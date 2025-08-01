@@ -266,11 +266,20 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.proposal.off.price']}" />
 			</td>
 			<td>
-				<p:inputText 
-					value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}"
-					disabled="true" size="35" style="text-align:right;">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
+				<c:if test="#{!isZonalWithPaOrPs}">
+					<p:inputText 
+						value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}"
+						disabled="true" size="35" style="text-align:right;">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
+				</c:if>
+				<c:if test="#{isZonalWithPaOrPs}">
+					<p:inputText 
+						value="#{lOADetailBackingBean.managedBean.totalZonePrice}"
+						disabled="true" size="35" style="text-align:right;">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
+				</c:if>
 			</td>
 		</tr>
 		<!-- Enhncement #24259 #24269 Workaround CJCP (LOA) - QT, DIRECT, DP -->
@@ -394,11 +403,15 @@
 			  </table>
 			</td>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				<ui:remove> #26770 - start </ui:remove>
+				<p:outputLabel style="width:87%; text-align:left;" value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
+				<p:outputLabel style="width:91% ;text-align:left; margin-top: -40px;" value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				<ui:remove> #26770 - end </ui:remove>
 			</td>
 			<td>
-				<table>
+				<ui:remove> #26770 - start </ui:remove>
+				<table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-right:20px;">
+				<ui:remove> #26770 - end </ui:remove>
 					<tr>
 						<td>
 							<p:selectOneRadio id="sl1mReq" styleClass="commonLabel"
@@ -411,6 +424,11 @@
 							</p:selectOneRadio>
 							<p:message id="sl1mReqMsg" for="sl1mReq" display="icon" />
 						</td>
+						<ui:remove> #26770 - start </ui:remove>
+						<td style="padding-right: 80px; margin-bottom: 20px;">
+							<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.sl1m.tooltip']}" />
+						</td>
+						<ui:remove> #26770 - end </ui:remove>
 					</tr>
 				</table>
 			</td>

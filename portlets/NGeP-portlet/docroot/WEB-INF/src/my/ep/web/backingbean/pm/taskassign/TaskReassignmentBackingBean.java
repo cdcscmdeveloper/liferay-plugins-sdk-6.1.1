@@ -2931,6 +2931,22 @@ public class TaskReassignmentBackingBean extends
 										.getUserId())),searchBean);
 				
 			}
+		
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
+			
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
 			
 			isSearched = true;
 			break;

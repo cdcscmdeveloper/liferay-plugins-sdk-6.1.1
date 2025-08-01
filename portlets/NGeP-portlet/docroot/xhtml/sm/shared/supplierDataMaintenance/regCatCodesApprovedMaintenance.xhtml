@@ -37,12 +37,13 @@
 				<p:column headerText="#{lbl['lbl.sm.status']}" />
 			</p:row>
 		</p:columnGroup>
-		<p:column selectionMode="multiple" style="width:2%" />
-		<p:column style="width : 2%;">
+		<!-- #37605 -->
+		<p:column selectionMode="multiple" style="width:2%;vertical-align: top;" />
+		<p:column style="width : 2%;vertical-align: top;">
 			<p:outputLabel value="#{index + 1}"
 				style="float: left;white-space: normal;" />
 		</p:column>
-		<p:column style="width :350px;white-space : normal">
+		<p:column style="width :350px;white-space : normal;vertical-align: top;">
 			<h:outputText
 				value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
 			<br />
@@ -52,17 +53,18 @@
 			<h:outputText
 				value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
 		</p:column>
-		<p:column style="width : 10% !important;">
+		<p:column style="width : 10% !important;vertical-align: top;">
 			<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 				rendered="#{!aprvdCatBean.specialCategory}" />
 			<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 				rendered="#{aprvdCatBean.specialCategory}" />
 		</p:column>
-		<p:column style="width : 25% !important;">
-			<p:inputTextarea id="otherDescMaintenance" maxlength="100"
+		<p:column style="width : 30% !important;vertical-align: top;">
+			<p:inputTextarea id="otherDescMaintenance" maxlength="5000"
 				style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
-				value="#{aprvdCatBean.otherDesc}" rows="5" cols="40"
-				rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}">
+				value="#{aprvdCatBean.otherDesc}" rows="5" cols="90"
+				rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}"
+				autoResize="false" > <!-- #37605 -->
 			</p:inputTextarea>
 			<p:graphicImage id="otherDescMaintenanceImg"
 				value="/css/images/design/icon_alert.png"
@@ -78,7 +80,7 @@
 			<p:message for="otherDescMaintenance" showDetail="false" showSummary="true"
 				display="icon" />
 		</p:column>
-		<p:column>
+		<p:column style="white-space : normal;vertical-align: top;width: 80px">
 			<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}" />
 		</p:column>
 	</p:dataTable>

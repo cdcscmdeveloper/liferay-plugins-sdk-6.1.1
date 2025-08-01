@@ -40,6 +40,7 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -73,6 +74,14 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 //#28765 - Start
+import org.primefaces.event.FileUploadEvent;
+//#28765 - Start
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementAdminInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -96,9 +105,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		renewSesionObject();
 		getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
 		getManagedBean().setPermStates(new ArrayList<SelectItem>());
+		getManagedBean().setPermDivisions(new ArrayList<SelectItem>()); //#34159 & #36718
 		getManagedBean().setPermDistricts(new ArrayList<SelectItem>());
 		getManagedBean().setPermCities(new ArrayList<SelectItem>());
 		getManagedBean().setMailStates(new ArrayList<SelectItem>());
+		getManagedBean().setMailDivisions(new ArrayList<SelectItem>()); //#34159 & #36718
 		getManagedBean().setMailDistricts(new ArrayList<SelectItem>());
 		getManagedBean().setMailCities(new ArrayList<SelectItem>());
 		getManagedBean().setHasSupplierUser(false);
@@ -249,6 +260,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	}
 	//#28765 - Start
 	public void checkingBeforeDeclare() {
+		//# 33563
+		validateRole();
 		RequestContext.getCurrentInstance().execute("declareDeletePopUp.show()");
 	}
 	//#28765 - End
@@ -745,7 +758,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		}
 		
-		listenerChangeRole();
+		listenerClickStaffRole(); // #33563
 	}
 
 	/**
@@ -753,19 +766,35 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * dialog pop up and for new personnel redirect to new personnel info page
 	 */
 	private void executeDecision() {
+
+		hideShowRoleByBusinessTypeAndSupplierType(this.getManagedBean()
+				.getSmSupplier().getSmAppl().getSupplierType(), this
+				.getManagedBean().getSmSupplier().getBusinessType());
 		// replace with new personnel
+		// #33589 - Start
 		if (!getManagedBean().isExistingUser()) {
-			RequestContext.getCurrentInstance().execute(
-					"replaceNewAdminConfirm.show()");
+			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
+					.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+				checkingBeforeDeclare();
+			} else {
+				RequestContext.getCurrentInstance().execute(
+						"replaceNewAdminConfirm.show()");
+			}
 		}
 		// replace with existing personnel
 		else {
-			setShowOrHideEmail();
-			initDefaultNewAdmin();
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",
-					null, null);
+			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
+					.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+				checkingBeforeDeclare();
+			} else {
+				setShowOrHideEmail();
+				initDefaultNewAdmin();
+				SmCommonUtil.redirectToPage(
+						"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml",
+						"", null, null);
+			}
 		}
+		// #33589 - End
 	}
 
 	/**
@@ -941,19 +970,35 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * @param String
 	 *            districtId
 	 */
-	public void updateMailAddLists(String countryId, String stateId,
-			String districtId) {
+	public void updateMailAddLists(String countryId, String stateId, String divisionId, String districtId) { //#34159 & #36718
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
 			getManagedBean().setMailStates(
 					SmCommonUtil.getStateList(Long.valueOf(countryId)));
+			getManagedBean().setMailDivisions(null); //#34159 & #36718
 			getManagedBean().setMailDistricts(null);
 			getManagedBean().setMailCities(null);
 		}
-		if (!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
-			getManagedBean().setMailDistricts(
-					SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+		//#34159 & #36718 - START
+		if (!stateId.isEmpty() || ("null").equalsIgnoreCase(stateId)) {
+			if(("14").equals(stateId)){
+				getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(Long.valueOf(stateId)));
+				getManagedBean().setMailDistricts(null);
+				getManagedBean().setMailCities(null);
+			} else {
+				getManagedBean().setMailDivisions(null);
+				if(getManagedBean().getMailAddr().getSmAddress().getPmDivision() != null){
+					getManagedBean().getMailAddr().getSmAddress().getPmDivision().setDivisionId(null);
+				}
+				getManagedBean().setMailDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+				getManagedBean().getMailAddr().getSmAddress().getPmDistrict().setDistrictId(null);
+				getManagedBean().setMailCities(null);
+			}
+		}
+		if(!divisionId.isEmpty() || ("null").equalsIgnoreCase(divisionId)){
+			getManagedBean().setMailDistricts(SmCommonUtil.getDistrictListByID(Long.valueOf(divisionId)));
 			getManagedBean().setMailCities(null);
 		}
+		//#34159 & #36718 - END
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
 			getManagedBean().setMailCities(
 					SmCommonUtil.getCityList(Long.valueOf(districtId)));
@@ -970,24 +1015,171 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * @param String
 	 *            districtId
 	 */
-	public void updatePermAddLists(String countryId, String stateId,
-			String districtId) {
+	public void updatePermAddLists(String countryId, String stateId, String divisionId, String districtId) { //#34159 & #36718
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
 			getManagedBean().setPermStates(
 					SmCommonUtil.getStateList(Long.valueOf(countryId)));
+			getManagedBean().setPermDivisions(null); //#34159 & #36718
 			getManagedBean().setPermDistricts(null);
 			getManagedBean().setPermCities(null);
 		}
-		if (!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
-			getManagedBean().setPermDistricts(
-					SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+		//#34159 & #36718 - START
+		if (!stateId.isEmpty() || ("null").equalsIgnoreCase(stateId)) {
+			if(("14").equals(stateId)){
+				getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(Long.valueOf(stateId)));
+				getManagedBean().setPermDistricts(null);
+				getManagedBean().setPermCities(null);
+			} else {
+				getManagedBean().setPermDivisions(null);
+				if(getManagedBean().getPermAddr().getSmAddress().getPmDivision() != null){
+					getManagedBean().getPermAddr().getSmAddress().getPmDivision().setDivisionId(null);
+				}
+				getManagedBean().setPermDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+				getManagedBean().getPermAddr().getSmAddress().getPmDistrict().setDistrictId(null);
+				getManagedBean().setPermCities(null);
+			}
+		}
+		if(!divisionId.isEmpty() || ("null").equalsIgnoreCase(divisionId)){
+			getManagedBean().setPermDistricts(SmCommonUtil.getDistrictListByID(Long.valueOf(divisionId)));
 			getManagedBean().setPermCities(null);
 		}
+		//#34159 & #36718 - END
 		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
 			getManagedBean().setPermCities(
 					SmCommonUtil.getCityList(Long.valueOf(districtId)));
 		}
 	}
+	
+	//#34159 & #36718 - START
+	public void onChangeCountry(SmAddress addr, String addrType){
+		Long countryId = addr.getPmCountry().getCountryId();
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			if(countryId != null){
+				addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
+				this.getManagedBean().setPermStates(SmCommonUtil.getStateList(countryId));
+			} else {
+				this.getManagedBean().setPermStates(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setPermDivisions(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermDistricts(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermCities(new ArrayList<SelectItem>());
+		}
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			if(countryId != null){
+				addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
+				this.getManagedBean().setMailStates(SmCommonUtil.getStateList(countryId));
+			} else {
+				this.getManagedBean().setMailStates(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setMailDivisions(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailDistricts(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailCities(new ArrayList<SelectItem>());
+		}
+		
+		addr.setPmState(new PmState());
+		addr.setPmDivision(new PmDivision());
+		addr.setPmDistrict(new PmDistrict());
+		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
+	}
+		
+	public void onChangeState(SmAddress addr, String addrType){
+		Long stateId = addr.getPmState().getStateId();
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			if(stateId != null){
+				addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+				if(addr.getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+					this.getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(stateId));
+					this.getManagedBean().setPermDistricts(new ArrayList<SelectItem>());
+				} else {
+					this.getManagedBean().setPermDistricts(SmCommonUtil.getDistrictList(stateId));
+				}
+			} else {
+				addr.setPmState(new PmState());
+				this.getManagedBean().setPermDivisions(new ArrayList<SelectItem>());
+				this.getManagedBean().setPermDistricts(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setPermCities(new ArrayList<SelectItem>());
+		}
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			if(stateId != null){
+				addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+				if(addr.getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+					this.getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(stateId));
+					this.getManagedBean().setMailDistricts(new ArrayList<SelectItem>());
+				} else {
+					this.getManagedBean().setMailDistricts(SmCommonUtil.getDistrictList(stateId));
+				}
+			} else {
+				addr.setPmState(new PmState());
+				this.getManagedBean().setMailDivisions(new ArrayList<SelectItem>());
+				this.getManagedBean().setMailDistricts(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setMailCities(new ArrayList<SelectItem>());
+		}
+		
+		addr.setPmDivision(new PmDivision());
+		addr.setPmDistrict(new PmDistrict());
+		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
+	}
+		
+	public void onChangeDivision(SmAddress addr, String addrType){
+		Long divisionId = addr.getPmDivision().getDivisionId();
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			if(divisionId != null){
+				this.getManagedBean().setPermDistricts(SmCommonUtil.getDistrictListByID(divisionId));
+			} else {
+				this.getManagedBean().setPermDistricts(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setPermCities(new ArrayList<SelectItem>());
+		}
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			if(divisionId != null){
+				this.getManagedBean().setMailDistricts(SmCommonUtil.getDistrictListByID(divisionId));
+			} else {
+				this.getManagedBean().setMailDistricts(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setMailCities(new ArrayList<SelectItem>());
+			
+		}
+		
+		addr.setPmDistrict(new PmDistrict());
+		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
+	}
+		
+	public void onChangeDistrict(SmAddress addr, String addrType){
+		Long districtId = addr.getPmDistrict().getDistrictId();
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			if(districtId != null){
+				this.getManagedBean().setPermCities(SmCommonUtil.getCityList(districtId));
+			} else {
+				this.getManagedBean().setPermCities(new ArrayList<SelectItem>());
+			}
+		}
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			if(districtId != null){
+				this.getManagedBean().setMailCities(SmCommonUtil.getCityList(districtId));
+			} else {
+				this.getManagedBean().setMailCities(new ArrayList<SelectItem>());
+			}
+		}
+		
+		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
+	}
+	
+	public void onChangeCity(SmAddress addr, String addrType){
+		addr.setPostcode("");
+	}
+	//#34159 & #36718 - END
 
 	/**
 	 * Set default permanent and mail address to Malaysia
@@ -1012,9 +1204,20 @@ public class ForceReplaceSuppAdminBackingBean extends
 			perm = new SmPersonnelAddress();
 			perm.setAddressType(SupplierManagementConst.PERM_ADD);
 			perm.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
+			perm.getSmAddress().setPmDivision(new PmDivision()); //#34159 & #36718
 			perm.setSmPersonnel(getManagedBean().getNewAdmin());
 			perm.setSameAsPerm(false);
 		} else {
+			//#34159 & #36718 - START
+			if(perm.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+				getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(perm.getSmAddress().getPmState().getStateId()));
+			} else {
+				getManagedBean().setPermDivisions(new ArrayList<SelectItem>());
+			}
+			if(perm.getSmAddress().getPmDivision() == null){
+				perm.getSmAddress().setPmDivision(new PmDivision());
+			}
+			//#34159 & #36718 - END
 			getManagedBean().setPermDistricts(
 					SmCommonUtil.getDistrictList(perm.getSmAddress()
 							.getPmState().getStateId()));
@@ -1037,9 +1240,20 @@ public class ForceReplaceSuppAdminBackingBean extends
 			mail = new SmPersonnelAddress();
 			mail.setAddressType(SupplierManagementConst.MAIL_ADD);
 			mail.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
+			mail.getSmAddress().setPmDivision(new PmDivision()); //#34159 & #36718
 			mail.setSmPersonnel(getManagedBean().getNewAdmin());
 			mail.setSameAsPerm(false);
 		} else {
+			//#34159 & #36718 - START
+			if(mail.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+				getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(mail.getSmAddress().getPmState().getStateId()));
+			} else {
+				getManagedBean().setMailDivisions(new ArrayList<SelectItem>());
+			}
+			if(mail.getSmAddress().getPmDivision() == null){
+				mail.getSmAddress().setPmDivision(new PmDivision());
+			}
+			//#34159 & #36718 - END
 			getManagedBean().setMailDistricts(
 					SmCommonUtil.getDistrictList(mail.getSmAddress()
 							.getPmState().getStateId()));
@@ -1167,6 +1381,20 @@ public class ForceReplaceSuppAdminBackingBean extends
 							MessageConst.INFO_721036, null, null);
 				}
 			}
+			// #28895_35501 Start - AUDIT TRAIL SM
+			log.info("START TB 35501: Audit Force Replace Admin");
+			System.out.println("START TB 35501: Audit Force Replace Admin");
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				getManagedBean().setForceReplace(true);
+				getManagedBean().setOldIdentification(getManagedBean().getReactivateBasic().getIdentificationNo());
+				getManagedBean().setNewIdentifiction(getManagedBean().getReactivateBasic().getNewIdentificationNo());
+				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
+				auditSmBackingBean.saveAuditData(getManagedBean(), null);
+			}
+			System.out.println("END TB 35501: Audit Force Replace Admin");
+			log.info("END TB 35501: Audit Force Replace Admin");
+			// #28895_35501 End
 		} else {
 			throw new EpException(MessageConst.ERROR_721113);
 		}
@@ -1221,8 +1449,70 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.retrieveActiveSmApplBySupp(mofRegistrationReqDTO).getSmAppl();
 	}
 	
+	// #34159 & #36718 - START
+	/**
+	 * Rechecks the validity of the specified source address.
+	 * 
+	 * @param srcAddr
+	 * @throws NullPointerException
+	 */
+	public void recheckVal(SmAddress srcAddr) {
+		if (isInvalidAddress(srcAddr)) {
+			handleInvalidAddress();
+		}
+	}
+
+	private boolean isInvalidAddress(SmAddress srcAddr) {
+		if (srcAddr == null) {
+			return true;
+		}
+		return isBlank(srcAddr.getAddress1()) || hasInvalidLocation(srcAddr)
+				|| isBlank(srcAddr.getPostcode());
+	}
+
+	private boolean hasInvalidLocation(SmAddress srcAddr) {
+		return isInvalidState(srcAddr) || isInvalidDivision(srcAddr)
+				|| isInvalidDistrict(srcAddr) || isInvalidCity(srcAddr);
+	}
+
+	private boolean isInvalidState(SmAddress srcAddr) {
+		return srcAddr.getPmState() == null
+				|| srcAddr.getPmState().getStateId() == null;
+	}
+
+	private boolean isInvalidDivision(SmAddress srcAddr) {
+		return "14".equalsIgnoreCase(srcAddr.getPmState().getStateId()
+				.toString())
+				&& (srcAddr.getPmDivision() == null || srcAddr.getPmDivision()
+						.getDivisionId() == null);
+	}
+
+	private boolean isInvalidDistrict(SmAddress srcAddr) {
+		return srcAddr.getPmDistrict() == null
+				|| srcAddr.getPmDistrict().getDistrictId() == null;
+	}
+
+	private boolean isInvalidCity(SmAddress srcAddr) {
+		return srcAddr.getPmCity() == null
+				|| srcAddr.getPmCity().getCityId() == null;
+	}
+
+	private boolean isBlank(String value) {
+		return StringUtils.isBlank(value);
+	}
+
+	private void handleInvalidAddress() {
+		String addrType = SmCommonUtil.getMessage("lbl.sm.permenantaddress",
+				null);
+		getManagedBean().getMailAddr().setSameAsPerm(false);
+		throw new EpException(MessageConst.ERROR_722656,
+				new String[] { addrType });
+	}
+	// #34159 & #36718 - END
+		
 	public void copyPermanentAddress(SmAddress refAddress){
 		if(this.getManagedBean().getMailAddr().isSameAsPerm()){
+			recheckVal(refAddress); // #34159 & #36718
 			if(this.getManagedBean().getMailAddr().getSmAddress() != null){
 				if(this.getManagedBean().getMailAddr().getSmAddress() == null){
 					this.getManagedBean().getMailAddr().setSmAddress(new SmAddress());
@@ -1239,21 +1529,47 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 				PmCountry country = new PmCountry();
 				PmState state = new PmState();
+				PmDivision division = new PmDivision(); //#34159 & #36718
 				PmDistrict district = new PmDistrict();
 				PmCity city = new PmCity();
 
-				country.setCountryId(refAddress.getPmCountry().getCountryId());
+				//#34159 & #36718 - START
+				if (refAddress.getPmCountry().getCountryId() != null) {
+					country = SmCommonUtil.getInstance().getCountryById(
+							refAddress.getPmCountry().getCountryId());
+				}
+
 				address.setPmCountry(country);
-				
-				state.setStateId(refAddress.getPmState().getStateId());
+				onChangeCountry(address, "M");
+
+				if (refAddress.getPmState().getStateId() != null) {
+					state = SmCommonUtil.getInstance().getStateById(
+							refAddress.getPmState().getStateId());
+				}
+
 				address.setPmState(state);
+				onChangeState(address, "M");
 				
-				updateMailAddLists("", refAddress.getPmState().getStateId().toString(),"");
-				district.setDistrictId(refAddress.getPmDistrict().getDistrictId());
+				if(refAddress.getPmState().getStateId()!= null &&("14").equalsIgnoreCase(refAddress.getPmState().getStateId().toString())){
+					division.setDivisionId(refAddress.getPmDivision().getDivisionId());
+					updateMailAddLists("", "",refAddress.getPmDivision().getDivisionId().toString(), "");
+				} else {
+					division.setDivisionId(null);
+				}
+				address.setPmDivision(division);
+				
+				if(refAddress.getPmDistrict().getDistrictId() != null){
+					district = SmCommonUtil.getInstance().getDistrictById(refAddress.getPmDistrict().getDistrictId());
+				}
 				address.setPmDistrict(district);
-				updateMailAddLists("", "",refAddress.getPmDistrict().getDistrictId().toString());
-				city.setCityId(refAddress.getPmCity().getCityId());
+				onChangeDistrict(address, "M");
+				if(refAddress.getPmCity().getCityId() != null){
+					city = SmCommonUtil.getInstance().getCityById(refAddress.getPmCity().getCityId());
+				}
 				address.setPmCity(city);
+				if (refAddress.getPostcode() != null)
+					address.setPostcode(new String(refAddress.getPostcode().toString()));
+				//#34159 & #36718 - END
 			}
 		}
 	}
@@ -1652,4 +1968,407 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		return retVal;
 	}
+
+    // -> START #33563
+    public void hideShowRoleByBusinessTypeAndSupplierType(String supplierType, String businessType){
+    	switch(supplierType){
+    	case SupplierManagementConst.SUPP_TYPE_BASIC:
+    	case SupplierManagementConst.SUPP_TYPE_CONTRACTOR:
+    		switch(businessType){
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK:
+    			//director hide
+    			//high management hide
+    			//semi pro hide
+    			//pro hide
+    			this.getManagedBean().setDisplayRoleEquity(true);
+    			this.getManagedBean().setDisplayRoleDirector(false);
+    			this.getManagedBean().setDisplayRoleHighManagement(false);
+    			this.getManagedBean().setDisplayRoleManagement(true);
+    			this.getManagedBean().setDisplayRoleProfessional(false);
+    			this.getManagedBean().setDisplayRoleSemiPro(false);
+    			this.getManagedBean().setDisplayRoleClericalStaff(true);
+    			break;
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP:
+    			//semi pro hide
+    			//pro hide
+    			this.getManagedBean().setDisplayRoleEquity(true);
+    			this.getManagedBean().setDisplayRoleDirector(true);
+    			this.getManagedBean().setDisplayRoleHighManagement(true);
+    			this.getManagedBean().setDisplayRoleManagement(true);
+    			this.getManagedBean().setDisplayRoleProfessional(false);
+    			this.getManagedBean().setDisplayRoleSemiPro(false);
+    			this.getManagedBean().setDisplayRoleClericalStaff(true);
+    			break;
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2:
+    			//hide owner
+    			//semi pro hide
+    			//pro hide
+    			this.getManagedBean().setDisplayRoleEquity(false);
+    			this.getManagedBean().setDisplayRoleDirector(true);
+    			this.getManagedBean().setDisplayRoleHighManagement(true);
+    			this.getManagedBean().setDisplayRoleManagement(true);
+    			this.getManagedBean().setDisplayRoleProfessional(false);
+    			this.getManagedBean().setDisplayRoleSemiPro(false);
+    			this.getManagedBean().setDisplayRoleClericalStaff(true);
+    			break;
+    			default:
+    				//all hide
+    				this.getManagedBean().setDisplayRoleEquity(false);
+        			this.getManagedBean().setDisplayRoleDirector(false);
+        			this.getManagedBean().setDisplayRoleHighManagement(false);
+        			this.getManagedBean().setDisplayRoleManagement(false);
+        			this.getManagedBean().setDisplayRoleProfessional(false);
+        			this.getManagedBean().setDisplayRoleSemiPro(false);
+        			this.getManagedBean().setDisplayRoleClericalStaff(false);
+    				break;
+    		}
+    		break;
+    	case SupplierManagementConst.SUPP_TYPE_CONSULTANT:
+    		switch(businessType){
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY:
+    			//director hide
+    			//high management hide
+    			this.getManagedBean().setDisplayRoleEquity(true);
+    			this.getManagedBean().setDisplayRoleDirector(false);
+    			this.getManagedBean().setDisplayRoleHighManagement(false);
+    			this.getManagedBean().setDisplayRoleManagement(true);
+    			this.getManagedBean().setDisplayRoleProfessional(true);
+    			this.getManagedBean().setDisplayRoleSemiPro(true);
+    			this.getManagedBean().setDisplayRoleClericalStaff(true);
+    			break;
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP:
+    			//all show
+    			this.getManagedBean().setDisplayRoleEquity(true);
+    			this.getManagedBean().setDisplayRoleDirector(true);
+    			this.getManagedBean().setDisplayRoleHighManagement(true);
+    			this.getManagedBean().setDisplayRoleManagement(true);
+    			this.getManagedBean().setDisplayRoleProfessional(true);
+    			this.getManagedBean().setDisplayRoleSemiPro(true);
+    			this.getManagedBean().setDisplayRoleClericalStaff(true);
+    			break;
+    			default:
+    				this.getManagedBean().setDisplayRoleEquity(false);
+        			this.getManagedBean().setDisplayRoleDirector(false);
+        			this.getManagedBean().setDisplayRoleHighManagement(false);
+        			this.getManagedBean().setDisplayRoleManagement(false);
+        			this.getManagedBean().setDisplayRoleProfessional(false);
+        			this.getManagedBean().setDisplayRoleSemiPro(false);
+        			this.getManagedBean().setDisplayRoleClericalStaff(false);
+    				//all hide
+    				break;
+    		}
+    		break;
+    		default:
+    			//all hide
+    			this.getManagedBean().setDisplayRoleEquity(false);
+    			this.getManagedBean().setDisplayRoleDirector(false);
+    			this.getManagedBean().setDisplayRoleHighManagement(false);
+    			this.getManagedBean().setDisplayRoleManagement(false);
+    			this.getManagedBean().setDisplayRoleProfessional(false);
+    			this.getManagedBean().setDisplayRoleSemiPro(false);
+    			this.getManagedBean().setDisplayRoleClericalStaff(false);
+    			break;
+    	}
+    }
+    
+    public void listenerClickStaffRole(){
+    	resetRoleEnableDisable();
+    	
+    	SmPersonnel currentPersonnel = this.getManagedBean().getNewAdmin();
+    	SmPersonnel passPersonnel = this.getManagedBean().getOldAdmin();
+    	String supplierType = this.getManagedBean().getSmSupplier().getSmAppl().getSupplierType();
+    	String businessType = this.getManagedBean().getSmSupplier().getBusinessType();
+    	
+//    	if(currentPersonnel != null){
+    		switch(supplierType){
+        	case SupplierManagementConst.SUPP_TYPE_BASIC:
+        	case SupplierManagementConst.SUPP_TYPE_CONTRACTOR:
+	    		this.getManagedBean().setDisplayRolePanel(true);
+	    		switch(businessType){
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK:
+	    			setEnableDisableRoleOneEquityOneStaff(currentPersonnel,passPersonnel);
+	    			break;
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK:
+	    			setEnableDisableRoleStafOnly(currentPersonnel);
+	    			break;
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2:
+	    			setEnableDisableRoleStafOnly(currentPersonnel);
+	    			break;
+	    			default:
+	    				resetRoleEnableDisable();
+	    				break;
+	    		}
+	    		break;
+	    		
+        	case SupplierManagementConst.SUPP_TYPE_CONSULTANT:
+	    		this.getManagedBean().setDisplayRolePanel(true);
+        		switch(businessType){
+        		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK:
+	    			//only 1 equity owner can apply role staff
+	    			setEnableDisableRoleOneEquityOneStaff(currentPersonnel,passPersonnel);
+	    			
+	    			break;
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY:
+	    			//management and staff can't apply in one - no director & h.management
+	    			setEnableDisableRoleStafOnly(currentPersonnel);
+	    			break;
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP:
+	    		//management and staff can't apply in one - with director & h.management
+	    			setEnableDisableRoleStafOnly(currentPersonnel);
+	    			break;
+	    			default:
+	    				//all enable
+	    				resetRoleEnableDisable();
+	    				break;
+        		}
+        		break;
+        		
+	    		default:
+	    			//all enable
+		    		this.getManagedBean().setDisplayRolePanel(false);
+	    			resetRoleEnableDisable();
+	    			break;
+    		}
+//    	} else {
+//    		//all enable
+//    		resetRoleEnableDisable();
+//    	}
+    }
+    
+    public void resetRoleEnableDisable(){
+    	this.getManagedBean().setDisabledRoleDirector(false);
+    	this.getManagedBean().setDisabledRoleEquity(false);
+    	this.getManagedBean().setDisabledRoleHighManagement(false);
+    	this.getManagedBean().setDisabledRoleManagement(false);
+    	this.getManagedBean().setDisabledRoleProfessional(false);
+    	this.getManagedBean().setDisabledRoleSemiPro(false);
+    	this.getManagedBean().setDisabledRoleClericalStaff(false);
+    }
+    
+    public void setEnableDisableRoleStafOnly(SmPersonnel currentPersonnel){
+    	resetRoleEnableDisable();
+    	/*
+    	 * RULES
+    	 * 1. Role Management & Staff cannot be apply in one profile 
+    	 */
+		if (currentPersonnel != null) {
+			if (currentPersonnel.isDirector() || currentPersonnel.isEquityOwner()
+					|| currentPersonnel.isHigherManagement() || currentPersonnel.isManagement()
+					|| currentPersonnel.isProf()) {
+				this.getManagedBean().setDisabledRoleDirector(false);
+				this.getManagedBean().setDisabledRoleEquity(false);
+				this.getManagedBean().setDisabledRoleHighManagement(false);
+				this.getManagedBean().setDisabledRoleManagement(false);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			} else if (currentPersonnel.isSemiProf()) {
+				this.getManagedBean().setDisabledRoleDirector(true);
+				this.getManagedBean().setDisabledRoleEquity(true);
+				this.getManagedBean().setDisabledRoleHighManagement(true);
+				this.getManagedBean().setDisabledRoleManagement(true);
+				this.getManagedBean().setDisabledRoleProfessional(true);
+				this.getManagedBean().setDisabledRoleSemiPro(false);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+				this.getManagedBean().getNewAdmin().setDirector(false);
+				this.getManagedBean().getNewAdmin().setEquityOwner(false);
+				this.getManagedBean().getNewAdmin().setHigherManagement(false);
+				this.getManagedBean().getNewAdmin().setManagement(false);
+				this.getManagedBean().getNewAdmin().setProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			} else if (currentPersonnel.isClerical()) {
+				this.getManagedBean().setDisabledRoleDirector(true);
+				this.getManagedBean().setDisabledRoleEquity(true);
+				this.getManagedBean().setDisabledRoleHighManagement(true);
+				this.getManagedBean().setDisabledRoleManagement(true);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+				this.getManagedBean().getNewAdmin().setDirector(false);
+				this.getManagedBean().getNewAdmin().setEquityOwner(false);
+				this.getManagedBean().getNewAdmin().setHigherManagement(false);
+				this.getManagedBean().getNewAdmin().setManagement(false);
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+			}
+		}
+    }
+    
+    public void setEnableDisableRoleOneEquityOneStaff(SmPersonnel currentPersonnel, SmPersonnel passPersonnel){
+    	/*
+    	 * RULES
+    	 * 1. Only 1 of Equity Owner can apply role Staff
+    	 * 2. All Equity can apply role Management
+    	 * 3. Role Management & Staff cannot be apply in one profile without Equity Owner 
+    	 */
+    	resetRoleEnableDisable();
+		if (currentPersonnel != null) {
+			int count = 0;
+			for (SmPersonnel smPersonnel : this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels()) {
+				if (currentPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo()
+						|| passPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo()) {
+					continue;
+				} else {
+					if (smPersonnel.isEquityOwner() && smPersonnel.isClerical()) {
+						count++;
+					}
+				}
+			}
+
+			if (currentPersonnel.isEquityOwner()) {
+				if (count > 0) {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(false);
+					this.getManagedBean().setDisabledRoleHighManagement(false);
+					this.getManagedBean().setDisabledRoleManagement(false);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+					this.getManagedBean().getNewAdmin().setClerical(false);
+				} else {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(false);
+					this.getManagedBean().setDisabledRoleHighManagement(false);
+					this.getManagedBean().setDisabledRoleManagement(false);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+				}
+			} else if (currentPersonnel.isHigherManagement() || currentPersonnel.isManagement()) {
+				this.getManagedBean().setDisabledRoleDirector(false);
+				this.getManagedBean().setDisabledRoleEquity(false);
+				this.getManagedBean().setDisabledRoleHighManagement(false);
+				this.getManagedBean().setDisabledRoleManagement(false);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			} else if (currentPersonnel.isClerical()) {
+				if (count > 0) {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(true);
+					this.getManagedBean().setDisabledRoleHighManagement(true);
+					this.getManagedBean().setDisabledRoleManagement(true);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+					this.getManagedBean().getNewAdmin().setEquityOwner(false);
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+					this.getManagedBean().getNewAdmin().setHigherManagement(false);
+					this.getManagedBean().getNewAdmin().setManagement(false);
+				} else {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(false);
+					this.getManagedBean().setDisabledRoleHighManagement(true);
+					this.getManagedBean().setDisabledRoleManagement(true);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+					this.getManagedBean().getNewAdmin().setHigherManagement(false);
+					this.getManagedBean().getNewAdmin().setManagement(false);
+				}
+
+			} else if (currentPersonnel.isProf()) {
+				this.getManagedBean().setDisabledRoleDirector(false);
+				this.getManagedBean().setDisabledRoleEquity(false);
+				this.getManagedBean().setDisabledRoleHighManagement(false);
+				this.getManagedBean().setDisabledRoleManagement(false);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+
+			} else if (currentPersonnel.isSemiProf()) {
+				this.getManagedBean().setDisabledRoleDirector(true);
+				this.getManagedBean().setDisabledRoleEquity(true);
+				this.getManagedBean().setDisabledRoleHighManagement(true);
+				this.getManagedBean().setDisabledRoleManagement(true);
+				this.getManagedBean().setDisabledRoleProfessional(true);
+				this.getManagedBean().setDisabledRoleSemiPro(false);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+				this.getManagedBean().getNewAdmin().setDirector(false);
+				this.getManagedBean().getNewAdmin().setEquityOwner(false);
+				this.getManagedBean().getNewAdmin().setHigherManagement(false);
+				this.getManagedBean().getNewAdmin().setManagement(false);
+				this.getManagedBean().getNewAdmin().setProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			}
+		}
+    }
+    
+    public void validateRole(){
+    	if(this.getManagedBean().getNewAdmin() != null){
+    		switch(this.getManagedBean().getSmSupplier().getSmAppl().getSupplierType()){
+    		case SupplierManagementConst.SUPP_TYPE_BASIC:
+    		case SupplierManagementConst.SUPP_TYPE_CONSULTANT:
+    		case SupplierManagementConst.SUPP_TYPE_CONTRACTOR:
+    			if(!this.getManagedBean().getNewAdmin().isEquityOwner()
+        				&& !this.getManagedBean().getNewAdmin().isDirector()
+        				&& !this.getManagedBean().getNewAdmin().isHigherManagement()
+        				&& !this.getManagedBean().getNewAdmin().isManagement()
+        				&& !this.getManagedBean().getNewAdmin().isProf()
+        				&& !this.getManagedBean().getNewAdmin().isSemiProf()
+        				&& !this.getManagedBean().getNewAdmin().isClerical()){
+        			throw new EpException(MessageConst.ERROR_722535);
+        		}
+    		break;
+    		default:
+    			break;
+    		}
+    		
+    	}
+    }
+    // END -> #33563
 }

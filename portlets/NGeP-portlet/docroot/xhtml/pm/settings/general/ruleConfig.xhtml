@@ -192,13 +192,25 @@
 					disabled="#{!(typeValueObj.brandNew)}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, @([id$=cloneLink])" />
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		  			<f:attribute name="max" value="99999999999.99"/>				
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						listener="#{ruleCatalogueBackingBean.updateToValue(index)}"
 						update=":form:settingTabId:ruleTypeValueTableID, :form:settingTabId:errorDialog" />
 				</p:inputText>
+				<!-- 29669 - START -->
+				<h:panelGroup id="toErrorLink">
+					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
+						partialSubmit="true" id="toErrorRequired"
+						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
+						oncomplete="errorDialog.show();"
+						rendered="#{typeValueObj.errorToRequired}">
+						<f:param name="index" value="#{index}"></f:param>
+						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+					</p:commandLink>
+				</h:panelGroup>
+				<!-- 29669 - END -->
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
 
@@ -217,7 +229,7 @@
 				</f:facet>
 
 				<p:calendar  navigator="true"
-					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"					
+					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleValeffDateId"
@@ -314,15 +326,17 @@
 							value="#{index}" />
 				</p:commandLink>
 				<h:panelGroup id="errorLink">
+					<!-- 29669 - START -->
 					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
 						partialSubmit="ture"
 						actionListener="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
 						oncomplete="errorDialog.show();"
-						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 2) and typeValueObj.fromValue >= typeValueObj.toValue}">
+						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 2) and typeValueObj.fromValue >= typeValueObj.toValue and typeValueObj.fromValue != null}">
 						<f:param name="index" value="#{index}"></f:param>
 						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
 					</p:commandLink>
+					<!-- 29669 - END -->
 				</h:panelGroup>
 
 			</p:column>

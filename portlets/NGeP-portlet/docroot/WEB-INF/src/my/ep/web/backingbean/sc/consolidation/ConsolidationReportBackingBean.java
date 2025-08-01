@@ -542,7 +542,8 @@ public class ConsolidationReportBackingBean extends
 		List<ScQtFinalizationReport> decisionPaperList = null;
 
 		for (ScQtFinalizationReport report : briefingPaperDisplayFilter(getManagedBean().getScQtFinalization()
-				.getScQtFinalizationReports())) {// 37623
+				.getScQtFinalizationReports())) { // 37623
+
 			if (report.getTitle().contains("Kertas Taklimat")) {
 
 				if (briefingPaperList == null) {
@@ -674,20 +675,25 @@ public class ConsolidationReportBackingBean extends
 		debugLogger("downloadAllEvaluationReports");
 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
-		// 18685 -end-		
+		// 18685 -end-
+		
 		// 37622 - start
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
-		for(ScQtFinalizationReport report: scQtFinalizationReports){
+
+		for (ScQtFinalizationReport report : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment = report.getScQtFinalizationReportAttachment();
-			if (attachment == null) { 
+
+			if (attachment == null) {
 				attachment = generateDocumentAttachment(report);
 				report.setScQtFinalizationReportAttachment(attachment);
-			} 
+			}
+
 			if (attachment != null) {
 				attachment.setTempFileName(report.getTitle());
-			} 
-			scAttachments.add(attachment); 
-		} 
+			}
+
+			scAttachments.add(attachment);
+		}
 		// 37622 - end
 
 		// Generate all the reports before submission
@@ -1199,11 +1205,39 @@ public class ConsolidationReportBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
 		TplSpecZoneDtl selectedZone = getManagedBean().getSelectedZone();
+		Boolean isScQtRecommendByZoneNull = false; // #29466
+
 		if (scQtFinalization != null) {
 			Map<Long, List<ScQtRecommend>> scQtRecommendsByZone = scQtFinalization
 					.getScQtRecommendsByZone();
-			log.debug("scQtFinalization.getScQtRecommendsByZone() : "
-					+ scQtRecommendsByZone);
+
+			// #29466 - START
+			/*
+			 * Checking if each QtRecommendId() from scQtRecommendsByZone for
+			 * that selected zone is null
+			 */
+			for (ScQtRecommend scQtRecommendByZone : scQtRecommendsByZone.get(selectedZone.getSpecZoneId())) {
+				if (scQtRecommendByZone.getQtRecommendId() == null) {
+					isScQtRecommendByZoneNull = true;
+					break;
+				}
+			}
+
+			/*
+			 * If at least one QtRecommendId() from scQtRecommendsByZone is
+			 * null, will be replaced and added from each
+			 * scQtFinalization.getScQtRecommends() for that same selected zone
+			 */
+			if (isScQtRecommendByZoneNull) {
+				scQtRecommendsByZone.get(selectedZone.getSpecZoneId()).clear();
+
+				for (ScQtRecommend qtRecommend : scQtFinalization.getScQtRecommends()) {
+					if (selectedZone.getSpecZoneId().equals(qtRecommend.getTplSpecZoneDtl().getSpecZoneId())) {
+						scQtRecommendsByZone.get(selectedZone.getSpecZoneId()).add(qtRecommend);
+					}
+				}
+			}
+			// #29466 - END
 
 			if (selectedZone != null && scQtRecommendsByZone != null
 					&& scQtRecommendsByZone.size() > 0) {
@@ -2074,10 +2108,12 @@ public class ConsolidationReportBackingBean extends
 					+ supplierFinalizationBB.getManagedBean().isItemize());
 		}
 		TplSpecZoneDtl specZoneDtl = this.getManagedBean().getSelectedZone();
-		log.info("specZoneDtl" + specZoneDtl);
+
 		if(evaluationStageId==2){ //#26440 Start
 		supplierFinalizationBB.getManagedBean().setCurrentZone(specZoneDtl);
 		} //#26440 End
+
+		supplierFinalizationBB.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt()); // #29466
 		supplierFinalizationBB.retrieveQualifiedSuppliersInfoByEvalStage();
 
 	}

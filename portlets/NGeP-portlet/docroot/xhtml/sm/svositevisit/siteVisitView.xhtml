@@ -36,7 +36,8 @@
 		<p:dataTable var="cat"
 			value="#{svoSiteVisitBackingBean.managedBean.supplierCategory}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<p:column headerText="#{lbl['lbl.sm.category.description']}">
+			<!-- #37605 -->
+			<p:column headerText="#{lbl['lbl.sm.category.description']}" style="white-space: normal; width: 88%;">
 				#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
 				:
 				#{cat.pmCategoryL3.categoryName}

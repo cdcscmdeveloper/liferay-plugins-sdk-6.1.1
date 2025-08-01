@@ -1,4 +1,5 @@
 /**
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.requestnote;
 
@@ -124,7 +125,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest; //#25790
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest; //#29006
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
@@ -150,9 +151,9 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean; //#25790
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //#30866
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean; //#25790
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean; //#25790
-import my.ep.web.backingbean.ct.circular.CircularBackingBean; //#30866
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBean;
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBeanTemplate;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean; //#25790
@@ -5062,9 +5063,33 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						}
 					}
 				}
-				for(ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
-					subTotalAmount = subTotalAmount.add(spItemPrice.getItemPrice().multiply(zonalSubTotalAmount));
+				// - start- #27797
+				if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+						) {
+					if (priceType.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
+						BigDecimal highestZonePrice = BigDecimal.ZERO;
+
+						for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+							int result = spItemPrice.getItemPrice().compareTo(highestZonePrice);
+
+							if (result == 1) {
+								highestZonePrice = spItemPrice.getItemPrice();
+							}
+						}
+						subTotalAmount = highestZonePrice.multiply(zonalSubTotalAmount);
+					} else {
+						for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+							subTotalAmount = subTotalAmount.add(spItemPrice.getItemPrice()
+									.multiply(zonalSubTotalAmount));
+						}
+					}
+				} else {
+					for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+						subTotalAmount.add(spItemPrice.getItemPrice().multiply(zonalSubTotalAmount));
+					}
 				}
+				// - end - #27797
 			} else {
 				ScSupplierItemPrice itemPrice = getTopZonalTierPrice(requestSupplierItem.getSupplierItemPrices(),
 						orderQuantity,
@@ -5605,6 +5630,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	// 36362 - end
 	
+	// #36119 - start
+	/**
+	 * Act as reload RN for codification wrapper
+	 * 
+	 * @param RequestNoteResDTO
+	 *            rnResDTO
+	 * 
+	 * @return void
+	 */
+	public void reloadRequestNoteForCodificationWrapper(RequestNoteResDTO requestNoteResDTO) {
+		reloadRequestNoteForCodification(requestNoteResDTO);
+	}
+	// #36119 - end
+	
 	// start - #25790
 	/**
 	 * load continuity session of page.
@@ -6004,20 +6043,5 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		}
 	}
-
 	// end - #25790
-	
-	// #36119 - start
-	/**
-	 * Act as reload RN for codification wrapper
-	 * 
-	 * @param RequestNoteResDTO
-	 *            rnResDTO
-	 * 
-	 * @return void
-	 */
-	public void reloadRequestNoteForCodificationWrapper(RequestNoteResDTO requestNoteResDTO) {
-		reloadRequestNoteForCodification(requestNoteResDTO);
-	}
-	// #36119 - end
 }

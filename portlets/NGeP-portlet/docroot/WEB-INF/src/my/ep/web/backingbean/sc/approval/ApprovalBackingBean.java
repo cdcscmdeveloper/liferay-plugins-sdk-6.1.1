@@ -138,8 +138,7 @@ import org.primefaces.event.FileUploadEvent;
  */
 @ManagedBean(name = "approvalBackingBean")
 @RequestScoped
-public class ApprovalBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 
 	/**
 	 * 
@@ -161,7 +160,6 @@ public class ApprovalBackingBean extends
 	public ApprovalBackingBean() {
 
 	}
-
 
 	/**
 	 * Inits the.
@@ -1189,7 +1187,6 @@ public class ApprovalBackingBean extends
 			// End Reopen 9019
 
 			CommitteResDTO committeResDto = null;
-
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
@@ -1251,7 +1248,7 @@ public class ApprovalBackingBean extends
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
 				committeReqDTO.setQtCommittee(qt.getScQtCommittees());
-
+				committeReqDTO.setTaskName(taskName);	// 37906 temp 17/04/2025
 				if (null != digiSign) {
 					updatePmDigiSignData(digiSign,
 							ParameterConst.DOCTYPE_COMMITTE_APROVAL,
@@ -1279,6 +1276,7 @@ public class ApprovalBackingBean extends
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				qtReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+				qtReqDTO.setTaskName(taskName);	// 37906 temp 17/04/2025
 				IQTDetailSO detailSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTDetailSO.class);
@@ -1897,6 +1895,7 @@ public class ApprovalBackingBean extends
 					scQt=checkProcuremntCategoryMedicine(scQt);
 					scQt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
+					updatePublishClosingDate(scQt); //Bug_37764
 					
 				} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD.equalsIgnoreCase(approvalType)) {
 					if (isFinalApproval) {
