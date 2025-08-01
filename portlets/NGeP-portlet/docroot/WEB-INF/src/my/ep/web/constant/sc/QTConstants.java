@@ -331,11 +331,7 @@ public interface QTConstants {
 	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
-	
-	// 36678 -start-
-	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
-	// 36678 -end-
-	
+
 	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
 	
 	// #29007 Start Vinod
@@ -373,4 +369,5 @@ public interface QTConstants {
 	// #36757 Start Vinod
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 End Vinod
+>>>>>>> refs/remotes/origin/release-pre-prd
 }
