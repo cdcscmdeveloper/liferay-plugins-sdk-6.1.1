@@ -213,40 +213,49 @@ public class TrustGateHelper {
 		// externalContext.redirect(url4);
 	}
 	
-	public void resetPIN(String identificationNo, String epNo, String email) throws IOException, PortalException, SystemException {
-		log.info("TRUSTGATE RESET:" + identificationNo + "||" + epNo + "||" + email);
-
+	public void resetPIN(String identificationNo, String epNo, String email)
+			throws IOException, PortalException, SystemException {
+		log.info("TRUSTGATE RESET:" + identificationNo + "||" + epNo + "||"
+				+ email);
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-
-		String url = getDns() + "/" + getTgUrl("resetpin") + encodedtoken;// 34807
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		log.info("------->TG updateCR token:"+token);
+		log.info("------->TG updateCR encodedtoken:"+encodedtoken);
+		String url = getDns() + "/" + getTgUrl("resetpin") + encodedtoken;//34807
 
 		externalContext.redirect(url);
 	}
 
-	public void changePIN(String identificationNo, String epNo) throws IOException, PortalException, SystemException {
+	public void changePIN(String identificationNo, String epNo)
+			throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE CHANGE PIN:" + identificationNo + "||" + epNo);
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-
-		String url = getDns() + "/" + getTgUrl("changepin") + encodedtoken;// 34807
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		log.info("------->TG changepin token:"+token);
+		log.info("------->TG changepin encodedtoken:"+encodedtoken);
+		String url = getDns() + "/" + getTgUrl("changepin") + encodedtoken;//34807
 
 		externalContext.redirect(url);
 	}
-	
-	public void updateChallResp(String identificationNo, String epNo) throws IOException, PortalException, SystemException {
-		log.info("TRUSTGATE UPDATE CHALL RESP:" + identificationNo + "||" + epNo);
 
+	public void updateChallResp(String identificationNo, String epNo)
+			throws IOException, PortalException, SystemException {
+		log.info("TRUSTGATE UPDATE CHALL RESP:" + identificationNo + "||"
+				+ epNo);
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-
-		String url = getDns() + "/" + getTgUrl("updateCR") + encodedtoken;// 34807
+		ExternalContext externalContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		log.info("------->TG updateCR token:"+token);
+		log.info("------->TG updateCR encodedtoken:"+encodedtoken);
+		String url = getDns() + "/" + getTgUrl("updateCR") + encodedtoken;//34807
 
 		externalContext.redirect(url);
 	}

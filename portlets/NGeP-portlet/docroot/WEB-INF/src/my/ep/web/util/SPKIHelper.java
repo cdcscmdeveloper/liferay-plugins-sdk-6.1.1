@@ -83,6 +83,7 @@ public class SPKIHelper {
 				throw new EpException(resDTO.getErrorMessage());
 			}
 			tok = resDTO.getToken();
+			log.info("generated token:"+tok);
 		} catch (Exception ex) {
 			log.info("Error call generateSecurityToken for:" + identificationNo + "||" + epNo + "||" + " ERROR MSG:" + ex.getMessage());
 			ex.printStackTrace();
