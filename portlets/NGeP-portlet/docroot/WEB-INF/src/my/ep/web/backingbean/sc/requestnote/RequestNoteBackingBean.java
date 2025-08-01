@@ -5636,7 +5636,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return {@code true} if the record status is CANCELLED or EXPIRED with
 	 *         disqualifying conditions; {@code false} otherwise.
 	 */
-	private boolean isCancelledOrBlacklist(Integer recordStatus, SmDisciplinaryAction action) {
+	private boolean isCancelledOrBlacklist(SmDisciplinaryAction action) {
 		return (action.isCancelRegistration() || action.isBlacklistOwner());
 	}
 
