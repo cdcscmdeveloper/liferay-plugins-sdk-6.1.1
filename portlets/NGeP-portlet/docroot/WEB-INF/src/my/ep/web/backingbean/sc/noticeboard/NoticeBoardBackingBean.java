@@ -1421,6 +1421,7 @@ public class NoticeBoardBackingBean extends
 							orderedStatuses.indexOf(QTStatusConst.QT_AWARDED));
 					
 					statusIds.addAll(orderedStatuses);
+					statusIds.add(QTStatusConst.QT_CLOSE_PERMANENTLY); //Bug #38702
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_AWARDED);
@@ -1460,6 +1461,7 @@ public class NoticeBoardBackingBean extends
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CANCELLED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_CANCELLED);
+					statusIds.add(QTStatusConst.QT_CANCELED_DUETO_PROPOSALVALIDITY_EXPIRED);//Bug #38702
 					
 				} else {
 					
