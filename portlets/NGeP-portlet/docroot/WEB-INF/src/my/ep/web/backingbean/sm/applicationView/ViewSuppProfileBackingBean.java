@@ -526,7 +526,9 @@ public class ViewSuppProfileBackingBean extends
 						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 			}
 
-			boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor()) && !supplier.isBumi();
+			boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
+					&& !supplier.isBumi()
+					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledBumiAccount(supplier));
 			if (noBumiAccount) {
 				messages.add(MessageUtils.getMessage(MessageConst.ERROR_760559, new String[] {},
 						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
