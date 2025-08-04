@@ -14,10 +14,22 @@
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			showSummary="true"></p:messages>
 
-		<div style="text-align: right; min-height: 40px;">
-			<div style="float: left; clear: both;">
+		<div
+			style="display: flex; justify-content: space-between; align-items: center; min-height: 40px;">
+			<div style="flex: 1; text-align: left;">
 				<p:commandButton value="#{lbl['lbl.cm.back']}"
 					action="#{codificationBackingBean.backToPrev}" />
+			</div>
+			<div style="text-align: right;">
+				<ui:remove>START : #35503</ui:remove>
+				<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
+					action="#{auditCodificationManagementReportBackingBean.redirectToAuditTrailView(
+					codificationBackingBean.managedBean.segmentCode,
+					codificationBackingBean.managedBean.familyCode,
+					codificationBackingBean.managedBean.classCode,
+					codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode)}"
+					rendered="#{auditCodificationManagementReportBackingBean.isAuditTrailView()}" />
+				<ui:remove>END : #35503</ui:remove>
 			</div>
 		</div>
 
