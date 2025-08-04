@@ -2750,4 +2750,29 @@
 		</property>
 	</bean>
 	<!-- #36125 - End -->
+	<!-- #32125 - Start -->
+	<bean id="PM_USER_ID_RPT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="userId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.user.UserDAO" />
+		<property name="searchMethod" value="retrieveUserLoList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="userName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.search.name" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="identificationNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.icNumber" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- #32125 - End -->
 </beans>
