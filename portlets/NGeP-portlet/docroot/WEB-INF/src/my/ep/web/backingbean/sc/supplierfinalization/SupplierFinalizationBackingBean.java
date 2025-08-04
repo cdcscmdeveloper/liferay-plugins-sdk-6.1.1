@@ -2484,10 +2484,6 @@ public class SupplierFinalizationBackingBean extends
 			if (scQtRecommend.isCancelled()) { 
 				++cancelledItemsCount; 
 			} 
-			if (!this.getManagedBean().isSubmit()) {
-				continue; 
-			} 
-
 			boolean allowToAward = !(scQtRecommend.isAwardedItem() || scQtRecommend.isCancelled()
 					|| scQtRecommend.isDisabled());
 			if (toBeValidated && allowToAward) {
