@@ -5824,8 +5824,8 @@ public class SimpleQuoteBackingBean extends
 			//#38236 - Start
 			reqDTO.setUserLocale(facesScopes.getUserLocale());
 			//#38236 - End
-			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);		
-			
+
+			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
 			
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = getManagedBean().getScQuote();

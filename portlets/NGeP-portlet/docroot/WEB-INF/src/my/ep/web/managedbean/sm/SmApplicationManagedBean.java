@@ -4705,7 +4705,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelRoleMsg = personnelRoleMsg;
 	}
 	//30762-End 
-
+		
 	//Start 32008
 	public boolean isUpsCannotEdit() {
 		return upsCannotEdit;

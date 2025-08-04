@@ -6919,6 +6919,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	} /*END*/
 
 	//38255-remove getSchInfo and setSchInfo
+	
 	public String getNavi() {
 		return navi;
 	}
