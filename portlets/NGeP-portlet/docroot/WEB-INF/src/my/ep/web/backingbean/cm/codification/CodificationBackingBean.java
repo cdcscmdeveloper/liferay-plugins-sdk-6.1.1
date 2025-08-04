@@ -107,6 +107,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public static final String NAV_TO_ASSIGN_PRODUCT_CODE = "assignProductCode";
 	public static final String NO_69 = "69";
 	public static final String NAV_SEARCH_UNSPC_TO_ASSIGN = "searchUnspscToAssign";
+	public static final String NAV_TO_SERVICE_SEARCH = "auditServiceSearch"; //35503
 
 	private static Logger log = Logger.getLogger(CodificationBackingBean.class);
 
@@ -766,6 +767,38 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		System.out.println("NAV_TO_EXTENSION_SEARCH");
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
 	}
+	
+	// 35503 Start
+	public String goToServiceSearch(CmUnspsc unspscObj) {
+
+		ICodificationSO unspscSO = BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+		reqDTO.setUnspscCode(unspscObj.getUnspscCode());
+		CodificationResDTO resDTO = unspscSO.retrieveUNSPSCByCommodityCode(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			CmUnspsc commodity = resDTO.getCommodityObj();
+
+			this.getManagedBean().setSelectedUNSPSCObj(commodity);
+
+			this.getManagedBean().setClassCode(commodity.getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setClassTitle(commodity.getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setClassTitleEng(commodity.getCmUnspsc().getUnspscTitleEng());
+
+			this.getManagedBean().setFamilyCode(commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setFamilyTitle(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setFamilyTitleEng(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+
+			this.getManagedBean().setSegmentCode(commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setSegmentTitle(commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setSegmentTitleEng(
+					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+		}
+
+		return NAV_TO_SERVICE_SEARCH + "?faces-redirect=true";
+	}
+	// 35503 End
 
 	public String goToExtensionSearchPortal(CmUnspsc unspscObj) {
 		log.debug("**********goToExtensionSearch************");
@@ -1709,7 +1742,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		this.getManagedBean().setRefreshPageNoFlag(true);
 
-		return "codificationView";
+		// 35503 Start
+		if (isAuditTrailView()) {
+			return "auditCodificationView";
+		} else {
+			return "codificationView";
+		}
+		// 35503 End
 	}
 
 	public String backToPrevPortal() {
@@ -3188,9 +3227,36 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		// this.renewSesionObject();
 		resetAction();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, "codificationView");
+		// 35503 Start
+		if (isAuditTrailView()) {
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "auditCodificationView");
+		} else {
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "codificationView");
+		}
+		// 35503 End
 	}
+	
+	// 35503 Start
+	/**
+	 * Only this role is accessible for Audit Trail page
+	 */
+	public boolean isAuditTrailView() {
+		return hasAnyRole(RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_INTERNAL.value(),
+				RoleCode.AUDITOR_GENERAL.value(), RoleCode.EP_ADMIN.value());
+	}
+
+	/**
+	 * Check if only this role is audit accessible
+	 */
+	private boolean hasAnyRole(String... roles) {
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	// 35503 End
 
 	public String getItemTypeParameter() {
 		return itemTypeParameter;
