@@ -61,6 +61,8 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean showRobExpiredDate = false;
 	private boolean showRobExpiredDateMesej = false;
 	
+	// #28895_35501 - AUDIT TRAIL SM
+	private PmUser oldSelectedUser;
 	public ProfilePersonalizationManagedBean(){}
 	
 	/**
@@ -379,4 +381,13 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 		this.showRobExpiredDateMesej = showRobExpiredDateMesej;
 	}
 
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public PmUser getOldSelectedUser() {
+		return oldSelectedUser;
+	}
+
+	public void setOldSelectedUser(PmUser oldSelectedUser) {
+		this.oldSelectedUser = oldSelectedUser;
+	}
+	// #28895_35501 End
 }

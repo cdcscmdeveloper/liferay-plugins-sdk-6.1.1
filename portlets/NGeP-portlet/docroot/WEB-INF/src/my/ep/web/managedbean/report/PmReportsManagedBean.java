@@ -71,7 +71,7 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String selectedAccessType;
 	private Long selectedApplicationStatus;
 	private Date monthlyDate;//#29486
-	
+
 	//29991 start
 	private PmOrgProfile selectedSupplier;
 	private String pmCompanyName;
@@ -79,7 +79,7 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String smCompanyName;
 	private String smSupplierName;
 	//29991 end
-	
+
 	private PmFinancialOrg selectedFinancialOrg; //#36719
 	
 	public PmReportsManagedBean(){}
