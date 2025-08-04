@@ -2300,7 +2300,8 @@ return scQt;
 
 			qt.setScQtCommittees(null);
 			
-			
+
+			qtReqDTO.setSuppResp(this.getManagedBean().getSuppResp());//#21962 new remark for supplier
 			qtReqDTO.setDigiSignData(digiSign);
 			qtReqDTO.setPayLoad(dataType);
 			FacesScopes facesScope = new FacesScopes();
@@ -2320,31 +2321,12 @@ return scQt;
 							qt.getQtId(), 
 							QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
 				}
-				
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														getMessgeConstant(outcome),
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_QUOTATION),
-																qt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+				//#21692 - Start
+				successMessage(getMessgeConstant(outcome), ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, qt.getQtNo(), Boolean.TRUE);
 				// clear data
 				super.renewSesionObject();
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-				
+				//#21692 - End
 			}
 
 		} finally {
