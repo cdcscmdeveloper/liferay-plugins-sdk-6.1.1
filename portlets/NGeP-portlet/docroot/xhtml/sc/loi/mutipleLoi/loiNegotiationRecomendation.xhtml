@@ -551,7 +551,7 @@
 							<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 								style="text-align:center;">
 								<h:outputText
-									rendered="#{supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}"
+									rendered="#{supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or lOIDetailBackingBean.managedBean.multiLOIZoneDetails.get(lOIDetailBackingBean.managedBean.zoneActiveIndex).branchDeactivated}"
 									value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
 							</p:column>
 
@@ -793,7 +793,7 @@
 							<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 								style="text-align:center;">
 								<h:outputText
-									rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}"
+									rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or lOIDetailBackingBean.managedBean.multiLOIZoneDetails.get(lOIDetailBackingBean.managedBean.zoneActiveIndex).branchDeactivated}"
 									value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
 							</p:column>
 						</p:dataTable> <ui:remove> #28777#29729 - End </ui:remove></td>
