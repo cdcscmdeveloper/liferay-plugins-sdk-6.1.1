@@ -158,17 +158,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	}
 
 	/**
-	 * @param search
-	 * @return
-	 * @throws Exception
-	 */
-	public boolean searching(boolean search) throws AuditPMException {
-		getManagedBean().getSearchBean().setSearching(search);
-		return getManagedBean().getSearchBean().isSearching();
-	}
-
-	/**
-	 * search Master Location
+	 * search Master UserOrg
 	 * 
 	 */
 	private class SearchMasterPagingDataModel extends PagingDataModel<VAuditPMDTO> {
