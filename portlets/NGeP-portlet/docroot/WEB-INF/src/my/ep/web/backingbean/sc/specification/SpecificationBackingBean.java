@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright ï¿½ 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -55,7 +55,6 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
-import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -13197,7 +13196,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 								
 									finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 									finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-									finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+									// Bug #38208@Syazani 12/06/2025 - line removed
 									
 									localCheckList.setPmStatus(scQtCheckList.getPmStatus());
 									
@@ -13997,7 +13996,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 								
 								finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 								finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-								finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+								// Bug #38208@Syazani 12/06/2025 - line removed
 								
 								scQtCheckList.setEdited(false);
 
