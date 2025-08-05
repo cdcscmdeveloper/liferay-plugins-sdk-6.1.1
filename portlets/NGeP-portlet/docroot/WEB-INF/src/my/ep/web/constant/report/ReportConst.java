@@ -1174,6 +1174,9 @@ public class ReportConst implements Serializable{
 	public static final String AUDITOR_INTERNAL = "AUDITOR_INTERNAL";
 	public static final String AUDITOR_GENERAL = "AUDITOR_GENERAL";
 	// Bug #34996@Syazani 16/08/2023 -- End
+	// #38526 Start Vinod 24/07/2025
+	public static final String PARAM_REPORT_FLOWTYPE = "flowType";
+	// #38526 End Vinod 24/07/2025
 	
 	public ReportConst(){}
 	

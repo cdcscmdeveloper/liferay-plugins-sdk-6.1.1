@@ -519,8 +519,7 @@ public class ViewSuppProfileBackingBean extends
 			List<String> cancelledCategoryCodes = new ArrayList<>();
 			cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
 
-			boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes)
-					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledCategories(supplier));
+			boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes);
 			if (noCancelledCategory) {
 				messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
 						new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
