@@ -22,7 +22,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.proj.done.for']}" /></td>
+								value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /></td>
 						<td style="width: 66%"><p:selectOneRadio disabled="true"
 								id="clientType"
 								value="#{cc.attrs.mBean.selectedCompExpMaster.clientType}">
@@ -32,7 +32,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.agency.name']}" /></td>
+								value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
 								value="#{cc.attrs.mBean.selectedCompExpMaster.agencyName}" /></td>
@@ -40,7 +40,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.file.ref.no']}" /></td>
+								value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
 								value="#{cc.attrs.mBean.selectedCompExpMaster.fileReferenceNo} #{cc.attrs.mBean.selectedCompExpMaster.fileExtensionNo}" /></td>
@@ -48,7 +48,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.loa.no']}" /></td>
+								value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
 								value="#{cc.attrs.mBean.selectedCompExpMaster.loaNo}" /></td>
@@ -56,7 +56,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.proc.cont.proj.title']}" /></td>
+								value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /></td>
 						<td style="width: 66%"><h:outputText
 								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 								styleClass="outputLabel-view"
@@ -65,7 +65,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.contract.value']}" /></td>
+								value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
 								value="#{cc.attrs.mBean.selectedCompExpMaster.contractValue}" /></td>
@@ -73,7 +73,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.payment.method']}" /></td>
+								value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
 								value="#{cc.attrs.bBean.getParameterDesc(cc.attrs.mBean.selectedCompExpMaster.paymentMethod)}" /></td>
@@ -81,7 +81,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.proc.method']}" /></td>
+								value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
 								value="#{cc.attrs.bBean.getParameterDesc(cc.attrs.mBean.selectedCompExpMaster.procumentMode)}" /></td>
@@ -89,7 +89,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.contract.eff.date']}" />
+								value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" />
 						</td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
@@ -101,7 +101,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.contract.exp.date']}" />
+								value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" />
 						</td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
@@ -113,7 +113,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.master.popup.contract.status']}" /></td>
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status']}" /></td>
 						<td style="width: 66%"><c:if
 								test="#{cc.attrs.mBean.selectedCompExpMaster.contractStatus eq ParameterConst.contractStatusInactive}">
 								<h:outputText styleClass="outputLabel-view"
@@ -133,7 +133,7 @@
 							</c:if></td>
 					</tr>
 				</table>
-				<p:panel header="#{lbl['lbl.sm.comp.exp.master.popup.cat.code']}"
+				<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 					toggleable="true">
 					<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
 						value="#{cc.attrs.mBean.selectedCompExpMaster.compExpMasterCats}"

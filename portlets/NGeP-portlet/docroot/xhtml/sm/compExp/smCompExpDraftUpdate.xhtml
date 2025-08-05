@@ -46,7 +46,7 @@
 				</tr>
 				<p:outputPanel
 					rendered="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal
-					and smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeCt}">
+					and smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}">
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2 mandatory"
@@ -65,13 +65,13 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							styleClass="mandatory" value="*"
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeCt}" /></td>
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}" /></td>
 					<td style="width: 66%"><p:inputText id="agencyName"
 							readonly="#{smCompExpMB.selectedDraft.clientType eq null or smCompExpMB.selectedDraft.agencyName ne null
 							or smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal}"
 							size="60" value="#{smCompExpMB.selectedDraft.agencyName}" /> <p:outputPanel
 							rendered="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal
-							and smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeCt}">
+							and smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}">
 							<p:commandLink action="#{smPtjPopupBB.initPtjPopup}"
 								oncomplete="blockWidget.hide(),smPtjPopupWV.show()"
 								onclick="blockWidget.show()" update=":form" process="@form">
@@ -113,7 +113,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
 					<td style="width: 66%"><p:inputText
-							readonly="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeCt
+							readonly="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdCt
 							and smCompExpMB.selectedDraft.loaNo ne null}"
 							value="#{smCompExpMB.selectedDraft.loaNo}" /></td>
 				</tr>
@@ -179,9 +179,9 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeCt}" /></td>
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}" /></td>
 					<td style="width: 66%"><h:outputText
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeCt}"
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdCt}"
 							styleClass="outputLabel-view"
 							value="#{smCompExpMB.selectedDraft.contractExpDate}">
 							<f:convertDateTime
@@ -192,7 +192,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							readonlyInput="true" showOn="button"
 							value="#{smCompExpMB.selectedDraft.contractExpDate}"
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeCt}">
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}">
 							<p:ajax event="dateSelect" listener="#{smCompExpBB.dateChange}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								process="@form" update=":form" />
@@ -233,7 +233,7 @@
 						</c:if></td>
 				</tr>
 				<p:outputPanel
-					rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeCt}">
+					rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}">
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
@@ -379,7 +379,7 @@
 				value="#{lbl['lbl.sm.comp.exp.update.delete.btn']}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{smCompExpBB.onDeleteDraft}"
-				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeCt}" />
+				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}" />
 			<p:commandButton id="btnDeclare"
 				value="#{lbl['lbl.sm.comp.exp.update.declare.btn']}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
