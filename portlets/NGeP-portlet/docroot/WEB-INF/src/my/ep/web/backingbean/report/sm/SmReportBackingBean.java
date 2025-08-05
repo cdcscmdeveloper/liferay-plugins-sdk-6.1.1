@@ -3453,13 +3453,24 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		String suppType = getManagedBean().getSupplierType();
 		String searchZone = "|pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
+		String searchZones = "pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
 		String zone = getManagedBean().getZone();
 		
 		if(StringUtils.isBlank(suppType) && StringUtils.isBlank(zone)){
 			return sb.toString();
 		}
 			
-		if ((StringUtils.isBlank(suppType) || suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)) && !StringUtils.isBlank(zone)){
+		if ((StringUtils.isBlank(suppType)) && !StringUtils.isBlank(zone)){
+			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
+				sb.append(searchZone + "1");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
+				sb.append(searchZone + "1");
+				sb.append("*" + searchZones + "2");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)){
+				sb.append(searchZone + "1");
+				sb.append("*" + searchZones + "3");
+			}
+		}else if(suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
 			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
 				sb.append(searchZone + "1");
 			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
