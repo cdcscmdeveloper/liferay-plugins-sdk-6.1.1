@@ -202,7 +202,13 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String docTitle;
 	
 	private boolean assignCodeFlg = false;
-
+	
+	// 35503 Start
+	private String segmentTitleEng;
+	private String familyTitleEng;
+	private String classTitleEng;
+	private String commodityTitleEng;
+	// 35503 End
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
 		return extensionSearchItemDataModel;
@@ -1560,4 +1566,38 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.typeList = typeList;
 	}
 	/*[#27625] end*/
+	
+	// 35503 Start
+	public String getSegmentTitleEng() {
+		return segmentTitleEng;
+	}
+
+	public void setSegmentTitleEng(String segmentTitleEng) {
+		this.segmentTitleEng = segmentTitleEng;
+	}
+
+	public String getFamilyTitleEng() {
+		return familyTitleEng;
+	}
+
+	public void setFamilyTitleEng(String familyTitleEng) {
+		this.familyTitleEng = familyTitleEng;
+	}
+
+	public String getClassTitleEng() {
+		return classTitleEng;
+	}
+
+	public void setClassTitleEng(String classTitleEng) {
+		this.classTitleEng = classTitleEng;
+	}
+
+	public String getCommodityTitleEng() {
+		return commodityTitleEng;
+	}
+
+	public void setCommodityTitleEng(String commodityTitleEng) {
+		this.commodityTitleEng = commodityTitleEng;
+	}
+	// 35503 End
 }

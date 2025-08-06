@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<script>
+		$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text')
+				.html("#{lbl['lbl.cm.item.code.search.title']}");
+	</script>
+
+	<h:panelGroup id="cmUNSPSCsearchID">
+		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="panel">
+			<table style="width: 100%; height: 100%;">
+				<tr>
+					<td width="100%">
+						<h:outputText styleClass="instruction"
+						style="float:left;margin-left:5px;" escape="false"
+						value="#{lbl['lbl.cm.search.insturction.support']}" />
+					</td>
+				</tr>
+			</table>
+			<p:remoteCommand name="updateAutoComplete" update=":form:autocompleteId"></p:remoteCommand>
+			<br/>
+			<table style="width: 100%;">
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.cm.unspsc.itype']}" />
+					</td>
+					<td>
+						<p:selectOneMenu id="itemType" value="#{codificationBackingBean.managedBean.typeName}" style="width:30%">
+							<f:selectItems value="#{codificationBackingBean.managedBean.typeList}" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" />
+					</td>
+					<td colspan="1">
+						<p:autoComplete id="autocompleteId" size="40"
+							title="#{lbl['lbl.cm.eight.digits']}" maxlength="8"
+							value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode.unspscCode}"
+							completeMethod="#{codificationBackingBean.autoCompleteUnspsc}"
+							maxResults="15" dropdown="false" forceSelection="false" />
+						<p:graphicImage id="itemNameID" value="/css/images/design/tooltips.png" />
+						<p:tooltip for="itemNameID">
+							<p:outputLabel escape="false" style="text-align: left;" value="#{lbl['lbl.tooltip.item.code']}" />
+						</p:tooltip>
+					</td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}" />
+					</td>
+					<td>
+						<p:inputText title="#{lbl['lbl.cm.title.english']}" id="itemTitle"
+							value="#{codificationBackingBean.managedBean.titleFilterBean.searchValue}"
+							size="40" />
+						<p:graphicImage id="itemCodeID" value="/css/images/design/tooltips.png" />
+						<p:tooltip for="itemCodeID">
+							<p:outputLabel escape="false" value="#{lbl['lbl.tooltip.product.service']}" />
+						</p:tooltip>
+					</td>
+				</tr>
+			</table>
+			<div style="text-align: right;">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{codificationBackingBean.unspscSearch}"
+					update="unspscTableID itemCodeSearchMsg" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{codificationBackingBean.resetAction}"
+					update="panel unspscTableID" />
+			</div>
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
+			<p:dataTable tableStyleClass = "fixedTable" id="unspscTableID" lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{codificationBackingBean.managedBean.searchDataModel}"
+				var="unspscObj" width="100%" rows="10">
+
+				<ac:paginator for="unspscTableID" />
+				
+				<p:column sortBy="#{unspscObj.unspscCode}" style="width: 100px; text-align: center; white-space: nowrap;">
+					<f:facet name="header">
+            			#{lbl['lbl.cm.unspsc.code']}
+        			</f:facet>
+					<h:panelGroup layout="block" style="overflow: hidden;">
+						<p:commandLink
+							action="#{codificationBackingBean.goToExtensionSearch(unspscObj)}"
+							rendered="#{codificationBackingBean.productCode(unspscObj.unspscCode) and (unspscObj.unspscLevel eq 3)}">
+                				#{unspscObj.unspscCode}
+            			</p:commandLink>
+						<p:commandLink
+							action="#{codificationBackingBean.goToServiceSearch(unspscObj)}"
+							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}">
+                				#{unspscObj.unspscCode}
+            			</p:commandLink>
+						<p:commandLink
+							action="#{codificationBackingBean.unspscPopUpSearch(unspscObj)}"
+							onclick="unspscPopUp.show()" update=":form:codificationPopUpId"
+							rendered="#{unspscObj.unspscLevel ne 3}">
+                				#{unspscObj.unspscCode}
+            			</p:commandLink>
+					</h:panelGroup>
+				</p:column>
+				<p:column
+					style="word-wrap: break-word !important; white-space: normal !important; width: 45% !important;"
+					sortBy="#{unspscObj.unspscTitle}">
+					<f:facet name="header">
+						#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang']).concat(')')}
+					</f:facet>
+					#{unspscObj.unspscTitle}
+				</p:column>
+				<p:column
+					style="word-wrap: break-word !important; white-space: normal !important; width: 45% !important;"
+					sortBy="#{unspscObj.unspscTitleEng}">
+					<f:facet name="header">
+						#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang.eng']).concat(')')}
+					</f:facet>
+					#{unspscObj.unspscTitleEng}
+				</p:column>
+			</p:dataTable>
+			<div class="clear" />
+		</p:panel>
+		
+		<p:dialog id="unspscPopUp" widgetVar="unspscPopUp" modal="true"
+			header="#{lbl['lbl.cm.item.code.search']}" width="800" height="400">
+			<ui:include src="auditCodificationSearchPopUp.xhtml" />
+		</p:dialog>
+	</h:panelGroup>
+</ui:composition>

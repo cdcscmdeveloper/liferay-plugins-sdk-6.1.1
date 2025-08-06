@@ -2739,6 +2739,15 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null != newValue) {
 				qtDtl.validateNewValueForValidityDays((int) newValue);
 			}
+
+			//#21692 - Start
+			if (null != newValue && null != valueBean.getOldValue()
+					&& (int) newValue > (int) valueBean.getOldValue()) {
+				this.getManagedBean().setProposalValidityChangeValue(true);
+			} else {
+				this.getManagedBean().setProposalValidityChangeValue(false);
+			}
+			//#21692 - End
 		}
 		// #29425 - end
 
@@ -3554,6 +3563,13 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	//20200210@asyrafhaziq_Bug #27381&#26694  - End
 
+	//#21692 - Start
+	/**
+	 * Check if current QT Status is in between QT Publication and QT Closed/Awarded
+	 * 
+	 * @param currentStatusId
+	 * @return
+	 */
 	public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
 		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION, QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
 				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION, QTStatusConst.QT_PENDING_LOI, QTStatusConst.QT_PENDING_LOA,
@@ -3566,6 +3582,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		return Boolean.FALSE;
 	}
+	//#21692 - End
 
 	/* :::Enhancement #25638 #29 - start::: */
 	public boolean isStatusInQTReviseGroupStatus(Long currentStatusId) {
@@ -3701,19 +3718,25 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
 			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
 		
-			for (ScQtCheckList checklist : scQtTechChecklist) {
-				if (checklist.getDefinationType().getParameterCode()
-						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
-
-					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
-					}
-				}
-			}
+			//28748 - 38426 - start
+			if (this.isStatusLessThanOrEquals(status,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH,
+					QTStatusConst.QT_ORDERED_STATUSES)
+					&& CollectionUtils.isNotEmpty(scQtTechChecklist)) {
+				for (ScQtCheckList checklist : scQtTechChecklist) {
+					if (checklist.getDefinationType().getParameterCode()
+							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+						boolean twoTierAndDemoRequired = type
+								.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired;
+						boolean oneTier = type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER);
+						if (twoTierAndDemoRequired || oneTier) {
+							RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
+							break;
+						}
+					} 
+				} 
+			} 
+			//28748 - 38426 - end
 
 			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)
 					&& !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {

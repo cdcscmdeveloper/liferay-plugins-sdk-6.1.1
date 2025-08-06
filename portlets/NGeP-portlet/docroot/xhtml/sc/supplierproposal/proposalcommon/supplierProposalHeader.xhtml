@@ -17,8 +17,12 @@
 							value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td class="header-info-text">
 						<ui:remove>bug #33090,#19287 -start-</ui:remove>
-						<p:commandLink process="@this" partialSubmit="true"
+						<ui:remove>#25791 start </ui:remove> 
+						<p:commandLink
+							process="@this" partialSubmit="true"
+							styleClass="commandLink_link"
 							action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,supplierProposalDetailBackingBean.managedBean.qt,false)}">
+							<ui:remove>#25791 end </ui:remove>
 							<h:outputText
 								value="#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}"
 								escape="false" />

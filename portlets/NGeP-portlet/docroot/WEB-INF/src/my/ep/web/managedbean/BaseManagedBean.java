@@ -178,6 +178,8 @@ public abstract class BaseManagedBean implements Serializable {
 	//#28784 - Demo WIP - To display QT BPM version
 	private String bpmVersionNo;
 	private boolean newVersion;
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean forceReplace;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1048,6 +1050,14 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setWipStatusMax(Integer wipStatusMax) {
 		this.wipStatusMax = wipStatusMax;
 	}	
+
+	public String getBpmVersionNo() {
+		return bpmVersionNo;
+	}
+
+	public void setBpmVersionNo(String bpmVersionNo) {
+		this.bpmVersionNo = bpmVersionNo;
+	}
 	
 	public boolean isNewVersion() {
 		return newVersion;
@@ -1065,4 +1075,13 @@ public abstract class BaseManagedBean implements Serializable {
 		this.currentTaskCreatedDate = currentTaskCreatedDate;
 	}
 	//25037 - end
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isForceReplace() {
+		return forceReplace;
+	}
+
+	public void setForceReplace(boolean forceReplace) {
+		this.forceReplace = forceReplace;
+	}
+	// #28895_35501 End
 }

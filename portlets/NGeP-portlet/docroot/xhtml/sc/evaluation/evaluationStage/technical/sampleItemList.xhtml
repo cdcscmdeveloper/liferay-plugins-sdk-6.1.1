@@ -7,12 +7,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup>
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<ui:param name="isManSpecAndCompliance" value="#{evaluationBackingBean.displayMandatorySpecAndComplianceColumnSample()}" /> 
+	<ui:remove>#29187 End Vinod</ui:remove>
 		<h:panelGroup id="sampleItemList">
 			<p:panel header="#{lbl['lbl.sc.item.list']}"
 				id="evaluationStageTechnicalSampleItemsListForDatatable"
 				toggleable="true">
 				 <ui:remove> #11104 - start </ui:remove>
-				<p:dataTable var="sampleItem" id="techSampleEvaluateId" rows="50"
+				<p:dataTable var="sampleItem" id="techSampleEvaluateId" rows="10"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{evaluationBackingBean.managedBean.sampleItemList}"
 					selectionMode="single"
@@ -27,8 +30,9 @@
 					<p:ajax event="rowSelect" process="@this" partialSubmit="true"
 						update="@([id$=samplespecLists])"
 						listener="#{evaluationBackingBean.retriveSpecificationsByItem}"></p:ajax>
+					<ui:remove> #29187 updated width Vinod </ui:remove>
 					<p:column headerText="#{lbl['lbl.sc.item.name']}"
-						style="width:55%;white-space: normal;">
+						style="width:15%;white-space: normal;">
 						<h:outputText
 							value="#{evaluationBackingBean.replaceWithBR(sampleItem.scRequestItem.tplSpecQuestion.clItem)}"
 							escape="false" style="white-space: normal;word-wrap: break-word;" />
@@ -51,6 +55,12 @@
 						#{sampleItem.scQtSampleLable.lableNo} - #{sampleItem.subLableNo}
 					</p:column>
 					<ui:remove> #11104 - end </ui:remove>
+					<ui:remove>#29187 Start Vinod</ui:remove>
+					<p:column headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}"
+						style="width:10%;white-space: normal;" rendered="#{isManSpecAndCompliance}">
+						<h:outputText value="#{sampleItem.scRequestItem.tplSpecQuestion.mandatorySpecForSample ? lbl['lbl.txt.yes']:''}"/>
+					</p:column>
+					<ui:remove>#29187 End Vinod</ui:remove>
 					<ui:remove> #11104 - start </ui:remove>
 					<p:column style="width:15%"
 						rendered="#{evaluationBackingBean.managedBean.itemSampleReq}">
@@ -58,13 +68,15 @@
 							<h:outputText value="*" styleClass="mandatory"></h:outputText>
 							<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"></h:outputText>
 						</f:facet>
+						<ui:remove>#29187 Vinod Added Compliance checking</ui:remove>
 						<p:inputText id="sampleaddressmanualScoreEvaluation"
 							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}"
-							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+							disabled="#{(sampleItem.compliance ne null and !sampleItem.compliance) or evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 								or evaluationBackingBean.managedBean.tabTechnicalIndex eq SourcingConstants.TECHNICAL_TAB_ACTIVE_INDEX}"
 							size="15" value="#{sampleItem.userScore}" maxlength="3"
 							style="text-align:right">
+							<ui:remove>#29187 Vinod Added Compliance checking</ui:remove>
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 								maxIntegerDigits="3" integerOnly="true" />
@@ -83,6 +95,42 @@
 							for="sampleaddressmanualScoreEvaluation" display="icon"></p:message>
 					</p:column>
 					<ui:remove> #11104 - end </ui:remove>
+					<ui:remove>#29187 Start Vinod</ui:remove>
+					<p:column style="width:10%;" rendered="#{isManSpecAndCompliance}">
+						<f:facet name="header">
+							<h:outputText value="*" styleClass="mandatory"></h:outputText>
+							<h:outputText value="#{lbl['lbl.sc.tec.compliance']}"/>
+							<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.compliance.sample.tooltip']}" />
+						</f:facet>
+						<h:selectOneMenu id="itemCompliance"
+										 label="#{lbl['lbl.sc.tec.compliance']}"
+										 rendered="#{sampleItem.scRequestItem.tplSpecQuestion.mandatorySpecForSample}"
+										 disabled="#{evaluationBackingBean.managedBean.readOnly 
+										 			or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
+										 valueChangeListener="#{evaluationBackingBean.itemComplianceChangeControl}"
+										 value="#{sampleItem.compliance}">
+							<p:ajax event="change" process="@this" partialSubmit="true" update="@all" listener="#{evaluationBackingBean.onchangeCompliance(sampleItem)}" />
+							<f:selectItems value="#{evaluationBackingBean.getComplianceDropdownValues()}" />
+						</h:selectOneMenu>
+						<p:message id="itemComplianceMsg" for="itemCompliance" display="icon" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.tpl.spec.content.comment']}"
+						style="width:15%;" rendered="#{isManSpecAndCompliance}">
+						<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly 
+													or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}" 
+			  							 style="width:calc(100% - 15px);" 
+										 value="#{sampleItem.remarkMandatorySpec}" 
+										 rows="1" 
+										 maxlength="100" 
+										 onkeyup="limitTextArea(this,100);" 
+										 onkeydown="limitTextArea(this,100);" 
+										 onmouseout="limitTextArea(this,100);">
+										 <p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+						</p:inputTextarea>
+					</p:column>
+					<ui:remove>#29187 End Vinod</ui:remove>
 				</p:dataTable>
 				<p:spacer height="7px;"></p:spacer>
 				

@@ -40,12 +40,13 @@
 			value="#{svoSiteVisitBackingBean.managedBean.supplierCategory}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<!-- #28175 start -->
+			<!-- #37605 -->
 			<c:choose>
 				<!-- #28175 Reopen #94 Start -->
 				<c:when test="#{!svoSiteVisitBackingBean.isLatestCatCodeDesc(false,
 							svoSiteVisitBackingBean.managedBean.smSvTask.smAppl)}">
 		        <!-- #28175 Reopen #94 End -->
-					<p:column headerText="#{lbl['lbl.sm.category.description']}">
+					<p:column headerText="#{lbl['lbl.sm.category.description']}" style="white-space: normal; width: 88%;">
 						#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code} 
 						: 
 						#{cat.categoryL3Name} 

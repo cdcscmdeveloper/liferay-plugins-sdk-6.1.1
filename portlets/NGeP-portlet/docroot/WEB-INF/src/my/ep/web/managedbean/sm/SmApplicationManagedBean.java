@@ -605,14 +605,26 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRecommendRejectReason;
 	//#15629 - END
 	
+	// #30974 && 37896 - START
+	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
+	private List<PmReasonDesc> selectedRejectReasonDescs;
+	private boolean showDifferenceRejection;
+	// #30974 && 37896 - END
+	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
+	//13362
+	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
 	
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
 	private boolean emptyMandatoryDocHistory;
 	private boolean emptyNonMandatoryDocHistory;
 	//#11641 - END
+	
+	private boolean poApproverPersonnelErr;//#31130-start
+	private String msgPersonnelErr;
+	private boolean poApproverAcedemicErr;//#31130-end
 	
 	//#30691 - START - 26112021
 	private boolean poApproverChgBusiness;
@@ -4588,6 +4600,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.displayBranches = displayBranches;
 	}
 	//#34135 END
+	//13362 START
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
+		return overlapCategoryListMalay;
+	}
+
+	public void setOverlapCategoryListMalay(List<SmBulkApplOverlapCatVO> overlapCategoryListMalay) {
+		this.overlapCategoryListMalay = overlapCategoryListMalay;
+	}
+	//13362 END
 	
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
@@ -4652,6 +4673,32 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.checkBranch = checkBranch;
 	}
 	//#32968 END
+	
+	//31130-start
+	public boolean isPoApproverPersonnelErr() {
+		return poApproverPersonnelErr;
+	}
+
+	public void setPoApproverPersonnelErr(boolean poApproverPersonnelErr) {
+		this.poApproverPersonnelErr = poApproverPersonnelErr;
+	}
+
+	public String getMsgPersonnelErr() {
+		return msgPersonnelErr;
+	}
+
+	public void setMsgPersonnelErr(String msgPersonnelErr) {
+		this.msgPersonnelErr = msgPersonnelErr;
+	}
+
+	public boolean isPoApproverAcedemicErr() {
+		return poApproverAcedemicErr;
+	}
+
+	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
+		this.poApproverAcedemicErr = poApproverAcedemicErr;
+	}
+	//31130-end
 	
 	//Start 32008
 	public boolean isUpsCannotEdit() {
@@ -4723,4 +4770,31 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
 	}
 	//#34392 - end
+
+	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
+		return selectedRecommendRejectReasonDescs;
+	}
+
+	public void setSelectedRecommendRejectReasonDescs(
+			List<PmReasonDesc> selectedRecommendRejectReasonDescs) {
+		this.selectedRecommendRejectReasonDescs = selectedRecommendRejectReasonDescs;
+	}
+
+	public List<PmReasonDesc> getSelectedRejectReasonDescs() {
+		return selectedRejectReasonDescs;
+	}
+
+	public void setSelectedRejectReasonDescs(
+			List<PmReasonDesc> selectedRejectReasonDescs) {
+		this.selectedRejectReasonDescs = selectedRejectReasonDescs;
+	}
+
+	public boolean isShowDifferenceRejection() {
+		return showDifferenceRejection;
+	}
+
+	public void setShowDifferenceRejection(boolean showDifferenceRejection) {
+		this.showDifferenceRejection = showDifferenceRejection;
+	}
 }
+
