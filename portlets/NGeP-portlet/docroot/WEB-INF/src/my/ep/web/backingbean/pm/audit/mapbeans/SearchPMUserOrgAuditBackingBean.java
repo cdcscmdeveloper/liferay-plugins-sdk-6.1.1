@@ -8,7 +8,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -334,11 +333,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	 * autoSelectOrgType()
 	 */
 	public void autoSelectOrgType() {
-		if (!getManagedBean().isNotFirstRun()) {
-			log.info("updateAuto");
-			RequestContext.getCurrentInstance().execute("autoSelectOrgType();");
-			getManagedBean().setNotFirstRun(true);
-		}
+		log.info("updateAuto");
 	}
 
 	/**
