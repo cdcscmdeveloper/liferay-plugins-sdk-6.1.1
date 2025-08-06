@@ -153,7 +153,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		if (managedBean.getFinancialOrg().isBrandNew()) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			
-			detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, "", address);
+			if(!address.isEmpty()){
+				
+				setNewMainAddress(editedAddress, address);
+			}
 			
 			if(managedBean.getContactPerson() != null ){
 				setNewContactPerson(managedBean.getContactPerson());
@@ -186,6 +189,26 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		
 		return address;
 	}
+	
+	private void setNewMainAddress(PmAddress editedAddress, String address){
+		
+		detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, null, address);
+		
+		detailObj(AuditConst.PM_AUD_OFO_STATE_FIELDLABELID, null, editedAddress.getPmState().getStateName());
+		detailObj(AuditConst.PM_AUD_OFO_DISTRICT_FIELDLABELID, null, editedAddress.getPmDistrict().getDistrictName());
+		detailObj(AuditConst.PM_AUD_OFO_CITY_FIELDLABELID, null, editedAddress.getPmCity().getCityName());
+		detailObj(AuditConst.PM_AUD_OFO_POSTCODE_FIELDLABELID, null, editedAddress.getPostcode());
+		detailObj(AuditConst.PM_AUD_OFO_COUNTRY_FIELDLABELID, null, editedAddress.getPmCountry().getCountryName());
+		
+		if(!editedAddress.getPhoneNo().isEmpty()){
+		detailObj(AuditConst.PM_AUD_OFO_PHONE_FIELDLABELID, null, 
+				editedAddress.getPhoneCountry() + editedAddress.getPhoneArea() + editedAddress.getPhoneNo());
+		}
+		
+		if(editedAddress.getPmDivision() != null){
+			detailObj(AuditConst.PM_AUD_OFO_DIVISION_FIELDLABELID, null, editedAddress.getPmDivision().getDivisionName());
+		}
+	}
 
 	/**
 	 * adds new contact to audit
@@ -197,14 +220,18 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		String officeMobileNo = !pmContact.getMobileNo().isEmpty() ? 
 				pmContact.getMobileCountry() + pmContact.getMobileArea() + pmContact.getMobileNo() : "";
 
-		detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, "", pmContact.getContactName());
-		detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, "", pmContact.getEmail());
+		
+		if(!pmContact.getContactName().isEmpty())
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, null, pmContact.getContactName());
+			
+		if(!pmContact.getEmail().isEmpty())
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, null, pmContact.getEmail());
 		
 		if(!officePhoneNo.isEmpty()){
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_TELEPHONE_FIELDLABELID, "", officePhoneNo);
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_TELEPHONE_FIELDLABELID, null, officePhoneNo);
 		}
 		if(!officeMobileNo.isEmpty()){
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_MOBILE_FIELDLABELID, "", officeMobileNo);
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_MOBILE_FIELDLABELID, null, officeMobileNo);
 		}
 	}
 	
