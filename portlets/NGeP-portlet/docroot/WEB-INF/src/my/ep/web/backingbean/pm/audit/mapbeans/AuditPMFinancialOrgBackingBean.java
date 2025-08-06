@@ -32,6 +32,8 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final String EMPTY_STRING = "";
+	private static final String COMMA_STRING = ", ";
 
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	String docNo;
@@ -139,8 +141,8 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 * @param oldPmAddress
 	 */
 	private void mainAddressDetail(PmAddress editedAddress, PmAddress oldPmAddress){
-		String address = "";
-		String oldAddressAppend = "";
+		String address = EMPTY_STRING;
+		String oldAddressAppend = EMPTY_STRING;
 		
 		if (editedAddress != null) {
 			address = getAddress(editedAddress);
@@ -177,16 +179,16 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	
 	//sonarlint. to get full address from current and/or edited address
 	private String getAddress(PmAddress pmAddress){
-		String address = "";
+		String address = EMPTY_STRING;
 		if(pmAddress.getAddress1() != null && !pmAddress.getAddress1().isEmpty()){
 			address += pmAddress.getAddress1();
 		}
 		if(pmAddress.getAddress2() != null && !pmAddress.getAddress2().isEmpty()){
-		    if (!address.isEmpty()) address += ", ";
+		    if (!address.isEmpty()) address += COMMA_STRING;
 			address += pmAddress.getAddress2();
 		}
 		if(pmAddress.getAddress3() != null && !pmAddress.getAddress3().isEmpty()){
-		    if (!address.isEmpty()) address += ", ";
+		    if (!address.isEmpty()) address += COMMA_STRING;
 			address += pmAddress.getAddress3();
 		}
 		
@@ -218,16 +220,16 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 * @param pmContact
 	 */
 	private void setNewContactPerson(PmContact pmContact){
-		String officePhoneNo = !pmContact.getPhoneNo().isEmpty() ? 
-				pmContact.getPhoneCountry() + pmContact.getPhoneArea() + pmContact.getPhoneNo() : "";
-		String officeMobileNo = !pmContact.getMobileNo().isEmpty() ? 
-				pmContact.getMobileCountry() + pmContact.getMobileArea() + pmContact.getMobileNo() : "";
+		String officePhoneNo = pmContact.getPhoneNo() != null && !pmContact.getPhoneNo().isEmpty() ? 
+				pmContact.getPhoneCountry() + pmContact.getPhoneArea() + pmContact.getPhoneNo() : EMPTY_STRING;
+		String officeMobileNo = pmContact.getMobileNo() != null && !pmContact.getMobileNo().isEmpty() ? 
+				pmContact.getMobileCountry() + pmContact.getMobileArea() + pmContact.getMobileNo() : EMPTY_STRING;
 
 		
-		if(!pmContact.getContactName().isEmpty())
+		if(pmContact.getContactName() != null && !pmContact.getContactName().isEmpty())
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, null, pmContact.getContactName());
 			
-		if(!pmContact.getEmail().isEmpty())
+		if(pmContact.getEmail() != null && !pmContact.getEmail().isEmpty())
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, null, pmContact.getEmail());
 		
 		if(!officePhoneNo.isEmpty()){
@@ -244,26 +246,26 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 * @param oldContactPerson
 	 */
 	private void setContact(PmContact editedtContactPerson, PmContact oldContactPerson) {
-		String officePhoneNo = "";
-		String officeMobileNo = "";
-		String auditPhoneNo = "";
-		String auditMobileNo = "";
+		String officePhoneNo = EMPTY_STRING;
+		String officeMobileNo = EMPTY_STRING;
+		String auditPhoneNo = EMPTY_STRING;
+		String auditMobileNo = EMPTY_STRING;
 
-		if(oldContactPerson.getPhoneNo() != null && !oldContactPerson.getPhoneNo().equals("")){
+		if(oldContactPerson.getPhoneNo() != null && !oldContactPerson.getPhoneNo().isEmpty()){
 			auditPhoneNo = oldContactPerson.getPhoneCountry() + oldContactPerson.getPhoneArea() + 
 					oldContactPerson.getPhoneNo();
 		}
-		if(oldContactPerson.getMobileNo() != null && !oldContactPerson.getMobileNo().equals("")){
+		if(oldContactPerson.getMobileNo() != null && !oldContactPerson.getMobileNo().isEmpty()){
 			auditMobileNo = oldContactPerson.getMobileCountry() + oldContactPerson.getMobileArea() + 
 					oldContactPerson.getMobileNo();
 		}
 		
-		if(!editedtContactPerson.getPhoneNo().equals("")){
+		if(editedtContactPerson.getPhoneNo() != null && !editedtContactPerson.getPhoneNo().isEmpty()){
 			officePhoneNo = editedtContactPerson.getPhoneCountry() + editedtContactPerson.getPhoneArea() + 
 					editedtContactPerson.getPhoneNo();
 		}
 		
-		if(!editedtContactPerson.getMobileNo().equals("")){
+		if(editedtContactPerson.getMobileNo() != null && !editedtContactPerson.getMobileNo().isEmpty()){
 			officeMobileNo = editedtContactPerson.getMobileCountry() + editedtContactPerson.getMobileArea() + 
 					editedtContactPerson.getMobileNo();
 		}
