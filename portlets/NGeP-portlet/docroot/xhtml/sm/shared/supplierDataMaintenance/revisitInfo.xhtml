@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<p:panel header="#{lbl['lbl.sm.rv.section.name']}" toggleable="true"
+		id="revisitPanelId"
+		rendered="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}">
+		<p:outputPanel>
+			<h:outputText value="#{lbl['lbl.sm.rv.history.link.part.one']}"
+				escape="false" />
+			<p:commandLink onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				action="#{viewSmApplBackingBean.onClickRevisitHistoryList}"
+				process="@this" partialSubmit="true" update=":form">
+				<u><h:outputText
+						value="#{lbl['lbl.sm.rv.history.link.part.two']}"
+						style="color:blue;" escape="false" /></u>
+			</p:commandLink>
+			<p:spacer width="2" />
+			<h:outputText value="#{lbl['lbl.sm.rv.history.link.part.three']}"
+				escape="false" />
+			<br />
+			<p:spacer height="2" />
+		</p:outputPanel>
+		<table style="width: 100%; table-layout: fixed">
+			<tr>
+				<td style="width: 25%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.rv.visiting.date']}" /></td>
+				<td style="width: 75%"><h:outputLabel
+						styleClass="outputLabel-view"
+						value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.getDEFAULT_DATE_FORMAT()}" />
+					</h:outputLabel></td>
+			</tr>
+			<p:outputPanel
+				rendered="#{!viewSmApplBackingBean.managedBean.supplierUser}">
+				<tr>
+					<td style="width: 25%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.rv.history.svo']}" /></td>
+					<td style="width: 75%"><p:outputLabel
+							styleClass="outputLabel-view"
+							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitOfficer.userName}" /></td>
+				</tr>
+				<tr>
+					<td style="width: 25%; vertical-align: top"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.rv.history.assist.officer']}" /></td>
+					<td style="width: 75%; font-size: 12px; font-family: Arial"><ui:repeat
+							var="rvAssistOfficer"
+							rendered="#{not empty viewSmApplBackingBean.managedBean.currentSmRevisit.smRvAssistOfficers}"
+							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.smRvAssistOfficers}">
+							<h:outputText value="#{rvAssistOfficer.officerName}" />
+							<br />
+						</ui:repeat> <p:outputLabel styleClass="outputLabel-view"
+							rendered="#{empty viewSmApplBackingBean.managedBean.currentSmRevisit.smRvAssistOfficers}"
+							value="#{lbl['lbl.txt.na']}" /></td>
+				</tr>
+				<tr>
+					<td style="width: 25%; vertical-align: top;"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.rv.history.supp.doc']}" /></td>
+					<td style="width: 75%; font-size: 12px; font-family: Arial"><ui:repeat
+							var="suppDoc"
+							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.smRvSuppDocs}">
+							<ui:repeat var="docFile" value="#{suppDoc.smRvDocFiles}">
+								<h:commandLink
+									value="#{viewSmApplBackingBean.getShortFileName(docFile.fileName)}">
+									<p:fileDownload
+										value="#{supplierDataMaintenanceBackingBean.downloadSelectedSuppDoc(docFile.fileName,docFile.filePath)}" />
+								</h:commandLink>
+								<br />
+							</ui:repeat>
+						</ui:repeat></td>
+				</tr>
+			</p:outputPanel>
+			<tr>
+				<td style="width: 25%; vertical-align: top"><p:outputLabel
+						styleClass="outputLabel-view-label" style="vertical-align:top"
+						value="#{lbl['lbl.sm.rv.history.visit.remark']}" /></td>
+				<p:outputPanel
+					rendered="#{viewSmApplBackingBean.managedBean.supplierUser}">
+					<td
+						style="width: 75%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitRemark}" />
+					</td>
+				</p:outputPanel>
+				<p:outputPanel
+					rendered="#{!viewSmApplBackingBean.managedBean.supplierUser}">
+					<td
+						style="width: 75%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+						<h:outputText
+							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitRemark}" />
+						<h:outputText
+							value="#{viewSmApplBackingBean.getExtendedRemarks(viewSmApplBackingBean.managedBean.currentSmRevisit)}"
+							escape="false" />
+					</td>
+				</p:outputPanel>
+			</tr>
+			<p:outputPanel
+				rendered="#{!viewSmApplBackingBean.managedBean.supplierUser}">
+				<tr>
+					<td style="width: 25%;"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.rv.history.action.by']}" /></td>
+					<td style="width: 75%"><p:outputLabel
+							styleClass="outputLabel-view"
+							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.actionedBy}" /></td>
+				</tr>
+			</p:outputPanel>
+			<tr>
+				<td style="width: 25%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.rv.history.action.date']}" /></td>
+				<td style="width: 75%"><h:outputLabel
+						styleClass="outputLabel-view"
+						value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.getDEFAULT_DATETIME_WITH_SECONDS_FORMAT()}" />
+					</h:outputLabel></td>
+			</tr>
+		</table>
+	</p:panel>
+	<ac:smRevisitHistoryPopUp dialogName="revisitHistoryDialog"
+		backingBean="#{viewSmApplBackingBean}" />
+</ui:composition>
