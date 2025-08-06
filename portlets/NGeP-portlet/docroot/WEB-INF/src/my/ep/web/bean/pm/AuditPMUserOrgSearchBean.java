@@ -15,7 +15,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 
 /**
- * Search Bean for Location
+ * Search Bean for AuditPMUserOrgSearchBean
  * 
  */
 public class AuditPMUserOrgSearchBean implements Serializable {
@@ -35,9 +35,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	private String orgCode;
 	private String orgName;
 	private String orgType;
-	private String orgCategory;
-	// private Long countryId;
-	// private String locationCode;
+	private String orgCategory = "0";
 	private String locationType;
 	private String actionType;
 	private Date dateFrom;
@@ -95,6 +93,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	private PmParameterDesc pmParameterDescOrgType;
 
 	public AuditPMUserOrgSearchBean() {
+		/*Empty Constructor*/
 	}
 
 	/**
@@ -250,7 +249,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 
 	public List<PmUser> getSearchPmUserList() {
 		if (searchPmUserList.size() <= 0)
-			searchPmUserList = new ArrayList<PmUser>();
+			searchPmUserList = new ArrayList<>();
 		return searchPmUserList;
 	}
 
@@ -588,7 +587,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 
 	public List<PmOrgValidity> getSearchPmOrgValidity() {
 		if (searchPmOrgValidity.size() <= 0)
-			searchPmOrgValidity = new ArrayList<PmOrgValidity>();
+			searchPmOrgValidity = new ArrayList<>();
 		return searchPmOrgValidity;
 	}
 
@@ -606,7 +605,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 
 	public List<PmOrgProfile> getSearchPmOrgProfile() {
 		if (searchPmOrgProfile.size() <= 0)
-			searchPmOrgProfile = new ArrayList<PmOrgProfile>();
+			searchPmOrgProfile = new ArrayList<>();
 		return searchPmOrgProfile;
 	}
 
