@@ -276,21 +276,21 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 
 		docId = officeContactPerson.getContactId();
 
-		if(auditContactPerson.getPhoneNo() != null && !auditContactPerson.getPhoneNo().equals(empty)){
+		if(auditContactPerson.getPhoneNo() != null && !auditContactPerson.getPhoneNo().isEmpty()){
 			auditPhoneNo = auditContactPerson.getPhoneCountry() + auditContactPerson.getPhoneArea() + 
 					auditContactPerson.getPhoneNo();
 		}
-		if(auditContactPerson.getMobileNo() != null && !auditContactPerson.getMobileNo().equals(empty)){
+		if(auditContactPerson.getMobileNo() != null && !auditContactPerson.getMobileNo().isEmpty()){
 			auditMobileNo = auditContactPerson.getMobileCountry() + auditContactPerson.getMobileArea() + 
 					auditContactPerson.getMobileNo();
 		}
 		
-		if(!officeContactPerson.getPhoneNo().equals(empty)){
+		if(!officeContactPerson.getPhoneNo().isEmpty()){
 			officePhoneNo = officeContactPerson.getPhoneCountry() + officeContactPerson.getPhoneArea() + 
 					officeContactPerson.getPhoneNo();
 		}
 		
-		if(!officeContactPerson.getMobileNo().equals(empty)){
+		if(!officeContactPerson.getMobileNo().isEmpty()){
 			officeMobileNo = officeContactPerson.getMobileCountry() + officeContactPerson.getMobileArea() + 
 					officeContactPerson.getMobileNo();
 		}
