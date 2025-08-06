@@ -64,7 +64,8 @@
 					<p:commandButton id="panelSearchId"
 						value="#{lbl['lbl.btn.search']}"
 						onstart="blkPanelSearchTable.show();"
-						oncomplete="blkPanelSearchTable.hide();" update="searchMasters"
+						oncomplete="blkPanelSearchTable.hide();" 
+						update="searchMasters"
 						process="userOrgAuditPMSearchPanel"
 						action="#{searchPMUserOrgAuditBackingBean.searchMaster}">
 					</p:commandButton>

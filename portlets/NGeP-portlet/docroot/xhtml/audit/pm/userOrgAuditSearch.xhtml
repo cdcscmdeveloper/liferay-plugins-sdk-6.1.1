@@ -12,7 +12,7 @@
 	<p:remoteCommand name="selectTypeAutoRun" id="remoteId"
 		update="userOrgAuditPMSearchPanel"
 		actionListener="#{searchPMUserOrgAuditBackingBean.autoSelectOrgType()}"
-		autoRun="#{not searchPMUserOrgAuditBackingBean.managedBean.notFirstRun}" />
+		autoRun="true" />
 	<p:panel id="userOrgAuditPMSearchPanel"
 		header="#{lbl['lbl.pm.search.location']}" toggleable="true">
 		<p:outputPanel>
@@ -39,7 +39,7 @@
 							oncomplete="blkPanelSearchTable.hide()" event="change"
 							listener="#{searchPMUserOrgAuditBackingBean.resetOrganisationSearchBean}"
 							process="@this"
-							update=":form:userOrgAuditPMSearchPanel,:form:searchMasters" />
+							update="userOrgAuditPMSearchPanel,:form:searchMasters" />
 					</p:selectOneMenu></td>
 				<td><p:message for="dropdownMainOrgUser"
 						id="dropdownMainOrgUserMsg" display="icon" /></td>

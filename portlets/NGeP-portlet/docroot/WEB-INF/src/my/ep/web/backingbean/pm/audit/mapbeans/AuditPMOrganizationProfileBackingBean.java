@@ -35,6 +35,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final String empty = "";
+	private static final String comma = ", ";
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO statusL1 = new AuditPMSPDTO();
 
@@ -145,8 +147,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	private void setAddUpdateGeneralDetails() {
 		PmAddress pmAddress = managedBean.getOfficeAddress();
 		PmAddress oldPmAddress = managedBean.getAuditBillingAddress();
-		String address = "";
-		String oldAddressAppend = "";
+		String address = empty;
+		String oldAddressAppend = empty;
 
 		docId = pmAddress.getAddressId();
 		
@@ -155,11 +157,11 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				address += pmAddress.getAddress1();
 			}
 			if(pmAddress.getAddress2() != null && !pmAddress.getAddress2().isEmpty()){
-			    if (!address.isEmpty()) address += ", ";
+			    if (!address.isEmpty()) address += comma;
 				address += pmAddress.getAddress2();
 			}
 			if(pmAddress.getAddress3() != null && !pmAddress.getAddress3().isEmpty()){
-			    if (!address.isEmpty()) address += ", ";
+			    if (!address.isEmpty()) address += comma;
 				address += pmAddress.getAddress3();
 			}
 			
@@ -168,16 +170,16 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 				
 				if(pmAddress.getPmDivision() != null){
-					detailObj(AuditConst.PM_AUD_OPM_DIVISION_FIELDLABELCODE, "", pmAddress.getPmDivision().getDivisionName());
+					detailObj(AuditConst.PM_AUD_OPM_DIVISION_FIELDLABELCODE, empty, pmAddress.getPmDivision().getDivisionName());
 				}
 				
-				detailObj(AuditConst.PM_AUD_OPM_OFFICEADDRESS_FIELDLABELCODE, "", address);
-				detailObj(AuditConst.PM_AUD_OPM_STATE_FIELDLABELCODE, "", pmAddress.getPmState().getStateName());
-				detailObj(AuditConst.PM_AUD_OPM_DISTRICT_FIELDLABELCODE, "", pmAddress.getPmDistrict().getDistrictName());
-				detailObj(AuditConst.PM_AUD_OPM_CITY_TOWN_FIELDLABELCODE, "", pmAddress.getPmCity().getCityName());
-				detailObj(AuditConst.PM_AUD_OPM_POSTCODE_FIELDLABELCODE, "", pmAddress.getPostcode());
-				detailObj(AuditConst.PM_AUD_OPM_COUNTRY_FIELDLABELCODE, "", pmAddress.getPmCountry().getCountryName());
-				detailObj(AuditConst.PM_AUD_OPM_TELNO_FIELDLABELCODE, "", 
+				detailObj(AuditConst.PM_AUD_OPM_OFFICEADDRESS_FIELDLABELCODE, empty, address);
+				detailObj(AuditConst.PM_AUD_OPM_STATE_FIELDLABELCODE, empty, pmAddress.getPmState().getStateName());
+				detailObj(AuditConst.PM_AUD_OPM_DISTRICT_FIELDLABELCODE, empty, pmAddress.getPmDistrict().getDistrictName());
+				detailObj(AuditConst.PM_AUD_OPM_CITY_TOWN_FIELDLABELCODE, empty, pmAddress.getPmCity().getCityName());
+				detailObj(AuditConst.PM_AUD_OPM_POSTCODE_FIELDLABELCODE, empty, pmAddress.getPostcode());
+				detailObj(AuditConst.PM_AUD_OPM_COUNTRY_FIELDLABELCODE, empty, pmAddress.getPmCountry().getCountryName());
+				detailObj(AuditConst.PM_AUD_OPM_TELNO_FIELDLABELCODE, empty, 
 						pmAddress.getPhoneCountry() + pmAddress.getPhoneArea() + pmAddress.getPhoneNo());
 				
 				if(managedBean.getOfficeContactPerson() != null ){
@@ -209,10 +211,10 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 						detailObj(AuditConst.PM_AUD_OPM_DIVISION_FIELDLABELCODE, 
 								oldPmAddress.getPmDivision().getDivisionName(), pmAddress.getPmDivision().getDivisionName());
 					} else if(oldPmAddress.getPmDivision() == null){
-						detailObj(AuditConst.PM_AUD_OPM_DIVISION_FIELDLABELCODE, "", pmAddress.getPmDivision().getDivisionName());						
+						detailObj(AuditConst.PM_AUD_OPM_DIVISION_FIELDLABELCODE, empty, pmAddress.getPmDivision().getDivisionName());						
 					}
 				} else if (oldPmAddress.getPmDivision() != null){
-					detailObj(AuditConst.PM_AUD_OPM_DIVISION_FIELDLABELCODE, oldPmAddress.getPmDivision().getDivisionName(), "");
+					detailObj(AuditConst.PM_AUD_OPM_DIVISION_FIELDLABELCODE, oldPmAddress.getPmDivision().getDivisionName(), empty);
 				}
 				if(!pmAddress.getPmState().getStateName().equals(oldPmAddress.getPmState().getStateName())){
 					detailObj(AuditConst.PM_AUD_OPM_STATE_FIELDLABELCODE, oldPmAddress.getPmState().getStateName(), pmAddress.getPmState().getStateName());
@@ -247,48 +249,48 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 
 	private void setNewContactPerson(PmContact pmContact){
 		String officePhoneNo = !pmContact.getPhoneNo().isEmpty() ? 
-				pmContact.getPhoneCountry() + pmContact.getPhoneArea() + pmContact.getPhoneNo() : "";
+				pmContact.getPhoneCountry() + pmContact.getPhoneArea() + pmContact.getPhoneNo() : empty;
 		String officeMobileNo = !pmContact.getMobileNo().isEmpty() ? 
-				pmContact.getMobileCountry() + pmContact.getMobileArea() + pmContact.getMobileNo() : "";
+				pmContact.getMobileCountry() + pmContact.getMobileArea() + pmContact.getMobileNo() : empty;
 
 		docId = pmContact.getContactId();
 
-		detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, "", pmContact.getContactName());
-		detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, "", pmContact.getEmail());
+		detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, empty, pmContact.getContactName());
+		detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, empty, pmContact.getEmail());
 		
 		if(!officePhoneNo.isEmpty()){
-			detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, "", officePhoneNo);
+			detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, empty, officePhoneNo);
 		}
 		if(!officeMobileNo.isEmpty()){
-			detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, "", officeMobileNo);
+			detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, empty, officeMobileNo);
 		}
 	}
 	
 	private void setContact() {
 		PmContact officeContactPerson = managedBean.getOfficeContactPerson();
 		PmContact auditContactPerson = managedBean.getAuditContactPerson();
-		String officePhoneNo = "";
-		String officeMobileNo = "";
-		String auditPhoneNo = "";
-		String auditMobileNo = "";
+		String officePhoneNo = empty;
+		String officeMobileNo = empty;
+		String auditPhoneNo = empty;
+		String auditMobileNo = empty;
 
 		docId = officeContactPerson.getContactId();
 
-		if(auditContactPerson.getPhoneNo() != null && !auditContactPerson.getPhoneNo().equals("")){
+		if(auditContactPerson.getPhoneNo() != null && !auditContactPerson.getPhoneNo().isEmpty()){
 			auditPhoneNo = auditContactPerson.getPhoneCountry() + auditContactPerson.getPhoneArea() + 
 					auditContactPerson.getPhoneNo();
 		}
-		if(auditContactPerson.getMobileNo() != null && !auditContactPerson.getMobileNo().equals("")){
+		if(auditContactPerson.getMobileNo() != null && !auditContactPerson.getMobileNo().isEmpty()){
 			auditMobileNo = auditContactPerson.getMobileCountry() + auditContactPerson.getMobileArea() + 
 					auditContactPerson.getMobileNo();
 		}
 		
-		if(!officeContactPerson.getPhoneNo().equals("")){
+		if(!officeContactPerson.getPhoneNo().isEmpty()){
 			officePhoneNo = officeContactPerson.getPhoneCountry() + officeContactPerson.getPhoneArea() + 
 					officeContactPerson.getPhoneNo();
 		}
 		
-		if(!officeContactPerson.getMobileNo().equals("")){
+		if(!officeContactPerson.getMobileNo().isEmpty()){
 			officeMobileNo = officeContactPerson.getMobileCountry() + officeContactPerson.getMobileArea() + 
 					officeContactPerson.getMobileNo();
 		}
@@ -315,8 +317,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private void setMinistry() {
-		String currentMinistryName = "";
-		String oldMinistryName = "";
+		String currentMinistryName = empty;
+		String oldMinistryName = empty;
 
 		currentMinistryName = orgProfile.getParentOrgProfile() != null ?
 				orgProfile.getParentOrgProfile().getPmOrgValidity().getOrgName() : 
@@ -333,11 +335,11 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 				detailObj(AuditConst.PM_AUD_OPM_MINISTRYNAME_FIELDLABELCODE, oldMinistryName, currentMinistryName);	
 			} else if (oldMinistryName == null) { //to cater for migration data
-				detailObj(AuditConst.PM_AUD_OPM_MINISTRYNAME_FIELDLABELCODE, "", currentMinistryName);
+				detailObj(AuditConst.PM_AUD_OPM_MINISTRYNAME_FIELDLABELCODE, empty, currentMinistryName);
 			}
 		} else {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-			detailObj(AuditConst.PM_AUD_OPM_MINISTRYNAME_FIELDLABELCODE, "", currentMinistryName);	
+			detailObj(AuditConst.PM_AUD_OPM_MINISTRYNAME_FIELDLABELCODE, empty, currentMinistryName);	
 		}
 	}
 
