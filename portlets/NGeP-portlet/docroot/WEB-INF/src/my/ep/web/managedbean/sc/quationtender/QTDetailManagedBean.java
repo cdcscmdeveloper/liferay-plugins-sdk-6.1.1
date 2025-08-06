@@ -1860,8 +1860,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<Long, VCtContract> checkLOAContract;
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
 	// 25791-End
-
-	public boolean isFieldProcurementJustification = false; //#36678 related to #35061
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -11604,21 +11602,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.searchBidScheduleDataModel = searchBidScheduleDataModel;
 	}
 	// 25791-End
-
-	/** #36678 related to #35061
-	 * 
-	 * @return
-	 */
-	public boolean isFieldProcurementJustification() {
-		return isFieldProcurementJustification;
-	}
-
-	/** #36678 related to #35061
-	 * @param
-	 */
-	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
-		this.isFieldProcurementJustification = isFieldProcurementJustification;
-	}
 	
 	//37813,35384 -start
 	/**
