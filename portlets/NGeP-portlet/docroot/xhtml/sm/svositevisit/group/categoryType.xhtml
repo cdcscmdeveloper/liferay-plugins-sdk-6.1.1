@@ -19,7 +19,21 @@
 			
 				<c:if test="#{code == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
 					<ui:include src="/xhtml/sm/shared/sitevisit/group/equipment.xhtml" />
-					<ui:include src="/xhtml/sm/shared/sitevisit/group/worker.xhtml" />
+					
+					<!-- employee -->
+					<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddress.siteType == 'H'}">
+						<ui:param name="workshop" value="#{template}" />
+						<ui:param name="workshopName" value="#{lbl['lbl.sm.facility.type._H']}" />
+						<ui:param name="workshopId" value="#{catCode}0" />
+						<ui:include src="/xhtml/sm/shared/sitevisit/group/worker.xhtml" />
+					</c:if>
+					<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddress.siteType != 'H'}">
+						<c:forEach var="workshop" items="#{template.workshops}" varStatus="workshopVar">
+							<ui:param name="workshopName" value="#{workshop.facilityName}" />
+							<ui:param name="workshopId" value="#{catCode}#{workshopVar.index}" />
+							<ui:include src="/xhtml/sm/shared/sitevisit/group/worker.xhtml" />
+						</c:forEach>
+					</c:if>
 				</c:if>
 				
 				<c:if test="#{code == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
