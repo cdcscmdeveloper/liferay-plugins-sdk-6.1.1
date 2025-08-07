@@ -4132,7 +4132,7 @@ public class SupplierFinalizationBackingBean extends
 		for (ScQtFinalizationReport report : getManagedBean().getDocumentList()) {
 			boolean isLatest = latestBriefingPaper == null
 					|| report.getCreatedDate().after(latestBriefingPaper.getCreatedDate());
-			if (report.getTitle().contains("Kertas Taklimat") && isLatest) {
+			if (report.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER) && isLatest) {
 				latestBriefingPaper = report;
 			}
 		}
