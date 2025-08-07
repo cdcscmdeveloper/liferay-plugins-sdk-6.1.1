@@ -3,77 +3,34 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-		<script>
-		function autoSelectOrgType() {
-			if ($("input[id$=':form:sorSearchOrgTypeId:0']").is(':disabled')) {
-				console.log("0");
-				$("input[id$=':form:sorSearchOrgTypeId:1']").prop('checked',
-						true);
-				$("input[id$=':form:sorSearchOrgTypeId:1']").change();
-
-			} else if ($("input[id$=':form:sorSearchOrgTypeId:1']").is(
-					':disabled')) {
-				console.log("1");
-				$("input[id$=':form:sorSearchOrgTypeId:0']").prop('checked',
-						true);
-				$("input[id$=':form:sorSearchOrgTypeId:0']").change();
-
-			} else {
-				console.log("2");
-				$("input[id$=':form:sorSearchOrgTypeId:0']").prop('checked',
-						true);
-				$("input[id$=':form:sorSearchOrgTypeId:0']").change();
-
-			}
-		}
-	</script>
-	
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<table class="ppTwoTable">
 		<tr>
 			<th width="22%"><p:outputLabel
 					value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel value="*"
 					styleClass="mandatory" /></th>
-			<td><p:selectOneRadio id="sorSearchOrgTypeId" layout="custom"
-					styleClass="commonLabel" widgetVar="myCheckbox"
-					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory}">
-					<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}"
-						itemValue="#{searchPMUserOrgAuditBackingBean.getFederalGovt()}" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}"
-						itemValue="#{searchPMUserOrgAuditBackingBean.getOthers()}" />
-					<p:ajax
-						process="@this,orgCategoryMaintainPGUser,orgTypeFederalList,orgTypeOthersList"
-						onstart="blkPanelSearchTable.show()"
-						oncomplete="blkPanelSearchTable.hide()" event="change"
-						partialSubmit="true"
-						update="userOrgAuditPMSearchPanel,orgTypeFederalList,orgTypeOthersList"
-						listener="#{searchPMUserOrgAuditBackingBean.changeType()}" />
-				</p:selectOneRadio> <h:panelGrid id="orgCategoryMaintainPGUser" columns="7">
-					<p:radioButton id="sorSearchGovnUser" for="sorSearchOrgTypeId"
-						itemIndex="0" />
-					<h:outputLabel styleClass="commonLabel" for="sorSearchGovnUser"
-						value="#{lbl['lbl.pm.org.federal.government']}" />
-					<p:radioButton id="sorSearchOthers" for="sorSearchOrgTypeId"
-						itemIndex="1" />
-					<h:outputLabel styleClass="commonLabel" for="sorSearchOthers"
-						value="#{lbl['lbl.pm.org.others']}" />	
-					     &#160; <p:graphicImage id="giOthersOrgUser"
-						style="vertical-align:top;"
-						value="/css/images/design/tooltips.png" />
-					<p:tooltip id="ttOthersOrgUser" for="giOthersOrgUser">
-						<h:outputText escape="false"
-							value="#{lbl['lbl.pm.org.others.tooltip']}" />
-					</p:tooltip>
+			<td><h:panelGrid columns="2">
+					<p:selectOneRadio id="radioGroup"
+						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory}">
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}"
+							itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}"
+							itemValue="1" />
+						<p:ajax event="change"
+							listener="#{searchPMUserOrgAuditBackingBean.changeType()}"
+							update="orgTypeFederalListId,orgTypeOthersListId,userOrgAuditPMSearchPanel" />
+					</p:selectOneRadio>
+					<ac:iconTooltip value="#{lbl['lbl.pm.org.others.tooltip']}" />
 				</h:panelGrid></td>
-			<th></th>
+			<td><p:message for="radioGroup" id="radioGroupMsg"
+					display="icon" /></td>
 			<td>&#160;</td>
 		</tr>
 		<tr>
 			<th width="22%"><p:outputLabel
-					value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
+					value="#{lbl['lbl.pm.organisation.orgType']}" /> <h:outputLabel
 					value="*" styleClass="mandatory" /></th>
-			<td><p:selectOneMenu id="orgTypeFederalList"
+			<td><p:selectOneMenu id="orgTypeFederalListId"
 					rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory eq searchPMUserOrgAuditBackingBean.getFederalGovt()}"
 					styleClass="ppDropDownWidthM"
 					required="#{!empty param['disableValidation']}"
@@ -87,11 +44,10 @@
 						itemValue="#{orgTypeItem.levelId}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						listener="#{searchPMUserOrgAuditBackingBean.changeOrgType()}"
-						update=":form:userOrgAuditPMSearchPanel" />
-				</p:selectOneMenu> <p:selectOneMenu id="orgTypeOthersList"
+						update="userOrgAuditPMSearchPanel" />
+				</p:selectOneMenu> <p:selectOneMenu id="orgTypeOthersListId"
 					rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory eq searchPMUserOrgAuditBackingBean.getOthers()}"
-					styleClass="ppDropDownWidthM"
-					required="#{!empty param['disableValidation']}"
+					styleClass="ppDropDownWidthM" required="true"
 					label="#{lbl['lbl.pm.organisation.orgType']}"
 					style="width: 265px;margin-bottom: 5px;"
 					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
@@ -102,24 +58,23 @@
 						itemValue="#{orgTypeItem.levelId}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						listener="#{searchPMUserOrgAuditBackingBean.changeOrgType()}"
-						update=":form:userOrgAuditPMSearchPanel" />
+						update="userOrgAuditPMSearchPanel" />
 				</p:selectOneMenu></td>
-			<td><p:message for="orgTypeFederalList"
-					id="orgTypeFederalListMsg" display="icon" /></td>
+			<td>&#160;</td>
 			<td>&#160;</td>
 		</tr>
 		<!-- *** OPM START ORGANIZATION PROFILE MGT *** -->
-		<c:if
-			test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM'}">
+		<h:panelGroup
+			rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OPM'}">
 			<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOPM.xhtml" />
-		</c:if>
+		</h:panelGroup>
 		<!-- *** OPM END *** -->
 
 		<!-- *** OUSR START - USER *** -->
-		<c:if
-			test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSR'}">
+		<h:panelGroup
+			rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OUSR'}">
 			<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOUSR.xhtml" />
-		</c:if>
+		</h:panelGroup>
 		<!-- *** OUSR END *** -->
 	</table>
 </ui:composition>
