@@ -32,8 +32,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class AuditPMManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
-	private VAuditPMDTO auditPmLocation = new VAuditPMDTO();
-
 	private AuditPMSearchBean searchBean;
 
 	private String selectedType;
@@ -95,17 +93,17 @@ public class AuditPMManagedBean extends BaseManagedBean {
 
 	private List<VAuditPMDTO> vpmAuditLocationDTOList;
 
+	/**
+	 * Constructor
+	 */
 	public AuditPMManagedBean() {
 		state = new PmState();
 		division = new PmDivision();
 		district = new PmDistrict();
 		city = new PmCity();
 		state.setPmCountry(new PmCountry());
-		// division.setPmState(state);
 		district.setPmState(state);
-		// district.setPmDivision(division);
 		city.setPmDistrict(district);
-
 	}
 
 	public List<PmCountry> getCountries() {
@@ -392,22 +390,4 @@ public class AuditPMManagedBean extends BaseManagedBean {
 	public void setSearchBean(AuditPMSearchBean searchBean) {
 		this.searchBean = searchBean;
 	}
-
-	// /**
-	// * @return the searchBean
-	// */
-	// public AuditPMSearchBean getPMSearchBean() {
-	// if (searchBean == null)
-	// searchBean = new AuditPMSearchBean();
-	// return searchBean;
-	// }
-	//
-	// /**
-	// * @param searchBean
-	// * the searchBean to set
-	// */
-	// public void setPMSearchBean(AuditPMSearchBean searchBean) {
-	// this.searchBean = searchBean;
-	// }
-
 }
