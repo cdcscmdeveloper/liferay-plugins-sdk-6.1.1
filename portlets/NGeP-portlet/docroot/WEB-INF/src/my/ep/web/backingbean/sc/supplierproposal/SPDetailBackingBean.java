@@ -1453,7 +1453,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				}
 			}
 			// Enhancement #3657@Syazani 12/10/2023 -- End
-	      if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){ //#21695
+	      if(null != this.getManagedBean().getTechnicalQtProposalChecklist()){ //#21695
 			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
 			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
 					.getTplSpecQuestion().getClPriceTypeCode()
@@ -3202,7 +3202,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		for (ScQtProposalChecklist tecChecklistDetail : this.getManagedBean().getTecCheckDetailsList()) {
 			if (tecChecklistDetail.getScQtCheckList().getTitle()
 					.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
-					&& !tecChecklistDetail.isSubmitted() && !tecChecklistDetail.isFromTechnicalProposal()) {
+					&& !tecChecklistDetail.isSubmitted()) {
 				throw new EpException(MessageConst.WARN_7602692);
 			}
 
