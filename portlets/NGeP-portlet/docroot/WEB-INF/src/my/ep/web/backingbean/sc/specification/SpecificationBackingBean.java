@@ -12959,14 +12959,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				BigDecimal currentIndPrice = this.getManagedBean().getQt().getEstimatedAmount();
 				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
 
-				//#36678 #38005 start
-				boolean isPriceBelowThreshold = currentIndPrice != null 
-						&& indPriceThreshold != null 
-						&& (currentIndPrice.compareTo(indPriceThreshold) <= 0) ;
-				
-				if ((!isPanel) && isPriceBelowThreshold 
-						&& SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
-				//#36678 #38005 end
+				if ((!isPanel) && currentIndPrice != null && indPriceThreshold != null
+						&& (currentIndPrice.compareTo(indPriceThreshold) <= 0)) {
 					// Bug #35061 - asyrafhaziq
 					// set message
 					String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE,
