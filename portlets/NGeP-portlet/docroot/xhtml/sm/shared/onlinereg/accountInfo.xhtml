@@ -73,7 +73,7 @@
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
 							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@this" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
 						</p:selectOneMenu>
 					</c:when>
 					<c:when test="#{!registrationBackingBean.managedBean.smAppl.brandNew and registrationBackingBean.managedBean.regAccountMaintainance}">
@@ -84,7 +84,7 @@
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
 							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@this" ></p:ajax>
 						</p:selectOneMenu>
 					</c:when>
 					<!-- #36710 START -->
@@ -96,7 +96,7 @@
 							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM) or registrationBackingBean.managedBean.activeDisicplinaryAction}">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/> 
 							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@this" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
 						</p:selectOneMenu> <!-- #36710 END-->
 					</c:when>
 					<c:otherwise>
@@ -107,7 +107,7 @@
 							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM) or registrationBackingBean.managedBean.activeDisicplinaryAction}">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDownAccountInfo()}"/> <!-- #36710 -->
 							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@this" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
 						</p:selectOneMenu>
 					</c:otherwise>
 				</c:choose>
@@ -152,7 +152,7 @@
 				<td class="tdContent">
 					<p:outputPanel id="regNoPanelId">
 					<!--  #16052019 - SSM INTEGRATION CR - Fahmi  -->
-						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="30"
+						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="20"
 							value="#{registrationBackingBean.managedBean.smSupp.regNo}" converter="toUpperCaseConverter"
 							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}"
 							size="40" label="#{lbl['lbl.sm.businessregno']}" >

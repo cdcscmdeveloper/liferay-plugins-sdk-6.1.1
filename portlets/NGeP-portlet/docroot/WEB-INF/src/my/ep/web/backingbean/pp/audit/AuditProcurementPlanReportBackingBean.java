@@ -22,6 +22,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pp.AuditPPConst;
 import my.ep.constant.rpt.ReportExcelAuditConstant;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pp.audit.AuditProcurementPlanSPDTO;
 import my.ep.exception.EpException;
 import my.ep.type.pm.RoleCode;
@@ -339,6 +340,22 @@ public class AuditProcurementPlanReportBackingBean extends BaseBackingBean<Audit
 		paramMap.put(AuditReportConst.PARAM_DOC_TYPE, docType);// P_GROUP_SECTION_ID
 
 		generateReport(AuditReportConst.RPT_AUDIT_TRAIL_PP, paramMap);
+	}
+	
+	/**
+	 * Reformat the break line
+	 * 
+	 * @param itemName
+	 * @return formattedItemName
+	 */
+	public String getFormattedValue(String itemName) {
+		String formattedItemName = itemName.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
+				TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		formattedItemName = formattedItemName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
+				TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+		formattedItemName = formattedItemName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		return formattedItemName;
 	}
 
 	/**

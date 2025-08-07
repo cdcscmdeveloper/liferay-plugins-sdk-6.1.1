@@ -157,7 +157,14 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private List<PmAddressType> oldReceivingAddressList = new ArrayList<>();
 	private List<PmAddressType> editedReceivingAddressList = new ArrayList<>();
 	private List<PmAddressType> newReceivingAddressList = new ArrayList<>();
+	private List<SmSupplierBank> auditSmSupplierBanks = new ArrayList<>();
+	private List<SmPersonnel> auditSmPersonnels = new ArrayList<>();
+	private List<PmProfileGroup> auditProfileGroup = new ArrayList<>();
+	private List<SmSupplierBank> newAuditSmSupplierBanks = new ArrayList<>();
+	private List<SmPersonnel> newAuditSmPersonnels = new ArrayList<>();
+	private List<PmProfileGroup> newAuditProfileGroup = new ArrayList<>();
 	private Long newProfileId;
+	private Long pmAddressTypeId;
 	/************ AUDIT END #28895-35509 *************/
 
 	public OrganisationManagedBean() {
@@ -1319,7 +1326,6 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setNewReceivingAddressList(List<PmAddressType> newReceivingAddressList) {
 		this.newReceivingAddressList = newReceivingAddressList;
 	}
-	/************ AUDIT END #28895-35509 *************/
 
 	public Long getNewProfileId() {
 		return newProfileId;
@@ -1328,5 +1334,98 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setNewProfileId(Long newProfileId) {
 		this.newProfileId = newProfileId;
 	}
+
+	public Long getPmAddressTypeId() {
+		return pmAddressTypeId;
+	}
+
+	public void setPmAddressTypeId(Long pmAddressTypeId) {
+		this.pmAddressTypeId = pmAddressTypeId;
+	}
+
+	/**
+	 * @return the auditSmSupplierBanks
+	 */
+	public List<SmSupplierBank> getAuditSmSupplierBanks() {
+		return auditSmSupplierBanks;
+	}
+
+	/**
+	 * @param auditSmSupplierBanks the auditSmSupplierBanks to set
+	 */
+	public void setAuditSmSupplierBanks(List<SmSupplierBank> auditSmSupplierBanks) {
+		this.auditSmSupplierBanks = auditSmSupplierBanks;
+	}
+
+	/**
+	 * @return the auditSmPersonnels
+	 */
+	public List<SmPersonnel> getAuditSmPersonnels() {
+		return auditSmPersonnels;
+	}
+
+	/**
+	 * @param auditSmPersonnels the auditSmPersonnels to set
+	 */
+	public void setAuditSmPersonnels(List<SmPersonnel> auditSmPersonnels) {
+		this.auditSmPersonnels = auditSmPersonnels;
+	}
+
+	/**
+	 * @return the auditProfileGroup
+	 */
+	public List<PmProfileGroup> getAuditProfileGroup() {
+		return auditProfileGroup;
+	}
+
+	/**
+	 * @param auditProfileGroup the auditProfileGroup to set
+	 */
+	public void setAuditProfileGroup(List<PmProfileGroup> auditProfileGroup) {
+		this.auditProfileGroup = auditProfileGroup;
+	}
+
+	/**
+	 * @return the newAuditSmSupplierBanks
+	 */
+	public List<SmSupplierBank> getNewAuditSmSupplierBanks() {
+		return newAuditSmSupplierBanks;
+	}
+
+	/**
+	 * @param newAuditSmSupplierBanks the newAuditSmSupplierBanks to set
+	 */
+	public void setNewAuditSmSupplierBanks(List<SmSupplierBank> newAuditSmSupplierBanks) {
+		this.newAuditSmSupplierBanks = newAuditSmSupplierBanks;
+	}
+
+	/**
+	 * @return the newAuditSmPersonnels
+	 */
+	public List<SmPersonnel> getNewAuditSmPersonnels() {
+		return newAuditSmPersonnels;
+	}
+
+	/**
+	 * @param newAuditSmPersonnels the newAuditSmPersonnels to set
+	 */
+	public void setNewAuditSmPersonnels(List<SmPersonnel> newAuditSmPersonnels) {
+		this.newAuditSmPersonnels = newAuditSmPersonnels;
+	}
+
+	/**
+	 * @return the newAuditProfileGroup
+	 */
+	public List<PmProfileGroup> getNewAuditProfileGroup() {
+		return newAuditProfileGroup;
+	}
+
+	/**
+	 * @param newAuditProfileGroup the newAuditProfileGroup to set
+	 */
+	public void setNewAuditProfileGroup(List<PmProfileGroup> newAuditProfileGroup) {
+		this.newAuditProfileGroup = newAuditProfileGroup;
+	}
+	/************ AUDIT END #28895-35509 *************/
 
 }

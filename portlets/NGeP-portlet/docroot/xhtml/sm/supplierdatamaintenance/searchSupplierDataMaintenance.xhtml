@@ -115,14 +115,18 @@
 						<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smSupplier.smAppl.supplierType eq 'J'}"/>
 					</p:column>
 
+					<!-- #38350 -Start -->
 					<p:column headerText="#{lbl['lbl.sm.regStatus']}">
 						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}"
 							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED}" />
+						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}"
+							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and (smSupplier.pendingBlacklist eq true or smSupplier.pendingCancel eq true)}" />
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty smSupplier.smAppl.pmRegStatus}" />
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
-							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED}" />
+							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and (smSupplier.pendingBlacklist eq false and smSupplier.pendingCancel eq false)}" />
 					</p:column>
+					<!-- #38350 -END -->
 
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">
 						<p:commandLink onstart="blockWidget.show()"
@@ -208,6 +212,8 @@
 				</c:if>
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regOwnerAndDirectorMaintenance.xhtml" /> <!-- 26238 -->
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regCatCodesMaintenance.xhtml" />
+				<ui:remove>#34031</ui:remove>
+				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/revisitMaintenance.xhtml" />
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/approverRemarkMaintenance.xhtml" />
 				
 				<p:confirmDialog id="confirmDialog" closable="true"

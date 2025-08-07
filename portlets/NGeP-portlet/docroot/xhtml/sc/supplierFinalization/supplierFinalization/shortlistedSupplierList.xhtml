@@ -278,8 +278,7 @@
 					value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 				<ui:param name="mofExpired"
 					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
-				<p:column
-					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
 					<h:outputText
 						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
@@ -523,8 +522,7 @@
 					value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 				<ui:param name="mofExpired"
 					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
-				<p:column
-					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
 					<h:outputText
 						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
@@ -809,8 +807,7 @@
 					value="#{shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 				<ui:param name="mofExpired"
 					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
-				<p:column
-					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
 					<h:outputText
 						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
@@ -858,7 +855,7 @@
 
 				<p:column style="text-align:center;">
 					<h:outputText
-						rendered="#{shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}"
+						rendered="#{shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalizationBackingBean.managedBean.zoneDetails.get(suppFinalizationBackingBean.managedBean.zoneActiveIndex).branchDeactivated}"
 						value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
 				</p:column>
 
