@@ -3411,7 +3411,7 @@ return	remarksNotFound;
 				}
 				// #28834- End.
 				
-				resDTO = qtSuppFinalizationSO.submitSupplierFinalizationBrief(reqDTO);
+				//resDTO = qtSuppFinalizationSO.submitSupplierFinalizationBrief(reqDTO);
 
 				if (resDTO.isSuccessful()) {
 					String msgCode = null;
@@ -3993,7 +3993,7 @@ return	remarksNotFound;
 			reqDTO.setBaseURL(SmCommonUtil.getBasePortalUrl());
 			reqDTO.setTaskName(this.getManagedBean().getTaskName());
 			//29561 -end
-			resDTO = qtSuppFinalizationSO.submitSupplierFinalization(reqDTO);
+			//resDTO = qtSuppFinalizationSO.submitSupplierFinalization(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				String msgCode = null;
