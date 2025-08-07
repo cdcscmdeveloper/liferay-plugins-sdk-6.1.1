@@ -88,8 +88,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	
 	private Integer lastIndex;
 
-	private List<String> higherManagementNames = new ArrayList<String>();
-	private List<String> managementNames = new ArrayList<String>();
+	private List<String> higherManagementNames = new ArrayList<>();
+	private List<String> managementNames = new ArrayList<>();
 	
 	private SmSvAdtMachine selectedAdtMachine;
 	private SmSvMachine selectedSvMachine;
@@ -135,7 +135,9 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SelectItem[] identificationTypes;
 	//28775 - Site Visit Grouping Enhancement - 28775 - end	
 	//29379 - Site Visit Grouping Enhancement - 28775
-	private SmFacility workerFacility;
+	private Object workshopObject;
+	private SmSvWorker selectedSmSvWorker;
+	private SmSvWorker oriSelectedSmSvWorker;
 	// 34795 -start
 	private String zoneCode;
 
@@ -755,12 +757,28 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	//28775 - Site Visit Grouping Enhancement - 28775 - end
 
 	//29379 - Site Visit Grouping Enhancement - 28775 - start
-	public SmFacility getWorkerFacility() {
-		return workerFacility;
+	public Object getWorkshopObject() {
+		return workshopObject;
 	}
 
-	public void setWorkerFacility(SmFacility workerFacility) {
-		this.workerFacility = workerFacility;
+	public void setWorkshopObject(Object workshopObject) {
+		this.workshopObject = workshopObject;
+	}
+	
+	public SmSvWorker getSelectedSmSvWorker() {
+		return selectedSmSvWorker;
+	}
+
+	public void setSelectedSmSvWorker(SmSvWorker selectedSmSvWorker) {
+		this.selectedSmSvWorker = selectedSmSvWorker;
+	}
+
+	public SmSvWorker getOriSelectedSmSvWorker() {
+		return oriSelectedSmSvWorker;
+	}
+
+	public void setOriSelectedSmSvWorker(SmSvWorker oriSelectedSmSvWorker) {
+		this.oriSelectedSmSvWorker = oriSelectedSmSvWorker;
 	}
 	//29379 - Site Visit Grouping Enhancement - 28775 - end
 	// 34795 -start
