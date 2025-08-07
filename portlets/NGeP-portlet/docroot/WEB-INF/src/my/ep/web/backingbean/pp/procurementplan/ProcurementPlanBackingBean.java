@@ -4898,11 +4898,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(this.getManagedBean().getSelectedPlan().getPpProcurementItems()==null){
 			this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
 		}
+		
+		//#35502 Fix as-is bug Start
 		if(this.getManagedBean().getDeletePpItems()==null){
 			this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
-		} else {
-			this.getManagedBean().getDeletePpItems().clear();
-		}
+		} 
+		//#35502 Fix as-is bug End
+
 		//add deleted item to list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
 			//log.info("[SIR#12802] - Procurement item delete status:" + procurementItem.isDeleted());
