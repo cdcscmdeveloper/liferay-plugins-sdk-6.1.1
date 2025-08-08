@@ -4619,7 +4619,7 @@ public class SmApplicationUtil {
 					//#32810 Alert message not display for cancel bumi - start 
 					SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
 					//#32298 DA cancel manufacture alert warning - start - <26238>
-					if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
+					if(smDisciplinaryAction != null && smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
 						cat.setCancelCategory(true);
 						if(smDisciplinaryAction.isCancelCategory() || smDisciplinaryAction.isBumiputeraCancel()){
 							cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
@@ -4718,10 +4718,10 @@ public class SmApplicationUtil {
 					addtnlList.add(cat);
 				}
 				//30865 - Starts
-			}else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
+			} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
 					|| cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_DELETED) == 0){
 						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
-						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
+						if (smDisciplinaryAction != null && smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
 							cat.setCancelCategory(true);
 							existingList.add(cat);
 						}
@@ -14962,12 +14962,15 @@ public class SmApplicationUtil {
 
 				calcEndDate(daysLeft, newEndCal, stateId);
 
-				if (newEndCal.getTime().before(dateCal.getTime())) {
+				if(DateUtils.isDateGreater(dateCal.getTime(), newEndCal.getTime())){
 					daysLeft++;
 				}
+//				if (newEndCal.getTime().before(dateCal.getTime())) {
+//					daysLeft++;
+//				}
 			}
 		}
-
+		log.info("30747 : daysLeft :" + daysLeft + " / time : " + dateCal.getTime());
 		mapDate.put(daysLeft, dateCal.getTime());
 		return mapDate;
 	}
@@ -15054,6 +15057,10 @@ public class SmApplicationUtil {
 	 * @return
 	 */
 	public static SmDisciplinaryAction retrieveActiveSmDisciplinaryActionByDisciplinaryId(Long disciplinaryId) {
+		if (disciplinaryId == null) {
+			return null;
+		}
+		
 		return SmServiceLookup.getSupplierDataMaintenanceSO()
 				.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryId);
 	}  
