@@ -70,6 +70,15 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 import org.apache.log4j.Logger;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBankInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+//#28895_35501 End
 
 @ManagedBean(name = "govtSellerBackingBean")
 @RequestScoped
@@ -159,6 +168,10 @@ public class GovtSellerRegistrationBackingBean extends
 		initBankBranches();
 		//START 17906
 		if(this.getManagedBean().getSmSupp().getSmAppl() != null && this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks() != null){
+			// #28895_35501 Start - AUDIT TRAIL SM
+			this.getManagedBean().setOldBanks(
+					CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()));
+			// #28895_35501 End
 			StringBuilder sb = new StringBuilder();
 			for(SmSupplierBank bank:this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()){
 				if(bank.getAccountNo() != null){
@@ -733,6 +746,11 @@ public class GovtSellerRegistrationBackingBean extends
 						new ArrayList<SelectItem>());
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
+			//#36718 - START
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+			//#36718 - END
 		} else if (addrType != null
 				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
 			if (country != null) {
@@ -750,6 +768,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean()
 						.setPermenantCityLs(new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmPermenantAdd().setPostcode(""); //#36718
 		} else if (addrType != null
 				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			if (country != null) {
@@ -767,6 +786,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setResidentialCityLs(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmResAdd().setPostcode(""); //#36718
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			if (country != null) {
 				//#34159 - START
@@ -791,6 +811,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setBranchCompanyCities(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
 
@@ -835,6 +856,11 @@ public class GovtSellerRegistrationBackingBean extends
 						districtLs);
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
+			//#36718 - START
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+			//#36718 - END
 		} else if (addrType != null
 				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
 			//13320-Start
@@ -872,6 +898,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean()
 						.setPermenantCityLs(new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmPermenantAdd().setPostcode(""); //#36718
 		} else if (addrType != null
 				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			//13320-Start
@@ -907,6 +934,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setResidentialCityLs(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmResAdd().setPostcode(""); //#36718
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			//13320-Start
 			Long stateId = state.getStateId();
@@ -939,6 +967,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setBranchCompanyCities(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
 
@@ -965,6 +994,11 @@ public class GovtSellerRegistrationBackingBean extends
 			} else {
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
+			//#36718 - START
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+			//#36718 - END
 		} else if (addrType != null
 				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
 			if (district != null) {
@@ -974,6 +1008,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean()
 						.setPermenantCityLs(new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmPermenantAdd().setPostcode(""); //#36718
 		} else if (addrType != null
 				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			if (district != null) {
@@ -983,6 +1018,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setResidentialCityLs(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmResAdd().setPostcode(""); //#36718
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			if (district != null) {
 				//#34159 - START
@@ -997,8 +1033,35 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setBranchCompanyCities(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
+	//#36718 - START
+	/**
+	 * Reset postcode when change city DropDown
+	 * 
+	 * @param PmCity
+	 *            city
+	 * @param String
+	 *            addrType
+	 */
+	public void onChangeCity(PmCity city, String addrType) {
+		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+		}
+		else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode("");
+		}
+		else if (addrType != null && addrType.equals("USER_PERMANENT_ADDRESS")) {
+			this.getManagedBean().getSmPermenantAdd().setPostcode("");
+		}
+		else if (addrType != null && addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
+			this.getManagedBean().getSmResAdd().setPostcode("");
+		}
+	}
+	//#36718 - END
 
 	/**
 	 * Proceed to user registration
@@ -1113,6 +1176,13 @@ public class GovtSellerRegistrationBackingBean extends
 				//SmCommonUtil.redirectToPage(
 				//		"/xhtml/sm/onlinereg/outputMsg.xhtml",
 				//		MessageConst.INFO_721013, null, null);
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+				}
+				// #28895_35501 End
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/onlinereg/outputMsg.xhtml",
 						MessageConst.INFO_721016, null, null);
@@ -2002,6 +2072,9 @@ public class GovtSellerRegistrationBackingBean extends
 				this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDistrict(new PmDistrict());
 				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmCity(new PmCity());
+				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
 				//#34159 - END
 			}
 		} else if (addrType != null && addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
@@ -2016,6 +2089,7 @@ public class GovtSellerRegistrationBackingBean extends
 				this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
 				this.getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
 				this.getManagedBean().getSmResAdd().setPmCity(new PmCity());
+				this.getManagedBean().getSmResAdd().setPostcode("");
 				//#34159 - END
 			}
 		} else if (addrType != null && addrType.equals("USER_PERMANENT_ADDRESS")) {
@@ -2030,6 +2104,7 @@ public class GovtSellerRegistrationBackingBean extends
 				this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
 				this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 				this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
+				this.getManagedBean().getSmPermenantAdd().setPostcode("");
 				//#34159 - END
 				
 			}
@@ -2047,6 +2122,7 @@ public class GovtSellerRegistrationBackingBean extends
 				this.getManagedBean().getSelectedBranch().getSmAddress().setPmCity(new PmCity());
 				//#34159 - END
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
 	//13320-End

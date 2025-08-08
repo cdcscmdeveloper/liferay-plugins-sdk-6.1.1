@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:param name="machineHeader" value="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}"/>
+	<ui:param name="printingCodeDesc" 
+	value="#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code} #{cat.pmCategoryL3.categoryName}" />
+	<p:panel header="#{cat.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_PRINTING ? 
+			printingCodeDesc : machineHeader}">
+		<!-- panel: id="pnlMachine" -->
+		<p:dataTable value="#{template.smSvMachines}" var="svMachine" id="a#{catCode}machTbl"
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowKey="#{machineDtl}">
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.availableLbl']}
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{svMachine.valid}" disabled="#{viewFlag}" />
+			</p:column>
+		
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.manufacturing.type.machine']}
+					</f:facet>
+				
+					<h:outputText value="#{svMachine.smMachineDtl.machineType}" style="float: left;white-space: normal;" 
+						rendered="#{empty svMachine.smMachineDtl.machine}"/>
+					<h:outputText value="#{svMachine.smMachineDtl.machine.machineDesc}" style="float: left;white-space: normal;" 
+						rendered="#{!empty svMachine.smMachineDtl.machine}"/>
+			</p:column>			
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.machine.brand']}
+					</f:facet>
+					<h:outputText value="#{svMachine.smMachineDtl.brandName}" style="float: left;white-space: normal;" />			
+			</p:column>	
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.machine.quantity']}
+					</f:facet>
+					
+					<h:outputText value="#{svMachine.smMachineDtl.qty}" style="float: left;white-space: normal;"></h:outputText>			
+			</p:column>
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.machine.purMthd']}
+					</f:facet>
+					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(
+						ParameterTypeConst.purchasingMethod,svMachine.smMachineDtl.purchaseMethod)}" 
+						style="float: left;white-space: normal;"/>						
+			</p:column>
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.machine.purchase.year']}
+					</f:facet>
+					<h:outputText value="#{svMachine.smMachineDtl.purchaseYear}"  style="float: left;white-space: normal;" />		
+			</p:column>
+			<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.sm.machine.guarnName']}
+					</f:facet>
+					<h:outputText value="#{svMachine.smMachineDtl.guarantorName}" style="float: left;white-space: normal;"/>
+			</p:column>
+			
+			<p:column rendered="#{!viewFlag}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.action']}" />
+				</f:facet>
+				<p:commandLink update=":#{p:component('machineDlg')}" rendered="#{!viewFlag}"
+					action="#{svoSiteVisitBackingBean.editMachine(svMachine)}" process="@this"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide();macDlg.show();">
+					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+</ui:composition>

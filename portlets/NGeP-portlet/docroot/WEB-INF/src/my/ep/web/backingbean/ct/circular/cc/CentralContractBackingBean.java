@@ -53,6 +53,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.comparator.ct.CtItemPriceComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -109,6 +110,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -128,6 +130,10 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
+
+import my.ep.constant.ct.audit.AuditContractConst; //35506
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 
 
 /**
@@ -248,15 +254,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 
 			if(getManagedBean().getCircularVer().getCtCircularContracts() != null && !getManagedBean().getCircularVer().getCtCircularContracts().isEmpty()) {
-				Collections.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract());
+				CustomUtils.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract()); //#36726
 				for(CtCircularContract ctCircularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 
 					if(ctCircularContract.getCtCircularItems() != null && !ctCircularContract.getCtCircularItems().isEmpty())
-						Collections.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem());
+						CustomUtils.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem()); //#36726
 
 					for(CtCircularItem circularItem : ctCircularContract.getCtCircularItems()){
-						if(circularItem.getCtContractItem() != null)
-							Collections.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPrice());
+						if(circularItem.getCtContractItem() != null) 
+							CustomUtils.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPriceComparator()); //#36726
 					}
 				}
 			}
@@ -577,6 +583,39 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
+				// #35506 Start
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				if (auditCtBean.getAuditCtConfigState()) {
+					if (getManagedBean().isUpdateAction() && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))) {
+
+						CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+						AuditContractReqDTO auCtData = new AuditContractReqDTO();
+						auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
+						auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
+						if (ctCircularVer.getCtCircular().getLatestCircularVer() != null) {
+							auCtData.setPrevContractVerId(ctCircularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+						}
+						auCtData.setDocType(resDTO.getCircularVer().getDocType());
+						auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
+						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
+
+						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+								|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) || getFacesScopes()
+										.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())))) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+						} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						}
+
+						auditCtBean.saveAuditData(auCtData);
+					}	
+				}
+				// #35506 End
+				
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 

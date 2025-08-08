@@ -77,22 +77,17 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
-			<!-- Bug #30600 , #31033, #33073, #33354 Start -->
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
-			</td>
-			<td>
-				<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-					rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier)}" 
-					process="@this" partialSubmit="true" update=":form">
-				<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-				</p:commandLink><p:spacer width="2"/>
-				<h:outputText rendered="#{!lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
-					value="#{lbl['lbl.cm.dialog.cofirm.no']}" /><p:spacer width="2"/>
-				<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
-			</td>
-		    <!-- Bug #30600 , #31033, #33073, #33354 End -->
+			<ui:remove>26247 - start</ui:remove>
+			<ui:param name="supplier" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"/>
+			<c:if test="#{not empty supplier.scQt}">
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
+				</td>
+				<td>
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" showTooltip="true" />
+				</td>
+			</c:if>
+			<ui:remove>26247 - end</ui:remove>
 		</tr>
 
 		<tr>
@@ -771,19 +766,13 @@
 			showAttachment="false" 
 			readonly="true"
 			rendered="#{not empty lOADetailBackingBean.managedBean.supplierRemarks}" />
-	</p:outputPanel>
-	<!-- Bug #30600, #31033 #32560 Start -->
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<!-- Bug #30600, #31033 #32560 End -->
-	
+	</p:outputPanel>	
 	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
 		resizable="false" width="700px" height="350px" modal="true" 
 		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-		onShow="singleUploadListener(approvalLetterUploadWV);">
-		<p:ajax event="close" />
+		onShow="singleUploadListener(approvalLetterUploadWV);"
+		rendered="#{isEditableStatus and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and (!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and (!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)))}"> <!-- #38711  -->
+		<p:ajax event="close" />	
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
 			fileUploadListener="#{lOADetailBackingBean.fileUpload}" multiple="false"
@@ -799,12 +788,6 @@
   		</f:facet>
 	</p:dialog>
 	
-	<!--ac:scSingleFileUploadPopup id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
-			fileUploadListener="lOADetailBackingBean.fileUpload"			
-			update=":form:uploadedPage" 
-			fileType="#{lOADetailBackingBean.managedBean.fileTypePdf}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
-			label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();"/-->
 	
 	<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg"  appendToBody="true" 
 		message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">

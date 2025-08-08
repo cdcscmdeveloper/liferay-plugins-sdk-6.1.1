@@ -72,7 +72,9 @@
 				<p:column style="white-space:normal;text-align:center;">
 					<f:facet name="header" style="white-space:normal;">
 						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}"/>
+						<ui:remove>#26284 - Start</ui:remove>
 						<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}"/>
+						<ui:remove>#26284 - End</ui:remove>
 					</f:facet>
 					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						rendered="#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier ne null and dpLOABackingBean.getDisciplinaryActionActive(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}"

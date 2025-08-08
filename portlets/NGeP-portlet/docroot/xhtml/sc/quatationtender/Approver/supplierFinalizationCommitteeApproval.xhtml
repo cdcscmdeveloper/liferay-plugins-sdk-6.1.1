@@ -167,7 +167,8 @@
 									<f:selectItems
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest1)}" />
 									<p:ajax event="change"
-										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
+										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}"
+										update="requestDetailsId" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsg" for="decisiontypeid"
 									display="icon" /></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;">
@@ -265,7 +266,8 @@
 									<f:selectItems
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest3)}" />
 									<p:ajax event="change"
-										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
+										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}"
+										update="requestDetailsId" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq3" for="decisiontypeidRq3"
 									display="icon" /></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;">
@@ -302,8 +304,12 @@
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.response.period']}" />
 					</td>
-					<td>
-						<p:inputText value="#{approvalBackingBean.managedBean.scQtApprovalRequestList.get(0).responsePeriod}" style="width:200px;" disabled="#{approvalBackingBean.managedBean.readOnly}" />
+					<td><ui:remove>21692 - Start</ui:remove>
+						<p:inputText value="#{approvalBackingBean.managedBean.scQtApprovalRequestList.get(0).responsePeriod}" style="width:200px;" disabled="#{approvalBackingBean.managedBean.readOnly}" >
+						<p:ajax event="change"
+							listener="#{approvalBackingBean.replaceResponsePeriodValue()}" />
+						</p:inputText>
+						<ui:remove>21692 - End</ui:remove>
 						<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip5']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
 					</td>
 					<td>
