@@ -12,8 +12,7 @@ import java.util.List;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 
 /**
- * #35509
- * Search Bean for Audit Trail View of System Configuration Search
+ * Search Bean for Location
  * 
  */
 public class AuditPMSearchBean implements Serializable {
