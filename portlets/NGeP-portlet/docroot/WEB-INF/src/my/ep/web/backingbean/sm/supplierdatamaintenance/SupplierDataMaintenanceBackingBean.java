@@ -3162,6 +3162,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		for (SmRvSuppDoc suppDoc : this.getManagedBean().getSmRevisit().getSmRvSuppDocs()) {
 			validateRvSuppDoc(suppDoc);
 		}
+		if (null == this.getManagedBean().getSmRevisit().getRevisitRemark() || this.getManagedBean().getSmRevisit().getRevisitRemark().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_723104);
+		}
 	}
 
 	private void validateRvSuppDoc(SmRvSuppDoc suppDoc) {
