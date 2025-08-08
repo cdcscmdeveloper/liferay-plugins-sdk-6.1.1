@@ -434,7 +434,7 @@
 						
 						<td class="tdContent">
 							<p:outputPanel id="regNoPanelId">
-								<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="30"
+								<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="20"
 									value="#{supplierDataMaintenanceBackingBean.managedBean.smSupp.regNo}" converter="toUpperCaseConverter"
 									disabled="#{!supplierDataMaintenanceBackingBean.managedBean.smSupp.brandNew}"
 									size="40" label="#{lbl['lbl.sm.businessregno']}" >
