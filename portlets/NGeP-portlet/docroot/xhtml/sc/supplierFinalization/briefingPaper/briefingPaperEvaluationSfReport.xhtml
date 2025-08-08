@@ -94,9 +94,11 @@
 		</p:dataTable>
 
 		<div class="ppRightBtn">
+			<ui:remove>38523 - start </ui:remove>
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
-			action="#{suppFinalizationBackingBean.downloadAllBriefingPaperReports()}"
+				action="#{suppFinalizationBackingBean.downloadAllBriefingPaperReports(false)}"
 				styleClass="BtnSpacing" />
+			<ui:remove>38523 - end</ui:remove>
 			
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 			disabled="#{suppFinalizationBackingBean.managedBean.readOnly or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT or suppFinalizationBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_SIGN_OFF}"
