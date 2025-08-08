@@ -1133,7 +1133,6 @@ public class SPDetailBackingBean extends
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
-		// #21695 - Start - fix completed financial proposal still ticked after technical proposal updated
 		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
 			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
 				if (finProposalChecklist.getScQtCheckList().getTitle()
@@ -1146,7 +1145,6 @@ public class SPDetailBackingBean extends
 				}
 			}
 		}
-
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
@@ -1335,13 +1333,11 @@ public class SPDetailBackingBean extends
 									answers.add(specAnswer);
 								
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
-												.getProcurementMode().getParameterCode())) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
-												.getProcurementMode().getParameterCode())) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
@@ -1438,7 +1434,7 @@ public class SPDetailBackingBean extends
             	}
             }
             //#21695 check null
-            if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){
+            if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){ //#21695
             	TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
     			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
     					.getTplSpecQuestion().getClPriceTypeCode()
