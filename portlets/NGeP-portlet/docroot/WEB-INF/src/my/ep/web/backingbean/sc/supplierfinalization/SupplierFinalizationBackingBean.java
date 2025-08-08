@@ -8964,11 +8964,23 @@ public class SupplierFinalizationBackingBean extends
 							recommendationBean = updateCachedData(qualSupplier, 
 									zoneId, selectedItemId, null);
 							// 26247, 31128, #32699 - Start.
-							SmSupplier supplier = recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier();
-							if (recommendationBean.isAwarded() && !disabledQTProcess(supplier)) {
-								getManagedBean().setRecommendedSupplier(qualSupplier); 
-							} 
-							//  26247, 31128, #32699 - End.
+							SmSupplier supplier = recommendationBean.getScQtProposal().getScQtSupplier()
+									.getSmSupplier();
+							boolean disabledSupplier = disabledQTProcess(supplier);
+							if (!disabledSupplier) {
+								if (recommendationBean.isAwarded()) {
+									getManagedBean().setRecommendedSupplier(qualSupplier);
+								}
+							} else {
+								if (getManagedBean().getDisabledSupplierIds() == null) {
+									getManagedBean().setDisabledSupplierIds(new ArrayList<String>());
+								}
+								String supplierId = supplier.getSupplierId().toString();
+								if (!getManagedBean().getDisabledSupplierIds().contains(supplierId)) {
+									getManagedBean().getDisabledSupplierIds().add(supplierId);
+								}
+							}
+							// 26247, 31128, #32699 - End.
 							
 							//#21692 - Start
 							awardedSupplierRejectEPV(recommendationBean);
