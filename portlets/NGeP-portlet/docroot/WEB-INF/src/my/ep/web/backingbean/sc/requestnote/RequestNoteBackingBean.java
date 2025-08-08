@@ -907,6 +907,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			FacesScopes facesScopes = new FacesScopes();
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
+			
+			//#26284 - Start
+			checkSupplierDisciplinaryAction(requestNote);
+			//#26284 -End
 
 			// reRecommend
 			requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
@@ -2145,6 +2149,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
+	
+			
 			parseRequestNote(requestNote, outcome);
 			requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
 
@@ -2278,6 +2284,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(scRequestNote);
+		
+		//#26284 - Start
+		checkSupplierDisciplinaryAction(scRequestNote);
+		//#26284 -End
 
 		// #31679 - Start
 		if (requestNoteReqDTO.getRequestNote() != null) {
@@ -6083,7 +6093,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			SmMofAccount mofAccount = supplierDataMaintenanceSO.retrieveMofSupplierBySupplierId(reqDTO).getSmMofAccount();
 			SmSupplier smSupplier = reqDTO.getSupplier();
 
-			if (mofAccount !=null && smSupplier !=null) {
+			if (mofAccount !=null || smSupplier !=null) {
 				// Check DA Active
 				List<SmDisciplinaryAction> nonExpiredActions = supplierDataMaintenanceSO
 						.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
