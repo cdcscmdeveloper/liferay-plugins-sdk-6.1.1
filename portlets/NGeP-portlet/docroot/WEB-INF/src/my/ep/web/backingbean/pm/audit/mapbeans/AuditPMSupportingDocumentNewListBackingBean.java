@@ -185,6 +185,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 		this.roleCode = roleCode;
 		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
 		this.docType = managedBeans.getSelectedDocument().getDocName();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getNewCategoryL3AuditList()) {
 			if (pmDocumentRestr.isBrandNew() && pmDocumentRestr.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
