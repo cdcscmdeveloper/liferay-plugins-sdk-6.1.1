@@ -1079,20 +1079,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
-
-		// #21695 - Start - fix completed financial proposal still ticked after technical proposal updated
-		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
-			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
-				if (finProposalChecklist.getScQtCheckList().getTitle()
-						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
-						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
-					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
-					finProposalChecklist.setSubmitted(false);
-					break;
-				}
-			}
-		}
 		
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
@@ -1453,7 +1439,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			}
 			// 20220127@syazani - Enhancement #3657 - specific error message - End
 
-          if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){ //#21695
+          if(null != this.getManagedBean().getTechnicalQtProposalChecklist()){ //#21695
 			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
 			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
 					.getTplSpecQuestion().getClPriceTypeCode()
@@ -3195,7 +3181,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		for (ScQtProposalChecklist tecChecklistDetail : this.getManagedBean().getTecCheckDetailsList()) {
 			if (tecChecklistDetail.getScQtCheckList().getTitle()
 					.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
-					&& !tecChecklistDetail.isSubmitted() && !tecChecklistDetail.isFromTechnicalProposal()) {
+					&& !tecChecklistDetail.isSubmitted()) {
 				throw new EpException(MessageConst.WARN_7602692);
 			}
 
