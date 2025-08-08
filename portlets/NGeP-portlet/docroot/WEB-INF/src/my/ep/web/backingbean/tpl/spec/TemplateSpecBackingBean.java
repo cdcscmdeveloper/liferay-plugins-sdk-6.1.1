@@ -3003,6 +3003,5 @@ public class TemplateSpecBackingBean extends
 		}
 
 	}
-	// #35384, #36248_haziq - End	
-	
+	// #35384, #36248_haziq - End
 }

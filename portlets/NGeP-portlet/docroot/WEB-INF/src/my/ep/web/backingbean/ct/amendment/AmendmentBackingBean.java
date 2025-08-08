@@ -5798,16 +5798,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}			
 			commonDownload(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);			
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} finally {
 			try {
 				if (fileOutputStream != null) {
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -5881,7 +5881,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setAllowAcknowledge(false);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 
