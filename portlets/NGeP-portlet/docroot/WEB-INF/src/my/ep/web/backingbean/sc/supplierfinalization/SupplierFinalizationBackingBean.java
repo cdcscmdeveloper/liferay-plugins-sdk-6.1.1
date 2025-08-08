@@ -4257,7 +4257,7 @@ return	remarksNotFound;
 	/**
 	 * @throws Exception
 	 */
-	public void downloadAllBriefingPaperReports(boolean directDownload) throws Exception {
+	public void downloadAllBriefingPaperReports(boolean directDownload) throws Exception {// 38523
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// 38523 - start
