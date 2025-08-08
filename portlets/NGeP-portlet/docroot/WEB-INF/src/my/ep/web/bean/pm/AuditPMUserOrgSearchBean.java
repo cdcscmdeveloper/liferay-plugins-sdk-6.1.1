@@ -93,7 +93,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	private PmParameterDesc pmParameterDescOrgType;
 
 	public AuditPMUserOrgSearchBean() {
-		/*Empty Constructor*/
+		/* Empty Constructor */
 	}
 
 	/**
@@ -442,7 +442,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	}
 
 	public String getMasterLabel2() {
-		return masterLabel2;
+		return masterLabel2 != null ? masterLabel2.trim() : null;
 	}
 
 	public void setMasterLabel2(String masterLabel2) {
