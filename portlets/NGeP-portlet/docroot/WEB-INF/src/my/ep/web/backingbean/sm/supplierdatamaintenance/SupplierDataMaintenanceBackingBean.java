@@ -1902,12 +1902,17 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		//#26238 - 38417
 		SmSupplier supplier = getManagedBean().getSmSupplier();
+		//#38609 - start
+		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isSuspendRegistration();
 		boolean hasPending = supplier.isPendingBlacklist() || supplier.isPendingCancel()
 				|| supplier.isPendingSuspend();
 		if (!hasPending && StringUtils.isNotEmpty(mofStatus) 
 				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)){
 			getManagedBean().setAllowedToDoMaintenance(false);
+		}else if (StringUtils.isNotEmpty(mofStatus) && mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA) {
+			getManagedBean().setAllowedToDoMaintenance(false);
 		}
+		//#38609 - end
 	}
 
 	/**
