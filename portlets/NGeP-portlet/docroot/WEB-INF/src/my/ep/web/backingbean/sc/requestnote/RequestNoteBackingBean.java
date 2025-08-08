@@ -2149,6 +2149,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
+	
+			
 			parseRequestNote(requestNote, outcome);
 			requestNoteReqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
 
@@ -2282,6 +2284,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(scRequestNote);
+		
+		//#26284 - Start
+		checkSupplierDisciplinaryAction(scRequestNote);
+		//#26284 -End
 
 		// #31679 - Start
 		if (requestNoteReqDTO.getRequestNote() != null) {
