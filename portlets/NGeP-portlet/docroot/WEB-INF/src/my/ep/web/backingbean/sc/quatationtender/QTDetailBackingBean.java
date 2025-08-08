@@ -14587,7 +14587,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//#21692 - End
   	//#29472 - start
-  	public void reviseQtDocument() {
+  	public void reviseQTDocument() {
   		
 		IQTDetailSO detailSO;
 		try {
