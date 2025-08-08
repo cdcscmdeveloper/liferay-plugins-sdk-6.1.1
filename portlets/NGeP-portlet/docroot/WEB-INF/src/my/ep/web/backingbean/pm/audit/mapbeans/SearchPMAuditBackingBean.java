@@ -145,7 +145,6 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 		getManagedBean().setLocationDetailType(locationType);
 		getManagedBean().getSearchBean().setPmParameterLvlId(pmParameterLvlId);
 		log.info("pmParameterLvlId.intValue() :::::  " + pmParameterLvlId.intValue());
-		getManagedBean().getSearchBean().setRoleCode(roleCode);
 		getManagedBean().getSearchBean().setCreatedBy(createBy.toString());
 		return NAV_TO_MAINTAIN;
 	}
@@ -234,8 +233,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "FirstUIViewMaster Pm Audit", "",
-						"auditPMSO",
-						new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
+						"auditPMSO", new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
 			}
 			return null;
 		}
@@ -301,8 +299,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "FirstUIViewDetail PM Audit", "",
-						"auditPMSO",
-						new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
+						"auditPMSO", new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
 			}
 			return null;
 		}

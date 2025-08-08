@@ -15,7 +15,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 
 /**
- * Search Bean for Location
+ * Search Bean for AuditPMUserOrgSearchBean
  * 
  */
 public class AuditPMUserOrgSearchBean implements Serializable {
@@ -35,9 +35,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	private String orgCode;
 	private String orgName;
 	private String orgType;
-	private String orgCategory;
-	// private Long countryId;
-	// private String locationCode;
+	private String orgCategory = "0";
 	private String locationType;
 	private String actionType;
 	private Date dateFrom;
@@ -70,6 +68,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	private Date pDatefrom;
 	private Date pDateto;
 	private BigDecimal pDocGroupId;
+	private BigDecimal pUserOrgProfileId;
 	private BigDecimal userId;
 	private BigDecimal userIdOldVal;
 	private List<PmUser> searchPmUserList;
@@ -94,6 +93,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	private PmParameterDesc pmParameterDescOrgType;
 
 	public AuditPMUserOrgSearchBean() {
+		/* Empty Constructor */
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 
 	public List<PmUser> getSearchPmUserList() {
 		if (searchPmUserList.size() <= 0)
-			searchPmUserList = new ArrayList<PmUser>();
+			searchPmUserList = new ArrayList<>();
 		return searchPmUserList;
 	}
 
@@ -442,7 +442,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	}
 
 	public String getMasterLabel2() {
-		return masterLabel2;
+		return masterLabel2 != null ? masterLabel2.trim() : null;
 	}
 
 	public void setMasterLabel2(String masterLabel2) {
@@ -587,7 +587,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 
 	public List<PmOrgValidity> getSearchPmOrgValidity() {
 		if (searchPmOrgValidity.size() <= 0)
-			searchPmOrgValidity = new ArrayList<PmOrgValidity>();
+			searchPmOrgValidity = new ArrayList<>();
 		return searchPmOrgValidity;
 	}
 
@@ -605,7 +605,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 
 	public List<PmOrgProfile> getSearchPmOrgProfile() {
 		if (searchPmOrgProfile.size() <= 0)
-			searchPmOrgProfile = new ArrayList<PmOrgProfile>();
+			searchPmOrgProfile = new ArrayList<>();
 		return searchPmOrgProfile;
 	}
 
@@ -635,6 +635,14 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 
 	public void setOrgValidityId(Long orgValidityId) {
 		this.orgValidityId = orgValidityId;
+	}
+
+	public BigDecimal getpUserOrgProfileId() {
+		return pUserOrgProfileId;
+	}
+
+	public void setpUserOrgProfileId(BigDecimal pUserOrgProfileId) {
+		this.pUserOrgProfileId = pUserOrgProfileId;
 	}
 
 }

@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<table class="ppTwoTable">
+		<tr>
+			<th width="22%"><p:outputLabel
+					value="#{lbl['lbl.pm.audit.Role']}" /></th>
+			<td><p:selectOneMenu id="roles" styleClass="ppDropDownWidthM"
+					rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 ne null}"
+					required="false" label="#{lbl['lbl.pm.audit.Role']}"
+					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode}"
+					style="width: 265px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}" />
+					<f:selectItems
+						value="#{searchPMUserOrgAuditBackingBean.getDropdownRoleList()}"
+						var="roleItem" itemLabel="#{roleItem.roleName}"
+						itemValue="#{roleItem.roleCode}" />
+					<p:ajax event="change" update="roles,searchActionBylist,@form"
+						process="userOrgAuditPMSearchPanel" />
+				</p:selectOneMenu> <ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" /></td>
+			<td><p:message for="roles" id="rolesMsg" display="icon" /></td>
+			<td>&#160;</td>
+		</tr>
+		<tr>
+			<th width="22%"><p:outputLabel
+					value="#{lbl['lbl.pm.audit.actionBy']}" /></th>
+			<td><p:outputPanel id="actionByPanel">
+					<ac:lovAudit isStoreProc="true" id="searchActionBylist"
+						disabled="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode eq null}"
+						lovId="PM_USER" size="36" readonly="true"
+						roleCode="searchPMUserOrgAuditBackingBean.getRoleCode()"
+						headerText="#{lbl['lbl.pm.audit.actionBy']}" process="@this"
+						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser.userName}"
+						postUpdateListener="searchPMUserOrgAuditBackingBean.resetGetActionBy()"
+						update="@form"
+						saveObject="searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser"
+						tooltip="#{lbl['lbl.pm.audit.tooltip.actionby']}">
+					</ac:lovAudit>
+				</p:outputPanel></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateFrom']}" /></td>
+			<td><p:calendar id="fromDate" showOn="button" size="36"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom}"
+					readonlyInput="true">
+					<p:ajax event="dateSelect" update="toDate" />
+				</p:calendar></td>
+			<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
+			<td><p:calendar showOn="button" size="32"
+					label="#{lbl['lbl.pm.audit.actiondateTo']}"
+					required="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom ne null or !searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom eq ''}"
+					mindate="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom}"
+					id="toDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateTo}"
+					readonlyInput="true">
+				</p:calendar></td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<div class="ppRightBtn">
+					<p:commandButton id="panelSearchId"
+						value="#{lbl['lbl.btn.search']}"
+						onstart="blkPanelSearchTable.show();"
+						oncomplete="blkPanelSearchTable.hide();" update="searchMasters"
+						process="userOrgAuditPMSearchPanel"
+						action="#{searchPMUserOrgAuditBackingBean.searchMaster}">
+						<f:param name="disableValidation" value="true" />
+					</p:commandButton>
+
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
+						partialSubmit="true" process="@this"
+						update="userOrgAuditPMSearchPanel,:form:searchMasters"
+						action="#{searchPMUserOrgAuditBackingBean.resetOrganisationSearchBean}" />
+				</div>
+			</td>
+		</tr>
+	</table>
+	<h:panelGroup
+		rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode ne null}">
+		<ac:lovPopupAudit id="actionByPopupId"
+			update=":form:userOrgAuditPMSearchPanel" />
+	</h:panelGroup>
+</ui:composition>
