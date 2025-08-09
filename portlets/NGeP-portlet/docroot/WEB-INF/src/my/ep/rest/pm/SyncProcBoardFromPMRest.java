@@ -368,8 +368,8 @@ public class SyncProcBoardFromPMRest {
 			if(setDefaultPassword != null && "true".equalsIgnoreCase(setDefaultPassword)){
 				setDefaultPwd = true;
 			}
-			SmServiceLookup.getUserSO().syncLiferayOimByLoginId(loginId,setDefaultPwd);
-			log.info("Finished Sync By Login Id");			
+			boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginId(loginId,setDefaultPwd);
+			log.info("Finished Sync By Login Id:"+success);			
 			return Response.status(200).entity("Success sync Procurement Board users !!").build();
 		} catch (Exception e) {
 			e.printStackTrace();
