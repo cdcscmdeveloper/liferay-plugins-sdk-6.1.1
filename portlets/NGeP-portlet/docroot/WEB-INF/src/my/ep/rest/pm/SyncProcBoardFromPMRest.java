@@ -347,6 +347,7 @@ public class SyncProcBoardFromPMRest {
 	 * <pre>
 	 *   /createuserv2?loginId=john.doe
 	 *   /createuserv2?loginId=john.doe&setDefaultPassword=true
+	 *   http://ngepsit.eperolehan.com.my/NGeP-portlet/rest/sync/createuserv2?loginId=3003703
 	 * </pre>
 	 *
 	 * @param loginId the login ID of the user to synchronize (required).
@@ -354,7 +355,7 @@ public class SyncProcBoardFromPMRest {
 	 * @return HTTP 200 if synchronization is successful, HTTP 406 with an error message if failed.
 	 */
 	@GET
-	@Path("/createuserv2}")
+	@Path("/createuserv2")
 	public Response syncLiferayOimByLoginId(
 	        @QueryParam("loginId") String loginId,
 	        @QueryParam("setDefaultPassword") String setDefaultPassword) {
