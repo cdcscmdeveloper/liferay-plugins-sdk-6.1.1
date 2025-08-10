@@ -297,6 +297,7 @@ public class SyncProcBoardFromPMRest {
 			log.info("#Start Sync By Login Id");
 			reqDTO = new UserReqDTO();
 			reqDTO.setLoginId(loginId);
+			reqDTO.setDefaultPassword(true);
 			resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginId(reqDTO);
 			log.info("TB DEV ISLAND: AFTER GET USER");
 			if(resDTO.getPmUser() == null){
@@ -309,6 +310,7 @@ public class SyncProcBoardFromPMRest {
 				reqDTO = new UserReqDTO();
 				reqDTO.setLoginId(loginId);
 				reqDTO.setUserId(userId);
+				reqDTO.setDefaultPassword(true);
 				reqDTO.setSupplierUser(false);
 				log.info("TB DEV ISLAND:START TO SYNC");
 				resDTO = SmServiceLookup.getUserSO().createnSyncLiferayAndOimRoleFromPm(reqDTO);
@@ -348,6 +350,7 @@ public class SyncProcBoardFromPMRest {
 	 *   /createuserv2?loginId=john.doe
 	 *   /createuserv2?loginId=john.doe&setDefaultPassword=true
 	 *   http://ngepsit.eperolehan.com.my/NGeP-portlet/rest/sync/createuserv2?loginId=3003703
+	 *   http://localhost:8080/NGeP-portlet/rest/sync/createuserv2?loginId=3003703
 	 * </pre>
 	 *
 	 * @param loginId the login ID of the user to synchronize (required).
