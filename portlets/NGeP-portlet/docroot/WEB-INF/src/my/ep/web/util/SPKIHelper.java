@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import my.ep.constant.MessageConst;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.sm.common.spki.SpkiReqDTO;
 import my.ep.dto.sm.common.spki.SpkiResDTO;
 import my.ep.exception.EpException;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SpkiVO;
 
@@ -64,7 +67,12 @@ public class SPKIHelper {
 			vo.setErrMsg(resDTO.getErrorMessage());
 		} catch (Exception e) {
 			log.info("SIGNING:" + identificationNo + "||" + epNo + "||" + dataForSigning + "  ERROR MSG:" + e.getMessage());
-			vo.setErrMsg(resDTO.getErrorMessage());
+			vo.setErrMsg(MessageUtils.getMessage(
+					provider.equals(SupplierManagementConst.CERT_TRUSTGATE) ? MessageConst.ERROR_TRUSTGATE_776062
+							: MessageConst.ERROR_DIGICERT_776062,
+					new String[] { },
+					MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale()));
 		}
 		vo.setSignedData(signedData);
 		return vo;
@@ -83,11 +91,11 @@ public class SPKIHelper {
 				throw new EpException(resDTO.getErrorMessage());
 			}
 			tok = resDTO.getToken();
-			log.info("generated token:"+tok);
 		} catch (Exception ex) {
 			log.info("Error call generateSecurityToken for:" + identificationNo + "||" + epNo + "||" + " ERROR MSG:" + ex.getMessage());
 			ex.printStackTrace();
-			throw new EpException(ex.getMessage());
+			throw new EpException(provider.equals(SupplierManagementConst.CERT_TRUSTGATE) ? MessageConst.ERROR_TRUSTGATE_776062
+					: MessageConst.ERROR_DIGICERT_776062);
 
 		}
 		return tok;
@@ -110,7 +118,8 @@ public class SPKIHelper {
 		} catch (Exception ex) {
 			log.info("Error call chall question for:" + identificationNo + "||" + epNo + "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
 			ex.printStackTrace();
-			throw new EpException(ex.getMessage());
+			throw new EpException(provider.equals(SupplierManagementConst.CERT_TRUSTGATE) ? MessageConst.ERROR_TRUSTGATE_776062
+					: MessageConst.ERROR_DIGICERT_776062);
 
 		}
 		return retVal;
