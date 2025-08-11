@@ -2232,7 +2232,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean toBeValidated = Arrays.asList(ParameterConst.DECISION_RECOMMEND_SUPPLIER,
 				ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY).contains(
 				scQtFinalization.getDecision().getParameterCode())
-				&& allowValidation;
+				&& allowValidation && !BpmOutcomeConst.BPM_REVISE.equals(this.getManagedBean().getOutcome());
 		// 26247 - end
 		
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();
@@ -2489,7 +2489,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean toBeValidated = Arrays.asList(ParameterConst.DECISION_RECOMMEND_SUPPLIER,
 				ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY).contains(
 				scQtFinalization.getDecision().getParameterCode())
-				&& allowValidation;
+				&& allowValidation && !BpmOutcomeConst.BPM_REVISE.equals(this.getManagedBean().getOutcome());
 		for (ScQtRecommend scQtRecommend : scQtFinalization.getScQtRecommends()) {
 			if (scQtRecommend.isCancelled()) { 
 				++cancelledItemsCount; 
