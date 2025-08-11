@@ -14962,12 +14962,15 @@ public class SmApplicationUtil {
 
 				calcEndDate(daysLeft, newEndCal, stateId);
 
-				if (newEndCal.getTime().before(dateCal.getTime())) {
+				if(DateUtils.isDateGreater(dateCal.getTime(), newEndCal.getTime())){
 					daysLeft++;
 				}
+//				if (newEndCal.getTime().before(dateCal.getTime())) {
+//					daysLeft++;
+//				}
 			}
 		}
-
+		log.info("30747 : daysLeft :" + daysLeft + " / time : " + dateCal.getTime());
 		mapDate.put(daysLeft, dateCal.getTime());
 		return mapDate;
 	}
