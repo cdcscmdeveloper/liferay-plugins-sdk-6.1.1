@@ -3,46 +3,15 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
 	<p:blockUI widgetVar="blkPanelSearchTable" block=":form"
 		trigger="panelSearchId">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
-	<script>
-		function autoSelectOrgType() {
-			if ($("input[id$=':form:sorSearchOrgTypeIdUser:0']")
-					.is(':disabled')) {
-				console.log("0");
-
-				//sorSearchOrgTypeIdUser
-				$("input[id$=':form:sorSearchOrgTypeIdUser:1']").prop(
-						'checked', true);
-				$("input[id$=':form:sorSearchOrgTypeIdUser:1']").change();
-
-			} else if ($("input[id$=':form:sorSearchOrgTypeIdUser:1']").is(
-					':disabled')) {
-				console.log("1");
-
-				//sorSearchOrgTypeIdUser
-				$("input[id$=':form:sorSearchOrgTypeIdUser:0']").prop(
-						'checked', true);
-				$("input[id$=':form:sorSearchOrgTypeIdUser:0']").change();
-
-			} else {
-				console.log("2");
-
-				//sorSearchOrgTypeIdUser
-				$("input[id$=':form:sorSearchOrgTypeIdUser:0']").prop(
-						'checked', true);
-				$("input[id$=':form:sorSearchOrgTypeIdUser:0']").change();
-			}
-		}
-	</script>
 	<p:remoteCommand name="selectTypeAutoRun" id="remoteId"
 		update="userOrgAuditPMSearchPanel"
-		actionListener="#{searchPMUserOrgAuditBackingBean.autoSelectOrgType()}"
-		autoRun="#{not searchPMUserOrgAuditBackingBean.managedBean.notFirstRun}" />
+		actionListener="#{searchPMUserOrgAuditBackingBean.autoSelectOrgType()}" />
 	<p:panel id="userOrgAuditPMSearchPanel"
 		header="#{lbl['lbl.pm.search.location']}" toggleable="true">
 		<p:outputPanel>
@@ -66,327 +35,37 @@
 							var="lvlType" itemLabel="#{lvlType.codeName}"
 							itemValue="#{lvlType.levelCode}" />
 						<p:ajax onstart="blkPanelSearchTable.show()"
-							oncomplete="blkPanelSearchTable.hide()" event="change"
+							oncomplete="blkPanelSearchTable.hide(); setTimeout(function() { selectTypeAutoRun(); }, 100);"
+							event="change"
 							listener="#{searchPMUserOrgAuditBackingBean.resetOrganisationSearchBean}"
 							process="@this"
-							update=":form:userOrgAuditPMSearchPanel,:form:searchMasters" />
+							update="userOrgAuditPMSearchPanel,:form:searchMasters" />
 					</p:selectOneMenu></td>
 				<td><p:message for="dropdownMainOrgUser"
 						id="dropdownMainOrgUserMsg" display="icon" /></td>
 				<td>&#160;</td>
 			</tr>
-			<!-- *** OPM START ORGANIZATION PROFILE MGT *** -->
-			<c:if
-				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM'}">
-				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOPM.xhtml" />
-			</c:if>
-			<!-- *** OPM END *** -->
-
-			<!-- *** OUSR START - USER *** -->
-			<c:if
-				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSR'}">
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></th>
-					<td><p:selectOneRadio id="sorSearchOrgTypeIdUser"
-							layout="custom" styleClass="commonLabel" widgetVar="myCheckbox"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory}">
-							<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}"
-								itemValue="#{searchPMUserOrgAuditBackingBean.getFederalGovt()}" />
-							<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}"
-								itemValue="#{searchPMUserOrgAuditBackingBean.getOthers()}" />
-							<p:ajax
-								process="@this,orgCategoryMaintainPGUser,orgTypeFederalListUser,orgTypeOthersListUser"
-								onstart="blkPanelSearchTable.show()"
-								oncomplete="blkPanelSearchTable.hide()" event="change"
-								partialSubmit="true"
-								update="userOrgAuditPMSearchPanel,orgTypeFederalListUser,orgTypeOthersListUser"
-								listener="#{searchPMUserOrgAuditBackingBean.changeType()}" />
-						</p:selectOneRadio> <h:panelGrid id="orgCategoryMaintainPGUser" columns="7">
-							<p:radioButton id="sorSearchGovnUser"
-								for="sorSearchOrgTypeIdUser" itemIndex="0" />
-							<h:outputLabel styleClass="commonLabel" for="sorSearchGovnUser"
-								value="#{lbl['lbl.pm.org.federal.government']}" />
-							<p:radioButton id="sorSearchOthersUser"
-								for="sorSearchOrgTypeIdUser" itemIndex="1" />
-							<h:outputLabel styleClass="commonLabel" for="sorSearchOthersUser"
-								value="#{lbl['lbl.pm.org.others']}" />	
-					     &#160; <p:graphicImage id="giOthersOrgUser"
-								style="vertical-align:top;"
-								value="/css/images/design/tooltips.png" />
-							<p:tooltip id="ttOthersOrgUser" for="giOthersOrgUser">
-								<h:outputText escape="false"
-									value="#{lbl['lbl.pm.org.others.tooltip']}" />
-							</p:tooltip>
-						</h:panelGrid></td>
-					<th></th>
-					<td>&#160;</td>
-				</tr>
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></th>
-					<td><p:selectOneMenu id="orgTypeFederalListUser"
-							rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory eq searchPMUserOrgAuditBackingBean.getFederalGovt()}"
-							styleClass="ppDropDownWidthM"
-							required="#{!empty param['disableValidation']}"
-							label="#{lbl['lbl.pm.organisation.orgType']}"
-							style="width: 265px;margin-bottom: 5px;"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems
-								value="#{searchPMUserOrgAuditBackingBean.getOrgTypeDropdownValues()}"
-								var="orgTypeItem" itemLabel="#{orgTypeItem.codeName}"
-								itemValue="#{orgTypeItem.levelId}" />
-							<p:ajax event="change" partialSubmit="true" process="@this"
-								listener="#{searchPMUserOrgAuditBackingBean.changeOrgType()}"
-								update=":form:userOrgAuditPMSearchPanel" />
-						</p:selectOneMenu> <p:selectOneMenu id="orgTypeOthersListUser"
-							rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory eq searchPMUserOrgAuditBackingBean.getOthers()}"
-							styleClass="ppDropDownWidthM"
-							required="#{!empty param['disableValidation']}"
-							label="#{lbl['lbl.pm.organisation.orgType']}"
-							style="width: 265px;margin-bottom: 5px;"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems
-								value="#{searchPMUserOrgAuditBackingBean.getOrgTypeDropdownValues()}"
-								var="orgTypeItem" itemLabel="#{orgTypeItem.codeName}"
-								itemValue="#{orgTypeItem.levelId}" />
-							<p:ajax event="change" partialSubmit="true" process="@this"
-								listener="#{searchPMUserOrgAuditBackingBean.changeOrgType()}"
-								update=":form:userOrgAuditPMSearchPanel" />
-						</p:selectOneMenu></td>
-					<th>&#160;</th>
-					<td>&#160;</td>
-				</tr>
-
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.orgName']}" /></th>
-					<td><p:outputPanel id="opFfcOrgCode"
-							rendered="#{ParameterConst.orgTypeFactoring eq searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}">
-							<ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="36"
-								readonly="true"
-								disabled="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterId==null or searchPMUserOrgAuditBackingBean.managedBean.disabledOrgFields}"
-								headerText="#{searchPMUserOrgAuditBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode)}"
-								value="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName}"
-								postUpdateListener="searchPMUserOrgAuditBackingBean.updateSearchCriteriaForOrgName"
-								update="@form"
-								saveObject="searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile"
-								conditionField="#{searchPMUserOrgAuditBackingBean.constructConditionFields()}"
-								displayResultWhenFirstLoad="false"
-								displayResultWhenReset="false" />
-							<p:message id="lovFfcOrgMsg" for="lovFfcOrg" display="icon" />
-						</p:outputPanel> <p:outputPanel id="opSupOrgCode"
-							rendered="#{ParameterConst.orgTypeSupplier eq searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}">
-							<ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER"
-								size="36" readonly="true"
-								disabled="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterId==null or searchPMUserOrgAuditBackingBean.managedBean.disabledOrgFields}"
-								headerText="#{searchPMUserOrgAuditBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode)}"
-								value="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
-								postUpdateListener="searchPMUserOrgAuditBackingBean.updateSearchCriteriaForOrgName"
-								update="@form"
-								saveObject="searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile"
-								conditionField="#{searchPMUserOrgAuditBackingBean.constructConditionFields()}"
-								displayResultWhenFirstLoad="false"
-								displayResultWhenReset="false" />
-							<p:message id="lovSupOrgMsg" for="lovSupOrg" display="icon" />
-						</p:outputPanel> <p:outputPanel id="opPtjOrgCode"
-							rendered="#{ParameterConst.orgTypePtj eq searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode or 
-					ParameterConst.orgTypePtjGroup eq searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}">
-							<p:inputText size="36" id="itSelectedPtj"
-								value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmOrgValidity.orgName}"
-								readonly="true" />
-					&#160;	
-					<p:commandLink id="ptjSearchCL" partialSubmit="true"
-								disabled="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterId==null or searchPMUserOrgAuditBackingBean.managedBean.disabledOrgFields}"
-								process="@this" update=":form:orgProfileCcId:ptjPopup"
-								action="#{organisationSearchBackingBean.initPtjPopup}"
-								oncomplete="ptjPopup.show();">
-								<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
-							</p:commandLink>
-						</p:outputPanel> <p:outputPanel id="opOrgCode"
-							rendered="#{ParameterConst.orgTypeFactoring ne searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode 
-							and ParameterConst.orgTypeSupplier ne searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode
-							and ParameterConst.orgTypePtj ne searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode
-							and ParameterConst.orgTypePtjGroup ne searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}">
-							<ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="36"
-								disabled="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterId==null or searchPMUserOrgAuditBackingBean.managedBean.disabledOrgFields}"
-								readonly="true"
-								headerText="#{searchPMUserOrgAuditBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode)}"
-								value="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"
-								saveObject="searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile"
-								postUpdateListener="searchPMUserOrgAuditBackingBean.updateSearchCriteriaForOrgName"
-								update="@form"
-								conditionField="#{searchPMUserOrgAuditBackingBean.constructConditionFields()}"
-								displayResultWhenFirstLoad="false"
-								displayResultWhenReset="false" />
-							<p:message id="lovMinistryMsg" for="lovMinistry1" display="icon" />
-						</p:outputPanel></td>
-				</tr>
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.identificationNo']}" /></th>
-					<td><p:inputText id="identificationNoId"
-							styleClass="ppDisplayTextM" size="36"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel5}"
-							maxlength="255" /> <ac:iconTooltip
-							value="#{lbl['lbl.pm.audit.tooltip.identificationNo']}" /></td>
-					<th>&#160;</th>
-					<td>&#160;</td>
-				</tr>
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.userName']}" /></th>
-					<td><p:inputText id="userNameId" styleClass="ppDisplayTextM"
-							size="36"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel6}"
-							maxlength="255" /> <ac:iconTooltip
-							value="#{lbl['lbl.pm.audit.tooltip.userName']}" /></td>
-					<th>&#160;</th>
-					<td>&#160;</td>
-				</tr>
-			</c:if>
-			<!-- *** OUSR END *** -->
+			<h:panelGroup
+				rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OUSR' or searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM'}">
+				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOrgType.xhtml"></ui:include>
+			</h:panelGroup>
 
 			<!-- *** OFO START - FINANCIAL ORGANIZATION *** -->
-			<c:if
-				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OFO'}">
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.serviceType']}" /> <h:outputLabel
-							value="*" styleClass="mandatory" /></th>
-					<td><p:selectOneMenu id="serviceTypeId"
-							styleClass="ppDropDownWidthM" required="true"
-							label="#{lbl['lbl.pm.audit.serviceType']}"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel3}"
-							style="width: 265px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{searchPMUserOrgAuditBackingBean.getServiceTypeDropdownValues()}"
-								var="lvlOFO" itemLabel="#{lvlOFO.codeName}"
-								itemValue="#{lvlOFO.masterLabel3}" />
-							<p:ajax event="change" partialSubmit="true" process="@this"
-								listener="#{searchPMUserOrgAuditBackingBean.changeServiceType()}"
-								update=":form:userOrgAuditPMSearchPanel" />
-						</p:selectOneMenu></td>
-					<td><p:message for="serviceTypeId" id="serviceTypeIdMsg"
-							display="icon" /></td>
-					<td>&#160;</td>
-				</tr>
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.businessRegNo']}" /></th>
-					<td><p:inputText id="businessRegNoId"
-							styleClass="ppDisplayTextM" maxlength="10" size="36"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel4}" /></td>
-					<th>&#160;</th>
-					<td>&#160;</td>
-				</tr>
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.financialOrgName']}" /></th>
-					<td><p:inputText id="financialOrgNameId"
-							styleClass="ppDisplayTextM" size="36"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel5}"
-							maxlength="255" /></td>
-					<th>&#160;</th>
-					<td>&#160;</td>
-				</tr>
-			</c:if>
+			<h:panelGroup
+				rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OFO'}">
+				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOFO.xhtml" />
+			</h:panelGroup>
 			<!-- *** OFO END *** -->
 
 			<!-- *** OUSRG START - USER GROUP *** -->
-
-
-			<c:if
-				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSRG'}">
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.grpRole']}" /> <h:outputLabel
-							value="*" styleClass="mandatory" /></th>
-					<td><p:selectOneMenu id="grpRoleId"
-							styleClass="ppDropDownWidthM" required="true"
-							label="#{lbl['lbl.pm.audit.grpRole']}"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel3}"
-							style="width: 265px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{searchPMUserOrgAuditBackingBean.getGroupRoleDropdownValues()}"
-								var="lvlGrpRole" itemLabel="#{lvlGrpRole.codeName}"
-								itemValue="#{lvlGrpRole.masterLabel3}" />
-							<p:ajax event="change" partialSubmit="true" process="@this"
-								listener="#{searchPMUserOrgAuditBackingBean.changeGroupRole()}"
-								update=":form:userOrgAuditPMSearchPanel" />
-						</p:selectOneMenu></td>
-					<td><p:message for="grpRoleId" id="grpRoleIdMsg"
-							display="icon" /></td>
-					<td>&#160;</td>
-				</tr>
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.grpCode']}" /></th>
-					<td><p:inputText id="grpCodeId" styleClass="ppDisplayTextM"
-							size="36"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel4}"
-							maxlength="255" /></td>
-					<th>&#160;</th>
-					<td>&#160;</td>
-				</tr>
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.grpName']}" /></th>
-					<td><p:inputText id="grpNameId" styleClass="ppDisplayTextM"
-							size="36"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel5}"
-							maxlength="255" /></td>
-					<th>&#160;</th>
-					<td>&#160;</td>
-				</tr>
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.ptjCode']}" /></th>
-					<td><p:inputText id="ptjCodeId" styleClass="ppDisplayTextM"
-							size="36"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel6}"
-							maxlength="255" /></td>
-					<th>&#160;</th>
-					<td>&#160;</td>
-				</tr>
-				<tr>
-					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.ptjName']}" /></th>
-					<td><p:inputText id="ptjNameId" styleClass="ppDisplayTextM"
-							size="36"
-							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel7}"
-							maxlength="255" /></td>
-					<th>&#160;</th>
-					<td>&#160;</td>
-				</tr>
-			</c:if>
+			<h:panelGroup
+				rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OUSRG'}">
+				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOUSRG.xhtml" />
+			</h:panelGroup>
 			<!-- *** OUSRG END *** -->
 
 			<ui:include src="/xhtml/audit/pm/userOrgAuditSearchCommon.xhtml" />
 
 		</table>
-		<h:panelGroup id="orgNamePopupPanelId"
-			rendered="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType ne null or 
-		            	searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterId ne null or
-		            	searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode ne null}">
-			<ac:lovPopup update=":form:userOrgAuditPMSearchPanel" />
-		</h:panelGroup>
-
-		<h:panelGroup
-			rendered="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
-		  		or searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtjGroup}">
-			<ac:ptjPopup id="orgProfileCcId"
-				orgTypeParamCode="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}"
-				okAction="searchPMUserOrgAuditBackingBean.selectPtjAction"
-				update=":form:userOrgAuditPMSearchPanel" />
-		</h:panelGroup>
 	</p:panel>
 </ui:composition>
