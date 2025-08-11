@@ -222,8 +222,6 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		log.info("------->TG updateCR token:"+token);
-		log.info("------->TG updateCR encodedtoken:"+encodedtoken);
 		String url = getDns() + "/" + getTgUrl("resetpin") + encodedtoken;//34807
 
 		externalContext.redirect(url);
@@ -237,8 +235,6 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		log.info("------->TG changepin token:"+token);
-		log.info("------->TG changepin encodedtoken:"+encodedtoken);
 		String url = getDns() + "/" + getTgUrl("changepin") + encodedtoken;//34807
 
 		externalContext.redirect(url);
@@ -253,8 +249,6 @@ public class TrustGateHelper {
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
-		log.info("------->TG updateCR token:"+token);
-		log.info("------->TG updateCR encodedtoken:"+encodedtoken);
 		String url = getDns() + "/" + getTgUrl("updateCR") + encodedtoken;//34807
 
 		externalContext.redirect(url);
