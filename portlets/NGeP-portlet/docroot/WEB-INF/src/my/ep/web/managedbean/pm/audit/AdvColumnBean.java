@@ -7,9 +7,8 @@ import java.io.Serializable;
 
 /**
  * AdvColumnBean
- * 
- * @author venugopal
- * @since 15/08/2014
+ * #35509
+ * @author normuliana
  * 
  */
 public class AdvColumnBean implements Serializable{
