@@ -151,7 +151,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().setParamLevel3(paramLevel3);
 		getManagedBean().getSearchBean().setPmParameterLvlId(pmParameterLvlId);
 		log.info("pmParameterLvlId.intValue() :::::  " + pmParameterLvlId.intValue());
-		getManagedBean().getSearchBean().setRoleCode(roleCode);
 		getManagedBean().getSearchBean().setCreatedBy(createBy.toString());
 		getManagedBean().getSearchBean().setMasterLabel1(AuditConst.PM_AUD_ORGUAD);
 		getManagedBean().getSearchBean().setpDocGroupId(docGroupId);
