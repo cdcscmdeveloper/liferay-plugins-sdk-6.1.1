@@ -529,6 +529,8 @@ public class ReportConst implements Serializable{
 	//SM - Declaration Form
 	public static final String SM_DECLARATION_FORM_REPORT = "SM_DECLARATION_FORM.jsp";
 	public static final String SM_DECLARATION_FORM_REPORT_EN = "SM_DECLARATION_FORM_EN.jsp"; //27057 - English Version
+	// #34031
+	public static final String SM_REVIST_REPORT = "SM_REVISIT.jsp";
 
 	// CT Module reports start
 	public static final String CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL = "CT_001";
@@ -1174,6 +1176,9 @@ public class ReportConst implements Serializable{
 	public static final String AUDITOR_INTERNAL = "AUDITOR_INTERNAL";
 	public static final String AUDITOR_GENERAL = "AUDITOR_GENERAL";
 	// Bug #34996@Syazani 16/08/2023 -- End
+	// #38526 Start Vinod 24/07/2025
+	public static final String PARAM_REPORT_FLOWTYPE = "flowType";
+	// #38526 End Vinod 24/07/2025
 	
 	public ReportConst(){}
 	

@@ -223,7 +223,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * Variable for declaring maximum deferment bond days, sharing with
 	 * ContractDetailBackingBean
 	 */
-	public final int MAX_DEFERMENT_BOND_DAYS = 60;
+	public static final int MAX_DEFERMENT_BOND_DAYS = 60;
 	//#13847 end
 
 	/**
@@ -419,7 +419,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		//#13847 start
 		//Latest 
-		else if(event.getComponent().getId().equalsIgnoreCase("delLatestWaiver")){
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.DEL_LATEST_WAIVER)){
 			if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()!= null
 					&& getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()!= null){
 				attachment = getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment();
@@ -430,7 +430,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 		//History
-		else if(event.getComponent().getId().equalsIgnoreCase("delHistoryWaiver")){
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.DEL_HISTORY_WAIVER)){
 			attachment = getManagedBean().getContractVer().getBondWaiverDefermentHistory().get(getManagedBean().getAttachFileIndex()).getCtAttachment();
 			if(attachment.getAttachmentId() != null){
 				getManagedBean().getDeleteAttachmentList().add(attachment);
@@ -2266,33 +2266,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		//#13847 end
 
 		if(event.getComponent().getId().equalsIgnoreCase("agencyUploadId")){
-			//#13847 start
-//			CtAttachment attachment = new CtAttachment();
-//			attachment.setFileName(item.getFileName());
-//			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-//			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
-//			attachment.setCreatedUser(facesScopes.getUserSessionBean());
-//			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			//#13847 end
 			attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
 			//#25703 start
 			getManagedBean().getContractVer().getAgencyContractSharingAttachements().add(attachment);
 			//RequestContext.getCurrentInstance().execute("ctSharingAttachDlg.hide()");
 			//#25703 end
 		}
-		//#13847 start
-		else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.UPLOAD_WAIVER)){
 			attachment.setDocType(getManagedBean().getContractVer().getDocType());
 			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
 			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
 			attachment.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 			getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtAttachment(attachment);
-			RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
+			RequestContext.getCurrentInstance().execute(ContractConst.UPLOAD_WAIVER_DIALOG_HIDE);
 		}
-		else if(event.getComponent().getId().equalsIgnoreCase("uploadHistoryWaiver")){
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.UPLOAD_HISTORY_WAIVER)){
 			attachment.setDocType(getManagedBean().getContractVer().getDocType());
 			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
 			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
@@ -2301,7 +2291,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 			getManagedBean().getContractVer().getBondWaiverDefermentHistory()
 					.get(getManagedBean().getAttachFileIndex()).setCtAttachment(attachment);
-			RequestContext.getCurrentInstance().execute("uploadHistoryWaiverDlg.hide()");
+			RequestContext.getCurrentInstance().execute(ContractConst.UPLOAD_HISTORY_WAIVER_DIALOG_HIDE);
 		}
 		//#13847 - end
 	}
@@ -2336,7 +2326,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
 			validateTotalDays(noOfDays);
 		}
-		RequestContext.getCurrentInstance().execute("addPBConfirmDlg.show()");
+		RequestContext.getCurrentInstance().execute(ContractConst.ADD_PB_CONFIRM_DLG_SHOW);
 	}
 	
 	/**
@@ -2472,9 +2462,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "saveBondWaiverToTable",
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "saveBondWaiverToTable",
-					getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_CONTRACTBACKINGBEAN,
+					getManagedBean().getContractVer().getCtContract().getContractNo(),
+					ContractConst.SLA_SAVE_BOND_WAIVER_TO_TABLE, getUserIdSessionFromLoginId(), e);
 		}
 	}
 		
@@ -2519,8 +2510,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				delBondExemptedDoc();
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "bondExempReset",
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "bondExempReset",
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_CONTRACTBACKINGBEAN,
+					getManagedBean().getContractVer().getCtContract().getContractNo(), ContractConst.SLA_BOND_EXEMP_RESET,
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
@@ -2775,9 +2766,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			checkDaysDefermentBondHistory();
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaiverAction",
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "chkBondWaiverAction",
-					getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_CONTRACTBACKINGBEAN,
+					getManagedBean().getContractVer().getCtContract().getContractNo(),
+					ContractConst.SLA_CHK_BOND_WAIVER_ACTION, getUserIdSessionFromLoginId(), e);
 		}
 		
 	}
@@ -4431,7 +4423,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public boolean isPerformanceBond(){
 		//#24333
-		if((getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
+		if(getManagedBean().getCtContractAmount().isBondReq()
 						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 						&& !getManagedBean().getCtContractAmount().isBondExempted()
 						&& (!getManagedBean().isCommonView()

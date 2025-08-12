@@ -115,8 +115,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean disableGstAmount;	
 	private boolean disableStaxAmount;	
 	private boolean disableContractAmount = true;
-//	private boolean bondWaiver; //#35642
-//	private CtContractAmount ctTestBondWaiverAmount; //#35642
 
 	private boolean selectAll;
 	private CtPerformanceBond ctPerformanceBond;
@@ -147,11 +145,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> agencySelected;
 	
 	private boolean contractExpired;
-	//LOG : 13847, by Fahmi 22032019 start
-	private Date waiverStartDate;
-	private Date waiverEndDate;
-	private String referenceNo;
-	private CtAttachment ctAttachment;
 	private List<ScLoa> bondDetail;
 	// #24333 - Start
 	private boolean extendContract = false;
@@ -1188,16 +1181,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCommonView(boolean commonView) {
 		this.commonView = commonView;
 	}
-	
-	//#35642 start
-	/*public boolean isBondWaiver() {
-		return bondWaiver;
-	}
-
-	public void setBondWaiver(boolean bondWaiver) {
-		this.bondWaiver = bondWaiver;
-	}*/
-	//#35642 end
 
 	public Map<String, CtAgency> getNewAgencyMap() {
 		if(newAgencyMap==null) {
@@ -1262,16 +1245,6 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.updateZoneMap = updateZoneMap;
 	}
 
-	//#35642 start
-//	public CtContractAmount getCtTestBondWaiverAmount() {
-//		return ctTestBondWaiverAmount;
-//	}
-//
-//	public void setCtTestBondWaiverAmount(CtContractAmount ctTestBondWaiverAmount) {
-//		this.ctTestBondWaiverAmount = ctTestBondWaiverAmount;
-//	}
-	//#35642 end
-
 	public List<PmOrgProfile> getAgencySelected() {
 		return agencySelected;
 	}
@@ -1301,40 +1274,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCtAgreementList(List<CtAgreement> ctAgreementList) {
 		this.ctAgreementList = ctAgreementList;
 	}
-	
-	//13847 start
-	public Date getWaiverStartDate() {
-		return waiverStartDate;
-	}
-
-	public void setWaiverStartDate(Date waiverStartDate) {
-		this.waiverStartDate = waiverStartDate;
-	}
-
-	public Date getWaiverEndDate() {
-		return waiverEndDate;
-	}
-
-	public void setWaiverEndDate(Date waiverEndDate) {
-		this.waiverEndDate = waiverEndDate;
-	}
-
-	public String getReferenceNo() {
-		return referenceNo;
-	}
-
-	public void setReferenceNo(String referenceNo) {
-		this.referenceNo = referenceNo;
-	}
-
-	public CtAttachment getCtAttachment() {
-		return ctAttachment;
-	}
-
-	public void setCtAttachment(CtAttachment ctAttachment) {
-		this.ctAttachment = ctAttachment;
-	}
-	//13847 end
 	
 	public CtContractItem getServiceselectedItem() {
 		return serviceselectedItem;
