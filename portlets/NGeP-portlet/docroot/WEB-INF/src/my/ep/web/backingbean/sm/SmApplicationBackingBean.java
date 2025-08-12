@@ -4243,16 +4243,6 @@ public class SmApplicationBackingBean extends
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl(),
 					getManagedBean().getCurrentPageType());
-			//32617  && 35208 START
-			if(getManagedBean().getSmSupplier().getSmAppl() != null){
-				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
-						getManagedBean().getSmSupplier().getSmAppl());
-			}
-			if(getManagedBean().getSmAppl() != null){
-				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
-						getManagedBean().getSmAppl());
-			}
-			//32617  && 35208 END
 
 			// init GST information
 			initGst();

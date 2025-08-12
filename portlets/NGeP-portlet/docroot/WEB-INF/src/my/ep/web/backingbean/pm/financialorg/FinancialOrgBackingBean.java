@@ -387,6 +387,10 @@ public class FinancialOrgBackingBean extends
 	public void maintainFinancialOrg(Long id) {
 		log.info("maintainFinancialOrg");
 		getManagedBean().setServiceTypes(new ArrayList<String>());
+
+		/***************AUDIT 35509 - shaqimi start***********************/
+		this.getManagedBean().setPmAddressTypeId(null);
+		/***************AUDIT 35509 - shaqimi end  ***********************/
 		
 		this.getManagedBean().setFinancialOrg(retrievePmFinancialOrg(id));	
 		updateAddressAndContactPersonMandatory();
@@ -1181,6 +1185,7 @@ public class FinancialOrgBackingBean extends
 				getManagedBean().setOldBankServicesList(new ArrayList<PmParameterDesc>());
 				getManagedBean().setOldFinancialAccList(new ArrayList<PmFinancialAcc>());
 				getManagedBean().setNewFinancialAccList(new ArrayList<PmFinancialAcc>());
+				getManagedBean().setPmAddressTypeId(null);
 
 				resetBeans();
 				retrieveServiceTypeMap();
