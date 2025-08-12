@@ -8,9 +8,8 @@ import java.util.List;
 
 /**
  * AdvBean
- * 
- * @author venugopal
- * @since 15/08/2014
+ * #35509
+ * @author normuliana
  * 
  */
 public class AdvBean implements Serializable{
