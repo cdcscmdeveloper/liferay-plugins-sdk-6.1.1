@@ -496,7 +496,8 @@ public class ViewSuppProfileBackingBean extends
 	 */
 	public void onViewQTAlertMessage(List<String> messages) {
 		this.getManagedBean().setDisciplinaryActionMsg(composeWarningMessages(messages));
-		RequestContext.getCurrentInstance().execute("suspendAlertWidget.show()");
+		RequestContext.getCurrentInstance().execute(
+				"$('[id$=\"suspendAlertWidgetId\"]').appendTo('body');suspendAlertWidget.show();");
 	}
 	// 26247 - end
 	
@@ -616,8 +617,9 @@ public class ViewSuppProfileBackingBean extends
 		}
 		boolean blacklistedOrCancelled = suspendedBlacklisted || suspendedCancelled;
 		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
-		return ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus) && blacklistedOrCancelled
-				&& !supplier.isDisciplinaryActions();
+		return Arrays.asList(ParameterConst.RECORD_STATUS_ACTIVE, ParameterConst.RECORD_STATUS_EXPIRED).contains(
+				mofRecordStatus)
+				&& blacklistedOrCancelled && !supplier.isDisciplinaryActions(); 
 	}
 	// 26247 - end
 	
