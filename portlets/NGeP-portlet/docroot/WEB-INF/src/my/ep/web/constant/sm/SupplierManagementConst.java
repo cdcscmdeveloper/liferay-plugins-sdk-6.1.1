@@ -465,6 +465,9 @@ public class SupplierManagementConst {
 	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
 	public static final String SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST = "B";
 	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG = "C";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_SUSPEND_REG = "S";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE = "M";
+	public static final String SM_DISCIPLINARY_ACTION = "DA";
 	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
@@ -712,7 +715,7 @@ public class SupplierManagementConst {
 
 	public static final int MAX_PAYMENT_BANK = 35;
 
-	public static final String DELETED_BY_DISCIPLINARY_ACTION = "Dihapuskan kerana dikenakan Tindakan Tatatertib"; // 26238, 32332
+	public static final String DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION;// 26238, 32332
 	public static final long PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION; // 26238
 
 	// EXTERNAL CONTEXT SESSION KEY MAP
@@ -745,6 +748,8 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
 	public static final String AU_TAB_ID_CATEGORY_CODE_INFO = "catCodeInfoTab";
 	public static final String AU_TAB_ID_SUPPLIER_INFO = "supplierInfoTab";
+	// #28895_35501_DA - AUDIT TRAIL SM DA
+	public static final String AU_TAB_ID_DISCIPLINARY_ACTION_INFO = "disciplinaryActionInfoTab";
 	public static final String AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO = "approvedCatCodeInfoTab";
 	public static final String AU_TAB_ID_OVERLAPPING_REMARK_INFO = "overlappingRemarkInfoTab";
 	public static final String AU_TAB_ID_APPROVER_REMARK_INFO = "approverRemarkInfoTab";
@@ -752,6 +757,23 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
 	public static final String SUPPLIER_APPL_SEARCH_URL = "supplier-application-search";
 	// #28895_35501 End
+	// #34031
+	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
+	
+	//26238 - START
+	public static final String MTO_CODE_04 = "04";
+	public static final String MTO_CODE_05 = "05";
+	public static final String MTO_CODE_06 = "06";
+	public static final String CAT_L1_22 = "22";
+	public static final String CAT_L2_17 = "17";
+	public static final String CAT_L3_09 = "09";
+	public static final int CAT_L3_347 = 347;
+	public static final String BUSINESS_TYPE_CODE_N = "N";
+	public static final String BUSINESS_TYPE_CODE_H = "H";
+	public static final int BUMI_PERCENTAGE = 50;
+	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
+	//26238 - END
+	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
@@ -1298,6 +1320,12 @@ public class SupplierManagementConst {
 	public long getPM_STATUS_PO_REVIEW() {
 		return PM_STATUS_PO_REVIEW;
 	}
+	
+	// #30747 - Start
+	public long getPM_STATUS_PO_ESCALTED_TO_APPROVER() {
+		return PM_STATUS_PO_ESCALTED_TO_APPROVER;
+	}
+	// #30747 - End
 
 	// 25792 - start
 	public String getSmSupplierBusinessTypeIndividual() {
@@ -1476,6 +1504,11 @@ public class SupplierManagementConst {
 	public String getAuTabIdSupplierInfo() {
 		return AU_TAB_ID_SUPPLIER_INFO;
 	}
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public String getAuTabIdDisciplinaryActionInfo() {
+		return AU_TAB_ID_DISCIPLINARY_ACTION_INFO;
+	}
+	// #28895_35501_DA End
 
 	public String getAuTabIdApprovedCategoryCodeInfo() {
 		return AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO;

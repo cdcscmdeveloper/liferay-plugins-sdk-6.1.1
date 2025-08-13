@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 
@@ -3673,31 +3675,11 @@ public class TemplateSpecBackingBean extends
 	}
 //#21695 Farid end 2/4/2021
 	
-	//#28784 - Start
-	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
-		ITemplateSpecSO templateSpecSO = null;
-		try {
-			TplSpecQuestion selectedSpecQuestion = templateSpecBean
-					.getSelectedSpecQuestion();
-			List<TplSpecScoring> specScorings = selectedSpecQuestion
-					.getTplSpecScorings();
-			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
-			BigDecimal demoScore = templateSpecSO.validateScoring(
-					selectedSpecQuestion, specScorings, new FacesScopes().getUserLocale());
-			if(demoScore != null && demoScore.equals(new BigDecimal(0))){
-				throw new EpException(MessageConst.ERROR_760476);
-			}
-			if (demoScore != null) {
-				selectedSpecQuestion.setDemoScore(demoScore);
-			}
-		} finally {
-			templateSpecSO = null;
-		}
-		templateSpecBean.setSelectedSpecQuestion(null);
-		getManagedBean().setTemplateSpecBean(templateSpecBean);
-	}
-
+	
+	/**
+	 * #28784 - Demo scoring cancle
+	 * @param templateSpecBean
+	 */
 	public void scoringCancelActionDemo(TemplateSpecBean templateSpecBean) {
 		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
 		TplSpecQuestion selectedSpecQuestion = templateSpecBean
@@ -3939,8 +3921,14 @@ public class TemplateSpecBackingBean extends
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 						.getStatusId() ? this.getManagedBean().getScQt()
 				.getQtStatus().getStatusId() : Long.MIN_VALUE;
-		if (statusId
-				.equals(QTStatusConst.QT_PROPOSAL_PREPARATION)) {
+				
+		List<Long> orderedStatuses = Arrays
+				.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		orderedStatuses = orderedStatuses.subList(
+				orderedStatuses.indexOf(QTStatusConst.QT_PROPOSAL_PREPARATION),
+				orderedStatuses.indexOf(QTStatusConst.QT_AWARDED) + 1);
+
+		if (orderedStatuses.contains(statusId)) {
 			List<TplSpecAnswer> answerList = templateSpecBean
 					.getSpecAnswerList();
 			for (TplSpecAnswer tplSpecAnswer : answerList) {
@@ -3997,19 +3985,41 @@ public class TemplateSpecBackingBean extends
 		List<TplSpecAnswer> answerList = this.getManagedBean()
 				.getTemplateSpecBean().getSpecAnswerList();
 		for (TplSpecAnswer answer : answerList) {
-			if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
-					&& ans.getCompliance() != null) {
-				if (ans.getCompliance() == Boolean.FALSE) {
-					answer.setUserScore(BigDecimal.ZERO);
-				}
-			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
-					&& ans.getCompliance() == null) {
+			if (ans.getSpecAnswerId().compareTo(answer.getSpecAnswerId()) == 0
+					&& ans.getCompliance() != null
+					&& ans.getCompliance() == Boolean.FALSE) {
+				answer.setUserScore(BigDecimal.ZERO);
+			} else if (ans.getSpecAnswerId()
+					.compareTo(answer.getSpecAnswerId()) == 0
+					&& (!getManagedBean().isComplianceOldNull() && (ans
+							.getCompliance() != null && ans.getCompliance() == Boolean.TRUE))) {
+				// As per note #631 issue 1 & 4 system will reset score if user
+				// select yes but won't update if the old value is null.
 				answer.setUserScore(null);
 			}
 		}
 	}
 
 	// #29187 End Vinod
+	// #29187 Start Vinod
+	/**
+	 * This method is to check the old value from compliance dropdown and update
+	 * flag for not to update the score if the old value is null.
+	 * 
+	 * @param event
+	 * @return
+	 */
+	public void itemComplianceChangeControl(ValueChangeEvent event) {
+		log.info("New: " + event.getNewValue() + ", Old: " + event.getOldValue());
+		if (event.getOldValue() == null) {
+			getManagedBean().setComplianceOldNull(true);
+		} else {
+			getManagedBean().setComplianceOldNull(false);
+		}
+	}
+
+	// #29187 End Vinod
+
 	//#36248_haziq - start
 	/**
 	 * #36248
