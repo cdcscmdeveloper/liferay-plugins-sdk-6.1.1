@@ -224,14 +224,18 @@
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</p:outputPanel>
-				<!-- #36718 - add id to panel -->
-				<p:outputPanel id="compFacilityAddrPanel" rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
+
+				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
+				<!-- #36718 - add panel for refresh address -->
+				<p:outputPanel id="compFacilityAddrPanel" >	
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}"
 								style="padding-top :5px;" /> <p:outputLabel value="*"
 								styleClass="mandatory" /></td>
-						<td><p:inputText id="companyAdd1" size="35" maxlength="100"
-								required="true" label="#{lbl['lbl.sm.companyaddress']}"
+						<td>
+							<!-- #36718 - change required condition -->
+							<p:inputText id="companyAdd1" size="35" maxlength="100"
+								required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.companyaddress']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" 
 								disabled="#{backingBean.managedBean.upsCannotEdit}" >
 								<p:ajax partialSubmit="true" process="@this" />
@@ -432,14 +436,15 @@
 							<p:message id="basicOffFacCityMsg" for="basicOffFacCity"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
-					</p:outputPanel>
+					
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:outputPanel id="postCodeOffFacPanelId">
 								<p:outputPanel
 									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId==backingBean.managedBean.myCountryId}">
-									<p:inputText maxlength="5" required="true"
+									<!-- #36718 - change required condition -->
+									<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostMyCode"
 										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
 										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -460,7 +465,8 @@
 								</p:outputPanel>
 								<p:outputPanel
 									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId!=backingBean.managedBean.myCountryId}">
-									<p:inputText maxlength="10" required="true"
+									<!-- #36718 - change required condition -->
+									<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostForeignCode"
 										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
 										size="35"
@@ -526,9 +532,11 @@
 							currLongValue="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}" 
 							alertLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}"/>					
 					</p:outputPanel>
-					<!-- #36718 - END -->
 					</td>
 				</tr>
+				</p:outputPanel>
+				<!-- #36718 - END -->
+				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
 					<tr>

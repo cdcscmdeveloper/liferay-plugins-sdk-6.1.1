@@ -300,6 +300,11 @@ public interface QTConstants {
 	
 	//21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
+
+	//#21692 - Start
+	public static final String PORTLET_NAME_QT_LOI_REVIEW = "scLoiReview_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_LOA_REVIEW = "scLoaReview_WAR_NGePportlet";
+	//#21692 - End
 	
 	//#29468 Start Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
@@ -336,6 +341,11 @@ public interface QTConstants {
 	public static final Long COMPOSITE_VALIDITY_ID_QT=29007L;
 	public static final Long COMPOSITE_VALIDITY_ID_DP=29006L;
 	//#29007 End Vinod
+	// #33787 Start Vinod
+	public static final Long APP_VERSION_REDMINE_NO_33787 = 33787L;
+	public static final String COMPANY_TYPE_SSM_G = "G";
+	public static final String LBL_SC_SPEC_PAID_UP_CAPITAL_INITIAL_FUND = "lbl.sc.spec.paid.up.capital.initial.fund";
+	//#33787 End Vinod
 	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
 	public static final String LBL_TXT_YES = "lbl.txt.yes";

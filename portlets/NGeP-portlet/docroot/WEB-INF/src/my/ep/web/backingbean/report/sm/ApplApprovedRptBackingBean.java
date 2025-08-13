@@ -33,10 +33,10 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 
-		if(getManagedBean().getSelectedOrgProfile() != null 
-				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
-				params.put(SmReportConst.PARAM_COMPANY_NAME, 
-						getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+			params.put(SmReportConst.PARAM_SUPPLIER_ID,
+					String.valueOf(getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId()));
 		}
 		
 		if(StringUtils.isNotBlank(getManagedBean().getMofNo())){
@@ -66,6 +66,11 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 		getManagedBean().setMofNo(null);
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setZone(null);
+		//#38227 - START
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
+		setDefaultDateFromAndDateTo();
+		//#38227 - END
 		//#32521 - START
 		getManagedBean().setSelectedUser(null);
 		getManagedBean().setApplType(null);

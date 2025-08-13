@@ -2597,6 +2597,7 @@ public void saveComplianceSample() {
 			reqDTO.setCompliance(null);
 			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
 			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				evaluationSO.checkChecklistForEPV(reqDTO);
 				this.getManagedBean().setAllSupplierRejectEpv(evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO).isCheckQualifiedSuppliers());
 			}
 			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
@@ -8701,8 +8702,14 @@ public void saveComplianceSample() {
 							retriveFinancialEvaluationStage();
 							retriveNonScoringComplianceFinancial(true);//#28856
 							//#30722 - start 
-							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList()
-									.get(0).getDocCategory());//#25138 - one item only
+							// #38528 Start docCategory changed for one item
+							// because of nullpointer Vinod 02/07/2025.
+							String docCategory = CollectionUtils.isEmpty(this.getManagedBean()
+									.getEvaluationStgTechnicalCheckList()) ? this.getManagedBean()
+									.getEvaluationStgfinancialCheckList().get(0).getDocCategory() : this
+									.getManagedBean().getEvaluationStgTechnicalCheckList().get(0).getDocCategory();
+							financialSpecQuestionOneItem(docCategory);// #25138 - one item only
+							// #38528 End Vinod 02/07/2025.
 							//#30722 - end
 							outputTab = 3;
 							this.getManagedBean().setTabFinancialIndex(1);
@@ -10610,6 +10617,9 @@ private void retriveCommitteeRemarksList(){
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			List<TplSpecAnswer> answers = getManagedBean()
 					.getTemplateSpecBean().getSpecAnswerList();
+			// #29187 Start Vinod
+			List<Long> questionIds = new ArrayList<>();
+			// #29187 End Vinod
 			if(answers != null){
 				for (TplSpecAnswer tplSpecAnswer : answers) {
 					tplSpecAnswer.setTplSpecSuppAnswer(tplSpecAnswer
@@ -10617,7 +10627,23 @@ private void retriveCommitteeRemarksList(){
 
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
-					
+					//#21692 - Start
+					List<Integer> rejectStatus = new ArrayList<>();
+					rejectStatus.add(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+					rejectStatus.add(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED);
+					ScQtProposalChecklist proposalChecklist = this.getManagedBean().getQtProposalChecklist();
+					boolean rejectEPV = proposalChecklist.getScQtProposal().getIsAgreeQtExtendPeriod() != null
+							&& rejectStatus.contains(proposalChecklist.getScQtProposal().getIsAgreeQtExtendPeriod());
+					//#21692 - End
+
+					// #29187 Start Vinod
+					if (QTConstants.FINANCIAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
+							&& (CollectionUtils.isEmpty(questionIds) || !questionIds.contains(tplSpecAnswer
+									.getTplSpecQuestion().getSpecQuestionId())) && !rejectEPV) {//#21692
+						questionIds.add(tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId());
+						validateUserScoreForTemplate(tplSpecAnswer, false);
+					}
+					// #29187 End Vinod
 				}
 			}
 			//#29187 Start Vinod
@@ -19274,36 +19300,30 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public void validateSaveTemplateForMandatorySpec(String actualButtonId) {
 		List<TplSpecAnswer> answers = getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+		List<Long> questionIds = new ArrayList<>();
 
 		if (answers != null) {
 			for (TplSpecAnswer tplSpecAnswer : answers) {
 				TplSpecQuestion question = tplSpecAnswer.getTplSpecQuestion();
 				String questionType = question.getQuestionType();
-				boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
 				boolean isTechSpec = QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean()
 						.getCheckListType()) && questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
-				boolean isUserScore = isTechSpec && question.getScoreTypeCode() != null
-						&& ParameterConst.SCORE_TYPE_USER.equals(question.getScoreTypeCode().getParameterCode())
-						&& tplSpecAnswer.getUserScore() == null;
-				if (!isNotOffered && isUserScore) {
-					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-							QTConstants.LBL_TPL_SPEC_CONTENT_USER_SCORE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
-				}
-				boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
-				boolean isComplianceNull = isTechSpec && isMandatorySpec && tplSpecAnswer.getCompliance() == null;
-				if (isComplianceNull && !isNotOffered) {
-					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-							QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
-				}
-				boolean isCompliance = tplSpecAnswer.getCompliance() != null
-						&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
-				String remark = tplSpecAnswer.getUserRemark();
+				boolean isComplianceNull = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()
+						&& tplSpecAnswer.getCompliance() == null;
+				//#21692 - Start
+				List<Integer> rejectStatus = new ArrayList<>();
+				rejectStatus.add(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+				rejectStatus.add(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED);
+				ScQtProposalChecklist proposalChecklist = this.getManagedBean().getQtProposalChecklist();
+				boolean rejectEPV = proposalChecklist.getScQtProposal().getIsAgreeQtExtendPeriod() != null
+						&& rejectStatus.contains(proposalChecklist.getScQtProposal().getIsAgreeQtExtendPeriod());
+				//#21692 - End
 
-				if (QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
-						&& isCompliance && StringUtils.isEmpty(remark)) {
-					throw new EpException(MessageConst.ERROR_775180);
+				if ((CollectionUtils.isEmpty(questionIds) || !questionIds.contains(question.getSpecQuestionId()))
+						&& !rejectEPV) {//#21692
+					questionIds.add(question.getSpecQuestionId());
+					validateUserScoreForTemplate(tplSpecAnswer, isTechSpec);
+					validateMandatorySpecAndRemark(tplSpecAnswer, isTechSpec, isComplianceNull);
 				}
 			}
 		}
@@ -19320,6 +19340,45 @@ private void retriveCommitteeRemarksList(){
 
 	/* #29187 End Vinod */
 	// #29187 Start Vinod
+	private void validateUserScoreForTemplate(TplSpecAnswer tplSpecAnswer, boolean isTechSpec) {
+		TplSpecQuestion question = tplSpecAnswer.getTplSpecQuestion();
+		String questionType = question.getQuestionType();
+		boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
+		boolean isFinSpec = QTConstants.FINANCIAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
+				&& questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM);
+		boolean isUserScoreNull = question.getScoreTypeCode() != null
+				&& ParameterConst.SCORE_TYPE_USER.equals(question.getScoreTypeCode().getParameterCode())
+				&& tplSpecAnswer.getUserScore() == null;
+		if ((isFinSpec || (!isNotOffered && isTechSpec)) && isUserScoreNull) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					QTConstants.LBL_TPL_SPEC_CONTENT_USER_SCORE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+	}
+
+	// #29187 End Vinod
+	// #29187 Start Vinod
+	private void validateMandatorySpecAndRemark(TplSpecAnswer tplSpecAnswer, boolean isTechSpec, boolean isComplianceNull) {
+		if(isTechSpec){
+			boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
+			if (isComplianceNull && !isNotOffered) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			boolean isCompliance = tplSpecAnswer.getCompliance() != null
+					&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
+			String remark = tplSpecAnswer.getUserRemark();
+
+			if (isCompliance
+					&& StringUtils.isEmpty(remark)) {
+				throw new EpException(MessageConst.ERROR_775180);
+			}
+		}
+	}
+
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to validate and show the conformation message for
 	 * template, if all ok then click the actual button which is hidden.
@@ -19331,18 +19390,7 @@ private void retriveCommitteeRemarksList(){
 		List<ScQtSampleItem> sampleItemlist = this.getManagedBean().getSampleItemList();
 
 		for (ScQtSampleItem item : sampleItemlist) {
-			Boolean isComplianceNull = item.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample()
-					&& item.getCompliance() == null;
-			if (isComplianceNull) {
-				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-						QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()) });
-			}
-			String remark = item.getRemarkMandatorySpec();
-			boolean isNotComply = item.getCompliance() != null && item.getCompliance().equals(Boolean.FALSE);
-			if (isNotComply && StringUtils.isEmpty(remark)) {
-				throw new EpException(MessageConst.ERROR_775180);
-			}
+			validateMandatorySpecAndRemarkForSample(item);
 		}
 
 		boolean complaincePopup = checkSampleCompliance();
@@ -19356,6 +19404,22 @@ private void retriveCommitteeRemarksList(){
 	}
 
 	/* #29187 End Vinod */
+	// #29187 Start Vinod
+	private void validateMandatorySpecAndRemarkForSample(ScQtSampleItem item) {
+		Boolean isComplianceNull = item.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample()
+				&& item.getCompliance() == null;
+		if (isComplianceNull) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+		String remark = item.getRemarkMandatorySpec();
+		if (item.getCompliance() != null && item.getCompliance().equals(Boolean.FALSE) && StringUtils.isEmpty(remark)) {
+			throw new EpException(MessageConst.ERROR_775180);
+		}
+	}
+
+	// #29187 End Vinod
 	
 	//32373 - saperate for recalculate pref margin after done financial package -Start
 		private boolean generatePrefMargin() { 
@@ -19667,4 +19731,14 @@ private void retriveCommitteeRemarksList(){
 		return isDaysCheck && isEcPendingComplianceCheck;
 	}
 	// Bug #36747@Syazani 20/01/2025 -- End
+	
+	//#28784 - Start
+	public void checkingForBeforeDemoMeetingDetails() {
+		if (!this.getManagedBean().isReadOnly()) {
+			checkMeetingDetailsAndStatus(this.getManagedBean()
+					.getScQtMeetings());
+		}
+		RequestContext.getCurrentInstance().execute("confirmUpdatePresentationDemoPopup.show()");
+	}
+	//#28784 - End
 }

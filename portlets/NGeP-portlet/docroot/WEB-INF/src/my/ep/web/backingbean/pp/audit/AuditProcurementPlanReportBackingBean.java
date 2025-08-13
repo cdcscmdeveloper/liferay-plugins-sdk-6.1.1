@@ -22,6 +22,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pp.AuditPPConst;
 import my.ep.constant.rpt.ReportExcelAuditConstant;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pp.audit.AuditProcurementPlanSPDTO;
 import my.ep.exception.EpException;
 import my.ep.type.pm.RoleCode;
@@ -36,6 +37,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.rpt.excel.ExcelCellStyleBuilder;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -340,17 +342,47 @@ public class AuditProcurementPlanReportBackingBean extends BaseBackingBean<Audit
 
 		generateReport(AuditReportConst.RPT_AUDIT_TRAIL_PP, paramMap);
 	}
+	
+	/**
+	 * Reformat the break line
+	 * 
+	 * @param itemName
+	 * @return formattedItemName
+	 */
+	public String getFormattedValue(String itemName) {
+		String formattedItemName = itemName.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
+				TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		formattedItemName = formattedItemName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
+				TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+		formattedItemName = formattedItemName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		return formattedItemName;
+	}
 
 	/**
 	 * To create record not found message in report
 	 * 
 	 */
 	private void notFoundRecord(Sheet sheet, int rowIndex, int totalCell, CellStyle noRecordsStyle) {
+		Workbook workbook = sheet.getWorkbook();
+		CellStyle borderStyle = workbook.createCellStyle();
+		borderStyle.cloneStyleFrom(noRecordsStyle);
+		borderStyle.setBorderTop(BorderStyle.THIN);
+		borderStyle.setBorderBottom(BorderStyle.THIN);
+		borderStyle.setBorderLeft(BorderStyle.THIN);
+		borderStyle.setBorderRight(BorderStyle.THIN);
+
 		Row noRecordRow = sheet.createRow(rowIndex);
-		Cell cellNoRecord = noRecordRow.createCell(1);
-		cellNoRecord.setCellValue(ReportExcelAuditConstant.RPT_NO_RECORDS);
-		cellNoRecord.setCellStyle(noRecordsStyle);
-		sheet.addMergedRegion(new CellRangeAddress(sheet.getLastRowNum(), sheet.getLastRowNum(), 1, totalCell));
+
+		for (int i = 1; i <= totalCell; i++) {
+			Cell cell = noRecordRow.createCell(i);
+			cell.setCellStyle(borderStyle);
+			if (i == 1) {
+				cell.setCellValue(ReportExcelAuditConstant.RPT_NO_RECORDS);
+			}
+		}
+
+		sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 1, totalCell));
 	}
 
 	/**
