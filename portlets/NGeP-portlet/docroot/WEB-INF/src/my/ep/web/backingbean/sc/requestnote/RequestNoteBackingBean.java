@@ -909,7 +909,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
 			
 			//#26284 - Start
-			checkSupplierDisciplinaryAction(requestNote);
+			if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))
+					&& requestNote != null) {
+				checkSupplierDisciplinaryAction(requestNote);
+			}
 			//#26284 -End
 
 			// reRecommend
@@ -2287,7 +2290,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if (requestNoteReqDTO.getRequestNote() != null) {
 			
 			//#26284 - Start
-			checkSupplierDisciplinaryAction(scRequestNote);
+			if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))){
+				checkSupplierDisciplinaryAction(scRequestNote);
+			}
 			//#26284 -End
 
 			log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")"
