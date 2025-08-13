@@ -496,7 +496,8 @@ public class ViewSuppProfileBackingBean extends
 	 */
 	public void onViewQTAlertMessage(List<String> messages) {
 		this.getManagedBean().setDisciplinaryActionMsg(composeWarningMessages(messages));
-		RequestContext.getCurrentInstance().execute("$('[id$=\"suspendAlertWidgetId\"]').appendTo('body');suspendAlertWidget.show();");
+		RequestContext.getCurrentInstance().execute(
+				"$('[id$=\"suspendAlertWidgetId\"]').appendTo('body');suspendAlertWidget.show();");
 	}
 	// 26247 - end
 	
