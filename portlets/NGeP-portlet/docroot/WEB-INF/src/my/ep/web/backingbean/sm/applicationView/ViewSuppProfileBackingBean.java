@@ -616,8 +616,9 @@ public class ViewSuppProfileBackingBean extends
 		}
 		boolean blacklistedOrCancelled = suspendedBlacklisted || suspendedCancelled;
 		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
-		return ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus) && blacklistedOrCancelled
-				&& !supplier.isDisciplinaryActions();
+		return Arrays.asList(ParameterConst.RECORD_STATUS_ACTIVE, ParameterConst.RECORD_STATUS_EXPIRED).contains(
+				mofRecordStatus)
+				&& blacklistedOrCancelled && !supplier.isDisciplinaryActions(); 
 	}
 	// 26247 - end
 	
