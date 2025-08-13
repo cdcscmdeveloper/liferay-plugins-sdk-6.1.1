@@ -240,7 +240,7 @@
 								oncomplete="blockWidget.hide();"
 								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
 								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and !(qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_RE_FINALIZATION or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_EVALUATION_PROPOSAL) and
-								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance} or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}" /><ui:remove>#29472</ui:remove>
+								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}" /><ui:remove>#29472</ui:remove>
 						</c:otherwise>
 					</c:choose>
 					<!-- 26095@hatta - start -->

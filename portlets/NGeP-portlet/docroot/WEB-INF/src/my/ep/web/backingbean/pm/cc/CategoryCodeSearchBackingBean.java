@@ -5,14 +5,12 @@ package my.ep.web.backingbean.pm.cc;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
@@ -799,7 +797,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				List<SmDisciplinaryAction> activeDAs = SmServiceLookup.getSupplierDataMaintenanceSO()
 						.retrieveActiveDisciplinaryActionBySupplierId(supplierId).getSmDisciplinaryActions();
 				
-				selectItems = getSelectItems(resDTO.getCategoryL3List(), activeDAs, null);
+				selectItems = getSelectItems(resDTO.getCategoryL3List(), activeDAs, supplierId); //#38844
 			//27859,30720 end - 3rd level category didnot appear
 			//#33387 - END
 		}
@@ -900,22 +898,34 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		return false;
 	}
 	
+	//#26238 - 38864
 	private boolean hasAllBasicMTOCodes(List<SmSupplierCategory> catList){
 		if (EntityHelper.isCollectionEmpty(catList)){
 			return false;
 		}
-		int checkBasic = 0;
-		List<String> basicMTO = Arrays.asList(SupplierManagementConst.MTO_CODE_04, SupplierManagementConst.MTO_CODE_05, SupplierManagementConst.MTO_CODE_06);
+		boolean hasMTO4 = false;
+		boolean hasMTO5 = false;
+		boolean hasMTO6 = false;
 		
 		for(SmSupplierCategory cat : catList){
-			boolean isSubCategoryMTO = cat.getPmCategoryL1() != null && (SupplierManagementConst.CAT_L1_22).equals(cat.getPmCategoryL1().getCategoryL1Code())
-					&& cat.getPmCategoryL2() != null && (SupplierManagementConst.CAT_L2_17).equals(cat.getPmCategoryL2().getCategoryL2Code());
+			boolean isSubCategoryMTO = cat.getPmCategoryL1() != null 
+					&& (SupplierManagementConst.CAT_L1_22).equals(cat.getPmCategoryL1().getCategoryL1Code())
+					&& cat.getPmCategoryL2() != null 
+					&& (SupplierManagementConst.CAT_L2_17).equals(cat.getPmCategoryL2().getCategoryL2Code());
 			
-			if(isSubCategoryMTO && cat.getPmCategoryL3() != null && basicMTO.contains(cat.getPmCategoryL3().getCategoryL3Code())){
-				checkBasic++;
+			if (!isSubCategoryMTO || cat.getPmCategoryL3() == null){
+				continue;
+			}
+			String codeL3 = cat.getPmCategoryL3().getCategoryL3Code();
+			if (SupplierManagementConst.MTO_CODE_04.equals(codeL3)){
+				hasMTO4 = true;
+			} else if (SupplierManagementConst.MTO_CODE_05.equals(codeL3)){
+				hasMTO5 = true;
+			} else if (SupplierManagementConst.MTO_CODE_06.equals(codeL3)){
+				hasMTO6 = true;
 			}
 		}
-		return checkBasic == basicMTO.size();
+		return hasMTO4 && hasMTO5 && hasMTO6;
 	}
 	//26238 - approver cannot add imposed category code - end
  
