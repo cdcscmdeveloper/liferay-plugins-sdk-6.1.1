@@ -1096,12 +1096,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			// #28777 & #29729 - End
 			
 			reqDTO.setBidItemId(bidItem.getBidItemId());
-			// #28777 & #29729 - Start
-			reqDTO.setSpecZoneId(selectedZoneId);
-			reqDTO.setQtId(scQt.getQtId());
-			// #28777 & #29729 - End
 			resDTO = biddingSO.retrieveLastBidPricesByItem(reqDTO);
-			
 			if (resDTO.isSuccessful()) {
 			
 				// #28777 & #29729 - Start
