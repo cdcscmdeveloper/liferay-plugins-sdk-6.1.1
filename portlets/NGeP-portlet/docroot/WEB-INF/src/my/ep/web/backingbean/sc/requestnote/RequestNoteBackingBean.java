@@ -827,7 +827,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
 			
 			//#26284 - Start
-			checkSupplierDisciplinaryAction(requestNote);
+			if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))
+					&& requestNote != null) {
+				checkSupplierDisciplinaryAction(requestNote);
+			}
 			//#26284 -End
 			
 			// reRecommend
@@ -1999,7 +2002,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(scRequestNote);
 		
 		//#26284 - Start
-		if (requestNoteReqDTO.getRequestNote() != null) {
+		if (requestNoteReqDTO.getRequestNote() != null && (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))) {
 			checkSupplierDisciplinaryAction(scRequestNote);
 		}
 		//#26284 -End
