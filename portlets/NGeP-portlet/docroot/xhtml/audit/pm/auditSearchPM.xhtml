@@ -89,14 +89,14 @@
 						value="#{lbl['lbl.pm.audit.itemCode']}"></p:outputLabel></td>
 				<td width="275px;"><p:inputText
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemCode}"
-						id="itemCode" size="36" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemCode']}" /></td>
+						id="itemCode" styleClass="ppDisplayTextM" size="36" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemCode']}" /></td>
 			</tr>
 			<tr>
 				<td width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.itemName']}"></p:outputLabel></td>
 				<td width="275px;"><p:inputText
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemName}"
-						id="itemName" size="36" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemName']}" /></td>
+						id="itemName" styleClass="ppDisplayTextM" size="36" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemName']}" /></td>
 			</tr>
 			<tr>
 				<th width="20%"><p:outputLabel
@@ -111,7 +111,7 @@
 							value="#{searchPMAuditBackingBean.getDropdownRoleList()}"
 							var="roleItem" itemLabel="#{roleItem.roleName}"
 							itemValue="#{roleItem.roleCode}" />
-						<p:ajax event="change" update="roles,searchActionBylist" />
+						<p:ajax event="change" update="roles,searchActionBylist" process="auditPMSearchPanel"/>
 					</p:selectOneMenu> <ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" /></td>
 				<td><p:message for="roles" id="rolesMsg" display="icon" /></td>
 				<td>&#160;</td>

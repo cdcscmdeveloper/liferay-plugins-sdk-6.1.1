@@ -215,8 +215,8 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			detailObj(AuditConst.PM_AUD_CT_CTCOUNTRY_FIELDLABELID, null, managedBean.getDistrict().getPmState().getPmCountry()
 					.getCountryName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_CT_CTSTATECODE_FIELDLABELID, null, managedBean.getResDistrict().getPmState()
-					.getStateName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_CT_CTSTATECODE_FIELDLABELID, null, managedBean.getDistrict().getPmState().getStateName(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_CT_CTDISTRICTID_FIELDLABELID, null, managedBean.getResCity().getPmDistrict()
 					.getDistrictName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -248,7 +248,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			dtlObj.setOldValue(oldValue);
 		}
 
-			dtlObj.setNewValue(newValue);
+		dtlObj.setNewValue(newValue);
 
 		dtlObj.setActionType(actionType);
 		objList.add(dtlObj);

@@ -29,6 +29,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
+ * #35509
+ * 
  * @author normuliana
  * 
  */
@@ -211,8 +213,8 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 					auditPMReqDTO.setpLvl1Code(lSearchBean.getSystemConfigParamLevel1OldVal());
 					auditPMReqDTO.setpLvl2Code(lSearchBean.getCategoryConfigParamLevel2OldVal());
 					auditPMReqDTO.setpLvl3Code(lSearchBean.getItemConfigParamLevel3OldVal());
-					auditPMReqDTO.setpItemCode(lSearchBean.getItemCode());
-					auditPMReqDTO.setpItemName(lSearchBean.getItemName());
+					auditPMReqDTO.setpItemCode(lSearchBean.getItemCodeOldVal());
+					auditPMReqDTO.setpItemName(lSearchBean.getItemNameOldVal());
 					auditPMReqDTO.setpRoleCode(lSearchBean.getRoleCodeOldVal());
 					auditPMReqDTO.setPdateFrom(lSearchBean.getDateFromOldVal());
 					auditPMReqDTO.setPdateTo(lSearchBean.getDateToOldVal());
