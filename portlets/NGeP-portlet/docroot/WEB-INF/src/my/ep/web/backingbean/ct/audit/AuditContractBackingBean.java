@@ -58,8 +58,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContractManagedBean> {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AuditContractBackingBean.class);
-	private IPagingDataModel<AuditContractResDTO> searchCT;
-    private IPagingDataModel<AuditContractResDTO> searchCircular;
+	private transient IPagingDataModel<AuditContractResDTO> searchCT;
+    private transient IPagingDataModel<AuditContractResDTO> searchCircular;
 	private String requestNoneView = "/xhtml/ct/audittrail/auditContractView.xhtml";
 	// This property is used to track which tab is
 	// currently selected.
