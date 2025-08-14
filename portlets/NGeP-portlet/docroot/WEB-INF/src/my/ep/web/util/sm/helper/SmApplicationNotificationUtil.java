@@ -353,17 +353,27 @@ public class SmApplicationNotificationUtil {
 		for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-				approvedCatCodes.append("<br/>");
-				approvedCatCodes.append("2.1.").append(++i + ") ")
+				// #38217 - Start
+				approvedCatCodes.append("<p style=\"margin: 0 0 0 2em;\">")
+						.append("2.1.").append(++i + ") ")
 						.append(cat.getPmCategoryL1().getCategoryL1Code())
 						.append(cat.getPmCategoryL2().getCategoryL2Code())
 						.append(cat.getPmCategoryL3().getCategoryL3Code())
 						.append("-")
-						.append(cat.getPmCategoryL3().getCategoryName());
+						.append(cat.getPmCategoryL3().getCategoryName())
+						.append("</p>");
+				if (cat.getOtherDesc() != null && !cat.getOtherDesc().isEmpty()) {
+					approvedCatCodes
+							.append("<p style=\"margin: 0 0 0 5em;text-align:justify;\">")
+							.append(cat.getOtherDesc()).append("</p>");
+				}
+				//#38217 - End
+
 			} else if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.RECORD_STATUS_SUSPENDED) == 0) {
 				existsRejectedCodes = true;
 				rejectedCatCodes.append("<tr>");
+				//#38217 - Start
 				rejectedCatCodes
 						.append("<td style='border: 1px solid black;'>")
 						.append("2.2.").append(++j + ") ")
@@ -371,10 +381,19 @@ public class SmApplicationNotificationUtil {
 						.append(cat.getPmCategoryL2().getCategoryL2Code())
 						.append(cat.getPmCategoryL3().getCategoryL3Code())
 						.append("-")
-						.append(cat.getPmCategoryL3().getCategoryName())
-						.append("</td>");
-				rejectedCatCodes
-						.append("<td style='border: 1px solid black;'>");
+						.append(cat.getPmCategoryL3().getCategoryName());
+				
+				if (cat.getOtherDesc() != null && !cat.getOtherDesc().isEmpty()) {
+					rejectedCatCodes
+							.append("<br/><p style=\" text-align: justify; margin: 0 0.5em 0 2.7em; display: inline-block;\">")
+							.append(cat.getOtherDesc())
+							.append("</p>");
+				}
+				
+				rejectedCatCodes.append("</td>");
+				//#38217 - End
+				
+				rejectedCatCodes.append("<td style='border: 1px solid black;'>");
 				if (isPoUser) {
 					rejectedCatCodes.append(cat.getPoRemarks()).append("</td>");
 				} else {
@@ -386,9 +405,11 @@ public class SmApplicationNotificationUtil {
 
 		}
 
-		rejectedCatCodes.append("</table>");
-		finalMsg.append("<p style='padding-left: 2em;text-indent: -2em;'>")
-				.append(approvedCatCodes.toString()).append("</p>");
+		//#38217 - Start
+		approvedCatCodes.append("<br/>");
+		rejectedCatCodes.append("</table><br/>");
+		finalMsg.append(approvedCatCodes);
+		//#38217 - End
 		if (existsRejectedCodes) {
 			finalMsg.append("<div style='margin-left: 20px;'>")
 					.append(rejectedCatCodes.toString()).append("</div>");
