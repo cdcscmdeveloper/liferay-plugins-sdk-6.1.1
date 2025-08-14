@@ -6,14 +6,11 @@ package my.ep.web.managedbean.pm.audit;
 import java.io.Serializable;
 
 /**
- * AdvColumnBean
- * 
- * @author venugopal
- * @since 15/08/2014
+ * AdvColumnBean #35509
  * 
  */
-public class AdvColumnBean implements Serializable{
-	
+public class AdvColumnBean implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	private String columnTitle;
 	private String columnName;
@@ -30,7 +27,8 @@ public class AdvColumnBean implements Serializable{
 	}
 
 	/**
-	 * @param columnTitle the columnTitle to set
+	 * @param columnTitle
+	 *            the columnTitle to set
 	 */
 	public void setColumnTitle(String columnTitle) {
 		this.columnTitle = columnTitle;
@@ -44,7 +42,8 @@ public class AdvColumnBean implements Serializable{
 	}
 
 	/**
-	 * @param columnName the columnName to set
+	 * @param columnName
+	 *            the columnName to set
 	 */
 	public void setColumnName(String columnName) {
 		this.columnName = columnName;
