@@ -803,7 +803,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 					int code = (Integer.parseInt(unspsc.getUnspscCode().substring(0, 2)));
 					
                 
-					if (code < 61){
+					if (code < 68){ //#35503, Fix as-is bug: #38632
 						unspscCodes.add(unspsc.getUnspscCode());
 					}		
 				}	

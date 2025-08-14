@@ -21,6 +21,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
@@ -73,7 +74,6 @@ import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLCtSupplierItemVO;
 import org.apache.commons.lang.StringUtils;
@@ -536,7 +536,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 							    contract.setScheduleNo(detail.getFlSchNo() != null ? detail.getFlSchNo().toString() : " ");
 							    contract.setCrNo(detail.getDocNo());
 							    contract.setCrNoStatus("("+getPmStatusDesc(detail.getDocStatus())+")");
-							    contract.setCoNo(detail.getFlOrderDocNo());
+							    contract.setCoNo(detail.getFlOrderDocNo() != null ? detail.getFlOrderDocNo() : " ");
 							    contract.setCoNoStatus("("+getPmStatusDesc(detail.getFlOrderDocStatus())+")");
 
 							    convertedScheduleList.add(contract);
@@ -568,11 +568,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		 * @return statusDesc
 		 */
 		private String getPmStatusDesc(Long statusId) {
+			IStatusSO statusSO;
+			statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			String statusDesc = StringUtils.EMPTY;
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setStatusId(statusId);
 			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-			StatusResDTO resDTO = SmServiceLookup.getStatusSO().retrieveStatusDescById(reqDTO);
+			StatusResDTO resDTO = statusSO.retrieveStatusDescById(reqDTO);
 			if (resDTO != null && resDTO.getPmStatusDesc() != null) {
 				statusDesc = resDTO.getPmStatusDesc().getStatusName();
 			}

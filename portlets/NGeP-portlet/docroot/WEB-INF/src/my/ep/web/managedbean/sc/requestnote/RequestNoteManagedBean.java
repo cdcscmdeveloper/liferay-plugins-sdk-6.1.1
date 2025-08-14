@@ -44,6 +44,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.sc.requestnote.CommodityGroup;//#26059
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -349,6 +350,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean disciplinaryActionWarning = false;
 	private boolean disciplinaryActionCancelRegistration = false;
 	private boolean disciplinaryActionBlacklist = false;
+	private boolean disciplinaryActionPendingTransaction = false;
+	private boolean disciplinaryActionDeletedDue = false;
 	private String popupMessage;
 	//26284 - End
 	
@@ -405,6 +408,14 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The new sourcing dp bpm version flag */
     private boolean sourcingDpNewBpmVer = Boolean.FALSE;
     //#36119 - end
+    
+	private boolean bpkApproverMode = Boolean.FALSE; //#26059
+	private boolean rnExceedThreshold = Boolean.FALSE; //#26059
+	private boolean showAttachments = Boolean.TRUE; //#26059
+	private boolean containRejectDecision = Boolean.FALSE; //#26059
+    private List<CommodityGroup> commodityGroups =	new ArrayList<>(); //#26059
+    
+    private	Integer	counter = 0; //#26059
     
     /**
      * Instantiates a new request note managed bean.
@@ -2404,5 +2415,148 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
 		this.disciplinaryActionWarning = disciplinaryActionWarning;
 	}
+	
+	/**
+	 * @return the disciplinaryActionPendingTransaction
+	 */
+	public boolean isDisciplinaryActionPendingTransaction() {
+		return disciplinaryActionPendingTransaction;
+	}
+
+	/**
+	 * @return the disciplinaryActionDeletedDue
+	 */
+	public boolean isDisciplinaryActionDeletedDue() {
+		return disciplinaryActionDeletedDue;
+	}
+
+	/**
+	 * @param disciplinaryActionPendingTransaction the disciplinaryActionPendingTransaction to set
+	 */
+	public void setDisciplinaryActionPendingTransaction(boolean disciplinaryActionPendingTransaction) {
+		this.disciplinaryActionPendingTransaction = disciplinaryActionPendingTransaction;
+	}
+
+	/**
+	 * @param disciplinaryActionDeletedDue the disciplinaryActionDeletedDue to set
+	 */
+	public void setDisciplinaryActionDeletedDue(boolean disciplinaryActionDeletedDue) {
+		this.disciplinaryActionDeletedDue = disciplinaryActionDeletedDue;
+	}
+
 	//#26284 - End
+	// #26059 - start
+	/**
+	 * Checks if the current mode is BPK Approver mode.
+	 * 
+	 * @return {@code true} if in BPK Approver mode, {@code false} otherwise.
+	 */
+	public boolean isBpkApproverMode() {
+		return bpkApproverMode;
+	}
+
+	/**
+	 * Sets the BPK Approver mode.
+	 * 
+	 * @param bpkApproverMode
+	 *            {@code true} to enable BPK Approver mode, {@code false} to
+	 *            disable.
+	 */
+	public void setBpkApproverMode(boolean bpkApproverMode) {
+		this.bpkApproverMode = bpkApproverMode;
+	}
+
+	/**
+	 * Retrieves the list of commodity groups.
+	 * 
+	 * @return A list of {@link CommodityGroup} objects.
+	 */
+	public List<CommodityGroup> getCommodityGroups() {
+		return commodityGroups;
+	}
+
+	/**
+	 * Sets the list of commodity groups.
+	 * 
+	 * @param commodityGroups
+	 *            The list of {@link CommodityGroup} objects to set.
+	 */
+	public void setCommodityGroups(List<CommodityGroup> commodityGroups) {
+		this.commodityGroups = commodityGroups;
+	}
+
+	/**
+	 * Checks if the Request Note (RN) exceeds the threshold.
+	 * 
+	 * @return {@code true} if the RN exceeds the threshold, {@code false}
+	 *         otherwise.
+	 */
+	public boolean isRnExceedThreshold() {
+		return rnExceedThreshold;
+	}
+
+	/**
+	 * Sets whether the Request Note (RN) exceeds the threshold.
+	 * 
+	 * @param rnExceedThreshold
+	 *            {@code true} if the RN exceeds the threshold, {@code false}
+	 *            otherwise.
+	 */
+	public void setRnExceedThreshold(boolean rnExceedThreshold) {
+		this.rnExceedThreshold = rnExceedThreshold;
+	}
+
+	/**
+	 * Checks if attachments should be shown.
+	 * 
+	 * @return {@code true} if attachments should be shown, {@code false}
+	 *         otherwise.
+	 */
+	public boolean isShowAttachments() {
+		return showAttachments;
+	}
+
+	/**
+	 * Sets whether attachments should be shown.
+	 * 
+	 * @param showAttachments
+	 *            {@code true} to show attachments, {@code false} to hide them.
+	 */
+	public void setShowAttachments(boolean showAttachments) {
+		this.showAttachments = showAttachments;
+	}
+
+	/**
+	 * Retrieves the current counter value.
+	 * 
+	 * @return The counter value as an {@link Integer}.
+	 */
+	public Integer getCounter() {
+		return counter;
+	}
+
+	/**
+	 * Sets the counter value.
+	 * 
+	 * @param counter
+	 *            The counter value to set.
+	 */
+	public void setCounter(Integer counter) {
+		this.counter = counter;
+	}
+	
+	/**
+	 * Checks if any item has a reject decision.
+	 */
+	public boolean isContainRejectDecision() {
+	    return containRejectDecision;
+	}
+
+	/**
+	 * Sets the reject decision status.
+	 */
+	public void setContainRejectDecision(boolean containRejectDecision) {
+	    this.containRejectDecision = containRejectDecision;
+	}
+	// #26059 - end
 }

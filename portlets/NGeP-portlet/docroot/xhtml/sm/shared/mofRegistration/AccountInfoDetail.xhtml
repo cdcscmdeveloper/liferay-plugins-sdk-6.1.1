@@ -84,7 +84,7 @@
 					<p:outputPanel id="regNoPanelId">
 					<!--  #16052019 - SSM INTEGRATION CR - Fahmi  -->
 				<!-- 32304 - start-->
-						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="30"
+						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="20"
 							value="#{backingBean.managedBean.smSupplier.regNo}" converter="toUpperCaseConverter"
 							disabled="true"
 							size="40" label="#{lbl['lbl.sm.businessregno']}" >

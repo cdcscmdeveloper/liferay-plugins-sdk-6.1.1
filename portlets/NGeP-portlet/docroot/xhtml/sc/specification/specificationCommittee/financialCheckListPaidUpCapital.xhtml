@@ -43,18 +43,23 @@
 			<ui:include
 				src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
 
-
-			<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
+			<ui:remove>#33787 start Vinod updated lable lbl.sc.spec.paid.up.capital to lbl.sc.spec.paid.up.capital.initial.fund 
+			for 3.->2. , 4.->4. and 5.->1.</ui:remove>
+			<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital.initial.fund']}"
 				toggleable="true">
+				<ui:remove>#33787 End Vinod</ui:remove>
 				<p:spacer height="5px;"></p:spacer>
 				<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.score.company.exp.tech.fin.gov.supplier.instructions']}"
 				escape="false" />
 				<table>
 					<tr>
-						<td><h:outputLabel
-								value="#{lbl['lbl.sc.paid.up.capital.ringgit']}"></h:outputLabel>
-						</td>
+						<ui:remove>#33787 start Vinod updated lable lbl.sc.paid.up.capital.ringgit to lbl.sc.paid.up.capital.ringgit.initial.fund 
+						for 3.->2. , 4.->4. and 5.->1.</ui:remove>
+						<td><p:outputLabel
+							value="#{lbl['lbl.sc.paid.up.capital.ringgit.initial.fund']}">
+						</p:outputLabel></td>
+						<ui:remove>#33787 End Vinod</ui:remove>
 						<td><p:inputText disabled="true"></p:inputText></td>
 						<td><ac:iconTooltip
 								value="#{lbl['lbl.sc.paid.up.capital.ringgit.tooltip']}" /></td>

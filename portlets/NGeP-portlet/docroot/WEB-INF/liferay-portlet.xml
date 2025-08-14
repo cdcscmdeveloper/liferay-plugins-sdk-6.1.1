@@ -2948,6 +2948,13 @@
 	 	</css-class-wrapper>
 	 </portlet>
 	 <portlet>
+	 	<portlet-name>dpApprovalExceedThreshold</portlet-name>
+	 	<icon>/icon.png</icon>
+	 	<requires-namespaced-parameters>false</requires-namespaced-parameters>
+	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+	 	<css-class-wrapper>dpApprovalExceedThreshold-portlet</css-class-wrapper>
+	 </portlet>
+	 <portlet>
 	 	<portlet-name>scQuotationTenderSearch</portlet-name>
 	 	<icon>/icon.png</icon>
 	 	<requires-namespaced-parameters>false</requires-namespaced-parameters>

@@ -209,17 +209,19 @@
 						value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" />
 					<p:outputLabel value="*" styleClass="mandatory" 
 					rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+				<!-- #38653 : Disciplinary Action - Start -->
 				<td><p:calendar showOn="button" navigator="true"
 						display="inline" readonlyInput="true"
 						label="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" id="startDate"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}"  
 						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
-						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}">
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction or supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.disciplinaryActionId != null}">
 						<p:ajax event="dateSelect" update="endDate" process="@this" partialSubmit="true"/>
 					</p:calendar>
 					<p:message id="startDateMsg" for="startDate"
 							showSummary="true" showDetail="false" display="icon" /></td>
+				<!-- #38653 : Disciplinary Action - End -->
 				<td></td>
 				<td></td>
 			</tr>
