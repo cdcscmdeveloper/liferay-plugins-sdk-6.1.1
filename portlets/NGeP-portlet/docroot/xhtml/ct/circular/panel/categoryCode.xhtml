@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<style>
+		.center-header th,
+		.center-header .ui-dt-c {
+			text-align: center !important;
+		}
+	</style>
+
+	<p:panel id="categoriCodeId"
+		header="#{lbl['lbl.ct.menu.category.code']}" toggleable="true"
+		toggleSpeed="500"
+		style="width: 100% !important; max-width: none !important;">
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.ct.instruction.panel.category.code']}" escape="false" />
+		<br />
+
+		<div style="width: 100%; overflow-x: auto;">
+			<p:dataTable id="panelCategoryCodeDt" var="cateGory"
+				value="#{panelBackingBean.managedBean.circularVer.ctPanelCategoryList}"
+				rowKey="#{cateGory}"
+				selection="#{panelBackingBean.managedBean.selectedCategoryList}"
+				rowIndexVar="index" widgetVar="openCodes" paginator="true" rows="10"
+				style="width:100% !important; table-layout: auto;"
+				tableStyleClass="center-header">
+
+				<ac:paginator for="panelCategoryCodeDt" />
+				<p:column selectionMode="multiple" style="width:5%" />
+
+				<p:ajax event="toggleSelect"
+					listener="#{panelBackingBean.onCategorySelectionChange}"
+					update=":form:deleteButtonId" />
+				<p:ajax event="rowSelectCheckbox"
+					listener="#{panelBackingBean.onCategorySelectionChange}"
+					update=":form:deleteButtonId" />
+				<p:ajax event="rowUnselectCheckbox"
+					listener="#{panelBackingBean.onCategorySelectionChange}"
+					update=":form:deleteButtonId" />
+
+				<!-- Category Code -->
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.menu.category.code']}" styleClass="required" />
+					</f:facet>
+					#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
+				</p:column>
+
+				<!-- Category -->
+				<p:column headerText="#{lbl['lbl.ct.tbl.category']}" style="min-width: 200px; white-space: normal;">
+					<h:outputText value="#{cateGory.pmCategoryL1Name}" />
+				</p:column>
+
+				<!-- Sub Category -->
+				<p:column headerText="#{lbl['lbl.ct.tbl.sub.category']}" style="min-width: 200px; white-space: normal;">
+					<h:outputText value="#{cateGory.pmCategoryL2Name}" />
+				</p:column>
+
+				<!-- Sub Category Division -->
+				<p:column headerText="#{lbl['lbl.ct.tbl.sub.category.div']}" style="min-width: 200px; white-space: normal;">
+					<h:outputText value="#{cateGory.pmCategoryL3Name}" />
+				</p:column>
+
+				<!-- Category Type -->
+				<p:column headerText="#{lbl['lbl.ct.tbl.category.type']}" style="min-width: 120px; white-space: normal;">
+					<h:outputText value="#{panelBackingBean.getParameterDesc(cateGory.categoryType)}" />
+				</p:column>
+			</p:dataTable>
+		</div>
+
+		<h:panelGroup id="addButtonId">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					process="@this, panelCategoryCodeDt" partialSubmit="true"
+					update=":form:catCodePopup" oncomplete="catCodePopup.show();"
+					rendered="#{!panelBackingBean.managedBean.viewContract}"
+					action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
+
+				<p:commandButton id="deleteButtonId" value="#{lbl['lbl.ct.delete']}"
+					process="@this, panelCategoryCodeDt" partialSubmit="true"
+					rendered="#{!panelBackingBean.managedBean.viewContract}"
+					disabled="#{empty panelBackingBean.managedBean.selectedCategoryList}"
+					update=":form:panelCategoryCodeDt, :form:deleteButtonId"
+					oncomplete="categoryCodeDeletePopUp.show()" />
+			</div>
+		</h:panelGroup>
+
+		<ac:confirmationPopup id="categoryCodeDeleteId"
+			widget="categoryCodeDeletePopUp"
+			okAction="panelBackingBean.deleteCategoryCode" width="400"
+			height="200" title="#{lbl['lbl.ct.tbl.category']}"
+			content="#{lbl['lbl.ct.dialog.confirm.category.code']}"
+			update=":form:panelCategoryCodeDt, :form:deleteButtonId" />
+
+		<ac:categoryCodePopup id="catCodePopup"
+			okAction="panelBackingBean.addNewCategoryCode"
+			update=":form:panelCategoryCodeDt" />
+
+	</p:panel>
+</ui:composition>

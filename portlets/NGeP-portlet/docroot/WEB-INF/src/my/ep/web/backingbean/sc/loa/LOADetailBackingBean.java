@@ -567,8 +567,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		// Bug 34404 - related to 29007 - end
 		//#21692 - Start
+		QtLOABackingBean qtLoa = new QtLOABackingBean();
+		qtLoa.renderEPVButtonForDP();
 		if (QTConstants.PORTLET_NAME_QT_LIST.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())) {
-			new QtLOABackingBean().isSupplierEPVStatusRejected(this.getManagedBean().getScLoa());//#36339
+			qtLoa.isSupplierEPVStatusRejected(this.getManagedBean().getScLoa());//#36339
 			getSupplierRejectProposalValidityExtensionNotification(this.getManagedBean().getScLoa());
 		}
 		//#21692 - End
@@ -1289,9 +1291,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScLoa scLoa = resDTO.getScLoa();
 		
 		// 26247 - start
-		if (null != scLoa && null != scLoa.getScLoiLoa() && null != scLoa.getScLoiLoa().getSmSupplier()) {
+		boolean supplierExist = null != scLoa && null != scLoa.getScLoiLoa()
+				&& null != scLoa.getScLoiLoa().getSmSupplier();
+		if (supplierExist) {
+			Long qtId = scLoa.getScLoiLoa().getDocId();
+			if (!Arrays.asList(ParameterConst.DOCTYPE_DIRECT_NEGO, ParameterConst.DOCTYPE_QUOTATION).contains(
+					scLoa.getScLoiLoa().getDocType())) {
+				qtId = null;
+			}
+
 			SmSupplier smSupplier = getQtSuppFinalizationSO().evaluateDisciplinaryActions(
-					scLoa.getScLoiLoa().getSmSupplier(), scLoa.getScLoiLoa().getDocId());
+					scLoa.getScLoiLoa().getSmSupplier(), qtId);
 			scLoa.getScLoiLoa().setSmSupplier(smSupplier);
 		}
 		// 26247 - start
@@ -4689,24 +4699,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
+		boolean dialogShown = false;//#38857
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value()) || isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
+				dialogShown = true;//#38857
 				this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} 
 		} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
 			//gpki for only govt seller
 			if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
+				dialogShown = true;//#38857
 				this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
 			}  else {
 				// spki
+				dialogShown = true;//#38857
 				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 				RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 			}
 
-		} else {
+		}
+		if (!dialogShown) {//#38857
 			updateBPMTask(outcome, null);
 		}	
 	}
@@ -12686,10 +12701,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//#21692 - Start
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoa scLoa) {
 		if (scLoa != null && scLoa.getLoaId() != null
-				&& isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())
-				&& checkProposalValidityDateReachByQt(getManagedBean().getScQt())
-				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV)) {
+				&& !ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())
+				&& checkingForEPVNotification(scLoa)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_ACCEPTANCE,
@@ -12737,6 +12750,39 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public boolean disableCancelForApprover() {
 		return !Arrays.asList(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_APPROVE);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Must validate html for LOA first
+	 * @param isWithBPM
+	 */
+	public void validateBeforePopup(boolean isWithBPM) {
+		if (isWithBPM) {
+			RequestContext.getCurrentInstance().execute("cancelLoaPopup.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("cancelLoaPopup2.show()");
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private boolean checkingForEPVNotification(ScLoa scLoa) {
+		// List of statuses to enable notification
+		List<Long> statusEnabledCancel = new ArrayList<>();
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_SUBMISSION);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_APPROVAL);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
+		
+		boolean statusEnabled = isLOAStatusAbleToCancel() != null
+				&& statusEnabledCancel.contains(isLOAStatusAbleToCancel());
+		boolean isQTValid = checkProposalValidityDateReachByQt(getManagedBean().getScQt())
+				&& this.validateSupportedTask(scLoa.getScQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+
+		return isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId()) && statusEnabled
+				&& isQTValid && !isQTMaintenanceScreen();
 	}
 	//#21692 - End
 }

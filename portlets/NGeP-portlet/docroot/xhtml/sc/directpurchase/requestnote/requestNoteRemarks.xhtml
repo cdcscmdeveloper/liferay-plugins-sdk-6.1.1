@@ -13,10 +13,30 @@
 			instruction="#{lbl['lbl.sc.requestnote.remarks.instruction']}" />
 	</c:if>
 	<c:if test="#{!isPendingItemCodificationStatus}">
-		<ac:scRemarkAndAttachment
-			remarkList="#{requestNoteBackingBean.managedBean.requestNote.remarks}"
-			showAttachment="false"
-			readonly="#{requestNoteBackingBean.managedBean.viewOnly}"
-			instruction="#{isPendingApprovalStatus ? lbl['lbl.sc.requestnote.remarks.instruction'] : ''}" />
+		<ui:remove>#26059 - start</ui:remove>
+		<c:choose>
+			<c:when
+				test="#{requestNoteBackingBean.managedBean.rnExceedThreshold}">
+				<ac:scRemarkAndAttachment
+					remarkList="#{requestNoteBackingBean.managedBean.requestNote.remarks}"
+					attachmentList="#{requestNoteBackingBean.managedBean.requestNote.scRequestNoteAttachments}"
+					showAttachment="true"
+					disableUpload="true"
+					documentHeader = "#{lbl['lbl.txt.attachment']}"
+					uploadButtonLabel = "#{lbl['lbl.txt.attach.doc']}"
+					recordsLabel = "#{lbl['lbl.sc.no.attachment.upload']}"		
+					readonly="#{requestNoteBackingBean.managedBean.viewOnly}"
+					showAttachments="#{requestNoteBackingBean.managedBean.showAttachments}"
+					instruction="#{isPendingApprovalStatus ? lbl['lbl.sc.requestnote.remarks.instruction'] : ''}" />
+			</c:when>
+			<c:otherwise>
+				<ac:scRemarkAndAttachment
+					remarkList="#{requestNoteBackingBean.managedBean.requestNote.remarks}"
+					showAttachment="false"
+					readonly="#{requestNoteBackingBean.managedBean.viewOnly}"
+					instruction="#{isPendingApprovalStatus ? lbl['lbl.sc.requestnote.remarks.instruction'] : ''}" />
+			</c:otherwise>
+		</c:choose>
+		<ui:remove>#26059 - start</ui:remove>
 	</c:if>
 </ui:composition>

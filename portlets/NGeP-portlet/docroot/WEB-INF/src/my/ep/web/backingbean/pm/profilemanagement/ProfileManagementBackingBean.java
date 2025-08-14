@@ -3255,8 +3255,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
-				
-				/************ START AUDIT #28895_35509 START *************/
+				/************START AUDIT #28895_35509 shaqimi 24072025*************/
 				if(getManagedBean().getSelectedUser().isBrandNew()){
 					user.setUserId(resDTO.getPmUser().getUserId());
 				}
@@ -3268,18 +3267,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
 					getManagedBean().setNewAuditPmUser(user);
 					getManagedBean().setNewAuditPmUserOrg(userOrg);
-					getManagedBean().setNewAuditPmUserRoles(userOrg.getPmUserRoles());
+					setNewAuditPmUserRoles(userOrg.getPmUserRoles());
 					getManagedBean().setNewAuditPmAddressTypes(getManagedBean().getSelectedReceivingAddrTypes());
 					getManagedBean().setOldAuditPmUser(oldPmUser);
 					getManagedBean().setOldAuditPmUserOrg(oldPmUserOrg);
 					getManagedBean().setOldAuditPmUserRoles(oldPmUserRoles);
 					getManagedBean().setOldAuditPmAddressTypes(oldPmAddressTypes);
 				}
-				
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
-					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_OUSR);
-				}
-				/************ END AUDIT #28895_35509 END *************/
+				/************ END AUDIT #28895_35509 shaqimi 24072025 *************/
 				
 				uploadAttachments();
 				deleteAttachments();
@@ -3312,6 +3307,39 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 				}
 				
+				/************ START AUDIT #28895_35509 START *************/
+				Map<String, PmUserRole> pmUserRoles = new HashMap<>();
+				Map<String, PmAddressType> pmAddressTypes = new HashMap<>();
+				
+				for(PmUserRole pur : getManagedBean().getPmUserOrgOriginal().getPmUserRoles()){
+					pmUserRoles.put(pur.getPmRole().getRoleCode(), pur);
+				}
+				
+				for(PmAddressType pat : getManagedBean().getPmUserOriginal().getPmAddressTypes()){
+					pmAddressTypes.put(pat.getPmAddress().getAddress1() + pat.getPmAddress().getAddress2() + 
+							pat.getPmAddress().getAddress3(), pat);
+				}
+				
+				for(PmUserRole userRole : this.getManagedBean().getNewAuditPmUserRoles()){
+					PmUserRole currentUserRole = pmUserRoles.get(userRole.getPmRole().getRoleCode());
+					userRole.setUserRoleId(currentUserRole.getUserRoleId());
+				}
+				
+				for(PmAddressType addressType : this.getManagedBean().getNewAuditPmAddressTypes()){
+					String address = addressType.getPmAddress().getAddress1() + addressType.getPmAddress().getAddress2() + 
+							addressType.getPmAddress().getAddress3(); 
+					PmAddressType currentAddressType = pmAddressTypes.get(address);
+					addressType.setAddressTypeId(currentAddressType.getAddressTypeId());
+				}
+				
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_OUSR);
+				}
+				
+				getManagedBean().setNewAuditPmUserRoles(new ArrayList<PmUserRole>());
+				getManagedBean().setNewAuditPmAddressTypes(new ArrayList<PmAddressType>());
+				/************ END AUDIT #28895_35509 END *************/
+				
 				//
 				logger.info("befor redirecting method");
 				if (isNewUser) {
@@ -3328,6 +3356,25 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			userSO = null;
 		}
 		return null;
+	}
+	
+	private void setNewAuditPmUserRoles(List<PmUserRole> currentPmUserRole){
+		
+		for(PmUserRole current : currentPmUserRole){
+			PmUserRole newUserRole = new PmUserRole();
+			PmRole newRole = current.getPmRole();
+
+			newUserRole.setPmRole(newRole);
+			newUserRole.setUserRoleId(current.getUserRoleId());
+			newUserRole.setRecordStatusFlg(current.getRecordStatusFlg());
+			newUserRole.setApprovalLimit(current.getApprovalLimit());
+			
+			if(getManagedBean().getNewAuditPmUserRoles() == null){
+				getManagedBean().setNewAuditPmUserRoles(new ArrayList<PmUserRole>());
+			}
+			
+			getManagedBean().getNewAuditPmUserRoles().add(newUserRole);
+		}
 	}
 
 	/**
