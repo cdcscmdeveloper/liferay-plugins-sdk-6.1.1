@@ -10,6 +10,7 @@ import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
@@ -110,6 +111,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		auditPMReqDTO.setObjList(objList);
 		managedBean.setOldFinancialOrg(null);
 		managedBean.setSavedFinancialOrg(null);
+		managedBean.setOldContactPerson(null);
 		return auditPMReqDTO;
 	}
 	
@@ -206,8 +208,8 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		detailObj(AuditConst.PM_AUD_OFO_COUNTRY_FIELDLABELID, null, editedAddress.getPmCountry().getCountryName());
 		
 		if(!editedAddress.getPhoneNo().isEmpty()){
-		detailObj(AuditConst.PM_AUD_OFO_PHONE_FIELDLABELID, null, 
-				editedAddress.getPhoneCountry() + editedAddress.getPhoneArea() + editedAddress.getPhoneNo());
+			detailObj(AuditConst.PM_AUD_OFO_PHONE_FIELDLABELID, null, 
+					editedAddress.getPhoneCountry() + editedAddress.getPhoneArea() + editedAddress.getPhoneNo());
 		}
 		
 		if(editedAddress.getPmDivision() != null){
@@ -222,19 +224,22 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	private void setNewContactPerson(PmContact pmContact){
 		String officePhoneNo = pmContact.getPhoneNo() != null && !pmContact.getPhoneNo().isEmpty() ? 
 				pmContact.getPhoneCountry() + pmContact.getPhoneArea() + pmContact.getPhoneNo() : EMPTY_STRING;
+				
 		String officeMobileNo = pmContact.getMobileNo() != null && !pmContact.getMobileNo().isEmpty() ? 
 				pmContact.getMobileCountry() + pmContact.getMobileArea() + pmContact.getMobileNo() : EMPTY_STRING;
 
-		
-		if(pmContact.getContactName() != null && !pmContact.getContactName().isEmpty())
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, null, pmContact.getContactName());
+		if(!EntityHelper.getStringNestedProperty(pmContact, "contactName").isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, null, EntityHelper.getStringNestedProperty(pmContact, "contactName"));
+		}
 			
-		if(pmContact.getEmail() != null && !pmContact.getEmail().isEmpty())
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, null, pmContact.getEmail());
+		if(!EntityHelper.getStringNestedProperty(pmContact, "email").isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, null, EntityHelper.getStringNestedProperty(pmContact, "email"));
+		}
 		
 		if(!officePhoneNo.isEmpty()){
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_TELEPHONE_FIELDLABELID, null, officePhoneNo);
 		}
+		
 		if(!officeMobileNo.isEmpty()){
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_MOBILE_FIELDLABELID, null, officeMobileNo);
 		}
@@ -250,11 +255,25 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		String officeMobileNo = EMPTY_STRING;
 		String auditPhoneNo = EMPTY_STRING;
 		String auditMobileNo = EMPTY_STRING;
+		
+		String currContactName = EntityHelper.getStringNestedProperty(editedtContactPerson, "contactName");
+		String oldContactName = EntityHelper.getStringNestedProperty(oldContactPerson, "contactName");
+		String currContactEmail = EntityHelper.getStringNestedProperty(editedtContactPerson, "email");
+		String oldContactEmail = EntityHelper.getStringNestedProperty(oldContactPerson, "email");
+
+		if(!currContactName.equals(oldContactName)){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, oldContactName, currContactName);					
+		}
+
+		if(!currContactEmail.equals(oldContactEmail)){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, oldContactEmail, currContactEmail);					
+		}
 
 		if(oldContactPerson.getPhoneNo() != null && !oldContactPerson.getPhoneNo().isEmpty()){
 			auditPhoneNo = oldContactPerson.getPhoneCountry() + oldContactPerson.getPhoneArea() + 
 					oldContactPerson.getPhoneNo();
 		}
+		
 		if(oldContactPerson.getMobileNo() != null && !oldContactPerson.getMobileNo().isEmpty()){
 			auditMobileNo = oldContactPerson.getMobileCountry() + oldContactPerson.getMobileArea() + 
 					oldContactPerson.getMobileNo();
@@ -269,20 +288,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			officeMobileNo = editedtContactPerson.getMobileCountry() + editedtContactPerson.getMobileArea() + 
 					editedtContactPerson.getMobileNo();
 		}
-
-		if(!editedtContactPerson.getContactName().equals(oldContactPerson.getContactName())){
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, 
-					oldContactPerson.getContactName(), editedtContactPerson.getContactName());					
-		}
 		
 		if(!officePhoneNo.equals(auditPhoneNo)){
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_TELEPHONE_FIELDLABELID, 
 					auditPhoneNo, officePhoneNo);					
-		}
-		
-		if(!editedtContactPerson.getEmail().equals(oldContactPerson.getEmail())){
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, 
-					oldContactPerson.getEmail(), editedtContactPerson.getEmail());					
 		}
 		
 		if(!officeMobileNo.equals(auditMobileNo)){

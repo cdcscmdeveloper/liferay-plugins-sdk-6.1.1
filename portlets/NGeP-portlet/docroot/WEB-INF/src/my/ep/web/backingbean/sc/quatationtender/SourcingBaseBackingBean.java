@@ -62,6 +62,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -921,6 +922,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				IScheduleBiddingSO.class);
 	}
 	// 26247 - end
+	
+	// 38523 - start
+	protected IReasonSO getReasonSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+	}
+
+	// 38523 - end
+	
 	// 12471 - start
 	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);

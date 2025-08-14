@@ -907,6 +907,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			FacesScopes facesScopes = new FacesScopes();
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
+			
+			//#26284 - Start
+			if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))
+					&& requestNote != null) {
+				checkSupplierDisciplinaryAction(requestNote);
+			}
+			//#26284 -End
 
 			// reRecommend
 			requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
@@ -2278,9 +2285,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(scRequestNote);
-
+		
 		// #31679 - Start
 		if (requestNoteReqDTO.getRequestNote() != null) {
+			
+			//#26284 - Start
+			if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))){
+				checkSupplierDisciplinaryAction(scRequestNote);
+			}
+			//#26284 -End
 
 			log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")"
 					+ "- Method: approverAction Start ---");
@@ -6083,7 +6096,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			SmMofAccount mofAccount = supplierDataMaintenanceSO.retrieveMofSupplierBySupplierId(reqDTO).getSmMofAccount();
 			SmSupplier smSupplier = reqDTO.getSupplier();
 
-			if (mofAccount !=null && smSupplier !=null) {
+			if (mofAccount !=null || smSupplier !=null) {
 				// Check DA Active
 				List<SmDisciplinaryAction> nonExpiredActions = supplierDataMaintenanceSO
 						.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
