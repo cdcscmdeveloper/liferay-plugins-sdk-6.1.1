@@ -734,6 +734,7 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_3 = "CM_USER";
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
 	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
+	
 	// #28895_35501 Start - AUDIT TRAIL SM
 	public static final String SM_APPL_PAGE_TYPE_AUDIT_TRAIL = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
 	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
@@ -746,6 +747,8 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
 	public static final String SUPPLIER_APPL_SEARCH_URL = "supplier-application-search";
 	// #28895_35501 End
+	
+	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
 		
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {

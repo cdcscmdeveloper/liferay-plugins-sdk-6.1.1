@@ -24,6 +24,59 @@
 				<h:outputText value="#{fcRequestDtls.changedValue}" />
 			</p:column>
 		</p:dataTable>
+		<ui:remove>21692 - Start</ui:remove>
+		<table
+			style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
+			<tr>
+			<td style="padding: 10px;">
+			</td>
+			</tr>
+		</table>
+		<table
+			style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
+			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange and scQt.responsePeriod != null}" >
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qt.new.validity.days']}" />
+					</td>
+					<td>
+						<p:inputText value="#{approvalBackingBean.getNewValidityPeriod()}" style="width:200px;" disabled="true" />
+					</td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qt.new.validity.date']}" />
+					</td>
+					<td>
+						<p:inputText value="#{qTDetailBB.getNewValidityDueDate(scQt, approvalBackingBean.getNewValidityPeriod())}" style="width:200px;" disabled="true" >
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+						</p:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.accept.response.period']}" />
+					</td>
+					<td>
+						<p:inputText value="#{scQt.responsePeriod}" style="width:200px;" disabled="true" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.qt.supplier.accept.resp.period.tooltips']}"/>
+					</td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
+					</td>
+					<td>
+					<c:if test="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod) != null}">
+						<p:inputText value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod)}" style="width:200px;" disabled="true" >
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+						</p:inputText>
+					</c:if>
+					<c:if test="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod) == null}">
+							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
+							</p:inputText>
+					</c:if>
+					</td>
+				</tr>
+			</c:if>
+		</table>
+		<ui:remove>21692 - End</ui:remove>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true"
 		rendered="#{approvalBackingBean.managedBean.qt.qtType eq 'R'}">

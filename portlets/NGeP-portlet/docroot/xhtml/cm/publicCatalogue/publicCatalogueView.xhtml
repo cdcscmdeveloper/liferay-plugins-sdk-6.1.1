@@ -227,9 +227,11 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 															</h:panelGroup></td>
 													</tr>
 													<tr>
-														<td align="center"
-															style="text-align: center; width: 100%; height: 100%; padding-left: 20px; padding-right: 20px; overflow-wrap: break-word;"><h:outputText
-																value="#{pCatalogueBackingBean.convertString(supplierItem.itemName, 20)}"  /></td>
+													    <!-- Enhancement #31245 - start -->
+														<td align="center" style="text-align: center; width: 100%; height: 100%; padding-left: 20px; padding-right: 20px; overflow-wrap: break-word;">
+															<h:outputText value="#{pCatalogueBackingBean.convertString(supplierItem.itemName.replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', ''), 20)}" />
+														</td>
+														<!-- Enhancement #31245 - end -->
 													</tr>
 													<tr>
 														<td align="center"
