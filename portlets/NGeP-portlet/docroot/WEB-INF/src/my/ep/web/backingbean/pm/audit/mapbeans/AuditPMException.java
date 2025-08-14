@@ -4,6 +4,9 @@ public class AuditPMException extends Exception {
 
 	/**
 	 * #35509
+	 * 
+	 * @author normuliana
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 

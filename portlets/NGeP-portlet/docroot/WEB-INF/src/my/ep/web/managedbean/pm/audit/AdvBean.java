@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * AdvBean #35509
+ * AdvBean
+ * #35509
+ * @author normuliana
  * 
  */
 public class AdvBean implements Serializable {

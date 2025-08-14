@@ -6,7 +6,9 @@ package my.ep.web.managedbean.pm.audit;
 import java.io.Serializable;
 
 /**
- * AdvColumnBean #35509
+ * AdvColumnBean
+ * #35509
+ * @author normuliana
  * 
  */
 public class AdvColumnBean implements Serializable {
