@@ -89,14 +89,14 @@
 						value="#{lbl['lbl.pm.audit.itemCode']}"></p:outputLabel></td>
 				<td width="275px;"><p:inputText
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemCode}"
-						id="itemCode" size="32" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemCode']}" /></td>
+						id="itemCode" size="36" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemCode']}" /></td>
 			</tr>
 			<tr>
 				<td width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.itemName']}"></p:outputLabel></td>
 				<td width="275px;"><p:inputText
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemName}"
-						id="itemName" size="32" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemName']}" /></td>
+						id="itemName" size="36" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemName']}" /></td>
 			</tr>
 			<tr>
 				<th width="20%"><p:outputLabel
@@ -120,7 +120,7 @@
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.actionBy']}" /></th>
 				<td><ac:lovAudit isStoreProc="true" id="searchActionBylist"
-						lovId="PM_USER" size="32" readonly="true"
+						lovId="PM_USER" size="36" readonly="true"
 						roleCode="searchPMAuditBackingBean.getRoleCode()"
 						headerText="#{lbl['lbl.pm.audit.actionBy']}" process="@this"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.pmUser.userName}"
@@ -133,13 +133,13 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.pm.audit.actiondateFrom']}" /></td>
-				<td><p:calendar id="fromDate" showOn="button" size="32"
+				<td><p:calendar id="fromDate" showOn="button" size="36"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom}" readonlyInput="true">
 						<p:ajax event="dateSelect" update="toDate" />
 					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
-				<td><p:calendar showOn="button" size="25"
+				<td><p:calendar showOn="button" size="30"
 						label="#{lbl['lbl.pm.audit.actiondateTo']}"
 						required="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom ne null or !searchPMAuditBackingBean.managedBean.searchBean.dateFrom eq ''}"
 						mindate="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom}"

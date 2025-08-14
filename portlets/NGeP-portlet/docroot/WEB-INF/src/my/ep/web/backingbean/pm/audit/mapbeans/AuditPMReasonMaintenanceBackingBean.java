@@ -522,10 +522,10 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	 */
 	private String checkPIDReason(String pidDocType) {
 
-		PmParameter contractRequestParam = getParameterByTypeAndCode("DT", pidDocType);
+		PmParameter pmParameter = getParameterByTypeAndCode("DT", pidDocType);
 		String description = null;
 
-		for (PmParameterDesc desc : contractRequestParam.getPmParameterDescsSpecCallOnly()) {
+		for (PmParameterDesc desc : pmParameter.getPmParameterDescsSpecCallOnly()) {
 			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 				description = desc.getCodeName();
 			}

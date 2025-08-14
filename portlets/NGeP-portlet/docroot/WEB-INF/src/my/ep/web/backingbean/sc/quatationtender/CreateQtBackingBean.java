@@ -4158,23 +4158,16 @@ public class CreateQtBackingBean extends
 			String type = (String) event.getComponent().getAttributes().get("value");
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
 
-			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
 			//28748 - 38426 - start
 			if (this.isStatusLessThanOrEquals(status,
 					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH,
-					QTStatusConst.QT_ORDERED_STATUSES)
-					&& CollectionUtils.isNotEmpty(scQtTechChecklist)) {
-				for (ScQtCheckList checklist : scQtTechChecklist) {
-					boolean isDemoDoc = checklist.getDefinationType().getParameterCode()
-							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
-					boolean twoTierAndDemoRequired = type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)
-							&& demoRequired;
-					boolean oneTier = type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER);
-					if (isDemoDoc && (twoTierAndDemoRequired || oneTier)) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
-					}
-				} 
+					QTStatusConst.QT_ORDERED_STATUSES)) {
+				//note937 Issue 2 - Start
+				boolean oneTier = type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER) && demoRequired;
+				if (oneTier) {
+					RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
+				}
+				//note937 Issue 2 - End
 			} 
 			//28748 - 38426 - end
 			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
@@ -4228,16 +4221,7 @@ public class CreateQtBackingBean extends
 				reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 				scQtTechChecklist = specSo.retrieveCheckLists(reqDTO).getTechnicalCheckList();
 			}
-
-			if (null != scQtTechChecklist) {
-				for (ScQtCheckList checklist : scQtTechChecklist) {
-					if (checklist.getDefinationType().getParameterCode()
-							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-						RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
-					}
-				}
-			}
-
+			RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");//note937 Issue 1
 		} else {
 			RequestContext.getCurrentInstance().execute("demoDialogConfirm.hide()");
 		}

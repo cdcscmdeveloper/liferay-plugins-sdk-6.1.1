@@ -1218,13 +1218,14 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void showConfirmDialog() {
 		//27460 : Disciplinary Action, //32827
 		validateUpdateDisciplinaryAction(getManagedBean().getDisciplineVO().getSmDiscplinaryAction());
+		validateCancelManufacturer();	//38742
 		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null){
 			boolean cancelCategory = getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel();
 			if(cancelCategory && !getManagedBean().isCancelCategoryCodeExist()
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
 			}
-			validateCancelManufacturer();
+			
 			//#28147 - start - #28494
 			if (getManagedBean().isBlacklistOwnerOrDirector() 
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedOwnerAndDirectorList())) {
@@ -1885,12 +1886,17 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		//#26238 - 38417
 		SmSupplier supplier = getManagedBean().getSmSupplier();
+		//#38609 - start
+		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isSuspendRegistration();
 		boolean hasPending = supplier.isPendingBlacklist() || supplier.isPendingCancel()
 				|| supplier.isPendingSuspend();
-		if (!hasPending && StringUtils.isNotEmpty(mofStatus) 
-				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)){
+		if (!hasPending && StringUtils.isNotEmpty(mofStatus)
+				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)) {
+			getManagedBean().setAllowedToDoMaintenance(false);
+		} else if (mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA) {
 			getManagedBean().setAllowedToDoMaintenance(false);
 		}
+		//#38609 - end
 	}
 
 	/**
@@ -2912,6 +2918,9 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 	//32618 - Start, 38391
 	private void unSelectSuspendCategories(){
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
+			return;
+		}
 		List<SmSupplierCategory> selectList = new ArrayList<>();
 		for (SmSupplierCategory cat : getManagedBean().getSelectedApprovedCategories()){
 			cat.setSelectable(!cat.isSuspendCategory());
@@ -2927,9 +2936,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	 *  Mandatory auto-tick 100% bumi, disable non-bumi, enable 51% bumi for selection
 	 */
 	public void unSelectCancelBumiCategories() {
-		if (EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
-			return;
-		}
 		unSelectSuspendCategories();
 		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
 				|| !getManagedBean().isEditDisciplinaryActionCheckBox()){
@@ -2937,6 +2943,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		List<SmSupplierCategory> selectList = new ArrayList<>();
 		List<SmSupplierCategory> prevSelect = getManagedBean().getSelectedApprovedCategories();
+		if (prevSelect == null){
+			prevSelect = new ArrayList<SmSupplierCategory>();
+		}
 		Iterator<SmSupplierCategory> it = getManagedBean().getApprovedCategoryList().iterator();
 		while (it.hasNext()) {
 			SmSupplierCategory cat = it.next();
@@ -3141,6 +3150,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		for (SmRvSuppDoc suppDoc : this.getManagedBean().getSmRevisit().getSmRvSuppDocs()) {
 			validateRvSuppDoc(suppDoc);
+		}
+		if (null == this.getManagedBean().getSmRevisit().getRevisitRemark() || this.getManagedBean().getSmRevisit().getRevisitRemark().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_723104);
 		}
 	}
 

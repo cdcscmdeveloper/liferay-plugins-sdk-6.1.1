@@ -35,6 +35,7 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	 */
 	public void generateReport() {
 		LinkedHashMap<String, String> params = new LinkedHashMap<>();
+		retrieveReportValueFromDb();
 		params.put(SmReportConst.PARAM_ZONE, this.getManagedBean().getZone());
 		if (null != this.getManagedBean().getSelectedOrgProfile()) {
 			params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId()));

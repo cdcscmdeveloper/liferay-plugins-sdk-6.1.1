@@ -171,9 +171,14 @@ public class AuditPMRoleBackingBean {
 	 * @return
 	 */
 	public String roleSoftCert() {
-		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_1.value()) ? RoleCode.EP_ADMIN_1.value() : getFacesScopes()
-				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
-				RoleCode.SUPPORT_APPL.value()) ? RoleCode.SUPPORT_APPL.value() : null;
+		List<RoleCode> rolePriority = Arrays.asList(RoleCode.EP_ADMIN_1, RoleCode.EP_ADMIN_2, RoleCode.SUPPORT_APPL);
+
+		for (RoleCode role : rolePriority) {
+			if (getFacesScopes().hasRoleUser(role.value())) {
+				return role.value();
+			}
+		}
+		return null;
 	}
 
 	/**
