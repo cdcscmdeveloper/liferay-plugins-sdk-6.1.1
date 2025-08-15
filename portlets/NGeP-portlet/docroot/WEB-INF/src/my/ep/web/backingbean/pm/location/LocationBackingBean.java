@@ -644,6 +644,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		DistrictResDTO districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);
 		getManagedBean().setDistricts(districtResDTO.getDistrictList());
 
+		/* #35509 PM Start */
+		for (PmState state : getManagedBean().getStates()) {
+			if (state.getStateId().equals(stateId)) {
+				getManagedBean().getDistrict().getPmState().setStateName(state.getStateName());
+				break;
+			}
+		}
+		/* #35509 PM End */
 	}
 
 	/*
