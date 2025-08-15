@@ -2232,7 +2232,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean toBeValidated = Arrays.asList(ParameterConst.DECISION_RECOMMEND_SUPPLIER,
 				ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY).contains(
 				scQtFinalization.getDecision().getParameterCode())
-				&& allowValidation;
+				&& allowValidation && !BpmOutcomeConst.BPM_REVISE.equals(this.getManagedBean().getOutcome());
 		// 26247 - end
 		
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();
@@ -2489,7 +2489,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean toBeValidated = Arrays.asList(ParameterConst.DECISION_RECOMMEND_SUPPLIER,
 				ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY).contains(
 				scQtFinalization.getDecision().getParameterCode())
-				&& allowValidation;
+				&& allowValidation && !BpmOutcomeConst.BPM_REVISE.equals(this.getManagedBean().getOutcome());
 		for (ScQtRecommend scQtRecommend : scQtFinalization.getScQtRecommends()) {
 			if (scQtRecommend.isCancelled()) { 
 				++cancelledItemsCount; 
@@ -10016,7 +10016,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
 				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
-				;
+				||QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());//25791
 	}
 	
 	//#25426 ruzaimah - Start
