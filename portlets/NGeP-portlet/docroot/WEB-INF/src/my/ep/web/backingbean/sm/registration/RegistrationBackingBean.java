@@ -4266,7 +4266,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			stateSelectLs = EntityHelper.convertListToSelectItem(stateLs,"stateName", "stateId");
 		}
 		this.getManagedBean().setBusinessStateLs(stateSelectLs);
-		populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());		
+		populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
+		
+		// #36718 - Start - reset regNo when business type changed
+		if (this.getManagedBean().getSmAppl().isBrandNew()
+				&& !this.getManagedBean().getSmAppl().isApplValidWithSsm()) {
+			this.getManagedBean().getSmSupp().setRegNo(null);
+		}
+		// #36718 - End
 	}
 			
 	/**
@@ -4879,6 +4886,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().getSmAppl().setSupplierType(null);
 		getManagedBean().getSmAppl().setApplValidWithSsm(false);
 		getManagedBean().setRegIcCheckSSM(null);
+		getManagedBean().getSmAppl().setSmCompanyBasic(new SmCompanyBasic());
+		getManagedBean().getSmAppl().getSmSupplierBanks().clear();
+		getManagedBean().getSmSupp().getSmSupplierBusinesses().clear();
+		getManagedBean().getSmPersonnelOwners().clear();
+		getManagedBean().getSmPersonnelDirector().clear();
+		getManagedBean().getSmBusinessAdd().setAddress1("");
+		getManagedBean().getSmBusinessAdd().setAddress2("");
+		getManagedBean().getSmBusinessAdd().setAddress3("");
+		getManagedBean().getSmSupp().setSsmNewRegNo(null);
 		// #37900 -end
 		return termAndCondition;
 
