@@ -1354,9 +1354,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			itemsToSelectedAddress(flItemAddr);
 		}
 		populateItemsForSelectedAddress();
-		if(!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+		/*if(!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
 			checkPRThresholdPerItem();
-		}
+		}*/
+		
+		// #31344 - start check threshold perp item per ptj per year with/without bpk approval
+		String procurementType = getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode();
+		checkThresholdPerItemPerPTJPerYear(procurementType,flItemAddr);
+		
 	}
 	
 	
@@ -1512,7 +1517,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		log.info("start - 20011");
 		//Redmine #20011
 		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFulfilmentRequest()));
-		if(!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+		/*if(!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
 			checkPRThresholdPerItem();
 		}else if(getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1521,7 +1526,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
-		}
+		}*/
 		log.info("end - 20011");
 		log.info("start - addButton");
 		//Redmine Enhancement #12177
@@ -3524,6 +3529,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}else{
 					checkReceivingOfficerList();
 				}
+				// #31344 - start validate PR exceed threshold with/without bpk approval
+				String procurementType = getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode();
+				validateThresholdPerItemPerPTJPerYearAction(procurementType);
+				// #31344 - end
 				validateChargelineLimit(outcome);
 				if(!getManagedBean().isDeclarationCheck()){
 					getManagedBean().setSelectedTabIndex(0);
@@ -5267,5 +5276,174 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 			}
 		}
-		//34555-End		
+		//34555-End	
+		
+		/**
+		 * 31344 - Check the threshold per item per ptj per year with/without bpk approval
+		 * 
+		 * @param procurementType
+		 * @param flItemAddr
+		 */
+		private void checkThresholdPerItemPerPTJPerYear(String procurementType,FlFulfilmentItemAddr flItemAddr){
+			BigDecimal accumulateAmount = getAccumalateAmountPerItemPerPtjPerYear(flItemAddr);
+			accumulateAmount = accumulateAmount.add(flItemAddr.getOrderedAmt());
+			
+			BigDecimal thresholdAmount = retrieveThresholdAmountByProcurementType(procurementType);
+			
+			List<ScRequestNoteDtl> scRequestNoteDtlList = new ArrayList<>();
+			if(getManagedBean().getRequestNoteWithDtlsList()!= null){
+				scRequestNoteDtlList.addAll(getManagedBean().getRequestNoteWithDtlsList());
+			}
+			ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
+			for(ScRequestNoteDtl scRequestNoteDtl : scRequestNoteDtlList){
+				if(scRequestNoteDtl.getRequestItem().getRequestNoteItemId().equals(flItemAddr.getScRequestItem().getRequestNoteItemId())){
+					requestNoteDtl = scRequestNoteDtl;
+				}
+			}
+			
+			// Hard code amount threshold for testing purpose
+			//thresholdAmount = new BigDecimal("30");
+				
+			if(accumulateAmount.doubleValue() > thresholdAmount.doubleValue()){
+				if ("1".equals(requestNoteDtl.getBpkThresholdDecision())) {
+					if(flItemAddr.getOrderedQty().doubleValue() > flItemAddr.getScRequestItem().getQuantity().doubleValue()){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_740073, 
+										new String[]{flItemAddr.getScRequestItem().getQuantity().toString(), 
+										flItemAddr.getScRequestItem().getQuantity().multiply(flItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP).toString()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_740074, 
+									new String[]{flItemAddr.getScRequestItem().getItemName(), 
+									getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(), 
+									thresholdAmount.setScale(2, RoundingMode.HALF_UP).toString()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+			}
+		}
+		
+		/**
+		 * 31344 - Validate threshold per item per ptj per year with/without bpk approval (submit/approve)
+		 * 
+		 * @param procurementType
+		 */
+		private void validateThresholdPerItemPerPTJPerYearAction(String procurementType){
+			List<String> bpkExceededItems = new ArrayList<>();
+		    List<String> nonBpkExceededItems = new ArrayList<>();
+		    
+			BigDecimal thresholdAmount = retrieveThresholdAmountByProcurementType(procurementType);
+		    
+			for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr item : delAddr.getFlFulfilmentItemAddr()){
+					BigDecimal accumulateAmount = getAccumalateAmountPerItemPerPtjPerYear(item);
+					accumulateAmount = accumulateAmount.add(item.getOrderedAmt());
+					
+					List<ScRequestNoteDtl> scRequestNoteDtlList = new ArrayList<>();
+					if(getManagedBean().getRequestNoteWithDtlsList()!= null){
+						scRequestNoteDtlList.addAll(getManagedBean().getRequestNoteWithDtlsList());
+					}
+					ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
+					for(ScRequestNoteDtl scRequestNoteDtl : scRequestNoteDtlList){
+						if(scRequestNoteDtl.getRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+							requestNoteDtl = scRequestNoteDtl;
+						}
+					}
+					
+					// Hard code amount threshold for testing purpose
+					//thresholdAmount = new BigDecimal("30");
+					
+					if(accumulateAmount.doubleValue() > thresholdAmount.doubleValue()){
+						if ("1".equals(requestNoteDtl.getBpkThresholdDecision())) {
+							if(item.getOrderedQty().doubleValue() > item.getScRequestItem().getQuantity().doubleValue()){
+								bpkExceededItems.add(item.getScRequestItem().getItemName());
+							}
+						} else {
+							nonBpkExceededItems.add(item.getScRequestItem().getItemName());
+						}
+					}
+				}
+			}
+			
+			if (!bpkExceededItems.isEmpty() || !nonBpkExceededItems.isEmpty()) {
+		        if (!bpkExceededItems.isEmpty()) {
+		        	StringBuilder itemList = new StringBuilder();
+		        	int count = 1;
+		            for (String item : bpkExceededItems) {
+		            	itemList.append("<br>" + count + ". " + item);
+		                count ++;
+		            }
+		            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_740075, 
+									new String[]{itemList.toString()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		            
+		        }
+
+		        if (!nonBpkExceededItems.isEmpty()) {
+		        	StringBuilder itemList = new StringBuilder();
+		        	int count = 1;
+		            for (String item : nonBpkExceededItems) {
+		            	itemList.append("<br>" + count + ". " + item);
+		                count ++;
+		            }
+		            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_740076, 
+									new String[]{itemList.toString(), 
+			            			getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(), 
+			            			getManagedBean().getFulfilmentRequest().getFinancialYear().toString(), 
+			            			thresholdAmount.setScale(2, RoundingMode.HALF_UP).toString()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		        }
+		        getManagedBean().setSelectedTabIndex(1);
+		        throw new EpException("");
+		    }
+		}
+		
+		/**
+		 * 31344 - Retrieve threshold amount by procurement type.
+		 * 
+		 * @param procurementType
+		 * @return
+		 */
+		private BigDecimal retrieveThresholdAmountByProcurementType(String procurementType){
+			BigDecimal thresholdAmount = BigDecimal.ZERO;
+			ScRequestNote requestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
+			if(!procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) || 
+					!procurementType.equalsIgnoreCase("S")){
+				RuleReqDTO ruleReqDTO = new RuleReqDTO();
+				IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+				if(requestNote.getQuote()!=null && requestNote.getQuote().isPanel()) {
+					ruleReqDTO.setRuleType(RuleTypeConst.PANEL_THRESHOLD);
+				} else {
+					ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
+				}
+				RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+				if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
+					thresholdAmount = new BigDecimal(roleResDTO.getRuleValueList().get(0).getRuleValue());
+				} else {
+					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+				}
+			}
+			return thresholdAmount;
+		}
+		
+		/**
+		 * 31344 - Get accumulate amount per item per ptj per year
+		 * 
+		 * @param flFulfilmentItemAddr
+		 * @return
+		 */
+		private BigDecimal getAccumalateAmountPerItemPerPtjPerYear(FlFulfilmentItemAddr flFulfilmentItemAddr){
+			IFlItemSummarySO itemSummSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
+			summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+			summReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
+			summReq.setItemId(flFulfilmentItemAddr.getScRequestItem().getCmItem().getItemId());
+			summReq.setExtensionCode(flFulfilmentItemAddr.getScRequestItem().getCmItem().getExtensionCode().substring(0, 8));
+			return itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);	
+		}
 }
