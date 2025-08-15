@@ -69,8 +69,8 @@
 							alertValue="#{backingBean.getOwnershipTypeLabel(backingBean.managedBean.latestAppl.hqFacility.ownershipType)}"/>
 						
 						<p:message for="ownTypeId" showDetail="false" showSummary="true"
-							display="icon" /></td>
-					<td colspan='2'>&#160;</td>
+							display="icon" />
+					</td>
 				</tr>
 				<!-- 29480 - Update: remove code for Re-endorsed CR -->
 				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O' or backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
@@ -115,6 +115,15 @@
 						</p:outputPanel>
 						<td colspan='2'>&#160;</td>
 					</tr>
+					<!-- #38890 - start -->
+					<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R' and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}">
+					<tr>
+						<td colspan="2">
+							<ac:smAIAssistant aiDlg="tenancyAI" smAppl="#{backingBean.managedBean.smAppl}" />
+						</td>
+					</tr>
+					</p:outputPanel>
+					<!-- #38890 - end -->
 					<tr>
 						<td><p:outputLabel value="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'?
 								lbl['lbl.sm.facility.landLordName']:lbl['lbl.sm.facility.ownerName']}" /> 
