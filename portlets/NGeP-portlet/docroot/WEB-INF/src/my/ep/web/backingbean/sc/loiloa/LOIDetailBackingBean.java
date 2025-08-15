@@ -7013,17 +7013,21 @@ public class LOIDetailBackingBean extends
 	 * @param isWithBPM
 	 */
 	public void validateBeforePopup(boolean isWithBPM) {
-		boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-			QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 		if (isWithBPM) {
 			RequestContext.getCurrentInstance().execute("cancelPopup.show()");
 		} else {
-			if (isValidFor21692) {
-				RequestContext.getCurrentInstance().execute("cancelPopup2.show()");
-			} else {
-				RequestContext.getCurrentInstance().execute("cancelPopup3.show()");
-			}
+			RequestContext.getCurrentInstance().execute("cancelPopup2.show()");
 		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Must validate html for LOI first
+	 * @param isWithBPM
+	 */
+	public void validateBeforePopupWIP() {
+		RequestContext.getCurrentInstance().execute("cancelPopup3.show()");
 	}
 	//#21692 - End
 	
