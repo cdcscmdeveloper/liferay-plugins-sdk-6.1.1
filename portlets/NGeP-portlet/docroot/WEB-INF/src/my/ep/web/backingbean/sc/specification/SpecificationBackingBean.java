@@ -13986,6 +13986,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 			//1873 - start - note 97
 			SpecificationResDTO resDTO  = new SpecificationResDTO(); 
@@ -14855,6 +14856,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 				this.getManagedBean().getSpecMaintenanceScreen()));
 		// code if alredy checklist exist need to remove existing finalcialspec
+		reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 		/*
 		 * IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
@@ -23828,11 +23830,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			Map<String, String> paramMap) {
 		int activeIndex = this.getManagedBean().getActiveIndex();
 		FacesScopes facesScopes = new FacesScopes();
+		String language = facesScopes.getUserLocale().getLanguage();
 		PmUser user = facesScopes.getUserSessionBean();
 		ScQt scQt = getManagedBean().getQt();
 		
 		paramMap.put(QtReportConst.PARAM_MAP_P_QTID, scQt.getQtId().toString());
-		paramMap.put(QtReportConst.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
+		paramMap.put(QtReportConst.PARAM_MAP_P_LANGUAGE, language);
 		paramMap.put(QtReportConst.PARAM_USER_ID, user.getUserId().toString());
 
 		switch (activeIndex) {
@@ -24134,6 +24137,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		
 		ScQt scQt = getManagedBean().getQt();
 		FacesScopes facesScopes = new FacesScopes();
+		String language = facesScopes.getUserLocale().getLanguage();
 		PmUser user = facesScopes.getUserSessionBean();
 
 		String selectedChecklist = selectedChecklistForReport(scQtChecklistListLocal, isSummary);
@@ -24145,7 +24149,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			Map<String, String> paramMap = new HashMap<>();
 			paramMap.put(QtReportConst.QUOTATION_TENDER_ID, scQt.getQtId().toString());
 			paramMap.put(QtReportConst.PARAM_MAP_P_QTCHECKLISTIDS, selectedChecklist);
-			paramMap.put(QtReportConst.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
+			paramMap.put(QtReportConst.PARAM_MAP_P_LANGUAGE, language);
 			paramMap.put(QtReportConst.PARAM_USER_ID, user.getUserId().toString());
 
 			downloadReportSpecPrepare(reportNameLocal, paramMap, attachment);

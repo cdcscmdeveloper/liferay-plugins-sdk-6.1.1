@@ -62,6 +62,7 @@ import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtBondWaiverDetail;
+import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract; //Fix - #30866
@@ -2464,23 +2465,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		boolean typeFactoring = false;
 		boolean bondRequired = false;
 		boolean approverSetting = false; // #35187
+		
+		CtContract ctContract = ctBB.getManagedBean().getContractVer().getCtContract();
 
 		/*Set value true if contract is zonal*/
-		if(ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+		if(ctContract.isZonalPricing()){
 			typeZonalPrice = true;
 		}
+		
 		if(ctBB.isPerformanceBond()){
 			bondRequired = true;
 		}
+		
 		/*Set value true if contract is schedule*/
-		//#25002 Remove ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
-//		if(ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().
-//				getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().
-//				getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
-		if(ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().
-					getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){	
+		//#25002 start
+		if(ctContract.getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){	
 			typeSchedule = true;
 		}
+		//#25002 end
 		
 		/*Set value true if contract is factor*/
 		if(allowShowFactoring()){/*#28868 - basri*/
@@ -3567,7 +3569,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()) {
 			if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
 					&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
-				//processPerformanceBonds(contractAmt, docType, isAmendment); //#24333
+				processPerformanceBonds(contractAmt, docType, isAmendment); //#24333
 				ctBB.getManagedBean().setCtContractAmount(contractAmt);
 			}
 
@@ -4478,7 +4480,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		// Check if the document is relevant for bond processing
 		if (!isAmendment
-				|| !(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+				&& !(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT) || docType
 							.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
 			contractAmt.setCtPerformanceBondsOriginal(contractAmt.getCtPerformanceBonds());
@@ -4494,10 +4496,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
 			if (bond.isBondNew()) {
 				hasNewBond = true;
-				if (bond.isBrandNew()) {
-					bond.setFileName(null);
-					bond.setFilePath(null);
-				}
 				bondNew.add(bond);
 			} else {
 				bondOriginal.add(bond);
