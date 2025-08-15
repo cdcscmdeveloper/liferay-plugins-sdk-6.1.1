@@ -53,7 +53,7 @@
 					action="#{lOIDetailBackingBean.submitAction}" process="@form"
 					update="@form" /><ui:remove>#21692</ui:remove>
 					
-				<p:commandButton value="#{lbl['lbl.btn.cancel]}1"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}1"
 					action="#{lOIDetailBackingBean.validateBeforePopup(true)}"
 					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOI and lOIDetailBackingBean.disableCancelForApprover()}"
 					process="@form" update="@form" /><ui:remove>36339, 21692</ui:remove>
