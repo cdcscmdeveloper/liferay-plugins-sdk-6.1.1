@@ -981,41 +981,71 @@ public class LOIDetailBackingBean extends
 		
 	}
 	
-	//#28777 & #29729 - Start
-    /**
-    * Method to check had disqualified supplier list by items
-    * @param scQtRecommendList
-    **/
-	private void disqualifiedSupplierListbyItem(List<ScQtRecommend> scQtRecommendList){
-	  ScQt scQt = this.getManagedBean().getScQt();
-	  if(checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())){
-		  List<ScQtRecommend> disqualifiedRecomendedList = new ArrayList<>();
-			for (ScQtRecommend disqualifiedRecom : scQtRecommendList) {
-				List<ScQtEvaluationResultDtl> disRecomDisList = disqualifiedRecom.getNotAwardSupplierList();
-				disqualifiedRecom.setNotAwardSupplierList(disRecomDisList);
-				disqualifiedRecomendedList.add(disqualifiedRecom);
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check had disqualified supplier list by items
+	 * 
+	 * @param scQtRecommendList
+	 **/
+	private void disqualifiedSupplierListbyItem(List<ScQtRecommend> scQtRecommendList) {
+		ScQt scQt = this.getManagedBean().getScQt();
+		List<ScQtRecommend> disqualifiedRecomendedList = new ArrayList<>();
+		if (!scQt.isZonal() && checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())) {
+			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+				setRecommendedSupplierList(scQtRecommend);
+				updateRecommendBy(scQtRecommend);
+				setDisciplinaryAction(scQtRecommend.getNotAwardSupplierList());
+				disqualifiedRecomendedList.add(scQtRecommend);
 			}
 			this.getManagedBean().setDisqualifiedRecommendList(disqualifiedRecomendedList);
-      }
-	}
-	//#28777 & #29729 - End
-	
-	//#28777 & #29729 - Start
-   /**
-    * Method to check had disqualified supplier list by packages
-    * @param scQtRecommendList
-    **/
-	private void disqualifiedSupplierListbyPackage(List<ScQtRecommend> scQtRecommendList){
-		ScQt scQt = this.getManagedBean().getScQt();
-		if(checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())){
-			
-			  processRecommendedSuppliersByPKG(scQtRecommendList);
-			  ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
-			  this.getManagedBean().setDisqualifiedSupplierList(scQtRecommend.getNotAwardSupplierList()); 
-			 
+		}
+		for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+			TplSpecZoneDtl tplSpecZoneDtl = scQtRecommend.getTplSpecZoneDtl();
+			if (scQt.isZonal() && tplSpecZoneDtl != null
+					&& checkListZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), tplSpecZoneDtl.getSpecZoneId())) {
+				setRecommendedSupplierList(scQtRecommend);
+				updateRecommendBy(scQtRecommend);
+				setDisciplinaryAction(scQtRecommend.getNotAwardSupplierList());
+				disqualifiedRecomendedList.add(scQtRecommend);
+				this.getManagedBean().setDisqualifiedRecommendList(disqualifiedRecomendedList);
+			}
 		}
 	}
-	//#28777 & #29729 - End	
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check had disqualified supplier list by packages
+	 * 
+	 * @param scQtRecommendList
+	 **/
+	private void disqualifiedSupplierListbyPackage(List<ScQtRecommend> scQtRecommendList) {
+		ScQt scQt = this.getManagedBean().getScQt();
+		if (!scQt.isZonal() && checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())) {
+
+			processRecommendedSuppliersByPKG(scQtRecommendList);
+			ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
+			setDisciplinaryAction(scQtRecommend.getNotAwardSupplierList());
+			this.getManagedBean().setDisqualifiedSupplierList(scQtRecommend.getNotAwardSupplierList());
+
+		}
+		for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+			TplSpecZoneDtl tplSpecZoneDtl = scQtRecommend.getTplSpecZoneDtl();
+			if (scQt.isZonal() && tplSpecZoneDtl != null
+					&& checkListZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), tplSpecZoneDtl.getSpecZoneId())) {
+
+				processRecommendedSuppliersByPKG(scQtRecommendList);
+				scQtRecommend = scQtRecommendList.get(0);
+				setDisciplinaryAction(scQtRecommend.getNotAwardSupplierList());
+				this.getManagedBean().setDisqualifiedSupplierList(scQtRecommend.getNotAwardSupplierList());
+
+			}
+		}
+
+	}
+
+	// #28777 & #29729 - End
 	
 	// 26247 - 31061 - start
 	private void setDisciplinaryAction(List<ScQtEvaluationResultDtl> evalResDtl) {
@@ -1076,10 +1106,8 @@ public class LOIDetailBackingBean extends
 		//#28777 & #29729 - Start
 		List<ScQtEvaluationResultDtl> disqualifiedSuppplierList = scQtRecommend.getNotAwardSupplierList();
 		if (CollectionUtils.isNotEmpty(disqualifiedSuppplierList)) {			
-			for (ScQtEvaluationResultDtl disqualifiedSupplier 
-											: disqualifiedSuppplierList) {
-				BigDecimal offeredPrice = new BigDecimal(0);
-				offeredPrice = disqualifiedSupplier.getProposalAmount().getProposalAmt();
+			for (ScQtEvaluationResultDtl disqualifiedSupplier : disqualifiedSuppplierList) {
+				BigDecimal offeredPrice = disqualifiedSupplier.getProposalAmount().getProposalAmt();
 				offeredPrice = offeredPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
 				disqualifiedSupplier.getQtEvaluationResult().setOfferedPrice(offeredPrice);
 			}
@@ -6847,13 +6875,18 @@ public class LOIDetailBackingBean extends
 	/**
 	 * Method to display instruction when had supplier deleted branch
 	 * 
-	 * @param Long
-	 *            qtId
+	 * @param qtId
 	 * @return true or false
 	 **/
 	public Boolean checkInstructionSupplierBranchDeleted(Long qtId) {
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();	
+		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+			return true;
+		}
 		return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
 	}
 
@@ -6863,15 +6896,21 @@ public class LOIDetailBackingBean extends
 	/**
 	 * Method to check if this supplier disqualified
 	 * 
-	 * @param Long
-	 *            qtId
-	 * @param Long
-	 *            supplierId
+	 * @param qtId
+	 * @param supplierId
 	 * @return true or false
 	 **/
 	public Boolean checkDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId) {
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();
+		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		if (CollectionUtils.isNotEmpty(zoneDetails)
+				&& zoneActiveIndex != -1
+				&& sourcingIntegrationSO.flagZonesDisqualifiedSupplierBranchDeleted(qtId, supplierId,
+						zoneDetails.get(zoneActiveIndex).getSpecZoneId())) {
+			return true;
+		}
 		return sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(qtId, supplierId);
 	}
 
@@ -6883,14 +6922,35 @@ public class LOIDetailBackingBean extends
 	/**
 	 * Method to check had disqualified supplier list
 	 * 
-	 * @param Long
-	 *            qtId
+	 * @param qtId
 	 * @return true or false
 	 **/
 	public Boolean checkListDisqualifiedSupplierBranchDeleted(Long qtId) {
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();	
+		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+			return true;
+		}
 		return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check list had disqualified zones
+	 * 
+	 * @param qtId
+	 * @param specZoneId
+	 * @return true or false
+	 **/
+	public Boolean checkListZonesDisqualifiedSupplierBranchDeleted(Long qtId, Long specZoneId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.checkListZonesDisqualifiedSupplierBranchDeleted(qtId, specZoneId);
 	}
 
 	// #28777 & #29729 - End

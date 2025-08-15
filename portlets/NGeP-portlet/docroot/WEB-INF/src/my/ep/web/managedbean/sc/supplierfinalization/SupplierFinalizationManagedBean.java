@@ -313,6 +313,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #28777 & #29729 - Start
 	private List<SmSupplierBranch> supplierBranchList;
 	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage;	
 	// #28777 & #29729 - End
 	
 	//29562 - START
@@ -2478,6 +2479,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disqualifiedSuppliersByRecommendType = disqualifiedSuppliersByRecommendType;
 	}
 
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByEvalStage() {
+		return disqualifiedSuppliersByEvalStage;
+	}
+
+	public void setDisqualifiedSuppliersByEvalStage(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage) {
+		this.disqualifiedSuppliersByEvalStage = disqualifiedSuppliersByEvalStage;
+	}
+	
 	// #28777 & #29729 - End
 
 	public boolean isDemoReq() {
