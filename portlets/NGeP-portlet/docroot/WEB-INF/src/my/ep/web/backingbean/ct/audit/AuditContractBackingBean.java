@@ -556,13 +556,13 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	public void handleButtonClick(Integer activeIndex) {
 		log.info("handleButtonClick");
 	    if (activeIndex == null) {
-	        log.warn("activeIndex is null");
+	        log.debug("activeIndex is null");
 	        return;
 	    }
 
 	    String ctType = getManagedBean().getCtType();
 	    if (ctType == null) {
-	        log.warn("ctType is null");
+	        log.debug("ctType is null");
 	        return;
 	    }
 
