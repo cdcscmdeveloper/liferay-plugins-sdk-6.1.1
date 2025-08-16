@@ -9505,7 +9505,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					.getSupplierId());
 			if(CollectionUtils.isNotEmpty(suppCategory)){
 				for (SmSupplierCategory supCat : suppCategory) {
+					sb.append("(");
 					appendCategorySupplier(sb, supCat);
+					sb.append(")");
 				}
 			}
 
@@ -9525,12 +9527,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/**
 	 * Method to append message contain category code for supplier.
+	 * By default StringBUilder sb has '(', it has been replace with empty
+	 * to check whether it is really empty
 	 * 
 	 * @param sb The stringbuilder of the message
 	 * @param supCat The list of the category code of the supplier
 	 */
 	private void appendCategorySupplier(StringBuilder sb, SmSupplierCategory supCat) {
-		if(StringUtils.isNotEmpty(sb.toString())){
+		if(StringUtils.isNotBlank(sb.replace(0, 1, "").toString())){
 			sb.append(", ");
 		}
 		sb.append(supCat.getCategoryL1Name().trim());
@@ -9557,7 +9561,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 			if (!suppBumiputera && openFor) {
 				this.getManagedBean().setSupplierBumiCancel(true);
-				if (StringUtils.isNotEmpty(this.getManagedBean().getDisciplinaryActionMsg())) {
+				if (StringUtils.isNotBlank(this.getManagedBean().getDisciplinaryActionMsg())) {
 					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
 				}
 				handleMessageSupplierMaintenance();
