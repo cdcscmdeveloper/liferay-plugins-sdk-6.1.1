@@ -84,6 +84,9 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 			if(reqDTO.getpDocGroupId() != null){
 				paramMap.put(AuditPMDaoConst.P_DOCGROUPID, reqDTO.getpDocGroupId().toString());
 			}
+			if(reqDTO.getpUserOrgProfileId() != null){
+				paramMap.put(AuditPMDaoConst.P_USERORGPROFILEID, reqDTO.getpUserOrgProfileId().toString());
+			}
 			paramMap.values().removeAll(Collections.singleton(null));
 			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_PM, paramMap);
 			

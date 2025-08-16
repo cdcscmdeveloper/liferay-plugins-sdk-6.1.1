@@ -5218,7 +5218,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		try {
 			Map<String, String> paramMap = new HashMap<>();
 			paramMap.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSmSupplier().getSupplierId()));
-			generateReport("reportName", paramMap);
+			paramMap.put(SmReportConst.PARAM_USER_ID, String.valueOf(getUserIdSessionFromLoginId()));
+			generateReport(ReportConst.SM_REVIST_REPORT, paramMap);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
 					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);

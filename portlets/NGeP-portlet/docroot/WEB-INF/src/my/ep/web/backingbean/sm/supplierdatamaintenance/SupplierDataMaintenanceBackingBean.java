@@ -611,7 +611,9 @@ public class SupplierDataMaintenanceBackingBean extends
 
 			// set registration status and expiry date
 			reqDTO.setOldRegStatus(getManagedBean().getExistingRegStatus());
-			reqDTO.setOldRegStatusId(getManagedBean().getOldRegStatusId());
+			//#38856 - START
+			reqDTO.setOldRegStatusId(getManagedBean().getExistingRegStatus().getPmStatus().getStatusId());
+			//#38856 - END
 			reqDTO.setOldMofExpiryDate(getManagedBean().getExistingMofExpiryDate());
 			
 			// set active status for newly added category
@@ -1218,13 +1220,14 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void showConfirmDialog() {
 		//27460 : Disciplinary Action, //32827
 		validateUpdateDisciplinaryAction(getManagedBean().getDisciplineVO().getSmDiscplinaryAction());
+		validateCancelManufacturer();	//38742
 		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null){
 			boolean cancelCategory = getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel();
 			if(cancelCategory && !getManagedBean().isCancelCategoryCodeExist()
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
 			}
-			validateCancelManufacturer();
+			
 			//#28147 - start - #28494
 			if (getManagedBean().isBlacklistOwnerOrDirector() 
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedOwnerAndDirectorList())) {
@@ -1885,12 +1888,17 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		//#26238 - 38417
 		SmSupplier supplier = getManagedBean().getSmSupplier();
+		//#38609 - start
+		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isSuspendRegistration();
 		boolean hasPending = supplier.isPendingBlacklist() || supplier.isPendingCancel()
 				|| supplier.isPendingSuspend();
-		if (!hasPending && StringUtils.isNotEmpty(mofStatus) 
-				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)){
+		if (!hasPending && StringUtils.isNotEmpty(mofStatus)
+				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)) {
+			getManagedBean().setAllowedToDoMaintenance(false);
+		} else if (mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA) {
 			getManagedBean().setAllowedToDoMaintenance(false);
 		}
+		//#38609 - end
 	}
 
 	/**
@@ -3144,6 +3152,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		for (SmRvSuppDoc suppDoc : this.getManagedBean().getSmRevisit().getSmRvSuppDocs()) {
 			validateRvSuppDoc(suppDoc);
+		}
+		if (null == this.getManagedBean().getSmRevisit().getRevisitRemark() || this.getManagedBean().getSmRevisit().getRevisitRemark().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_723104);
 		}
 	}
 

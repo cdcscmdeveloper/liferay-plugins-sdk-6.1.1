@@ -22,6 +22,7 @@
 				<td>$!worker.identificationNo</td>
 				<td>$!worker.workExpYear</td>
 			</tr>
+			#set($rowCounter = $rowCounter + 1)
 			#end
 		#else
 			<tr>

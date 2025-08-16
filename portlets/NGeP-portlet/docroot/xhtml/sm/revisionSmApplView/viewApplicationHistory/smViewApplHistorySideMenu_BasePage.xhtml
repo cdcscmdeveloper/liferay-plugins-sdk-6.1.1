@@ -25,14 +25,14 @@
 		<p:outputPanel id="supplierProfilePanelId">
 		#{viewSmApplBackingBean.rePopulateApplFacilitiesList()} <!-- #34209 -->
 		<!-- Enhancement 26238, 38284 - START -->
-		<p:outputPanel style="color:red;" rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
+		<p:outputPanel style="font-size:13px; color:red" rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
 			and !viewApplHistoryBackingBean.managedBean.noDisciplinary}">
 			<h:outputText value="#{lbl['lbl.sm.supplier.disciplinary.action.msg']}" escape="false"/><p:spacer width="2"/>
 			<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{viewApplHistoryBackingBean.onViewDisciplinaryAction}" 
 				process="@this" partialSubmit="true" update=":#{p:component('disciplinaryActionHistoryDlgId')}" >
-					<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" escape="false" style="text-decoration: underline; font-weight: bold; color:red;"/>
+					<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" escape="false" style="text-decoration: underline; font-weight: bold; color:red; font-size:13px;"/>
 			</p:commandLink><p:spacer width="2"/>
 			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
 			<p:spacer height="2"/>

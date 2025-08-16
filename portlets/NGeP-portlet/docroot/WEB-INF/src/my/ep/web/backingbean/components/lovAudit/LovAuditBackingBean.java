@@ -73,7 +73,6 @@ public class LovAuditBackingBean implements Serializable {
 	private static Logger log = Logger.getLogger(LovAuditBackingBean.class);
 
 	private String lovId = null;
-	private String roleCode = null;
 	@SuppressWarnings("rawtypes")
 	private transient ISearchBean lovSearchBean = new SearchBean();
 	private transient IPagingDataModel<PmUser> searchPmUserDataModel = new SearchPmUserPagingDataModel();
@@ -256,7 +255,7 @@ public class LovAuditBackingBean implements Serializable {
 		String displayResultWhenFirstLoad = facesScopes.getParameter("displayResultWhenFirstLoad");
 		String displayResultWhenReset = facesScopes.getParameter("displayResultWhenReset");
 		String isStoreProc = facesScopes.getParameter("isStoreProc");
-		roleCode = facesScopes.getParameter("roleCode");
+		String roleCode = facesScopes.getParameter("roleCode");
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		String expressionString = roleCode;
@@ -394,12 +393,17 @@ public class LovAuditBackingBean implements Serializable {
 	 * Reset all.
 	 */
 	@SuppressWarnings("rawtypes")
-	public void resetAllSP() {
-		this.getSearchPmUserDataModel().resetData();
+	public void resetAll() {
+
+		this.getSearchPmUserDataModel().resetData(); // #29416
 		this.setLovSearchBean(new SearchBean());
 		this.setLovBean(new LovBean());
 
 		persistedEntities.clear();
+
+		if (selectedEntities != null && !selectedEntities.isEmpty()) {
+			selectedEntities.clear();
+		}
 	}
 
 	// OR: columnName1^value1*columnName1^value2

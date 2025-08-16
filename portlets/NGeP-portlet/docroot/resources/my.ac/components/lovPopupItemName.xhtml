@@ -81,6 +81,8 @@
 		<h:panelGroup id="resultPanel" style="width:100%;">
 			
 	 <h:panelGroup rendered="#{lovBackingBean.lovBean.selectionMode == 'single'}">
+	 <h:outputText rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport()}"
+				styleClass="instruction" value="#{lbl['lbl.ct.instruction.report.itemusage.monitoringdtls.allministry']}" escape="false" style="color: blue"/><br /><br />	<!-- #34889 -->
 			<p:dataTable id="lovTb"
 				var="entity" 
 				selection="#{lovBackingBean.selectedEntity}"
@@ -97,6 +99,8 @@
                      update="@form" />
                 <p:ajax event="rowSelect" update="@([id$=slbtn])" />   
                 <p:ajax event="rowUnselect" update="@([id$=slbtn])" />   
+                <p:ajax event="rowSelect" update="@([id$=slbtnAllMinistry)" /> <!-- #34889 -->  
+                <p:ajax event="rowUnselect" update="@([id$=slbtnAllMinistry])" /> <!-- #34889 -->
 				<!-- <p:column selectionMode="single" style="width:2%" /> 
 				
 				<p:column width="5%">
@@ -228,7 +232,18 @@
 					process="resultPanel"
 					disabled="#{lovBackingBean.isSelectButtonDisable()}"
 					partialSubmit="true"  styleClass="BtnSpacing"/>
-															
+					
+					<!-- Start - #34889 -->
+					<p:commandButton rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport()}"
+					id="slbtnAllMinistry"
+					value="#{lbl['lbl.btn.select.allMinistry']}"
+					action="#{lovBackingBean.allMinistrySelection()}"
+					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
+					oncomplete="lovPopup.hide();"
+					process="resultPanel"
+					partialSubmit="true"  styleClass="BtnSpacing"/>
+					<!-- End - #34889 -->	
+													
 			    <p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
 			      	value="#{lbl['lbl.btn.cancel']}"
 				  	partialSubmit="true" process="@this" update="@this"
