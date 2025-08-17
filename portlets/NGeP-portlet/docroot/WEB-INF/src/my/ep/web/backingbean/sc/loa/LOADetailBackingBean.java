@@ -12756,8 +12756,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		boolean statusEnabled = isLOAStatusAbleToCancel() != null
 				&& statusEnabledCancel.contains(isLOAStatusAbleToCancel());
-		boolean isQTValid = checkProposalValidityDateReachByQt(getManagedBean().getScQt())
-				&& this.validateSupportedTask(scLoa.getScQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+		boolean isQTValid = checkProposalValidityDateReachByQt(getManagedBean().getScQt());
 
 		return isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId()) && statusEnabled
 				&& isQTValid && !isQTMaintenanceScreen();
