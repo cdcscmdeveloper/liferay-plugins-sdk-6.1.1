@@ -107,7 +107,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			detailObj(AuditConst.PM_AUD_ST_STSTATECODE_FIELDLABELID, null, managedBean.getResState().getStateCode(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_ST_STCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryName(),
+			detailObj(AuditConst.PM_AUD_ST_STCOUNTRY_FIELDLABELID, null, managedBean.getResCountry().getCountryName(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_ST_STNAME_FIELDLABELID, null, managedBean.getResState().getStateName(),
