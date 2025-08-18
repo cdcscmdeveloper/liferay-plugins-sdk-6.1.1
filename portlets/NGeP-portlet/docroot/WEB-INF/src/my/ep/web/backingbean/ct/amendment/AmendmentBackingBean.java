@@ -1719,7 +1719,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//Enhancement #26186/#29793/#32860/#34097 start  start - retrieve disciplinary info
 			if (checkContractConditionForSupplier()) {
-				checkAndSetDA();
+				Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
+				if (!statusId.equals(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT)
+						&& !statusId.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
+					checkAndSetDA();
+				}
 				checkSupplierDataMaintenance(); // #34097
 			}
 			// Enhancement #26186/#29793/#32860/#34097 start end - retrieve
@@ -7743,7 +7747,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * It ensures that:
 	 * - The task name is not null.
 	 * - The viewSCL is not being viewed.
-	 * - The contract status is not completed, pending acknowledgment, or pending verification.
+	 * - The contract status is not loa completed and rejection acknowledgement.
 	 * 
 	 * @return true if all conditions are met; false otherwise.
 	 */
@@ -7753,8 +7757,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
 
 		boolean contractStatus = !statusId.equals(ContractStatusConst.FA_LOA_COMPLETED)
-				&& !statusId.equals(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT)
-				&& !statusId.equals(ContractStatusConst.FA_PENDING_VERIFICATION)
 				&& !statusId.equals(ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT);
 
 		return getManagedBean().getTaskName() != null && !ctBackingBean.getManagedBean().isViewSCL() && contractStatus;
@@ -9505,13 +9507,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					.getSupplierId());
 			if(CollectionUtils.isNotEmpty(suppCategory)){
 				for (SmSupplierCategory supCat : suppCategory) {
-					sb.append("(");
 					appendCategorySupplier(sb, supCat);
-					sb.append(")");
 				}
 			}
 
 			if (StringUtils.isNotBlank(sb.toString())) {
+				sb.insert(0, "(");
+			    sb.append(")");
 				String[] params = new String[] { sb.toString() };
 				this.getManagedBean().setSupplierMsg(
 						ResourceBundleUtils.getMessage("lbl.ct.amend.supplier.maintenance.cancel.category", params,
@@ -9534,7 +9536,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @param supCat The list of the category code of the supplier
 	 */
 	private void appendCategorySupplier(StringBuilder sb, SmSupplierCategory supCat) {
-		if(StringUtils.isNotBlank(sb.replace(0, 1, "").toString())){
+		if(StringUtils.isNotBlank(sb.toString())){
 			sb.append(", ");
 		}
 		sb.append(supCat.getCategoryL1Name().trim());
