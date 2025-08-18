@@ -44,7 +44,8 @@
 								value="#{locationBackingBean.managedBean.countries}"
 								itemLabel="#{counLs.countryName}"
 								itemValue="#{counLs.countryId}" />
-
+							<p:ajax event="change"
+								listener="#{locationBackingBean.retrieveStateList}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
