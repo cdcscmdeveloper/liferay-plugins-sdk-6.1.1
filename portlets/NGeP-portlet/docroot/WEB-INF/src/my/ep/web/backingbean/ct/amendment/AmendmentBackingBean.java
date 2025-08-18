@@ -2786,20 +2786,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 					
 							throw new EpException(MessageConst.ERROR_750079, new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()});
-				}else {
-							// Validation for amendment extension period for expired
-							// contract
-							// 28848
-							if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
-									&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0 && ctBackingBean
-											.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)) { // 32418
-
-								getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-								
-								throw new EpException(MessageConst.ERROR_750073);
-							}
-						}
+				}
 					}
 				
 			// End Fix - #33952, #25956
@@ -2813,6 +2800,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			   throw new EpException(MessageConst.ERROR_750074);
 			  }
 			//32418 End
+			//Start Fix - #38613, #33287 - *apply for both contract expired and non-expired
+			// Validation for amendment when extension period - 0 
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0 && ctBackingBean
+							.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)) { // 32418
+
+				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
+				throw new EpException(MessageConst.ERROR_750073);
+			}
+			//End Fix - #38613, #33287
 			// Validation for amendment effective date
 			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() != null
