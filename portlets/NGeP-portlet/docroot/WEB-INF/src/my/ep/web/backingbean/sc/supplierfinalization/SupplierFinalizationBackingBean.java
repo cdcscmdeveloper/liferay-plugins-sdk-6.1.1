@@ -1370,6 +1370,7 @@ public class SupplierFinalizationBackingBean extends
 				            		selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
 				        		} else {
 				            		getManagedBean().setQualifiedSuppliersByEvalStage(null);
+				            		getManagedBean().setDisqualifiedSuppliersByEvalStage(null);// #28777&#29729
 				            		return;
 				        		}
 				    		}
@@ -1393,6 +1394,7 @@ public class SupplierFinalizationBackingBean extends
 										selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 									} else {
 										getManagedBean().setQualifiedSuppliersByEvalStage(null);
+										getManagedBean().setDisqualifiedSuppliersByEvalStage(null);// #28777&#29729
 										log.debug("None of the item(s) has been row selected");
 										return;
 									}
@@ -1414,6 +1416,7 @@ public class SupplierFinalizationBackingBean extends
 										.getRequestItem().getRequestNoteItemId();
 						 } else {
 							 getManagedBean().setQualifiedSuppliersByEvalStage(null);
+							 getManagedBean().setDisqualifiedSuppliersByEvalStage(null);// #28777&#29729
 							 log.debug("None of the item(s) has been row selected");
 							 return;
 						 }
@@ -1431,17 +1434,23 @@ public class SupplierFinalizationBackingBean extends
 		 }
 		this.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt());//#29466
 		
+		getManagedBean().setQualifiedSuppliersByEvalStage(
+				new QualifiedSuppliersPagingDataModel("evaluationQualifiedSuppliers", qtId, selectedZoneId,
+						selectedItemId, evaluationStage, isDisqualified));// #28777&#29729
+		
 		// #28777 & #29729 - Start
 		List<Long> quaQtSupplierIdList = retrieveZoneQtSuppliersIdsByQtIdAndSpecZoneId(true, qtId, selectedZoneId);
 		if (CollectionUtils.isEmpty(quaQtSupplierIdList) && selectedZoneId != null) {
 			getManagedBean().setQualifiedSuppliersByEvalStage(null);
 		}
+		
+		if(isDisqualified){
+			getManagedBean().setDisqualifiedSuppliersByEvalStage(
+					new QualifiedSuppliersPagingDataModel("evaluationDisqualifiedSuppliers", qtId, selectedZoneId,
+							selectedItemId, evaluationStage, true));
+		}
 		// #28777 & #29729 - End
-		
-		getManagedBean().setQualifiedSuppliersByEvalStage(
-				new QualifiedSuppliersPagingDataModel("evaluationQualifiedSuppliers", qtId, selectedZoneId,
-						selectedItemId, evaluationStage, isDisqualified));// #28777&#29729
-		
+	
 	}
 	
 	/**
@@ -9984,7 +9993,7 @@ public class SupplierFinalizationBackingBean extends
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
 				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
-				;
+				||QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());//25791
 	}
 	
 	//#25426 ruzaimah - Start
