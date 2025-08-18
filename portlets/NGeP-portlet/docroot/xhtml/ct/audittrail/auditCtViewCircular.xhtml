@@ -121,13 +121,6 @@
                             	update="searchCircularViewId"
                             	onstart="blockWidget.show()"
                             	oncomplete="blockWidget.hide()" />
-
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.item.supplier.panel']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(6)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
             	</p:tabMenu>
 
             	<!-- DataTable for CCR & PCR -->
