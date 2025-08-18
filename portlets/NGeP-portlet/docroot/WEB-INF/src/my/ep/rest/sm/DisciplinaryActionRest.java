@@ -79,6 +79,7 @@ public class DisciplinaryActionRest {
 			log.info("UpdateDisciplinaryActionJob New Function After For");
 		} catch (Exception ex) {
 			log.error("UpdateDisciplinaryActionJob Error="+ex);
+			ex.printStackTrace();
 			return Response.status(406).entity(ex.getMessage()).build();
 		} finally {
 			log.info("after close ejb for UpdateDisciplinaryActionJob");

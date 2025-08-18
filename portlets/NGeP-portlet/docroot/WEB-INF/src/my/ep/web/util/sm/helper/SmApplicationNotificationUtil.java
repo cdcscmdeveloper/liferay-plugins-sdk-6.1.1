@@ -360,15 +360,11 @@ public class SmApplicationNotificationUtil {
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 				// #38217 - Start
 				approvedCatCodes.append("<p style=\"margin: 0 0 0 2em;\">").append("2.1.").append(++i + ") ")
-						.append(cat.getPmCategoryL1().getCategoryL1Code())
-						.append(cat.getPmCategoryL2().getCategoryL2Code())
-						.append(cat.getPmCategoryL3().getCategoryL3Code()).append("-")
-						.append(cat.getPmCategoryL3().getCategoryName()).append("</p>");
+						.append(cat.getPmCategoryL1().getCategoryL1Code()).append(cat.getPmCategoryL2().getCategoryL2Code())
+						.append(cat.getPmCategoryL3().getCategoryL3Code()).append("-").append(cat.getPmCategoryL3().getCategoryName()).append("</p>");
 				if (cat.getOtherDesc() != null && !cat.getOtherDesc().isEmpty()) {
-					approvedCatCodes.append("<p style=\"margin: 0 0 0 5em;text-align:justify;\">")
-							.append(cat.getOtherDesc()).append("</p>");
+					approvedCatCodes.append("<p style=\"margin: 0 0 0 5em;text-align:justify;\">").append(cat.getOtherDesc()).append("</p>");
 				}
-				approvedCatCodes.append("<br/>");
 				// #38217 - End
 
 			} else if (cat.getRecordStatusFlg().compareTo(
@@ -377,19 +373,16 @@ public class SmApplicationNotificationUtil {
 				rejectedCatCodes.append("<tr>");
 				// #38217 - Start
 				rejectedCatCodes.append("<td style='border: 1px solid black;'>").append("2.2.").append(++j + ") ")
-						.append(cat.getPmCategoryL1().getCategoryL1Code())
-						.append(cat.getPmCategoryL2().getCategoryL2Code())
-						.append(cat.getPmCategoryL3().getCategoryL3Code()).append("-")
-						.append(cat.getPmCategoryL3().getCategoryName());
+						.append(cat.getPmCategoryL1().getCategoryL1Code()).append(cat.getPmCategoryL2().getCategoryL2Code())
+						.append(cat.getPmCategoryL3().getCategoryL3Code()).append("-").append(cat.getPmCategoryL3().getCategoryName());
 
 				if (cat.getOtherDesc() != null && !cat.getOtherDesc().isEmpty()) {
-					rejectedCatCodes
-							.append("<p style=\" text-align: justify; margin: 0 0.5em 0 3em; display: inline-block;\">")
-							.append(cat.getOtherDesc()).append("</p><br/>&nbsp;");
+					rejectedCatCodes.append("<br/><p style=\" text-align: justify; margin: 0 0.5em 0 2.7em; display: inline-block;\">")
+							.append(cat.getOtherDesc()).append("</p>");
 				}
 
 				rejectedCatCodes.append("</td>");
-				//#38217 - End
+				// #38217 - End
 				rejectedCatCodes
 						.append("<td style='border: 1px solid black;'>");
 				if (isPoUser) {
@@ -403,8 +396,9 @@ public class SmApplicationNotificationUtil {
 
 		}
 
-		rejectedCatCodes.append("</table>");
 		// #38217 - Start
+		approvedCatCodes.append("<br/>");
+		rejectedCatCodes.append("</table><br/>");
 		finalMsg.append(approvedCatCodes);
 		// #38217 - End
 		if (existsRejectedCodes) {
