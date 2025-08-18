@@ -8,6 +8,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.web.bean.pm.AuditPMUserOrgSearchBean;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
@@ -22,7 +23,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class AuditPMUserOrgManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	// Organization Search
 	private OrganisationSearchBean organisationSearchBean;
 	private AuditPMUserOrgSearchBean searchBean;
 	private Integer searchOrgCategory = 0;
@@ -36,14 +36,17 @@ public class AuditPMUserOrgManagedBean extends BaseManagedBean {
 	private PmOrgProfile currentActiveOrg;
 	private String additionalOrgFilter;
 	private PmOrgValidity pmOrgValidity;
+	private PmParameter selectedOrgType;
+	private boolean isDisabledOrgFields = false;
 
 	private String selectedType;
-	
+
 	private boolean isLazy = false;
 
 	private String paramLevel3;
 
 	public AuditPMUserOrgManagedBean() {
+		/* Empty Constructor */
 	}
 
 	/**
@@ -166,6 +169,9 @@ public class AuditPMUserOrgManagedBean extends BaseManagedBean {
 	 * @return the currentActiveOrg
 	 */
 	public PmOrgProfile getCurrentActiveOrg() {
+		if (currentActiveOrg == null) {
+			this.currentActiveOrg = new PmOrgProfile();
+		}
 		return currentActiveOrg;
 	}
 
@@ -215,4 +221,38 @@ public class AuditPMUserOrgManagedBean extends BaseManagedBean {
 	public void setParamLevel3(String paramLevel3) {
 		this.paramLevel3 = paramLevel3;
 	}
+
+	/**
+	 * @return the selectedOrgType
+	 */
+	public PmParameter getSelectedOrgType() {
+		if (this.selectedOrgType == null) {
+			this.selectedOrgType = new PmParameter();
+		}
+		return selectedOrgType;
+	}
+
+	/**
+	 * @param selectedOrgType
+	 *            the selectedOrgType to set
+	 */
+	public void setSelectedOrgType(PmParameter selectedOrgType) {
+		this.selectedOrgType = selectedOrgType;
+	}
+
+	/**
+	 * @return the isDisabledOrgFields
+	 */
+	public boolean isDisabledOrgFields() {
+		return isDisabledOrgFields;
+	}
+
+	/**
+	 * @param isDisabledOrgFields
+	 *            the isDisabledOrgFields to set
+	 */
+	public void setDisabledOrgFields(boolean isDisabledOrgFields) {
+		this.isDisabledOrgFields = isDisabledOrgFields;
+	}
+
 }

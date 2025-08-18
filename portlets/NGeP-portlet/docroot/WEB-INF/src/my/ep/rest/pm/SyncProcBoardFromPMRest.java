@@ -340,8 +340,8 @@ public class SyncProcBoardFromPMRest {
 	 *
 	 * <b>Query Parameters:</b>
 	 * <ul>
-	 *   <li><b>loginId</b> (required) – The login ID of the user to synchronize.</li>
-	 *   <li><b>setDefaultPassword</b> (optional) – If set to "true" (case-insensitive),
+	 *   <li><b>loginId</b> (required)  The login ID of the user to synchronize.</li>
+	 *   <li><b>setDefaultPassword</b> (optional)  If set to "true" (case-insensitive),
 	 *       the user's password will be reset to the system's default password.</li>
 	 * </ul>
 	 *
@@ -378,7 +378,7 @@ public class SyncProcBoardFromPMRest {
 			e.printStackTrace();
 			return Response.status(406).entity(e.getMessage()).build();
 		}
-	}
-	// End 32821 - PDS 
+	} 
+	// End 32821 - PDS   
 	
 }
