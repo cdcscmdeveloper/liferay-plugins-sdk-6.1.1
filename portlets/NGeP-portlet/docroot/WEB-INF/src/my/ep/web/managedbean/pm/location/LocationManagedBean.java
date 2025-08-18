@@ -81,6 +81,8 @@ public class LocationManagedBean extends BaseManagedBean {
 
 	private PmCity resCity;
 
+	private PmCountry resCountry;
+
 	private StateResDTO stateOldVal;
 
 	private DivisionResDTO divisionOldVal;
@@ -317,6 +319,7 @@ public class LocationManagedBean extends BaseManagedBean {
 	}
 
 	public PmState getResState() {
+		resState = resState == null ? new PmState() : resState;
 		return resState;
 	}
 
@@ -370,5 +373,13 @@ public class LocationManagedBean extends BaseManagedBean {
 
 	public void setCityOldVal(CityResDTO cityOldVal) {
 		this.cityOldVal = cityOldVal;
+	}
+
+	public PmCountry getResCountry() {
+		return resCountry;
+	}
+
+	public void setResCountry(PmCountry resCountry) {
+		this.resCountry = resCountry;
 	}
 }
