@@ -29,6 +29,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
+ * #35509
+ * 
  * @author normuliana
  * 
  */
@@ -145,7 +147,6 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 		getManagedBean().setLocationDetailType(locationType);
 		getManagedBean().getSearchBean().setPmParameterLvlId(pmParameterLvlId);
 		log.info("pmParameterLvlId.intValue() :::::  " + pmParameterLvlId.intValue());
-		getManagedBean().getSearchBean().setRoleCode(roleCode);
 		getManagedBean().getSearchBean().setCreatedBy(createBy.toString());
 		return NAV_TO_MAINTAIN;
 	}
@@ -212,8 +213,8 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 					auditPMReqDTO.setpLvl1Code(lSearchBean.getSystemConfigParamLevel1OldVal());
 					auditPMReqDTO.setpLvl2Code(lSearchBean.getCategoryConfigParamLevel2OldVal());
 					auditPMReqDTO.setpLvl3Code(lSearchBean.getItemConfigParamLevel3OldVal());
-					auditPMReqDTO.setpItemCode(lSearchBean.getItemCode());
-					auditPMReqDTO.setpItemName(lSearchBean.getItemName());
+					auditPMReqDTO.setpItemCode(lSearchBean.getItemCodeOldVal());
+					auditPMReqDTO.setpItemName(lSearchBean.getItemNameOldVal());
 					auditPMReqDTO.setpRoleCode(lSearchBean.getRoleCodeOldVal());
 					auditPMReqDTO.setPdateFrom(lSearchBean.getDateFromOldVal());
 					auditPMReqDTO.setPdateTo(lSearchBean.getDateToOldVal());
@@ -234,8 +235,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "FirstUIViewMaster Pm Audit", "",
-						"auditPMSO",
-						new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
+						"auditPMSO", new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
 			}
 			return null;
 		}
@@ -301,8 +301,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "FirstUIViewDetail PM Audit", "",
-						"auditPMSO",
-						new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
+						"auditPMSO", new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
 			}
 			return null;
 		}

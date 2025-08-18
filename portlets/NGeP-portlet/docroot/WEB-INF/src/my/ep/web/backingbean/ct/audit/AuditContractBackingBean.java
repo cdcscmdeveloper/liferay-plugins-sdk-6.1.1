@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -57,7 +58,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContractManagedBean> {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AuditContractBackingBean.class);
-	private transient IPagingDataModel<AuditContractResDTO> searchCT = new SearchCTPagingDataModel();
+	private transient IPagingDataModel<AuditContractResDTO> searchCT;
+    private transient IPagingDataModel<AuditContractResDTO> searchCircular;
 	private String requestNoneView = "/xhtml/ct/audittrail/auditContractView.xhtml";
 	// This property is used to track which tab is
 	// currently selected.
@@ -139,59 +141,100 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, this.getManagedBean().getBackURL());
 	}
-
+	
 	/**
-	 * search CT Audit trail list
-	 * 
-	 */
-	private class SearchCTPagingDataModel extends PagingDataModel<AuditContractResDTO> {
-
+	 * Initializes the bean after construction.
+	 * Creates the paging data models for Contract (CT) and Circular audit trails.
+	 */	
+    @PostConstruct
+    public void init() {
+        this.searchCT = new AuditPagingDataModel("searchCTId");
+        this.searchCircular = new AuditPagingDataModel("searchCircularId");
+    }
+	
+    /**
+     * Inner class for handling paginated audit contract data.
+     * <p>
+     * Extends {@link PagingDataModel} and loads audit trail records
+     * based on the current search and pagination parameters.
+     * </p>
+     */
+	private class AuditPagingDataModel extends PagingDataModel<AuditContractResDTO> {
 		private static final long serialVersionUID = 1L;
 
-		public SearchCTPagingDataModel() {
-			super("searchCTId", getManagedBean().isLazy());
+		public AuditPagingDataModel(String dataTableId) {
+			super(dataTableId, getManagedBean().isLazy());
 		}
 
-		/**
-		 * pageChangeListener
-		 * 
-		 * @param searchBean
-		 * @return SearchResultBean
-		 */
 		@Override
 		public ISearchResultBean<AuditContractResDTO> pageChangeListener(ISearchBean<AuditContractResDTO> searchBean) {
-			ISearchResultBean<AuditContractResDTO> resDTO = null;
-			AuditContractReqDTO auCtReqDTO = new AuditContractReqDTO();
 			try {
+				AuditContractReqDTO reqDTO = new AuditContractReqDTO();
 
+				// Set parameter dari managed bean
+				reqDTO.setDocType(getManagedBean().getDocType());
+				reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+				reqDTO.setDocId(getManagedBean().getDocId());
+				reqDTO.setCtType(getManagedBean().getCtType());
+				reqDTO.setAuCtTab(getManagedBean().getAuTabView());
+
+				// Pagination: pageIndex = pageNo - 1 (0-based), pageSize = rows
+				// per page
+				reqDTO.setPageIndex(searchBean.getPageNo() - 1);
+				reqDTO.setPageSize(searchBean.getNoOfRowsPerPage());
+
+				// Panggil service
 				IAuditContractSO auditContractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
 						IAuditContractSO.class);
 
-				// Prepare request DTO
+				return auditContractSO.searchAuditCTResultList(reqDTO);
 
-				auCtReqDTO.setDocType(getManagedBean().getDocType());
-				auCtReqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-				auCtReqDTO.setDocId(getManagedBean().getDocId());
-				auCtReqDTO.setCtType(getManagedBean().getCtType());
-				auCtReqDTO.setAuCtTab(getManagedBean().getAuTabView());
-
-				resDTO = auditContractSO.searchAuditCTResultList(auCtReqDTO);
-
-				return resDTO;
 			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "AU", auCtReqDTO.getDocId().toString(),
-						"AuditContractBackingBean.SearchCTPagingDataModel", getUserId(), e);
+				// Hindari NPE jika docId null
+				String docIdStr = (getManagedBean().getDocId() != null) ? getManagedBean().getDocId().toString() : "N/A";
+
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "AU", docIdStr,
+						"AuditContractBackingBean.AuditPagingDataModel", getUserId(), e);
+
 				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
 	}
-
+	
+	/**
+	 * Returns the Contract (CT) audit trail data model.
+	 *
+	 * @return the CT audit data model
+	 */
 	public IPagingDataModel<AuditContractResDTO> getSearchCT() {
 		return searchCT;
 	}
-
+	
+	/**
+	 * Sets the Contract (CT) audit trail data model.
+	 *
+	 * @param searchCT the CT audit data model
+	 */
 	public void setSearchCT(IPagingDataModel<AuditContractResDTO> searchCT) {
 		this.searchCT = searchCT;
+	}
+	
+	/**
+	 * Returns the Circular audit trail data model.
+	 *
+	 * @return the Circular audit data model
+	 */
+	public IPagingDataModel<AuditContractResDTO> getSearchCircular() {
+		return searchCircular;
+	}
+	
+	/**
+	 * Sets the Circular audit trail data model.
+	 *
+	 * @param searchCircular the Circular audit data model
+	 */
+	public void setSearchCircular(IPagingDataModel<AuditContractResDTO> searchCircular) {
+		this.searchCircular = searchCircular;
 	}
 
 	// SECTION: Generate Report (PDF & EXCEL)
@@ -461,11 +504,11 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_PBD, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PBD));
 		map.put(AuditContractConst.AU_SECTION_ITS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_ITS));
 		map.put(AuditContractConst.AU_SECTION_AGS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_AGS));
+		map.put(AuditContractConst.AU_SECTION_FT, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FT));
 		map.put(AuditContractConst.AU_SECTION_CMN, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CMN));
 		map.put(AuditContractConst.AU_SECTION_FNS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FNS));
 		map.put(AuditContractConst.AU_SECTION_CO, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CO));
-		map.put(AuditContractConst.AU_SECTION_FT, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FT));
-		map.put(AuditContractConst.AU_SECTION_DCA, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_DCA));
+		
 
 		map.put(AuditContractConst.AU_SECTION_CC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CC));
 		map.put(AuditContractConst.AU_SECTION_PC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PC));
@@ -573,11 +616,10 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			tabViews.put(8, AuditContractConst.AU_SECTION_PBD);
 			tabViews.put(9, AuditContractConst.AU_SECTION_ITS);
 			tabViews.put(10, AuditContractConst.AU_SECTION_AGS);
-			tabViews.put(11, AuditContractConst.AU_SECTION_CMN);
-			tabViews.put(12, AuditContractConst.AU_SECTION_FNS);
-			tabViews.put(13, AuditContractConst.AU_SECTION_CO);
-			tabViews.put(14, AuditContractConst.AU_SECTION_FT);
-			tabViews.put(15, AuditContractConst.AU_SECTION_DCA);
+			tabViews.put(11, AuditContractConst.AU_SECTION_FT);
+			tabViews.put(12, AuditContractConst.AU_SECTION_CMN);
+			tabViews.put(13, AuditContractConst.AU_SECTION_FNS);
+			tabViews.put(14, AuditContractConst.AU_SECTION_CO);
 		}
 
 		if (getManagedBean().getCtType().equals(AuditContractConst.CT_TYPE_CCR)) {
