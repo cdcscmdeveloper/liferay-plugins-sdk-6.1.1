@@ -318,6 +318,7 @@ public class LocationManagedBean extends BaseManagedBean {
 		this.stateOldVal = stateOldVal;
 	}
 
+	/* AUDIT 28895_35509 START */
 	public PmState getResState() {
 		resState = resState == null ? new PmState() : resState;
 		return resState;
@@ -382,4 +383,5 @@ public class LocationManagedBean extends BaseManagedBean {
 	public void setResCountry(PmCountry resCountry) {
 		this.resCountry = resCountry;
 	}
+	/* AUDIT 28895_35509 END */
 }
