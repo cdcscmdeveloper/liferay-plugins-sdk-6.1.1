@@ -85,6 +85,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sm.DisciplinaryActionConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -1355,6 +1356,38 @@ public class SmCommonUtil {
 
 		return msg;
 	}
+
+	//13362 - START
+	public static String getMessageMalay(String key, String[] params) {
+		String preferredLang = CommonConstants.LANGUAGE_CODE_MALAY;
+		Locale usrLocale = getLocaleByLang(preferredLang);
+		String msg = "";
+
+		log.info("ROLE NAME USRLOCALE VALUE =====>" + usrLocale);
+		if (params != null) {
+			msg = ResourceBundleUtils.getMessage(key, params,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		} else {
+			msg = ResourceBundleUtils.getMessage(key,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		}
+
+		return msg;
+	}
+	
+	private static Locale getLocaleByLang(String lang){
+		if(StringUtils.isNotBlank(lang)){
+			if(lang.equalsIgnoreCase(CommonConstants.LANGUAGE_CODE_MALAY)){
+				return new Locale(CommonConstants.LANGUAGE_CODE_MALAY,CommonConstants.DEFAULT_COUNTRY_CODE);
+			}else{
+				return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+			}
+		}else{
+			return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		}
+	}
+	//13362 - END
+
 
 	/**
 	 * Get message from Message Bundle
@@ -3081,13 +3114,20 @@ public class SmCommonUtil {
 	 */
 	public static SmAppl getActiveApplBySupplier(SmSupplier supplier) {
 		SmAppl activeAppl = null;
+		//38517 - START
+		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+
+		if (supplier.getSmAppl() != null){
+			mofRegistrationReqDTO.setSmAppl(supplier.getSmAppl());
+		}
+		
 		if (supplier != null) {
-			MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
 			mofRegistrationReqDTO.setSupplierId(supplier.getSupplierId());
 			activeAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveActiveSmApplBySupp(mofRegistrationReqDTO)
 					.getSmAppl();
 		}
+		//38517 - END
 		return activeAppl;
 	}
 

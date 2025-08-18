@@ -92,6 +92,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
+import my.ep.constant.ct.audit.AuditContractConst; //35506
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
+
 /**
  * Backing Bean For Supplier
  *  * 
@@ -647,6 +651,38 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 
 			if (resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
+				
+				// #35506 Start
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				if (auditCtBean.getAuditCtConfigState()) {
+					if (getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_UPDATE_FACTORING)
+							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE))) {
+						
+						AuditContractReqDTO auCtData = new AuditContractReqDTO();
+						auCtData.setDocId(getManagedBean().getCtContract().getContractId());
+						auCtData.setContractVerId(getManagedBean().getContractVer().getContractVerId());
+						auCtData.setPrevContractVerId(getManagedBean().getFactoring().getFactoringId());
+						auCtData.setDocType(getManagedBean().getDocType());
+						auCtData.setCtType(getManagedBean().getCtContract().getContractType().getParameterCode());
+						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
+
+						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+						}
+
+						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						}
+
+						auditCtBean.saveAuditData(auCtData);
+					}
+				}
+				// #35506 End
+				
 				String messageId = MessageConst.INFO_700043;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					messageId = MessageConst.INFO_700011;
@@ -950,7 +986,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						getManagedBean().setFullBankInfo(account); // Fix - #33856
 						changeAccountActionListener();
 					}
-					getManagedBean().setApplID(smSupplierBank.getSmAppl().getApplId()); // Fix - #33856
+					//Start Fix - #38748 
+					if (smSupplierBank.getSmAppl() != null) {
+						getManagedBean().setApplID(smSupplierBank.getSmAppl().getApplId()); // Fix - #33856
+					}
+					//End Fix - #38748 
 				}
 				//End Fix - #33399
 				getManagedBean().setPopulateBankAccountList(items);	

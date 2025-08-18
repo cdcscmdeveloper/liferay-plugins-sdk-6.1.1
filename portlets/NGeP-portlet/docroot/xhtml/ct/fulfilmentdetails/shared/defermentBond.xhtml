@@ -114,7 +114,7 @@
 						<td><p:outputLabel id="waiverReferenceNo"
 								value="#{lbl['lbl.ct.pb.waiver.reference.no']}"
 								styleClass="required" /></td>
-						<td><p:inputText id="referenceNo" maxlength="20"
+						<td><p:inputText id="referenceNo" maxlength="100"
 								style="width:130px;" value="#{bondDeferment.referenceNo}"
 								disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 			  				or ctBackingBean.managedBean.disableDeferment}">
@@ -148,7 +148,7 @@
 											onsuccess="deleteWaiverAttachDlg.show();"
 											action="#{ctBackingBean.setAttachFileIndex(defermentIndex)}"
 											process="@this" partialSubmit="true"
-											disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"
+											disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableDeferment}"
 											rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and bondDeferment.ctAttachment.fileName != null
 										and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 											<h:graphicImage value="/css/images/design/icon_trash.png"
@@ -230,7 +230,7 @@
 					<h:outputText value="#{lbl['lbl.ct.pb.waiver.reference.no']}" />
 				</f:facet>
 				<p:inputText id="bondRefNoId"
-					value="#{bondWaiverDefermentHistory.referenceNo}" maxlength="20"
+					value="#{bondWaiverDefermentHistory.referenceNo}" maxlength="100"
 					disabled="true"
 					rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 						and ctBackingBean.managedBean.ctContractAmount.bondReq}">

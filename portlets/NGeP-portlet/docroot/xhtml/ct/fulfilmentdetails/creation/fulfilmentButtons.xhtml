@@ -32,13 +32,28 @@
 					</ui:define><!-- #31422-basri 190821 -->
 					 </ui:decorate><!-- #31422-basri 190821 -->
 				</c:if></td>
+			<!-- #35506 Start -->
+			<td style="float: right;">
+			<c:if test='#{ctBackingBean.managedBean.viewContract and contractDetailsBackingBean.isAuditCheck()}'>
+			<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
+						action="#{auditContractBackingBean.redirectToAudittrailView(
+                ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode,
+                ctBackingBean.managedBean.contractVer.ctContract.contractId,
+                ctBackingBean.managedBean.contractVer.docType)}"
+						immediate="true" />
+			</c:if>
+			
 			<c:if test='#{ctBackingBean.managedBean.viewContract}'>
-				<td style="text-align: right">
-					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
-						action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode,
-						ctBackingBean.managedBean.contractVer.ctContract.contractId, ctBackingBean.isSupplier())}"  /> <!-- #35202 -->
-				</td>
-			</c:if>				
+			&#160;&#160;
+			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+						immediate="true"
+						action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(
+                ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode,
+                ctBackingBean.managedBean.contractVer.ctContract.contractId, 
+                ctBackingBean.isSupplier())}" />
+			</c:if>
+			</td>
+			<!-- #35506 End -->				
 		</tr>
 	</table>
 </ui:composition>

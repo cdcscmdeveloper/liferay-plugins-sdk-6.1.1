@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<table class="ppTwoTable">
+		<tr>
+			<th width="22%"><p:outputLabel
+					value="#{lbl['lbl.pm.audit.serviceType']}" /> <h:outputLabel
+					value="*" styleClass="mandatory" /></th>
+			<td><p:selectOneMenu id="serviceTypeId"
+					styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}"
+					label="#{lbl['lbl.pm.audit.serviceType']}"
+					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel3}"
+					style="width: 265px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems
+						value="#{searchPMUserOrgAuditBackingBean.getServiceTypeDropdownValues()}"
+						var="lvlOFO" itemLabel="#{lvlOFO.codeName}"
+						itemValue="#{lvlOFO.masterLabel3}" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						listener="#{searchPMUserOrgAuditBackingBean.changeServiceType()}"
+						update=":form:userOrgAuditPMSearchPanel" />
+				</p:selectOneMenu></td>
+			<td><p:message for="serviceTypeId" id="serviceTypeIdMsg"
+					display="icon" /></td>
+			<td>&#160;</td>
+		</tr>
+		<tr>
+			<th width="22%"><p:outputLabel
+					value="#{lbl['lbl.pm.audit.businessRegNo']}" /></th>
+			<td><p:inputText id="businessRegNoId"
+					styleClass="ppDisplayTextM" maxlength="10" size="36"
+					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel4}" /></td>
+			<th>&#160;</th>
+			<td>&#160;</td>
+		</tr>
+		<tr>
+			<th width="22%"><p:outputLabel
+					value="#{lbl['lbl.pm.audit.financialOrgName']}" /></th>
+			<td><p:inputText id="financialOrgNameId"
+					styleClass="ppDisplayTextM" size="36"
+					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel5}"
+					maxlength="255" /></td>
+			<th>&#160;</th>
+			<td>&#160;</td>
+		</tr>
+	</table>
+</ui:composition>

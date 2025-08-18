@@ -8,6 +8,10 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.dto.pm.common.city.CityResDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.division.DivisionResDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -67,6 +71,25 @@ public class LocationManagedBean extends BaseManagedBean {
 	private boolean divisionBox = false;
 
 	private boolean isLazy = false;
+	
+	/* AUDIT 28895_35509 START */
+	private PmState resState;
+
+	private PmDivision resDivision;
+
+	private PmDistrict resDistrict;
+
+	private PmCity resCity;
+
+	private StateResDTO stateOldVal;
+
+	private DivisionResDTO divisionOldVal;
+
+	private DistrictResDTO districtOldVal;
+
+	private CityResDTO cityOldVal;
+
+	/* AUDIT 28895_35509 END */
 
 	public LocationManagedBean() {
 		state = new PmState();
@@ -285,4 +308,70 @@ public class LocationManagedBean extends BaseManagedBean {
 		this.isLazy = isLazy;
 	}
 
+	//START: #35509
+	public StateResDTO getStateOldVal() {
+		return stateOldVal;
+	}
+
+	public void setStateOldVal(StateResDTO stateOldVal) {
+		this.stateOldVal = stateOldVal;
+	}
+
+	public PmState getResState() {
+		return resState;
+	}
+
+	public void setResState(PmState resState) {
+		this.resState = resState;
+	}
+
+	public PmDivision getResDivision() {
+		return resDivision;
+	}
+
+	public void setResDivision(PmDivision resDivision) {
+		this.resDivision = resDivision;
+	}
+
+	public PmDistrict getResDistrict() {
+		return resDistrict;
+	}
+
+	public void setResDistrict(PmDistrict resDistrict) {
+		this.resDistrict = resDistrict;
+	}
+
+	public PmCity getResCity() {
+		return resCity;
+	}
+
+	public void setResCity(PmCity resCity) {
+		this.resCity = resCity;
+	}
+
+	public DivisionResDTO getDivisionOldVal() {
+		return divisionOldVal;
+	}
+
+	public void setDivisionOldVal(DivisionResDTO divisionOldVal) {
+		this.divisionOldVal = divisionOldVal;
+	}
+
+	public DistrictResDTO getDistrictOldVal() {
+		return districtOldVal;
+	}
+
+	public void setDistrictOldVal(DistrictResDTO districtOldVal) {
+		this.districtOldVal = districtOldVal;
+	}
+
+	public CityResDTO getCityOldVal() {
+		return cityOldVal;
+	}
+
+	public void setCityOldVal(CityResDTO cityOldVal) {
+		this.cityOldVal = cityOldVal;
+	}
+	//END: #35509
+	
 }

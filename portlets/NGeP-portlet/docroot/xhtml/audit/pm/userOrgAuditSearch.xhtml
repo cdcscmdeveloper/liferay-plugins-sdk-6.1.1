@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:blockUI widgetVar="blkPanelSearchTable" block=":form"
+		trigger="panelSearchId">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	<p:remoteCommand name="selectTypeAutoRun" id="remoteId"
+		update="userOrgAuditPMSearchPanel"
+		actionListener="#{searchPMUserOrgAuditBackingBean.autoSelectOrgType()}" />
+	<p:panel id="userOrgAuditPMSearchPanel"
+		header="#{lbl['lbl.pm.search.location']}" toggleable="true">
+		<p:outputPanel>
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.pm.audit.search.instruction2']}" escape="false" />
+			<br />
+			<br />
+		</p:outputPanel>
+		<table class="ppTwoTable">
+			<tr>
+				<th width="22%"><p:outputLabel
+						value="#{lbl['lbl.pm.audit.orgUser.type']}" /> <h:outputLabel
+						value="*" styleClass="mandatory" /></th>
+				<td><p:selectOneMenu id="dropdownMainOrgUser"
+						styleClass="ppDropDownWidthM" required="true"
+						label="#{lbl['lbl.pm.audit.orgUser.type']}"
+						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2}"
+						style="width: 265px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{searchPMUserOrgAuditBackingBean.getDropdownMainOrgUser()}"
+							var="lvlType" itemLabel="#{lvlType.codeName}"
+							itemValue="#{lvlType.levelCode}" />
+						<p:ajax onstart="blkPanelSearchTable.show()"
+							oncomplete="blkPanelSearchTable.hide(); setTimeout(function() { selectTypeAutoRun(); }, 100);"
+							event="change"
+							listener="#{searchPMUserOrgAuditBackingBean.resetOrganisationSearchBean}"
+							process="@this"
+							update="userOrgAuditPMSearchPanel,:form:searchMasters" />
+					</p:selectOneMenu></td>
+				<td><p:message for="dropdownMainOrgUser"
+						id="dropdownMainOrgUserMsg" display="icon" /></td>
+				<td>&#160;</td>
+			</tr>
+			<h:panelGroup
+				rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OUSR' or searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM'}">
+				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOrgType.xhtml"></ui:include>
+			</h:panelGroup>
+
+			<!-- *** OFO START - FINANCIAL ORGANIZATION *** -->
+			<h:panelGroup
+				rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OFO'}">
+				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOFO.xhtml" />
+			</h:panelGroup>
+			<!-- *** OFO END *** -->
+
+			<!-- *** OUSRG START - USER GROUP *** -->
+			<h:panelGroup
+				rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OUSRG'}">
+				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOUSRG.xhtml" />
+			</h:panelGroup>
+			<!-- *** OUSRG END *** -->
+
+			<ui:include src="/xhtml/audit/pm/userOrgAuditSearchCommon.xhtml" />
+
+		</table>
+	</p:panel>
+</ui:composition>

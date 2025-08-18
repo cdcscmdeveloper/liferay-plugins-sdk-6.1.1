@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<cc:interface>
+		<cc:attribute name="supplier"
+			type="my.ep.persistence.entity.sm.SmSupplier" />
+		<cc:attribute name="showTooltip" default="false" />
+		<cc:attribute name="index" default="0" />
+		<cc:attribute name="childIndex" default="0" />
+		<cc:attribute name="maxRow" default="10" />
+	    <cc:attribute name="immediate" default="false" />
+	</cc:interface>
+	<cc:implementation>
+		<ui:fragment rendered="#{not cc.attrs.showTooltip}">
+			<div style="position: relative; width: 100% !important;">
+				<div style="margin: auto !important; width: 70px !important;">
+					<div style="display: inline-block; width: 50% !important; text-align: center;">
+						<p:commandLink onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							style="color:red; font-weight:bold;"
+							rendered="#{cc.attrs.supplier.disciplinaryActions}"
+							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(cc.attrs.supplier)}"
+							update="@([id$=disciplinaryActionHistoryDlgId])" immediate="#{cc.attrs.immediate}">
+							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+								styleClass="warning" />
+						</p:commandLink>
+						<ui:fragment rendered="#{!cc.attrs.supplier.disciplinaryActions}">
+							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+						</ui:fragment>
+					</div>
+					<ui:param name="warnings" value="#{viewSuppProfileBackingBean.evaluateWarningTooltip(cc.attrs.supplier)}"/>
+					<ui:fragment
+						rendered="#{not empty warnings}">
+						<p:commandLink onstart="blockWidget.show()"
+							action="#{viewSuppProfileBackingBean.onViewQTAlertMessage(warnings)}"
+							oncomplete="blockWidget.hide();"
+							update="@([id$=suspendAlertWidgetId])" process="@this">
+							<p:graphicImage id="imageId"
+								value="/css/images/design/icon_error.png"
+								style="vertical-align: sub !important;" />
+						</p:commandLink>
+					</ui:fragment>
+				</div>
+			</div>
+		</ui:fragment>
+		<ui:fragment rendered="#{cc.attrs.showTooltip}">
+			<ui:fragment rendered="#{cc.attrs.supplier.disciplinaryActions}">
+				<p:commandLink onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()"
+					style="color:red; font-weight:bold;"
+					action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(cc.attrs.supplier)}"
+					update="@([id$=disciplinaryActionHistoryDlgId])" immediate="true">
+					<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+						styleClass="warning" />
+					<p:spacer width="2" />
+				</p:commandLink>
+				<ac:iconTooltip
+					value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+			</ui:fragment>
+			<ui:fragment rendered="#{!cc.attrs.supplier.disciplinaryActions}">
+				<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+			</ui:fragment>
+		</ui:fragment>
+		<ui:param name="compositeIndex" value="#{(cc.attrs.index + cc.attrs.childIndex)}"/>
+		<ui:fragment rendered="#{compositeIndex == 0 or compositeIndex mod cc.attrs.maxRow == 0}">
+			<style>
+				[id*="disciplinaryActionHistoryDlgId"].ui-dialog {
+					width: 1100px !important;
+				}
+				[id*="disciplinaryActionHistoryDlgId"].ui-dialog .ui-datatable {
+				 	width: auto !important;
+				 	pointer-events: none !important;				 	
+				}
+			</style>
+			<ac:disciplinaryActionHistory dynamic="true" 
+				voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"
+				btnView="true" />
+			<p:dialog id="suspendAlertWidgetId" widgetVar="suspendAlertWidget"
+				header="#{lbl['lbl.sc.qt.details']}" resizable="false" modal="true"
+				dynamic="true">
+				<p:outputPanel id="panelId">
+					<table style="border: none !important;">
+						<tr>
+							<td style="border: none !important;"><h:outputText style="text-align: left; color: red !important;"
+									value="#{viewSuppProfileBackingBean.managedBean.disciplinaryActionMsg}"
+									escape="false" /></td>
+						</tr>
+					</table>
+				</p:outputPanel>
+			</p:dialog>
+		</ui:fragment>
+	</cc:implementation>
+</ui:composition>

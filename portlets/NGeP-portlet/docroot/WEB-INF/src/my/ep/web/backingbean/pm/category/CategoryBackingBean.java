@@ -92,6 +92,12 @@ import javax.faces.component.UIComponent;
 import javax.faces.validator.ValidatorException;
 import my.ep.util.SLAUtils;
 //end #29665
+//start 35509
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
+import my.ep.constant.pm.AuditConst;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMCategoryCodeBackingBean;
+//end 35509
 
 /**
  * Backing Bean for Category
@@ -1279,6 +1285,19 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 			trackingDiaryForCreateAndUpdateOfMainCategory(reqDTO);
 			
+			
+			/************ AUDIT 35509 Start*************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMCategoryCodeBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			PmCategoryL1 pmcategoryL1 = this.getManagedBean().getPmCategoryL1();
+			this.getManagedBean().setAuditLevelCategory(AuditConst.PM_LVL_CODE_3_CCR_CATL1);
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE) && pmcategoryL1.getCategoryL1Id() != null){
+				reqDTO.setCategoryL1Id(pmcategoryL1.getCategoryL1Id());
+				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+				this.getManagedBean().setAuditOldCategoryL1(resDTO.getCategoryL1());
+			}
+			/************ AUDIT 35509 END*************/
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveCategory(reqDTO);
 			PmCategoryL1 oldCategoryL1 = (PmCategoryL1) BeanUtils
 					.cloneBean(resDTO.getCategoryL1());
@@ -1289,6 +1308,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						.getCategoryL1Id());
 			}
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT 35509 Start*************/
+				this.getManagedBean().setAuditUpdatedCategoryL1(resDTO.getCategoryL1());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
+				}
+				/************ AUDIT 35509 END*************/
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setNewCategory(false);
 					returnUrl = "/xhtml/pm/category/search.xhtml";
@@ -1502,7 +1527,18 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 
 			trackingDiaryForCreateAndUpdateOfSubCategory(reqDTO);
-
+			/************ AUDIT 35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMCategoryCodeBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			PmCategoryL2 pmCategoryL2 = this.getManagedBean().getPmCategoryL2();
+			this.getManagedBean().setAuditLevelCategory(AuditConst.PM_LVL_CODE_3_CCR_CATL2);
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE) && pmCategoryL2.getCategoryL2Id() != null){
+				reqDTO.setCategoryL2Id(pmCategoryL2.getCategoryL2Id());
+				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+				this.getManagedBean().setAuditOldCategoryL2(resDTO.getCategoryL2());
+			}
+			/************ AUDIT 35509*************/
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubCategory(reqDTO);
 
 			// start @29665 add if to avoid NPE when create new sub categ
@@ -1516,6 +1552,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().setOldCategoryL2(oldCategoryL2);
 			
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT 35509 *************/
+				this.getManagedBean().setAuditUpdatedCategoryL2(resDTO.getCategoryL2());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
+				}
+				/************ AUDIT 35509 *************/
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setPmCategoryL2(
 							resDTO.getCategoryL2());
@@ -1700,6 +1742,19 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			getAllCategoryDetailsForTracking(reqDTO, this.getManagedBean()
 					.getPmCategoryL3().getRecordStatusFlg().longValue());
 
+			
+			/************ AUDIT 35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMCategoryCodeBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			this.getManagedBean().setAuditLevelCategory(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE) && pmCategoryL3.getCategoryL3Id() != null){
+				reqDTO.setCategoryL3Id(pmCategoryL3.getCategoryL3Id());
+				CategoryCodeResDTO resDTO = categoryCodeSO
+						.retrieveCategoryL3DtlById(reqDTO);
+				this.getManagedBean().setAuditOldCategoryL3(resDTO.getCategoryL3());
+			}
+			/************ AUDIT *************/
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
 
 			PmCategoryL3 oldCategoryL3 = (PmCategoryL3) BeanUtils
@@ -1707,6 +1762,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().setOldCategoryL3(oldCategoryL3);
 
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT 35509*************/
+				this.getManagedBean().setAuditUpdatedCategoryL3(resDTO.getCategoryL3());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
+				}
+				/************ AUDIT *************/
 				reset();
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setPmCategoryL3(
