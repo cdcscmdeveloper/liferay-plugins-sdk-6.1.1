@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -57,13 +59,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContractManagedBean> {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AuditContractBackingBean.class);
-	private transient IPagingDataModel<AuditContractResDTO> searchCT = new SearchCTPagingDataModel();
+	private transient IPagingDataModel<AuditContractResDTO> searchCT;
+    private transient IPagingDataModel<AuditContractResDTO> searchCircular;
 	private String requestNoneView = "/xhtml/ct/audittrail/auditContractView.xhtml";
-	// This property is used to track which tab is
-	// currently selected.
 
 	private static final String FILE_NAME = "AuditContractDAO";
 	private static final String METHOD_NAME = "insertAudit";
+	private static final long DEFAULT_DOC_ID = 0L;
+	private static final String BEAN_LOG_CONTEXT = "AuditContractBackingBean.AuditPagingDataModel";
 
 	private static final Map<Long, TabHeaderPair> sectionTabHeaderMap = createSectionTabHeaderMap();
 	
@@ -88,15 +91,6 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	}
 
 	/**
-	 * loadCTRequestnote() - reload searchCT data
-	 */
-	public void loadCTAuditTrail() {
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().setSearching(true);
-		searchCT.reloadData();
-	}
-
-	/**
 	 * redirectToAudittrailView
 	 * 
 	 * @param ctType
@@ -104,30 +98,26 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 * @param docType
 	 */
 	public void redirectToAudittrailView(String ctType, Long docId, String docType) throws IOException {
+	    FacesContext fc = FacesContext.getCurrentInstance();
+	    String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
-		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		if (docId != null) {
-			getManagedBean().setDocId(docId);
-		} else {
-			// Handle the case where docId is null, if necessary
-			getManagedBean().setDocId(Long.valueOf(0)); // or some other
-														// default value
-		}
+	    getManagedBean().setDocId(docId != null ? docId : DEFAULT_DOC_ID);
+	    getManagedBean().setDocType(docType);
+	    getManagedBean().setLanguage(languageCode);
+	    getManagedBean().setBackURL(fc.getViewRoot().getViewId());
 
-		getManagedBean().setDocType(docType);
-		getManagedBean().setLanguage(languageCode);
-		FacesContext fc = FacesContext.getCurrentInstance();
-		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
-		if (ctType.equalsIgnoreCase(AuditContractConst.CT_TYPE_MC) || ctType.equalsIgnoreCase(AuditContractConst.CT_TYPE_CC)) {
-			getManagedBean().setCtCircularType(AuditContractConst.CT_NULL);
-			getManagedBean().setCtType(AuditContractConst.CT_CONTRACT);
-		} else {
-			getManagedBean().setCtType(ctType);
-		}
-  
-		handleButtonClick(0); // Default to first tab									   
-		loadCTAuditTrail();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, requestNoneView);
+	    if (ctType != null && 
+	       (ctType.equalsIgnoreCase(AuditContractConst.CT_TYPE_MC) 
+	         || ctType.equalsIgnoreCase(AuditContractConst.CT_TYPE_CC))) {
+	        getManagedBean().setCtCircularType(AuditContractConst.CT_NULL);
+	        getManagedBean().setCtType(AuditContractConst.CT_CONTRACT);
+	    } else {
+	        getManagedBean().setCtType(ctType);
+	    }
+
+	    handleButtonClick(0); // default to first tab
+
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, requestNoneView);
 	}
 
 	/**
@@ -139,69 +129,111 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, this.getManagedBean().getBackURL());
 	}
-
+	
 	/**
-	 * search CT Audit trail list
-	 * 
-	 */
-	private class SearchCTPagingDataModel extends PagingDataModel<AuditContractResDTO> {
-
+	 * Initializes the bean after construction.
+	 * Creates the paging data models for Contract (CT) and Circular audit trails.
+	 */	
+    @PostConstruct
+    public void init() {
+        this.searchCT = new AuditPagingDataModel("searchCTId");
+        this.searchCircular = new AuditPagingDataModel("searchCircularId");
+    }
+	
+    /**
+     * Inner class for handling paginated audit contract data.
+     * <p>
+     * Extends {@link PagingDataModel} and loads audit trail records
+     * based on the current search and pagination parameters.
+     * </p>
+     */
+	private class AuditPagingDataModel extends PagingDataModel<AuditContractResDTO> {
 		private static final long serialVersionUID = 1L;
 
-		public SearchCTPagingDataModel() {
-			super("searchCTId", getManagedBean().isLazy());
+		public AuditPagingDataModel(String dataTableId) {
+			super(dataTableId, getManagedBean().isLazy());
 		}
 
-		/**
-		 * pageChangeListener
-		 * 
-		 * @param searchBean
-		 * @return SearchResultBean
-		 */
 		@Override
 		public ISearchResultBean<AuditContractResDTO> pageChangeListener(ISearchBean<AuditContractResDTO> searchBean) {
-			ISearchResultBean<AuditContractResDTO> resDTO = null;
-			AuditContractReqDTO auCtReqDTO = new AuditContractReqDTO();
-			try {
+		    try {
+		        AuditContractReqDTO reqDTO = new AuditContractReqDTO();
+		        reqDTO.setDocType(getManagedBean().getDocType());
+		        reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		        reqDTO.setDocId(getManagedBean().getDocId());
+		        reqDTO.setCtType(getManagedBean().getCtType());
+		        reqDTO.setAuCtTab(getManagedBean().getAuTabView());
 
-				IAuditContractSO auditContractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
-						IAuditContractSO.class);
+		        reqDTO.setPageIndex(searchBean.getPageNo() - 1);
+		        reqDTO.setPageSize(searchBean.getNoOfRowsPerPage());
 
-				// Prepare request DTO
+		        IAuditContractSO auditContractSO = BusinessDelegate.getInstance()
+		                .getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAuditContractSO.class);
 
-				auCtReqDTO.setDocType(getManagedBean().getDocType());
-				auCtReqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-				auCtReqDTO.setDocId(getManagedBean().getDocId());
-				auCtReqDTO.setCtType(getManagedBean().getCtType());
-				auCtReqDTO.setAuCtTab(getManagedBean().getAuTabView());
+		        return auditContractSO.searchAuditCTResultList(reqDTO);
 
-				resDTO = auditContractSO.searchAuditCTResultList(auCtReqDTO);
+		    } catch (RuntimeException e) {
+		        String docIdStr = getManagedBean().getDocId() != null 
+		                ? getManagedBean().getDocId().toString() 
+		                : "N/A";
 
-				return resDTO;
-			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "AU", auCtReqDTO.getDocId().toString(),
-						"AuditContractBackingBean.SearchCTPagingDataModel", getUserId(), e);
-				throw new EpException(MessageConst.ERROR_000001);
-			}
+		        SLAUtils.getInstance().logSLAError(
+		                ModuleCodeConst.CONTRACT_MANAGEMENT, "AU", docIdStr,
+		                BEAN_LOG_CONTEXT, getUserId(), e);
+
+		        throw new EpException(MessageConst.ERROR_000001);
+		    }
 		}
-	}
 
+	}
+	
+	/**
+	 * Returns the Contract (CT) audit trail data model.
+	 *
+	 * @return the CT audit data model
+	 */
 	public IPagingDataModel<AuditContractResDTO> getSearchCT() {
 		return searchCT;
 	}
-
+	
+	/**
+	 * Sets the Contract (CT) audit trail data model.
+	 *
+	 * @param searchCT the CT audit data model
+	 */
 	public void setSearchCT(IPagingDataModel<AuditContractResDTO> searchCT) {
 		this.searchCT = searchCT;
+	}
+	
+	/**
+	 * Returns the Circular audit trail data model.
+	 *
+	 * @return the Circular audit data model
+	 */
+	public IPagingDataModel<AuditContractResDTO> getSearchCircular() {
+		return searchCircular;
+	}
+	
+	/**
+	 * Sets the Circular audit trail data model.
+	 *
+	 * @param searchCircular the Circular audit data model
+	 */
+	public void setSearchCircular(IPagingDataModel<AuditContractResDTO> searchCircular) {
+		this.searchCircular = searchCircular;
 	}
 
 	// SECTION: Generate Report (PDF & EXCEL)
 	/**
-	 * Generate Report: PDF Format
-	 * 
-	 * @param docId
-	 *            ,referring to selected P_DOCID = CONTRACT_ID
-	 * @param sectionId
-	 * 
+	 * Generate Report: PDF Format.
+	 * <p>
+	 * Generates an audit trail report for the given document and section in PDF format.
+	 * </p>
+	 *
+	 * @param docId     the document identifier (P_DOCID = CONTRACT_ID)
+	 * @param sectionId the section/group identifier (P_GROUP_SECTION_ID)
+	 * @param ctType    the contract type (e.g. CT_CONTRACT, CCR, PCR)
+	 * @throws IOException if report generation fails
 	 */
 	public void generateReport(Long docId, BigInteger sectionId, String ctType) throws IOException {
 
@@ -215,10 +247,11 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	}
 
 	/**
-	 * Generate Report: All Tab in PDF Format
-	 * 
-	 * @param docId
-	 * @throws IOException
+	 * Generate Report: All Tabs in PDF format.
+	 *
+	 * @param docId  the document identifier
+	 * @param ctType the contract type (e.g. CT_CONTRACT, CCR, PCR)
+	 * @throws IOException if report generation fails
 	 */
 	public void generateAllReport(BigInteger docId, String ctType) throws IOException {
 
@@ -461,10 +494,10 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_PBD, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PBD));
 		map.put(AuditContractConst.AU_SECTION_ITS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_ITS));
 		map.put(AuditContractConst.AU_SECTION_AGS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_AGS));
+		map.put(AuditContractConst.AU_SECTION_FT, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FT));
 		map.put(AuditContractConst.AU_SECTION_CMN, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CMN));
 		map.put(AuditContractConst.AU_SECTION_FNS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FNS));
 		map.put(AuditContractConst.AU_SECTION_CO, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CO));
-		map.put(AuditContractConst.AU_SECTION_FT, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FT));
 		map.put(AuditContractConst.AU_SECTION_DCA, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_DCA));
 
 		map.put(AuditContractConst.AU_SECTION_CC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CC));
@@ -476,7 +509,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_CL, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CL));
 		map.put(AuditContractConst.AU_SECTION_ID, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_ID));
 		map.put(AuditContractConst.AU_SECTION_IS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_IS));
-		map.put(AuditContractConst.AU_SECTION_IPS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_IPS));																								  
+		map.put(AuditContractConst.AU_SECTION_IPS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_IPS));
 		return map;
 	}
 
@@ -522,84 +555,132 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 */
 	public void handleButtonClick(Integer activeIndex) {
 		log.info("handleButtonClick");
-		
-		int selectedIndex = (activeIndex != null) ? activeIndex : 0; // Default to first tab
+	    if (activeIndex == null) {
+	        log.debug("activeIndex is null");
+	        return;
+	    }
 
-		// Update the tab view based on the selected tab index
-		updateTabView(selectedIndex);
+	    String ctType = getManagedBean().getCtType();
+	    if (ctType == null) {
+	        log.debug("ctType is null");
+	        return;
+	    }
 
-		// Store the newly selected tab as the active tab
-		this.getManagedBean().setActiveTab(selectedIndex);
+	    // Save activeTab (for UI)
+	    getManagedBean().setActiveTab(activeIndex);
 
-		// Load additional data for the selected tab
-		loadCTAuditTrail();
+	    // Take mapping tab
+	    Map<Integer, Long> tabViews = getTabViews();
+	    Long logicalTab = tabViews.get(activeIndex);
+
+	    if (logicalTab == null) {
+	        log.info("No logical tab for index {} in ctType {}"+ activeIndex);
+	        return;
+	    }
+
+	    // Set auTabView
+	    getManagedBean().setAuTabView(logicalTab);
+
+	    // Reload data
+	    IPagingDataModel<AuditContractResDTO> model = 
+	        AuditContractConst.CT_CONTRACT.equals(ctType) ? searchCT : searchCircular;
+
+	    if (model != null) {
+	        getManagedBean().setLazy(true);
+	        getManagedBean().setSearching(true);
+	        model.reloadData();
+	    }
 	}
 
-
 	/**
-	 * Updates the audit tab view based on the given active index. If the index
-	 * does not match a predefined section, no action is taken.
-	 * 
-	 * @param activeIndex
-	 *            the identifier of the clicked tab
-	 */
-	private void updateTabView(Integer activeIndex) {
-		Long tabView = getTabViews().get(activeIndex);
-
-		// Only update the tab view if a valid mapping exists
-		if (tabView != null) {
-			getManagedBean().setAuTabView(tabView);
-		}
-	}
-
-	/**
-	 * A mapping of tab indexes to their corresponding audit section constants.
-	 * This replaces a lengthy switch statement with a more maintainable
-	 * structure. Each key represents a tab index, and the value represents the
-	 * associated audit section.
+	 * Returns a mapping between UI tab indexes and backend audit section codes.
+	 * <p>
+	 * The mapping depends on the current contract type (ctType). If ctType is
+	 * unsupported or null, an empty map is returned.
+	 * </p>
+	 *
+	 * @return a map of tab indexes to audit section codes; never null
 	 */
 	public Map<Integer, Long> getTabViews() {
-		Map<Integer, Long> tabViews = new HashMap<>();
+	    if (getManagedBean() == null || getManagedBean().getCtType() == null) {
+	        log.debug("ManagedBean or ctType is null in getTabViews()");
+	        return Collections.emptyMap();
+	    }
 
-		if (getManagedBean().getCtType().equals(AuditContractConst.CT_CONTRACT)) {
-			tabViews.put(0, AuditContractConst.AU_SECTION_FD);
-			tabViews.put(1, AuditContractConst.AU_SECTION_ZO);
-			tabViews.put(2, AuditContractConst.AU_SECTION_AG);
-			tabViews.put(3, AuditContractConst.AU_SECTION_PD);
-			tabViews.put(4, AuditContractConst.AU_SECTION_SD);
-			tabViews.put(5, AuditContractConst.AU_SECTION_DE);
-			tabViews.put(6, AuditContractConst.AU_SECTION_SC);
-			tabViews.put(7, AuditContractConst.AU_SECTION_PB);
-			tabViews.put(8, AuditContractConst.AU_SECTION_PBD);
-			tabViews.put(9, AuditContractConst.AU_SECTION_ITS);
-			tabViews.put(10, AuditContractConst.AU_SECTION_AGS);
-			tabViews.put(11, AuditContractConst.AU_SECTION_CMN);
-			tabViews.put(12, AuditContractConst.AU_SECTION_FNS);
-			tabViews.put(13, AuditContractConst.AU_SECTION_CO);
-			tabViews.put(14, AuditContractConst.AU_SECTION_FT);
-			tabViews.put(15, AuditContractConst.AU_SECTION_DCA);
-		}
+	    String ctType = getManagedBean().getCtType();
 
-		if (getManagedBean().getCtType().equals(AuditContractConst.CT_TYPE_CCR)) {
-			tabViews.put(0, AuditContractConst.AU_SECTION_CC);
-			tabViews.put(1, AuditContractConst.AU_SECTION_PID);
-			tabViews.put(2, AuditContractConst.AU_SECTION_CPD);
-			tabViews.put(3, AuditContractConst.AU_SECTION_EMD);
-			tabViews.put(4, AuditContractConst.AU_SECTION_RCT);
-			tabViews.put(5, AuditContractConst.AU_SECTION_CL);
-		}
-
-		if (getManagedBean().getCtType().equals(AuditContractConst.CT_TYPE_PCR)) {
-			tabViews.put(0, AuditContractConst.AU_SECTION_PC);
-			tabViews.put(1, AuditContractConst.AU_SECTION_PID);
-			tabViews.put(2, AuditContractConst.AU_SECTION_CPD);
-			tabViews.put(3, AuditContractConst.AU_SECTION_RCT);
-			tabViews.put(4, AuditContractConst.AU_SECTION_ID);
-			tabViews.put(5, AuditContractConst.AU_SECTION_IS);
-			tabViews.put(6, AuditContractConst.AU_SECTION_IPS);										  
-		}
-
-		return tabViews;
+	    if (AuditContractConst.CT_CONTRACT.equals(ctType)) {
+	        return getContractTabViews();
+	    }
+	    
+	    if (AuditContractConst.CT_TYPE_CCR.equals(ctType)) {
+	        return getCircularTabViews();
+	    } 
+	    
+	    if (AuditContractConst.CT_TYPE_PCR.equals(ctType)) {
+	        return getPcrTabViews();
+	    }
+	        log.info("Unsupported ctType: {}"+ ctType);
+	        return Collections.emptyMap();	    
+	}
+	
+	/**
+	 * Returns tab index mappings for Contract (CT) audit trails.
+	 *
+	 * @return a map of tab indexes to audit section codes for contracts
+	 */
+	private Map<Integer, Long> getContractTabViews() {
+	    Map<Integer, Long> map = new HashMap<>();
+	    map.put(0, AuditContractConst.AU_SECTION_FD);
+	    map.put(1, AuditContractConst.AU_SECTION_ZO);
+	    map.put(2, AuditContractConst.AU_SECTION_AG);
+	    map.put(3, AuditContractConst.AU_SECTION_PD);
+	    map.put(4, AuditContractConst.AU_SECTION_SD);
+	    map.put(5, AuditContractConst.AU_SECTION_DE);
+	    map.put(6, AuditContractConst.AU_SECTION_SC);
+	    map.put(7, AuditContractConst.AU_SECTION_PB);
+	    map.put(8, AuditContractConst.AU_SECTION_PBD);
+	    map.put(9, AuditContractConst.AU_SECTION_ITS);
+	    map.put(10, AuditContractConst.AU_SECTION_AGS);
+	    map.put(11, AuditContractConst.AU_SECTION_FT);
+	    map.put(12, AuditContractConst.AU_SECTION_CMN);
+	    map.put(13, AuditContractConst.AU_SECTION_FNS);
+	    map.put(14, AuditContractConst.AU_SECTION_CO);
+	    map.put(15, AuditContractConst.AU_SECTION_DCA);
+	    return map;
+	}
+	
+	/**
+	 * Returns tab index mappings for Circular (CCR) audit trails.
+	 *
+	 * @return a map of tab indexes to audit section codes for circulars
+	 */
+	private Map<Integer, Long> getCircularTabViews() {
+	    Map<Integer, Long> map = new HashMap<>();
+	    map.put(0, AuditContractConst.AU_SECTION_CC);
+	    map.put(1, AuditContractConst.AU_SECTION_PID);
+	    map.put(2, AuditContractConst.AU_SECTION_CPD);
+	    map.put(3, AuditContractConst.AU_SECTION_EMD);
+	    map.put(4, AuditContractConst.AU_SECTION_RCT);
+	    map.put(5, AuditContractConst.AU_SECTION_CL);
+	    return map;
+	}
+	
+	/**
+	 * Returns tab index mappings for PanelCircular audit trails.
+	 *
+	 * @return a map of tab indexes to audit section codes for PCR
+	 */
+	private Map<Integer, Long> getPcrTabViews() {
+	    Map<Integer, Long> map = new HashMap<>();
+	    map.put(0, AuditContractConst.AU_SECTION_PC);
+	    map.put(1, AuditContractConst.AU_SECTION_PID);
+	    map.put(2, AuditContractConst.AU_SECTION_CPD);
+	    map.put(3, AuditContractConst.AU_SECTION_RCT);
+	    map.put(4, AuditContractConst.AU_SECTION_ID);
+	    map.put(5, AuditContractConst.AU_SECTION_IS);
+	    map.put(6, AuditContractConst.AU_SECTION_IPS);
+	    return map;
 	}
 
 	/**
