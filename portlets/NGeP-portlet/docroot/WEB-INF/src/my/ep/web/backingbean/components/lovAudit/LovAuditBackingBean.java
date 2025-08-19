@@ -164,14 +164,10 @@ public class LovAuditBackingBean implements Serializable {
 					SearchFilterBean filterBean = (SearchFilterBean) searchBean.getDataFilterBeans().get(i);
 					log.info("filterBeangetSearchField###$$$ ::: " + filterBean.getSearchField());
 					log.info("filterBean ###$$$ getSearchValue::: " + filterBean.getSearchValue());
-					if (filterBean.getSearchField() != null) {
-						if ("userName".equalsIgnoreCase(filterBean.getSearchField())) {
-							reqDTO.setUserName(filterBean.getSearchValue().toString());
-						} else if ("identificationNo".equalsIgnoreCase(filterBean.getSearchField())) {
-							reqDTO.setIdentificationNo(filterBean.getSearchValue().toString());
-						} else if ("designation".equalsIgnoreCase(filterBean.getSearchField())) {
-							reqDTO.setDesignation(filterBean.getSearchValue().toString());
-						}
+					if ("userName".equalsIgnoreCase(filterBean.getSearchField())) {
+						reqDTO.setUserName(filterBean.getSearchValue().toString());
+					} else if ("identificationNo".equalsIgnoreCase(filterBean.getSearchField())) {
+						reqDTO.setIdentificationNo(filterBean.getSearchValue().toString());
 					}
 
 					if (filterBean.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
@@ -311,7 +307,7 @@ public class LovAuditBackingBean implements Serializable {
 
 		columnsToDisplay.clear();
 		for (LovColumnBean column : lovBean.getColumns()) {
-			if (column.isViewable()) {
+			if (column.isViewable() && !"designation".equalsIgnoreCase(column.getColumnName())) {
 
 				ValueExpression valueExpression = null;
 				if (column.getMethodName() != null) {
@@ -520,7 +516,7 @@ public class LovAuditBackingBean implements Serializable {
 		this.setSearchOptions(new ArrayList<SelectItem>());
 		if (lovBean.getColumns() != null && lovBean.getColumns().size() > 0) {
 			for (LovColumnBean column : lovBean.getColumns()) {
-				if (column.isSearchable()) {
+				if (column.isSearchable() && !"designation".equalsIgnoreCase(column.getColumnName())) {
 					SelectItem item = new SelectItem(column.getColumnName(), column.getColumnTitle());
 					this.getSearchOptions().add(item);
 				}
@@ -700,7 +696,9 @@ public class LovAuditBackingBean implements Serializable {
 	private void prepareColumnTitle(LovBean lovBean) {
 		for (LovColumnBean column : lovBean.getColumns()) {
 			ResourceBundle bundle = ResourceBundle.getBundle(column.getBundleFile(), new FacesScopes().getUserLocale());
-			column.setColumnTitle(bundle.getString(column.getBundleKey()));
+			if (!"designation".equalsIgnoreCase(column.getColumnName())) {
+				column.setColumnTitle(bundle.getString(column.getBundleKey()));
+			}
 		}
 	}
 
