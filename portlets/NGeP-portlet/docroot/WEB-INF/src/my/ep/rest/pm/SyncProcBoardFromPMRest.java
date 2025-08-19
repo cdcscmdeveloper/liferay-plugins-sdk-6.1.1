@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -347,33 +348,36 @@ public class SyncProcBoardFromPMRest {
 	 *
 	 * <b>Sample URLs:</b>
 	 * <pre>
-	 *   /createuserv2?loginId=john.doe
-	 *   /createuserv2?loginId=john.doe&setDefaultPassword=true
-	 *   http://ngepsit.eperolehan.com.my/NGeP-portlet/rest/sync/createuserv2?loginId=3003703
-	 *   http://localhost:8080/NGeP-portlet/rest/sync/createuserv2?loginId=3003703
+	 *   curl -X POST http://localhost:8080/NGeP-portlet/rest/sync/createuserv2 \ -H "Content-Type: application/json" \  -d '{"loginId":"3003703","keyPass"}'
 	 * </pre>
 	 *
 	 * @param loginId the login ID of the user to synchronize (required).
 	 * @param setDefaultPassword "true" to reset the password to default; otherwise ignored (optional).
 	 * @return HTTP 200 if synchronization is successful, HTTP 406 with an error message if failed.
 	 */
-	@GET
-	@Path("/createuserv2")
-	public Response syncLiferayOimByLoginId(
-	        @QueryParam("loginId") String loginId,
-	        @QueryParam("setDefaultPassword") String setDefaultPassword) {
-		UserReqDTO reqDTO = null;
+	
+	
+	@POST
+	@Path("/syncUserv2")
+	public Response syncLiferayOimByLoginId(UserReqDTO reqDTO) {
 		try {
+			String message = "";
 			log.info("#Start Sync By Login Id");
-			reqDTO = new UserReqDTO();
-			reqDTO.setLoginId(loginId);
-			boolean setDefaultPwd = false;
-			if(setDefaultPassword != null && "true".equalsIgnoreCase(setDefaultPassword)){
-				setDefaultPwd = true;
+			if(reqDTO == null){
+				log.info("Body Is Null");
+				reqDTO = new UserReqDTO();
+			}else{
+				log.info("Body Is Not Null");
 			}
-			boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginId(loginId,setDefaultPwd);
-			log.info("Finished Sync By Login Id:"+success);			
-			return Response.status(200).entity("Success sync Procurement Board users !!").build();
+			if(reqDTO.getKeyPass() != 8532147){
+				log.info("Key Wrong");
+				message = "Error Key";
+			}else{
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginId(reqDTO.getLoginId(),false);
+				log.info("Finished Sync By Login Id:"+success);	
+				message = "Success";
+			}
+			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(406).entity(e.getMessage()).build();
