@@ -12604,16 +12604,7 @@ public class SpecificationBackingBean extends
 			}
 		}
 // #29732 End - reOpen Fix
-		
-//		#36678 related to #35061 start
-		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
-		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
 
-		if (!this.getManagedBean().getQt().isPanel() && null != intendedPrice && intendedPrice.compareTo(indPriceThreshold) <= 0 
-				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt().getJustificationProcValue().isEmpty())) {
-				throw new EpException(MessageConst.ERROR_760560);
-		}
-//		#36678 related to #35061 end
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -13981,6 +13972,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 			//1873 - start - note 97
 			SpecificationResDTO resDTO  = new SpecificationResDTO(); 
@@ -14857,6 +14849,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			// code if alredy checklist exist need to remove existing finalcialspec
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 	
 			/*
 			 * IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
@@ -15019,25 +15012,8 @@ public class SpecificationBackingBean extends
 	            if(issample && SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)){// 11104-Reendose794
 				sampleDetailsPendingTemplateSpec();
 			   }// 11104-Reendose794
-	          //#36678 start
-				boolean isPanel = scQt.isPanel();
-	    		BigDecimal currentIndPrice = this.getManagedBean().getQt().getEstimatedAmount();
-	    		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
-				if ((!isPanel) && currentIndPrice != null && indPriceThreshold != null
-						&& (currentIndPrice.compareTo(indPriceThreshold) <= 0)) {
-					// BugBug #35061 - asyrafhaziq
-					// set message
-					String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE, new String[] { String
-							.valueOf(indPriceThreshold).trim() });
-					// SONARQUBE QT 2023 - haziq
-					this.getManagedBean().setMsgConfirmBelowIndi(msg.trim());
 
-					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
-
-				} else {
-					return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
-				}
-				//#36678 end
+				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 			return null;
 		// Bug #33661@Syazani 12/04/2023 -- Start
@@ -23060,18 +23036,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 	// 11104 -end-
-	
-	public String redirectSpecComMainYes() {
-		this.getManagedBean().setFieldProcurementJustification(true);
-		return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
-	}
 
-	public String redirectSpecComMainNo() {
-		this.getManagedBean().setFieldProcurementJustification(false);
-		return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
-	}
-	//#36678 related to #35061 end
-	
 	// 11104 -start-
 	/**
 	 * set Sample details index to list after save.
