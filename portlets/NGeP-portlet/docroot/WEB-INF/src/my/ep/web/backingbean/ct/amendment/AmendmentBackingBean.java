@@ -8033,6 +8033,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().getCtLetterOfAcceptance().clear();
 		}
 		setAmendmentContractVer(reqDTO);
+		setCtContractAmountForViewSL(); //#38823
 					
 //		if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
 			ctBackingBean.getManagedBean().setViewContract(true);
@@ -8373,4 +8374,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// #25956 - Start
+	
+	//#38823 start
+	/**
+	 * re-setting CtContractAmount in CtContractVer for ViewSCL to show previous
+	 * CtContractAmount amendment details
+	 */
+	public void setCtContractAmountForViewSL(){
+		Date asAtDate = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate();
+		for (CtContractAmount ctContractAmount : ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts()) {
+			if (ctContractAmount.getEffDate().getTime() <= asAtDate.getTime()
+					&& ctContractAmount.getExpDate().getTime() >= asAtDate.getTime()) {
+				ctBackingBean.getManagedBean().getContractVer().setCtContractAmount(ctContractAmount);
+			}
+		}
+	}
+	//#38823 end
 }
