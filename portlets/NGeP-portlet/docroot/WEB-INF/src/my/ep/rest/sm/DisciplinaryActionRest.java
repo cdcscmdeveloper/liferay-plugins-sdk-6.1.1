@@ -260,7 +260,7 @@ public class DisciplinaryActionRest {
 
 							//26238 - 32558 - 32710 -  rollback code is for imposed suspen when supplier finish pending txn
 							if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
-								if(completedPendingSmDa.getStartDate().compareTo(today) == 0){
+								if(formatter.format(completedPendingSmDa.getStartDate()).compareTo(formatter.format(today)) == 0){
 									completedPendingSmDa.setFutureImposed(true);
 								} else {
 									completedPendingSmDa.setFutureImposed(false);
