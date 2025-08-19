@@ -213,7 +213,19 @@
 			</h:panelGroup>
 			
 			<table style="width:100%;"><tr><TD style="text-align:right;">
-				<p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
+			
+					<!-- Start - #34889 -->
+					<p:commandButton rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport()}"
+					id="slbtnAllMinistry"
+					value="#{lbl['lbl.btn.select.allMinistry']}"
+					action="#{lovBackingBean.allMinistrySelection()}"
+					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
+					oncomplete="lovPopup.hide();"
+					process="resultPanel"
+					partialSubmit="true"  styleClass="BtnSpacing"/>
+					<!-- End - #34889 -->
+					
+					<p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
 					id="slbtn"
 					value="#{lbl['lbl.btn.select']}"
 					action="#{lovBackingBean.populateToSaveObject}"
@@ -232,24 +244,14 @@
 					process="resultPanel"
 					disabled="#{lovBackingBean.isSelectButtonDisable()}"
 					partialSubmit="true"  styleClass="BtnSpacing"/>
-					
-					<!-- Start - #34889 -->
-					<p:commandButton rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport()}"
-					id="slbtnAllMinistry"
-					value="#{lbl['lbl.btn.select.allMinistry']}"
-					action="#{lovBackingBean.allMinistrySelection()}"
-					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
-					oncomplete="lovPopup.hide();"
-					process="resultPanel"
-					partialSubmit="true"  styleClass="BtnSpacing"/>
-					<!-- End - #34889 -->	
-													
-			    <p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
+																		
+			    	<p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
 			      	value="#{lbl['lbl.btn.cancel']}"
 				  	partialSubmit="true" process="@this" update="@this"
 				  	action="#{lovBackingBean.resetAction()}"
 				  	oncomplete="lovPopup.hide();" styleClass="BtnSpacing"/>
-				<p:commandButton rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}"
+				  	
+					<p:commandButton rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}"
 				  	value="#{lbl['lbl.btn.cancel']}"
 				  	partialSubmit="true" process="@this" update="@this"
 				  	action="#{lovBackingBean.populatedBackupSelectedItems()}"
