@@ -1193,10 +1193,16 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 					reqDTO.setOrgProfileId(orgProfileId);
 					OrgProfileResDTO resDTO = orgProfileSO.getActivePmOrgValidityByOrgProfileId(reqDTO);
-
-					getManagedBean().setChargePTJOrg(resDTO.getPmOrgProfile());
 					
-					log.info("Item Charge PTJ");
+					if (resDTO != null && resDTO.getPmOrgProfile() != null) {
+						getManagedBean().setChargePTJOrg(resDTO.getPmOrgProfile());
+						log.info("Item Charge PTJ");
+					}else{
+						getManagedBean().setChargePTJOrg(getManagedBean().getPaymentAdvice().getFlRequest().getChargeOrgProfile());
+						log.info("FL Request Charge PTJ");
+					}
+
+					
 				}
 				//38898 -End
 			}
