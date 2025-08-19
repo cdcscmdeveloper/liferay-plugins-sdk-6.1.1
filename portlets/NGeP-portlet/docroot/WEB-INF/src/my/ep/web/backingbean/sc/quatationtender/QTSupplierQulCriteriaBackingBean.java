@@ -2110,4 +2110,35 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		
 	}
+	
+	// #29732 Start
+	public void onClickHistoryIcon(String catCode, String catCodeLevel, Long catCodeID) {
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
+
+		if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+			reqDTO.setCategoryL1Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+			reqDTO.setCategoryL2Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+			reqDTO.setCategoryL3Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+		}
+		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+		getManagedBean().setHisCatCode(catCode);
+		RequestContext.getCurrentInstance().execute("hisPopup.show()");
+	}
+
+	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
+		for (PmRemarkCategory rc : remarkList) {
+			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
+			rc.setCreatedUsername(user.getUserName());
+		}
+		return remarkList;
+	}
+	// #29732 End
 }

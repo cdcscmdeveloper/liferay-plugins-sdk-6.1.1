@@ -142,12 +142,13 @@
 							<!-- 25077 -end- -->
 							
 							<ui:remove> #37632 - Update rendered - Start </ui:remove>
+							<ui:remove> #29732 Start add update </ui:remove>	
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								rendered="#{!qTDetailBB.isCancel(bpmAction) or isCommitteeApprovalReviseTask}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
 								<ui:remove>start 9019 - Reopen #note-317</ui:remove>
 								<f:param name="skipsubmitvalidation" value="0" />
 								<ui:remove>end 9019 - Reopen #note-317</ui:remove>

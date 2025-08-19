@@ -184,6 +184,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private Map<Long,Boolean> committeeFormed;
 	private boolean navigateFromMobileView;
 	private ScWorkFlowStatus workflowStatus;
+	private String hisCatCode; //#29732
+	private List<PmRemarkCategory> historyList; //#29732
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1292,7 +1294,22 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.workflowStatus = workflowStatus;
 	}
 
+	//#29732 Start
+	public String getHisCatCode() {
+		return hisCatCode;
+	}
+
+	public void setHisCatCode(String hisCatCode) {
+		this.hisCatCode = hisCatCode;
+	}
+
+	public List<PmRemarkCategory> getHistoryList() {
+		return historyList;
+	}
+
+	public void setHistoryList(List<PmRemarkCategory> historyList) {
+		this.historyList = historyList;
+	}
+	//#29732 End
 	
-
-
 }

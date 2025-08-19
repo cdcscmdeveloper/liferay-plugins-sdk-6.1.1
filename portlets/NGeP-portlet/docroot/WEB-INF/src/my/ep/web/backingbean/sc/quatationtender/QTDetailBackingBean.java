@@ -857,6 +857,19 @@ public class QTDetailBackingBean extends
 	//Enhancement #25729 -start-
 	public void submitQTDetailsAction() {
 	//Enhancement #25729 -end-	
+		
+		// #29732 Start
+		if (this.getManagedBean().getQt().getQtStatus().getStatusId().equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
+			String changedCatCodeList = checkCatCodeChange();
+
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setCatCodeList(changedCatCodeList);
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
+				return;
+			}
+		}
+		// #29732 End
+		
 		// Start Reopen 9019 #note-289
 		boolean emptyRemarksExist = false;
 
@@ -1190,6 +1203,35 @@ public class QTDetailBackingBean extends
 								new FacesScopes().getUserLocale())));
 			}
 			// 9019 - End (Harun)
+			
+			// #29732 Start
+			// qtmaintenance from audit search ,ADD ISREADONLY
+			if ((this.getManagedBean().getQt().getQtStatus().getStatusId()
+					.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) && !this.getManagedBean().isReadOnly()) {
+				if (isQTRoleMaintenanceValidation()) {
+					this.getManagedBean().setCategoryDescriptionChange(true); // 29732
+				}
+
+				String changedCatCodeList = checkCatCodeChange();
+
+				if (!changedCatCodeList.isEmpty()) {
+					this.getManagedBean().setActiveIndex(1);
+					retrieveSuppQualificationTabDtl();
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+									"lbl.sc.category.has.changes.on.prerender.view.1", null,
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+									"lbl.sc.category.has.changes.on.prerender.view.2",
+									new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
+				}
+			}
+			// #29732 End
+			
 			// 25037 - start
 			boolean isValidFor25037 = this.validateSupportedTask(scQt.getQtNo(),
 					QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
@@ -3184,7 +3226,34 @@ public class QTDetailBackingBean extends
 			if (null == this.getManagedBean().getQt().getContractType()) {
 				this.getManagedBean().getQt().setContractType(new PmParameter());
 			}
-				
+			
+			// #29732 Start
+			if (this.getManagedBean().getQt().getQtStatus().getStatusId()
+					.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
+					|| this.getManagedBean().getQt().getQtStatus().getStatusId()
+							.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+					|| this.getManagedBean().getQt().getQtStatus().getStatusId()
+							.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
+				String changedCatCodeList = checkCatCodeChange();
+
+				if (!changedCatCodeList.isEmpty()) {
+					this.getManagedBean().setActiveIndex(1);
+					retrieveSuppQualificationTabDtl();
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+									"lbl.sc.category.has.changes.on.prerender.view.1", null,
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+									"lbl.sc.category.has.changes.on.prerender.view.2",
+									new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
+				}
+			}
+			// #29732 End
+			
 			// initializing remark for cancel or subsequent save start
 			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
 				ScQt scQt = this.getManagedBean().getQt();
@@ -3268,7 +3337,9 @@ public class QTDetailBackingBean extends
 	 *            the outcome
 	 * @return the string
 	 */
-	public String updateBpmTask(String outcome) {
+	// #29732 start
+	public void updateBpmTask(String outcome) {
+	// #29732 end
 		
 		//25037 - start - remove after clone(25635) enter production
 		assertSpecificationUpdateInProgress(false);
@@ -3276,6 +3347,22 @@ public class QTDetailBackingBean extends
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("updateBpmTask");
+		
+		// #29732 Start
+		if (this.getManagedBean().getQt().getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
+				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
+						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
+						.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
+			String changedCatCodeList = checkCatCodeChange();
+
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setCatCodeList(changedCatCodeList);
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
+				return;
+			}
+		}
+		// #29732 End
 
 		updateApprovalDetails(scQt);
 
@@ -3517,6 +3604,18 @@ public class QTDetailBackingBean extends
 
 				this.getManagedBean().setResetBpkCurrentArea(false); //#25077
 
+				// 29732 fix duplicate issues -start-
+				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+
+				// 29732 fix duplicate issues while deleting the category and add the same id -start-
+				if(null != removeCategoryCodes){
+					List<ScQtCategory> categoryResults;
+					categoryResults = this.getManagedBean().getQtCategoryList();
+					this.getManagedBean().setQtCategoryList(categoryResults);
+					qt.setScQtCategorys(categoryResults);
+				}
+				// 29732 -end-
+				
 				qtResDTO = (QuationTenderResDTO) detailSO
 						.updateBPMAction(qtReqDTO);
 			}
@@ -3560,7 +3659,7 @@ public class QTDetailBackingBean extends
 			detailSO = null;
 			committeSO=null;
 		}
-		return null;
+//		return null; // #29732 remove
 	}
 
 	// #30477/#25426 -start-
@@ -4331,6 +4430,20 @@ public class QTDetailBackingBean extends
 						}
 					}
 				}
+				
+				// 29732 fix duplicate issues -start-
+				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+				// 29732 fix duplicate issues while deleting the category and
+				// add the same id -start-
+				if (null != removeCategoryCodes) {
+					// #29732-Start fix duplicate & error merge persistance if
+					// user delete and add the same category(ID)
+					List<ScQtCategory> categoryResults;
+					categoryResults = this.getManagedBean().getQtCategoryList();
+					this.getManagedBean().setQtCategoryList(categoryResults);
+					// 29732- End
+				}
+				// 29732 -end-
 			} else {
 				this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
 				if (CollectionUtils.isNotEmpty(tenderResDTO.getPanelItems())) {
@@ -6802,6 +6915,26 @@ public class QTDetailBackingBean extends
 			}
 			// 11104-End
 
+			// 29732 qt maintenance -Start
+			this.getManagedBean().setFromSubmitCatChange(true);
+
+			String changedCatCodeList = checkCatCodeChange();
+			ScWorkFlowStatus specMainworkflow = this.getManagedBean().getQt().getCurrentWorkFlowStatus();
+			Long workflowStatusId = specMainworkflow.getPmStatus().getStatusId();
+
+			Set<Long> pendingStatuses = new HashSet<>(Arrays.asList(QTStatusConst.SE_PENDING_SUBMISSION,
+					QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF,
+					QTStatusConst.SE_PENDING_REVISION, QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL,
+					QTStatusConst.SE_COMPLETED));
+			boolean qtStatusWorkflow = pendingStatuses.contains(workflowStatusId);
+
+			if (!changedCatCodeList.isEmpty() && qtStatusWorkflow) {
+				this.getManagedBean().setCatCodeList(changedCatCodeList);
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
+				return;
+			}
+			// 29732 -End
+			
 			// 25037 - start
 			boolean showPopup = validateIsCommitteeFormed(confirmResetReendorse);
 			if (showPopup) {
@@ -7199,6 +7332,11 @@ public class QTDetailBackingBean extends
 	public boolean enableFieldByStatusNFiledName(String fieldName) {
 		Long statusId = this.getManagedBean().getCurrentStatusId();
 
+		// #29732 start
+		if (statusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)) {
+			statusId = getManagedBean().getQt().getQtStatus().getStatusId();
+		}
+		// 29732 end
 		return enableFieldByStatusNFiledName(fieldName, statusId, 
 				getManagedBean().isMaintanceFlow(), 
 				!getManagedBean().isReadOnly());
@@ -10889,5 +11027,89 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setPrevDOAs(generateDOACompareStr(this.getManagedBean().getPmuserContactpersonList()));
 	}
 	// 25037 - end
+	
+	// #29732 Start
+	public String checkCatCodeChange() {
+		// check submit empty category code
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
+				&& this.getManagedBean().isFromSubmitCatChange()) {
+			IQTSpecSO specSo = getQtSpecSO();
+			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
+
+			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
+			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
+		}
+
+		List<ScQtCategory> qtCatCodeList = this.getManagedBean().getQt().getScQtCategorys();
+		// suspected session were renew, set back list.
+		if (null == qtCatCodeList || qtCatCodeList.isEmpty()) {
+			qtCatCodeList = this.getManagedBean().getQtCategoryList();
+		}
+		String catCodeList = "";
+		Integer recordstatusInactive = 0;// #29732(#221)
+
+		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
+			for (ScQtCategory catCode : qtCatCodeList) {
+				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+				PmCategoryL1 catCodeL1 = new PmCategoryL1();
+				CategoryCodeReqDTO reqDTO1 = new CategoryCodeReqDTO();
+
+				reqDTO1.setCategoryL1Id(catCode.getPmCategoryL1().getCategoryL1Id());
+
+				CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO1);
+
+				catCodeL1 = resDTO1.getCategoryL1();
+				PmCategoryL2 catCodeL2 = new PmCategoryL2();
+				CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
+
+				reqDTO2.setCategoryL2Id(catCode.getPmCategoryL2().getCategoryL2Id());
+
+				CategoryCodeResDTO resDTO2 = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO2);
+
+				catCodeL2 = resDTO2.getCategoryL2();
+				PmCategoryL3 catCodeL3 = new PmCategoryL3();
+				CategoryCodeReqDTO reqDTO3 = new CategoryCodeReqDTO();
+
+				reqDTO3.setCategoryL3Id(catCode.getPmCategoryL3().getCategoryL3Id());
+
+				CategoryCodeResDTO resDTO3 = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO3);
+				catCodeL3 = resDTO3.getCategoryL3();
+
+				if (!catCodeL1.getCategoryName().equals(catCode.getPmCategoryL1Name())
+						|| !catCodeL2.getCategoryName().equals(catCode.getPmCategoryL2Name())
+						|| !catCodeL3.getCategoryName().equals(catCode.getPmCategoryL3Name())
+						|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+						|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+						|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+				) {
+					if (catCodeList != "") {
+						catCodeList = catCodeList.concat(", ");
+					}
+
+					catCodeList = catCodeList.concat(catCode.getPmCategoryL1().getCategoryL1Code().toString()
+							+ catCode.getPmCategoryL2().getCategoryL2Code().toString()
+							+ catCode.getPmCategoryL3().getCategoryL3Code().toString());
+				}
+			}
+		}
+
+		return catCodeList;
+	}
+
+	// #29732 End
+
+	// 29732 start
+	private boolean isQTRoleMaintenanceValidation() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value());
+	}
+	// 29732 end
+
+	// 29732 start
+	private IQTSpecSO getQtSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+	}
+	// 29732 end
 
 }
