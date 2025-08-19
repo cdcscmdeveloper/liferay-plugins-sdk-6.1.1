@@ -119,6 +119,12 @@
                         		update="searchViewId" 
                         		onstart="blockWidget.show()"
                         		oncomplete="blockWidget.hide()" />
+                    <p:menuitem 
+								value="#{lbl['lbl.ct.audit.tab.designation.contract.details']}"
+								actionListener="#{auditContractBackingBean.handleButtonClick(15)}"
+								update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
                 </p:tabMenu>
 
                 <!-- DataTable for CONTRACT -->
