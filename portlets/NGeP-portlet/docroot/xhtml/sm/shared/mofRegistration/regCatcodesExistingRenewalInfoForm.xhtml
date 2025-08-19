@@ -56,8 +56,9 @@
 					<h:outputText 
 						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
 					<!-- #28175 Reopen End -->
-					<!-- 30865 Start -->
-					<p:outputLabel rendered="#{aprvdCatBean.cancelCategory}" styleClass="warning" style="color:red !important; text-align:left;">
+					<!-- 30865, 38896 Start -->
+					<p:outputLabel rendered="#{aprvdCatBean.cancelCategory}" styleClass="warning" 
+						style="color:red !important; text-align:left; float:none">
 						<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
 					</p:outputLabel>
 					<!-- 30865 End -->

@@ -8749,6 +8749,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				    	copyJustifications.setRoleCode(oldJustifications.getRoleCode());
 				    	copyJustifications.setRemarkType(oldJustifications.getRemarkType());
 				    	copyJustifications.setRemark(oldJustifications.getRemark());
+				    	//#35502, Fix as-is bug: #38802 Start
+				    	copyJustifications.setCreatedBy(getUserIdSessionFromLoginId());
+				    	copyJustifications.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
+				    	copyJustifications.setChangedDate(new Timestamp(System.currentTimeMillis()));
+				    	//#35502, Fix as-is bug: #38802 End
 				    	
 				    	newJustifications.add(copyJustifications);
 				    }
