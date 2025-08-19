@@ -14478,7 +14478,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			constructBiddingSerachBean(qtnTenderSearchBean, searchBean);
 			// Order by created date
 			searchBean.getSortColumns().add(
-					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_START_DATE, false));
+					new SearchOrderBean(SourcingConstants.BIDDING_SCHEDULE_ID, false));
 			if(isDeskOfficer() || isApprover()){
 				biddingReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				if(isDeskOfficer()){
