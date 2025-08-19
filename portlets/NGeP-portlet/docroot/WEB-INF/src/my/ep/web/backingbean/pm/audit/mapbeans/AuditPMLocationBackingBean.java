@@ -104,10 +104,10 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 						AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			}
 		} else {
-			detailObj(AuditConst.PM_AUD_ST_STSTATECODE_FIELDLABELID, null, managedBean.getResState().getStateCode(),
+			detailObj(AuditConst.PM_AUD_ST_STCOUNTRY_FIELDLABELID, null, managedBean.getResCountry().getCountryName(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_ST_STCOUNTRY_FIELDLABELID, null, managedBean.getResCountry().getCountryName(),
+			detailObj(AuditConst.PM_AUD_ST_STSTATECODE_FIELDLABELID, null, managedBean.getResState().getStateCode(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_ST_STNAME_FIELDLABELID, null, managedBean.getResState().getStateName(),
