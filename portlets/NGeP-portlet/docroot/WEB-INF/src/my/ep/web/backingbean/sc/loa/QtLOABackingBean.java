@@ -533,7 +533,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			suppList.add(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
 			
 			// will return true if the supplier reject EPV
-			supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getQt().getQtId(), suppList);
+			supplierStatus = detailSO.checkSupplierEPVStatus(scLoa.getScQt().getQtId(), suppList);
 
 			// check the validity of BPM version, if version is equal/higher will enable button
 			boolean isValidFor21692 = this.validateSupportedTask(scLoa.getScQt().getQtNo(),
