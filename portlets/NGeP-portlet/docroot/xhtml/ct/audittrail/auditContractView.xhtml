@@ -20,13 +20,13 @@
                             action="#{auditContractBackingBean.redirectToMainPage}" />
                     </td>
                     <td style="width: 50%; text-align: right;">
-                        <p:commandLink value="#{lbl['lbl.txt.print.audit.all']}" ajax="false">
+                        <p:commandLink value="#{lbl['lbl.txt.print.audit.all']}" styleClass="blue_font" style="color:#009ae5 !important;" ajax="false">
                             <p:fileDownload value="#{auditContractBackingBean.generateAllReport(
                                 auditContractBackingBean.managedBean.docId,
                                 auditContractBackingBean.managedBean.ctType)}" />
                         </p:commandLink>
                         &#160;
-                        <p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}" ajax="false">
+                        <p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}" styleClass="blue_font" style="color:#009ae5 !important;" ajax="false">
                             <p:fileDownload value="#{auditContractBackingBean.getAuditTrailDetailsForExlRpt(
                                 auditContractBackingBean.managedBean.docId,
                                 null,
