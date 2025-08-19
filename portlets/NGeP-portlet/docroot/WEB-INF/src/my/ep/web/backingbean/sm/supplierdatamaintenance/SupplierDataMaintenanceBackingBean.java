@@ -611,7 +611,9 @@ public class SupplierDataMaintenanceBackingBean extends
 
 			// set registration status and expiry date
 			reqDTO.setOldRegStatus(getManagedBean().getExistingRegStatus());
-			reqDTO.setOldRegStatusId(getManagedBean().getOldRegStatusId());
+			//#38856 - START
+			reqDTO.setOldRegStatusId(getManagedBean().getExistingRegStatus().getPmStatus().getStatusId());
+			//#38856 - END
 			reqDTO.setOldMofExpiryDate(getManagedBean().getExistingMofExpiryDate());
 			
 			// set active status for newly added category

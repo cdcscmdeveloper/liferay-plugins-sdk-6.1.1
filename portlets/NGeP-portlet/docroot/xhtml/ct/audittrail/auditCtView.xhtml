@@ -3,230 +3,185 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
-    xmlns:ac="http://ac.my/jsf/composite/cc"
-    xmlns:c="http://java.sun.com/jsp/jstl/core">
+    xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<h:head>
-		<style type="text/css">
-.audit-main-panel {
-	overflow-x: auto;
-	max-width: 100vw;
-}
+    <!-- CONTRACT type audit view -->
+    <ui:fragment rendered="#{auditContractBackingBean.managedBean.ctType eq 'CONTRACT'}">
+        <p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true">
 
-.audit-table {
-	width: 100% !important;
-	table-layout: fixed;
-}
+            <!-- Print & Download buttons -->
+            <div style="text-align: right; margin-bottom: 10px;">
+                <p:commandLink value="#{lbl['lbl.btn.print']}" styleClass="blue_font" style="color:#009ae5 !important;" ajax="false">
+                    <p:fileDownload
+                        value="#{auditContractBackingBean.generateReport(
+                                auditContractBackingBean.managedBean.docId, 
+                                auditContractBackingBean.managedBean.auTabView, 
+                                auditContractBackingBean.managedBean.ctType)}"
+                        immediate="true" 
+                        onstart="blockWidget.show();" 
+                        oncomplete="blockWidget.hide();" />
+                </p:commandLink>
+                &#160;
+                <p:commandLink value="#{lbl['lbl.btn.download']}" styleClass="blue_font" style="color:#009ae5 !important;" ajax="false">
+                    <p:fileDownload
+                        value="#{auditContractBackingBean.getAuditTrailDetailsForExlRpt(
+                                auditContractBackingBean.managedBean.docId, 
+                                auditContractBackingBean.managedBean.auTabView, 
+                                auditContractBackingBean.managedBean.ctType)}" />
+                </p:commandLink>
+            </div>
 
-.audit-table .ui-datatable-data td {
-	white-space: normal;
-	word-wrap: break-word;
-	word-break: break-word;
-}
+            <!-- Tab menu -->
+            <h:panelGroup id="searchViewId">
+                <p:tabMenu id="sidemenuId"
+                           activeIndex="#{auditContractBackingBean.managedBean.activeTab}"
+                           styleClass="equal-width-tabs">
 
-.audit-table .ui-datatable-header {
-	white-space: normal !important;
-	word-wrap: break-word;
-}
+                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.contract.summary']}"
+                                actionListener="#{auditContractBackingBean.handleButtonClick(0)}"
+                                update="searchViewId"
+                                onstart="blockWidget.show()"
+                                oncomplete="blockWidget.hide()" />
+                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.zone.details']}"
+                                actionListener="#{auditContractBackingBean.handleButtonClick(1)}"
+                                update="searchViewId"
+                                onstart="blockWidget.show()"
+                                oncomplete="blockWidget.hide()" />
+                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.agency.details']}"
+                                actionListener="#{auditContractBackingBean.handleButtonClick(2)}"
+                                update="searchViewId"
+                                onstart="blockWidget.show()"
+                                oncomplete="blockWidget.hide()" />
+                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.product.details']}"
+                                actionListener="#{auditContractBackingBean.handleButtonClick(3)}"
+                                update="searchViewId"
+                                onstart="blockWidget.show()"
+                                oncomplete="blockWidget.hide()" />
+                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.service.details']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(4)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.deduction.details']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(5)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.schedule.details']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(6)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                    <p:menuitem
+                        		value="#{lbl['lbl.ct.audit.tab.performancebond.details']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(7)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                    <p:menuitem
+                        		value="#{lbl['lbl.ct.audit.tab.performancebond.deferment']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(8)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                    <p:menuitem
+                        		value="#{lbl['lbl.ct.audit.tab.item.details.suspension']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(9)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                    <p:menuitem
+                        		value="#{lbl['lbl.ct.audit.tab.agency.details.suspension']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(10)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.factoring.details']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(11)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                    <p:menuitem
+                        		value="#{lbl['lbl.ct.audit.tab.contractmgm.module.ntf.setting']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(12)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                    <p:menuitem
+                        		value="#{lbl['lbl.ct.audit.tab.fulfilment.module.ntf.setting']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(13)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                    <p:menuitem
+                        		value="#{lbl['lbl.ct.audit.tab.new.contract.owner.details']}"
+                        		actionListener="#{auditContractBackingBean.handleButtonClick(14)}"
+                        		update="searchViewId" 
+                        		onstart="blockWidget.show()"
+                        		oncomplete="blockWidget.hide()" />
+                </p:tabMenu>
 
-/* Semua tab default sama lebar untuk baris 1 dan 2 */
-.equal-width-tabs .ui-tabmenu-nav {
-	display: flex !important;
-	flex-wrap: wrap;
-	padding: 0;
-	margin: 0;
-}
+                <!-- DataTable for CONTRACT -->
+                <p:dataTable 
+                    id="searchCTId" 
+                    var="obj" 
+                    value="#{auditContractBackingBean.searchCT}"
+                    rows="10"
+                    lazy="true"
+                    paginator="true"
+                    responsiveLayout="scroll"
+                    styleClass="audit-table"
+                    scrollHeight="400">
 
-.equal-width-tabs .ui-tabmenuitem {
-	flex: 1 1 auto !important;
-	min-width: 140px;
-	text-align: center;
-	white-space: normal !important;
-	word-break: break-word;
-	padding: 0 !important;
-}
+                    <ac:paginator for="searchCTId" />
 
-.equal-width-tabs .ui-tabmenuitem>a {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 100%;
-	padding: 10px;
-	line-height: 1.3;
-	min-height: 30px; /* tinggi minimum */
-}
+                    <p:column headerText="#{lbl['lbl.audit.header.action.date']}" styleClass="col-action-date">
+                        <h:outputText value="#{obj.createdDate}">
+                            <f:convertDateTime pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
+                        </h:outputText>
+                    </p:column>
 
-.equal-width-tabs .ui-tabmenuitem:nth-child(n+13) {
-	flex: unset !important;
-	min-width: auto !important;
-	max-width: none !important;
-	margin-right: 4px; /* jarak antar tab */
-	align-self: flex-start;
-}
+                    <p:column headerText="#{lbl['lbl.audit.header.action.type']}" styleClass="col-action-type">
+                        <h:outputText value="#{obj.actionType}" />
+                    </p:column>
 
-/* Link dalam tab juga diatur tingginya */
-.equal-width-tabs .ui-tabmenuitem:nth-child(n+13)>a {
-	min-height: 30px; /* tinggi minimum */
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-/* Responsif */
-@media ( max-width : 768px) {
-	.equal-width-tabs .ui-tabmenuitem {
-		min-width: 100px !important;
-		font-size: 0.8em;
-	}
-}
+                    <p:column headerText="#{lbl['lbl.audit.header.action.by']}" styleClass="col-action-by">
+                        <h:outputText value="#{obj.actionBy}" escape="false" />
+                    </p:column>
 
-/* Batasi lebar kolom */
-.col-action-date {
-	width: 120px;
-}
+                    <p:column headerText="#{lbl['lbl.audit.header.org.name']}" styleClass="col-org-name">
+                        <h:outputText value="#{obj.orgName}" escape="false" />
+                    </p:column>
 
-.col-action-type {
-	width: 100px;
-}
+                    <p:column headerText="#{lbl['lbl.audit.header.role']}" styleClass="col-role">
+                        <h:outputText value="#{obj.roleName}" />
+                    </p:column>
 
-.col-action-by {
-	width: 120px;
-}
+                    <p:column headerText="#{lbl['lbl.audit.header.docType']}" styleClass="col-doc-type">
+                        <h:outputText value="#{obj.docType}" />
+                    </p:column>
 
-.col-org-name {
-	width: 140px;
-}
+                    <p:column headerText="#{lbl['lbl.audit.header.docNo']}" styleClass="col-doc-no">
+                        <h:outputText value="#{obj.docNo}" />
+                    </p:column>
 
-.col-role {
-	width: 100px;
-}
+                    <p:column headerText="#{lbl['lbl.audit.header.docStatus']}" styleClass="col-doc-status">
+                        <h:outputText value="#{obj.docStatus}" escape="false" />
+                    </p:column>
 
-.col-doc-type {
-	width: 80px;
-}
+                    <p:column headerText="#{lbl['lbl.audit.header.fieldName']}" styleClass="col-field-name">
+                        <h:outputText value="#{obj.fieldName}" />
+                    </p:column>
 
-.col-doc-no {
-	width: 120px;
-}
+                    <p:column headerText="#{lbl['lbl.audit.header.oldValue']}" styleClass="col-old-value">
+                        <h:outputText value="#{obj.oldValue}" style="white-space: pre-line;" />
+                    </p:column>
 
-.col-doc-status {
-	width: 120px;
-}
-
-.col-field-name {
-	width: 100px;
-}
-
-.col-old-value {
-	width: 200px;
-}
-
-.col-new-value {
-	width: 200px;
-}
-</style>
-	</h:head>
-
-	<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true">
-        <!-- Tombol Print & Download -->
-        <table style="width: 100%; margin-bottom: 10px;">
-            <tr>
-                <td style="text-align: right;">
-                    <p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-                        <p:fileDownload
-                            value="#{auditContractBackingBean.generateReport(auditContractBackingBean.managedBean.docId, auditContractBackingBean.managedBean.auTabView, auditContractBackingBean.managedBean.ctType)}"
-                            immediate="true" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-                    </p:commandLink>
-                    &#160;
-                    <p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
-                        <p:fileDownload
-                            value="#{auditContractBackingBean.getAuditTrailDetailsForExlRpt(auditContractBackingBean.managedBean.docId, auditContractBackingBean.managedBean.auTabView, auditContractBackingBean.managedBean.ctType)}" />
-                    </p:commandLink>
-                </td>
-            </tr>
-        </table>
-
-        <p:tabMenu id="sidemenuId" 
-                   activeIndex="#{auditContractBackingBean.managedBean.activeTab}" 
-                   styleClass="equal-width-tabs">
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.contract.summary']}" actionListener="#{auditContractBackingBean.handleButtonClick(0)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.zone.details']}" actionListener="#{auditContractBackingBean.handleButtonClick(1)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.agency.details']}" actionListener="#{auditContractBackingBean.handleButtonClick(2)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.product.details']}" actionListener="#{auditContractBackingBean.handleButtonClick(3)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.service.details']}" actionListener="#{auditContractBackingBean.handleButtonClick(4)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.deduction.details']}" actionListener="#{auditContractBackingBean.handleButtonClick(5)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.schedule.details']}" actionListener="#{auditContractBackingBean.handleButtonClick(6)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.performancebond.details']}" actionListener="#{auditContractBackingBean.handleButtonClick(7)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.performancebond.deferment']}" actionListener="#{auditContractBackingBean.handleButtonClick(8)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.item.details.suspension']}" actionListener="#{auditContractBackingBean.handleButtonClick(9)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.agency.details.suspension']}" actionListener="#{auditContractBackingBean.handleButtonClick(10)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.factoring.details']}" actionListener="#{auditContractBackingBean.handleButtonClick(11)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.contractmgm.module.ntf.setting']}" actionListener="#{auditContractBackingBean.handleButtonClick(12)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.fulfilment.module.ntf.setting']}" actionListener="#{auditContractBackingBean.handleButtonClick(13)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-            <p:menuitem value="#{lbl['lbl.ct.audit.tab.new.contract.owner.details']}" actionListener="#{auditContractBackingBean.handleButtonClick(14)}" update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-        </p:tabMenu>
-
-        <!-- DataTable dengan Scroll dan Responsive -->
-        <p:dataTable 
-            id="searchCTId" 
-            var="obj" 
-            value="#{auditContractBackingBean.searchCT}"
-            rows="10"
-            lazy="true"
-            paginator="true"
-            paginatorPosition="bottom"
-            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-            currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords}"
-            responsiveLayout="scroll"
-            styleClass="audit-table"
-            scrollHeight="400">
-
-            <ac:paginator for="searchCTId" />
-
-            <p:column headerText="#{lbl['lbl.audit.header.action.date']}" styleClass="col-action-date">
-                <h:outputText value="#{obj.createdDate}">
-                    <f:convertDateTime pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
-                </h:outputText>
-            </p:column>
-
-            <p:column headerText="#{lbl['lbl.audit.header.action.type']}" styleClass="col-action-type">
-                <h:outputText value="#{obj.actionType}" />
-            </p:column>
-
-            <p:column headerText="#{lbl['lbl.audit.header.action.by']}" styleClass="col-action-by">
-                <h:outputText value="#{obj.actionBy}" escape="false" />
-            </p:column>
-
-            <p:column headerText="#{lbl['lbl.audit.header.org.name']}" styleClass="col-org-name">
-                <h:outputText value="#{obj.orgName}" escape="false" />
-            </p:column>
-
-            <p:column headerText="#{lbl['lbl.audit.header.role']}" styleClass="col-role">
-                <h:outputText value="#{obj.roleName}" />
-            </p:column>
-
-            <p:column headerText="#{lbl['lbl.audit.header.docType']}" styleClass="col-doc-type">
-                <h:outputText value="#{obj.docType}" />
-            </p:column>
-
-            <p:column headerText="#{lbl['lbl.audit.header.docNo']}" styleClass="col-doc-no">
-                <h:outputText value="#{obj.docNo}" />
-            </p:column>
-
-            <p:column headerText="#{lbl['lbl.audit.header.docStatus']}" styleClass="col-doc-status">
-                <h:outputText value="#{obj.docStatus}" escape="false" />
-            </p:column>
-
-            <p:column headerText="#{lbl['lbl.audit.header.fieldName']}" styleClass="col-field-name">
-                <h:outputText value="#{obj.fieldName}" />
-            </p:column>
-
-            <p:column headerText="#{lbl['lbl.audit.header.oldValue']}" styleClass="col-old-value">
-                <h:outputText value="#{obj.oldValue}" style="white-space: pre-line;" />
-            </p:column>
-
-            <p:column headerText="#{lbl['lbl.audit.header.newValue']}" styleClass="col-new-value">
-                <h:outputText value="#{obj.newValue}" style="white-space: pre-line;" />
-            </p:column>
-        </p:dataTable>
-    </p:panel>
+                    <p:column headerText="#{lbl['lbl.audit.header.newValue']}" styleClass="col-new-value">
+                        <h:outputText value="#{obj.newValue}" style="white-space: pre-line;" />
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </p:panel>
+    </ui:fragment>
 </ui:composition>
