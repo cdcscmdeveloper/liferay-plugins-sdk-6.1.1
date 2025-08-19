@@ -5584,12 +5584,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// Check DA Active
 			List<SmDisciplinaryAction> nonExpiredActions = supplierDataMaintenanceSO
 					.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
-			processDisciplinaryActions(nonExpiredActions, rnDtl);
+			processDisciplinaryActions(responseDtoActive, rnDtl , DisciplinaryActionContext.ACTIVE);
 
 			// Check DA is Deleted Due Or Pending Transaction (just for Cancel Registration and Blacklist Owner)
 			List<SmDisciplinaryAction> expiredActions = supplierDataMaintenanceSO
 					.retrieveActiveDisciplinaryActionCancelOrBlacklistBySupplierDp(reqDTO).getSmDisciplinaryActions();
-			processDisciplinaryActions(expiredActions, rnDtl);
+			processDisciplinaryActions(responseDtoAfterEnded, rnDtl , DisciplinaryActionContext.AFTER_ENDED);
 		}
 	}
 
@@ -5605,12 +5605,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 *            the {@link ScRequestNoteDtl} object used for generating error
 	 *            messages.
 	 */
-	private void processDisciplinaryActions(List<SmDisciplinaryAction> actions,
-			ScRequestNoteDtl rnDtl) {
-		if (actions != null) {
-			for (SmDisciplinaryAction action : actions) {
+	private void processDisciplinaryActions(SupplierDataMaintenanceResDTO responseDto,
+			ScRequestNoteDtl rnDtl ,  DisciplinaryActionContext context) {
+		if (responseDto.getSmDisciplinaryActions() != null) {
+			for (SmDisciplinaryAction action : responseDto.getSmDisciplinaryActions()) {
 				if (checkDisciplinaryActionStatusFlag(action)) {
-					errorMessage(rnDtl);
+					errorMessage(rnDtl , responseDto ,context);
 				}
 			}
 		}
@@ -5678,14 +5678,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @throws EpException
 	 *             always thrown with the error code and supplier name.
 	 */
-	private void errorMessage(ScRequestNoteDtl rnDtl) {
+	private void errorMessage(ScRequestNoteDtl rnDtl, SupplierDataMaintenanceResDTO responseDto, DisciplinaryActionContext context) {
 		String supplierName = rnDtl.getScRequestSupplierItem().getSmSupplier() != null ? rnDtl
 				.getScRequestSupplierItem().getSmSupplier().getCompanyName() : StringUtils.EMPTY;
-		if (getManagedBean().isDisciplinaryActionDeletedDue()) {
-			throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
-		} else {
-			throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+
+		switch (context) {
+		case ACTIVE:
+			if (responseDto.isDisciplinaryActionDeletedDue()) {
+				throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
+			}else if (responseDto.isDisciplinaryActionPendingTransaction() || responseDto.isDisciplinaryActionDeletedDue()) {
+				throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+			}
+			break;
+
+		case AFTER_ENDED:
+			if (responseDto.isDisciplinaryActionPendingTransaction() || responseDto.isDisciplinaryActionDeletedDue()) {
+				throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+			}
+			break;
 		}
+	}
+	
+	public enum DisciplinaryActionContext {
+	    ACTIVE, // Normal active check
+	    AFTER_ENDED // Cancel Registration / Blacklist Owner
 	}
 
 	// 26284 - End
