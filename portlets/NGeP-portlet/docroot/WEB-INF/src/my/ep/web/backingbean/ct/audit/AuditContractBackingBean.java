@@ -508,7 +508,8 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_RCT, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_RCT));
 		map.put(AuditContractConst.AU_SECTION_CL, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CL));
 		map.put(AuditContractConst.AU_SECTION_ID, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_ID));
-		map.put(AuditContractConst.AU_SECTION_IS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_IS));																								  
+		map.put(AuditContractConst.AU_SECTION_IS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_IS));
+		map.put(AuditContractConst.AU_SECTION_IPS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_IPS));
 		return map;
 	}
 
