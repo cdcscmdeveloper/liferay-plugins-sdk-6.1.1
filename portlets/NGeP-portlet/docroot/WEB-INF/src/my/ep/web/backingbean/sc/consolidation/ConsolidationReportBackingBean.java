@@ -2782,22 +2782,25 @@ public class ConsolidationReportBackingBean extends
 			if (CollectionUtils.isNotEmpty(qualifiedSupplierBeans)) {
 
 				// Sort the suppliers as per the rank given by the desk officer
-				Collections.sort(qualifiedSupplierBeans,
-						new Comparator<QtEvaluationResultDtlBean>() {
-							public int compare(QtEvaluationResultDtlBean supplier1,
-									QtEvaluationResultDtlBean supplier2) {
-								if (supplier1.getDeskOfficerRank() != null
-										&& supplier2.getDeskOfficerRank() != null) {
-
-									// Ascending order
-									return supplier1.getDeskOfficerRank()
-											.intValue()
-											- supplier2.getDeskOfficerRank()
-													.intValue();
-								}
-								return -1;
-							}
-						});
+			// 26247 - start
+			CustomUtils.sort(qualifiedSupplierBeans, new Comparator<QtEvaluationResultDtlBean>() {
+				@Override
+				public int compare(QtEvaluationResultDtlBean supplier1, QtEvaluationResultDtlBean supplier2) {
+					BigDecimal rank1 = supplier1.getDeskOfficerRank();
+					BigDecimal rank2 = supplier2.getDeskOfficerRank();
+					if (rank1 == null && rank2 == null) {
+						return 0;
+					}
+					if (rank1 == null) {
+						return -1;
+					}
+					if (rank2 == null) {
+						return 1;
+					}
+					return rank1.compareTo(rank2);
+				}
+			});
+			// 26247 - end
 
 				for (QtEvaluationResultDtlBean qualifiedSupp : qualifiedSupplierBeans) {
 					BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
