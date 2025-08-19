@@ -2602,6 +2602,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			// End Fix - #33952, #25956
+			
+			//Start Fix - #38613, #33287 - *apply for both contract expired and non-expired
+			// Validation for amendment when extension period - 0 
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0) {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_750048);
+			}
+			//End Fix - #38613, #33287
 
 			// Validation for amendment effective date
 			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
