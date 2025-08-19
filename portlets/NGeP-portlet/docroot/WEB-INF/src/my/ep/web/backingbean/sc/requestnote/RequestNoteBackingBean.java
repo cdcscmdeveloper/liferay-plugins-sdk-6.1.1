@@ -113,10 +113,10 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc; //#26059
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract; //#25790
 import my.ep.persistence.entity.ct.VCtContract; //#25790
@@ -398,13 +398,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Boolean isAssignedState = getManagedBean().isAssignedState();
 		
 		try {
-
-			// 26284 - Start
-//			if (outcome != null && BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome) && requestNote != null) {
-//			    checkSupplierDisciplinaryAction(requestNote);
-//			}
-			// 26284 - End
-
 			parseRequestNote(requestNote, outcome);
 
 			setUserDetails(requestNote);
@@ -674,7 +667,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				getCurrentStatus(getPmStatusByStatusId(statusId));
 			}
 		}
-
+		getDocStatus(requestNote); //#38692
 		getManagedBean().setTitleChecker(true);
 		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
@@ -914,6 +907,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			FacesScopes facesScopes = new FacesScopes();
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
+			
+			//#26284 - Start
+			if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))
+					&& requestNote != null) {
+				checkSupplierDisciplinaryAction(requestNote);
+			}
+			//#26284 -End
 
 			// reRecommend
 			requestNoteReqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
@@ -1542,6 +1542,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
 					scRequestNoteDtl.setExceedThreshold(true);
+					resetBpkDecision(outcome, scRequestNoteDtl);
 				}
 
 				if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
@@ -1560,6 +1561,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
 					scRequestNoteDtl.setExceedThreshold(null);
+					scRequestNoteDtl.setBpkThresholdDecision(null);
 				}
 				
 				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
@@ -1582,6 +1584,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	//#26059 - start
+	/**
+	 * Reset BPK decision if outcome is not approval.
+	 */
+	private void resetBpkDecision(String outcome, ScRequestNoteDtl scRequestNoteDtl) {
+		if (!outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+			scRequestNoteDtl.setBpkThresholdDecision(null);
+		}
+	}
+	
 	/**
 	 * Triggers an info message alert on first submission if threshold exceeded.
 	 * @param thresholdItems Exceeded items.
@@ -2274,9 +2285,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNote(scRequestNote);
-
+		
 		// #31679 - Start
 		if (requestNoteReqDTO.getRequestNote() != null) {
+			
+			//#26284 - Start
+			if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE))){
+				checkSupplierDisciplinaryAction(scRequestNote);
+			}
+			//#26284 -End
 
 			log.info("--- Bug 31679 (" + requestNoteReqDTO.getRequestNote().getRequestNoteNo() + ")"
 					+ "- Method: approverAction Start ---");
@@ -2562,6 +2579,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setJustRequired(Boolean.FALSE);
 
 		getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION));
+
+		getManagedBean().setDocStatus(getStatusDescById(DPStatusConstants.RN_PENDING_SUBMISSION)); //#38538
 
 		// clear the justification type, price type and justification remarks
 		getManagedBean().setPriceType("");
@@ -6077,43 +6096,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			SmMofAccount mofAccount = supplierDataMaintenanceSO.retrieveMofSupplierBySupplierId(reqDTO).getSmMofAccount();
 			SmSupplier smSupplier = reqDTO.getSupplier();
 
-			Integer recordStatus = null;
-			if (mofAccount != null || smSupplier != null) {
-				recordStatus = determineRecordStatus(mofAccount, smSupplier);
-			}
+			if (mofAccount !=null || smSupplier !=null) {
+				// Check DA Active
+				SupplierDataMaintenanceResDTO responseDtoActive = supplierDataMaintenanceSO
+						.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO);
+				processDisciplinaryActions(responseDtoActive, rnDtl , DisciplinaryActionContext.ACTIVE);
 
-			if (recordStatus != null) {
-				// Check non-expired disciplinary actions
-				List<SmDisciplinaryAction> nonExpiredActions = supplierDataMaintenanceSO
-						.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
-				processDisciplinaryActions(nonExpiredActions, recordStatus, rnDtl);
-
-				// Check expired disciplinary actions
-				List<SmDisciplinaryAction> expiredActions = supplierDataMaintenanceSO
-						.retrieveActiveDisciplinaryActionCancelOrBlacklistBySupplierDp(reqDTO).getSmDisciplinaryActions();
-				processDisciplinaryActions(expiredActions, recordStatus, rnDtl);
+				// Check DA is Deleted Due Or Pending Transaction (just for Cancel Registration and Blacklist Owner)
+				SupplierDataMaintenanceResDTO responseDtoAfterEnded = supplierDataMaintenanceSO
+						.retrieveActiveDisciplinaryActionCancelOrBlacklistBySupplierDp(reqDTO);
+				processDisciplinaryActions(responseDtoAfterEnded, rnDtl , DisciplinaryActionContext.AFTER_ENDED);
 			}
-		}
-		
-		/**
-		 * Determines the record status flag from the given MOF account or supplier.
-		 * 
-		 * @param mofAccount
-		 *            the {@link SmMofAccount} object, which may contain a record
-		 *            status flag.
-		 * @param smSupplier
-		 *            the {@link SmSupplier} object, which may contain a record
-		 *            status flag.
-		 * @return the record status flag if available, or {@code null} if none is
-		 *         found.
-		 */
-		private Integer determineRecordStatus(SmMofAccount mofAccount, SmSupplier smSupplier) {
-			if (mofAccount != null && mofAccount.getRecordStatusFlg() != null) {
-				return mofAccount.getRecordStatusFlg();
-			} else if (smSupplier != null && smSupplier.getRecordStatusFlg() != null) {
-				return smSupplier.getRecordStatusFlg();
-			}
-			return null;
 		}
 		
 		/**
@@ -6128,16 +6121,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 *            the {@link ScRequestNoteDtl} object used for generating error
 		 *            messages.
 		 */
-		private void processDisciplinaryActions(List<SmDisciplinaryAction> actions, Integer recordStatus,
-				ScRequestNoteDtl rnDtl) {
-			if (actions != null) {
-				for (SmDisciplinaryAction action : actions) {
-					if (checkDisciplinaryActionStatusFlag(recordStatus, action)) {
-						errorMessage(rnDtl);
+		private void processDisciplinaryActions(SupplierDataMaintenanceResDTO responseDto,
+				ScRequestNoteDtl rnDtl ,  DisciplinaryActionContext context) {
+			if (responseDto.getSmDisciplinaryActions() != null) {
+				for (SmDisciplinaryAction action : responseDto.getSmDisciplinaryActions()) {
+					if (checkDisciplinaryActionStatusFlag(action)) {
+						errorMessage(rnDtl , responseDto ,context);
 					}
 				}
 			}
-			
+
 		}
 		
 		/**
@@ -6152,11 +6145,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 * @return {@code true} if the conditions for triggering an error are met;
 		 *         {@code false} otherwise.
 		 */
-		private boolean checkDisciplinaryActionStatusFlag(Integer recordStatus, SmDisciplinaryAction action) {
-			if (isCancelledOrExpiredWithConditions(recordStatus, action)) {
+		private boolean checkDisciplinaryActionStatusFlag(SmDisciplinaryAction action) {
+			if (isCancelledOrBlacklist(action)) {
 				return true;
 			}
-			return hasDisciplinaryActionConditions(action);
+			return checkIfSuspend(action);
 		}
 		
 		/**
@@ -6167,10 +6160,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 * @param action the {@link SmDisciplinaryAction} object containing disciplinary action details.
 		 * @return {@code true} if the record status is CANCELLED or EXPIRED with disqualifying conditions; {@code false} otherwise.
 		 */
-		private boolean isCancelledOrExpiredWithConditions(Integer recordStatus, SmDisciplinaryAction action) {
-			return recordStatus == DbValueConst.RECORD_STATUS_CANCELLED
-					|| recordStatus == DbValueConst.RECORD_STATUS_EXPIRED
-					&& (action.isCancelRegistration() || action.isBlacklistOwner());
+		private boolean isCancelledOrBlacklist(SmDisciplinaryAction action) {
+			return (action.isCancelRegistration() || action.isBlacklistOwner());
 		}
 		
 		/**
@@ -6183,8 +6174,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 * @return {@code true} if the action indicates suspension, cancellation, or
 		 *         blacklisting; {@code false} otherwise.
 		 */
-		private boolean hasDisciplinaryActionConditions(SmDisciplinaryAction action) {
-			return action.isSuspendRegistration() || action.isCancelRegistration() || action.isBlacklistOwner();
+		private boolean checkIfSuspend(SmDisciplinaryAction action) {
+			return action.isSuspendRegistration();
 		}
 		
 		/**
@@ -6198,10 +6189,28 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 * @throws EpException
 		 *             always thrown with the error code and supplier name.
 		 */
-		private void errorMessage(ScRequestNoteDtl rnDtl) {
+		private void errorMessage(ScRequestNoteDtl rnDtl, SupplierDataMaintenanceResDTO responseDto, DisciplinaryActionContext context) {
 			String supplierName = rnDtl.getScRequestSupplierItem().getSmSupplier() != null ? rnDtl
 					.getScRequestSupplierItem().getSmSupplier().getCompanyName() : StringUtils.EMPTY;
-			throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+	
+			switch (context) {
+			case ACTIVE:
+				if (responseDto.isDisciplinaryActionDeletedDue()) {
+					throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
+				}
+				break;
+	
+			case AFTER_ENDED:
+				if (responseDto.isDisciplinaryActionPendingTransaction() || responseDto.isDisciplinaryActionDeletedDue()) {
+					throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+				}
+				break;
+			}
+		}
+		
+		public enum DisciplinaryActionContext {
+		    ACTIVE, // Normal active check
+		    AFTER_ENDED // Cancel Registration / Blacklist Owner
 		}
 
 		// 26284 - End
@@ -6923,6 +6932,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			getManagedBean().setDisciplinaryActionBlacklist(resDto.isDisciplinaryActionBlackListOwner());
 			getManagedBean().setDisciplinaryActionCancelRegistration(resDto.isDisciplinaryActionCancelRegistration());
+			getManagedBean().setDisciplinaryActionDeletedDue(resDto.isDisciplinaryActionDeletedDue());
+			getManagedBean().setDisciplinaryActionPendingTransaction(resDto.isDisciplinaryActionPendingTransaction());
 
 			return resDto.isDisciplinaryActionBlackListOwner() || resDto.isDisciplinaryActionCancelRegistration();
 
@@ -6951,22 +6962,27 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void supplierDisciplinaryActionStatus() {
 
 		try {
-
-			String[] parameter = new String[0];
 			String status = StringUtils.EMPTY;
-
+			String reasonType = StringUtils.EMPTY;
+			String reasonLabel = StringUtils.EMPTY;
+			String detailLabel = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail", new String[0]); // base
+																										// message
 			if (getManagedBean().isDisciplinaryActionCancelRegistration()) {
-				status = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail", parameter) + DPConstants.SPACE
-						+ getMessageLabelPutParam("lbl.sm.disciplinary.jktt.cancel.registration", parameter);
+				reasonType = getMessageLabelPutParam("lbl.sm.disciplinary.jktt.cancel.registration", new String[0]);
+			} else if (getManagedBean().isDisciplinaryActionBlacklist()) {
+				reasonType = getMessageLabelPutParam("lbl.sm.disciplinary.jktt.blacklist.owner", new String[0]);
 			}
 
-			if (getManagedBean().isDisciplinaryActionBlacklist()) {
-				status = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail", parameter) + DPConstants.SPACE
-						+ getMessageLabelPutParam("lbl.sm.disciplinary.jktt.blacklist.owner", parameter);
+			if (getManagedBean().isDisciplinaryActionPendingTransaction()) {
+				reasonLabel = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail.pending", new String[] { reasonType });
+			} else if (getManagedBean().isDisciplinaryActionDeletedDue()) {
+				reasonLabel = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail.deleted.due",
+						new String[] { reasonType });
 			}
-			
+
+			status = detailLabel + DPConstants.SPACE + reasonLabel;
+
 			getManagedBean().setPopupMessage(status);
-
 			RequestContext.getCurrentInstance().execute("disciplinaryActionRequestNoteDlg.show();");
 
 		} catch (Exception e) {
@@ -7052,22 +7068,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().getCommodityGroups().clear();
 
 		for (ScRequestNoteDtl dtl : dtlsToGroup) {
-			Long unspscId = 0L;
-			if (dtl != null && dtl.getRequestItem() != null && dtl.getRequestItem().getCmItem() != null
-					&& dtl.getRequestItem().getCmItem().getCmUnspsc() != null
-					&& dtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscId() != null) {
-
-				unspscId = dtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscId();
-			} else {
-				unspscId = dtl.getRequestItem().getRequestNoteItemId();
-			}
-
-			List<ScRequestNoteDtl> listForUnspsc = groupedByUnspscId.get(unspscId);
-			if (listForUnspsc == null) {
-				listForUnspsc = new ArrayList<>();
-				groupedByUnspscId.put(unspscId, listForUnspsc);
-			}
-			listForUnspsc.add(dtl);
+			populateListForUnspsc(groupedByUnspscId, dtl);
 		}
 
 		for (Map.Entry<Long, List<ScRequestNoteDtl>> entry : groupedByUnspscId.entrySet()) {
@@ -7092,32 +7093,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 
 			String unspscCode = SSTConstant.EMPTY_STRING;
-			if (firstDtlInGroup.getRequestItem() != null && firstDtlInGroup.getRequestItem().getCmItem() != null
-					&& firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc() != null) {
-				unspscCode = firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode();
+			unspscCode = populateAccumulativeAmountPerItemGroup(group, firstDtlInGroup, cal, unspscCode);
 
-				if (firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode() != null) {
-					FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
-					flReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-					flReqDTO.setExtensionCode(firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode());
-					flReqDTO.setYear(cal.get(Calendar.YEAR));
-					IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance()
-							.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-
-					BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
-
-					group.setAccumulativeAmountPerItemGroup(totalAmt);
-				}
-			}
-
-			String cmItemName = StringUtils.equals(new FacesScopes().getUserLocale().getLanguage(),
-					SSTConstant.LANGUAGE_CODE_EN) ? SSTConstant.NA : SSTConstant.TB;
+			String cmItemName = firstDtlInGroup.getRequestItem().getItemName();
 
 			if (firstDtlInGroup.getRequestItem() != null && firstDtlInGroup.getRequestItem().getCmItem() != null) {
 				cmItemName = firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
-			}
-			else{
-				cmItemName = firstDtlInGroup.getRequestItem().getItemName();
 			}
 
 			if (!unspscCode.isEmpty()) {
@@ -7141,6 +7122,33 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().getCommodityGroups().add(group);
 		}
 
+		sortCommodityGroup();
+	}
+
+	/**
+	 * Groups request note detail into map by UNSPSC ID.
+	 */
+	private void populateListForUnspsc(Map<Long, List<ScRequestNoteDtl>> groupedByUnspscId, ScRequestNoteDtl dtl) {
+		Long unspscId = dtl.getRequestItem().getRequestNoteItemId();
+		CmUnspsc unspsc = dtl.getRequestItem() != null && dtl.getRequestItem().getCmItem() != null ? dtl
+				.getRequestItem().getCmItem().getCmUnspsc() : null;
+
+		if (unspsc != null && unspsc.getUnspscId() != null) {
+			unspscId = unspsc.getUnspscId();
+		}
+
+		List<ScRequestNoteDtl> listForUnspsc = groupedByUnspscId.get(unspscId);
+		if (listForUnspsc == null) {
+			listForUnspsc = new ArrayList<>();
+			groupedByUnspscId.put(unspscId, listForUnspsc);
+		}
+		listForUnspsc.add(dtl);
+	}
+
+	/**
+	 * Sorts commodity groups by item code name in ascending order.
+	 */
+	private void sortCommodityGroup() {
 		Collections.sort(getManagedBean().getCommodityGroups(), new Comparator<CommodityGroup>() {
 			@Override
 			public int compare(CommodityGroup group1, CommodityGroup group2) {
@@ -7159,6 +7167,32 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				return name1.compareTo(name2);
 			}
 		});
+	}
+
+	/**
+	 * Calculates and sets total accumulated amount for grouped item using extension code.
+	 */
+	private String populateAccumulativeAmountPerItemGroup(CommodityGroup group, ScRequestNoteDtl firstDtlInGroup,
+			Calendar cal, String unspscCode) {
+		String unspsCode = unspscCode;
+		if (firstDtlInGroup.getRequestItem() != null && firstDtlInGroup.getRequestItem().getCmItem() != null
+				&& firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc() != null) {
+			unspsCode = firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode();
+
+			if (firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode() != null) {
+				FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
+				flReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+				flReqDTO.setExtensionCode(firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode());
+				flReqDTO.setYear(cal.get(Calendar.YEAR));
+				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+
+				group.setAccumulativeAmountPerItemGroup(totalAmt);
+			}
+		}
+		return unspsCode;
 	}
 
 	/**
@@ -7207,8 +7241,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
 			requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
 			requestNoteReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
-			requestNote.setRemarks(initializeRemarks(requestNote, requestNote.getCurrentStatus(),
-					requestNote.getRemarks(), ScRequestNoteRemark.class));
+			finalizeRemarks(requestNote.getRemarks());
 			requestNoteReqDTO.setRequestNote(requestNote);
 			
 			getRequestNoteSO().updateScRequestNote(requestNoteReqDTO);
@@ -7216,6 +7249,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			ScRequestNote updatedRequestNote = getRequestNoteSO().getRequestNote(requestNoteReqDTO).getRequestNoteDetail();
 			bpkApprovalNotification(commodityGroup,updatedRequestNote);
 		} catch (Exception e) {
+			requestNote.setRemarks(initializeRemarks(requestNote, null, requestNote.getRemarks(),
+					ScRequestNoteRemark.class));			
 			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean",
 					getManagedBean().getRequestNote().getRequestNoteNo(), "bpkApproverSubmit",
 					getUserIdSessionFromLoginId(), e);
@@ -7235,7 +7270,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @throws FileNotFoundException If the file specified by the path name does not exist.
 	 * @throws IOException If an I/O error occurs during the file upload process.
 	 */
-	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+	public void handleFileUpload(FileUploadEvent event) throws IOException {
 		List<ScRequestNoteAttachment> attachments = new ArrayList<>();
 		if (event.getFile() != null) {
 			ScRequestNoteAttachment attachment = new ScRequestNoteAttachment();
@@ -7328,10 +7363,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			String bpkApproverName = SmCommonUtil.getUserByUserId(
 					scRequestNote.getRequestNoteDtls().get(0).getChangedBy()).getUserName();
 			
-			getRequestNoteSO().sendBpkApproverNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
-					CommonConstants.DASHBOARD, htmlDataRow, bpkApproverName, updatedRequestNote);
-			getRequestNoteSO().sendBpkApproverNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
-					CommonConstants.EMAIL, htmlDataRow, bpkApproverName, updatedRequestNote);
+			String[] notificationInfoDashboard = {
+				    userEmail,
+				    ptjName,
+				    ministryName,
+				    CommonConstants.DASHBOARD,
+				    htmlDataRow,
+				    bpkApproverName
+				};
+			String[] notificationInfoEmail = {
+				    userEmail,
+				    ptjName,
+				    ministryName,
+				    CommonConstants.EMAIL,
+				    htmlDataRow,
+				    bpkApproverName
+				};
+			
+			getRequestNoteSO().sendBpkApproverNotification(requestNoteReqDTO, assignUser, notificationInfoDashboard, updatedRequestNote);
+			getRequestNoteSO().sendBpkApproverNotification(requestNoteReqDTO, assignUser, notificationInfoEmail, updatedRequestNote);
 		}else{
 			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION,
 					ParameterConst.DOCTYPE_REQUEST_NOTE.toUpperCase(),

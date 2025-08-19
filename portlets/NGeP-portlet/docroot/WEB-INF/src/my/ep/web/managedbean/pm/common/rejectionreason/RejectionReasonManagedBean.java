@@ -54,13 +54,12 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private PmReason newPmReason;
 	private List<PmPIDReason> deletePIDReasonList;
 	private List<PmPIDReason> auditAddPIDReasonList;
-	private List <PmSupplierReason> auditDeleteAppTypeRestrictions;
-	private List <PmSupplierReason> auditDeleteComTypeRestrictions;
-	private List <PmSupplierReason> auditDeleteSuppTypeRestrictions;
-	
+
 	private List <PmSupplierReason> auditAddAppTypeRestrictions;
 	private List <PmSupplierReason> auditAddComTypeRestrictions;
 	private List <PmSupplierReason> auditAddSuppTypeRestrictions;
+	
+	private List <PmSupplierReason> auditDeleteRestrictions;
 	/************ AUDIT END #28895-35509 *************/
 	public RejectionReasonManagedBean(){}
 	
@@ -342,30 +341,6 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 		this.newPmReason = newPmReason;
 	}
 
-	public List<PmSupplierReason> getAuditDeleteAppTypeRestrictions() {
-		return auditDeleteAppTypeRestrictions;
-	}
-
-	public void setAuditDeleteAppTypeRestrictions(List<PmSupplierReason> auditDeleteAppTypeRestrictions) {
-		this.auditDeleteAppTypeRestrictions = auditDeleteAppTypeRestrictions;
-	}
-
-	public List<PmSupplierReason> getAuditDeleteComTypeRestrictions() {
-		return auditDeleteComTypeRestrictions;
-	}
-
-	public void setAuditDeleteComTypeRestrictions(List<PmSupplierReason> auditDeleteComTypeRestrictions) {
-		this.auditDeleteComTypeRestrictions = auditDeleteComTypeRestrictions;
-	}
-
-	public List<PmSupplierReason> getAuditDeleteSuppTypeRestrictions() {
-		return auditDeleteSuppTypeRestrictions;
-	}
-
-	public void setAuditDeleteSuppTypeRestrictions(List<PmSupplierReason> auditDeleteSuppTypeRestrictions) {
-		this.auditDeleteSuppTypeRestrictions = auditDeleteSuppTypeRestrictions;
-	}
-
 	public List<PmPIDReason> getDeletePIDReasonList() {
 		return deletePIDReasonList;
 	}
@@ -406,7 +381,14 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 		this.auditAddSuppTypeRestrictions = auditAddSuppTypeRestrictions;
 	}
 
-	
+	public List <PmSupplierReason> getAuditDeleteRestrictions() {
+		return auditDeleteRestrictions;
+	}
+
+	public void setAuditDeleteRestrictions(List <PmSupplierReason> auditDeleteRestrictions) {
+		this.auditDeleteRestrictions = auditDeleteRestrictions;
+	}
+
 	/************ AUDIT END #28895-35509 *************/
 	
 }

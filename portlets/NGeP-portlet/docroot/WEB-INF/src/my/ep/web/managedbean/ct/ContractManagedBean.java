@@ -145,13 +145,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> agencySelected;
 	
 	private boolean contractExpired;
-	//LOG : 13847, by Fahmi 22032019 start
-	private Date waiverStartDate;
-	private Date waiverEndDate;
-	private String referenceNo;
-	private CtAttachment ctAttachment;
-	private List<ScLoa> bondDetail;
 	// #24333 - Start
+	private List<ScLoa> bondDetail;
 	private boolean extendContract = false;
 	private boolean disableOriginalBond = false;
 	private BigDecimal originalOverallAmount;
@@ -216,6 +211,10 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankName;
 	private Long applID;
 	//End Fix - #33674
+	
+	//24333 - Start
+	private BigDecimal bondPercentage;
+	//24333 - End
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1280,40 +1279,6 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.ctAgreementList = ctAgreementList;
 	}
 	
-	//13847 start
-	public Date getWaiverStartDate() {
-		return waiverStartDate;
-	}
-
-	public void setWaiverStartDate(Date waiverStartDate) {
-		this.waiverStartDate = waiverStartDate;
-	}
-
-	public Date getWaiverEndDate() {
-		return waiverEndDate;
-	}
-
-	public void setWaiverEndDate(Date waiverEndDate) {
-		this.waiverEndDate = waiverEndDate;
-	}
-
-	public String getReferenceNo() {
-		return referenceNo;
-	}
-
-	public void setReferenceNo(String referenceNo) {
-		this.referenceNo = referenceNo;
-	}
-
-	public CtAttachment getCtAttachment() {
-		return ctAttachment;
-	}
-
-	public void setCtAttachment(CtAttachment ctAttachment) {
-		this.ctAttachment = ctAttachment;
-	}
-	//13847 end
-	
 	public CtContractItem getServiceselectedItem() {
 		return serviceselectedItem;
 	}
@@ -1704,7 +1669,7 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.inPage = inPage;
 	}
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
-
+	//#24333 - Start
 	public BigDecimal getOriginalOverallAmount() {
 		return originalOverallAmount;
 	}
@@ -1712,4 +1677,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setOriginalOverallAmount(BigDecimal originalOverallAmount) {
 		this.originalOverallAmount = originalOverallAmount;
 	}
+	
+	public BigDecimal getBondPercentage() {
+		return bondPercentage;
+	}
+
+	public void setBondPercentage(BigDecimal bondPercentage) {
+		this.bondPercentage = bondPercentage;
+	}
+	//#24333 - End
 }

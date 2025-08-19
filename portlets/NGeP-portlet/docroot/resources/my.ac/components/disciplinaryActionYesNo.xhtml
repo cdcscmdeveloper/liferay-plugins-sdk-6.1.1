@@ -13,6 +13,7 @@
 		<cc:attribute name="index" default="0" />
 		<cc:attribute name="childIndex" default="0" />
 		<cc:attribute name="maxRow" default="10" />
+	    <cc:attribute name="immediate" default="false" />
 	</cc:interface>
 	<cc:implementation>
 		<ui:fragment rendered="#{not cc.attrs.showTooltip}">
@@ -24,7 +25,7 @@
 							style="color:red; font-weight:bold;"
 							rendered="#{cc.attrs.supplier.disciplinaryActions}"
 							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(cc.attrs.supplier)}"
-							update="@([id$=disciplinaryActionHistoryDlgId])" immediate="true">
+							update="@([id$=disciplinaryActionHistoryDlgId])" immediate="#{cc.attrs.immediate}">
 							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 								styleClass="warning" />
 						</p:commandLink>
@@ -38,7 +39,7 @@
 						<p:commandLink onstart="blockWidget.show()"
 							action="#{viewSuppProfileBackingBean.onViewQTAlertMessage(warnings)}"
 							oncomplete="blockWidget.hide();"
-							update="@([id$=suspendAlertWidgetId])">
+							update="@([id$=suspendAlertWidgetId])" process="@this">
 							<p:graphicImage id="imageId"
 								value="/css/images/design/icon_error.png"
 								style="vertical-align: sub !important;" />
@@ -85,7 +86,7 @@
 				<p:outputPanel id="panelId">
 					<table style="border: none !important;">
 						<tr>
-							<td style="border: none !important;"><p:outputLabel style="text-align: left;"
+							<td style="border: none !important;"><h:outputText style="text-align: left; color: red !important;"
 									value="#{viewSuppProfileBackingBean.managedBean.disciplinaryActionMsg}"
 									escape="false" /></td>
 						</tr>
