@@ -47,6 +47,8 @@
 							<p:ajax event="change"
 								listener="#{locationBackingBean.retrieveStateList}" />
 						</p:selectOneMenu></td>
+						<ui:remove>Start/End -> p:ajax event=change
+								listener=#{locationBackingBean.retrieveStateList} - #35509 </ui:remove>
 				</tr>
 				<tr>
 					<td><p:outputLabel
