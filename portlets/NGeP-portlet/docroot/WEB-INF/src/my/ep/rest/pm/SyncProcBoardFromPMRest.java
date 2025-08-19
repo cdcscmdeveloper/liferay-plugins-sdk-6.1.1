@@ -373,7 +373,7 @@ public class SyncProcBoardFromPMRest {
 				log.info("Body Is Null");
 				return Response.status(400).entity("Body is required").build();
 			}else{
-				log.info("Body Is Not Null");
+				log.info("Body Is Not Null:"+reqDTO.getLoginId());
 			}
 			if(reqDTO.getKeyPass() != 8532147){
 				log.info("Key Wrong");
