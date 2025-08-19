@@ -678,6 +678,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	    map.put(3, AuditContractConst.AU_SECTION_RCT);
 	    map.put(4, AuditContractConst.AU_SECTION_ID);
 	    map.put(5, AuditContractConst.AU_SECTION_IS);
+	    map.put(6, AuditContractConst.AU_SECTION_IPS);
 	    return map;
 	}
 
