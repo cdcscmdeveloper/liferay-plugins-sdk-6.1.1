@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import my.ep.dto.pm.authorization.user.SyncUserReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -364,19 +365,20 @@ public class SyncProcBoardFromPMRest {
 	@Path("/syncUserv2")
 	@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN) // or APPLICATION_JSON if you prefer
-	public Response syncLiferayOimByLoginId(UserReqDTO reqDTO) {
+	public Response syncLiferayOimByLoginId(SyncUserReqDTO reqDTO) {
 		try {
 			String message = "";
 			log.info("#Start Sync By Login Id");
 			if(reqDTO == null){
 				log.info("Body Is Null");
-				reqDTO = new UserReqDTO();
+				return Response.status(400).entity("Body is required").build();
 			}else{
 				log.info("Body Is Not Null");
 			}
 			if(reqDTO.getKeyPass() != 8532147){
 				log.info("Key Wrong");
 				message = "Error Key";
+				return Response.status(401).entity("Error Key").build();
 			}else{
 				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginId(reqDTO.getLoginId(),false);
 				log.info("Finished Sync By Login Id:"+success);	
