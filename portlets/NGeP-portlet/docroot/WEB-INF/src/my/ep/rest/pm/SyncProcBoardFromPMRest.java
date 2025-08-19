@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -341,8 +344,8 @@ public class SyncProcBoardFromPMRest {
 	 *
 	 * <b>Query Parameters:</b>
 	 * <ul>
-	 *   <li><b>loginId</b> (required) – The login ID of the user to synchronize.</li>
-	 *   <li><b>setDefaultPassword</b> (optional) – If set to "true" (case-insensitive),
+	 *   <li><b>loginId</b> (required)  The login ID of the user to synchronize.</li>
+	 *   <li><b>setDefaultPassword</b> (optional)  If set to "true" (case-insensitive),
 	 *       the user's password will be reset to the system's default password.</li>
 	 * </ul>
 	 *
@@ -359,6 +362,8 @@ public class SyncProcBoardFromPMRest {
 	
 	@POST
 	@Path("/syncUserv2")
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN) // or APPLICATION_JSON if you prefer
 	public Response syncLiferayOimByLoginId(UserReqDTO reqDTO) {
 		try {
 			String message = "";
