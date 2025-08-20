@@ -2564,13 +2564,7 @@ public class QTDocumentsBackingBean extends
 						.equals(criteria.getLocationLevel().getParameterCode())) {
 					isSubLocLevel = true;
 					locationLevel = "District";
-					// Bug #38731@Syazani 20/08/2025 -- Start
-				} else if (ParameterConst.LOCATION_LEVEL_DIVISION
-						.equals(criteria.getLocationLevel().getParameterCode())) {
-					isSubLocLevel = true;
-					locationLevel = "Division";
 				}
-				// Bug #38731@Syazani 20/08/2025 -- End
 				context.put("subLocLevel", isSubLocLevel);
 			} else {
 				context.put("subLocLevel", isSubLocLevel);
