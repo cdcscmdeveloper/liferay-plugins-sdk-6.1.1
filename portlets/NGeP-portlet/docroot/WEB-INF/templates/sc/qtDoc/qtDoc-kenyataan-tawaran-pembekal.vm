@@ -182,6 +182,12 @@ th{
 									#if ($locationLevel == "District")
 										<td>Daerah</td>
 									#end
+									## 38731 -start-
+									#if ($locationLevel == "Division")
+										<td>Bahagian</td>
+										<td>Daerah</td>
+									#end
+									## 38731 -end-
 								</tr>
 								</span>
 								#foreach($tplSpecLoc in $locality)
@@ -195,6 +201,18 @@ th{
 												$tplSpecLoc.pmDistrict.districtName
 											</td>
 										#end
+										## 38731 -start-
+										#if ($locationLevel == "Division")
+											<td>
+												$tplSpecLoc.pmDivision.divisionName
+											</td>
+											<td>
+												#foreach($pmDivisionDistricts in $tplSpecLoc.pmDivision.pmDistricts)
+												$pmDivisionDistricts.districtName <br/>
+												#end
+											</td>
+										#end
+										## 38731 -end-
 									</tr>
 								</span>
 								#end
