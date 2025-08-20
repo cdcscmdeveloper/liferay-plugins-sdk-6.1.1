@@ -349,6 +349,66 @@ public class SyncProcBoardFromPMRest {
 			return Response.status(406).entity(e.getMessage()).build();
 		}
 	}
+	
+	@POST
+	@Path("/syncUserv3")
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN) // or APPLICATION_JSON if you prefer
+	public Response syncLiferayOimByLoginIdNative(SyncUserReqDTO reqDTO) {
+		try {
+			String message = "";
+			log.info("#Start Sync By Login Id");
+			if(reqDTO == null){
+				log.info("Body Is Null");
+				return Response.status(400).entity("Body is required").build();
+			}else{
+				log.info("Body Is Not Null:"+reqDTO.getLoginId());
+			}
+			if(reqDTO.getKeyPass() != 8532147){
+				log.info("Key Wrong");
+				message = "Error Key";
+				return Response.status(401).entity("Error Key").build();
+			}else{
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginIdNative(reqDTO.getLoginId(),false,false);
+				log.info("Finished Sync By Login Id:"+success);	
+				message = "Success";
+			}
+			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Path("/syncUserv4")
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN) // or APPLICATION_JSON if you prefer
+	public Response syncLiferayOimByLoginIdNativeEvict(SyncUserReqDTO reqDTO) {
+		try {
+			String message = "";
+			log.info("#Start Sync By Login Id");
+			if(reqDTO == null){
+				log.info("Body Is Null");
+				return Response.status(400).entity("Body is required").build();
+			}else{
+				log.info("Body Is Not Null:"+reqDTO.getLoginId());
+			}
+			if(reqDTO.getKeyPass() != 8532147){
+				log.info("Key Wrong");
+				message = "Error Key";
+				return Response.status(401).entity("Error Key").build();
+			}else{
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginIdNative(reqDTO.getLoginId(),false,true);
+				log.info("Finished Sync By Login Id:"+success);	
+				message = "Success";
+			}
+			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+	}
 	// End 32821 - PDS 
 	
 }
