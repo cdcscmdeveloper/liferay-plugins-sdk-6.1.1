@@ -9,7 +9,6 @@
 	<ui:param name="isFCApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
 
 	<p:panel id="fcreqDetails" header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
-		<ui:remove>21692 - End</ui:remove>
 		<p:dataTable id="fcareqdtlsid"
 			value="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -37,6 +36,7 @@
 		<c:if test="#{qTDetailBB.showEPVInstruction()}" >
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.menu.instruction']}" escape="false"/>
 		</c:if>
+		<ui:remove>21692 - End</ui:remove>
 		<p:dataTable id="finalizationsecretaryid"
 			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
