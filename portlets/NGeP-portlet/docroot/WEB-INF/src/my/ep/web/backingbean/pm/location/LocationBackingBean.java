@@ -514,6 +514,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	/** #35509 getCountryAuditVal() START **/
 	private void getCountryAuditVal(Long selectedCountryId) {
 		retrieveCountryList();
+		
 		Map<Long, PmCountry> countryMap = new HashMap<>();
 		for (PmCountry country : getManagedBean().getCountries()) {
 			countryMap.put(country.getCountryId(), country);
