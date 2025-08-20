@@ -414,6 +414,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private boolean ableToCancelLOI;
 	private boolean ableToCancelLOIWithoutBPM;
 	private boolean ableToSubmitLOI;
+	private boolean ableToCancelWIP;
 	//#21692 - End
   
     /**
@@ -2382,6 +2383,18 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	public void setAbleToSubmitLOI(boolean ableToSubmitLOI) {
 		this.ableToSubmitLOI = ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelWIP() {
+		return ableToCancelWIP;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelWIP(boolean ableToCancelWIP) {
+		this.ableToCancelWIP = ableToCancelWIP;
 	}
 	//#21692 - End
 	
