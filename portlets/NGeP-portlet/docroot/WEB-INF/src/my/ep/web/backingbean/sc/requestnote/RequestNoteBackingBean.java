@@ -5582,13 +5582,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		if (mofAccount !=null || smSupplier !=null) {
 			// Check DA Active
-			List<SmDisciplinaryAction> nonExpiredActions = supplierDataMaintenanceSO
-					.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
+			SupplierDataMaintenanceResDTO responseDtoActive = supplierDataMaintenanceSO
+					.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO);
 			processDisciplinaryActions(responseDtoActive, rnDtl , DisciplinaryActionContext.ACTIVE);
 
 			// Check DA is Deleted Due Or Pending Transaction (just for Cancel Registration and Blacklist Owner)
-			List<SmDisciplinaryAction> expiredActions = supplierDataMaintenanceSO
-					.retrieveActiveDisciplinaryActionCancelOrBlacklistBySupplierDp(reqDTO).getSmDisciplinaryActions();
+			SupplierDataMaintenanceResDTO responseDtoAfterEnded = supplierDataMaintenanceSO
+					.retrieveActiveDisciplinaryActionCancelOrBlacklistBySupplierDp(reqDTO);
 			processDisciplinaryActions(responseDtoAfterEnded, rnDtl , DisciplinaryActionContext.AFTER_ENDED);
 		}
 	}
