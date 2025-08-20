@@ -6197,6 +6197,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			case ACTIVE:
 				if (responseDto.isDisciplinaryActionDeletedDue()) {
 					throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
+				}else if (responseDto.isDisciplinaryActionPendingTransaction() || responseDto.isDisciplinaryActionDeletedDue()) {
+					throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
 				}
 				break;
 	
