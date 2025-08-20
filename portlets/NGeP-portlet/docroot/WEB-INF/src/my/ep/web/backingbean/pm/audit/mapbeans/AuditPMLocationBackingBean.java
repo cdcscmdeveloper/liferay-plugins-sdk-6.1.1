@@ -104,10 +104,10 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 						AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			}
 		} else {
-			detailObj(AuditConst.PM_AUD_ST_STSTATECODE_FIELDLABELID, null, managedBean.getResState().getStateCode(),
+			detailObj(AuditConst.PM_AUD_ST_STCOUNTRY_FIELDLABELID, null, managedBean.getResCountry().getCountryName(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_ST_STCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryName(),
+			detailObj(AuditConst.PM_AUD_ST_STSTATECODE_FIELDLABELID, null, managedBean.getResState().getStateCode(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_ST_STNAME_FIELDLABELID, null, managedBean.getResState().getStateName(),
@@ -138,7 +138,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			/** INSERT NEW transaction ***/
-			detailObj(AuditConst.PM_AUD_DIV_DVCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryName(),
+			detailObj(AuditConst.PM_AUD_DIV_DVCOUNTRY_FIELDLABELID, null, managedBean.getResCountry().getCountryName(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_DIV_DVSTATECODE_FIELDLABELID, null, managedBean.getState().getStateName(),
@@ -174,7 +174,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			/** INSERT NEW transaction ***/
-			detailObj(AuditConst.PM_AUD_DS_DSCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryName(),
+			detailObj(AuditConst.PM_AUD_DS_DSCOUNTRY_FIELDLABELID, null, managedBean.getResCountry().getCountryName(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_DS_DSSTATEID_FIELDLABELID, null,
@@ -212,10 +212,10 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			/** INSERT NEW transaction ***/
-			detailObj(AuditConst.PM_AUD_CT_CTCOUNTRY_FIELDLABELID, null, managedBean.getDistrict().getPmState().getPmCountry()
-					.getCountryName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_CT_CTCOUNTRY_FIELDLABELID, null, managedBean.getResCountry().getCountryName(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_CT_CTSTATECODE_FIELDLABELID, null, managedBean.getDistrict().getPmState().getStateName(),
+			detailObj(AuditConst.PM_AUD_CT_CTSTATECODE_FIELDLABELID, null, managedBean.getResState().getStateName(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_CT_CTDISTRICTID_FIELDLABELID, null, managedBean.getResCity().getPmDistrict()
