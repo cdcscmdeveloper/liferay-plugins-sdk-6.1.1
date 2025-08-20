@@ -53,17 +53,17 @@
 					action="#{lOIDetailBackingBean.submitAction}" process="@form"
 					update="@form" /><ui:remove>#21692</ui:remove>
 					
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}1"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					action="#{lOIDetailBackingBean.validateBeforePopup(true)}"
 					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOI and lOIDetailBackingBean.disableCancelForApprover()}"
 					process="@form" update="@form" /><ui:remove>36339, 21692</ui:remove>
 					
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}2"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					action="#{lOIDetailBackingBean.validateBeforePopup(false)}"
 					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOIWithoutBPM}"
 					process="@form" update="@form" /><ui:remove>36339, 21692</ui:remove>
 					
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}3"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					action="#{lOIDetailBackingBean.validateBeforePopupWIP()}"
 					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelWIP}"
 					process="@form" update="@form" /><ui:remove>36339, 21692</ui:remove>
