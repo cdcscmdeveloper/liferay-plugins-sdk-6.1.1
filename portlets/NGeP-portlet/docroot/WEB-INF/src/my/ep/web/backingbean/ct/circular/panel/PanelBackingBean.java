@@ -570,10 +570,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				// #35506 Start
 				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
 				if (auditCtBean.getAuditCtConfigState()) {
-					if (getManagedBean().isUpdateAction() && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+					CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+					
+					if ((getManagedBean().isUpdateAction() || ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_APPROVAL)
+							|| ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_REVISION_APPROVAL)
+							|| ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_REVISION))
+							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))) {
-
-						CtCircularVer ctCircularVer = getManagedBean().getCircularVer();					
+											
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
 						auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
 						auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
