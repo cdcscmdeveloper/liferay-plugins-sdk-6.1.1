@@ -2585,6 +2585,16 @@ public class NoticeBoardBackingBean extends
 						attendance.setEmail(smPersonal.getEmail());
 						attendance.setName(smPersonal.getName());
 						attendance.setBsvRegistration(bsvRegistration);
+						
+						// #30447 - Start
+						String salutation = supplierSalutation(attendance.getIcPassPort());
+						if (salutation != null) {
+							String newName = attendance.getName();
+							newName = supplierSalutation(attendance.getIcPassPort()).concat(" " + newName);
+							attendance.setName(newName);
+						}
+						// #30447 - End
+						
 						setUserDetails(attendance);
 	
 						bsvAttandances.add(attendance);
@@ -3562,9 +3572,9 @@ public class NoticeBoardBackingBean extends
 	public String supplierSalutation(String identificationNo) {
 		String salutationName = StringUtils.EMPTY;
 		try {
-			IQTNoticeBoardSO QTNoticeBoardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+			IQTNoticeBoardSO noticeBoardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			PmSalutation salutation = QTNoticeBoardSO.retrieveSalutationByIdentificationNo(identificationNo);
+			PmSalutation salutation = noticeBoardSO.retrieveSalutationByIdentificationNo(identificationNo);
 			if (salutation != null) {
 				salutationName = salutation.getSalutationName();
 			}
