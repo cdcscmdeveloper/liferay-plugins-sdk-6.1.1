@@ -79,6 +79,7 @@ public class DisciplinaryActionRest {
 			log.info("UpdateDisciplinaryActionJob New Function After For");
 		} catch (Exception ex) {
 			log.error("UpdateDisciplinaryActionJob Error="+ex);
+			ex.printStackTrace();
 			return Response.status(406).entity(ex.getMessage()).build();
 		} finally {
 			log.info("after close ejb for UpdateDisciplinaryActionJob");
@@ -260,7 +261,7 @@ public class DisciplinaryActionRest {
 
 							//26238 - 32558 - 32710 -  rollback code is for imposed suspen when supplier finish pending txn
 							if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
-								if(completedPendingSmDa.getStartDate().compareTo(today) == 0){
+								if(formatter.format(completedPendingSmDa.getStartDate()).compareTo(formatter.format(today)) == 0){
 									completedPendingSmDa.setFutureImposed(true);
 								} else {
 									completedPendingSmDa.setFutureImposed(false);
