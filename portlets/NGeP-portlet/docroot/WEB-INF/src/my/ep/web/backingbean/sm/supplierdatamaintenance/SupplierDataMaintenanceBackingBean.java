@@ -615,10 +615,12 @@ public class SupplierDataMaintenanceBackingBean extends
 		certDTO.setApplId(getManagedBean().getSmAppl().getApplId());
 
 		try {
-
+			
 			// set registration status and expiry date
 			reqDTO.setOldRegStatus(getManagedBean().getExistingRegStatus());
-			reqDTO.setOldRegStatusId(getManagedBean().getOldRegStatusId());
+			// #38856 - START
+			reqDTO.setOldRegStatusId(getManagedBean().getCurrRegStatusId());
+			// #38856 - END
 			reqDTO.setOldMofExpiryDate(getManagedBean().getExistingMofExpiryDate());
 			
 			// set active status for newly added category
@@ -1902,12 +1904,17 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		//#26238 - 38417
 		SmSupplier supplier = getManagedBean().getSmSupplier();
+		//#38609 - start
+		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isSuspendRegistration();
 		boolean hasPending = supplier.isPendingBlacklist() || supplier.isPendingCancel()
 				|| supplier.isPendingSuspend();
 		if (!hasPending && StringUtils.isNotEmpty(mofStatus) 
 				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)){
 			getManagedBean().setAllowedToDoMaintenance(false);
+		}else if (StringUtils.isNotEmpty(mofStatus) && mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA) {
+			getManagedBean().setAllowedToDoMaintenance(false);
 		}
+		//#38609 - end
 	}
 
 	/**
@@ -3161,6 +3168,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		for (SmRvSuppDoc suppDoc : this.getManagedBean().getSmRevisit().getSmRvSuppDocs()) {
 			validateRvSuppDoc(suppDoc);
+		}
+		if (null == this.getManagedBean().getSmRevisit().getRevisitRemark() || this.getManagedBean().getSmRevisit().getRevisitRemark().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_723104);
 		}
 	}
 
