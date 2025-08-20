@@ -604,7 +604,7 @@ public class ViewSuppProfileBackingBean extends
 	 * @return
 	 */
 	public boolean evaluateCancellationBlacklist(SmSupplier supplier) {
-		if(null == supplier){
+		if (null == supplier) {
 			return false;
 		}
 		boolean suspendedBlacklisted = false;
@@ -616,10 +616,7 @@ public class ViewSuppProfileBackingBean extends
 			suspendedCancelled = disciplinaryAction.isCancelRegistration() && disciplinaryAction.isPendingCancel();
 		}
 		boolean blacklistedOrCancelled = suspendedBlacklisted || suspendedCancelled;
-		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
-		return Arrays.asList(ParameterConst.RECORD_STATUS_ACTIVE, ParameterConst.RECORD_STATUS_EXPIRED).contains(
-				mofRecordStatus)
-				&& blacklistedOrCancelled && !supplier.isDisciplinaryActions(); 
+		return blacklistedOrCancelled && !supplier.isDisciplinaryActions();
 	}
 	// 26247 - end
 	

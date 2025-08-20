@@ -380,6 +380,15 @@ public class SupplierFinalizationBackingBean extends
 		}
 		
 		String committeeType = getManagedBean().getCommitteeType();
+		//Bug 38904- Start
+		boolean mofFinal = false;
+		if (null != dataType.getIsMofFinalization()) {
+			mofFinal = dataType.getIsMofFinalization();
+		}
+		if(mofFinal){
+			getManagedBean().setSecretaryUser(true);	
+		}
+		//Bug 38904- End
 		if (StringUtils.isNotBlank(committeeType) && 
 				!StringUtils.equalsIgnoreCase(committeeType, "null")) {
 			loadPreparationTabDetails();

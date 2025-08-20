@@ -78,6 +78,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 // #31443 End
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -1547,16 +1548,7 @@ public class ConsolidationReportBackingBean extends
 		// #28777 & #29729 - End
 		
 		// 26247 - start
-		int countDisabled = 0;
-		if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
-			for (ScQtEvaluationResultDtl resultDtl : qualifiedSuppliers) {
-				ScQtEvaluationResult scQtEvaluationResult = resultDtl.getQtEvaluationResult();
-				ScQtProposal scQtProposal = scQtEvaluationResult.getScQtProposal();
-				if (this.disabledQTProcess(scQtProposal.getScQtSupplier().getSmSupplier())) {
-					countDisabled++;
-				}
-			}
-		}
+		int countDisabled = countSupplierWithDisciplinaryAction(qualifiedSuppliers);
 		totalQualifiedSuppliers = totalQualifiedSuppliers - countDisabled;
 		// 26247 - end
 
@@ -1601,16 +1593,7 @@ public class ConsolidationReportBackingBean extends
 				// #28777 & #29729 - End
 				
 				// 26247 - start
-				int countItemDisabled = 0;
-				if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
-					for (ScQtEvaluationResultDtl resultDtl : qualifiedSuppliers) {
-						ScQtEvaluationResult scQtEvaluationResult = resultDtl.getQtEvaluationResult();
-						ScQtProposal scQtProposal = scQtEvaluationResult.getScQtProposal();
-						if (this.disabledQTProcess(scQtProposal.getScQtSupplier().getSmSupplier())) {
-							countItemDisabled++;
-						}
-					}
-				}
+				int countItemDisabled = countSupplierWithDisciplinaryAction(qualifiedSuppliers);
 				totalQualifiedSuppliers = totalQualifiedSuppliers - countItemDisabled;
 				// 26247 - end
 				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(specZoneDtl, item.getRequestItem(), itemQualifiedSuppliers);
@@ -1625,6 +1608,22 @@ public class ConsolidationReportBackingBean extends
 		}
 		// End of item wise validation
 	}
+	
+	// 26247 - start
+	private int countSupplierWithDisciplinaryAction(List<ScQtEvaluationResultDtl> evaluationResultDtls){
+		int countItemDisabled = 0;
+		if (CollectionUtils.isNotEmpty(evaluationResultDtls)) {
+			for (ScQtEvaluationResultDtl resultDtl : evaluationResultDtls) {
+				ScQtEvaluationResult scQtEvaluationResult = resultDtl.getQtEvaluationResult();
+				ScQtProposal scQtProposal = scQtEvaluationResult.getScQtProposal();
+				if (this.disabledQTProcess(scQtProposal.getScQtSupplier().getSmSupplier())) {
+					countItemDisabled++;
+				}
+			}
+		}
+		return countItemDisabled;
+	}
+	// 26247 - end
 
 	private void validateRanking(List<QtEvaluationResultDtlBean> qualifiedSupplierBeans, boolean isItemized, ScQtRecommend item, TplSpecZoneDtl specZoneDtl,
 			int totalQualifiedSuppliers) {
@@ -1647,16 +1646,25 @@ public class ConsolidationReportBackingBean extends
 		if (CollectionUtils.isNotEmpty(qualifiedSupplierBeans)) {
 
 			// Sort the suppliers as per the rank given by the desk officer
-			Collections.sort(qualifiedSupplierBeans, new Comparator<QtEvaluationResultDtlBean>() {
-				public int compare(QtEvaluationResultDtlBean supplier1, QtEvaluationResultDtlBean supplier2) {
-					if (supplier1.getDeskOfficerRank() != null && supplier2.getDeskOfficerRank() != null) {
-
-						// Ascending order
-						return supplier1.getDeskOfficerRank().intValue() - supplier2.getDeskOfficerRank().intValue();
+			// 26247 - start
+			CustomUtils.sort(qualifiedSupplierBeans, new Comparator<QtEvaluationResultDtlBean>() {
+				@Override
+				public int compare(QtEvaluationResultDtlBean supplier1, QtEvaluationResultDtlBean supplier2) { 
+					BigDecimal rank1 = supplier1.getDeskOfficerRank();
+					BigDecimal rank2 = supplier2.getDeskOfficerRank();
+					if (rank1 == null && rank2 == null) {
+						return 0;
 					}
-					return -1;
+					if (rank1 == null) {
+						return -1;
+					}
+					if (rank2 == null) {
+						return 1;
+					}
+					return rank1.compareTo(rank2);
 				}
 			});
+			// 26247 - end
 
 			for (QtEvaluationResultDtlBean qualifiedSupp : qualifiedSupplierBeans) {
 				BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
@@ -2660,6 +2668,10 @@ public class ConsolidationReportBackingBean extends
 			if (resDTO != null) {
 				qualifiedSuppliers = resDTO.getQualifiedSupplierDetails();
 				totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
+				// 26247 - start
+				int countDisabled = countSupplierWithDisciplinaryAction(qualifiedSuppliers);
+				totalQualifiedSuppliers = totalQualifiedSuppliers - countDisabled;
+				// 26247 - end
 			}
 
 		// farid start bug #31556 related to #21695
@@ -2697,6 +2709,10 @@ public class ConsolidationReportBackingBean extends
 								.getQualifiedSupplierDetails();
 						totalQualifiedSuppliers = resDTO
 								.getTotalQualifiedSuppliers();
+						// 26247 - start
+						int countItemDisabled = countSupplierWithDisciplinaryAction(itemQualifiedSuppliers);
+						totalQualifiedSuppliers = totalQualifiedSuppliers - countItemDisabled;
+						// 26247 - end
 					}
 					qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
 							specZoneDtl, item.getRequestItem(),
@@ -2766,22 +2782,25 @@ public class ConsolidationReportBackingBean extends
 			if (CollectionUtils.isNotEmpty(qualifiedSupplierBeans)) {
 
 				// Sort the suppliers as per the rank given by the desk officer
-				Collections.sort(qualifiedSupplierBeans,
-						new Comparator<QtEvaluationResultDtlBean>() {
-							public int compare(QtEvaluationResultDtlBean supplier1,
-									QtEvaluationResultDtlBean supplier2) {
-								if (supplier1.getDeskOfficerRank() != null
-										&& supplier2.getDeskOfficerRank() != null) {
-
-									// Ascending order
-									return supplier1.getDeskOfficerRank()
-											.intValue()
-											- supplier2.getDeskOfficerRank()
-													.intValue();
-								}
-								return -1;
-							}
-						});
+			// 26247 - start
+			CustomUtils.sort(qualifiedSupplierBeans, new Comparator<QtEvaluationResultDtlBean>() {
+				@Override
+				public int compare(QtEvaluationResultDtlBean supplier1, QtEvaluationResultDtlBean supplier2) {
+					BigDecimal rank1 = supplier1.getDeskOfficerRank();
+					BigDecimal rank2 = supplier2.getDeskOfficerRank();
+					if (rank1 == null && rank2 == null) {
+						return 0;
+					}
+					if (rank1 == null) {
+						return -1;
+					}
+					if (rank2 == null) {
+						return 1;
+					}
+					return rank1.compareTo(rank2);
+				}
+			});
+			// 26247 - end
 
 				for (QtEvaluationResultDtlBean qualifiedSupp : qualifiedSupplierBeans) {
 					BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
