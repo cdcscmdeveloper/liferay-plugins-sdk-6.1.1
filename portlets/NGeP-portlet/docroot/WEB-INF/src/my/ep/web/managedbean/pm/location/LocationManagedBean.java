@@ -320,6 +320,7 @@ public class LocationManagedBean extends BaseManagedBean {
 	}
 
 	public PmState getResState() {
+		resState = resState == null ? new PmState() : resState;
 		return resState;
 	}
 
