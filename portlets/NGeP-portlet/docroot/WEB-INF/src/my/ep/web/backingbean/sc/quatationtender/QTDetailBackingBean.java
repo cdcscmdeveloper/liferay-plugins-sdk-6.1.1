@@ -14613,6 +14613,12 @@ public void retrieveDemoQtDetails(Long qtId) {
   	//#29472 - end
 	
 	//#21692 - Start
+	/**
+	 * Cannot directly use in html due to unknown issue,
+	 * so done it through backing bean
+	 * 
+	 * @return TRUE if status LESS than Pending Recommendation
+	 */
 	public boolean showEPVInstruction() {
 		boolean isShow = isQTStatusGreaterThan(this.getManagedBean().getQt().getQtStatus().getStatusId(),
 				QTStatusConst.QT_CONSOLIDATION_REPORT);
