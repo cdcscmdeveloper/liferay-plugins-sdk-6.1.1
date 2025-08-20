@@ -135,6 +135,37 @@
 							
 							</td>
 					</tr>
+					<!-- #29594 start -->
+					<c:if test="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode eq 'FJA'
+					            or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode eq 'FPJ'}">
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.organisation.ministry']}" /> </th>
+						<td width="80%">
+							<p:inputText id="itMinistry" 
+									disabled="true" 
+									value="#{profileManagementBackingBean.retrieveMinistryName()}"
+									maxlength="100"
+									size="103">
+							</p:inputText>
+						</td>
+					</tr>
+					<c:if test="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode eq 'FPJ'}">
+					<tr>
+						<th width="20%"><p:outputLabel
+								value="#{lbl['lbl.pm.organisation.ptjGroup']}" /> </th>
+						<td width="80%">
+							<p:inputText id="itPtjGroup" 
+									disabled="true" 
+									value="#{profileManagementBackingBean.retrievePTJGroupName()}"
+									maxlength="100"
+									size="103">
+							</p:inputText>
+						</td>
+					</tr>
+					</c:if>
+					</c:if>
+					<!-- #29594 end -->
 					<tr>
 					<td>
 						<p:outputLabel
@@ -179,9 +210,9 @@
 							    	<p:inputText 
 										size="103"
 										id="itSelectedPtj" 
-										value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}" 
+										value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgCode} - #{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}" 
 										readonly="true"
-									/>
+									/><!-- #29594 add orgCode and '-' -->
 									&#160;	
 									<p:commandLink id="ptjSearchCL" partialSubmit="true"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
