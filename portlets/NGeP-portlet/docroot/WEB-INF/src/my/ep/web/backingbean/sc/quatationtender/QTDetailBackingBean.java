@@ -12681,6 +12681,12 @@ public class QTDetailBackingBean extends
 	//#21692 - End
 	
 	//#21692 - Start
+	/**
+	 * Cannot directly use in html due to unknown issue,
+	 * so done it through backing bean
+	 * 
+	 * @return TRUE if status LESS than Pending Recommendation
+	 */
 	public boolean showEPVInstruction() {
 		boolean isShow = isQTStatusGreaterThan(this.getManagedBean().getQt().getQtStatus().getStatusId(),
 				QTStatusConst.QT_CONSOLIDATION_REPORT);
