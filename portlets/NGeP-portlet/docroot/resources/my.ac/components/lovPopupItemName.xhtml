@@ -81,7 +81,7 @@
 		<h:panelGroup id="resultPanel" style="width:100%;">
 			
 	 <h:panelGroup rendered="#{lovBackingBean.lovBean.selectionMode == 'single'}">
-	 <h:outputText rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport()}"
+	 <h:outputText rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport() and lovBackingBean.lovBean.title eq lbl['lbl.ct.ministry']}"
 				styleClass="instruction" value="#{lbl['lbl.ct.instruction.report.itemusage.monitoringdtls.allministry']}" escape="false" style="color: blue"/><br /><br />	<!-- #34889 -->
 			<p:dataTable id="lovTb"
 				var="entity" 
@@ -215,7 +215,7 @@
 			<table style="width:100%;"><tr><TD style="text-align:right;">
 			
 					<!-- Start - #34889 -->
-					<p:commandButton rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport()}"
+					<p:commandButton rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport() and lovBackingBean.lovBean.title eq lbl['lbl.ct.ministry']}"
 					id="slbtnAllMinistry"
 					value="#{lbl['lbl.btn.select.allMinistry']}"
 					action="#{lovBackingBean.allMinistrySelection()}"
