@@ -559,10 +559,10 @@ public class ConsolidationReportBackingBean extends
 	/**
 	 * @throws Exception
 	 */
+	// 38523 - start
 	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
-		// 38523 - start
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
 		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
 				.getScQtFinalization().getScQtFinalizationReports());
@@ -588,7 +588,7 @@ public class ConsolidationReportBackingBean extends
 			}
 		}
 
-		if (!skipDownload) {
+		if (!skipDownload) {// 38523
 			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 		// #18685 - End.
