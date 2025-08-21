@@ -2424,7 +2424,7 @@ public class SpecificationBackingBean extends
 				// 37813,35384 remove coding.
 				techWeightageSum();
 				techScoreSum();
-				
+				checkhaszeroquantity(); //#38679
 //#28948 Start - remove this (fixed in #21695)			
 				//#25635 danial 11/3/2020
 //				if(null!=this.getManagedBean().getTechnicalItemScoreSetting()){
@@ -24806,5 +24806,25 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 	// 11104 -end-
+	
+	//#38679
+	public void checkhaszeroquantity() {
+		this.getManagedBean().setZoneQtyHasZeroVal(false);
+		for (ScQtCheckList checkList : this.getManagedBean().getQt().getScQtChecklists())
+			if (checkList.getDocCategory().equalsIgnoreCase("1")) {
+				for (TplSpecQuestion specQuestion : checkList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
+					if (null != specQuestion && null != specQuestion.getTplSpecZoneQties()) {
+						for (TplSpecZoneQty zoneqty : specQuestion.getTplSpecZoneQties()) {
+							if (zoneqty.getQty().equals(new BigDecimal(0))) {
+								this.getManagedBean().setZoneQtyHasZeroVal(true);
+								break;
+							}
+						}
+					}
+				}
+
+			}
+	}
+	// #38679
 	
 }

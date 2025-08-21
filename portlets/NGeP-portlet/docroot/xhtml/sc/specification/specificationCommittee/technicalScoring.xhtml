@@ -231,7 +231,9 @@
 
 							<p:selectOneRadio required="true"
 								disabled="#{specificationBackingBean.managedBean.readOnly or 
-								specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial}"
+								(specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial 
+								or specificationBackingBean.managedBean.qt.partial ne null and !specificationBackingBean.managedBean.qt.partial 
+								and specificationBackingBean.managedBean.zoneQtyHasZeroVal)}"
 								label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
 								value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
 								<f:selectItems

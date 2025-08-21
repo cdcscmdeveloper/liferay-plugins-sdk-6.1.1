@@ -167,7 +167,7 @@ label.ui-button>span.ui-button-text {
 								<!-- #farid #21695 disable start -->
 								<ui:remove><!-- 1873 note 74 update disabled condition--></ui:remove>
 									<td><p:selectOneRadio 
-									disabled="#{specificationBackingBean.managedBean.specItemWeightageRequired or specificationBackingBean.managedBean.qt.partial or !(!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly))}"
+									disabled="#{specificationBackingBean.managedBean.specItemWeightageRequired and specificationBackingBean.managedBean.readOnly or !(!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly))}"
 											value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
 											<f:selectItems
 												value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />

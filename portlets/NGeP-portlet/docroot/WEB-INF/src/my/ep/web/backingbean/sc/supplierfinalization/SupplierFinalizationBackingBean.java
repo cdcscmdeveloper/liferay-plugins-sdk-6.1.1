@@ -8689,6 +8689,13 @@ return	remarksNotFound;
 				//#21695 tec by itemize result pop up farid - start
 					reqDTO.setSpecZoneId(selectedZoneId);
 				}
+				
+				// #38679
+				if(null != selectedZoneId && (SourcingConstants.EVAL_STAGE_TECHNICAL.equalsIgnoreCase(evaluationStage) ||  SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO.equalsIgnoreCase(evaluationStage))){
+					reqDTO.setTecSpecZoneId(selectedZoneId);
+				}
+				// #38679
+				
 				/*
 				 * BUG 34212 - FIX SORT ITEMIZE & PACKAGE IN SUPPLIER FINALIZATION START
 				 */
