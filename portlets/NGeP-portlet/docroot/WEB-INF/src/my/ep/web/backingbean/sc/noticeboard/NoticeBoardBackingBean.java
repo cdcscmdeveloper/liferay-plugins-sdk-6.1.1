@@ -2585,6 +2585,16 @@ public class NoticeBoardBackingBean extends
 						attendance.setEmail(smPersonal.getEmail());
 						attendance.setName(smPersonal.getName());
 						attendance.setBsvRegistration(bsvRegistration);
+						
+						// #30447 - Start
+						String salutation = supplierSalutation(attendance.getIcPassPort());
+						if (salutation != null) {
+							String newName = attendance.getName();
+							newName = supplierSalutation(attendance.getIcPassPort()).concat(" " + newName);
+							attendance.setName(newName);
+						}
+						// #30447 - End
+						
 						setUserDetails(attendance);
 	
 						bsvAttandances.add(attendance);
@@ -2599,6 +2609,14 @@ public class NoticeBoardBackingBean extends
 						if (bsvAttandances.contains(extAttandance)) {
 							bsvAttandances.remove(extAttandance);
 	
+							// #30447 - Start
+							String salutation = supplierSalutation(extAttandance.getIcPassPort());
+							if (salutation != null) {
+								String newName = extAttandance.getName();
+								newName = supplierSalutation(extAttandance.getIcPassPort()).concat(" " + newName);
+								extAttandance.setName(newName);
+							}
+							// #30447 - End
 						}
 						bsvAttandances.add(extAttandance);
 					}
@@ -3544,21 +3562,19 @@ public class NoticeBoardBackingBean extends
 		return isRenderRigisterBtn;
 	}
 	
+	// #30447 - Start
 	/**
-	 * #30447 - Retrieve supplier Salutation by identification No
+	 * Retrieve supplier Salutation by identification No
+	 * 
 	 * @param identificationNo
 	 * @return salutationName
 	 */
 	public String supplierSalutation(String identificationNo) {
-		PmSalutation salutation = null;
-		String salutationName = null;
-		IQTNoticeBoardSO supplierSO = null;
-
+		String salutationName = StringUtils.EMPTY;
 		try {
-			supplierSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTNoticeBoardSO.class);
-			salutation = supplierSO.retrieveUserByIdentificationNo(identificationNo);
-
+			IQTNoticeBoardSO noticeBoardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			PmSalutation salutation = noticeBoardSO.retrieveSalutationByIdentificationNo(identificationNo);
 			if (salutation != null) {
 				salutationName = salutation.getSalutationName();
 			}
@@ -3568,7 +3584,9 @@ public class NoticeBoardBackingBean extends
 					getUserIdSessionFromLoginId(), e);
 		}
 		return salutationName;
-	}//#30447 - end
+	}
+
+	// #30447 - End
 
 		// #29732 Start
 		public void onClickHistoryIcon(String catCode, String catCodeLevel,

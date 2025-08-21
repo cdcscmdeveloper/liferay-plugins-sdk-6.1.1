@@ -655,6 +655,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			reqDTO.setPaymentType(getManagedBean().getPaymentType());
 			getManagedBean().getSmAppl().setPmStatus(paymentStatus);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
+			// 38862 - START
+			if (getManagedBean().getSmAppl().getSmSupplier() != null
+					&& getManagedBean().getSmAppl().getSmSupplier().getSmAppl() != null) {
+				reqDTO.getSmAppl().setBumi(
+						getManagedBean().getSmAppl().getSmSupplier()
+								.getSmAppl().isBumi()); 
+			}
+			// 38862 - END
 
 			// create Payment
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
