@@ -1055,9 +1055,6 @@ public class BSVAttendanceBackingBean extends
 				briefingAttendance.setEmail(personnel.getEmail());
 				briefingAttendance.setBsvRegistration(briefingRegistration);
 				briefingAttendance.setAuthorized(true);
-				
-				
-				
 				attanedList.add(briefingAttendance);
 			}
 		}
