@@ -82,6 +82,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -3836,6 +3837,32 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			proposalSO = null;
 		}
 	}
+	
+	// #30447 - Start
+	/**
+	 * Retrieve supplier Salutation by identification No
+	 * 
+	 * @param identificationNo
+	 * @return salutationName
+	 */
+	public String supplierSalutation(String identificationNo) {
+		String salutationName = StringUtils.EMPTY;
+		try {
+			IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			PmSalutation salutation = proposalSO.retrieveSalutationByIdentificationNo(identificationNo);
+			if (salutation != null) {
+				salutationName = salutation.getSalutationName();
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "supplierSalutation",
+					this.getManagedBean().getQt().getQtId().toString(), "supplierSalutation",
+					getUserIdSessionFromLoginId(), e);
+		}
+		return salutationName;
+	}
+
+	// #30447 - End
 
 	/**
 	 * Method to retrieve Supplier details
@@ -3869,6 +3896,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 			for (SmPersonnel personnel : resDTO.getSmAppl().getSmPersonnels()) {
 				if (personnel.isEquityOwner()) {
+					
+					// #30447 - Start
+					String salutation = supplierSalutation(personnel.getIdentificationNo());
+					if (salutation != null) {
+						String newName = personnel.getName();
+						newName = supplierSalutation(personnel.getIdentificationNo()).concat(" " + newName);
+						personnel.setName(newName);
+					}
+					// #30447 - End
+					
 					equityShareHolders.add(personnel);
 
 				}
@@ -5947,22 +5984,39 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		
 	}
 	
-	//#25089@hatta - start
-		public void onTabChange(TabChangeEvent event){
-			if(event.getTab().getId().equals("tab1")){
-				try {
-					Thread.sleep(500);
-					RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+	// #25089@hatta - start
+	public void onTabChange(TabChangeEvent event) {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId())) {
+			return;
+		}
+		// #38852 End 12/08/2025 Vinod
+		if (event.getTab().getId().equals("tab1")) {
+			try {
+				Thread.sleep(500);
+				RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
-		
-		public void dafaultPopUpSupplierInfo(){
-		   RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+	}
+
+	public void dafaultPopUpSupplierInfo() {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId())) {
+			return;
 		}
-	//#25089@hatta - end
+		// #38852 End 12/08/2025 Vinod
+		RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+	}
+
+	// #25089@hatta - end
 		
 
 		//#21695 farid	start display tree node
