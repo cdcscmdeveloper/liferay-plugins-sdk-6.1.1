@@ -19,6 +19,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
+import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -44,6 +45,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -74,6 +76,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -965,6 +968,33 @@ public class BSVAttendanceBackingBean extends
 			}
 		}
 	}
+	
+	// #30447 - Start
+	/**
+	 * Retrieve supplier Salutation by identification No
+	 * 
+	 * @param identificationNo
+	 * @return salutationName
+	 */
+	public String supplierSalutation(String identificationNo) {
+		String salutationName = StringUtils.EMPTY;
+		try {
+			IQTBriefingSO qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
+				
+			PmSalutation salutation = qTBriefingSO.retrieveSalutationByIdentificationNo(identificationNo);
+			if (salutation != null) {
+				salutationName = salutation.getSalutationName();
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "supplierSalutation",
+					this.getManagedBean().getScQt().getQtId().toString(), "supplierSalutation",
+					getUserIdSessionFromLoginId(), e);
+		}
+		return salutationName;
+	}
+
+	// #30447 - End
 
 	private void getAttandanceDtlsBySelectedRegistartion(
 			ScQtBsvRegistration briefingRegistration) {
@@ -1010,7 +1040,14 @@ public class BSVAttendanceBackingBean extends
 
 			for (SmPersonnel personnel : personals) {
 				ScQtBsvAttendance briefingAttendance = new ScQtBsvAttendance();
-				briefingAttendance.setName(personnel.getName());
+				
+				// #30447 - Start
+				String newName = personnel.getName();
+				String salutation = supplierSalutation(personnel.getIdentificationNo());
+				newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+				// #30447 - End
+				
+				briefingAttendance.setName(newName);//#30447
 				briefingAttendance.setIcPassPort(personnel
 						.getIdentificationNo());
 				//Start Bug #26525
@@ -1019,6 +1056,9 @@ public class BSVAttendanceBackingBean extends
 				briefingAttendance.setEmail(personnel.getEmail());
 				briefingAttendance.setBsvRegistration(briefingRegistration);
 				briefingAttendance.setAuthorized(true);
+				
+				
+				
 				attanedList.add(briefingAttendance);
 			}
 		}
