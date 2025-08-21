@@ -5093,7 +5093,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    ScLoa loa = ctContractVer.getCtContract().getLoa();
 	
 	    BigDecimal total = ctContractVer.getCtContractValue().getOverallCtAmtPbond();
-	    // Early return if OverallCtAmtPbond is null
+	    // Early return 0.0 if OverallCtAmtPbond is null
 	    if (total == null) {
 	        return BigDecimal.ZERO;
 	    }
