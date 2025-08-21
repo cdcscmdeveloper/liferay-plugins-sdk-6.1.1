@@ -11245,19 +11245,13 @@ public class SupplierFinalizationBackingBean extends
 	 * @throws Exception
 	 */
 	public ScQtFinalizationReportAttachment downloadBriefingPaperReportForBidding(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
-	    ScQtFinalizationReportAttachment reportAttachment = null;
-		if (null != getManagedBean().getCurrentStatusId() 
-				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION.longValue()
-						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
-						)) {
-			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-		} else {
-			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
-
-			if (reportAttachment == null) {
-				reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-			}
-		}
+		//38523 - start
+		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
+				.getScQtFinalizationReportAttachment();
+		if (reportAttachment == null) {
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, true);
+		} 
+		//38523 - end
 		return reportAttachment;
 	}
 	// #30567 - End.
