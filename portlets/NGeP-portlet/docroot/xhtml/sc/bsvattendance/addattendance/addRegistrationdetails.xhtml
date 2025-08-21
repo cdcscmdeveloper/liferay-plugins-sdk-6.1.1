@@ -147,10 +147,6 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column style="width:22%;white-space: normal;">
-				<!-- #30447 start -->
-				<h:outputText value="#{noticeBoardBackingBean.supplierSalutation(scQtBriefAttendace.icPassPort).concat(' ').concat(scQtBriefAttendace.name)}"
-					rendered="#{scQtBriefAttendace.authorized}" />
-				<!-- #30447 end -->
 				<p:inputText value="#{scQtBriefAttendace.name}"
 					rendered="#{!scQtBriefAttendace.authorized}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
