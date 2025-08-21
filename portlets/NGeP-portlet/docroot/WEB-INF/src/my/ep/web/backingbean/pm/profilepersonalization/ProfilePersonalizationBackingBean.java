@@ -26,6 +26,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -42,6 +43,7 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
+import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.admin.PmAdminMatrix;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -91,6 +93,7 @@ import com.liferay.portal.util.PortalUtil;
 //#28895_35501 Start - AUDIT TRAIL SM
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.constants.CTProcessNameConst; //#26186
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.CustomUtils;
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
@@ -1697,7 +1700,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			// 26247 - end
 			
 			//#26186 start
-			checkCtSupplierCategory(supplier);
+			if (docNo.substring(0, 2).equals(ParameterConst.CONTRACT)) {
+				CTContractAmendmentDataType dataType = super.getBpmTaskDetails(CTContractAmendmentDataType.class, null);
+				if (dataType.getDocType() != null
+						&& dataType.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)
+						&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+					checkCtSupplierCategory(supplier);
+				}
+			}
 			//#26186 end
 
 			SLAUtils.getInstance().logSLAInfo("SM","DA-5", log, startTime);
@@ -1834,7 +1844,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-					"ProfilePersonalizationBackingBean", "", "ProfilePersonalizationBackingBean.checkSupplierCategory",
+					"ProfilePersonalizationBackingBean", "", "ProfilePersonalizationBackingBean.checkCtSupplierCategory",
 					getUserIdSessionFromLoginId(), e);
 		}
 	}

@@ -73,7 +73,9 @@
 				</tr>
 		</table>
 		<!-- 26186 start -->
-		<ui:include src="infoActiveCt.xhtml"/>
+		<ui:fragment rendered="#{not empty profilePersonalizationBackingBean.managedBean.ctSupplierMsgNonDA}">
+			<ui:include src="infoActiveCt.xhtml" />
+		</ui:fragment>
 		<!-- 26186 end -->
 		
 		<!-- 30842 -->
