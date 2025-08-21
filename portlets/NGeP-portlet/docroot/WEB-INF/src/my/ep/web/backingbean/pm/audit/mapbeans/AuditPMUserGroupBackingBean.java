@@ -66,71 +66,19 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		if (managedBeans.getUserGroupUpdate() != null && managedBeans.getUserGroupUpdate().getPmUserGroupUsers() != null) {
 			for (PmUserGroupUser groupUser : managedBeans.getUserGroupUpdate().getPmUserGroupUsers()) {
 				if (hMap != null && !(hMap.isEmpty())) {
-					this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-					if (hMap.containsKey(groupUser.getPmUser().getUserId())) {
-						if (groupUser.getRecordStatusFlg().intValue() != hMap.get(groupUser.getPmUser().getUserId()).intValue()) {
-							this.docId = BigInteger.valueOf(groupUser.getUserGroupUserId());
-							detailObj(AuditConst.PM_AUD_OUSRG_USTATUS_FIELDLABELID, hMap.get(groupUser.getPmUser().getUserId())
-									.intValue() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
-									groupUser.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
-						}
-					} else {
-						this.docId = BigInteger.valueOf(groupUser.getUserGroupUserId());
-						detailObj(AuditConst.PM_AUD_OUSRG_UNAME_FIELDLABELID, null, groupUser.getPmUser().getUserName());
-						detailObj(AuditConst.PM_AUD_OUSRG_UIDNO_FIELDLABELID, null, groupUser.getPmUser().getIdentificationNo());
-						detailObj(AuditConst.PM_AUD_OUSRG_USTATUS_FIELDLABELID, null,
-								groupUser.getPmUser().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-										: AuditConst.PM_AUD_INACTIVE);
-					}
+					updateUserGroupList(hMap, groupUser);
 				}
 			}
 
 			/* update UserGroup */
-			if (managedBeans.getUserGroupUpdate() != null && managedBeans.getUserGroupOld() != null) {
-				String oldVal = managedBeans.getUserGroupOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-						: AuditConst.PM_AUD_INACTIVE;
-				String newVal = managedBeans.getUserGroupUpdate().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-						: AuditConst.PM_AUD_INACTIVE;
-				if (oldVal != newVal) {
-					this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-					detailObj(AuditConst.PM_AUD_OUSRG_GSTATUS_FIELDLABELID,
-							managedBeans.getUserGroupOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-									: AuditConst.PM_AUD_INACTIVE,
-							managedBeans.getUserGroupUpdate().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-									: AuditConst.PM_AUD_INACTIVE);
-				}
-			}
+			updateUserGroupListStatus(managedBeans.getUserGroupUpdate(), managedBeans.getUserGroupOld());
 		}
 
 		/* new created UserGroup */
-		if (managedBeans.getUserGroupNew() != null && managedBeans.getUserGroupNew().getUserGroupId() > 0) {
-			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-			this.docId = BigInteger.valueOf(managedBeans.getUserGroupNew().getUserGroupId()); // /
-			this.grpStatus = managedBeans.getUserGroupNew().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-					: AuditConst.PM_AUD_INACTIVE;
-			this.ptjCodeName = managedBeans.getUserGroupNew().getPmOrgProfile().getPmOrgValidity().getOrgCode() + "/"
-					+ managedBeans.getUserGroupNew().getPmOrgProfile().getPmOrgValidity().getOrgName();
-			this.groupName = managedBeans.getUserGroupNew().getGroupName();
-			this.groupRole = managedBeans.getUserGroupNew().getRoleCode(); // FL_APPROVER,RN_APPROVER
-
-			detailObj(AuditConst.PM_AUD_OUSRG_GRPNAME_FIELDLABELID, null, this.groupName);// New
-			detailObj(AuditConst.PM_AUD_OUSRG_GROLE_FIELDLABELID, null, this.groupRole); // New
-			detailObj(AuditConst.PM_AUD_OUSRG_PTJCODENAME_FIELDLABELID, null, this.ptjCodeName);
-			detailObj(AuditConst.PM_AUD_OUSRG_GSTATUS_FIELDLABELID, null, this.grpStatus);
-		}
+		newCreateduserGroup(managedBeans.getUserGroupNew(), managedBeans.getRoleDesc());
 
 		/** new created UserGroupUsers List **/
-		if (managedBeans.getUserGroupNew() != null && managedBeans.getUserGroupNew().getPmUserGroupUsers() != null
-				&& !managedBeans.getUserGroupNew().getPmUserGroupUsers().isEmpty()) {
-			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-			for (PmUserGroupUser usersGroup : managedBeans.getUserGroupNew().getPmUserGroupUsers()) {
-				this.docId = BigInteger.valueOf(usersGroup.getUserGroupUserId());
-				detailObj(AuditConst.PM_AUD_OUSRG_UNAME_FIELDLABELID, null, usersGroup.getPmUser().getUserName());
-				detailObj(AuditConst.PM_AUD_OUSRG_UIDNO_FIELDLABELID, null, usersGroup.getPmUser().getIdentificationNo());
-				detailObj(AuditConst.PM_AUD_OUSRG_USTATUS_FIELDLABELID, null,
-						usersGroup.getPmUser().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
-			}
-		}
+		newCreateduserGroupList(managedBeans.getUserGroupNew());
 
 		auditPMReqDTO.setObjList(objList);
 
@@ -142,11 +90,78 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
+	private void updateUserGroupList(HashMap<Long, Integer> hMap, PmUserGroupUser groupUser) {
+		if (hMap.containsKey(groupUser.getPmUser().getUserId())) {
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+			if (groupUser.getRecordStatusFlg().intValue() != hMap.get(groupUser.getPmUser().getUserId()).intValue()) {
+				this.docId = BigInteger.valueOf(groupUser.getUserGroupUserId());
+				detailObj(AuditConst.PM_AUD_OUSRG_USTATUS_FIELDLABELID,
+						hMap.get(groupUser.getPmUser().getUserId()).intValue() == 1 ? AuditConst.PM_AUD_ACTIVE
+								: AuditConst.PM_AUD_INACTIVE, groupUser.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+								: AuditConst.PM_AUD_INACTIVE);
+			}
+		} else {
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			this.docId = BigInteger.valueOf(groupUser.getUserGroupUserId());
+			detailObj(AuditConst.PM_AUD_OUSRG_UNAME_FIELDLABELID, null, groupUser.getPmUser().getUserName());
+			detailObj(AuditConst.PM_AUD_OUSRG_UIDNO_FIELDLABELID, null, groupUser.getPmUser().getIdentificationNo());
+			detailObj(AuditConst.PM_AUD_OUSRG_USTATUS_FIELDLABELID, null,
+					groupUser.getPmUser().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+		}
+	}
+
+	/* update UserGroup */
+	private void updateUserGroupListStatus(PmUserGroup getUserGroupUpdate, PmUserGroup getUserGroupOld) {
+		if (getUserGroupUpdate != null && getUserGroupOld != null) {
+			String oldVal = getUserGroupOld.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
+			String newVal = getUserGroupUpdate.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
+			this.docId = BigInteger.valueOf(getUserGroupUpdate.getUserGroupId());
+			if (oldVal != newVal) {
+				this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+				detailObj(AuditConst.PM_AUD_OUSRG_GSTATUS_FIELDLABELID,
+						getUserGroupOld.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
+						getUserGroupUpdate.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+			}
+		}
+	}
+
+	/* new created UserGroup */
+	private void newCreateduserGroup(PmUserGroup getUserGroupNew, String roleDesc) {
+		if (getUserGroupNew != null && getUserGroupNew.getUserGroupId() > 0) {
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			this.docId = BigInteger.valueOf(getUserGroupNew.getUserGroupId()); // /
+			this.grpStatus = getUserGroupNew.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
+			this.ptjCodeName = getUserGroupNew.getPmOrgProfile().getPmOrgValidity().getOrgCode() + "/"
+					+ getUserGroupNew.getPmOrgProfile().getPmOrgValidity().getOrgName();
+			this.groupName = getUserGroupNew.getGroupName();
+
+			detailObj(AuditConst.PM_AUD_OUSRG_GRPNAME_FIELDLABELID, null, this.groupName);// New
+			detailObj(AuditConst.PM_AUD_OUSRG_GROLE_FIELDLABELID, null, roleDesc); // New
+			detailObj(AuditConst.PM_AUD_OUSRG_PTJCODENAME_FIELDLABELID, null, this.ptjCodeName);
+			detailObj(AuditConst.PM_AUD_OUSRG_GSTATUS_FIELDLABELID, null, this.grpStatus);
+		}
+	}
+
+	/** new created UserGroupUsers List **/
+	private void newCreateduserGroupList(PmUserGroup getUserGroupNew) {
+		if (getUserGroupNew != null && getUserGroupNew.getPmUserGroupUsers() != null
+				&& !getUserGroupNew.getPmUserGroupUsers().isEmpty()) {
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			for (PmUserGroupUser usersGroup : getUserGroupNew.getPmUserGroupUsers()) {
+				this.docId = BigInteger.valueOf(usersGroup.getUserGroupUserId());
+				detailObj(AuditConst.PM_AUD_OUSRG_UNAME_FIELDLABELID, null, usersGroup.getPmUser().getUserName());
+				detailObj(AuditConst.PM_AUD_OUSRG_UIDNO_FIELDLABELID, null, usersGroup.getPmUser().getIdentificationNo());
+				detailObj(AuditConst.PM_AUD_OUSRG_USTATUS_FIELDLABELID, null,
+						usersGroup.getPmUser().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+			}
+		}
+	}
+
 	private void detailObj(BigInteger fieldLabelId, String oldValue, String newValue) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
 		dtlObj.setDocType(this.docType);
-		if (this.groupRole != null && this.groupRole.equalsIgnoreCase("RN_APPROVER")) {
+		if (this.groupRole != null && "RN_APPROVER".equalsIgnoreCase(this.groupRole)) {
 			dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_OUSRG_PMPARAMETERLVLID_RNAPPR);
 		} else {
 			dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_OUSRG_PMPARAMETERLVLID_FULAPPR);
@@ -155,7 +170,7 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		dtlObj.setGroupOrgProfileId(this.grpOrgProfileId);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_OUSRG);
-		dtlObj.setLvlCode3(this.groupRole.equals("FL_APPROVER") ? AuditConst.PM_LVL_CODE_3_OUSRG_FULAPPR
+		dtlObj.setLvlCode3("FL_APPROVER".equalsIgnoreCase(this.groupRole) ? AuditConst.PM_LVL_CODE_3_OUSRG_FULAPPR
 				: AuditConst.PM_LVL_CODE_3_OUSRG_RNAPPR);
 		dtlObj.setDocId(docId);
 		dtlObj.setDocGroupId(this.docGroupId);

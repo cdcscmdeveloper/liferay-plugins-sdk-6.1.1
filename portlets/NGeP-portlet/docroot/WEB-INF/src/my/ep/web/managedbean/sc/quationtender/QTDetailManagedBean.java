@@ -138,7 +138,7 @@ import org.primefaces.model.MenuModel;//#25138 Reendorsed
 import org.primefaces.model.TreeNode;
 
 //25791 -start-
-import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQt;
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
 
 //25791 -end-
 
@@ -1673,6 +1673,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> toBeRemoveEPVAttachments;
 	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
 	private boolean noSupplierExistForEPV;
+	private boolean userAbleToChangePBSecretary;
 	//#21692 - End
 	
 	// #29468 Vinod Start
@@ -1901,7 +1902,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScLoa> viewQtDlLoaContractTrackingDtls;
 	private IPagingDataModel<VCtContract> viewLoaContractDataModel;
 	private Map<Long, VCtContract> checkLoaContract;
-	private IPagingDataModel<ScBidScheduleForQt> searchBidScheduleDataModel;
+	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
 	// 25791-End
 	//28895 - 35500 start
 	/** The newly added sc qt committee */
@@ -1913,8 +1914,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean auditViewRole;
 	//#28895 - 35500 end
-	
-	public boolean isFieldProcurementJustification = false; //#36678 related to #35061
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12085,7 +12084,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/**
 	 * @return the searchBidScheduleDataModel
 	 */
-	public IPagingDataModel<ScBidScheduleForQt> getSearchBidScheduleDataModel() {
+	public IPagingDataModel<ScBidScheduleForQT> getSearchBidScheduleDataModel() {
 		return searchBidScheduleDataModel;
 	}
 
@@ -12093,7 +12092,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param searchBidScheduleDataModel the searchBidScheduleDataModel to set
 	 */
 	public void setSearchBidScheduleDataModel(
-			IPagingDataModel<ScBidScheduleForQt> searchBidScheduleDataModel) {
+			IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel) {
 		this.searchBidScheduleDataModel = searchBidScheduleDataModel;
 	}
 	
@@ -12152,21 +12151,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#21692 #note-504 - End
 	
-	/** #36678 related to #35061
-	 * 
-	 * @return
-	 */
-	public boolean isFieldProcurementJustification() {
-		return isFieldProcurementJustification;
-	}
-
-	/** #36678 related to #35061
-	 * @param
-	 */
-	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
-		this.isFieldProcurementJustification = isFieldProcurementJustification;
-	}
-	
 	//37813,35384 -start
 	/**
 	 * @return the techPoints
@@ -12192,4 +12176,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.noSupplierExistForEPV = noSupplierExistForEPV;
 	}
 	//#21692 note-569 - End
+
+	//#21692 - End
+	public boolean isUserAbleToChangePBSecretary() {
+		return userAbleToChangePBSecretary;
+	}
+
+	public void setUserAbleToChangePBSecretary(boolean userAbleToChangePBSecretary) {
+		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
+	}
+	//#21692 - End
 }

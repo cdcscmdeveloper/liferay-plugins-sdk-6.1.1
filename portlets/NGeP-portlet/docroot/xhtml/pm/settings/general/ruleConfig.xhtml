@@ -16,7 +16,7 @@
 						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="ruleCatalogSaveBtn"
 							partialSubmit="true" process=":form:settingTabId:ruleConfigId"
-							oncomplete="saveInfoDlg.show();">
+							oncomplete="if (!args.validationFailed) saveInfoDlg.show();">
 						</p:commandButton>
 						<!-- 34445 end -->
 					</div>

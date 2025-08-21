@@ -118,7 +118,7 @@
 					value="#{(item.scBidSupplier.bumi)? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			<ui:remove>26247 - start</ui:remove>
-			<p:column>
+			<p:column style="white-space:normal;width:18%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 					<ac:iconTooltip
@@ -203,6 +203,17 @@
 				<h:outputText
 					value="#{(item.scBidSupplier.bumi)? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
+			
+			<p:column style="white-space:normal;width:18%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+				</f:facet>
+				<ac:disciplinaryActionYesNo
+					supplier="#{item.scBidSupplier.smSupplier}" index="#{index}"/>
+			</p:column>
+			
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
 				<h:outputText style="float : right"
 					value="#{item.scBidSupplier.packageStartPrice}">
@@ -258,7 +269,7 @@
 			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 				style="text-align:center;">
 				<h:outputText
-					rendered="#{biddingBB.checkDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId)}"
+					rendered="#{biddingBB.checkDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId) or biddingBB.checkZonesDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId, biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.specZoneId)}"
 					value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
 			</p:column>
 		</p:dataTable>

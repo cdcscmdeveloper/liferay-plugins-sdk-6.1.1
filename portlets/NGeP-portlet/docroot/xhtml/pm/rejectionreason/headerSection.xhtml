@@ -20,7 +20,7 @@
 						<!-- 34445 start -->
 						<c:choose>
 							<c:when test="#{rejectionReasonBackingBean.managedBean.selectedReason.brandNew}">
-								<p:commandButton id="btnReasonSave" value="#{lbl['lbl.btn.save']}" oncomplete="saveInfoDlg.show()"/>
+								<p:commandButton id="btnReasonSave" value="#{lbl['lbl.btn.save']}" oncomplete="if (!args.validationFailed) saveInfoDlg.show()"/>
 							</c:when>
 							<c:otherwise>
 								<p:commandButton id="btnReasonUpdate" value="#{lbl['lbl.btn.update']}" oncomplete="updateInfoDlg.show()"/>

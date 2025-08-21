@@ -19,8 +19,7 @@
 				<!-- 34445 start -->
 				<div align="right" style="width: 100%">
 					<p:commandButton id="userSaveBtnId" value="#{lbl['lbl.btn.save']}"
-						style="float:right;"
-						onstart="saveInfoDlg.show();" oncomplete="userGroupBlockWidget.hide();"
+						style="float:right;" oncomplete="if (!args.validationFailed) saveInfoDlg.show();"
 						rendered ="#{usergroupBackingBean.managedBean.userGroup.brandNew}"/>
 						
 					<p:commandButton id="userUpdateBtnId" value="#{lbl['lbl.btn.update']}"
