@@ -267,12 +267,22 @@
 						<td></td>
 						<td align="left">
 							<span id="blinkId4">
-								<font color="red">&#x26A0;</font>
-								<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
+								<!-- #13362 START -->
+								<p:graphicImage id="alert-img-overlapcat"
+									style="vertical-align:top"
+									value="/css/images/design/icon_alert.png" />
+								<strong><h:outputText
+										styleClass="warning"
+										value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
 							</span>
 							<span style="opacity: 0.0;">
-								<font color="red">&#x26A0;</font>
-								<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" />
+								<p:graphicImage id="alert-img-overlapcat2"
+									style="vertical-align:top"
+									value="/css/images/design/icon_alert.png" />
+								<strong><h:outputText
+										styleClass="instruction"
+										value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
+								<!-- #13362 END -->
 							</span>
 						</td>
 					</tr>

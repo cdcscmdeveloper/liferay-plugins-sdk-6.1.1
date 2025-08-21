@@ -67,10 +67,12 @@ import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -189,6 +191,7 @@ import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAtta
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -213,6 +216,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;	// Bug #36730@Syazani 07/01/2025
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
@@ -273,7 +277,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
 			  SourcingConstants.MALAYSIA_COUNTRY_CODE);
 
-	
+	private final Map<String, String> recordStatusParamMap = new HashMap<>();
+
 	/**
 	 * Logger instance.
 	 */
@@ -820,6 +825,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	
+	//38343 - start
+	protected IDocumentSO getDocumentSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+	}
+	//38343 - end
+
+	// 26247 - start
+	protected IQTSuppFinalizationSO getQtSuppFinalizationSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSuppFinalizationSO.class);
+	}
+
+	protected IQTBriefingSO getQtBriefingSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
+	}
+
+	protected IScheduleBiddingSO getScheduleBiddingSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScheduleBiddingSO.class);
+	}
+	// 26247 - end
+
 	/**
 	 * To initialize remarks.
 	 * 
@@ -5672,38 +5699,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// #25729 #142 Start - Allow create QT below threshold RM20k
 	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
-
 		BigDecimal actualIntendedPrice = new BigDecimal(0);
 
-		// 36678 add condition status id related to 35061 -start-
-		if ("createQt".equals(ScreenType)
-				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+		if ("createQt".equals(ScreenType)) {
 			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-
 		} else {
-			actualIntendedPrice = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : new BigDecimal(0);
-			// 36678 related to 35061 -end-
+			actualIntendedPrice = scQt.getEstimatedAmount();
 		}
 
 		if (!scQt.isPanel() && actualIntendedPrice != null) {
 			// #25729 #174
-			// BugBug #35061 - asyrafhaziq
+			// Bug #35061 - asyrafhaziq
 			// get total indicative price threshold validation value
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
 
-			if ((actualIntendedPrice.compareTo(indPriceThreshold) <= 0))
-
-			{
+			if ((actualIntendedPrice.compareTo(indPriceThreshold) <= 0)) {
+				// Bug #35061 -end-
 				return Boolean.TRUE;
 			}
 		}
-
-		// #36678 set null if user change above 50k. related to #35061,#37899
-		if (scQt.getJustificationProcValue() != null && scQt.getQtStatus() != null
-				&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
-			scQt.setJustificationProcValue(null);
-		}
-		// #36678, #35061, #37899 -end-
 
 		return Boolean.FALSE;
 	}
@@ -7111,11 +7125,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		for (ScQtFinalizationReport briefingPaperReport : briefingPaperList) {
 			String definitionKey = null != briefingPaperReport.getPmDocument() ? briefingPaperReport.getPmDocument()
 					.getDocDefinitionKey() : "";
+			String subStringDemoReport = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);//#28784
 			if (!Arrays.asList(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT,
 					SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT,
 					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT,
-					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT,
-					SourcingConstants.DEMO_EVALUATION_REPORT).contains(definitionKey)) {
+					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT).contains(definitionKey)
+					&& !briefingPaperReport.getTitle().contains(subStringDemoReport)) {//#28784
 				reportList.add(briefingPaperReport);
 			}
 		}
@@ -7174,4 +7189,72 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// #29007 End vinod
+	
+	
+	// 26247 - start
+	/**
+	 * Retrieve mof status descriptions
+	 * @param mofAccount
+	 * @return mof status description
+	 */
+	public String evaluateMOFStatus(SmMofAccount mofAccount) {
+		if (recordStatusParamMap.isEmpty()) {
+			List<PmParameterDesc> paramDescs = this.getParameterDescsByTypeAndSearchBean(
+					ParameterTypeConst.RECORD_STATUS, null);
+			for (PmParameterDesc paramDesc : paramDescs) {
+				recordStatusParamMap.put(
+						paramDesc.getPmParameter().getParameterCode().concat(paramDesc.getLanguageCode()),
+						paramDesc.getCodeName());
+			}
+		}
+
+		Locale locale = new FacesScopes().getUserLocale();
+		String mofStatus = "0";
+		if (null != mofAccount) {
+			mofStatus = mofAccount.getRecordStatusFlg().toString();
+		}
+		return recordStatusParamMap.get(mofStatus.concat(locale.getLanguage()));
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	/**
+	 * Evaluate if qt is disabled for futher action for non/disciplinary action scenario
+	 * @param scQt
+	 * @param supplier
+	 * @return
+	 */
+	public boolean disabledQTProcess(SmSupplier supplier) {
+		if (null == supplier || null == supplier.getScQt()) {
+			return false;
+		}
+		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
+		boolean isDirectDiciplinaryAction = false;
+		if(CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())){
+			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+			isDirectDiciplinaryAction = Arrays.asList(disciplinaryAction.isBlacklistOwner(), 
+					disciplinaryAction.isCancelRegistration(),
+					disciplinaryAction.isSuspendRegistration()).contains(true);
+		}
+				
+
+		boolean isDisciplinaryAction = isDirectDiciplinaryAction && supplier.isDisciplinaryActions() && !supplier.isWarningDA();
+		boolean isCancelledOrBlacklisted = viewSuppProfileBean.evaluateCancellationBlacklist(supplier);
+		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
+		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
+				&& !supplier.isBumi();
+
+		List<String> cancelledCategoryCodes = new ArrayList<>();
+		cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
+		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
+		boolean hasCancelledCategories = CollectionUtils.isNotEmpty(cancelledCategoryCodes);
+
+		boolean isSuspendRegistration = viewSuppProfileBean.evaluateSuspendRegistration(supplier);
+
+		return Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction,
+				isSuspendRegistration).contains(true)
+				|| !Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_EXPIRED).contains(
+						mofRecordStatus);
+	}
+	// 26247 - end
 }

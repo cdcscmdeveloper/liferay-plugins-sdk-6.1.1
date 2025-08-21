@@ -12,7 +12,9 @@
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.function')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.quantity')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.value')</th>
-			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purMthd')</th>
+			<!--#38310 - START -->
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purchasingMthd')</th>
+      <!--#38310 - END -->
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purchase.year')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.guarnName')</th>
 		</tr>
@@ -46,6 +48,32 @@
 				<td>$!machine.purchaseYear</td>
 				<td>$!machine.guarantorName</td>
 			</tr>
+			#set($brandLen = 0)
+			#set($guarantorLen = 0) 
+			#set($functionLen = 0)
+			#set($maxLen = 0)
+			
+			#if($!machine.brandName)
+			    #set($maxLen = $machine.brandName.length())
+			#end
+			#if($!machine.guarantorName)
+			    #set($guarantorLen = $machine.guarantorName.length())
+			#end
+			#if($!machine.machineFunction)
+			    #set($functionLen = $machine.machineFunction.length())
+			#end
+			#if($brandLen > $maxLen) #set($maxLen = $brandLen) #end
+			#if($guarantorLen > $maxLen) #set($maxLen = $guarantorLen) #end  
+			#if($functionLen > $maxLen) #set($maxLen = $functionLen) #end
+			
+			#set($extraRows = $maxLen / 10)
+			#set($rowCounter = $rowCounter + 1 + $extraRows)
+			
+			#if($rowCounter > $MAX_ROWS_PER_PAGE * 2)
+				<div style="page-break-before: always;"></div>
+				#set($rowCounter = 0)
+		    #end
+			
 			#end
 		#else
 			<tr>

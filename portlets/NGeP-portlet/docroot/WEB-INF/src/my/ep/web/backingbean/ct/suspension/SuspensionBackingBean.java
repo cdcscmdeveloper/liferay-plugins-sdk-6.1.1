@@ -73,6 +73,11 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
+import my.ep.persistence.entity.ct.CtContractVer; //35506
+import my.ep.constant.ct.audit.AuditContractConst; //35506
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
+
 /**
  * Backing Bean For Contract Suspension Details
  * 
@@ -586,6 +591,38 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
+				
+				// #35506 Start
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				if (auditCtBean.getAuditCtConfigState()) {
+					if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+							|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+
+						CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+						AuditContractReqDTO auCtData = new AuditContractReqDTO();
+						auCtData.setDocId(ctContractVer.getCtContract().getContractId());
+						auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+						auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer().getContractVerId());
+						auCtData.setDocType(resDTO.getCtContractVer().getDocType());
+						auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
+						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
+
+						if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+						}
+
+						if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						}
+
+						auditCtBean.saveAuditData(auCtData);
+					}
+				}
+				// #35506 End
+				
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 

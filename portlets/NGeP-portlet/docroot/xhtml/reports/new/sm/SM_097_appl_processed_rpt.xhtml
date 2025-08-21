@@ -58,12 +58,12 @@
 			</td>
 			<td class="tdContent">
 				<p:selectOneMenu value="#{applProcessedRptBB.managedBean.applType}" style="width:300px;">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue=""></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.newAccRegMOF']}" itemValue="N"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.renewAccMOF']}" itemValue="R"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.updateAccMOF']}" itemValue="U"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.addCatCode']}" itemValue="A"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiStatus']}" itemValue="B"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.all']}" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.newAccRegMOF']}" itemValue="N" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.renewAccMOF']}" itemValue="R" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.updateAccMOF']}" itemValue="U" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.addCatCode']}" itemValue="A" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.menu.applType.bumiStatus']}" itemValue="B" />
 					<!-- 32521 - END -->
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
@@ -92,7 +92,7 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.processingofficername']}"  />
 			</td>
 			<td class="tdContent">
-						<ac:lov id="lovUser" lovId="PM_USER_ID" style="width:289px;" size="40"
+						<ac:lov id="lovUser" lovId="PM_USER_ID_RPT" style="width:289px;" size="40"
 		            	readonly="true" 
 						headerText="#{lbl['lbl.pm.ta.user.lov']}"
 						value="#{applProcessedRptBB.managedBean.selectedUser.userName}" 

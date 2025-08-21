@@ -68,11 +68,14 @@
 									</tr>
 								</table>
 							</h:panelGroup></td>
-						<td colspan="4"><h:outputText
-								style="text-align:left;vertical-align:top; padding: 0 0 0 0;"
-								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"
-								styleClass="item-title" /></td>
-
+						<td colspan="4">
+							<!-- Enhancement #31245 - start -->
+							<h:outputText
+								style="text-align:left;vertical-align:top; padding: 0 0 0 0;" styleClass="item-title"
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName.replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', '')}" />
+							<!-- Enhancement #31245 - end -->
+					  	</td>
+                        
 
 					</tr>
 

@@ -1350,6 +1350,8 @@ public class PurchaseInquiryBackingBean extends
 
 					reqNoteBackingBean.getCurrentStatus(getPmStatusByStatusId(rnStatusId));
 					
+					reqNoteBackingBean.getManagedBean().setDocStatus(getStatusDescById(rnStatusId)); //#38538
+
 					requestNote.setRemarks(initializeRemarks(requestNote,
 							requestNote.getCurrentStatus(),
 							requestNote.getRemarks(), ScRequestNoteRemark.class));

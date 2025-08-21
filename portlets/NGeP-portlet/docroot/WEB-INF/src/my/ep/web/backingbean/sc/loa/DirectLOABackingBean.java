@@ -914,6 +914,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setPayLoad(awardDateType);
 
 			getSupplierDeatilsByLoaId(loaId);
+			setDisciplinaryAction(this.getManagedBean().getScLoa()); // 26247
 			this.getManagedBean().setValidatewitness(Boolean.TRUE); //#17376-144
 
 		} catch (Exception e) {
@@ -2612,36 +2613,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoa.setScLoiLoa(scLoiLoa);
 			}
 		}
-		
-		// #29451 -- #26247 -- Start.
-		checkDA(scLoa);
-		// #29451 -- #26247 -- End.
+		setDisciplinaryAction(scLoa);// 26247
 	}
-
-	// #29451 -- #26247 -- Start.
-	/**
-	 * @param scLoa
-	 */
-	private void checkDA(ScLoa scLoa) {
-		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-		
-		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-			
-			if (null != qtSuppFinalizationSO) {
-				SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoa.getScLoiLoa().getSmSupplier());
-				scLoa.getScLoiLoa().setSmSupplier(smSupplier);
-			}
-		} finally {
-			qtSuppFinalizationSO = null;
-		}
-		
-	}
-	// #29451 -- #26247 -- End.
-	
-	
 	
 	public SelectItem[]  getSelectRadioButtonCodeValues(String type)
 	{
@@ -5273,10 +5246,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scQt.setEstimatedAmount(scLoa.getEstimatedPrice());
 		}
 		
-		// #29451 -- #26247 -- Start.
-		checkDA(scLoa);
-		// #29451 -- #26247 -- End.
-		
+		setDisciplinaryAction(scLoa);// 26247
+
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getContractSignerList());
 		this.getManagedBean().setSupplierHQPersonnel(
@@ -13395,5 +13366,24 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return categoryCode;
 	}
 	// 26770 - end fix sonarlint
+	// 26247 - start
+	/**
+	 * Populate scLoa with disciplinary action informations
+	 * @param scLoa
+	 */
+	private void setDisciplinaryAction(ScLoa scLoa) {
+		if (scLoa.isBrandNew()) {
+			return;
+		}
+		Long qtId = scLoa.getScLoiLoa().getDocId();
+		if (!Arrays.asList(ParameterConst.DOCTYPE_DIRECT_NEGO, ParameterConst.DOCTYPE_QUOTATION).contains(
+				scLoa.getScLoiLoa().getDocType())) {
+			qtId = null;
+		}
+		SmSupplier smSupplier = this.getQtSuppFinalizationSO().evaluateDisciplinaryActions(
+				scLoa.getScLoiLoa().getSmSupplier(), qtId);
+		scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+	}
+	// 26247 - end
 
 }

@@ -923,7 +923,7 @@ public class SmPersonnelBackingBean extends
 				throw new EpException(MessageConst.ERROR_722656,
 						new String[] { addrType });
 			} else {
-				destAddr.setSmAddress(srcAddr);
+				destAddr.setSmAddress((SmAddress) srcAddr.deepCopy());
 				updateMailAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
 			}
 		}else{
@@ -1553,6 +1553,7 @@ public class SmPersonnelBackingBean extends
 		addr.setPmDivision(new PmDivision());
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 		
 	/**
@@ -1640,6 +1641,7 @@ public class SmPersonnelBackingBean extends
 		addr.setPmDivision(new PmDivision());
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 		
 	/**
@@ -1682,6 +1684,7 @@ public class SmPersonnelBackingBean extends
 		}
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 		
 	/**
@@ -1716,6 +1719,11 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
+	}
+	
+	public void onChangeCity(SmAddress addr, String addrType){
+		addr.setPostcode("");
 	}
 	//#34159 - End
 		

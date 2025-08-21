@@ -4403,7 +4403,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setComplianceOldNo(boolean isComplianceOldNo) {
 		this.isComplianceOldNo = isComplianceOldNo;
 	}
-
+	
 	/* #29187 End Vinod */
 	
 	//34528-uat 4serangkai - start

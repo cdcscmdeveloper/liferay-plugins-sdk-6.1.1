@@ -1,0 +1,170 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:blockUI widgetVar="blkPanelSearchTable" block=":form"
+		trigger="panelSearchId">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	<p:panel id="auditPMSearchPanel"
+		header="#{lbl['lbl.pm.search.location']}" toggleable="true">
+		<p:outputPanel>
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.pm.audit.search.instruction']}" escape="false" />
+			<br />
+			<br />
+		</p:outputPanel>
+		<table class="ppTwoTable">
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.audit.config.type']}" /> <h:outputLabel
+						value="*" styleClass="mandatory" /></th>
+				<td><p:selectOneMenu id="paramLevel1"
+						styleClass="ppDropDownWidthM" required="true"
+						label="#{lbl['lbl.pm.audit.config.type']}"
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.systemConfigParamLevel1}"
+						style="width: 265px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{searchPMAuditBackingBean.getDropdownLevel1()}"
+							var="lvl1" itemLabel="#{lvl1.codeName}"
+							itemValue="#{lvl1.levelCode}" />
+						<p:ajax event="change" update=":form:auditPMSearchPanel,:form:searchMasters"
+							listener="#{searchPMAuditBackingBean.changeType()}" />
+					</p:selectOneMenu></td>					
+				<td><p:message for="paramLevel1" id="paramLevel1Msg"
+						display="icon" /></td>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.audit.configCategory.type']}" /> <h:outputLabel
+						value="*" styleClass="mandatory" /></th>
+				<td><p:selectOneMenu id="paramLevel2"
+						styleClass="ppDropDownWidthM" required="true"
+						label="#{lbl['lbl.pm.audit.configCategory']}"
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.categoryConfigParamLevel2}"
+						style="width: 265px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" 
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{searchPMAuditBackingBean.getDropdownLevel2()}"
+							var="lvl2" itemLabel="#{lvl2.codeName}"
+							itemValue="#{lvl2.levelCode}" />
+						<p:ajax event="change"
+							update="paramLevel1,paramLevel2,paramLevel3,fromDate,toDate" />
+					</p:selectOneMenu></td>
+				<td><p:message for="paramLevel2" id="paramLevel2Msg"
+						display="icon" /></td>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.audit.configItem.type']}" /></th>
+				<td><p:selectOneMenu id="paramLevel3"
+						styleClass="ppDropDownWidthM" required="false"
+						label="#{lbl['lbl.pm.audit.configItem']}"
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemConfigParamLevel3}"
+						style="width: 265px;margin-bottom: 5px;"
+						disabled="#{searchPMAuditBackingBean.managedBean.searchBean.categoryConfigParamLevel2 eq null}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{searchPMAuditBackingBean.getDropdownLevel3()}"
+							var="lvl3" itemLabel="#{lvl3.codeName}"
+							itemValue="#{lvl3.levelCode}" />
+						<p:ajax event="change"
+							update="paramLevel1,paramLevel2,paramLevel3,fromDate,toDate" />
+					</p:selectOneMenu></td>
+				<td><p:message for="paramLevel3" id="paramLevel3Msg"
+						display="icon" /></td>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<td width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.audit.itemCode']}"></p:outputLabel></td>
+				<td width="275px;"><p:inputText
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemCode}"
+						id="itemCode" styleClass="ppDisplayTextM" size="36" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemCode']}" /></td>
+			</tr>
+			<tr>
+				<td width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.audit.itemName']}"></p:outputLabel></td>
+				<td width="275px;"><p:inputText
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemName}"
+						id="itemName" styleClass="ppDisplayTextM" size="36" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemName']}" /></td>
+			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.audit.Role']}" /></th>
+				<td><p:selectOneMenu id="roles" styleClass="ppDropDownWidthM"
+						required="false" label="#{lbl['lbl.pm.audit.Role']}"
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.roleCode}"
+						style="width: 265px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{searchPMAuditBackingBean.getDropdownRoleList()}"
+							var="roleItem" itemLabel="#{roleItem.roleName}"
+							itemValue="#{roleItem.roleCode}" />
+						<p:ajax event="change" update="roles,searchActionBylist" process="auditPMSearchPanel"/>
+					</p:selectOneMenu> <ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" /></td>
+				<td><p:message for="roles" id="rolesMsg" display="icon" /></td>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.audit.actionBy']}" /></th>
+				<td><ac:lovAudit isStoreProc="true" id="searchActionBylist"
+						lovId="PM_USER" size="36" readonly="true"
+						roleCode="searchPMAuditBackingBean.getRoleCode()"
+						headerText="#{lbl['lbl.pm.audit.actionBy']}" process="@this"
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.pmUser.userName}"
+						postUpdateListener="searchPMAuditBackingBean.resetGetActionBy()"
+						update="@form"
+						saveObject="searchPMAuditBackingBean.managedBean.searchBean.pmUser"
+						tooltip="#{lbl['lbl.pm.audit.tooltip.actionby']}">
+					</ac:lovAudit></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.pm.audit.actiondateFrom']}" /></td>
+				<td><p:calendar id="fromDate" showOn="button" size="36"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom}" readonlyInput="true">
+						<p:ajax event="dateSelect" update="toDate" />
+					</p:calendar></td>
+				<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
+				<td><p:calendar showOn="button" size="30"
+						label="#{lbl['lbl.pm.audit.actiondateTo']}"
+						required="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom ne null or !searchPMAuditBackingBean.managedBean.searchBean.dateFrom eq ''}"
+						mindate="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom}"
+						id="toDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.dateTo}" readonlyInput="true">
+					</p:calendar></td>
+			</tr>
+			<tr>
+				<td colspan="4" width="100%">
+					<div class="ppRightBtn">
+						<p:commandButton id="panelSearchId"
+							value="#{lbl['lbl.btn.search']}"
+							onstart="blkPanelSearchTable.show();"
+							oncomplete="blkPanelSearchTable.hide();" update="searchMasters"
+							process="auditPMSearchPanel"
+							action="#{searchPMAuditBackingBean.searchMaster}" />
+						<p:commandButton id="searchButtonId"
+							value="#{lbl['lbl.btn.reset']}"
+							update=":form:auditPMSearchPanel,:form:searchMasters"
+							process="@this"
+							action="#{searchPMAuditBackingBean.resetSearchBean}" />
+					</div>
+				</td>
+			</tr>
+		</table>
+		<ac:lovPopupAudit />
+	</p:panel>
+</ui:composition>
