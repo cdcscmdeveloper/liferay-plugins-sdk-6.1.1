@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import my.ep.dto.pm.authorization.user.SyncUserReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -341,8 +345,8 @@ public class SyncProcBoardFromPMRest {
 	 *
 	 * <b>Query Parameters:</b>
 	 * <ul>
-	 *   <li><b>loginId</b> (required) – The login ID of the user to synchronize.</li>
-	 *   <li><b>setDefaultPassword</b> (optional) – If set to "true" (case-insensitive),
+	 *   <li><b>loginId</b> (required)  The login ID of the user to synchronize.</li>
+	 *   <li><b>setDefaultPassword</b> (optional)  If set to "true" (case-insensitive),
 	 *       the user's password will be reset to the system's default password.</li>
 	 * </ul>
 	 *
@@ -359,21 +363,84 @@ public class SyncProcBoardFromPMRest {
 	
 	@POST
 	@Path("/syncUserv2")
-	public Response syncLiferayOimByLoginId(UserReqDTO reqDTO) {
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN) // or APPLICATION_JSON if you prefer
+	public Response syncLiferayOimByLoginId(SyncUserReqDTO reqDTO) {
 		try {
 			String message = "";
 			log.info("#Start Sync By Login Id");
 			if(reqDTO == null){
 				log.info("Body Is Null");
-				reqDTO = new UserReqDTO();
+				return Response.status(400).entity("Body is required").build();
 			}else{
-				log.info("Body Is Not Null");
+				log.info("Body Is Not Null:"+reqDTO.getLoginId());
 			}
 			if(reqDTO.getKeyPass() != 8532147){
 				log.info("Key Wrong");
 				message = "Error Key";
+				return Response.status(401).entity("Error Key").build();
 			}else{
 				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginId(reqDTO.getLoginId(),false);
+				log.info("Finished Sync By Login Id:"+success);	
+				message = "Success";
+			}
+			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Path("/syncUserv3")
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN) // or APPLICATION_JSON if you prefer
+	public Response syncLiferayOimByLoginIdNative(SyncUserReqDTO reqDTO) {
+		try {
+			String message = "";
+			log.info("#Start Sync By Login Id");
+			if(reqDTO == null){
+				log.info("Body Is Null");
+				return Response.status(400).entity("Body is required").build();
+			}else{
+				log.info("Body Is Not Null:"+reqDTO.getLoginId());
+			}
+			if(reqDTO.getKeyPass() != 8532147){
+				log.info("Key Wrong");
+				message = "Error Key";
+				return Response.status(401).entity("Error Key").build();
+			}else{
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginIdNative(reqDTO.getLoginId(),false,false);
+				log.info("Finished Sync By Login Id:"+success);	
+				message = "Success";
+			}
+			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Path("/syncUserv4")
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN) // or APPLICATION_JSON if you prefer
+	public Response syncLiferayOimByLoginIdNativeEvict(SyncUserReqDTO reqDTO) {
+		try {
+			String message = "";
+			log.info("#Start Sync By Login Id");
+			if(reqDTO == null){
+				log.info("Body Is Null");
+				return Response.status(400).entity("Body is required").build();
+			}else{
+				log.info("Body Is Not Null:"+reqDTO.getLoginId());
+			}
+			if(reqDTO.getKeyPass() != 8532147){
+				log.info("Key Wrong");
+				message = "Error Key";
+				return Response.status(401).entity("Error Key").build();
+			}else{
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginIdNative(reqDTO.getLoginId(),false,true);
 				log.info("Finished Sync By Login Id:"+success);	
 				message = "Success";
 			}
