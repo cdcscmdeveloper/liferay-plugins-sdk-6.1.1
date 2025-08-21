@@ -725,6 +725,7 @@ public class LovBackingBean implements Serializable {
 		if (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 			ctReportBB.getManagedBean().setLovItemReportNameTriggered(true);
 			ccContractItemMonitoringRptBB.getManagedBean().setLovItemReportNameTriggered(true);
+			ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setLovItemReportNameTriggered(true); //#34889
 		}
 		// End - #29416
 		if(this.getLovBean().getSelectionMode().equalsIgnoreCase("single")) {
