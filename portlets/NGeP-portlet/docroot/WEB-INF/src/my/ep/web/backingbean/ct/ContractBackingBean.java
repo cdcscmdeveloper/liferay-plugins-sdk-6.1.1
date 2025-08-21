@@ -5091,9 +5091,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public BigDecimal calculateOriginalOverallAmount() {
 		CtContractVer ctContractVer = getManagedBean().getContractVer();
 	    ScLoa loa = ctContractVer.getCtContract().getLoa();
-
+	
 	    BigDecimal total = ctContractVer.getCtContractValue().getOverallCtAmtPbond();
-
+	    // Early return if OverallCtAmtPbond is null
+	    if (total == null) {
+	        return BigDecimal.ZERO;
+	    }
+	    
 	    // Skip bond calculation if direct purchase or bond exempted
 	    if (getManagedBean().isDirectPurchase() || getManagedBean().getCtContractAmount().isBondExempted()) {
 	        return total;
