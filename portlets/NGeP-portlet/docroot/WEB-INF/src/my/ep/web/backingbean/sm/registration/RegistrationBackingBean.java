@@ -1179,6 +1179,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	public void onCallFirstUserTncDialog(){
 		getManagedBean().setAggreeDeclareAdmin(false);
+		// #34400 - Start
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
 		SmSupplierOwner smSuppOwner = this.getManagedBean().getSmSuppOwner();
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
@@ -1193,14 +1194,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				throw new EpException(MessageConst.ERROR_721050);
 			}
 
-			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",
-					IPersonnelSO.class);
+			IPersonnelSO personnelSO = BusinessDelegate.getInstance()
+			        .getServiceObject("sm", IPersonnelSO.class);
+			
 			PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
 
 			personneleqDTO.setIdentificationNo(this.getManagedBean().getSmSupp().getRegNo());
 			PersonnelResDTO personnelResDTO = personnelSO.retrieveIsEquityOrIsDirectorByIdentNo(personneleqDTO);
 
-			if (personnelResDTO.getSmPersonnelList().size() > 0) {
+			if (!personnelResDTO.getSmPersonnelList().isEmpty()) {
 				throw new EpException(MessageConst.ERROR_721026);
 			}
 
@@ -1235,6 +1237,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			checkRoleInCompany();
 			// #30829 - end
 		}
+		// #34400 - End
 		//SSM INTEGRATION
 		//#27315
 		//disable this, no need to check other supplier owner
