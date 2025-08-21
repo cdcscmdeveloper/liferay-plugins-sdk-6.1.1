@@ -218,6 +218,12 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		if(editedAddress.getPmDivision() != null){
 			detailObj(AuditConst.PM_AUD_OFO_DIVISION_FIELDLABELID, null, editedAddress.getPmDivision().getDivisionName());
 		}
+		
+		if(!editedAddress.getFaxNo().isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_FAX_FIELDLABELID, null, 
+					editedAddress.getFaxCountry() + editedAddress.getFaxArea() + editedAddress.getFaxNo());
+		}
+		
 	}
 
 	/**
@@ -265,21 +271,6 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		if(!editedAddress.getPostcode().equals(oldPmAddress.getPostcode())){
 			detailObj(AuditConst.PM_AUD_OFO_POSTCODE_FIELDLABELID, oldPmAddress.getPostcode(), editedAddress.getPostcode());
 		}
-		
-		/**if(!editedAddress.getPhoneNo().isEmpty() && !editedAddress.getPhoneNo().equals(oldPmAddress.getPhoneNo())
-				|| !editedAddress.getPhoneArea().isEmpty() && !editedAddress.getPhoneArea().equals(oldPmAddress.getPhoneArea())
-				|| !editedAddress.getPhoneCountry().isEmpty() && !editedAddress.getPhoneCountry().equals(oldPmAddress.getPhoneCountry())){
-			detailObj(AuditConst.PM_AUD_OFO_PHONE_FIELDLABELID, oldPmAddress.getPhoneNo()== null ? EMPTY_STRING : 
-				oldPmAddress.getPhoneCountry() + oldPmAddress.getPhoneArea() + oldPmAddress.getPhoneNo(),
-					editedAddress.getPhoneCountry() + editedAddress.getPhoneArea() + editedAddress.getPhoneNo());
-		}
-		
-		if(!editedAddress.getFaxNo().isEmpty() && !editedAddress.getFaxNo().equals(oldPmAddress.getFaxNo())){
-			detailObj(AuditConst.PM_AUD_OFO_FAX_FIELDLABELID, oldPmAddress.getFaxNo()== null ? EMPTY_STRING  : 
-				oldPmAddress.getFaxCountry() + oldPmAddress.getFaxArea() + oldPmAddress.getFaxNo(), 
-					editedAddress.getFaxCountry() + editedAddress.getFaxArea() + editedAddress.getFaxNo());
-		}
-		*/
 		
 		if (editedAddress.getPmDivision() != null
 				&& !editedAddress.getPmDivision().equals(oldPmAddress.getPmDivision())) {
