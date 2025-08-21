@@ -4597,20 +4597,8 @@ public class SmApplicationUtil {
 			
 					//30865, 30921 - Starts
 				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
-					//#32810 Alert message not display for cancel bumi - start 
-					SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
-					//#32298 DA cancel manufacture alert warning - start - <26238>
-					if(smDisciplinaryAction != null && smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
-						cat.setCancelCategory(true);
-						if(smDisciplinaryAction.isCancelCategory() || smDisciplinaryAction.isBumiputeraCancel()){
-							cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
-						}else if(smDisciplinaryAction.isManufacturerCancel()){
-							cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE);
-						}
-						apprvList.add(cat);
-					}
-						//#32810 Alert message not display for cancel bumi - end 
-						//#32298 DA cancel manufacture alert warning - end - <26238>
+					addValidCategoryWithDAType(cat, apprvList);	//#38984
+					//#32298, #32810, #32298 DA cancel manufacture alert warning - end - <26238>
 				}
 				//30865, 30921  - Ends
 			}
@@ -4628,6 +4616,26 @@ public class SmApplicationUtil {
 			managedBean.setActiveCategoryList(catList);
 			managedBean.setApprovedCategoryList(apprvList);
 		}
+	}
+	
+	//#26238 - 38984
+	private static void addValidCategoryWithDAType(SmSupplierCategory cat, List<SmSupplierCategory> catList){
+		if (cat == null || cat.getDisciplinaryActionId() == null){
+			return;
+		}
+		SmDisciplinaryAction da = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
+		if(da == null || da.getRecordStatusFlg() == null || 
+				da.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+			return;
+		}
+		
+		cat.setCancelCategory(true);
+		if(da.isCancelCategory() || da.isBumiputeraCancel()){
+			cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
+		}else if(da.isManufacturerCancel()){
+			cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE);
+		}
+		catList.add(cat);
 	}
 	
 	//#26238
@@ -4701,11 +4709,7 @@ public class SmApplicationUtil {
 				//30865 - Starts
 			} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
 					|| cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_DELETED) == 0){
-						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
-						if (smDisciplinaryAction != null && smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
-							cat.setCancelCategory(true);
-							existingList.add(cat);
-						}
+				addValidCategoryWithDAType(cat, existingList); //#38984
 			}
 				//30865 - Ends
 		}
