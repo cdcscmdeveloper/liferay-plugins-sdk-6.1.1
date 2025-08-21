@@ -19,7 +19,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
-import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
