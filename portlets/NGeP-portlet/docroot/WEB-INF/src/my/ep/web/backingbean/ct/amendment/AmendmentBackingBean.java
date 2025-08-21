@@ -1621,17 +1621,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 
 			// 24333 - Start
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa() != null) {
-				ScLoa ctloa = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa();
-				if (ctloa.getGstAmt() == null) {
-					ctloa.setGstAmt(BigDecimal.ZERO);
-				}
-				if (ctloa.getSstAmt() == null) {
-					ctloa.setSstAmt(BigDecimal.ZERO);
-				}
-				ctBackingBean.getManagedBean().setOriginalOverallAmount(ctloa.getLoaAmt().add(ctloa.getGstAmt().add(ctloa.getSstAmt())));
-
-			}
+			ctBackingBean.getManagedBean().setOriginalOverallAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getOverallCtAmtPbond());
 			// 24333 - Start
 			
 			// Amendment process	  
