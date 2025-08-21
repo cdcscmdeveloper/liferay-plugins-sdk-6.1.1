@@ -114,9 +114,13 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
 		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
+		
 		// #26307 start
 		String cardType = null; 
 		String extraP = httpServletRequest.getParameter("extraP");
+		
+		log.info("##############################################orderId:"+orderId+"  tranID:"+tranID+"  amount:"+amount+"  extraP:"+extraP);
+		
 		boolean fromManualPayment = false;
 		//Start //26307
 		boolean skipChecking = false;
