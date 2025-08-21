@@ -207,16 +207,15 @@
 							    </ui:fragment>
 							     <ui:fragment rendered="#{isPTJOrgType or isKPTJOrgType}">								  
 							    	<h:panelGroup id="lovResOrg">
-											<p:inputText 
-											   size="103"
-										       id="itSelectedPtj" 
-											   value="#{empty profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgCode 
-											   and empty profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName 
-											   ? ''
-											   : profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgCode.concat(' - ')
-											   .concat(profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName)}"
-											   readonly="true" />
-											<!-- #29594 add orgCode and '-' -->
+							    	<p:inputText
+										size="103"
+								       	id="itSelectedPtj"
+									   	value="#{empty profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgCode
+									   	and empty profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName
+									   	? ''
+									   	: profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgCode.concat(' - ')
+									   	.concat(profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName)}"
+									   	readonly="true"/><!-- #29594 add orgCode and '-' -->
 									&#160;	
 									<p:commandLink id="ptjSearchCL" partialSubmit="true"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
