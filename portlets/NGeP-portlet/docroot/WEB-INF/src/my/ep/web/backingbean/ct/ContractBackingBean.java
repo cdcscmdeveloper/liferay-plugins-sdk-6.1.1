@@ -5084,36 +5084,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	// 24333 - Start
 	/**
-	 * The method used to calculate overall amount with GST AND STAX From LOA
+	 * The method used to set Overall Amount and calculate for Bond Percentage
 	 * 
 	 * @return BigDecimal total amount
 	 */
 	public BigDecimal calculateOriginalOverallAmount() {
-	    CtContract ctContract = getManagedBean().getContractVer().getCtContract();
-	    ScLoa loa = ctContract.getLoa();
+		CtContractVer ctContractVer = getManagedBean().getContractVer();
+	    ScLoa loa = ctContractVer.getCtContract().getLoa();
 
-	    // Early return if LOA is null
-	    if (loa == null) {
-	        return BigDecimal.ZERO;
-	    }
-
-	    // Initialize amounts with null-safe assignment
-	    BigDecimal contractAmt = loa.getLoaAmt();
-	    if (contractAmt == null) {
-	        contractAmt = BigDecimal.ZERO;
-	    }
-
-	    BigDecimal gstAmt = loa.getGstAmt();
-	    if (gstAmt == null) {
-	        gstAmt = BigDecimal.ZERO;
-	    }
-
-	    BigDecimal staxAmt = loa.getSstAmt();
-	    if (staxAmt == null) {
-	        staxAmt = BigDecimal.ZERO;
-	    }
-
-	    BigDecimal total = contractAmt.add(gstAmt).add(staxAmt);
+	    BigDecimal total = ctContractVer.getCtContractValue().getOverallCtAmtPbond();
 
 	    // Skip bond calculation if direct purchase or bond exempted
 	    if (getManagedBean().isDirectPurchase() || getManagedBean().getCtContractAmount().isBondExempted()) {
