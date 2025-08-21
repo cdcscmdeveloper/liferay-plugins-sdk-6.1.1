@@ -26,7 +26,6 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO; //#26186
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.ct.ContractConst; //#26186
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -43,7 +42,6 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
-import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType; //#26186
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.admin.PmAdminMatrix;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -1636,6 +1634,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String docNo = originalServletRequest.getParameter("docNo");
+		String taskName = originalServletRequest.getParameter("taskName"); //#26186
 		Long qtId = this.getManagedBean().getQtId();// 26247
 		renewSesionObject(); 
 		FacesScopes facesScopes = new FacesScopes();
@@ -1700,13 +1699,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			// 26247 - end
 			
 			//#26186 start
-			if (docNo.substring(0, 2).equals(ParameterConst.CONTRACT)) {
-				CTContractAmendmentDataType dataType = super.getBpmTaskDetails(CTContractAmendmentDataType.class, null);
-				if (dataType.getDocType() != null
-						&& dataType.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)
-						&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-					checkCtSupplierCategory(supplier);
-				}
+			if (taskName != null && taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				checkCtSupplierCategory(supplier);
 			}
 			//#26186 end
 
