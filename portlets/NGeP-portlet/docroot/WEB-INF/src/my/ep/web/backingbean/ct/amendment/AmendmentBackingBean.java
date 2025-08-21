@@ -1621,6 +1621,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 
 			// 24333 - Start
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getOverallCtAmtPbond() == null){
+				ctBackingBean.getManagedBean().getContractVer().getCtContractValue().setOverallCtAmtPbond(BigDecimal.ZERO);
+			}
 			ctBackingBean.getManagedBean().setOriginalOverallAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getOverallCtAmtPbond());
 			// 24333 - Start
 			
