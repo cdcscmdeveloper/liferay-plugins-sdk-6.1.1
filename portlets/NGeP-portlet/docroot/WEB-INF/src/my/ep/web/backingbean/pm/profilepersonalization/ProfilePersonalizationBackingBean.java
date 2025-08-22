@@ -1624,15 +1624,18 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 	}
 	
-	
 	//26238 - start
+	//#26186 start
 	/**
-	 * Pre-Render Disciplinary Action
+	  * Entry point for pre-render logic on the Disciplinary Action page.
+	  * <p>
+	  * This method orchestrates supplier initialization, disciplinary action checks,
+	  * QT and CT validations. Any exceptions are logged and handled gracefully
+	  * with user-facing error messages.
 	 */
 	public void preRenderDisciplinaryAction() {
 		//26238 -  START Disciplinary Action - 28111,28496
-		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()));
 		String docNo = originalServletRequest.getParameter("docNo");
 		String taskName = originalServletRequest.getParameter("taskName"); //#26186
 		Long qtId = this.getManagedBean().getQtId();// 26247
@@ -1641,81 +1644,22 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		FacesContext fc = FacesContext.getCurrentInstance();  
 		long startTime = System.currentTimeMillis();
 		try {
-			if(!StringUtils.isEmpty(docNo)){
-				MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
-				reqDTO1.setApplNo(docNo);
-				SmAppl srcAppl =  SmServiceLookup.getMofRegistrationSO().retrieveSmSupplierByApplNo(reqDTO1).getSmAppl();								
-				//26238 -  START Disciplinary Action - end
-		
-				this.getManagedBean().setSmSupplier(srcAppl != null ? srcAppl.getSmSupplier() : null);
-			}
-			if (getManagedBean().getSmSupplier() == null){
-				getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
-			}
-			if (getManagedBean().getSmSupplier() == null){
-				loadSupplierCommonDetails(getUserIdSessionFromLoginId());
-				if(getManagedBean().getCurrentProfile().getSmSupplier() != null){
-					getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
-				}
-			}
-			SmSupplier supplier = getManagedBean().getSmSupplier();
-			String log = "ProfilePersonalizationBackingBean.preRenderDisciplinaryAction";
-			getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
-			String msgDA = getDisciplinaryActionMsg(supplier);
-			if(msgDA != null){
-				//30842 Start
-				getManagedBean().setSmAppl(SmApplicationUtil.getLatestApplBySupplierId(
-						getManagedBean().getSmSupplier().getSupplierId()));
-				//30842 End
-				getManagedBean().setDisciplinaryActionMsg(msgDA);
-				getManagedBean().setDisciplinaryAction(true);
-				facesScopes.getUserSessionBean().setDisciplinaryAction(true);
-				//start 32229
-				SLAUtils.getInstance().logSQLPerformanceInfo("SM","DA-4", log, startTime,"32229");
-				startTime = System.currentTimeMillis();
-				//end 32229
-			}
-			
-			//26247 - start
-			String qtIdParam = originalServletRequest.getParameter("qtId");
-			this.getManagedBean().setQtId(qtId);
-			if (qtIdParam != null) {
-				qtId = Long.valueOf(qtIdParam);
-			}
-			if (null != supplier && null != qtId) {
-				this.getManagedBean().setQtId(qtId);
-				ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-				supplier = supplierSearchSO.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), qtId);
 
-				ViewSuppProfileBackingBean viewSuppProfileBB = new ViewSuppProfileBackingBean();
-				String qtWarningMessage = viewSuppProfileBB.evaluateQTWarningMessage(supplier);
-				String message = getManagedBean().getDisciplinaryActionMsg();
-				if (StringUtils.isNotEmpty(message) && StringUtils.isNotEmpty(qtWarningMessage)) {
-					qtWarningMessage = "<br/>" + qtWarningMessage;
-				}
-				getManagedBean().setQtDisciplinaryActionMsg(qtWarningMessage);
-			}
-			// 26247 - end
-			
-			//#26186 start
-			if (taskName != null && taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-				checkCtSupplierCategory(supplier);
-			}
-			//#26186 end
+			String log = "ProfilePersonalizationBackingBean.preRenderDisciplinaryAction";
+			initializeSupplier(docNo);
+			handleDisciplinaryActionMsg(facesScopes, startTime, log);
+			//26238 -  START Disciplinary Action - end
+			startTime = System.currentTimeMillis();
+			handleQtMsg(originalServletRequest, getManagedBean().getSmSupplier(), qtId);//26247
+			handleCtMsg(taskName);//#26186
 
 			SLAUtils.getInstance().logSLAInfo("SM","DA-5", log, startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("SM", "DA", "", "ProfilePersonalizationBackingBean", 
-					(new LogKey()).getUserId(), e);
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
-							.getMsgFromMsgUtils(MessageConst.ERROR_770045, 	null)));
-			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
+			handleException(fc, e);
 		}
 	}
+	//#26186 end
 	
 	private String getDisciplinaryActionMsg(SmSupplier supplier) {
 		if (supplier == null){
@@ -1807,6 +1751,114 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	
 	//#26186 start
 	/**
+	 * Initializes the supplier in the managed bean.
+	 * <p>
+	 * Logic:
+	 * - Try retrieving supplier by application number (docNo).
+	 * - Fallback to current supplier from application util.
+	 * - Fallback to supplier from user profile.
+	 *
+	 * @param docNo application number parameter from request
+	 */
+	private void initializeSupplier(String docNo) {
+		// 26238 - START Disciplinary Action - 28111,28496
+		if (!StringUtils.isEmpty(docNo)) {
+			MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
+			reqDTO1.setApplNo(docNo);
+			SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO().retrieveSmSupplierByApplNo(reqDTO1).getSmAppl();
+			// 26238 - START Disciplinary Action - end
+
+			this.getManagedBean().setSmSupplier(srcAppl != null ? srcAppl.getSmSupplier() : null);
+		}
+		if (getManagedBean().getSmSupplier() == null) {
+			getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
+		}
+		if (getManagedBean().getSmSupplier() == null) {
+			loadSupplierCommonDetails(getUserIdSessionFromLoginId());
+			if (getManagedBean().getCurrentProfile().getSmSupplier() != null) {
+				getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
+			}
+		}
+	}
+	
+	/**
+	 * Checks if the supplier has an active disciplinary action and updates
+	 * the managed bean and user session accordingly.
+	 *
+	 * @param facesScopes context holder for user session
+	 * @param startTime   start timestamp for SLA logging
+	 */
+	private void handleDisciplinaryActionMsg(FacesScopes facesScopes, long startTime, String log) {
+		SmSupplier supplier = getManagedBean().getSmSupplier();
+		getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+		String msgDA = getDisciplinaryActionMsg(supplier);
+		if (msgDA != null) {
+			// 30842 Start
+			getManagedBean().setSmAppl(
+					SmApplicationUtil.getLatestApplBySupplierId(getManagedBean().getSmSupplier().getSupplierId()));
+			// 30842 End
+			getManagedBean().setDisciplinaryActionMsg(msgDA);
+			getManagedBean().setDisciplinaryAction(true);
+			facesScopes.getUserSessionBean().setDisciplinaryAction(true);
+			// start 32229
+			SLAUtils.getInstance().logSQLPerformanceInfo("SM", "DA-4", log, startTime, "32229");
+			// end 32229
+		}
+	}
+	
+	//26247 - start
+	/**
+	 * Handles QT Message.
+	 * <p>
+	 * - Reads QT Id from request.
+	 * - Validates and parses it safely.
+	 * - Retrieves updated supplier details for disciplinary info.
+	 * - Updates managed bean with QT warning message if applicable.
+	 *
+	 * @param request  original servlet request
+	 * @param supplier previously retrieve supplier
+	 * @param qtId     previously available qtId (may be overridden)
+	 */
+	private void handleQtMsg(HttpServletRequest originalServletRequest, SmSupplier smSupplier, Long id) {
+		String qtIdParam = originalServletRequest.getParameter("qtId");
+		Long qtId = id; // keep original value unless overridden
+		SmSupplier supplier = smSupplier;
+		this.getManagedBean().setQtId(qtId);
+		if (qtIdParam != null) {
+			qtId = Long.valueOf(qtIdParam);
+		}
+		if (null != supplier && null != qtId) {
+			this.getManagedBean().setQtId(qtId);
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			supplier = supplierSearchSO.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), qtId);
+
+			ViewSuppProfileBackingBean viewSuppProfileBB = new ViewSuppProfileBackingBean();
+			String qtWarningMessage = viewSuppProfileBB.evaluateQTWarningMessage(supplier);
+			String message = getManagedBean().getDisciplinaryActionMsg();
+			if (StringUtils.isNotEmpty(message) && StringUtils.isNotEmpty(qtWarningMessage)) {
+				qtWarningMessage = "<br/>" + qtWarningMessage;
+			}
+			getManagedBean().setQtDisciplinaryActionMsg(qtWarningMessage);
+		}
+	}
+	//26247 - end
+	
+	/**
+	 * Handles CT Message.
+	 * <p>
+	 * Currently validates supplier category when taskName matches
+	 * ACK_FA_HT_NAME constant.
+	 *
+	 * @param taskName task name parameter from request
+	 */
+	private void handleCtMsg(String taskName) {
+		if (taskName != null && CTProcessNameConst.ACK_FA_HT_NAME.equalsIgnoreCase(taskName)) {
+			checkCtSupplierCategory(getManagedBean().getSmSupplier());
+		}
+	}
+	
+	/**
 	 * Method to check supplier for Cancelled Category Code/ Cancelled Category Related to Manufacturing
 	 * Used for CT module.
 	 * 
@@ -1858,6 +1910,26 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		sb.append(supCat.getCategoryL2Name().trim());
 		sb.append(", ");
 		sb.append(supCat.getCategoryL3Name().trim());
+	}
+	
+	/**
+	 * Centralized exception handling for the pre-render process.
+	 * <p>
+	 * - Logs SLA error.
+	 * - Displays a user-friendly error message on UI.
+	 * - Redirects to error page.
+	 *
+	 * @param fc FacesContext to add messages
+	 * @param e  exception caught during pre-render logic
+	 */
+	private void handleException(FacesContext fc, Exception e) {
+		SLAUtils.getInstance().logSLAError("SM", "DA", "", "ProfilePersonalizationBackingBean",
+				(new LogKey()).getUserId(), e);
+		fc.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
+						.getMsgFromMsgUtils(MessageConst.ERROR_770045, null)));
+		PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
 	}
 	//#26186 end
 }
