@@ -11,24 +11,18 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
-import my.ep.persistence.entity.pm.common.PmBusinessNature;
-import my.ep.persistence.entity.pm.common.PmGlAccount;
-import my.ep.persistence.entity.pm.integration.PmInterfaceAgOff;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -54,14 +48,22 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 
 	/** The search accounting office. */
 	private IPagingDataModel<PmAgOffice> searchAccountingOffice = new SearchOfficePagingDataModel();
+	
+	private PmAgOffice agOffice;
 
 	private static final Logger log = EpLogger
 			.getLogger(TransactionFeeRptBackingBean.class);
 
+	/**
+	 * Transaction fee rpt constructor
+	 */
 	public TransactionFeeRptBackingBean() {
 		setDefaultTransactionDate();
 	}
 
+	/**
+	 * reset button
+	 */
 	public void resetAction(){
 		getManagedBean().setPmAccountingOffice(null);
 		getManagedBean().setCheckSFOneOff(false);
@@ -72,12 +74,19 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		resetSearchCriteriaValues();
 	}
 
+	/**
+	 * default value for transaction date
+	 */
 	public void setDefaultTransactionDate() {
 		Calendar fromDate = Calendar.getInstance();
 		fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
 		getManagedBean().setTransactionFromDate(fromDate.getTime());
 		getManagedBean().setTransactionToDate(new Date());
 	}
+	
+	/**
+	 * main method for report generation method
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -100,7 +109,6 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 
 		//add ag office name
 		if (getManagedBean().getPmAccountingOffice().getOfficeCode() !=null ) {
-			//params.put(FlReportConst.FL_RPT_AG_OFFICE, getManagedBean().getAgOff().getOffCode());
 			params.put(FlReportConst.FL_RPT_AG_OFFICE, getManagedBean().getPmAccountingOffice().getOfficeCode());
 		}else{
 			params.put(FlReportConst.FL_RPT_AG_OFFICE, null);
@@ -137,6 +145,9 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		}
 	}
 
+	/**
+	 * disable AG picker when tick ALL
+	 */
 	public void selectedAgOff(){
 		if(agOffice == null){
 			PmAgOffice agoff = new PmAgOffice();
@@ -145,11 +156,8 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		}else{
 			agOffice.setOfficeName(agOffice.getPmAgValidity().getOfficeName());
 			getManagedBean().setPmAccountingOffice(agOffice);
-			log.info(getManagedBean().getPmAccountingOffice().getPmAgValidity().getOfficeName());
 		}
 	}
-
-	private PmAgOffice agOffice;
 
 	public PmAgOffice getAgOffice() {
 		return agOffice;
@@ -180,7 +188,6 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 			IAgOfficeSO agOfficeSO;
 
 			try {
-				//AccountingOfficeSearchBean officeSearchBean= getManagedBean().getAccountingOfficeSearchBean();
 				String inputAg = getManagedBean().getInputAgOff();
 				AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
 				if (StringUtils.isNotBlank(inputAg)){
@@ -258,12 +265,23 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		this.searchAccountingOffice = searchAccountingOffice;
 	}
 
+	/**
+	 * set value for all AG office
+	 * 
+	 * @param e
+	 */
 	public void allAgOffChecked(AjaxBehaviorEvent e) {
 		String valCheck = (String) e.getComponent().getAttributes().get("value");
 		this.getManagedBean().setInputAgOff(null);
 		this.getManagedBean().setIsAllAgOff(valCheck);
 		searchAccountingOffice();
 	}
+	
+	/**
+	 * disable AG select button
+	 * 
+	 * @return
+	 */
 	public boolean isSelectButtonDisable() {
 		if(getManagedBean().getIsAllAgOff() != null){
 			if(getManagedBean().getIsAllAgOff().equalsIgnoreCase("true")){
