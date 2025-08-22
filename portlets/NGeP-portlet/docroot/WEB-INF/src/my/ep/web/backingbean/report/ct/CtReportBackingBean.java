@@ -663,7 +663,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	        RoleCode.BPK_AUDITOR.value(),
 	        RoleCode.MIN_CONTRACT_ADMIN.value(),
 	        RoleCode.CT_APPROVER.value(),
-	        RoleCode.SYS_ADMIN.value(),
+	        RoleCode.EP_ADMIN.value(),
 	        RoleCode.BPK_CCA.value(),
 	        RoleCode.BPK_CC_APPROVER.value(),
 	        RoleCode.BPK_CQ_APPROVER.value()
