@@ -14,6 +14,7 @@ import my.ep.biz.bean.search.SearchBean; //#29416
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.MessageConst; //#29416
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
@@ -286,7 +287,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 													new FacesScopes().getUserLocale()) },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
-		} else if (contractNumber.length() != 17) {
+		} else if (contractNumber.length() != ContractConst.CONTRACT_LENGTH) {
 			isError = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,

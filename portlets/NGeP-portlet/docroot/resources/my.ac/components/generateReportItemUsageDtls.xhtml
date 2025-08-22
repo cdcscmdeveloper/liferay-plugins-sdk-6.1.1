@@ -15,7 +15,7 @@
 
 		<div style="text-align: right;">
 		<ui:param name="paramValues" value="#{cc.attrs.bBean.getparams()}"></ui:param>
-			<!-- #32675 - shaqimi start -->
+			
 			<p:commandButton id="btnGenerate" value="#{lbl['lbl.rpt.generate']}" oncomplete="if (!args.validationFailed) rptConfirmationDlg.show();" 
 				 action="#{cc.attrs.bBean.generateReportCT038(paramValues)}" update=":form"
 				 rendered="#{!cc.attrs.bBean.managedBean.factoringUser}">
@@ -33,7 +33,7 @@
 				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.defaultOutputType}" value="#{cc.attrs.reportMainBean.managedBean.defaultOutputType}" />
 				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.tempAccess}" value="#{cc.attrs.reportMainBean.managedBean.tempAccess}" />
 			</p:commandButton>
-			<!-- #32675 - shaqimi end -->
+			
 			<p:commandButton id="btnReset" value="#{lbl['lbl.btn.reset']}" update=":form" 
 				process="@this" action="#{cc.attrs.bBean.resetSearch()}"/>
 		</div>

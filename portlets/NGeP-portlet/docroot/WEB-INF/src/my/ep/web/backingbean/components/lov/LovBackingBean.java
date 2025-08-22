@@ -232,9 +232,9 @@ public class LovBackingBean implements Serializable {
 					searchBean.setDocNo(ctReportBB.getManagedBean().getContractNo());
 				} else if (ccContractItemMonitoringRptBB.getManagedBean().getContractNo() != null) {
 					searchBean.setDocNo(ccContractItemMonitoringRptBB.getManagedBean().getContractNo());
-				} else if (ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo() != null) {
-					searchBean.setDocNo(ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo());
-				}
+				} else if (ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo() != null) { //#34889
+					searchBean.setDocNo(ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo()); //#34889
+				} //#34889
 
 				if (getLovBeanReset().isResetFlag()) {
 					searchBean.setResetAction(true);
@@ -429,9 +429,9 @@ public class LovBackingBean implements Serializable {
 				handledError = ctReportBB.validateBeforeExecuteLov(getContractNo());
 			} else if ("ccContractItemMonitoringRptBB".equalsIgnoreCase(backingBean)) {
 				handledError = ccContractItemMonitoringRptBB.validateBeforeExecuteLov(getContractNo());
-			} else if ("ccContractItemUsageMonitoringDtlsReportBB".equals(backingBean)){
-				handledError = ccContractItemUsageMonitoringDtlsReportBB.validateBeforeExecuteLov(getContractNo());
-			}
+			} else if ("ccContractItemUsageMonitoringDtlsReportBB".equals(backingBean)){ //#34889
+				handledError = ccContractItemUsageMonitoringDtlsReportBB.validateBeforeExecuteLov(getContractNo()); //#34889
+			} //#34889
 
 			if (handledError) {
 				// Set a callback parameter to indicate an error
@@ -1113,9 +1113,9 @@ public class LovBackingBean implements Serializable {
 				&& ccContractItemMonitoringRptBB.getManagedBean().getContractNo() != null) {
 			contractNo = ccContractItemMonitoringRptBB.getManagedBean().getContractNo();
 		} else if (ccContractItemUsageMonitoringDtlsReportBB != null
-				&& ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo() != null) {
-			contractNo = ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo();
-		}
+				&& ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo() != null) { //#34889
+			contractNo = ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo(); //#34889
+		} //#34889
 
 		return contractNo;
 	}
