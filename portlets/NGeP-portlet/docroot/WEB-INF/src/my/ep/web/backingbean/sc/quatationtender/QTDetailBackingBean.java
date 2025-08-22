@@ -10221,7 +10221,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
 			
-			if (isDeskOfficer() || isAuditor()) {
+			if (isDeskOfficer() || isAuditor() || isAdmin() || isApprover()) {//25791
 				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
 			}	
 		}
@@ -10645,7 +10645,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
 		if (scQt != null && scQt.getQtStatus() != null && scQt.getQtStatus().getStatusId() != null &&
 				ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equals(docType) &&
-				(isQTMaintenanceScreen() || isQTSearchScreen())) {
+				(isQTMaintenanceScreen() || isQTSearchScreen() || isQtTechSupportSearchScreen())) {//25791
 			isAllowQTViewSupplierFinalization = true;
 		}		
 		
@@ -11038,8 +11038,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
-		if (ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean()
-				.getQtnTenderSearchBean().getResultDocType())) {//25791-start
+		if (getManagedSearchBeanDocumentTypeIsBidding()) {//25791-start
 			getManagedBean().setViewOriginalUrl(
 					QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW);
 		}//25791-end
@@ -14479,7 +14478,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			constructBiddingSerachBean(qtnTenderSearchBean, searchBean);
 			// Order by created date
 			searchBean.getSortColumns().add(
-					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_START_DATE, false));
+					new SearchOrderBean(SourcingConstants.BIDDING_SCHEDULE_ID, false));
 			if(isDeskOfficer() || isApprover()){
 				biddingReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				if(isDeskOfficer()){

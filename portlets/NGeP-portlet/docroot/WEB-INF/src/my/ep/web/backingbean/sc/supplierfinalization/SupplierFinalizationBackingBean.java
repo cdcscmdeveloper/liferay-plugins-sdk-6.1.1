@@ -2240,7 +2240,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean toBeValidated = Arrays.asList(ParameterConst.DECISION_RECOMMEND_SUPPLIER,
 				ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY).contains(
 				scQtFinalization.getDecision().getParameterCode())
-				&& allowValidation;
+				&& allowValidation && !BpmOutcomeConst.BPM_REVISE.equals(this.getManagedBean().getOutcome());
 		// 26247 - end
 		
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();
@@ -2497,7 +2497,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean toBeValidated = Arrays.asList(ParameterConst.DECISION_RECOMMEND_SUPPLIER,
 				ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY).contains(
 				scQtFinalization.getDecision().getParameterCode())
-				&& allowValidation;
+				&& allowValidation && !BpmOutcomeConst.BPM_REVISE.equals(this.getManagedBean().getOutcome());
 		for (ScQtRecommend scQtRecommend : scQtFinalization.getScQtRecommends()) {
 			if (scQtRecommend.isCancelled()) { 
 				++cancelledItemsCount; 
@@ -4305,7 +4305,7 @@ return	remarksNotFound;
 	/**
 	 * @throws Exception
 	 */
-	public void downloadAllBriefingPaperReports(boolean directDownload) throws Exception {// 38523
+	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {// 38523
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// 38523 - start
@@ -4315,7 +4315,7 @@ return	remarksNotFound;
 		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment;
 			if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
-				attachment = retrieveBriefingPaperAttachment(scQtFinalizationReport, directDownload);
+				attachment = retrieveBriefingPaperAttachment(scQtFinalizationReport, skipDownload);
 			} else {
 				attachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 			} 
@@ -4335,7 +4335,7 @@ return	remarksNotFound;
 		}
 
 		// Generate all the reports before submission
-		if (!getManagedBean().isSubmit()) {
+		if (!skipDownload) { // 38523
 			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 		// #18685 - End.
@@ -4357,7 +4357,8 @@ return	remarksNotFound;
 		ScQtFinalizationReport latestBriefingPaper = null;
 		for (ScQtFinalizationReport report : getManagedBean().getDocumentList()) {
 			boolean isLatest = latestBriefingPaper == null
-					|| report.getCreatedDate().after(latestBriefingPaper.getCreatedDate());
+					|| (report.getCreatedDate() != null && report.getCreatedDate().after(
+							latestBriefingPaper.getCreatedDate()));
 			if (report.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER) && isLatest) {
 				latestBriefingPaper = report;
 			}
@@ -10064,7 +10065,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
 				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
-				;
+				||QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());//25791
 	}
 	
 	//#25426 ruzaimah - Start

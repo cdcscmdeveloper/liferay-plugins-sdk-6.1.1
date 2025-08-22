@@ -1057,10 +1057,11 @@ public class LOIDetailBackingBean extends
 		ScQt scQt = this.getManagedBean().getScQt();
 		List<ScQtRecommend> disqualifiedRecomendedList = new ArrayList<>();
 		if (!scQt.isZonal() && checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())) {
-			for (ScQtRecommend disqualifiedRecom : scQtRecommendList) {
-				List<ScQtEvaluationResultDtl> disRecomDisList = disqualifiedRecom.getNotAwardSupplierList();
-				disqualifiedRecom.setNotAwardSupplierList(disRecomDisList);
-				disqualifiedRecomendedList.add(disqualifiedRecom);
+			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+				setRecommendedSupplierList(scQtRecommend);
+				updateRecommendBy(scQtRecommend);
+				setDisciplinaryAction(scQtRecommend.getNotAwardSupplierList());
+				disqualifiedRecomendedList.add(scQtRecommend);
 			}
 			this.getManagedBean().setDisqualifiedRecommendList(disqualifiedRecomendedList);
 		}
@@ -1068,11 +1069,10 @@ public class LOIDetailBackingBean extends
 			TplSpecZoneDtl tplSpecZoneDtl = scQtRecommend.getTplSpecZoneDtl();
 			if (scQt.isZonal() && tplSpecZoneDtl != null
 					&& checkListZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), tplSpecZoneDtl.getSpecZoneId())) {
-				for (ScQtRecommend disqualifiedRecom : scQtRecommendList) {
-					List<ScQtEvaluationResultDtl> disRecomDisList = disqualifiedRecom.getNotAwardSupplierList();
-					disqualifiedRecom.setNotAwardSupplierList(disRecomDisList);
-					disqualifiedRecomendedList.add(disqualifiedRecom);
-				}
+				setRecommendedSupplierList(scQtRecommend);
+				updateRecommendBy(scQtRecommend);
+				setDisciplinaryAction(scQtRecommend.getNotAwardSupplierList());
+				disqualifiedRecomendedList.add(scQtRecommend);
 				this.getManagedBean().setDisqualifiedRecommendList(disqualifiedRecomendedList);
 			}
 		}
@@ -1092,6 +1092,7 @@ public class LOIDetailBackingBean extends
 
 			processRecommendedSuppliersByPKG(scQtRecommendList);
 			ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
+			setDisciplinaryAction(scQtRecommend.getNotAwardSupplierList());
 			this.getManagedBean().setDisqualifiedSupplierList(scQtRecommend.getNotAwardSupplierList());
 
 		}
@@ -1102,6 +1103,7 @@ public class LOIDetailBackingBean extends
 
 				processRecommendedSuppliersByPKG(scQtRecommendList);
 				scQtRecommend = scQtRecommendList.get(0);
+				setDisciplinaryAction(scQtRecommend.getNotAwardSupplierList());
 				this.getManagedBean().setDisqualifiedSupplierList(scQtRecommend.getNotAwardSupplierList());
 
 			}

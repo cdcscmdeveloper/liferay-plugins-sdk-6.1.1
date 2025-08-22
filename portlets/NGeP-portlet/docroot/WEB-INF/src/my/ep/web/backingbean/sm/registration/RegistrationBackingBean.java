@@ -1179,11 +1179,65 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	public void onCallFirstUserTncDialog(){
 		getManagedBean().setAggreeDeclareAdmin(false);
-		// #30829 - start
-		checkRoleInCompany();
-		// #30829 - end
-		setAdminSameAsOwner();
+		// #34400 - Start
 		SmPersonnel smPersonnel = this.getManagedBean().getSmPersonnel();
+		SmSupplierOwner smSuppOwner = this.getManagedBean().getSmSuppOwner();
+		SmSupplier smSupp = this.getManagedBean().getSmSupp();
+		SmAppl smAppl = this.getManagedBean().getSmAppl();
+		
+		if (getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.INDIVIDUAL_FLAG)) {
+			this.getManagedBean().setSameAsOwner(true);
+			setAdminSameAsOwner();
+
+			if (SmCommonUtil.isSupplierOwnerIndividualAcc(smSuppOwner.getIdentificationType().getParameterCode(),
+					smSupp.getRegNo(), null)) {
+				throw new EpException(MessageConst.ERROR_721050);
+			}
+
+			IPersonnelSO personnelSO = BusinessDelegate.getInstance()
+			        .getServiceObject("sm", IPersonnelSO.class);
+			
+			PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
+
+			personneleqDTO.setIdentificationNo(this.getManagedBean().getSmSupp().getRegNo());
+			PersonnelResDTO personnelResDTO = personnelSO.retrieveIsEquityOrIsDirectorByIdentNo(personneleqDTO);
+
+			if (!personnelResDTO.getSmPersonnelList().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_721026);
+			}
+
+			PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(
+					ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
+			smPersonnel.setIdentificationTypeId(identificationType.getParameterId());
+			smPersonnel.setIdentificationType(identificationType);
+
+			PmCountry indNationality = SmCommonUtil
+					.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			smSupp.setServiceCategory(SupplierManagementConst.SPECIAL_SERVICE); // DEFAULT
+																				// for
+																				// Individual
+			smSuppOwner.setIdentificationTypeId(identificationType.getParameterId());
+			smSuppOwner.setOwnerName(smAppl.getSmCompanyBasic().getCompanyName().trim());
+			smSuppOwner.setIdentificationNo(smSupp.getRegNo());
+			smSuppOwner.setNationality(indNationality);
+			smPersonnel.setName(smAppl.getSmCompanyBasic().getCompanyName().trim());
+			smPersonnel.setIdentificationNo(smSupp.getRegNo());
+			smPersonnel.setPmCountry(indNationality);
+			validateNewIC(smPersonnel, true);
+			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
+
+			// set mobileno to company phone no
+			smAppl.getSmCompanyBasic().setPhoneNo(smPersonnel.getMobileNo());
+
+			getManagedBean().setGstFlag(false);
+			getManagedBean().setSstFlag(false);
+		} else {
+			setAdminSameAsOwner();
+			// #30829 - start
+			checkRoleInCompany();
+			// #30829 - end
+		}
+		// #34400 - End
 		//SSM INTEGRATION
 		//#27315
 		//disable this, no need to check other supplier owner
@@ -4809,9 +4863,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().getSmAppl().setSmCompanyBasic(new SmCompanyBasic());
 		getManagedBean().getSmAppl().getSmSupplierBanks().clear();
 		getManagedBean().getSmSupp().getSmSupplierBusinesses().clear();
+		getManagedBean().getSmPersonnelOwners().clear();
+		getManagedBean().getSmPersonnelDirector().clear();
 		getManagedBean().getSmBusinessAdd().setAddress1("");
 		getManagedBean().getSmBusinessAdd().setAddress2("");
 		getManagedBean().getSmBusinessAdd().setAddress3("");
+		getManagedBean().getSmSupp().setSsmNewRegNo(null);
 		//#37900 -end
 		return termAndCondition;
 

@@ -921,6 +921,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		PmStatusDesc statusDesc = SmApplicationUtil
 				.getCurrRegStatusDesc(getManagedBean().getSmAppl());
 		if (statusDesc != null) {
+			// #38856 Start
+			getManagedBean().setCurrRegStatusId(statusDesc.getPmStatus().getStatusId());
+			// #38856 End
 			getManagedBean().setCurrRegStatus(statusDesc.getStatusName());
 		}
 		
@@ -2509,6 +2512,103 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		return false;
 	}
+	
+	//#26238 - #38899 - start
+	/**
+	 * Get Supplier Account Status based on Disciplinary Action and MOF Status
+	 * @param supplier
+	 * @return
+	 */
+	public String getSupplierAccountStatus(SmSupplier supplier){
+		if (supplier == null){
+			return "";
+		}
+		if (!supplier.isFutureImposed() && !StringUtils.isEmpty(supplier.getTypeDisciplinaryAction())){
+			return getSupplierAccountStatusDA(supplier);
+		}
+		if (!StringUtils.isEmpty(supplier.getMofStatus())){
+			return getSupplierAccountStatusMOF(supplier);
+		}
+		//#34319
+		SmAppl appl = getManagedBean().getSmAppl() != null ? getManagedBean().getSmAppl() : supplier.getSmAppl();
+		if (supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_CANCELLED) 
+				&& appl.getPmStatus().getStatusId().equals(
+						my.ep.constant.sm.SupplierManagementConst.PM_STATUS_CANCELLED_PREREGISTRATION_ACCOUNT)){
+			return SmCommonUtil.getMessage("lbl.txt.na", null);
+		}
+		switch(supplier.getRecordStatusFlg()){
+		case DbValueConst.RECORD_STATUS_ACTIVE:
+			return SmCommonUtil.getMessage("lbl.txt.active", null);
+			
+		case DbValueConst.RECORD_STATUS_SUSPENDED:
+			return SmCommonUtil.getMessage("lbl.txt.inactive", null);
+			
+		case DbValueConst.RECORD_STATUS_IN_PROGRESS:
+			return SmCommonUtil.getMessage("lbl.sm.account.status.inprogress", null);
+		
+		case DbValueConst.RECORD_STATUS_DELETED:
+			return SmCommonUtil.getMessage("lbl.sm.account.status.deleted", null);
+		default:
+			return "";
+		}
+	}
+	
+	//29156, 29778, 32970, 33248
+	private String getSupplierAccountStatusDA(SmSupplier supplier){
+		String lblDASuspend = SmCommonUtil.getMessage("lbl.sm.status.suspend", null);
+		String lblDABlacklist = SmCommonUtil.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner", null);
+		String lblDACancelReg = SmCommonUtil.getMessage("lbl.sm.disciplinary.jktt.cancel.registration", null);
+		
+		String lblDeletedTransaction = SmCommonUtil.getMessage("lbl.sm.status.deleted.with.transaction", null);
+		String lblDeleted = SmCommonUtil.getMessage("lbl.sm.mof.status.deleted1", null);
+		
+		String daType = supplier.getTypeDisciplinaryAction();
+		
+		if (SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST.equals(daType)	&& supplier.isBlacklistStats()){
+			String label = supplier.isPendingBlacklist() ? lblDeletedTransaction : lblDeleted;
+			String label2 = supplier.isSuspendRegistrationStats() ? 
+					" (" + lblDASuspend + ", " + lblDABlacklist + ")"
+					: " (" + lblDABlacklist + ")";
+			return label + label2;
+		}
+		
+		if (SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG.equals(daType) && supplier.isCancelRegStats()){
+			String label = supplier.isPendingCancel() ? lblDeletedTransaction : lblDeleted;
+			String label2 = supplier.isSuspendRegistrationStats() ? 
+					" (" + lblDASuspend + ", " + lblDACancelReg + ")"
+					: " (" + lblDACancelReg + ")";
+			return label + label2;
+		}
+		
+		if (SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_SUSPEND_REG.equals(daType)){
+			String label = supplier.isPendingSuspend() ? lblDeletedTransaction : lblDeleted;
+			return label + " (" + lblDASuspend + ")";
+		}
+		return "";
+	}
+	
+	private String getSupplierAccountStatusMOF(SmSupplier supplier){
+		switch(supplier.getMofStatus()){
+		case SupplierManagementConst.MOF_STATUS_ACTIVE:
+			return SmCommonUtil.getMessage("lbl.sm.mof.status.active", null);
+			
+		case SupplierManagementConst.MOF_STATUS_EXPIRED:
+			return SmCommonUtil.getMessage("", null);
+			
+		case SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE:
+			return SmCommonUtil.getMessage("lbl.sm.mof.status.not.applicable", null);
+			
+		case SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM:
+			return SmCommonUtil.getMessage("lbl.sm.mof.status.deleted3", null);
+			
+		case SupplierManagementConst.MOF_STATUS_CANCELLED:
+			return SmCommonUtil.getMessage("lbl.sm.mof.status.deleted2" , null) 
+					+ " ("+ supplier.getSmAppl().getApplNo() + ")";
+		default:
+			return "";
+		}
+	}
+	//#26238 - #38899 - end
 
 	/**
 	 * Initialized and construct bumi recommendation message
@@ -2995,6 +3095,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if(getManagedBean().isDisciplinaryAction()){
 			retrieveActiveDisciplinaryAction(smAppl.getSmSupplier());
 		}
+		//#38899
+		SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+		reqDTO.setSmSupplier(smAppl.getSmSupplier());
+		smAppl.setSmSupplier(SmServiceLookup.getSmApplRevisionSO()
+				.setSmSupplierMOFStatus(reqDTO).getSmSupplier());
 		//#26238
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
