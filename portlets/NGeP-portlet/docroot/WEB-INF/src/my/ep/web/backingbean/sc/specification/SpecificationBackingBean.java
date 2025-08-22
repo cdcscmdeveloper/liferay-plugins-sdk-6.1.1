@@ -2048,9 +2048,13 @@ public class SpecificationBackingBean extends
 							+ list.getQtScoreWeightage().getScore().intValue();
                      }
 					score = (int) addScore;
+					// Bug #38254@Syazani 15/07/2025 -- Start
 					if (list.isScoringReq()) {
 						this.getManagedBean().getTechnicalScoring().add(list);
+					} else {
+						list.getQtScoreWeightage().setScore(new BigDecimal(0));
 					}
+					// Bug #38254@Syazani 15/07/2025 -- End
 					if(null!=list.getQtScoreWeightage() && null!=list.getQtScoreWeightage().getScore()){
 					list.getQtScoreWeightage().setScore(list.getQtScoreWeightage().getScore());
 					}
