@@ -242,6 +242,17 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 	// AdminRoles
 	public static final Map<String, List<String>> adminUserRoleMap = new HashMap<String, List<String>>();
+	
+	//DA
+	//#26186 start
+	private static final String PARAM_DOC_NO = "docNo";
+	private static final String PARAM_TASK_NAME = "taskName";
+	private static final String PARAM_QT_ID = "qtId";
+	private static final String LBL_CT_CANCEL_CATEGORY = "lbl.ct.amend.supplier.maintenance.cancel.category";
+	private static final String LOG_CLASS = "ProfilePersonalizationBackingBean";
+	private static final String LOG_CLASS_PRERENDER = "ProfilePersonalizationBackingBean.preRenderDisciplinaryAction";
+	private static final String LOG_CLASS_CHECKSUPPLIER = "ProfilePersonalizationBackingBean.checkCtSupplierCategory";
+	//#26186 end
 
 	public static PmUser authUserDetails;
 
@@ -1634,26 +1645,28 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	  * with user-facing error messages.
 	 */
 	public void preRenderDisciplinaryAction() {
-		//26238 -  START Disciplinary Action - 28111,28496
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()));
-		String docNo = originalServletRequest.getParameter("docNo");
-		String taskName = originalServletRequest.getParameter("taskName"); //#26186
+		// 26238 - START Disciplinary Action - 28111,28496
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest()));
+		String docNo = originalServletRequest.getParameter(PARAM_DOC_NO);
+		String taskName = originalServletRequest.getParameter(PARAM_TASK_NAME); // #26186
 		Long qtId = this.getManagedBean().getQtId();// 26247
-		renewSesionObject(); 
+		renewSesionObject();
 		FacesScopes facesScopes = new FacesScopes();
-		FacesContext fc = FacesContext.getCurrentInstance();  
+		FacesContext fc = FacesContext.getCurrentInstance();
 		long startTime = System.currentTimeMillis();
 		try {
-
-			String log = "ProfilePersonalizationBackingBean.preRenderDisciplinaryAction";
 			initializeSupplier(docNo);
-			handleDisciplinaryActionMsg(facesScopes, startTime, log);
-			//26238 -  START Disciplinary Action - end
+			handleDisciplinaryActionMsg(facesScopes);
+			// start 32229
+			SLAUtils.getInstance().logSQLPerformanceInfo("SM", "DA-4", LOG_CLASS_PRERENDER, startTime, "32229");
+			// end 32229
+			// 26238 - START Disciplinary Action - end
 			startTime = System.currentTimeMillis();
-			handleQtMsg(originalServletRequest, getManagedBean().getSmSupplier(), qtId);//26247
-			handleCtMsg(taskName);//#26186
+			handleQtMsg(originalServletRequest, getManagedBean().getSmSupplier(), qtId);// 26247
+			handleCtMsg(taskName);// #26186
 
-			SLAUtils.getInstance().logSLAInfo("SM","DA-5", log, startTime);
+			SLAUtils.getInstance().logSLAInfo("SM", "DA-5", LOG_CLASS_PRERENDER, startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
 			handleException(fc, e);
@@ -1788,7 +1801,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param facesScopes context holder for user session
 	 * @param startTime   start timestamp for SLA logging
 	 */
-	private void handleDisciplinaryActionMsg(FacesScopes facesScopes, long startTime, String log) {
+	private void handleDisciplinaryActionMsg(FacesScopes facesScopes) {
 		SmSupplier supplier = getManagedBean().getSmSupplier();
 		getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
 		String msgDA = getDisciplinaryActionMsg(supplier);
@@ -1800,9 +1813,6 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			getManagedBean().setDisciplinaryActionMsg(msgDA);
 			getManagedBean().setDisciplinaryAction(true);
 			facesScopes.getUserSessionBean().setDisciplinaryAction(true);
-			// start 32229
-			SLAUtils.getInstance().logSQLPerformanceInfo("SM", "DA-4", log, startTime, "32229");
-			// end 32229
 		}
 	}
 	
@@ -1820,7 +1830,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param qtId     previously available qtId (may be overridden)
 	 */
 	private void handleQtMsg(HttpServletRequest originalServletRequest, SmSupplier smSupplier, Long id) {
-		String qtIdParam = originalServletRequest.getParameter("qtId");
+		String qtIdParam = originalServletRequest.getParameter(PARAM_QT_ID );
 		Long qtId = id; // keep original value unless overridden
 		SmSupplier supplier = smSupplier;
 		this.getManagedBean().setQtId(qtId);
@@ -1884,14 +1894,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				sb.append(")");
 				String[] params = new String[] { sb.toString() };
 				this.getManagedBean().setCtSupplierMsgNonDA(
-						ResourceBundleUtils.getMessage("lbl.ct.amend.supplier.maintenance.cancel.category", params,
+						ResourceBundleUtils.getMessage(LBL_CT_CANCEL_CATEGORY, params,
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			}
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-					"ProfilePersonalizationBackingBean", "", "ProfilePersonalizationBackingBean.checkCtSupplierCategory",
-					getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, LOG_CLASS, "",
+					LOG_CLASS_CHECKSUPPLIER, getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
@@ -1923,7 +1932,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param e  exception caught during pre-render logic
 	 */
 	private void handleException(FacesContext fc, Exception e) {
-		SLAUtils.getInstance().logSLAError("SM", "DA", "", "ProfilePersonalizationBackingBean",
+		SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA", "", LOG_CLASS,
 				(new LogKey()).getUserId(), e);
 		fc.addMessage(
 				null,
