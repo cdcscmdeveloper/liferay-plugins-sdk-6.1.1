@@ -131,7 +131,13 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 
 		params.put(FlReportConst.FL_RPT_TRANSACTION_FROM_DATE, df.format(getManagedBean().getTransactionFromDate()));
 		params.put(FlReportConst.FL_RPT_TRANSACTION_TO_DATE, df.format(getManagedBean().getTransactionToDate()));
-		checkOneYearDifferent(getManagedBean().getTransactionFromDate(), getManagedBean().getTransactionToDate());
+		
+		//check toDate is bigger than fromDate
+		if(getManagedBean().getTransactionToDate().compareTo(getManagedBean().getTransactionFromDate()) < 0){
+			throw new EpException(MessageConst.ERROR_REPORT_780088);
+		}
+		
+		checkOneYearDifferentForTransactionFeeRpt(getManagedBean().getTransactionFromDate(), getManagedBean().getTransactionToDate());
 		
 		//generate report for excel or pdf
 		if("PDF".equals(getManagedBean().getDocumentType())){
@@ -292,6 +298,39 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * to ensure difference between from - to date no exceed 1 year
+	 * 
+	 * @param fromDate
+	 * @param toDate 
+	 */
+	public void checkOneYearDifferentForTransactionFeeRpt(Date fromDate, Date toDate) {
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		String yearFrom = outputDateFormat.format(fromDate).substring(6, 10);
+		String yearTo = outputDateFormat.format(toDate).substring(6, 10);
+		String monthFrom = outputDateFormat.format(fromDate).substring(3, 5);
+		String monthTo = outputDateFormat.format(toDate).substring(3, 5);
+		String dayFrom = outputDateFormat.format(fromDate).substring(0, 2);
+		String dayTo = outputDateFormat.format(toDate).substring(0, 2);
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		int monthFromInt = Integer.parseInt(monthFrom);
+		int monthToInt = Integer.parseInt(monthTo);
+		int dayFromInt = Integer.parseInt(dayFrom);
+		int dayToInt = Integer.parseInt(dayTo);
+		if (yearToInt == yearFromInt + 1) {
+			if (monthToInt == monthFromInt) {
+				if (dayToInt > dayFromInt) {
+					throw new EpException(MessageConst.ERROR_REPORT_780087);
+				}
+			} else if (monthToInt > monthFromInt) {
+				throw new EpException(MessageConst.ERROR_REPORT_780087);
+			}
+		} else if (yearToInt > yearFromInt + 1) {
+			throw new EpException(MessageConst.ERROR_REPORT_780087);
+		}
 	}
 
 }
