@@ -23,7 +23,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO; //#26186
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -63,7 +63,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmSupplierCategory; //#26186
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -80,7 +80,7 @@ import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils; //#26186
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -91,6 +91,7 @@ import com.liferay.portal.util.PortalUtil;
 //#28895_35501 Start - AUDIT TRAIL SM
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.constants.CTProcessNameConst; //#26186
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.CustomUtils;
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
@@ -1633,6 +1634,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String docNo = originalServletRequest.getParameter("docNo");
+		String taskName = originalServletRequest.getParameter("taskName"); //#26186
 		Long qtId = this.getManagedBean().getQtId();// 26247
 		renewSesionObject(); 
 		FacesScopes facesScopes = new FacesScopes();
@@ -1697,7 +1699,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			// 26247 - end
 			
 			//#26186 start
-			checkCtSupplierCategory(supplier);
+			if (taskName != null && taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				checkCtSupplierCategory(supplier);
+			}
 			//#26186 end
 
 			SLAUtils.getInstance().logSLAInfo("SM","DA-5", log, startTime);
@@ -1834,7 +1838,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-					"ProfilePersonalizationBackingBean", "", "ProfilePersonalizationBackingBean.checkSupplierCategory",
+					"ProfilePersonalizationBackingBean", "", "ProfilePersonalizationBackingBean.checkCtSupplierCategory",
 					getUserIdSessionFromLoginId(), e);
 		}
 	}

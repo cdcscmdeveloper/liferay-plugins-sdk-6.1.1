@@ -2593,7 +2593,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			return SmCommonUtil.getMessage("lbl.sm.mof.status.active", null);
 			
 		case SupplierManagementConst.MOF_STATUS_EXPIRED:
-			return SmCommonUtil.getMessage("", null);
+			return SmCommonUtil.getMessage("lbl.sm.mof.status.expired", null);
 			
 		case SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE:
 			return SmCommonUtil.getMessage("lbl.sm.mof.status.not.applicable", null);

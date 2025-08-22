@@ -69,14 +69,14 @@
 			<p:outputPanel id="#{cc.attrs.id}Popup" layout="block"> <!-- #29665 change component type -->
 			<table width="100%">
 				<tr>
+					<!-- #34400 - start -->
 					<td align="left" style="white-space: normal; word-wrap: break-word !important;">
-					<p:outputLabel value="#{confirmationContent}" escape="false" style="padding-left:0px"/></td>
+					<h:outputText value="#{confirmationContent}" escape="false" style="padding-left:0px"/></td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<c:choose>
-					<!-- #34400 - start -->
 					<c:when test="#{cc.attrs.hasParam}">
 						<p:commandButton id="yesWithParamId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
