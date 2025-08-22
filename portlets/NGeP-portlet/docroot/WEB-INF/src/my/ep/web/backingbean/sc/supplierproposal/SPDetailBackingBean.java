@@ -3896,14 +3896,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 			for (SmPersonnel personnel : resDTO.getSmAppl().getSmPersonnels()) {
 				if (personnel.isEquityOwner()) {
-					
+
 					// #30447 - Start
+					String newName = personnel.getName();
 					String salutation = supplierSalutation(personnel.getIdentificationNo());
-					if (salutation != null) {
-						String newName = personnel.getName();
-						newName = supplierSalutation(personnel.getIdentificationNo()).concat(" " + newName);
-						personnel.setName(newName);
-					}
+					newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+					personnel.setName(newName);
 					// #30447 - End
 					
 					equityShareHolders.add(personnel);

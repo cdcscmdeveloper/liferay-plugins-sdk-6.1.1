@@ -2587,12 +2587,10 @@ public class NoticeBoardBackingBean extends
 						attendance.setBsvRegistration(bsvRegistration);
 						
 						// #30447 - Start
-						String salutation = supplierSalutation(attendance.getIcPassPort());
-						if (salutation != null) {
-							String newName = attendance.getName();
-							newName = supplierSalutation(attendance.getIcPassPort()).concat(" " + newName);
-							attendance.setName(newName);
-						}
+						String newName = attendance.getName();
+						String salutation = supplierSalutation(smPersonal.getIdentificationNo());
+						newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+						attendance.setName(newName);
 						// #30447 - End
 						
 						setUserDetails(attendance);
@@ -2610,12 +2608,10 @@ public class NoticeBoardBackingBean extends
 							bsvAttandances.remove(extAttandance);
 	
 							// #30447 - Start
+							String newName = extAttandance.getName();
 							String salutation = supplierSalutation(extAttandance.getIcPassPort());
-							if (salutation != null) {
-								String newName = extAttandance.getName();
-								newName = supplierSalutation(extAttandance.getIcPassPort()).concat(" " + newName);
-								extAttandance.setName(newName);
-							}
+							newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+							extAttandance.setName(newName);
 							// #30447 - End
 						}
 						bsvAttandances.add(extAttandance);
