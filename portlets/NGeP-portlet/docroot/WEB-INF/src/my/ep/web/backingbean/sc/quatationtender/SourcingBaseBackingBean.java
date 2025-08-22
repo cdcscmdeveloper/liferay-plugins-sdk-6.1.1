@@ -3304,6 +3304,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK);
 		}
+		
+		// #35320 - Start
+		else if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
+			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
+		}// #35320 - End
+		
 		return items;
 	}
 	
