@@ -7203,7 +7203,7 @@ public class LOIDetailBackingBean extends
 			 */
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(scLoi.getScLoiLoa().getDocId());
-			reqDTO.setLoiId(scLoi.getLoiId());
+			reqDTO.setDocId(scLoi.getLoiId());
 			QuationTenderResDTO resDTO = getQTDetailSO().exitEPVLOIOperation(reqDTO);
 
 			if (resDTO.isSuccessful()) {
