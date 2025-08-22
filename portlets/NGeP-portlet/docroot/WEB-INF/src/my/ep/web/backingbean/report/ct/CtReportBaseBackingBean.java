@@ -238,32 +238,21 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 			searchbeanz.setDocNo(contractNo);
 		}
 	}
-
-	/**
-	 * @param bean
-	 * @return boolean result based on validateBeforeExecuteLov
-	 */
-	public boolean getManagedBeanFromLovBBean(Object bean) {
-		boolean validationStatus = false;
-		if (bean == null) {
-			return validationStatus;
+	
+	//Start - #34889
+		public boolean isCentralItemUsageMonitoringDtls(){
+			boolean isQualifiedReport = false;
+			if(getManagedBean().getReportCode().equals(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_CC_VAL)){
+				isQualifiedReport = true;
+			}
+			return isQualifiedReport;
 		}
-		if (bean instanceof CtReportBackingBean) {
-			CtReportBackingBean mcReportBean = (CtReportBackingBean) bean;
-			validationStatus = validateBeforeExecuteLov(mcReportBean);
-		} else if (bean instanceof ContractItemMonitoringCCRptBackingBean) {
-			ContractItemMonitoringCCRptBackingBean ccReportBean = (ContractItemMonitoringCCRptBackingBean) bean;
-			validationStatus = validateBeforeExecuteLov(ccReportBean);
-		}
-		return validationStatus;
-	}
 
+	// Start - #29416 || #34889
 	/**
-	 * Validates the contract number in the given {@link CtReportBackingBean}
-	 * before executing the LOV process.
+	 * Validates the contract number before executing the LOV process.
 	 * <p>
-	 * This method checks if the contract number in the managed bean of
-	 * {@code mcReportBackingBean} is:
+	 * This method checks if the contract number in the managed bean is:
 	 * <ul>
 	 * <li>Null or empty: Logs a message and adds an error message to the JSF
 	 * context.</li>
@@ -274,16 +263,14 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 	 * {@link FacesContext}.
 	 * </p>
 	 * 
-	 * @param mcReportBackingBean
-	 *            The backing bean containing the managed bean with the contract
-	 *            number.
+	 * @param contractNumber
+	 *            is passed from different beans
 	 * @return {@code true} if validation fails (error detected), otherwise
 	 *         {@code false}.
 	 */
-	public boolean validateBeforeExecuteLov(CtReportBackingBean mcReportBackingBean) {
+	public boolean validateBeforeExecuteLov(String contractNumber) {
 		boolean isError = false;
-		if (mcReportBackingBean.getManagedBean().getContractNo() == null
-				|| mcReportBackingBean.getManagedBean().getContractNo().isEmpty()) {
+		if (contractNumber == null || contractNumber.isEmpty()) {
 			isError = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -299,8 +286,7 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 													new FacesScopes().getUserLocale()) },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
-		} else if (mcReportBackingBean.getManagedBean().getContractNo() != null
-				&& mcReportBackingBean.getManagedBean().getContractNo().length() != 17) {
+		} else if (contractNumber.length() != 17) {
 			isError = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -312,61 +298,5 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 		}
 		return isError;
 	}
-
-	/**
-	 * Validates the contract number in the given {@link ccReportBackingBean}
-	 * before executing the LOV process.
-	 * <p>
-	 * This method checks if the contract number in the managed bean of
-	 * {@code ccReportBackingBean} is:
-	 * <ul>
-	 * <li>Null or empty: Logs a message and adds an error message to the JSF
-	 * context.</li>
-	 * <li>Not exactly 17 characters long: Logs a message and adds an error
-	 * message to the JSF context.</li>
-	 * </ul>
-	 * If any validation fails, an error message is displayed in the UI using
-	 * {@link FacesContext}.
-	 * </p>
-	 * 
-	 * @param ccReportBackingBean
-	 *            The backing bean containing the managed bean with the contract
-	 *            number.
-	 * @return {@code true} if validation fails (error detected), otherwise
-	 *         {@code false}.
-	 */
-	public boolean validateBeforeExecuteLov(ContractItemMonitoringCCRptBackingBean ccReportBackingBean) {
-		boolean isError = false;
-		if (ccReportBackingBean.getManagedBean().getContractNo() == null
-				|| ccReportBackingBean.getManagedBean().getContractNo().isEmpty()) {
-			isError = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(
-									MessageConst.ERROR_750083,
-									new String[] {
-											ResourceBundleUtils.getMessage("lbl.rpt.itmName",
-													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-													new FacesScopes().getUserLocale()),
-											ResourceBundleUtils.getMessage("lbl.ct.contract.no",
-													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-													new FacesScopes().getUserLocale()) },
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-
-		} else if (ccReportBackingBean.getManagedBean().getContractNo() != null
-				&& ccReportBackingBean.getManagedBean().getContractNo().length() != 17) {
-			isError = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-							MessageConst.ERROR_750084, new String[] { ResourceBundleUtils.getMessage(
-									"lbl.ct.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-		}
-		return isError;
-	}
-
-	// End - #29416
+	// End - #29416 || #34889
 }
