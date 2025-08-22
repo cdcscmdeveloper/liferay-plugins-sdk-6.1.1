@@ -151,6 +151,12 @@ th{
 								#if ($locationLevel == "District")
 									<td>Daerah</td>
 								#end
+								## 38731 -start-
+								#if ($locationLevel == "Division")
+									<td>Bahagian</td>
+									<td>Daerah</td>
+								#end
+								## 38731 -end-
 							</tr>
 						</span>
 							#foreach($location in $zoneLocality)
@@ -166,6 +172,18 @@ th{
 											$locCriteria.pmDistrict.districtName
 										</td>
 									#end
+									## 38731 -start-
+									#if ($locationLevel == "Division")
+										<td>
+											$locCriteria.pmDivision.divisionName
+										</td>
+										<td>
+											#foreach($pmDivisionDistricts in $locCriteria.pmDivision.pmDistricts)
+											$pmDivisionDistricts.districtName <br/>
+											#end
+										</td>
+									#end
+									## 38731 -end-
 								</tr>
 								</span>
 								#end
