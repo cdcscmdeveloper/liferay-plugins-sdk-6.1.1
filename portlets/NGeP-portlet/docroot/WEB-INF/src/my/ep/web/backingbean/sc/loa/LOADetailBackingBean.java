@@ -12253,7 +12253,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			 */
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
-			reqDTO.setLoiId(scLoa.getLoaId());
+			reqDTO.setLoaId(scLoa.getLoaId());
 			QuationTenderResDTO resDTO = getQTDetailSO().exitEPVLOAOperation(reqDTO);
 
 			if (resDTO.isSuccessful()) {
