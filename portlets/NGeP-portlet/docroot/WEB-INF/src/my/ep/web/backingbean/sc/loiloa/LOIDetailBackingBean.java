@@ -7201,12 +7201,10 @@ public class LOIDetailBackingBean extends
 			 * either Completed, Rejected OR Cancelled (Not agree with extension
 			 * validity period), QT will exit and goes to Refinalization.
 			 */
-			IQTOsbSO qtOsbSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTOsbSO.class);
-			QTOsbReqDTO reqDTO = new QTOsbReqDTO();
-			reqDTO.setSourceId(scLoi.getScLoiLoa().getDocId());
-			reqDTO.setDocId(scLoi.getLoiId());
-			QTOsbResDTO resDTO = qtOsbSO.onLoiCancelled(reqDTO);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scLoi.getScLoiLoa().getDocId());
+			reqDTO.setLoiId(scLoi.getLoiId());
+			QuationTenderResDTO resDTO = getQTDetailSO().exitEPVLOIOperation(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				successMessage(MessageConst.INFO_700031, ParameterTypeConst.DOCUMENT_TYPES,
