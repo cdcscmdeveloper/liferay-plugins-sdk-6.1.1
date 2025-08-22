@@ -5285,9 +5285,16 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		 * @param flItemAddr
 		 */
 		private void checkThresholdPerItemPerPTJPerYear(String procurementType,FlFulfilmentItemAddr flItemAddr){
-			BigDecimal accumulateAmount = getAccumalateAmountPerItemPerPtjPerYear(flItemAddr);
-			accumulateAmount = accumulateAmount.add(flItemAddr.getOrderedAmt());
-			
+			BigDecimal accumulateAmount = getAccumalateAmountPerItemPerPtjPerYear(flItemAddr.getScRequestItem());
+			BigDecimal totalOrderedQuantity = new BigDecimal("0");
+			for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr item : delAddr.getFlFulfilmentItemAddr()){
+					if(item.getScRequestItem().getRequestNoteItemId() == flItemAddr.getScRequestItem().getRequestNoteItemId()){
+						accumulateAmount = accumulateAmount.add(item.getOrderedAmt());
+						totalOrderedQuantity = totalOrderedQuantity.add(item.getOrderedQty());
+					}
+				}
+			}
 			BigDecimal thresholdAmount = retrieveThresholdAmountByProcurementType(procurementType);
 			
 			List<ScRequestNoteDtl> scRequestNoteDtlList = new ArrayList<>();
@@ -5302,11 +5309,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 			
 			// Hard code amount threshold for testing purpose
-			//thresholdAmount = new BigDecimal("30");
+			thresholdAmount = new BigDecimal("70");
 				
 			if(accumulateAmount.doubleValue() > thresholdAmount.doubleValue()){
 				if ("1".equals(requestNoteDtl.getBpkThresholdDecision())) {
-					if(flItemAddr.getOrderedQty().doubleValue() > flItemAddr.getScRequestItem().getQuantity().doubleValue()){
+					if(totalOrderedQuantity.doubleValue() > flItemAddr.getScRequestItem().getQuantity().doubleValue()){
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(MessageConst.ERROR_740073, 
 										new String[]{flItemAddr.getScRequestItem().getQuantity().toString(), 
@@ -5334,36 +5341,66 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		    List<String> nonBpkExceededItems = new ArrayList<>();
 		    
 			BigDecimal thresholdAmount = retrieveThresholdAmountByProcurementType(procurementType);
-		    
-			for(FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-				for(FlFulfilmentItemAddr item : delAddr.getFlFulfilmentItemAddr()){
-					BigDecimal accumulateAmount = getAccumalateAmountPerItemPerPtjPerYear(item);
-					accumulateAmount = accumulateAmount.add(item.getOrderedAmt());
-					
-					List<ScRequestNoteDtl> scRequestNoteDtlList = new ArrayList<>();
-					if(getManagedBean().getRequestNoteWithDtlsList()!= null){
-						scRequestNoteDtlList.addAll(getManagedBean().getRequestNoteWithDtlsList());
-					}
-					ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
-					for(ScRequestNoteDtl scRequestNoteDtl : scRequestNoteDtlList){
-						if(scRequestNoteDtl.getRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-							requestNoteDtl = scRequestNoteDtl;
-						}
-					}
-					
-					// Hard code amount threshold for testing purpose
-					//thresholdAmount = new BigDecimal("30");
-					
-					if(accumulateAmount.doubleValue() > thresholdAmount.doubleValue()){
-						if ("1".equals(requestNoteDtl.getBpkThresholdDecision())) {
-							if(item.getOrderedQty().doubleValue() > item.getScRequestItem().getQuantity().doubleValue()){
-								bpkExceededItems.add(item.getScRequestItem().getItemName());
-							}
-						} else {
-							nonBpkExceededItems.add(item.getScRequestItem().getItemName());
-						}
+			
+			Map<Long, ScRequestItem> requestItemMap = new HashMap<Long, ScRequestItem>();
+			Map<Long, BigDecimal> itemAmountMap = new HashMap<Long, BigDecimal>();
+			Map<Long, BigDecimal> itemQuantityMap = new HashMap<Long, BigDecimal>();
+			for (FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			    for (FlFulfilmentItemAddr item : delAddr.getFlFulfilmentItemAddr()) {
+			        Long itemId = item.getScRequestItem().getRequestNoteItemId();
+			        ScRequestItem requestItem = item.getScRequestItem();
+
+			        // Update amount
+			        BigDecimal currentAmount = itemAmountMap.get(itemId);
+			        if (currentAmount == null) {
+			            itemAmountMap.put(itemId, item.getOrderedAmt());
+			        } else {
+			            itemAmountMap.put(itemId, currentAmount.add(item.getOrderedAmt()));
+			        }
+
+			        // Update quantity
+			        BigDecimal currentQty = itemQuantityMap.get(itemId);
+			        if (currentQty == null) {
+			            itemQuantityMap.put(itemId, item.getOrderedQty());
+			        } else {
+			            itemQuantityMap.put(itemId, currentQty.add(item.getOrderedQty()));
+			        }
+
+			        // Store request item only once
+			        if (!requestItemMap.containsKey(itemId)) {
+			            requestItemMap.put(itemId, requestItem);
+			        }
+			    }
+			}
+			
+			for(Map.Entry<Long, BigDecimal> map : itemAmountMap.entrySet() ){
+				BigDecimal accumulateAmount = getAccumalateAmountPerItemPerPtjPerYear(requestItemMap.get(map.getKey()));
+				accumulateAmount = accumulateAmount.add(map.getValue());
+				
+				List<ScRequestNoteDtl> scRequestNoteDtlList = new ArrayList<>();
+				if(getManagedBean().getRequestNoteWithDtlsList()!= null){
+					scRequestNoteDtlList.addAll(getManagedBean().getRequestNoteWithDtlsList());
+				}
+				ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
+				for(ScRequestNoteDtl scRequestNoteDtl : scRequestNoteDtlList){
+					if(scRequestNoteDtl.getRequestItem().getRequestNoteItemId().equals(requestItemMap.get(map.getKey()).getRequestNoteItemId())){
+						requestNoteDtl = scRequestNoteDtl;
 					}
 				}
+				
+				// Hard code amount threshold for testing purpose
+				thresholdAmount = new BigDecimal("70");
+				
+				if(accumulateAmount.doubleValue() > thresholdAmount.doubleValue()){
+					if ("1".equals(requestNoteDtl.getBpkThresholdDecision())) {
+						if(itemQuantityMap.get(map.getKey()).doubleValue() > requestItemMap.get(map.getKey()).getQuantity().doubleValue()){
+							bpkExceededItems.add(requestItemMap.get(map.getKey()).getItemName());
+						}
+					} else {
+						nonBpkExceededItems.add(requestItemMap.get(map.getKey()).getItemName());
+					}
+				}
+				
 			}
 			
 			if (!bpkExceededItems.isEmpty() || !nonBpkExceededItems.isEmpty()) {
@@ -5371,7 +5408,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		        	StringBuilder itemList = new StringBuilder();
 		        	int count = 1;
 		            for (String item : bpkExceededItems) {
-		            	itemList.append("<br>" + count + ". " + item);
+		            	itemList.append("<br>" + count + ". " + new CommonUtils().filterItemNameNA(item));
 		                count ++;
 		            }
 		            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -5385,7 +5422,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		        	StringBuilder itemList = new StringBuilder();
 		        	int count = 1;
 		            for (String item : nonBpkExceededItems) {
-		            	itemList.append("<br>" + count + ". " + item);
+		            	itemList.append("<br>" + count + ". " + new CommonUtils().filterItemNameNA(item));
 		                count ++;
 		            }
 		            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -5435,15 +5472,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		 * @param flFulfilmentItemAddr
 		 * @return
 		 */
-		private BigDecimal getAccumalateAmountPerItemPerPtjPerYear(FlFulfilmentItemAddr flFulfilmentItemAddr){
+		private BigDecimal getAccumalateAmountPerItemPerPtjPerYear(ScRequestItem scRequestItem){
 			IFlItemSummarySO itemSummSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
 			summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
 			summReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
-			summReq.setItemId(flFulfilmentItemAddr.getScRequestItem().getCmItem().getItemId());
-			summReq.setExtensionCode(flFulfilmentItemAddr.getScRequestItem().getCmItem().getExtensionCode().substring(0, 8));
+			summReq.setItemId(scRequestItem.getCmItem().getItemId());
+			summReq.setExtensionCode(scRequestItem.getCmItem().getExtensionCode().substring(0, 8));
 			return itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);	
 		}
 }
