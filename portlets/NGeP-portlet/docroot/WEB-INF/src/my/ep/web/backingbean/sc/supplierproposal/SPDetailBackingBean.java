@@ -82,6 +82,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -3836,6 +3837,32 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			proposalSO = null;
 		}
 	}
+	
+	// #30447 - Start
+	/**
+	 * Retrieve supplier Salutation by identification No
+	 * 
+	 * @param identificationNo
+	 * @return salutationName
+	 */
+	public String supplierSalutation(String identificationNo) {
+		String salutationName = StringUtils.EMPTY;
+		try {
+			IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			PmSalutation salutation = proposalSO.retrieveSalutationByIdentificationNo(identificationNo);
+			if (salutation != null) {
+				salutationName = salutation.getSalutationName();
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "supplierSalutation",
+					this.getManagedBean().getQt().getQtId().toString(), "supplierSalutation",
+					getUserIdSessionFromLoginId(), e);
+		}
+		return salutationName;
+	}
+
+	// #30447 - End
 
 	/**
 	 * Method to retrieve Supplier details
@@ -3869,6 +3896,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 			for (SmPersonnel personnel : resDTO.getSmAppl().getSmPersonnels()) {
 				if (personnel.isEquityOwner()) {
+
+					// #30447 - Start
+					String newName = personnel.getName();
+					String salutation = supplierSalutation(personnel.getIdentificationNo());
+					newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+					personnel.setName(newName);
+					// #30447 - End
+					
 					equityShareHolders.add(personnel);
 
 				}

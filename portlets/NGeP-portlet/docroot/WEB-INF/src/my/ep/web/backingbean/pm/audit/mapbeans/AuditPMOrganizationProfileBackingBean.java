@@ -126,7 +126,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private String setStatus() {
-		docId = orgProfile.getOrgProfileId();
+		docId = managedBean.getNewProfileId() != null ? managedBean.getNewProfileId() : orgProfile.getOrgProfileId();
 		
 		if (orgProfile.isBrandNew() && !orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_SYS)) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
@@ -325,7 +325,9 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				oldOrgProfile.getParentOrgProfile().getPmOrgValidity().getOrgName() : 
 					oldOrgProfile.getPmOrgValidity().getOrgName();
 				
-		docId = orgProfile.getPmOrgValidity().getOrgValidityId();
+		docId = managedBean.getNewPmOrgProfile() != null ? 
+				managedBean.getNewPmOrgProfile().getPmOrgValidity().getOrgValidityId() : 
+					orgProfile.getPmOrgValidity().getOrgValidityId();
 		
 		if (!orgProfile.isBrandNew()) {
 			if(!currentMinistryName.equalsIgnoreCase(oldMinistryName)){
@@ -341,10 +343,13 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private void setOrgName() {
-		docId = orgProfile.getPmOrgValidity().getOrgValidityId();
+		docId = managedBean.getNewPmOrgProfile() != null ? 
+				managedBean.getNewPmOrgProfile().getPmOrgValidity().getOrgValidityId() : 
+					orgProfile.getPmOrgValidity().getOrgValidityId();
+				
 		if (orgProfile.isBrandNew()) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-			detailObj(AuditConst.PM_AUD_OPM_ORGNAME_FIELDLABELCODE, null, orgProfile.getPmOrgValidity().getOrgName());
+			detailObj(AuditConst.PM_AUD_OPM_ORGNAME_FIELDLABELCODE, null, managedBean.getNewPmOrgProfile().getPmOrgValidity().getOrgName());
 
 		} else if (!orgProfile.getPmOrgValidity().getOrgName().equals(oldOrgProfile.getPmOrgValidity().getOrgName())) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
@@ -355,7 +360,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 
 	private void setOrganisationDetail() {
 		if (orgProfile.isBrandNew()) {
-			docId = orgProfile.getOrgProfileId();
+			docId = managedBean.getNewProfileId() != null ? managedBean.getNewProfileId() : orgProfile.getOrgProfileId();
 			
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			detailObj(AuditConst.PM_AUD_OPM_ORGCATEGORY_FIELDLABELCODE, null, getOrgType()); // 167
@@ -366,7 +371,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 
 	private void setPTJGroup() {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-		docId = orgProfile.getOrgProfileId();
+		docId = managedBean.getNewProfileId() != null ? managedBean.getNewProfileId() : orgProfile.getOrgProfileId();;
 		
 		if (orgProfile.isGovtSeller() != oldOrgProfile.isGovtSeller()) {
 			detailObj(AuditConst.PM_AUD_OPM_G2G_FIELDLABELCODE, null, orgProfile.isGovtSeller() ? AuditConst.PM_AUD_YES
@@ -541,7 +546,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	
 	//extracted method. Used to set group org type.
 	private void setGroupOrgType() {
-		docId = orgProfile.getOrgProfileId();
+		docId = managedBean.getNewProfileId() != null ? managedBean.getNewProfileId() : orgProfile.getOrgProfileId();
 		
 		if (orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() == null) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;

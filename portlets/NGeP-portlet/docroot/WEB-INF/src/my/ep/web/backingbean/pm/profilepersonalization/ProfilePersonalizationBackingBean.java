@@ -23,6 +23,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO; //#26186
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -62,6 +63,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierCategory; //#26186
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -78,6 +80,7 @@ import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.collections.CollectionUtils; //#26186
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -88,6 +91,7 @@ import com.liferay.portal.util.PortalUtil;
 //#28895_35501 Start - AUDIT TRAIL SM
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.constants.CTProcessNameConst; //#26186
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.CustomUtils;
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
@@ -1630,6 +1634,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String docNo = originalServletRequest.getParameter("docNo");
+		String taskName = originalServletRequest.getParameter("taskName"); //#26186
 		Long qtId = this.getManagedBean().getQtId();// 26247
 		renewSesionObject(); 
 		FacesScopes facesScopes = new FacesScopes();
@@ -1692,6 +1697,12 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				getManagedBean().setQtDisciplinaryActionMsg(qtWarningMessage);
 			}
 			// 26247 - end
+			
+			//#26186 start
+			if (taskName != null && taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				checkCtSupplierCategory(supplier);
+			}
+			//#26186 end
 
 			SLAUtils.getInstance().logSLAInfo("SM","DA-5", log, startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
@@ -1793,4 +1804,60 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		return auditUser;
 	}
 	// #28895_35501 End
+	
+	//#26186 start
+	/**
+	 * Method to check supplier for Cancelled Category Code/ Cancelled Category Related to Manufacturing
+	 * Used for CT module.
+	 * 
+	 * @param supplier the supplier for the current contract
+	 */
+	public void checkCtSupplierCategory(SmSupplier supplier) {
+		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		try {
+			this.getManagedBean().setCtSupplierMsgNonDA(StringUtils.EMPTY);
+			StringBuilder sb = new StringBuilder();
+
+			List<SmSupplierCategory> suppCategory = suppDataSO.nonDisciplinaryActionCancelCategoryCode(supplier
+					.getSupplierId());
+			if (CollectionUtils.isNotEmpty(suppCategory)) {
+				for (SmSupplierCategory supCat : suppCategory) {
+					appendCtSupplierCategoryMsg(sb, supCat);
+				}
+			}
+
+			if (StringUtils.isNotBlank(sb.toString())) {
+				sb.insert(0, "(");
+				sb.append(")");
+				String[] params = new String[] { sb.toString() };
+				this.getManagedBean().setCtSupplierMsgNonDA(
+						ResourceBundleUtils.getMessage("lbl.ct.amend.supplier.maintenance.cancel.category", params,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+					"ProfilePersonalizationBackingBean", "", "ProfilePersonalizationBackingBean.checkCtSupplierCategory",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	/**
+	 * Method to append message contain category code for supplier.
+	 * 
+	 * @param sb The stringbuilder of the message
+	 * @param supCat The list of the category code of the supplier
+	 */
+	private void appendCtSupplierCategoryMsg(StringBuilder sb, SmSupplierCategory supCat) {
+		if (StringUtils.isNotBlank(sb.toString())) {
+			sb.append(", ");
+		}
+		sb.append(supCat.getCategoryL1Name().trim());
+		sb.append(", ");
+		sb.append(supCat.getCategoryL2Name().trim());
+		sb.append(", ");
+		sb.append(supCat.getCategoryL3Name().trim());
+	}
+	//#26186 end
 }
