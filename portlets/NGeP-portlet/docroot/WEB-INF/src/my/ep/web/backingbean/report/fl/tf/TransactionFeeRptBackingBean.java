@@ -72,6 +72,9 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		setDefaultTransactionDate();
 
 		resetSearchCriteriaValues();
+		
+		//reset AG acc
+		resetOfficeSearchBean();
 	}
 
 	/**
@@ -238,11 +241,13 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 	 */
 	public void resetOfficeSearchBean() {
 		this.agOffice = null;
-		if(this.getManagedBean().getIsAllAgOff() == null){
-			this.getManagedBean().setIsAllAgOff("false");
-		}
+		this.getManagedBean().setIsAllAgOff("false");
+		
 		this.getManagedBean().setOffDropdown("officeCode");
 		this.getManagedBean().setAccountingOfficeSearchBean(new AccountingOfficeSearchBean());
+		
+		this.getManagedBean().setInputAgOff(null);
+		searchAccountingOffice();
 	}
 
 	/**
