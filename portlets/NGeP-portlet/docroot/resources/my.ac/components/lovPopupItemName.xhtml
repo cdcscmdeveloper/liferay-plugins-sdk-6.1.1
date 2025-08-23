@@ -81,6 +81,8 @@
 		<h:panelGroup id="resultPanel" style="width:100%;">
 			
 	 <h:panelGroup rendered="#{lovBackingBean.lovBean.selectionMode == 'single'}">
+	 <h:outputText rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport() and lovBackingBean.lovBean.title eq lbl['lbl.ct.ministry']}"
+				styleClass="instruction" value="#{lbl['lbl.ct.instruction.report.itemusage.monitoringdtls.allministry']}" escape="false" style="color: blue"/><br /><br />	<!-- #34889 -->
 			<p:dataTable id="lovTb"
 				var="entity" 
 				selection="#{lovBackingBean.selectedEntity}"
@@ -96,7 +98,9 @@
 				<p:ajax event="rowDblselect" listener="#{lovBackingBean.populateToSaveObject}" 
                      update="@form" />
                 <p:ajax event="rowSelect" update="@([id$=slbtn])" />   
-                <p:ajax event="rowUnselect" update="@([id$=slbtn])" />   
+                <p:ajax event="rowUnselect" update="@([id$=slbtn])" /> 
+                <p:ajax event="rowSelect" update="@([id$=slbtnAllMinistry)" /> <!-- #34889 -->  
+                <p:ajax event="rowUnselect" update="@([id$=slbtnAllMinistry])" /> <!-- #34889 -->  
 				<!-- <p:column selectionMode="single" style="width:2%" /> 
 				
 				<p:column width="5%">
@@ -209,7 +213,19 @@
 			</h:panelGroup>
 			
 			<table style="width:100%;"><tr><TD style="text-align:right;">
-				<p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
+			
+					<!-- Start - #34889 -->
+					<p:commandButton rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport() and lovBackingBean.lovBean.title eq lbl['lbl.ct.ministry']}"
+					id="slbtnAllMinistry"
+					value="#{lbl['lbl.btn.select.allMinistry']}"
+					action="#{lovBackingBean.allMinistrySelection()}"
+					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
+					oncomplete="lovPopup.hide();"
+					process="resultPanel"
+					partialSubmit="true"  styleClass="BtnSpacing"/>
+					<!-- End - #34889 -->
+					
+					<p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
 					id="slbtn"
 					value="#{lbl['lbl.btn.select']}"
 					action="#{lovBackingBean.populateToSaveObject}"
@@ -229,12 +245,13 @@
 					disabled="#{lovBackingBean.isSelectButtonDisable()}"
 					partialSubmit="true"  styleClass="BtnSpacing"/>
 															
-			    <p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
+			    	<p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
 			      	value="#{lbl['lbl.btn.cancel']}"
 				  	partialSubmit="true" process="@this" update="@this"
 				  	action="#{lovBackingBean.resetAction()}"
 				  	oncomplete="lovPopup.hide();" styleClass="BtnSpacing"/>
-				<p:commandButton rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}"
+				  	
+					<p:commandButton rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}"
 				  	value="#{lbl['lbl.btn.cancel']}"
 				  	partialSubmit="true" process="@this" update="@this"
 				  	action="#{lovBackingBean.populatedBackupSelectedItems()}"
