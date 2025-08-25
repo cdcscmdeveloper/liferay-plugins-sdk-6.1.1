@@ -2616,7 +2616,7 @@ public class QTDocumentsBackingBean extends
 		}
 		
 		// Bug #38731@Syazani 20/08/2025 -- Start
-		if (locationLevel.equalsIgnoreCase("District")) {
+		if ("District".equalsIgnoreCase(locationLevel)) {
 			isLocLevelDistrictContainsDivision = isLocationContainsDivision(specZoneDtls,
 					tenderResDTO.getLocationDetails());
 		}
@@ -3233,19 +3233,14 @@ public class QTDocumentsBackingBean extends
 				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs())) {
 					tplSpecZoneDtl.setTplSpecZoneLocs(removeDuplicatebyDivisionIDbyTplSpecZoneLoc(tplSpecZoneDtl
 							.getTplSpecZoneLocs()));
-					for (TplSpecZoneLoc tplSpecZoneLoc : tplSpecZoneDtl.getTplSpecZoneLocs()) {
-						if (null != tplSpecZoneLoc.getPmDivision()) {
-							isLocationContainsDivision = true;
-							break;
-						}
-					}
+					isLocationContainsDivision = loopFindisLocationContainsPmDivision(tplSpecZoneDtl);
 				}
 			}
 		}
 
 		if (!CollectionUtils.isEmpty(locationDetails)) {
-			locationDetails = removeDuplicatebyDivisionIDbyTplSpecLoc(locationDetails);
-			for (TplSpecLoc tplSpecLoc : locationDetails) {
+			List<TplSpecLoc> locationDetailsNew = removeDuplicatebyDivisionIDbyTplSpecLoc(locationDetails);
+			for (TplSpecLoc tplSpecLoc : locationDetailsNew) {
 				if (null != tplSpecLoc.getPmDivision()) {
 					isLocationContainsDivision = true;
 					break;
@@ -3255,14 +3250,23 @@ public class QTDocumentsBackingBean extends
 
 		return isLocationContainsDivision;
 	}
+	
+	private boolean loopFindisLocationContainsPmDivision(TplSpecZoneDtl tplSpecZoneDtl) {
+		for (TplSpecZoneLoc tplSpecZoneLoc : tplSpecZoneDtl.getTplSpecZoneLocs()) {
+			if (null != tplSpecZoneLoc.getPmDivision()) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	private List<TplSpecZoneLoc> removeDuplicatebyDivisionIDbyTplSpecZoneLoc(List<TplSpecZoneLoc> tplSpecZoneLocLst) {
-		Map<String, TplSpecZoneLoc> map = new LinkedHashMap<String, TplSpecZoneLoc>();
+		Map<String, TplSpecZoneLoc> map = new LinkedHashMap<>();
 		for (TplSpecZoneLoc tplSpecZoneLoc : tplSpecZoneLocLst) {
 			if (null != tplSpecZoneLoc.getPmDivision()) {
 				if (!map.containsKey("D" + tplSpecZoneLoc.getPmDivision().getDivisionId())) {
 					TplSpecZoneLoc tplSpecZoneLocNew = tplSpecZoneLoc;
-					List<PmDistrict> pmDistrictLst = new ArrayList<PmDistrict>();
+					List<PmDistrict> pmDistrictLst = new ArrayList<>();
 					pmDistrictLst.add(tplSpecZoneLoc.getPmDistrict());
 					tplSpecZoneLoc.getPmDivision().setPmDistricts(pmDistrictLst);
 					map.put("D" + tplSpecZoneLoc.getPmDivision().getDivisionId(), tplSpecZoneLocNew);
@@ -3278,16 +3282,16 @@ public class QTDocumentsBackingBean extends
 			}
 		}
 
-		return new ArrayList<TplSpecZoneLoc>(map.values());
+		return new ArrayList<>(map.values());
 	}
 
 	private List<TplSpecLoc> removeDuplicatebyDivisionIDbyTplSpecLoc(List<TplSpecLoc> tplSpecLocLst) {
-		Map<String, TplSpecLoc> map = new LinkedHashMap<String, TplSpecLoc>();
+		Map<String, TplSpecLoc> map = new LinkedHashMap<>();
 		for (TplSpecLoc tplSpecLoc : tplSpecLocLst) {
 			if (null != tplSpecLoc.getPmDivision()) {
 				if (!map.containsKey("D" + tplSpecLoc.getPmDivision().getDivisionId())) {
 					TplSpecLoc tplSpecLocNew = tplSpecLoc;
-					List<PmDistrict> pmDistrictLst = new ArrayList<PmDistrict>();
+					List<PmDistrict> pmDistrictLst = new ArrayList<>();
 					pmDistrictLst.add(tplSpecLoc.getPmDistrict());
 					tplSpecLoc.getPmDivision().setPmDistricts(pmDistrictLst);
 					map.put("D" + tplSpecLoc.getPmDivision().getDivisionId(), tplSpecLocNew);
@@ -3303,7 +3307,7 @@ public class QTDocumentsBackingBean extends
 			}
 		}
 
-		return new ArrayList<TplSpecLoc>(map.values());
+		return new ArrayList<>(map.values());
 	}
 	// Bug #38731@Syazani 20/08/2025 -- End
 }
