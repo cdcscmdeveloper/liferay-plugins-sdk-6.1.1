@@ -5089,10 +5089,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return BigDecimal total amount
 	 */
 	public BigDecimal calculateOriginalOverallAmount() {
-		CtContractVer ctContractVer = getManagedBean().getContractVer();
-	    ScLoa loa = ctContractVer.getCtContract().getLoa();
+		CtContractAmount contractAmount = getManagedBean().getCtContractAmount();
+		ScLoa loa = getManagedBean().getContractVer().getCtContract().getLoa();
 	
-	    BigDecimal total = ctContractVer.getCtContractValue().getOverallCtAmtPbond();
+	    BigDecimal total = getManagedBean().getCtContractAmount().getOverallCtAmtPbond();
 	    // Early return 0.0 if OverallCtAmtPbond is null
 	    if (total == null) {
 	        return BigDecimal.ZERO;
@@ -5103,8 +5103,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	        return total;
 	    }
 
-	    // Check if bond is required in LOA or contract amount
-	    CtContractAmount contractAmount = getManagedBean().getContractVer().getCtContractAmount();
+	    // Check if bond is required in LOA or contract amount to set bond percentage
 	    if (loa.isBondReq() || contractAmount.isBondReq()) {
 	        String periodStr = calculateBondPeriod();
 	        BigDecimal contractPeriod = new BigDecimal(periodStr); // Ensure periodStr is valid numeric string

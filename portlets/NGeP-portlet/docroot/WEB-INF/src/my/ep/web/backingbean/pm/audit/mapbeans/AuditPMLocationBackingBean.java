@@ -51,6 +51,9 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
 		LocationManagedBean managedBeans = (LocationManagedBean) manageBean;
 		this.roleCode = roleCode;
+		if (null == managedBeans.getResCountry()) {
+			managedBeans.setResCountry(managedBeans.getState().getPmCountry());
+		}
 		if (ParameterConst.LOCATION_LEVEL_STATE.equals(managedBeans.getSelectedType())) {
 			docType = managedBeans.getState().getStateName();// AuditConst.PM_AUD_ST_DOC_TYPE;
 			paramLvlId = AuditConst.PM_AUD_ST_PMPARAMETERLVLID;
