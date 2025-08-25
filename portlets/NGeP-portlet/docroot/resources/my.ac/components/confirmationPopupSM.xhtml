@@ -72,11 +72,13 @@
 					<!-- #34400 - start -->
 					<td align="left" style="white-space: normal; word-wrap: break-word !important;">
 					<h:outputText value="#{confirmationContent}" escape="false" style="padding-left:0px"/></td>
+					<!-- #34400 - end -->
 				</tr>
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<c:choose>
+					<!-- #34400 - start -->
 					<c:when test="#{cc.attrs.hasParam}">
 						<p:commandButton id="yesWithParamId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
