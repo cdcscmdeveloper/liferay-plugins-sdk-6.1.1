@@ -38,6 +38,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.audit.ILovAuditSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.dto.cc.lov.LovReqDTO;
 import my.ep.dto.cc.lov.LovResDTO;
 import my.ep.persistence.entity.BaseEntity;
@@ -46,6 +47,8 @@ import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMException;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.LovBean;
 import my.ep.web.bean.LovColumnBean;
@@ -55,32 +58,35 @@ import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+/**
+ * @author normuliana #35509 PM Audit
+ * 
+ */
 @ManagedBean(name = "lovAuditBackingBean")
 @ViewScoped
 public class LovAuditBackingBean implements Serializable {
 
 	/**
-	 * #35509
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(LovAuditBackingBean.class);
 
 	private String lovId = null;
-	private String roleCode = null;
 	@SuppressWarnings("rawtypes")
-	private ISearchBean lovSearchBean = new SearchBean();
-	private IPagingDataModel<PmUser> searchPmUserDataModel = new SearchPmUserPagingDataModel();
+	private transient ISearchBean lovSearchBean = new SearchBean();
+	private transient IPagingDataModel<PmUser> searchPmUserDataModel = new SearchPmUserPagingDataModel();
 
-	private LovBean lovBean = null;
-	private List<SelectItem> searchOptions = new ArrayList<SelectItem>();
+	private LovBean lovBean = new LovBean();
+	private List<SelectItem> searchOptions = new ArrayList<>();
 
 	@SuppressWarnings("rawtypes")
-	private List resultList = new ArrayList();
-	private Object selectedEntity;
+	private transient List resultList = new ArrayList();
+	private transient Object selectedEntity;
 	private List<BaseEntity> selectedEntities;
-	private Map<Long, BaseEntity> persistedEntities = new HashMap<Long, BaseEntity>();
+	private Map<Long, BaseEntity> persistedEntities = new HashMap<>();
 
-	private List<LovColumnBean> columnsToDisplay = new ArrayList<LovColumnBean>();
+	private List<LovColumnBean> columnsToDisplay = new ArrayList<>();
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -137,8 +143,8 @@ public class LovAuditBackingBean implements Serializable {
 			}
 
 			searchBean.getDataFilterBeans().addAll(getLovSearchBean().getDataFilterBeans());
-			System.out.println("AAAAAAAAa :::: " + lovSearchBean.getDataFilterBeans().size());
-			System.out.println("BBBBBBBB :::: " + searchBean.getDataFilterBeans().size());
+			log.info("AAAAAAAAa :::: " + lovSearchBean.getDataFilterBeans().size());
+			log.info("BBBBBBBB :::: " + searchBean.getDataFilterBeans().size());
 
 			for (int i = 0; i < lovSearchBean.getDataFilterBeans().size(); i++) {
 				if (searchBean.getDataFilterBeans().get(i) instanceof SearchMultiFilterBean) {
@@ -152,19 +158,17 @@ public class LovAuditBackingBean implements Serializable {
 					if (filterBean2.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
 						filterBean2.setCaseInsensitive(true);
 					}
-					System.out.println("filterBean1 ### ::: " + filterBean1);
-					System.out.println("filterBean2 ### ::: " + filterBean2);
+					log.info("filterBean1 ### ::: " + filterBean1);
+					log.info("filterBean2 ### ::: " + filterBean2);
 				} else {
 					SearchFilterBean filterBean = (SearchFilterBean) searchBean.getDataFilterBeans().get(i);
-					System.out.println("filterBeangetSearchField###$$$ ::: " + filterBean.getSearchField());
-					System.out.println("filterBean ###$$$ getSearchValue::: " + filterBean.getSearchValue());
+					log.info("filterBeangetSearchField###$$$ ::: " + filterBean.getSearchField());
+					log.info("filterBean ###$$$ getSearchValue::: " + filterBean.getSearchValue());
 					if (filterBean.getSearchField() != null) {
-						if (filterBean.getSearchField().equalsIgnoreCase("userName")) {
+						if ("userName".equalsIgnoreCase(filterBean.getSearchField())) {
 							reqDTO.setUserName(filterBean.getSearchValue().toString());
-						} else if (filterBean.getSearchField().equalsIgnoreCase("identificationNo")) {
+						} else if ("identificationNo".equalsIgnoreCase(filterBean.getSearchField())) {
 							reqDTO.setIdentificationNo(filterBean.getSearchValue().toString());
-						} else if (filterBean.getSearchField().equalsIgnoreCase("designation")) {
-							reqDTO.setDesignation(filterBean.getSearchValue().toString());
 						}
 					}
 
@@ -173,24 +177,23 @@ public class LovAuditBackingBean implements Serializable {
 					}
 				}
 			}
-			System.out.println("getLovBean().getRoleCode() :::: " + getLovBean().getRoleCode());
+			log.info("getLovBean().getRoleCode() :::: " + getLovBean().getRoleCode());
 			reqDTO.setSearchBean(searchBean);
 
 			reqDTO.setRoleCode(lovBean.getRoleCode());
 
-			lovSO = (ILovAuditSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					ILovAuditSO.class);
+			lovSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ILovAuditSO.class);
 
 			debugLogger("reqDTO: " + reqDTO);
 			debugLogger("reqDTO.getSearchBean(): " + reqDTO.getSearchBean());
 
 			LovResDTO resDTO = lovSO.getSearchListSP(reqDTO);
-			ISearchResultBean resultBean = resDTO.getResultBean();
-
-			return resultBean;
-		} finally {
-			lovSO = null;
+			return resDTO.getResultBean();
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "searchActionByList", "resDTO",
+					"searchResult", Long.valueOf(searchBean.getUserId()), e);
 		}
+		return null;
 	}
 
 	/**
@@ -201,7 +204,7 @@ public class LovAuditBackingBean implements Serializable {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("rawtypes")
-	public void populateObject(ValueChangeEvent event) throws Exception {
+	public void populateObject(ValueChangeEvent event) throws AuditPMException {
 		lovSearchBean.getDataFilterBeans().clear();
 
 		lovBean = getBeanByLovId((String) event.getComponent().getAttributes().get("lovId"));
@@ -210,7 +213,7 @@ public class LovAuditBackingBean implements Serializable {
 		String saveObject = (String) event.getComponent().getAttributes().get("saveObject");
 
 		lovBean.setSaveObject(saveObject);
-		lovBean.setSelectionMode("single");
+		lovBean.setSelectionMode(AuditConst.SINGLE);
 
 		debugLogger("event.getNewValue(): " + event.getNewValue());
 		debugLogger("lovBean.getConditionField(): " + lovBean.getConditionField());
@@ -255,7 +258,7 @@ public class LovAuditBackingBean implements Serializable {
 		FacesContext context = FacesContext.getCurrentInstance();
 		String expressionString = roleCode;
 
-		debugLogger("Save Object: " + expressionString);
+		debugLogger("Save Object : " + expressionString);
 		if (!FacesScopes.isValueReference(expressionString)) {
 			expressionString = "#{" + expressionString + "}";
 		}
@@ -294,9 +297,9 @@ public class LovAuditBackingBean implements Serializable {
 		lovBean.setDisplayResultWhenReset(Boolean.valueOf(displayResultWhenReset));
 		lovBean.setStoreProc(Boolean.valueOf(isStoreProc));
 		lovBean.setRoleCode(String.valueOf(roleCodeVal));
-		if (lovBean.getSelectionMode().equals("single")) {
+		if (AuditConst.SINGLE.equals(lovBean.getSelectionMode())) {
 			lovBean.setClientId("@(:input[id*="
-					+ StringUtils.replace(clientId.substring(clientId.indexOf(":") + 1).concat(":").concat(componentId), ":",
+					+ StringUtils.replace(clientId.substring(clientId.indexOf(':') + 1).concat(":").concat(componentId), ":",
 							"\\\\:") + "])");
 		}
 		debugLogger("client id: " + lovBean.getClientId());
@@ -306,7 +309,7 @@ public class LovAuditBackingBean implements Serializable {
 
 		columnsToDisplay.clear();
 		for (LovColumnBean column : lovBean.getColumns()) {
-			if (column.isViewable()) {
+			if (column.isViewable() && !AuditConst.DESIGNATION.equalsIgnoreCase(column.getColumnName())) {
 
 				ValueExpression valueExpression = null;
 				if (column.getMethodName() != null) {
@@ -332,11 +335,6 @@ public class LovAuditBackingBean implements Serializable {
 		}
 
 		resetAction();
-		if (getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")) {
-			FacesScopes facesScopesLovID = new FacesScopes();
-			facesScopesLovID.setSessionScope("LovID_Business_Nature", "PM_BUSINESS_NATURE");
-			removeSelectedBusinessNature();
-		}
 	}
 
 	/**
@@ -354,8 +352,8 @@ public class LovAuditBackingBean implements Serializable {
 	 * @return
 	 */
 	private int extractSaveObjectIndex(String saveObject) {
-		int index1 = saveObject.indexOf("[");
-		int index2 = saveObject.indexOf("]");
+		int index1 = saveObject.indexOf('[');
+		int index2 = saveObject.indexOf(']');
 
 		if (index1 < 0 || index2 < 0) {
 			return -1;
@@ -366,6 +364,9 @@ public class LovAuditBackingBean implements Serializable {
 		return (saveOjbectIndex == null) ? 0 : Integer.parseInt(saveOjbectIndex);
 	}
 
+	/**
+	 * resetAction()
+	 */
 	@SuppressWarnings("rawtypes")
 	public void resetAction() {
 		if (getLovBean().isStoreProc()) {
@@ -390,12 +391,17 @@ public class LovAuditBackingBean implements Serializable {
 	 * Reset all.
 	 */
 	@SuppressWarnings("rawtypes")
-	public void resetAllSP() {
-		this.getSearchPmUserDataModel().resetData();
+	public void resetAll() {
+
+		this.getSearchPmUserDataModel().resetData(); // #29416
 		this.setLovSearchBean(new SearchBean());
 		this.setLovBean(new LovBean());
 
 		persistedEntities.clear();
+
+		if (selectedEntities != null && !selectedEntities.isEmpty()) {
+			selectedEntities.clear();
+		}
 	}
 
 	// OR: columnName1^value1*columnName1^value2
@@ -431,7 +437,7 @@ public class LovAuditBackingBean implements Serializable {
 							if (Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_IN.value()
 									|| Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_NOT_IN.value()) {
 								String[] listArray = fieldMapping[1].split("\\,");
-								List<String> list = new ArrayList<String>();
+								List<String> list = new ArrayList<>();
 								for (String obj : listArray) {
 									list.add(obj);
 								}
@@ -441,7 +447,7 @@ public class LovAuditBackingBean implements Serializable {
 							}
 
 						} else {
-							if (!isThis && fieldMapping[1].equals("this")) {
+							if (!isThis && "this".equals(fieldMapping[1])) {
 								continue;
 							} else if (!isThis) {
 								filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -475,7 +481,7 @@ public class LovAuditBackingBean implements Serializable {
 						if (Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_IN.value()
 								|| Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_NOT_IN.value()) {
 							String[] listArray = fieldMapping[1].split("\\,");
-							List<String> list = new ArrayList<String>();
+							List<String> list = new ArrayList<>();
 							for (String obj : listArray) {
 								list.add(obj);
 							}
@@ -485,11 +491,11 @@ public class LovAuditBackingBean implements Serializable {
 						}
 
 					} else {
-						if (!isThis && fieldMapping[1].equals("this")) {
+						if (!isThis && "this".equals(fieldMapping[1])) {
 							continue;
 						} else if (!isThis) {
 							// 9442 - START
-							if (filterBean.getSearchField().equalsIgnoreCase("levelCode")) {
+							if ("levelCode".equalsIgnoreCase(filterBean.getSearchField())) {
 								filterBean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
 							} else {
 								filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -512,7 +518,7 @@ public class LovAuditBackingBean implements Serializable {
 		this.setSearchOptions(new ArrayList<SelectItem>());
 		if (lovBean.getColumns() != null && lovBean.getColumns().size() > 0) {
 			for (LovColumnBean column : lovBean.getColumns()) {
-				if (column.isSearchable()) {
+				if (column.isSearchable() && !AuditConst.DESIGNATION.equalsIgnoreCase(column.getColumnName())) {
 					SelectItem item = new SelectItem(column.getColumnName(), column.getColumnTitle());
 					this.getSearchOptions().add(item);
 				}
@@ -521,7 +527,7 @@ public class LovAuditBackingBean implements Serializable {
 	}
 
 	public List<SelectItem> getSearchOperators() {
-		List<SelectItem> operatorList = new ArrayList<SelectItem>();
+		List<SelectItem> operatorList = new ArrayList<>();
 
 		SelectItem item1 = new SelectItem(SearchOperator.OPERATOR_LIKE.value(), ResourceBundleUtils.getMessage(
 				"lbl.operator.equals", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
@@ -542,8 +548,7 @@ public class LovAuditBackingBean implements Serializable {
 				.getExternalContext().getRequest());
 		ServletContext servletContext = request.getSession().getServletContext();
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-		LovBean lovBean = (LovBean) webApplicationContext.getBean(lovId);
-
+		lovBean = (LovBean) webApplicationContext.getBean(lovId);
 		return lovBean;
 	}
 
@@ -552,11 +557,12 @@ public class LovAuditBackingBean implements Serializable {
 				.getExternalContext().getRequest());
 		ServletContext servletContext = request.getSession().getServletContext();
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-		LovBean lovBean = (LovBean) webApplicationContext.getBean(roleCode);
-
-		return lovBean;
+		return (LovBean) webApplicationContext.getBean(rolecode);
 	}
 
+	/**
+	 * populateToSaveObject()
+	 */
 	public void populateToSaveObject() {
 		debugLogger("In populateToSaveObject");
 
@@ -572,7 +578,7 @@ public class LovAuditBackingBean implements Serializable {
 			expressionString = "#{" + expressionString + "}";
 		}
 
-		if (this.getLovBean().getSelectionMode().equalsIgnoreCase("single")) {
+		if (this.getLovBean().getSelectionMode().equalsIgnoreCase(AuditConst.SINGLE)) {
 
 			debugLogger("this.getSelectedEntity(): " + this.getSelectedEntity());
 
@@ -608,9 +614,9 @@ public class LovAuditBackingBean implements Serializable {
 				this.resetAction();
 
 			}
-		} else if (this.getLovBean().getSelectionMode().equalsIgnoreCase("multiple")) {
+		} else if (this.getLovBean().getSelectionMode().equalsIgnoreCase(AuditConst.MULTIPLE)) {
 			if (!persistedEntities.isEmpty())
-				selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values());
+				selectedEntities = new ArrayList<>(persistedEntities.values());
 			debugLogger("this.getSelectedEntities().size(): " + this.getSelectedEntities().size());
 			debugLogger("this.getSelectedEntities(): " + this.getSelectedEntities());
 
@@ -647,8 +653,8 @@ public class LovAuditBackingBean implements Serializable {
 		if (lovBean != null) {
 			String autoUpdateValue = lovBean.getAutoUpdateValue();
 			if (StringUtils.isNotBlank(autoUpdateValue)) {
-				String enableAutoUpdate = (String) FacesContext.getCurrentInstance().getExternalContext()
-						.getRequestParameterMap().get("enableAutoUpdate");
+				String enableAutoUpdate = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+						.get("enableAutoUpdate");
 
 				if (StringUtils.isNotBlank(enableAutoUpdate)) {
 					if (!FacesScopes.isValueReference(autoUpdateValue)) {
@@ -666,7 +672,7 @@ public class LovAuditBackingBean implements Serializable {
 
 	public boolean isSelectButtonDisable() {
 		if (getLovBean() != null && getLovBean().getSelectionMode() != null) {
-			if (getLovBean().getSelectionMode().equalsIgnoreCase("single")) {
+			if (getLovBean().getSelectionMode().equalsIgnoreCase(AuditConst.SINGLE)) {
 				if (getSelectedEntity() != null) {
 					return false;
 				}
@@ -674,7 +680,7 @@ public class LovAuditBackingBean implements Serializable {
 				// #29832 & #9442 added if else to make sure the selected cb
 				// save after tick.
 				// Default save after click next page onPageChange listener
-				if (getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")) {
+				if ("PM_BUSINESS_NATURE".equalsIgnoreCase(getLovBean().getLovId())) {
 					for (BaseEntity item : selectedEntities) {
 						if (item instanceof PmBusinessNature) {
 							Long key = ((PmBusinessNature) item).getBusinessNatureId();
@@ -690,13 +696,17 @@ public class LovAuditBackingBean implements Serializable {
 	}
 
 	private void prepareColumnTitle(LovBean lovBean) {
-		ResourceBundle bundle = null;
 		for (LovColumnBean column : lovBean.getColumns()) {
-			bundle = ResourceBundle.getBundle(column.getBundleFile(), new FacesScopes().getUserLocale());
-			column.setColumnTitle(bundle.getString(column.getBundleKey()));
+			ResourceBundle bundle = ResourceBundle.getBundle(column.getBundleFile(), new FacesScopes().getUserLocale());
+			if (!AuditConst.DESIGNATION.equalsIgnoreCase(column.getColumnName())) {
+				column.setColumnTitle(bundle.getString(column.getBundleKey()));
+			}
 		}
 	}
 
+	/**
+	 * @param event
+	 */
 	public void onUnselectRow(UnselectEvent event) {
 		Object value = event.getObject();
 		if (value instanceof PmBusinessNature) {
@@ -706,6 +716,9 @@ public class LovAuditBackingBean implements Serializable {
 		}
 	}
 
+	/**
+	 * @param event
+	 */
 	public void onToggleSelect(ToggleSelectEvent event) {
 		List<? extends BaseEntity> templist = !selectedEntities.isEmpty() ? selectedEntities : searchPmUserDataModel.getList();
 		if (templist instanceof BaseEntity) {
@@ -721,9 +734,12 @@ public class LovAuditBackingBean implements Serializable {
 		}
 	}
 
+	/**
+	 * @param event
+	 */
 	public void onPageChange(PageEvent event) {
-		if (getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")) {
-
+		if ("PM_BUSINESS_NATURE".equalsIgnoreCase(getLovBean().getLovId())) {
+			log.info("getLovId().equalsIgnoreCase(PM_BUSINESS_NATURE)");
 		} else {
 			for (BaseEntity item : selectedEntities) {
 				if (item instanceof PmBusinessNature) {
@@ -736,8 +752,11 @@ public class LovAuditBackingBean implements Serializable {
 
 	}
 
+	/**
+	 * populateSelectedItems()
+	 */
 	public void populateSelectedItems() {
-		selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values());
+		selectedEntities = new ArrayList<>(persistedEntities.values());
 	}
 
 	private void enableDisplayResult() {
@@ -828,9 +847,8 @@ public class LovAuditBackingBean implements Serializable {
 	 * 
 	 * **/
 	public void removeSelectedBusinessNature() {
-		SimpleQuoteManagedBean simpleQuoteMB = new SimpleQuoteManagedBean();
 		if (getLovBean().getSimpleQuoteBackingBean() != null) {
-			simpleQuoteMB = getLovBean().getSimpleQuoteBackingBean().deleteSuccess();
+			SimpleQuoteManagedBean simpleQuoteMB = getLovBean().getSimpleQuoteBackingBean().deleteSuccess();
 			if (simpleQuoteMB.getDeleteBusinessNature()) {
 				if (simpleQuoteMB.getDeletedBusinessNatureMap() != null) {
 					if (simpleQuoteMB.getDeletedBusinessNatureMap().size() > 0) {

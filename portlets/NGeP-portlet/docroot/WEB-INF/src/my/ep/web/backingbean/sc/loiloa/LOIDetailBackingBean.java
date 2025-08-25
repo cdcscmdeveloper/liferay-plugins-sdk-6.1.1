@@ -7103,9 +7103,7 @@ public class LOIDetailBackingBean extends
 		
 		boolean isStatusEnabled = scLoi.getScWorkFlowStatus() != null
 				&& statusEnabledCancel.contains(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());
-		boolean isQTValid = checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
-				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+		boolean isQTValid = checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate());
 
 		return isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId()) && isStatusEnabled
 				&& isQTValid && !isQTMaintenanceScreen();
@@ -7203,12 +7201,10 @@ public class LOIDetailBackingBean extends
 			 * either Completed, Rejected OR Cancelled (Not agree with extension
 			 * validity period), QT will exit and goes to Refinalization.
 			 */
-			IQTOsbSO qtOsbSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTOsbSO.class);
-			QTOsbReqDTO reqDTO = new QTOsbReqDTO();
-			reqDTO.setSourceId(scLoi.getScLoiLoa().getDocId());
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scLoi.getScLoiLoa().getDocId());
 			reqDTO.setDocId(scLoi.getLoiId());
-			QTOsbResDTO resDTO = qtOsbSO.onLoiCancelled(reqDTO);
+			QuationTenderResDTO resDTO = getQTDetailSO().exitEPVLOIOperation(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				successMessage(MessageConst.INFO_700031, ParameterTypeConst.DOCUMENT_TYPES,
