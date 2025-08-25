@@ -12082,12 +12082,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			 * either Completed, Rejected OR Cancelled (Not agree with extension
 			 * validity period), QT will exit and goes to Refinalization.
 			 */
-			IQTOsbSO qtOsbSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTOsbSO.class);
-			QTOsbReqDTO reqDTO = new QTOsbReqDTO();
-			reqDTO.setSourceId(scLoa.getScLoiLoa().getDocId());
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
 			reqDTO.setDocId(scLoa.getLoaId());
-			QTOsbResDTO resDTO = qtOsbSO.onLoaCancelled(reqDTO);
+			QuationTenderResDTO resDTO = getQTDetailSO().exitEPVLOAOperation(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				successMessage(MessageConst.INFO_700031, ParameterTypeConst.DOCUMENT_TYPES,
