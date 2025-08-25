@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -558,54 +559,27 @@ public class ConsolidationReportBackingBean extends
 	/**
 	 * @throws Exception
 	 */
-	public void downloadAllBriefingPaperReports() throws Exception {
-
+	// 38523 - start
+	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
-		// #28834 - Start.
-		List<ScQtFinalizationReport> briefingPaperList = null;
-		List<ScQtFinalizationReport> decisionPaperList = null;
-		for (ScQtFinalizationReport report : briefingPaperDisplayFilter(getManagedBean().getScQtFinalization()
-				.getScQtFinalizationReports())) { // 37623
-			  if (report.getTitle().contains("Kertas Taklimat")) {
-				  if (briefingPaperList == null) {
-					  briefingPaperList = new ArrayList<>();
-				  }
-				  briefingPaperList.add(report);
-			  } else {
-				  if (decisionPaperList == null) {
-					  decisionPaperList = new ArrayList<>();
-				  }
-				  decisionPaperList.add(report);
-			  }
-		}
-
-		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
-
-		if (CollectionUtils.isNotEmpty(briefingPaperList)
-				&& briefingPaperList.size() > 0) {
-			for (ScQtFinalizationReport finalizationReport : briefingPaperList) {
-				ScQtFinalizationReportAttachment attachment = finalizationReport.getScQtFinalizationReportAttachment();
-				if (finalizationReport.getTitle().equals(briefingPaperList.get(briefingPaperList.size() -1).getTitle()) || attachment == null) {
-					attachment = generateDocumentAttachment(finalizationReport);
-					finalizationReport.setScQtFinalizationReportAttachment(attachment);
-				}
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
+				.getScQtFinalization().getScQtFinalizationReports());
+		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
+			ScQtFinalizationReportAttachment attachment;
+			if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
+				attachment = retrieveBriefingPaperAttachment(scQtFinalizationReport, skipDownload);
+			} else {
+				attachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+			}
+			if (null != attachment) {
 				scAttachments.add(attachment);
 			}
 		}
 
-		if (CollectionUtils.isNotEmpty(decisionPaperList)
-				&& decisionPaperList.size() > 0) {
-			for (ScQtFinalizationReport finalizationReport : decisionPaperList) {
-				ScQtFinalizationReportAttachment attachment = finalizationReport.getScQtFinalizationReportAttachment();
-				if (null != attachment) {
-					scAttachments.add(attachment);
-				}
-			}
-		}
-		// #28834 - End.
-		if (CollectionUtils.isNotEmpty(this.getManagedBean().getNewBriefingPaperReportList())
-				&& this.getManagedBean().getNewBriefingPaperReportList().size() > 0) {
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getNewBriefingPaperReportList())) {
+			// 38523 - end
 			for (ScQtFinalizationReport uploadedSfReport : this.getManagedBean().getNewBriefingPaperReportList()) {
 				if (uploadedSfReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
 						&& null != uploadedSfReport.getScQtFinalizationReportAttachment()) {
@@ -614,8 +588,7 @@ public class ConsolidationReportBackingBean extends
 			}
 		}
 
-		// Generate all the reports before submission
-		if (!getManagedBean().isSubmit()) {
+		if (!skipDownload) {// 38523
 			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 		// #18685 - End.
@@ -626,43 +599,41 @@ public class ConsolidationReportBackingBean extends
 	 * @throws Exception
 	 */
 	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
-		//28834 starts.
-		ScQtFinalizationReportAttachment reportAttachment = null;
-        boolean latestBriefingPaper = false;
-        // #28834 - Start.
-        List<ScQtFinalizationReport> briefingPaperList = null;
-		for (ScQtFinalizationReport report: getManagedBean().getFinalizationReports()) {
-			  if (report.getTitle().contains("Kertas Taklimat")) {
-				  if (briefingPaperList == null) {
-					  briefingPaperList = new ArrayList<>();
-				  }
-				  briefingPaperList.add(report);
-			  }
-		}
-        if (CollectionUtils.isNotEmpty(briefingPaperList) && briefingPaperList.size() > 0) {
-          ScQtFinalizationReport latestScQtFinalizationReport = briefingPaperList.get(briefingPaperList.size() -1);
-          if (null != latestScQtFinalizationReport && latestScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
-            latestBriefingPaper = true;
-          }
-        }
-        // #28834 - End.
-		if (null != getManagedBean().getCurrentStatusId()
-				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue() ||
-						getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue()) && latestBriefingPaper) {
-			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
-			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-			//28834 ends.
-		} else {
-			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+		// 38523 - start
+		downloadFile(retrieveBriefingPaperAttachment(scQtFinalizationReport, false));
+		// 38523 - end
+	}
 
-			if (reportAttachment == null) {
-				reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
-				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+	// 38523 - start
+	private ScQtFinalizationReportAttachment retrieveBriefingPaperAttachment(
+			ScQtFinalizationReport scQtFinalizationReport, boolean directDownload) throws Exception {
+		ScQtFinalizationReport latestBriefingPaper = null;
+		for (ScQtFinalizationReport report : getManagedBean().getFinalizationReports()) {
+			boolean isLatest = latestBriefingPaper == null
+					|| (report.getCreatedDate() != null && report.getCreatedDate().after(
+							latestBriefingPaper.getCreatedDate()));
+			if (report.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER) && isLatest) {
+				latestBriefingPaper = report;
 			}
 		}
-		downloadFile(reportAttachment);
+		boolean isGenerateReport = false;
+		if (latestBriefingPaper != null) {
+			isGenerateReport = latestBriefingPaper.getTitle().equals(scQtFinalizationReport.getTitle());
+		}
+		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
+				.getScQtFinalizationReportAttachment();
+
+		List<Long> allowedStatusIds = Arrays.asList(QTStatusConst.QT_CONSOLIDATION_REPORT,
+				QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER);
+
+		if ((allowedStatusIds.contains(getManagedBean().getCurrentStatusId()) && isGenerateReport)
+				|| null == reportAttachment) {
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		}
+		return reportAttachment;
 	}
-	// #18685 - End
+	// 38523 - end
 
 	/**
 	 * To download all reports under Evaluation Report tab.
