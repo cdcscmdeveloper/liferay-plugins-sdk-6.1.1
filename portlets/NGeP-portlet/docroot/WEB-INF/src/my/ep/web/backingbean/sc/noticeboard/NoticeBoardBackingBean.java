@@ -2585,6 +2585,14 @@ public class NoticeBoardBackingBean extends
 						attendance.setEmail(smPersonal.getEmail());
 						attendance.setName(smPersonal.getName());
 						attendance.setBsvRegistration(bsvRegistration);
+						
+						// #30447 - Start
+						String newName = attendance.getName();
+						String salutation = supplierSalutation(smPersonal.getIdentificationNo());
+						newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+						attendance.setName(newName);
+						// #30447 - End
+						
 						setUserDetails(attendance);
 	
 						bsvAttandances.add(attendance);
@@ -2600,12 +2608,10 @@ public class NoticeBoardBackingBean extends
 							bsvAttandances.remove(extAttandance);
 	
 							// #30447 - Start
+							String newName = extAttandance.getName();
 							String salutation = supplierSalutation(extAttandance.getIcPassPort());
-							if (salutation != null) {
-								String newName = extAttandance.getName();
-								newName = supplierSalutation(extAttandance.getIcPassPort()).concat(" " + newName);
-								extAttandance.setName(newName);
-							}
+							newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+							extAttandance.setName(newName);
 							// #30447 - End
 						}
 						bsvAttandances.add(extAttandance);
@@ -3562,9 +3568,9 @@ public class NoticeBoardBackingBean extends
 	public String supplierSalutation(String identificationNo) {
 		String salutationName = StringUtils.EMPTY;
 		try {
-			IQTNoticeBoardSO QTNoticeBoardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+			IQTNoticeBoardSO noticeBoardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			PmSalutation salutation = QTNoticeBoardSO.retrieveSalutationByIdentificationNo(identificationNo);
+			PmSalutation salutation = noticeBoardSO.retrieveSalutationByIdentificationNo(identificationNo);
 			if (salutation != null) {
 				salutationName = salutation.getSalutationName();
 			}
