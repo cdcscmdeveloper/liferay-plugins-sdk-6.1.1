@@ -4862,11 +4862,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(this.getManagedBean().getSelectedPlan().getPpProcurementItems()==null){
 			this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
 		}
-		if(this.getManagedBean().getDeletePpItems()==null){
+
+		// #35502 Fix as-is bug Start
+		if (this.getManagedBean().getDeletePpItems() == null) {
 			this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
-		} else {
-			this.getManagedBean().getDeletePpItems().clear();
 		}
+		// #35502 Fix as-is bug End
+
 		//add deleted item to list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
 			//log.info("[SIR#12802] - Procurement item delete status:" + procurementItem.isDeleted());
@@ -8580,6 +8582,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				copyJustifications.setRoleCode(oldJustifications.getRoleCode());
 				copyJustifications.setRemarkType(oldJustifications.getRemarkType());
 				copyJustifications.setRemark(oldJustifications.getRemark());
+				//#35502, Fix as-is bug: #38802 Start
+		    	copyJustifications.setCreatedBy(getUserIdSessionFromLoginId());
+		    	copyJustifications.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
+		    	copyJustifications.setChangedDate(new Timestamp(System.currentTimeMillis()));
+		    	//#35502, Fix as-is bug: #38802 End
 
 				newJustifications.add(copyJustifications);
 			}

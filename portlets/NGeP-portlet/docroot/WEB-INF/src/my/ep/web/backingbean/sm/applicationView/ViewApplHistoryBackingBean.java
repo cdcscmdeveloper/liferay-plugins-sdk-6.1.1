@@ -1910,11 +1910,6 @@ public class ViewApplHistoryBackingBean extends
 					button = false;
 				}//#32002 - end
 			}
-			//#26238
-			if(getManagedBean().isCancelCategoryCode() && 
-					!EntityHelper.isCollectionEmpty(getManagedBean().getCategoryCodeList())){
-				button = false;
-			}
 		}
 		// #32628 - start
 		Date today = new Date();

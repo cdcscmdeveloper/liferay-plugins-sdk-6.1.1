@@ -1,0 +1,57 @@
+<ui:composition xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="bBean" required="true" default="" />
+		<cc:attribute name="reportMainBean" required="true" default="" />
+	</cc:interface>
+
+	<cc:implementation>
+
+		<div style="text-align: right;">
+		<ui:param name="paramValues" value="#{cc.attrs.bBean.getparams()}"></ui:param>
+			
+			<p:commandButton id="btnGenerate" value="#{lbl['lbl.rpt.generate']}" oncomplete="if (!args.validationFailed) rptConfirmationDlg.show();" 
+				 action="#{cc.attrs.bBean.generateReportCT038(paramValues)}" update=":form">
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportCode}" value="#{cc.attrs.reportMainBean.managedBean.reportCode}" />
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportName}" value="#{cc.attrs.reportMainBean.managedBean.reportName}" />
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.defaultOutputType}" value="#{cc.attrs.reportMainBean.managedBean.defaultOutputType}" />
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.tempAccess}" value="#{cc.attrs.reportMainBean.managedBean.tempAccess}" />
+			</p:commandButton>
+				
+			<p:commandButton id="btnReset" value="#{lbl['lbl.btn.reset']}" update=":form" 
+				process="@this" action="#{cc.attrs.bBean.resetSearch()}"/>
+		</div>
+
+		<p:dialog id="rptConfirmationDlgId" widgetVar="rptConfirmationDlg" modal="true"
+			width="500px" resizable="false" styleClass="pop_up_top">
+			
+			<h:outputText escape="false" style="float:left;margin-left:5px;"
+				value="#{cc.attrs.bBean.managedBean.popUpMsg}">
+			</h:outputText>
+			<br />
+
+			<div style="float:right;">
+
+				<table style="width:100%">
+					<tr>
+						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+								onclick="rptConfirmationDlg.hide();" />
+							<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
+								action="#{cc.attrs.bBean.redirect()}">
+							</p:commandButton></td>
+					</tr>
+				</table>
+
+
+
+			</div>
+		</p:dialog>
+
+	</cc:implementation>
+</ui:composition>
