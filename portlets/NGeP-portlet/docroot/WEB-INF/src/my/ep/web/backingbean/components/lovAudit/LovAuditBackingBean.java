@@ -164,10 +164,12 @@ public class LovAuditBackingBean implements Serializable {
 					SearchFilterBean filterBean = (SearchFilterBean) searchBean.getDataFilterBeans().get(i);
 					log.info("filterBeangetSearchField###$$$ ::: " + filterBean.getSearchField());
 					log.info("filterBean ###$$$ getSearchValue::: " + filterBean.getSearchValue());
-					if ("userName".equalsIgnoreCase(filterBean.getSearchField())) {
-						reqDTO.setUserName(filterBean.getSearchValue().toString());
-					} else if ("identificationNo".equalsIgnoreCase(filterBean.getSearchField())) {
-						reqDTO.setIdentificationNo(filterBean.getSearchValue().toString());
+					if (filterBean.getSearchField() != null) {
+						if ("userName".equalsIgnoreCase(filterBean.getSearchField())) {
+							reqDTO.setUserName(filterBean.getSearchValue().toString());
+						} else if ("identificationNo".equalsIgnoreCase(filterBean.getSearchField())) {
+							reqDTO.setIdentificationNo(filterBean.getSearchValue().toString());
+						}
 					}
 
 					if (filterBean.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
