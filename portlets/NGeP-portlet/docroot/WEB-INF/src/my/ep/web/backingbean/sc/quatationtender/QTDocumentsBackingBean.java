@@ -2620,7 +2620,7 @@ public class QTDocumentsBackingBean extends
 		
 		// Bug #38731@Syazani 20/08/2025 -- Start
 		if ("District".equalsIgnoreCase(locationLevel)) {
-			isLocLevelDistrictContainsDivision = isLocationContainsDivision(specZoneDtls, locationDetails);
+			isLocLevelDistrictContainsDivision = isLocationContainsDivision(specZoneDtls, locationDetails, context);
 		}
 		context.put("isLocLevelDistrictContainsDivision", isLocLevelDistrictContainsDivision);
 		// Bug #38731@Syazani 20/08/2025 -- End
@@ -3228,7 +3228,7 @@ public class QTDocumentsBackingBean extends
 	// Bug #36702@Syazani 28/11/2024 -- End
 	
 	// Bug #38731@Syazani 20/08/2025 -- Start
-	private boolean isLocationContainsDivision(List<TplSpecZoneDtl> specZoneDtls, List<TplSpecLoc> locationDetails) {
+	private boolean isLocationContainsDivision(List<TplSpecZoneDtl> specZoneDtls, List<TplSpecLoc> locationDetails, VelocityContext context) {
 		boolean isLocationContainsDivision = false;
 		if (!CollectionUtils.isEmpty(specZoneDtls)) {
 			for (TplSpecZoneDtl tplSpecZoneDtl : specZoneDtls) {
@@ -3242,6 +3242,7 @@ public class QTDocumentsBackingBean extends
 
 		if (!CollectionUtils.isEmpty(locationDetails)) {
 			List<TplSpecLoc> locationDetailsNew = removeDuplicatebyDivisionIDbyTplSpecLoc(locationDetails);
+			context.put("locality", locationDetailsNew);
 			for (TplSpecLoc tplSpecLoc : locationDetailsNew) {
 				if (null != tplSpecLoc.getPmDivision()) {
 					isLocationContainsDivision = true;
