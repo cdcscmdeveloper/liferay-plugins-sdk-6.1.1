@@ -1185,7 +1185,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				}
 				//38898 -Start
 				if(orgProfileId !=null) {					
-					IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+					IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 					reqDTO.setOrgProfileId(orgProfileId);
