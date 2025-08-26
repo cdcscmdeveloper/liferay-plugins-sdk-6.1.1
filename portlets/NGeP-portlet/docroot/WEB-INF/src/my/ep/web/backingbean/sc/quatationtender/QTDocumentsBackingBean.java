@@ -3201,10 +3201,12 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		boolean isLocationContainsDivision = false;
 		if (!CollectionUtils.isEmpty(specZoneDtls)) {
 			for (TplSpecZoneDtl tplSpecZoneDtl : specZoneDtls) {
-				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs())) {
+				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs()) && !isLocationContainsDivision) {
 					tplSpecZoneDtl.setTplSpecZoneLocs(removeDuplicatebyDivisionIDbyTplSpecZoneLoc(tplSpecZoneDtl
 							.getTplSpecZoneLocs()));
 					isLocationContainsDivision = loopFindisLocationContainsPmDivision(tplSpecZoneDtl);
+				} else if (isLocationContainsDivision) {
+					break;
 				}
 			}
 		}
