@@ -615,12 +615,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		certDTO.setApplId(getManagedBean().getSmAppl().getApplId());
 
 		try {
-
+			
 			// set registration status and expiry date
 			reqDTO.setOldRegStatus(getManagedBean().getExistingRegStatus());
 			// #38856 - START
-			reqDTO.setOldRegStatusId(getManagedBean().getExistingRegStatus()
-					.getPmStatus().getStatusId());
+			reqDTO.setOldRegStatusId(getManagedBean().getCurrRegStatusId());
 			// #38856 - END
 			reqDTO.setOldMofExpiryDate(getManagedBean().getExistingMofExpiryDate());
 			

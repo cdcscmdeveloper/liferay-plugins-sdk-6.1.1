@@ -372,14 +372,14 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	 */
 	public void changeType() {
 		log.info("changeLocationType!!!");
-		getManagedBean().getSearchBean().setCategoryConfigParamLevel2(null);
-		getManagedBean().getSearchBean().setItemConfigParamLevel3(null);
-		getManagedBean().getSearchBean().setItemCode(null);
-		getManagedBean().getSearchBean().setItemName(null);
-		getManagedBean().getSearchBean().setDateTo(null);
-		getManagedBean().getSearchBean().setDateFrom(null);
-		getManagedBean().getSearchBean().setRoleCode(null);
-		getManagedBean().getSearchBean().setPmUser(null);
+		this.getManagedBean().getSearchBean().setCategoryConfigParamLevel2(null);
+		this.getManagedBean().getSearchBean().setItemConfigParamLevel3(null);
+		this.getManagedBean().getSearchBean().setItemCode(null);
+		this.getManagedBean().getSearchBean().setItemName(null);
+		this.getManagedBean().getSearchBean().setDateTo(null);
+		this.getManagedBean().getSearchBean().setDateFrom(null);
+		this.getManagedBean().getSearchBean().setRoleCode(null);
+		this.getManagedBean().getSearchBean().setPmUser(null);
 	}
 
 	/**
@@ -395,11 +395,18 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	 */
 	public void resetSearchBean() {
 		log.info("resetLocationSearchBean");
-		getManagedBean().setLazy(false);
+		changeType();
 		AuditPMSearchBean searchBean = new AuditPMSearchBean();
 		this.getManagedBean().setSearchBean(searchBean);
-		searchMaster = new SearchMasterPagingDataModel();
 		getManagedBean().setSelectedType(null);
+		getManagedBean().setLazy(false);
+		getSearchMaster().resetData();
+		searchMaster = new SearchMasterPagingDataModel();
+
+		log.info("ItemCode after reset: " + getManagedBean().getSearchBean().getItemCode());
+		log.info("ItemName after reset: " + getManagedBean().getSearchBean().getItemName());
+		log.info("RoleCode after reset: " + getManagedBean().getSearchBean().getRoleCode());
+
 	}
 
 	public IPagingDataModel<VAuditPMDTO> getSearchMaster() {
