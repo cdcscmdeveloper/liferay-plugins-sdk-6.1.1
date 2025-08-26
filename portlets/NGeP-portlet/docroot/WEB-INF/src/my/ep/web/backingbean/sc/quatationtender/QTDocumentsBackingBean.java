@@ -2487,6 +2487,7 @@ public class QTDocumentsBackingBean extends
 
 		List<ScQtCategory> categoryResults1 = new ArrayList<ScQtCategory>();
 		List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
+		List<TplSpecLoc> locationDetails;	// Bug #38731@Syazani 20/08/2025
 		IQTDetailSO QtDetailsSO;
 		QuationTenderResDTO tenderResDTO;	// Bug #38731@Syazani 20/08/2025
 		try {
@@ -2496,10 +2497,12 @@ public class QTDocumentsBackingBean extends
 			tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
 			tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);	// Bug #38731@Syazani 20/08/2025
-			categoryResults = tenderResDTO.getCategories()
-					;
-			if (null != tenderResDTO.getLocationDetails()) {
-				context.put("locality", tenderResDTO.getLocationDetails());
+			categoryResults = tenderResDTO.getCategories();
+			// Bug #38731@Syazani 20/08/2025 -- Start
+			locationDetails = CustomUtils.getInstance().deepCopyArrayList(tenderResDTO.getLocationDetails());
+			if (null != locationDetails) {
+				context.put("locality", locationDetails);
+				// Bug #38731@Syazani 20/08/2025 -- End
 			}
 		} finally {
 			QtDetailsSO = null;
@@ -2617,8 +2620,7 @@ public class QTDocumentsBackingBean extends
 		
 		// Bug #38731@Syazani 20/08/2025 -- Start
 		if ("District".equalsIgnoreCase(locationLevel)) {
-			isLocLevelDistrictContainsDivision = isLocationContainsDivision(specZoneDtls,
-					tenderResDTO.getLocationDetails());
+			isLocLevelDistrictContainsDivision = isLocationContainsDivision(specZoneDtls, locationDetails);
 		}
 		context.put("isLocLevelDistrictContainsDivision", isLocLevelDistrictContainsDivision);
 		// Bug #38731@Syazani 20/08/2025 -- End
