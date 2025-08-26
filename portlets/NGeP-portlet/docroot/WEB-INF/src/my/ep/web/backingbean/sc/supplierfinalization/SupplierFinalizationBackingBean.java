@@ -3663,6 +3663,16 @@ public class SupplierFinalizationBackingBean extends
 				} finally {
 					committeeSO = null;
 				}
+				// Bug 38904- Start
+				SCEvaluationDataType dataType = (SCEvaluationDataType) this.getManagedBean().getPayLoad();
+				boolean mofFinal = false;
+				if (null != dataType.getIsMofFinalization()) {
+					mofFinal = dataType.getIsMofFinalization();
+				}
+				if (mofFinal) {
+					isCurrentCommitteeAuthorisedToSubmit = true;
+				}
+				// Bug 38904- End			
 				
 				//#30324 - Start
 				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
