@@ -120,7 +120,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		this.roleCode = roleCode;
 		this.docType = managedBeans.getSelectedUser().isBrandNew() ? 
 				managedBeans.getNewAuditPmUser().getUserName() : managedBeans.getSelectedUser().getUserName();
-		this.docId = BigInteger.valueOf(managedBeans.getOldAuditPmUserOrg().getUserOrgId());
+		this.docId = managedBeans.getOldAuditPmUserOrg() != null ? BigInteger.valueOf(managedBeans.getOldAuditPmUserOrg().getUserOrgId()) : 
+			BigInteger.valueOf(managedBeans.getBrandNewUserOrgId());
 		this.docGroupId = managedBeans.getSelectedUser().isBrandNew() ? 
 				BigInteger.valueOf(managedBeans.getNewAuditPmUser().getUserId()) : 
 					BigInteger.valueOf(managedBeans.getSelectedUser().getUserId());
