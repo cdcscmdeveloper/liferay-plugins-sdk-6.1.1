@@ -184,10 +184,10 @@ th{
 													#end
 												</td>
 											#else
+												<td></td>
 												<td>
 													$locCriteria.pmDistrict.districtName
 												</td>
-												<td></td>
 											#end
 											
 										#else
@@ -249,10 +249,10 @@ th{
 														#end
 													</td>
 												#else
+													<td></td>
 													<td>
 														$tplSpecLoc.pmDistrict.districtName
 													</td>
-													<td></td>
 												#end
 												
 											#else
