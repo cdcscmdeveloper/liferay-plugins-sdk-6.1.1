@@ -3328,11 +3328,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					userRole.setUserRoleId(currentUserRole.getUserRoleId());
 				}
 				
-				for(PmAddressType addressType : this.getManagedBean().getNewAuditPmAddressTypes()){
-					String address = addressType.getPmAddress().getAddress1() + addressType.getPmAddress().getAddress2() + 
-							addressType.getPmAddress().getAddress3(); 
-					PmAddressType currentAddressType = pmAddressTypes.get(address);
-					addressType.setAddressTypeId(currentAddressType.getAddressTypeId());
+				if(this.getManagedBean().getNewAuditPmAddressTypes() != null){
+					for(PmAddressType addressType : this.getManagedBean().getNewAuditPmAddressTypes()){
+						String address = addressType.getPmAddress().getAddress1() + addressType.getPmAddress().getAddress2() + 
+								addressType.getPmAddress().getAddress3(); 
+						PmAddressType currentAddressType = pmAddressTypes.get(address);
+						addressType.setAddressTypeId(currentAddressType.getAddressTypeId());
+					}
 				}
 				
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
