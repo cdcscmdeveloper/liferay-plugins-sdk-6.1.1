@@ -969,6 +969,13 @@ public class SupplierFinalizationBackingBean extends
 				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
 				this.getManagedBean().setScQtCommittee(scQtCommittee);
 
+				//#21692 - Start
+				List<Long> statuses = new ArrayList<>();
+				statuses.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
+				statuses.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
+				statuses.add(QTStatusConst.SF_PENDING_SIGN_OFF);
+				//#21692 - End
+
 				// Committee Details
 				if (scQtCommittee != null) {
 					// 25037 - start
@@ -1000,6 +1007,8 @@ public class SupplierFinalizationBackingBean extends
 						}
 						for (ScQtCommitteeActivity commActivity 
 									: scQtCommittee.getCommitteeActivities()) {
+							commActivity.setAttended(commActivity.isAttended() ? commActivity.isAttended() : statuses
+									.contains(this.getManagedBean().getCurrentStatusId()));//#21692
 							committeeEndorsementList.add(commActivity);
 						}
 						//25201#63-2
@@ -3663,6 +3672,16 @@ public class SupplierFinalizationBackingBean extends
 				} finally {
 					committeeSO = null;
 				}
+				// Bug 38904, 27502 - Start
+				SCEvaluationDataType dataType = (SCEvaluationDataType) this.getManagedBean().getPayLoad();
+				boolean mofFinal = false;
+				if (null != dataType.getIsMofFinalization()) {
+					mofFinal = dataType.getIsMofFinalization();
+				}
+				if (mofFinal) {
+					isCurrentCommitteeAuthorisedToSubmit = true;
+				}
+				// Bug 38904, 27502 - End			
 				
 				//#30324 - Start
 				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
