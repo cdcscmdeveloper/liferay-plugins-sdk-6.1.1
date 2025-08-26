@@ -295,10 +295,10 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
 					//cc
 					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableMinistryField(true);
-					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));
 					//mc
 					getManagedBean().setDisableMinistryField(true);
-					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));//Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));
 				} else if (isNoDefaultValues()) {
 					// cc
 					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableMinistryField(false);
