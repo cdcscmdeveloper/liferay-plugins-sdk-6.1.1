@@ -3262,6 +3262,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				
 				if(getManagedBean().getSelectedUserOrg().isBrandNew()){
+					this.getManagedBean().setBrandNewUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					getManagedBean().setPmUserOrgOriginal(resDTO.getPmUser().getPmUserOrgs().get(0));
 				}
