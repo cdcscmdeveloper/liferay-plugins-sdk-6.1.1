@@ -3236,6 +3236,9 @@ public class QTDocumentsBackingBean extends
 					tplSpecZoneDtl.setTplSpecZoneLocs(removeDuplicatebyDivisionIDbyTplSpecZoneLoc(tplSpecZoneDtl
 							.getTplSpecZoneLocs()));
 					isLocationContainsDivision = loopFindisLocationContainsPmDivision(tplSpecZoneDtl);
+					if (isLocationContainsDivision) {
+						break;
+					}
 				}
 			}
 		}
