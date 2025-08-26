@@ -27,9 +27,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.audit.Role']}" style="width :10%"> 
 				<h:outputText value="#{master.roleName}" />
-			</p:column>
-			<!--  <p:column headerText="#{lbl['lbl.pm.audit.action']}" style="width:5%;text-align:center;">-->
-				
+			</p:column>	
 				<p:column width="5%" style="text-align: center;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
@@ -39,13 +37,6 @@
 							icon="ui-icon-view"
 							action="#{searchPMAuditBackingBean.redirectToDetails(master.paramLevel3,master.pmParameterLvlId,master.createBy,master.roleCode)}" />
 					</p:menuButton>
-				
-				<!--  <p:commandLink id="panelSearchId"
-					action="#{searchPMAuditBackingBean.redirectToDetails(master.paramLevel3,master.pmParameterLvlId,master.createBy,master.roleCode)}"
-					onstart="blkPanelSearchTable.show();" oncomplete="blkPanelSearchTable.hide();">
-					<p:graphicImage library="ep/images/design" 
-						value="/css/images/design/ico-view.png" />
-				</p:commandLink>-->
 			</p:column>
 		</p:dataTable>
 	</p:panel>
