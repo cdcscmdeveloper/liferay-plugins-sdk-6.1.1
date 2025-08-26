@@ -10,6 +10,7 @@ import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
@@ -32,6 +33,8 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final String EMPTY_STRING = "";
+	private static final String COMMA_STRING = ", ";
 
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	String docNo;
@@ -108,6 +111,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		auditPMReqDTO.setObjList(objList);
 		managedBean.setOldFinancialOrg(null);
 		managedBean.setSavedFinancialOrg(null);
+		managedBean.setOldContactPerson(null);
 		return auditPMReqDTO;
 	}
 	
@@ -139,8 +143,8 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 * @param oldPmAddress
 	 */
 	private void mainAddressDetail(PmAddress editedAddress, PmAddress oldPmAddress){
-		String address = "";
-		String oldAddressAppend = "";
+		String address = EMPTY_STRING;
+		String oldAddressAppend = EMPTY_STRING;
 		
 		if (editedAddress != null) {
 			address = getAddress(editedAddress);
@@ -151,40 +155,75 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		}
 			
 		if (managedBean.getFinancialOrg().isBrandNew()) {
-			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			
-			detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, "", address);
+			if(!address.isEmpty()){
+				
+				setNewMainAddress(editedAddress, address);
+				/**
+	 			PM_AUD_OFO_FAX_FIELDLABELID
+				 */
+			}
 			
 			if(managedBean.getContactPerson() != null ){
 				setNewContactPerson(managedBean.getContactPerson());
 			}
 		} else {
-			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 			
 			if (!address.equals(oldAddressAppend)){
 				detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, oldAddressAppend, address);
 			}
 
+			if (!address.isEmpty())
+				setUpdateAddressDetail(editedAddress, oldPmAddress);
+			
 			setContact(managedBean.getContactPerson(), managedBean.getOldContactPerson());
 		}
 	}
 	
 	//sonarlint. to get full address from current and/or edited address
 	private String getAddress(PmAddress pmAddress){
-		String address = "";
+		String address = EMPTY_STRING;
 		if(pmAddress.getAddress1() != null && !pmAddress.getAddress1().isEmpty()){
 			address += pmAddress.getAddress1();
 		}
 		if(pmAddress.getAddress2() != null && !pmAddress.getAddress2().isEmpty()){
-		    if (!address.isEmpty()) address += ", ";
+		    if (!address.isEmpty()) address += COMMA_STRING;
 			address += pmAddress.getAddress2();
 		}
 		if(pmAddress.getAddress3() != null && !pmAddress.getAddress3().isEmpty()){
-		    if (!address.isEmpty()) address += ", ";
+		    if (!address.isEmpty()) address += COMMA_STRING;
 			address += pmAddress.getAddress3();
 		}
 		
 		return address;
+	}
+	
+	private void setNewMainAddress(PmAddress editedAddress, String address){
+		
+		detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, null, address);
+		
+		detailObj(AuditConst.PM_AUD_OFO_STATE_FIELDLABELID, null, editedAddress.getPmState().getStateName());
+		detailObj(AuditConst.PM_AUD_OFO_DISTRICT_FIELDLABELID, null, editedAddress.getPmDistrict().getDistrictName());
+		detailObj(AuditConst.PM_AUD_OFO_CITY_FIELDLABELID, null, editedAddress.getPmCity().getCityName());
+		detailObj(AuditConst.PM_AUD_OFO_POSTCODE_FIELDLABELID, null, editedAddress.getPostcode());
+		detailObj(AuditConst.PM_AUD_OFO_COUNTRY_FIELDLABELID, null, editedAddress.getPmCountry().getCountryName());
+		
+		if(!editedAddress.getPhoneNo().isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_PHONE_FIELDLABELID, null, 
+					editedAddress.getPhoneCountry() + editedAddress.getPhoneArea() + editedAddress.getPhoneNo());
+		}
+		
+		if(editedAddress.getPmDivision() != null){
+			detailObj(AuditConst.PM_AUD_OFO_DIVISION_FIELDLABELID, null, editedAddress.getPmDivision().getDivisionName());
+		}
+		
+		if(!editedAddress.getFaxNo().isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_FAX_FIELDLABELID, null, 
+					editedAddress.getFaxCountry() + editedAddress.getFaxArea() + editedAddress.getFaxNo());
+		}
+		
 	}
 
 	/**
@@ -192,20 +231,87 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 * @param pmContact
 	 */
 	private void setNewContactPerson(PmContact pmContact){
-		String officePhoneNo = !pmContact.getPhoneNo().isEmpty() ? 
-				pmContact.getPhoneCountry() + pmContact.getPhoneArea() + pmContact.getPhoneNo() : "";
-		String officeMobileNo = !pmContact.getMobileNo().isEmpty() ? 
-				pmContact.getMobileCountry() + pmContact.getMobileArea() + pmContact.getMobileNo() : "";
+		String officePhoneNo = pmContact.getPhoneNo() != null && !pmContact.getPhoneNo().isEmpty() ? 
+				pmContact.getPhoneCountry() + pmContact.getPhoneArea() + pmContact.getPhoneNo() : EMPTY_STRING;
+				
+		String officeMobileNo = pmContact.getMobileNo() != null && !pmContact.getMobileNo().isEmpty() ? 
+				pmContact.getMobileCountry() + pmContact.getMobileArea() + pmContact.getMobileNo() : EMPTY_STRING;
 
-		detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, "", pmContact.getContactName());
-		detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, "", pmContact.getEmail());
+		if(!EntityHelper.getStringNestedProperty(pmContact, "contactName").isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, null, EntityHelper.getStringNestedProperty(pmContact, "contactName"));
+		}
+			
+		if(!EntityHelper.getStringNestedProperty(pmContact, "email").isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, null, EntityHelper.getStringNestedProperty(pmContact, "email"));
+		}
 		
 		if(!officePhoneNo.isEmpty()){
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_TELEPHONE_FIELDLABELID, "", officePhoneNo);
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_TELEPHONE_FIELDLABELID, null, officePhoneNo);
 		}
+		
 		if(!officeMobileNo.isEmpty()){
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_MOBILE_FIELDLABELID, "", officeMobileNo);
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_MOBILE_FIELDLABELID, null, officeMobileNo);
 		}
+	}
+	
+	private void setUpdateAddressDetail(PmAddress editedAddress, PmAddress oldPmAddress){
+		
+		if(!editedAddress.getPmState().getStateName().equals(oldPmAddress.getPmState().getStateName())){
+			detailObj(AuditConst.PM_AUD_OFO_STATE_FIELDLABELID, oldPmAddress.getPmState().getStateName(), editedAddress.getPmState().getStateName());
+		}
+		
+		if(!editedAddress.getPmDistrict().getDistrictName().equals(oldPmAddress.getPmDistrict().getDistrictName())){
+			detailObj(AuditConst.PM_AUD_OFO_DISTRICT_FIELDLABELID, oldPmAddress.getPmState().getStateName(), editedAddress.getPmDistrict().getDistrictName());
+		}
+		
+		if(!editedAddress.getPmCity().getCityName().equals(oldPmAddress.getPmCity().getCityName())){
+			detailObj(AuditConst.PM_AUD_OFO_CITY_FIELDLABELID, oldPmAddress.getPmCity().getCityName(), editedAddress.getPmCity().getCityName());
+		}
+		
+		if(!editedAddress.getPostcode().equals(oldPmAddress.getPostcode())){
+			detailObj(AuditConst.PM_AUD_OFO_POSTCODE_FIELDLABELID, oldPmAddress.getPostcode(), editedAddress.getPostcode());
+		}
+		
+		if (editedAddress.getPmDivision() != null
+				&& !editedAddress.getPmDivision().equals(oldPmAddress.getPmDivision())) {
+			detailObj(AuditConst.PM_AUD_OFO_DIVISION_FIELDLABELID, 
+					oldPmAddress.getPmDivision().getDivisionName(), 
+					editedAddress.getPmDivision().getDivisionName());
+		}
+		
+		String newPhone = checkEmptyString(editedAddress.getPhoneCountry()) +
+				checkEmptyString(editedAddress.getPhoneArea()) +
+                checkEmptyString(editedAddress.getPhoneNo());
+
+		String oldPhone = checkEmptyString(oldPmAddress.getPhoneCountry()) +
+				checkEmptyString(oldPmAddress.getPhoneArea()) +
+                checkEmptyString(oldPmAddress.getPhoneNo());
+		
+		if (!newPhone.isEmpty() && !newPhone.equals(oldPhone)) {
+		    detailObj(AuditConst.PM_AUD_OFO_PHONE_FIELDLABELID,
+		              oldPhone.isEmpty() ? EMPTY_STRING : oldPhone,
+		              newPhone);
+		}
+		
+		String newFax = checkEmptyString(editedAddress.getFaxCountry()) +
+				checkEmptyString(editedAddress.getFaxArea()) +
+                checkEmptyString(editedAddress.getFaxNo());
+
+		String oldFax = checkEmptyString(oldPmAddress.getFaxCountry()) +
+				checkEmptyString(oldPmAddress.getFaxArea()) +
+                checkEmptyString(oldPmAddress.getFaxNo());
+		
+		if (!newFax.isEmpty() && !newFax.equals(oldFax)) {
+		    detailObj(AuditConst.PM_AUD_OFO_FAX_FIELDLABELID,
+		    		oldFax.isEmpty() ? EMPTY_STRING : oldFax,
+		    				newFax);
+		}
+		
+	}
+	
+
+	private String checkEmptyString(String value) {
+	    return value == null ? "" : value;
 	}
 	
 	/**
@@ -214,43 +320,47 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 * @param oldContactPerson
 	 */
 	private void setContact(PmContact editedtContactPerson, PmContact oldContactPerson) {
-		String officePhoneNo = "";
-		String officeMobileNo = "";
-		String auditPhoneNo = "";
-		String auditMobileNo = "";
+		String officePhoneNo = EMPTY_STRING;
+		String officeMobileNo = EMPTY_STRING;
+		String auditPhoneNo = EMPTY_STRING;
+		String auditMobileNo = EMPTY_STRING;
+		
+		String currContactName = EntityHelper.getStringNestedProperty(editedtContactPerson, "contactName");
+		String oldContactName = EntityHelper.getStringNestedProperty(oldContactPerson, "contactName");
+		String currContactEmail = EntityHelper.getStringNestedProperty(editedtContactPerson, "email");
+		String oldContactEmail = EntityHelper.getStringNestedProperty(oldContactPerson, "email");
 
-		if(oldContactPerson.getPhoneNo() != null && !oldContactPerson.getPhoneNo().equals("")){
+		if(!currContactName.equals(oldContactName)){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, oldContactName, currContactName);					
+		}
+
+		if(!currContactEmail.equals(oldContactEmail)){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, oldContactEmail, currContactEmail);					
+		}
+
+		if(oldContactPerson.getPhoneNo() != null && !oldContactPerson.getPhoneNo().isEmpty()){
 			auditPhoneNo = oldContactPerson.getPhoneCountry() + oldContactPerson.getPhoneArea() + 
 					oldContactPerson.getPhoneNo();
 		}
-		if(oldContactPerson.getMobileNo() != null && !oldContactPerson.getMobileNo().equals("")){
+		
+		if(oldContactPerson.getMobileNo() != null && !oldContactPerson.getMobileNo().isEmpty()){
 			auditMobileNo = oldContactPerson.getMobileCountry() + oldContactPerson.getMobileArea() + 
 					oldContactPerson.getMobileNo();
 		}
 		
-		if(!editedtContactPerson.getPhoneNo().equals("")){
+		if(editedtContactPerson.getPhoneNo() != null && !editedtContactPerson.getPhoneNo().isEmpty()){
 			officePhoneNo = editedtContactPerson.getPhoneCountry() + editedtContactPerson.getPhoneArea() + 
 					editedtContactPerson.getPhoneNo();
 		}
 		
-		if(!editedtContactPerson.getMobileNo().equals("")){
+		if(editedtContactPerson.getMobileNo() != null && !editedtContactPerson.getMobileNo().isEmpty()){
 			officeMobileNo = editedtContactPerson.getMobileCountry() + editedtContactPerson.getMobileArea() + 
 					editedtContactPerson.getMobileNo();
-		}
-
-		if(!editedtContactPerson.getContactName().equals(oldContactPerson.getContactName())){
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, 
-					oldContactPerson.getContactName(), editedtContactPerson.getContactName());					
 		}
 		
 		if(!officePhoneNo.equals(auditPhoneNo)){
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_TELEPHONE_FIELDLABELID, 
 					auditPhoneNo, officePhoneNo);					
-		}
-		
-		if(!editedtContactPerson.getEmail().equals(oldContactPerson.getEmail())){
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, 
-					oldContactPerson.getEmail(), editedtContactPerson.getEmail());					
 		}
 		
 		if(!officeMobileNo.equals(auditMobileNo)){
@@ -309,10 +419,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		retrieveServiceType();
 		
 		if(managedBean.getFinancialOrg().isBrandNew()){
-			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			newFinancialService(bankServicesList);
 		} else {
-			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 			editedFinancialService(bankServicesList,oldBankServicesList);
 		}
 		
