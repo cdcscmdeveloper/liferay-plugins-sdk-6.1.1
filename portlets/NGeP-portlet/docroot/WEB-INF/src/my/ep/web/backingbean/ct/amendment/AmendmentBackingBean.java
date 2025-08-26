@@ -1719,7 +1719,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//Enhancement #26186/#29793/#32860/#34097 start  start - retrieve disciplinary info
 			if (checkContractConditionForSupplier()) {
-				if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+				if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
 						.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
 					checkAndSetDA();
 				}
