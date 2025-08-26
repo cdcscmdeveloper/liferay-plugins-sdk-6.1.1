@@ -114,7 +114,18 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = EpLogger.getLogger(ProfilePersonalizationBackingBean.class);
-
+	//DA
+	//#26186 start
+	private static final String PARAM_DOC_NO = "docNo";
+	private static final String PARAM_TASK_NAME = "taskName";
+	private static final String PARAM_QT_ID = "qtId";
+	private static final String LBL_CT_CANCEL_CATEGORY = "lbl.ct.amend.supplier.maintenance.cancel.category";
+	private static final String LOG_CLASS = "ProfilePersonalizationBackingBean";
+	private static final String LOG_CLASS_PRERENDER = "ProfilePersonalizationBackingBean.preRenderDisciplinaryAction";
+	private static final String LOG_CLASS_CHECKSUPPLIER = "ProfilePersonalizationBackingBean.checkCtSupplierCategory";
+	private static final String LOG_CLASS_LOADSUPPLIER = "ProfilePersonalizationBackingBean.loadSupplierCommonDetails";
+	//#26186 end
+	
 	public ProfilePersonalizationBackingBean() {
 
 		adminUserRoleMap.put("AUDITOR_GENERAL", Arrays.asList(""));
@@ -243,16 +254,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	// AdminRoles
 	public static final Map<String, List<String>> adminUserRoleMap = new HashMap<String, List<String>>();
 	
-	//DA
-	//#26186 start
-	private static final String PARAM_DOC_NO = "docNo";
-	private static final String PARAM_TASK_NAME = "taskName";
-	private static final String PARAM_QT_ID = "qtId";
-	private static final String LBL_CT_CANCEL_CATEGORY = "lbl.ct.amend.supplier.maintenance.cancel.category";
-	private static final String LOG_CLASS = "ProfilePersonalizationBackingBean";
-	private static final String LOG_CLASS_PRERENDER = "ProfilePersonalizationBackingBean.preRenderDisciplinaryAction";
-	private static final String LOG_CLASS_CHECKSUPPLIER = "ProfilePersonalizationBackingBean.checkCtSupplierCategory";
-	//#26186 end
+	
 
 	public static PmUser authUserDetails;
 
@@ -1659,14 +1661,16 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			initializeSupplier(docNo);
 			handleDisciplinaryActionMsg(facesScopes);
 			// start 32229
-			SLAUtils.getInstance().logSQLPerformanceInfo("SM", "DA-4", LOG_CLASS_PRERENDER, startTime, "32229");
+			SLAUtils.getInstance().logSQLPerformanceInfo(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA-4",
+					LOG_CLASS_PRERENDER, startTime, "32229");
 			// end 32229
 			// 26238 - START Disciplinary Action - end
 			startTime = System.currentTimeMillis();
 			handleQtMsg(originalServletRequest, getManagedBean().getSmSupplier(), qtId);// 26247
 			handleCtMsg(taskName);// #26186
 
-			SLAUtils.getInstance().logSLAInfo("SM", "DA-5", LOG_CLASS_PRERENDER, startTime);
+			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA-5", LOG_CLASS_PRERENDER,
+					startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
 			handleException(fc, e);
@@ -1700,10 +1704,10 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			this.getManagedBean().setCurrentUserOrg(pmUserOrgs != null ? pmUserOrgs.get(0) : null);
 			this.getManagedBean().setUserActiveRoles(new ArrayList<PmUserRole>());
 			addUserActiveRoles(this.getManagedBean().getCurrentUserOrg());
-			SLAUtils.getInstance().logSLAInfo("SM","DA",
-					"ProfilePersonalizationBackingBean.loadSupplierCommonDetails", startTime);				
+			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA", LOG_CLASS_LOADSUPPLIER,
+					startTime);			
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("SM", "DA", userId.toString(), "ProfilePersonalizationBackingBean", 
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA", userId.toString(), LOG_CLASS, 
 					(new LogKey()).getUserId(), e);
 			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
 		}
