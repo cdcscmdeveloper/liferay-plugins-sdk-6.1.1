@@ -2581,7 +2581,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		
 		if (SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_SUSPEND_REG.equals(daType)){
-			String label = supplier.isPendingSuspend() ? lblDeletedTransaction : lblDeleted;
+			String label = supplier.isPendingSuspend() ? lblDeletedTransaction 
+					: SmCommonUtil.getMessage("lbl.sm.status.deleted_suspend", null);
 			return label + " (" + lblDASuspend + ")";
 		}
 		return "";
@@ -2593,7 +2594,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			return SmCommonUtil.getMessage("lbl.sm.mof.status.active", null);
 			
 		case SupplierManagementConst.MOF_STATUS_EXPIRED:
-			return SmCommonUtil.getMessage("", null);
+			return SmCommonUtil.getMessage("lbl.sm.mof.status.expired", null);
 			
 		case SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE:
 			return SmCommonUtil.getMessage("lbl.sm.mof.status.not.applicable", null);
