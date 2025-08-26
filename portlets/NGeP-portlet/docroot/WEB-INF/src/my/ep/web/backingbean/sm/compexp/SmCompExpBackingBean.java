@@ -61,6 +61,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private static String smCompExpDraftXhtml = "smCompExpDraft.xhtml";
 	private static String smCompExpDraftUpdateXhtml = "smCompExpDraftUpdate.xhtml";
 	private static String filePathDateFormat = "yyyyMMdd_HHmmss";
+	private static String smCompExpMasterUpdateXhtml = "smCompExpMasterUpdate.xhtml";
+	private static String lblClientTypeFed = "lbl.sm.comp.exp.update.client.type.federal";
 
 	/**
 	 * Prerender for Sm Company Experience
@@ -106,7 +108,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		initSelectedDraft(draft);
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
 		SelectItem clientTypeFederalItem = new SelectItem();
-		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.client.type.federal", null));
+		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
 		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
 		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
 		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
@@ -134,7 +136,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			dateChange();
 		}
 
-		initDraftDoc();
+		initSuppDoc();
 		initCatDraft();
 
 		this.getManagedBean().setSelectedAll(false);
@@ -155,50 +157,89 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Listener for ContractEffDate and ContractExpDate
 	 */
 	public void dateChange() {
-		if (null != this.getManagedBean().getSelectedDraft().getContractExpDate()) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(this.getManagedBean().getSelectedDraft().getContractExpDate());
-			cal.add(Calendar.DATE, -1);
-			Date maxEffDate = cal.getTime();
-			this.getManagedBean().setMaxEffDate(maxEffDate);
-		} else {
-			this.getManagedBean().setMaxEffDate(null);
+		Date expDate = new Date();
+		Date effDate = new Date();
+		Long sourceType = null;
+		Integer recordStatusFlg = null;
+		if (null != this.getManagedBean().getSelectedDraft()) {
+			expDate = this.getManagedBean().getSelectedDraft().getContractExpDate();
+			effDate = this.getManagedBean().getContractEffDateTemp();
+			sourceType = this.getManagedBean().getSelectedDraft().getSourceType().getParameterId();
+			recordStatusFlg = this.getManagedBean().getSelectedDraft().getRecordStatusFlg();
+		} else if (null != this.getManagedBean().getSelectedMaster()) {
+			expDate = this.getManagedBean().getSelectedMaster().getContractExpDate();
+			effDate = this.getManagedBean().getSelectedMaster().getContractEffDate();
+			sourceType = this.getManagedBean().getSelectedMaster().getSourceType().getParameterId();
+			recordStatusFlg = this.getManagedBean().getSelectedMaster().getRecordStatusFlg();
 		}
 
-		if (null != this.getManagedBean().getContractEffDateTemp()) {
+		setMaxEffDate(expDate);
+		setMinExpDate(effDate);
+		Long contractStatus = null;
+
+		if (null != sourceType && sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT)
+				&& recordStatusFlg.toString().equals(ParameterConst.RECORD_STATUS_INACTIVE)) {
+			contractStatus = ParameterConst.CONTRACT_STATUS_TERMINATED;
+		}
+
+		if (null != this.getManagedBean().getSelectedDraft()) {
+			this.getManagedBean().getSelectedDraft().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
+		} else if (null != this.getManagedBean().getSelectedMaster()) {
+			this.getManagedBean().getSelectedMaster().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
+		}
+
+	}
+
+	private void setMinExpDate(Date effDate) {
+		if (null != effDate) {
 			Calendar cal = Calendar.getInstance();
-			cal.setTime(this.getManagedBean().getContractEffDateTemp());
+			cal.setTime(effDate);
 			cal.add(Calendar.DATE, +1);
 			Date minExpDate = cal.getTime();
 			this.getManagedBean().setMinExpDate(minExpDate);
 		} else {
 			this.getManagedBean().setMinExpDate(null);
 		}
+	}
 
-		Date curDate = new Date();
-		this.getManagedBean().getSelectedDraft().setContractStatus(null);
-
-		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)
-				&& this.getManagedBean().getSelectedDraft().getRecordStatusFlg().equals(ParameterConst.RECORD_STATUS_INACTIVE)) {
-			this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_TERMINATED);
-		} else if (null != this.getManagedBean().getSelectedDraft().getContractExpDate() && null != this.getManagedBean().getContractEffDateTemp()) {
-			if (curDate.before(this.getManagedBean().getContractEffDateTemp())) {
-				this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_INACTIVE);
-			} else if ((curDate.equals(this.getManagedBean().getContractEffDateTemp()) || curDate.after(this.getManagedBean()
-					.getContractEffDateTemp())) && curDate.before(this.getManagedBean().getSelectedDraft().getContractExpDate())) {
-				this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_EFFECTIVE);
-			} else if (curDate.after(this.getManagedBean().getSelectedDraft().getContractExpDate())) {
-				this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_EXPIRED);
-			}
+	private void setMaxEffDate(Date expDate) {
+		if (null != expDate) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(expDate);
+			cal.add(Calendar.DATE, -1);
+			Date maxEffDate = cal.getTime();
+			this.getManagedBean().setMaxEffDate(maxEffDate);
+		} else {
+			this.getManagedBean().setMaxEffDate(null);
 		}
 	}
 
-	private void initDraftDoc() {
+	private Long setContractStatus(Long status, Date expDate, Date effDate) {
+		Date curDate = new Date();
+		Long contractStatus = status;
+		if (null == status && null != expDate && null != effDate) {
+			if (curDate.before(effDate)) {
+				contractStatus = ParameterConst.CONTRACT_STATUS_INACTIVE;
+			} else if ((curDate.equals(effDate) || curDate.after(effDate)) && curDate.before(expDate)) {
+				contractStatus = ParameterConst.CONTRACT_STATUS_EFFECTIVE;
+			} else if (curDate.after(expDate)) {
+				contractStatus = ParameterConst.CONTRACT_STATUS_EXPIRED;
+			}
+		}
+		return contractStatus;
+	}
+
+	private void initSuppDoc() {
 		List<SmCompExpMasterDoc> smCompExpDocList = new ArrayList<>();
 		this.getManagedBean().setSmCompExpDocList(smCompExpDocList);
 
-		String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_COMP_EXP_FILE_PATH)
-				+ this.getManagedBean().getSelectedDraft().getSmSupplier().getRegNo() + "/"
+		String regNo = "";
+		if (null != this.getManagedBean().getSelectedDraft()) {
+			regNo = this.getManagedBean().getSelectedDraft().getSmSupplier().getRegNo();
+		} else if (null != this.getManagedBean().getSelectedMaster()){
+			regNo = this.getManagedBean().getSelectedMaster().getSmSupplier().getRegNo();
+		}
+		String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_COMP_EXP_FILE_PATH) + regNo + "/"
 				+ DateUtils.dateToString(filePathDateFormat, Calendar.getInstance().getTime()) + "/";
 
 		this.getManagedBean().setSmCompExpFilePath(filePath);
@@ -280,15 +321,21 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 *            PmOrgProfile
 	 */
 	public void selectAgencyAction(PmOrgProfile orgProfile) {
-		this.getManagedBean().getSelectedDraft().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
-		this.getManagedBean().getSelectedDraft().setOrgProfile(orgProfile);
+		if (null != this.getManagedBean().getSelectedDraft()) {
+			this.getManagedBean().getSelectedDraft().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
+			this.getManagedBean().getSelectedDraft().setOrgProfile(orgProfile);
+		}
+		if (null != this.getManagedBean().getSelectedMaster()) {
+			this.getManagedBean().getSelectedMaster().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
+			this.getManagedBean().getSelectedMaster().setOrgProfile(orgProfile);
+		}
 	}
 
 	/**
 	 * Remove special character from File Reference No
 	 */
 	public void trimFileReferenceNo() {
-		if (null != this.getManagedBean().getSelectedDraft().getFileReferenceNo()
+		if (null != this.getManagedBean().getSelectedDraft() && null != this.getManagedBean().getSelectedDraft().getFileReferenceNo()
 				&& !this.getManagedBean().getSelectedDraft().getFileReferenceNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedDraft().getFileReferenceNo();
 
@@ -298,13 +345,23 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 			this.getManagedBean().getSelectedDraft().setFileReferenceNo(fileNo);
 		}
+		if (null != this.getManagedBean().getSelectedMaster() && null != this.getManagedBean().getSelectedMaster().getFileReferenceNo()
+				&& !this.getManagedBean().getSelectedMaster().getFileReferenceNo().isEmpty()) {
+			String fileNo = this.getManagedBean().getSelectedMaster().getFileReferenceNo();
+
+			fileNo = fileNo.replaceAll("\\s+", "");
+			fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");
+			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");
+
+			this.getManagedBean().getSelectedMaster().setFileReferenceNo(fileNo);
+		}
 	}
 
 	/**
 	 * Remove special character from File Extension No
 	 */
 	public void trimFileExtensionNo() {
-		if (null != this.getManagedBean().getSelectedDraft().getFileExtensionNo()
+		if (null != this.getManagedBean().getSelectedDraft() && null != this.getManagedBean().getSelectedDraft().getFileExtensionNo()
 				&& !this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedDraft().getFileExtensionNo();
 
@@ -312,6 +369,15 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+", "");
 
 			this.getManagedBean().getSelectedDraft().setFileExtensionNo(fileNo);
+		}
+		if (null != this.getManagedBean().getSelectedMaster() && null != this.getManagedBean().getSelectedMaster().getFileExtensionNo()
+				&& !this.getManagedBean().getSelectedMaster().getFileExtensionNo().isEmpty()) {
+			String fileNo = this.getManagedBean().getSelectedMaster().getFileExtensionNo();
+
+			fileNo = fileNo.replaceAll("\\s+", "");
+			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+", "");
+
+			this.getManagedBean().getSelectedMaster().setFileExtensionNo(fileNo);
 		}
 	}
 
@@ -734,18 +800,51 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	/**
 	 * Initialize Master view popup dialog
+	 * 
+	 * @param selectedMaster
 	 */
 	public void initViewPopup(SmCompExpMaster selectedMaster) {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
-		this.getManagedBean().setSelectedCompExpMaster(resDTO.getMaster());
-		
+		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
+
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
 		SelectItem clientTypeFederalItem = new SelectItem();
-		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.client.type.federal", null));
+		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
 		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
 		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
 	}
 
+	/**
+	 * Redirect to Sm Company Experience main screen
+	 * 
+	 * @param selectedMaster
+	 */
+	public void redirectToUpdateMaster(SmCompExpMaster selectedMaster) {
+		this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.master.update.fed.header.self.declared", null));
+
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
+		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
+		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
+
+		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
+		SelectItem clientTypeFederalItem = new SelectItem();
+		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
+		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
+		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
+
+		dateChange();
+
+		if (null != this.getManagedBean().getSelectedMaster().getCompExpMasterDocs()
+				&& !this.getManagedBean().getSelectedMaster().getCompExpMasterDocs().isEmpty()) {
+			this.getManagedBean().setSmCompExpDocList(this.getManagedBean().getSelectedMaster().getCompExpMasterDocs());
+			this.getManagedBean().setSmCompExpFilePath(this.getManagedBean().getSmCompExpDocList().get(0).getFilePath());
+		} else {
+			initSuppDoc();
+		}
+
+		SmCommonUtil.redirectToPage(smCompExpMasterUpdateXhtml, "", null, null);
+	}
 }

@@ -25,7 +25,7 @@
 								value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /></td>
 						<td style="width: 66%"><p:selectOneRadio disabled="true"
 								id="clientType"
-								value="#{cc.attrs.mBean.selectedCompExpMaster.clientType}">
+								value="#{cc.attrs.mBean.selectedMaster.clientType}">
 								<f:selectItems value="#{cc.attrs.mBean.clientTypeItems}"></f:selectItems>
 							</p:selectOneRadio></td>
 					</tr>
@@ -35,7 +35,7 @@
 								value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
-								value="#{cc.attrs.mBean.selectedCompExpMaster.agencyName}" /></td>
+								value="#{cc.attrs.mBean.selectedMaster.agencyName}" /></td>
 					</tr>
 					<tr>
 						<td style="width: 34%"><p:outputLabel
@@ -43,7 +43,7 @@
 								value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
-								value="#{cc.attrs.mBean.selectedCompExpMaster.fileReferenceNo} #{cc.attrs.mBean.selectedCompExpMaster.fileExtensionNo}" /></td>
+								value="#{cc.attrs.mBean.selectedMaster.fileReferenceNo} #{cc.attrs.mBean.selectedMaster.fileExtensionNo}" /></td>
 					</tr>
 					<tr>
 						<td style="width: 34%"><p:outputLabel
@@ -51,7 +51,7 @@
 								value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
-								value="#{cc.attrs.mBean.selectedCompExpMaster.loaNo}" /></td>
+								value="#{cc.attrs.mBean.selectedMaster.loaNo}" /></td>
 					</tr>
 					<tr>
 						<td style="width: 34%"><p:outputLabel
@@ -60,7 +60,7 @@
 						<td style="width: 66%"><h:outputText
 								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 								styleClass="outputLabel-view"
-								value="#{cc.attrs.mBean.selectedCompExpMaster.title}" /></td>
+								value="#{cc.attrs.mBean.selectedMaster.title}" /></td>
 					</tr>
 					<tr>
 						<td style="width: 34%"><p:outputLabel
@@ -68,7 +68,7 @@
 								value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
-								value="#{cc.attrs.mBean.selectedCompExpMaster.contractValue}" /></td>
+								value="#{cc.attrs.mBean.selectedMaster.contractValue}" /></td>
 					</tr>
 					<tr>
 						<td style="width: 34%"><p:outputLabel
@@ -76,7 +76,7 @@
 								value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
-								value="#{cc.attrs.bBean.getParameterDesc(cc.attrs.mBean.selectedCompExpMaster.paymentMethod)}" /></td>
+								value="#{cc.attrs.bBean.getParameterDesc(cc.attrs.mBean.selectedMaster.paymentMethod)}" /></td>
 					</tr>
 					<tr>
 						<td style="width: 34%"><p:outputLabel
@@ -84,7 +84,7 @@
 								value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
-								value="#{cc.attrs.bBean.getParameterDesc(cc.attrs.mBean.selectedCompExpMaster.procumentMode)}" /></td>
+								value="#{cc.attrs.bBean.getParameterDesc(cc.attrs.mBean.selectedMaster.procumentMode)}" /></td>
 					</tr>
 					<tr>
 						<td style="width: 34%"><p:outputLabel
@@ -93,7 +93,7 @@
 						</td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
-								value="#{cc.attrs.mBean.selectedCompExpMaster.contractEffDate}">
+								value="#{cc.attrs.mBean.selectedMaster.contractEffDate}">
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 							</h:outputText></td>
@@ -105,7 +105,7 @@
 						</td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
-								value="#{cc.attrs.mBean.selectedCompExpMaster.contractExpDate}">
+								value="#{cc.attrs.mBean.selectedMaster.contractExpDate}">
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 							</h:outputText></td>
@@ -115,19 +115,19 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.contract.status']}" /></td>
 						<td style="width: 66%"><c:if
-								test="#{cc.attrs.mBean.selectedCompExpMaster.contractStatus eq ParameterConst.contractStatusInactive}">
+								test="#{cc.attrs.mBean.selectedMaster.contractStatus eq ParameterConst.contractStatusInactive}">
 								<h:outputText styleClass="outputLabel-view"
 									value="#{lbl['lbl.sm.comp.exp.update.contract.status.inactive']}" />
 							</c:if> <c:if
-								test="#{cc.attrs.mBean.selectedCompExpMaster.contractStatus eq ParameterConst.contractStatusEffective}">
+								test="#{cc.attrs.mBean.selectedMaster.contractStatus eq ParameterConst.contractStatusEffective}">
 								<h:outputText styleClass="outputLabel-view"
 									value="#{lbl['lbl.sm.comp.exp.update.contract.status.effective']}" />
 							</c:if> <c:if
-								test="#{cc.attrs.mBean.selectedCompExpMaster.contractStatus eq ParameterConst.contractStatusExpired}">
+								test="#{cc.attrs.mBean.selectedMaster.contractStatus eq ParameterConst.contractStatusExpired}">
 								<h:outputText styleClass="outputLabel-view"
 									value="#{lbl['lbl.sm.comp.exp.update.contract.status.expired']}" />
 							</c:if> <c:if
-								test="#{cc.attrs.mBean.selectedCompExpMaster.contractStatus eq ParameterConst.contractStatusTerminated}">
+								test="#{cc.attrs.mBean.selectedMaster.contractStatus eq ParameterConst.contractStatusTerminated}">
 								<h:outputText styleClass="outputLabel-view"
 									value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
 							</c:if></td>
@@ -136,7 +136,7 @@
 				<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 					toggleable="true">
 					<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
-						value="#{cc.attrs.mBean.selectedCompExpMaster.compExpMasterCats}"
+						value="#{cc.attrs.mBean.selectedMaster.compExpMasterCats}"
 						var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
 						<ac:paginator for="smCompExpCatCodes" />
 						<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">

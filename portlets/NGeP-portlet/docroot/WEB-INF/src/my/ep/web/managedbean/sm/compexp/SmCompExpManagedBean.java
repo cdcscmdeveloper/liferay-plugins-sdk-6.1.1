@@ -70,7 +70,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private List<SelectItem> clientTypeItems = new ArrayList<SelectItem>();
 	private transient IPagingDataModel<SmCompExpMaster> masterFedDataModel = new MasterFedPagingDataModel();
 	private transient IPagingDataModel<SmCompExpMaster> masterNonFedDataModel = new MasterNonFedPagingDataModel();
-	private SmCompExpMaster selectedCompExpMaster;
+	private SmCompExpMaster selectedMaster;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -396,12 +396,16 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.masterNonFedDataModel = masterNonFedDataModel;
 	}
 
-	public SmCompExpMaster getSelectedCompExpMaster() {
-		return selectedCompExpMaster;
+	public SmCompExpMaster getSelectedMaster() {
+		return selectedMaster;
 	}
 
-	public void setSelectedCompExpMaster(SmCompExpMaster selectedCompExpMaster) {
-		this.selectedCompExpMaster = selectedCompExpMaster;
+	public void setSelectedMaster(SmCompExpMaster selectedMaster) {
+		this.selectedMaster = selectedMaster;
+	}
+
+	public void setMasterNonFedDataModel(IPagingDataModel<SmCompExpMaster> masterNonFedDataModel) {
+		this.masterNonFedDataModel = masterNonFedDataModel;
 	}
 
 }
