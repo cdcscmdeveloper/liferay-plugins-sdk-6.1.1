@@ -1143,6 +1143,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 		//#21692 - Start
 		List<Long> statuses = new ArrayList<>();
+		statuses.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
 		statuses.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
 		statuses.add(QTStatusConst.SF_PENDING_SIGN_OFF);
 		//#21692 - End
@@ -1179,7 +1180,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 					ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
 					activity.setScQtCommittee(scQtCommittee);
 					activity.setScCommitteeMember(member);
-					activity.setAttended(statuses.contains(this.getManagedBean().getCurrentStatusId()));//#21692
+					activity.setAttended(activity.isAttended() ? activity.isAttended() : statuses.contains(this
+							.getManagedBean().getCurrentStatusId()));//#21692
 					setUserDetails(activity);
 					missingActivities.add(activity);
 				}
