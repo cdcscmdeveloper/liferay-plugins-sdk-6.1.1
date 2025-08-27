@@ -4,20 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
-
+import my.ep.dto.pm.authorization.user.SyncUserReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.log4j.Logger;
 
 @Path("/sync")
 public class SyncProcBoardFromPMRest {
@@ -286,5 +290,125 @@ public class SyncProcBoardFromPMRest {
 			e.printStackTrace();
 			return Response.status(406).entity(e.getMessage()).build();
 		}
+	}	
+	// START 32821 - PDS 
+	/**
+	 * Synchronizes user information from PM to Liferay and OIM based on the provided login ID.
+	 * Optionally sets the user's password to the default value if specified.
+	 *
+	 * <p>This endpoint is typically used to re-sync a user's account details and roles
+	 * between systems when discrepancies are detected or after updates in PM.</p>
+	 *
+	 * <b>HTTP Method:</b> GET  
+	 * <b>Path:</b> /createuserv2  
+	 *
+	 * <b>Query Parameters:</b>
+	 * <ul>
+	 *   <li><b>loginId</b> (required)  The login ID of the user to synchronize.</li>
+	 *   <li><b>setDefaultPassword</b> (optional)  If set to "true" (case-insensitive),
+	 *       the user's password will be reset to the system's default password.</li>
+	 * </ul>
+	 *
+	 * <b>Sample URLs:</b>
+	 * <pre>
+	 *   curl -X POST http://localhost:8080/NGeP-portlet/rest/sync/createuserv2 \ -H "Content-Type: application/json" \  -d '{"loginId":"3003703","keyPass"}'
+	 * </pre>
+	 *
+	 * @param loginId the login ID of the user to synchronize (required).
+	 * @param setDefaultPassword "true" to reset the password to default; otherwise ignored (optional).
+	 * @return HTTP 200 if synchronization is successful, HTTP 406 with an error message if failed.
+	 */
+	
+	
+	@POST
+	@Path("/syncUserv2")
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN) // or APPLICATION_JSON if you prefer
+	public Response syncLiferayOimByLoginId(SyncUserReqDTO reqDTO) {
+		try {
+			String message = "";
+			log.info("#Start Sync By Login Id");
+			if(reqDTO == null){
+				log.info("Body Is Null");
+				return Response.status(400).entity("Body is required").build();
+			}else{
+				log.info("Body Is Not Null:"+reqDTO.getLoginId());
+			}
+			if(reqDTO.getKeyPass() != 8532147){
+				log.info("Key Wrong");
+				message = "Error Key";
+				return Response.status(401).entity("Error Key").build();
+			}else{
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginId(reqDTO.getLoginId(),false);
+				log.info("Finished Sync By Login Id:"+success);	
+				message = "Success";
+			}
+			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
+		}
 	}
+	
+	@POST
+	@Path("/syncUserv3")
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN) // or APPLICATION_JSON if you prefer
+	public Response syncLiferayOimByLoginIdNative(SyncUserReqDTO reqDTO) {
+		try {
+			String message = "";
+			log.info("#Start Sync By Login Id");
+			if(reqDTO == null){
+				log.info("Body Is Null");
+				return Response.status(400).entity("Body is required").build();
+			}else{
+				log.info("Body Is Not Null:"+reqDTO.getLoginId());
+			}
+			if(reqDTO.getKeyPass() != 8532147){
+				log.info("Key Wrong");
+				message = "Error Key";
+				return Response.status(401).entity("Error Key").build();
+			}else{
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginIdNative(reqDTO.getLoginId(),false,false);
+				log.info("Finished Sync By Login Id:"+success);	
+				message = "Success";
+			}
+			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Path("/syncUserv4")
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN) // or APPLICATION_JSON if you prefer
+	public Response syncLiferayOimByLoginIdNativeEvict(SyncUserReqDTO reqDTO) {
+		try {
+			String message = "";
+			log.info("#Start Sync By Login Id");
+			if(reqDTO == null){
+				log.info("Body Is Null");
+				return Response.status(400).entity("Body is required").build();
+			}else{
+				log.info("Body Is Not Null:"+reqDTO.getLoginId());
+			}
+			if(reqDTO.getKeyPass() != 8532147){
+				log.info("Key Wrong");
+				message = "Error Key";
+				return Response.status(401).entity("Error Key").build();
+			}else{
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginIdNative(reqDTO.getLoginId(),false,true);
+				log.info("Finished Sync By Login Id:"+success);	
+				message = "Success";
+			}
+			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(406).entity(e.getMessage()).build();
+		}
+	}
+	// End 32821 - PDS 
+	
 }
