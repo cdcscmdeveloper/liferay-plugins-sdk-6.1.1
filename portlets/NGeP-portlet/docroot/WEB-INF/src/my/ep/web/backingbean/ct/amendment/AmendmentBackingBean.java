@@ -1621,7 +1621,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 
 			// 24333 - Start
-			ctBackingBean.getManagedBean().setOriginalOverallAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getOverallCtAmtPbond());
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getOverallCtAmtPbond() == null){
+				ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().setOverallCtAmtPbond(BigDecimal.ZERO);
+			}
+			ctBackingBean.getManagedBean().setOriginalOverallAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getOverallCtAmtPbond());
 			// 24333 - Start
 			
 			// Amendment process	  
@@ -1709,7 +1712,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//Enhancement #26186/#29793/#32860/#34097 start  start - retrieve disciplinary info
 			if (checkContractConditionForSupplier()) {
-				if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+				if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
 						.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
 					checkAndSetDA();
 				}

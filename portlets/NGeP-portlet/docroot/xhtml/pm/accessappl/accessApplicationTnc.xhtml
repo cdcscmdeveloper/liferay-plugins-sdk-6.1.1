@@ -14,10 +14,6 @@
 		<p:panel header="#{lbl['lbl.pm.access.app.tnc.header']}"
 			toggleable="true" id="tncPnl">
 			<p:scrollPanel style="height:300px;border:0;" mode="native">
-			<p:inputText value="#{commonBackingBean.managedBean.reportName}"  size="40"></p:inputText>
-			<p:commandButton value="Push Schedule ID. Do not click."
-					action="#{commonBackingBean.testPushBiddingSchedule()}"
-					update="@form"></p:commandButton>
 			<h:outputText escape="false"
 				value="#{lbl['lbl.pm.access.app.tnc.desc']}" />
 				<!-- #38302 START -->

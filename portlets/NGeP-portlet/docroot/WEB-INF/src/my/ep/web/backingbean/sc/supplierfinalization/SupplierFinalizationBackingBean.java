@@ -1086,6 +1086,13 @@ public class SupplierFinalizationBackingBean extends
 				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
 				this.getManagedBean().setScQtCommittee(scQtCommittee);
 
+				//#21692 - Start
+				List<Long> statuses = new ArrayList<>();
+				statuses.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
+				statuses.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
+				statuses.add(QTStatusConst.SF_PENDING_SIGN_OFF);
+				//#21692 - End
+
 				// Committee Details
 				if (scQtCommittee != null) {
 					// 25037 - start
@@ -1117,6 +1124,8 @@ public class SupplierFinalizationBackingBean extends
 						}
 						for (ScQtCommitteeActivity commActivity 
 									: scQtCommittee.getCommitteeActivities()) {
+							commActivity.setAttended(commActivity.isAttended() ? commActivity.isAttended() : statuses
+									.contains(this.getManagedBean().getCurrentStatusId()));//#21692
 							committeeEndorsementList.add(commActivity);
 						}
 						//25201#63-2
@@ -4257,7 +4266,7 @@ return	remarksNotFound;
 	/**
 	 * @throws Exception
 	 */
-	public void downloadAllBriefingPaperReports(boolean generateOnly) throws Exception {// 38523
+	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {// 38523
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// 38523 - start
@@ -4267,7 +4276,7 @@ return	remarksNotFound;
 		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment;
 			if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
-				attachment = retrieveBriefingPaperAttachment(scQtFinalizationReport, generateOnly);
+				attachment = retrieveBriefingPaperAttachment(scQtFinalizationReport, skipDownload);
 			} else {
 				attachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 			} 
@@ -4287,7 +4296,7 @@ return	remarksNotFound;
 		}
 
 		// Generate all the reports before submission
-		if (!generateOnly) { // 38523
+		if (!skipDownload) { // 38523
 			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 		// #18685 - End.
