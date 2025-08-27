@@ -622,6 +622,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean emptyNonMandatoryDocHistory;
 	//#11641 - END
 	
+	private boolean poApproverPersonnelErr;//#31130-start
+	private String msgPersonnelErr;
+	private boolean poApproverAcedemicErr;//#31130-end
+	
 	//#30691 - START - 26112021
 	private boolean poApproverChgBusiness;
 	private String msgChgBusiness;
@@ -4669,6 +4673,32 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.checkBranch = checkBranch;
 	}
 	//#32968 END
+	
+	//31130-start
+	public boolean isPoApproverPersonnelErr() {
+		return poApproverPersonnelErr;
+	}
+
+	public void setPoApproverPersonnelErr(boolean poApproverPersonnelErr) {
+		this.poApproverPersonnelErr = poApproverPersonnelErr;
+	}
+
+	public String getMsgPersonnelErr() {
+		return msgPersonnelErr;
+	}
+
+	public void setMsgPersonnelErr(String msgPersonnelErr) {
+		this.msgPersonnelErr = msgPersonnelErr;
+	}
+
+	public boolean isPoApproverAcedemicErr() {
+		return poApproverAcedemicErr;
+	}
+
+	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
+		this.poApproverAcedemicErr = poApproverAcedemicErr;
+	}
+	//31130-end
 	
 	//Start 32008
 	public boolean isUpsCannotEdit() {

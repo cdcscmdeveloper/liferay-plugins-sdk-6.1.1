@@ -2750,7 +2750,12 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			quationTenderReqDTO.setScReports(reports);
 			qtDocumentSO.saveReportAndAttachment(quationTenderReqDTO);
 			
-		} finally {
+		}//#21692 - Start 
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}//#21692 - End
+		finally {
 			qtDocumentSO = null;
 		}
 		

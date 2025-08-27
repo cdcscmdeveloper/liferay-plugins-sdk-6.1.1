@@ -2739,6 +2739,15 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null != newValue) {
 				qtDtl.validateNewValueForValidityDays((int) newValue);
 			}
+
+			//#21692 - Start
+			if (null != newValue && null != valueBean.getOldValue()
+					&& (int) newValue > (int) valueBean.getOldValue()) {
+				this.getManagedBean().setProposalValidityChangeValue(true);
+			} else {
+				this.getManagedBean().setProposalValidityChangeValue(false);
+			}
+			//#21692 - End
 		}
 		// #29425 - end
 
@@ -3554,6 +3563,13 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	//20200210@asyrafhaziq_Bug #27381&#26694  - End
 
+	//#21692 - Start
+	/**
+	 * Check if current QT Status is in between QT Publication and QT Closed/Awarded
+	 * 
+	 * @param currentStatusId
+	 * @return
+	 */
 	public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
 		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION, QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
 				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION, QTStatusConst.QT_PENDING_LOI, QTStatusConst.QT_PENDING_LOA,
@@ -3566,6 +3582,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		return Boolean.FALSE;
 	}
+	//#21692 - End
 
 	/* :::Enhancement #25638 #29 - start::: */
 	public boolean isStatusInQTReviseGroupStatus(Long currentStatusId) {

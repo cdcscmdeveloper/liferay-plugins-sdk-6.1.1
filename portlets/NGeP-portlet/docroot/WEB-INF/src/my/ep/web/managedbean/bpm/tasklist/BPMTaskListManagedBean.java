@@ -592,6 +592,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));									
 								}
 								//CR 28766: Static Code Analysis End
+								//#21692 - Start
+								int docStatus = worklistItemVO.getDocStatus().intValue();
+								String noteEPV = ResourceBundleUtils.getMessage("lbl.sc.qt.proposal.extension.tasklist.note",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale());
+								
+								if (QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE.intValue() == docStatus) {
+									worklistItemVO.setTitle(worklistItemVO.getTitle()
+											+ "<br/>"
+											+ "<span style=\"color:red;font-weight:bold\">" + noteEPV + "<span>");
+								}
+								//#21692 - End
 								
 						       processWorklistItemByDocType(worklistItemVO);
 						       

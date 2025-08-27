@@ -6,6 +6,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<ui:param name="isManSpecAndCompliance" value="#{evaluationBackingBean.displayMandatorySpecAndComplianceColumn(templateSpecBean)}" /> 
+	<ui:param name="isRenderZone" value="#{evaluationBackingBean.renderZoneForFinancial()}" /> 
+	<ui:remove>#29187 End Vinod</ui:remove>
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
 	<!-- Bug #32378 Farid Start related to #21695-->
@@ -13,8 +17,10 @@
 	<!-- Bug #32378 Farid End related to #21695--> 
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
 	<ui:param name="remarklbl" value="#{isSqSpec ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.answer'}" />
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal}" headerText="#{lbl['lbl.sc.zone']}">
+		<ui:remove>#29187 Start Vinod Added isRenderZone Vinod</ui:remove>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and isRenderZone}" headerText="#{lbl['lbl.sc.zone']}">
 		</p:column>
+		<ui:remove>#29187 End Vinod</ui:remove>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px;white-space:normal;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.total']}" />
@@ -29,23 +35,41 @@
 		</p:column>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:normal; text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		</p:column>
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:normal; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : remarklbl]}">
+		<ui:remove>#29187 Start Vinod</ui:remove>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:10%; word-wrap:break-word; word-break:break-word;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" rendered="#{isScoringReq and isManSpecAndCompliance}">
 		</p:column>
-	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.supplier.note']}">
+		<ui:remove>#29187 End Vinod</ui:remove>
+		<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '82px'}; white-space:pre-line !important; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : remarklbl]}">
+		</p:column>
+	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '100px'}; white-space:pre-line !important;" headerText="#{lbl['lbl.tpl.spec.content.supplier.note']}">
 	</p:column>
+	<ui:remove>#29187 End Vinod</ui:remove>
 	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:60px; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" 
 		rendered="#{templateSpecBackingBean.hasWeightage(templateSpecBean)}">
 		</p:column>
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:50px; white-space:normal; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}" rendered="#{isScoringReq}">
+		<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right; word-wrap:break-word; word-break:break-word;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}" rendered="#{isScoringReq}">
 		</p:column>
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:50px; white-space:normal; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}" rendered="#{isScoringReq}">
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right; word-wrap:break-word; word-break:break-word;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}" rendered="#{isScoringReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
 		</f:facet>
 		</p:column>
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}">
+		<ui:remove>#29187 Start Vinod</ui:remove>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:10%; white-space:normal; word-wrap:break-word; word-break:break-word;" rendered="#{isScoringReq and isManSpecAndCompliance}">
+			<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.tec.compliance']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.tpl.spec.content.scoring.compliance.tooltip']}" />
+			</f:facet>
 		</p:column>
+		<ui:remove>#29187 End Vinod</ui:remove>
+		<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:#{isManSpecAndCompliance ? '10%' : '130px'};" headerText="#{lbl['lbl.tpl.spec.content.comment']}">
+		</p:column>
+		<ui:remove>#29187 End Vinod</ui:remove>
 	</ui:define>
 	</ui:decorate>
 	<ui:decorate template="specColumnQuestionView.xhtml">
@@ -92,14 +116,16 @@
 				</h:panelGroup>
 			</p:column>
 			
-			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal}">
+			<ui:remove>#29187 Start Vinod Added isRenderZone</ui:remove>
+			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and isRenderZone}">
 				<p:commandLink id="zoneName"
 					oncomplete="zoneLocPopup.show();"
 					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
 					<f:setPropertyActionListener target="#{zoneLocationBackingBean.tplSpecZoneDtl}" value="#{tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl}" />
 					<h:outputText value="#{tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName}" />
 				</p:commandLink>
-			</p:column>
+			</p:column> 
+			<ui:remove>#29187 End Vinod</ui:remove>
 		</ui:define>
 	</ui:decorate>
 	
@@ -141,7 +167,8 @@
 		</h:panelGroup>
 	</p:column>
 	<!-- Bug #32378 Farid Start related to #21695 -->
-	<p:column style="width:82px; white-space:normal; #{isSpecTypeFinancial ? 'text-align:right;' : ''}">
+	<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+	<p:column style="width:#{isManSpecAndCompliance ? '10%' : '82px'}; white-space:normal; #{isSpecTypeFinancial ? 'text-align:right;' : ''}">
 		<f:facet name="footer">
 			<h:outputText value="#{templateSpecBackingBean.calcGrandTotalAmount(templateSpecBean)}" rendered="#{isSpecTypeFinancial}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -158,8 +185,9 @@
 		</h:panelGroup>
 	</p:column>
 	<!-- Bug #32378 Farid End related to #21695 -->
-	<p:column style="width:100px;white-space:normal;">
+	<p:column style="width:#{isManSpecAndCompliance ? '10%' : '100px'};white-space:normal;">
 		<ui:param name="answerRemark" value="#{fn:replace(tplSpecAnswer.answerRemark,',',',  ')}"></ui:param>
 		#{answerRemark}
 	</p:column>
+	<ui:remove>#29187 End Vinod</ui:remove>
 </ui:composition>

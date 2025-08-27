@@ -420,7 +420,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				
 			//end check registration ic with ssm #27148
 			
-			checkExistingBusinessRegNoSSM();
+			// #38143 - Start
+			validateExistingBusinessRegNo();
+			// #38143 - End
 			SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			this.getManagedBean().setValidateWithSSM(true);
@@ -1915,66 +1917,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * Check the existance of business Reg No
 	 * @return boolean
 	 */
-	private void checkExistingBusinessRegNo(){
-		
-		if (!StringUtils
-				.isBlank(getManagedBean().getSmSupp().getBusinessType())
-				&& SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
-						.contains(getManagedBean().getSmSupp()
-								.getBusinessType())) {
-			validateBusinessRegNoWithBussTypeAndLocalAuth();
-		} else{
-			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-			List<Integer> recStatusLs = new ArrayList<Integer>();
-			recStatusLs.add(DbValueConst.RECORD_STATUS_ACTIVE);
-			recStatusLs.add(DbValueConst.RECORD_STATUS_IN_PROGRESS);
-			recStatusLs.add(SupplierManagementConst.MIGRATION_DATA_RECORD_STATUS); //#29005
-			
-			IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
-			//30987
-			this.getManagedBean().getSmSupp().setRegNo(this.getManagedBean().getSmSupp().getRegNo().trim());
-			reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
-			reqDTO.setStatusLs(recStatusLs);
-			RegistrationResDTO resDTO = reqSO.retrieveSupplierByRegNoAndStatusLs(reqDTO);
-			
-			if(resDTO.getSmSuppliers().size() > 0 ){
-				//Appl Type is MOF
-				if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
-					for(SmSupplier supplier : resDTO.getSmSuppliers()){
-						if(getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType())){
-							String labelText = null;
-							if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-								labelText = SmCommonUtil.getMessage("lbl.sm.contractor", null);
-							}else{
-								labelText = SmCommonUtil.getMessage("lbl.sm.consultant", null);
-							}
-							
-							throw new EpException(MessageConst.ERROR_721041,new String[]{labelText,getManagedBean().getSmSupp().getRegNo()});
-						}
-						
-						if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-							if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
-								throw new EpException(MessageConst.ERROR_721042,new String[]{getManagedBean().getSmSupp().getRegNo()});
-							}
-						}
-					}
-				}
-				else{
-					//Appl Type is BASIC
-					for(SmSupplier supplier : resDTO.getSmSuppliers()){
-						if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
-							throw new EpException(MessageConst.ERROR_721041,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
-						}
-						
-						if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
-							throw new EpException(MessageConst.ERROR_721041,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
-						}
-					}
-				}
-			}
-		}
-		
+	private void checkExistingBusinessRegNo() {
+		// #38143 - Start
+		validateExistingBusinessRegNo();
+		// #38143 - End
+
 	}
+	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	public String returnToCompanyValidation(){
 		/*getManagedBean().setCaptchaAnswer(null);
@@ -1982,6 +1931,314 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		return ssmAccountCheck;
 
 	}
+	
+	// #38143 - Start
+	private void validateExistingBusinessRegNo() {
+		if (isLocalAuthBusinessType()) {
+			validateBusinessRegNoWithBussTypeAndLocalAuth();
+			return;
+		}
+
+		trimRegNo();
+		RegistrationReqDTO reqDTO = createRegistrationRequest();
+		List<SmSupplier> suppliers = SmServiceLookup.getRegistrationSO().retrieveSupplierByRegNoAndStatusLs(reqDTO)
+				.getSmSuppliers();
+
+		if (suppliers.isEmpty()) {
+			return;
+		}
+
+		if (isApplicationTypeMoF()) {
+			validateForMoF(suppliers);
+		} else {
+			validateForBasic(suppliers);
+		}
+	}
+
+	private boolean isLocalAuthBusinessType() {
+		String businessType = getManagedBean().getSmSupp().getBusinessType();
+		return !StringUtils.isBlank(businessType)
+				&& SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE.contains(businessType);
+	}
+
+	private void trimRegNo() {
+		SmSupplier supplier = getManagedBean().getSmSupp();
+		supplier.setRegNo(supplier.getRegNo().trim());
+	}
+
+	private RegistrationReqDTO createRegistrationRequest() {
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		reqDTO.setRegNo(getManagedBean().getSmSupp().getRegNo());
+		reqDTO.setStatusLs(Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_SUSPENDED,
+				DbValueConst.RECORD_STATUS_EXPIRED, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION,
+				DbValueConst.RECORD_STATUS_IN_PROGRESS));
+		return reqDTO;
+	}
+
+	private boolean isApplicationTypeMoF() {
+		return getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF);
+	}
+
+	private void validateForMoF(List<SmSupplier> suppliers) {
+		for (SmSupplier supplier : suppliers) {
+			if (supplier.getSmAppl() == null) {
+				errorMessageSSM(supplier);
+				continue;
+			}
+
+			String currentType = getManagedBean().getSmAppl().getSupplierType();
+			String existingType = supplier.getSmAppl().getSupplierType();
+
+			if (currentType.equals(existingType)) {
+				handleSameTypeMoF(supplier);
+			} else {
+				handleDifferentTypeMoF(suppliers, supplier, currentType, existingType);
+			}
+		}
+	}
+
+	private void handleSameTypeMoF(SmSupplier supplier) {
+		String labelText = getSupplierTypeLabel(supplier.getSmAppl().getSupplierType());
+		int status = supplier.getRecordStatusFlg();
+
+		switch (status) {
+		case DbValueConst.RECORD_STATUS_ACTIVE:
+			errorMessageSSM(supplier);
+			throw new EpException(MessageConst.ERROR_721073, new String[] {
+					SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+		case DbValueConst.RECORD_STATUS_SUSPENDED:
+			throw new EpException(MessageConst.ERROR_721074, new String[] {
+					SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+		case DbValueConst.RECORD_STATUS_PENDING_ACTIVATION:
+			if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+				throw new EpException(MessageConst.ERROR_721061, new String[] {
+						SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+			} else {
+				throw new EpException(MessageConst.ERROR_721065, new String[] {
+						SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+			}
+
+		case DbValueConst.RECORD_STATUS_EXPIRED:
+			throw new EpException(MessageConst.ERROR_721076, new String[] {
+					SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+		case DbValueConst.RECORD_STATUS_IN_PROGRESS:
+			handleInProgressStatus(supplier, labelText);
+			break;
+		default:
+			throw new EpException(MessageConst.ERROR_721041, new String[] { labelText, supplier.getRegNo() });
+		}
+	}
+
+	private void handleDifferentTypeMoF(List<SmSupplier> suppliers, SmSupplier supplier, String currentType,
+			String existingType) {
+		if (suppliers.size() > 1) {
+			checkMultipleSuppliersForBasicContractor(suppliers, currentType);
+		}
+
+		if (suppliers.size() == 1) {
+			onlyOneSupplierExist(existingType, currentType, supplier);
+		} else {
+			errorMessageSSM(supplier);
+		}
+	}
+
+	private void checkMultipleSuppliersForBasicContractor(List<SmSupplier> suppliers, String currentType) {
+
+		for (SmSupplier supp : suppliers) {
+			String suppType = supp.getSmAppl().getSupplierType();
+
+			if (SupplierManagementConst.STYPE_CONTRACTOR.equalsIgnoreCase(currentType)
+					&& SupplierManagementConst.STYPE_BASIC.equalsIgnoreCase(suppType)) {
+
+				int status = supp.getRecordStatusFlg();
+				String regNo = supp.getRegNo();
+
+				if (status == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+					throw new EpException(MessageConst.ERROR_721063, new String[] { regNo });
+				} else if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
+					throw new EpException(MessageConst.ERROR_721074, new String[] { regNo });
+				} else {
+					throw new EpException(MessageConst.ERROR_721042, new String[] { regNo });
+				}
+			}
+		}
+
+	}
+
+	private void onlyOneSupplierExist(String existingType, String currentType, SmSupplier supplier) {
+		String labelText = getSupplierTypeLabel(existingType);
+		int status = supplier.getRecordStatusFlg();
+
+		if (isConsultant(currentType, existingType)) {
+			if (status == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
+				handleInProgressDifferentType(supplier, labelText);
+			}
+			return; // silently ignore other statuses
+		}
+
+		switch (status) {
+		case DbValueConst.RECORD_STATUS_SUSPENDED:
+			throw new EpException(MessageConst.ERROR_721074, new String[] { supplier.getRegNo() });
+		case DbValueConst.RECORD_STATUS_ACTIVE:
+			throw new EpException(MessageConst.ERROR_721042, new String[] { getManagedBean().getSmSupp().getRegNo() });
+		case DbValueConst.RECORD_STATUS_IN_PROGRESS:
+			handleInProgressDifferentType(supplier, labelText);
+			break;
+		default:
+			errorMessageSSM(supplier);
+			break;
+		}
+	}
+
+	private boolean isConsultant(String currentType, String existingType) {
+		boolean isCurrentConsultant = currentType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT);
+		boolean isExistingConsultant = existingType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT);
+		return isCurrentConsultant != isExistingConsultant;
+	}
+
+	private void handleInProgressStatus(SmSupplier supplier, String labelText) {
+		if (StringUtils.isBlank(supplier.getEpNo())) {
+			if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+				throw new EpException(MessageConst.ERROR_721075, new String[] {
+						SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+			} else {
+				throw new EpException(MessageConst.ERROR_721068, new String[] {
+						SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+			}
+
+		} else {
+			throw new EpException(MessageConst.ERROR_721083, new String[] { supplier.getRegNo(), labelText });
+		}
+	}
+
+	private void handleInProgressDifferentType(SmSupplier supplier, String labelText) {
+		if (StringUtils.isBlank(supplier.getEpNo())) {
+			if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)) {
+				throw new EpException(MessageConst.ERROR_721068, new String[] {
+						SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+			} else {
+				throw new EpException(MessageConst.ERROR_721062, new String[] { supplier.getRegNo(), labelText });
+			}
+
+		} else {
+			throw new EpException(MessageConst.ERROR_721064, new String[] { supplier.getRegNo(), labelText, labelText });
+		}
+	}
+
+	private void validateForBasic(List<SmSupplier> suppliers) {
+		for (SmSupplier supplier : suppliers) {
+			String existingType = supplier.getSmAppl().getSupplierType();
+			int status = supplier.getRecordStatusFlg();
+
+			if (existingType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+				if (status == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
+					validateInProgressBasic(supplier);
+				}
+				continue; // Skip other statuses for consultant
+			}
+
+			handleBasicSupplierByStatus(supplier, status);
+		}
+	}
+
+	private void handleBasicSupplierByStatus(SmSupplier supplier, int status) {
+		String regNoMsg = SmCommonUtil.getMessage(supplier.getRegNo(), null);
+
+		switch (status) {
+		case DbValueConst.RECORD_STATUS_ACTIVE:
+			handleBasicActiveStatus(supplier, regNoMsg);
+			break;
+		case DbValueConst.RECORD_STATUS_SUSPENDED:
+			throw new EpException(MessageConst.ERROR_721074, new String[] { regNoMsg });
+		case DbValueConst.RECORD_STATUS_IN_PROGRESS:
+			validateInProgressBasic(supplier);
+			break;
+		case DbValueConst.RECORD_STATUS_PENDING_ACTIVATION:
+			throw new EpException(MessageConst.ERROR_721065, new String[] { regNoMsg });
+		case DbValueConst.RECORD_STATUS_EXPIRED:
+			validateExpiredBasic(supplier);
+			break;
+		default:
+			// Optional logging or silent ignore
+			break;
+		}
+	}
+
+	private void handleBasicActiveStatus(SmSupplier supplier, String regNoMsg) {
+		if (SupplierManagementConst.STYPE_CONTRACTOR.equalsIgnoreCase(supplier.getSmAppl().getSupplierType())) {
+			if (checkIfMofExp(supplier)) {
+				errorMessageSSM(supplier);
+			} else {
+				// Since if existing status 1 for K need different message if
+				// going errorMessageSSM first can have different message
+				throw new EpException(MessageConst.ERROR_721066, new String[] { regNoMsg });
+			}
+		} else {
+			errorMessageSSM(supplier);
+			throw new EpException(MessageConst.ERROR_721066, new String[] { regNoMsg });
+		}
+	}
+
+	private boolean checkIfMofExp(SmSupplier supp) {
+		if (supp.getSmAppl() == null || supp.getSmAppl().getSmMofCerts() == null) {
+			return false;
+		}
+
+		String suppType = supp.getSmAppl().getSupplierType();
+		if (!SupplierManagementConst.STYPE_CONSULTANT.equalsIgnoreCase(suppType)
+				&& !SupplierManagementConst.STYPE_CONTRACTOR.equalsIgnoreCase(suppType)) {
+			return false;
+		}
+
+		for (SmMofCert cert : supp.getSmAppl().getSmMofCerts()) {
+			if (cert.getSmMofAccount().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private void validateInProgressBasic(SmSupplier supplier) {
+		String labelText = getSupplierTypeLabel(supplier.getSmAppl().getSupplierType());
+
+		if (StringUtils.isBlank(supplier.getEpNo())) {
+			throw new EpException(MessageConst.ERROR_721068, new String[] {
+					SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+		} else {
+			throw new EpException(MessageConst.ERROR_721083, new String[] { supplier.getRegNo(), labelText });
+		}
+	}
+
+	private void validateExpiredBasic(SmSupplier supplier) {
+		if (supplier.getSmMofAccount() != null && supplier.getSmMofAccount().getExpDate() != null) {
+			long days = DateUtils.getDaysDifference(supplier.getSmMofAccount().getExpDate(), new Date());
+			if (days <= 365) {
+				throw new EpException(MessageConst.ERROR_721069, new String[] {
+						SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+			} else {
+				throw new EpException(MessageConst.ERROR_721072, new String[] {
+						SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_721069, new String[] {
+					SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+		}
+	}
+
+	private String getSupplierTypeLabel(String supplierType) {
+		if (supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			return SmCommonUtil.getMessage("lbl.sm.contractor", null);
+		} else if (supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+			return SmCommonUtil.getMessage("lbl.sm.consultant", null);
+		} else {
+			return SmCommonUtil.getMessage("lbl.sm.basic", null);
+		}
+	}
+
+	// #38143 - End
+
+	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	private void checkExistingBusinessRegNoSSM(){
 			

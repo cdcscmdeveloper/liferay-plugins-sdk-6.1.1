@@ -848,7 +848,15 @@ a:hover.blue_font {
 	color: #95caee;
 	text-decoration: none;
 }
-
+/* #24333 - Start  */
+a.red_font {
+	font-family: Tahoma, Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #f2081b;
+	text-decoration: none;
+}
+/* #24333 - End  */
 .ui-datagrid-content {
 	border: 0px !important;
 }

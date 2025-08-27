@@ -254,6 +254,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	}
 	//#28765 - Start
 	public void checkingBeforeDeclare() {
+		//# 33563
+		validateRole();
 		RequestContext.getCurrentInstance().execute("declareDeletePopUp.show()");
 	}
 	//#28765 - End
@@ -750,7 +752,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		}
 		
-		listenerChangeRole();
+		listenerClickStaffRole(); // #33563
 	}
 
 	/**
@@ -758,19 +760,35 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * dialog pop up and for new personnel redirect to new personnel info page
 	 */
 	private void executeDecision() {
+
+		hideShowRoleByBusinessTypeAndSupplierType(this.getManagedBean()
+				.getSmSupplier().getSmAppl().getSupplierType(), this
+				.getManagedBean().getSmSupplier().getBusinessType());
 		// replace with new personnel
+		// #33589 - Start
 		if (!getManagedBean().isExistingUser()) {
-			RequestContext.getCurrentInstance().execute(
-					"replaceNewAdminConfirm.show()");
+			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
+					.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+				checkingBeforeDeclare();
+			} else {
+				RequestContext.getCurrentInstance().execute(
+						"replaceNewAdminConfirm.show()");
+			}
 		}
 		// replace with existing personnel
 		else {
-			setShowOrHideEmail();
-			initDefaultNewAdmin();
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",
-					null, null);
+			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
+					.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+				checkingBeforeDeclare();
+			} else {
+				setShowOrHideEmail();
+				initDefaultNewAdmin();
+				SmCommonUtil.redirectToPage(
+						"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml",
+						"", null, null);
+			}
 		}
+		// #33589 - End
 	}
 
 	/**
@@ -1672,4 +1690,407 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		return retVal;
 	}
+
+    // -> START #33563
+    public void hideShowRoleByBusinessTypeAndSupplierType(String supplierType, String businessType){
+    	switch(supplierType){
+    	case SupplierManagementConst.SUPP_TYPE_BASIC:
+    	case SupplierManagementConst.SUPP_TYPE_CONTRACTOR:
+    		switch(businessType){
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK:
+    			//director hide
+    			//high management hide
+    			//semi pro hide
+    			//pro hide
+    			this.getManagedBean().setDisplayRoleEquity(true);
+    			this.getManagedBean().setDisplayRoleDirector(false);
+    			this.getManagedBean().setDisplayRoleHighManagement(false);
+    			this.getManagedBean().setDisplayRoleManagement(true);
+    			this.getManagedBean().setDisplayRoleProfessional(false);
+    			this.getManagedBean().setDisplayRoleSemiPro(false);
+    			this.getManagedBean().setDisplayRoleClericalStaff(true);
+    			break;
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP:
+    			//semi pro hide
+    			//pro hide
+    			this.getManagedBean().setDisplayRoleEquity(true);
+    			this.getManagedBean().setDisplayRoleDirector(true);
+    			this.getManagedBean().setDisplayRoleHighManagement(true);
+    			this.getManagedBean().setDisplayRoleManagement(true);
+    			this.getManagedBean().setDisplayRoleProfessional(false);
+    			this.getManagedBean().setDisplayRoleSemiPro(false);
+    			this.getManagedBean().setDisplayRoleClericalStaff(true);
+    			break;
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2:
+    			//hide owner
+    			//semi pro hide
+    			//pro hide
+    			this.getManagedBean().setDisplayRoleEquity(false);
+    			this.getManagedBean().setDisplayRoleDirector(true);
+    			this.getManagedBean().setDisplayRoleHighManagement(true);
+    			this.getManagedBean().setDisplayRoleManagement(true);
+    			this.getManagedBean().setDisplayRoleProfessional(false);
+    			this.getManagedBean().setDisplayRoleSemiPro(false);
+    			this.getManagedBean().setDisplayRoleClericalStaff(true);
+    			break;
+    			default:
+    				//all hide
+    				this.getManagedBean().setDisplayRoleEquity(false);
+        			this.getManagedBean().setDisplayRoleDirector(false);
+        			this.getManagedBean().setDisplayRoleHighManagement(false);
+        			this.getManagedBean().setDisplayRoleManagement(false);
+        			this.getManagedBean().setDisplayRoleProfessional(false);
+        			this.getManagedBean().setDisplayRoleSemiPro(false);
+        			this.getManagedBean().setDisplayRoleClericalStaff(false);
+    				break;
+    		}
+    		break;
+    	case SupplierManagementConst.SUPP_TYPE_CONSULTANT:
+    		switch(businessType){
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY:
+    			//director hide
+    			//high management hide
+    			this.getManagedBean().setDisplayRoleEquity(true);
+    			this.getManagedBean().setDisplayRoleDirector(false);
+    			this.getManagedBean().setDisplayRoleHighManagement(false);
+    			this.getManagedBean().setDisplayRoleManagement(true);
+    			this.getManagedBean().setDisplayRoleProfessional(true);
+    			this.getManagedBean().setDisplayRoleSemiPro(true);
+    			this.getManagedBean().setDisplayRoleClericalStaff(true);
+    			break;
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD:
+    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP:
+    			//all show
+    			this.getManagedBean().setDisplayRoleEquity(true);
+    			this.getManagedBean().setDisplayRoleDirector(true);
+    			this.getManagedBean().setDisplayRoleHighManagement(true);
+    			this.getManagedBean().setDisplayRoleManagement(true);
+    			this.getManagedBean().setDisplayRoleProfessional(true);
+    			this.getManagedBean().setDisplayRoleSemiPro(true);
+    			this.getManagedBean().setDisplayRoleClericalStaff(true);
+    			break;
+    			default:
+    				this.getManagedBean().setDisplayRoleEquity(false);
+        			this.getManagedBean().setDisplayRoleDirector(false);
+        			this.getManagedBean().setDisplayRoleHighManagement(false);
+        			this.getManagedBean().setDisplayRoleManagement(false);
+        			this.getManagedBean().setDisplayRoleProfessional(false);
+        			this.getManagedBean().setDisplayRoleSemiPro(false);
+        			this.getManagedBean().setDisplayRoleClericalStaff(false);
+    				//all hide
+    				break;
+    		}
+    		break;
+    		default:
+    			//all hide
+    			this.getManagedBean().setDisplayRoleEquity(false);
+    			this.getManagedBean().setDisplayRoleDirector(false);
+    			this.getManagedBean().setDisplayRoleHighManagement(false);
+    			this.getManagedBean().setDisplayRoleManagement(false);
+    			this.getManagedBean().setDisplayRoleProfessional(false);
+    			this.getManagedBean().setDisplayRoleSemiPro(false);
+    			this.getManagedBean().setDisplayRoleClericalStaff(false);
+    			break;
+    	}
+    }
+    
+    public void listenerClickStaffRole(){
+    	resetRoleEnableDisable();
+    	
+    	SmPersonnel currentPersonnel = this.getManagedBean().getNewAdmin();
+    	SmPersonnel passPersonnel = this.getManagedBean().getOldAdmin();
+    	String supplierType = this.getManagedBean().getSmSupplier().getSmAppl().getSupplierType();
+    	String businessType = this.getManagedBean().getSmSupplier().getBusinessType();
+    	
+//    	if(currentPersonnel != null){
+    		switch(supplierType){
+        	case SupplierManagementConst.SUPP_TYPE_BASIC:
+        	case SupplierManagementConst.SUPP_TYPE_CONTRACTOR:
+	    		this.getManagedBean().setDisplayRolePanel(true);
+	    		switch(businessType){
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK:
+	    			setEnableDisableRoleOneEquityOneStaff(currentPersonnel,passPersonnel);
+	    			break;
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK:
+	    			setEnableDisableRoleStafOnly(currentPersonnel);
+	    			break;
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2:
+	    			setEnableDisableRoleStafOnly(currentPersonnel);
+	    			break;
+	    			default:
+	    				resetRoleEnableDisable();
+	    				break;
+	    		}
+	    		break;
+	    		
+        	case SupplierManagementConst.SUPP_TYPE_CONSULTANT:
+	    		this.getManagedBean().setDisplayRolePanel(true);
+        		switch(businessType){
+        		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK:
+	    			//only 1 equity owner can apply role staff
+	    			setEnableDisableRoleOneEquityOneStaff(currentPersonnel,passPersonnel);
+	    			
+	    			break;
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY:
+	    			//management and staff can't apply in one - no director & h.management
+	    			setEnableDisableRoleStafOnly(currentPersonnel);
+	    			break;
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD:
+	    		case SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP:
+	    		//management and staff can't apply in one - with director & h.management
+	    			setEnableDisableRoleStafOnly(currentPersonnel);
+	    			break;
+	    			default:
+	    				//all enable
+	    				resetRoleEnableDisable();
+	    				break;
+        		}
+        		break;
+        		
+	    		default:
+	    			//all enable
+		    		this.getManagedBean().setDisplayRolePanel(false);
+	    			resetRoleEnableDisable();
+	    			break;
+    		}
+//    	} else {
+//    		//all enable
+//    		resetRoleEnableDisable();
+//    	}
+    }
+    
+    public void resetRoleEnableDisable(){
+    	this.getManagedBean().setDisabledRoleDirector(false);
+    	this.getManagedBean().setDisabledRoleEquity(false);
+    	this.getManagedBean().setDisabledRoleHighManagement(false);
+    	this.getManagedBean().setDisabledRoleManagement(false);
+    	this.getManagedBean().setDisabledRoleProfessional(false);
+    	this.getManagedBean().setDisabledRoleSemiPro(false);
+    	this.getManagedBean().setDisabledRoleClericalStaff(false);
+    }
+    
+    public void setEnableDisableRoleStafOnly(SmPersonnel currentPersonnel){
+    	resetRoleEnableDisable();
+    	/*
+    	 * RULES
+    	 * 1. Role Management & Staff cannot be apply in one profile 
+    	 */
+		if (currentPersonnel != null) {
+			if (currentPersonnel.isDirector() || currentPersonnel.isEquityOwner()
+					|| currentPersonnel.isHigherManagement() || currentPersonnel.isManagement()
+					|| currentPersonnel.isProf()) {
+				this.getManagedBean().setDisabledRoleDirector(false);
+				this.getManagedBean().setDisabledRoleEquity(false);
+				this.getManagedBean().setDisabledRoleHighManagement(false);
+				this.getManagedBean().setDisabledRoleManagement(false);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			} else if (currentPersonnel.isSemiProf()) {
+				this.getManagedBean().setDisabledRoleDirector(true);
+				this.getManagedBean().setDisabledRoleEquity(true);
+				this.getManagedBean().setDisabledRoleHighManagement(true);
+				this.getManagedBean().setDisabledRoleManagement(true);
+				this.getManagedBean().setDisabledRoleProfessional(true);
+				this.getManagedBean().setDisabledRoleSemiPro(false);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+				this.getManagedBean().getNewAdmin().setDirector(false);
+				this.getManagedBean().getNewAdmin().setEquityOwner(false);
+				this.getManagedBean().getNewAdmin().setHigherManagement(false);
+				this.getManagedBean().getNewAdmin().setManagement(false);
+				this.getManagedBean().getNewAdmin().setProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			} else if (currentPersonnel.isClerical()) {
+				this.getManagedBean().setDisabledRoleDirector(true);
+				this.getManagedBean().setDisabledRoleEquity(true);
+				this.getManagedBean().setDisabledRoleHighManagement(true);
+				this.getManagedBean().setDisabledRoleManagement(true);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+				this.getManagedBean().getNewAdmin().setDirector(false);
+				this.getManagedBean().getNewAdmin().setEquityOwner(false);
+				this.getManagedBean().getNewAdmin().setHigherManagement(false);
+				this.getManagedBean().getNewAdmin().setManagement(false);
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+			}
+		}
+    }
+    
+    public void setEnableDisableRoleOneEquityOneStaff(SmPersonnel currentPersonnel, SmPersonnel passPersonnel){
+    	/*
+    	 * RULES
+    	 * 1. Only 1 of Equity Owner can apply role Staff
+    	 * 2. All Equity can apply role Management
+    	 * 3. Role Management & Staff cannot be apply in one profile without Equity Owner 
+    	 */
+    	resetRoleEnableDisable();
+		if (currentPersonnel != null) {
+			int count = 0;
+			for (SmPersonnel smPersonnel : this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels()) {
+				if (currentPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo()
+						|| passPersonnel.getIdentificationNo() == smPersonnel.getIdentificationNo()) {
+					continue;
+				} else {
+					if (smPersonnel.isEquityOwner() && smPersonnel.isClerical()) {
+						count++;
+					}
+				}
+			}
+
+			if (currentPersonnel.isEquityOwner()) {
+				if (count > 0) {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(false);
+					this.getManagedBean().setDisabledRoleHighManagement(false);
+					this.getManagedBean().setDisabledRoleManagement(false);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+					this.getManagedBean().getNewAdmin().setClerical(false);
+				} else {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(false);
+					this.getManagedBean().setDisabledRoleHighManagement(false);
+					this.getManagedBean().setDisabledRoleManagement(false);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+				}
+			} else if (currentPersonnel.isHigherManagement() || currentPersonnel.isManagement()) {
+				this.getManagedBean().setDisabledRoleDirector(false);
+				this.getManagedBean().setDisabledRoleEquity(false);
+				this.getManagedBean().setDisabledRoleHighManagement(false);
+				this.getManagedBean().setDisabledRoleManagement(false);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			} else if (currentPersonnel.isClerical()) {
+				if (count > 0) {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(true);
+					this.getManagedBean().setDisabledRoleHighManagement(true);
+					this.getManagedBean().setDisabledRoleManagement(true);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+					this.getManagedBean().getNewAdmin().setEquityOwner(false);
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+					this.getManagedBean().getNewAdmin().setHigherManagement(false);
+					this.getManagedBean().getNewAdmin().setManagement(false);
+				} else {
+					this.getManagedBean().setDisabledRoleDirector(false);
+					this.getManagedBean().setDisabledRoleEquity(false);
+					this.getManagedBean().setDisabledRoleHighManagement(true);
+					this.getManagedBean().setDisabledRoleManagement(true);
+					this.getManagedBean().setDisabledRoleProfessional(false);
+					this.getManagedBean().setDisabledRoleSemiPro(true);
+					this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+					this.getManagedBean().getNewAdmin().setSemiProf(false);
+					this.getManagedBean().getNewAdmin().setHigherManagement(false);
+					this.getManagedBean().getNewAdmin().setManagement(false);
+				}
+
+			} else if (currentPersonnel.isProf()) {
+				this.getManagedBean().setDisabledRoleDirector(false);
+				this.getManagedBean().setDisabledRoleEquity(false);
+				this.getManagedBean().setDisabledRoleHighManagement(false);
+				this.getManagedBean().setDisabledRoleManagement(false);
+				this.getManagedBean().setDisabledRoleProfessional(false);
+				this.getManagedBean().setDisabledRoleSemiPro(true);
+				this.getManagedBean().setDisabledRoleClericalStaff(false);
+
+				this.getManagedBean().getNewAdmin().setSemiProf(false);
+
+			} else if (currentPersonnel.isSemiProf()) {
+				this.getManagedBean().setDisabledRoleDirector(true);
+				this.getManagedBean().setDisabledRoleEquity(true);
+				this.getManagedBean().setDisabledRoleHighManagement(true);
+				this.getManagedBean().setDisabledRoleManagement(true);
+				this.getManagedBean().setDisabledRoleProfessional(true);
+				this.getManagedBean().setDisabledRoleSemiPro(false);
+				this.getManagedBean().setDisabledRoleClericalStaff(true);
+
+				this.getManagedBean().getNewAdmin().setDirector(false);
+				this.getManagedBean().getNewAdmin().setEquityOwner(false);
+				this.getManagedBean().getNewAdmin().setHigherManagement(false);
+				this.getManagedBean().getNewAdmin().setManagement(false);
+				this.getManagedBean().getNewAdmin().setProf(false);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			}
+		}
+    }
+    
+    public void validateRole(){
+    	if(this.getManagedBean().getNewAdmin() != null){
+    		switch(this.getManagedBean().getSmSupplier().getSmAppl().getSupplierType()){
+    		case SupplierManagementConst.SUPP_TYPE_BASIC:
+    		case SupplierManagementConst.SUPP_TYPE_CONSULTANT:
+    		case SupplierManagementConst.SUPP_TYPE_CONTRACTOR:
+    			if(!this.getManagedBean().getNewAdmin().isEquityOwner()
+        				&& !this.getManagedBean().getNewAdmin().isDirector()
+        				&& !this.getManagedBean().getNewAdmin().isHigherManagement()
+        				&& !this.getManagedBean().getNewAdmin().isManagement()
+        				&& !this.getManagedBean().getNewAdmin().isProf()
+        				&& !this.getManagedBean().getNewAdmin().isSemiProf()
+        				&& !this.getManagedBean().getNewAdmin().isClerical()){
+        			throw new EpException(MessageConst.ERROR_722535);
+        		}
+    		break;
+    		default:
+    			break;
+    		}
+    		
+    	}
+    }
+    // END -> #33563
 }

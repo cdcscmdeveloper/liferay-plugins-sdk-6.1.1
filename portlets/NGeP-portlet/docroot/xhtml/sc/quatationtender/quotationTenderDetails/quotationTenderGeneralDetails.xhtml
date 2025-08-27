@@ -16,6 +16,12 @@
 		value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
 	<ui:param name="qtStatusScheduleDocAndAfter"
 		value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+	<ui:remove>21692 - Start</ui:remove>
+	<ui:param name="qtStatusIsProposalValidPeriodExtApproval"
+		value="#{qTDetailBB.isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(scQt.qtStatus.statusId)}" />
+	<ui:param name="qtExtensionResponseDueDate"
+		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod)}" />
+	<ui:remove>21692 - End</ui:remove>
 	<ui:param name="zoneCoverageReadonly"
 		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_ZONE_COVERAGE)}" />
 	<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
@@ -915,8 +921,8 @@
 										style="text-align:right; width:200px;">
 										<ui:remove>9019 -end</ui:remove>
 										<p:ajax event="blur" process="@this" partialSubmit="true"
-											update="@this, @(.amendButton)"
-											listener="#{createQtBB.handleProposalValidityDate}" />
+											update="@form, @(.amendButton)"
+											listener="#{createQtBB.handleProposalValidityDate}" /><ui:remove>21692 update field this to form</ui:remove>
 									</p:inputMask></td>
 								<td><p:message id="proposalvalidityMsg"
 										for="proposalvalidity" display="icon" /></td>
@@ -926,6 +932,53 @@
 						</table>
 					</td>
 				</tr>
+				<ui:remove>21692 - Start</ui:remove>
+				<ui:fragment id="responsePeriodId" rendered="#{qtStatusIsProposalValidPeriodExtApproval and (createQtBB.managedBean.isProposalValidityChangeValue()
+					or isReadOnly)}">
+				<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.accept.response.period']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td>
+							<table>
+								<tr>
+									<td>
+									<p:inputMask id="responsePeriod" mask="9?9999"
+										maxlength="3" placeHolder=""
+										label="#{lbl['lbl.sc.qt.response.period']}" required="#{empty param['skipvalidation']}"
+										value="#{scQt.responsePeriod}"
+										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
+										style="text-align:right; width:200px;">
+<!-- 										<p:ajax event="blur" process="@this" partialSubmit="true" -->
+<!-- 											update="@this, @(.amendButton)" -->
+<!-- 											listener="#{createQtBB.handleProposalValidityDate}" /> -->
+									</p:inputMask></td>
+									<td><p:message id="responsePeriodMsg"
+										for="responsePeriod" display="icon" /></td>
+									<td colspan="2">
+										<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
+						</td>
+						<td>
+						<c:if test="#{qtExtensionResponseDueDate != null}">
+							<p:inputText value="#{qtExtensionResponseDueDate}" style="width:200px;" disabled="true" >
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+							</p:inputText>
+						</c:if>
+						<c:if test="#{qtExtensionResponseDueDate == null}">
+							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
+							</p:inputText>
+						</c:if>
+						</td>
+					</tr>
+				</ui:fragment>
+				<ui:remove>21692 - End</ui:remove>
 			</c:if>
 			<tr>
 				<td style="width: 100%;"><p:outputLabel
@@ -1020,22 +1073,6 @@
 									</p:inputTextarea>
 									<p:message id="title2Msg_1" for="justificationProcValueId_1" display="icon" />
 								</c:when>
-								<ui:remove><!-- #36678 related to #35061 Start(to enable field at spec preparation if user change below 50k)-->
-										   <!-- #36678 add disable estimated amount if has null value for first time enter -->
-								</ui:remove>
-								<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING}">
-								<p:inputTextarea id="justificationProcValueId_1"
-										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="#{not empty param['skipsubmitvalidation']}"
-										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" 
-										disabled="#{isReadOnly and scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or scQt.estimatedAmount eq null}" 
-										cols="110" rows="3"
-										onkeyup="limitTextArea(this,100);"
-										onkeydown="limitTextArea(this,100);"
-										onmouseout="limitTextArea(this,100);">
-										<f:ajax></f:ajax>
-								</p:inputTextarea>
-								</c:when>
-								<ui:remove> <!-- #36678 related to #35061 End--> </ui:remove> 
 								<c:otherwise>
 									<p:inputTextarea id="justificationProcValueId_2"
 										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 

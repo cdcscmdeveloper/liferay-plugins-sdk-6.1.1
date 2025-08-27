@@ -1133,43 +1133,20 @@ public class SPDetailBackingBean extends
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
-		// #21695 - Start - fix completed financial proposal still ticked after
-		// technical proposal updated
-		ScQtProposalChecklist completedFinSpec = null;
-		for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equals(finProposalChecklist
-					.getScQtCheckList().getDefinationType().getParameterCode())
-					&& finProposalChecklist.isSubmitted() && !finProposalChecklist.equals(scQtProposalChecklist)) {
-				completedFinSpec = finProposalChecklist;
-				break;
-			}
-		}
+		// #21695 - Start - fix completed financial proposal still ticked after technical proposal updated
 		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
 			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
 				if (finProposalChecklist.getScQtCheckList().getTitle()
 						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
 						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
-						&& null != completedFinSpec) {
-					// #34726 start - flag to define process from technical,
-					// save technical spec proposal is sending
-					// financialproposalchecklist(preparefinancialaction)
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
 					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
-					// #34726 start
-					prepareFinancialAction(finProposalChecklist);
-					saveFinancialSpecificationAction(false, true);
-					// #34726 start
-					// need to setback to false, because at financial proposal
-					// prepare button is trigger prepare financialaction
-					// this flag is needed in prepareFinancialAction during save technical proposal spec or click prepare at financial proposal
-					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(false);
-					// #34726 end
+					finProposalChecklist.setSubmitted(false);
 					break;
 				}
 			}
 		}
-		// #21695 - End - fix completed financial proposal still ticked after
-		// technical proposal updated
+
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
@@ -1358,13 +1335,11 @@ public class SPDetailBackingBean extends
 									answers.add(specAnswer);
 								
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
-												.getProcurementMode().getParameterCode())) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
-												.getProcurementMode().getParameterCode())) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
@@ -1460,7 +1435,8 @@ public class SPDetailBackingBean extends
             		super.setUserDetails(answer);
             	}
             }
-            if(!this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){
+            //#21695 check null
+            if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){ //#21695
             	TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
     			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
     					.getTplSpecQuestion().getClPriceTypeCode()
@@ -6018,9 +5994,19 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		}
 	}
 
-	//#25089@hatta - start
-	public void onTabChange(TabChangeEvent event){
-		if(event.getTab().getId().equals("tab1")){
+	// #25089@hatta - start
+	public void onTabChange(TabChangeEvent event) {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+
+		if (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId())) {
+			return;
+		}
+		// #38852 End 12/08/2025 Vinod
+
+		if (event.getTab().getId().equals("tab1")) {
 			try {
 				Thread.sleep(500);
 				RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
@@ -6029,12 +6015,22 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			}
 		}
 	}
-		
-	public void dafaultPopUpSupplierInfo(){
-	   RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+
+	public void dafaultPopUpSupplierInfo() {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+
+		if (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId())) {
+			return;
+		}
+		// #38852 End 12/08/2025 Vinod
+
+		RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
 	}
-	//#25089@hatta - end
-		
+	// #25089@hatta - end
+
 	//#28792-start			
 	private void validateFinacialProposalAttachments(boolean validationSuspend){
 		

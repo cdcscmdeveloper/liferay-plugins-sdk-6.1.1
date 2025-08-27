@@ -37,6 +37,12 @@ public interface QTConstants {
 	// #9019 -start-
 	public static final String QT_SEARCHING_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml?faces-redirect=true";
 	// #9019 -end-
+	//#21692 - Start
+	public static final String MAINT_EPV_APPROVAL_DETAIL = "/xhtml/sc/quatationtender/Approver/maintenanceApprovalEpv.xhtml";
+	public static final String EXTEND_PROPOSAL_VALIDITY_SUPPLIER_ACCEPTANCE = "/xhtml/sc/quatationtender/Approver/supplierAccepetance.xhtml";
+	public static final String EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL = "/xhtml/sc/quatationtender/Approver/applProposalValidPeriodExtension.xhtml";
+	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";
+	//#21692 - End
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";
@@ -304,6 +310,13 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648 #35227@Syazani 20/10/2022
 	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
 
+	//#21692 - Start
+	//QT Bpm Composite Version Validity ID
+	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
+	public static final String PORTLET_NAME_QT_LOI_REVIEW = "scLoiReview_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_LOA_REVIEW = "scLoaReview_WAR_NGePportlet";
+	//#21692 - End
+
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
 	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
@@ -370,6 +383,18 @@ public interface QTConstants {
 	public static final Long COMPOSITE_VALIDITY_ID_QT=29007L;
 	public static final Long COMPOSITE_VALIDITY_ID_DP=29006L;
 	// #29007 End Vinod
+	// #29187 Start Vinod
+	public static final String LBL_TXT_SELECT = "lbl.txt.select";
+	public static final String LBL_TXT_YES = "lbl.txt.yes";
+	public static final String LBL_TXT_NO = "lbl.txt.no";
+	public static final String COMPLIANCE_CONFIRMATION_POPUP = "complianceConfirmPopUp.show()";
+	public static final String COMPLIANCE_SAMPLE_CONFIRMATION_POPUP = "complianceSampleConfirmPopUp.show()";
+	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
+	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
+	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
+	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
+	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
+	// #29187 End Vinod
 
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR"; // #28784
 	//#11104 -start-
@@ -395,14 +420,30 @@ public interface QTConstants {
 	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
-	
-	//36678
-	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
-	
-		
+
+	// 25791 -start-
+	public static final String QT_MAINTENANCE_BIDDING_MANAGEMENT_VIEW = "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";
+	public static final String QT_CT_LOA_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewQTCTLOADetails.xhtml";
+	public static final String LOA_CT_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewLOAContractList.xhtml";
+	public static final int TAB_MAIN_INDEX = 0;
+	public static final String CONTRACT_PAGE_DETAILS_VIEW = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";
+	public static final String DATATABLE_QT_DL_LOA_CT_COMPONENT_ID = "ctLoaId";
+	public static final String DATATABLE_LOA_CT_COMPONENT_ID = "loaCTDetail";
+	public static final String CONTRACT_STATUS_EFFECTIVE = "lbl.ct.effective";
+	public static final String CONTRACT_STATUS_INACTIVE = "lbl.ct.inactive";
+	public static final String CONTRACT_STATUS_EXPIRED = "lbl.ct.expired";
+	public static final String CONTRACT_STATUS_TERMINATED = "lbl.ct.terminated";
+	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
+	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
+	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
+	public static final String QT_SEARCH_BID_SCHEDULE_ID = "searchQTBidSchedules";
+	public static final String QT_SEARCH_DETAILS_ID = "searchQTs";
+	public static final String QT_SEARCH_LOI_LOA_DETAILS_ID = "searchQTLoaLois";
+	// 25791-End
+
 	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
 	
-	//#29732 -Start
+	//#29732 -StartR
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2_A = "lbl.sc.category.has.changes.on.prerender.view.2.a";

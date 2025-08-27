@@ -82,6 +82,14 @@
 					</p:commandButton>
 				</h:panelGroup>
 			</p:column>
+			<ui:remove>#29187 Start Vinod</ui:remove>
+			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" rendered="#{templateSpecBackingBean.displayMandatorySpecColumn(templateSpecBean)}">
+				<h:panelGroup rendered="#{!isSpecTypeFinancial}">
+					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec ? lbl['lbl.txt.yes']:''}" rendered="#{!isQuestionTypeItem}"/>
+					<ac:iconTooltip rendered="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec and !isQuestionTypeItem}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.instruction']}" />
+				</h:panelGroup>
+			</p:column>
+			<ui:remove>#29187 End Vinod</ui:remove>
 			<!-- 11715 danial -start- -->
 			<!-- #31134 Farid Start 25/6/2021-->
 			<p:column style="width:5%;text-align:right;"

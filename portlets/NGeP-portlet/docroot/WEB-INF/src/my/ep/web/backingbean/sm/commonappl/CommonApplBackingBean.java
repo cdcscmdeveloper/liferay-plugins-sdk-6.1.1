@@ -34,9 +34,7 @@ import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
@@ -612,8 +610,7 @@ public class CommonApplBackingBean extends
 			}			
 			//27641,27736 : Disciplinary Action - 26238 - end
 			setNavigationForDraftAppl(appl.getApplType());
-			// }
-
+			SmApplicationUtil.checkAndRedirectIfInvalid(appl);//#37784
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT)) {
 			//log.info(" ******* The selected process name is  Draft Maintain Account******"
@@ -732,6 +729,8 @@ public class CommonApplBackingBean extends
 						srcObj.getSupplierList());
 			}*/
 			smApplBB.getManagedBean().setPayLoad(srcObj);
+			smApplBB.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo()); //#38195
+			
 			SmRemaksResDTO remResDTO = getRemarksByDoc(
 					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
 					appl.getApplId());

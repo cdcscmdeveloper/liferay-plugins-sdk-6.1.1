@@ -12,6 +12,12 @@ public class ScheduleInfo {
 	private String crNoStatus;
 	private String coNo;
 	private String coNoStatus;
+	
+	//38255-Start
+	public ScheduleInfo() {
+        // Default constructor logic
+    }
+	//38255-End
 
 	public ScheduleInfo(String schNo, String crNo, String crNoStatus, String coNo, String coNoStatus) {
 		super();

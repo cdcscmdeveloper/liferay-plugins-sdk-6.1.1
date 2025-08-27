@@ -13,10 +13,12 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.MapKeyEnum;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
@@ -514,4 +516,76 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// #17376 #19287 #19336 #25201 - end
+	
+	//#21692 - Start
+	/**
+	 * Check If Supplier EPV Status Is Rejected
+	 * 
+	 * @return
+	 */
+	public void isSupplierEPVStatusRejected(ScLoa scLoa) {
+		boolean supplierStatus = false;
+
+		// all status stated in FRS for 21692
+		List<Long> statusEnabledCancel = new ArrayList<>();
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_APPROVAL);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
+		getManagedBean().setAbleToSubmitLOA(true);
+		if (null != scLoa.getScLoiLoa()
+				&& !scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+
+			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+
+			// Only one supplier, LOA's supplier
+			List<Long> suppList = new ArrayList<>();
+			suppList.add(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
+
+			// will return true if the supplier reject EPV
+			supplierStatus = detailSO.checkSupplierEPVStatus(scLoa.getScQt().getQtId(), suppList);
+
+			// check the validity of BPM version, if version is equal/higher will enable button
+			boolean isValidFor21692 = this.validateSupportedTask(scLoa.getScQt().getQtNo(),
+					QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+			
+			// will hide submit LOA button if supplier reject EPV (prerendered == false)
+			getManagedBean().setAbleToSubmitLOA(!supplierStatus);
+			
+			supplierStatus = supplierStatus && isLoaListPortlet() ? true : false;
+			
+			// cancel button during Pending LOA Submission only
+			getManagedBean().setAbleToCancelLOAWithoutBPM(
+					supplierStatus
+							&& new LOADetailBackingBean().isLOAStatusAbleToCancel().equals(
+									QTStatusConst.LOA_PENDING_SUBMISSION));
+
+			if (!isValidFor21692) {
+				// WIP - cancel button will show/hide based on this (prerendered false/true)
+				getManagedBean().setAbleToCancelWIP(
+						supplierStatus
+								&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));
+				supplierStatus = false;
+			}
+		}
+		
+		// cancel button will show/hide based on this (prerendered false/true)
+		getManagedBean().setAbleToCancelLOA(
+				supplierStatus
+						&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isLoaListPortlet() {
+		return QTConstants.PORTLET_NAME_QT_LIST.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_LOA_REVIEW.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	public void renderEPVButtonForDP() {
+		getManagedBean().setAbleToSubmitLOA(true);
+	}
+	//#21692 - End
 }

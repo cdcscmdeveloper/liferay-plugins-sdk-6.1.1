@@ -77,7 +77,9 @@
 					value="#{evaFinSupplier.totalUserScore}" required="true"
 					disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 					or evaluationBackingBean.managedBean.tabItemPackageIndex eq '2'
-					or isRejected}"><ui:remove>6906</ui:remove>
+					or isRejected
+					or (evaFinSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or evaFinSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"><ui:remove>6906 21692</ui:remove>
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 						maxIntegerDigits="14" integerOnly="true" />

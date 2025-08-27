@@ -83,6 +83,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -330,7 +331,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	protected void populateAttachmentDetails(ScAttachment attachment)
 			throws FileNotFoundException, IOException {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		PmUser createdUser = new FacesScopes().getUserSessionBean();
+		//#21692 - Start
+		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
+		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
+		//#21692 - End
 
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		if (attachment.getAttachmentId() == null
@@ -4656,38 +4660,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 	// #25729 #142 Start - Allow create QT below threshold RM20k
 	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
-
 		BigDecimal actualIntendedPrice = new BigDecimal(0);
 
-		// 36678 add condition status id related to 35061 -start-
-		if ("createQt".equals(ScreenType)
-				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+		if ("createQt".equals(ScreenType)) {
 			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-
 		} else {
-			actualIntendedPrice = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : new BigDecimal(0);
-			// 36678 related to 35061 -end-
+			actualIntendedPrice = scQt.getEstimatedAmount();
 		}
 
 		if (!scQt.isPanel() && actualIntendedPrice != null) {
 			// #25729 #174
-			// BugBug #35061 - asyrafhaziq
+			// Bug #35061 - asyrafhaziq
 			// get total indicative price threshold validation value
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
 
-			if ((actualIntendedPrice.compareTo(indPriceThreshold) <= 0))
-
-			{
+			if ((actualIntendedPrice.compareTo(indPriceThreshold) <= 0)) {
+				// Bug #35061 -end-
 				return Boolean.TRUE;
 			}
 		}
-
-		// #36678 set null if user change above 50k. related to #35061,#37899
-		if (scQt.getJustificationProcValue() != null && scQt.getQtStatus() != null
-				&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
-			scQt.setJustificationProcValue(null);
-		}
-		// #36678, #35061, #37899 -end-
 
 		return Boolean.FALSE;
 	}
@@ -4961,7 +4952,59 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		// No need to explicitly close the stream; it's done automatically
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End	
-    
+
+	// 25791-start
+	/**
+	 * The method used to retrieve the contract status of the contract.
+	 * 
+	 * @param contractStatus
+	 * @return Effective, Terminated, Expired, Inactive
+	 */
+	public String getContractStatusDesc(int contractStatus) {
+		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EFFECTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INACTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EXPIRED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_TERMINATED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			return "";
+		}
+	}
+	// 25791 -end-
+
+	// 25791 -start-
+	/**
+	 * The method used to retrieve the status completion of the contract.
+	 * 
+	 * @param contractNo
+	 * @param status
+	 * @return complete or incomplete
+	 */
+	public String chkContractStatusType(String contractNo, int status) {
+		if (StringUtils.isNotEmpty(contractNo) && StringUtils.isNotBlank(contractNo)) {
+			if (status == ContractConst.STATUS_COMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_COMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_INCOMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INCOMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_NOT_APPLICABLE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_NOT_APPLICABLE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			}
+		}
+
+		return "";
+	}
+	// 25791-End
+
 	// #26226 - Start
 	/**
 	 * @param context
