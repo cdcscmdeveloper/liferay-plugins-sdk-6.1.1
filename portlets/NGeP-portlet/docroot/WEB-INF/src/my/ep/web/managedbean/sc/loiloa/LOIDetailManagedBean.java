@@ -438,9 +438,12 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<ScQtRecommend> disqualifiedRecommendList;
 	// #28777 & #29729 - End
 
-	private boolean ableToCancelLOI;//#36339, #21692
-	private boolean ableToCancelLOIWithoutBPM;//#21692
-	private boolean ableToSubmitLOI;//#21692
+	//#21692 - Start
+	private boolean ableToCancelLOI;
+	private boolean ableToCancelLOIWithoutBPM;
+	private boolean ableToSubmitLOI;
+	private boolean ableToCancelWIP;
+	//#21692 - End
 
 	private List<WeightageScoreBean> weightageScoreBeans;//#38151	
 	private Long overallTechnicalRecommendationPercent;//#38151
@@ -2529,6 +2532,18 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	//#21692 - Start
 	public void setAbleToSubmitLOI(boolean ableToSubmitLOI) {
 		this.ableToSubmitLOI = ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelWIP() {
+		return ableToCancelWIP;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelWIP(boolean ableToCancelWIP) {
+		this.ableToCancelWIP = ableToCancelWIP;
 	}
 	//#21692 - End
 	

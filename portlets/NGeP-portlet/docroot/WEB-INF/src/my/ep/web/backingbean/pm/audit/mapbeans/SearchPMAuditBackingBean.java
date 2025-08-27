@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -30,6 +29,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
+ * #35509
+ * 
  * @author normuliana
  * 
  */
@@ -146,7 +147,6 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 		getManagedBean().setLocationDetailType(locationType);
 		getManagedBean().getSearchBean().setPmParameterLvlId(pmParameterLvlId);
 		log.info("pmParameterLvlId.intValue() :::::  " + pmParameterLvlId.intValue());
-		getManagedBean().getSearchBean().setRoleCode(roleCode);
 		getManagedBean().getSearchBean().setCreatedBy(createBy.toString());
 		return NAV_TO_MAINTAIN;
 	}
@@ -165,7 +165,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	 * search Master Location
 	 * 
 	 */
-	private class SearchMasterPagingDataModel extends PagingDataModel<VAuditPMDTO> implements Serializable {
+	private class SearchMasterPagingDataModel extends PagingDataModel<VAuditPMDTO> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -213,8 +213,8 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 					auditPMReqDTO.setpLvl1Code(lSearchBean.getSystemConfigParamLevel1OldVal());
 					auditPMReqDTO.setpLvl2Code(lSearchBean.getCategoryConfigParamLevel2OldVal());
 					auditPMReqDTO.setpLvl3Code(lSearchBean.getItemConfigParamLevel3OldVal());
-					auditPMReqDTO.setpItemCode(lSearchBean.getItemCode());
-					auditPMReqDTO.setpItemName(lSearchBean.getItemName());
+					auditPMReqDTO.setpItemCode(lSearchBean.getItemCodeOldVal());
+					auditPMReqDTO.setpItemName(lSearchBean.getItemNameOldVal());
 					auditPMReqDTO.setpRoleCode(lSearchBean.getRoleCodeOldVal());
 					auditPMReqDTO.setPdateFrom(lSearchBean.getDateFromOldVal());
 					auditPMReqDTO.setPdateTo(lSearchBean.getDateToOldVal());
@@ -235,8 +235,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "FirstUIViewMaster Pm Audit", "",
-						"auditPMSO",
-						new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
+						"auditPMSO", new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
 			}
 			return null;
 		}
@@ -246,7 +245,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	 * search Details Location
 	 * 
 	 */
-	private class SearchDetailPagingDataModel extends PagingDataModel<VAuditPMDTO> implements Serializable {
+	private class SearchDetailPagingDataModel extends PagingDataModel<VAuditPMDTO> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -302,8 +301,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "FirstUIViewDetail PM Audit", "",
-						"auditPMSO",
-						new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
+						"auditPMSO", new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
 			}
 			return null;
 		}
@@ -366,7 +364,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 		IAuditPMSO auditPMSO;
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
-		return auditPMSO.getDropdownRoleList(languageCode);
+		return auditPMSO.getDropdownRoleList(languageCode, "null");
 	}
 
 	/**
@@ -374,14 +372,14 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	 */
 	public void changeType() {
 		log.info("changeLocationType!!!");
-		getManagedBean().getSearchBean().setCategoryConfigParamLevel2(null);
-		getManagedBean().getSearchBean().setItemConfigParamLevel3(null);
-		getManagedBean().getSearchBean().setItemCode(null);
-		getManagedBean().getSearchBean().setItemName(null);
-		getManagedBean().getSearchBean().setDateTo(null);
-		getManagedBean().getSearchBean().setDateFrom(null);
-		getManagedBean().getSearchBean().setRoleCode(null);
-		getManagedBean().getSearchBean().setPmUser(null);
+		this.getManagedBean().getSearchBean().setCategoryConfigParamLevel2(null);
+		this.getManagedBean().getSearchBean().setItemConfigParamLevel3(null);
+		this.getManagedBean().getSearchBean().setItemCode(null);
+		this.getManagedBean().getSearchBean().setItemName(null);
+		this.getManagedBean().getSearchBean().setDateTo(null);
+		this.getManagedBean().getSearchBean().setDateFrom(null);
+		this.getManagedBean().getSearchBean().setRoleCode(null);
+		this.getManagedBean().getSearchBean().setPmUser(null);
 	}
 
 	/**
@@ -397,11 +395,18 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	 */
 	public void resetSearchBean() {
 		log.info("resetLocationSearchBean");
-		getManagedBean().setLazy(false);
+		changeType();
 		AuditPMSearchBean searchBean = new AuditPMSearchBean();
 		this.getManagedBean().setSearchBean(searchBean);
-		searchMaster = new SearchMasterPagingDataModel();
 		getManagedBean().setSelectedType(null);
+		getManagedBean().setLazy(false);
+		getSearchMaster().resetData();
+		searchMaster = new SearchMasterPagingDataModel();
+
+		log.info("ItemCode after reset: " + getManagedBean().getSearchBean().getItemCode());
+		log.info("ItemName after reset: " + getManagedBean().getSearchBean().getItemName());
+		log.info("RoleCode after reset: " + getManagedBean().getSearchBean().getRoleCode());
+
 	}
 
 	public IPagingDataModel<VAuditPMDTO> getSearchMaster() {
@@ -410,18 +415,6 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 
 	public void setSearchMaster(IPagingDataModel<VAuditPMDTO> searchMaster) {
 		this.searchMaster = searchMaster;
-	}
-
-	/**
-	 * resetLocationDetailSearchBean()
-	 */
-	public void resetLocationDetailSearchBean() {
-		log.info("resetLocationDetailSearchBean");
-		getManagedBean().setLazy(false);
-		AuditPMSearchBean searchBean = new AuditPMSearchBean();
-		this.getManagedBean().setSearchBean(searchBean);
-		searchDetail = new SearchDetailPagingDataModel();
-		getManagedBean().setSelectedType(null);
 	}
 
 	public IPagingDataModel<VAuditPMDTO> getSearchDetail() {

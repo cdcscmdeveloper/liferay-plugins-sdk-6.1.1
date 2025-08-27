@@ -202,11 +202,9 @@
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="sharePerson" rows="10">
 				<ac:paginator for="sharePerson" />
-				<p:column headerText="#{lbl['lbl.sc.spec.personal.name']}"
-					style="width : 20%;">	
-					<!-- #30447 start -->				
-					<h:outputText style="float : left" value="#{sharePerson.title.salutationName.concat(' ').concat(sharePerson.name)}"></h:outputText>
-					<!-- #30447 end -->
+	            <p:column headerText="#{lbl['lbl.sc.spec.personal.name']}"
+					style="width : 20%;">
+					<h:outputText style="float : left" value="#{sharePerson.name}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.identification.no']}"
 					style="width : 15%;">

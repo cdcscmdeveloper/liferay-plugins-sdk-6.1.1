@@ -300,6 +300,18 @@ public class SupplierDataMaintenanceBackingBean extends
 				|| (getManagedBean().getSmAppl().getPmStatus() != null && (statusId.equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED)
 				|| statusId.equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED)))) {//29943: Disciplinary Action - 26238
 			List<Object[]> applList = SmApplicationUtil.getActiveApplList(getManagedBean().getSmSupplier());		
+
+			//38697 - START
+			if (applList != null) {
+				for (Object[] appl : applList) {
+					if(appl[3] != null){
+						appl[2] = appl[3];
+						break;
+					}
+				}
+			}
+			//38697 - END
+			
 			getManagedBean().setActiveApplList(applList);
 		}
 		//27437 : Disciplinary Action - start
@@ -599,7 +611,9 @@ public class SupplierDataMaintenanceBackingBean extends
 
 			// set registration status and expiry date
 			reqDTO.setOldRegStatus(getManagedBean().getExistingRegStatus());
-			reqDTO.setOldRegStatusId(getManagedBean().getOldRegStatusId());
+			//#38856 - START
+			reqDTO.setOldRegStatusId(getManagedBean().getCurrRegStatusId());
+			//#38856 - END
 			reqDTO.setOldMofExpiryDate(getManagedBean().getExistingMofExpiryDate());
 			
 			// set active status for newly added category
@@ -620,7 +634,9 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
 			reqDTO.setRemarkOverlappedId(getManagedBean().getRemarkOverlappedId());	
-			
+			//#38592 - START
+			reqDTO.setEditDisciplinaryAction(getManagedBean().isEditDisciplinaryAction());
+			//#38592 - END
 			//#26238
 			if (getManagedBean().isEditDisciplinaryAction()) {
 				listSmTrackingDiary.add(setDisciplinaryAction(reqDTO, activeAppl)); 
@@ -1204,13 +1220,14 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void showConfirmDialog() {
 		//27460 : Disciplinary Action, //32827
 		validateUpdateDisciplinaryAction(getManagedBean().getDisciplineVO().getSmDiscplinaryAction());
+		validateCancelManufacturer();	//38742
 		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null){
 			boolean cancelCategory = getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel();
 			if(cancelCategory && !getManagedBean().isCancelCategoryCodeExist()
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
 			}
-			validateCancelManufacturer();
+			
 			//#28147 - start - #28494
 			if (getManagedBean().isBlacklistOwnerOrDirector() 
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedOwnerAndDirectorList())) {
@@ -1616,7 +1633,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
 			for(SmSupplierCategory cat: getManagedBean().getApprovedCategoryList()){
 				cat.setSelected(false);
-				cat.setSelectable(true);
+				cat.setSelectable(!cat.isSuspendCategory());	//#38391
 			}
 			//28494
 			getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
@@ -1871,12 +1888,17 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		//#26238 - 38417
 		SmSupplier supplier = getManagedBean().getSmSupplier();
+		//#38609 - start
+		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isSuspendRegistration();
 		boolean hasPending = supplier.isPendingBlacklist() || supplier.isPendingCancel()
 				|| supplier.isPendingSuspend();
-		if (!hasPending && StringUtils.isNotEmpty(mofStatus) 
-				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)){
+		if (!hasPending && StringUtils.isNotEmpty(mofStatus)
+				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)) {
+			getManagedBean().setAllowedToDoMaintenance(false);
+		} else if (mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA) {
 			getManagedBean().setAllowedToDoMaintenance(false);
 		}
+		//#38609 - end
 	}
 
 	/**
@@ -2897,19 +2919,35 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 	
 	//32618 - Start, 38391
+	private void unSelectSuspendCategories(){
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
+			return;
+		}
+		List<SmSupplierCategory> selectList = new ArrayList<>();
+		for (SmSupplierCategory cat : getManagedBean().getSelectedApprovedCategories()){
+			cat.setSelectable(!cat.isSuspendCategory());
+			if (!cat.isSuspendCategory()){
+				selectList.add(cat);
+			}
+		}
+		getManagedBean().setSelectedApprovedCategories(selectList);
+	}
 	//#26238
 	/**
 	 * Removed selected cancel bumi categories from the list.
 	 *  Mandatory auto-tick 100% bumi, disable non-bumi, enable 51% bumi for selection
 	 */
 	public void unSelectCancelBumiCategories() {
+		unSelectSuspendCategories();
 		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
-				|| getManagedBean().getSelectedPendingApprovedCategories() == null
 				|| !getManagedBean().isEditDisciplinaryActionCheckBox()){
 			return;
 		}
 		List<SmSupplierCategory> selectList = new ArrayList<>();
 		List<SmSupplierCategory> prevSelect = getManagedBean().getSelectedApprovedCategories();
+		if (prevSelect == null){
+			prevSelect = new ArrayList<SmSupplierCategory>();
+		}
 		Iterator<SmSupplierCategory> it = getManagedBean().getApprovedCategoryList().iterator();
 		while (it.hasNext()) {
 			SmSupplierCategory cat = it.next();
@@ -3114,6 +3152,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		for (SmRvSuppDoc suppDoc : this.getManagedBean().getSmRevisit().getSmRvSuppDocs()) {
 			validateRvSuppDoc(suppDoc);
+		}
+		if (null == this.getManagedBean().getSmRevisit().getRevisitRemark() || this.getManagedBean().getSmRevisit().getRevisitRemark().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_723104);
 		}
 	}
 

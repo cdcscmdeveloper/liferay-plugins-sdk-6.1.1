@@ -1941,9 +1941,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean auditViewRole;
 	//#28895 - 35500 end
 	
-	public boolean isFieldProcurementJustification = false; //#36678 related to #35061
-
-	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12366,21 +12363,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.auditViewRole = auditViewRole;
 	}
 	//#28895 - 35500 end
-	
-	/** #36678 related to #35061
-	 * 
-	 * @return
-	 */
-	public boolean isFieldProcurementJustification() {
-		return isFieldProcurementJustification;
-	}
-
-	/** #36678 related to #35061
-	 * @param
-	 */
-	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
-		this.isFieldProcurementJustification = isFieldProcurementJustification;
-	}
 	
 	//37813,35384 -start
 	/**
