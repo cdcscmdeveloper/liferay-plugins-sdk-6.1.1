@@ -245,25 +245,37 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? pnpCheck(managedBeans.getOldAuditPmUserOrg().isPMP()) : "";
 				newValue = managedBeans.getNewAuditPmUserOrg() != null ? pnpCheck(managedBeans.getNewAuditPmUserOrg().isPMP()) : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_GRADE_FIELDLABELID)) {
-				oldValue = EntityHelper.getStringNestedProperty(managedBeans, "oldAuditPmUserOrg.grade");
-				newValue = EntityHelper.getStringNestedProperty(managedBeans, "newAuditPmUserOrg.grade");
+				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
+						managedBeans.getOldAuditPmUserOrg().getGrade() != null ? managedBeans.getOldAuditPmUserOrg().getGrade() : "";
+				newValue = managedBeans.getNewAuditPmUserOrg() != null &&
+						managedBeans.getNewAuditPmUserOrg().getGrade() != null ? managedBeans.getNewAuditPmUserOrg().getGrade() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_EMAIL_FIELDLABELID)) {
-				oldValue = EntityHelper.getStringNestedProperty(managedBeans, "oldAuditPmUserOrg.email");
-				newValue = EntityHelper.getStringNestedProperty(managedBeans, "newAuditPmUserOrg.email");
+				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
+						managedBeans.getOldAuditPmUserOrg().getEmail() != null ? managedBeans.getOldAuditPmUserOrg().getEmail() : "";
+				newValue = managedBeans.getNewAuditPmUserOrg() != null && 
+						managedBeans.getNewAuditPmUserOrg().getEmail() != null ? managedBeans.getNewAuditPmUserOrg().getEmail() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_TEL_FIELDLABELID)) {
-				oldValue = EntityHelper.getStringNestedProperty(managedBeans, "oldAuditPmUserOrg.phoneCountry") + 
-						EntityHelper.getStringNestedProperty(managedBeans, "oldAuditPmUserOrg.phoneArea") +
-						EntityHelper.getStringNestedProperty(managedBeans, "oldAuditPmUserOrg.phoneNo");
-				newValue = EntityHelper.getStringNestedProperty(managedBeans, "newAuditPmUserOrg.phoneCountry") + 
-						EntityHelper.getStringNestedProperty(managedBeans, "newAuditPmUserOrg.phoneArea") +
-						EntityHelper.getStringNestedProperty(managedBeans, "newAuditPmUserOrg.phoneNo");
+				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
+						managedBeans.getOldAuditPmUserOrg().getPhoneNo() != null ? 
+								managedBeans.getOldAuditPmUserOrg().getPhoneCountry() + 
+								managedBeans.getOldAuditPmUserOrg().getPhoneArea() + 
+								managedBeans.getOldAuditPmUserOrg().getPhoneNo() : "";
+				newValue = managedBeans.getNewAuditPmUserOrg() != null &&
+						managedBeans.getNewAuditPmUserOrg().getPhoneNo() != null ? 
+								managedBeans.getNewAuditPmUserOrg().getPhoneCountry() +
+								managedBeans.getNewAuditPmUserOrg().getPhoneArea() +
+								managedBeans.getNewAuditPmUserOrg().getPhoneNo() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_MOBILE_FIELDLABELID)) {
-				oldValue = EntityHelper.getStringNestedProperty(managedBeans, "oldAuditPmUserOrg.mobileCountry") + 
-						EntityHelper.getStringNestedProperty(managedBeans, "oldAuditPmUserOrg.mobileArea") +
-						EntityHelper.getStringNestedProperty(managedBeans, "oldAuditPmUserOrg.mobileNo");
-				newValue = EntityHelper.getStringNestedProperty(managedBeans, "newAuditPmUserOrg.mobileCountry") + 
-						EntityHelper.getStringNestedProperty(managedBeans, "newAuditPmUserOrg.mobileArea") +
-						EntityHelper.getStringNestedProperty(managedBeans, "newAuditPmUserOrg.mobileNo");
+				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
+						managedBeans.getOldAuditPmUserOrg().getMobileNo() != null ? 
+								managedBeans.getOldAuditPmUserOrg().getMobileCountry() +
+								managedBeans.getOldAuditPmUserOrg().getMobileArea() +
+								managedBeans.getOldAuditPmUserOrg().getMobileNo() : "";
+				newValue = managedBeans.getNewAuditPmUserOrg() != null &&
+						managedBeans.getNewAuditPmUserOrg().getMobileNo() != null ? 
+								managedBeans.getNewAuditPmUserOrg().getMobileCountry() +
+								managedBeans.getNewAuditPmUserOrg().getMobileArea() +
+								managedBeans.getNewAuditPmUserOrg().getMobileNo() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_STATUS_USER_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? statusCheck(managedBeans.getOldAuditPmUserOrg().getRecordStatusFlg()) : "";
 				newValue = managedBeans.getNewAuditPmUserOrg() != null ? statusCheck(managedBeans.getNewAuditPmUserOrg().getRecordStatusFlg()) : "";
