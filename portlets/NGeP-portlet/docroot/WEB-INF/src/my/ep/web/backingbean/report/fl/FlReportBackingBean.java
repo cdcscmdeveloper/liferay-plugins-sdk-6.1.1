@@ -815,7 +815,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	
 	//#29554 start 	
 	/**
-	 * generate report in excel
+	 * main method to generate excel report
 	 */
 	public void generateFLExcelReport(String reportCode, LinkedHashMap<String, String> params){
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
@@ -865,6 +865,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
 		RequestContext.getCurrentInstance().execute("confirmationId.show()");
 	}
+	
+	/**
+	 * generate excel report for service fee based on accounting 
+	 * @param params
+	 * @param requestId
+	 * @throws Exception
+	 */
 	public void getServiceFeeBasedOnAccountingReport(LinkedHashMap<String, String> params, BigDecimal requestId) throws Exception{
 		log.info("29554: start getServiceFeeBasedOnAccountingReport");
 		
@@ -1073,47 +1080,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			
 			createFooterForSummaryForEachAGOffice(sheetReportList, wb, createHelper, summaryTotalAmtAG,
 					summaryDeductionAmtAG, summaryGSTAmtAG, summaryServiceFeeAmtAG, summaryAmtPayableSupplierAG);
-			//calculate summary
-			
-			//end calculate summary
-			// summary report sheet
-			/*
-			int rowSummary = sheetReportList.getLastRowNum() + 1;
-			Row row = sheetReportList.createRow(rowSummary);
-			
-			Cell cellSummary = row.createCell(1);
-			cellSummary.setCellValue("Jumlah Keseluruhan (RM)");
-			cellSummary.setCellStyle(titleHeaderStyle(wb,true,true,false,false,true,true));
-			CellRangeAddress cellZone = new CellRangeAddress(rowSummary,rowSummary,1,8);
-		    sheetReportList.addMergedRegion(cellZone);
-		    
-		    boxedRegion(cellSummary,cellZone,sheetReportList);
-	        
-			// summary report sheet cell - total amount with gst
-	        Cell cellSummaryTotalAmt = row.createCell(9);
-	        cellSummaryTotalAmt.setCellValue((summaryTotalAmt).doubleValue());
-	        cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
-			// summary report sheet cell - deduction amount
-	        Cell cellSummaryDeductionAmt = row.createCell(10);
-	        cellSummaryDeductionAmt.setCellValue((summaryDeductionAmt).doubleValue());
-	        cellSummaryDeductionAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
-			// summary report sheet cell - gst amount
-	        Cell cellSummaryGSTAmt = row.createCell(11);
-	        cellSummaryGSTAmt.setCellValue((summaryGSTAmt).doubleValue());
-	        cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
-			// summary report sheet cell - service fee amount 
-	        Cell cellSummaryServiceFeeAmt = row.createCell(12);
-	        cellSummaryServiceFeeAmt.setCellValue((summaryServiceFeeAmt).doubleValue());
-	        cellSummaryServiceFeeAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
-			// summary report sheet cell - accumulate amount payable supplier
-	        Cell cellSummaryAmtPayableSupplier = row.createCell(13);
-	        cellSummaryAmtPayableSupplier.setCellValue((summaryAmtPayableSupplier).doubleValue());
-	        cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, true, false, false));
-	        
-	        CellRangeAddress cellZoneSummaryAmt = new CellRangeAddress(rowSummary,rowSummary,13,14);
-		    sheetReportList.addMergedRegion(cellZoneSummaryAmt);
-		    
-		    boxedRegion(cellSummaryAmtPayableSupplier,cellZoneSummaryAmt,sheetReportList);*/
 		}
 		 if(reportList.isEmpty()){
 	        	Row noRecordRow = sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
@@ -1447,7 +1413,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 	}
 	
-	
+	/**
+	 * generate excel report for accumulated service fee
+	 * 
+	 * @param params
+	 * @param requestId
+	 * @throws Exception
+	 */
 	public void getAccumulatedServiceFee(LinkedHashMap<String, String> params, BigDecimal requestId) throws Exception{
 		log.info("29554: start getAccumulatedServiceFee");
 		
@@ -1725,8 +1697,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
-	    	//log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
@@ -1737,20 +1707,55 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	    }
 	}
 	
+	/**
+	 * get list data for service fee based on accounting report
+	 * 
+	 * @param params
+	 * @param type
+	 * @return
+	 */
 	public List<Object[]> generateServiceFeeBasedOnAccountingReport(LinkedHashMap<String, String> params, String type){
 		IRPTRequestSO irptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
 		return irptRequestSO.generateServiceFeeBasedOnAccountingReport(params, type);
 	}
+	
+	/**
+	 * get list data for accumulated service fee report
+	 * 
+	 * @param params
+	 * @return
+	 */
 	public List<Object[]> generateAccumulatedServiceFee(LinkedHashMap<String, String> params){
 		IRPTRequestSO irptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
 		return irptRequestSO.generateAccumulatedServiceFee(params);
 	}
+	
+	/**
+	 * boxed region for excel styling
+	 * 
+	 * @param cell
+	 * @param cellZone
+	 * @param sheet
+	 */
 	public void boxedRegion(Cell cell, CellRangeAddress cellZone, Sheet sheet){
 		RegionUtil.setBorderBottom(cell.getCellStyle().getBorderBottomEnum().getCode(), cellZone, sheet);
         RegionUtil.setBorderTop(cell.getCellStyle().getBorderTopEnum().getCode(), cellZone, sheet);
         RegionUtil.setBorderLeft(cell.getCellStyle().getBorderLeftEnum().getCode(), cellZone, sheet);
         RegionUtil.setBorderRight(cell.getCellStyle().getBorderRightEnum().getCode(), cellZone, sheet);
 	}
+	
+	/**
+	 * title header for excel styling
+	 * 
+	 * @param wb
+	 * @param isBold
+	 * @param isAlignCenter
+	 * @param isWrapTxt
+	 * @param isVAlignTop
+	 * @param isBoxed
+	 * @param isShade
+	 * @return
+	 */
 	public CellStyle titleHeaderStyle(Workbook wb, Boolean isBold, Boolean isAlignCenter, Boolean isWrapTxt, Boolean isVAlignTop, Boolean isBoxed, Boolean isShade){
 		Font titleReportFont = wb.createFont();
 		if(isBold)titleReportFont.setBold(true);
@@ -1779,6 +1784,20 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		return titleReportCellStyle;
 	}
 	
+	/**
+	 * column style for excel styling
+	 * 
+	 * @param wb
+	 * @param createHelper
+	 * @param isCellListHeader
+	 * @param isBold
+	 * @param isHAlignCenter
+	 * @param isFormatDate
+	 * @param isFormatDecimalNumber
+	 * @param isWrapTxt
+	 * @param isVAlignCenter
+	 * @return
+	 */
 	public CellStyle columnStyle(Workbook wb, 
 			CreationHelper createHelper,
 			Boolean isCellListHeader,

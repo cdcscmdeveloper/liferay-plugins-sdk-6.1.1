@@ -3258,10 +3258,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				/************START AUDIT #28895_35509 shaqimi 24072025*************/
 				if(getManagedBean().getSelectedUser().isBrandNew()){
 					user.setUserId(resDTO.getPmUser().getUserId());
+					getManagedBean().setPmUserOriginal(resDTO.getPmUser());
 				}
 				
 				if(getManagedBean().getSelectedUserOrg().isBrandNew()){
+					this.getManagedBean().setBrandNewUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
+					getManagedBean().setPmUserOrgOriginal(resDTO.getPmUser().getPmUserOrgs().get(0));
 				}
 				
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
