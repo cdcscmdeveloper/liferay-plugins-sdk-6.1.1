@@ -2546,7 +2546,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		
 		if (SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_SUSPEND_REG.equals(daType)){
-			String label = supplier.isPendingSuspend() ? lblDeletedTransaction : lblDeleted;
+			String label = supplier.isPendingSuspend() ? lblDeletedTransaction 
+					: SmCommonUtil.getMessage("lbl.sm.status.deleted_suspend", null);
 			return label + " (" + lblDASuspend + ")";
 		}
 		return "";
