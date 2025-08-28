@@ -48,14 +48,22 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 
 	/** The search accounting office. */
 	private IPagingDataModel<PmAgOffice> searchAccountingOffice = new SearchOfficePagingDataModel();
+	
+	private PmAgOffice agOffice;
 
 	private static final Logger log = EpLogger
 			.getLogger(TransactionFeeRptBackingBean.class);
 
+	/**
+	 * Transaction fee rpt constructor
+	 */
 	public TransactionFeeRptBackingBean() {
 		setDefaultTransactionDate();
 	}
 
+	/**
+	 * reset button
+	 */
 	public void resetAction(){
 		getManagedBean().setPmAccountingOffice(null);
 		getManagedBean().setCheckSFOneOff(false);
@@ -64,14 +72,24 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		setDefaultTransactionDate();
 
 		resetSearchCriteriaValues();
+		
+		//reset AG acc
+		resetOfficeSearchBean();
 	}
 
+	/**
+	 * default value for transaction date
+	 */
 	public void setDefaultTransactionDate() {
 		Calendar fromDate = Calendar.getInstance();
 		fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
 		getManagedBean().setTransactionFromDate(fromDate.getTime());
 		getManagedBean().setTransactionToDate(new Date());
 	}
+	
+	/**
+	 * main method for report generation method
+	 */
 	public void generateReport(){
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
@@ -94,7 +112,6 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 
 		//add ag office name
 		if (getManagedBean().getPmAccountingOffice().getOfficeCode() !=null ) {
-			//params.put(FlReportConst.FL_RPT_AG_OFFICE, getManagedBean().getAgOff().getOffCode());
 			params.put(FlReportConst.FL_RPT_AG_OFFICE, getManagedBean().getPmAccountingOffice().getOfficeCode());
 		}else{
 			params.put(FlReportConst.FL_RPT_AG_OFFICE, null);
@@ -117,7 +134,13 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 
 		params.put(FlReportConst.FL_RPT_TRANSACTION_FROM_DATE, df.format(getManagedBean().getTransactionFromDate()));
 		params.put(FlReportConst.FL_RPT_TRANSACTION_TO_DATE, df.format(getManagedBean().getTransactionToDate()));
-		checkOneYearDifferent(getManagedBean().getTransactionFromDate(), getManagedBean().getTransactionToDate());
+		
+		//check toDate is bigger than fromDate
+		if(getManagedBean().getTransactionToDate().compareTo(getManagedBean().getTransactionFromDate()) < 0){
+			throw new EpException(MessageConst.ERROR_REPORT_780088);
+		}
+		
+		checkOneYearDifferentForTransactionFeeRpt(getManagedBean().getTransactionFromDate(), getManagedBean().getTransactionToDate());
 		
 		//generate report for excel or pdf
 		if("PDF".equals(getManagedBean().getDocumentType())){
@@ -131,6 +154,9 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		}
 	}
 
+	/**
+	 * disable AG picker when tick ALL
+	 */
 	public void selectedAgOff(){
 		if(agOffice == null){
 			PmAgOffice agoff = new PmAgOffice();
@@ -139,11 +165,8 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		}else{
 			agOffice.setOfficeName(agOffice.getPmAgValidity().getOfficeName());
 			getManagedBean().setPmAccountingOffice(agOffice);
-			log.info(getManagedBean().getPmAccountingOffice().getPmAgValidity().getOfficeName());
 		}
 	}
-
-	private PmAgOffice agOffice;
 
 	public PmAgOffice getAgOffice() {
 		return agOffice;
@@ -174,7 +197,6 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 			IAgOfficeSO agOfficeSO;
 
 			try {
-				//AccountingOfficeSearchBean officeSearchBean= getManagedBean().getAccountingOfficeSearchBean();
 				String inputAg = getManagedBean().getInputAgOff();
 				AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
 				if (StringUtils.isNotBlank(inputAg)){
@@ -219,11 +241,13 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 	 */
 	public void resetOfficeSearchBean() {
 		this.agOffice = null;
-		if(this.getManagedBean().getIsAllAgOff() == null){
-			this.getManagedBean().setIsAllAgOff("false");
-		}
+		this.getManagedBean().setIsAllAgOff("false");
+		
 		this.getManagedBean().setOffDropdown("officeCode");
 		this.getManagedBean().setAccountingOfficeSearchBean(new AccountingOfficeSearchBean());
+		
+		this.getManagedBean().setInputAgOff(null);
+		searchAccountingOffice();
 	}
 
 	/**
@@ -252,12 +276,23 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		this.searchAccountingOffice = searchAccountingOffice;
 	}
 
+	/**
+	 * set value for all AG office
+	 * 
+	 * @param e
+	 */
 	public void allAgOffChecked(AjaxBehaviorEvent e) {
 		String valCheck = (String) e.getComponent().getAttributes().get("value");
 		this.getManagedBean().setInputAgOff(null);
 		this.getManagedBean().setIsAllAgOff(valCheck);
 		searchAccountingOffice();
 	}
+	
+	/**
+	 * disable AG select button
+	 * 
+	 * @return
+	 */
 	public boolean isSelectButtonDisable() {
 		if(getManagedBean().getIsAllAgOff() != null){
 			if(getManagedBean().getIsAllAgOff().equalsIgnoreCase("true")){
@@ -268,6 +303,39 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * to ensure difference between from - to date no exceed 1 year
+	 * 
+	 * @param fromDate
+	 * @param toDate 
+	 */
+	public void checkOneYearDifferentForTransactionFeeRpt(Date fromDate, Date toDate) {
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		String yearFrom = outputDateFormat.format(fromDate).substring(6, 10);
+		String yearTo = outputDateFormat.format(toDate).substring(6, 10);
+		String monthFrom = outputDateFormat.format(fromDate).substring(3, 5);
+		String monthTo = outputDateFormat.format(toDate).substring(3, 5);
+		String dayFrom = outputDateFormat.format(fromDate).substring(0, 2);
+		String dayTo = outputDateFormat.format(toDate).substring(0, 2);
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		int monthFromInt = Integer.parseInt(monthFrom);
+		int monthToInt = Integer.parseInt(monthTo);
+		int dayFromInt = Integer.parseInt(dayFrom);
+		int dayToInt = Integer.parseInt(dayTo);
+		if (yearToInt == yearFromInt + 1) {
+			if (monthToInt == monthFromInt) {
+				if (dayToInt > dayFromInt) {
+					throw new EpException(MessageConst.ERROR_REPORT_780087);
+				}
+			} else if (monthToInt > monthFromInt) {
+				throw new EpException(MessageConst.ERROR_REPORT_780087);
+			}
+		} else if (yearToInt > yearFromInt + 1) {
+			throw new EpException(MessageConst.ERROR_REPORT_780087);
+		}
 	}
 
 }

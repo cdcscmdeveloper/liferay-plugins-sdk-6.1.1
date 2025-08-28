@@ -1,0 +1,119 @@
+/* ===============================
+   MAIN PANEL WRAPPER
+   =============================== */
+.audit-main-panel {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+/* ===============================
+   DATATABLE STYLING
+   =============================== */
+.audit-main-panel .audit-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+}
+
+.audit-main-panel .audit-table .ui-datatable-data td {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+}
+
+/* Atur tinggi baris header datatable */
+.audit-table thead th {
+    height: 70px;              /* tinggi header */
+    vertical-align: middle;    /* teks ditengah */
+    padding: 8px !important;   /* spasi dalam */
+    font-size: 14px;           /* optional: ubah ukuran font */
+}
+
+.audit-main-panel .audit-table .ui-datatable-header {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+}
+
+/* ===============================
+   TAB MENU STYLING (CONTRACT, CCR, PCR)
+   =============================== */
+.equal-width-tabs .ui-tabmenu-nav {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.equal-width-tabs .ui-tabmenuitem {
+    flex: 1 1 auto !important;
+    min-width: 140px !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    padding: 0 !important;
+}
+
+.equal-width-tabs .ui-tabmenuitem > a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    padding: 10px !important;
+    line-height: 1.3 !important;
+    min-height: 30px !important;
+}
+
+/* Kontrak: tab ke-13+ beda aturan */
+.equal-width-tabs .ui-tabmenuitem:nth-child(n+13) {
+    flex: unset !important;
+    min-width: auto !important;
+    max-width: none !important;
+    margin-right: 4px !important;
+    align-self: flex-start !important;
+}
+
+.equal-width-tabs .ui-tabmenuitem:nth-child(n+13) > a {
+    min-height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Circular: tab ke-5+ beda aturan */
+.equal-width-tabs .ui-tabmenuitem:nth-child(n+5) {
+    flex: unset !important;
+    min-width: 150px !important;
+    max-width: none !important;
+    margin-right: 4px !important;
+    align-self: flex-start !important;
+}
+
+.equal-width-tabs .ui-tabmenuitem:nth-child(n+5) > a {
+    min-height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .equal-width-tabs .ui-tabmenuitem {
+        min-width: 100px !important;
+        font-size: 0.8em !important;
+    }
+}
+
+/* ===============================
+   FIXED COLUMN WIDTHS
+   =============================== */
+.audit-main-panel .col-action-date   { width: 120px !important; }
+.audit-main-panel .col-action-type   { width: 100px !important; }
+.audit-main-panel .col-action-by     { width: 120px !important; }
+.audit-main-panel .col-org-name      { width: 140px !important; }
+.audit-main-panel .col-role          { width: 100px !important; }
+.audit-main-panel .col-doc-type      { width: 80px  !important; }
+.audit-main-panel .col-doc-no        { width: 120px !important; }
+.audit-main-panel .col-doc-status    { width: 120px !important; }
+.audit-main-panel .col-field-name    { width: 100px !important; }
+.audit-main-panel .col-old-value     { width: 200px !important; }
+.audit-main-panel .col-new-value     { width: 200px !important; }
