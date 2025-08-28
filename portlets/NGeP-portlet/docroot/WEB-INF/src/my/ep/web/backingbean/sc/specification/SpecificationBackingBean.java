@@ -1979,7 +1979,7 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 			if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 				this.getManagedBean().setDemoAction(true);
 				this.getManagedBean().setDemoType(true);
-				resetDemoSpecStatus();
+				resetDemoSpecStatus();//28784 - End
 			}
 		} finally {
 			specSo = null;
@@ -10686,9 +10686,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 		ScQt scQt = this.getManagedBean().getQt();
 		
-		// #28784 - Demo WIP
-		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-		this.getManagedBean().setNewVersion(isQtNewVersion);		
+		//#28784 - Demo WIP - Start
+		checkDemoVersion(scQt);
+		//28784 - End		
 		
 		// #25638 - Start
 		if (null != this.getManagedBean().getCurrentStatusId()
