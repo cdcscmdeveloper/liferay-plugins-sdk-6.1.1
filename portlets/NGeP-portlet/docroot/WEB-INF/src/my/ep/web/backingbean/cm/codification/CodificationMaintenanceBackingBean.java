@@ -53,6 +53,12 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+//35503 Start
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.cm.AuditCMConst;
+import my.ep.web.backingbean.cm.audit.AuditCodificationManagementBackingBean;
+import my.ep.web.backingbean.cm.audit.AuditCodificationManagementBackingBeanTemplate;
+//35503 End
 
 @ManagedBean(name = "codificationMaintenanceBackingBean")
 @ViewScoped
@@ -665,6 +671,27 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				this.getManagedBean().setSegmentTitleEng(
 						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
 						.getUnspscTitleEng());
+				
+				//35503 Start
+				this.getManagedBean().setAuditCommodityCode(commodity.getUnspscCode());
+				this.getManagedBean().setAuditCommodityTitle(commodity.getUnspscTitle());
+				this.getManagedBean().setAuditCommodityTitleEng(commodity.getUnspscTitleEng());
+
+				this.getManagedBean().setAuditClassCode(commodity.getCmUnspsc().getUnspscCode());
+				this.getManagedBean().setAuditClassTitle(commodity.getCmUnspsc().getUnspscTitle());
+				this.getManagedBean().setAuditClassTitleEng(commodity.getCmUnspsc().getUnspscTitleEng());
+
+				this.getManagedBean().setAuditFamilyCode(commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
+				this.getManagedBean().setAuditFamilyTitle(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
+				this.getManagedBean().setAuditFamilyTitleEng(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+
+				this.getManagedBean().setAuditSegmentCode(
+						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscCode());
+				this.getManagedBean().setAuditSegmentTitle(
+						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitle());
+				this.getManagedBean().setAuditSegmentTitleEng(
+						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+				//35503 End
 
 			}
 
@@ -679,6 +706,13 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		this.getManagedBean().setCommodityCode("");
 		this.getManagedBean().setCommodityTitle("");
 		this.getManagedBean().setCommodityTitleEng("");
+		
+		//35503 Start - To set null for all list
+		this.getManagedBean().setAuditTypeExtList(null);
+		this.getManagedBean().setAuditBrandExtList(null);
+		this.getManagedBean().setAuditMeasurementExtList(null);
+		this.getManagedBean().setAuditColourExtList(null);
+		//35503 End
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
@@ -690,44 +724,52 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					.retrieveUNSPSCByCommodityCode(reqDTO);
 			
 		
-			if (resDTO.isSuccessful()) {
-				CmUnspsc commodity = resDTO.getCommodityObj();
+		if (resDTO.isSuccessful()) {
+			CmUnspsc commodity = resDTO.getCommodityObj();
 
-				
-				this.getManagedBean().setSelectedUNSPSCObj(commodity);
+			this.getManagedBean().setSelectedUNSPSCObj(commodity);
 
-				this.getManagedBean().setClassCode(
-						commodity.getCmUnspsc().getUnspscCode());
-				this.getManagedBean().setClassTitle(
-						commodity.getCmUnspsc().getUnspscTitle());
-				this.getManagedBean().setClassTitleEng(
-						commodity.getCmUnspsc().getUnspscTitleEng());
+			this.getManagedBean().setClassCode(commodity.getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setClassTitle(commodity.getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setClassTitleEng(commodity.getCmUnspsc().getUnspscTitleEng());
 
-				this.getManagedBean().setFamilyCode(
-						commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
-				this.getManagedBean().setFamilyTitle(
-						commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
-				this.getManagedBean().setFamilyTitleEng(
-						commodity.getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+			this.getManagedBean().setFamilyCode(commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setFamilyTitle(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setFamilyTitleEng(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
 
+			this.getManagedBean().setSegmentCode(commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setSegmentTitle(commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setSegmentTitleEng(
+					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
 
-				this.getManagedBean().setSegmentCode(
-						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
-						.getUnspscCode());
-				this.getManagedBean().setSegmentTitle(
-						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
-						.getUnspscTitle());
-				this.getManagedBean().setSegmentTitleEng(
-						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
-						.getUnspscTitleEng());
-				 		
-		//20200406@azza - CR25551 - Start
-		this.getManagedBean().setExtension(null);
-		this.getManagedBean().setStatus(null);
-		//20200406@azza - CR25551 - End
-		this.getManagedBean().setData(null);
-		this.getExtensionAttributeSearchData().resetData();
-		this.getManagedBean().setDisableSelectBtn(true);
+			// 35503 Start - To get code and title for all code
+			this.getManagedBean().setAuditCommodityCode(commodity.getUnspscCode());
+			this.getManagedBean().setAuditCommodityTitle(commodity.getUnspscTitle());
+			this.getManagedBean().setAuditCommodityTitleEng(commodity.getUnspscTitleEng());
+
+			this.getManagedBean().setAuditClassCode(commodity.getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setAuditClassTitle(commodity.getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setAuditClassTitleEng(commodity.getCmUnspsc().getUnspscTitleEng());
+
+			this.getManagedBean().setAuditFamilyCode(commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setAuditFamilyTitle(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setAuditFamilyTitleEng(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+
+			this.getManagedBean().setAuditSegmentCode(
+					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setAuditSegmentTitle(
+					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitle());
+			this.getManagedBean().setAuditSegmentTitleEng(
+					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+			// 35503 End
+
+			// 20200406@azza - CR25551 - Start
+			this.getManagedBean().setExtension(null);
+			this.getManagedBean().setStatus(null);
+			// 20200406@azza - CR25551 - End
+			this.getManagedBean().setData(null);
+			this.getExtensionAttributeSearchData().resetData();
+			this.getManagedBean().setDisableSelectBtn(true);
 		}
 		return "optionExtensionCodeMaintenance.xhtml?faces-redirect=true";
 	}
@@ -917,7 +959,18 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		    }
 		}
 		
-		
+		//35503 Start - for audit trail required
+		if (resDTO.isSuccessful()) {
+			IAuditTrailSO auditCodificationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailSO.class);
+
+			if (auditCodificationSO.isAuditConfig(AuditCMConst.CM_AU_CONF)) {
+				AuditCodificationManagementBackingBeanTemplate auTemplate = new AuditCodificationManagementBackingBean();
+				auTemplate.saveAuditItemCodeMaintenance();
+			}
+		}
+		//35503 End - for audit trail required
+
 		renewSesionObject(); 
 		
 		FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
@@ -1295,159 +1348,189 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 		CodificationResDTO resDTO = null;
 		
+		//35503 Start
+		this.getManagedBean().setAuditTypeExtList(null);
+		this.getManagedBean().setAuditBrandExtList(null);
+		this.getManagedBean().setAuditMeasurementExtList(null);
+		this.getManagedBean().setAuditColourExtList(null);
+		//35503 End
+		
 		log.info("Data Type " + this.getManagedBean().getData());
 		
-		if(this.getManagedBean().getData().equals("t")){
-	
-		for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
-		    Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
-			
-		     log.info("OBJECT " + getManagedBean().getUpdatedStatus().size());
-		     
-			reqDTO.setTypeId(Long.parseLong(objects[2].toString()));
-			reqDTO.setUnspscId(Long.parseLong(objects[0].toString()));
-			
-			resDTO = unspscSO.searchCmTypeObj(reqDTO);
-				
-				
-			if (resDTO.getCmType()!= null){
-					
-				 System.out.println("search " + resDTO.getCmType().getTypeId());
-				 System.out.println("search " + objects[5].toString());
-							
-			     Integer result = Integer.valueOf(objects[5].toString()); 
-					
-				resDTO.getCmType().setRecordStatusFlg(result);
-				resDTO.getCmType().getTypeId();
-				resDTO.getCmType().getTypeCode();
-					
-				log.info("Type id for CmType " + resDTO.getCmType().getTypeId());
-							
-	           }	
-			    
-			    reqDTO.getExtensionStatusList().add(resDTO.getCmType());
-				
-		     }
-	             
-		       log.info("------ start to update ------");
-		        
-			   resDTO = unspscSO.updateTypeExtensionStatus(reqDTO);
-	}
-		if(this.getManagedBean().getData().equals("b")){
-				
+		if (this.getManagedBean().getData().equals("t")) {
+
 			for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
-			    Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
-			     
+				Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
+
+				log.info("OBJECT " + getManagedBean().getUpdatedStatus().size());
+
+				reqDTO.setTypeId(Long.parseLong(objects[2].toString()));
+				reqDTO.setUnspscId(Long.parseLong(objects[0].toString()));
+
+				resDTO = unspscSO.searchCmTypeObj(reqDTO);
+
+				if (resDTO.getCmType() != null) {
+
+					System.out.println("search " + resDTO.getCmType().getTypeId());
+					System.out.println("search " + objects[5].toString());
+
+					Integer result = Integer.valueOf(objects[5].toString());
+
+					resDTO.getCmType().setRecordStatusFlg(result);
+					resDTO.getCmType().getTypeId();
+					resDTO.getCmType().getTypeCode();
+
+					log.info("Type id for CmType " + resDTO.getCmType().getTypeId());
+
+				}
+
+				reqDTO.getExtensionStatusList().add(resDTO.getCmType());
+
+			}
+
+			log.info("------ start to update ------");
+
+			//35503 Start
+			this.getManagedBean().getAuditTypeExtList().addAll(reqDTO.getExtensionStatusList());
+			//35503 End
+
+			resDTO = unspscSO.updateTypeExtensionStatus(reqDTO);
+		}
+		
+		if (this.getManagedBean().getData().equals("b")) {
+
+			for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
+				Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
+
 				reqDTO.setBrandId(Long.parseLong(objects[2].toString()));
 				reqDTO.setUnspscId(Long.parseLong(objects[0].toString()));
-				
-					
-					resDTO = unspscSO.searchCmBrandObj(reqDTO);
-					
-					
-					if (resDTO.getCmBrand()!= null){
-						
-					 System.out.println("search " + resDTO.getCmBrand().getBrandId());
-								
-					 Integer result = Integer.valueOf(objects[5].toString()); 
-				     
-						
+
+				resDTO = unspscSO.searchCmBrandObj(reqDTO);
+
+				if (resDTO.getCmBrand() != null) {
+
+					System.out.println("search " + resDTO.getCmBrand().getBrandId());
+
+					Integer result = Integer.valueOf(objects[5].toString());
+
 					resDTO.getCmBrand().setRecordStatusFlg(result);
 					resDTO.getCmBrand().getBrandId();
 					resDTO.getCmBrand().getBrandCode();
-					
-					log.info("Brand id for CmBrand " + resDTO.getCmBrand().getBrandId());
-					
-						
-							  
-				}
-				    reqDTO.getBrandExtensionStatusList().add(resDTO.getCmBrand());
-						
-					
-			}
-			      log.info("------ start to update Brand ------");
-	  		  
-				 resDTO = unspscSO.updateBrandExtensionStatus(reqDTO);
-        }
 
-		if(this.getManagedBean().getData().equals("m")){
-			
-		for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
-		    Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
-		     
-			reqDTO.setMeasurementId(Long.parseLong(objects[2].toString()));
-			reqDTO.setUnspscId(Long.parseLong(objects[0].toString()));
-			
-				
-				resDTO = unspscSO.searchCmMeasurementObj(reqDTO);
-				
-				
-				if (resDTO.getCmMeasurement()!= null){
-					
-				 System.out.println("search " + resDTO.getCmMeasurement().getMeasurementId());
-							
-				 Integer result = Integer.valueOf(objects[5].toString());  
-			     
-					
-				resDTO.getCmMeasurement().setRecordStatusFlg(result);
-				resDTO.getCmMeasurement().getMeasurementId();
-				resDTO.getCmMeasurement().getMeasurementCode();
-					
-				log.info("Measurement id for CmMeasurement " + resDTO.getCmMeasurement().getMeasurementId());
-				  
+					log.info("Brand id for CmBrand " + resDTO.getCmBrand().getBrandId());
+
+				}
+				reqDTO.getBrandExtensionStatusList().add(resDTO.getCmBrand());
+
 			}
-				
-		}
-		
-		 log.info("------ start to update measurment ------");
-		 reqDTO.getMeasurementExtensionStatusList().add(resDTO.getCmMeasurement());
+			log.info("------ start to update Brand ------");
 			
-		 resDTO = unspscSO.updateMeasurementExtensionStatus(reqDTO);
-	  } 
-		   if(this.getManagedBean().getData().equals("c")){
-				
+			//35503 Start
+			this.getManagedBean().getAuditBrandExtList().addAll(reqDTO.getBrandExtensionStatusList());
+			//35503 End
+
+			resDTO = unspscSO.updateBrandExtensionStatus(reqDTO);
+		}
+
+		if (this.getManagedBean().getData().equals("m")) {
+
 			for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
-			    Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
-			     
-				reqDTO.setColorId(Long.parseLong(objects[2].toString()));
+				Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
+
+				reqDTO.setMeasurementId(Long.parseLong(objects[2].toString()));
+				reqDTO.setUnspscId(Long.parseLong(objects[0].toString()));
+
+				resDTO = unspscSO.searchCmMeasurementObj(reqDTO);
+
+				if (resDTO.getCmMeasurement() != null) {
+
+					System.out.println("search " + resDTO.getCmMeasurement().getMeasurementId());
+
+					Integer result = Integer.valueOf(objects[5].toString());
+
+					resDTO.getCmMeasurement().setRecordStatusFlg(result);
+					resDTO.getCmMeasurement().getMeasurementId();
+					resDTO.getCmMeasurement().getMeasurementCode();
+
+					log.info("Measurement id for CmMeasurement " + resDTO.getCmMeasurement().getMeasurementId());
+
+				}
 				
-					
-					resDTO = unspscSO.searchCmColorObj(reqDTO);
-					
-					
-					if (resDTO.getCmColor()!= null){
-						
-					 System.out.println("search " + resDTO.getCmColor().getColorId());
-								
-					 Integer result = Integer.valueOf(objects[5].toString());  
-						
+				//35503 Start - Fix as-is bug
+				reqDTO.getMeasurementExtensionStatusList().add(resDTO.getCmMeasurement());
+				//35503 End - Fix as-is bug
+
+			}
+
+			log.info("------ start to update measurment ------");
+			
+			//35503 Start
+			this.getManagedBean().getAuditMeasurementExtList().addAll(reqDTO.getMeasurementExtensionStatusList());
+			//35503 End
+
+			resDTO = unspscSO.updateMeasurementExtensionStatus(reqDTO);
+		} 
+		
+		if (this.getManagedBean().getData().equals("c")) {
+
+			for (int i = 0; i < getManagedBean().getUpdatedStatus().size(); i++) {
+				Object[] objects = (Object[]) getManagedBean().getUpdatedStatus().get(i);
+
+				reqDTO.setColorId(Long.parseLong(objects[2].toString()));
+
+				resDTO = unspscSO.searchCmColorObj(reqDTO);
+
+				if (resDTO.getCmColor() != null) {
+
+					System.out.println("search " + resDTO.getCmColor().getColorId());
+
+					Integer result = Integer.valueOf(objects[5].toString());
+
 					resDTO.getCmColor().setRecordStatusFlg(result);
 					resDTO.getCmColor().getColorId();
 					resDTO.getCmColor().getColorCode();
-						
+
 					log.info("Color id for CmColor " + resDTO.getCmColor().getColorId());
-					
-					reqDTO.getColorExtensionStatusList().add(resDTO.getCmColor());
-					    
 				}
-					
-					 log.info("------ start to update color ------");
-					 
-				
-				     resDTO = unspscSO.updateColorExtensionStatus(reqDTO);
-			} 
-		  }
+
+				//35503 Start - Fix as-is bug
+				reqDTO.getColorExtensionStatusList().add(resDTO.getCmColor());
+				//35503 End - Fix as-is bug
+			}
+
+			log.info("------ start to update color ------");
+
+			//35503 Start
+			this.getManagedBean().getAuditColourExtList().addAll(reqDTO.getColorExtensionStatusList());
+			//35503 End
+
+			//35503 Start - Fix as-is bug
+			resDTO = unspscSO.updateColorExtensionStatus(reqDTO);
+			//35503 End - Fix as-is bug
+		}
+		
+		//35503 Start - for audit trail required
+		if (resDTO.isSuccessful()) {
+			IAuditTrailSO auditCodificationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailSO.class);
+
+			if (auditCodificationSO.isAuditConfig(AuditCMConst.CM_AU_CONF)) {
+				AuditCodificationManagementBackingBeanTemplate auTemplate = new AuditCodificationManagementBackingBean();
+				auTemplate.saveAuditExtensionCodeMaintenance();
+			}
+		}
+		//35503 End - for audit trail required
 		   	 	
-				renewSesionObject(); 
-						
-				FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-					MessageConst.INFO_710024, MessageUtils.BUNDLE_COMMON_MESSAGES,
-		     		new FacesScopes().getUserLocale()));	
-				    FacesContext context = FacesContext.getCurrentInstance();
-				    context.getExternalContext().getFlash().setKeepMessages(true);
-				    context.addMessage(null, fm);
-				
-			  	FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,  CommonUIConst.ACKNOWLEDGE_PAGE);			
+		renewSesionObject();
+
+		FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+				MessageConst.INFO_710024, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.getExternalContext().getFlash().setKeepMessages(true);
+		context.addMessage(null, fm);
+
+		FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+				.handleNavigation(FacesContext.getCurrentInstance(), null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 				
 	
