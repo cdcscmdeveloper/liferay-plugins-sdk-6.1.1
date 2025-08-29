@@ -6192,14 +6192,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		private void errorMessage(ScRequestNoteDtl rnDtl, SupplierDataMaintenanceResDTO responseDto, DisciplinaryActionContext context) {
 			String supplierName = rnDtl.getScRequestSupplierItem().getSmSupplier() != null ? rnDtl
 					.getScRequestSupplierItem().getSmSupplier().getCompanyName() : StringUtils.EMPTY;
-	
+
 			switch (context) {
 			case ACTIVE:
 				if (responseDto.isDisciplinaryActionDeletedDue()) {
-					throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
-				}
-				break;
-	
+			        throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
+			    } else if (responseDto.isDisciplinaryActionPendingTransaction()) {
+			        throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+			    } else {
+			        throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+			    }
+
 			case AFTER_ENDED:
 				if (responseDto.isDisciplinaryActionPendingTransaction() || responseDto.isDisciplinaryActionDeletedDue()) {
 					throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });

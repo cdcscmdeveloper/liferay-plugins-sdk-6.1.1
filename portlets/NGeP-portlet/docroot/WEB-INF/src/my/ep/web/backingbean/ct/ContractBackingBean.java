@@ -5084,44 +5084,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	// 24333 - Start
 	/**
-	 * The method used to calculate overall amount with GST AND STAX From LOA
+	 * The method used to set Overall Amount and calculate for Bond Percentage
 	 * 
 	 * @return BigDecimal total amount
 	 */
 	public BigDecimal calculateOriginalOverallAmount() {
-	    CtContract ctContract = getManagedBean().getContractVer().getCtContract();
-	    ScLoa loa = ctContract.getLoa();
-
-	    // Early return if LOA is null
-	    if (loa == null) {
+		CtContractAmount contractAmount = getManagedBean().getCtContractAmount();
+		ScLoa loa = getManagedBean().getContractVer().getCtContract().getLoa();
+	
+	    BigDecimal total = getManagedBean().getCtContractAmount().getOverallCtAmtPbond();
+	    // Early return 0.0 if OverallCtAmtPbond is null
+	    if (total == null) {
 	        return BigDecimal.ZERO;
 	    }
-
-	    // Initialize amounts with null-safe assignment
-	    BigDecimal contractAmt = loa.getLoaAmt();
-	    if (contractAmt == null) {
-	        contractAmt = BigDecimal.ZERO;
-	    }
-
-	    BigDecimal gstAmt = loa.getGstAmt();
-	    if (gstAmt == null) {
-	        gstAmt = BigDecimal.ZERO;
-	    }
-
-	    BigDecimal staxAmt = loa.getSstAmt();
-	    if (staxAmt == null) {
-	        staxAmt = BigDecimal.ZERO;
-	    }
-
-	    BigDecimal total = contractAmt.add(gstAmt).add(staxAmt);
 
 	    // Skip bond calculation if direct purchase or bond exempted
 	    if (getManagedBean().isDirectPurchase() || getManagedBean().getCtContractAmount().isBondExempted()) {
 	        return total;
 	    }
 
-	    // Check if bond is required in LOA or contract amount
-	    CtContractAmount contractAmount = getManagedBean().getContractVer().getCtContractAmount();
+	    // Check if bond is required in LOA or contract amount to set bond percentage
 	    if (loa.isBondReq() || contractAmount.isBondReq()) {
 	        String periodStr = calculateBondPeriod();
 	        BigDecimal contractPeriod = new BigDecimal(periodStr); // Ensure periodStr is valid numeric string
