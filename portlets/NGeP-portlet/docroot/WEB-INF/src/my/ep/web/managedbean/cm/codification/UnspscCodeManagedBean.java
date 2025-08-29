@@ -127,6 +127,17 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	
 	private boolean disableRevise = false;
 	private boolean renderV2 = false;
+	
+	// 35503 start
+	private transient List<List<String>> auditCommodityList;
+	private transient List<List<String>> auditClassList;
+	private transient List<List<String>> auditFamilyList;
+	private transient List<List<String>> auditSegmentList;
+	private String auditCommodityCode;
+	private String auditClassCode;
+	private String auditFamilyCode;
+	private String auditSegmentCode;
+	// 35503 end
 
 	public boolean isRecommendExtension(){
 		return this.recommendExtension;
@@ -813,4 +824,77 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 		this.showRecommend = showRecommend;
 	}
 
+	// 35503 start
+	public List<List<String>> getAuditCommodityList() {
+		if (auditCommodityList == null)
+			auditCommodityList = new ArrayList<>();
+		return auditCommodityList;
+	}
+
+	public void setAuditCommodityList(List<List<String>> auditCommodityList) {
+		this.auditCommodityList = auditCommodityList;
+	}
+
+	public List<List<String>> getAuditClassList() {
+		if (auditClassList == null)
+			auditClassList = new ArrayList<>();
+		return auditClassList;
+	}
+
+	public void setAuditClassList(List<List<String>> auditClassList) {
+		this.auditClassList = auditClassList;
+	}
+
+	public List<List<String>> getAuditFamilyList() {
+		if (auditFamilyList == null)
+			auditFamilyList = new ArrayList<>();
+		return auditFamilyList;
+	}
+
+	public void setAuditFamilyList(List<List<String>> auditFamilyList) {
+		this.auditFamilyList = auditFamilyList;
+	}
+
+	public List<List<String>> getAuditSegmentList() {
+		if (auditSegmentList == null)
+			auditSegmentList = new ArrayList<>();
+		return auditSegmentList;
+	}
+
+	public void setAuditSegmentList(List<List<String>> auditSegmentList) {
+		this.auditSegmentList = auditSegmentList;
+	}
+
+	public String getAuditCommodityCode() {
+		return auditCommodityCode;
+	}
+
+	public void setAuditCommodityCode(String auditCommodityCode) {
+		this.auditCommodityCode = auditCommodityCode;
+	}
+
+	public String getAuditClassCode() {
+		return auditClassCode;
+	}
+
+	public void setAuditClassCode(String auditClassCode) {
+		this.auditClassCode = auditClassCode;
+	}
+
+	public String getAuditFamilyCode() {
+		return auditFamilyCode;
+	}
+
+	public void setAuditFamilyCode(String auditFamilyCode) {
+		this.auditFamilyCode = auditFamilyCode;
+	}
+
+	public String getAuditSegmentCode() {
+		return auditSegmentCode;
+	}
+
+	public void setAuditSegmentCode(String auditSegmentCode) {
+		this.auditSegmentCode = auditSegmentCode;
+	}
+	// 35503 end
 }
