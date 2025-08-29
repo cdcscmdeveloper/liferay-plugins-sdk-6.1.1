@@ -40,6 +40,7 @@ import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.osb.sc.IQTOsbSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
@@ -70,6 +71,8 @@ import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SpecialCharacter;
+import my.ep.dto.osb.sc.QTOsbReqDTO;
+import my.ep.dto.osb.sc.QTOsbResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -12233,6 +12236,37 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//#21692 - End
 	
+	//#21692 - Start
+	/**
+	 * Enable LOA without BPM (LOA Submission) to be cancelled for rejecting
+	 * proposal validity extension
+	 */
+	public void cancelLOAWIP() {
+		try {
+			ScLoa scLoa = getManagedBean().getScLoa();
+			/**
+			 * Will update LOA workflow status: Cancelled (Not agree with
+			 * extension validity period) and ScQtRecommendDtl: IS_LOA_AWARDED =
+			 * FALSE and RECORD_STATUS = Rejected (4). IF all LOAs' status
+			 * either Completed, Rejected OR Cancelled (Not agree with extension
+			 * validity period), QT will exit and goes to Refinalization.
+			 */
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
+			reqDTO.setDocId(scLoa.getLoaId());
+			QuationTenderResDTO resDTO = getQTDetailSO().exitEPVLOAOperation(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700031, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(), Boolean.TRUE);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("LOI", "CancelLOAWithoutBPM", getManagedBean().getScLoa().getLoaNo(),
+					"cancelLOAWithoutBPM", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#21692 - End
+	
 	// 34242 - Start
 	public void retainAwardPage() {
 		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance()
@@ -12700,6 +12734,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//#21692 - End
 	
 	//#21692 - Start
+	/**
+	 * Must validate html for LOA WIP first
+	 * @param isWithBPM
+	 */
+	public void validateBeforePopupWIP() {
+		RequestContext.getCurrentInstance().execute("cancelLoaPopup3.show()");
+	}
+	//#21692 - End
+	
+	//#21692 - Start
 	private boolean checkingForEPVNotification(ScLoa scLoa) {
 		// List of statuses to enable notification
 		List<Long> statusEnabledCancel = new ArrayList<>();
@@ -12710,8 +12754,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		boolean statusEnabled = isLOAStatusAbleToCancel() != null
 				&& statusEnabledCancel.contains(isLOAStatusAbleToCancel());
-		boolean isQTValid = checkProposalValidityDateReachByQt(getManagedBean().getScQt())
-				&& this.validateSupportedTask(scLoa.getScQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+		boolean isQTValid = checkProposalValidityDateReachByQt(getManagedBean().getScQt());
 
 		return isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId()) && statusEnabled
 				&& isQTValid && !isQTMaintenanceScreen();
