@@ -111,8 +111,11 @@
 							 />
 				<p:remoteCommand name="#{templateSpecId}SpecReRender" 
 					partialSubmit="true" process="@this" update="@(.ac-paginator)"
-					oncomplete="#{templateSpecId}specBlockWidget.hide();" />
+					oncomplete="#{templateSpecId}specBlockWidget.hide();" />l
 					
+				<ui:remove>#29187 Start Vinod</ui:remove>
+				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" />
+				<ui:remove>#29187 End Vinod</ui:remove>
 				<ac:dataTable id="questionTbl" widgetVar="#{templateSpecId}questionTblWidget" var="question" rowIndexVar="row"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"

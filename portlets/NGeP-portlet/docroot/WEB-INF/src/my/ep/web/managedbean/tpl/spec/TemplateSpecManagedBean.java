@@ -19,6 +19,7 @@ import javax.faces.model.SelectItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -53,6 +54,13 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private PmOrgProfile orgProfileOfLoginUser;
 	private boolean cloneBtnRendered;
 	private SelectItem[] uomDropDownList;
+	// #29187 Start Vinod
+	List<SelectItem> mandatorySpecList;
+	private boolean zoneForItemHlink;
+	private TplSpecQuestion questionForItemHlink;
+	private List<TplSpecZoneQty> zoneQtyForItemHlink;
+	private boolean isComplianceOldNull;
+	// #29187 End Vinod
 	public TemplateSpecManagedBean() {
 	}
 
@@ -292,7 +300,47 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	 */
 	public void setUomDropDownList(SelectItem[] uomDropDownList) {
 		this.uomDropDownList = uomDropDownList;
+	}		
+	//#29187 Start Vinod
+	public List<SelectItem> getMandatorySpecList() {
+		return mandatorySpecList;
+	}
+
+	public void setMandatorySpecList(List<SelectItem> mandatorySpecList) {
+		this.mandatorySpecList = mandatorySpecList;
+	}
+
+	public boolean isZoneForItemHlink() {
+		return zoneForItemHlink;
+	}
+
+	public void setZoneForItemHlink(boolean zoneForItemHlink) {
+		this.zoneForItemHlink = zoneForItemHlink;
+	}
+
+	public TplSpecQuestion getQuestionForItemHlink() {
+		return questionForItemHlink;
 	}
 	
+	public void setQuestionForItemHlink(TplSpecQuestion questionForItemHlink) {
+		this.questionForItemHlink = questionForItemHlink;
+	}
+
+	public List<TplSpecZoneQty> getZoneQtyForItemHlink() {
+		return zoneQtyForItemHlink;
+	}
+
+	public void setZoneQtyForItemHlink(List<TplSpecZoneQty> zoneQtyForItemHlink) {
+		this.zoneQtyForItemHlink = zoneQtyForItemHlink;
+	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
 	
+	//#29187 End Vinod
 }

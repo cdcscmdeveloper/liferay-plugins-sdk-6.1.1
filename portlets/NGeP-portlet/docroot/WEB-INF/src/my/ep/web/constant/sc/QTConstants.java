@@ -360,6 +360,20 @@ public interface QTConstants {
 	public static final Long COMPOSITE_VALIDITY_ID_QT=29007L;
 	public static final Long COMPOSITE_VALIDITY_ID_DP=29006L;
 	// #29007 End Vinod
+
+	// #29187 Start Vinod
+	public static final String LBL_TXT_SELECT = "lbl.txt.select";
+	public static final String LBL_TXT_YES = "lbl.txt.yes";
+	public static final String LBL_TXT_NO = "lbl.txt.no";
+	public static final String COMPLIANCE_CONFIRMATION_POPUP = "complianceConfirmPopUp.show()";
+	public static final String COMPLIANCE_SAMPLE_CONFIRMATION_POPUP = "complianceSampleConfirmPopUp.show()";
+	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
+	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
+	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
+	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
+	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
+	// #29187 End Vinod
+
 	
 	// #32119 - start
 	public static final String PORTLET_NAME_CT_MAINTENANCE = "ctContractMaintenance_WAR_NGePportlet";

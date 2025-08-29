@@ -12,6 +12,12 @@
 
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.spec.sample.instruction']}" escape="false" />
+		<ui:remove>#29187 Start Vinod</ui:remove>
+		<br />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.sample.instruction.spec.prepare']}"
+			escape="false" />
+		<ui:remove>#29187 End Vinod</ui:remove>
 		<p:spacer height="10"></p:spacer>
 		<table>
 			<tr>
@@ -50,6 +56,10 @@
 
 		</table>
 		<p:spacer height="10"></p:spacer>
+         <ui:remove>#29187 Start Vinod</ui:remove>
+		<ui:param name="isManSpec"
+			value="#{specificationBackingBean.renderManSpec(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.tplSpecQuestions)}" />
+		<ui:remove>#29187 End Vinod</ui:remove>
 		<p:dataTable var="technicalSampleQuestion"
 			id="technicalSampleTemplateQuestionsTableId" rows="10"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -85,6 +95,11 @@
 					<p:column rowspan="2"
 						headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}"
 						style="width:10%; text-align:center;" />
+					<ui:remove>#29187 Added Vinod -start-</ui:remove>
+					<p:column rowspan="2" rendered="#{isManSpec}"
+						headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}"
+						style="width:10%; text-align:center;" />
+					<ui:remove>#29187 Added Vinod -end-</ui:remove>
 				</p:row>
 				<p:row>
 
@@ -184,6 +199,23 @@
 
 				</h:panelGroup>
 			</p:column>
+			
+			<ui:remove>#29187 Start Vinod</ui:remove>
+			<p:column rendered="#{isManSpec}">
+				<h:panelGroup>
+					<h:selectOneMenu id="manSpec"
+						rendered="#{technicalSampleQuestion.mandatorySpecForSample}"
+						value="#{technicalSampleQuestion.mandatorySpecForSample}"
+						disabled="true">
+						<f:selectItems
+							value="#{specificationBackingBean.getMandatorySpecDropdownValues()}" />
+					</h:selectOneMenu>
+					<ac:iconTooltip
+						rendered="#{technicalSampleQuestion.mandatorySpecForSample}"
+						value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.tooltip']}" />
+				</h:panelGroup>
+			</p:column>
+			<ui:remove>#29187 End Vinod</ui:remove>
 
 		</p:dataTable>
 		<p:spacer height="10"></p:spacer>
