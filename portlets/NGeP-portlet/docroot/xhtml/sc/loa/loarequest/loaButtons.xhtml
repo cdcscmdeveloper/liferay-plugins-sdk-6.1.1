@@ -85,6 +85,15 @@
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" />
 				<ui:remove>21692 - End</ui:remove>
+				
+				<ui:remove>21692 - Start</ui:remove>
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					styleClass="ui-button"
+					rendered="#{qtLOABackingBean.managedBean.ableToCancelWIP and isLoaGenerated}"
+					action="#{lOADetailBackingBean.validateBeforePopupWIP()}"
+					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+					update="#{isReject ? '@this' : '@form'}" />
+				<ui:remove>21692 - End</ui:remove>
 			</c:if>
 
 			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">
@@ -105,7 +114,16 @@
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" />
 				<ui:remove>21692 - End</ui:remove>
-				
+					
+				<ui:remove>21692 - Start</ui:remove>
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					styleClass="ui-button"
+					rendered="#{qtLOABackingBean.managedBean.ableToCancelWIP and lOADetailBackingBean.disableCancelForApprover()}"
+					action="#{lOADetailBackingBean.validateBeforePopupWIP()}"
+					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+					update="#{isReject ? '@this' : '@form'}" />
+				<ui:remove>21692 - End</ui:remove>
+					
 				<ui:decorate
 					template="/WEB-INF/facelets/templates/claim_template.xhtml">
 					<ui:define name="outComeSection">
@@ -291,5 +309,26 @@
 		</div>
 	</p:dialog>
 	<ui:remove>21692 - End</ui:remove>
+	<ui:remove>#21692 - Start</ui:remove>
+	<p:dialog id="submissionPopupId3" widgetVar="cancelLoaPopup3"
+		header="#{lbl['lbl.sc.cancel.confirm']}"
+		resizable="false" width="325" height="100" closable="false"
+		modal="true">
+		<table>
+			<tr>
+				<td align="center"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.pending.qt.loa.cancel']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" onclick="blockWidget.show();"
+				action="#{lOADetailBackingBean.cancelLOAWIP()}"
+				oncomplete="cancelLoaPopup3.hide();"  update="@form">
+			</p:commandButton>
+
+		</div>
+	</p:dialog>
+	<ui:remove>#21692 - End</ui:remove>
 	
 </ui:composition>
