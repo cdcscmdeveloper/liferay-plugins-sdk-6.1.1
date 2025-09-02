@@ -24808,6 +24808,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	// 11104 -end-
 	
 	//#38679
+	/**
+	 * set flag that has 0 quantity for checking.
+	 * @return result true or false.
+	 * 
+	 */
 	public void checkhaszeroquantity() {
 		this.getManagedBean().setZoneQtyHasZeroVal(false);
 		for (ScQtCheckList checkList : this.getManagedBean().getQt().getScQtChecklists())

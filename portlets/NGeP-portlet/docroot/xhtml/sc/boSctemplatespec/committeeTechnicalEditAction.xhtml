@@ -164,7 +164,7 @@ label.ui-button>span.ui-button-text {
 						<td>
 							<table>
 								<tr>
-								<!-- #farid #21695 disable start -->
+								<!-- #farid #21695 disable start #38679 remove condition disable for PO -->
 								<ui:remove><!-- 1873 note 74 update disabled condition--></ui:remove>
 									<td><p:selectOneRadio 
 									disabled="#{specificationBackingBean.managedBean.specItemWeightageRequired and specificationBackingBean.managedBean.readOnly or !(!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly))}"

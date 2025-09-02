@@ -228,7 +228,7 @@
 					</ui:fragment></td>
 				<td>
 				<!-- #21695 FARID START DISABLE SCQT PARTIAL-->
-
+				<ui:remove><!-- #38679 adjust disable condition with new requirement --></ui:remove>
 							<p:selectOneRadio required="true"
 								disabled="#{specificationBackingBean.managedBean.readOnly or 
 								(specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial 
