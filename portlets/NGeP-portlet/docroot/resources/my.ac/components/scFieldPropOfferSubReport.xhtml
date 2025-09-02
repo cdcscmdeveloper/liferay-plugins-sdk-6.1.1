@@ -25,123 +25,194 @@
 			    white-space: normal !important;
 			    width: 500px;
 			}
+			label {
+			    display: inline-block;
+				text-align: right;
+				font-size: 12px;
+				font-weight: normal;
+				vertical-align: middle;
+				float: right;
+				padding: 15px 15px 15px 0;
+				font-family: Arial;
+			}
 	  </style>
-
-
-		<h:outputText styleClass="instruction"
-			style="float:left;margin-left:20px;"
-			value="#{lbl['lbl.instruction.mandatory']}" />
 
 		<ui:param name="deskofficerEnableDisable"
 			value="#{cc.attrs.bBean.retriveUserRoles()}"></ui:param>
 		<ui:param name="ptjEnableDisable"
 			value="#{cc.attrs.bBean.getPtjValues()}"></ui:param>
 		
-		<table style="width:100%;margin-left: auto;margin-right: auto;">
-			<tr>
-				<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.supplier']}"/>
-					
-				</td>
-			    
-			    <td>	
-					<p:inputText value="#{qtPropOfferSubReportBB.managedBean.supplierName}"
-					disabled="true" readonly="true" style="width:560px;" />	
-			    </td>
-			</tr>				
+		
+		<h:panelGroup id="searchproposalid">
+			<p:panel id="qtProposalPanel" toggleable="true">
 			
-			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.qtn.no']}"/>
-				</td>
-				<td>
-					<p:autoComplete size="60" 
-							title="#{lbl['lbl.sc.qtn.no']}"
-							value="#{qtPropOfferSubReportBB.managedBean.autoScQt.qtNo}"
-							completeMethod="#{qtPropOfferSubReportBB.autoCompleteQtNo}"
-							scrollHeight="100"/>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-				<p:outputLabel value="#{lbl['lbl.sc.title']}"/>
-				</td>
-				<td colspan="2">
-				<p:autoComplete size="90"
-							title="#{lbl['lbl.sc.title']}"
-							value="#{qtPropOfferSubReportBB.managedBean.autoScQt.qtTitle}"
-							completeMethod="#{qtPropOfferSubReportBB.autoCompleteQtTitle}"
-							scrollHeight="300"/>
-		    	</td>
-			</tr>
-			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.proposal.no']}"/>
-				</td>
-				<td>
-					<p:autoComplete size="60" 
-							title="#{lbl['lbl.sc.proposal.no']}"
-							value="#{qtPropOfferSubReportBB.managedBean.autoScQtProposal.proposalNo}"
-							completeMethod="#{qtPropOfferSubReportBB.autoCompleteProposalNo}"
-							scrollHeight="100"/>
-				</td>
+			<div>
+			    <h:outputText styleClass="instruction"
+				style="float:left;margin-left:20px;"
+				value="#{lbl['lbl.instruction.mandatory']}" />
 				
-				<td>	
-					<p:outputLabel value="#{lbl['lbl.rpt.status']}"/>
-				</td>
-				<td>		
-					 <p:selectManyMenu id="manyMenuSts" value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scStatusManyMenu}" 
-						converter="#{statusConverter}" filter="true" multiple="true" filterMatchMode="startsWith" showCheckbox="true" styleClass="manymenu-advanced"
-						style="width:300px;height:70px;position:relative;">
-						<f:selectItems
-							value="#{cc.attrs.bBean.reportStatusDropdownValuesProposalOfferSubmission()}"
-							var="status" itemValue="#{status}" itemLabel="#{status}" 
-							itemDisabled="#{cc.attrs.bBean.isDisabled(status,qtReportMainBB.managedBean.reportCode)}" ></f:selectItems>
-						<p:ajax event="change" process="@this" update="@this"
-						listener="#{cc.attrs.bBean.onSelectAll(qtReportMainBB.managedBean.reportCode)}" />	
-					</p:selectManyMenu>
-				</td>	
-			</tr>
-			<tr>
-				<TD><p:outputLabel value="#{lbl['lbl.rpt.proposal.submitted.date.from']}"
-						style="margin-top:5px;width:120px;margin-left:4px" /></TD>
-				<TD><p:selectOneMenu
-						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scCreatedFromMonth}"
-						style="margin-top:5px;width:130px;">
-						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-							itemValue="#{null}"></f:selectItem>
-						<f:selectItems value="#{cc.attrs.bBean.generateMonthList()}"></f:selectItems>
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							listener="#{cc.attrs.bBean.propSubmitToMonthUpdate(cc.attrs.bBean.managedBean.scReportSearchBean)}" 
-							update="@([id$=propSubmitMonth])" />
-					</p:selectOneMenu>
-					<p:selectOneMenu
-						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scCreatedFromYear}"
-						style="margin-top:5px;width:90px;">
-						<f:selectItems value="#{cc.attrs.bBean.generateYearList()}"></f:selectItems>
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							listener="#{cc.attrs.bBean.propSubmitToDtUpdate(cc.attrs.bBean.managedBean.scReportSearchBean)}"
-							update="@([id$=propSubmitDt])" />
-					</p:selectOneMenu></TD>
-				<TD><p:outputLabel value="#{lbl['lbl.rpt.proposal.submitted.date.to']}"
-						style="margin-top:2px;width:120px;margin-left:-8px" /></TD>
-				<TD><p:selectOneMenu id="propSubmitMonth"
-						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scCreatedToMonth}"
-						style="margin-top:5px;width:130px;">
-						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-							itemValue="#{null}"></f:selectItem>
-						<f:selectItems value="#{cc.attrs.bBean.generateMonthList()}"></f:selectItems>
-						<p:ajax event="change" process="@this" partialSubmit="true" />
-					</p:selectOneMenu>
-					<p:selectOneMenu id="propSubmitDt" disabled="true"
-						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scCreatedToYear}"
-						style="margin-top:5px;width:90px;">
-						<f:selectItems value="#{cc.attrs.bBean.generateYearList()}"></f:selectItems>
-						<p:ajax event="change" process="@this" partialSubmit="true" />
-					</p:selectOneMenu></TD>
-			</tr>
-		</table>	
+				<table style="width:100%;border-spacing: 10px;">
+					<tr>
+						<td width="15%">
+						<p:outputLabel value="#{lbl['lbl.rpt.supplier']}"/>
+							
+						</td>
+					    
+					    <td width="35%">	
+							<p:inputText value="#{qtPropOfferSubReportBB.managedBean.supplierName}"
+							disabled="true" readonly="true" style="width:560px;" />	
+					    </td>
+					</tr>				
+					
+					<tr>
+						<td width="15%">
+							<p:outputLabel value="#{lbl['lbl.sc.qtn.no']}"/>
+						</td>
+						<td width="35%">
+							<p:autoComplete size="60" 
+									title="#{lbl['lbl.sc.qtn.no']}"
+									value="#{qtPropOfferSubReportBB.managedBean.proposalQtnTenderSearchBean.qtNo}"
+									completeMethod="#{qtPropOfferSubReportBB.autoCompleteQtNo}"
+									scrollHeight="100"/>
+						</td>
+					</tr>
+					
+					<tr>
+						<td width="15%">
+						<p:outputLabel value="#{lbl['lbl.sc.title']}"/>
+						</td>
+						<td width="35%" colspan="2">
+						<p:autoComplete size="90"
+									title="#{lbl['lbl.sc.title']}"
+									value="#{qtPropOfferSubReportBB.managedBean.proposalQtnTenderSearchBean.qtTitle}"
+									completeMethod="#{qtPropOfferSubReportBB.autoCompleteQtTitle}"
+									scrollHeight="300"/>
+				    	</td>
+					</tr>
+					<tr>
+						<td width="15%">
+							<p:outputLabel value="#{lbl['lbl.sc.proposal.no']}"/>
+						</td>
+						<td width="35%">
+							<p:autoComplete size="60" 
+									title="#{lbl['lbl.sc.proposal.no']}"
+									value="#{qtPropOfferSubReportBB.managedBean.proposalQtnTenderSearchBean.proposalNo}"
+									completeMethod="#{qtPropOfferSubReportBB.autoCompleteProposalNo}"
+									scrollHeight="100"/>
+						</td>
+						
+						<td width="15%">	
+							<p:outputLabel value="#{lbl['lbl.rpt.status']}"/>
+						</td>
+						<td width="35%">		
+							 <p:selectManyMenu id="manyMenuSts" value="#{qtPropOfferSubReportBB.managedBean.proposalQtnTenderSearchBean.scStatusManyMenu}" 
+								converter="#{statusConverter}" filter="true" multiple="true" filterMatchMode="startsWith" showCheckbox="true" styleClass="manymenu-advanced"
+								style="width:300px;height:70px;position:relative;">
+								<f:selectItems
+									value="#{qtPropOfferSubReportBB.reportStatusDropdownValuesProposalOfferSubmission()}"
+									var="status" itemValue="#{status}" itemLabel="#{status}" 
+									itemDisabled="#{qtPropOfferSubReportBB.isDisabled(status,qtReportMainBB.managedBean.reportCode)}" ></f:selectItems>
+								<p:ajax event="change" process="@this" update="@this"
+								listener="#{qtPropOfferSubReportBB.onSelectAll(qtReportMainBB.managedBean.reportCode)}" />	
+							</p:selectManyMenu>
+						</td>	
+					</tr>
+					<tr>
+						<TD><p:outputLabel value="#{lbl['lbl.rpt.proposal.submitted.date.from']}"
+								style="margin-top:5px;width:120px;margin-left:4px" /></TD>
+						<TD><p:selectOneMenu
+								value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scCreatedFromMonth}"
+								style="margin-top:5px;width:130px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems value="#{cc.attrs.bBean.generateMonthList()}"></f:selectItems> 
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									listener="#{cc.attrs.bBean.propSubmitToMonthUpdate(cc.attrs.bBean.managedBean.scReportSearchBean)}" 
+									update="@([id$=propSubmitMonth])" />
+							</p:selectOneMenu>
+							<p:selectOneMenu
+								value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scCreatedFromYear}"
+								style="margin-top:5px;width:90px;">
+								<f:selectItems value="#{cc.attrs.bBean.generateYearList()}"></f:selectItems>
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									listener="#{cc.attrs.bBean.propSubmitToYearUpdate(cc.attrs.bBean.managedBean.scReportSearchBean)}" 
+									update="@([id$=propSubmitDt])" />
+							</p:selectOneMenu></TD>
+						<TD><p:outputLabel value="#{lbl['lbl.rpt.proposal.submitted.date.to']}"
+								style="margin-top:2px;width:120px;margin-left:-8px" /></TD>
+						<TD><p:selectOneMenu id="propSubmitMonth"
+								value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scCreatedToMonth}"
+								style="margin-top:5px;width:130px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItems value="#{cc.attrs.bBean.generateMonthList()}"></f:selectItems>
+								<p:ajax event="change" process="@this" partialSubmit="true" />
+							</p:selectOneMenu>
+							<p:selectOneMenu id="propSubmitDt" disabled="true"
+								value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scCreatedToYear}"
+								style="margin-top:5px;width:90px;">
+								<f:selectItems value="#{cc.attrs.bBean.generateYearList()}"></f:selectItems>
+								<p:ajax event="change" process="@this" partialSubmit="true" />
+							</p:selectOneMenu></TD>
+					</tr>
+					
+				</table>
+			</div>
+				
+		</p:panel>
+		
+		
+		<p:panel header="#{lbl['lbl.rpt.proposal.list.title']}" 
+			toggleable="true">
+			
+			<p:dataTable id="qtProposalListid" rows="10"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{qtPropOfferSubReportBB.searchQTProposal}"
+				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
+				styleClass="cloneResults">
+	
+				<ac:paginator for="qtProposalListid" />
+				
+				<p:ajax event="rowSelect" update="@form"   
+							listener="#{qtPropOfferSubReportBB.onRowProposalAction}" />
+	
+				<p:column style="width:15%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.qtn.no']}">
+					<h:outputText value="#{scQt.qtNo}" />
+				</p:column>
+	
+				<p:column style="width:15%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.proposal.no']}">
+					<h:outputText value="#{qtPropOfferSubReportBB.getProposalNoForSupplierReport(scQt.qtId)}" />  
+				</p:column>
+				
+				<p:column style="width:45%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.title']}">
+					<h:outputText value="#{scQt.qtTitle}" />
+				</p:column>
+				
+				<p:column style="width:25%;white-space: normal;"
+					headerText="#{lbl['lbl.sc.status']}">
+					<h:outputText
+						value="#{qtPropOfferSubReportBB.getStatusForReportBySupplier(scQt.qtId)}" /> 
+				</p:column>
+			</p:dataTable>
+			<table style="width:100%;border-spacing: 10px;">
+			<p:commandButton id="btnReset" value="#{lbl['lbl.btn.reset']}" update=":form" 
+					process="@this" action="#{cc.attrs.bBean.resetSearch()}"
+					style="float:right;"/>
+			
+			<p:commandButton value="#{lbl['lbl.btn.search']}"
+					styleClass="BtnSpacing" update="searchproposalid"
+					actionListener="#{qtPropOfferSubReportBB.searchProposalListAction()}"
+					style="float:right;" partialSubmit="true" process="@parent" />	
+					
+			</table>
+			
+			<p:spacer height="15px" />
+		</p:panel>	
+		
+	</h:panelGroup>		
 
 	</cc:implementation>
 </ui:component>

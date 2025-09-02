@@ -67,6 +67,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
+import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.qt.QtReportManagedBean;
@@ -1250,7 +1251,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * 
 	 * @return ScPropSubmitToYear 
 	 */
-	public void propSubmitToDtUpdate(ScReportFieldsSearchBean reportSearchbean) {
+	//public void propSubmitToDtUpdate(ScReportFieldsSearchBean reportSearchbean) {
+	public void propSubmitToYearUpdate(ScReportFieldsSearchBean reportSearchbean) {
 		reportSearchbean.setScCreatedToYear(reportSearchbean.getScCreatedFromYear());
 		reportSearchbean.setScPropSubmitFromYear(reportSearchbean.getScCreatedFromYear());
 		reportSearchbean.setScPropSubmitToYear(reportSearchbean.getScCreatedFromYear());
@@ -1267,6 +1269,43 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		reportSearchbean.setScCreatedToMonth(reportSearchbean.getScCreatedFromMonth());
 		reportSearchbean.setScPropSubmitFromMonth(reportSearchbean.getScCreatedFromMonth());
 		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScCreatedFromMonth());
+	}
+	
+	/**
+	 * construct the proposal Submitted to year based on ScPropSubmitFromYear(
+	 * 
+	 * @param reportSearchbean getScPropSubmitFromYear
+	 * 
+	 * @return ScPropSubmitToYear 
+	 */
+	//public void propSubmitToDtUpdate(ScReportFieldsSearchBean reportSearchbean) {
+	public void propSubmitToYearUpdate(QtnTenderSearchBean qtTenderSearchbean) {
+		qtTenderSearchbean.setScCreatedToYear(qtTenderSearchbean.getScCreatedFromYear());
+		qtTenderSearchbean.setScPropSubmitFromYear(qtTenderSearchbean.getScCreatedFromYear());
+		qtTenderSearchbean.setScPropSubmitToYear(qtTenderSearchbean.getScCreatedFromYear());
+	}
+
+	/**
+	 * construct the proposal Submitted to month based on ScPropSubmitFromMonth(
+	 * 
+	 * @param reportSearchbean getScPropSubmitFromMonth
+	 * 
+	 * @return ScPropSubmitToMonth
+	 */
+	public void propSubmitToMonthUpdate(QtnTenderSearchBean qtTenderSearchbean) {
+		qtTenderSearchbean.setScCreatedToMonth(qtTenderSearchbean.getScCreatedFromMonth());
+		qtTenderSearchbean.setScPropSubmitFromMonth(qtTenderSearchbean.getScCreatedFromMonth());
+		qtTenderSearchbean.setScPropSubmitToMonth(qtTenderSearchbean.getScCreatedFromMonth());
+	}
+	
+	public List<String> searchListProposal() {
+		log.info("harun cek searchListProposal=========================");
+		List<String> statusValues = new ArrayList<String>();
+
+		statusValues.add(getStatusDesc("lbl.rpt.pending.proposal.submission"));
+		statusValues.add(getStatusDesc("lbl.rpt.proposal.submitted"));
+	
+		return statusValues;
 	}
 	//#14306 - End
 }

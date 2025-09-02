@@ -13,6 +13,7 @@ package my.ep.web.bean.sc.quatationtender;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import my.ep.biz.bean.search.sc.QTSearchBean;
 import my.ep.constant.pm.ParameterConst;
@@ -85,6 +86,18 @@ public class QtnTenderSearchBean implements Serializable {
 	
 	/** The loa no. */
 	private String loaNo;//#29468 Added by Vinod
+	
+	/** The Proposal no. */
+	private String proposalNo;//#14306 Harun
+	private List<String> scStatusManyMenu;//#29580
+	private String scCreatedFromMonth;//#14306
+	private String scCreatedFromYear;//#14306
+	private String scCreatedToMonth;//#14306
+	private String scCreatedToYear;//#14306
+	private String scPropSubmitFromMonth;//#14306
+	private String scPropSubmitFromYear;//#14306
+	private String scPropSubmitToMonth;//#14306
+	private String scPropSubmitToYear;//#14306
 	
 	/**
 	 * flag to indicate if the qtStatus is to filter ScQt by status
@@ -480,6 +493,89 @@ public class QtnTenderSearchBean implements Serializable {
 		this.loaNo = loaNo;
 	}
 	//#29468 End Vinod
+
+	//#14306 Start Harun
+	public String getProposalNo() {
+		return proposalNo;
+	}
+
+	public void setProposalNo(String proposalNo) {
+		this.proposalNo = proposalNo;
+	}
+
+	public List<String> getScStatusManyMenu() {
+		return scStatusManyMenu;
+	}
+
+	public void setScStatusManyMenu(List<String> scStatusManyMenu) {
+		this.scStatusManyMenu = scStatusManyMenu;
+	}
+
+	public String getScCreatedFromMonth() {
+		return scCreatedFromMonth;
+	}
+
+	public void setScCreatedFromMonth(String scCreatedFromMonth) {
+		this.scCreatedFromMonth = scCreatedFromMonth;
+	}
+
+	public String getScCreatedFromYear() {
+		return scCreatedFromYear;
+	}
+
+	public void setScCreatedFromYear(String scCreatedFromYear) {
+		this.scCreatedFromYear = scCreatedFromYear;
+	}
+
+	public String getScCreatedToMonth() {
+		return scCreatedToMonth;
+	}
+
+	public void setScCreatedToMonth(String scCreatedToMonth) {
+		this.scCreatedToMonth = scCreatedToMonth;
+	}
+
+	public String getScCreatedToYear() {
+		return scCreatedToYear;
+	}
+
+	public void setScCreatedToYear(String scCreatedToYear) {
+		this.scCreatedToYear = scCreatedToYear;
+	}
+
+	public String getScPropSubmitFromMonth() {
+		return scPropSubmitFromMonth;
+	}
+
+	public void setScPropSubmitFromMonth(String scPropSubmitFromMonth) {
+		this.scPropSubmitFromMonth = scPropSubmitFromMonth;
+	}
+
+	public String getScPropSubmitFromYear() {
+		return scPropSubmitFromYear;
+	}
+
+	public void setScPropSubmitFromYear(String scPropSubmitFromYear) {
+		this.scPropSubmitFromYear = scPropSubmitFromYear;
+	}
+
+	public String getScPropSubmitToMonth() {
+		return scPropSubmitToMonth;
+	}
+
+	public void setScPropSubmitToMonth(String scPropSubmitToMonth) {
+		this.scPropSubmitToMonth = scPropSubmitToMonth;
+	}
+
+	public String getScPropSubmitToYear() {
+		return scPropSubmitToYear;
+	}
+
+	public void setScPropSubmitToYear(String scPropSubmitToYear) {
+		this.scPropSubmitToYear = scPropSubmitToYear;
+	}
+	
+	//#14306 End Harun
 	
 	
 }

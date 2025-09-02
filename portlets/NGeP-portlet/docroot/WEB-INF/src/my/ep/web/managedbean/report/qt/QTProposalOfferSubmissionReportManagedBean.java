@@ -16,6 +16,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
+import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 
 /**
  * The Class BriefingPaperReportManagedBean.
@@ -35,10 +36,12 @@ public class QTProposalOfferSubmissionReportManagedBean extends QtReportManagedB
 	private ScQt autoScQt;
 	private ScQtProposal autoScQtProposal;
 	private Long supplierId;//#14306
-	private String scPropSubmitFromMonth;//#14306
-	private String scPropSubmitFromYear;//#14306
-	private String scPropSubmitToMonth;//#14306
-	private String scPropSubmitToYear;//#14306
+//	private String scPropSubmitFromMonth;//#14306
+//	private String scPropSubmitFromYear;//#14306
+//	private String scPropSubmitToMonth;//#14306
+//	private String scPropSubmitToYear;//#14306
+	/** The clone qtn tender search bean. */
+	private QtnTenderSearchBean proposalQtnTenderSearchBean; //#14306
 	
 	
 
@@ -133,55 +136,70 @@ public class QTProposalOfferSubmissionReportManagedBean extends QtReportManagedB
 		this.supplierId = supplierId;
 	}
 	
-	/**
-	 * @return the scPropSubmitFromMonth
-	 */
-	public String getScPropSubmitFromMonth() {
-		return scPropSubmitFromMonth;
-	}
-	/**
-	 * @param scPropSubmitFromMonth the scPropSubmitFromMonth to set
-	 */
-	public void setScPropSubmitFromMonth(String scPropSubmitFromMonth) {
-		this.scPropSubmitFromMonth = scPropSubmitFromMonth;
-	}
-	/**
-	 * @return the scPropSubmitFromYear
-	 */
-	public String getScPropSubmitFromYear() {
-		return scPropSubmitFromYear;
-	}
-	/**
-	 * @param scPropSubmitFromYear the scPropSubmitFromYear to set
-	 */
-	public void setScPropSubmitFromYear(String scPropSubmitFromYear) {
-		this.scPropSubmitFromYear = scPropSubmitFromYear;
-	}
-	/**
-	 * @return the scPropSubmitToMonth
-	 */
-	public String getScPropSubmitToMonth() {
-		return scPropSubmitToMonth;
-	}
-	/**
-	 * @param scPropSubmitToMonth the scPropSubmitToMonth to set
-	 */
-	public void setScPropSubmitToMonth(String scPropSubmitToMonth) {
-		this.scPropSubmitToMonth = scPropSubmitToMonth;
-	}
-	/**
-	 * @return the scPropSubmitToYear
-	 */
-	public String getScPropSubmitToYear() {
-		return scPropSubmitToYear;
-	}
-	/**
-	 * @param scPropSubmitToYear the scPropSubmitToYear to set
-	 */
-	public void setScPropSubmitToYear(String scPropSubmitToYear) {
-		this.scPropSubmitToYear = scPropSubmitToYear;
-	}
+//	/**
+//	 * @return the scPropSubmitFromMonth
+//	 */
+//	public String getScPropSubmitFromMonth() {
+//		return scPropSubmitFromMonth;
+//	}
+//	/**
+//	 * @param scPropSubmitFromMonth the scPropSubmitFromMonth to set
+//	 */
+//	public void setScPropSubmitFromMonth(String scPropSubmitFromMonth) {
+//		this.scPropSubmitFromMonth = scPropSubmitFromMonth;
+//	}
+//	/**
+//	 * @return the scPropSubmitFromYear
+//	 */
+//	public String getScPropSubmitFromYear() {
+//		return scPropSubmitFromYear;
+//	}
+//	/**
+//	 * @param scPropSubmitFromYear the scPropSubmitFromYear to set
+//	 */
+//	public void setScPropSubmitFromYear(String scPropSubmitFromYear) {
+//		this.scPropSubmitFromYear = scPropSubmitFromYear;
+//	}
+//	/**
+//	 * @return the scPropSubmitToMonth
+//	 */
+//	public String getScPropSubmitToMonth() {
+//		return scPropSubmitToMonth;
+//	}
+//	/**
+//	 * @param scPropSubmitToMonth the scPropSubmitToMonth to set
+//	 */
+//	public void setScPropSubmitToMonth(String scPropSubmitToMonth) {
+//		this.scPropSubmitToMonth = scPropSubmitToMonth;
+//	}
+//	/**
+//	 * @return the scPropSubmitToYear
+//	 */
+//	public String getScPropSubmitToYear() {
+//		return scPropSubmitToYear;
+//	}
+//	/**
+//	 * @param scPropSubmitToYear the scPropSubmitToYear to set
+//	 */
+//	public void setScPropSubmitToYear(String scPropSubmitToYear) {
+//		this.scPropSubmitToYear = scPropSubmitToYear;
+//	}
 	//#14306 - End
 
+	/**
+	 * @return the proposalQtnTenderSearchBean
+	 */
+	public QtnTenderSearchBean getProposalQtnTenderSearchBean() {
+		return proposalQtnTenderSearchBean;
+	}
+
+	/**
+	 * @param proposalQtnTenderSearchBean the proposalQtnTenderSearchBean to set
+	 */
+	public void setProposalQtnTenderSearchBean(QtnTenderSearchBean proposalQtnTenderSearchBean) {
+		this.proposalQtnTenderSearchBean = proposalQtnTenderSearchBean;
+	}
+
+	
 
 }

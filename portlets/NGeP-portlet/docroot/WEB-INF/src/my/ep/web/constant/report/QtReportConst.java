@@ -91,6 +91,8 @@ public class QtReportConst implements Serializable {
 	//Report status
 	public static final String STATUS_PENDING_PROPOSAL_SUBMISSION = "9";
 	public static final String STATUS_PROPOSAL_SUBMITTED = "10";
+	public static final String STATUS_PROPOSAL_SUBMITTED_ISSUBMITTED_YES = "1";
+	public static final String STATUS_PROPOSAL_SUBMITTED_ISSUBMITTED_NO = "0";
 	// 14306 - End (Harun)
 	
 	// 29580 - Report status label constant
