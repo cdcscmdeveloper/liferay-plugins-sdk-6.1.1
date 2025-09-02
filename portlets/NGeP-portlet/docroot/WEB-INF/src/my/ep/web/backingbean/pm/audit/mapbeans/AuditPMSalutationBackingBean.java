@@ -23,6 +23,7 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	String roleCode;
 	String docNo;
+	String docType;
 	BigInteger docId;
 
 	@Override
@@ -41,6 +42,7 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 		SalutationManagedBean managedBeans = (SalutationManagedBean) manageBean;
 		this.roleCode = roleCode;
 		this.docNo = managedBeans.getPmSalutation().getSalutationCode();
+		this.docType = managedBeans.getPmSalutation().getSalutationName();
 		this.docId = BigInteger.valueOf(managedBeans.getPmSalutation().getSalutationId());
 		if (managedBeans.getOldPmSalutation() != null && managedBeans.getOldPmSalutation().getSalutationId() != null) {
 			if (managedBeans.getPmSalutation().getSalutationName() != null
@@ -75,7 +77,7 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 	private ArrayList<AuditPMSPDTO> detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
-		dtlObj.setDocType(AuditConst.PM_AUD_SALUTATION);
+		dtlObj.setDocType(this.docType);
 		dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_SALUTATION_PMPARAMETERLVLID);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);

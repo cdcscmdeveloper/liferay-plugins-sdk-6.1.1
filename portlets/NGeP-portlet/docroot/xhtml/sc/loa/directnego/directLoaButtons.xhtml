@@ -152,4 +152,26 @@
 			</div>
 	</p:dialog>
 	<ui:remove> #29007 End Vinod </ui:remove>
+	<ui:remove> #29766 Start Vinod </ui:remove>
+	<p:dialog id="reviseForPK7Id" widgetVar="reviseForPK7PopUp"
+		resizable="false" width="50%" height="100" closable="false"
+		modal="true">
+		<table style="width: 900px;">
+			<tr>
+				<td align="center">
+					<h:outputText style="white-space: normal;word-wrap:break-word; word-break:break-word;"
+						value="#{directLOABackingBean.managedBean.alertForInactivePK7}" />
+				</td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}"
+				onclick="blockWidget.show();"
+				oncomplete="reviseForPK7PopUp.hide(); blockWidget.hide();"
+				partialSubmit="true" process="@form" update="@form"
+				action="#{directLOABackingBean.reviseForQTTypeItemInPK7()}" />
+		</div>
+	</p:dialog>
+	<ui:remove> #29766 End Vinod </ui:remove>
 </ui:composition>

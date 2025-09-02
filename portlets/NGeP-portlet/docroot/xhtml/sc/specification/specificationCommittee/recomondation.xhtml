@@ -7,8 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:remove>#10141 Start Vinod</ui:remove>
-	<ui:include src="specScorePreview.xhtml" />
-	<p:spacer height="35"></p:spacer>
+	<c:if test="#{!specificationBackingBean.managedBean.readOnly}">
+		<ui:include src="specScorePreview.xhtml" />
+		<p:spacer height="35"></p:spacer>
+	</c:if>
 	<ui:remove>#10141 End Vinod</ui:remove>
 
 	<h:panelGroup id="recommendationid">

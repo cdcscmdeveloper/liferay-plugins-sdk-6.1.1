@@ -315,10 +315,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean haveSupplierRejection;
 	// #11134 - End
 	
-	//#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	private List<SmSupplierBranch> supplierBranchList;
-	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;	
-	//#28777 & #29729 - End
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage;	
+	// #28777 & #29729 - End
 	
 	//29562 - START
 	private String finalizationMethodBefore;
@@ -330,6 +331,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean notReachAgrm;
 	
 	private boolean allSupplierDisagreeEPV;//#21692
+	
+	// 26247 - start
+	private List<String> disabledSupplierIds;
+
+	// 26247 - end
 	
 	/**
 	 * @return the activeIndex
@@ -2465,7 +2471,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	//28834 end
 
-	//#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;
 	}
@@ -2473,7 +2479,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
 	}
-	
+
 	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByRecommendType() {
 		return disqualifiedSuppliersByRecommendType;
 	}
@@ -2482,7 +2488,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType) {
 		this.disqualifiedSuppliersByRecommendType = disqualifiedSuppliersByRecommendType;
 	}
-	//#28777 & #29729 - End
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByEvalStage() {
+		return disqualifiedSuppliersByEvalStage;
+	}
+
+	public void setDisqualifiedSuppliersByEvalStage(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage) {
+		this.disqualifiedSuppliersByEvalStage = disqualifiedSuppliersByEvalStage;
+	}
+	// #28777 & #29729 - End
 
 	public boolean isDemoReq() {
 		return isDemoReq;
@@ -2619,6 +2634,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
 	}
 	//#21692 - End
+	// 26247 - start
+	public List<String> getDisabledSupplierIds() {
+		return disabledSupplierIds;
+	}
 
+	public void setDisabledSupplierIds(List<String> disabledSupplierIds) {
+		this.disabledSupplierIds = disabledSupplierIds;
+	}
+	// 26247 - end
 }
 // ***25201

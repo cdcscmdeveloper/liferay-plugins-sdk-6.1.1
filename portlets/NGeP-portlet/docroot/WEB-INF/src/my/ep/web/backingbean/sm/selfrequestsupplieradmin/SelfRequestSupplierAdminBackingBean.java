@@ -609,6 +609,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 			//addr.setPmDivision(new PmDivision());
 			addr.setPmDistrict(new PmDistrict());
 			addr.setPmCity(new PmCity());
+			addr.setPostcode("");
 		}
 	}
 
@@ -645,6 +646,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 			//addr.setPmDivision(new PmDivision());
 			addr.setPmDistrict(new PmDistrict());
 			addr.setPmCity(new PmCity());
+			addr.setPostcode("");
 		}
 	}
 
@@ -670,6 +672,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 		//PR - preRender
 		if(!isPreRender){
 			addr.setPmCity(new PmCity());
+			addr.setPostcode("");
 		}
 	}
 	
@@ -696,6 +699,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 		if(!isPreRender){
 			addr.setPmDistrict(new PmDistrict());
 			addr.setPmCity(new PmCity());
+			addr.setPostcode("");
 		}
 	}
 	//13320-End
@@ -706,6 +710,8 @@ public class SelfRequestSupplierAdminBackingBean extends
 		
 		if(isPreRender){
 			cityId = addr.getCityId() == null ? addr.getPmCity().getCityId() : addr.getCityId();
+		} else {
+			addr.setPostcode("");
 		}
 		if(cityId != null){
 			addr.setPmCity(SmCommonUtil.getInstance().getCityById(cityId));

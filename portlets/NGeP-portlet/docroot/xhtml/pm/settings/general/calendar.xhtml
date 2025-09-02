@@ -300,16 +300,15 @@
 						</tr>
 					</table>
 					<div style="float: right;">
-							<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
-										rendered="#{not calendarBackingBean.managedBean.disabledUpdate}"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
-										update="eventDetails,calendarMessages" process="eventDetails"/>
-							<p:commandButton id="deleteButton" value="#{lbl['lbl.btn.delete']}"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										actionListener="#{calendarBackingBean.deleteEvent}"
-										update="schedule,eventDetails" process="@this"
-										rendered="#{not calendarBackingBean.managedBean.newEvent and not calendarBackingBean.managedBean.disabledUpdate}" />
+						<!-- 34445 start -->
+						<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
+							rendered="#{not calendarBackingBean.managedBean.disabledUpdate}"
+							partialSubmit="true" process="eventDetails"
+							update="eventDetails,calendarMessages" oncomplete="if (!args.validationFailed) updateData.show()"/>
+						<p:commandButton id="deleteButton" value="#{lbl['lbl.btn.delete']}"
+							rendered="#{not calendarBackingBean.managedBean.newEvent and not calendarBackingBean.managedBean.disabledUpdate}"
+							process="@this" oncomplete="deleteInfoDlg.show()" />
+						<!-- 34445 start -->
 					</div>
 				</h:panelGroup>
 				</p:outputPanel>
@@ -329,6 +328,23 @@
 
 				</h:panelGroup>
 			</p:dialog>
+		
+		<!-- 34445 start -->
+		<ac:confirmationPopupSM id="updateData" widget="updateData"
+			width="400" height="100" loadingWidget="blockWidget"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.save.msg']}"
+			okAction="calendarBackingBean.addOrUpdateEvent"
+			update="@([id$=eventDetails], [id$=calendarMessages])"/>
+			
+		<ac:confirmationPopup id="deleteInfoDlg" widget="deleteInfoDlg"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.delete.msg']}"
+			loadingWidget="blockWidget"
+			okAction="calendarBackingBean.deleteEvent"
+			update="@([id$=schedule],[id$=eventDetails])"/>
+		<!-- 34445 end -->
 		
 	</ui:define>
 </ui:composition>

@@ -66,8 +66,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td>
-				<!-- #34400 -->
+			<td><!-- #34400 -->
 				<p:commandButton value="#{lbl['lbl.btn.submit']}" oncomplete="if (!args.validationFailed) confirmDlg.show();" />
 			</td>
 			<td />
@@ -80,13 +79,53 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif" />
 			</p:dialog>
 	<!-- #34400 -->
-	<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
-		okAction="supplierUserActivationBackingBean.activateSupplierUser"
-		okProcess="@form"
-		content="#{lbl['lbl.sm.confirm.user.activate']}" 
-		update="@form"
-		loadingWidget="submissionDialog"/>
+	<!-- ac:confirmationPopupSM was not used due to null error because JSTL tag (c:when) render before cc.attrs -->
+	<style>
+			#{cc.attrs.dialogCSS}
+			.confirm-ui-dialog{
+				max-width: 500px;
+				width: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table{
+				margin: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table td label {
+				white-space: normal;
+				padding-left: 5px;
+				display: inline !important;
+				float: none !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content{
+				padding: 1em 1em !important;
+				height: auto !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content span img{
+				margin-top: -4px;
+			}
+	</style>
+	<p:dialog styleClass="confirm-ui-dialog" id="confirmDlg" widgetVar="confirmDlg"
+		header="#{lbl['lbl.btn.dialog.cofirm.header']}" resizable="false"
+		width="400" height="auto" closable="false" modal="true">
+		
+		<p:outputPanel id="confirmDlgPopup" layout="block">
+		<table width="100%">
+			<tr>
+				<td align="left" style="white-space: normal; word-wrap: break-word !important;">
+				<p:outputLabel value="#{lbl['lbl.sm.confirm.user.activate']}" 
+					escape="false" style="padding-left:0px"/></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" onstart="confirmDlg.hide();submissionDialog.show();"
+				action="#{supplierUserActivationBackingBean.activateSupplierUser()}"
+				oncomplete="submissionDialog.hide();" 
+				ajax="false"/>
+			
+			<p:commandButton value="#{lbl['lbl.btn.no']}" oncomplete="confirmDlg.hide();" />
+		</div>
+		</p:outputPanel>
+	</p:dialog>
 	</ui:define>
-
 
 </ui:composition>

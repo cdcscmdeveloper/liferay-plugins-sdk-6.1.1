@@ -8,7 +8,7 @@
 <p:blockUI widgetVar="blkPanelSearchTable"  block=":form" trigger="panelSearchId">  
 			  <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
 		 </p:blockUI> 
-	<p:panel header="#{lbl['lbl.pm.audit.result_']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.pm.audit.result']}" toggleable="true">
 		<p:dataTable id="searchMasters" var="master" rows="10"
 			value="#{searchPMAuditBackingBean.searchMaster}"
 			rowIndexVar="index" lazy="true">
@@ -26,16 +26,17 @@
 				<h:outputText value="#{master.actionBy}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.audit.Role']}" style="width :10%"> 
-				<h:outputText value="#{master.roleCode}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.audit.action']}" style="width:5%;text-align:center;">
-				<p:commandLink id="panelSearchId"
-					action="#{searchPMAuditBackingBean.redirectToDetails(master.paramLevel3,master.pmParameterLvlId,master.createBy,master.roleCode)}"
-					onstart="blkPanelSearchTable.show();" oncomplete="blkPanelSearchTable.hide();">
-					<p:graphicImage library="ep/images/design" 
-						title="#{lbl['lbl.pm.update.location']}"
-						value="/css/images/design/ico-view.png" />
-				</p:commandLink>
+				<h:outputText value="#{master.roleName}" />
+			</p:column>	
+				<p:column width="5%" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.action']}" />
+					</f:facet>
+				<p:menuButton value="#{lbl['lbl.btn.option']}">
+						<p:menuitem id="panelSearchId" value="#{lbl['lbl.pm.view']}"
+							icon="ui-icon-view"
+							action="#{searchPMAuditBackingBean.redirectToDetails(master.paramLevel3,master.pmParameterLvlId,master.createBy,master.roleCode)}" />
+					</p:menuButton>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

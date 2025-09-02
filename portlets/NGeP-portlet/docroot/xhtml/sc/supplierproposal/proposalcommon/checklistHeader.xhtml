@@ -12,7 +12,9 @@
 				<h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}" />
 			</td>
 			<td class="header-info-text">
-				#{scQtCheckList.title}
+				<ui:remove>#33787 Start Vinod</ui:remove>
+				#{supplierProposalDetailBackingBean.getChecklistTitle(scQtCheckList)}
+				<ui:remove>#33787 End Vinod</ui:remove>
 			</td>
 		</tr>
 		</table>

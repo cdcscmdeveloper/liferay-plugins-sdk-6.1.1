@@ -258,6 +258,7 @@ public class PoJobTypeRatioBackingBean extends BaseBackingBean<PoJobTypeRatioMan
 			if (resDTO.isSuccessful() && resDTO.getPoJobTypeRatio() != null) {
 				/************ AUDIT START #28895-35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_WORK_ALLOCATION)) {
+					getManagedBean().setSavedJobTypeRatio(resDTO.getPoJobTypeRatio());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_WORK_ALLOCATION);
 				}
 				/************ AUDIT END #28895-35509 *************/

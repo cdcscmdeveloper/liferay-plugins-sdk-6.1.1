@@ -143,7 +143,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	private List<PpUpdateReason> selectedUpdateReasons;
 	
-	
 	//[#25549] add .. start
 	private List<PpProcurementItem> clonePpProcurementItemLs;
 	private List<PpExpenditureItem> clonePpExpenditureItemLs;
@@ -177,6 +176,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	//#32730 - start
 	private boolean preYear = true;
 	//#32730 - end
+	private Long auditReviseStatusID; //35502
 	
 	public ProcurementPlanManagedBean(){}
 
@@ -533,7 +533,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setSelectedUpdateReasons(List<PpUpdateReason> selectedUpdateReasons) {
 		this.selectedUpdateReasons = selectedUpdateReasons;
 	}
-
 
 	/**
 	 * @return the approverModel
@@ -1499,4 +1498,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.preYear = preYear;
 	}
 	//#32730 - end
+
+	//35502 - Start
+	public Long getAuditReviseStatusID() {
+		return auditReviseStatusID;
+	}
+
+	public void setAuditReviseStatusID(Long auditReviseStatusID) {
+		this.auditReviseStatusID = auditReviseStatusID;
+	}
+	//35502 - end
 }

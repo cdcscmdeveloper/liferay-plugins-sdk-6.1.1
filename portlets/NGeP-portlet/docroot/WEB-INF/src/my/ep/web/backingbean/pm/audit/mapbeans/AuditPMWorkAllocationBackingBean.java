@@ -27,6 +27,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO dtlWeightCategory = new AuditPMSPDTO();
 	AuditPMSPDTO dtlStatus = new AuditPMSPDTO();
+	BigInteger docId;
 
 	@Override
 	public String getRoleCode() {
@@ -45,6 +46,8 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 		PoJobTypeRatioManagedBean managedBean = (PoJobTypeRatioManagedBean) manageBean;
 		PmPoJobTypeRatio jobRatio = managedBean.getPoJobTypeRatio();
 
+		docId = BigInteger.valueOf(managedBean.getSavedJobTypeRatio().getPoJobTypeRatioId());
+		
 		if (!managedBean.isBrandNew()) {
 			PmPoJobTypeRatio oldPoJobRatio = managedBean.getOriPoJobTypeRatio();
 
@@ -56,7 +59,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 				dtlWeightCategory.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				dtlWeightCategory.setLvlCode2(AuditConst.PM_LVL_CODE_2_WAML);
 				dtlWeightCategory.setLvlCode3(AuditConst.PM_LVL_CODE_3_WAML);
-				dtlWeightCategory.setDocId(BigInteger.valueOf(jobRatio.getPoJobTypeRatioId()));
+				dtlWeightCategory.setDocId(docId);
 				dtlWeightCategory.setFieldLabelCode(AuditConst.PM_AUD_WAML_WEIGHT_CATEGORY_FIELDLABELCODE);
 				dtlWeightCategory.setOldValue(checkValue(oldPoJobRatio.getPoJobWeight().getPoJobWeightId()));
 				dtlWeightCategory.setNewValue(checkValue(jobRatio.getPoJobWeight().getPoJobWeightId()));
@@ -73,7 +76,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 				dtlStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				dtlStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_WAML);
 				dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_WAML);
-				dtlStatus.setDocId(BigInteger.valueOf(jobRatio.getPoJobTypeRatioId()));
+				dtlStatus.setDocId(docId);
 				dtlStatus.setFieldLabelCode(AuditConst.PM_AUD_WAML_STATUS_FIELDLABELCODE);
 				dtlStatus.setOldValue(oldPoJobRatio.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 						: AuditConst.PM_AUD_INACTIVE);
@@ -89,7 +92,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 			dtlWeightCategory.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 			dtlWeightCategory.setLvlCode2(AuditConst.PM_LVL_CODE_2_WAML);
 			dtlWeightCategory.setLvlCode3(AuditConst.PM_LVL_CODE_3_WAML);
-			dtlWeightCategory.setDocId(BigInteger.valueOf(jobRatio.getPoJobTypeRatioId()));
+			dtlWeightCategory.setDocId(docId);
 			dtlWeightCategory.setFieldLabelCode(AuditConst.PM_AUD_WAML_WEIGHT_CATEGORY_FIELDLABELCODE);
 			dtlWeightCategory.setNewValue(checkValue(jobRatio.getPoJobWeight().getPoJobWeightId()));
 			dtlWeightCategory.setNewValueId(BigInteger.valueOf(jobRatio.getPoJobWeight().getPoJobWeightId()));
@@ -102,7 +105,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 			dtlStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 			dtlStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_WAML);
 			dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_WAML);
-			dtlStatus.setDocId(BigInteger.valueOf(jobRatio.getPoJobTypeRatioId()));
+			dtlStatus.setDocId(docId);
 			dtlStatus.setFieldLabelCode(AuditConst.PM_AUD_WAML_STATUS_FIELDLABELCODE);
 			dtlStatus.setNewValue(jobRatio.getPoJobWeight().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
@@ -111,7 +114,8 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 		}
 
 		auditPMReqDTO.setObjList(objList);
-		managedBean.setOriPoJobTypeRatio(null);
+		managedBean.setBrandNew(false);
+		managedBean.setSavedJobTypeRatio(null);
 		return auditPMReqDTO;
 	}
 

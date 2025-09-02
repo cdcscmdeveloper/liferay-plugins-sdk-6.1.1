@@ -2,7 +2,9 @@ package my.ep.web.backingbean.pm.location;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -259,10 +261,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		String message = null;
 		String[] messageParam = null;
 		Long locationId = null;
+
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IStateSO.class);
+
 		if (ParameterConst.LOCATION_LEVEL_STATE.equals(getManagedBean().getSelectedType())) {
 			StateReqDTO reqDTO = new StateReqDTO();
-			IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IStateSO.class);
 			PmState state = this.getManagedBean().getState();
 			state.setStateCode(state.getStateCode().toUpperCase());
 			state.setStateName(state.getStateName().trim());
@@ -334,6 +338,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				locationId = getManagedBean().getDivision().getDivisionId();
 				/************ AUDIT #28895_35509 START *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+					StateResDTO stateResDTO = stateSO.retrieveStateByStateId(reqDTO.getStateId());
+					getManagedBean().setState(stateResDTO.getPmState());
 					getManagedBean().setResDivision(resDTO.getPmDivision());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
 				}
@@ -448,6 +454,22 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		}
 
 	}
+
+	/** #35509 getCountryAuditVal() START **/
+	private void getCountryAuditVal(Long selectedCountryId) {
+		retrieveCountryList();
+		Map<Long, PmCountry> countryMap = new HashMap<>();
+		for (PmCountry country : getManagedBean().getCountries()) {
+			countryMap.put(country.getCountryId(), country);
+		}
+
+		PmCountry selectedCountry = countryMap.get(selectedCountryId);
+		if (selectedCountry != null) {
+			getManagedBean().setResCountry(selectedCountry);
+		}
+	}
+
+	/** #35509 getCountryAuditVal() END **/
 
 	/**
 	 * Maintain Location details
@@ -597,6 +619,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		getManagedBean().setStates(resDTO.getStateList());
+
+		/* #35509 PM Start */
+		getCountryAuditVal(countryId);
+		/* #35509 PM End */
 	}
 
 	public void retrieveDivisionList(AjaxBehaviorEvent e) {
@@ -640,6 +666,17 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		DistrictResDTO districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);
 		getManagedBean().setDistricts(districtResDTO.getDistrictList());
 
+		/* #35509 PM Start */
+		Map<Long, PmState> stateMap = new HashMap<>();
+		for (PmState state : getManagedBean().getStates()) {
+			stateMap.put(state.getStateId(), state);
+		}
+
+		PmState selectedSate = stateMap.get(stateId);
+		if (selectedSate != null) {
+			getManagedBean().setResState(selectedSate);
+		}
+		/* #35509 PM End */
 	}
 
 	/*

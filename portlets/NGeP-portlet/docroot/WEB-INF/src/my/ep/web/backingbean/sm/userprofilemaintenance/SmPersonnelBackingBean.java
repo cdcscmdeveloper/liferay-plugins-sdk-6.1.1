@@ -927,11 +927,11 @@ public class SmPersonnelBackingBean extends
 				throw new EpException(MessageConst.ERROR_722656,
 						new String[] { addrType });
 			} else {
-				destAddr.setSmAddress(srcAddr);
+				destAddr.setSmAddress((SmAddress) srcAddr.deepCopy());
 				updateMailAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
 			}
 		}else{
-			SmAddress prevAddr = (SmAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().cloneEntity();
+			SmAddress prevAddr = (SmAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().deepCopy();
 			Long prevCountry = prevAddr.getPmCountry().getCountryId();
 			Long prevState = prevAddr.getPmState().getStateId();
 			PmDivision prevDivision = prevAddr.getPmDivision();
@@ -1557,6 +1557,7 @@ public class SmPersonnelBackingBean extends
 		addr.setPmDivision(new PmDivision());
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 	
 	/**
@@ -1644,6 +1645,7 @@ public class SmPersonnelBackingBean extends
 		addr.setPmDivision(new PmDivision());
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 	
 	/**
@@ -1686,6 +1688,7 @@ public class SmPersonnelBackingBean extends
 		}
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 	
 	/**
@@ -1720,6 +1723,11 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
+	}
+	
+	public void onChangeCity(SmAddress addr, String addrType){
+		addr.setPostcode("");
 	}
 	//#34159 - End
 		
@@ -2262,8 +2270,8 @@ public class SmPersonnelBackingBean extends
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());//#33592-start
 			reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
-			FacesScopes facesScopes = new FacesScopes();
-			PmUser usr = facesScopes.getUserSessionBean();
+			// #38064
+			PmUser usr = getManagedBean().getBasicSmPersonnel().getPmUser();
 			getPersonnelByPmUser(usr);
 			reqDTO.setUserId(usr.getUserId());//#33592-end
 			SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO().retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();

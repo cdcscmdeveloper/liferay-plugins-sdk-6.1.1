@@ -379,6 +379,9 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	private Boolean readOnlyLOADownload = true;
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+	// #29766 Start Vinod
+	private String alertForInactivePK7;
+	// #29766 End Vinod
 	
 	/**
 	 * Gets the spki backing bean.
@@ -2198,5 +2201,15 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.readOnlyLOADownload = readOnlyLOADownload;
 	}
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+
+	// #29766 Start Vinod
+	public String getAlertForInactivePK7() {
+		return alertForInactivePK7;
+	}
+
+	public void setAlertForInactivePK7(String alertForInactivePK7) {
+		this.alertForInactivePK7 = alertForInactivePK7;
+	}
+	// #29766 End Vinod
 	
 }

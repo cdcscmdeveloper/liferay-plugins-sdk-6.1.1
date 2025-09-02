@@ -143,10 +143,10 @@
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.permenantStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
-						<!-- #36718 - START - process panel when change dropdown value, reset value -->
+						<!-- #36718 - START - process panel when change dropdown value, reset value, update postcode -->
 						<p:ajax event="change" process="@this @([id$=individualAddrPanel])"
 							listener="#{registrationBackingBean.populateDistrictByAddType('permenant', true)}"
-							update="divisionIndiLabelPanelId,divisionIndiDropdownPanelId,cmbPermDistrict,cmbPermCity" />
+							update="divisionIndiLabelPanelId,divisionIndiDropdownPanelId,cmbPermDistrict,cmbPermCity,txtPermPostcodeMy" />
 					</p:selectOneMenu> <p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 			</tr>
 			
@@ -174,10 +174,10 @@
 							value="#{registrationBackingBean.managedBean.permenantDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<!-- #36718 - START - process panel when change dropdown value, reset value -->
+						<!-- #36718 - START - process panel when change dropdown value, reset value, update postcode -->
 						<p:ajax event="change" process="@([id$=individualAddrPanel])"
 							listener="#{registrationBackingBean.populateDivisionByAddType('permenant',true)}"
-							update="cmbPermDistrict,cmbPermCity" />
+							update="cmbPermDistrict,cmbPermCity,txtPermPostcodeMy" />
 					</p:selectOneMenu>
 					</ui:fragment>
 				</p:outputPanel>
@@ -205,10 +205,10 @@
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
-						<!-- #36718 - START - process panel when change dropdown value, reset value -->
+						<!-- #36718 - START - process panel when change dropdown value, reset value, update postcode -->
 						<p:ajax event="change" process="@([id$=individualAddrPanel])"
 							listener="#{registrationBackingBean.populateCityByAddType('permenant',true)}"
-							update="cmbPermCity" />
+							update="cmbPermCity,txtPermPostcodeMy" />
 					</p:selectOneMenu> <p:message id="cmbPermDistrictMsg" for="cmbPermDistrict"
 						display="icon" /></td>
 			</tr>
@@ -231,6 +231,10 @@
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.permenantCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
+						<!-- #36718 - START - add ajax -->
+						<p:ajax event="change" process="@([id$=individualAddrPanel])"
+							listener="#{registrationBackingBean.onSelectCity('permenant')}"
+							update="txtPermPostcodeMy" />
 					</p:selectOneMenu> <p:message id="cmbPermCityMsg" for="cmbPermCity" display="icon" /></td>
 			</tr>
 			</p:panel>

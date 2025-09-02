@@ -29,11 +29,11 @@
 							oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
 							style="float:right;width: auto;" />
 					</td>
-					<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}"> 
-						<p:commandButton partialSubmit="true"
-							value="#{lbl['lbl.btn.save']}"		
-							action="#{categoryBackingBean.saveCategory}"
-							update=":form" style="float:right;width: auto;" />
+					<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}">
+						<!-- 34445 start -->
+						<p:commandButton value="#{lbl['lbl.btn.save']}" partialSubmit="true"
+							oncomplete="saveInfoDlg.show();" style="float:right;width: auto;"/>
+						<!-- 34445 end -->
 					</td>				
 					<ui:remove>END : #29665 Add Style for button</ui:remove>
 					<!-- End #29665 change update button behaviour -->
@@ -242,6 +242,15 @@
 				update=":form"
 				oncomplete="updateCategDialog.hide();"/>
 				
+		<!-- 34445 start -->
+		<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
+			okAction="categoryBackingBean.saveCategory"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.save.msg']}" 
+			update=":form"/>
+		<!-- 34445 end -->
+		
 		<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
 			<ac:pmCategoryHistoryPopup catCode="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" 
 			historyList="#{categoryBackingBean.managedBean.remarkHistoryList}" widget="remarkHisCatCodePopup"/>

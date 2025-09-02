@@ -256,9 +256,10 @@
 			<tr>
 				<td valign="top" width="25%"><p:outputLabel
 						value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
-				<td><p:inputText disabled="true" size="35" style="float:left;"
+				<td><p:inputTextarea disabled="true" style="float:left;"
 						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
-						value="#{receivedNoteBackingBean.managedBean.itemName}" /> <h:outputText
+						value="#{receivedNoteBackingBean.managedBean.itemName}" cols="60" rows="3" autoResize="false"></p:inputTextarea>
+				    <h:outputText
 						style="float:left;"
 						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
 						value="#{receivedNoteBackingBean.managedBean.itemName}" /></td>
@@ -268,11 +269,11 @@
 				<td valign="top" width="25%"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.offer']} :&#160;"
 						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" /></td>
-				<td><p:inputText disabled="true" style="float:left;"
+				<td><p:inputTextarea disabled="true" style="float:left;"
 						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
 						escape="false"
 						value="#{receivedNoteBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.supplierOffer}"
-						size="35" /> <ac:iconTooltip
+						cols="60" rows="3" autoResize="false"></p:inputTextarea> <ac:iconTooltip
 						value="#{lbl['lbl.fl.supp.offer.tooltip']}"
 						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" /></td>
 			</tr>
@@ -280,10 +281,10 @@
 				<td valign="top" width="25%"><p:outputLabel
 						value="#{lbl['lbl.fl.new.supp.offer']} :&#160;"
 						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" /></td>
-				<td><p:inputText disabled="true" style="float:left;"
+				<td><p:inputTextarea disabled="true" style="float:left;"
 						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
 						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}"
-						size="35" /> <ac:iconTooltip
+						cols="60" rows="3" autoResize="false"></p:inputTextarea> <ac:iconTooltip
 						value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"
 						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" /></td>
 			</tr>

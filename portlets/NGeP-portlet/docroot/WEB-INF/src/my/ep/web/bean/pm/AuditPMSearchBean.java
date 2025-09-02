@@ -12,7 +12,8 @@ import java.util.List;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 
 /**
- * Search Bean for Location
+ * #35509 
+ * Search Bean for Audit Trail View of System Configuration Search
  * 
  */
 public class AuditPMSearchBean implements Serializable {
@@ -58,6 +59,7 @@ public class AuditPMSearchBean implements Serializable {
 	private String itemName;
 	private String itemCodeOldVal;
 	private String itemNameOldVal;
+	private String pLvl3CodeOld;
 
 	public AuditPMSearchBean() {
 	}
@@ -365,5 +367,13 @@ public class AuditPMSearchBean implements Serializable {
 
 	public void setItemNameOldVal(String itemNameOldVal) {
 		this.itemNameOldVal = itemNameOldVal;
+	}
+
+	public String getpLvl3CodeOld() {
+		return pLvl3CodeOld;
+	}
+
+	public void setpLvl3CodeOld(String pLvl3CodeOld) {
+		this.pLvl3CodeOld = pLvl3CodeOld;
 	}
 }

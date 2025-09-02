@@ -19,7 +19,7 @@
 			<td width="25%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.officeloc.prvt.prchs.price')</td>
 			<td width="25%">#if($review) $!officePrice #end</td>
 		#elseif($officeOwnership == "R")
-			<td class="txtBold" width="25%">$smVmUtil.getDescByLabel('lbl.sm.officeloc.rent.mnthly.rate')</td>
+			<td class="txtBold" width="25%">$smVmUtil.getDescByLabel('lbl.sm.officelocation.rent.mnthly.rate')</td>
 			<td width="25%">#if($review) $!officeRentalRate #end</td>
 		#end
 	</tr>
@@ -142,7 +142,7 @@
 </table>
 <br /><br />
 #end
-
+<div style="page-break-before: always;"></div>
 <table>
 	<tr><td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.comments')</u></td></tr>
 	#if($review)
