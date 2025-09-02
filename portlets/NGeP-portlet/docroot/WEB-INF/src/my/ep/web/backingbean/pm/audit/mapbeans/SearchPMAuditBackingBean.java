@@ -408,6 +408,10 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 		log.info("RoleCode after reset: " + getManagedBean().getSearchBean().getRoleCode());
 
 	}
+	
+	public String wrapText(String input) {
+		return input.replaceAll("(.{20})", "$1\u200B");
+	}
 
 	public IPagingDataModel<VAuditPMDTO> getSearchMaster() {
 		return searchMaster;
