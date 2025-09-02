@@ -6,13 +6,34 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<!-- 36738 Start -->
+	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
+		id="ruleTypeSearch" collapsed="true">
+		<h:panelGrid columns="2" cellpadding="5">
+			<p:outputLabel value="#{lbl['lbl.pm.rule.type']}" />
+			<p:inputText
+				value="#{ruleCatalogueBackingBean.managedBean.searchedRuleType}" />
+		</h:panelGrid>
 
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.search']}"
+				action="#{ruleCatalogueBackingBean.searchRuleType}"
+				update=":form:settingTabId:ruleConfigId" />
+			&#160;
+			<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				action="#{ruleCatalogueBackingBean.resetRuleType}" process="@this"
+				update=":form:settingTabId:ruleConfigId" />
+		</div>
+
+	</p:panel>
+	
+	
+	<!-- 36738 End -->
 	<p:panel id="ruleConfigId">
-
 		<table style="width: 100%">
 			<tr>
-				<td>
-					<div align="right" style="width: 100%">
+				<td>				
+					<div align="right" style="width: 100%">					
 						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="ruleCatalogSaveBtn"
 							partialSubmit="true" process=":form:settingTabId:ruleConfigId"
@@ -23,7 +44,6 @@
 				</td>
 			</tr>
 		</table>
-		
 		<!-- 34445 start -->
 		<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
 			okAction="ruleCatalogueBackingBean.saveRuleCatalog"
@@ -64,13 +84,71 @@
 							
 			</p:column>
 		</p:dataTable>
+		<!-- 36738 Start -->
+		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
+			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'C') or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC')}"
+			id="ruleTypeValueSearch" collapsed="true">
 
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel value="#{lbl['lbl.pm.value']}" />
+				<p:inputText
+					value="#{ruleCatalogueBackingBean.managedBean.searchedRuleDataTypeValues}" />
+
+				<p:outputLabel value="#{lbl['lbl.pm.desc']}" />
+				<p:inputText
+					value="#{ruleCatalogueBackingBean.managedBean.searchedRuleDataTypeDesc}" />
+
+				<p:outputLabel value="#{lbl['lbl.pm.zone']}"
+					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC'}" />
+				<p:selectOneMenu
+					value="#{ruleCatalogueBackingBean.managedBean.searchedRuleDataTypeZone}"
+					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC'}">
+					<f:selectItem itemLabel="#{lbl[lbl.cm.selectOne]}" itemValue="" noSelectionOption="true" />
+					<f:selectItem itemLabel="#{lbl[lbl.rpt.semenanjung]}" itemValue="1" />
+					<f:selectItem itemLabel="#{lbl[lbl.rpt.sabah]}" itemValue="2" />
+					<f:selectItem itemLabel="#{lbl[lbl.rpt.sarawak]}" itemValue="3" />
+				</p:selectOneMenu>
+
+				<h:outputLabel value="#{lbl['lbl.pm.as.effdate']}" />
+				<p:calendar
+					value="#{ruleCatalogueBackingBean.managedBean.searchedRuleDataTypeEffectiveDate}"
+					id="pbdateFrom" showOn="button" readonlyInput="true"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" update="pbdateTo" />
+				</p:calendar>
+				<h:outputLabel value="#{lbl['lbl.pm.as.expdate']}" />
+				<p:calendar id="pbdateTo" showOn="button"
+					value="#{ruleCatalogueBackingBean.managedBean.searchedRuleDataTypeExpiryDate}"
+					mindate="#{ruleCatalogueBackingBean.managedBean.searchedRuleDataTypeEffectiveDate}"
+					readonlyInput="true"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<f:attribute name="startDate"
+						value="#{ruleCatalogueBackingBean.managedBean.searchedRuleDataTypeEffectiveDate}" />
+					<f:validator validatorId="dateRangeValidator" />
+				</p:calendar>
+
+			</h:panelGrid>
+
+			<div style="text-align: left; margin-top: 10px;">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{ruleCatalogueBackingBean.searchRuleValue}"
+					update="ruleTypeValueTableID" />
+				&#160;
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{ruleCatalogueBackingBean.resetRuleValue}" process="@this"
+					update="ruleTypeValueTableID" />
+			</div>
+		</p:panel>
+
+		<!-- 36738 End -->
+		
 		<h:outputText value="#{lbl['lbl.pm.rule.type.value']}"
 			style="font-weight: bold;" />
 		<p:spacer height="20px" />
 		<br/>
 		<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.pm.ruleconfig.tooltip']}" />
+
 		<p:dataTable id="ruleTypeValueTableID" widgetVar="ruleValueTblWidget"
 			rows="5"
 			value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.configRuleValues}"

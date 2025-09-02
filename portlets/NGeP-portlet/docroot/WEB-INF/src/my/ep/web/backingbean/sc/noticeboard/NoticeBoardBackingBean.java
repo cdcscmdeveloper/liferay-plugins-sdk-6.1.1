@@ -3557,7 +3557,7 @@ public class NoticeBoardBackingBean extends
 		try {
 			supplierSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTNoticeBoardSO.class);
-			salutation = supplierSO.retrieveUserByIdentificationNo(identificationNo);
+//			salutation = supplierSO.retrieveUserByIdentificationNo(identificationNo);
 
 			if (salutation != null) {
 				salutationName = salutation.getSalutationName();

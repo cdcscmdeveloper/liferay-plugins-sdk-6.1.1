@@ -180,6 +180,17 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	private String auditLevelCode;
 	private String auditFeeExemptionType;
+	
+	//#36738 Start
+	private List<PmConfigRuleDesc> originalConfigRuleDescList;
+	private List<PmConfigRuleValue> originalConfigRuleValueList;
+	private String searchedRuleType;
+	private String searchedRuleDataTypeValues;
+	private String searchedRuleDataTypeDesc;
+	private Date searchedRuleDataTypeEffectiveDate;
+	private Date searchedRuleDataTypeExpiryDate;
+	private Long searchedRuleDataTypeZone;
+	//#36738 End
 
 	/************ AUDIT #28895_35509 *************/
 
@@ -1854,4 +1865,67 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.auditResDTOSelectedRuleValueList = auditResDTOSelectedRuleValueList;
 	}
 	/************ AUDIT #28895_35509 *************/
+	
+	//#36738 Start	
+	public String getSearchedRuleType() {
+		return searchedRuleType;
+	}
+	
+	public void setSearchedRuleType(String searchedRuleType) {
+		this.searchedRuleType = searchedRuleType;
+	}
+	
+	public String getSearchedRuleDataTypeValues() {
+		return searchedRuleDataTypeValues;
+	}
+	
+	public void setSearchedRuleDataTypeValues(String searchedRuleDataTypeValues) {
+		this.searchedRuleDataTypeValues = searchedRuleDataTypeValues;
+	}
+	
+	public String getSearchedRuleDataTypeDesc() {
+		return searchedRuleDataTypeDesc;
+	}
+	
+	public void setSearchedRuleDataTypeDesc(String searchedRuleDataTypeDesc) {
+		this.searchedRuleDataTypeDesc = searchedRuleDataTypeDesc;
+	}
+	
+	public Date getSearchedRuleDataTypeEffectiveDate() {
+		return searchedRuleDataTypeEffectiveDate;
+	}
+	
+	public void setSearchedRuleDataTypeEffectiveDate(Date searchedRuleDataTypeEffectiveDate) {
+		this.searchedRuleDataTypeEffectiveDate = searchedRuleDataTypeEffectiveDate;
+	}
+	
+	public Date getSearchedRuleDataTypeExpiryDate() {
+		return searchedRuleDataTypeExpiryDate;
+	}
+	
+	public void setSearchedRuleDataTypeExpiryDate(Date searchedRuleDataTypeExpiryDate) {
+		this.searchedRuleDataTypeExpiryDate = searchedRuleDataTypeExpiryDate;
+	}
+	
+	public Long getSearchedRuleDataTypeZone() {
+		return searchedRuleDataTypeZone;
+	}
+	
+	public void setSearchedRuleDataTypeZone(Long searchedRuleDataTypeZone) {
+		this.searchedRuleDataTypeZone = searchedRuleDataTypeZone;
+	}
+	public List<PmConfigRuleDesc> getOriginalConfigRuleDescList() {
+		return originalConfigRuleDescList;
+	}
+	public void setOriginalConfigRuleDescList(List<PmConfigRuleDesc> originalConfigRuleDescList) {
+		this.originalConfigRuleDescList = originalConfigRuleDescList;
+	}
+	public List<PmConfigRuleValue> getOriginalConfigRuleValueList() {
+		return originalConfigRuleValueList;
+	}
+	public void setOriginalConfigRuleValueList(List<PmConfigRuleValue> originalConfigRuleValueList) {
+		this.originalConfigRuleValueList = originalConfigRuleValueList;
+	}
+	
+	//#36738 End
 }

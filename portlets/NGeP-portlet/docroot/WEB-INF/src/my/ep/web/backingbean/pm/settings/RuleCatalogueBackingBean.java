@@ -401,6 +401,7 @@ public class RuleCatalogueBackingBean extends
 			/* 27827 - START */
 			retrievePmZoneList();
 			/* 27827 - END */
+			getManagedBean().setOriginalConfigRuleDescList(list);//36738
 		} finally {
 			cgeneralSO = null;
 		}
@@ -5274,6 +5275,9 @@ public class RuleCatalogueBackingBean extends
         	getManagedBean().setLOPOSelected(selectedRuleType.equals("LOPO"));
         	//end #29267 - CR 22113: Static Code Analysis
         }
+        //#36738 Start
+        this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+        //#36738 End
 	}
 	
 	/* 27827 - START */
@@ -5527,4 +5531,253 @@ public class RuleCatalogueBackingBean extends
 		managedBeans.setAuditDeletedFeeExemptionsForComodity(null);
 		managedBeans.setAuditAddedFeeExemptionsForComodity(null);
 	}
+	
+	//#36738 Start	
+	/**
+	 * #36738
+	 * Search rule type
+	 */
+	public void searchRuleType(){		
+		String searchedRuleType = this.getManagedBean().getSearchedRuleType();
+		List<PmConfigRuleDesc> configRuleDescList = this.getManagedBean().getOriginalConfigRuleDescList();
+		List<PmConfigRuleDesc> searchedRuleDescList = new ArrayList<>();
+		
+		for (PmConfigRuleDesc configRuleDesc : configRuleDescList) {
+			if (searchedRuleType != null && !searchedRuleType.isEmpty()) {
+				String searchRegex = searchedRuleType
+				        .replace("%", ".*?")  
+				        .replace("_", ".")   
+				        .replace("?", ".")    
+				        .replace("*", ".*?"); 
+				if (configRuleDesc.getRuleDesc().toLowerCase().contains(searchedRuleType.toLowerCase())
+						|| configRuleDesc.getRuleDesc().toLowerCase().matches(searchRegex.toLowerCase())) {
+					searchedRuleDescList.add(configRuleDesc);
+				}
+			}		
+		}		
+		
+		if (CollectionUtils.isNotEmpty(searchedRuleDescList)) {
+			this.getManagedBean().setConfigRuleDescList(searchedRuleDescList);
+			this.getManagedBean().setSelectedRuleDescType(searchedRuleDescList.get(0));
+		}else{
+			this.getManagedBean().setConfigRuleDescList(null);
+			this.getManagedBean().setSelectedRuleDescType(null);
+		}
+		
+		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleConfigId");
+	}
+	
+	/**
+	 * #36738
+	 * Reset searched rule type
+	 */
+	public void resetRuleType(){
+		this.getManagedBean().setSearchedRuleType(new String());
+		this.getManagedBean().setConfigRuleDescList(this.getManagedBean().getOriginalConfigRuleDescList());
+	}
+	
+	/**
+	 * #36738
+	 * Search rule value
+	 */
+	public void searchRuleValue() {
+		
+		String searchedRuleValues = this.getManagedBean().getSearchedRuleDataTypeValues();
+		String searchedRuleDesc = this.getManagedBean().getSearchedRuleDataTypeDesc();
+		Date searchedEffectiveDate = this.getManagedBean().getSearchedRuleDataTypeEffectiveDate();
+		Date searchedExpiryDate = this.getManagedBean().getSearchedRuleDataTypeExpiryDate();
+		Long searchedRuleZone = this.getManagedBean().getSearchedRuleDataTypeZone();
+		String ruleDataType = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleDataTypeId().getParameterCode();
+
+		List<PmConfigRuleValue> configRuleValuesList = this.getManagedBean().getOriginalConfigRuleValueList();
+		List<PmConfigRuleValue> searchedRuleTypeValueList = new ArrayList<>();
+
+		// search via value		
+		for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
+			
+			if (ParameterConst.CONFIG_RULE_DATA_CATEGORY_CODE.equals(ruleDataType)){
+				searchedRuleTypeValueList = searchByRuleValueCategoryCode(searchedRuleTypeValueList,configRuleValue,searchedRuleValues);
+			}else{
+				searchedRuleTypeValueList = searchByRuleValuePTJ(searchedRuleTypeValueList,configRuleValue,searchedRuleValues);
+			}
+		}
+		
+		// search via desc
+		if (CollectionUtils.isNotEmpty(searchedRuleTypeValueList)) {
+			configRuleValuesList = searchedRuleTypeValueList;
+		}	
+		searchedRuleTypeValueList = searchByRuleValueDesc(configRuleValuesList,searchedRuleDesc);
+		
+		// search via zone
+		if (CollectionUtils.isNotEmpty(searchedRuleTypeValueList)) {
+			configRuleValuesList = searchedRuleTypeValueList;
+		}
+		searchedRuleTypeValueList = searchByZone(configRuleValuesList,searchedRuleZone);
+		
+		// search via effective date and expiry date (exact date if only one, between if both)
+		if (CollectionUtils.isNotEmpty(searchedRuleTypeValueList)) {
+			configRuleValuesList = searchedRuleTypeValueList;
+		}
+		if (searchedEffectiveDate!= null || searchedExpiryDate != null) {
+			searchedRuleTypeValueList = searchByDates(configRuleValuesList,searchedEffectiveDate,searchedExpiryDate);
+		}
+		
+		
+		if (CollectionUtils.isNotEmpty(searchedRuleTypeValueList)) {
+			this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(searchedRuleTypeValueList);
+		} else {
+			this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(null);
+		}
+	}
+	
+	/**
+	 * filter rule values by value for rule data type: category code
+	 * @param searchedRuleTypeValueList
+	 * @param configRuleValue
+	 * @param searchedRuleValues
+	 * @return
+	 */
+	private List<PmConfigRuleValue> searchByRuleValueCategoryCode(List<PmConfigRuleValue> searchedRuleTypeValueList, PmConfigRuleValue configRuleValue,String searchedRuleValues){	
+		if (searchedRuleValues != null && !searchedRuleValues.isEmpty()) {
+			String ruleValue = configRuleValue.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+					+ configRuleValue.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
+					+ configRuleValue.getCategoryL3Id().getCategoryL3Code()
+					;
+			String searchRegex = searchedRuleValues.replace("%", ".*?").replace("_", ".").replace("?", ".")
+					.replace("*", ".*?");
+			
+			if (ruleValue.toLowerCase().contains(searchedRuleValues.toLowerCase())
+					|| ruleValue.toLowerCase().matches(searchRegex.toLowerCase())) {
+				searchedRuleTypeValueList.add(configRuleValue);
+			}
+		}
+		return searchedRuleTypeValueList;
+	}
+	
+	/**
+	 * #36738
+	 * filter rule values by value for rule data type: PTJ code
+	 * @param configRuleValuesList
+	 * @param searchedRuleValues
+	 * @return
+	 */
+	private List<PmConfigRuleValue> searchByRuleValuePTJ(List<PmConfigRuleValue> searchedRuleTypeValueList, PmConfigRuleValue configRuleValue,String searchedRuleValues){		
+		if (searchedRuleValues != null && !searchedRuleValues.isEmpty()) {
+			String searchRegex = searchedRuleValues.replace("%", ".*?").replace("_", ".").replace("?", ".")
+					.replace("*", ".*?");
+			if (configRuleValue.getRuleValue().toLowerCase().contains(searchedRuleValues.toLowerCase())
+					|| configRuleValue.getRuleValue().toLowerCase().matches(searchRegex.toLowerCase())) {
+				searchedRuleTypeValueList.add(configRuleValue);
+			}
+		}
+				
+		return searchedRuleTypeValueList;
+	}
+	
+	/**
+	 * #36738
+	 * filter rule values by description
+	 * @param configRuleValuesList
+	 * @param searchedRuleValueDesc
+	 * @return
+	 */
+	private List<PmConfigRuleValue> searchByRuleValueDesc(List<PmConfigRuleValue> configRuleValuesList,String searchedRuleValueDesc){		
+		List<PmConfigRuleValue> result = new ArrayList<>();
+
+		if (searchedRuleValueDesc != null && !searchedRuleValueDesc.isEmpty()) {
+			String searchRegex = searchedRuleValueDesc.replace("%", ".*?")
+					.replace("_", ".")
+					.replace("?", ".")
+					.replace("*", ".*?");
+
+			for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
+				String desc = configRuleValue.getRuleDescription().toLowerCase();
+				if (desc.contains(searchedRuleValueDesc.toLowerCase()) || desc.matches(searchRegex.toLowerCase())) {
+					result.add(configRuleValue);
+				}
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(result)){
+			return result;
+		}else {
+			return configRuleValuesList;
+		}
+		
+	}
+	
+	/**
+	 * #36738
+	 * filter rule values by zone
+	 * @param configRuleValuesList
+	 * @param searchedRuleDesc
+	 * @return
+	 */
+	private List<PmConfigRuleValue> searchByZone(List<PmConfigRuleValue> configRuleValuesList,Long searchedRuleZone){		
+		List<PmConfigRuleValue> result = new ArrayList<>();
+		
+		if (searchedRuleZone != null && searchedRuleZone != 0) {
+			for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
+				if (configRuleValue.getZoneId() != null && configRuleValue.getZoneId().equals(searchedRuleZone)) {
+					result.add(configRuleValue);
+				}
+			}
+		}
+			
+		if (CollectionUtils.isNotEmpty(result)){
+			return result;
+		}else {
+			return configRuleValuesList;
+		}
+	}
+	
+	/**
+	 * #36738
+	 * filter rule values by effective date and expiry date
+	 * @param configRuleValuesList
+	 * @param searchedEffectiveDate
+	 * @param searchedExpiryDate
+	 * @return
+	 */
+	private List<PmConfigRuleValue> searchByDates(List<PmConfigRuleValue> configRuleValuesList,Date searchedEffectiveDate,Date searchedExpiryDate){
+		List<PmConfigRuleValue> result = new ArrayList<>();
+
+		for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
+			if (searchedEffectiveDate != null) {
+				if (searchedEffectiveDate.equals(configRuleValue.getEffDate())) {
+					result.add(configRuleValue);
+				}
+			} else if (searchedExpiryDate != null) {
+				if (searchedExpiryDate.equals(configRuleValue.getExpDate())) {
+					result.add(configRuleValue);
+				}
+			} else {
+				if (!configRuleValue.getEffDate().before(searchedEffectiveDate)
+						|| !configRuleValue.getExpDate().after(searchedExpiryDate)) {
+					result.add(configRuleValue);
+				}
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(result)){
+			return result;
+		}else {
+			return configRuleValuesList;
+		}
+	}
+	
+	/**
+	 * #36738
+	 * Reset searched rule value
+	 */
+	public void resetRuleValue(){
+		this.getManagedBean().setSearchedRuleDataTypeValues(new String());
+		this.getManagedBean().setSearchedRuleDataTypeDesc(new String());
+		this.getManagedBean().setSearchedRuleDataTypeEffectiveDate(new Date());
+		this.getManagedBean().setSearchedRuleDataTypeExpiryDate(new Date());
+		this.getManagedBean().setSearchedRuleDataTypeZone(0L);
+		this.getManagedBean().setSelectedRuleDescType(this.getManagedBean().getConfigRuleDescList().get(0));
+	}
+	
+	//#36738 End
 }
