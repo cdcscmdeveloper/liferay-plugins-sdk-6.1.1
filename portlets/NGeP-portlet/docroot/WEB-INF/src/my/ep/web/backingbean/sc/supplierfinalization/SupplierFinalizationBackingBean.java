@@ -8703,10 +8703,10 @@ return	remarksNotFound;
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				reqDTO.setQtId(qtId);
 				//#38679
-				IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				IQTEvaluationSO evaluationSO=null;
+				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTEvaluationSO.class);
-				FacesScopes facesScopes = new FacesScopes();
 				EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
 				long qtId = reqDTO.getQtId();
 				req4SerDTO.setQtId(qtId);
