@@ -16483,6 +16483,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void validateRole(SmPersonnel personnel){
 		if(personnel.isEquityOwner() || personnel.isDirector() || personnel.isDirOrHghrMngmt()){
 			personnel.setClerical(false);
+			personnel.setSemiProf(false);//#38610`
 		}
 	}
 	public BigDecimal calPercentage(BigDecimal totalCapitalCompany,BigDecimal shareAmt){
