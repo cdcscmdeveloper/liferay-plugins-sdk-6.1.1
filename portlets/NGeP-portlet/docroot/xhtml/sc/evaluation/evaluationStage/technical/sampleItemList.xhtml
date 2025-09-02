@@ -30,7 +30,8 @@
 					<p:ajax event="rowSelect" process="@this" partialSubmit="true"
 						update="@([id$=samplespecLists])"
 						listener="#{evaluationBackingBean.retriveSpecificationsByItem}"></p:ajax>
-					<p:column headerText="#{lbl['lbl.sc.item.name']}" style="width:55%;white-space: normal;">
+					<ui:remove> #29187 updated width Vinod </ui:remove>
+					<p:column headerText="#{lbl['lbl.sc.item.name']}" style="width:15%;white-space: normal;">
 						<h:outputText
 				value="#{evaluationBackingBean.replaceWithBR(sampleItem.scRequestItem.tplSpecQuestion.clItem)}"
 				escape="false"
