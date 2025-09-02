@@ -12012,9 +12012,16 @@ public class QTDetailBackingBean extends
 			BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
 
 			constructBiddingSearchBean(qtnTenderSearchBean, searchBean);
-			// Order by created date
+			
+			// No Bidding group by QT No -38930 & 25791 -start
+			searchBean.getSortColumns()
+					.add(new SearchOrderBean(SourcingConstants.BIDDING_DOC_NO,
+							false));
 			searchBean.getSortColumns().add(
-					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_START_DATE, false));
+					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_NUMBER,
+							false));
+			// No Bidding group by QT No -38930 & 25791 -end
+			
 			if(isDeskOfficer() || isApprover()){
 				biddingReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				if(isDeskOfficer()){
