@@ -707,6 +707,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					
 					qtDemo.setQtId(this.getManagedBean().getQt());
 					qtDemo.setDemoCategoryId(pmParam);
+					Collections.sort(qualifiedSupp, new QualifiedSupplierComparator());//sort supplier list
 
 					for (ScQtProposal p : qualifiedSupp) {
 						scQtDemoSchedule = new ScQtDemoSchedule();
@@ -798,6 +799,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					// remove supplier without spec answer -start-
 					qualifiedSupp = checkQualifiedSupplierZoneAndItem(qualifiedSupp, specQuestionList);
 					// remove supplier without spec answer -end-
+					Collections.sort(qualifiedSupp, new QualifiedSupplierComparator());//sort supplier list
 
 					for (ScQtProposal p : qualifiedSupp) {
 						demoSupplier = new ScQtDemoSupplier();

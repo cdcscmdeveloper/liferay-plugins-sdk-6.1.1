@@ -3719,7 +3719,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String type = (String) event.getComponent().getAttributes().get("value");
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
 
-			// 38426 - start
+			//#28784 - 38426 - start
 			if (this.isStatusLessThanOrEquals(status,
 					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH,
 					QTStatusConst.QT_ORDERED_STATUSES)) {
@@ -3731,7 +3731,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				// note937 Issue 2 - End
 			}
-			// 38426 - end
+			//#28784 - 38426 - end
 
 			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)
 					&& !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
