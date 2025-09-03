@@ -409,14 +409,6 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 
 	}
 
-	/**
-	 * @param input
-	 * @return
-	 */
-	public String wrapText(String input) {
-		return input.replaceAll("(.{20})", "$1\u200B");
-	}
-
 	public IPagingDataModel<VAuditPMDTO> getSearchMaster() {
 		return searchMaster;
 	}
