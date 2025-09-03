@@ -127,6 +127,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (EntityHelper.isCollectionEmpty(docs)){
 			return;
 		}
+		if (StringUtils.isEmpty(googleUrl)){
+			googleUrl = "http://192.168.62.17:5000/";
+		}
 		
 		String filepath = docs.get(0).getFilePath() + docs.get(0).getFileName();
 		if ("EPF".equals(docType)){
@@ -135,20 +138,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		} else if ("TNC".equals(docType)){
 			processTenancyAgreement(filepath);
 			
-		} else if ("G".equals(docType)){
-			log.info("google connection test");
-			
-			
 		} else {
-			byte[] fileData = getFakeData(filepath);
-			JSONArray entities = getJsonEntities(fileData); 
-			log.info("...entities:\t"+entities);
-			BankStatementEntity bankStatement = new BankStatementEntity(entities);
-			log.info(bankStatement);
-			log.info("COMPANY NAME: "+bankStatement.namaSyarikat);
+			processBank(filepath);
 		}
-			
-		Thread.sleep(2000);
 	}
 	
 	/**
@@ -262,7 +254,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				log.error(" ", e);
 			}
 		}
-		//get JSON response
 		
 		if (entities == null){
 			return;
@@ -287,19 +278,64 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param filepath
+	 */
+	public static void processBank(String filepath){
+		JSONArray entities = null;
+		if (filepath.endsWith(".json")){
+			log.info("skip AI");
+			byte[] fileData = getFakeData(filepath);
+			entities = getJsonEntities(fileData);
+			
+		} else if (filepath.endsWith("ai_demo.pdf")){
+			log.info("use google url: "+googleUrl);
+			InputStream is;
+			try {
+				String doc64 = getBase64(filepath);
+				is = sendDocumentToExternalService(doc64, "tenancy");
+				entities = getJsonEntitiesFromStream(is);
+			} catch (IOException e) {
+				log.error(" ", e);
+			}
+		}
+		if (entities == null){
+			return;
+		}
+		log.info(entities);
+		BankStatementEntity bank = new BankStatementEntity(entities);
+		log.info(bank);
+		log.info("COMPANY NAME: "+bank.namaSyarikat);
+	}
 
 	/**
 	 * 
 	 * @param filepath
 	 */
 	public static void processTenancyAgreement(String filepath){
-		//send to Google
-		//get JSON response
-		byte[] fileData = getFakeData(filepath);
-		JSONArray entities = getJsonEntities(fileData); 
+		JSONArray entities = null;
+		if (filepath.endsWith(".json")){
+			log.info("skip AI");
+			byte[] fileData = getFakeData(filepath);
+			entities = getJsonEntities(fileData);
+			
+		} else if (filepath.endsWith("ai_demo.pdf")){
+			log.info("use google url: "+googleUrl);
+			InputStream is;
+			try {
+				String doc64 = getBase64(filepath);
+				is = sendDocumentToExternalService(doc64, "tenancy");
+				entities = getJsonEntitiesFromStream(is);
+			} catch (IOException e) {
+				log.error(" ", e);
+			}
+		}
 		if (entities == null){
 			return;
 		}
+		log.info("entities");
 		tenancy = new TenancyEntity(entities);
 		log.info(tenancy);
 	}
@@ -309,13 +345,27 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param filepath
 	 */
 	public static void processEPF(String filepath){
-		//send to Google
-		//get JSON response
-		byte[] fileData = getFakeData(filepath);
-		JSONArray entities = getJsonEntities(fileData); 
+		JSONArray entities = null;
+		if (filepath.endsWith(".json")){
+			log.info("skip AI");
+			byte[] fileData = getFakeData(filepath);
+			entities = getJsonEntities(fileData);
+			
+		} else if (filepath.endsWith("ai_demo.pdf")){
+			log.info("use google url: "+googleUrl);
+			InputStream is;
+			try {
+				String doc64 = getBase64(filepath);
+				is = sendDocumentToExternalService(doc64, "epf");
+				entities = getJsonEntitiesFromStream(is);
+			} catch (IOException e) {
+				log.error(" ", e);
+			}
+		}
 		if (entities == null){
 			return;
 		}
+		log.info("entities");
 		epf = new EPFEntity(entities);
 		log.info(epf);
 	}
@@ -437,7 +487,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 	
 
-
 	public List<EPFEntity.EmployeeInfo> getSelectedEmployees() {
 		return selectedEmployees;
 	}
@@ -446,50 +495,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		this.selectedEmployees = selectedEmployees;
 	}
 
-	private InputStream getGoogleResponse(SmApplSupportDoc doc, String docType){
-		try {
-			String base64Content = getBase64(doc);
-			String payload = String.format(
-				"{\"base64Data\":\"%s\",\"filename\":\"%s\",\"documentType\":\"%s\"}",
-			    base64Content, doc.getSmApplDocFiles().get(0).getFileName(), docType
-			);
-			
-			URL url = new URL(googleUrl);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/json");
-			conn.setDoOutput(true);
-			
-			OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
-			out.write(payload);
-			out.flush();
-			
-			int statusCode = conn.getResponseCode();
-			log.info("Google Doc Response Status: " + statusCode);
-			
-			if (statusCode >= 200 && statusCode < 300){
-				return conn.getInputStream();
-			}
-			log.warn("Error Stream:");
-			BufferedReader read = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-			String line;
-			while ((line = read.readLine()) != null) {
-				log.warn(line);
-			}
-			read.close();
-			
-		} catch (MalformedURLException e) {
-			log.error(" wrong URL for google.doc.url", e);
-		} catch (ProtocolException e) {
-			log.error(" wrong request method", e);
-		} catch (UnsupportedEncodingException e) {
-			log.error(" wrong encoding", e);
-		} catch (IOException e) {
-			log.error("IOException ", e);
-		} catch (DocumentException e) {
-			log.error(" DocumentException", e);
-		}
-        return null;
+	
+	private static String getBase64(String filepath) throws IOException{
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/"+filepath;
+		File file = new File(tempDir);
+		byte[] pdf = Files.readAllBytes(file.toPath());
+		return DatatypeConverter.printBase64Binary(pdf);
 	}
 
 	private static String getBase64(SmApplSupportDoc doc) throws IOException, DocumentException {
@@ -512,7 +524,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	private static InputStream sendDocumentToExternalService(String base64, String docType) throws IOException {
-		String payload = String.format("{\"document\":\"%s\",\"doc_type\":\"%s\"}", base64, "bank");
+		String payload = String.format("{\"document\":\"%s\",\"doc_type\":\"%s\"}", base64, docType);
 
 		URL url = new URL(googleUrl);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
