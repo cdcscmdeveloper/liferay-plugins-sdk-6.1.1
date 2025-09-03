@@ -128,7 +128,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		if (StringUtils.isEmpty(googleUrl)){
-			googleUrl = "http://192.168.62.17:5000/";
+			googleUrl = "http://192.168.62.17:5000/process";
 		}
 		
 		String filepath = docs.get(0).getFilePath() + docs.get(0).getFileName();
@@ -229,7 +229,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		if (StringUtils.isEmpty(googleUrl)){
-			googleUrl = "http://192.168.62.17:5000/";
+			googleUrl = "http://192.168.62.17:5000/process";
 		}
 		//wip - need to combine all docs  & convert to base64
 		SmApplDocFile docFile = doc.getSmApplDocFiles().get(0);
