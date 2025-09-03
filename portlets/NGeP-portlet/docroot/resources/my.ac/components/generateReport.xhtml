@@ -16,7 +16,8 @@
 		<div style="text-align: right;">
 		<ui:param name="paramValues" value="#{cc.attrs.bBean.getparams()}"></ui:param>
 			<!-- #32675 - shaqimi start -->
-			<p:commandButton id="btnGenerate" value="#{lbl['lbl.rpt.generate']}" oncomplete="if (!args.validationFailed) rptConfirmationDlg.show();" 
+			<!-- #14306 - harun start -->
+			<!--<p:commandButton id="btnGenerate" value="#{lbl['lbl.rpt.generate']}" oncomplete="if (!args.validationFailed) rptConfirmationDlg.show();" 
 				 action="#{cc.attrs.bBean.generateReport(paramValues)}" update=":form"
 				 rendered="#{!cc.attrs.bBean.managedBean.factoringUser}">
 				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportCode}" value="#{cc.attrs.reportMainBean.managedBean.reportCode}" />
@@ -24,6 +25,17 @@
 				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.defaultOutputType}" value="#{cc.attrs.reportMainBean.managedBean.defaultOutputType}" />
 				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.tempAccess}" value="#{cc.attrs.reportMainBean.managedBean.tempAccess}" />
 			</p:commandButton>
+			-->
+			
+			<p:commandButton id="btnGenerate" value="#{lbl['lbl.rpt.generate']}" oncomplete="if (!args.validationFailed) rptConfirmationDlg.show();" 
+				 action="#{cc.attrs.bBean.generateReport(paramValues)}" update=":form"
+				 rendered="#{!cc.attrs.bBean.managedBean.factoringUser and cc.attrs.reportMainBean.managedBean.reportCode != 'SC_079'}">
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportCode}" value="#{cc.attrs.reportMainBean.managedBean.reportCode}" />
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.reportName}" value="#{cc.attrs.reportMainBean.managedBean.reportName}" />
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.defaultOutputType}" value="#{cc.attrs.reportMainBean.managedBean.defaultOutputType}" />
+				<f:setPropertyActionListener target="#{cc.attrs.bBean.managedBean.tempAccess}" value="#{cc.attrs.reportMainBean.managedBean.tempAccess}" />
+			</p:commandButton>
+			<!-- #14306 - harun end -->
 			
 			<p:commandButton id="btnGenerateFactoring" value="#{lbl['lbl.rpt.generate']}" oncomplete="if (!args.validationFailed) rptConfirmationDlg.show();" 
 				 action="#{cc.attrs.bBean.generateReportFactoring(paramValues)}" update=":form"
@@ -35,7 +47,8 @@
 			</p:commandButton>
 			<!-- #32675 - shaqimi end -->
 			<p:commandButton id="btnReset" value="#{lbl['lbl.btn.reset']}" update=":form" 
-				process="@this" action="#{cc.attrs.bBean.resetSearch()}"/>
+				process="@this" action="#{cc.attrs.bBean.resetSearch()}"
+				rendered="#{cc.attrs.reportMainBean.managedBean.reportCode != 'SC_079'}"/>
 		</div>
 
 		<p:dialog id="rptConfirmationDlgId" widgetVar="rptConfirmationDlg" modal="true"
@@ -50,7 +63,7 @@
 
 				<table style="width:100%">
 					<tr>
-						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+						<td><p:commandButton value="#{lbl['lbl.rpt.btn.generatetest4']}"
 								onclick="rptConfirmationDlg.hide();" />
 							<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
 								action="#{cc.attrs.bBean.redirect()}">
