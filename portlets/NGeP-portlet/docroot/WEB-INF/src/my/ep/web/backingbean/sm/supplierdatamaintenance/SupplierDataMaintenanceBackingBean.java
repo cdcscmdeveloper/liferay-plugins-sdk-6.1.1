@@ -1892,12 +1892,20 @@ public class SupplierDataMaintenanceBackingBean extends
 		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isSuspendRegistration();
 		boolean hasPending = supplier.isPendingBlacklist() || supplier.isPendingCancel()
 				|| supplier.isPendingSuspend();
-		if (!hasPending && StringUtils.isNotEmpty(mofStatus)
-				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)) {
-			getManagedBean().setAllowedToDoMaintenance(false);
-		} else if (mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA) {
+		//#38962 - START
+		String pendingNotActiveDA = "";
+		if(StringUtils.isNotEmpty(mofStatus)){
+			pendingNotActiveDA = checkNonActiveDAWithPending(supplier);
+		}
+		
+		if ((!hasPending && StringUtils.isNotEmpty(mofStatus) && mofStatus
+				.equals(SupplierManagementConst.MOF_STATUS_DELETED))
+				|| (mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA)
+				|| (mofStatus.equals(SupplierManagementConst.MOF_STATUS_ACTIVE) && StringUtils
+						.isNotEmpty(pendingNotActiveDA))) {
 			getManagedBean().setAllowedToDoMaintenance(false);
 		}
+		//#38962 - END
 		//#38609 - end
 	}
 

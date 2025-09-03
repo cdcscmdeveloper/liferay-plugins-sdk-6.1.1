@@ -2523,6 +2523,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (supplier == null){
 			return "";
 		}
+		//#38962  - START
+		String pending = checkNonActiveDAWithPending(supplier);
+		if(!pending.equalsIgnoreCase("")){
+			return pending;
+		}
+		//#38962  - END
 		if (!supplier.isFutureImposed() && !StringUtils.isEmpty(supplier.getTypeDisciplinaryAction())){
 			return getSupplierAccountStatusDA(supplier);
 		}
@@ -2552,6 +2558,33 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			return "";
 		}
 	}
+	//#38962  - START
+	/**
+	 * Check if supplier with non active DA with pending blacklist or cancel registration
+	 * @param supplier 
+	 * @return String
+	 */
+	public String checkNonActiveDAWithPending(SmSupplier supplier) {
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveNotActiveDisciplinaryActionWithBlacklistCancel(reqDTO);
+		
+		if (resDTO != null) {
+			String lblDeletedTransaction = SmCommonUtil.getMessage("lbl.sm.status.deleted.with.transaction", null);
+			
+			if(resDTO.isDisciplinaryActionBlackListOwner()){
+				return lblDeletedTransaction + " (" + SmCommonUtil.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner", null) + ")";
+			}else if(resDTO.isDisciplinaryActionCancelRegistration()){
+				return lblDeletedTransaction + " (" + SmCommonUtil.getMessage("lbl.sm.disciplinary.jktt.cancel.registration", null) + ")";
+			}
+		}
+		
+		return "";
+	}
+	//#38962  - END
 	
 	//29156, 29778, 32970, 33248
 	private String getSupplierAccountStatusDA(SmSupplier supplier){
