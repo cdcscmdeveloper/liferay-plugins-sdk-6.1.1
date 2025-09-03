@@ -2525,7 +2525,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		//#38962  - START
 		String pending = checkNonActiveDAWithPending(supplier);
-		if(!pending.equalsIgnoreCase("")){
+		if(StringUtils.isNotBlank(pending)){
 			return pending;
 		}
 		//#38962  - END
