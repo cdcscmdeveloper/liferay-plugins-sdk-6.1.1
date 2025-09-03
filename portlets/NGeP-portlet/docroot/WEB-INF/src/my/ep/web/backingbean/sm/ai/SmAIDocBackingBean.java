@@ -280,7 +280,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		log.info("...processBankStatement2\t..." + companyNameSupp);
 
 		// wip - need to map based on fields received in JSON
-		doc.setMappedFieldAI("Bank Info:<br/>Bank Name, Account No.");
+		//doc.setMappedFieldAI("Bank Info:<br/>Bank Name, Account No.");
 
 		if (!StringUtils.equals(companyNameJson, companyNameSupp)){
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
