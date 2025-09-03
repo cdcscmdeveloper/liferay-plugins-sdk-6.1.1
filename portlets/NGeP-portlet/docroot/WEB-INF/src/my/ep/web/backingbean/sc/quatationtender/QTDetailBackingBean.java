@@ -1148,10 +1148,11 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			Long qtId = scQt.getQtId();
-			
-			// #28784 - Demo WIP
+
+			// #28784 - Demo WIP -start-
 			boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
 			this.getManagedBean().setNewVersion(isQtNewVersion);
+			// #28784 - Demo WIP -end-
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setMaintanceFlow(true);
@@ -5469,21 +5470,20 @@ public class QTDetailBackingBean extends
 						}
 
 						scQt = tenderResDTO.getQtDetail();
-						
-						//#28784 - Demo WIP
-						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-						this.getManagedBean().setNewVersion(isQtNewVersion);
 
 						getManagedBean().setQt(scQt);
 
-						//#28784 - Include Demo WIP
-						if (demoRequired && this.getManagedBean().isNewVersion()){
+						// #28784 - Demo WIP -start-
+						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(),
+								CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						this.getManagedBean().setNewVersion(isQtNewVersion);
+
+						if (demoRequired && this.getManagedBean().isNewVersion()) {
 							getManagedBean().getQt().setDemoRequired(demoRequired);
 							getManagedBean().getQt().setEvaluationType(evalType);
 						}
 						// #28784 -end-
 
-						getManagedBean().setQt(scQt);
 						this.getManagedBean().setPanel(scQt.isPanel());
 						Long currentStatus = this.getManagedBean().getQt()
 								.getQtStatus().getStatusId();
@@ -5528,10 +5528,11 @@ public class QTDetailBackingBean extends
 							this.getManagedBean().setPtjSpecialApproval(scQt.getPtjSpecialApproval());
 						}
 
-						//#28784 - Include Demo WIP
-						if(this.getManagedBean().isNewVersion()){
-							checkDemoPresentationByStatus();	
+						// #28784 - Include Demo WIP -start-
+						if (this.getManagedBean().isNewVersion()) {
+							checkDemoPresentationByStatus();
 						}
+						// #28784 - Include Demo WIP -end-
 					}
 
 					this.getManagedBean().setAmendMentBean(
