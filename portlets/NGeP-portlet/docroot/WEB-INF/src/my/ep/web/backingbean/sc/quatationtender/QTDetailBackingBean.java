@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -4029,6 +4030,13 @@ public class QTDetailBackingBean extends
 									//21692 - End
 								}
 							}
+							//#21692 - Start
+							if (CollectionUtils.isNotEmpty(qtApproval.getHistoryApprovalRequests())) {
+								LinkedHashSet<ScQtApprovalRequest> removeDuplicate = new LinkedHashSet<>(qtApproval.getHistoryApprovalRequests());
+								List<ScQtApprovalRequest> noDuplicate = new ArrayList<>(removeDuplicate);
+								qtApproval.setHistoryApprovalRequests(noDuplicate);
+							}
+							//#21692 - End
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval,
 									retrieveFinalizationCommitteeType()));
