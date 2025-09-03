@@ -395,6 +395,7 @@
 		<!-- LOG :12491 Finish Button -->
 		<portlet id="FirstTimeMessage"></portlet>
 		<portlet id="spkiTest"></portlet>
+		<portlet id="testSmAI"></portlet><!-- #38890 -->
 	</category>
 
 	<category name="category.ep.wp">
