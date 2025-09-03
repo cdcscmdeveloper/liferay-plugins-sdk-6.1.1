@@ -1938,6 +1938,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean auditViewRole;
 	//#28895 - 35500 end
 	
+	//#35320
+	private boolean afterSF;
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12386,4 +12389,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
 	}
 	//#21692 - End
+	
+	//#35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}//#35320 - End
 }

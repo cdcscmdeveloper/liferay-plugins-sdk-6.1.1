@@ -2604,7 +2604,7 @@ public class SupplierFinalizationBackingBean extends
 			// Bug #32682 #27502 & #34921 - Start
 			setUserLoiLoaPreparedBy(scQtFinalization, currentStatusId);
 			// Bug #32682 #27502 & #34921 - End
-
+			//#35320 - try buat validation comittee kt sini atau pn dekat  preSubmitValidation - amir
 			SuppFinalizationReqDTO reqDTO = preSubmitValidation();
 			// #18685-Start.
 
@@ -3482,6 +3482,46 @@ return	remarksNotFound;
 					}
 				}
 			} 
+			
+			//#35320 - START
+			if (this.getManagedBean().isSubmit() && !getManagedBean().isInitialDecisionFwdToBPK()) {
+
+				boolean exceedAmount = checkAllSupplierOfferPriceIsExceedCommitteeAuthority();
+
+				if (exceedAmount && ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode)) {
+					PmReason reason = this.getManagedBean().getScQtFinalization().getReason();
+
+					if (reason == null) {
+						throw new EpException(MessageConst.ERROR_760710, new String[] {
+								this.getManagedBean().getScQt().getQtNo(),
+								getManagedBean().getScQt().getEstimatedAmount().toString() });
+					} else {
+						String reasonType = this.getManagedBean().getScQtFinalization().getReason().getReasonCode();
+						
+						if (reasonType == null || reasonType == "") {
+							// 38523 - refactor codes - start
+							ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
+							reasonReqDTO.setReasonId(getManagedBean().getScQtFinalization().getReason().getReasonId());
+							reasonType = getReasonSO().retrieveReasonById(reasonReqDTO).getPmReason().getReasonCode();
+							// 38523 - refactor codes - end
+						}
+
+						if (!ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY
+								.equalsIgnoreCase(reasonType)) {
+							throw new EpException(MessageConst.ERROR_760710, new String[] {
+									this.getManagedBean().getScQt().getQtNo(),
+									getManagedBean().getScQt().getEstimatedAmount().toString() });
+						}
+
+					}
+				} else if (exceedAmount
+						&& !ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode)) {
+					throw new EpException(MessageConst.ERROR_760710, new String[] {
+							this.getManagedBean().getScQt().getQtNo(),
+							getManagedBean().getScQt().getEstimatedAmount().toString() });
+				}
+			}
+			//#35320 - END
 		}
 		// #28834 - End.
 		
@@ -3749,47 +3789,7 @@ return	remarksNotFound;
 				signOff();
 			}	
 			String decisionTypeCode = getManagedBean().getScQtFinalization()
-										.getDecision().getParameterCode();
-			
-			//#35320 - START
-			if (this.getManagedBean().isSubmit() && !getManagedBean().isInitialDecisionFwdToBPK()) {
-
-				boolean exceedAmount = checkAllSupplierOfferPriceIsExceedCommitteeAuthority();
-
-				if (exceedAmount && ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode)) {
-					PmReason reason = this.getManagedBean().getScQtFinalization().getReason();
-
-					if (reason == null) {
-						throw new EpException(MessageConst.ERROR_760710, new String[] {
-								this.getManagedBean().getScQt().getQtNo(),
-								getManagedBean().getScQt().getEstimatedAmount().toString() });
-					} else {
-						String reasonType = this.getManagedBean().getScQtFinalization().getReason().getReasonCode();
-						
-						if (reasonType == null || reasonType == "") {
-							// 38523 - refactor codes - start
-							ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
-							reasonReqDTO.setReasonId(getManagedBean().getScQtFinalization().getReason().getReasonId());
-							reasonType = getReasonSO().retrieveReasonById(reasonReqDTO).getPmReason().getReasonCode();
-							// 38523 - refactor codes - end
-						}
-
-						if (!ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY
-								.equalsIgnoreCase(reasonType)) {
-							throw new EpException(MessageConst.ERROR_760710, new String[] {
-									this.getManagedBean().getScQt().getQtNo(),
-									getManagedBean().getScQt().getEstimatedAmount().toString() });
-						}
-
-					}
-				} else if (exceedAmount
-						&& !ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode)) {
-					throw new EpException(MessageConst.ERROR_760710, new String[] {
-							this.getManagedBean().getScQt().getQtNo(),
-							getManagedBean().getScQt().getEstimatedAmount().toString() });
-				}
-			}
-			//#35320 - END
+										.getDecision().getParameterCode();			
 			
 			// Check if the current committee is authorized to submit
 			// based on the total awarded price
@@ -3870,7 +3870,7 @@ return	remarksNotFound;
 											committeeName, String.valueOf(totalIntendedPrice.intValue()) });
 				}
 			}
-			//#26169 - START
+			//#26169 - START, #35320 - rules are not valid anymore 
 			if (getManagedBean().isSubmit() && 
 					!getManagedBean().isInitialDecisionFwdToBPK() &&
 						isRecommendByAward() && 					
