@@ -1,4 +1,5 @@
 /**
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.requestnote;
 
@@ -3837,6 +3838,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
 		List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
+		
 		// #36119 - start
 		IRequestNoteSO requestNoteSO = null;
 		List<ScRequestNoteDtl> rndtls = null;
@@ -3858,7 +3860,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		    
 			int prSize = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
-
+			
 			//ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
 			//List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
 			IPurchaseRequestSO purchaseRequestSO = null;

@@ -31,39 +31,31 @@ public class SampleQuestionBean implements Serializable {
 	private BigDecimal sampleQuestionQuantity;
 	private BigDecimal sampleQuestionScore;
 	private TplSpecQuestion sampleSpecQuestion;
-
+	
 	/**
 	 * Instantiates a new SampleQuestionBean bean.
-	 * 
-	 * @param specQuestionId
-	 *            the specQuestionId
-	 * @param sampleSpecQuestion
-	 *            the sampleSpecQuestion
+	 *
+	 * @param specQuestionId the specQuestionId
+	 * @param sampleSpecQuestion the sampleSpecQuestion
 	 */
 	public SampleQuestionBean(Long specQuestionId, TplSpecQuestion sampleSpecQuestion) {
 		this.specQuestionId = specQuestionId;
 		this.sampleSpecQuestion = sampleSpecQuestion;
 	}
-
 	/**
 	 * Instantiates a new SampleQuestionBean bean.
-	 * 
-	 * @param specQuestionId
-	 *            the specQuestionId
-	 * @param isSample
-	 *            the isSample
-	 * @param sampleQuestionQuantity
-	 *            the sampleQuestionQuantity
-	 * @param sampleQuestionScore
-	 *            the sampleQuestionScore
+	 *
+	 * @param specQuestionId the specQuestionId
+	 * @param isSample the isSample
+	 * @param sampleQuestionQuantity the sampleQuestionQuantity
+	 * @param sampleQuestionScore the sampleQuestionScore
 	 * 
 	 */
-	public SampleQuestionBean(Long specQuestionId, boolean isSample, BigDecimal sampleQuestionQuantity,
-			BigDecimal sampleQuestionScore) {
-		this.specQuestionId = specQuestionId;
-		this.isSample = isSample;
-		this.sampleQuestionQuantity = sampleQuestionQuantity;
-		this.sampleQuestionScore = sampleQuestionScore;
+	public SampleQuestionBean(Long specQuestionId, boolean isSample,BigDecimal sampleQuestionQuantity,BigDecimal sampleQuestionScore){
+		this.specQuestionId=specQuestionId;
+		this.isSample=isSample;
+		this.sampleQuestionQuantity=sampleQuestionQuantity;
+		this.sampleQuestionScore=sampleQuestionScore;
 	}
 
 	/**
@@ -74,8 +66,7 @@ public class SampleQuestionBean implements Serializable {
 	}
 
 	/**
-	 * @param specQuestionId
-	 *            the specQuestionId to set
+	 * @param specQuestionId the specQuestionId to set
 	 */
 	public void setSpecQuestionId(Long specQuestionId) {
 		this.specQuestionId = specQuestionId;
@@ -89,8 +80,7 @@ public class SampleQuestionBean implements Serializable {
 	}
 
 	/**
-	 * @param isSample
-	 *            the isSample to set
+	 * @param isSample the isSample to set
 	 */
 	public void setSample(boolean isSample) {
 		this.isSample = isSample;
@@ -104,8 +94,7 @@ public class SampleQuestionBean implements Serializable {
 	}
 
 	/**
-	 * @param sampleQuestionQuantity
-	 *            the sampleQuestionQuantity to set
+	 * @param sampleQuestionQuantity the sampleQuestionQuantity to set
 	 */
 	public void setSampleQuestionQuantity(BigDecimal sampleQuestionQuantity) {
 		this.sampleQuestionQuantity = sampleQuestionQuantity;
@@ -119,8 +108,7 @@ public class SampleQuestionBean implements Serializable {
 	}
 
 	/**
-	 * @param sampleQuestionScore
-	 *            the sampleQuestionScore to set
+	 * @param sampleQuestionScore the sampleQuestionScore to set
 	 */
 	public void setSampleQuestionScore(BigDecimal sampleQuestionScore) {
 		this.sampleQuestionScore = sampleQuestionScore;
@@ -134,8 +122,7 @@ public class SampleQuestionBean implements Serializable {
 	}
 
 	/**
-	 * @param sampleSpecQuestion
-	 *            the sampleSpecQuestion to set
+	 * @param sampleSpecQuestion the sampleSpecQuestion to set
 	 */
 	public void setSampleSpecQuestion(TplSpecQuestion sampleSpecQuestion) {
 		this.sampleSpecQuestion = sampleSpecQuestion;

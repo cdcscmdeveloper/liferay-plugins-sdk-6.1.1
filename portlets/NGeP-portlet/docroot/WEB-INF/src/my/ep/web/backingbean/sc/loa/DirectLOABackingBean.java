@@ -8256,6 +8256,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				fileNo = splitLongLengthString(fileNo, 29);
 			}
 		}
+		
 		// #26770 Note-#548 - Start
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);

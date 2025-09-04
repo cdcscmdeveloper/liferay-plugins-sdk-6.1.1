@@ -262,6 +262,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void checkingBeforeDeclare() {
 		//# 33563
 		validateRole();
+		
 		//#33589 - Start
 		if(getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)){
 			RequestContext.getCurrentInstance().execute("declareDeletePopUpBeforeId.show()");

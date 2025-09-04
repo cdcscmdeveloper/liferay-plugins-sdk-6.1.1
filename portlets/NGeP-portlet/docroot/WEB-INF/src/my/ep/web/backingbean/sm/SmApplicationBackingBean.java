@@ -3767,6 +3767,10 @@ public class SmApplicationBackingBean extends
 					}//#31461-End
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
+					//#31130-start
+					SmApplicationUtil.validatePersonnelBeforeSave(true, -1,getManagedBean());
+					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
+					//#31130 -end
 					
 					//#31130-start
 					SmApplicationUtil.validatePersonnelBeforeSave(true, -1,getManagedBean());
@@ -3889,6 +3893,17 @@ public class SmApplicationBackingBean extends
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl(),
 					getManagedBean().getCurrentPageType());
+			
+			// 35208 START
+			if(getManagedBean().getSmSupplier().getSmAppl() != null){
+				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
+						getManagedBean().getSmSupplier().getSmAppl());
+			}
+			if(getManagedBean().getSmAppl() != null){
+				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
+						getManagedBean().getSmAppl());
+			}
+			// 35208 END
 
 			// init GST information
 			initGst();
@@ -10553,6 +10568,7 @@ public class SmApplicationBackingBean extends
 		}
 		reqDTO.setCurrWorkflowStatus(smAppCanObj.getCurrWfStatus().longValue());
 		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+		//#38195 END
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
 
 		res = res.equals("REJECT") ? SmCommonUtil.getMessage(
