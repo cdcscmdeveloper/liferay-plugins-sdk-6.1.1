@@ -17888,6 +17888,10 @@ private void retriveCommitteeRemarksList(){
 			for (ScQtDemoByItemScore score : resDto.getByItemList()) {
 				this.getManagedBean().setDemoScore(score.getDemoEvalScore());
 				}
+			this.getManagedBean().setItemAllOtherElementsPercentage((new BigDecimal(this.getManagedBean().getOtherchecklistScore())
+			.add(new BigDecimal(this.getManagedBean().getDemoScore())))
+			.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
+			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, RoundingMode.HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));//#28784 sonarqube
 			}
 		finally {
 

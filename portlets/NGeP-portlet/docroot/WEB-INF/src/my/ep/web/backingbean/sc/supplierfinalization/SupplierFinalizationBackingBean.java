@@ -57,6 +57,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.comparator.WorklistItemVOComparator;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -1275,10 +1276,11 @@ public class SupplierFinalizationBackingBean extends
 		switch (evaluationStageId) {
 			case 1 : if (getManagedBean().getScQt().isDemoRequired()) {
 						//#28784 - Start
+						boolean isQtNewVersion = validateSupportedTask(getManagedBean().getScQt().getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
 						boolean isItemize = getManagedBean().isItemize();
 						boolean isItemRowSelected = getManagedBean().isItemRowSelect();
 						ScQtRecommend selectedItem = getManagedBean().getSelectedItem();
-						if (!isItemize) {
+						if (!isItemize || !isQtNewVersion) {
 				    		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
 						} else {
 				    		int wipStatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
