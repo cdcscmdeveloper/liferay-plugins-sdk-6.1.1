@@ -27,6 +27,11 @@ import my.ep.persistence.entity.cm.catalog.CmType;
 @SessionScoped
 public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String cmNavigationURL;
 
 	private List<CmUnspsc> unspscList;
@@ -104,8 +109,8 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	
 	private SearchFilterBean titleFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
-	
-	// 35503 Start
+
+	//35503 Start
 	private String auditCommodityCode;
 	private String auditCommodityTitle;
 	private String auditCommodityTitleEng;
@@ -122,9 +127,8 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	private List<CmBrand> auditBrandExtList;
 	private List<CmMeasurement> auditMeasurementExtList;
 	private List<CmColor> auditColourExtList;
-	// 35503 End
-
-	
+	//35503 End
+		
 	public CmUnspsc getAutoCompleteUnspscCode() {
 		if (autoCompleteUnspscCode == null)
 			autoCompleteUnspscCode = new CmUnspsc();
@@ -646,8 +650,8 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 		this.typeList = typeList;
 	}
 	/*[#27625] end*/
-	
-	// 35503 Start
+
+	//35503 Start
 	public String getAuditCommodityTitle() {
 		return auditCommodityTitle;
 	}
@@ -783,6 +787,5 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	public void setAuditColourExtList(List<CmColor> auditColourExtList) {
 		this.auditColourExtList = auditColourExtList;
 	}
-	// 35503 End
-
+	//35503 End
 }

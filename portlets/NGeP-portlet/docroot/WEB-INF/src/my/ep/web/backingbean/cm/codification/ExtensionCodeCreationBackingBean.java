@@ -1282,7 +1282,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		//35503 Start
 		this.getManagedBean().setAuditRequestExtList(null);
 		//35503 End
-
+		
 		if (this.getManagedBean().getRequestExtCodeList().size()> 0){
 		    this.getManagedBean().setDisableSelectBtn(false);
 		}else{

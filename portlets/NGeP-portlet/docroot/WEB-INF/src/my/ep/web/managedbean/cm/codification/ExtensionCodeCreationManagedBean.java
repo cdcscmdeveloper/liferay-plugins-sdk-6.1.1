@@ -35,13 +35,16 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-
 import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "extensionCodeCreationMB")
 @SessionScoped
 public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private boolean editMode = false;
 	private int editModeIndex = 0;
 	
