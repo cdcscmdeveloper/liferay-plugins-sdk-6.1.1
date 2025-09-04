@@ -36,17 +36,16 @@
 						<p:ajax event="change" update=":form:auditPMSearchPanel,:form:searchMasters"
 							listener="#{searchPMAuditBackingBean.changeType()}" />
 					</p:selectOneMenu></td>					
-				<td><p:message for="paramLevel1" id="paramLevel1Msg"
-						display="icon" /></td>
+				<td>&#160;</td>
 				<td>&#160;</td>
 			</tr>
 			<tr>
 				<th width="20%"><p:outputLabel
-						value="#{lbl['lbl.pm.audit.configCategory']}" /> <h:outputLabel
+						value="#{lbl['lbl.pm.audit.configCategory.type']}" /> <h:outputLabel
 						value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneMenu id="paramLevel2"
 						styleClass="ppDropDownWidthM" required="true"
-						label="#{lbl['lbl.pm.audit.configCategory']}"
+						label="#{lbl['lbl.pm.audit.configCategory.type']}"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.categoryConfigParamLevel2}"
 						style="width: 265px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" 
@@ -56,15 +55,14 @@
 							var="lvl2" itemLabel="#{lvl2.codeName}"
 							itemValue="#{lvl2.levelCode}" />
 						<p:ajax event="change"
-							update="paramLevel1,paramLevel2,paramLevel3,fromDate,toDate" />
+							update="paramLevel1,paramLevel2,paramLevel3,itemCode,itemName,roles,fromDate,toDate" />
 					</p:selectOneMenu></td>
-				<td><p:message for="paramLevel2" id="paramLevel2Msg"
-						display="icon" /></td>
+				<td>&#160;</td>
 				<td>&#160;</td>
 			</tr>
 			<tr>
 				<th width="20%"><p:outputLabel
-						value="#{lbl['lbl.pm.audit.configItem']}" /></th>
+						value="#{lbl['lbl.pm.audit.configItem.type']}" /></th>
 				<td><p:selectOneMenu id="paramLevel3"
 						styleClass="ppDropDownWidthM" required="false"
 						label="#{lbl['lbl.pm.audit.configItem']}"
@@ -78,10 +76,9 @@
 							var="lvl3" itemLabel="#{lvl3.codeName}"
 							itemValue="#{lvl3.levelCode}" />
 						<p:ajax event="change"
-							update="paramLevel1,paramLevel2,paramLevel3,fromDate,toDate" />
+							update="paramLevel1,paramLevel2,paramLevel3,itemCode,itemName,roles,fromDate,toDate" />
 					</p:selectOneMenu></td>
-				<td><p:message for="paramLevel3" id="paramLevel3Msg"
-						display="icon" /></td>
+				<td>&#160;</td>
 				<td>&#160;</td>
 			</tr>
 			<tr>
@@ -111,9 +108,9 @@
 							value="#{searchPMAuditBackingBean.getDropdownRoleList()}"
 							var="roleItem" itemLabel="#{roleItem.roleName}"
 							itemValue="#{roleItem.roleCode}" />
-						<p:ajax event="change" update="roles,searchActionBylist" process="auditPMSearchPanel"/>
+						<p:ajax event="change" update="searchActionBylist" process="auditPMSearchPanel"/>
 					</p:selectOneMenu> <ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" /></td>
-				<td><p:message for="roles" id="rolesMsg" display="icon" /></td>
+				<td>&#160;</td>
 				<td>&#160;</td>
 			</tr>
 			<tr>
@@ -156,11 +153,12 @@
 							oncomplete="blkPanelSearchTable.hide();" update="searchMasters"
 							process="auditPMSearchPanel"
 							action="#{searchPMAuditBackingBean.searchMaster}" />
+							
 						<p:commandButton id="searchButtonId"
-							value="#{lbl['lbl.btn.reset']}"
-							update=":form:auditPMSearchPanel,:form:searchMasters"
-							process="@this"
-							action="#{searchPMAuditBackingBean.resetSearchBean}" />
+							value="#{lbl['lbl.btn.reset']}" process="@this"
+							action="#{searchPMAuditBackingBean.preLoading}"
+							update="@form"
+							 ></p:commandButton>
 					</div>
 				</td>
 			</tr>

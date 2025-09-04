@@ -86,21 +86,21 @@
 				</p:tooltip>
 				<!-- Enhancement #22211 END -->
 				
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}1"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
 					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOA and isLoaGenerated}"
 					action="#{lOADetailBackingBean.validateBeforePopup(true)}"
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" /><ui:remove>36339, 21692</ui:remove>
 				
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}2"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
 					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOAWithoutBPM and isLoaGenerated}"
 					action="#{lOADetailBackingBean.validateBeforePopup(false)}"
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" /><ui:remove>21692</ui:remove>
 				
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}3"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
 					rendered="#{qtLOABackingBean.managedBean.ableToCancelWIP and isLoaGenerated}"
 					action="#{lOADetailBackingBean.validateBeforePopupWIP()}"
@@ -118,14 +118,14 @@
 				    process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
 				
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}1"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
 					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOA and lOADetailBackingBean.disableCancelForApprover()}"
 					action="#{lOADetailBackingBean.validateBeforePopup(true)}"
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" /><ui:remove>36339, 21692</ui:remove>
 				
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}3"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
 					rendered="#{qtLOABackingBean.managedBean.ableToCancelWIP and lOADetailBackingBean.disableCancelForApprover()}"
 					action="#{lOADetailBackingBean.validateBeforePopupWIP()}"
@@ -326,7 +326,7 @@
 		<p:spacer height="1" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" onclick="blockWidget.show();"
-				action="#{lOADetailBackingBean.cancelLOAWithoutBPM()}"
+				action="#{lOADetailBackingBean.cancelLOAWIP()}"
 				oncomplete="cancelLoaPopup3.hide();"  update="@form">
 			</p:commandButton>
 
