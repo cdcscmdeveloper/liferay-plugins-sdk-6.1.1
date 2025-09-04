@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import my.ep.util.SLAUtils; //#25790
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -42,8 +41,9 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.ct.IContractSO; //#25790
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO; //#25790
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO; //#25790
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -56,7 +56,6 @@ import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#25790
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
-import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -66,17 +65,19 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.AuditDPRequestNoteConst;
-import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.ContinuityDPConst; //#25790
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.ct.ContractReqDTO; //#25790
 import my.ep.dto.ct.ContractResDTO; //#25790
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
-import my.ep.dto.fl.FulfilmentReqDTO; //#25790
-import my.ep.dto.fl.FulfilmentResDTO; //#25790
+import my.ep.dto.osb.sc.DPOsbReqDTO;
+import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -92,8 +93,6 @@ import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
-import my.ep.dto.osb.sc.DPOsbReqDTO;
-import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO; //#25790
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO; //#25790
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
@@ -145,9 +144,9 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //#25790
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
@@ -162,7 +161,6 @@ import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
-import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.DPConstants;
@@ -185,7 +183,6 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class RequestNoteBackingBean.
@@ -4464,10 +4461,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		try {
 			fos = new FileOutputStream(getActualFilePath(attachment));
-			DocumentGenerator.getInstance().generatePdfFromVelocity(
-	    			"/sc/directPurchase/pi-report.vm", 
-	    			context, 
-	    			fos);
+			DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/directPurchase/pi-report.vm", context, fos);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -5562,6 +5556,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// #28789 - end
+
 	// 36362 - start
 	/**
 	 * To validate quantity not exceed tier max quantity

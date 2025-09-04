@@ -4677,7 +4677,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public boolean isUpsCannotEdit() {
 		return upsCannotEdit;
 	}
-
+	
 	public void setUpsCannotEdit(boolean upsCannotEdit) {
 		this.upsCannotEdit = upsCannotEdit;
 	}

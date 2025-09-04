@@ -10,7 +10,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -46,24 +45,24 @@ public class SyncProcBoardFromPMRest {
 		try {
 			log.info("#25278 Before Sync");
 			pbChairpersonList = retrievePBChairpersonList();
-			if(pbChairpersonList != null && !pbChairpersonList.isEmpty())
-			{
+			if (pbChairpersonList != null && !pbChairpersonList.isEmpty()) {
 				log.info("------ PB Chairperson ------");
-				for(PmUser chairperson: pbChairpersonList) {
+				for (PmUser chairperson : pbChairpersonList) {
 					user = new HashMap<String, String>();
-					if(chairperson.getLiferayRoles() != null) {
-						for(String roles:chairperson.getLiferayRoles())
-						{
-							if(liferayRole == null)
+					if (chairperson.getLiferayRoles() != null) {
+						for (String roles : chairperson.getLiferayRoles()) {
+							if (liferayRole == null) {
 								liferayRole = roles;
-							else
+							} else {
 								liferayRole = liferayRole + "," + roles;
+							}
 						}
 					}
-					if(liferayRole != null)
+					if (liferayRole != null) {
 						user.put("Liferay Role", liferayRole);
-					else
+					} else {
 						user.put("Liferay Role", "-NULL-");
+					}
 					liferayRole = null;
 					loginId = chairperson.getLoginId();
 					userId = chairperson.getUserId();
@@ -76,40 +75,41 @@ public class SyncProcBoardFromPMRest {
 						resDTO = SmServiceLookup.getUserSO().syncLiferayAndOimRoleFromPm(reqDTO);
 						user.put("User", loginId);
 						user.put("Result", String.valueOf(resDTO.isSuccessful()));
-						user.put("Role","Chairperson");
+						user.put("Role", "Chairperson");
 						successUser.add(user);
-						
-					} catch(Exception e) {
+
+					} catch (Exception e) {
 						user.put("User", loginId);
 						user.put("Result", e.getMessage());
-						user.put("Role","Chairperson");
-						failedUser.add(user);					
+						user.put("Role", "Chairperson");
+						failedUser.add(user);
 					}
-					if(count == 10)
+					if (count == 10) {
 						break;
+					}
 				}
 			}
 			count = 0;
 			liferayRole = null;
 			pbMemberList = retrievePBMemberList();
-			if(pbMemberList != null && !pbMemberList.isEmpty())
-			{
+			if (pbMemberList != null && !pbMemberList.isEmpty()) {
 				log.info("------ PB Member ------");
-				for(PmUser member: pbMemberList) {
+				for (PmUser member : pbMemberList) {
 					user = new HashMap<String, String>();
-					if(member.getLiferayRoles() != null) {
-						for(String roles:member.getLiferayRoles())
-						{
-							if(liferayRole == null)
+					if (member.getLiferayRoles() != null) {
+						for (String roles : member.getLiferayRoles()) {
+							if (liferayRole == null) {
 								liferayRole = roles;
-							else
+							} else {
 								liferayRole = liferayRole + "," + roles;
+							}
 						}
 					}
-					if(liferayRole != null)
+					if (liferayRole != null) {
 						user.put("Liferay Role", liferayRole);
-					else
+					} else {
 						user.put("Liferay Role", "-NULL-");
+					}
 					liferayRole = null;
 					loginId = member.getLoginId();
 					userId = member.getUserId();
@@ -122,40 +122,41 @@ public class SyncProcBoardFromPMRest {
 						resDTO = SmServiceLookup.getUserSO().syncLiferayAndOimRoleFromPm(reqDTO);
 						user.put("User", loginId);
 						user.put("Result", String.valueOf(resDTO.isSuccessful()));
-						user.put("Role","Member");
+						user.put("Role", "Member");
 						successUser.add(user);
-					} catch(Exception e) {
+					} catch (Exception e) {
 						user.put("User", loginId);
 						user.put("Result", e.getMessage());
-						user.put("Role","Member");
+						user.put("Role", "Member");
 						failedUser.add(user);
 					}
-					
-					if(count == 10)
+
+					if (count == 10) {
 						break;
+					}
 				}
 			}
 			count = 0;
 			liferayRole = null;
 			pbSecretaryList = retrievePBSecretaryList();
-			if(pbSecretaryList != null && !pbSecretaryList.isEmpty())
-			{
+			if (pbSecretaryList != null && !pbSecretaryList.isEmpty()) {
 				log.info("------ PB Secretary ------");
-				for(PmUser secretary: pbSecretaryList) {
+				for (PmUser secretary : pbSecretaryList) {
 					user = new HashMap<String, String>();
-					if(secretary.getLiferayRoles() != null) {
-						for(String roles:secretary.getLiferayRoles())
-						{
-							if(liferayRole == null)
+					if (secretary.getLiferayRoles() != null) {
+						for (String roles : secretary.getLiferayRoles()) {
+							if (liferayRole == null) {
 								liferayRole = roles;
-							else
+							} else {
 								liferayRole = liferayRole + "," + roles;
+							}
 						}
 					}
-					if(liferayRole != null)
+					if (liferayRole != null) {
 						user.put("Liferay Role", liferayRole);
-					else
+					} else {
 						user.put("Liferay Role", "-NULL-");
+					}
 					liferayRole = null;
 					loginId = secretary.getLoginId();
 					userId = secretary.getUserId();
@@ -168,26 +169,27 @@ public class SyncProcBoardFromPMRest {
 						resDTO = SmServiceLookup.getUserSO().syncLiferayAndOimRoleFromPm(reqDTO);
 						user.put("User", loginId);
 						user.put("Result", String.valueOf(resDTO.isSuccessful()));
-						user.put("Role","Secretary");
+						user.put("Role", "Secretary");
 						successUser.add(user);
-					} catch(Exception e) {
+					} catch (Exception e) {
 						user.put("User", loginId);
 						user.put("Result", e.getMessage());
-						user.put("Role","Secretary");
+						user.put("Role", "Secretary");
 						failedUser.add(user);
 					}
-					
-					if(count == 10)
+
+					if (count == 10) {
 						break;
+					}						
 				}
 			}
 			log.info("List of Success User");
-			for(HashMap<String, String> result: successUser) {
-				log.info(result.get("User")+ ":" + result.get("Result") + ", " + result.get("Role") + ", " + result.get("Liferay Role"));
+			for (HashMap<String, String> result : successUser) {
+				log.info(result.get("User") + ":" + result.get("Result") + ", " + result.get("Role") + ", " + result.get("Liferay Role"));
 			}
 			log.info("List of Failed User");
-			for(HashMap<String, String> result: failedUser) {
-				log.info(result.get("User")+ ":" + result.get("Result") + ", " + result.get("Role") + ", " + result.get("Liferay Role"));
+			for (HashMap<String, String> result : failedUser) {
+				log.info(result.get("User") + ":" + result.get("Result") + ", " + result.get("Role") + ", " + result.get("Liferay Role"));
 			}
 			log.info("#25278 - Finished Sync");
 			return Response.status(200).entity("Success sync Procurement Board users !!").build();
@@ -202,18 +204,19 @@ public class SyncProcBoardFromPMRest {
 		UserResDTO resDTO = null;
 		List<String> roleCodes = new ArrayList<String>();
 		List<PmUser> chairpersonList = null;
-		try{		
-		roleCodes.add(RoleCode.PPB_CHAIRPERSON.value());;
-		reqDTO.setRoleCodes(roleCodes);
-		resDTO = SmServiceLookup.getUserSO().retrieveUserListByRole(reqDTO);
-		chairpersonList = resDTO.getUserList();
-		log.info("PB Chairperson: " + chairpersonList.size());
-		/*for (PmUser user : chairpersonList) {
-			System.out.println(user.getUserId() + "|"
-					+ user.getUserName());
-		}*/
+		try {
+			roleCodes.add(RoleCode.PPB_CHAIRPERSON.value());
+			reqDTO.setRoleCodes(roleCodes);
+			resDTO = SmServiceLookup.getUserSO().retrieveUserListByRole(reqDTO);
+			chairpersonList = resDTO.getUserList();
+			log.info("PB Chairperson: " + chairpersonList.size());
+			/*
+			for (PmUser user : chairpersonList) {
+				System.out.println(user.getUserId() + "|" + user.getUserName()); 
+			}
+			*/
 
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return chairpersonList;
@@ -224,39 +227,42 @@ public class SyncProcBoardFromPMRest {
 		UserResDTO resDTO = null;
 		List<String> roleCodes = new ArrayList<String>();
 		List<PmUser> memberList = null;
-		try{		
-		roleCodes.add(RoleCode.PPB_MEMBER.value());;
-		reqDTO.setRoleCodes(roleCodes);
-		resDTO = SmServiceLookup.getUserSO().retrieveUserListByRole(reqDTO);
-		memberList = resDTO.getUserList();
-		log.info("PB Member: " + memberList.size());
-		/*for (PmUser user : memberList) {
-			System.out.println(user.getUserId() + "|"
-					+ user.getUserName());
-		}*/
+		try {
+			roleCodes.add(RoleCode.PPB_MEMBER.value());
+			reqDTO.setRoleCodes(roleCodes);
+			resDTO = SmServiceLookup.getUserSO().retrieveUserListByRole(reqDTO);
+			memberList = resDTO.getUserList();
+			log.info("PB Member: " + memberList.size());
+			/*
+			for (PmUser user : memberList) {
+				System.out.println(user.getUserId() + "|" + user.getUserName()); 
+			}
+			*/
 
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return memberList;
 	}
+
 	private List<PmUser> retrievePBSecretaryList() {
 		UserReqDTO reqDTO = new UserReqDTO();
 		UserResDTO resDTO = null;
 		List<String> roleCodes = new ArrayList<String>();
 		List<PmUser> secretaryList = null;
-		try{		
-		roleCodes.add(RoleCode.PPB_SECRETARY.value());;
-		reqDTO.setRoleCodes(roleCodes);
-		resDTO = SmServiceLookup.getUserSO().retrieveUserListByRole(reqDTO);
-		secretaryList = resDTO.getUserList();
-		log.info("PB Secretary: " + secretaryList.size());
-		/*for (PmUser user : secretaryList) {
-			System.out.println(user.getUserId() + "|"
-					+ user.getUserName());
-		}*/
+		try {
+			roleCodes.add(RoleCode.PPB_SECRETARY.value());
+			reqDTO.setRoleCodes(roleCodes);
+			resDTO = SmServiceLookup.getUserSO().retrieveUserListByRole(reqDTO);
+			secretaryList = resDTO.getUserList();
+			log.info("PB Secretary: " + secretaryList.size());
+			/*
+			for (PmUser user : secretaryList) { 
+				System.out.println(user.getUserId() + "|" + user.getUserName()); 
+			}
+			*/
 
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return secretaryList;
@@ -273,8 +279,7 @@ public class SyncProcBoardFromPMRest {
 			reqDTO = new UserReqDTO();
 			reqDTO.setLoginId(loginId);
 			resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginId(reqDTO);
-			if(resDTO.isSuccessful())
-			{
+			if (resDTO.isSuccessful()) {
 				userId = resDTO.getPmUser().getUserId();
 				reqDTO = new UserReqDTO();
 				reqDTO.setLoginId(loginId);
@@ -283,14 +288,15 @@ public class SyncProcBoardFromPMRest {
 				resDTO = SmServiceLookup.getUserSO().syncLiferayAndOimRoleFromPm(reqDTO);
 				log.info("Sync user by login Id: " + resDTO.isSuccessful());
 			}
-			
-			log.info("#25278 Finished Sync By Login Id");			
+
+			log.info("#25278 Finished Sync By Login Id");
 			return Response.status(200).entity("Success sync Procurement Board users !!").build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(406).entity(e.getMessage()).build();
 		}
-	}	
+	}
+
 	// START 32821 - PDS 
 	/**
 	 * Synchronizes user information from PM to Liferay and OIM based on the provided login ID.
@@ -317,8 +323,7 @@ public class SyncProcBoardFromPMRest {
 	 * @param loginId the login ID of the user to synchronize (required).
 	 * @param setDefaultPassword "true" to reset the password to default; otherwise ignored (optional).
 	 * @return HTTP 200 if synchronization is successful, HTTP 406 with an error message if failed.
-	 */
-	
+	 */	
 	
 	@POST
 	@Path("/syncUserv2")
@@ -328,22 +333,22 @@ public class SyncProcBoardFromPMRest {
 		try {
 			String message = "";
 			log.info("#Start Sync By Login Id");
-			if(reqDTO == null){
+			if (reqDTO == null) {
 				log.info("Body Is Null");
 				return Response.status(400).entity("Body is required").build();
-			}else{
-				log.info("Body Is Not Null:"+reqDTO.getLoginId());
+			} else {
+				log.info("Body Is Not Null:" + reqDTO.getLoginId());
 			}
-			if(reqDTO.getKeyPass() != 8532147){
+			if (reqDTO.getKeyPass() != 8532147) {
 				log.info("Key Wrong");
 				message = "Error Key";
 				return Response.status(401).entity("Error Key").build();
-			}else{
-				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginId(reqDTO.getLoginId(),false);
-				log.info("Finished Sync By Login Id:"+success);	
+			} else {
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginId(reqDTO.getLoginId(), false);
+				log.info("Finished Sync By Login Id:" + success);
 				message = "Success";
 			}
-			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
+			return Response.status(200).entity("sync Procurement Board users !!" + message).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(406).entity(e.getMessage()).build();
@@ -358,22 +363,22 @@ public class SyncProcBoardFromPMRest {
 		try {
 			String message = "";
 			log.info("#Start Sync By Login Id");
-			if(reqDTO == null){
+			if (reqDTO == null) {
 				log.info("Body Is Null");
 				return Response.status(400).entity("Body is required").build();
-			}else{
-				log.info("Body Is Not Null:"+reqDTO.getLoginId());
+			} else {
+				log.info("Body Is Not Null:" + reqDTO.getLoginId());
 			}
-			if(reqDTO.getKeyPass() != 8532147){
+			if (reqDTO.getKeyPass() != 8532147) {
 				log.info("Key Wrong");
 				message = "Error Key";
 				return Response.status(401).entity("Error Key").build();
-			}else{
-				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginIdNative(reqDTO.getLoginId(),false,false);
-				log.info("Finished Sync By Login Id:"+success);	
+			} else {
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginIdNative(reqDTO.getLoginId(), false, false);
+				log.info("Finished Sync By Login Id:" + success);
 				message = "Success";
 			}
-			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
+			return Response.status(200).entity("sync Procurement Board users !!" + message).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(406).entity(e.getMessage()).build();
@@ -388,27 +393,26 @@ public class SyncProcBoardFromPMRest {
 		try {
 			String message = "";
 			log.info("#Start Sync By Login Id");
-			if(reqDTO == null){
+			if (reqDTO == null) {
 				log.info("Body Is Null");
 				return Response.status(400).entity("Body is required").build();
-			}else{
-				log.info("Body Is Not Null:"+reqDTO.getLoginId());
+			} else {
+				log.info("Body Is Not Null:" + reqDTO.getLoginId());
 			}
-			if(reqDTO.getKeyPass() != 8532147){
+			if (reqDTO.getKeyPass() != 8532147) {
 				log.info("Key Wrong");
 				message = "Error Key";
 				return Response.status(401).entity("Error Key").build();
-			}else{
-				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginIdNative(reqDTO.getLoginId(),false,true);
-				log.info("Finished Sync By Login Id:"+success);	
+			} else {
+				boolean success = SmServiceLookup.getUserSO().syncLiferayOimByLoginIdNative(reqDTO.getLoginId(), false, true);
+				log.info("Finished Sync By Login Id:" + success);
 				message = "Success";
 			}
-			return Response.status(200).entity("sync Procurement Board users !!"+message).build();
+			return Response.status(200).entity("sync Procurement Board users !!" + message).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(406).entity(e.getMessage()).build();
 		}
 	}
-	// End 32821 - PDS 
-	
+	// End 32821 - PDS
 }
