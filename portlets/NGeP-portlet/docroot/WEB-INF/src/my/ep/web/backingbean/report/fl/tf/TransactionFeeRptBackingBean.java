@@ -99,8 +99,9 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 		if(getManagedBean().getPmAccountingOffice() == null){
 			throw new EpException(MessageConst.ERROR_REPORT_780065);
 		}
-		if ("FL_071".equalsIgnoreCase(getManagedBean().getReportCode()) && !getManagedBean().isCheckSFOneOff()
-				&& !getManagedBean().isCheckSFPeriodic()) {
+		if (getManagedBean().getReportCode().equalsIgnoreCase(
+				FlReportConst.FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE)
+				&& !getManagedBean().isCheckSFOneOff() && !getManagedBean().isCheckSFPeriodic()) {
 			throw new EpException(MessageConst.ERROR_REPORT_780066);
 		}
 		if(getManagedBean().getDocumentType() == null){

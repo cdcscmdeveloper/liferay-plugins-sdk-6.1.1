@@ -847,21 +847,21 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e);
 		}
 		
-		switch(reportCode){
-		case "FL_071" : //Service fee based on Accounting report
+		switch (reportCode) {
+		case FlReportConst.FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE:
 			try {
-				getServiceFeeBasedOnAccountingReport(params,resDTO.getRequestId());
-			}catch (Exception e1) {
+				getServiceFeeBasedOnAccountingReport(params, resDTO.getRequestId());
+			} catch (Exception e1) {
 				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
 						SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
 						SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e1);
 			}
 			break;
-	
-		case "FL_072" : //Accumulated service fee
-			try{
+
+		case FlReportConst.FL_072_ACCUMULATED_SERVICE_FEE_REPORT:
+			try {
 				getAccumulatedServiceFee(params, resDTO.getRequestId());
-			}catch(Exception e){
+			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
 						SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
 						SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e);
