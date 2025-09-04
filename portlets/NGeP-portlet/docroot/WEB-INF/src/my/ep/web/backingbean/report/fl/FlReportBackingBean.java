@@ -30,6 +30,7 @@ import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.SLALogFulfilmentConst;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -49,6 +50,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
@@ -816,11 +818,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	//#29554 start 	
 	/**
 	 * main method to generate excel report
+	 * 
+	 * @param reportCode report code
+	 * @param params rpt param
 	 */
 	public void generateFLExcelReport(String reportCode, LinkedHashMap<String, String> params){
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
-		log.info("29554: start generateFLExcelReport");
 		params.put(FlReportConst.PARAM_KEY_REPORT, getManagedBean()
 				.getReportName());
 		params.put(FlReportConst.FL_RPT_REPORT_ID, getManagedBean()
@@ -836,28 +840,31 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				
 		RPTRequestResDTO resDTO = new RPTRequestResDTO();
 		try{
-			log.info("29554: start generateFLExcelReport SO");
 			resDTO = rptRequestSO.generateReportInExcel(reqDTO);
 		}catch(Exception e){
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+					SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+					SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e);
 		}
 		
 		switch(reportCode){
 		case "FL_071" : //Service fee based on Accounting report
 			try {
-				log.info("29554: start getServiceFeeBasedOnAccountingReport");
 				getServiceFeeBasedOnAccountingReport(params,resDTO.getRequestId());
 			}catch (Exception e1) {
-				e1.printStackTrace();
+				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+						SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+						SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e1);
 			}
 			break;
 	
 		case "FL_072" : //Accumulated service fee
 			try{
-				log.info("29554: start getAccumulatedServiceFee");
 				getAccumulatedServiceFee(params, resDTO.getRequestId());
 			}catch(Exception e){
-				e.printStackTrace();
+				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+						SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+						SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e);
 			}
 			break;
 		}
@@ -873,19 +880,18 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * @throws Exception
 	 */
 	public void getServiceFeeBasedOnAccountingReport(LinkedHashMap<String, String> params, BigDecimal requestId) throws Exception{
-		log.info("29554: start getServiceFeeBasedOnAccountingReport");
 		
-		List<Object[]> reportList = new ArrayList<Object[]>();
-		List<Object[]> summaryReportList = new ArrayList<Object[]>();
-		Map<Integer, Object[]> fiList = new TreeMap<Integer, Object[]>();
-		Map<Integer, Object[]> summaryFiList = new TreeMap<Integer, Object[]>();
+		List<Object[]> reportList;
+		List<Object[]> summaryReportList;
+		Map<Integer, Object[]> fiList = new TreeMap<>();
+		Map<Integer, Object[]> summaryFiList = new TreeMap<>();
 		String[] sheetName = {"Laporan","Ringkasan"};
 		String[] rowHeaderItems = {"Pejabat Perakaunan","Kadar Fi Perkhidmatan (%)"};
 		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh", "No. Dokumen",
 				"Kategori Jenis Perolehan", "Kod Kumpulan PTJ", "PTJ Pembayar", "Kadar Fi Perkhidmatan (%)", "Perihal",
 				"Nilai Transaksi Termasuk CBP (RM)", "Nilai Potongan (RM)", "CBP (RM)", "Perkhidmatan Fi (RM)",
 				"Bayaran Kepada Pembekal (RM)", "Status"));
-		ArrayList<String> columnsSummaryList = new ArrayList<String>(Arrays.asList("Bil", "Pejabat Perakaunan",
+		ArrayList<String> columnsSummaryList = new ArrayList<>(Arrays.asList("Bil", "Pejabat Perakaunan",
 				"Kadar Fi Perkhidmatan (%)", "Bil. Pesanan Kerajaan", "Nilai Transaksi Termasuk CBP (RM)",
 				"Nilai Potongan (RM)", "CBP (RM)", "Fi Perkhidmatan (RM)", "Bayaran Kepada Pembekal (RM)"));
 		
@@ -895,14 +901,13 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				+ " SEPERTI PADA "+ DateUtils.dateToString("dd/MM/yyyy",new Date())
 				+ " BAGI TAHUN KEWANGAN "+ DateUtils.dateToString("yyyy",new Date());
 		
-		log.info("29554: start get data");
 		reportList = generateServiceFeeBasedOnAccountingReport(params, "R");
 		summaryReportList = generateServiceFeeBasedOnAccountingReport(params, "S");
 		//sort data
 		int fiCount = 0;
 		if(!reportList.isEmpty()){
 			for(int m=0; m<reportList.size(); m++){
-				Object[] row = (Object[]) reportList.get(m);
+				Object[] row = reportList.get(m);
 				BigDecimal amtTransIncCBP = row[16] != null ? (BigDecimal)row[16] : BigDecimal.ZERO;
 				BigDecimal amtDeduction = row[19] != null ? (BigDecimal)row[19] : BigDecimal.ZERO;
 				BigDecimal amtCBP = row[20] != null ? (BigDecimal)row[20] : BigDecimal.ZERO;
@@ -1236,15 +1241,15 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
-	    	//log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
 	        wb.close();
 	        
 	    }catch(Exception e){
-	    	e.printStackTrace();
+	    	SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+					SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+					SLALogFulfilmentConst.FL_RPT_SVC_FEE_BASED_ACCOUNTING_OFFICE, getUserIdSessionFromLoginId(), e);
 	    }
 	    
 	}
@@ -1372,7 +1377,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		Row headerRowList = sheetReportList.createRow(sheetReportList.getLastRowNum() + 2);
 		for (int i = 0; i < columnHeaderList.size(); i++) {
 			Cell cell = headerRowList.createCell(i + 1);
-			cell.setCellValue(columnHeaderList.get(i).toString());
+			cell.setCellValue(columnHeaderList.get(i));
 			cell.setCellStyle(columnStyle(wb, createHelper, true, true, true, false, false, true, true));
 		}
 		// Resize all columns
@@ -1423,10 +1428,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	public void getAccumulatedServiceFee(LinkedHashMap<String, String> params, BigDecimal requestId) throws Exception{
 		log.info("29554: start getAccumulatedServiceFee");
 		
-		List<Object[]> reportList = new ArrayList<Object[]>();
-		Map<Integer, Object[]> fiList = new TreeMap<Integer, Object[]>();
+		List<Object[]> reportList;
+		Map<Integer, Object[]> fiList = new TreeMap<>();
 		String sheetName = "Laporan";
-		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil","Pejabat Perakaunan","Jan(RM)","Feb(RM)","Mac(RM)","April(RM)","Mei(RM)",
+		ArrayList<String> columnHeaderList = new ArrayList<>(Arrays.asList("Bil","Pejabat Perakaunan","Jan(RM)","Feb(RM)","Mac(RM)","April(RM)","Mei(RM)",
 				"Jun(RM)","Julai(RM)","Ogos(RM)","Sept(RM)","Okt(RM)","Nov(RM)","Dis(RM)","Jumlah(RM)"));
 		
 		String reportTitle = "LAPORAN FI PERKHIDMATAN TERKUMPUL BAGI TEMPOH " 
@@ -1456,7 +1461,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		if(!reportList.isEmpty()){
 			
 			for(int m=0; m<reportList.size(); m++){
-				Object[] row = (Object[]) reportList.get(m);
+				Object[] row = reportList.get(m);
 				
 				BigDecimal jan = row[3] != null ? (BigDecimal)row[3] : BigDecimal.ZERO;
 				BigDecimal feb = row[4] != null ? (BigDecimal)row[4] : BigDecimal.ZERO;
@@ -1703,7 +1708,9 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	        wb.close();
 	        
 	    }catch(Exception e){
-	    	e.printStackTrace();
+	    	SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+					SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+					SLALogFulfilmentConst.FL_RPT_ACCUMULATED_SVC_FEE, getUserIdSessionFromLoginId(), e);
 	    }
 	}
 	
