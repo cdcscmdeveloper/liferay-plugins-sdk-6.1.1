@@ -37,6 +37,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.rpt.excel.ExcelCellStyleBuilder;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -363,11 +364,25 @@ public class AuditProcurementPlanReportBackingBean extends BaseBackingBean<Audit
 	 * 
 	 */
 	private void notFoundRecord(Sheet sheet, int rowIndex, int totalCell, CellStyle noRecordsStyle) {
+		Workbook workbook = sheet.getWorkbook();
+		CellStyle borderStyle = workbook.createCellStyle();
+		borderStyle.cloneStyleFrom(noRecordsStyle);
+		borderStyle.setBorderTop(BorderStyle.THIN);
+		borderStyle.setBorderBottom(BorderStyle.THIN);
+		borderStyle.setBorderLeft(BorderStyle.THIN);
+		borderStyle.setBorderRight(BorderStyle.THIN);
+
 		Row noRecordRow = sheet.createRow(rowIndex);
-		Cell cellNoRecord = noRecordRow.createCell(1);
-		cellNoRecord.setCellValue(ReportExcelAuditConstant.RPT_NO_RECORDS);
-		cellNoRecord.setCellStyle(noRecordsStyle);
-		sheet.addMergedRegion(new CellRangeAddress(sheet.getLastRowNum(), sheet.getLastRowNum(), 1, totalCell));
+
+		for (int i = 1; i <= totalCell; i++) {
+			Cell cell = noRecordRow.createCell(i);
+			cell.setCellStyle(borderStyle);
+			if (i == 1) {
+				cell.setCellValue(ReportExcelAuditConstant.RPT_NO_RECORDS);
+			}
+		}
+
+		sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 1, totalCell));
 	}
 
 	/**

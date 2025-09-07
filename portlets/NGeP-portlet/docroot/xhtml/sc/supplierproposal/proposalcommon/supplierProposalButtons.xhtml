@@ -36,7 +36,8 @@
 				<ui:remove>
 					Bug #27412 #75 : END
 				</ui:remove>
-				<ui:remove>26247 - start</ui:remove>				
+				<ui:remove>26247 - start</ui:remove>
+				<ui:param name="supplier" value="#{supplierProposalDetailBackingBean.managedBean.qtProposal.scQtSupplier.smSupplier}" />
 				<ui:param name="isDisciplinaryAction"
 					value="#{supplierProposalDetailBackingBean.disabledQTProcess(supplier)}" />				
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"

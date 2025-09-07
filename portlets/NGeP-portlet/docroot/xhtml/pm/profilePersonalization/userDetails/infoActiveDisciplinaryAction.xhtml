@@ -42,7 +42,7 @@
 		</p:blockUI>
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td colspan="2" valign="top" style="color:red;">
+					<td colspan="2" valign="top" style="color:red; font-size:13px;">
 						<h:outputText rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"
 							value="#{profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"/>
 						<!-- 38530 - START -->
@@ -51,14 +51,14 @@
 							action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}" 
 							update=":form" process="@this"
 							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
-								<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="text-decoration: underline; font-weight: bold; color:red;" />
+								<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="font-size:13px; text-decoration: underline; font-weight: bold; color:red;" />
 						</p:commandLink>
-							<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier ne null}"			
-								action="#{viewSuppProfileBackingBean.onViewDisciplinaryActionSupp(profilePersonalizationBackingBean.managedBean.smSupplier)}" 
-								update=":form" process="@this"
-								onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
-									<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="text-decoration: underline; font-weight: bold; color:red;" />
-							</p:commandLink>
+						<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier ne null}"			
+							action="#{viewSuppProfileBackingBean.onViewDisciplinaryActionSupp(profilePersonalizationBackingBean.managedBean.smSupplier)}"
+							update=":form" process="@this"
+							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
+								<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="font-size:13px; text-decoration: underline; font-weight: bold; color:red;" />
+						</p:commandLink>
 						</h:form>
 						<!-- 38530 - END -->
 						<p:spacer width="2"/>
@@ -72,6 +72,12 @@
 					</td>
 				</tr>
 		</table>
+		<!-- 26186 start -->
+		<ui:fragment rendered="#{not empty profilePersonalizationBackingBean.managedBean.ctSupplierMsgNonDA}">
+			<ui:include src="infoActiveCt.xhtml" />
+		</ui:fragment>
+		<!-- 26186 end -->
+		
 		<!-- 30842 -->
 		<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" smSupplier="#{profilePersonalizationBackingBean.managedBean.smSupplier}" mofView="#{viewSuppProfileBackingBean.managedBean.mofSupplier}"
 		btnView="#{viewSuppProfileBackingBean.managedBean.disableDownloadButtonDAHistory}" smAppl="#{profilePersonalizationBackingBean.managedBean.smAppl}" />
