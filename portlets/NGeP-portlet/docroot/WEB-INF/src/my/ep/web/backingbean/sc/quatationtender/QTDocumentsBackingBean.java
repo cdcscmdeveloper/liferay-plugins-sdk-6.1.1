@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -88,6 +89,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -115,9 +117,11 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.CustomUtils;	// Bug #36702@Syazani 28/11/2024
@@ -2431,6 +2435,7 @@ public class QTDocumentsBackingBean extends
 			hostUrl = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl").toString();
 		}
 		
+		boolean isLocLevelDistrictContainsDivision = false;	// Bug #38731@Syazani 20/08/2025
 		context.put("hostUrl", hostUrl);
 		context.put("commonUtils", commonUtils);
 		context.put("AddressUtils", new AddressUtils());
@@ -2482,19 +2487,22 @@ public class QTDocumentsBackingBean extends
 
 		List<ScQtCategory> categoryResults1 = new ArrayList<ScQtCategory>();
 		List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
+		List<TplSpecLoc> locationDetails;	// Bug #38731@Syazani 20/08/2025
 		IQTDetailSO QtDetailsSO;
+		QuationTenderResDTO tenderResDTO;	// Bug #38731@Syazani 20/08/2025
 		try {
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 			tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
-			QuationTenderResDTO tenderResDTO = QtDetailsSO
-					.retriveQTSuppQulCriDetails(tenderReqDTO);
-			categoryResults = tenderResDTO.getCategories()
-					;
-			if (null != tenderResDTO.getLocationDetails()) {
-				context.put("locality", tenderResDTO.getLocationDetails());
+			tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);	// Bug #38731@Syazani 20/08/2025
+			categoryResults = tenderResDTO.getCategories();
+			// Bug #38731@Syazani 20/08/2025 -- Start
+			locationDetails = CustomUtils.getInstance().deepCopyArrayList(tenderResDTO.getLocationDetails());
+			if (null != locationDetails) {
+				context.put("locality", locationDetails);
+				// Bug #38731@Syazani 20/08/2025 -- End
 			}
 		} finally {
 			QtDetailsSO = null;
@@ -2564,7 +2572,13 @@ public class QTDocumentsBackingBean extends
 						.equals(criteria.getLocationLevel().getParameterCode())) {
 					isSubLocLevel = true;
 					locationLevel = "District";
+					// Bug #38731@Syazani 20/08/2025 -- Start
+				} else if (ParameterConst.LOCATION_LEVEL_DIVISION
+						.equals(criteria.getLocationLevel().getParameterCode())) {
+					isSubLocLevel = true;
+					locationLevel = "Division";
 				}
+				// Bug #38731@Syazani 20/08/2025 -- End
 				context.put("subLocLevel", isSubLocLevel);
 			} else {
 				context.put("subLocLevel", isSubLocLevel);
@@ -2574,6 +2588,7 @@ public class QTDocumentsBackingBean extends
 		context.put("locationLevel", locationLevel);
 
 		IQTDetailSO qtDtlSO;
+		List<TplSpecZoneDtl> specZoneDtls = null;	// Bug #38731@Syazani 20/08/2025
 		try {
 			qtDtlSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -2595,13 +2610,20 @@ public class QTDocumentsBackingBean extends
 			if (this.getManagedBean().getQt().isZonal()) {
 				if (scQt.getScQtSupplierCriteria() != null &&
 						scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-					List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
+					specZoneDtls = CustomUtils.getInstance().deepCopyArrayList(scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls());	// Bug #38731@Syazani 20/08/2025
 					context.put("zoneLocality", specZoneDtls);
 				}
 			}
 		} finally {
 			QtDetailsSO = null;
 		}
+		
+		// Bug #38731@Syazani 20/08/2025 -- Start
+		if ("District".equalsIgnoreCase(locationLevel)) {
+			isLocLevelDistrictContainsDivision = isLocationContainsDivision(specZoneDtls, locationDetails, context);
+		}
+		context.put("isLocLevelDistrictContainsDivision", isLocLevelDistrictContainsDivision);
+		// Bug #38731@Syazani 20/08/2025 -- End
 
 		context.put("bsvReq", qt.isBsvRequired());
 		boolean isZone = false;
@@ -3204,4 +3226,93 @@ public class QTDocumentsBackingBean extends
 		}
 	}
 	// Bug #36702@Syazani 28/11/2024 -- End
+	
+	// Bug #38731@Syazani 20/08/2025 -- Start
+	private boolean isLocationContainsDivision(List<TplSpecZoneDtl> specZoneDtls, List<TplSpecLoc> locationDetails, VelocityContext context) {
+		boolean isLocationContainsDivision = false;
+		if (!CollectionUtils.isEmpty(specZoneDtls)) {
+			for (TplSpecZoneDtl tplSpecZoneDtl : specZoneDtls) {
+				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs()) && !isLocationContainsDivision) {
+					tplSpecZoneDtl.setTplSpecZoneLocs(removeDuplicatebyDivisionIDbyTplSpecZoneLoc(tplSpecZoneDtl
+							.getTplSpecZoneLocs()));
+					isLocationContainsDivision = loopFindisLocationContainsPmDivision(tplSpecZoneDtl);
+				} else if (isLocationContainsDivision) {
+					break;
+				}
+			}
+		}
+
+		if (!CollectionUtils.isEmpty(locationDetails)) {
+			List<TplSpecLoc> locationDetailsNew = removeDuplicatebyDivisionIDbyTplSpecLoc(locationDetails);
+			context.put("locality", locationDetailsNew);
+			for (TplSpecLoc tplSpecLoc : locationDetailsNew) {
+				if (null != tplSpecLoc.getPmDivision()) {
+					isLocationContainsDivision = true;
+					break;
+				}
+			}
+		}
+
+		return isLocationContainsDivision;
+	}
+
+	private boolean loopFindisLocationContainsPmDivision(TplSpecZoneDtl tplSpecZoneDtl) {
+		for (TplSpecZoneLoc tplSpecZoneLoc : tplSpecZoneDtl.getTplSpecZoneLocs()) {
+			if (null != tplSpecZoneLoc.getPmDivision()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private List<TplSpecZoneLoc> removeDuplicatebyDivisionIDbyTplSpecZoneLoc(List<TplSpecZoneLoc> tplSpecZoneLocLst) {
+		Map<String, TplSpecZoneLoc> map = new LinkedHashMap<>();
+		for (TplSpecZoneLoc tplSpecZoneLoc : tplSpecZoneLocLst) {
+			if (null != tplSpecZoneLoc.getPmDivision()) {
+				if (!map.containsKey("D" + tplSpecZoneLoc.getPmDivision().getDivisionId())) {
+					TplSpecZoneLoc tplSpecZoneLocNew = tplSpecZoneLoc;
+					List<PmDistrict> pmDistrictLst = new ArrayList<>();
+					pmDistrictLst.add(tplSpecZoneLoc.getPmDistrict());
+					tplSpecZoneLoc.getPmDivision().setPmDistricts(pmDistrictLst);
+					map.put("D" + tplSpecZoneLoc.getPmDivision().getDivisionId(), tplSpecZoneLocNew);
+				} else {
+					TplSpecZoneLoc tplSpecZoneLocNew = map.get("D" + tplSpecZoneLoc.getPmDivision().getDivisionId());
+					List<PmDistrict> pmDistrictLst = tplSpecZoneLocNew.getPmDivision().getPmDistricts();
+					pmDistrictLst.add(tplSpecZoneLoc.getPmDistrict());
+					tplSpecZoneLoc.getPmDivision().setPmDistricts(pmDistrictLst);
+					map.put("D" + tplSpecZoneLoc.getPmDivision().getDivisionId(), tplSpecZoneLocNew);
+				}
+			} else {
+				map.put("S" + tplSpecZoneLoc.getSpecLocId(), tplSpecZoneLoc);
+			}
+		}
+
+		return new ArrayList<>(map.values());
+	}
+
+	private List<TplSpecLoc> removeDuplicatebyDivisionIDbyTplSpecLoc(List<TplSpecLoc> tplSpecLocLst) {
+		Map<String, TplSpecLoc> map = new LinkedHashMap<>();
+		for (TplSpecLoc tplSpecLoc : tplSpecLocLst) {
+			if (null != tplSpecLoc.getPmDivision()) {
+				if (!map.containsKey("D" + tplSpecLoc.getPmDivision().getDivisionId())) {
+					TplSpecLoc tplSpecLocNew = tplSpecLoc;
+					List<PmDistrict> pmDistrictLst = new ArrayList<>();
+					pmDistrictLst.add(tplSpecLoc.getPmDistrict());
+					tplSpecLoc.getPmDivision().setPmDistricts(pmDistrictLst);
+					map.put("D" + tplSpecLoc.getPmDivision().getDivisionId(), tplSpecLocNew);
+				} else {
+					TplSpecLoc tplSpecLocNew = map.get("D" + tplSpecLoc.getPmDivision().getDivisionId());
+					List<PmDistrict> pmDistrictLst = tplSpecLocNew.getPmDivision().getPmDistricts();
+					pmDistrictLst.add(tplSpecLoc.getPmDistrict());
+					tplSpecLoc.getPmDivision().setPmDistricts(pmDistrictLst);
+					map.put("D" + tplSpecLoc.getPmDivision().getDivisionId(), tplSpecLocNew);
+				}
+			} else {
+				map.put("S" + tplSpecLoc.getSpecLocId(), tplSpecLoc);
+			}
+		}
+
+		return new ArrayList<>(map.values());
+	}
+	// Bug #38731@Syazani 20/08/2025 -- End
 }

@@ -95,10 +95,10 @@
 		</p:dataTable>
 
 		<div class="ppRightBtn">
+			<ui:remove>38523 - start </ui:remove>
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
-			action="#{consolidationReportBackingBean.downloadAllBriefingPaperReports()}"
-				styleClass="BtnSpacing" />
-				
+			action="#{consolidationReportBackingBean.downloadAllBriefingPaperReports(false)}" styleClass="BtnSpacing" />
+			<ui:remove>38523 - end </ui:remove>
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 			disabled="#{consolidationReportBackingBean.managedBean.readOnly}"
 				styleClass="BtnSpacing" process="@this, evaluationreport"
