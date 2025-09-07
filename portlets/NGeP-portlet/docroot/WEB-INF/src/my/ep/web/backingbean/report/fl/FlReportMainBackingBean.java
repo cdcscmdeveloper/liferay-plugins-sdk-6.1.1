@@ -31,22 +31,21 @@ public class FlReportMainBackingBean extends FlReportBackingBean<FlReportMainMan
 	private static final Logger log = EpLogger
 			.getLogger(FlReportMainBackingBean.class);
 	
-	private static final String serviceFeeCode = "SF"; //#29554
+	private static final String SERVICE_FEE_CODE = "SF"; //#29554
 
 	public void preRenderView() {
 		log.info("preRenderView");
 		this.renewSesionObject();
 		retrieveReportCategoryListByModuleCode(ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase());
 
-		//#29554 start
+		// #29554 start
 		getManagedBean().setShowRptCategory(true);
-		if(isGovCollector()){
-			if(!(isAuditor() || isEpAdmin())){
-				retrieveReportListByModuleCodeAndSubModule(ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase(),serviceFeeCode);
-				getManagedBean().setShowRptCategory(false);
-			}
+		if (isGovCollector() && (!(isAuditor() || isEpAdmin()))) {
+			retrieveReportListByModuleCodeAndSubModule(ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase(),
+					SERVICE_FEE_CODE);
+			getManagedBean().setShowRptCategory(false);
 		}
-		//#29554 end
+		// #29554 end
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_FLREPORT);

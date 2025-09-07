@@ -188,6 +188,7 @@ import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.backingbean.sm.ai.SmAIDocBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewSmApplBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
@@ -12906,6 +12907,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 
 	}
+	
+	//#38890
+	/**
+	 * Process documents with OCR
+	 */
+	public void processAI(){
+		SmAIDocBackingBean.processBankStatement(getManagedBean().getSupportDoc());
+	}
 
 	// harris
 	public void deleteSupDocFileAttachment() {
@@ -16483,6 +16492,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void validateRole(SmPersonnel personnel){
 		if(personnel.isEquityOwner() || personnel.isDirector() || personnel.isDirOrHghrMngmt()){
 			personnel.setClerical(false);
+			personnel.setSemiProf(false);//#38610`
 		}
 	}
 	public BigDecimal calPercentage(BigDecimal totalCapitalCompany,BigDecimal shareAmt){

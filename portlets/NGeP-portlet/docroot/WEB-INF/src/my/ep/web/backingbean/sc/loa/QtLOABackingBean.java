@@ -531,19 +531,30 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			// Only one supplier, LOA's supplier
 			List<Long> suppList = new ArrayList<>();
 			suppList.add(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
-			
+
 			// will return true if the supplier reject EPV
 			supplierStatus = detailSO.checkSupplierEPVStatus(scLoa.getScQt().getQtId(), suppList);
 
 			// check the validity of BPM version, if version is equal/higher will enable button
 			boolean isValidFor21692 = this.validateSupportedTask(scLoa.getScQt().getQtNo(),
 					QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+			
+			// will hide submit LOA button if supplier reject EPV (prerendered == false)
+			getManagedBean().setAbleToSubmitLOA(!supplierStatus);
+			
+			supplierStatus = supplierStatus && isLoaListPortlet() ? true : false;
+			
+			// cancel button during Pending LOA Submission only
+			getManagedBean().setAbleToCancelLOAWithoutBPM(
+					supplierStatus
+							&& new LOADetailBackingBean().isLOAStatusAbleToCancel().equals(
+									QTStatusConst.LOA_PENDING_SUBMISSION));
 
-			if (isValidFor21692) {
-				// will hide submit LOA button if supplier reject EPV (prerendered == false)
-				getManagedBean().setAbleToSubmitLOA(!supplierStatus);
-				supplierStatus = supplierStatus && isLoaListPortlet() ? true : false;
-			} else {
+			if (!isValidFor21692) {
+				// WIP - cancel button will show/hide based on this (prerendered false/true)
+				getManagedBean().setAbleToCancelWIP(
+						supplierStatus
+								&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));
 				supplierStatus = false;
 			}
 		}
@@ -551,12 +562,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		// cancel button will show/hide based on this (prerendered false/true)
 		getManagedBean().setAbleToCancelLOA(
 				supplierStatus
-						&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));//#36339, #21692
-		// cancel button during Pending LOA Submission only
-		getManagedBean().setAbleToCancelLOAWithoutBPM(
-				supplierStatus
-						&& new LOADetailBackingBean().isLOAStatusAbleToCancel().equals(
-								QTStatusConst.LOA_PENDING_SUBMISSION));
+						&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));
 	}
 	//#21692 - End
 

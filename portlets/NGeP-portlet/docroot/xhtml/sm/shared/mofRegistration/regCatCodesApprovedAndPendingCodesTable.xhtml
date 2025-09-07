@@ -101,9 +101,14 @@
 				<br />
 				<h:outputText
 					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
-				<!-- 26238 add catBean.cancelCategory and catBean.disciplinaryActionId!=null-->
-				<p:outputLabel rendered="#{catBean.cancelCategory and catBean.disciplinaryActionId!=null}" styleClass="warning" style="color:red;text-align:left;">
+				<!-- 26238, 38984, 38896 -->
+				<p:outputLabel rendered="#{catBean.typeDisciplinaryAction eq 'C'}" 
+					styleClass="warning" style="color:red;text-align:left; float:none">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
+				</p:outputLabel>
+				<p:outputLabel rendered="#{catBean.typeDisciplinaryAction eq 'M'}" 
+					styleClass="warning" style="color:red;text-align:left; float:none">
+					<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
