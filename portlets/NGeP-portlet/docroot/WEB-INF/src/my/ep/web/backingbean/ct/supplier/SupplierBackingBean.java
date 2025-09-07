@@ -659,10 +659,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE))) {
 						
+						Long factoringId = resDTO.getFactoring().getFactoringId();
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
 						auCtData.setDocId(getManagedBean().getCtContract().getContractId());
 						auCtData.setContractVerId(getManagedBean().getContractVer().getContractVerId());
-						auCtData.setPrevContractVerId(getManagedBean().getFactoring().getFactoringId());
+						auCtData.setPrevContractVerId(factoringId != null ? factoringId : 0L);
 						auCtData.setDocType(getManagedBean().getDocType());
 						auCtData.setCtType(getManagedBean().getCtContract().getContractType().getParameterCode());
 						auCtData.setRoleName(getUserRole());
