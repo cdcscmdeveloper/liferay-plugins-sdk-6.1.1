@@ -8,17 +8,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.List;
 
@@ -26,6 +22,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -87,6 +84,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static TenancyEntity tenancy = null;
 	private List<EPFEntity.EmployeeInfo> selectedEmployees;
 	
+	private static String tempGoogleUrl = "http://172.23.114.72:5000/process"; //http://192.168.62.17:5000/process";
+	
 	
 	/**
 	 * 
@@ -127,28 +126,19 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (EntityHelper.isCollectionEmpty(docs)){
 			return;
 		}
+		if (StringUtils.isEmpty(googleUrl)){
+			googleUrl = tempGoogleUrl;
+		}
 		
-		String filepath = docs.get(0).getFilePath() + docs.get(0).getFileName();
 		if ("EPF".equals(docType)){
-			processEPF(filepath);
+			processEPF(docs.get(0).getFilePath(), docs.get(0).getFileName());
 			
 		} else if ("TNC".equals(docType)){
-			processTenancyAgreement(filepath);
-			
-		} else if ("G".equals(docType)){
-			log.info("google connection test");
-			
+			processTenancyAgreement(docs.get(0).getFilePath(), docs.get(0).getFileName());
 			
 		} else {
-			byte[] fileData = getFakeData(filepath);
-			JSONArray entities = getJsonEntities(fileData); 
-			log.info("...entities:\t"+entities);
-			BankStatementEntity bankStatement = new BankStatementEntity(entities);
-			log.info(bankStatement);
-			log.info("COMPANY NAME: "+bankStatement.namaSyarikat);
+			processBank(docs.get(0).getFilePath(), docs.get(0).getFileName());
 		}
-			
-		Thread.sleep(2000);
 	}
 	
 	/**
@@ -236,14 +226,33 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			log.info("...not bank statement");
 			return;
 		}
+		if (StringUtils.isEmpty(googleUrl)){
+			googleUrl = tempGoogleUrl;
+		}
 		//wip - need to combine all docs  & convert to base64
 		SmApplDocFile docFile = doc.getSmApplDocFiles().get(0);
 		String filepath = docFile.getFilePath() + docFile.getFileName();
 
 		//send to Google
-		//get JSON response
-		byte[] fileData = getFakeData(filepath);
-		JSONArray entities = getJsonEntities(fileData); 
+		JSONArray entities = null;
+		if (docFile.getFileName().endsWith(".json")){
+			log.info("skip AI");
+			byte[] fileData = getFakeData(filepath);
+			entities = getJsonEntities(fileData); 
+		} else if (docFile.getFileName().endsWith("ai_demo.pdf")){
+			log.info("use google url: "+googleUrl);
+			InputStream is;
+			try {
+				String doc64 = getBase64(doc);
+				is = sendDocumentToExternalService(doc64, "bank", docFile.getFileName());
+				entities = getJsonEntitiesFromStream(is);
+			} catch (IOException e) {
+				log.error(" ", e);
+			} catch (DocumentException e) {
+				log.error(" ", e);
+			}
+		}
+		
 		if (entities == null){
 			return;
 		}
@@ -259,7 +268,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		log.info("...processBankStatement2\t..." + companyNameSupp);
 
 		// wip - need to map based on fields received in JSON
-		doc.setMappedFieldAI("Bank Info:<br/>Bank Name, Account No.");
+		//doc.setMappedFieldAI("Bank Info:<br/>Bank Name, Account No.");
 
 		if (!StringUtils.equals(companyNameJson, companyNameSupp)){
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -267,35 +276,94 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 	}
-
+	
 	/**
-	 * 
 	 * @param filepath
+	 * @param filename
 	 */
-	public static void processTenancyAgreement(String filepath){
-		//send to Google
-		//get JSON response
-		byte[] fileData = getFakeData(filepath);
-		JSONArray entities = getJsonEntities(fileData); 
+	public static void processBank(String filepath, String filename){
+		JSONArray entities = null;
+		if (filename.endsWith(".json")){
+			log.info("skip AI");
+			byte[] fileData = getFakeData(filepath + filename);
+			entities = getJsonEntities(fileData);
+			
+		} else if (filename.endsWith("ai_demo.pdf")){
+			log.info("use google url: "+googleUrl);
+			InputStream is;
+			try {
+				String doc64 = getBase64(filepath);
+				is = sendDocumentToExternalService(doc64, "tenancy", filename);
+				entities = getJsonEntitiesFromStream(is);
+			} catch (IOException e) {
+				log.error(" ", e);
+			}
+		}
 		if (entities == null){
 			return;
 		}
+		log.info(entities);
+		BankStatementEntity bank = new BankStatementEntity(entities);
+		log.info(bank);
+		log.info("COMPANY NAME: "+bank.namaSyarikat);
+	}
+
+	/**
+	 * @param filepath
+	 * @param filename
+	 */
+	public static void processTenancyAgreement(String filepath, String filename){
+		JSONArray entities = null;
+		if (filename.endsWith(".json")){
+			log.info("skip AI");
+			byte[] fileData = getFakeData(filepath + filename);
+			entities = getJsonEntities(fileData);
+			
+		} else if (filename.endsWith("ai_demo.pdf")){
+			log.info("use google url: "+googleUrl);
+			InputStream is;
+			try {
+				String doc64 = getBase64(filepath);
+				is = sendDocumentToExternalService(doc64, "tenancy", filename);
+				entities = getJsonEntitiesFromStream(is);
+			} catch (IOException e) {
+				log.error(" ", e);
+			}
+		}
+		if (entities == null){
+			return;
+		}
+		log.info("entities");
 		tenancy = new TenancyEntity(entities);
 		log.info(tenancy);
 	}
 
 	/**
-	 * 
 	 * @param filepath
+	 * @param filename
 	 */
-	public static void processEPF(String filepath){
-		//send to Google
-		//get JSON response
-		byte[] fileData = getFakeData(filepath);
-		JSONArray entities = getJsonEntities(fileData); 
+	public static void processEPF(String filepath, String filename){
+		JSONArray entities = null;
+		if (filename.endsWith(".json")){
+			log.info("skip AI");
+			byte[] fileData = getFakeData(filepath + filename);
+			entities = getJsonEntities(fileData);
+			
+		} else if (filename.endsWith("ai_demo.pdf")){
+			log.info("use google url: "+googleUrl);
+			InputStream is;
+			try {
+				String doc64 = getBase64(filepath + filename);
+				is = sendDocumentToExternalService(doc64, "epf", filename);
+				entities = getJsonEntitiesFromStream(is);
+			} catch (IOException e) {
+				log.error(" ", e);
+			}
+		}
 		if (entities == null){
 			return;
 		}
+		log.info("entities");
 		epf = new EPFEntity(entities);
 		log.info(epf);
 	}
@@ -370,8 +438,52 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		return null;
 	}
-	
 
+	private static JSONArray getJsonEntitiesFromStream(InputStream inputStream) {
+		if (inputStream == null) {
+			return null;
+		}
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+			StringBuilder content = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				content.append(line);
+			}
+			
+			JSONObject root = new JSONObject(content.toString());
+			if (!root.has("extractedData")) {
+				log.warn("  No extractedData found in JSON");
+				return null;
+			}
+			JSONObject extractedData = root.getJSONObject("extractedData");
+			if (!extractedData.has("entities")) {
+				log.warn("  No entities found in extractedData");
+				return null;
+			}
+			JSONArray entities = extractedData.getJSONArray("entities");
+			if (entities.length() == 0) {
+				log.warn("  No entities found");
+				return null;
+			}
+			return entities;
+		} catch (IOException e) {
+			log.error(" Error reading InputStream", e);
+		} catch (JSONException e) {
+			log.error(" Error parsing JSON from InputStream", e);
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					log.warn("Error closing reader", e);
+				}
+			}
+		}
+		return null;
+	}
+	
 
 	public List<EPFEntity.EmployeeInfo> getSelectedEmployees() {
 		return selectedEmployees;
@@ -381,65 +493,60 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		this.selectedEmployees = selectedEmployees;
 	}
 
-	private InputStream getGoogleResponse(SmApplSupportDoc doc, String docType){
-		try {
-			String base64Content = getBase64(doc);
-			String payload = String.format(
-				"{\"base64Data\":\"%s\",\"filename\":\"%s\",\"documentType\":\"%s\"}",
-			    base64Content, doc.getSmApplDocFiles().get(0).getFileName(), docType
-			);
-			
-			URL url = new URL(googleUrl);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/json");
-			conn.setDoOutput(true);
-			
-			OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
-			out.write(payload);
-			out.flush();
-			
-			int statusCode = conn.getResponseCode();
-			log.info("Google Doc Response Status: " + statusCode);
-			
-			if (statusCode >= 200 && statusCode < 300){
-				return conn.getInputStream();
-			}
-			log.warn("Error Stream:");
-			BufferedReader read = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-			String line;
-			while ((line = read.readLine()) != null) {
-				log.warn(line);
-			}
-			read.close();
-			
-		} catch (MalformedURLException e) {
-			log.error(" wrong URL for google.doc.url", e);
-		} catch (ProtocolException e) {
-			log.error(" wrong request method", e);
-		} catch (UnsupportedEncodingException e) {
-			log.error(" wrong encoding", e);
-		} catch (IOException e) {
-			log.error("IOException ", e);
-		} catch (DocumentException e) {
-			log.error(" DocumentException", e);
-		}
-        return null;
+	
+	private static String getBase64(String filepath) throws IOException{
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/"+filepath;
+		File file = new File(tempDir);
+		byte[] pdf = Files.readAllBytes(file.toPath());
+		return DatatypeConverter.printBase64Binary(pdf);
 	}
 
-	private String getBase64(SmApplSupportDoc doc) throws IOException, DocumentException {
+	private static String getBase64(SmApplSupportDoc doc) throws IOException, DocumentException {
 		if (doc == null || EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
 			return "";
 		}
+		//based on commonUploadFile()
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/";
 		List<String> pdfPaths = new ArrayList<>();
-		for (SmApplDocFile file : doc.getSmApplDocFiles()){
-			if (!file.getFileName().endsWith("pdf")){
+		for (SmApplDocFile file : doc.getSmApplDocFiles()) {
+			if (!file.getFileName().endsWith("pdf")) {
 				continue;
 			}
-			pdfPaths.add(file.getFilePath() + file.getFileName());
+			pdfPaths.add(tempDir + file.getFilePath() + file.getFileName());
 		}
 		byte[] combinedPDF = combinePDF(pdfPaths);
-		return Base64.getEncoder().encodeToString(combinedPDF);
+		return DatatypeConverter.printBase64Binary(combinedPDF);
+	}
+
+	private static InputStream sendDocumentToExternalService(String base64, 
+			String docType, String filename) throws IOException {
+		
+		String payload = String.format("{\"document\":\"%s\",\"doc_type\":\"%s\",\"filename\":\"%s\"}", 
+				base64, docType, filename);
+
+		URL url = new URL(googleUrl);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setDoOutput(true);
+		conn.setConnectTimeout(30*1000);
+		conn.setReadTimeout(120*1000);
+
+		OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
+		out.write(payload);
+		out.flush();
+		out.close();
+
+		int statusCode = conn.getResponseCode();
+		log.info("External Service Response Status: " + statusCode);
+
+		if (statusCode >= 200 && statusCode < 300) {
+			return conn.getInputStream();
+		}
+
+		throw new IOException("HTTP Error " + statusCode + ": " + conn.getResponseMessage());
 	}
 
 	/**
@@ -449,7 +556,11 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @throws IOException
 	 * @throws DocumentException
 	 */
-	private byte[] combinePDF(List<String> pdfPaths) throws IOException, DocumentException {
+	private static byte[] combinePDF(List<String> pdfPaths) throws IOException, DocumentException {
+		if (pdfPaths.size() == 1){
+			File file = new File(pdfPaths.get(0));
+			return Files.readAllBytes(file.toPath());
+		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Document document = new Document();
 		PdfWriter writer = PdfWriter.getInstance(document, baos);
@@ -725,17 +836,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					switch (type) {
 					case "Alamat_Sewaan-Premis":
 						this.alamatSewaanPremis = text.trim();
-						
-						// Parse address components if available
-						JSONObject addressComponents = entity.optJSONObject("addressComponents");
-						if (addressComponents != null) {
-							this.postcode = addressComponents.optString("postcode", "").trim();
-							this.country = addressComponents.optString("country", "").trim();
-							this.state = addressComponents.optString("state", "").trim();
-							this.district = addressComponents.optString("district", "").trim();
-							this.city = addressComponents.optString("city", "").trim();
-							this.normalizedAddress = addressComponents.optString("normalized_Address", "").trim();
-						}
+						setAddress(entity);
 						break;
 					case "Nama_Pemilik-Premis":
 						this.namaPemilikPremis = text.trim();
@@ -748,6 +849,19 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				}
 			} catch (JSONException e) {
 				log.error("Error TenancyEntity", e);
+			}
+		}
+		
+		private void setAddress(JSONObject entity){
+			// Parse address components if available
+			JSONObject addressComponents = entity.optJSONObject("addressComponents");
+			if (addressComponents != null) {
+				this.postcode = addressComponents.optString("postcode", "").trim();
+				this.country = addressComponents.optString("country", "").trim();
+				this.state = addressComponents.optString("state", "").trim();
+				this.district = addressComponents.optString("district", "").trim();
+				this.city = addressComponents.optString("city", "").trim();
+				this.normalizedAddress = addressComponents.optString("normalized_Address", "").trim();
 			}
 		}
 	}
