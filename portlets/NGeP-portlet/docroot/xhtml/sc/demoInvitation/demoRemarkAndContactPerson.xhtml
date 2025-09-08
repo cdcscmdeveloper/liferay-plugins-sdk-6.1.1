@@ -50,46 +50,50 @@
 				widgetVar="openCodes"
 				value="#{demoInvBB.managedBean.scQtDemoContactList}"
 				rowIndexVar="index" rows="10"
-				selection="#{demoInvBB.managedBean.selectedContactList}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{contactPerson}">
 				<ac:paginator for="contactPrsId" />
-				<p:ajax event="rowSelect"
-					update="@([id$=demoContactPersonDeleteCategoryBtnId])" />
-				<p:ajax event="rowUnselect"
-					update="@([id$=demoContactPersonDeleteCategoryBtnId])" />
-				<p:ajax event="rowSelectCheckbox"
-					update="@([id$=demoContactPersonDeleteCategoryBtnId])" />
-				<p:ajax event="rowUnselectCheckbox"
-					update="@([id$=demoContactPersonDeleteCategoryBtnId])" />
-				<p:ajax event="toggleSelect"
-					update="@([id$=demoContactPersonDeleteCategoryBtnId])" />
 
-				<p:column selectionMode="multiple" style="width:1%"
+				<p:column style="width:1%">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox value="#{demoInvBB.managedBean.selectAll}"
+						rendered="#{!contactReadonly}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=demoContact])"
+							listener="#{demoInvBB.addToBeRemoveContactPerson(null, true)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox id="singleCheckboxId"
+					value="#{contactPerson.disableRowSelection}"
 					rendered="#{!contactReadonly}"
-					disabledSelection="#{contactPerson.disableRowSelection}" />
+					disabled="#{contactPerson.pmUser ne null}">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=demoContactPersonDeleteCategoryBtnId])"
+						listener="#{demoInvBB.addToBeRemoveContactPerson(contactPerson, false)}" />
+				</p:selectBooleanCheckbox>
+				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.contact.name']}"
 					style="white-space: normal;">
 					<h:inputText value="#{contactPerson.userName}"
-						disabled="#{contactPerson.disableRowSelection}" size="30" />
+						disabled="#{contactPerson.pmUser ne null}" size="30" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.contact.phone']}"
 					style="white-space: normal;">
 					<h:inputText value="#{contactPerson.telephoneNo}"
-						disabled="#{contactPerson.disableRowSelection}" size="30" />
+						disabled="#{contactPerson.pmUser ne null}" size="30" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.contact.fax']}"
 					style="white-space: normal;">
 					<h:inputText value="#{contactPerson.faxNo}"
-						disabled="#{contactPerson.disableRowSelection}" size="30" />
+						disabled="#{contactPerson.pmUser ne null}" size="30" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.contact.email']}">
 					<h:inputText value="#{contactPerson.email}"
-						disabled="#{contactPerson.disableRowSelection}" size="30" />
+						disabled="#{contactPerson.pmUser ne null}" size="30" />
 				</p:column>
 
 			</p:dataTable>
@@ -118,7 +122,7 @@
 										title="#{lbl['lbl.sc.confirmation']}"
 										okAction="#{demoInvBB.deleteContactPerson()}"
 										content="#{lbl['lbl.sc.dialog.confirm.contact.person.dtls']}"
-										update="@([id$=contactPrsId])" />
+										update="@([id$=demoContact])" />
 								</td>
 							</tr>
 						</table>

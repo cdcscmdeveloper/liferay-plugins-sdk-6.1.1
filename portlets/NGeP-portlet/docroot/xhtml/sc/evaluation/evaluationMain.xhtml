@@ -94,7 +94,8 @@
 					process="@all" partialSubmit="true" 
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" /> <ui:remove>#28784</ui:remove>
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
-					disabled="#{evaluationBackingBean.managedBean.isEvalStatusComp()}" oncomplete="confirmUpdatePresentationDemoPopup.show();" style="float:right;"/>
+					disabled="#{evaluationBackingBean.managedBean.isEvalStatusComp()}" action="#{evaluationBackingBean.checkingForBeforeDemoMeetingDetails()}"
+					style="float:right;"/>
 			</ui:repeat>
 		</ui:fragment>
 		<ui:remove> #25037 #29253 - start </ui:remove>
