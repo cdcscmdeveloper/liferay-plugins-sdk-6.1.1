@@ -543,7 +543,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 
 				// Buat lookup map untuk O(1) access
 				// Step 3: Untuk setiap perubahan di updateItemMap, update item aslinya
-				Map<Long, CtContractItem> originalItemMap = new HashMap<Long, CtContractItem>();
+				Map<Long, CtContractItem> originalItemMap = new HashMap<>();
 				for (CtContractItem item : originalItems) {
 					if (item.getScRequestItem() != null) {
 						originalItemMap.put(item.getScRequestItem().getRequestNoteItemId(), item);
