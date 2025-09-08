@@ -3764,7 +3764,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public SelectItem[] retrieveFinalizationCommitteeType() {
 		
 		ScQt scQt = getManagedBean().getQt();
-		SelectItem[] finalizationSecratary = this.getManagedBean().getFinalizationSecratary();
+		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
 		if (finalizationSecratary == null
@@ -3782,7 +3782,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<PmParameter> finalizationCommTypes = resDTO.getFinalizationSecratry();
 				if(CollectionUtils.isNotEmpty(finalizationCommTypes)){
 					finalizationSecratary = new SelectItem[finalizationCommTypes.size()];
-					for(int i=0;i<finalizationCommTypes.size();i++){//----#36320, Populate drop down value from QCA,QCB to QQC
+					for(int i=0;i<finalizationCommTypes.size();i++){
 						String commTypeDesc = getParameterDesc(
 								finalizationCommTypes.get(i),new FacesScopes().getUserLocale());
 						finalizationSecratary[i] = new SelectItem(
@@ -7019,7 +7019,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			getManagedBean().getQt().setFinalizationCommitte(
 					parameterResDTO.getPmParameter());
-			this.getManagedBean().getQt().setFinalizationSecratery(new PmUser());
+			getManagedBean().getQt().setFinalizationSecratery(new PmUser());
 		}
 	}
 	
@@ -8301,11 +8301,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public String cancelQtDetails() {
 		debugLogger("cancelQtDetails");
 		IQTDetailSO detailSO;
-		
-		// #35320 - Start
-		this.getManagedBean().setAfterSF(false);
-		// #35320 - End
-				
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -8333,19 +8328,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				TabBean tabBean = new TabBean(null, null, qtApproval,
 						retrieveFinalizationCommitteeType());
 				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
-				
-				//#35320 - Start
-				if(isQTStatusGreaterThanOrEquals(scQt.getQtStatus().getStatusId()
-						, QTStatusConst.QT_SUPPLIER_FINALIZATION)){
-					this.getManagedBean().setAfterSF(true);
-					
-					ScQtApproval approval = this.getManagedBean()
-							.getSelectedApprovalTabBean().getScQtApproval();
-					List<ScQtApproverSettings> approverSettings = approval
-							.getApproverSettings();
-					approverSettings.get(0).setCommitteeType(scQt.getFinalizationCommitte());
-					approverSettings.get(0).setPmUser(scQt.getFinalizationSecratery());
-				}//#35320 - End
 			} else {
              //9019 null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
                 List<ScQtRemark> remarks = null;
@@ -13585,7 +13567,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION,
 				QTStatusConst.QT_PENDING_LOI, QTStatusConst.QT_PENDING_LOA, QTStatusConst.QT_AWARDED,
 				QTStatusConst.QT_CLOSED, QTStatusConst.QT_CONSOLIDATION_REPORT,
-				QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER, QTStatusConst.QT_RE_FINALIZATION);
+				QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER,
+				QTStatusConst.QT_RE_EVALUATION, QTStatusConst.QT_RE_FINALIZATION);
 
 		for (int i = 0; i < validPeriodExts.size(); i++) {
 			if (validPeriodExts.get(i).longValue() == currentStatusId)
@@ -14494,9 +14477,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 			BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
 
 			constructBiddingSerachBean(qtnTenderSearchBean, searchBean);
-			// Order by created date
+			
+			// No Bidding group by QT No -38930 & 25791 -start
+			searchBean.getSortColumns()
+					.add(new SearchOrderBean(SourcingConstants.BIDDING_DOC_NO,
+							false));
 			searchBean.getSortColumns().add(
-					new SearchOrderBean(SourcingConstants.BIDDING_SCHEDULE_ID, false));
+					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_NUMBER,
+							false));
+			// No Bidding group by QT No -38930 & 25791 -end
+	
 			if(isDeskOfficer() || isApprover()){
 				biddingReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				if(isDeskOfficer()){
@@ -14959,6 +14949,20 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setUserAbleToChangePBSecretary(
 					workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus() == null);
 		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Cannot directly use in html due to unknown issue,
+	 * so done it through backing bean
+	 * 
+	 * @return TRUE if status LESS than Pending Recommendation
+	 */
+	public boolean showEPVInstruction() {
+		boolean isShow = isQTStatusGreaterThan(this.getManagedBean().getQt().getQtStatus().getStatusId(),
+				QTStatusConst.QT_CONSOLIDATION_REPORT);
+		return !isShow;
 	}
 	//#21692 - End
 
