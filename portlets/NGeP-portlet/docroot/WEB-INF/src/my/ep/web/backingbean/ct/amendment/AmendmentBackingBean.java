@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols; //24333
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale; //24333
 import java.util.Map;
 import java.util.Set;
 
@@ -1554,19 +1556,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
 			}
 			
-			// 24333 -Start
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa() != null) {
-				ScLoa ctloa = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa();
-				if (ctloa.getGstAmt() == null) {
-					ctloa.setGstAmt(BigDecimal.ZERO);
-				}
-				if (ctloa.getSstAmt() == null) {
-					ctloa.setSstAmt(BigDecimal.ZERO);
-				}
-				ctBackingBean.getManagedBean().setOriginalOverallAmount(ctloa.getLoaAmt().add(ctloa.getGstAmt().add(ctloa.getSstAmt())));
-
+			// 24333 - Start
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getOverallCtAmtPbond() == null) {
+				ctBackingBean.getManagedBean().getContractVer().getCtContractAmount()
+						.setOverallCtAmtPbond(BigDecimal.ZERO);
 			}
-			// 24333 - End
+			ctBackingBean.getManagedBean().setOriginalOverallAmount(
+					ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getOverallCtAmtPbond());
+			// 24333 - Start
 
 			// Amendment process
 			// Redmine 19600 - Amendment with Supplement
@@ -3754,43 +3751,45 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	//#24333 - Start
 	/**
-	 * The method used to retrieve the bond amount
-	 * in text format.
-	 * 
-	 * @return  bond amount in text format.
+	 * Retrieves the bond amount in text format (in words).
+	 * Returns "N/A" if bond amount is not available or zero.
+	 *
+	 * @return bond amount in words, or "N/A" if null or zero
 	 */
 	public String getBondAmountInText() {
-		String lang = new FacesScopes().getUserLocale().getLanguage();
-		
-		 if (ctBackingBean.getManagedBean().getContractVer() == null ||
-			        ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null ||
-			        ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null ||
-			        ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
-			        return "";
-			    }
+		FacesScopes scopes = new FacesScopes();
+	    Locale locale = scopes.getUserLocale();
+	    String lang = locale.getLanguage();
 
-			    BigDecimal bondAmount = ctBackingBean
-			        .getManagedBean().getContractVer()
-			        .getCtAmendment().getAmendmentLoa().getBondAmt();
+	    String na = ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
-			    if (bondAmount.compareTo(BigDecimal.ZERO) == 0) {
-			        return "";
-			    }
+	    // Traverse the object chain with null checks
+	    CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
+	    if (contractVer == null || 
+	        contractVer.getCtAmendment() == null || 
+	        contractVer.getCtAmendment().getAmendmentLoa() == null || 
+	        contractVer.getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
+	        return na;
+	    }
 
-			    // Format the amount to two decimal places
-			    DecimalFormat decimalFormat = new DecimalFormat("#.00");
-			    String formattedAmount = decimalFormat.format(bondAmount);
+	    BigDecimal bondAmt = contractVer.getCtAmendment().getAmendmentLoa().getBondAmt();
 
-			    // Convert to words based on language
-			    if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
-			        return NumberWordUtilEn.convert(formattedAmount);
-			    }
+	    if (BigDecimal.ZERO.compareTo(bondAmt) == 0) {
+	        return na;
+	    }
 
-			    if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
-			        return NumberWordUtil.convert(formattedAmount);
-			    }
+	    // Format to 2 decimal places
+	    DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(locale));
+	    String formatted = df.format(bondAmt);
 
-			    return "";
+	    // Convert based on language
+	    if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
+	        return NumberWordUtilEn.convert(formatted);
+	    } else if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
+	        return NumberWordUtil.convert(formatted);
+	    }
+
+	    return na;
 	}
 	//#24333 - End
 
