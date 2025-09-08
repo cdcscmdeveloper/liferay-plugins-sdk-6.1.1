@@ -8,11 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -87,6 +84,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static TenancyEntity tenancy = null;
 	private List<EPFEntity.EmployeeInfo> selectedEmployees;
 	
+	private static String tempGoogleUrl = "http://172.23.114.72:5000/process"; //http://192.168.62.17:5000/process";
+	
 	
 	/**
 	 * 
@@ -128,18 +127,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		if (StringUtils.isEmpty(googleUrl)){
-			googleUrl = "http://192.168.62.17:5000/process";
+			googleUrl = tempGoogleUrl;
 		}
 		
-		String filepath = docs.get(0).getFilePath() + docs.get(0).getFileName();
 		if ("EPF".equals(docType)){
-			processEPF(filepath);
+			processEPF(docs.get(0).getFilePath(), docs.get(0).getFileName());
 			
 		} else if ("TNC".equals(docType)){
-			processTenancyAgreement(filepath);
+			processTenancyAgreement(docs.get(0).getFilePath(), docs.get(0).getFileName());
 			
 		} else {
-			processBank(filepath);
+			processBank(docs.get(0).getFilePath(), docs.get(0).getFileName());
 		}
 	}
 	
@@ -229,7 +227,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		if (StringUtils.isEmpty(googleUrl)){
-			googleUrl = "http://192.168.62.17:5000/process";
+			googleUrl = tempGoogleUrl;
 		}
 		//wip - need to combine all docs  & convert to base64
 		SmApplDocFile docFile = doc.getSmApplDocFiles().get(0);
@@ -246,7 +244,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			InputStream is;
 			try {
 				String doc64 = getBase64(doc);
-				is = sendDocumentToExternalService(doc64, "bank");
+				is = sendDocumentToExternalService(doc64, "bank", docFile.getFileName());
 				entities = getJsonEntitiesFromStream(is);
 			} catch (IOException e) {
 				log.error(" ", e);
@@ -280,22 +278,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 	
 	/**
-	 * 
 	 * @param filepath
+	 * @param filename
 	 */
-	public static void processBank(String filepath){
+	public static void processBank(String filepath, String filename){
 		JSONArray entities = null;
-		if (filepath.endsWith(".json")){
+		if (filename.endsWith(".json")){
 			log.info("skip AI");
-			byte[] fileData = getFakeData(filepath);
+			byte[] fileData = getFakeData(filepath + filename);
 			entities = getJsonEntities(fileData);
 			
-		} else if (filepath.endsWith("ai_demo.pdf")){
+		} else if (filename.endsWith("ai_demo.pdf")){
 			log.info("use google url: "+googleUrl);
 			InputStream is;
 			try {
 				String doc64 = getBase64(filepath);
-				is = sendDocumentToExternalService(doc64, "tenancy");
+				is = sendDocumentToExternalService(doc64, "tenancy", filename);
 				entities = getJsonEntitiesFromStream(is);
 			} catch (IOException e) {
 				log.error(" ", e);
@@ -311,22 +309,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * 
 	 * @param filepath
+	 * @param filename
 	 */
-	public static void processTenancyAgreement(String filepath){
+	public static void processTenancyAgreement(String filepath, String filename){
 		JSONArray entities = null;
-		if (filepath.endsWith(".json")){
+		if (filename.endsWith(".json")){
 			log.info("skip AI");
-			byte[] fileData = getFakeData(filepath);
+			byte[] fileData = getFakeData(filepath + filename);
 			entities = getJsonEntities(fileData);
 			
-		} else if (filepath.endsWith("ai_demo.pdf")){
+		} else if (filename.endsWith("ai_demo.pdf")){
 			log.info("use google url: "+googleUrl);
 			InputStream is;
 			try {
 				String doc64 = getBase64(filepath);
-				is = sendDocumentToExternalService(doc64, "tenancy");
+				is = sendDocumentToExternalService(doc64, "tenancy", filename);
 				entities = getJsonEntitiesFromStream(is);
 			} catch (IOException e) {
 				log.error(" ", e);
@@ -341,22 +339,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * 
 	 * @param filepath
+	 * @param filename
 	 */
-	public static void processEPF(String filepath){
+	public static void processEPF(String filepath, String filename){
 		JSONArray entities = null;
-		if (filepath.endsWith(".json")){
+		if (filename.endsWith(".json")){
 			log.info("skip AI");
-			byte[] fileData = getFakeData(filepath);
+			byte[] fileData = getFakeData(filepath + filename);
 			entities = getJsonEntities(fileData);
 			
-		} else if (filepath.endsWith("ai_demo.pdf")){
+		} else if (filename.endsWith("ai_demo.pdf")){
 			log.info("use google url: "+googleUrl);
 			InputStream is;
 			try {
-				String doc64 = getBase64(filepath);
-				is = sendDocumentToExternalService(doc64, "epf");
+				String doc64 = getBase64(filepath + filename);
+				is = sendDocumentToExternalService(doc64, "epf", filename);
 				entities = getJsonEntitiesFromStream(is);
 			} catch (IOException e) {
 				log.error(" ", e);
@@ -520,11 +518,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		byte[] combinedPDF = combinePDF(pdfPaths);
 		return DatatypeConverter.printBase64Binary(combinedPDF);
-		//return Base64.getEncoder().encodeToString(combinedPDF);
 	}
 
-	private static InputStream sendDocumentToExternalService(String base64, String docType) throws IOException {
-		String payload = String.format("{\"document\":\"%s\",\"doc_type\":\"%s\"}", base64, docType);
+	private static InputStream sendDocumentToExternalService(String base64, 
+			String docType, String filename) throws IOException {
+		
+		String payload = String.format("{\"document\":\"%s\",\"doc_type\":\"%s\",\"filename\":\"%s\"}", 
+				base64, docType, filename);
 
 		URL url = new URL(googleUrl);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -836,17 +836,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					switch (type) {
 					case "Alamat_Sewaan-Premis":
 						this.alamatSewaanPremis = text.trim();
-						
-						// Parse address components if available
-						JSONObject addressComponents = entity.optJSONObject("addressComponents");
-						if (addressComponents != null) {
-							this.postcode = addressComponents.optString("postcode", "").trim();
-							this.country = addressComponents.optString("country", "").trim();
-							this.state = addressComponents.optString("state", "").trim();
-							this.district = addressComponents.optString("district", "").trim();
-							this.city = addressComponents.optString("city", "").trim();
-							this.normalizedAddress = addressComponents.optString("normalized_Address", "").trim();
-						}
+						setAddress(entity);
 						break;
 					case "Nama_Pemilik-Premis":
 						this.namaPemilikPremis = text.trim();
@@ -859,6 +849,19 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				}
 			} catch (JSONException e) {
 				log.error("Error TenancyEntity", e);
+			}
+		}
+		
+		private void setAddress(JSONObject entity){
+			// Parse address components if available
+			JSONObject addressComponents = entity.optJSONObject("addressComponents");
+			if (addressComponents != null) {
+				this.postcode = addressComponents.optString("postcode", "").trim();
+				this.country = addressComponents.optString("country", "").trim();
+				this.state = addressComponents.optString("state", "").trim();
+				this.district = addressComponents.optString("district", "").trim();
+				this.city = addressComponents.optString("city", "").trim();
+				this.normalizedAddress = addressComponents.optString("normalized_Address", "").trim();
 			}
 		}
 	}
