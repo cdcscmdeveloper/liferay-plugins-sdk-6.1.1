@@ -99,7 +99,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		my.ep.web.backingbean.report.ct.panel.ListOfCircularRptBackingBean panelListOfCircularRptBB = 
 				new my.ep.web.backingbean.report.ct.panel.ListOfCircularRptBackingBean();
 		//#29416 - baking bean for contract item monitoring report
-		ContractItemMonitoringCCRptBackingBean ccContractItemMonitoringRptBB = new ContractItemMonitoringCCRptBackingBean();
+		ContractItemMonitoringCCRptBackingBean ccContractItemMonitoringRptBB = new ContractItemMonitoringCCRptBackingBean();		
+		ContractItemUsageMonitoringDtlsBackingBean ccContractItemUsageMonitoringDtlsBackingBean = new ContractItemUsageMonitoringDtlsBackingBean(); //#34889 
 		
 		// reset common search criteria
 		resetSearch();
@@ -113,7 +114,9 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		panelListOfCircularRptBB.resetSearch();
 		//#29416 start
 		ccContractItemMonitoringRptBB.resetSearch();
-		//29416 end
+		//29416 end		
+		ccContractItemUsageMonitoringDtlsBackingBean.resetSearch(); //#34889 
+
 	}
 	
 	/**
