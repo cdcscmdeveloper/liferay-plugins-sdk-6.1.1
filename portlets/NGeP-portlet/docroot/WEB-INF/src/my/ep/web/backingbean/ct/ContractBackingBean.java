@@ -2589,14 +2589,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public SelectItem[] getMinistryDropdown() {		
 		SelectItem[] items = null;
-
+		boolean isPk7Affected = true;
 		try {
 			int i = 0;
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
-
+			OrgProfileResDTO resDTO = new OrgProfileResDTO();
+			if(!isPk7Affected){
+				 resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
+				
+			}else{
+				 List<Long> listAffected = orgProfileSO.retrieveAffectedAgencies();
+				 reqDTO.setOrgProfileIdListReq(listAffected);
+				 resDTO = orgProfileSO.retrieveOrgProfileListByMinistryAffected(reqDTO);
+			}
+			
 			List<PmOrgProfile> list = resDTO.getOrgProfileList();
 			items = new SelectItem[list.size()];
 			for (PmOrgProfile orgProfile : list) {
