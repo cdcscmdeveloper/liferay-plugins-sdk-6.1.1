@@ -984,12 +984,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if (approvalRequest.getDecessionType() == null) {
 					approvalRequest.setDecessionType(pmParameter);
 				}
-
-				ScQt scQt = getManagedBean().getQt();
-				if (scQt.getMofDate() != null) {
-					if (approvalRequest.getDecisionCertPBM() == null) {
-						approvalRequest.setDecisionCertPBM(pmParameter);
-					}
+				if (approvalRequest.getDecisionCertPBM() == null) {
+					approvalRequest.setDecisionCertPBM(pmParameter);
 				}
 			}
 		}
