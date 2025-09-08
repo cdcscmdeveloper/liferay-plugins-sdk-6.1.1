@@ -5629,12 +5629,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if (supplier == null){
 			return;
 		}
+		//39068 - START
+		supplier.setEndDate(true);
+		getManagedBean().setDisciplinaryAction(
+				!EntityHelper.isCollectionEmpty(SmApplicationUtil
+						.retrieveSmDisciplinaryActionBySupplier(supplier)));
+		//39068 - END
 		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
 		if(EntityHelper.isCollectionEmpty(discList)){
-			getManagedBean().setNoDisciplinary(true);
+			getManagedBean().setNoDisciplinary(DbValueConst.FLAG_YES);
 			return;
 		}
-		getManagedBean().setNoDisciplinary(false);
+		getManagedBean().setNoDisciplinary(DbValueConst.FLAG_NO);
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(supplier.getSupplierId());
 		
