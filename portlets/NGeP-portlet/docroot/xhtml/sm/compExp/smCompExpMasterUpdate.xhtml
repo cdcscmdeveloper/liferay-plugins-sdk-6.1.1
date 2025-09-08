@@ -101,6 +101,24 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
+					<td style="width: 66%"><p:selectOneMenu
+							value="#{smCompExpMB.selectedMaster.paymentMethod.parameterId}">
+							<f:selectItems value="#{smCompExpBB.getDropdownValues('ParameterConst.paramTypePaymentMethod)}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /></td>
+					<td style="width: 66%"><p:selectOneMenu
+							value="#{smCompExpMB.selectedMaster.procumentMode.parameterId}">
+							<f:selectItems value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypeProcurementMode)}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /></td>
 					<td style="width: 66%"><p:calendar id="contractEffDate"
 							label="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
