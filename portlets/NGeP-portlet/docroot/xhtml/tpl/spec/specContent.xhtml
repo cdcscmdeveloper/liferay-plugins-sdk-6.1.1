@@ -270,7 +270,9 @@
 				</ui:param>
 				<ui:remove> #32110 related to #21695 Farid End 30/11/2021</ui:remove>
 				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
-				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" /><!-- #29187 Added Vinod -->
+				<ui:remove>#29187 Start Vinod</ui:remove>
+				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" />
+				<ui:remove>#29187 End Vinod</ui:remove>
 				<!-- #33859 - start -->
 				<!-- SHAFFUL (START HERE)UOM oncomplete="blockWidget.hide();" -->
 			    <p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row" 
@@ -407,8 +409,12 @@
 				<c:if test="#{isZonal}">
 					<ui:include src="zoneQtyPopup.xhtml" />
 				</c:if>
-				
-				<p:dialog id="zoneTierPricePopup" header="#{lbl['lbl.sc.offered.price']}" widgetVar="#{zoneTierPricePopup}" modal="true" width="450" height="290" closable="false">
+
+			<!-- #31503 Start -->
+			<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+			<!-- #31503 End -->
+
+			<p:dialog id="zoneTierPricePopup" header="#{lbl['lbl.sc.offered.price']}" widgetVar="#{zoneTierPricePopup}" modal="true" width="450" height="290" closable="false">
 			
 					<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 						<div style="height:250px;">

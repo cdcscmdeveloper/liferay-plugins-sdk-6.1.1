@@ -187,7 +187,7 @@
 					    	<p:selectOneMenu id="show" value="#{ctBackingBean.managedBean.showItem}" style="width:200px;">
 					           	<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList(
 					           		amendmentBackingBean.managedBean.selectedItem.itemType.parameterCode)}" />
-						        <p:ajax event="change" update=":form:changeField" listener="#{amendmentBackingBean.changeShowItem}" process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+						        <p:ajax event="change" update=":form:changeField" listener="#{amendmentBackingBean.changeShowItem}" process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /> <!-- #33287 -->
 					       	</p:selectOneMenu>
 					       	<p:spacer width="1"/>
 				     		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls.show']}" />
@@ -280,38 +280,22 @@
 									</h:outputText>
 								</p:column>
 								
-								<p:column id="actionedColumn" headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center"
+								<p:column headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center"
 									rendered="#{!ctBackingBean.managedBean.disableAmendDetails and 
 						           		amendmentBackingBean.managedBean.selectedItem.recordStatusFlg == 1 and !ctBackingBean.managedBean.viewSCL}"
 								     style="width:10%; white-space:normal;"><!-- Enhancement 15851 - shaqimi -->								  
-									<p:commandLink update=":form:itemId :form:itemPriceTable:actionedColumn" process="@form" 
+									<p:commandLink update=":form:itemId" process="@form" 
 										disabled="#{itemPriceVar.chkIndexOfRow or 
 										(ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and !ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange) }"
 									   	rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 										<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
 									</p:commandLink>
-									<p:commandLink update=":form:itemPriceTable:actionedColumn" rendered="#{itemPriceVar.changePrice}" oncomplete="dlgItemPrices.show();return false;">
+									<p:commandLink rendered="#{itemPriceVar.changePrice}" oncomplete="dlgItemPrices.show();return false;">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 										<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
 									</p:commandLink>
-								</p:column>			        
-								<p:column	headerText="Flag check" styleClass="column-align-center" style="width:10%; white-space:normal;">
-										    <h:outputText value="Edit icon rendering : " />
-											<h:outputText value=" #{!itemPriceVar.changePrice and itemPriceVar.editable ? 'Rendered' : 'Not Rendered'}" />
-											<br/>
-											<h:outputText value="Delete icon rendering :  " />
-											<h:outputText value="#{itemPriceVar.changePrice ? 'Rendered' : 'Not Rendered'}" />
-											<br/>
-											<h:outputText value="Edit : !ChangePrice : " />
-											<h:outputText value="#{!itemPriceVar.changePrice ? 'True' : 'False'}" />
-											<br/>
-											<h:outputText value="Edit : editable : " />
-											<h:outputText value="#{itemPriceVar.editable ? 'True' : 'False'}" />
-											<br/>
-											<h:outputText value="Delete : changePrice : " />
-											<h:outputText value="#{itemPriceVar.changePrice ? 'True' : 'False'}" />	
-							   </p:column>		        
+								</p:column>			        	        
 				        </p:dataTable>
 				        <p:confirmDialog id="dlgItemPrices" widgetVar="dlgItemPrices" message="#{lbl['lbl.msg.confirm.delete']}" 	
                              severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">

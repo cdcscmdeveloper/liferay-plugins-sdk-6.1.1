@@ -43,6 +43,10 @@
 									title="#{lbl['lbl.audit.tab.approve.bank.information']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdUserInfo}"
 									title="#{lbl['lbl.audit.tab.user.profile']}" />
+								<ui:remove>#28895_35501_DA Start - AUDIT TRAIL SM DA</ui:remove>
+								<p:tab id="#{SupplierManagementConst.auTabIdDisciplinaryActionInfo}"
+									title="#{lbl['lbl.audit.tab.disciplinary.action']}" />
+								<ui:remove>#28895_35501_DA End</ui:remove>
 								<p:tab id="#{SupplierManagementConst.auTabIdAdminInfo}"
 									title="#{lbl['lbl.audit.tab.deactive.replace.sup.admin']}" />
 							</c:when>
@@ -62,6 +66,11 @@
 									title="#{lbl['lbl.audit.tab.cancel.registered.category']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdSupplierInfo}"
 									title="#{lbl['lbl.audit.tab.supplier.information']}" />
+								<ui:remove>#28895_35501_DA Start - AUDIT TRAIL SM DA</ui:remove>
+								<p:tab
+									id="#{SupplierManagementConst.auTabIdDisciplinaryActionInfo}"
+									title="#{lbl['lbl.audit.tab.disciplinary.action']}" />
+								<ui:remove>#28895_35501_DA End</ui:remove>
 								<p:tab
 									id="#{SupplierManagementConst.auTabIdApprovedCategoryCodeInfo}"
 									title="#{lbl['lbl.audit.tab.approve.category.codes']}" />
@@ -95,56 +104,58 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:dataTable id="searchAuSmId" var="obj" rows="10"
-						width="100%" tableStyle="width:auto"
-						value="#{AuditSupplierManagementViewBackingBean.managedBean.searchAuSm}"
-						rowIndexVar="index" lazy="true"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-						<ac:paginator for="searchAuSmId"></ac:paginator>
-						<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
-							style="white-space: normal!important;">
-							<h:outputText value="#{obj.actionDate}">
-								<f:convertDateTime
-									pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
-							</h:outputText>
-						</p:column>
-						<p:column headerText="#{lbl['lbl.audit.header.action.type']}"
-							style="white-space: normal!important;">
-							<h:outputText value="#{obj.actionType}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.audit.header.action.by']}"
-							style="white-space: normal!important;">
-							<h:outputText value="#{obj.actionBy}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.audit.header.org.name']}"
-							style="white-space: normal!important;">
-							<h:outputText value="#{obj.org}" escape="false" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.audit.header.role']}"
-							style="white-space: normal!important;">
-							<h:outputText value="#{obj.role}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.audit.header.docType']}"
-							style="white-space: normal!important;">
-							<h:outputText value="#{obj.docType}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.audit.header.docNo']}"
-							style="white-space: normal!important;">
-							<h:outputText value="#{obj.docNo}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.audit.header.fieldName']}"
-							style="white-space: normal!important;">
-							<h:outputText value="#{obj.fieldName}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
-							style="white-space: pre-wrap!important;">
-							<h:outputText value="#{obj.oldValue}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
-							style="white-space: pre-wrap!important;">
-							<h:outputText value="#{obj.newValue}" />
-						</p:column>
-					</p:dataTable></td>
+				<ui:remove>#35501_Reopen#65 Start</ui:remove>
+				<td><p:dataTable id="searchAuSmId" var="obj" rows="10" 
+						width="100%" tableStyle="width:100%"
+						value="#{AuditSupplierManagementViewBackingBean.managedBean.searchAuSm}" 
+						rowIndexVar="index" lazy="true" 
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"> 
+						<ac:paginator for="searchAuSmId"></ac:paginator> 
+						<p:column headerText="#{lbl['lbl.audit.header.action.date']}" 
+							style="white-space: normal!important; vertical-align: top; width:8%;">
+							<h:outputText value="#{obj.actionDate}"> 
+								<f:convertDateTime 
+									pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" /> 
+							</h:outputText> 
+						</p:column> 
+						<p:column headerText="#{lbl['lbl.audit.header.action.type']}" 
+							style="white-space: normal!important;vertical-align: top; width:6%;">
+							<h:outputText value="#{obj.actionType}" /> 
+						</p:column> 
+						<p:column headerText="#{lbl['lbl.audit.header.action.by']}" 
+							style="white-space: normal!important;vertical-align: top; width:8%;">
+							<h:outputText value="#{obj.actionBy}" /> 
+						</p:column> 
+						<p:column headerText="#{lbl['lbl.audit.header.org.name']}" 
+							style="white-space: normal!important;vertical-align: top; width:10%;">
+							<h:outputText value="#{obj.org}" escape="false" /> 
+						</p:column> 
+						<p:column headerText="#{lbl['lbl.audit.header.role']}" 
+							style="white-space: normal!important;vertical-align: top; width:8%;">
+							<h:outputText value="#{obj.role}" /> 
+						</p:column> 
+						<p:column headerText="#{lbl['lbl.audit.header.docType']}" 
+							style="white-space: normal!important;vertical-align: top; width:8%;">
+							<h:outputText value="#{obj.docType}" /> 
+						</p:column> 
+						<p:column headerText="#{lbl['lbl.audit.header.docNo']}" 
+							style="white-space: normal!important;vertical-align: top; width:8%;">
+							<h:outputText value="#{obj.docNo}" /> 
+						</p:column> 
+						<p:column headerText="#{lbl['lbl.audit.header.fieldName']}" 
+							style="white-space: normal!important;vertical-align: top; width:8%;">
+							<h:outputText value="#{obj.fieldName}" /> 
+						</p:column> 
+						<p:column headerText="#{lbl['lbl.audit.header.oldValue']}" 
+							style="white-space: pre-wrap!important;vertical-align: top; width:18%;">
+							<h:outputText value="#{obj.oldValue}" /> 
+						</p:column> 
+						<p:column headerText="#{lbl['lbl.audit.header.newValue']}" 
+							style="white-space: pre-wrap!important;vertical-align: top; width:18%;">
+							<h:outputText value="#{obj.newValue}" /> 
+						</p:column> 
+					</p:dataTable></td> 
+				<ui:remove>#35501_Reopen#65 End</ui:remove>
 			</tr>
 		</table>
 	</p:panel>

@@ -78,19 +78,19 @@
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:row>
 			</p:columnGroup>
-			<!-- 26238 add catBean.cancelCategory and catBean.disciplinaryActionId!=null, #32008 -->
-			<p:column selectionMode="multiple" style="width:2%"
+			<!-- 26238 add catBean.cancelCategory and catBean.disciplinaryActionId!=null, #32008, #37605 -->
+			<p:column selectionMode="multiple" style="width:2%;vertical-align: top;"
 				rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"
 				disabledSelection="#{backingBean.managedBean.supplierUser and 
 					(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or 
 					(not empty catBean.approvedDate and catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS))
 					or (catBean.cancelCategory and catBean.disciplinaryActionId!=null)}" />
-			<p:column style="width : 2%;">
+			<p:column style="width : 2%;vertical-align: top;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory and catBean.disciplinaryActionId!=null-->
-			<p:column style="width :350px;white-space : normal"
+			<p:column style="width :350px;white-space : normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or (catBean.cancelCategory and catBean.disciplinaryActionId!=null)}">
 				<h:outputText
@@ -101,19 +101,25 @@
 				<br />
 				<h:outputText
 					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
-				<!-- 26238 add catBean.cancelCategory and catBean.disciplinaryActionId!=null-->
-				<p:outputLabel rendered="#{catBean.cancelCategory and catBean.disciplinaryActionId!=null}" styleClass="warning" style="color:red;text-align:left;">
+				<!-- 26238, 38984, 38896 -->
+				<p:outputLabel rendered="#{catBean.typeDisciplinaryAction eq 'C'}" 
+					styleClass="warning" style="color:red;text-align:left; float:none">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
+				</p:outputLabel>
+				<p:outputLabel rendered="#{catBean.typeDisciplinaryAction eq 'M'}" 
+					styleClass="warning" style="color:red;text-align:left; float:none">
+					<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
-			<p:column
+			<p:column style="white-space:normal;vertical-align: top;width:500px"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
-				<p:inputTextarea id="otherDesc" maxlength="100"
+				<p:inputTextarea id="otherDesc" maxlength="5000"
 					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
-					value="#{catBean.otherDesc}" rows="5" cols="20"
-					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}" ><!-- #32008, #36289 -->
+					value="#{catBean.otherDesc}" rows="5" cols="80"
+					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}" 
+					autoResize="false" ><!-- #32008, #36289,#37605 -->
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
 						update=":form:tt:catCodeInfPan" />
@@ -131,7 +137,7 @@
 					display="icon" />
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
-			<p:column
+			<p:column style="white-space:normal;vertical-align: top;width: 100px"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
@@ -140,7 +146,7 @@
 					rendered="#{catBean.specialCategory}" />
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
-			<p:column
+			<p:column style="white-space:normal;vertical-align: top;width: 100px"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}"
 				rendered="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}">
@@ -150,7 +156,7 @@
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
-			<p:column
+			<p:column style="white-space:normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}"
 				rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
@@ -207,7 +213,7 @@
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
 			<p:column rendered="#{backingBean.managedBean.poUser}"
-				style="width : 25%;"
+				style="width : 25%;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
 				<p:inputTextarea autoResize="false" value="#{catBean.poRemarks}" maxlength="2000"
@@ -220,7 +226,7 @@
 					</p:inputTextarea>
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
-			<p:column rendered="#{backingBean.managedBean.approverUser}"
+			<p:column rendered="#{backingBean.managedBean.approverUser}" style="white-space : normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
 				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
@@ -240,7 +246,7 @@
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
-			<p:column rendered="#{backingBean.managedBean.approverUser}"
+			<p:column rendered="#{backingBean.managedBean.approverUser}" style="white-space:normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
 				<p:inputTextarea autoResize="false" value="#{catBean.approverRemarks}" maxlength="2000"
@@ -253,7 +259,7 @@
 				</p:inputTextarea>
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
-			<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}"
+			<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}" style="white-space:normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
 				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
@@ -442,11 +448,11 @@
 			<ac:paginator for="catApprNDt" />
 			<!-- 29723 End -->	
 			
-			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;vertical-align: top;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal;vertical-align: top;">
 				<h:outputText
 					value="#{aprvdCatNBean.pmCategoryL1.categoryL1Code} -  #{empty aprvdCatNBean.categoryL1Name ? aprvdCatNBean.pmCategoryL1.categoryName : aprvdCatNBean.categoryL1Name}" />
 				<br />
@@ -460,19 +466,19 @@
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal;vertical-align: top;">
 				<h:outputText value="#{lbl['lbl.sm.no.available']}"
 					rendered="#{empty aprvdCatNBean.otherDesc}" />
 				<h:outputText value="#{aprvdCatNBean.otherDesc}"
 					rendered="#{not empty aprvdCatNBean.otherDesc}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 15%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 15%;white-space : normal;vertical-align: top;">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 					rendered="#{!aprvdCatNBean.specialCategory}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 					rendered="#{aprvdCatNBean.specialCategory}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal;vertical-align: top;">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
 					rendered="#{aprvdCatNBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}"

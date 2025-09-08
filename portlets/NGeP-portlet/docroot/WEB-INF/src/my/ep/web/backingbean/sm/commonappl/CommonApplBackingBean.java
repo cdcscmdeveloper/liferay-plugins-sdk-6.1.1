@@ -597,7 +597,7 @@ public class CommonApplBackingBean extends
 			smApplBB.getManagedBean().setDraftedAppl(true);
 			//#26238 -- 27641,27736,27876
 			setNavigationForDraftAppl(appl.getApplType());
-
+			SmApplicationUtil.checkAndRedirectIfInvalid(appl);//#37784
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT) || resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT.replaceAll("\\s", ""))) {
@@ -723,6 +723,8 @@ public class CommonApplBackingBean extends
 						srcObj.getSupplierList());
 			}*/
 			smApplBB.getManagedBean().setPayLoad(srcObj);
+			smApplBB.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo()); //#38195
+			
 			SmRemaksResDTO remResDTO = getRemarksByDoc(
 					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
 					appl.getApplId());
@@ -794,14 +796,18 @@ public class CommonApplBackingBean extends
 						SMProcessNameConst.PROCESSING_FEE.replaceAll("\\s", ""))) {
 			Object bpmObj = new Object();
 			PaymentBackingBean paymentBB = new PaymentBackingBean();
-			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+			//#34178 - Start
+			if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
+			//#34178 - End
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+			// #34178 - Start
+			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
+			// #34178 - End
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());

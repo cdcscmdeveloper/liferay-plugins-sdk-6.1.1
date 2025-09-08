@@ -57,7 +57,6 @@
 		<td valign="top">
 		<table>
 			<tr><td>$velocityCount.</td></tr>
-			<tr><td><p style="width: 10px;height: 10px;background: white;border:solid thin black;" /></td></tr>
 		</table>
 		</td>
 		
@@ -101,6 +100,12 @@
 				<td valign="top">$!bank.smSupplierBank.signatureInstruction</td>
 			</tr>
 			
+			<tr>
+				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.verifyLbl')</td>
+				<td>#if($bank.valid) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+						#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>
+			</tr>
+			
 			##14055 start - change placement of the Remarks
 			<tr>
 				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.remark'):</td>
@@ -121,10 +126,15 @@
 </table>
 <br /><br />
 
+<!-- #28775 -->
+#if($bankInfo && $bankInfo.size() > 1)
+    <div style="page-break-before: always;"></div>
+#end
+
 <table class="sTable">
 	#if($review)
 		<tr>
-			<td class="txtBold" width="40%"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.acc.no')</u></td>
+			<td class="txtBold" width="40%"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.check.list')</u></td>
 			<td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.availableLbl')</u></td>
 			<td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.remark')</u></td>
 		</tr>

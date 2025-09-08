@@ -43,12 +43,11 @@
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 					<!-- #34159 - END -->
-					<!-- #33129 - START -->
-					<ac:confirmationPopup id="declareDeletePopUpId"
+					<!-- #33129 - START --><!-- #34400 -->
+					<ac:confirmationPopupSM id="declareDeletePopUpId"
 						widget="declareDeletePopUp"
 						okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
 						width="400" height="auto"
-						title="#{lbl['lbl.msg.confirm.declare.header']}"
 						content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
 						update=":form"/>
 					<!-- #33129 - END -->
@@ -202,14 +201,18 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="newAdminEmail"
+					<td>
+						<!-- #32617 - START - add validator message -->
+						<p:inputText id="newAdminEmail"
 							label="#{lbl['lbl.sm.userprofile.email']}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}"
+							validatorMessage="Email Address - Invalid Email Format"
 							size="40" required="true"><!-- #28765 Added <p:ajax event --><p:ajax event="change" partialSubmit="true" process="@this" />
 							<f:validateRegex 
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							<p:ajax event="change" process="@this" listener="#{forceReplaceSuppAdminBackingBean.onChangeEmail()}" update="newAdminEmail"/> 
-							</p:inputText>
+						</p:inputText>
+						<!-- #32617 - END -->
 							<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
 						  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
 								<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />

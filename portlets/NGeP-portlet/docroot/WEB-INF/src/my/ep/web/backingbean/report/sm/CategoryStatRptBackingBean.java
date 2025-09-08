@@ -96,7 +96,7 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 			//#7754_#35984 - End
 			addDistrictParam(params);
 			
-			//#32521 - START
+			//#32521 - START, #26238
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 			params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
@@ -144,6 +144,10 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 		getManagedBean().setState(null);
 		getManagedBean().setDistrict(null);
 		resetCategory();
+		//#38227 - START
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
+		//#38227 - END
 		//#32521 - START
 		setDefaultDateFromAndDateTo();
 		getManagedBean().setDisciplinaryActionStatus(null);

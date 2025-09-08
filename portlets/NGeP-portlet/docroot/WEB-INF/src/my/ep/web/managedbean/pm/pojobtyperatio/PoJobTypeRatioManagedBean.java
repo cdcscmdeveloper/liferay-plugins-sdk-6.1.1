@@ -48,6 +48,11 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 	private Map<String, String> categoryTypeMap;
 	private Map<Long,PmPoJobWeight> jobWeightMap;
 	
+	/************ AUDIT START #28895-35509 *************/
+	private Boolean brandNew = false;
+	private PmPoJobTypeRatio savedJobTypeRatio;
+	/************ AUDIT END #28895-35509 *************/
+	
 	public PoJobTypeRatioManagedBean() {
 	}
 
@@ -231,4 +236,28 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 		}
 
 	}
+	/************ AUDIT START #28895-35509 *************/
+	/**
+	 * @return the brandNew
+	 */
+	public Boolean isBrandNew() {
+		return brandNew;
+	}
+
+	/**
+	 * @param brandNew the brandNew to set
+	 */
+	public void setBrandNew(Boolean brandNew) {
+		this.brandNew = brandNew;
+	}
+
+	public PmPoJobTypeRatio getSavedJobTypeRatio() {
+		return savedJobTypeRatio;
+	}
+
+	public void setSavedJobTypeRatio(PmPoJobTypeRatio savedJobTypeRatio) {
+		this.savedJobTypeRatio = savedJobTypeRatio;
+	}
+	/************ AUDIT END #28895-35509 *************/
+
 }

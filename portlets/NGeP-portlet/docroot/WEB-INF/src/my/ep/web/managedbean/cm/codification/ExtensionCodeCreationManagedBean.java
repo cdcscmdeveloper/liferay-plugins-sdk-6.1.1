@@ -151,6 +151,10 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	private boolean requestMeasurement = true;
 	private boolean requestColor = true;
 	//#25551 18042020 - azza - end
+	
+	// 35503 Start
+	private List<CmRequestCode> auditRequestExtList;
+	// 35503 End
 
 	
 	/** The back to previous page. */
@@ -1123,7 +1127,7 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		System.out.println("segmentCode " + segmentCode);
 		
 		//#25551 01062020 - azza - start
-		if (Integer.parseInt(segmentCode) > 60) {
+		if (Integer.parseInt(segmentCode) > 69) { //#35503, Fix as-is bug: #38632
 			flag = true;
 		//#25551 01062020 - azza - end
 		}
@@ -1222,6 +1226,18 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	public void setRequestColor(boolean requestColor) {
 		this.requestColor = requestColor;
 	}
+	
+	// 35503 Start
+	public List<CmRequestCode> getAuditRequestExtList() {
+		if (auditRequestExtList == null)
+			auditRequestExtList = new ArrayList<>();
+		return auditRequestExtList;
+	}
+
+	public void setAuditRequestExtList(List<CmRequestCode> auditRequestExtList) {
+		this.auditRequestExtList = auditRequestExtList;
+	}
+	// 35503 End
 
 	/*[#27625] begin*/
 	public String getTypeName() {

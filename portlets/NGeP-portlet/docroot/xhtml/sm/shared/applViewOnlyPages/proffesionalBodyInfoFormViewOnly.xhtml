@@ -23,11 +23,14 @@
 					<ac:labelDate value="#{profBean.expDate}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink action="#{viewSmApplBackingBean.assignSelAssocBody(profBean)}" 
+				<!-- #37771 - Start -->
+					<p:commandLink action="#{viewSmApplBackingBean.assignSelAssocBodyExclPersonnel(profBean)}" 
 						oncomplete="profDialog.show()" partialSubmit="true" process="@this" update=":form:tt:profPop">
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
+					<ac:smFieldChangeTableAlertView object="#{profBean}" />
+					<!-- #37771 - End -->
 				</p:column>
 			</p:dataTable>
 				
@@ -47,21 +50,55 @@
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.profBody.profBody']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.pmCertBody.bodyName}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.pmCertBody.bodyName}" /> 
+					<!-- #37771 - Start -->
+						<ac:smFieldChangeAlert
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+							and not empty viewSmApplBackingBean.managedBean.latestProfBody}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestProfBody.pmCertBody.bodyName}"
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocBody.pmCertBody.bodyName}"
+							alertValue="#{viewSmApplBackingBean.managedBean.latestProfBody.pmCertBody.bodyName}" /> 
+					<!-- #37771 - End --></td>
 				</tr>
 	
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.profBody.others']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.otherAssociation}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.otherAssociation}" /> 
+					<!-- #37771 - Start -->
+						<ac:smFieldChangeAlert
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+							and not empty viewSmApplBackingBean.managedBean.latestProfBody}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestProfBody.otherAssociation}"
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocBody.otherAssociation}"
+							alertValue="#{viewSmApplBackingBean.managedBean.latestProfBody.otherAssociation}" /> 
+					<!-- #37771 - End -->
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.profBody.regNo']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.regNo}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.regNo}"/> 
+					<!-- #37771 - Start -->
+						<ac:smFieldChangeAlert
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+							and not empty viewSmApplBackingBean.managedBean.latestProfBody}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestProfBody.regNo}"
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocBody.regNo}"
+							alertValue="#{viewSmApplBackingBean.managedBean.latestProfBody.regNo}" /> 
+					<!-- #37771 - End -->
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.profBody.expDate']}" /></td>
 					<td>
-						<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.expDate}" />
+						<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.expDate}" /> 
+						<!-- #37771 - Start -->
+						<ac:smFieldChangeAlert
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+							and not empty viewSmApplBackingBean.managedBean.latestProfBody}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestProfBody.expDate}"
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocBody.expDate}"
+							alertValue="#{viewSmApplBackingBean.managedBean.latestProfBody.expDate}" /> 
+						<!-- #37771 - End -->
 					</td>
 				</tr>
 			</table>

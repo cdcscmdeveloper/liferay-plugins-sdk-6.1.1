@@ -25,6 +25,7 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory; //#30014
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
@@ -134,6 +135,13 @@ public class PanelManagedBean extends BaseManagedBean {
 	private String taskIdFromTaskList;
 	private String[] outComesFromTaskList;
 	//#33533 end
+	
+	//#25790
+	private boolean sqEditableMode = false;
+
+	//#30014 - Start
+	private List<CtPanelCategory> selectedCategoryList;
+	//#30014 - End
 	
 	/**
 	 * @return the circular
@@ -1028,5 +1036,34 @@ public class PanelManagedBean extends BaseManagedBean {
 	}
 	
 	//#33533 end
+	
+	// #25790 - start
+	public boolean isSqEditableMode() {
+		return sqEditableMode;
+	}
 
+	public void setSqEditableMode(boolean sqEditableMode) {
+		this.sqEditableMode = sqEditableMode;
+	}
+	// #25790 - end
+
+	//#30014 - Start
+	/**
+	 * Gets the list of selected category codes from the data table.
+	 * 
+	 * @return the list of selected {@link CtPanelCategory} items
+	 */
+	public List<CtPanelCategory> getSelectedCategoryList() {
+		return selectedCategoryList;
+	}
+	
+	/**
+	 * Sets the list of selected category code from the data table.
+	 * 
+	 * @param selectedCategoryList the selected category list to set
+	 */
+	public void setSelectedCategoryList(List<CtPanelCategory> selectedCategoryList) {
+		this.selectedCategoryList = selectedCategoryList;
+	}
+	//#30014 - End
 }

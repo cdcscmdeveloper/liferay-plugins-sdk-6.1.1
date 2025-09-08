@@ -1,0 +1,269 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:ac="http://ac.my/jsf/composite/cc">
+    
+<cc:interface>
+	<!-- <cc:attribute name="required" />
+	<cc:attribute name="value" /> -->
+</cc:interface>
+
+<cc:implementation>
+	<p:remoteCommand name="updateSearchDialog" update="searchPanel  lovTitle  resultPanel" partialSubmit="true" process="@this resultPanel" oncomplete="lovPopup.show(); lovItemReportPopup.hide();" />
+	<p:remoteCommand name="resetAllData" update="searchPanel lovTitle  resultPanel" partialSubmit="true" action="#{lovBackingBean.resetAll}" process="@this" />
+	<p:remoteCommand name="lovPopsetAutoUpdateValue" partialSubmit="true" process="@this" update="@this" action="#{lovBackingBean.setAutoUpdateValue()}" />	
+
+	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top" 
+		onShow="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:false}]);"
+		onHide="if (#{!lovBackingBean.lovBean.itemUsageMonitoringReport}){lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:true}]); resetAllData(); console.log('Dialog Closed!');}" 
+		resizable="false">
+
+			<f:facet name="header">
+				<h:panelGroup id="lovTitle">
+					<h:outputText value="#{lbl['lbl.lov.listing']} - #{lovBackingBean.lovBean.title}"
+						rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
+						style="font-weight: bold;" />
+					<h:outputText value="#{lbl['lbl.ct.report.search.item.title']}"
+						rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}"
+						style="font-weight: bold;" />
+				</h:panelGroup>
+			</f:facet>
+
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false"/>
+
+			<p:panel id="searchPanel" toggleable="true">
+				<f:facet name="header">
+					<h:outputText
+						value="#{lovBackingBean.lovBean.itemUsageMonitoringReport ? 
+                                lbl['lbl.ct.report.search.item.criteria'] : 
+                                lbl['lbl.cm.search']}" />
+				</f:facet>
+
+				<h:outputText
+					rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}"
+					styleClass="instruction"
+					value="#{lbl['lbl.ct.instruction.report.item.usage.monitoring']}"
+					escape="false" style="color: blue" />
+				<br />
+				<br />
+				<h:panelGroup style="width:100%;">
+					<h:panelGroup rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}">
+						<ui:include src="lovSearchPanel.xhtml" />
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}">
+						<ui:include src="lovItemNameSearchPanel.xhtml" />
+					</h:panelGroup>
+					
+
+					<table style="width: 100%;">
+						<tr>
+							<TD style="text-align: right;"><p:commandButton
+									id="lovSearchBtn" value="#{lbl['lbl.btn.search']}"
+									action="#{lovBackingBean.searchAction}" partialSubmit="true"
+									process="searchPanel" update="resultPanel"
+									widgetVar="lovSearch">
+								</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}"
+									action="#{lovBackingBean.resetAction}" partialSubmit="true"
+									process="searchPanel" update="searchPanel resultPanel">
+								</p:commandButton></TD>
+						</tr>
+					</table>
+				</h:panelGroup>
+			</p:panel>
+
+
+			<p:panel header="#{lbl['lbl.fl.result']}" toggleable="true">
+		<h:panelGroup id="resultPanel" style="width:100%;">
+			
+	 <h:panelGroup rendered="#{lovBackingBean.lovBean.selectionMode == 'single'}">
+	 <h:outputText rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport() and lovBackingBean.lovBean.title eq lbl['lbl.ct.ministry']}"
+				styleClass="instruction" value="#{lbl['lbl.ct.instruction.report.itemusage.monitoringdtls.allministry']}" escape="false" style="color: blue"/><br /><br />	<!-- #34889 -->
+			<p:dataTable id="lovTb"
+				var="entity" 
+				selection="#{lovBackingBean.selectedEntity}"
+				selectionMode="single"
+				rowIndexVar="rowIndex"
+				rowKey="#{entity[lovBackingBean.lovBean.pk]}"
+				rows="10"
+				lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{lovBackingBean.searchDataModel}" >
+				
+				<ac:paginator for="lovTb" />
+				<p:ajax event="rowDblselect" listener="#{lovBackingBean.populateToSaveObject}" 
+                     update="@form" />
+                <p:ajax event="rowSelect" update="@([id$=slbtn])" />   
+                <p:ajax event="rowUnselect" update="@([id$=slbtn])" />   
+                <p:ajax event="rowSelect" update="@([id$=slbtnAllMinistry)" /> <!-- #34889 -->  
+                <p:ajax event="rowUnselect" update="@([id$=slbtnAllMinistry])" /> <!-- #34889 -->
+				<!-- <p:column selectionMode="single" style="width:2%" /> 
+				
+				<p:column width="5%">
+					<f:facet name="header">
+						<p:outputLabel value="No." />
+					</f:facet>
+					<p:outputLabel value="#{rowIndex + 1}" />
+				</p:column> -->
+				
+				<p:columns var="column" value="#{lovBackingBean.columnsToDisplay}">
+				
+					<f:facet name="header">  
+		                #{column.columnTitle}  
+		            </f:facet>
+						#{column.columnNameve.getValue(facesContext.ELContext)}
+				</p:columns>
+				
+			</p:dataTable>
+			</h:panelGroup>  
+			
+
+			<h:panelGroup rendered="#{lovBackingBean.lovBean.selectionMode == 'multiple' and !lovBackingBean.lovBean.itemUsageMonitoringReport}">
+			<!--20200909@akmal - Enhancement28951 - Start-->
+			<p:remoteCommand name="lovPopulateSelection" partialSubmit="true" update="lovTb2, @([id$=slbtn])" actionListener="#{lovBackingBean.populateSelectedItems()}" />
+			<!--20200909@akmal - Enhancement28951 - End-->
+			<p:dataTable id="lovTb2"
+				var="entity" 
+				selection="#{lovBackingBean.selectedEntities}"
+				rowIndexVar="rowIndex"
+				rowKey="#{entity[lovBackingBean.lovBean.pk]}"
+				rows="10"
+				lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{lovBackingBean.searchDataModel}" >
+				
+				<ac:paginator for="lovTb2" />
+				
+				<p:column selectionMode="multiple" styleClass="td-check-box-spacing" /> 
+				<p:ajax event="rowSelectCheckbox" update="@([id$=slbtn])" />
+				<!--20200909@akmal - Enhancement28951 - Start-->
+				<p:ajax event="rowUnselectCheckbox" update="@([id$=slbtn])" listener="#{lovBackingBean.onUnselectRow}"/>
+				<!--20200909@akmal - Enhancement28951 - End-->
+				<p:ajax event="rowSelect" update="@([id$=slbtn])" />   
+                <p:ajax event="rowUnselect" update="@([id$=slbtn])" />  
+                <p:ajax event="toggleSelect" update="@([id$=slbtn])" listener="#{lovBackingBean.onToggleSelect}"/>
+                <!--20200909@akmal - Enhancement28951 - Start-->
+                <p:ajax event="page" listener="#{lovBackingBean.onPageChange}" oncomplete="lovPopulateSelection()"/>
+                <!--20200909@akmal - Enhancement28951 - End-->                        
+				<!-- <p:column width="5%">
+					<f:facet name="header">
+						<p:outputLabel value="No." />
+					</f:facet>
+					<p:outputLabel value="#{rowIndex + 1}" />
+				</p:column> -->
+				
+				<p:columns var="column" value="#{lovBackingBean.columnsToDisplay}">
+				
+					<f:facet name="header">  
+		                #{column.columnTitle}  
+		            </f:facet>
+						#{column.columnNameve.getValue(facesContext.ELContext)}
+				</p:columns>
+				
+			</p:dataTable>
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{lovBackingBean.lovBean.selectionMode == 'multiple' and lovBackingBean.lovBean.itemUsageMonitoringReport}">
+			<!--20200909@akmal - Enhancement28951 - Start-->
+			<p:remoteCommand name="lovPopulateSelection" partialSubmit="true" update="lovTb3, @([id$=slbtnItem])" actionListener="#{lovBackingBean.populateSelectedItems()}" />
+			<!--20200909@akmal - Enhancement28951 - End-->
+			<p:dataTable id="lovTb3"
+				var="entity" 
+				selection="#{lovBackingBean.selectedEntities}"
+				rowIndexVar="rowIndex"
+				rowKey="#{entity[lovBackingBean.lovBean.pk]}"
+				rows="10"
+				lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{lovBackingBean.searchDataModelMultiSelection}" >
+				
+				<ac:paginator for="lovTb3" />
+				
+				<p:column selectionMode="multiple" styleClass="td-check-box-spacing" /> 
+				<p:ajax event="rowSelectCheckbox" update="@([id$=slbtnItem])" listener="#{lovBackingBean.onSelectRow}" />
+				<!--20200909@akmal - Enhancement28951 - Start-->
+				<p:ajax event="rowUnselectCheckbox" update="@([id$=slbtnItem])" listener="#{lovBackingBean.onUnselectRow}"/>
+				<!--20200909@akmal - Enhancement28951 - End-->
+				<p:ajax event="rowSelect" update="@([id$=slbtnItem])" />   
+                <p:ajax event="rowUnselect" update="@([id$=slbtnItem])" />  
+                <p:ajax event="toggleSelect" update="@([id$=slbtnItem])" listener="#{lovBackingBean.onToggleSelect}"/>
+                <!--20200909@akmal - Enhancement28951 - Start-->
+                <p:ajax event="page" listener="#{lovBackingBean.onPageChange}" oncomplete="lovPopulateSelection()" />
+                <!--20200909@akmal - Enhancement28951 - End-->                        
+				<!-- <p:column width="5%">
+					<f:facet name="header">
+						<p:outputLabel value="No." />
+					</f:facet>
+					<p:outputLabel value="#{rowIndex + 1}" />
+				</p:column> -->
+				
+				<p:columns var="column" value="#{lovBackingBean.columnsToDisplay}">
+				
+					<f:facet name="header">  
+		                #{column.columnTitle}  
+		            </f:facet>
+						#{column.columnNameve.getValue(facesContext.ELContext)}
+				</p:columns>
+				
+			</p:dataTable>
+			</h:panelGroup>
+			
+			<table style="width:100%;"><tr><TD style="text-align:right;">
+			
+					<!-- Start - #34889 -->
+					<p:commandButton rendered="#{lovBackingBean.isCentralItemUsageMonitoringDetailsReport() and lovBackingBean.lovBean.title eq lbl['lbl.ct.ministry']}"
+					id="slbtnAllMinistry"
+					value="#{lbl['lbl.btn.select.allMinistry']}"
+					action="#{lovBackingBean.allMinistrySelection()}"
+					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
+					oncomplete="lovPopup.hide();"
+					process="resultPanel"
+					partialSubmit="true"  styleClass="BtnSpacing"/>
+					<!-- End - #34889 -->
+					
+					<p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
+					id="slbtn"
+					value="#{lbl['lbl.btn.select']}"
+					action="#{lovBackingBean.populateToSaveObject}"
+					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
+					oncomplete="lovPopup.hide(); resetAllData();"
+					process="resultPanel"
+					disabled="#{lovBackingBean.isSelectButtonDisable()}"
+					partialSubmit="true"  styleClass="BtnSpacing"/>
+					
+					<p:commandButton rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}"
+					id="slbtnItem"
+					value="#{lbl['lbl.btn.select']}"
+					action="#{lovBackingBean.populateToSaveObject}"
+					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
+					oncomplete="lovPopup.hide();"
+					process="resultPanel"
+					disabled="#{lovBackingBean.isSelectButtonDisable()}"
+					partialSubmit="true"  styleClass="BtnSpacing"/>
+																		
+			    	<p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
+			      	value="#{lbl['lbl.btn.cancel']}"
+				  	partialSubmit="true" process="@this" update="@this"
+				  	action="#{lovBackingBean.resetAction()}"
+				  	oncomplete="lovPopup.hide();" styleClass="BtnSpacing"/>
+				  	
+					<p:commandButton rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}"
+				  	value="#{lbl['lbl.btn.cancel']}"
+				  	partialSubmit="true" process="@this" update="@this"
+				  	action="#{lovBackingBean.populatedBackupSelectedItems()}"
+				  	oncomplete="lovPopup.hide();" styleClass="BtnSpacing"/>
+			</TD>
+			</tr></table>
+			
+		</h:panelGroup>
+		</p:panel>
+	</p:dialog>
+	
+	<p:defaultCommand target="lovSearchBtn" scope="searchPanel"></p:defaultCommand>
+
+</cc:implementation>
+</ui:composition>

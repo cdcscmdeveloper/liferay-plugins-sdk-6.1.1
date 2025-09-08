@@ -238,7 +238,8 @@
 							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedMachine.smMachineCategories}">
 								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code} 
-									(#{cat.pmCategoryL3.categoryName})" style="float:left"/><br />
+									(#{backingBean.getSupplierCategoryName(cat.pmCategoryL3, false, false)})" style="float:left"/><br />
+								<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 							</ui:repeat>
 						</p:outputPanel>
 							<!-- style="float: left;white-space: normal;" -->
@@ -414,7 +415,8 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this" 
-					action="#{backingBean.cancelMachineSaveorUpdate}" />
+					action="#{backingBean.cancelMachineSaveorUpdate}" 
+					update=":#{p:component('smMachVal')}" /> <!-- #28775 -->
 			</div>
 			<p:blockUI block="machineOutPanelId" widgetVar="machineOutWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>

@@ -22,6 +22,7 @@
 					#end
 				</td>
 			</tr>
+			#set($rowCounter = $rowCounter + 1)
 			#end
 		#else
 			<tr>

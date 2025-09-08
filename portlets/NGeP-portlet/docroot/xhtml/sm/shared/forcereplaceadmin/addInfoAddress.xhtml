@@ -29,11 +29,16 @@
 								<td><p:outputLabel
 										value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
 										styleClass="mandatory" /></td>
-								<td ><p:inputText
-										maxlength="100" required="true" id="permAdd1"
+								<td >
+									<!-- #36716 - START - change required value -->
+									<p:inputText
+										maxlength="100" required="#{!empty param['disableValidation']}" id="permAdd1"
 										label="#{lbl['lbl.sm.address']}"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.address1}" 
-										size="35"><p:ajax event="blur" process="@this" partialSubmit="true"/></p:inputText>
+										size="35">
+										<p:ajax event="blur" process="@this" partialSubmit="true"/>
+									</p:inputText>
+									<!-- #36716 - END -->
 									<p:message id="permAdd1Msg" for="permAdd1"
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
@@ -64,9 +69,11 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permCountries}" />
-										<p:ajax event="change"
+										<!-- #36716 - Start -->
+										<p:ajax event="change" process="@([id$=PermanentAddressInfo])"
 											update="basicPermAddDivisionListLabel, basicPermAddDivisionListField,basicPermAddStateList, basicPermAddDistrictList, basicPermAddCityList,basicPermAddPostCodePanelId"
 											listener="#{forceReplaceSuppAdminBackingBean.onChangeCountry(forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress,'I')}" />
+										<!-- #36716 - End -->
 									</p:selectOneMenu>
 								<!-- #34159 - END -->
 									<p:message id="basicPermAddCountryListMsg"
@@ -86,9 +93,11 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permStates}" />
-										<p:ajax event="change"
-											update="basicPermAddDistrictList, basicPermAddDivisionListLabel, basicPermAddDivisionListField, basicPermAddCityList"
+										<!-- #36716 - Start -->
+										<p:ajax event="change" process="@([id$=PermanentAddressInfo])"
+											update="basicPermAddDistrictList, basicPermAddDivisionListLabel, basicPermAddDivisionListField, basicPermAddCityList, basicPermAddPostCodePanelId"
 											listener="#{forceReplaceSuppAdminBackingBean.onChangeState(forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress,'I')}" />
+										<!-- #36716 - End -->
 									</p:selectOneMenu>
 									<!-- #34159 - END -->
 									<p:message id="basicPermAddStateListMsg"
@@ -112,8 +121,12 @@
 												style="width: 207px;margin-bottom: 5px;">
 												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems value="#{forceReplaceSuppAdminBackingBean.managedBean.permDivisions}" />
-												<p:ajax event="change" update="basicPermAddDistrictList, basicPermAddCityList"
+												<!-- #36716 - Start -->
+												<p:ajax event="change"
+													update="basicPermAddDistrictList, basicPermAddCityList,basicPermAddPostCodePanelId"
+													process="@([id$=PermanentAddressInfo])"
 													listener="#{forceReplaceSuppAdminBackingBean.onChangeDivision(forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress,'I')}" />
+												<!-- #36716 - End  -->
 											</p:selectOneMenu>
 											<p:message id="basicPermAddDivisionListMsg" for="basicPermAddDivisionList" showSummary="true"
 												showDetail="false" display="icon" />
@@ -134,8 +147,12 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permDistricts}" />
-										<p:ajax event="change" update="basicPermAddCityList"  process="@this" partialSubmit="true"
+										<!-- #36716 - Start -->
+										<p:ajax event="change" update="basicPermAddCityList,basicPermAddPostCodePanelId"
+											partialSubmit="true"
+											process="@this @([id$=PermanentAddressInfo])"
 											listener="#{forceReplaceSuppAdminBackingBean.onChangeDistrict(forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress,'I')}" />
+										<!-- #36716 - End -->
 										<!-- #34159 - END -->
 									</p:selectOneMenu>
 									<p:message id="basicPermAddDistrictListMsg"
@@ -155,7 +172,12 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permCities}" />
-											<p:ajax event="change" update="@this"  process="@this" partialSubmit="true"></p:ajax>
+										<!-- #36716 - Start -->
+										<p:ajax event="change" update="@this,basicPermAddPostCodePanelId"
+											process="@this @([id$=PermanentAddressInfo])"
+											listener="#{forceReplaceSuppAdminBackingBean.onChangeCity(forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress,'I')}" 
+											partialSubmit="true"></p:ajax>
+										<!-- #36716 - End  -->
 									</p:selectOneMenu>
 									<!-- #34159 - END -->
 									<p:message id="basicPermAddCityListMsg"
@@ -170,7 +192,8 @@
 									<p:outputPanel id="basicPermAddPostCodePanelId">
 										<p:outputPanel
 											rendered="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmCountry.countryId==forceReplaceSuppAdminBackingBean.managedBean.myCountryId}">
-											<p:inputText maxlength="5" required="true"
+											<!-- #36716 - START - change required value -->
+											<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 												label="#{lbl['lbl.sm.postcode']}" id="basicPermAddPostCodeMy"
 												value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.postcode}"
 												validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -178,16 +201,19 @@
 												<p:ajax event="blur" process="@this" partialSubmit="true"/>
 												<f:validator validatorId="postcodeValidator" />
 											</p:inputText>
+											<!-- #36716 - END -->
 											<p:message id="basicPermAddPostCodeMyMsg" for="basicPermAddPostCodeMy"
 												showSummary="true" showDetail="false" display="icon" />
 										</p:outputPanel>
 										<p:outputPanel
 											rendered="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmCountry.countryId!=forceReplaceSuppAdminBackingBean.managedBean.myCountryId}">
-											<p:inputText maxlength="10" required="true"
+											<!-- #36716 - Start -->
+											<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
 												label="#{lbl['lbl.sm.postcode']}" id="basicPermAddPostCodeForeign"
 												value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.postcode}"
 												size="35">
 											</p:inputText>
+											<!-- #36716 - End -->
 											<p:message id="basicPermAddPostCodeForeignMsg"
 												for="basicPermAddPostCodeForeign" showSummary="true"
 												showDetail="false" display="icon" />
@@ -206,13 +232,18 @@
 											value="#{lbl['lbl.sm.person.mailAddr']} " /></b></u></td>
 							</tr>
 							<tr>
-								<td></td>				
-								<td style="white-space: nowrap; float: left;"><p:selectBooleanCheckbox
+								<td></td>		
+								<td style="white-space: nowrap; float: left;">
+								<!-- #36716 - Start  -->
+								<p:selectBooleanCheckbox
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}">
-										<p:ajax event="change" update="@([id$=MailingAddressInfo])" listener="#{forceReplaceSuppAdminBackingBean.copyPermanentAddress(forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress)}" 
+										<p:ajax event="change" update="@([id$=MailingAddressInfo])"
+											listener="#{forceReplaceSuppAdminBackingBean.copyPermanentAddress(forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress)}"
 											partialSubmit="true"
-											process="@this" />
-									</p:selectBooleanCheckbox><p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
+											process="@this @([id$=MailingAddressInfo])" />
+									</p:selectBooleanCheckbox> 
+									<!-- #36716 - End -->
+									<p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
 								<td></td>				
 							</tr>
 						
@@ -221,17 +252,19 @@
 								<td><p:outputLabel
 										value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
 										styleClass="mandatory" /></td>
-								<td  ><p:inputText
-										maxlength="100" label="#{lbl['lbl.sm.address']}"
-										id="mailAdd1"
-										value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.address1}"
-										size="35"
-										required="#{!forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
-										readonly="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
-										disabled="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}" />
-									<p:message id="mailAdd1Msg" for="mailAdd1" showSummary="true"
-										showDetail="false" display="icon" /></td>
-							</tr>
+									<!-- #36716 - Start -->
+									<td><p:inputText maxlength="100"
+											label="#{lbl['lbl.sm.address']}" id="mailAdd1"
+											value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.address1}"
+											size="35"
+											required="#{!forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm and !empty param['disableValidation']}"
+											readonly="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
+											disabled="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}" />
+										<!-- #36716 - End --> 
+										<p:message id="mailAdd1Msg"
+											for="mailAdd1" showSummary="true" showDetail="false"
+											display="icon" /></td>
+								</tr>
 							<tr>
 								<td></td>
 								<td  ><p:inputText
@@ -267,9 +300,11 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.mailCountries}" />
-										<p:ajax event="change"
-											update="basicMailAddStateList, basicMailAddDivisionListLabel, basicMailAddDivisionListField, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId"
-											listener="#{forceReplaceSuppAdminBackingBean.onChangeCountry(forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress,'M')}" />
+										<!-- #36716 - Start  -->
+											<p:ajax event="change" process="@([id$=MailingAddressInfo])"
+												update="basicMailAddStateList, basicMailAddDivisionListLabel, basicMailAddDivisionListField, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId"
+												listener="#{forceReplaceSuppAdminBackingBean.onChangeCountry(forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress,'M')}" />
+										<!-- #36716 - End -->
 									<!-- #34159 - END -->
 									</p:selectOneMenu>
 									<p:message id="basicMailAddCountryListMsg"
@@ -292,9 +327,11 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.mailStates}" />
-										<p:ajax event="change"
-											update="basicMailAddDivisionListLabel, basicMailAddDivisionListField, basicMailAddDistrictList, basicMailAddCityList"
-											listener="#{forceReplaceSuppAdminBackingBean.onChangeState(forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress,'M')}" />
+										<!-- #36716 - Start -->
+											<p:ajax event="change" process="@([id$=MailingAddressInfo])"
+												update="basicMailAddDivisionListLabel, basicMailAddDivisionListField, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId"
+												listener="#{forceReplaceSuppAdminBackingBean.onChangeState(forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress,'M')}" />
+										<!-- #36716 - End -->
 									<!-- #34159 - END -->
 									</p:selectOneMenu>
 									<p:message id="basicMailAddStateListMsg"
@@ -321,9 +358,12 @@
 												style="width: 207px;margin-bottom: 5px;">
 												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems value="#{forceReplaceSuppAdminBackingBean.managedBean.mailDivisions}" />
-												<p:ajax event="change"
-													update="basicMailAddDistrictList basicMailAddCityList"
-													listener="#{forceReplaceSuppAdminBackingBean.onChangeDivision(forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress,'M')}" />
+												<!-- #36716 - Start -->
+													<p:ajax event="change"
+														process="@([id$=MailingAddressInfo])"
+														update="basicMailAddDistrictList basicMailAddCityList,basicMailAddPostCodePanelId"
+														listener="#{forceReplaceSuppAdminBackingBean.onChangeDivision(forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress,'M')}" />
+													<!-- #36716 - End -->
 											</p:selectOneMenu>
 											<p:message id="basicMailAddDivisionListMsg" for="basicMailAddDivisionList" showSummary="true"
 												showDetail="false" display="icon" />
@@ -346,8 +386,11 @@
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{forceReplaceSuppAdminBackingBean.managedBean.mailDistricts}" />
-											<p:ajax event="change" update="basicMailAddCityList"
+											<!-- #36716 - Start -->
+											<p:ajax event="change" update="basicMailAddCityList,basicMailAddPostCodePanelId"
+												process="@([id$=MailingAddressInfo])"
 												listener="#{forceReplaceSuppAdminBackingBean.onChangeDistrict(forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress,'M')}" />
+											<!-- #36716 - End -->
 											<!-- #34159 - END -->
 										</p:selectOneMenu>
 										<p:message id="basicMailAddDistrictListMsg"
@@ -370,6 +413,10 @@
 												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems
 													value="#{forceReplaceSuppAdminBackingBean.managedBean.mailCities}" />
+												<!-- #36718 - add ajax -->
+												<p:ajax event="change" update="basicMailAddPostCodePanelId"
+													process="@([id$=MailingAddressInfo])"
+													listener="#{forceReplaceSuppAdminBackingBean.onChangeCity(forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress,'M')}" />
 											</p:selectOneMenu>
 											<!-- #34159 - END -->
 											<p:message id="basicMailAddCityListMsg"
@@ -382,9 +429,10 @@
 										value="*" styleClass="mandatory" /></td>
 										<td>
 											<p:outputPanel id="basicMailAddPostCodePanelId">
-												<p:outputPanel
-													rendered="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.pmCountry.countryId==forceReplaceSuppAdminBackingBean.managedBean.myCountryId}">
-													<p:inputText maxlength="5" required="#{!forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
+												<!-- #36718 - START -->
+												<c:if test="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.pmCountry.countryId==forceReplaceSuppAdminBackingBean.managedBean.myCountryId}">
+													<!-- #36716 - Start -->
+													<p:inputText maxlength="5" required="#{!forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm and !empty param['disableValidation']}"
 														label="#{lbl['lbl.sm.postcode']}" id="basicMailAddPostCodeMy"
 														value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.postcode}"
 														validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -393,22 +441,25 @@
 														size="35">
 														<f:validator validatorId="postcodeValidator" />
 													</p:inputText>
+													<!-- #36716 - End -->
 													<p:message id="basicMailAddPostCodeMyMsg" for="basicMailAddPostCodeMy"
 														showSummary="true" showDetail="false" display="icon" />
-												</p:outputPanel>
-												<p:outputPanel
-													rendered="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.pmCountry.countryId!=forceReplaceSuppAdminBackingBean.managedBean.myCountryId}">
-													<p:inputText maxlength="10" required="#{!forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
+												</c:if>
+												<!-- #36718 - START -->
+												<c:if test="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.pmCountry.countryId!=forceReplaceSuppAdminBackingBean.managedBean.myCountryId}">
+													<!-- #36716 - Start -->
+													<p:inputText maxlength="10" required="#{!forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm and !empty param['disableValidation']}"
 														label="#{lbl['lbl.sm.postcode']}" id="basicMailAddPostCodeForeign"
 														value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.postcode}"
 														readonly="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
 														disabled="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.sameAsPerm}"
 														size="35">
 													</p:inputText>
+													<!-- #36716 - End -->
 													<p:message id="basicMailAddPostCodeForeignMsg"
 														for="basicMailAddPostCodeForeign" showSummary="true"
 														showDetail="false" display="icon" />
-												</p:outputPanel>
+												</c:if>
 											</p:outputPanel>
 										</td>
 									</tr>

@@ -465,6 +465,9 @@ public class SupplierManagementConst {
 	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
 	public static final String SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST = "B";
 	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG = "C";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_SUSPEND_REG = "S";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE = "M";
+	public static final String SM_DISCIPLINARY_ACTION = "DA";
 	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
@@ -758,7 +761,27 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_APPROVER_REMARK_INFO = "approverRemarkInfoTab";
 	public static final String AU_TAB_ID_USER_INFO = "userInfoTab";
 	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
+	public static final String SUPPLIER_APPL_SEARCH_URL = "supplier-application-search";
 	// #28895_35501 End
+	// #28895_35501_DA - AUDIT TRAIL SM DA
+	public static final String AU_TAB_ID_DISCIPLINARY_ACTION_INFO = "disciplinaryActionInfoTab";
+	// #34031
+	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
+	
+	//26238 - START
+	public static final String MTO_CODE_04 = "04";
+	public static final String MTO_CODE_05 = "05";
+	public static final String MTO_CODE_06 = "06";
+	public static final String CAT_L1_22 = "22";
+	public static final String CAT_L2_17 = "17";
+	public static final String CAT_L3_09 = "09";
+	public static final int CAT_L3_347 = 347;
+	public static final String BUSINESS_TYPE_CODE_N = "N";
+	public static final String BUSINESS_TYPE_CODE_H = "H";
+	public static final int BUMI_PERCENTAGE = 50;
+	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
+	//26238 - END
+	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
 	
 	public String getCOMPANY_TYPE_CLBG() {
 		return COMPANY_TYPE_CLBG;
@@ -1310,6 +1333,11 @@ public class SupplierManagementConst {
 	public long getPM_STATUS_PO_REVIEW() {
 		return PM_STATUS_PO_REVIEW;
 	}
+	
+	//#30747
+	public long getPM_STATUS_PO_ESCALTED_TO_APPROVER(){
+		return PM_STATUS_PO_ESCALTED_TO_APPROVER;
+	}
 
 	// 25792 - start
 	public String getSmSupplierBusinessTypeIndividual() {
@@ -1511,6 +1539,15 @@ public class SupplierManagementConst {
 	public String getAuTabIdAdminInfo() {
 		return AU_TAB_ID_ADMIN_INFO;
 	}
+
+	public static String getSupplierApplSearchUrl() {
+		return SUPPLIER_APPL_SEARCH_URL;
+	}
 	// #28895_35501 End
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public String getAuTabIdDisciplinaryActionInfo() {
+		return AU_TAB_ID_DISCIPLINARY_ACTION_INFO;
+	}
+	// #28895_35501_DA End
 
 }

@@ -51,6 +51,7 @@ public class AuditSupplierManagementViewBackingBean extends BaseBackingBean<Audi
 			auSmSearchBean.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
 			tabName = SupplierManagementConst.AU_TAB_ID_BANK_INFO;
 		}
+		auSmSearchBean.setUserId(BigInteger.valueOf(getUserIdSessionFromLoginId()));
 		getManagedBean().setAuSmSearchBean(auSmSearchBean);
 		getManagedBean().setActiveIndex(0);
 		loadAuditInfo(tabName);
@@ -80,6 +81,12 @@ public class AuditSupplierManagementViewBackingBean extends BaseBackingBean<Audi
 		case SupplierManagementConst.AU_TAB_ID_USER_INFO:
 			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO));
 			break;
+		// #28895_35501_DA Start - AUDIT TRAIL SM DA
+		case SupplierManagementConst.AU_TAB_ID_DISCIPLINARY_ACTION_INFO:
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(
+					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION));
+			break;
+		// #28895_35501_DA End
 		case SupplierManagementConst.AU_TAB_ID_ADMIN_INFO:
 			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_ADMIN_INFO));
 			break;

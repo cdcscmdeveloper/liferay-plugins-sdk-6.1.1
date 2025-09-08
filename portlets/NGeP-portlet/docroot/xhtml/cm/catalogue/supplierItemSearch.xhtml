@@ -624,8 +624,9 @@
 		<!-- [#26282] - start -->
 		<ac:disciplinaryActionHistory
 			voList="#{catalogueBackingBean.managedBean.disciplineVOs}"
-			mofView="#{catalogueBackingBean.managedBean.mofSupplier}"
-			dialogMessage="#{catalogueBackingBean.managedBean.disciplinaryMsg}" />
+			dialogMessage="#{catalogueBackingBean.managedBean.disciplinaryMsg}"
+			btnView="true"
+			dialogHeader=""/> <ui:remove>set null value for title at popup DA history</ui:remove>
 		<!-- [#26282] - end -->
 
 		<!-- #27654 start -->
