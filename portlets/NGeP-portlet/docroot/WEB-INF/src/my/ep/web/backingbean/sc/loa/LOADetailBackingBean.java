@@ -12100,7 +12100,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			scWreqDTO.setDocId(this.getManagedBean().getScLoa().getLoaId());
 
-			return workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus().getPmStatus().getStatusId();
+			return workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus() != null ? 
+					workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus().getPmStatus().getStatusId() : CommonConstants.RETURN_ZERO_LONG_ID;
 		}
 		return CommonConstants.RETURN_ZERO_LONG_ID;
 	}

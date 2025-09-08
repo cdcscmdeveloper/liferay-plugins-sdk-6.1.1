@@ -188,6 +188,7 @@ import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.backingbean.sm.ai.SmAIDocBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewSmApplBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
@@ -12905,6 +12906,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		}
 
+	}
+	
+	//#38890
+	/**
+	 * Process documents with OCR
+	 */
+	public void processAI(){
+		SmAIDocBackingBean.processBankStatement(getManagedBean().getSupportDoc());
 	}
 
 	// harris
