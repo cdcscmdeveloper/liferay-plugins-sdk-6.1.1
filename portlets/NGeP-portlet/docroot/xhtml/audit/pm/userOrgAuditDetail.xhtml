@@ -7,17 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true">
-		<div align="right" style="vertical-align: top; width: 100%">
-			<p:commandLink value="#{lbl['lbl.btn.print']}" styleClass="blue_font" style="color:#009ae5 !important;" ajax="false">
-			<p:fileDownload value="#{auditPMDocBBean.generateReport(searchPMUserOrgAuditBackingBean.reqDTO)}" />
-			</p:commandLink>
-			&#160;
-			<p:commandLink value="#{lbl['lbl.btn.download']}" styleClass="blue_font" style="color:#009ae5 !important;" ajax="false">
-			<p:fileDownload value="#{auditPMDocBBean.generateRptExcel(searchPMUserOrgAuditBackingBean.reqDTO, searchPMUserOrgAuditBackingBean.searchDetail)}" />
-			</p:commandLink>
-			&#160;
-		</div>
-		
 		<p:dataTable id="searchDetails" var="detail" rows="10"
 			value="#{searchPMUserOrgAuditBackingBean.searchDetail}"
 			rowIndexVar="index" lazy="true">
@@ -27,7 +16,7 @@
 				<f:convertDateTime pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.audit.actionType']}" style="white-space: normal!important;" width="8%">
+			<p:column headerText="#{lbl['lbl.pm.audit.actionType']}" style="white-space: normal!important;" width="6%">
 				<h:outputText value="#{detail.actionType}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.audit.actionBy']}" style="white-space: normal!important;" width="10%"> 
@@ -36,10 +25,10 @@
 			<p:column headerText="#{lbl['lbl.pm.audit.Organization']}" style="white-space: normal!important;" width="8%"> 
 				<h:outputText value="#{detail.orgName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.audit.Role']}" style="white-space: normal!important;" width="8%"> 
+			<p:column headerText="#{lbl['lbl.pm.audit.Role']}" style="white-space: normal!important;" width="9%"> 
 				<h:outputText value="#{detail.roleName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.audit.docType']}" style="white-space: normal!important;" width="8%">
+			<p:column headerText="#{lbl['lbl.pm.audit.docType']}" style="white-space:pre-wrap!important;word-break: break-word;width: 13%;">
 				<h:outputText value="#{detail.docType}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.audit.docNo']}" style="white-space: normal!important;" width="8%">
@@ -48,10 +37,10 @@
 			<p:column headerText="#{lbl['lbl.pm.audit.fieldName']}" style="white-space: normal!important;" width="8%">
 				<h:outputText value="#{detail.fieldLabelName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.audit.oldValue']}" style="white-space: normal!important;" width="18%">
+			<p:column headerText="#{lbl['lbl.pm.audit.oldValue']}" style="white-space:pre-wrap!important;word-break: break-word;width: 16%;">
 				<h:outputText value="#{detail.oldValue}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.audit.newValue']}" style="white-space: normal!important;" width="18%">
+			<p:column headerText="#{lbl['lbl.pm.audit.newValue']}" style="white-space:pre-wrap!important;word-break: break-word;width: 16%;">
 				<h:outputText value="#{detail.newValue}" />
 			</p:column>	
 		</p:dataTable>
