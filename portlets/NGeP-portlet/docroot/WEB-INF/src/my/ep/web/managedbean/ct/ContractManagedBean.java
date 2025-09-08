@@ -145,8 +145,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> agencySelected;
 	
 	private boolean contractExpired;
-	private List<ScLoa> bondDetail;
 	// #24333 - Start
+	private List<ScLoa> bondDetail;
 	private boolean extendContract = false;
 	private boolean disableOriginalBond = false;
 	private BigDecimal originalOverallAmount;
@@ -211,6 +211,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankName;
 	private Long applID;
 	//End Fix - #33674
+	
+	//24333 - Start
+	private BigDecimal bondPercentage;
+	//24333 - End
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1666,6 +1671,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
 
+	//#24333 - Start
 	public BigDecimal getOriginalOverallAmount() {
 		return originalOverallAmount;
 	}
@@ -1673,4 +1679,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setOriginalOverallAmount(BigDecimal originalOverallAmount) {
 		this.originalOverallAmount = originalOverallAmount;
 	}
+	
+	public BigDecimal getBondPercentage() {
+		return bondPercentage;
+	}
+
+	public void setBondPercentage(BigDecimal bondPercentage) {
+		this.bondPercentage = bondPercentage;
+	}
+	//#24333 - End
 }

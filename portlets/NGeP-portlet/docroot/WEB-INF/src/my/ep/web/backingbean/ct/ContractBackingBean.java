@@ -2663,17 +2663,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 			getManagedBean().setGstTotalAmount(staxAmt.add(gstAmt.add(contractAmt)));
 			
-			// #24333 - Start
-			if (!getManagedBean().isDirectPurchase()
-					&& !getManagedBean().getCtContractAmount().isBondExempted()
-					&& (getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() || getManagedBean()
-							.getContractVer().getCtContractAmount().isBondReq())) {
-				getManagedBean().getCtContractAmount().setTotalBondAmt(
-						getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt());
-			}
-			// #24333 - End
-
-
 		}
 		
 		//#24333 Start - Remove Code
@@ -4423,13 +4412,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public boolean isPerformanceBond(){
 		//#24333
-		if(getManagedBean().getCtContractAmount().isBondReq()
+		if((getManagedBean().getCtContractAmount().isBondReq() && getManagedBean().getCtContractAmount().getTotalBondAmt() != null)
 						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 						&& !getManagedBean().getCtContractAmount().isBondExempted()
 						&& (!getManagedBean().isCommonView()
 								|| getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
 								equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY))){
-								
+			
 			return  true;
 		}
 		return false;
@@ -4614,34 +4603,43 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to retrieve the bond amount
 	 * in text format.
 	 * Putra 24333
-	 * @return  bond amount in text format.
+	 *
+	 * @return bond amount in text format (in words), or "N/A" if unavailable or zero
 	 */
 	public String getBondAmountInText() {
-		String lang = new FacesScopes().getUserLocale().getLanguage();
+		FacesScopes scopes = new FacesScopes();
+	    Locale locale = scopes.getUserLocale();
+	    String lang = locale.getLanguage();
 
-	    if (getManagedBean() == null) {
-	        return "";
-	    }
+	    // Get N/A message from resource bundle
+	    String na = ResourceBundleUtils.getMessage("lbl.txt.na", 
+	                      ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
+	    // Retrieve contract amount and total bond amount
 	    CtContractAmount contractAmount = getManagedBean().getCtContractAmount();
 	    if (contractAmount == null || contractAmount.getTotalBondAmt() == null) {
-	        return "";
+	        return na;
 	    }
 
-	    BigDecimal bondAmtDecimal = contractAmount.getTotalBondAmt();
-	    if (BigDecimal.ZERO.compareTo(bondAmtDecimal) == 0) {
-	        return "";
+	    BigDecimal bondAmt = contractAmount.getTotalBondAmt();
+	    if (bondAmt.compareTo(BigDecimal.ZERO) == 0) {
+	        return na;
 	    }
 
-	    String formattedAmount = new DecimalFormat("#.00").format(bondAmtDecimal);
+	    // Format to 2 decimal places using locale
+	    DecimalFormat df = new DecimalFormat("#.00");
+	    df.setDecimalFormatSymbols(new DecimalFormatSymbols(locale));
+	    String formattedAmount = df.format(bondAmt);
 
-	    if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+	    // Convert to words based on language
+	    if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
 	        return NumberWordUtilEn.convert(formattedAmount);
-	    } else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+	    }
+	    if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
 	        return NumberWordUtil.convert(formattedAmount);
 	    }
 
-	    return "";
+	    return na;
 	}
 	//#24333 - End
 	
@@ -4652,12 +4650,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
-		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)){	
-			
-			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
-		}else{
-			return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
-		}
+		return String.valueOf(getManagedBean().getCtContractAmount().getContractPeriodBond());
 	}
 	
 	/**
@@ -4736,7 +4729,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				|| statusId == ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
 				|| statusId == ContractStatusConst.FA_PENDING_VERIFICATION.longValue()
 				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION.longValue()
-				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.longValue();
+				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.longValue()
+				|| statusId == ContractStatusConst.FA_LOA_COMPLETED.longValue();
 	}
 	//#24333 - End
 	
@@ -5054,23 +5048,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return BigDecimal total amount
 	 */
 	public BigDecimal calculateOriginalOverallAmount() {
-		BigDecimal gstAmt = BigDecimal.ZERO;
-		BigDecimal staxAmt = BigDecimal.ZERO;
-		BigDecimal contractAmt = BigDecimal.ZERO;
+		CtContractAmount contractAmount = getManagedBean().getCtContractAmount();
+		ScLoa loa = getManagedBean().getContractVer().getCtContract().getLoa();
+	
+	    BigDecimal total = getManagedBean().getCtContractAmount().getOverallCtAmtPbond();
+	    // Early return 0.0 if OverallCtAmtPbond is null
+	    if (total == null) {
+	        return BigDecimal.ZERO;
+	    }
 
-		if (getManagedBean().getContractVer().getCtContract().getLoa() != null) {
-			if (getManagedBean().getContractVer().getCtContract().getLoa().getGstAmt() != null)
-				gstAmt = getManagedBean().getContractVer().getCtContract().getLoa().getGstAmt();
+	    // Skip bond calculation if direct purchase or bond exempted
+	    if (getManagedBean().isDirectPurchase() || getManagedBean().getCtContractAmount().isBondExempted()) {
+	        return total;
+	    }
 
-			if (getManagedBean().getContractVer().getCtContract().getLoa().getSstAmt() != null)
-				staxAmt = getManagedBean().getContractVer().getCtContract().getLoa().getSstAmt();
+	    // Check if bond is required in LOA or contract amount to set bond percentage
+	    if (loa.isBondReq() || contractAmount.isBondReq()) {
+	        String periodStr = calculateBondPeriod();
+	        BigDecimal contractPeriod = new BigDecimal(periodStr); // Ensure periodStr is valid numeric string
+	        getManagedBean().setBondPercentage(
+	            PerformanceBondUtil.calculatePerformanceBondPercentage(total, contractPeriod)
+	        );
+	    }
 
-			if (getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt() != null)
-				contractAmt = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
-		}
-
-		BigDecimal total = contractAmt.add(gstAmt).add(staxAmt);
-		return total;
+	    return total;
 	}
 	
 	/**
