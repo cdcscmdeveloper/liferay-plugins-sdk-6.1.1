@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.ai;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,13 +15,15 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.el.MethodExpression;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -31,33 +32,20 @@ import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
-
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.helper.EntityHelper;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
-import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmPersonnelAddress;
-import my.ep.persistence.entity.sm.SmRelatedCompany;
-import my.ep.persistence.entity.sm.SmStaffAcademic;
-import my.ep.persistence.entity.sm.SmStaffExperience;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 
@@ -74,9 +62,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	private static List<SmApplDocFile> docs = new ArrayList<>();
 	private static String folderAI = Calendar.getInstance().get(Calendar.YEAR) + "/SM/APPLICATION/AI/";
-	private static String mentionText = "mentionText";
+	private static String mentionTextStr = "mentionText";
 	private static String confidence = "confidence";
-	private static String googleSkipAI = EpPropertiesUtils.getInstance().getProperty("google.doc.skip");
+	private static String entitiesStr = "entities";
+	private static String extractedDataStr = "extractedData";
 	private static String googleUrl = EpPropertiesUtils.getInstance().getProperty("google.doc.url");
 	private static double minConfidence = 0.95;
 	
@@ -84,7 +73,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static TenancyEntity tenancy = null;
 	private List<EPFEntity.EmployeeInfo> selectedEmployees;
 	
-	private static String tempGoogleUrl = "http://172.23.114.72:5000/process"; //http://192.168.62.17:5000/process";
+	private static String tempGoogleUrl = "http://192.168.62.17:5000/process-v2";
+	//172.23.114.72, 192.168.62.17 (dev), 192.168.120.238 (jenkins)"
 	
 	
 	/**
@@ -119,34 +109,54 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	/**
 	 * @param docType
-	 * @throws InterruptedException
 	 */
-	public void processDoc(String docType) throws InterruptedException{
+	public static void processDoc(String docType){
 		log.info("...wip\t"+docs.size() +"\t_" + docType);
 		if (EntityHelper.isCollectionEmpty(docs)){
 			return;
 		}
-		if (StringUtils.isEmpty(googleUrl)){
-			googleUrl = tempGoogleUrl;
+		//process multiple docs
+		List<JSONArray> entities = new ArrayList<>();
+		for (SmApplDocFile doc : docs){
+			entities.add(sendDocumentOCR(docType, doc.getFilePath(), doc.getFileName()));
 		}
 		
 		if ("EPF".equals(docType)){
-			processEPF(docs.get(0).getFilePath(), docs.get(0).getFileName());
+			processEPF(entities);
 			
 		} else if ("TNC".equals(docType)){
-			processTenancyAgreement(docs.get(0).getFilePath(), docs.get(0).getFileName());
+			processTenancyAgreement(entities);
 			
 		} else {
-			processBank(docs.get(0).getFilePath(), docs.get(0).getFileName());
+			processBank(entities);
 		}
+	}
+	
+	private static JSONArray sendDocumentOCR(String docType, String filepath, String filename){
+		if (filename.endsWith(".json")){
+			log.info("skip AI");
+			byte[] fileData = getFakeData(filepath + filename);
+			return getJsonEntities(fileData);
+			
+		} else if (filename.endsWith("ai_demo.pdf")){
+			InputStream is;
+			try {
+				is = sendDocumentToExternalService(filepath, filename);
+				return getJsonEntitiesFromStream(is);
+			} catch (IOException e) {
+				log.error(" ", e);
+			}
+		}
+		return null;
 	}
 	
 	/**
 	 * 
 	 * @param docType
 	 * @param appl
+	 * @param methodActionStr
 	 */
-	public void submit(String docType, SmAppl appl){
+	public void submit(String docType, SmAppl appl, String methodActionStr){
 		if (StringUtils.isEmpty(docType) || appl == null){
 			return;
 		}
@@ -155,8 +165,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			submitEPF(appl);
 			
 		} else if ("TNC".equals(docType)){
-			log.info("woah, tenancy");
 			submitTenancy(appl);
+		}
+		//save smAppl
+		if (StringUtils.isNotBlank(methodActionStr)) {
+			MethodExpression methodExp = FacesScopes.createMethodExpression(
+					FacesContext.getCurrentInstance(), methodActionStr, null, new Class[] {});
+			methodExp.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[] {});
 		}
 	}
 	
@@ -171,6 +186,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			per.setEpfNo(employee.getNoAhliKWSP());
 			
 			//SmApplicationUtil - setDefaultPersonnelValues()
+			// or check SssmSO on how to save SmPersonnels
+			per.setPersonnelId(null);
 			per.setEpRole("");
 			per.setShareAmt(new BigDecimal(0));
 			per.setSharePercentage(new BigDecimal(0));
@@ -179,20 +196,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			per.setSmAppl(appl);
 			per.setBumiFlg(1);
 			per.setMuslimFlg(1);
-			per.setPmCountry(new PmCountry());
-			per.setPmRace(new PmRace());
-			per.setIdentificationType(new PmParameter());
-			per.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-			per.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
-			per.setSmStaffExperiences(new ArrayList<SmStaffExperience>());
-			per.setSmRelatedCompanies(new ArrayList<SmRelatedCompany>());
-			per.setSmAssociationBodies(new ArrayList<SmAssociationBody>());
-			per.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 			
 			appl.getSmPersonnels().add(per);
 		}
 	}
 	
+	//wip
 	private void submitTenancy(SmAppl appl){
 		SmFacility basicCompany = new SmFacility();
 		if (!StringUtils.isEmpty(tenancy.namaPemilikPremis)){
@@ -206,165 +215,115 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				log.error("Invalid Rent", e);
 			}
 		}
-		
-		
 	}
 	
 
 	/**
-	 * 
-	 * @param doc
+	 * @param suppDoc
 	 */
-	public static void processBankStatement(SmApplSupportDoc doc){
-		if (doc == null || doc.getPmDocument() == null || doc.getSmAppl() == null
-				|| doc.getSmAppl().getSmSupplier() == null){
+	public static void processBankStatement(SmAppl appl, SmApplSupportDoc suppDoc){
+		if (suppDoc == null || suppDoc.getPmDocument() == null || appl == null || appl.getSmSupplier() == null){
+			return;
+		}
+		if (EntityHelper.isCollectionEmpty(suppDoc.getSmApplDocFiles())){
 			return;
 		}
 		//PENYATA AKAUN SEMASA YANG TERKINI ATAS NAMA SYARIKAT / SLIP DEPOSIT (all zones)
 		List<Long> bankStatementIds = Arrays.asList(529L, 633L, 676L);
-		if (!bankStatementIds.contains(doc.getPmDocument().getDocumentId())){
+		if (!bankStatementIds.contains(suppDoc.getPmDocument().getDocumentId())){
 			log.info("...not bank statement");
 			return;
 		}
-		if (StringUtils.isEmpty(googleUrl)){
-			googleUrl = tempGoogleUrl;
+		List<JSONArray> entities = new ArrayList<>();
+		for (SmApplDocFile doc : suppDoc.getSmApplDocFiles()){
+			entities.add(sendDocumentOCR("bank", doc.getFilePath(), doc.getFileName()));
 		}
-		//wip - need to combine all docs  & convert to base64
-		SmApplDocFile docFile = doc.getSmApplDocFiles().get(0);
-		String filepath = docFile.getFilePath() + docFile.getFileName();
+		List<BankStatementEntity> banks = processBank(entities);
+		
+		// wip - need to map based on fields received in JSON
+		suppDoc.setMappedFieldAI("Bank Info:<br/>Bank Name, Account No., Company Name");
+		
+		validateBankEntity(appl, banks);
+	}
+	
+	private static void validateBankEntity(SmAppl appl, List<BankStatementEntity> banks){
+		String companyNameSupp = appl.getSmSupplier().getCompanyName();
+		log.info("...processBankStatement1\t..." + companyNameSupp);
+		Map<String, String> bankAccounts = new HashMap<>();
+		for (SmSupplierBank suppBank : appl.getSmSupplierBanks()){
+			bankAccounts.put(suppBank.getAccountNo(), suppBank.getPmFinancialOrg().getFinOrgName());
+		}
+		for (BankStatementEntity bank : banks){
+			String companyNameJson = bank.accountHolderName;
+			
+			log.info("...processBankStatement\t..." + companyNameJson);
+			String bankName = bankAccounts.get(bank.accountNo);
+			if (bankName == null){
+				bankName = "";
+			}
+			log.info("account no:"+bank.accountNo);
+			log.info("match with bank:"+bankName);
 
-		//send to Google
-		JSONArray entities = null;
-		if (docFile.getFileName().endsWith(".json")){
-			log.info("skip AI");
-			byte[] fileData = getFakeData(filepath);
-			entities = getJsonEntities(fileData); 
-		} else if (docFile.getFileName().endsWith("ai_demo.pdf")){
-			log.info("use google url: "+googleUrl);
-			InputStream is;
-			try {
-				String doc64 = getBase64(doc);
-				is = sendDocumentToExternalService(doc64, "bank", docFile.getFileName());
-				entities = getJsonEntitiesFromStream(is);
-			} catch (IOException e) {
-				log.error(" ", e);
-			} catch (DocumentException e) {
-				log.error(" ", e);
+			if (!StringUtils.equals(companyNameJson, companyNameSupp)){
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.ai.bank.verify", new String[] { "" }));
+				FacesContext.getCurrentInstance().addMessage("ai", msg);
 			}
 		}
 		
-		if (entities == null){
-			return;
-		}
-		log.info(entities);
-		BankStatementEntity bankStatement = new BankStatementEntity(entities);
-		if (StringUtils.isEmpty(bankStatement.namaSyarikat)){
-			return;
-		}
-
-		String companyNameJson = bankStatement.namaSyarikat;
-		String companyNameSupp = doc.getSmAppl().getSmSupplier().getCompanyName();
-		log.info("...processBankStatement1\t..." + companyNameJson);
-		log.info("...processBankStatement2\t..." + companyNameSupp);
-
-		// wip - need to map based on fields received in JSON
-		//doc.setMappedFieldAI("Bank Info:<br/>Bank Name, Account No.");
-
-		if (!StringUtils.equals(companyNameJson, companyNameSupp)){
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.ai.bank.verify", new String[] { "" }));
-			FacesContext.getCurrentInstance().addMessage("ai", msg);
-		}
+		//check for bank name, bank account
 	}
 	
 	/**
-	 * @param filepath
-	 * @param filename
+	 * @param entities
+	 * @return
 	 */
-	public static void processBank(String filepath, String filename){
-		JSONArray entities = null;
-		if (filename.endsWith(".json")){
-			log.info("skip AI");
-			byte[] fileData = getFakeData(filepath + filename);
-			entities = getJsonEntities(fileData);
-			
-		} else if (filename.endsWith("ai_demo.pdf")){
-			log.info("use google url: "+googleUrl);
-			InputStream is;
-			try {
-				String doc64 = getBase64(filepath);
-				is = sendDocumentToExternalService(doc64, "tenancy", filename);
-				entities = getJsonEntitiesFromStream(is);
-			} catch (IOException e) {
-				log.error(" ", e);
-			}
+	public static List<BankStatementEntity> processBank(List<JSONArray> entities){
+		if (EntityHelper.isCollectionEmpty(entities)){
+			return new ArrayList<>();
 		}
-		if (entities == null){
-			return;
+		List<BankStatementEntity> banks = new ArrayList<>();
+		for (JSONArray entity : entities){
+			BankStatementEntity bank = new BankStatementEntity(entity);
+			banks.add(bank);
+			log.info("COMPANY NAME: "+bank.accountHolderName);
 		}
-		log.info(entities);
-		BankStatementEntity bank = new BankStatementEntity(entities);
-		log.info(bank);
-		log.info("COMPANY NAME: "+bank.namaSyarikat);
+		return banks;
 	}
 
 	/**
-	 * @param filepath
-	 * @param filename
+	 * @param entities
 	 */
-	public static void processTenancyAgreement(String filepath, String filename){
-		JSONArray entities = null;
-		if (filename.endsWith(".json")){
-			log.info("skip AI");
-			byte[] fileData = getFakeData(filepath + filename);
-			entities = getJsonEntities(fileData);
-			
-		} else if (filename.endsWith("ai_demo.pdf")){
-			log.info("use google url: "+googleUrl);
-			InputStream is;
-			try {
-				String doc64 = getBase64(filepath);
-				is = sendDocumentToExternalService(doc64, "tenancy", filename);
-				entities = getJsonEntitiesFromStream(is);
-			} catch (IOException e) {
-				log.error(" ", e);
-			}
-		}
-		if (entities == null){
+	public static void processTenancyAgreement(List<JSONArray> entities){
+		if (EntityHelper.isCollectionEmpty(entities)){
 			return;
 		}
-		log.info("entities");
-		tenancy = new TenancyEntity(entities);
+		List<TenancyEntity> tes = new ArrayList<>();
+		for (JSONArray entity : entities){
+			TenancyEntity te = new TenancyEntity(entity);
+			tes.add(te);
+			if (tenancy == null){
+				tenancy = te;
+			}
+		}
 		log.info(tenancy);
 	}
 
 	/**
-	 * @param filepath
-	 * @param filename
+	 * @param entities
 	 */
-	public static void processEPF(String filepath, String filename){
-		JSONArray entities = null;
-		if (filename.endsWith(".json")){
-			log.info("skip AI");
-			byte[] fileData = getFakeData(filepath + filename);
-			entities = getJsonEntities(fileData);
-			
-		} else if (filename.endsWith("ai_demo.pdf")){
-			log.info("use google url: "+googleUrl);
-			InputStream is;
-			try {
-				String doc64 = getBase64(filepath + filename);
-				is = sendDocumentToExternalService(doc64, "epf", filename);
-				entities = getJsonEntitiesFromStream(is);
-			} catch (IOException e) {
-				log.error(" ", e);
-			}
-		}
-		if (entities == null){
+	public static void processEPF(List<JSONArray> entities){
+		if (EntityHelper.isCollectionEmpty(entities)){
 			return;
 		}
-		log.info("entities");
-		epf = new EPFEntity(entities);
+		List<EPFEntity> ees = new ArrayList<>();
+		for (JSONArray entity : entities){
+			EPFEntity ee = new EPFEntity(entity);
+			ees.add(ee);
+			if (epf == null){
+				epf = ee;
+			}
+		}
 		log.info(epf);
 	}
 	
@@ -418,16 +377,16 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		try {
 			String content = new String(fileData, StandardCharsets.UTF_8);
 			JSONObject root = new JSONObject(content);
-			if (!root.has("extractedData")) {
+			if (!root.has(extractedDataStr)) {
 				log.warn("  No extractedData found in JSON");
 				return null;
 			}
-			JSONObject extractedData = root.getJSONObject("extractedData");
-			if (!extractedData.has("entities")) {
+			JSONObject extractedData = root.getJSONObject(extractedDataStr);
+			if (!extractedData.has(entitiesStr)) {
 				log.warn("  No entities found in extractedData");
 				return null;
 			}
-			JSONArray entities = extractedData.getJSONArray("entities");
+			JSONArray entities = extractedData.getJSONArray(entitiesStr);
 			if (entities.length() == 0) {
 				log.warn("  No entities found");
 				return null;
@@ -453,33 +412,28 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 			
 			JSONObject root = new JSONObject(content.toString());
-			if (!root.has("extractedData")) {
-				log.warn("  No extractedData found in JSON");
+			if (!root.has("data")) {
+				log.warn("  No data found in JSON");
 				return null;
 			}
-			JSONObject extractedData = root.getJSONObject("extractedData");
-			if (!extractedData.has("entities")) {
+			JSONObject data = root.getJSONObject("data");
+			if (!data.has(extractedDataStr)) {
+				log.warn("  No extractedData found in data");
+				return null;
+			}
+			JSONObject extractedData = data.getJSONObject(extractedDataStr);
+			if (!extractedData.has(entitiesStr)) {
 				log.warn("  No entities found in extractedData");
 				return null;
 			}
-			JSONArray entities = extractedData.getJSONArray("entities");
+			JSONArray entities = extractedData.getJSONArray(entitiesStr);
 			if (entities.length() == 0) {
 				log.warn("  No entities found");
 				return null;
 			}
 			return entities;
-		} catch (IOException e) {
+		} catch (IOException | JSONException e) {
 			log.error(" Error reading InputStream", e);
-		} catch (JSONException e) {
-			log.error(" Error parsing JSON from InputStream", e);
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					log.warn("Error closing reader", e);
-				}
-			}
 		}
 		return null;
 	}
@@ -493,54 +447,57 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		this.selectedEmployees = selectedEmployees;
 	}
 
-	
-	private static String getBase64(String filepath) throws IOException{
-		String tempDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/"+filepath;
-		File file = new File(tempDir);
-		byte[] pdf = Files.readAllBytes(file.toPath());
-		return DatatypeConverter.printBase64Binary(pdf);
-	}
 
-	private static String getBase64(SmApplSupportDoc doc) throws IOException, DocumentException {
-		if (doc == null || EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
-			return "";
-		}
-		//based on commonUploadFile()
-		String tempDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/";
-		List<String> pdfPaths = new ArrayList<>();
-		for (SmApplDocFile file : doc.getSmApplDocFiles()) {
-			if (!file.getFileName().endsWith("pdf")) {
-				continue;
-			}
-			pdfPaths.add(tempDir + file.getFilePath() + file.getFileName());
-		}
-		byte[] combinedPDF = combinePDF(pdfPaths);
-		return DatatypeConverter.printBase64Binary(combinedPDF);
-	}
-
-	private static InputStream sendDocumentToExternalService(String base64, 
-			String docType, String filename) throws IOException {
+	private static InputStream sendDocumentToExternalService(String filepath, String filename) 
+			throws IOException {
 		
-		String payload = String.format("{\"document\":\"%s\",\"doc_type\":\"%s\",\"filename\":\"%s\"}", 
-				base64, docType, filename);
-
+		if (StringUtils.isEmpty(googleUrl)) {
+			googleUrl = tempGoogleUrl;
+		}
+		log.info("use google url: " + googleUrl);
+		
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR) + "/" + filepath + filename;
+		File file = new File(tempDir);
+		byte[] fileBytes = Files.readAllBytes(file.toPath());
+		
+		// Create boundary for multipart
+		String boundary = "----WebKitFormBoundary" + System.currentTimeMillis();
+		String crlf = "\r\n";
+		
 		URL url = new URL(googleUrl);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 		conn.setDoOutput(true);
-		conn.setConnectTimeout(30*1000);
-		conn.setReadTimeout(120*1000);
-
+		conn.setConnectTimeout(30 * 1000); // 30 sec
+		conn.setReadTimeout(120 * 1000); // 2 min
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("--").append(boundary).append(crlf);
+		sb.append("Content-Disposition: form-data; name=\"documentType\"").append(crlf);
+		sb.append(crlf);
+		sb.append("bank").append(crlf);
+		
+		sb.append("--").append(boundary).append(crlf);
+		sb.append("Content-Disposition: form-data; name=\"file\"; filename=\"")
+			.append(filename).append("\"").append(crlf);
+		sb.append("Content-Type: application/pdf").append(crlf);
+		sb.append(crlf);
+		
 		OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
-		out.write(payload);
+		out.write(sb.toString());
+		out.flush();
+		
+		conn.getOutputStream().write(fileBytes);
+		
+		out.write(crlf + "--" + boundary + "--" + crlf);
 		out.flush();
 		out.close();
 
 		int statusCode = conn.getResponseCode();
-		log.info("External Service Response Status: " + statusCode);
+		log.info("API Response Code: " + statusCode);
 
 		if (statusCode >= 200 && statusCode < 300) {
 			return conn.getInputStream();
@@ -549,52 +506,19 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		throw new IOException("HTTP Error " + statusCode + ": " + conn.getResponseMessage());
 	}
 
-	/**
-	 * 
-	 * @param pdfPaths
-	 * @return
-	 * @throws IOException
-	 * @throws DocumentException
-	 */
-	private static byte[] combinePDF(List<String> pdfPaths) throws IOException, DocumentException {
-		if (pdfPaths.size() == 1){
-			File file = new File(pdfPaths.get(0));
-			return Files.readAllBytes(file.toPath());
-		}
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Document document = new Document();
-		PdfWriter writer = PdfWriter.getInstance(document, baos);
-		document.open();
-		PdfContentByte cb = writer.getDirectContent();
-
-		for (String pdfPath : pdfPaths) {
-			PdfReader reader = new PdfReader(pdfPath);
-			int pageCount = reader.getNumberOfPages();
-
-			for (int i = 1; i <= pageCount; i++) {
-				document.newPage();
-				PdfImportedPage page = writer.getImportedPage(reader, i);
-				cb.addTemplate(page, 0, 0);
-			}
-			reader.close();
-		}
-		document.close();
-		return baos.toByteArray();
-	}
 
 	private static class BankStatementEntity {
-		private String namaBank;
-		private String noAkaun;
-		private String namaSyarikat;
-		private String alamatBank;
-		private String cawanganBank;
+		private String bankName;
+		private String accountNo;
+		private String accountHolderName;
+		private String bankBranch;
 
 		private BankStatementEntity(JSONArray entities) {
 			try {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(mentionText, "");
+					String text = entity.optString("value", "");
 					double conf = entity.optDouble(confidence, 0.0);
 					if (conf < minConfidence){
 						log.info("Patut skip la kan? " + conf);
@@ -603,20 +527,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 						continue;
 					}
 					switch (type) {
-					case "Nama_Bank":
-						this.namaBank = text.trim();
+					case "Bank_Name":
+						this.bankName = text.trim();
 						break;
-					case "No_Akaun":
-						this.noAkaun = text.trim();
+					case "Account_Number":
+						this.accountNo = text.trim();
 						break;
-					case "Nama_Syarikat":
-						this.namaSyarikat = text.trim();
+					case "Account_Holder_Name":
+						this.accountHolderName = text.trim();
 						break;
-					case "Alamat_Bank":
-						this.alamatBank = text.trim();
-						break;
-					case "Cawangan_Bank":
-						this.cawanganBank = text.trim();
+					case "Bank_Branch":
+						this.bankBranch = text.trim();
 						break;
 					default:
 					}	
@@ -629,20 +550,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
-			if (namaBank != null) {
-				sb.append("Nama_Bank: ").append(namaBank).append("\n");
+			if (bankName != null) {
+				sb.append("bankName: ").append(bankName).append("\n");
 			}
-			if (noAkaun != null) {
-				sb.append("No_Akaun: ").append(noAkaun).append("\n");
+			if (accountNo != null) {
+				sb.append("accountNo: ").append(accountNo).append("\n");
 			}
-			if (namaSyarikat != null) {
-				sb.append("Nama_Syarikat: ").append(namaSyarikat).append("\n");
+			if (accountHolderName != null) {
+				sb.append("accountHolderName: ").append(accountHolderName).append("\n");
 			}
-			if (alamatBank != null) {
-				sb.append("Alamat_Bank: ").append(alamatBank).append("\n");
-			}
-			if (cawanganBank != null) {
-				sb.append("Cawangan_Bank: ").append(cawanganBank).append("\n");
+			if (bankBranch != null) {
+				sb.append("bankBranch: ").append(bankBranch).append("\n");
 			}
 			return sb.toString();
 		}
@@ -652,7 +570,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * JSON mapping for EPF document
 	 * @author AI
 	 */
-	public static class EPFEntity {
+	public static class EPFEntity {		//outdated format
 		private EmployerInfo employer;
 		private List<EmployeeInfo> employees;
 
@@ -731,7 +649,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(mentionText, "");
+					String text = entity.optString(mentionTextStr, "");
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
 						continue;
 					}
@@ -761,7 +679,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				for (int j = 0; j < properties.length(); j++) {
 					JSONObject prop = properties.getJSONObject(j);
 					String propType = prop.optString("type", "");
-					String propText = prop.optString(mentionText, "");
+					String propText = prop.optString(mentionTextStr, "");
 
 					if ("Alamat_Majikan".equals(propType)) {
 						empAlamat = propText.trim();
@@ -788,7 +706,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			for (int j = 0; j < empProperties.length(); j++) {
 				JSONObject prop = empProperties.getJSONObject(j);
 				String propType = prop.optString("type", "");
-				String propText = prop.optString(mentionText, "");
+				String propText = prop.optString(mentionTextStr, "");
 
 				switch (propType) {
 				case "No_Ahli_KWSP":
@@ -813,7 +731,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 	}
 
-	private static class TenancyEntity {
+	private static class TenancyEntity {	//outdated format
 		private String alamatSewaanPremis;
 		private String namaPemilikPremis;
 		private String sewaanBulanan;
@@ -829,7 +747,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(mentionText, "");
+					String text = entity.optString(mentionTextStr, "");
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
 						continue;
 					}
@@ -853,7 +771,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		
 		private void setAddress(JSONObject entity){
-			// Parse address components if available
 			JSONObject addressComponents = entity.optJSONObject("addressComponents");
 			if (addressComponents != null) {
 				this.postcode = addressComponents.optString("postcode", "").trim();

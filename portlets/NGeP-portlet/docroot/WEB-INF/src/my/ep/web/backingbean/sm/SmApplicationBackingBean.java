@@ -12913,7 +12913,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * Process documents with OCR
 	 */
 	public void processAI(){
-		SmAIDocBackingBean.processBankStatement(getManagedBean().getSupportDoc());
+		SmAIDocBackingBean.processBankStatement(getManagedBean().getSmAppl(),
+				getManagedBean().getSupportDoc());
 	}
 
 	// harris
