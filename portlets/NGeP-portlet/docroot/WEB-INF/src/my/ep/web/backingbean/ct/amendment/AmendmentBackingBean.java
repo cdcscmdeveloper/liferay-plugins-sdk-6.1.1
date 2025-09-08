@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.text.DecimalFormatSymbols; //24333
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -26,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale; //24333
 import java.util.Map;
 import java.util.Set;
 
@@ -1626,18 +1628,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			// 24333 - Start
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa() != null) {
-				ScLoa ctloa = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa();
-				if (ctloa.getGstAmt() == null) {
-					ctloa.setGstAmt(BigDecimal.ZERO);
-				}
-				if (ctloa.getSstAmt() == null) {
-					ctloa.setSstAmt(BigDecimal.ZERO);
-				}
-				ctBackingBean.getManagedBean().setOriginalOverallAmount(
-						ctloa.getLoaAmt().add(ctloa.getGstAmt().add(ctloa.getSstAmt())));
-
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getOverallCtAmtPbond() == null){
+				ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().setOverallCtAmtPbond(BigDecimal.ZERO);
 			}
+			ctBackingBean.getManagedBean().setOriginalOverallAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getOverallCtAmtPbond());
 			// 24333 - Start
 			
 			// Amendment process	  
@@ -4260,45 +4254,45 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	//#24333 - Start
 	/**
-	 * The method used to retrieve the new bond amount
-	 * in text format.
-	 * 
-	 * @return new bond amount in text format.
+	 * Retrieves the bond amount in text format (in words).
+	 * Returns "N/A" if bond amount is not available or zero.
+	 *
+	 * @return bond amount in words, or "N/A" if null or zero
 	 */
-
 	public String getBondAmountInText() {
-		String lang = new FacesScopes().getUserLocale().getLanguage();
+		FacesScopes scopes = new FacesScopes();
+	    Locale locale = scopes.getUserLocale();
+	    String lang = locale.getLanguage();
 
-		if (ctBackingBean == null
-				|| ctBackingBean.getManagedBean() == null
-				|| ctBackingBean.getManagedBean().getContractVer() == null
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
-			return "";
-		}
+	    String na = ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
-		BigDecimal bondAmount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()
-				.getBondAmt();
+	    // Traverse the object chain with null checks
+	    CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
+	    if (contractVer == null || 
+	        contractVer.getCtAmendment() == null || 
+	        contractVer.getCtAmendment().getAmendmentLoa() == null || 
+	        contractVer.getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
+	        return na;
+	    }
 
-		if (bondAmount.compareTo(BigDecimal.ZERO) == 0) {
-			return "";
-		}
+	    BigDecimal bondAmt = contractVer.getCtAmendment().getAmendmentLoa().getBondAmt();
 
-		// Format the amount to two decimal places
-		DecimalFormat decimalFormat = new DecimalFormat("#.00");
-		String formattedAmount = decimalFormat.format(bondAmount);
+	    if (BigDecimal.ZERO.compareTo(bondAmt) == 0) {
+	        return na;
+	    }
 
-		// Convert to words based on language
-		if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
-			return NumberWordUtilEn.convert(formattedAmount);
-		}
+	    // Format to 2 decimal places
+	    DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(locale));
+	    String formatted = df.format(bondAmt);
 
-		if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
-			return NumberWordUtil.convert(formattedAmount);
-		}
+	    // Convert based on language
+	    if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
+	        return NumberWordUtilEn.convert(formatted);
+	    } else if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
+	        return NumberWordUtil.convert(formatted);
+	    }
 
-		return "";
+	    return na;
 	}
 	//#24333 - End
 	

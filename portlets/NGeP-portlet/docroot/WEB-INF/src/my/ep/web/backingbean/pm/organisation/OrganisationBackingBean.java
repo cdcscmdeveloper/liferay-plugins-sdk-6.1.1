@@ -1438,7 +1438,41 @@ public class OrganisationBackingBean extends
 								message));
 				/************ AUDIT 35509 - shaqimi start*************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)) {
-					getManagedBean().setNewProfileId(resDTO.getPmOrgProfile().getOrgProfileId());
+					getManagedBean().setNewProfileId(resDTO.getPmOrgProfile().getOrgProfileId());getManagedBean().setNewPmOrgProfile(resDTO.getPmOrgProfile());
+
+					
+					if(orgProfile.isBrandNew()){
+						for (PmAddressType pmAddressType : resDTO.getPmOrgProfile().getPmAddressTypes()) {
+							getManagedBean().getOfficeContactPerson().setContactId(pmAddressType.getPmContacts().get(0).getContactId());
+							getManagedBean().getOfficeAddress().setAddressId(pmAddressType.getPmAddress().getAddressId());
+						}
+					}
+					
+					for(SmSupplierBank smSupplierBank : this.getManagedBean().getSmSupplierBanks()){
+						for(SmSupplierBank newSupplierBank : this.getManagedBean().getNewAuditSmSupplierBanks()){
+							if(smSupplierBank.getAccountNo().equals(newSupplierBank.getAccountNo())){
+								newSupplierBank.setSupplierBankId(smSupplierBank.getSupplierBankId());
+							}
+						}
+					}
+					
+					for(PmProfileGroup pmProfileGroup : this.getManagedBean().getProfileGroup()){
+						for(PmProfileGroup newProfileGroup : this.getManagedBean().getNewAuditProfileGroup()){
+							if(pmProfileGroup.getAuthorizedOrgProfile().getOrgValidity().getOrgCode()
+									.equals(newProfileGroup.getAuthorizedOrgProfile().getOrgValidity().getOrgCode())){
+								newProfileGroup.setProfileGroupId(pmProfileGroup.getProfileGroupId());
+							}
+						}
+					}
+					
+					for(SmPersonnel smPersonnel : this.getManagedBean().getSmPersonnels()){
+						for(SmPersonnel newPersonnel : this.getManagedBean().getNewAuditSmPersonnels()){
+							if(smPersonnel.getPmUser().getLoginId().equals(newPersonnel.getPmUser().getLoginId())){
+								newPersonnel.setPersonnelId(smPersonnel.getPersonnelId());
+							}
+						}
+					}
+					
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_ORG_PROFILE);
 				}
 				
@@ -1928,7 +1962,7 @@ public class OrganisationBackingBean extends
 						&& address.getAddressId() != null
 						&& address.getAddressId().equals(
 								manualAddr.getAddressId())) {
-					getManagedBean().getAddressTypesList().set(i, adressType);
+					getManagedBean().getAddressTypesList().set(i, adressType);					
 					deliveryAddr.setPmAddress(manualAddr);
 					/**********************************AUDIT 35509******************************************/
 					getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr));

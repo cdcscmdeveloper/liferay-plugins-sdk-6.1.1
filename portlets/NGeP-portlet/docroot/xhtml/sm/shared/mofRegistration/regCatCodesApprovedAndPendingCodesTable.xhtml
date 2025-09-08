@@ -101,18 +101,18 @@
 				<br />
 				<h:outputText
 					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
-				<!-- 26238, 38984 -->
+				<!-- 26238, 38984, 38896 -->
 				<p:outputLabel rendered="#{catBean.typeDisciplinaryAction eq 'C'}" 
-					styleClass="warning" style="color:red;text-align:left;">
+					styleClass="warning" style="color:red;text-align:left; float:none">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
 				<p:outputLabel rendered="#{catBean.typeDisciplinaryAction eq 'M'}" 
-					styleClass="warning" style="color:red;text-align:left;">
+					styleClass="warning" style="color:red;text-align:left; float:none">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
-			<p:column style="white-space:normal;vertical-align: top;width: 500px"
+			<p:column style="white-space:normal;vertical-align: top;width:500px"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
 				<p:inputTextarea id="otherDesc" maxlength="5000"
