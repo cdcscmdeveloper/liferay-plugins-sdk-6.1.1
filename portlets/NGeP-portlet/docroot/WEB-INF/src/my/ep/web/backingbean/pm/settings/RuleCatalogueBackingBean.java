@@ -5819,7 +5819,6 @@ public class RuleCatalogueBackingBean extends
 	    // filter by limit
 	    if (searchedLimit != null && !searchedLimit.isEmpty()) {
 	        searchedPtjApprovalList = searchByLimit(ptjApprovalList, searchedLimit);
-	        ptjApprovalList = searchedPtjApprovalList;
 	    }
 		
 		sortPmPtjSpecialApprovalByMinistryName(searchedPtjApprovalList);
