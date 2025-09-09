@@ -1271,8 +1271,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 		//#38540 - Start
 		List<Long> statuses = new ArrayList<>();
+		statuses.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
 		statuses.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
 		statuses.add(QTStatusConst.SF_PENDING_SIGN_OFF);
+
+		List<Long> signOffStatus = new ArrayList<>();
+		signOffStatus.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
+		signOffStatus.add(QTStatusConst.SF_PENDING_SIGN_OFF);
 		//#38540 - End
 		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
 		List<ScQtCommitteeActivity> committeeActivities = scQtCommittee
@@ -1305,7 +1310,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 					ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
 					activity.setScQtCommittee(scQtCommittee);
 					activity.setScCommitteeMember(member);
-					activity.setAttended(statuses.contains(this.getManagedBean().getCurrentStatusId()));//#38540
+					//#21692 - Start
+					boolean isSecretary = activity.getScCommitteeMember().getMemberRole().getParameterCode()
+							.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					activity.setSignedOff(!isSecretary ? activity.isSignedOff() : signOffStatus.contains(this
+							.getManagedBean().getCurrentStatusId()));
+					activity.setAttended(!isSecretary || activity.isAttended() ? activity.isAttended() : statuses.contains(this
+							.getManagedBean().getCurrentStatusId()));
+					//#21692 - End
 					setUserDetails(activity);
 					missingActivities.add(activity);
 				}

@@ -13430,6 +13430,18 @@ public class SmApplicationUtil {
 					   bean.getSelectedShareHolder().setDisableEquityOwner(false);
 					   bean.getSelectedShareHolder().setDisableStaff(false);
 				   }
+				 //#38610-start
+				if (bean.getSelectedShareHolder().isClerical()) {
+					bean.getSelectedShareHolder().setProf(false);
+					bean.getSelectedShareHolder().setManagement(false);
+					bean.getSelectedShareHolder().setEquityOwner(false);
+					bean.getSelectedShareHolder().setSemiProf(false);
+					bean.getSelectedShareHolder().setHigherManagement(false);
+					bean.getSelectedShareHolder().setDisableProf(true);
+					bean.getSelectedShareHolder().setDisableManagement(true);
+					bean.getSelectedShareHolder().setDisableEquityOwner(true);
+					bean.getSelectedShareHolder().setDisableSemiProf(true);
+				}//#38610-end
 				 if(bean.getSelectedShareHolder().isEquityOwner()
 							|| bean.getSelectedShareHolder().isManagement()
 							|| bean.getSelectedShareHolder().isDirector()
@@ -14732,7 +14744,10 @@ public class SmApplicationUtil {
 			Map.Entry<Integer, Date> startDateMap = getPoKpiStartDate(
 					new Long(docId), stateId).entrySet().iterator().next();
 			Date startDate = startDateMap.getValue();
-			Integer pauseDays = startDateMap.getKey();
+			// #38876 - Start - Set pause day to 0
+			// Integer pauseDays = startDateMap.getKey();
+			Integer pauseDays = 0;
+			// #38876 - End -
 			Map.Entry<Integer, Date> entry = getPoKpiEndDateByCompanyState(
 					startDate, numDays, pauseDays, stateId).entrySet()
 					.iterator().next();

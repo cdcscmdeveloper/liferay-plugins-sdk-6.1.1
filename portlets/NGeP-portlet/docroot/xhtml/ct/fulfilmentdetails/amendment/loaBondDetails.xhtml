@@ -32,13 +32,13 @@
 	   	
 	   		<p:outputLabel id="bondPercentageId" value="#{lbl['lbl.ct.bond.bondpercentage']}" />
 			<p:inputText for="bondPercentageId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage}"  disabled="true">
+	  			value="#{ctBackingBean.managedBean.bondPercentage  == null ? 0.0 : ctBackingBean.managedBean.bondPercentage}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			
 			<p:outputLabel id="bondAmountId" value="#{lbl['lbl.ct.bond.bondamount']}" />
 			<p:inputText for="bondAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.ctContractAmount.totalBondAmt}"  disabled="true">
+	  			value="#{ctBackingBean.managedBean.ctContractAmount.totalBondAmt == null ? 0.0: ctBackingBean.managedBean.ctContractAmount.totalBondAmt}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			<p:outputLabel />
@@ -201,7 +201,8 @@
 	
 	  
 	<p:panel id="bondDetails" toggleable="true" 
-				  rendered="#{ctBackingBean.isPendingSupplementalContractLetter() and ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq 
+				  rendered="#{ctBackingBean.isPendingSupplementalContractLetter() 
+				  and (ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq or ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq)
 				  and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted}" toggleSpeed="500">
 			<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.supplemental.bond']}"/>
@@ -231,13 +232,21 @@
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.bond.bondpercentage']}" />
 			<p:inputText style="width:200px;" disabled="true" styleClass="ppRightBtn"
-				value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage}">
+				value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage != null 
+            			? ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage 
+            			: (ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondPercentage != null 
+                    	? ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondPercentage 
+                    	: 0.0)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</p:inputText>
 				
 			<p:outputLabel value="#{lbl['lbl.ct.bond.bondamount']}" />			  
 			<p:inputText style="width:200px;" disabled="true"  styleClass="ppRightBtn"
-			  value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt}" >
+			  value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt != null 
+            			? ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt 
+            			: (ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt != null 
+                    	? ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt 
+                    	: 0.0)}" >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />				
 			</p:inputText>
 			
