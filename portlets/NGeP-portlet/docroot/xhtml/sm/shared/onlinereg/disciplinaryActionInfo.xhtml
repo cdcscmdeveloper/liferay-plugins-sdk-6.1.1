@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<!-- 39068 - START -->
 	<p:panel header="#{lbl['lbl.sm.disciplinary.action.info.headerlbl']}"
 		toggleable="true"
 		rendered="#{registrationBackingBean.managedBean.disciplinaryAction}">
@@ -28,20 +29,21 @@
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					
-					<p:outputLabel rendered="#{registrationBackingBean.managedBean.warning}" styleClass="outputLabel-view"
+					<p:outputLabel rendered="#{registrationBackingBean.managedBean.warning and !registrationBackingBean.managedBean.noDisciplinary}" styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
-					<p:outputLabel rendered="#{registrationBackingBean.managedBean.suspendRegistration}" styleClass="outputLabel-view"
+					<p:outputLabel rendered="#{registrationBackingBean.managedBean.suspendRegistration and !registrationBackingBean.managedBean.noDisciplinary}" styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}"/>
-					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelRegistration}" styleClass="outputLabel-view"
+					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelRegistration and !registrationBackingBean.managedBean.noDisciplinary}" styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/> 
 					<!-- 38928 Start -->
 					<p:outputLabel
-						rendered="#{registrationBackingBean.managedBean.blacklistowner}"
+						rendered="#{registrationBackingBean.managedBean.blacklistowner and !registrationBackingBean.managedBean.noDisciplinary}"
 						styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" /> 
+					<!-- 39068 - END -->
 					<!-- 38928 End -->
 					<!-- 30842 Start -->
-					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelCategory}" styleClass="outputLabel-view"
+					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelCategory and !registrationBackingBean.managedBean.noDisciplinary}" styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}"/>
 					<!-- 30842 End -->	
 						
