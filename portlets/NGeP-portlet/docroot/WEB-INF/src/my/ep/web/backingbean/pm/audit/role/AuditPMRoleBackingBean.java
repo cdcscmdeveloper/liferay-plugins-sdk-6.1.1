@@ -185,9 +185,16 @@ public class AuditPMRoleBackingBean {
 	 * @return
 	 */
 	public String roleReasonMaintenance() {
-		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
-				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
-				RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : null;
+		List<RoleCode> rolePriority = Arrays.asList(RoleCode.EP_ADMIN, RoleCode.EP_ADMIN_2, RoleCode.BPK_ADMIN,
+				RoleCode.UPS_ADMIN);
+
+		for (RoleCode role : rolePriority) {
+			if (getFacesScopes().hasRoleUser(role.value())) {
+				return role.value();
+			}
+		}
+		return null;
+
 	}
 
 	/**

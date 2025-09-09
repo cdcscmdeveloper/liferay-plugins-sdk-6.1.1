@@ -1086,6 +1086,17 @@ public class SupplierFinalizationBackingBean extends
 				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
 				this.getManagedBean().setScQtCommittee(scQtCommittee);
 
+				//#21692 - Start
+				List<Long> statuses = new ArrayList<>();
+				statuses.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
+				statuses.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
+				statuses.add(QTStatusConst.SF_PENDING_SIGN_OFF);
+
+				List<Long> signOffStatus = new ArrayList<>();
+				signOffStatus.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
+				signOffStatus.add(QTStatusConst.SF_PENDING_SIGN_OFF);
+				//#21692 - End
+
 				// Committee Details
 				if (scQtCommittee != null) {
 					// 25037 - start
@@ -1117,6 +1128,14 @@ public class SupplierFinalizationBackingBean extends
 						}
 						for (ScQtCommitteeActivity commActivity 
 									: scQtCommittee.getCommitteeActivities()) {
+							//#21692 - Start
+							boolean isSecretary = commActivity.getScCommitteeMember().getMemberRole().getParameterCode()
+									.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+							commActivity.setSignedOff(!isSecretary ? commActivity.isSignedOff() : signOffStatus.contains(
+									this.getManagedBean().getCurrentStatusId()));
+							commActivity.setAttended(!isSecretary ? commActivity.isAttended() : statuses.contains(
+									this.getManagedBean().getCurrentStatusId()));
+							//#21692 - End
 							committeeEndorsementList.add(commActivity);
 						}
 						//25201#63-2
@@ -4257,7 +4276,7 @@ return	remarksNotFound;
 	/**
 	 * @throws Exception
 	 */
-	public void downloadAllBriefingPaperReports(boolean directDownload) throws Exception {// 38523
+	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {// 38523
 		// #18685 - Start.
 		debugLogger("downloadAllReports");
 		// 38523 - start
@@ -4267,7 +4286,7 @@ return	remarksNotFound;
 		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment;
 			if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
-				attachment = retrieveBriefingPaperAttachment(scQtFinalizationReport, directDownload);
+				attachment = retrieveBriefingPaperAttachment(scQtFinalizationReport, skipDownload);
 			} else {
 				attachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 			} 
@@ -4287,7 +4306,7 @@ return	remarksNotFound;
 		}
 
 		// Generate all the reports before submission
-		if (!getManagedBean().isSubmit()) {
+		if (!skipDownload) { // 38523
 			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 		}
 		// #18685 - End.
@@ -4309,7 +4328,8 @@ return	remarksNotFound;
 		ScQtFinalizationReport latestBriefingPaper = null;
 		for (ScQtFinalizationReport report : getManagedBean().getDocumentList()) {
 			boolean isLatest = latestBriefingPaper == null
-					|| report.getCreatedDate().after(latestBriefingPaper.getCreatedDate());
+					|| (report.getCreatedDate() != null && report.getCreatedDate().after(
+							latestBriefingPaper.getCreatedDate()));
 			if (report.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER) && isLatest) {
 				latestBriefingPaper = report;
 			}
