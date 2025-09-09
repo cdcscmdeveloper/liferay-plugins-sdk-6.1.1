@@ -184,12 +184,16 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	//#36738 Start
 	private List<PmConfigRuleDesc> originalConfigRuleDescList;
 	private List<PmConfigRuleValue> originalConfigRuleValueList;
+	private List<PmPtjSpecialApproval> originalPtjSpecialApprovalList;
 	private String searchedRuleType;
 	private String searchedRuleDataTypeValues;
 	private String searchedRuleDataTypeDesc;
 	private Date searchedRuleDataTypeEffectiveDate;
 	private Date searchedRuleDataTypeExpiryDate;
 	private Long searchedRuleDataTypeZone;
+	private String searchedPtjCode;
+	private String searchedPtjName;
+	private String searchedQtValueLimit;
 	//#36738 End
 
 	/************ AUDIT #28895_35509 *************/
@@ -1914,17 +1918,51 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSearchedRuleDataTypeZone(Long searchedRuleDataTypeZone) {
 		this.searchedRuleDataTypeZone = searchedRuleDataTypeZone;
 	}
+	
 	public List<PmConfigRuleDesc> getOriginalConfigRuleDescList() {
 		return originalConfigRuleDescList;
 	}
+	
 	public void setOriginalConfigRuleDescList(List<PmConfigRuleDesc> originalConfigRuleDescList) {
 		this.originalConfigRuleDescList = originalConfigRuleDescList;
 	}
+	
 	public List<PmConfigRuleValue> getOriginalConfigRuleValueList() {
 		return originalConfigRuleValueList;
 	}
+	
 	public void setOriginalConfigRuleValueList(List<PmConfigRuleValue> originalConfigRuleValueList) {
 		this.originalConfigRuleValueList = originalConfigRuleValueList;
+	}
+	
+	public String getSearchedPtjCode() {
+		return searchedPtjCode;
+	}
+	
+	public void setSearchedPtjCode(String searchedPtjCode) {
+		this.searchedPtjCode = searchedPtjCode;
+	}
+	
+	public String getSearchedPtjName() {
+		return searchedPtjName;
+	}
+	
+	public void setSearchedPtjName(String searchedPtjName) {
+		this.searchedPtjName = searchedPtjName;
+	}
+	
+	public String getSearchedQtValueLimit() {
+		return searchedQtValueLimit;
+	}
+	
+	public void setSearchedQtValueLimit(String searchedQtValueLimit) {
+		this.searchedQtValueLimit = searchedQtValueLimit;
+	}
+	public List<PmPtjSpecialApproval> getOriginalPtjSpecialApprovalList() {
+		return originalPtjSpecialApprovalList;
+	}
+	public void setOriginalPtjSpecialApprovalList(List<PmPtjSpecialApproval> originalPtjSpecialApprovalList) {
+		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
 	}
 	
 	//#36738 End
