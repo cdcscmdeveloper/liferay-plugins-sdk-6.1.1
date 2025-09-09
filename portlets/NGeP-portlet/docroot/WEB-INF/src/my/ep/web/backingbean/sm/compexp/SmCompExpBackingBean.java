@@ -160,7 +160,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		Date expDate = new Date();
 		Date effDate = new Date();
 		Long sourceType = null;
-		Integer recordStatusFlg = null;
+ 		Integer recordStatusFlg = null;
 		if (null != this.getManagedBean().getSelectedDraft()) {
 			expDate = this.getManagedBean().getSelectedDraft().getContractExpDate();
 			effDate = this.getManagedBean().getContractEffDateTemp();
@@ -338,23 +338,20 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null != this.getManagedBean().getSelectedDraft() && null != this.getManagedBean().getSelectedDraft().getFileReferenceNo()
 				&& !this.getManagedBean().getSelectedDraft().getFileReferenceNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedDraft().getFileReferenceNo();
-
-			fileNo = fileNo.replaceAll("\\s+", "");
-			fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");
-			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");
-
-			this.getManagedBean().getSelectedDraft().setFileReferenceNo(fileNo);
+			this.getManagedBean().getSelectedDraft().setFileReferenceNo(cleanFileReferenceNo(fileNo));
 		}
 		if (null != this.getManagedBean().getSelectedMaster() && null != this.getManagedBean().getSelectedMaster().getFileReferenceNo()
 				&& !this.getManagedBean().getSelectedMaster().getFileReferenceNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedMaster().getFileReferenceNo();
-
-			fileNo = fileNo.replaceAll("\\s+", "");
-			fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");
-			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");
-
-			this.getManagedBean().getSelectedMaster().setFileReferenceNo(fileNo);
+			this.getManagedBean().getSelectedMaster().setFileReferenceNo(cleanFileReferenceNo(fileNo));
 		}
+	}
+
+	private String cleanFileReferenceNo(String fileNo) {	
+		fileNo = fileNo.replaceAll("\\s+", "");
+		fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");
+		fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");
+		return fileNo;
 	}
 
 	/**
@@ -364,21 +361,19 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null != this.getManagedBean().getSelectedDraft() && null != this.getManagedBean().getSelectedDraft().getFileExtensionNo()
 				&& !this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedDraft().getFileExtensionNo();
-
-			fileNo = fileNo.replaceAll("\\s+", "");
-			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+", "");
-
-			this.getManagedBean().getSelectedDraft().setFileExtensionNo(fileNo);
+			this.getManagedBean().getSelectedDraft().setFileExtensionNo(cleanFileExtensionNo(fileNo));
 		}
 		if (null != this.getManagedBean().getSelectedMaster() && null != this.getManagedBean().getSelectedMaster().getFileExtensionNo()
 				&& !this.getManagedBean().getSelectedMaster().getFileExtensionNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedMaster().getFileExtensionNo();
-
-			fileNo = fileNo.replaceAll("\\s+", "");
-			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+", "");
-
-			this.getManagedBean().getSelectedMaster().setFileExtensionNo(fileNo);
+			this.getManagedBean().getSelectedMaster().setFileExtensionNo(cleanFileExtensionNo(fileNo));
 		}
+	}
+
+	private String cleanFileExtensionNo(String fileNo) {	
+		fileNo = fileNo.replaceAll("\\s+", "");
+		fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+", "");
+		return fileNo;
 	}
 
 	/**
