@@ -159,7 +159,7 @@
 			</p:column>
 			<!-- #38890 -->
 			<p:column style="width : 10%; text-align:center;" rendered="#{cc.attrs.hasAI}">
-				<p:outputPanel rendered="false">
+				<p:outputPanel rendered="#{not empty table.mappedFieldAI}">
 					<p:graphicImage id="imgHasAI" value="/css/images/design/ackno.png" />
 					<p:tooltip for="imgHasAI" value="#{table.mappedFieldAI}" />
 				</p:outputPanel>
