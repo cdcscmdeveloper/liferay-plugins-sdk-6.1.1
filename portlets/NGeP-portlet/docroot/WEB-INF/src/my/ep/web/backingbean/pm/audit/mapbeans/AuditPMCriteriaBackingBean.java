@@ -54,7 +54,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			if (managedBeans.getPmCriteriaOld().getRecordStatusFlg() != managedBeans.getSelectedCriteria().getRecordStatusFlg()) {
 				updateSatus(managedBeans);
-			}			
+			}
 		} else {
 			this.docId = BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId());
 			if (managedBeans.getSelectedCriteria().getPmCriteriaDescs() != null) {
@@ -90,9 +90,8 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 			PmCriteriaDesc desc = descMap.get(langCode);
 
 			if (desc != null
-					&& managedBeans.getPmCriteriaOld().getCriteriaId()
-							.equals(managedBeans.getSelectedCriteria().getCriteriaId())
-					&& !descOld.getCriteria().equalsIgnoreCase(desc.getCriteria())) {				
+					&& managedBeans.getPmCriteriaOld().getCriteriaId().equals(managedBeans.getSelectedCriteria().getCriteriaId())
+					&& !descOld.getCriteria().equalsIgnoreCase(desc.getCriteria())) {
 				if (langCode.equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 					detailObj(AuditConst.PM_AUD_SUPPPERFCRITERIA_BM_FIELDLABELID, descOld.getCriteria(),
 							desc.getCriteria(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
@@ -113,7 +112,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_EN)) {
 				detailObj(AuditConst.PM_AUD_SUPPPERFCRITERIA_EN_FIELDLABELID, null, desc.getCriteria(),
 						AuditConst.PM_AUD_ACTION_TYPE_INS);
-			}			
+			}
 		}
 	}
 
