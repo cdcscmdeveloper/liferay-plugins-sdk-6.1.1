@@ -12913,7 +12913,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * Process documents with OCR
 	 */
 	public void processAI(){
-		SmAIDocBackingBean.processBankStatement(getManagedBean().getSupportDoc());
+		SmAIDocBackingBean.processBankStatement(getManagedBean().getSmAppl(),
+				getManagedBean().getSupportDoc());
 	}
 
 	// harris
@@ -12930,6 +12931,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				List<SmApplDocFile> updatedFiles = new ArrayList<>(mainDoc.getSmApplDocFiles());
 				updatedFiles.set(0, this.getManagedBean().getSmApplDocFile());
 				mainDoc.setSmApplDocFiles(updatedFiles);
+				mainDoc.setMappedFieldAI("");	//#38890
 			} else {
 				// #28807 - Start
 				mainDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
