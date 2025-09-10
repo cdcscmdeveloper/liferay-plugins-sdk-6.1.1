@@ -12,8 +12,9 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
+import java.text.DateFormat; //#24333
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
+import java.text.DecimalFormatSymbols; //24333
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,6 +150,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.ct.CtAddressUtil;
+import my.ep.util.shared.PerformanceBondUtil;//24333
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
@@ -1621,11 +1623,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 
 			// 24333 - Start
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getOverallCtAmtPbond() == null){
-				ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().setOverallCtAmtPbond(BigDecimal.ZERO);
+			List<CtContractAmount> ctAmounts = ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts();
+			if (ctAmounts == null || ctAmounts.isEmpty()) return;
+			Date now = new Date();
+			for (CtContractAmount ctAmount : ctAmounts) {
+			    if (isContractActive(ctAmount, now)) {
+			        BigDecimal overall = ctAmount.getOverallCtAmtPbond() != null ? ctAmount.getOverallCtAmtPbond() : BigDecimal.ZERO;
+			        BigDecimal totalBond = ctAmount.getTotalBondAmt() != null ? ctAmount.getTotalBondAmt() : BigDecimal.ZERO;
+			        Integer periodBondInt = ctAmount.getContractPeriodBond();
+			        BigDecimal periodBond = periodBondInt != null ? BigDecimal.valueOf(periodBondInt) : BigDecimal.ZERO;
+
+			        ctBackingBean.getManagedBean().setOriginalOverallAmount(overall);
+			        ctBackingBean.getManagedBean().setTotalBondAmt(totalBond);
+			        ctBackingBean.getManagedBean().setBondPercentage(PerformanceBondUtil.calculatePerformanceBondPercentage(overall, periodBond));
+			        break;
+			    }
 			}
-			ctBackingBean.getManagedBean().setOriginalOverallAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getOverallCtAmtPbond());
-			// 24333 - Start
+			// 24333 - End
 			
 			// Amendment process	  
 			// Redmine 19600 - Amendment with Supplement
@@ -4279,8 +4293,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public String calculateNewContractPeriod(boolean isCalculateNew) {
 		if (isCalculateNew) {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod()
-					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
+			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().intValue()
+					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()); //#24333
 		} else {
 			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract()
 					.getLatestContractVer().getCtContractValue().getContractPeriod());
@@ -9784,5 +9798,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	//#38823 end
+	
+	//#24333 - Start
+	/**
+	 * Checks if a contract is active on a given date.
+	 *
+	 * @param contractAmt The contract to validate.
+	 * @param now The date to check against.
+	 * @return {@code true} if active; {@code false} otherwise.
+	 */
+	private boolean isContractActive(CtContractAmount contractAmt, Date now) {
+	    if (contractAmt == null || contractAmt.getEffDate() == null || contractAmt.getExpDate() == null) {
+	        return false;
+	    }
+	    return !contractAmt.getEffDate().after(now) && !contractAmt.getExpDate().before(now);
+	}
+	//#24333 - End
 	
 	}
