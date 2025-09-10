@@ -214,6 +214,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	//24333 - Start
 	private BigDecimal bondPercentage;
+	private BigDecimal totalBondAmt;
 	//24333 - End
 	
 	/**
@@ -1686,6 +1687,14 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setBondPercentage(BigDecimal bondPercentage) {
 		this.bondPercentage = bondPercentage;
+	}
+	
+	public BigDecimal getTotalBondAmt() {
+		return totalBondAmt;
+	}
+
+	public void setTotalBondAmt(BigDecimal totalBondAmt) {
+		this.totalBondAmt = totalBondAmt;
 	}
 	//#24333 - End
 }
