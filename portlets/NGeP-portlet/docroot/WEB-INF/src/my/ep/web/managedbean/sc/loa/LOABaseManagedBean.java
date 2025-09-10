@@ -1,12 +1,9 @@
 package my.ep.web.managedbean.sc.loa;
 
-import java.util.List;
-
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.managedbean.BaseManagedBean;
 
 public abstract class LOABaseManagedBean extends BaseManagedBean {
@@ -129,6 +126,5 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
 		this.selectedUserPtj = selectedUserPtj;
 	}
-
 	
 }

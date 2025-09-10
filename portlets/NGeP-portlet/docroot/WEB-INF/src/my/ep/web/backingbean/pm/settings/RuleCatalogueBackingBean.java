@@ -1374,24 +1374,24 @@ public class RuleCatalogueBackingBean extends
 			for (PmConfigRule configRule : resDTO.getRuleTypeList()) {
 				for (PmConfigRuleValue cfRuleValue : configRule.getConfigRuleValues()) {
 					if (cfRuleValue.isBrandNew()) {
-//						cfRuleValue.setRuleTypeCode(configRule.getRuleType());
-//						cfRuleValue.setRuleDescMS(configRule.getConfigRuleDesc().get(1).getRuleDesc());
-//						cfRuleValue.setRuleDataTypeCode(configRule.getRuleDataTypeId().getParameterCode());
-//						cfRuleValue.setRuleRangeType(BigInteger.valueOf(configRule.getRangeType()));
-//						if (cfRuleValue.getZoneId() != null) {
-//							cfRuleValue.setZoneName(getZoneName(cfRuleValue.getZoneId()));
-//						}
+						cfRuleValue.setRuleTypeCode(configRule.getRuleType());
+						cfRuleValue.setRuleDescMS(configRule.getConfigRuleDesc().get(1).getRuleDesc());
+						cfRuleValue.setRuleDataTypeCode(configRule.getRuleDataTypeId().getParameterCode());
+						cfRuleValue.setRuleRangeType(BigInteger.valueOf(configRule.getRangeType()));
+						if (cfRuleValue.getZoneId() != null) {
+							cfRuleValue.setZoneName(getZoneName(cfRuleValue.getZoneId()));
+						}
 						/*** AUDIT #28895_35509 ***/
 						this.getManagedBean().getAuditAddedSelectedRuleValueList().add(cfRuleValue);
 					}
 					if (cfRuleValue.isModified()) {
-//						cfRuleValue.setRuleTypeCode(configRule.getRuleType());
-//						cfRuleValue.setRuleDescMS(configRule.getConfigRuleDesc().get(1).getRuleDesc());
-//						cfRuleValue.setRuleDataTypeCode(configRule.getRuleDataTypeId().getParameterCode());
-//						cfRuleValue.setRuleRangeType(BigInteger.valueOf(configRule.getRangeType()));
-//						if (cfRuleValue.getZoneId() != null) {
-//							cfRuleValue.setZoneName(getZoneName(cfRuleValue.getZoneId()));
-//						}
+						cfRuleValue.setRuleTypeCode(configRule.getRuleType());
+						cfRuleValue.setRuleDescMS(configRule.getConfigRuleDesc().get(1).getRuleDesc());
+						cfRuleValue.setRuleDataTypeCode(configRule.getRuleDataTypeId().getParameterCode());
+						cfRuleValue.setRuleRangeType(BigInteger.valueOf(configRule.getRangeType()));
+						if (cfRuleValue.getZoneId() != null) {
+							cfRuleValue.setZoneName(getZoneName(cfRuleValue.getZoneId()));
+						}
 						/*** AUDIT #28895_35509 ***/
 						this.getManagedBean().getAuditUpdatedSelectedRuleValueList().add(cfRuleValue);
 					}

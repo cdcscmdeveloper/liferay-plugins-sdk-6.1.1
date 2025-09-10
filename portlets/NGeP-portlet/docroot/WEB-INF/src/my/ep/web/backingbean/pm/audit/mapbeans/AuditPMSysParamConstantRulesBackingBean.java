@@ -180,19 +180,19 @@ public class AuditPMSysParamConstantRulesBackingBean {
 		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID,
 				getExpiryDate(newCreatedItem, null), getExpiryDate(null, deletedItem));
 
-//		if ((ruleValueType.getRuleDataTypeCode().matches("A|N|M|P") && ruleValueType.getRuleRangeType() != BigInteger.valueOf(2))
-//				|| ruleValueType.getRuleDataTypeCode().matches("PC")) {
-//			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_VALUE_FIELDLABELID,
-//					ruleNumberValueNewCreated(newCreatedItem), ruleNumberValueDeleted(deletedItem));
-//		}
+		if ((ruleValueType.getRuleDataTypeCode().matches("A|N|M|P") && ruleValueType.getRuleRangeType() != BigInteger.valueOf(2))
+				|| ruleValueType.getRuleDataTypeCode().matches("PC")) {
+			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_VALUE_FIELDLABELID,
+					ruleNumberValueNewCreated(newCreatedItem), ruleNumberValueDeleted(deletedItem));
+		}
 		// categoryL3Id
-//		if (ruleValueType.getCategoryL3Id() != null && "C".equals(ruleValueType.getRuleDataTypeCode())) {
-//			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_VALUE_FIELDLABELID,
-//					categoryL3IdNewCreated(newCreatedItem), categoryL3IdDeleted(deletedItem));
-//			// Category Name
-//			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_DESCRIPTION_FIELDLABELID,
-//					categoryNameNewCreated(newCreatedItem), categoryNameDeleted(deletedItem));
-//		}
+		if (ruleValueType.getCategoryL3Id() != null && "C".equals(ruleValueType.getRuleDataTypeCode())) {
+			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_VALUE_FIELDLABELID,
+					categoryL3IdNewCreated(newCreatedItem), categoryL3IdDeleted(deletedItem));
+			// Category Name
+			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_DESCRIPTION_FIELDLABELID,
+					categoryNameNewCreated(newCreatedItem), categoryNameDeleted(deletedItem));
+		}
 		// FromValue
 		if (ruleValueType.getFromValue() != null) {
 			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_FROMVALUE_FIELDLABELID,
@@ -340,7 +340,7 @@ public class AuditPMSysParamConstantRulesBackingBean {
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem.getRuleValueId()) > 0)
 				&& newCreatedItem.getZoneId() != null) {
-//			return newCreatedItem.getZoneName();
+			return newCreatedItem.getZoneName();
 		}
 		return null;
 	}
@@ -349,7 +349,7 @@ public class AuditPMSysParamConstantRulesBackingBean {
 		if (deletedItem != null
 				&& (Long.valueOf(deletedItem.getRuleValueId()) != null || Long.valueOf(deletedItem.getRuleValueId()) > 0)
 				&& deletedItem.getZoneId() != null) {
-//			return deletedItem.getZoneName();
+			return deletedItem.getZoneName();
 		}
 		return null;
 	}
@@ -381,7 +381,7 @@ public class AuditPMSysParamConstantRulesBackingBean {
 	 */
 	public void spRuleValTypeAddUpdateDeleteAuditDetail(PmConfigRuleValue ruleValue, BigInteger fieldLabelCode, String oldValue,
 			String newValue, String actionType) {
-//		lvlCode3 = ruleValue.getRuleTypeCode();
+		lvlCode3 = ruleValue.getRuleTypeCode();
 		docId = BigInteger.valueOf(ruleValue.getRuleValueId());
 		addAuditDetail(fieldLabelCode, oldValue, newValue, actionType);
 	}
