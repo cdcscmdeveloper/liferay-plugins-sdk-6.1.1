@@ -3453,10 +3453,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0){
 					processPerformanceBonds(contractAmt, docType, isAmendment); //#24333
 					ctBB.getManagedBean().setCtContractAmount(contractAmt);
+					ctBB.getManagedBean().setTotalBondAmt(contractAmt.getTotalBondAmt()); //#24333
 					break;
 				}
-				//Bug #26542 -end
-				
+				//Bug #26542 -end				
 			}
 		
 
