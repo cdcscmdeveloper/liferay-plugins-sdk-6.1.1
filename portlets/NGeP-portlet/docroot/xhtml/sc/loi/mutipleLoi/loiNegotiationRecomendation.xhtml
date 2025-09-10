@@ -294,9 +294,9 @@
 								</f:facet>
 								<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none">
 									<ui:param name="supplier" value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
-									<ui:param name="mofExpired"
-										value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
-										<h:panelGroup layout="block" style="padding: 0 10px 0 10px" styleClass="#{mofExpired ? 'red-background':''}">
+									<ui:param name="mofExpired" value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+										<h:panelGroup rendered="#{isPendingNegotiationStatus or (!isPendingNegotiationStatus and recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}"
+											layout="block" style="padding: 0 10px 0 10px" styleClass="#{mofExpired ? 'red-background':''}">
 											<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 											<h:outputText escape="false" value="&#60;br &#47;&#62;"/>
 										</h:panelGroup>
@@ -547,41 +547,10 @@
 																				CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 								</h:outputText>
 							</p:column>
-
-							<p:column headerText="#{lbl['lbl.sc.mof.status']}">
-								<h:outputText value="#{lbl['lbl.pm.status.active']}"
-									rendered="#{!empty supplierDtlDisqualified.smMofAccount and 
-														supplierDtlDisqualified.smMofAccount.recordStatusFlg eq DbValueConst.recordStatusActive}" />
-							</p:column>
-							<ui:remove>
-								#31061 - SHAFFUL (START)
-							</ui:remove>
-							<p:column style="white-space:normal;width:18%;">
-								<f:facet name="header">
-									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-									<ac:iconTooltip
-										value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
-								</f:facet>
-								<p:commandLink onstart="blockWidget.show()"
-									oncomplete="blockWidget.hide()"
-									style="color:red; font-weight:bold;"
-									rendered="#{supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-									action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"
-									process="@this" partialSubmit="true" update=":form">
-									<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-										styleClass="warning" />
-								</p:commandLink>
-								<p:spacer width="2" />
-
-								<h:outputText
-									rendered="#{!supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-									value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-							</p:column>
-
 							<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 								style="text-align:center;">
 								<h:outputText
-									rendered="#{supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}"
+									rendered="#{supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or lOIDetailBackingBean.managedBean.multiLOIZoneDetails.get(lOIDetailBackingBean.managedBean.zoneActiveIndex).branchDeactivated}"
 									value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
 							</p:column>
 
@@ -674,40 +643,6 @@
 
 								</ui:repeat>
 							</p:column>
-
-							<ui:remove>
-								#31061 - SHAFFUL (START)
-							</ui:remove>
-							<p:column style="white-space:normal;width:18%;">
-								<f:facet name="header">
-									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-									<ac:iconTooltip
-										value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
-								</f:facet>
-								<p:dataList var="recommendedSupplDis"
-									value="#{item.notAwardSupplierList}" type="none"
-									rendered="#{isPendingNegotiationStatus}">
-									<p:commandLink onstart="blockWidget.show()"
-										oncomplete="blockWidget.hide()"
-										style="color:red; font-weight:bold;"
-										rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-										action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"
-										process="@this" partialSubmit="true" update=":form">
-										<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-											styleClass="warning" />
-									</p:commandLink>
-									<h:outputText
-										rendered="#{!recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-										value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-									<h:outputText escape="false" value="&#60;br &#47;&#62;"
-										rendered="#{isPendingNegotiationStatus or recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
-									<h:outputText escape="false" value="&#60;br &#47;&#62;"
-										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}" />
-								</p:dataList>
-							</p:column>
-							<ui:remove>
-								#31061 - SHAFFUL (END)
-							</ui:remove>
 							<p:column headerText="#{lbl['lbl.sc.price.type']}">
 								<h:outputText
 									value="#{lOIDetailBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
@@ -857,7 +792,7 @@
 							<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 								style="text-align:center;">
 								<h:outputText
-									rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}"
+									rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or lOIDetailBackingBean.managedBean.multiLOIZoneDetails.get(lOIDetailBackingBean.managedBean.zoneActiveIndex).branchDeactivated}"
 									value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
 							</p:column>
 						</p:dataTable> <ui:remove> #28777#29729 - End </ui:remove></td>

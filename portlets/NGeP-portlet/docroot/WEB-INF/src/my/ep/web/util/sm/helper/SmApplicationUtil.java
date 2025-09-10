@@ -4616,20 +4616,8 @@ public class SmApplicationUtil {
 			
 					//30865, 30921 - Starts
 				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
-					//#32810 Alert message not display for cancel bumi - start 
-					SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
-					//#32298 DA cancel manufacture alert warning - start - <26238>
-					if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
-						cat.setCancelCategory(true);
-						if(smDisciplinaryAction.isCancelCategory() || smDisciplinaryAction.isBumiputeraCancel()){
-							cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
-						}else if(smDisciplinaryAction.isManufacturerCancel()){
-							cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE);
-						}
-						apprvList.add(cat);
-					}
-						//#32810 Alert message not display for cancel bumi - end 
-						//#32298 DA cancel manufacture alert warning - end - <26238>
+					addValidCategoryWithDAType(cat, apprvList);	//#38984
+					//#32298, #32810, #32298 DA cancel manufacture alert warning - end - <26238>
 				}
 				//30865, 30921  - Ends
 			}
@@ -4647,6 +4635,26 @@ public class SmApplicationUtil {
 			managedBean.setActiveCategoryList(catList);
 			managedBean.setApprovedCategoryList(apprvList);
 		}
+	}
+	
+	//#26238 - 38984
+	private static void addValidCategoryWithDAType(SmSupplierCategory cat, List<SmSupplierCategory> catList){
+		if (cat == null || cat.getDisciplinaryActionId() == null){
+			return;
+		}
+		SmDisciplinaryAction da = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
+		if(da == null || da.getRecordStatusFlg() == null || 
+				da.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+			return;
+		}
+		
+		cat.setCancelCategory(true);
+		if(da.isCancelCategory() || da.isBumiputeraCancel()){
+			cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
+		}else if(da.isManufacturerCancel()){
+			cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE);
+		}
+		catList.add(cat);
 	}
 	
 	//#26238
@@ -4718,13 +4726,9 @@ public class SmApplicationUtil {
 					addtnlList.add(cat);
 				}
 				//30865 - Starts
-			}else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
+			} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
 					|| cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_DELETED) == 0){
-						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
-						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
-							cat.setCancelCategory(true);
-							existingList.add(cat);
-						}
+				addValidCategoryWithDAType(cat, existingList); //#38984
 			}
 				//30865 - Ends
 		}
@@ -13485,6 +13489,18 @@ public class SmApplicationUtil {
 					   bean.getSelectedShareHolder().setDisableEquityOwner(false);
 					   bean.getSelectedShareHolder().setDisableStaff(false);
 				   }
+				// #38610-start
+				if (bean.getSelectedShareHolder().isClerical()) {
+					bean.getSelectedShareHolder().setProf(false);
+					bean.getSelectedShareHolder().setManagement(false);
+					bean.getSelectedShareHolder().setEquityOwner(false);
+					bean.getSelectedShareHolder().setSemiProf(false);
+					bean.getSelectedShareHolder().setHigherManagement(false);
+					bean.getSelectedShareHolder().setDisableProf(true);
+					bean.getSelectedShareHolder().setDisableManagement(true);
+					bean.getSelectedShareHolder().setDisableEquityOwner(true);
+					bean.getSelectedShareHolder().setDisableSemiProf(true);
+				}// #38610-end
 				 if(bean.getSelectedShareHolder().isEquityOwner()
 							|| bean.getSelectedShareHolder().isManagement()
 							|| bean.getSelectedShareHolder().isDirector()
@@ -14818,7 +14834,10 @@ public class SmApplicationUtil {
 			Map.Entry<Integer, Date> startDateMap = getPoKpiStartDate(
 					new Long(docId), stateId).entrySet().iterator().next();
 			Date startDate = startDateMap.getValue();
-			Integer pauseDays = startDateMap.getKey();
+			// #38876 - Start - Set pause day to 0
+			// Integer pauseDays = startDateMap.getKey();
+			Integer pauseDays = 0;
+			// #38876 - End -
 			Map.Entry<Integer, Date> entry = getPoKpiEndDateByCompanyState(
 					startDate, numDays, pauseDays, stateId).entrySet()
 					.iterator().next();
@@ -14916,10 +14935,18 @@ public class SmApplicationUtil {
 		}
 	}
 	
-	public Map<Integer, Date> getPoKpiEndDateByCompanyState(Date startDate,
-			int numDays, int pauseDays, Long stateId) {
-		int daysLeft = numDays;
-		Map<Integer, Date> mapDate = new HashMap();
+	// 30747 - Start
+	/**
+	 * @param startDate
+	 * @param numDays
+	 * @param pauseDays
+	 * @param stateId
+	 * @return days left and date
+	 */
+	public Map<Integer, Date> getPoKpiEndDateByCompanyState(Date startDate, int numDays, int pauseDays, Long stateId) {
+		int daysLeft;
+		int totalDays = numDays + pauseDays;
+		Map<Integer, Date> mapDate = new HashMap<>();
 		Calendar dateCal = Calendar.getInstance();
 		dateCal.setTime(startDate);
 
@@ -14929,21 +14956,67 @@ public class SmApplicationUtil {
 			calcEndDate(pauseDays, dateCal, stateId);
 		}
 
-		daysLeft = SmCommonUtil.getInstance().getDaysDiffMinusHolidayByState(
-				new Date(), dateCal.getTime(), stateId);
+		if (dateCal.getTime().before(new Date())) {
+			daysLeft = 0;
+		} else {
+			daysLeft = SmCommonUtil.getInstance()
+					.getDaysDiffMinusHolidayByState(new Date(), dateCal.getTime(), stateId);
 
+			Calendar endCal = Calendar.getInstance();
+			endCal.setTime(dateCal.getTime());
+			endCal.add(Calendar.DATE, 1);
+
+			boolean isNextDayHoliday = SmCommonUtil.getInstance().isDateHoliday(endCal, stateId);
+
+			if (!isNextDayHoliday) {
+				mapDate.put(daysLeft, dateCal.getTime());
+				return mapDate;
+			}
+
+			if (daysLeft == 0) {
+				compareDateForKpi(new Date(), dateCal.getTime(), daysLeft);
+			} else if (daysLeft < totalDays) {
+				Calendar newEndCal = Calendar.getInstance();
+				newEndCal.setTime(new Date());
+
+				calcEndDate(daysLeft, newEndCal, stateId);
+
+				if(DateUtils.isDateGreater(dateCal.getTime(), newEndCal.getTime())){
+					daysLeft++;
+				}
+//				if (newEndCal.getTime().before(dateCal.getTime())) {
+//					daysLeft++;
+//				}
+			}
+		}
+		log.info("30747 : daysLeft :" + daysLeft + " / time : " + dateCal.getTime());
 		mapDate.put(daysLeft, dateCal.getTime());
 		return mapDate;
 	}
 
+	private int compareDateForKpi(Date start, Date end, int daysLeft) {
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(start);
+		int result = daysLeft; // new local variable instead of mutating the
+								// parameter
+		while (startCal.getTime().before(end)) {
+			result++;
+			startCal.add(Calendar.DATE, 1);
+		}
+		return result;
+	}
+
 	private void calcEndDate(int numDays, Calendar dateCal, Long stateId) {
-		for (int i = numDays - 1; i >= 0; i--) {
-			dateCal.add(dateCal.DATE, 1);
-			if (SmCommonUtil.getInstance().isDateHoliday(dateCal, stateId)) {
-				i = i + 1;
-			}
+		int actualDays = 0;
+		while (actualDays < numDays) { //#30747 change for loop to while
+		    dateCal.add(Calendar.DATE, 1);
+		    if (!SmCommonUtil.getInstance().isDateHoliday(dateCal, stateId)) {
+		        actualDays++;
+		    }
 		}
 	}
+	// 30747 - End
+	
 	public void calcCapitalDistribution(SmPersonnel per,SmCompanyBasic basic){
 		if (per.getShareAmt() == null) {
 			per.setShareAmt(new BigDecimal(0));
@@ -15003,6 +15076,10 @@ public class SmApplicationUtil {
 	 * @return
 	 */
 	public static SmDisciplinaryAction retrieveActiveSmDisciplinaryActionByDisciplinaryId(Long disciplinaryId) {
+		if (disciplinaryId == null) {
+			return null;
+		}
+		
 		return SmServiceLookup.getSupplierDataMaintenanceSO()
 				.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryId);
 	}  

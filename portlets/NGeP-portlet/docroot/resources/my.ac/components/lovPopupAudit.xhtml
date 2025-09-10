@@ -13,13 +13,13 @@
 </cc:interface>
 
 <cc:implementation>
-	<p:remoteCommand name="updateSearchDialog" update="searchPanel lovTitle resultPanel" partialSubmit="true" process="@this resultPanel" oncomplete="lovPopupAudit.show();" />
-	<p:remoteCommand name="resetAllData" update="searchPanel lovTitle resultPanel" partialSubmit="true" action="#{lovAuditBackingBean.resetAllSP}" process="@this" />
-	<p:remoteCommand name="lovPopsetAutoUpdateValue" partialSubmit="true" process="@this" update="@this" action="#{lovAuditBackingBean.setAutoUpdateValue()}" />
+	<p:remoteCommand name="updateSearchDialogUser" update="searchPanelAudit lovTitle resultPanelAudit" partialSubmit="true" process="@this resultPanelAudit" oncomplete="lovPopupAudit.show();" />
+	<p:remoteCommand name="resetAllData" update="searchPanelAudit lovTitle resultPanelAudit" partialSubmit="true" action="#{lovAuditBackingBean.resetAll}" process="@this" />
+	<p:remoteCommand name="lovPopsetAutoUpdateValueUser" partialSubmit="true" process="@this" update="@this" action="#{lovAuditBackingBean.setAutoUpdateValue()}" />
 	
 	<p:dialog id="lovPopupAudit" widgetVar="lovPopupAudit" modal="true" width="700" position="top" 
-		onShow="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:false}]);"
-		onHide="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:true}]); resetAllData();" 
+		onShow="lovPopsetAutoUpdateValueUser([{name:'enableAutoUpdate', value:false}]);"
+		onHide="lovPopsetAutoUpdateValueUser([{name:'enableAutoUpdate', value:true}]); resetAllData();" 
 		resizable="false">
 	
 		<f:facet name="header">
@@ -30,7 +30,7 @@
 		
 		<p:panel header="#{lbl['lbl.cm.search']}" toggleable="true">
 		
-		<h:panelGroup id="searchPanel" style="width:100%;">
+		<h:panelGroup id="searchPanelAudit" style="width:100%;">
 
 		<ui:include src="lovSearchPanelAudit.xhtml" />
 
@@ -39,23 +39,23 @@
 				value="#{lbl['lbl.pm.audit.search']}"
 				action="#{lovAuditBackingBean.searchActionByList}"
 				partialSubmit="true"
-				process="searchPanel"
-				update="resultPanel"
+				process="searchPanelAudit"
+				update="resultPanelAudit"
 				widgetVar="lovSearch">
 			</p:commandButton>		
 			<p:commandButton
 				value="#{lbl['lbl.btn.reset']}"
 				action="#{lovAuditBackingBean.resetAction}"
 				partialSubmit="true"
-				process="searchPanel"
-				update="searchPanel resultPanel">
+				process="searchPanelAudit"
+				update="searchPanelAudit resultPanelAudit">
 			</p:commandButton>
 		</TD></tr></table>
 
 		</h:panelGroup>
 		</p:panel>  
 		<p:panel header="#{lbl['lbl.pm.audit.result']}" toggleable="true">
-		<h:panelGroup id="resultPanel" style="width:100%;">
+		<h:panelGroup id="resultPanelAudit" style="width:100%;">
 			
 			<h:panelGroup rendered="#{lovAuditBackingBean.lovBean.selectionMode == 'single'}">
 			<p:dataTable id="lovTbSP"
@@ -123,9 +123,9 @@
 					id="slbtn"
 					value="#{lbl['lbl.pm.audit.select']}"  
 					action="#{lovAuditBackingBean.populateToSaveObject}"
-					update="searchPanel #{lovAuditBackingBean.lovBean.clientId} #{lovAuditBackingBean.lovBean.update}"
+					update="searchPanelAudit #{lovAuditBackingBean.lovBean.clientId} #{lovAuditBackingBean.lovBean.update}"
 					oncomplete="lovPopupAudit.hide();"
-					process="resultPanel"
+					process="resultPanelAudit"
 					disabled="#{lovAuditBackingBean.isSelectButtonDisable()}"
 					partialSubmit="true"  styleClass="BtnSpacing"/>	
 			   <p:commandButton value="#{lbl['lbl.btn.cancel']}"
@@ -139,6 +139,6 @@
 		</p:panel>
 	</p:dialog>
 	
-	<p:defaultCommand target="lovSearchBtn" scope="searchPanel"></p:defaultCommand>
+	<p:defaultCommand target="lovSearchBtn" scope="searchPanelAudit"></p:defaultCommand>
 </cc:implementation>
 </ui:composition>

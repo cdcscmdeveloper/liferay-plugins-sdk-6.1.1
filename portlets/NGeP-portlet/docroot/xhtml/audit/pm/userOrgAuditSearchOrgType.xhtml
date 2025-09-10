@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<table class="ppTwoTable">
+		<tr>
+			<th width="22%"><p:outputLabel
+					value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel value="*"
+					styleClass="mandatory" /></th>
+			<td><h:panelGrid columns="2">
+					<p:selectOneRadio id="radioGroup"
+						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory}">
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}"
+							itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}"
+							itemValue="1" />
+						<p:ajax event="change"
+							listener="#{searchPMUserOrgAuditBackingBean.changeType()}"
+							update="orgTypeFederalListId,orgTypeOthersListId,userOrgAuditPMSearchPanel" />
+					</p:selectOneRadio>
+					<ac:iconTooltip value="#{lbl['lbl.pm.org.others.tooltip']}" />
+				</h:panelGrid></td>
+			<td><p:message for="radioGroup" id="radioGroupMsg"
+					display="icon" /></td>
+			<td>&#160;</td>
+		</tr>
+		<tr>
+			<th width="22%"><p:outputLabel
+					value="#{lbl['lbl.pm.organisation.orgType']}" /> <h:outputLabel
+					value="*" styleClass="mandatory" /></th>
+			<td><p:selectOneMenu id="orgTypeFederalListId"
+					rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory eq searchPMUserOrgAuditBackingBean.getFederalGovt()}"
+					styleClass="ppDropDownWidthM"
+					required="#{!empty param['disableValidation']}"
+					label="#{lbl['lbl.pm.organisation.orgType']}"
+					style="width: 265px;margin-bottom: 5px;"
+					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems
+						value="#{searchPMUserOrgAuditBackingBean.getOrgTypeDropdownValues()}"
+						var="orgTypeItem" itemLabel="#{orgTypeItem.codeName}"
+						itemValue="#{orgTypeItem.levelId}" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						listener="#{searchPMUserOrgAuditBackingBean.changeOrgType()}"
+						update="userOrgAuditPMSearchPanel" />
+				</p:selectOneMenu> <p:selectOneMenu id="orgTypeOthersListId"
+					rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory eq searchPMUserOrgAuditBackingBean.getOthers()}"
+					styleClass="ppDropDownWidthM" required="true"
+					label="#{lbl['lbl.pm.organisation.orgType']}"
+					style="width: 265px;margin-bottom: 5px;"
+					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems
+						value="#{searchPMUserOrgAuditBackingBean.getOrgTypeDropdownValues()}"
+						var="orgTypeItem" itemLabel="#{orgTypeItem.codeName}"
+						itemValue="#{orgTypeItem.levelId}" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						listener="#{searchPMUserOrgAuditBackingBean.changeOrgType()}"
+						update="userOrgAuditPMSearchPanel" />
+				</p:selectOneMenu></td>
+			<td>&#160;</td>
+			<td>&#160;</td>
+		</tr>
+		<!-- *** OPM START ORGANIZATION PROFILE MGT *** -->
+		<h:panelGroup
+			rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OPM'}">
+			<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOPM.xhtml" />
+		</h:panelGroup>
+		<!-- *** OPM END *** -->
+
+		<!-- *** OUSR START - USER *** -->
+		<h:panelGroup
+			rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OUSR'}">
+			<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOUSR.xhtml" />
+		</h:panelGroup>
+		<!-- *** OUSR END *** -->
+	</table>
+</ui:composition>

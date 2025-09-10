@@ -1246,10 +1246,12 @@ public class NoticeBoardBackingBean extends
 				}
 			}
 			
+			// 26247 - start
 			if (getManagedBean().isQualified()) {
-				checkDisciplinaryActionExists(supplier);
+				getManagedBean().setQualified(!this.disabledQTProcess(supplier));
 			}
-			
+			// 26247 - end
+
 			// construct the proposal/update url
 			if (QTStatusConst.QT_PROPOSAL_PREPARATION
 					.equals(currentStatus) && isValidSupplier ) {
@@ -1267,73 +1269,73 @@ public class NoticeBoardBackingBean extends
 
 	}
 
-	/**
-	 * @param supplier 
-	 * 
-	 */
-	private void checkDisciplinaryActionExists(SmSupplier supplier) {
-		SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
-		FacesScopes facesScopes = new FacesScopes();
-		PmUser sUsers = facesScopes.getUserSessionBean();
-		IQTNoticeBoardSO qtNoticeBoardSO = null;
-		List<String> categoryCodes = null;
-		
-		if (sUsers != null && sUsers.getPreferredLanguage() != null){
-			supplierDataMaintenanceReqDTO.setLanguage(sUsers.getPreferredLanguage());
-		}
-		
-		supplierDataMaintenanceReqDTO.setSupplier(supplier);
-		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-		SupplierDataMaintenanceResDTO supplierDataMaintenanceResDTO = null;
-
-		ISearchBean<ScQtCategory> searchBean = new SearchBean<>();
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("scQt.qtId",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						getManagedBean().getQtId()));
-
-
-		searchBean.getSortColumns().add(
-				new SearchOrderBean("pmCategoryL1.categoryL1Code"));
-		searchBean.getSortColumns().add(
-				new SearchOrderBean("pmCategoryL2.categoryL2Code"));
-		searchBean.getSortColumns().add(
-				new SearchOrderBean("pmCategoryL3.categoryL3Code"));
-
-		try {
-			qtNoticeBoardSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTNoticeBoardSO.class);
-			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-			reqDTO.setQtCategorySearchBean(searchBean);
-			NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
-			if (null != resDTO && null != resDTO.getCategoryResultBean()) {
-				ISearchResultBean<ScQtCategory> resultBean = resDTO.getCategoryResultBean();
-				List<ScQtCategory> categories = resultBean.getResultList();
-				if (CollectionUtils.isNotEmpty(categories)) {
-					categoryCodes = new ArrayList<>();
-					for (ScQtCategory qtCategory : categories) {
-						categoryCodes.add(qtCategory.getPmCategoryL1().getCategoryL1Code()
-								+ qtCategory.getPmCategoryL2().getCategoryL2Code()
-								+ qtCategory.getPmCategoryL3().getCategoryL3Code());
-					}
-				}
-			}
-		} finally{
-			qtNoticeBoardSO = null;
-		}
-		
-		if (null != suppDataSO) {
-			log.info(this.getClass().getName() + ".checkDisciplinaryActionExists() :  Checking Active Disciplinary Action for supplier ID: " + supplier.getSupplierId());
-			supplierDataMaintenanceResDTO = suppDataSO.getDisciplinaryActionMsg(supplierDataMaintenanceReqDTO, categoryCodes);
-			if (null != supplierDataMaintenanceResDTO && StringUtils.isNotEmpty(supplierDataMaintenanceResDTO.getErrorMessage())
-					&& (supplierDataMaintenanceResDTO.getErrorMessage().contains("Disciplinary Action")
-							|| supplierDataMaintenanceResDTO.getErrorMessage().contains("Tindakan Tatatertib"))) {
-				log.info(this.getClass().getName() + ".checkDisciplinaryActionExists() :  Active Disciplinary Action exist for supplier ID: " + supplier.getSupplierId());
-				this.getManagedBean().setQualified(false);
-			}
-		}
-	}
+//	/**
+//	 * @param supplier 
+//	 * 
+//	 */
+//	private void checkDisciplinaryActionExists(SmSupplier supplier) {
+//		SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
+//		FacesScopes facesScopes = new FacesScopes();
+//		PmUser sUsers = facesScopes.getUserSessionBean();
+//		IQTNoticeBoardSO qtNoticeBoardSO = null;
+//		List<String> categoryCodes = null;
+//		
+//		if (sUsers != null && sUsers.getPreferredLanguage() != null){
+//			supplierDataMaintenanceReqDTO.setLanguage(sUsers.getPreferredLanguage());
+//		}
+//		
+//		supplierDataMaintenanceReqDTO.setSupplier(supplier);
+//		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+//		SupplierDataMaintenanceResDTO supplierDataMaintenanceResDTO = null;
+//
+//		ISearchBean<ScQtCategory> searchBean = new SearchBean<>();
+//		searchBean.getDataFilterBeans().add(
+//				new SearchFilterBean("scQt.qtId",
+//						SearchOperator.OPERATOR_EQUALS.value(),
+//						getManagedBean().getQtId()));
+//
+//
+//		searchBean.getSortColumns().add(
+//				new SearchOrderBean("pmCategoryL1.categoryL1Code"));
+//		searchBean.getSortColumns().add(
+//				new SearchOrderBean("pmCategoryL2.categoryL2Code"));
+//		searchBean.getSortColumns().add(
+//				new SearchOrderBean("pmCategoryL3.categoryL3Code"));
+//
+//		try {
+//			qtNoticeBoardSO = BusinessDelegate.getInstance()
+//					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//							IQTNoticeBoardSO.class);
+//			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+//			reqDTO.setQtCategorySearchBean(searchBean);
+//			NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
+//			if (null != resDTO && null != resDTO.getCategoryResultBean()) {
+//				ISearchResultBean<ScQtCategory> resultBean = resDTO.getCategoryResultBean();
+//				List<ScQtCategory> categories = resultBean.getResultList();
+//				if (CollectionUtils.isNotEmpty(categories)) {
+//					categoryCodes = new ArrayList<>();
+//					for (ScQtCategory qtCategory : categories) {
+//						categoryCodes.add(qtCategory.getPmCategoryL1().getCategoryL1Code()
+//								+ qtCategory.getPmCategoryL2().getCategoryL2Code()
+//								+ qtCategory.getPmCategoryL3().getCategoryL3Code());
+//					}
+//				}
+//			}
+//		} finally{
+//			qtNoticeBoardSO = null;
+//		}
+//		
+//		if (null != suppDataSO) {
+//			log.info(this.getClass().getName() + ".checkDisciplinaryActionExists() :  Checking Active Disciplinary Action for supplier ID: " + supplier.getSupplierId());
+//			supplierDataMaintenanceResDTO = suppDataSO.getDisciplinaryActionMsg(supplierDataMaintenanceReqDTO, categoryCodes);
+//			if (null != supplierDataMaintenanceResDTO && StringUtils.isNotEmpty(supplierDataMaintenanceResDTO.getErrorMessage())
+//					&& (supplierDataMaintenanceResDTO.getErrorMessage().contains("Disciplinary Action")
+//							|| supplierDataMaintenanceResDTO.getErrorMessage().contains("Tindakan Tatatertib"))) {
+//				log.info(this.getClass().getName() + ".checkDisciplinaryActionExists() :  Active Disciplinary Action exist for supplier ID: " + supplier.getSupplierId());
+//				this.getManagedBean().setQualified(false);
+//			}
+//		}
+//	}
 
 	/**
 	 * Handle Department drop down changed - reset selected ptj profile and
@@ -1419,6 +1421,7 @@ public class NoticeBoardBackingBean extends
 							orderedStatuses.indexOf(QTStatusConst.QT_AWARDED));
 					
 					statusIds.addAll(orderedStatuses);
+					statusIds.add(QTStatusConst.QT_CLOSE_PERMANENTLY); //Bug #38702
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_AWARDED);
@@ -1458,6 +1461,7 @@ public class NoticeBoardBackingBean extends
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CANCELLED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_CANCELLED);
+					statusIds.add(QTStatusConst.QT_CANCELED_DUETO_PROPOSALVALIDITY_EXPIRED);//Bug #38702
 					
 				} else {
 					
@@ -2581,6 +2585,14 @@ public class NoticeBoardBackingBean extends
 						attendance.setEmail(smPersonal.getEmail());
 						attendance.setName(smPersonal.getName());
 						attendance.setBsvRegistration(bsvRegistration);
+						
+						// #30447 - Start
+						String newName = attendance.getName();
+						String salutation = supplierSalutation(smPersonal.getIdentificationNo());
+						newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+						attendance.setName(newName);
+						// #30447 - End
+						
 						setUserDetails(attendance);
 	
 						bsvAttandances.add(attendance);
@@ -2595,6 +2607,12 @@ public class NoticeBoardBackingBean extends
 						if (bsvAttandances.contains(extAttandance)) {
 							bsvAttandances.remove(extAttandance);
 	
+							// #30447 - Start
+							String newName = extAttandance.getName();
+							String salutation = supplierSalutation(extAttandance.getIcPassPort());
+							newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+							extAttandance.setName(newName);
+							// #30447 - End
 						}
 						bsvAttandances.add(extAttandance);
 					}
@@ -3540,21 +3558,19 @@ public class NoticeBoardBackingBean extends
 		return isRenderRigisterBtn;
 	}
 	
+	// #30447 - Start
 	/**
-	 * #30447 - Retrieve supplier Salutation by identification No
+	 * Retrieve supplier Salutation by identification No
+	 * 
 	 * @param identificationNo
 	 * @return salutationName
 	 */
 	public String supplierSalutation(String identificationNo) {
-		PmSalutation salutation = null;
-		String salutationName = null;
-		IQTNoticeBoardSO supplierSO = null;
-
+		String salutationName = StringUtils.EMPTY;
 		try {
-			supplierSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTNoticeBoardSO.class);
-			salutation = supplierSO.retrieveUserByIdentificationNo(identificationNo);
-
+			IQTNoticeBoardSO noticeBoardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			PmSalutation salutation = noticeBoardSO.retrieveSalutationByIdentificationNo(identificationNo);
 			if (salutation != null) {
 				salutationName = salutation.getSalutationName();
 			}
@@ -3564,7 +3580,9 @@ public class NoticeBoardBackingBean extends
 					getUserIdSessionFromLoginId(), e);
 		}
 		return salutationName;
-	}//#30447 - end
+	}
+
+	// #30447 - End
 
 		// #29732 Start
 		public void onClickHistoryIcon(String catCode, String catCodeLevel,
