@@ -178,6 +178,13 @@ import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
 
+//29661 -start-
+import my.ep.dto.sc.quationtender.EvaluationResDTO;
+import my.ep.web.constant.sc.SLALogConstant;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
+
+//29661 -end-
+
 /**
  * Supplier Proposal Backing Bean
  * 
@@ -3286,6 +3293,29 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 				pageUrl = retrievePaidUpCapitalNdDeclarationDtls();
 			}
+			
+			// 29661-start-
+			else if (SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE
+					.equalsIgnoreCase(docDefinitionKey)) {
+				this.getManagedBean().setCloseCompanyExpReminderPopUp(
+						SourcingConstants.OPEN_REMINDER_POPUP_VALUE);
+				retrieveFinGovNonGovCompanyExpDetails(scQtProposalChecklist,
+						SourcingConstants.CLIENT_TYPE_FINANCIAL,
+						QTConstants.PROPOSAL__GOV_PROC_RELATED,
+						QTConstants.PROPOSAL__GOV__NONPROC_RELATED);
+				pageUrl = QTConstants.PROPOSAL_FINANCIAL_GOVERNMENT_EXPERIENCE;
+			} else if (SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE
+					.equalsIgnoreCase(docDefinitionKey)) {
+				this.getManagedBean().setCloseCompanyExpReminderPopUp(
+						SourcingConstants.OPEN_REMINDER_POPUP_VALUE);
+				retrieveFinGovNonGovCompanyExpDetails(scQtProposalChecklist,
+						SourcingConstants.CLIENT_TYPE_OTHER,
+						QTConstants.PROPOSAL__NONGOV_PROC_RELATED,
+						QTConstants.PROPOSAL__NONGOV__NONPROC_RELATED);
+				pageUrl = QTConstants.PROPOSAL_NONFINANCIAL_GOVERNMENT_EXPERIENCE;
+			}
+			// 29661-end-
+			
 		}
 		this.getManagedBean().setPageUrl(pageUrl);
 		return NAV_TO_FINANCIAL_CHECKLIST_MAIN_PAGE + "?faces-redirect=true";
@@ -6664,4 +6694,189 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 
 	}
 	// #33787 End Vinod
+
+
+	// 29661 -start-
+	/**
+	 * set company experience reminder popup close value.
+	 */
+	public void closeCompanyExpReminderPopUp() {
+		this.getManagedBean().setCloseCompanyExpReminderPopUp(
+				SourcingConstants.CLOSE_REMINDER_POPUP_VALUE);
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * show company experience reminder popup.
+	 */
+	public void showCompanyExpPopUp() {
+		RequestContext.getCurrentInstance().execute(
+				QTConstants.COMPANY_EXPERIENCE_REMINDER_POPUP);
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * fetch supplier company experience details Related to procument and
+	 * Nonprocurement.
+	 * 
+	 * @param scQtProposalChecklist
+	 * @param clientType
+	 */
+	private void retrieveFinGovNonGovCompanyExpDetails(
+			ScQtProposalChecklist scQtProposalChecklist, String clientType,
+			String procRelated, String procNotRelated) {
+		BigDecimal year = scQtProposalChecklist.getScQtCheckList()
+				.getScQtCheckListValue().getYear();
+		getManagedBean().setYear(year);
+		ScQt scQt = this.getManagedBean().getQt();
+		this.getManagedBean().setCompanyExpProcRelatedList(null);
+		this.getManagedBean().setCompanyExpNonProcRelatedList(null);
+		this.getManagedBean().setContractStatusvalueProcRelated(null);
+		this.getManagedBean().setCompanyExpProcRelatedContracts(0);
+		this.getManagedBean().setCompanyExpNonProcRelatedContracts(0);
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (qtStatus != null
+				&& QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus
+						.getStatusId())) {
+			ProposalResDTO compExpProc = retrieveProposalCompanyExpdtls(
+					scQtProposalChecklist, clientType, year,
+					SourcingConstants.CATEGORY_CODE_IN);
+			if (CollectionUtils.isNotEmpty(compExpProc
+					.getCompanyExpProcNonProcList())) {
+				this.getManagedBean().setCompanyExpProcRelatedList(
+						compExpProc.getCompanyExpProcNonProcList());
+				this.getManagedBean().setCompanyExpProcRelatedContracts(
+						compExpProc.getCompanyExpProcNonProcList().size());
+
+			}
+			this.getManagedBean().setContractStatusvalueProcRelated(
+					compExpProc.getCompanyExpStatusBean());
+			BigDecimal procTotalAmount = calculateContractValueAmount(compExpProc
+					.getCompanyExpStatusBean().get(1));
+
+			this.getManagedBean()
+					.setCompanyExpProcRelatedValue(procTotalAmount);
+			ProposalResDTO compExpNonProc = retrieveProposalCompanyExpdtls(
+					scQtProposalChecklist, clientType, year,
+					SourcingConstants.CATEGORY_CODE_NOT_IN);
+			if (CollectionUtils.isNotEmpty(compExpNonProc
+					.getCompanyExpProcNonProcList())) {
+				this.getManagedBean().setCompanyExpNonProcRelatedList(
+						compExpNonProc.getCompanyExpProcNonProcList());
+				this.getManagedBean().setCompanyExpNonProcRelatedContracts(
+						compExpNonProc.getCompanyExpProcNonProcList().size());
+
+			}
+			this.getManagedBean().setContractStatusvalueNonProcRelated(
+					compExpNonProc.getCompanyExpStatusBean());
+			BigDecimal nonProcTotalAmount = calculateContractValueAmount(compExpNonProc
+					.getCompanyExpStatusBean().get(1));
+			this.getManagedBean().setCompanyExpNonProcRelatedValue(
+					nonProcTotalAmount);
+
+		} else {
+
+			EvaluationReqDTO evaluationProcReqDTO = setDetailsToReqDTO(
+					scQtProposalChecklist, scQt, clientType,
+					SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL,
+					Boolean.TRUE);
+			this.getManagedBean().setCompanyExpProcRelatedPagingModel(
+					new ViewSupplierCompExpDtlsPagingDataModel(procRelated,
+							evaluationProcReqDTO));
+
+			EvaluationResDTO cmpExpProcStatusValue = retrieveContractStatusValueCount(
+					scQtProposalChecklist, scQt, clientType,
+					SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL,
+					Boolean.TRUE);
+			this.getManagedBean().setContractStatusvalueProcRelated(
+					cmpExpProcStatusValue.getCompExpContractValueStatusBean());
+			this.getManagedBean()
+					.setCompanyExpProcRelatedContracts(
+							calculateContractValueAmount(
+									this.getManagedBean()
+											.getContractStatusvalueProcRelated()
+											.get(0)).intValue());
+
+			this.getManagedBean().setCompanyExpProcRelatedValue(
+					calculateContractValueAmount(this.getManagedBean()
+							.getContractStatusvalueProcRelated().get(1)));
+
+			EvaluationReqDTO evaluationNonProcReqDTO = setDetailsToReqDTO(
+					scQtProposalChecklist, scQt, clientType,
+					SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL,
+					Boolean.FALSE);
+			this.getManagedBean().setCompanyExpNonProcRelatedPagingModel(
+					new ViewSupplierCompExpDtlsPagingDataModel(procNotRelated,
+							evaluationNonProcReqDTO));
+
+			EvaluationResDTO cmpExpNonPrcCountValue = retrieveContractStatusValueCount(
+					scQtProposalChecklist, scQt, clientType,
+					SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL,
+					Boolean.FALSE);
+			this.getManagedBean().setContractStatusvalueNonProcRelated(
+					cmpExpNonPrcCountValue.getCompExpContractValueStatusBean());
+			this.getManagedBean().setCompanyExpNonProcRelatedContracts(
+					calculateContractValueAmount(
+							this.getManagedBean()
+									.getContractStatusvalueNonProcRelated()
+									.get(0)).intValue());
+			this.getManagedBean().setCompanyExpNonProcRelatedValue(
+					calculateContractValueAmount(this.getManagedBean()
+							.getContractStatusvalueNonProcRelated().get(1)));
+
+		}
+
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * 
+	 * @param proposalChekList
+	 * @param clinetType
+	 * @param year
+	 * @param categoryCodeCondition
+	 * @return ProposalResDTO
+	 */
+	public ProposalResDTO retrieveProposalCompanyExpdtls(
+			ScQtProposalChecklist proposalChekList, String clinetType,
+			BigDecimal year, int categoryCodeCondition) {
+		IQTProposalSO proposalSO = null;
+		try {
+
+			Long supplierId = getManagedBean().getSupplierId();
+			Long applId = proposalChekList.getScQtProposal()
+					.getSupplierApplId();
+			ScQt scQt = this.getManagedBean().getQt();
+			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			proposalReqDTO.setSupplierId(supplierId);
+			proposalReqDTO.setYear(year.intValue());
+			proposalReqDTO.setApplId(applId);
+			proposalReqDTO.setCategoryL3Codes(getCategoryL3Codes(scQt));
+			proposalReqDTO
+					.setCategoryCodeSearchCondition(categoryCodeCondition);
+			proposalReqDTO.setClientType(clinetType);
+			proposalReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			return proposalSO.retrieveCompanyExpDetails(proposalReqDTO);
+
+		} catch (Exception e) {
+			Long qtId = this.getManagedBean().getQt().getQtId();
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SP_DETAIL_BACKINGBEAN,
+					String.valueOf(qtId),
+					SLALogConstant.RETRIEVE_PROPOSAL_COMPANY_EXP_DETAILS,
+					getUserIdSessionFromLoginId(), e);
+		}
+		return null;
+	}
+
+	// 29661 -end-
+	
 }

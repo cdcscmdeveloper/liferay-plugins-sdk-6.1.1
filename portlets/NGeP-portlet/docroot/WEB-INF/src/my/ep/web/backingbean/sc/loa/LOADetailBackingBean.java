@@ -12617,7 +12617,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (isQTMaintenanceScreen()) {
 			getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX);
 		}
-	}// 25791-end	
+		
+		//29661 -start-
+		else if(isCheckProposalPortlet() || isCheckEvaluationPortlet()){
+			getManagedBean().setSelectedTabIndex(QTConstants.TAB_LOA_INDEX);
+			
+		}
+		//29661 -end-
+	}// 25791-end
+	
+	
 	
 	// #29007 Start vinod
 	private void checkAndInsertItemSpecOffer() {
