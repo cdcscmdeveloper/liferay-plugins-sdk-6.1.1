@@ -843,6 +843,13 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		}
 		//36386 -End
 		
+		//36386 -Start
+		if(getSearchFunctionType() !=null && getSearchFunctionType().equalsIgnoreCase("ParameterConst.ORG_TYPE_SUPPLIER")){
+			flDocTypes.remove(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+			flDocTypes.remove(ParameterConst.DOCTYPE_CONTRACT_REQUEST); 
+		}
+		//36386 -End
+		
 		return flDocTypes;
 	}
 	

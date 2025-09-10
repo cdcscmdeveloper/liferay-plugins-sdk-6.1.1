@@ -157,7 +157,7 @@ public class TrustGateHelper {
 				} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
 					vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_TRUSTGATE_776061, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
-					// START 28683
+				//START 28683	
 				} else if (res.getStatusCode() == SPKIConst.CERT_EXPIRED) {
 					vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_TRUSTGATE_776063, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
@@ -166,7 +166,7 @@ public class TrustGateHelper {
 					vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_TRUSTGATE_776062, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				}
-				// END 28683
+				//END 28683
 
 			}
 		} catch (Exception e) {
@@ -213,43 +213,40 @@ public class TrustGateHelper {
 		// externalContext.redirect(url4);
 	}
 	
-	public void resetPIN(String identificationNo, String epNo, String email)
-			throws IOException, PortalException, SystemException {
-		log.info("TRUSTGATE RESET:" + identificationNo + "||" + epNo + "||"
-				+ email);
+	public void resetPIN(String identificationNo, String epNo, String email) throws IOException, PortalException, SystemException {
+		log.info("TRUSTGATE RESET:" + identificationNo + "||" + epNo + "||" + email);
+
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance()
-				.getExternalContext();
-		String url = getDns() + "/" + getTgUrl("resetpin") + encodedtoken;//34807
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+
+		String url = getDns() + "/" + getTgUrl("resetpin") + encodedtoken;// 34807
 
 		externalContext.redirect(url);
 	}
 
-	public void changePIN(String identificationNo, String epNo)
-			throws IOException, PortalException, SystemException {
+	public void changePIN(String identificationNo, String epNo) throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE CHANGE PIN:" + identificationNo + "||" + epNo);
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance()
-				.getExternalContext();
-		String url = getDns() + "/" + getTgUrl("changepin") + encodedtoken;//34807
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+
+		String url = getDns() + "/" + getTgUrl("changepin") + encodedtoken;// 34807
 
 		externalContext.redirect(url);
 	}
+	
+	public void updateChallResp(String identificationNo, String epNo) throws IOException, PortalException, SystemException {
+		log.info("TRUSTGATE UPDATE CHALL RESP:" + identificationNo + "||" + epNo);
 
-	public void updateChallResp(String identificationNo, String epNo)
-			throws IOException, PortalException, SystemException {
-		log.info("TRUSTGATE UPDATE CHALL RESP:" + identificationNo + "||"
-				+ epNo);
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance()
-				.getExternalContext();
-		String url = getDns() + "/" + getTgUrl("updateCR") + encodedtoken;//34807
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+
+		String url = getDns() + "/" + getTgUrl("updateCR") + encodedtoken;// 34807
 
 		externalContext.redirect(url);
 	}

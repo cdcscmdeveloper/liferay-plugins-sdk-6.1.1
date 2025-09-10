@@ -10447,7 +10447,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
-	
+
 	// 11104-start
 	/**
 	 * @return the sampleCheckList
@@ -10572,7 +10572,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isSampleShowHide = isSampleShowHide;
 	}
 	// 11104-End
-	
+
 	// 25037 - start
 	public boolean isShowHistory() {
 		return showHistory;
@@ -10788,5 +10788,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setTechPoints(BigDecimal techPoints) {
 		this.techPoints = techPoints;
 	}
-	// 37813,35384 -end
+	// 37813,35384 -end	
+
 }

@@ -2178,16 +2178,13 @@ public class SmApplicationUtil {
 				validPersonnels = false;
 			}
 		}
-		//#31130 --START 040725
-		if (!validPersonnels && managedBean.isSupplierUser()){//#31130
+		// #31130 --START 040725
+		if (!validPersonnels && managedBean.isSupplierUser()) {// #31130
 			validSave = false;
-			/*setNavigationBackToCurrentPage(currentTab, managedBean);
-			throw new EpException(MessageConst.ERROR_722599,
-					new String[] { sb.toString() });*/ //Commented for #31130 050625
-		}else if (!validPersonnels && (managedBean.isApproverUser()|| managedBean.isPoUser())){
+		} else if (!validPersonnels && (managedBean.isApproverUser() || managedBean.isPoUser())) {
 			managedBean.setPoApproverAcedemicErr(true);
 			managedBean.setMsgPersonnelErr(sb.toString());
-		//#31130 --END 040725
+			// #31130 --END 040725
 		}
 
 		return validSave;
@@ -2240,25 +2237,21 @@ public class SmApplicationUtil {
 			if ((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() == null)
 					// #30718 - start
 					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null 
-							&& (per.getPmCountry() != null && per.getPmCountry().getCountryId() == 131L)) //#31130 -040725
+					&& (per.getPmCountry() != null && per.getPmCountry().getCountryId() == 131L)) //#31130 -040725
 					// #30718 - end
 					//#31130 --START 040725
 					|| per.getPmRace() == null || per.getTitle() == null
 					|| per.getDesignation() == null 
 					|| per.getPmCountry() == null || per.getIdentificationNo() == null
 					|| per.getIdentificationTypeId() == null || per.getBirthDate() == null 
-					|| (per.getWorkExperienceYear() == null && appl.getSupplierType().equalsIgnoreCase(
-							SupplierManagementConst.STYPE_CONSULTANT)) 
+					|| (per.getWorkExperienceYear() == null && appl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))
 					|| ((per.getMobileArea() == null || per.getMobileNo() == null|| per.getMobileTelcoId() == null)
-							&& per.isAuthorized() == true)
+					&& per.isAuthorized() == true)
 					|| per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
-			} //#31130 --END 040725
-
-			/*} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
-				validPersonnel = false;
-			}*/ //Commented for #31130 050625
-
+			} 
+			//#31130 --END 040725
+			
 			//31130-start 040725
 			for (SmPersonnelAddress addressPer : per.getSmPersonnelAddresses()){
 				if (addressPer.getSmAddress() == null
@@ -2277,11 +2270,9 @@ public class SmApplicationUtil {
 			}//31130-end 040725
 			//#30444 --START--25082021--
 			if ((per.isClerical() && per.isManagement() 
-					&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))
-							|| (per.isClerical() && per.isManagement() && !per.isEquityOwner()
-									&& managedBean.getBusinessTypeVal().equalsIgnoreCase(
-											SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))){
+					&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))
+					|| (per.isClerical() && per.isManagement() && !per.isEquityOwner()
+					&& managedBean.getBusinessTypeVal().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))){
 				validPersonnels = false;
 			}
 			//#30444 --END--25082021--

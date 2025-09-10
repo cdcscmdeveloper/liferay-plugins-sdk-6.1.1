@@ -98,7 +98,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatus;	// Bug #37829@Syazani 13/03/2024
 import my.ep.persistence.entity.sc.common.ScActor; //Bug #32682
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
@@ -148,6 +148,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean.FinalizationEndorsementReportDTO;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -263,6 +264,12 @@ public class SupplierFinalizationBackingBean extends
 			// #18685 - Start.
 			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
 			// #18685 - End.
+			
+			// Bug #37829@Syazani 13/03/2024 -- Start
+			if (!validateCurrentStatus()) {
+				throw new EpException(MessageConst.ERROR_721018);
+			}
+			// Bug #37829@Syazani 13/03/2024 -- End
 			
 			// Bug #37829@Syazani 13/03/2024 -- Start
 			if (!validateCurrentStatus()) {
@@ -1373,7 +1380,7 @@ public class SupplierFinalizationBackingBean extends
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 			finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));//35381 - Related 6906
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
-			
+
 			// 6906 - start - note 117
 			String desicion = scQtFinalization.getDecision() == null ? null : scQtFinalization.getDecision()
 					.getParameterCode();
@@ -2287,7 +2294,7 @@ public class SupplierFinalizationBackingBean extends
 						new FacesScopes().getUserLocale()) });
 			}
 			// 6906 - end - note 117
-			
+
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId)
@@ -4578,7 +4585,7 @@ public class SupplierFinalizationBackingBean extends
 		List<Long> rejectedRecommendIds = getManagedBean().getRejectedScQtRecommendIds();
 		rejectedRecommendIds = rejectedRecommendIds == null ? new ArrayList<Long>() : rejectedRecommendIds;
 		// 33380 - end
-		
+
 		if (CollectionUtils.isNotEmpty(scQtRecommends)) {
 			for (ScQtRecommend recommend : scQtRecommends) {
 				if (recommend.getRecommendDtls() != null) {
@@ -6636,7 +6643,7 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setSelectionMode(recommendCount > 0 ? QTConstants.SELECTION_MODE_MULTIPLE : QTConstants.SELECTION_MODE_SINGLE);
 		}
 		// 33380 - end
-		
+
 		if (scQtRecommend.isSelected()) {
 			getManagedBean().setSelectedItem(scQtRecommend);
 			getManagedBean().getSelectedItemList().add(scQtRecommend);
