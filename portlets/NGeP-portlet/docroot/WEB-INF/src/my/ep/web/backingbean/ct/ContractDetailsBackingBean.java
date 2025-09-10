@@ -3600,8 +3600,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					Date CurrentDate = new Date();
 					if(dateFormat.format(contractAmt.getEffDate()).compareTo(dateFormat.format(CurrentDate))<=0
 							&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0){
-						processPerformanceBonds(contractAmt, docType, isAmendment);
+						processPerformanceBonds(contractAmt, docType, isAmendment); //#24333
 						ctBB.getManagedBean().setCtContractAmount(contractAmt);
+						ctBB.getManagedBean().setTotalBondAmt(contractAmt.getTotalBondAmt()); //#24333
 						break; // Exit loop after processing the first matching
 								// contractAmt
 					}
