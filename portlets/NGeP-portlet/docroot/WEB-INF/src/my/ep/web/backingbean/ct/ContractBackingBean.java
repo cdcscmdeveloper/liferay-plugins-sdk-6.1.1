@@ -4713,7 +4713,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				|| statusId == ContractStatusConst.FA_PENDING_VERIFICATION.longValue()
 				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION.longValue()
 				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.longValue()
-				|| statusId == ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT .longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT.longValue()
 				|| statusId == ContractStatusConst.FA_LOA_COMPLETED.longValue();
 	}
 	//#24333 - End
