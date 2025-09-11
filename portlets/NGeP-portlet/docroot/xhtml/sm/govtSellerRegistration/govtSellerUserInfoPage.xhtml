@@ -283,8 +283,6 @@
 		
 		<p:outputPanel id="pnlUsrInfo"> 
 			<table class="customTbl">
-				<!-- #36718 - START - add panel for refresh address -->
-				<p:panel id="g2gUsrInfoPanelId" style="border: none;">
 				<tr>
 					<td class="tdTitle">
 						<c:choose>
@@ -321,7 +319,7 @@
 							<f:selectItems var="counLs"
 								value="#{bb.managedBean.countryLs}" />
 							<!-- #36718 - process panel when change address dropdown -->
-							<p:ajax event="change" process="@([id$=g2gUsrInfoPanelId])" 
+							<p:ajax event="change" process="@([id$=pnlUsrInfo])" 
 								listener="#{bb.onChangeCountry(bb.managedBean.smPermenantAdd.pmCountry,'USER_PERMANENT_ADDRESS')}"
 								update="cmbPermState,cmbPermDivision,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
 						</p:selectOneMenu> <p:message id="cmbPermCounrtyMsg" for="cmbPermCounrty"
@@ -342,10 +340,10 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="state"
 								value="#{bb.managedBean.permenantStateLs}" />
-							<!-- #36718 - process panel when change address dropdown -->
-							<p:ajax event="change" process="@([id$=g2gUsrInfoPanelId])" 
+							<!-- #36718 - process panel when change address dropdown, update postcode -->
+							<p:ajax event="change" process="@([id$=pnlUsrInfo])"  
 								listener="#{bb.onChangeState(bb.managedBean.smPermenantAdd.pmState,'USER_PERMANENT_ADDRESS')}"
-								update="cmbPermDistrict,pnlUsrInfo,divisionUserInfoLabelPanelId,divisionUserInfoDropdownPanelId,cmbPermCity" />
+								update="cmbPermDistrict,pnlUsrInfo,divisionUserInfoLabelPanelId,divisionUserInfoDropdownPanelId,cmbPermCity,txtPermPostcodePanelId" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 				</tr>
@@ -371,10 +369,10 @@
 							value="#{bb.managedBean.permenantDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<!-- #36718 - process panel when change address dropdown -->
-						<p:ajax event="change" process="@([id$=g2gUsrInfoPanelId])" 
+						<!-- #36718 - process panel, update postcode -->
+						<p:ajax event="change" process="@([id$=pnlUsrInfo])" 
 							listener="#{bb.onChangeDivision(bb.managedBean.smPermenantAdd.pmDivision,'USER_PERMANENT_ADDRESS')}"
-								update="cmbPermDistrict,cmbPermCity" />
+							update="cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
 					</p:selectOneMenu>
 					<p:message id="cmbPermDivisionMsg" for="cmbPermDivision" display="icon" />
 					<!-- #34159 - END -->
@@ -396,10 +394,10 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="dist"
 								value="#{bb.managedBean.permenantDistrictLs}" />
-							<!-- #36718 - process panel when change address dropdown -->
-							<p:ajax event="change" process="@([id$=g2gUsrInfoPanelId])" 
+							<!-- #36718 - process panel, update postcode -->
+							<p:ajax event="change" process="@([id$=pnlUsrInfo])" 
 								listener="#{bb.onChangeDistrict(bb.managedBean.smPermenantAdd.pmDistrict,'USER_PERMANENT_ADDRESS')}"
-								update="cmbPermCity" />
+								update="cmbPermCity,txtPermPostcodePanelId" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermDistrictMsg" for="cmbPermDistrict" display="icon" /></td>
 				</tr>
@@ -417,12 +415,14 @@
 							<f:selectItems var="pcity"
 								value="#{bb.managedBean.permenantCityLs}"
 								itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
+							<!-- #36718 - add ajax -->
+							<p:ajax event="change" process="@([id$=pnlUsrInfo])"
+								listener="#{bb.onChangeCity(bb.managedBean.smPermenantAdd.pmCity,'USER_PERMANENT_ADDRESS')}"
+								update="txtPermPostcodePanelId" />
 						</p:selectOneMenu>
 						<p:message id="cmbPermCityMsg" for="cmbPermCity" display="icon" />
 						</td>
 				</tr>
-				</p:panel>
-				<!-- #36718 - END -->
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td class="tdContent">
@@ -589,9 +589,10 @@
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="resState"
 										value="#{bb.managedBean.residentialStateLs}" />
-									<p:ajax event="change"
+									<!-- #36718 - process panel, update postcode -->
+									<p:ajax event="change" process="@([id$=pnlContactInfo])" 
 										listener="#{bb.onChangeState(bb.managedBean.smResAdd.pmState,'USER_RESIDENTIAL_ADDRESS')}"
-										update="cmbResDistrict,divisionUserLabelPanelId,divisionUserDropdownPanelId,cmbResCity" />
+										update="cmbResDistrict,divisionUserLabelPanelId,divisionUserDropdownPanelId,cmbResCity,conPostCodeMy" />
 								</p:selectOneMenu> <p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
 							</td>
 						</tr>
@@ -620,9 +621,10 @@
 							value="#{bb.managedBean.residentialDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change" process="@this"
+						<!-- #36718 - process panel, update postcode -->
+						<p:ajax event="change" process="@([id$=pnlContactInfo])"
 							listener="#{bb.onChangeDivision(bb.managedBean.smResAdd.pmDivision,'USER_RESIDENTIAL_ADDRESS')}"
-							update="cmbResDistrict,cmbResCity" />
+							update="cmbResDistrict,cmbResCity,conPostCodeMy" />
 					</p:selectOneMenu>
 					<p:message id="cmbResDivisionMsg" for="cmbResDivision" display="icon" />
 					<!-- #34159 - END -->
@@ -651,9 +653,10 @@
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="dist"
 										value="#{bb.managedBean.residentialDistrictLs}" />
-									<p:ajax event="change"
+									<!-- #36718 - process panel, update postcode -->
+									<p:ajax event="change" process="@([id$=pnlContactInfo])"
 										listener="#{bb.onChangeDistrict(bb.managedBean.smResAdd.pmDistrict,'USER_RESIDENTIAL_ADDRESS')}"
-										update="cmbResCity" />
+										update="cmbResCity,conPostCodeMy" />
 								</p:selectOneMenu> <p:message id="cmbResDistrictMsg" for="cmbResDistrict"
 									display="icon" /></td>
 						</tr>
@@ -679,6 +682,11 @@
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="city"
 										value="#{bb.managedBean.residentialCityLs}" />
+									<!-- #36718 - add ajax -->
+									<p:ajax event="change"
+										listener="#{bb.onChangeCity(bb.managedBean.smResAdd.pmCity,'USER_RESIDENTIAL_ADDRESS')}"
+										process="@([id$=pnlContactInfo])"
+										update="conPostCodeMy" />
 								</p:selectOneMenu> <p:message id="cmbResCityMsg" for="cmbResCity" display="icon" /></td>
 						</tr>
 			

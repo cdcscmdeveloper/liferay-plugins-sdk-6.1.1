@@ -2,6 +2,9 @@
 #set($codeL1 = $tmp.suppCategory.pmCategoryL1.categoryL1Code)
 #set($codeL2 = $tmp.suppCategory.pmCategoryL2.categoryL2Code)
 #set($codeL3 = $tmp.suppCategory.pmCategoryL3.categoryL3Code)
+#set($MAX_ROWS_PER_PAGE = 22)
+#set($rowCounter = 0)
+
 <table width='100%'>
     <tr align='center' style="background-color: #3366ff;">
 	    <td>
@@ -12,18 +15,35 @@
 </table>
 	#if($templateCode == "L" || $templateCode == "B")
 		#parse("templates/sm/sitevisit/shared/equipmentMaintenanceBeating.vm")
-		<br /><br />
-		#if($templateCode == "B")
-			#parse("templates/sm/sitevisit/shared/workshop_worker.vm")
-			<br /><br />
-		#end
+		<div style="page-break-before: always;"></div>
 	#end
 	
+	#if($templateCode == "B")
+		#if($isHQ)
+			#set($workshopName = $smVmUtil.getDescByLabel('lbl.sm.facility.type._H'))
+			#parse("templates/sm/sitevisit/shared/group/workshop_worker.vm")
+		#else
+			#foreach($workshop in $workshops)
+				#set($workshopName = $workshop.facilityName)
+				#parse("templates/sm/sitevisit/shared/group/workshop_worker.vm")
+				<br />
+			#end
+		#end
+		<br /><br />
+	#end
+	#if($rowCounter > $MAX_ROWS_PER_PAGE)
+		<div style="page-break-before: always;"></div>
+		#set($rowCounter = 0)
+    #end
 	#if($templateCode != "PG")
 		#parse("templates/sm/sitevisit/shared/group/manufacturing-machine.vm")
     	<br /><br />
     #end
-	
+	#if($rowCounter > $MAX_ROWS_PER_PAGE)
+		<div style="page-break-before: always;"></div>
+		#set($rowCounter = 0)
+    #end
+    
    	#if($templateCode == "M")
     	#parse("templates/sm/sitevisit/shared/manufacturing-or-assembly.vm")
     	<br /><br />
@@ -33,6 +53,10 @@
     	<br /><br />
     #end
     
+	#if($rowCounter > $MAX_ROWS_PER_PAGE)
+		<div style="page-break-before: always;"></div>
+		#set($rowCounter = 0)
+    #end
     #if($templateCode != "PG")
    		#parse("templates/sm/sitevisit/shared/group/machine.vm")
    	#else

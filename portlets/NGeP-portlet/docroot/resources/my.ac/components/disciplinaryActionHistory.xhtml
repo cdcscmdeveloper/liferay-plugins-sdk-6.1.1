@@ -20,6 +20,7 @@
 		<cc:attribute name="smAppl" type="my.ep.persistence.entity.sm.SmAppl" />
 		<!-- 30842 End -->
 		<cc:attribute name="btnView" default="false" />
+		<cc:attribute name="showCatCode" default="false"/>	<!-- #38283 -->
 		<ui:remove>26247 - start</ui:remove>
 		<cc:attribute name="dynamic" default="false" />
 		<ui:remove>26247 - end</ui:remove>
@@ -37,7 +38,7 @@
 		<ui:param name="isMOF" value="#{empty cc.attrs.voList ? false : cc.attrs.voList.get(0).mofNoExist}" />
 							
 		<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" id="disciplinaryActionDtId"
-		 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+		  rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 		 scrollable="#{cc.attrs.voList.size() gt 1}"
 		 scrollHeight="#{cc.attrs.voList.size() gt 5 ? 470 : ''}" 	 
 		 style="table-layout: fixed; width: 97%; margin: 0; padding: 0;">
@@ -109,9 +110,9 @@
 			</p:column>
 			<!-- 27796: Disciplinary Action - end - 26238 -->
 			<!-- 28613, 28637 -->
-			<!-- 30842 -->
+			<!-- 30842, 38283 -->
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
-				rendered="#{isMOF}"
+				rendered="#{isMOF or cc.attrs.showCatCode}"
 				style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 				<!-- 30842 End -->
 				<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"

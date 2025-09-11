@@ -23,6 +23,7 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	String roleCode;
 	String docNo;
 	BigInteger docId;
+	private String docType;
 	BigInteger docGroupId;
 
 	/**
@@ -33,7 +34,8 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteAppType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		Integer rowIndex = managedBeans.getDeleteRowIndex();
 		log.info("rowIndex ::: >>> ::: " + rowIndex);
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteAppTypeRestrictionsAuditList()) {
@@ -113,7 +115,8 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteComType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteComTypeRestrictionsAudit()) {
 			if (null != pmDocumentRestr.getCompanyTypeCode() && null != pmDocumentRestr.getCompanyTypeCode().getParameterId()) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
@@ -134,7 +137,8 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteSuppType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		// deletesuppresrictOld << untick checkbox suppTypeRestrictionOld
 		if (managedBeans.getDeleteSuppTypeRestrictionsAudit() != null) { // managedBeans.getSuppTypeRestrictionsOld()managedBeans.getComTypeRestrictionsOld()
 			for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteSuppTypeRestrictionsAudit()) {
@@ -159,7 +163,8 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteCategoryType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteCategoryRestrictionsAudit()) {
 			if (null != pmDocumentRestr.getPmCategoryL3().getCategoryL3Id()) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
@@ -193,7 +198,8 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteCertBodyType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		if (managedBeans.getDeleteCertBodyRestrictionsAudit() != null) {
 			for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteCertBodyRestrictionsAudit()) {
 				if (null != pmDocumentRestr.getPmCertBody() && null != pmDocumentRestr.getPmCertBody().getCertBodyId()) {
@@ -210,7 +216,7 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	private AuditPMSPDTO detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
-		dtlObj.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+		dtlObj.setDocType(docType);
 		dtlObj.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);

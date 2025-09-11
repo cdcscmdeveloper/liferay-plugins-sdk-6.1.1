@@ -23,13 +23,19 @@
 			<tr>
 				<td>
 					<span id="blinkId3">
-						<p:graphicImage id="alert-img"
+						<p:graphicImage id="alert-img-overlapcat"
 						style="vertical-align:top"
 						value="/css/images/design/icon_alert.png" />
-						<strong><h:outputText styleClass="warning" value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
+						<!-- #13362 START -->
+						<strong><h:outputText
+							styleClass="warning"
+							value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
 					</span>
 					<span style="opacity: 0.0;">
-						<strong><h:outputText styleClass="instruction" value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
+						<strong><h:outputText
+							styleClass="instruction"
+							value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
+						<!-- #13362 END -->
 					</span>
 				</td>
 			</tr>

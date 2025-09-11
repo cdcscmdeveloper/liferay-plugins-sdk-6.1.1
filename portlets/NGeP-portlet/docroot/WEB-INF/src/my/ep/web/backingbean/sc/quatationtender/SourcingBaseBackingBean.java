@@ -62,6 +62,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -72,6 +73,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -192,6 +194,7 @@ import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAtta
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -896,7 +899,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected IQTDetailSO getQTDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
-	
+
+	//38343 - start
+	protected IDocumentSO getDocumentSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+	}
+	//38343 - end
+
 	// 26247 - start
 	protected IQTSuppFinalizationSO getQtSuppFinalizationSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -908,7 +917,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				IQTBriefingSO.class);
 	}
 
+	protected IScheduleBiddingSO getScheduleBiddingSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScheduleBiddingSO.class);
+	}
 	// 26247 - end
+	
+	// 38523 - start
+	protected IReasonSO getReasonSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+	}
+
+	// 38523 - end
+	
 	// 12471 - start
 	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
@@ -5735,42 +5756,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	// 18685 - END.
 
 	// #25729 #142 Start - Allow create QT below threshold RM20k
-		public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
-			
-			BigDecimal actualIntendedPrice = new BigDecimal(0);
-			if ("createQt".equals(ScreenType) && !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) { //36678 add condition status id related to 35061
-				actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-				
-			}
-			else {
-				actualIntendedPrice = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : new BigDecimal(0) ;
-				//36678 related to 35061
-			}
-			
-			
-			if (!scQt.isPanel() && actualIntendedPrice != null) {
-				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
-		 
-				// #25729 #174
-				//BugBug #35061 - asyrafhaziq
-				// get total indicative price threshold validation value
-				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
-				
-				if ((actualIntendedPrice.compareTo(indPriceThreshold) <=0))
+	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
+		BigDecimal actualIntendedPrice = new BigDecimal(0);
 
-				{
-					return Boolean.TRUE;
-				}
-			}
-			//#36678 set null if user change above 50k. related to 35061
-			if(scQt.getJustificationProcValue() != null && scQt.getQtStatus() != null
-					&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){//#37899 add null checking for Pm Status
-				scQt.setJustificationProcValue(null);
-			}
-			return Boolean.FALSE;
+		if ("createQt".equals(ScreenType)) {
+			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+		} else {
+			actualIntendedPrice = scQt.getEstimatedAmount();
 		}
-		//#25729 - end -
+
+		if (!scQt.isPanel() && actualIntendedPrice != null) {
+			// #25729 #174
+			// Bug #35061 - asyrafhaziq
+			// get total indicative price threshold validation value
+			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+
+			if ((actualIntendedPrice.compareTo(indPriceThreshold) <= 0)) {
+				// Bug #35061 -end-
+				return Boolean.TRUE;
+			}
+		}
+
+		return Boolean.FALSE;
+	}
+	//#25729 - end -
 	
 		// #28215 - Start
 		/**
@@ -7373,11 +7382,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		for (ScQtFinalizationReport briefingPaperReport : briefingPaperList) {
 			String definitionKey = null != briefingPaperReport.getPmDocument() ? briefingPaperReport.getPmDocument()
 					.getDocDefinitionKey() : "";
+			String subStringDemoReport = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);//#28784
 			if (!Arrays.asList(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT,
 					SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT,
 					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT,
-					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT,
-					SourcingConstants.DEMO_EVALUATION_REPORT).contains(definitionKey)) {
+					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT).contains(definitionKey)
+					&& !briefingPaperReport.getTitle().contains(subStringDemoReport)) {//#28784
 				reportList.add(briefingPaperReport);
 			}
 		}
@@ -7470,7 +7480,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return false;
 		}
 		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
-		boolean isDisciplinaryAction = supplier.isDisciplinaryActions() && !supplier.isWarningDA();
+		boolean isDirectDiciplinaryAction = false;
+		if (CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
+			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+			isDirectDiciplinaryAction = Arrays.asList(disciplinaryAction.isBlacklistOwner(),
+					disciplinaryAction.isCancelRegistration(), disciplinaryAction.isSuspendRegistration()).contains(
+					true);
+		}
+		
+		boolean isDisciplinaryAction = isDirectDiciplinaryAction && supplier.isDisciplinaryActions() && !supplier.isWarningDA();
 		boolean isCancelledOrBlacklisted = viewSuppProfileBean.evaluateCancellationBlacklist(supplier);
 		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
 		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
@@ -7489,4 +7507,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						mofRecordStatus);
 	}
 	// 26247 - end
+	// #33787 Start Vinod
+	/**
+	 * This method is added to display title if the checklist is
+	 * "Modal Berbayar" then display the title from lable.
+	 * 
+	 * @param scQtCheckList
+	 * 
+	 * @return String
+	 * 
+	 */
+	public String getChecklistTitle(ScQtCheckList scQtCheckList) {
+		return null != scQtCheckList.getPmDocument()
+				&& null != scQtCheckList.getPmDocument().getDocDefinitionKey()
+				&& scQtCheckList.getPmDocument().getDocDefinitionKey()
+						.equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_PAID_UP_CAPITAL) ? getMessageCommon(QTConstants.LBL_SC_SPEC_PAID_UP_CAPITAL_INITIAL_FUND)
+				: scQtCheckList.getTitle();
+
+	}
+	// #33787 End Vinod
 }

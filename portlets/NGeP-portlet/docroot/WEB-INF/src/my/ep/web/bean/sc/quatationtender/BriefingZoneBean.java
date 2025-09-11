@@ -75,8 +75,11 @@ public class BriefingZoneBean implements Serializable {
 	private Long divisionId;
 	private Long cityId;//11104-End
 	
+	// #28777 & #29729 - Start
 	@Transient
-	private boolean branchDeactivated;//#28777 & #29729
+	private boolean branchDeactivated;
+
+	// #28777 & #29729 - End
 
 	/**
 	 * Instantiates a new briefing zone bean.
@@ -441,7 +444,7 @@ public class BriefingZoneBean implements Serializable {
 	}
 	//11104-End
 
-	//#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	public boolean isBranchDeactivated() {
 		return branchDeactivated;
 	}
@@ -449,5 +452,5 @@ public class BriefingZoneBean implements Serializable {
 	public void setBranchDeactivated(boolean branchDeactivated) {
 		this.branchDeactivated = branchDeactivated;
 	}
-	//#28777 & #29729 - End
+	// #28777 & #29729 - End
 }

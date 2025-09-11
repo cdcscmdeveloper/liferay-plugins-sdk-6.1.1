@@ -105,6 +105,15 @@
 				rendered="#{auditSearchDPRequestNoteBackingBean.getRoleCode() and requestNoteBackingBean.managedBean.trackingDairyView}" />
 			&#160;
 			<ui:remove>END : #28895#35492</ui:remove>
+			<ui:remove>#26059-start</ui:remove>
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"
+				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+				rendered="#{requestNoteBackingBean.managedBean.bpkApproverMode and isViewOnly}"
+				action="#{requestNoteBackingBean.bpkApproverSubmit}" process="@all">
+				<f:setPropertyActionListener
+					target="#{requestNoteBackingBean.managedBean.action}" value="" />
+			</p:commandButton>
+			<ui:remove>#26059-end</ui:remove>
 		</div>
 	</div>
 	<h:panelGroup rendered="#{!isViewOnly}">

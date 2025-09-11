@@ -51,10 +51,14 @@
 					
 					<br />
 					<p:outputPanel rendered="#{tasks.overlappedCategory}">
-						<p:graphicImage id="alert-img"
-						style="vertical-align:top"
-						value="/css/images/design/icon_alert.png" />
-						<strong><h:outputText styleClass="warning" value="&#160; #{lbl['lbl.txt.alert']}" /></strong>&#160;
+						<!-- #13362 START -->
+						<p:graphicImage id="alert-img-overlapcat"
+							style="vertical-align:top"
+							value="/css/images/design/icon_alert.png" />
+						<strong><h:outputText
+								styleClass="warning"
+								value="&#160; #{lbl['lbl.txt.alert']}" /></strong>&#160;
+						<!-- #13362 END -->
 					</p:outputPanel>
 					
 					<table style="width: 100%">

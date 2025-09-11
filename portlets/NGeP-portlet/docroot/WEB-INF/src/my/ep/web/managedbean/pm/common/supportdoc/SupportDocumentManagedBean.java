@@ -17,6 +17,7 @@ import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -89,6 +90,7 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List<PmDocumentRestr> newCompanyCodeTypeAuditList = new ArrayList<>();
 	private List<PmDocumentRestr> newCategoryL3AuditList = new ArrayList<>();
 	private boolean deletedAuditList;
+	private PmZone auditPmZone;
 
 	/************ AUDIT #28895_35509 *************/
 	
@@ -704,6 +706,20 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 
 	public void setNewCategoryL3AuditList(List<PmDocumentRestr> newCategoryL3AuditList) {
 		this.newCategoryL3AuditList = newCategoryL3AuditList;
+	}
+
+	/**
+	 * @return the auditPmZone
+	 */
+	public PmZone getAuditPmZone() {
+		return auditPmZone;
+	}
+
+	/**
+	 * @param auditPmZone the auditPmZone to set
+	 */
+	public void setAuditPmZone(PmZone auditPmZone) {
+		this.auditPmZone = auditPmZone;
 	}
 	/************ AUDIT #28895_35509 *************/
 }

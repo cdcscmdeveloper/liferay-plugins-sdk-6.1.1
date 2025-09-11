@@ -581,32 +581,35 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
 				// #35506 Start
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-						|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				if (auditCtBean.getAuditCtConfigState()) {
 					CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
-					AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
-					AuditContractReqDTO auCtData = new AuditContractReqDTO();
-					auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
-					auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
-					if (ctCircularVer.getCtCircular().getLatestCircularVer() != null) {
-						auCtData.setPrevContractVerId(ctCircularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
-					}
-					auCtData.setDocType(resDTO.getCircularVer().getDocType());
-					auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
-					auCtData.setRoleName(getUserRole());
+					
+					if (shouldProcessAudit(auditCtBean, ctCircularVer, action)) {
+					
+						AuditContractReqDTO auCtData = new AuditContractReqDTO();
+						auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
+						auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
+						if (ctCircularVer.getCtCircular().getLatestCircularVer() != null) {
+							auCtData.setPrevContractVerId(ctCircularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+						}
+						auCtData.setDocType(resDTO.getCircularVer().getDocType());
+						auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
+						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
 
-					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
-							|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) || getFacesScopes()
-									.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())))) {
-						auCtData.setCtIsFinal(AuditContractConst.CT_YES);
-						auCtData.setCtIsApproved(AuditContractConst.CT_YES);
-					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-						auCtData.setCtIsFinal(AuditContractConst.CT_YES);
-						auCtData.setCtIsApproved(AuditContractConst.CT_NO);
-					}
+						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+								|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) || getFacesScopes()
+										.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())))) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+						} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						}
 
-					auditCtBean.saveAuditData(auCtData);
+						auditCtBean.saveAuditData(auCtData);
+					}	
 				}
 				// #35506 End
 				String messageId = MessageConst.INFO_700005;
@@ -658,7 +661,47 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 		return null;
 	}
+	
+	//#35506 - Start
+	/**
+	 * Checks if audit processing should be executed based on config, status, and action.
+	 *
+	 * @param auditCtBean   the audit contract bean
+	 * @param ctCircularVer the circular version being processed
+	 * @param action        the user action
+	 * @return true if audit should be processed, false otherwise
+	 */
+	private boolean shouldProcessAudit(AuditContractBackingBean auditCtBean, CtCircularVer ctCircularVer, String action) {
+	    return auditCtBean.getAuditCtConfigState()
+	        && (getManagedBean().isUpdateAction() || isPendingUpdateStatus(ctCircularVer.getStatus().getStatusId()))
+	        && isAllowedAction(action);
+	}
 
+	/**
+	 * Checks if the status is a pending update status.
+	 *
+	 * @param statusId the status ID
+	 * @return true if pending update status, false otherwise
+	 */
+	private boolean isPendingUpdateStatus(Long statusId) {
+	    return ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL.equals(statusId)
+	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION_APPROVAL.equals(statusId)
+	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION.equals(statusId);
+	}
+
+	/**
+	 * Checks if the action is allowed for audit.
+	 *
+	 * @param action the user action
+	 * @return true if allowed for audit, false otherwise
+	 */
+	private boolean isAllowedAction(String action) {
+	    return BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)
+	        || BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
+	}
+	//#35506 - End
+	
 	/**
 	 * The method used for validating the central circular information.
 	 * A warning or error message will display on screen when the validation

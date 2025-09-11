@@ -12,6 +12,8 @@
 		<cc:attribute name="showTooltip" default="false" />
 		<cc:attribute name="index" default="0" />
 		<cc:attribute name="childIndex" default="0" />
+		<cc:attribute name="maxRow" default="10" />
+	    <cc:attribute name="immediate" default="false" />
 	</cc:interface>
 	<cc:implementation>
 		<ui:fragment rendered="#{not cc.attrs.showTooltip}">
@@ -23,7 +25,7 @@
 							style="color:red; font-weight:bold;"
 							rendered="#{cc.attrs.supplier.disciplinaryActions}"
 							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(cc.attrs.supplier)}"
-							update="@([id$=disciplinaryActionHistoryDlgId])" immediate="true">
+							update="@([id$=disciplinaryActionHistoryDlgId])" immediate="#{cc.attrs.immediate}" process="@this">
 							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 								styleClass="warning" />
 						</p:commandLink>
@@ -37,7 +39,7 @@
 						<p:commandLink onstart="blockWidget.show()"
 							action="#{viewSuppProfileBackingBean.onViewQTAlertMessage(warnings)}"
 							oncomplete="blockWidget.hide();"
-							update="@([id$=suspendAlertWidgetId])">
+							update="@([id$=suspendAlertWidgetId])" process="@this">
 							<p:graphicImage id="imageId"
 								value="/css/images/design/icon_error.png"
 								style="vertical-align: sub !important;" />
@@ -64,13 +66,15 @@
 				<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
 			</ui:fragment>
 		</ui:fragment>
-		<ui:fragment rendered="#{(cc.attrs.index + cc.attrs.childIndex) == 0}">
+		<ui:param name="compositeIndex" value="#{(cc.attrs.index + cc.attrs.childIndex)}"/>
+		<ui:fragment rendered="#{compositeIndex == 0 or compositeIndex mod cc.attrs.maxRow == 0}">
 			<style>
 				[id*="disciplinaryActionHistoryDlgId"].ui-dialog {
 					width: 1100px !important;
 				}
 				[id*="disciplinaryActionHistoryDlgId"].ui-dialog .ui-datatable {
 				 	width: auto !important;
+				 	pointer-events: none !important;
 				}
 			</style>
 			<ac:disciplinaryActionHistory dynamic="true" 
@@ -82,7 +86,7 @@
 				<p:outputPanel id="panelId">
 					<table style="border: none !important;">
 						<tr>
-							<td style="border: none !important;"><p:outputLabel style="text-align: left;"
+							<td style="border: none !important;"><h:outputText style="text-align: left; color: red !important;"
 									value="#{viewSuppProfileBackingBean.managedBean.disciplinaryActionMsg}"
 									escape="false" /></td>
 						</tr>

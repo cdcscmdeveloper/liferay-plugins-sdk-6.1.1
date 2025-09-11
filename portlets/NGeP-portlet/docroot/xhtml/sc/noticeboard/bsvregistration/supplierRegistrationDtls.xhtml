@@ -232,10 +232,6 @@
 				</p:columnGroup>
 
 				<p:column style="width:25%;white-space: normal;">
-					<!-- #30447 start -->
-					<h:outputText value="#{noticeBoardBackingBean.supplierSalutation(bsvAttandance.icPassPort)}" />
-					<h:outputText value="&#160;" />
-					<!-- #30447 end -->
 					<h:outputText value="#{bsvAttandance.name}" />
 				</p:column>
 
@@ -249,21 +245,25 @@
 					<h:outputText value="#{bsvAttandance.email}" />
 				</p:column>
 
-				<p:column style="width:5px;text-align:center">
-					<p:selectBooleanCheckbox value="#{bsvAttandance.preRegisterd}" disabled="#{noticeBoardBackingBean.isAttandanceEditable(noticeBoardBackingBean.managedBean.briefingDtls) or (!noticeBoardBackingBean.managedBean.scQt.zonal and noticeBoardBackingBean.managedBean.hideBSVRegisterBtn)}" rendered="#{!isBranchDeactivated}"> <ui:remove> #28777#29729 </ui:remove>
-						<p:ajax process="@this"
-							listener="#{noticeBoardBackingBean.updateToBeAttandance(bsvAttandance,bsvAttandance.preRegisterd)}"
-							update="@form" />
-					</p:selectBooleanCheckbox>
-					
-					<ui:remove> #28777#29729 - Start </ui:remove>
-						<p:selectBooleanCheckbox value="#{false}" disabled="#{true}" rendered="#{isBranchDeactivated}">
-						</p:selectBooleanCheckbox>
-					<ui:remove> #28777#29729 - End </ui:remove>
-				</p:column>
+		<p:column style="width:5px;text-align:center">
+			<p:selectBooleanCheckbox value="#{bsvAttandance.preRegisterd}"
+				disabled="#{noticeBoardBackingBean.isAttandanceEditable(noticeBoardBackingBean.managedBean.briefingDtls) or (!noticeBoardBackingBean.managedBean.scQt.zonal and noticeBoardBackingBean.managedBean.hideBSVRegisterBtn)}"
+				rendered="#{!isBranchDeactivated}">
+				<ui:remove> #28777#29729 </ui:remove>
+				<p:ajax process="@this"
+					listener="#{noticeBoardBackingBean.updateToBeAttandance(bsvAttandance,bsvAttandance.preRegisterd)}"
+					update="@form" />
+			</p:selectBooleanCheckbox>
+
+			<ui:remove> #28777#29729 - Start </ui:remove>
+			<p:selectBooleanCheckbox value="#{false}" disabled="#{true}"
+				rendered="#{isBranchDeactivated}">
+			</p:selectBooleanCheckbox>
+			<ui:remove> #28777#29729 - End </ui:remove>
+		</p:column>
 
 
-			</p:dataTable>
+	</p:dataTable>
 
 
 </ui:composition>

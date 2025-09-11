@@ -1600,6 +1600,16 @@
 		<css-class-wrapper>system-Configuration-search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>pmAuUserOrgSearch</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>User-Configuration-search-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>pmResendAccessApplicationActivation</portlet-name>
 		<icon>/icon.png</icon>
 		<requires-namespaced-parameters>false</requires-namespaced-parameters>
@@ -2938,6 +2948,13 @@
 	 	</css-class-wrapper>
 	 </portlet>
 	 <portlet>
+	 	<portlet-name>dpApprovalExceedThreshold</portlet-name>
+	 	<icon>/icon.png</icon>
+	 	<requires-namespaced-parameters>false</requires-namespaced-parameters>
+	 	<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+	 	<css-class-wrapper>dpApprovalExceedThreshold-portlet</css-class-wrapper>
+	 </portlet>
+	 <portlet>
 	 	<portlet-name>scQuotationTenderSearch</portlet-name>
 	 	<icon>/icon.png</icon>
 	 	<requires-namespaced-parameters>false</requires-namespaced-parameters>
@@ -3591,6 +3608,17 @@
 	
 	<portlet>	<!-- #36451 -->
 		<portlet-name>testSpki</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>icon-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>	<!-- #38890 -->
+		<portlet-name>testSmAI</portlet-name>
 		<icon>/icon.png</icon>
 		<requires-namespaced-parameters>false</requires-namespaced-parameters>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>

@@ -300,6 +300,11 @@ public interface QTConstants {
 	
 	//21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
+
+	//#21692 - Start
+	public static final String PORTLET_NAME_QT_LOI_REVIEW = "scLoiReview_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_LOA_REVIEW = "scLoaReview_WAR_NGePportlet";
+	//#21692 - End
 	
 	//#29468 Start Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
@@ -336,6 +341,11 @@ public interface QTConstants {
 	public static final Long COMPOSITE_VALIDITY_ID_QT=29007L;
 	public static final Long COMPOSITE_VALIDITY_ID_DP=29006L;
 	//#29007 End Vinod
+	// #33787 Start Vinod
+	public static final Long APP_VERSION_REDMINE_NO_33787 = 33787L;
+	public static final String COMPANY_TYPE_SSM_G = "G";
+	public static final String LBL_SC_SPEC_PAID_UP_CAPITAL_INITIAL_FUND = "lbl.sc.spec.paid.up.capital.initial.fund";
+	//#33787 End Vinod
 	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
 	public static final String LBL_TXT_YES = "lbl.txt.yes";
@@ -464,10 +474,6 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
-	public static final String PARAM_MAP_QTID = "qtid";
-	public static final String PARAM_MAP_P_QTCHECKLISTIDS = "p_qtchecklistids";
-	public static final String PARAM_MAP_P_LANGUAGE = "p_language";
-	public static final String PARAM_MAP_PUSER = "puser";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -512,6 +518,10 @@ public interface QTConstants {
 	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
 	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
 	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
+	public static final String QT_SEARCH_BID_SCHEDULE_ID = "searchQTBidSchedules";
+	public static final String QT_SEARCH_DETAILS_ID = "searchQTs";
+	public static final String QT_SEARCH_LOI_LOA_DETAILS_ID = "searchQTLoaLois";
+			
 	// 25791-End
 	
 	// 36671 - start
@@ -519,9 +529,7 @@ public interface QTConstants {
 	// 36671 - end
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
-	
-	//36678
-	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+
 	// #36757 Start Vinod 04/12/2024
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 Start Vinod 04/12/2024

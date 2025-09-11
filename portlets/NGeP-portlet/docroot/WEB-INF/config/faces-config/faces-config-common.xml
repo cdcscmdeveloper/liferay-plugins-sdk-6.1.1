@@ -18,6 +18,7 @@
 	<lifecycle>
 		<phase-listener>my.ep.web.phaselistener.EpPhaseListener</phase-listener>
 		<phase-listener>my.ep.web.phaselistener.EpSecurityPhaseListener</phase-listener>
+	<!--	<phase-listener>my.ep.web.phaselistener.TokenPhaseListener</phase-listener> -->
 	</lifecycle>
 	<factory>
 		<exception-handler-factory>my.ep.web.factory.EpExceptionHandlerFactory</exception-handler-factory>

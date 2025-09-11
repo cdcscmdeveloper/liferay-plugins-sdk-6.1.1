@@ -27,6 +27,12 @@
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
+					<ui:remove>#33787 Start Vinod</ui:remove>
+					<td style="width: 160px;"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.company.limited.by.guarantee']}" /></td>
+					<td><p:inputText disabled="true" readonly="true" size="30"
+							value="#{supplierProposalDetailBackingBean.getCompanyLimitedByGuarantee(smAppl.smCompanyBasic)}" /></td>
+					<ui:remove>#33787 End Vinod</ui:remove>
 				</tr>
 
 			</c:if>
@@ -41,6 +47,12 @@
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
+				<ui:remove>#33787 Start Vinod</ui:remove>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.spec.company.limited.by.guarantee']}" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30"
+						value="#{supplierProposalDetailBackingBean.getCompanyLimitedByGuarantee(smAppl.smCompanyBasic)}" /></td>
+				<ui:remove>#33787 End Vinod</ui:remove>
 			</c:if>
 
 			<c:if
@@ -190,11 +202,9 @@
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="sharePerson" rows="10">
 				<ac:paginator for="sharePerson" />
-				<p:column headerText="#{lbl['lbl.sc.spec.personal.name']}"
-					style="width : 20%;">	
-					<!-- #30447 start -->				
-					<h:outputText style="float : left" value="#{sharePerson.title.salutationName.concat(' ').concat(sharePerson.name)}"></h:outputText>
-					<!-- #30447 end -->
+	            <p:column headerText="#{lbl['lbl.sc.spec.personal.name']}"
+					style="width : 20%;">
+					<h:outputText style="float : left" value="#{sharePerson.name}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.identification.no']}"
 					style="width : 15%;">

@@ -77,14 +77,15 @@
 					disabled="true" />
 			</td>
 			<ui:remove>26247 - start</ui:remove>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
-			</td>
-			<td>
-				<ac:disciplinaryActionYesNo
-					supplier="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"
-					showTooltip="true" />
-			</td>
+			<ui:param name="supplier" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"/>
+			<c:if test="#{not empty supplier.scQt}">
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
+				</td>
+				<td>
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" showTooltip="true" />
+				</td>
+			</c:if>
 			<ui:remove>26247 - end</ui:remove>
 		</tr>
 

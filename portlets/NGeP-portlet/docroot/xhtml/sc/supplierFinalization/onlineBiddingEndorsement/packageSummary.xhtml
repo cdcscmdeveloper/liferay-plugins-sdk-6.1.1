@@ -22,11 +22,16 @@
 					  rendered="#{suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}" 
 					  styleClass="leftMargin"/>
 		<br/>
+
 		<ui:remove> #28777#29729 - Start </ui:remove>
-	    <c:if test="#{suppFinalBiddingBackingBean.checkInstructionSupplierBranchDeleted(suppFinalBiddingBackingBean.managedBean.scQt.qtId)}">
-	      <h:outputText styleClass="instruction" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pmlb']} " escape="false" />
-	    </c:if>
-        <ui:remove> #28777#29729 - End </ui:remove>
+		<c:if
+			test="#{suppFinalBiddingBackingBean.checkInstructionSupplierBranchDeleted(suppFinalBiddingBackingBean.managedBean.scQt.qtId)}">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.branch.related.deleted.instruction']} "
+				escape="false" />
+		</c:if>
+		<ui:remove> #28777#29729 - End </ui:remove>
+
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
 			escape="false" />
@@ -35,12 +40,15 @@
 			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 		</h:outputText>		  
 		<br/>
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']} " escape="false" /> <ui:remove>21692</ui:remove>	
-		
-		<ui:remove> #28777#29729 - Start </ui:remove>	
-	    <h:outputText escape="false" value="#{lbl['lbl.sc.list.qualified.supplier']}" style="font-weight:bold; font-size: 15px;" rendered="#{isDisqualified}" /> 
-        <ui:remove> #28777#29729 - End </ui:remove>	
-        
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']} " escape="false" /> <ui:remove>21692</ui:remove>
+
+		<ui:remove> #28777#29729 - Start </ui:remove>
+		<h:outputText escape="false"
+			value="#{lbl['lbl.sc.list.qualified.supplier']}"
+			style="font-weight:bold; font-size: 15px;"
+			rendered="#{isDisqualified}" />
+		<ui:remove> #28777#29729 - End </ui:remove>
+
 		<p:dataTable id="supplierPackageTbl" value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" 
 					 var="price" rowKey="#{price}" rowIndexVar="rowIndex" 
 					 emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
@@ -84,13 +92,24 @@
 				<h:outputText value="#{(price.scBidSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			<ui:remove>26247 - start</ui:remove>
-			<p:column>
+			<ui:param name="supplier"
+				value="#{price.scBidSupplier.smSupplier}" />
+			<ui:param name="mofExpired"
+				value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+			<p:column styleClass="#{mofExpired ? 'red-background':''}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
+				</f:facet>
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+			</p:column>
+			<p:column style="white-space:normal;width:18%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
 				<ac:disciplinaryActionYesNo
-					supplier="#{price.scBidSupplier.smSupplier}" index="#{rowIndex}"/>
+					supplier="#{supplier}" index="#{rowIndex}"/>
 			</p:column>
 			<ui:remove>26247 - end</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}" style="width:10%; white-space:normal; text-align:right;">
@@ -158,118 +177,139 @@
 					  									suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" />	<ui:remove> 21692 </ui:remove>
 			<ui:remove>26247 - end - added isDisciplinaryAction</ui:remove>	
 		</p:dataTable>
-		
-	    <ui:remove> #28777#29729 - Start </ui:remove>	
-        <h:outputText escape="false" value="#{lbl['lbl.sc.list.disqualified.supplier']}" style="font-weight:bold; font-size: 15px;" rendered="#{isDisqualified}" /> 
-        	<p:dataTable id="supplierPackageTblDisqualified" value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceListDisqualified}" 
-					 var="priceDis" rowKey="#{priceDis}" rowIndexVar="rowIndex" 
-					 emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}" rendered="#{isDisqualified}">
-			<ac:paginator for="supplierPackageTblDisqualified"/>		
-			
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; text-align:center;">
+
+		<ui:remove> #28777#29729 - Start </ui:remove>
+		<h:outputText escape="false"
+			value="#{lbl['lbl.sc.list.disqualified.supplier']}"
+			style="font-weight:bold; font-size: 15px;"
+			rendered="#{isDisqualified}" />
+		<p:dataTable id="supplierPackageTblDisqualified"
+			value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceListDisqualified}"
+			var="priceDis" rowKey="#{priceDis}" rowIndexVar="rowIndex"
+			emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
+			rendered="#{isDisqualified}">
+			<ac:paginator for="supplierPackageTblDisqualified" />
+
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+				style="width:5%; text-align:center;">
 				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
-							   process="@this" update="@([id$=suppDetailsPopupId])">
+					process="@this" update="@([id$=suppDetailsPopupId])">
 					<f:setPropertyActionListener value="#{priceDis.scQtProposal}"
-							target="#{supplierDetailBackingBean.scQtProposal}" />
+						target="#{supplierDetailBackingBean.scQtProposal}" />
 					<h:outputText value="#{priceDis.scQtProposal.supplierNo}" />
 				</p:commandLink>
-				<ui:remove> #28777#29729 - Start </ui:remove>
-				 <p:spacer width="15" height="15"/>
-                     <p:commandLink  process="@this"  action="#{suppFinalBiddingBackingBean.showSupplierBranchList(priceDis.scBidSupplier.smSupplier.supplierId)}" 
-		         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
-						<h:graphicImage value="/css/images/exclam-info.png" />
-	         		</p:commandLink> 
-				<ui:remove> #28777#29729 - End </ui:remove>	
-			</p:column>			
-			
-			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;">
-				<h:outputText value="#{(priceDis.scBidSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
+
+				<p:spacer width="15" height="15" />
+				<p:commandLink process="@this"
+					action="#{suppFinalBiddingBackingBean.showSupplierBranchList(priceDis.scBidSupplier.smSupplier.supplierId)}"
+					update="@([id$=suppBranchListPopupId])"
+					oncomplete="suppBranchListPopup.show();">
+					<h:graphicImage value="/css/images/exclam-info.png" />
+				</p:commandLink>
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+				style="width:5%; white-space:normal;">
+				<h:outputText
+					value="#{(priceDis.scBidSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			
-			<ui:remove>
-				Bug 31101 - WIP Impact 
-			</ui:remove>
-			<p:column>
+			<ui:param name="supplier"
+				value="#{priceDis.scBidSupplier.smSupplier}" />
+			<ui:param name="mofExpired"
+				value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+			<p:column styleClass="#{mofExpired ? 'red-background':''}">
 				<f:facet name="header">
-									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
-								</f:facet>
-				<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-					rendered="#{priceDis.scBidSupplier.smSupplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(priceDis.scBidSupplier.smSupplier)}" 
-					process="@this" partialSubmit="true" update=":form">
-						<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-				</p:commandLink><p:spacer width="2"/>
-				
-				<h:outputText rendered="#{!priceDis.scBidSupplier.smSupplier.disciplinaryActions}"
-				 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />								
+					<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
+				</f:facet>
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+			</p:column>			
+			<p:column style="white-space:normal;width:18%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+				</f:facet>
+				<ac:disciplinaryActionYesNo
+					supplier="#{supplier}" index="#{rowIndex}"/>
 			</p:column>
 			
-			<ui:remove>
-				Bug 31101 - END
-			</ui:remove>
-			
-			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}" style="width:10%; white-space:normal; text-align:right;">
+			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}"
+				style="width:10%; white-space:normal; text-align:right;">
 				<h:outputText value="#{priceDis.scBidSupplier.packageStartPrice}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}" style="width:15%; white-space:normal; text-align:right;">
+
+			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}"
+				style="width:15%; white-space:normal; text-align:right;">
 				<p:commandLink immediate="true" oncomplete="pricePop.show();"
-					actionListener="#{suppFinalBiddingBackingBean.supplierItemPricePopupAction(priceDis)}" 
-					update="@([id$=itemPricePop])" title="Item Price Details" 
+					actionListener="#{suppFinalBiddingBackingBean.supplierItemPricePopupAction(priceDis)}"
+					update="@([id$=itemPricePop])" title="Item Price Details"
 					rendered="#{!(priceDis.scBidSupplier.packageStartPrice eq priceDis.bidPriceTotal)}">
 					<p:graphicImage
 						value="#{CommonUIConstant.imagePathUptoDesign}/ico-price.png"
 						style="vertical-align:middle"></p:graphicImage>
 				</p:commandLink>
-				<h:outputText value="#{priceDis.bidPriceTotal}" 
-							  rendered="#{!(priceDis.scBidSupplier.packageStartPrice eq priceDis.bidPriceTotal)}">
+				<h:outputText value="#{priceDis.bidPriceTotal}"
+					rendered="#{!(priceDis.scBidSupplier.packageStartPrice eq priceDis.bidPriceTotal)}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.difference.rm']}" style="width:10%; white-space:normal; text-align:right;">
-				<h:outputText value="#{priceDis.bidPriceTotal - suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice}"
+
+			<p:column headerText="#{lbl['lbl.sc.difference.rm']}"
+				style="width:10%; white-space:normal; text-align:right;">
+				<h:outputText
+					value="#{priceDis.bidPriceTotal - suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice}"
 					rendered="#{priceDis.scBidSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.difference.perc']}" style="width:10%; white-space:normal;">
-				<h:outputText style="float : right;" value="#{priceDis.diffPercentage}"
+
+			<p:column headerText="#{lbl['lbl.sc.difference.perc']}"
+				style="width:10%; white-space:normal;">
+				<h:outputText style="float : right;"
+					value="#{priceDis.diffPercentage}"
 					rendered="#{priceDis.scBidSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</h:outputText>
 			</p:column>
-			
+
 			<!-- #29466 - START -->
-			<p:column headerText="#{lbl[manufacturercategoryCode ?'lbl.sc.pref.margin.manufacturer' : 'lbl.sc.pref.margin']}" style="width:5%; white-space:normal;">
-				<h:outputText style="float : right;" value="#{priceDis.prefMargin}" 
-							  rendered="#{priceDis.scBidSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+			<p:column
+				headerText="#{lbl[manufacturercategoryCode ?'lbl.sc.pref.margin.manufacturer' : 'lbl.sc.pref.margin']}"
+				style="width:5%; white-space:normal;">
+				<h:outputText style="float : right;" value="#{priceDis.prefMargin}"
+					rendered="#{priceDis.scBidSupplier.bumi and suppFinalBiddingBackingBean.managedBean.nonBumiAvailable}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</h:outputText>
 			</p:column>
 			<!-- #29466 - END -->
-			
-			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}"  style="width:10%; white-space:normal; text-align:right;">
-				<h:outputText value="#{suppFinalBiddingBackingBean.managedBean.estimatedCost - 
+
+			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}"
+				style="width:10%; white-space:normal; text-align:right;">
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.managedBean.estimatedCost - 
 																					priceDis.bidPriceTotal}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
-			</p:column>			
-			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}" style="text-align:center;">
-			       <h:outputText  value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" 
-			       rendered="#{priceDis.scQtProposal.scQtSupplier.recordStatusFlg eq DbValueConst.recordStatusDisqualifiedSupplierBranchDeleted}" /> 	
-			</p:column>	
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
+				style="text-align:center;">
+				<h:outputText
+					value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}"
+					rendered="#{priceDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalBiddingBackingBean.managedBean.biddingZoneDetails.get(suppFinalBiddingBackingBean.managedBean.zoneActiveIndex).branchDeactivated}" />
+			</p:column>
 		</p:dataTable>
-        <ui:remove> #28777#29729 - End </ui:remove>	
-        
+		<ui:remove> #28777#29729 - End </ui:remove>
+
 	</p:panel>
 	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"
 			  widgetVar="pricePop" showEffect="fade" hideEffect="fade" modal="true" id="itemPricePop">
