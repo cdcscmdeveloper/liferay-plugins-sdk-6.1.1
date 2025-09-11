@@ -1624,21 +1624,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 			// 24333 - Start
 			List<CtContractAmount> ctAmounts = ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts();
-			if (ctAmounts == null || ctAmounts.isEmpty()) return;
-			Date now = new Date();
-			for (CtContractAmount ctAmount : ctAmounts) {
-			    if (isContractActive(ctAmount, now)) {
-			        BigDecimal overall = ctAmount.getOverallCtAmtPbond() != null ? ctAmount.getOverallCtAmtPbond() : BigDecimal.ZERO;
-			        BigDecimal totalBond = ctAmount.getTotalBondAmt() != null ? ctAmount.getTotalBondAmt() : BigDecimal.ZERO;
-			        Integer periodBondInt = ctAmount.getContractPeriodBond();
-			        BigDecimal periodBond = periodBondInt != null ? BigDecimal.valueOf(periodBondInt) : BigDecimal.ZERO;
+			// Set value default to BigDecimal.ZERO
+			BigDecimal overall = BigDecimal.ZERO;
+			BigDecimal totalBond = BigDecimal.ZERO;
+			BigDecimal periodBond = BigDecimal.ZERO;
 
-			        ctBackingBean.getManagedBean().setOriginalOverallAmount(overall);
-			        ctBackingBean.getManagedBean().setTotalBondAmt(totalBond);
-			        ctBackingBean.getManagedBean().setBondPercentage(PerformanceBondUtil.calculatePerformanceBondPercentage(overall, periodBond));
-			        break;
+			// Find active contract and set values if found
+			if (ctAmounts != null && !ctAmounts.isEmpty()) {
+			    for (CtContractAmount ctAmount : ctAmounts) {
+			        if (isContractActive(ctAmount, new Date())) {
+			            overall = ctAmount.getOverallCtAmtPbond() != null ? ctAmount.getOverallCtAmtPbond() : BigDecimal.ZERO;
+			            totalBond = ctAmount.getTotalBondAmt() != null ? ctAmount.getTotalBondAmt() : BigDecimal.ZERO;
+			            periodBond = new BigDecimal(ctAmount.getContractPeriodBond());
+			            break; 
+			        }
 			    }
 			}
+
+			ctBackingBean.getManagedBean().setOriginalOverallAmount(overall);
+			ctBackingBean.getManagedBean().setTotalBondAmt(totalBond);
+			ctBackingBean.getManagedBean().setBondPercentage(PerformanceBondUtil.calculatePerformanceBondPercentage(overall, periodBond));
 			// 24333 - End
 			
 			// Amendment process	  
