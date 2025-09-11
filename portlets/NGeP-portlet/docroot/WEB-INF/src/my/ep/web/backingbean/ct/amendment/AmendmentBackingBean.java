@@ -1560,21 +1560,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			// 24333 - Start
 			List<CtContractAmount> ctAmounts = ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts();
-			if (ctAmounts == null || ctAmounts.isEmpty()) return;
-			Date now = new Date();
-			for (CtContractAmount ctAmount : ctAmounts) {
-			    if (isContractActive(ctAmount, now)) {
-			        BigDecimal overall = ctAmount.getOverallCtAmtPbond() != null ? ctAmount.getOverallCtAmtPbond() : BigDecimal.ZERO;
-			        BigDecimal totalBond = ctAmount.getTotalBondAmt() != null ? ctAmount.getTotalBondAmt() : BigDecimal.ZERO;
-			        Integer periodBondInt = ctAmount.getContractPeriodBond();
-			        BigDecimal periodBond = periodBondInt != null ? BigDecimal.valueOf(periodBondInt) : BigDecimal.ZERO;
+			BigDecimal overall = BigDecimal.ZERO;
+			BigDecimal totalBond = BigDecimal.ZERO;
+			BigDecimal periodBond = BigDecimal.ZERO;
 
-			        ctBackingBean.getManagedBean().setOriginalOverallAmount(overall);
-			        ctBackingBean.getManagedBean().setTotalBondAmt(totalBond);
-			        ctBackingBean.getManagedBean().setBondPercentage(PerformanceBondUtil.calculatePerformanceBondPercentage(overall, periodBond));
-			        break;
+			if (ctAmounts != null && !ctAmounts.isEmpty()) {
+			    CtContractAmount selectedAmount = getSelectedContractAmount(ctAmounts);
+			    if (selectedAmount != null) {
+			        overall = selectedAmount.getOverallCtAmtPbond() != null ? selectedAmount.getOverallCtAmtPbond() : BigDecimal.ZERO;
+			        totalBond = selectedAmount.getTotalBondAmt() != null ? selectedAmount.getTotalBondAmt() : BigDecimal.ZERO;
+			        periodBond = new BigDecimal(selectedAmount.getContractPeriodBond());
 			    }
 			}
+
+			ctBackingBean.getManagedBean().setOriginalOverallAmount(overall);
+			ctBackingBean.getManagedBean().setTotalBondAmt(totalBond);
+			ctBackingBean.getManagedBean().setBondPercentage(PerformanceBondUtil.calculatePerformanceBondPercentage(overall, periodBond));
 			// 24333 - End
 
 			// Amendment process
@@ -8403,6 +8404,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//#38823 end
 	
 	//#24333 - Start
+	/**
+	 * Determines the primary contract amount to use.
+	 * <p>
+	 * The method returns the first active contract amount found in the list.
+	 * If no active contract is found, it defaults to the last one in the list.
+	 * </p>
+	 *
+	 * @param ctAmounts The list of contract amounts. Must not be null or empty.
+	 * @return The selected {@link CtContractAmount}.
+	 */
+	private CtContractAmount getSelectedContractAmount(List<CtContractAmount> ctAmounts) {
+	    // Find the first active contract amount
+	    for (CtContractAmount ctAmount : ctAmounts) {
+	        if (isContractActive(ctAmount, new Date())) {
+	            return ctAmount;
+	        }
+	    }
+	    // If no active contract is found, return the last one
+	    return ctAmounts.get(ctAmounts.size() - 1);
+	}
+	
 	/**
 	 * Checks if a contract is active on a current date.
 	 *
