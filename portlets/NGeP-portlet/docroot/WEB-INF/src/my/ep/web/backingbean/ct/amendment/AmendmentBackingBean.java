@@ -1624,20 +1624,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 			// 24333 - Start
 			List<CtContractAmount> ctAmounts = ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts();
-			// Set value default to BigDecimal.ZERO
 			BigDecimal overall = BigDecimal.ZERO;
 			BigDecimal totalBond = BigDecimal.ZERO;
 			BigDecimal periodBond = BigDecimal.ZERO;
 
-			// Find active contract and set values if found
 			if (ctAmounts != null && !ctAmounts.isEmpty()) {
-			    for (CtContractAmount ctAmount : ctAmounts) {
-			        if (isContractActive(ctAmount, new Date())) {
-			            overall = ctAmount.getOverallCtAmtPbond() != null ? ctAmount.getOverallCtAmtPbond() : BigDecimal.ZERO;
-			            totalBond = ctAmount.getTotalBondAmt() != null ? ctAmount.getTotalBondAmt() : BigDecimal.ZERO;
-			            periodBond = new BigDecimal(ctAmount.getContractPeriodBond());
-			            break; 
-			        }
+			    CtContractAmount selectedAmount = getSelectedContractAmount(ctAmounts);
+			    if (selectedAmount != null) {
+			        overall = selectedAmount.getOverallCtAmtPbond() != null ? selectedAmount.getOverallCtAmtPbond() : BigDecimal.ZERO;
+			        totalBond = selectedAmount.getTotalBondAmt() != null ? selectedAmount.getTotalBondAmt() : BigDecimal.ZERO;
+			        periodBond = new BigDecimal(selectedAmount.getContractPeriodBond());
 			    }
 			}
 
@@ -9805,6 +9801,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//#38823 end
 	
 	//#24333 - Start
+	/**
+	 * Determines the primary contract amount to use.
+	 * <p>
+	 * The method returns the first active contract amount found in the list.
+	 * If no active contract is found, it defaults to the last one in the list.
+	 * </p>
+	 *
+	 * @param ctAmounts The list of contract amounts. Must not be null or empty.
+	 * @return The selected {@link CtContractAmount}.
+	 */
+	private CtContractAmount getSelectedContractAmount(List<CtContractAmount> ctAmounts) {
+	    // Find the first active contract amount
+	    for (CtContractAmount ctAmount : ctAmounts) {
+	        if (isContractActive(ctAmount, new Date())) {
+	            return ctAmount;
+	        }
+	    }
+	    // If no active contract is found, return the last one
+	    return ctAmounts.get(ctAmounts.size() - 1);
+	}
+	
 	/**
 	 * Checks if a contract is active on a given date.
 	 *
