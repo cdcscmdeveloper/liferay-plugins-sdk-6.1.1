@@ -3455,8 +3455,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setCtContractAmount(contractAmt);
 					break;
 				}
-				//Bug #26542 -end
-				
+				//Bug #26542 -end				
 			}
 		
 
@@ -4232,7 +4231,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		 *            whether the document is an amendment
 		 */
 		private void processPerformanceBonds(CtContractAmount contractAmt, String docType, boolean isAmendment) {
-
+			
+			ctBB.getManagedBean().setTotalBondAmt(contractAmt.getTotalBondAmt());
 			// Check if the document is relevant for bond processing
 			if (!isAmendment
 					|| !(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
