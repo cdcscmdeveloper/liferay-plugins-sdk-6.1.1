@@ -3570,6 +3570,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
 				processPerformanceBonds(contractAmt, docType, isAmendment); //#24333
 				ctBB.getManagedBean().setCtContractAmount(contractAmt);
+				ctBB.getManagedBean().setTotalBondAmt(contractAmt.getTotalBondAmt()); //#24333
 			}
 
 			// Bug #26542 - start
