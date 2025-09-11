@@ -105,6 +105,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 *            SmCompExpDraft
 	 */
 	public void redirectToDraftUpdate(SmCompExpDraft draft) {
+		this.getManagedBean().setDraftUpdate(true);
 		initSelectedDraft(draft);
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
 		SelectItem clientTypeFederalItem = new SelectItem();
@@ -160,13 +161,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		Date expDate = new Date();
 		Date effDate = new Date();
 		Long sourceType = null;
- 		Integer recordStatusFlg = null;
-		if (null != this.getManagedBean().getSelectedDraft()) {
+		Integer recordStatusFlg = null;
+		if (this.getManagedBean().isDraftUpdate()) {
 			expDate = this.getManagedBean().getSelectedDraft().getContractExpDate();
 			effDate = this.getManagedBean().getContractEffDateTemp();
 			sourceType = this.getManagedBean().getSelectedDraft().getSourceType().getParameterId();
 			recordStatusFlg = this.getManagedBean().getSelectedDraft().getRecordStatusFlg();
-		} else if (null != this.getManagedBean().getSelectedMaster()) {
+		} else if (this.getManagedBean().isMasterUpdate()) {
 			expDate = this.getManagedBean().getSelectedMaster().getContractExpDate();
 			effDate = this.getManagedBean().getSelectedMaster().getContractEffDate();
 			sourceType = this.getManagedBean().getSelectedMaster().getSourceType().getParameterId();
@@ -182,9 +183,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			contractStatus = ParameterConst.CONTRACT_STATUS_TERMINATED;
 		}
 
-		if (null != this.getManagedBean().getSelectedDraft()) {
+		if (this.getManagedBean().isDraftUpdate()) {
 			this.getManagedBean().getSelectedDraft().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
-		} else if (null != this.getManagedBean().getSelectedMaster()) {
+		} else if (this.getManagedBean().isMasterUpdate()) {
 			this.getManagedBean().getSelectedMaster().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
 		}
 
@@ -234,9 +235,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setSmCompExpDocList(smCompExpDocList);
 
 		String regNo = "";
-		if (null != this.getManagedBean().getSelectedDraft()) {
+		if (this.getManagedBean().isDraftUpdate()) {
 			regNo = this.getManagedBean().getSelectedDraft().getSmSupplier().getRegNo();
-		} else if (null != this.getManagedBean().getSelectedMaster()){
+		} else if (this.getManagedBean().isMasterUpdate()) {
 			regNo = this.getManagedBean().getSelectedMaster().getSmSupplier().getRegNo();
 		}
 		String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_COMP_EXP_FILE_PATH) + regNo + "/"
@@ -321,11 +322,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 *            PmOrgProfile
 	 */
 	public void selectAgencyAction(PmOrgProfile orgProfile) {
-		if (null != this.getManagedBean().getSelectedDraft()) {
+		if (this.getManagedBean().isDraftUpdate()) {
 			this.getManagedBean().getSelectedDraft().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
 			this.getManagedBean().getSelectedDraft().setOrgProfile(orgProfile);
 		}
-		if (null != this.getManagedBean().getSelectedMaster()) {
+		if (this.getManagedBean().isMasterUpdate()) {
 			this.getManagedBean().getSelectedMaster().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
 			this.getManagedBean().getSelectedMaster().setOrgProfile(orgProfile);
 		}
@@ -335,19 +336,19 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Remove special character from File Reference No
 	 */
 	public void trimFileReferenceNo() {
-		if (null != this.getManagedBean().getSelectedDraft() && null != this.getManagedBean().getSelectedDraft().getFileReferenceNo()
+		if (this.getManagedBean().isDraftUpdate() && null != this.getManagedBean().getSelectedDraft().getFileReferenceNo()
 				&& !this.getManagedBean().getSelectedDraft().getFileReferenceNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedDraft().getFileReferenceNo();
 			this.getManagedBean().getSelectedDraft().setFileReferenceNo(cleanFileReferenceNo(fileNo));
 		}
-		if (null != this.getManagedBean().getSelectedMaster() && null != this.getManagedBean().getSelectedMaster().getFileReferenceNo()
+		if (this.getManagedBean().isMasterUpdate() && null != this.getManagedBean().getSelectedMaster().getFileReferenceNo()
 				&& !this.getManagedBean().getSelectedMaster().getFileReferenceNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedMaster().getFileReferenceNo();
 			this.getManagedBean().getSelectedMaster().setFileReferenceNo(cleanFileReferenceNo(fileNo));
 		}
 	}
 
-	private String cleanFileReferenceNo(String fileNo) {	
+	private String cleanFileReferenceNo(String fileNo) {
 		fileNo = fileNo.replaceAll("\\s+", "");
 		fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");
 		fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");
@@ -358,19 +359,19 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Remove special character from File Extension No
 	 */
 	public void trimFileExtensionNo() {
-		if (null != this.getManagedBean().getSelectedDraft() && null != this.getManagedBean().getSelectedDraft().getFileExtensionNo()
+		if (this.getManagedBean().isDraftUpdate() && null != this.getManagedBean().getSelectedDraft().getFileExtensionNo()
 				&& !this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedDraft().getFileExtensionNo();
 			this.getManagedBean().getSelectedDraft().setFileExtensionNo(cleanFileExtensionNo(fileNo));
 		}
-		if (null != this.getManagedBean().getSelectedMaster() && null != this.getManagedBean().getSelectedMaster().getFileExtensionNo()
+		if (this.getManagedBean().isMasterUpdate() && null != this.getManagedBean().getSelectedMaster().getFileExtensionNo()
 				&& !this.getManagedBean().getSelectedMaster().getFileExtensionNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedMaster().getFileExtensionNo();
 			this.getManagedBean().getSelectedMaster().setFileExtensionNo(cleanFileExtensionNo(fileNo));
 		}
 	}
 
-	private String cleanFileExtensionNo(String fileNo) {	
+	private String cleanFileExtensionNo(String fileNo) {
 		fileNo = fileNo.replaceAll("\\s+", "");
 		fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+", "");
 		return fileNo;
@@ -817,6 +818,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @param selectedMaster
 	 */
 	public void redirectToUpdateMaster(SmCompExpMaster selectedMaster) {
+		this.getManagedBean().setMasterUpdate(true);
 		this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.master.update.fed.header.self.declared", null));
 
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();

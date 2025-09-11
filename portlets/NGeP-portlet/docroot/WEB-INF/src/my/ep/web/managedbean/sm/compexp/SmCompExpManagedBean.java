@@ -71,6 +71,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private transient IPagingDataModel<SmCompExpMaster> masterFedDataModel = new MasterFedPagingDataModel();
 	private transient IPagingDataModel<SmCompExpMaster> masterNonFedDataModel = new MasterNonFedPagingDataModel();
 	private SmCompExpMaster selectedMaster;
+	private boolean draftUpdate;
+	private boolean masterUpdate;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -406,6 +408,22 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setMasterNonFedDataModel(IPagingDataModel<SmCompExpMaster> masterNonFedDataModel) {
 		this.masterNonFedDataModel = masterNonFedDataModel;
+	}
+
+	public boolean isDraftUpdate() {
+		return draftUpdate;
+	}
+
+	public void setDraftUpdate(boolean draftUpdate) {
+		this.draftUpdate = draftUpdate;
+	}
+
+	public boolean isMasterUpdate() {
+		return masterUpdate;
+	}
+
+	public void setMasterUpdate(boolean masterUpdate) {
+		this.masterUpdate = masterUpdate;
 	}
 
 }
