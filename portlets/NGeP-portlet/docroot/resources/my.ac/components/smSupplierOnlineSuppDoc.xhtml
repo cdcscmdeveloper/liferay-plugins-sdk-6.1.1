@@ -186,7 +186,7 @@
 				showButtons="false"/>
 			<!-- #28807 - End -->
 			<!-- #38890 -->
-			<p:ajax event="close" listener="#{backingBean.processAI()}" />
+			<p:ajax event="close" listener="#{backingBean.processAI()}" update="#{cc.attrs.tableId}" />
 		</p:dialog>
 
 		<!-- harris -->
