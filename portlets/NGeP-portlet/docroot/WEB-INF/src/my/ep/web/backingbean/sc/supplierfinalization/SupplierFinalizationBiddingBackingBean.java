@@ -3333,11 +3333,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getBiddingZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+		
 		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+		
+		if(!isZonal){
+			return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+		}
+		
+		return false;
 	}
 
 	// #28777 & #29729 - End
@@ -3354,11 +3361,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getBiddingZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+		
 		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+		
+		if(!isZonal){
+			return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+		}
+		
+		return false;
 	}
 
 	// #28777 & #29729 - End
