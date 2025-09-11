@@ -91,6 +91,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper; //#30045
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -2589,22 +2590,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public SelectItem[] getMinistryDropdown() {		
 		SelectItem[] items = null;
-		boolean isPk7Affected = true;
+		
 		try {
 			int i = 0;
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			OrgProfileResDTO resDTO = new OrgProfileResDTO();
-			if(!isPk7Affected){
-				 resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
-				
-			}else{
-				 List<Long> listAffected = orgProfileSO.retrieveAffectedAgencies();
-				 reqDTO.setOrgProfileIdListReq(listAffected);
-				 resDTO = orgProfileSO.retrieveOrgProfileListByMinistryAffected(reqDTO);
+			//Start - #30045
+			if (isPk7Agencies()) {
+				List<Long> listAffected = orgProfileSO.retrieveAffectedAgencies();
+				reqDTO.setPk7Related(true);
+				reqDTO.setOrgProfileIdListForPk7(listAffected);
 			}
-			
+			//End - #30045
+			resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
 			List<PmOrgProfile> list = resDTO.getOrgProfileList();
 			items = new SelectItem[list.size()];
 			for (PmOrgProfile orgProfile : list) {
@@ -5142,4 +5142,35 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    return filteredList.isEmpty() ? originalList : filteredList;
 	}
 	// 24333 - End
+	
+	//Start - #30045
+	public boolean isPk7Agencies() {
+		boolean isPk7 = false;
+	    PmParameter procTypeValue = null;
+	    
+	    procTypeValue = EntityHelper.getNestedPropertyList(
+	        getManagedBean(),
+	        "contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType"
+	    );
+
+	    if (procTypeValue == null) {
+	        procTypeValue = EntityHelper.getNestedProperty(
+	            getManagedBean(),
+	            "contractVer.ctContract.loa.qtType"
+	        );
+	    }
+	    
+	    if((procTypeValue.getParameterCode().equalsIgnoreCase(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7) && procTypeValue.getParameterType().equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) 
+	    		|| (procTypeValue.getParameterCode().equalsIgnoreCase(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP) && procTypeValue.getParameterType().equalsIgnoreCase(ParameterTypeConst.QUOTATION_TENDER_TYPE))){		
+	    		String procurementType = getParameterDesc(procTypeValue);	
+		 	    log.info("procTypeValue :::::::::::::::::::::::::::::::::::::: " + procTypeValue);
+		 	    log.info("procurementType :::::::::::::::::::::::::::::::::::::: " + procurementType);
+	 	   isPk7 = true;
+	    }
+	    
+	   
+
+	    return isPk7;
+	}
+	//End - #30045
 }  
