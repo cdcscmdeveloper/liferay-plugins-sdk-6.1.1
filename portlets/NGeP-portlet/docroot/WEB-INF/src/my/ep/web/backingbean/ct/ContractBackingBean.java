@@ -5148,7 +5148,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		boolean isPk7 = false;
 	    PmParameter procTypeValue = null;
 	    
-	    procTypeValue = EntityHelper.getNestedPropertyList(
+	    procTypeValue = EntityHelper.getNestedPropertyWithList(
 	        getManagedBean(),
 	        "contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType"
 	    );
