@@ -5840,8 +5840,14 @@ public class RuleCatalogueBackingBean extends
 	        String value = useName 
 	            ? ptjApproval.getPmOrgProfile().getOrgValidity().getOrgName()
 	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();
-
-	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))) {
+	            
+	            String searchRegex = value
+				        .replace("%", ".*?")  
+				        .replace("_", ".")   
+				        .replace("?", ".")    
+				        .replace("*", ".*?");    
+	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
+	        		|| value.toLowerCase().matches(searchRegex)) {
 	            result.add(ptjApproval);
 	        }
 	    }
