@@ -3453,7 +3453,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0){
 					processPerformanceBonds(contractAmt, docType, isAmendment); //#24333
 					ctBB.getManagedBean().setCtContractAmount(contractAmt);
-					ctBB.getManagedBean().setTotalBondAmt(contractAmt.getTotalBondAmt()); //#24333
 					break;
 				}
 				//Bug #26542 -end				
@@ -4232,7 +4231,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		 *            whether the document is an amendment
 		 */
 		private void processPerformanceBonds(CtContractAmount contractAmt, String docType, boolean isAmendment) {
-
+			
+			ctBB.getManagedBean().setTotalBondAmt(contractAmt.getTotalBondAmt());
 			// Check if the document is relevant for bond processing
 			if (!isAmendment
 					|| !(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
