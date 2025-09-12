@@ -5148,7 +5148,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		boolean isPk7 = false;
 	    PmParameter procTypeValue = null;
 	    
-	    procTypeValue = EntityHelper.getNestedPropertyWithList(
+	    procTypeValue = EntityHelper.getNestedProperty(
 	        getManagedBean(),
 	        "contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType"
 	    );
@@ -5166,10 +5166,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		 	    log.info("procTypeValue :::::::::::::::::::::::::::::::::::::: " + procTypeValue);
 		 	    log.info("procurementType :::::::::::::::::::::::::::::::::::::: " + procurementType);
 	 	   isPk7 = true;
-	    }
-	    
-	   
-
+	    }	   
 	    return isPk7;
 	}
 	//End - #30045
