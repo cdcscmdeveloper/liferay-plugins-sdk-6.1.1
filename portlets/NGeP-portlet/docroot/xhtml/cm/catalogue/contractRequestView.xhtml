@@ -34,10 +34,11 @@
 				<p>
 				</p>
 
+				<!-- 38255 --> 
 				<p:dataTable
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{catalogueBackingBean.schInfo}" id="contractRequestIdd"
-					rowIndexVar="rowIndex" var="contractObjj" width="100%">
+					value="#{catalogueBackingBean.managedBean.schInfo}" id="contractRequestIdd"
+					rowIndexVar="rowIndex" var="contractObjj" width="100%"><!-- 38255 --> 
 
 					<ac:paginator for="contractRequestIdd"></ac:paginator>
 
@@ -71,7 +72,7 @@
 					<p:column>
 						<h:outputText value="#{contractObjj.crNo}"
 							style="display: block; width:100%; text-align:center;" />
-					<h:outputText value="#{contractObjj.crNoStatus=='(null)' ? '' : contractObjj.crNoStatus}"
+		<!-- 38255 --> <h:outputText value="#{contractObjj.crNoStatus=='()' ? '' : contractObjj.crNoStatus}"
 							style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 
 					</p:column>
@@ -80,7 +81,7 @@
 						<h:outputText value="#{contractObjj.coNo}"
 							style="display: block; width:100%; text-align:center;" />
 
-					<h:outputText value="#{contractObjj.coNoStatus=='(null)' ? '' : contractObjj.coNoStatus}"
+		<!-- 38255 --> <h:outputText value="#{contractObjj.coNoStatus=='()' ? '' : contractObjj.coNoStatus}"
 							style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 
 					</p:column>

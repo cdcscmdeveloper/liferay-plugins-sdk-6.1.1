@@ -138,8 +138,7 @@ import org.primefaces.event.FileUploadEvent;
  */
 @ManagedBean(name = "approvalBackingBean")
 @RequestScoped
-public class ApprovalBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 
 	/**
 	 * 
@@ -161,7 +160,6 @@ public class ApprovalBackingBean extends
 	public ApprovalBackingBean() {
 
 	}
-
 
 	/**
 	 * Inits the.
@@ -1189,7 +1187,6 @@ public class ApprovalBackingBean extends
 			// End Reopen 9019
 
 			CommitteResDTO committeResDto = null;
-
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();

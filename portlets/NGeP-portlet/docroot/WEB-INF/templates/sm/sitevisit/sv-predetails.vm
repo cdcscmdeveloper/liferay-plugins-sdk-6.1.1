@@ -37,8 +37,7 @@
 	      	<td>N/A</td>
 	      	#end
     	</tr>
-    	<!-- 24819 end
-    	 -->	
+    	<!-- 24819 end -->	
     	<tr>
     		 <td width="35%"><b>GST Registration No.</b></td>
 	        <td>$!gstRegNo</td>

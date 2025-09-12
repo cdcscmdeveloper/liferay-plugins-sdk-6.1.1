@@ -267,6 +267,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void preRenderContract() {
 		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
+		ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi 06/12/2022
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_PAGE);
 	}
 
@@ -278,6 +279,39 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
+		
+		//Bug 34142, 15851 - shaqimi start 04/12/2022
+		if(taskId!=null){
+			ctBB.getManagedBean().setInPage(false);
+		}
+		if(!ctBB.getManagedBean().isInPage()){
+			if(ctBB.getManagedBean().isBackFromSCL()){
+				getManagedBean().setSelectedTabIndex(0);
+				ctBB.getManagedBean().setBackFromSCL(false);
+				
+				if (ctBB.getManagedBean().getContractVerIdFromAgreementTaskList() != null){
+					ContractReqDTO reqDTO = new ContractReqDTO();
+					reqDTO.setContractVerId(ctBB.getManagedBean().getContractVerIdFromAgreementTaskList());
+					reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
+					reqDTO.setViewOnly(true);
+					
+					setValidateContractField(reqDTO);
+				}
+			}
+			
+			if(!ctBB.getManagedBean().isViewContractFromAgreement()){
+				if(taskId != null && !taskId.isEmpty()){
+					ctBB.getManagedBean().setDocTypeFromTaskList(null);
+					ctBB.getManagedBean().setTaskIdFromTaskList(taskId);
+				} else {
+					if(ctBB.getManagedBean().getTaskIdFromTaskList() != null && !ctBB.getManagedBean().getTaskIdFromTaskList().isEmpty()){
+						taskId = ctBB.getManagedBean().getTaskIdFromTaskList();
+					}
+				}
+			}
+			ctBB.getManagedBean().setInPage(true);
+		}
+		//Bug 34142, 15851 - shaqimi end 04/12/2022
 
 		if (taskId == null) {
 			if (getManagedBean().getWarningPercentage() != null) {
@@ -317,9 +351,31 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				// End - Fix #29368
 				}
 			// End Fix - #30856
-					
+
+			//Bug 34142, 15851 - shaqimi start 04/12/2022
+			if(ctBB.getManagedBean().getOutcomesFromContract() != null){
+				this.getManagedBean().setOutComes(ctBB.getManagedBean().getOutcomesFromContract());
+			} else {
+				ctBB.getManagedBean().setOutcomesFromContract(getManagedBean().getOutComes());
+			}
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
 			return;
 		}
+		
+		//Bug 34142, 15851 - shaqimi start 06/12/2022
+		if (ctBB.getManagedBean().getDocTypeFromTaskList() != null){
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			
+			reqDTO.setTaskName(ctBB.getManagedBean().getTaskNameFromTaskList());
+			reqDTO.setDocType(ctBB.getManagedBean().getDocTypeFromTaskList());
+			reqDTO.setContractId(ctBB.getManagedBean().getContractIdFromTaskList());
+			reqDTO.setContractVerId(ctBB.getManagedBean().getContractVerIdFromTaskList());
+			reqDTO.setViewOnly(true);//Bug 34142 - shaqimi 04/12/2022
+			
+			setValidateContractField(reqDTO);
+			return;
+		}
+		//Bug 34142, 15851 - shaqimi end 06/12/2022
 
 		Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 		getManagedBean().setSelectedTabIndex(0);
@@ -343,6 +399,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#25406 - End	
 	
 		ContractReqDTO reqDTO = new ContractReqDTO();
+		reqDTO.setViewOnly(true);//Bug 34142 - shaqimi 04/12/2022
 		reqDTO.setTaskName(getManagedBean().getTaskName());
 		
 		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderView]");
@@ -362,6 +419,21 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(new Long(dataType.getDocId()));
 			reqDTO.setDocType(dataType.getDocType());
 		}
+		
+		//Bug 34030 - shaqimi start
+		ctBB.getManagedBean().setTaskNameFromTaskList(reqDTO.getTaskName());
+		ctBB.getManagedBean().setDocTypeFromTaskList(reqDTO.getDocType());
+		ctBB.getManagedBean().setContractIdFromTaskList(reqDTO.getContractId());
+		ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());
+		//Bug 34030 - shaqimi end
+		
+		//Bug 34142, 15851 - shaqimi start 04122022
+		if(ctBB.getManagedBean().getOutcomesFromContract() != null){
+			this.getManagedBean().setOutComes(ctBB.getManagedBean().getOutcomesFromContract());
+		} else {
+			ctBB.getManagedBean().setOutcomesFromContract(getManagedBean().getOutComes());
+		}
+		//Bug 34142, 15851 - shaqimi start 04122022
 		
 		/*#26083 start - basri*/
 		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
@@ -421,6 +493,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
 			ctAgreementReqDTO = new ContractAgreementReqDTO();
 			ctAgreementReqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+			ctAgreementReqDTO.setViewOnly(reqDTO.isViewOnly());//Enhancement 29418 - shaqimi;
 			ctAgreementResDTO = agreementSO.retrieveContractAgreements(ctAgreementReqDTO);
 			
 			ctBB.getManagedBean().setCtAgreementList(ctAgreementResDTO.getAgreementList());
@@ -2170,6 +2243,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			reqDTO.setUpdateAction(true);	
+			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
 			trBB = new TerminationBackingBean();
 			trBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
@@ -2198,7 +2272,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setContractVerId(contractVerId);
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 		reqDTO.setUpdateAction(true);
-
+		ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		SuspensionBackingBean	suspBB = new SuspensionBackingBean();
 		
@@ -2228,8 +2302,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setUpdateAction(true);
 
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
+		ctBB.getManagedBean().setAmendFromViewPage(true); // #15851
+		ctBB.getManagedBean().setViewSCL(false);//34142, 15851 to reset viewSCL before anything
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("amendManagedBean", null);//#15851
 		AmendmentBackingBean amendBB = new AmendmentBackingBean();
 		amendBB.getManagedBean().setSelectedTabIndex(0);
+		/*#25956 Start*/
+		amendBB.getManagedBean().setViewOnly(false); /*#25956 notification setting*/
+		/*#25956 End*/
 		amendBB.setAmendmentContractVer(reqDTO);
 		return PROCESS_AMEND_PAGE;
 	}
@@ -2258,7 +2338,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
+		ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
 		ctBB.getManagedBean().setViewContract(true);
+		ctBB.getManagedBean().setFromViewPage(true); //#15851
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		getManagedBean().setAsAtDate(null);
 		setValidateContractField(reqDTO);
@@ -2294,6 +2376,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		ctBB.getManagedBean().setViewContract(true);
 		ctBB.getManagedBean().setCommonView(true);
+		ctBB.getManagedBean().setOutcomesFromContract(getManagedBean().getOutComes());//Bug 34142, 15851 - shaqimi 04/12/2022
 		setValidateContractField(reqDTO);
 		getManagedBean().setSelectedTabIndex(0); 
 		getManagedBean().setAsAtDate(DateUtils.getCurrentDateWithoutTime());
@@ -2326,7 +2409,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 
 			reqDTO.setUpdateAction(true);
-			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
+			reqDTO.setViewOnly(true);//Bug 34142, 15851 - shaqimi start 04/12/2022
+			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
+			ctBB.getManagedBean().setViewSCL(false);//34142, 15851 to reset viewSCL before anything
+			ctBB.getManagedBean().setNotificationSetting(false);
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
 			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
@@ -2361,7 +2447,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
 				
 			reqDTO.setUpdateAction(true);
-			reqDTO.setDocType(ParameterConst.DOCTYPE_NOTIFICATION_SETTING); 
+			reqDTO.setViewOnly(true);//Bug 34142, 15851 - shaqimi start 04/12/2022
+			reqDTO.setDocType(ParameterConst.DOCTYPE_NOTIFICATION_SETTING);
+			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
 			ctBB.getManagedBean().setNotificationSetting(true);
@@ -2394,9 +2482,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		TerminationBackingBean trBB =  new TerminationBackingBean();
+		ctBB.renewSesionObject(); //#15851
 		trBB.setCtBB(new ContractBackingBean());	
 		trBB.getCtBB().getManagedBean().setViewContract(true);
 		trBB.getCtBB().getManagedBean().setContractVer(resDTO.getCtContractVer());
+		trBB.getManagedBean().setContractVer(resDTO.getCtContractVer()); //#15851
+		trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract()); //#15851
 		trBB.getManagedBean().setExternalPageUrl(null);
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 
@@ -2615,7 +2706,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public String backAction() {
 		ctBB.getManagedBean().setViewContract(false);
+		ctBB.getManagedBean().setFromViewPage(false); //#15851
 		getManagedBean().setLoaContractVerList(null);
+		getManagedBean().setLoaContractVerId(null); //#15851
 		ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
 		contractBB.getManagedBean().setItemcode(null);
 		contractBB.getManagedBean().setItemname(null);
@@ -2628,6 +2721,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ContractBackingBean ccBB = new ContractBackingBean();
 		ctBB.getManagedBean().setSelectedItem(null);
 		ctBB.getManagedBean().setServiceselectedItem(null);
+		
+		//Bug 34030 - shaqimi start
+		//Bug 34142 - shaqimi start 25/11/2022
+		if(!ctBB.getManagedBean().isViewContractFromAgreement()){
+		ctBB.getManagedBean().setAmendFromTaskList(false);
+		}
+		//Bug 34142 - shaqimi end 25/11/2022
+		ctBB.getManagedBean().setAmendFromViewPage(false);
+		ctBB.getManagedBean().setViewSCL(false);
+		ctBB.getManagedBean().setHasAmendmentLoaNo(false);
+		ctBB.getManagedBean().setViewContract(false);
+		ctBB.getManagedBean().setBackFromSCL(false);
+		ctBB.getManagedBean().setBackFromContract(true);//Bug 34142 - shaqimi 04/12/2022
+		ctBB.getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
+		//Bug 34030 - shaqimi end
+		
+		ctBB.getManagedBean().setViewContractFromAgreement(false);//Bug 34142 - shaqimi 16/11/2022
 		
 		contractBB.getManagedBean().getContractListingPagingDataModel().resetData();
 		contractBB.getManagedBean().getServiceListingPagingDataModel().resetData();
@@ -3183,6 +3293,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 			PmOrgProfile orgProfile = null;
+			
+			//Enhancement 29418 - shaqimi start 21/10/2022
+			Boolean hasPBQCRole = 
+					(getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QCB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.PBA_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PBA_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PBB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.PPB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value()));
+			//Enhancement 29418 - shaqimi end 21/10/2022
+			
 			if (userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
 				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 			}
@@ -3194,7 +3314,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+					|| hasPBQCRole) {//Enhancement 29418 - shaqimi 21/10/2022
 				this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 				this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
 				if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {
@@ -3423,6 +3544,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT);			
 		
 			reqDTO.setUpdateAction(true);
+			ctBB.renewSesionObject(); //#15851
 			ctBB.getManagedBean().setNotificationSetting(false);
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
@@ -3430,6 +3552,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			setValidateContractField(reqDTO);
 			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			ctBB.chkServiceTaxAlert();
+			ctBB.getManagedBean().setOutcomesFromContract(getManagedBean().getOutComes());//Bug 34142, 15851 - shaqimi 04/12/2022
 			getManagedBean().setExternalPageUrl(null);
 			getManagedBean().setSelectedTabIndex(0);	
 			return PROCESS_OWNER_MANAGEMENT_PAGE;

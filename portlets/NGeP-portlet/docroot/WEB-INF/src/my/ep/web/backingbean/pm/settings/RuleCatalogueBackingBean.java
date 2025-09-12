@@ -462,8 +462,7 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().getDeletedOrgAndItemFeeExemptions().clear();
 			resFDTO = feeSO.getFeeExemptionsForOrgAndItem(reqFDTO);
 			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
-				if (exemption.getItemId() == null) {// TODO: clear it before
-													// updating the fee list
+				if (exemption.getItemId() == null) {
 					exemption.setItemId(new CmItem());
 				}
 				this.getManagedBean().getFeeExemptionsForOrgAndItem()
@@ -507,14 +506,7 @@ public class RuleCatalogueBackingBean extends
 
 			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
 				if (exemption.getRequestItemId() == null) {
-					exemption.setRequestItemId(new ScRequestItem());// TODO:
-																	// clear
-																	// it
-																	// before
-																	// updating
-																	// the
-																	// fee
-																	// list
+					exemption.setRequestItemId(new ScRequestItem());
 				}
 				this.getManagedBean().getFeeExemptionsForContract()
 						.add(exemption);
@@ -603,7 +595,6 @@ public class RuleCatalogueBackingBean extends
 					.getLanguage();
 			reqRDTO.setLanguageCode(languageCode);
 			ISearchBean<PmConfigRuleDesc> searchBean = new SearchBean<PmConfigRuleDesc>();
-			//TODO - data restriction on next round (16/2/2017)
 //			ISearchBean<PmConfigRuleDesc> searchBean = super.createSearchBean(PmConfigRuleDesc.class,
 //					"ruleTypeTableID");
 			// Filter By - status
@@ -1505,14 +1496,16 @@ public class RuleCatalogueBackingBean extends
 					// next
 					// record\
 					continue;
-				} else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc
-						.getRuleType().getRangeType() == 2)
-						&& baseValueToCompare.isError()) {// to value can not be
-															// less than from
-															// value
-					throw new EpException(MessageConst.ERROR_770210,
-							new String[] { ruleTypeDesc.getRuleDesc() });
 				}
+				// 29669 - start
+				else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc.getRuleType().getRangeType() == 2)
+						&& (baseValueToCompare.isError() || baseValueToCompare.isErrorToRequired())) {
+							// to value can not be less than from value
+							// or
+							// previous tier's TO value can not be changed to null if already add next tier
+					throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });				
+				}
+				// 29669 - end
 
 				// 30672 - start 19/07/2022
 				if (ruleTypeDesc.getRuleType().getRangeType() != 1
@@ -1537,20 +1530,16 @@ public class RuleCatalogueBackingBean extends
 					if (value.getRecordStatusFlg() == 0) {// if is inActive one
 						// go to next record
 						continue;
-					} else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc
-							.getRuleType().getRangeType() == 2)
-							&& value.isError()) { // to
-						// value
-						// can
-						// not
-						// be
-						// less
-						// than
-						// from
-						// value
-						throw new EpException(MessageConst.ERROR_770210,
-								new String[] { ruleTypeDesc.getRuleDesc() });
 					}
+					// 29669 - start
+					else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc.getRuleType().getRangeType() == 2)
+							&& (value.isError() || value.isErrorToRequired())) { 
+						// to value can not be less than from value
+						// or
+						// previous tier's TO value can not be changed to null if already add next tier
+						throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });
+					}
+				    // 29669 - end
 
 					if (!ruleValueValidation(baseValueToCompare, value,
 							ruleTypeDesc.getRuleType())) {
@@ -2102,8 +2091,7 @@ public class RuleCatalogueBackingBean extends
 			reqDTO = new FeeExemptionReqDTO();
 			resDTO = exemptionSO.getFeeExemptionsForOrgAndItem(reqDTO);
 			for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-				if (exemption.getItemId() == null) {// TODO: clear it before
-													// updating the fee list
+				if (exemption.getItemId() == null) {
 					exemption.setItemId(new CmItem());
 				}
 				this.getManagedBean().getFeeExemptionsForOrgAndItem()
@@ -2407,14 +2395,7 @@ public class RuleCatalogueBackingBean extends
 
 			for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
 				if (exemption.getRequestItemId() == null) {
-					exemption.setRequestItemId(new ScRequestItem());// TODO:
-																	// clear
-																	// it
-																	// before
-																	// updating
-																	// the
-																	// fee
-																	// list
+					exemption.setRequestItemId(new ScRequestItem());
 				}
 				this.getManagedBean().getFeeExemptionsForContract()
 						.add(exemption);
@@ -2821,133 +2802,70 @@ public class RuleCatalogueBackingBean extends
 	public void fillTrackingDairyForThreshold(int type, ThresholdReqDTO reqDTO) {
 		log.info("Tracking diary for Threshold :");
 		log.info("type" + type);
-		PmThreshold centralizedLevelThreshold = this.getManagedBean()
-				.getThreshold();
+		PmThreshold centralizedLevelThreshold = this.getManagedBean().getThreshold();
 		log.info("centralizedLevelThreshold" + centralizedLevelThreshold);
-		log.info("centralizedLevelThreshold.isModified()="
-				+ centralizedLevelThreshold.isModified());
+		log.info("centralizedLevelThreshold.isModified()=" + centralizedLevelThreshold.isModified());
 		log.info("this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId())="
-				+ this.getManagedBean()
-						.getThresholdIdToS2UnplannedMap()
-						.get(this.getManagedBean().getThreshold()
-								.getThresholdId()));
+				+ this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId()));
 		// 1 - unplanned
 		// 2 - budget
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
-		StatusReqDTO statusReqDTO = null;
+		// IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+		// StatusReqDTO statusReqDTO = null;
 		if (type == 1) {
-
 			if (centralizedLevelThreshold.isModified()) {
-				Integer originalUnplanndthreshold = this
-						.getManagedBean()
-						.getThresholdIdToS2UnplannedMap()
-						.get(this.getManagedBean().getThreshold()
-								.getThresholdId());
-				if (originalUnplanndthreshold != null
-						&& !originalUnplanndthreshold
-								.equals(centralizedLevelThreshold
-										.getS2Unplanned())) {// track change
+				Integer originalUnplanndthreshold = this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId());
+				if (originalUnplanndthreshold != null && !originalUnplanndthreshold.equals(centralizedLevelThreshold.getS2Unplanned())) {// track change
 					log.info("Tracking diary for Threshold : Centeralized Unplanned changed");
 					String messageId = MessageConst.TD_80203;
-					String[] msgParam = new String[] {
-							originalUnplanndthreshold.toString(),
-							centralizedLevelThreshold.getS2Unplanned()
-									.toString() };
+					String[] msgParam = new String[] { originalUnplanndthreshold.toString(), centralizedLevelThreshold.getS2Unplanned().toString() };
 					reqDTO.setTrackingStatus(true);
 
 					reqDTO.getTrackDairyVOs().add(
-							PmCommonUtil
-									.assignTrackingDairyForUnplannedThreshold(
-											centralizedLevelThreshold,
-											getActionDesc(messageId, msgParam),
-											centralizedLevelThreshold
-													.getRecordStatusFlg()
-													.longValue()));
+							PmCommonUtil.assignTrackingDairyForUnplannedThreshold(centralizedLevelThreshold, getActionDesc(messageId, msgParam), 
+									centralizedLevelThreshold.getRecordStatusFlg().longValue()));
 				}
 			}
-			for (PmThreshold threshold : this.getManagedBean()
-					.getUnplannedThresholdList()) {
+			for (PmThreshold threshold : this.getManagedBean().getUnplannedThresholdList()) {
 				if (threshold.isModified()) {
-					Integer originalUnplanndthreshold = this.getManagedBean()
-							.getThresholdIdToS2UnplannedMap()
-							.get(threshold.getThresholdId());
-					if (originalUnplanndthreshold != null
-							&& !originalUnplanndthreshold.equals(threshold
-									.getS2Unplanned())) {// track change
+					Integer originalUnplanndthreshold = this.getManagedBean().getThresholdIdToS2UnplannedMap().get(threshold.getThresholdId());
+					if (originalUnplanndthreshold != null && !originalUnplanndthreshold.equals(threshold.getS2Unplanned())) {// track change
 						log.info("Tracking diary for Threshold : ministery Unplanned changed");
 						String messageId = MessageConst.TD_80202;
-						String[] msgParam = new String[] {
-								threshold.getOrgProfileId().getPmOrgValidity()
-										.getOrgName(),
-								originalUnplanndthreshold.toString(),
+						String[] msgParam = new String[] { threshold.getOrgProfileId().getPmOrgValidity().getOrgName(), originalUnplanndthreshold.toString(),
 								threshold.getS2Unplanned().toString() };
 						reqDTO.setTrackingStatus(true);
 
-						reqDTO.getTrackDairyVOs()
-								.add(PmCommonUtil
-										.assignTrackingDairyForUnplannedThreshold(
-												threshold,
-												getActionDesc(messageId,
-														msgParam), threshold
-														.getRecordStatusFlg()
-														.longValue()));
+						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForUnplannedThreshold(threshold, getActionDesc(messageId, msgParam), 
+								threshold.getRecordStatusFlg().longValue()));
 					}
 				}
 			}
 		} else if (type == 2) {
 			if (centralizedLevelThreshold.isModified()) {
-				Integer originalBudgetThreshold = this
-						.getManagedBean()
-						.getThresholdIdToBudgetSpentMap()
-						.get(this.getManagedBean().getThreshold()
-								.getThresholdId());
-				if (originalBudgetThreshold != null
-						&& !originalBudgetThreshold
-								.equals(centralizedLevelThreshold
-										.getBudgetSpent())) {// track change
+				Integer originalBudgetThreshold = this.getManagedBean().getThresholdIdToBudgetSpentMap().get(this.getManagedBean().getThreshold().getThresholdId());
+				if (originalBudgetThreshold != null && !originalBudgetThreshold.equals(centralizedLevelThreshold.getBudgetSpent())) {// track change
 					log.info("Tracking diary for Threshold : Centeralized BudgetVsSpent changed");
 					String messageId = MessageConst.TD_80205;
-					String[] msgParam = new String[] {
-							originalBudgetThreshold.toString(),
-							centralizedLevelThreshold.getBudgetSpent()
-									.toString() };
+					String[] msgParam = new String[] { originalBudgetThreshold.toString(), centralizedLevelThreshold.getBudgetSpent().toString() };
 					reqDTO.setTrackingStatus(true);
 
 					reqDTO.getTrackDairyVOs().add(
-							PmCommonUtil.assignTrackingDairyForBudgetThreshold(
-									centralizedLevelThreshold,
-									getActionDesc(messageId, msgParam),
-									centralizedLevelThreshold
-											.getRecordStatusFlg().longValue()));
+							PmCommonUtil.assignTrackingDairyForBudgetThreshold(centralizedLevelThreshold, getActionDesc(messageId, msgParam), 
+									centralizedLevelThreshold.getRecordStatusFlg().longValue()));
 				}
 			}
-			for (PmThreshold threshold : this.getManagedBean()
-					.getBudgetThresholdList()) {
+			for (PmThreshold threshold : this.getManagedBean().getBudgetThresholdList()) {
 				if (threshold.isModified()) {
-					Integer originalUnplanndthreshold = this.getManagedBean()
-							.getThresholdIdToBudgetSpentMap()
-							.get(threshold.getThresholdId());
-					if (originalUnplanndthreshold != null
-							&& !originalUnplanndthreshold.equals(threshold
-									.getBudgetSpent())) {// track change
+					Integer originalUnplanndthreshold = this.getManagedBean().getThresholdIdToBudgetSpentMap().get(threshold.getThresholdId());
+					if (originalUnplanndthreshold != null && !originalUnplanndthreshold.equals(threshold.getBudgetSpent())) {// track change
 						log.info("Tracking diary for Threshold : ministery BudgetVsSpent changed");
 						String messageId = MessageConst.TD_80204;
-						String[] msgParam = new String[] {
-								threshold.getOrgProfileId().getPmOrgValidity()
-										.getOrgName(),
-								originalUnplanndthreshold.toString(),
+						String[] msgParam = new String[] { threshold.getOrgProfileId().getPmOrgValidity().getOrgName(), originalUnplanndthreshold.toString(), 
 								threshold.getBudgetSpent().toString() };
 						reqDTO.setTrackingStatus(true);
 
-						reqDTO.getTrackDairyVOs().add(
-								PmCommonUtil
-										.assignTrackingDairyForBudgetThreshold(
-												threshold,
-												getActionDesc(messageId,
-														msgParam), threshold
-														.getRecordStatusFlg()
-														.longValue()));
+						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForBudgetThreshold(threshold, getActionDesc(messageId, msgParam), 
+								threshold.getRecordStatusFlg().longValue()));
 					}
 				}
 			}
@@ -3081,21 +2999,30 @@ public class RuleCatalogueBackingBean extends
 			if (rulevalue.getGroupValueId().equals(
 					configRuleType.getConfigRuleValues().get(index)
 							.getGroupValueId())) {
-				rulevalue.setFromValue(configRuleType.getConfigRuleValues()
-						.get(index).getToValue().add(new BigDecimal(0.01)));
+				// 29669 - start
+				if (configRuleType.getConfigRuleValues().get(index).getToValue() == null) {
+					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(true);
+				} else {
+					rulevalue.setFromValue(configRuleType.getConfigRuleValues()
+							.get(index).getToValue().add(new BigDecimal(0.01)));
+					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(false);
+				}
+				// 29669 - end
 			}
 		}
 
 		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 				.get(index);
+		// 29669 start
 		if (selectedValue.getFromValue() != null
 				&& selectedValue.getToValue() != null
 				&& selectedValue.getFromValue().compareTo(
-						selectedValue.getToValue()) == 1) {
+						selectedValue.getToValue()) >= 0) {
 			selectedValue.setError(true);
 		} else {
 			selectedValue.setError(false);
 		}
+		// 29669 end
 	}
 
 	/**
@@ -3191,7 +3118,13 @@ public class RuleCatalogueBackingBean extends
 
 					newRuleValue.setGroupValueId(1);
 				}
-				newRuleValue.setFromValue(new BigDecimal(1));
+				// 29669 - start
+				if (configRuleType.getRuleType().equals(RuleTypeConst.QTPMM)) {
+					newRuleValue.setFromValue(new BigDecimal(0));
+				} else {
+					newRuleValue.setFromValue(new BigDecimal(1));
+				}
+				// 29669 - end
 			}
 			int index = configRuleType.getConfigRuleValues().size();
 			configRuleType.getConfigRuleValues().add(index, newRuleValue);
@@ -3653,7 +3586,6 @@ public class RuleCatalogueBackingBean extends
 		getManagedBean().getTaxableItemsForG2G().clear();
 		getManagedBean().getDeletedTaxableItemsForG2G().clear();
 
-		// TODO init exemption type tabs
 		// hide GstItemTabs
 		// for (int exemptionType : ProfileManagementConst.GST_EXEMPTION_LIST) {
 		// initGstTabsItems(exemptionType);
@@ -3665,27 +3597,21 @@ public class RuleCatalogueBackingBean extends
 	private void initGstTabsItems(int exemptionType) {
 		IGstItemSO gstItemSO = null;
 		try {
-			gstItemSO = (IGstItemSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IGstItemSO.class);
+			gstItemSO = (IGstItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IGstItemSO.class);
 			ISearchBean<PmGstItem> searchBean = new SearchBean<PmGstItem>();
 
 			GstItemReqDTO reqDTO = new GstItemReqDTO();
 			reqDTO.setSearchBean(searchBean);
 			reqDTO.setExemptionType(exemptionType);
 
-			GstItemResDTO resDTO = gstItemSO
-					.retrieveGstItemsBySearchBean(reqDTO);
+			GstItemResDTO resDTO = gstItemSO.retrieveGstItemsBySearchBean(reqDTO);
 			if (resDTO.isSuccessful() && resDTO.getResultBean() != null) {
 				if (ProfileManagementConst.EXEMPTION_GENERAL == exemptionType) {
-					getManagedBean().setTaxableItems(
-							resDTO.getResultBean().getResultList());
+					getManagedBean().setTaxableItems(resDTO.getResultBean().getResultList());
 				} else if (ProfileManagementConst.EXEMPTION_DA == exemptionType) {
-					getManagedBean().setTaxableItemsForDA(
-							resDTO.getResultBean().getResultList());
+					getManagedBean().setTaxableItemsForDA(resDTO.getResultBean().getResultList());
 				} else if (ProfileManagementConst.EXEMPTION_G2G == exemptionType) {
-					getManagedBean().setTaxableItemsForG2G(
-							resDTO.getResultBean().getResultList());
+					getManagedBean().setTaxableItemsForG2G(resDTO.getResultBean().getResultList());
 				}
 			}
 
@@ -3702,20 +3628,15 @@ public class RuleCatalogueBackingBean extends
 		IDesignatedAreaSO designatedAreaSO = null;
 		try {
 
-			designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
-							IDesignatedAreaSO.class);
+			designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDesignatedAreaSO.class);
 			ISearchBean<PmDesignatedArea> searchBean = new SearchBean<PmDesignatedArea>();
 
 			DesignatedAreaReqDTO reqDTO = new DesignatedAreaReqDTO();
 			reqDTO.setSearchBean(searchBean);
 
-			DesignatedAreaResDTO resDTO = designatedAreaSO
-					.retrieveDesignatedAreaBySearchBean(reqDTO);
+			DesignatedAreaResDTO resDTO = designatedAreaSO.retrieveDesignatedAreaBySearchBean(reqDTO);
 			if (resDTO.isSuccessful() && resDTO.getResultBean2() != null) {
-				getManagedBean().setDaValidityList(
-						resDTO.getResultBean2().getResultList());
+				getManagedBean().setDaValidityList(resDTO.getResultBean2().getResultList());
 			}
 		} finally {
 			designatedAreaSO = null;
@@ -4650,22 +4571,13 @@ public class RuleCatalogueBackingBean extends
 				.getSelectedRuleDescType().getRuleType();
 		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 				.get(index);
-		if (selectedValue.getFromValue() != null
-				&& selectedValue.getToValue() != null
-				&& selectedValue.getFromValue().compareTo(
-						selectedValue.getToValue()) == 1) {
+		// 29669 start
+		if (selectedValue.getFromValue() != null && selectedValue.getToValue() != null && selectedValue.getFromValue().compareTo(selectedValue.getToValue()) >= 0) {
 			selectedValue.setError(true);
 		} else {
 			selectedValue.setError(false);
 		}
-		//
-		// if (selectedValue.getRuleValue() == null
-		// || selectedValue.getFromValue() == null) {
-		// this.getManagedBean().setError2(true);
-		// } else {
-		// this.getManagedBean().setError2(false);
-		// }
-
+		// 29669 end
 	}
 
 	/**
@@ -4961,6 +4873,7 @@ public class RuleCatalogueBackingBean extends
 	
 	
 	public void saveQtValues() {
+
 		log.info("saveQtValues");
 		/*
 		 * 030125: Urgent fixing issue, re-factoring code to cater only check overlapping date range group by orgProfileID
@@ -4979,10 +4892,8 @@ public class RuleCatalogueBackingBean extends
 					result = isDateOverlaped(approval.getEffDate(), approval.getExpDate(),
 							compare.getEffDate(), compare.getExpDate());
 				}
-				
-				log.info("....result=" + result);
-
-				if (result == true) {
+				//#29166 - CR 27827: Static Code Analysis Start - Remove the literal "true" boolean value
+				if (result) {
 					// hit error and return
 					this.getManagedBean().setDisabledSelectedMinistryId(false);
 					this.getManagedBean().setMinistryProfileId(null);
@@ -5002,7 +4913,7 @@ public class RuleCatalogueBackingBean extends
 	        }
 	        groupedApprovals.get(orgProfileId).add(approval);
 	    }
-
+	    
 	    // Iterate through each group and check for overlapping dates
 	    for (Map.Entry<Long, List<PmPtjSpecialApproval>> entry : groupedApprovals.entrySet()) {
 	        List<PmPtjSpecialApproval> group = entry.getValue();
@@ -5478,6 +5389,9 @@ public class RuleCatalogueBackingBean extends
 	public void onRuleType(org.primefaces.event.SelectEvent event) {
 
 		String selectedRuleType = null;
+		// 29669,29641,29650 - start
+		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleConfigId"); // reset form when select different Rule if UI validation error
+		// 29669,29641,29650 - end
 		
         if (getManagedBean().getSelectedRuleDescType() != null) {
         	selectedRuleType = getManagedBean().getSelectedRuleDescType()

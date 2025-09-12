@@ -1307,6 +1307,9 @@ public class SupplierFinalizationBackingBean extends
 		if (getManagedBean().getCurrentZone() != null && evaluationStageId==2) { //#26440
 			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		 }
+
+		this.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt()); // #29466
+
 		getManagedBean().setQualifiedSuppliersByEvalStage(
 				new QualifiedSuppliersPagingDataModel(
 						"evaluationQualifiedSuppliers", qtId,

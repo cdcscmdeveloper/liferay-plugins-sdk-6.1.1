@@ -599,7 +599,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
 		// #36119 - end
-				
+		
 		ScPurchaseRequest purchaseRequest =  (ScPurchaseRequest) prObj[2];
 		if (null != purchaseRequest) {
 			Long purchaseRequestId = purchaseRequest.getPurchaseRequestId();
@@ -1420,14 +1420,14 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
 		ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
-		
+			
 		workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
 		reqDTO.setScWorkFlowStatus(workFlowStatus);
 		workFlowStatusSO.updataApprovedCancelledLoaToCancelled(reqDTO);
 
 	}
 	//END #22211
-	
+		
 	/**
 	 * Pid validity.
 	 *
@@ -1436,7 +1436,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 */
 	private boolean pidValidityBoolean(Date pidChangedDate, Integer pidValidDays) {
 		boolean valid = false;
-		
 		if(pidChangedDate != null && pidValidDays != null){
 			Date today  = DateUtils.getCurrentDate();
 			Date ExpDate = DateUtils.addDays(pidChangedDate, pidValidDays);
@@ -1447,9 +1446,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		return valid;
 	}
-	
 	//12183 - end
-	
+		
 	//#22211 - start -  if loa prepared by user, return true
 	public boolean allowCancel(Object[] dpObj) {
 		IQTAwardSO qtAwardSO;
@@ -1457,11 +1455,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 		boolean disable = true;
 		String docNo = (String) dpObj[1];
-		
+			
 		AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 		awardSupplierReqDTO.setLoaNo(docNo);
 		AwardSupplierResDTO awardSupplierResDTO = qtAwardSO.retrieveLOADtlByLoaNo(awardSupplierReqDTO);
-								
+									
 		if(String.valueOf(awardSupplierResDTO.getScLoa().getCreatedBy()).equalsIgnoreCase(String.valueOf(getFacesScopes().getUserSessionBean().getUserId()))){
 			disable = false;				
 		}

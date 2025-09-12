@@ -265,15 +265,17 @@ public interface QTConstants {
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	// 19287#91, 17376#104 -end-
 
-	// #15391  #11104  -start-
+	// #15391,#11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
-	// #15391 #11104 -end-
+	// #15391,#11104 -end-
+
 
 	// 9019 - Start (Harun) WIP transaction Pending QT Submission
 	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
 	// 9019 - End (Harun)
 
 	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648 #35227@Syazani 20/10/2022
+	
 	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
 
 	// Bug #35485@Syazani 08/02/2024 -- Start
@@ -293,11 +295,11 @@ public interface QTConstants {
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
 	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
 	// 25037 - end
-
+	
 	// 36671, 25037 - start
 	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
 	// 36671, 25037 - end
-
+	
 	// Bug #35688@Syazani 10/07/2024 -- Start
 	public static final String TAB_SC_GENERAL_INFORMATION = "0";
 	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
@@ -311,16 +313,16 @@ public interface QTConstants {
 	public static final String TAB_SC_FULFILMENT_SCHEDULE = "8";
 	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "9";
 	// Bug #35688@Syazani 10/07/2024 -- End
-	
-	//#11104
-	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
-	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
-	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX=1;//35148&11104
-	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
-	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148&11104
+
+	// #11104 -start-
+	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE = "scQTPrepareSpec_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT = "scSpecificationCommitteeEndorsement_WAR_NGePportlet";
+	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX = 1;// 35148&11104
+	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX = 2;
+	public static final int EVALUATION_MAIN_ACTIVE_INDEX = 7;// 35148&11104
 	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
-	//#11104 -end-
-	
+	// #11104 -end-
+
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";
@@ -329,11 +331,7 @@ public interface QTConstants {
 	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
-	
-	// 36678 -start-
-	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
-	// 36678 -end-
-	
+
 	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
 	
 	// #29007 Start Vinod

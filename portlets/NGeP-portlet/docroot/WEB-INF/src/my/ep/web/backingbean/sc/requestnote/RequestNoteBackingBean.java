@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import my.ep.util.SLAUtils; //#25790
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -42,8 +41,8 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.ct.IContractSO; //#25790
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO; //#25790
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO; //#25790
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -66,17 +65,17 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.AuditDPRequestNoteConst;
-import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.ContinuityDPConst; //#25790
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.ct.ContractReqDTO; //#25790
 import my.ep.dto.ct.ContractResDTO; //#25790
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
-import my.ep.dto.fl.FulfilmentReqDTO; //#25790
-import my.ep.dto.fl.FulfilmentResDTO; //#25790
 import my.ep.dto.osb.sc.DPOsbReqDTO;
 import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -147,6 +146,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //#25790
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
@@ -4461,10 +4461,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		try {
 			fos = new FileOutputStream(getActualFilePath(attachment));
-			DocumentGenerator.getInstance().generatePdfFromVelocity(
-	    			"/sc/directPurchase/pi-report.vm", 
-	    			context, 
-	    			fos);
+			DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/directPurchase/pi-report.vm", context, fos);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -5084,9 +5081,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									.multiply(zonalSubTotalAmount));
 						}
 					}
-				}
-
-				else {
+				} else {
 					for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
 						subTotalAmount.add(spItemPrice.getItemPrice().multiply(zonalSubTotalAmount));
 					}
@@ -5553,6 +5548,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// #28789 - end
+
 	// 36362 - start
 	/**
 	 * To validate quantity not exceed tier max quantity

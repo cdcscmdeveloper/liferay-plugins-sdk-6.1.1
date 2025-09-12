@@ -224,7 +224,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	private static final long serialVersionUID = 1L;
 
 	/** The log. */
-	public static Logger log = EpLogger.getLogger(DirectLOABackingBean.class);
+	private static Logger log = EpLogger.getLogger(DirectLOABackingBean.class);
 
 	/** The pm digi sign. */
 	private PmDigiSign pmDigiSign;
@@ -241,10 +241,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	private static final String CARET_SYMBOL = "^";
 	private static final String BRANCH_INFO_TITLE = "Branch Information";
 	private static final String MALAY_NA = "T/B";
-
+	
 	// 26130 - start
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
 			SourcingConstants.MALAYSIA_COUNTRY_CODE);
+
 	// 26130 - end
 	/* #29007 Start Vinod */
 	private String itemNameSearchCriteria;
@@ -275,6 +276,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// #29007 Start Vinod
 			String bpmVersionNo = this.getManagedBean().getBpmVersionNo();
 			// #29007 End Vinod
+
+			// Bug #38049@Syazani 29/04/2025 -- Start
+			PmParameter selectedOrgType = null != this.getManagedBean().getSelectedOrgType() ? (PmParameter) this
+					.getManagedBean().getSelectedOrgType().cloneEntity() : null;
+			PmOrgProfile selectedPtj = null != this.getManagedBean().getSelectedPtj() ? (PmOrgProfile) this
+					.getManagedBean().getSelectedPtj().cloneEntity() : null;
+			// Bug #38049@Syazani 29/04/2025 -- End
 			
 			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 					.equals(statusId)) {
@@ -346,6 +354,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setPayLoad(awardSupplierDataType);
 				this.getManagedBean().setValidatewitness(validateWitness); //#17376
 				this.getManagedBean().setIconForDL(directLoa); //#29007
+
+				// Bug #38049@Syazani 29/04/2025 -- Start
+				if (null != selectedOrgType) {
+					this.getManagedBean().setSelectedOrgType(selectedOrgType);
+				}
+				if (null != selectedPtj) {
+					this.getManagedBean().setSelectedPtj(selectedPtj);
+				}
+				// Bug #38049@Syazani 29/04/2025 -- End
 
 				if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(scLoa.getPmStatus().getStatusId())) {
@@ -5660,6 +5677,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title=title.replaceAll(">", "&#62;");
 		title = title.replaceAll("\r\n", "<br />");
 		context.put("title", title);
+
 		context.put("hasLoi", false); 
 		context.put("bondReq", scLoa.isBondReq());
 
@@ -6041,7 +6059,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			} else {
 				isBumi = SSTConstant.BUKAN_BUMIPUTERA; // #26770
 			}
-			
 			// #26770 new kod bidang
 			if ((smSupplier.getSmAppl() != null && smSupplier.getSmAppl().getSmSupplierCategories() != null)
 					&& !smSupplier.getSmAppl().getSmSupplierCategories().isEmpty()) {
@@ -6386,10 +6403,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 *             the exception
 	 */
 	/*
-	private void generateJadualHarga(ScAttachment attachment,
-			List<JadualHargaBean> productList,
-			List<JadualHargaBean> serviceList, boolean isS1OrS2)
-			throws Exception {
+	private void generateJadualHarga(ScAttachment attachment, List<JadualHargaBean> productList, List<JadualHargaBean> serviceList, boolean isS1OrS2) throws Exception {
 		InputStream inputStream = null;
 		try {
 			final String templatePath = "templates"
@@ -6508,32 +6522,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	*/
 
-	private List<ItemBean> convertSpecQuestionToSpecAnswer(
-			TplSpecMaster specMaster) {
+	private List<ItemBean> convertSpecQuestionToSpecAnswer(TplSpecMaster specMaster) {
 		Map<Integer, ItemBean> questionSpecMap = new HashMap<Integer, ItemBean>();
 
 		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
-			for (TplSpecQuestion specQuestion : specMaster
-					.getTplSpecQuestions()) {
-				/*if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion
-						.getQuestionType())) {*/
-					if(specQuestion.getParentSpecQuestion() == null) {
-						int order = specQuestion.getQuestionOrder();
-						if (!questionSpecMap.containsKey(order)) {
-							ItemBean specBean = new ItemBean();
-							specBean.setItem(specQuestion.getClItem());
-							specBean.setSpecs(new ArrayList<String>());
-							questionSpecMap.put(order, specBean);						} 
-					} else {
-						int parentOrder = specQuestion.getParentSpecQuestion().getQuestionOrder();
-						questionSpecMap.get(parentOrder).getSpecs().add(specQuestion.getClSpecDetail());
+			for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+				if (specQuestion.getParentSpecQuestion() == null) {
+					int order = specQuestion.getQuestionOrder();
+					if (!questionSpecMap.containsKey(order)) {
+						ItemBean specBean = new ItemBean();
+						specBean.setItem(specQuestion.getClItem());
+						specBean.setSpecs(new ArrayList<String>());
+						questionSpecMap.put(order, specBean);
 					}
-				/*} else {
-					TplSpecAnswer specAnswer = new TplSpecAnswer();
-					specAnswer.setTplSpecQuestion(specQuestion);
-
-					specAnswers.add(specAnswer);
-				}*/
+				} else {
+					int parentOrder = specQuestion.getParentSpecQuestion().getQuestionOrder();
+					questionSpecMap.get(parentOrder).getSpecs().add(specQuestion.getClSpecDetail());
+				}
 			}
 		}
 
@@ -6553,27 +6558,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 *             the exception
 	 */
 	/*
-	private void generateSpecification(ScAttachment attachment,
-			List<TplSpecAnswer> productList, List<TplSpecAnswer> serviceList)
-			throws Exception {
+	private void generateSpecification(ScAttachment attachment, List<TplSpecAnswer> productList, List<TplSpecAnswer> serviceList) throws Exception {
 		InputStream inputStream = null;
 		try {
 
-			final String templatePath = "templates"
-					+ SourcingConstants.DOCPATH_SC_LOA_SPECIFICATION;
-			inputStream = this.getClass().getClassLoader()
-					.getResourceAsStream(templatePath);
+			final String templatePath = "templates" + SourcingConstants.DOCPATH_SC_LOA_SPECIFICATION;
+			inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
 			if (inputStream != null) {
-				XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
-																	// HSSFWorkbook();
+				XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new HSSFWorkbook();
 				boolean emptyProductList = false;
 				Sheet productSheet = null;
 				Sheet serviceSheet = null;
 				Row row = null;
 				int rowIndex = 0;
 				int cellIndex = 0;
-				if (productList.size() > 0
-						|| (productList.size() == 0 && serviceList.size() == 0)) {
+				if (productList.size() > 0 || (productList.size() == 0 && serviceList.size() == 0)) {
 					rowIndex = 0;
 					productSheet = wb.getSheetAt(0);
 					wb.setSheetName(0, "ProductSheet");
@@ -6581,40 +6580,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						rowIndex++;
 						cellIndex = 0;
 						row = productSheet.createRow(rowIndex);
-						row.createCell(cellIndex++)
-								.setCellValue(
-										null == answer.getTplSpecQuestion()
-												.getClItem() ? "" : answer
-												.getTplSpecQuestion()
-												.getClItem());
+						row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClItem() ? "" : answer.getTplSpecQuestion().getClItem());
 
-						row.createCell(cellIndex++)
-								.setCellValue(
-										null == answer.getTplSpecQuestion()
-												.getClSpecDetail() ? ""
-												: answer.getTplSpecQuestion()
-														.getClSpecDetail());
+						row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClSpecDetail() ? "" : answer.getTplSpecQuestion().getClSpecDetail());
 
-						row.createCell(cellIndex++)
-								.setCellValue(
-										null == answer.getTplSpecQuestion()
-												.getClUom() ? "" : answer
-												.getTplSpecQuestion()
-												.getClUom().getUomName());
+						row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUom() ? "" : answer.getTplSpecQuestion().getClUom().getUomName());
 
-						row.createCell(cellIndex++).setCellValue(
-								null == answer.getTplSpecQuestion()
-										.getClPriceTypeCode() ? ""
-										: getParameterDesc(answer
-												.getTplSpecQuestion()
-												.getClPriceTypeCode()));
-
+						row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClPriceTypeCode() ? "" : getParameterDesc(answer.getTplSpecQuestion().getClPriceTypeCode()));
 
 					}
 
 					// Auto size all the columns
-					for (int x = 0; x < productSheet.getRow(0)
-							.getPhysicalNumberOfCells(); x++) {
+					for (int x = 0; x < productSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
 						productSheet.autoSizeColumn(x);
 					}
 				} else {
@@ -6622,8 +6599,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					emptyProductList = true;
 				}
 
-				if (serviceList.size() > 0
-						|| (productList.size() == 0 && serviceList.size() == 0)) {
+				if (serviceList.size() > 0 || (productList.size() == 0 && serviceList.size() == 0)) {
 					rowIndex = 0;
 					if (emptyProductList) {
 						serviceSheet = wb.getSheetAt(0);
@@ -6637,49 +6613,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						rowIndex++;
 						cellIndex = 0;
 						row = serviceSheet.createRow(rowIndex);
-						row.createCell(cellIndex++)
-								.setCellValue(
-										null == answer.getTplSpecQuestion()
-												.getClItem() ? "" : answer
-												.getTplSpecQuestion()
-												.getClItem());
+						row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClItem() ? "" : answer.getTplSpecQuestion().getClItem());
 
-						row.createCell(cellIndex++)
-								.setCellValue(
-										null == answer.getTplSpecQuestion()
-												.getClSpecDetail() ? ""
-												: answer.getTplSpecQuestion()
-														.getClSpecDetail());
+						row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClSpecDetail() ? "" : answer.getTplSpecQuestion().getClSpecDetail());
 
-						row.createCell(cellIndex++)
-								.setCellValue(
-										null == answer.getTplSpecQuestion()
-												.getClUom() ? "" : answer
-												.getTplSpecQuestion()
-												.getClUom().getUomName());
+						row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUom() ? "" : answer.getTplSpecQuestion().getClUom().getUomName());
 
-						row.createCell(cellIndex++).setCellValue(
-								null == answer.getTplSpecQuestion()
-										.getClUomFrequency() ? "" : answer
-										.getTplSpecQuestion()
-										.getClUomFrequency().toString());
+						row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUomFrequency() ? "" : answer.getTplSpecQuestion().getClUomFrequency().toString());
 
-						row.createCell(cellIndex++).setCellValue(
-								null == answer.getTplSpecQuestion()
-										.getClUomPerDay() ? "" : answer
-										.getTplSpecQuestion().getClUomPerDay()
-										.toString());
+						row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUomPerDay() ? "" : answer.getTplSpecQuestion().getClUomPerDay().toString());
 
-						row.createCell(cellIndex++).setCellValue(
-								null == answer.getTplSpecQuestion()
-										.getClUomPerMonth() ? "" : answer
-										.getTplSpecQuestion()
-										.getClUomPerMonth().toString());
+						row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUomPerMonth() ? "" : answer.getTplSpecQuestion().getClUomPerMonth().toString());
 
 					}
 
-					for (int x = 0; x < serviceSheet.getRow(0)
-							.getPhysicalNumberOfCells(); x++) {
+					for (int x = 0; x < serviceSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
 						serviceSheet.autoSizeColumn(x);
 					}
 				} else {
@@ -6687,8 +6635,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 
 				wb.setActiveSheet(0);
-				FileOutputStream os = new FileOutputStream(
-						getActualFilePath(attachment));
+				FileOutputStream os = new FileOutputStream(getActualFilePath(attachment));
 				wb.write(os);
 				os.flush();
 				os.close();
@@ -6696,7 +6643,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(inputStream != null) {
+		if (inputStream != null) {
 			inputStream.close();
 		}
 	}
@@ -6713,33 +6660,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 *             the exception
 	 */
 	/*
-	private void generateNegotiationResultPdf(ScAttachment attachment)
-			throws Exception {
+	private void generateNegotiationResultPdf(ScAttachment attachment) throws Exception {
 		attachment.setFileName("Negotiation_Result.pdf");
 		ScLoa scLoa = getManagedBean().getScLoa();
 		populateAttachmentDetails(attachment);
 		List<ScLoi> lois = new ArrayList<ScLoi>();
-		if (getManagedBean().getSuppLoiLoaMap() != null
-				&& getManagedBean().getSuppLoiLoaMap().size() > 0) {
-			Map<Long, List<ScLoiLoa>> suppLoiLoaMap = getManagedBean()
-					.getSuppLoiLoaMap();
-			if (scLoa.getScLoiLoa() != null
-					&& scLoa.getScLoiLoa().getSmSupplier() != null) {
-				List<ScLoiLoa> loiloas = suppLoiLoaMap.get(scLoa.getScLoiLoa()
-						.getSmSupplier().getSupplierId());
+		if (getManagedBean().getSuppLoiLoaMap() != null && getManagedBean().getSuppLoiLoaMap().size() > 0) {
+			Map<Long, List<ScLoiLoa>> suppLoiLoaMap = getManagedBean().getSuppLoiLoaMap();
+			if (scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getSmSupplier() != null) {
+				List<ScLoiLoa> loiloas = suppLoiLoaMap.get(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
 				if (loiloas != null && loiloas.size() > 0) {
 					for (ScLoiLoa scLoiLoa : loiloas) {
-						if (scLoiLoa.getScLois() != null
-								&& scLoiLoa.getScLois().size() > 0) {
+						if (scLoiLoa.getScLois() != null && scLoiLoa.getScLois().size() > 0) {
 							lois.addAll(scLoiLoa.getScLois());
 						}
 					}
 				}
 			}
 		} else {
-			if (scLoa.getScLoiLoa() != null
-					&& scLoa.getScLoiLoa().getScLois() != null
-					&& scLoa.getScLoiLoa().getScLois().size() > 0) {
+			if (scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getScLois() != null && scLoa.getScLoiLoa().getScLois().size() > 0) {
 				lois = scLoa.getScLoiLoa().getScLois();
 			}
 		}
@@ -6754,8 +6693,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		try {
 			fos = new FileOutputStream(getActualFilePath(attachment));
-			DocumentGenerator.getInstance().generatePdfFromVelocity(
-					SourcingConstants.LOI_NEGOTIONATION_RESULT, context, fos);
+			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOI_NEGOTIONATION_RESULT, context, fos);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -7701,23 +7639,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-		orgProfileReqDTO.setOrgProfileId(scLoiLoa.getPmOrgProfile()
-				.getOrgProfileId());
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IOrgProfileSO.class);
-		PmOrgProfile ministryOrgProfile = orgProfileSO
-				.retrieveMinistryByOrgProfileId(orgProfileReqDTO)
-				.getPmOrgProfile();
+		orgProfileReqDTO.setOrgProfileId(scLoiLoa.getPmOrgProfile().getOrgProfileId());
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		PmOrgProfile ministryOrgProfile = orgProfileSO.retrieveMinistryByOrgProfileId(orgProfileReqDTO).getPmOrgProfile();
 		StringBuilder criteria = new StringBuilder();
-		criteria.append(
-				"orgTypeCode.parameterCode")
-				.append("^").append(OrganizationType.DIVISION.value())
-				.append("|");
+		criteria.append("orgTypeCode.parameterCode").append("^").append(OrganizationType.DIVISION.value()).append("|");
 		
-		criteria.append(
-				"parentOrgProfile.orgProfileId")
-				.append("^").append(ministryOrgProfile.getOrgProfileId())
-				.append("|");
+		criteria.append("parentOrgProfile.orgProfileId").append("^").append(ministryOrgProfile.getOrgProfileId()).append("|");
 		
 		criteria.append("recordStatus^1");
 		getManagedBean().setMinistryConditionField(criteria.toString());
@@ -8316,8 +8244,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		
 		// #26770 Note-#548 - Start
-		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
-		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		fileNo = fileNo.trim().replaceAll("Ã©", SSTConstant.PROTEGE_LOWERCASE_E);
+		fileNo = fileNo.trim().replaceAll("Ã‰", SSTConstant.PROTEGE_UPPERCASE_E);
 		// #26770 Note-#548 - End
 				
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
@@ -8370,9 +8298,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		context.put(SSTConstant.HEADER_TITLE, headerTitle);
 		context.put(SSTConstant.SUBJECT_TITLE, headerTitle.toLowerCase());
 		// #25025,#26770 -end-
-		
 		context.put("headerTitle", headerTitle); 
-		context.put("subTitle", headerTitle.toLowerCase());
+		context.put("subTitle", headerTitle.toLowerCase()); 
 		
 		// loa title
 		String title=	scQt.getQtTitle();
@@ -8388,10 +8315,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title = title.replaceAll("<", SSTConstant.LESS_THAN_SYMBOL);
 		title = title.replaceAll(">", SSTConstant.GREATER_THAN_SYMBOL);
 		title = title.replaceAll("\r\n", SSTConstant.BREAKLINE);
-		title = title.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
-		title = title.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		title = title.replaceAll("Ã©", SSTConstant.PROTEGE_LOWERCASE_E);
+		title = title.replaceAll("Ã‰", SSTConstant.PROTEGE_UPPERCASE_E);
 		// 26770 - end
 		context.put("loaTitle", title);
+		
 		context.put("hasLoi", false); 
 		context.put("bondReq", scLoa.isBondReq());
 
@@ -8643,21 +8571,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	/*
 	private ItemBean mappingJadualHarga(ScLoiLoaItem item) {
 		ItemBean itemBean = new ItemBean();
-		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item
-				.getTplSpecZoneDtl().getZoneName() : "");
+		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "");
 		itemBean.setItem(item.getScRequestItem().getItemName());
-		
-		if(item.getTplSpecTierQty() != null){
+
+		if (item.getTplSpecTierQty() != null) {
 			itemBean.setTier(Boolean.TRUE);
-			itemBean.setFromQty(null == item.getTplSpecTierQty().getFromQty()? "" 
-					: item.getTplSpecTierQty().getFromQty().toString());
-			itemBean.setToQty(null == item.getTplSpecTierQty().getToQty()? "" 
-					: item.getTplSpecTierQty().getToQty().toString());
+			itemBean.setFromQty(null == item.getTplSpecTierQty().getFromQty() ? "" : item.getTplSpecTierQty().getFromQty().toString());
+			itemBean.setToQty(null == item.getTplSpecTierQty().getToQty() ? "" : item.getTplSpecTierQty().getToQty().toString());
 		}
-		
-		itemBean.setQuantity(null == item.getQty()? "" : item.getQty()
-				.toString());
-		
+		itemBean.setQuantity(null == item.getQty() ? "" : item.getQty().toString());
+
 		return itemBean;
 	}
 	*/
@@ -8740,23 +8663,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	
 	public void downloadViewLoa() throws Exception {
 		log.info("start downloadViewLoa");
-	List<ScLoaReport> scloaReports=	this.getManagedBean().getScLoa().getScLoaReports();
-	if(CollectionUtils.isNotEmpty(scloaReports)){
-		ScLoaReport report=null;
-		for(ScLoaReport loaReport:scloaReports){
-			if(null!=loaReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equalsIgnoreCase(loaReport.getPmDocument().getDocDefinitionKey())){
-				log.info("LoaReport Title"+loaReport.getTitle());
-				//log.info("DocDefinitionType"+loaReport.getDefinationType().getParameterCode());
-				//log.info("LoaReportAttachment"+loaReport.getScLoaReportAttachment());
-				report = loaReport;									
-			break;	
+		List<ScLoaReport> scloaReports=	this.getManagedBean().getScLoa().getScLoaReports();
+		if(CollectionUtils.isNotEmpty(scloaReports)){
+			ScLoaReport report=null;
+			for(ScLoaReport loaReport:scloaReports){
+				if(null!=loaReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equalsIgnoreCase(loaReport.getPmDocument().getDocDefinitionKey())){
+					log.info("LoaReport Title"+loaReport.getTitle());
+					//log.info("DocDefinitionType"+loaReport.getDefinationType().getParameterCode());
+					//log.info("LoaReportAttachment"+loaReport.getScLoaReportAttachment());
+					report = loaReport;									
+				break;	
+				}
+			}
+			if(null!=report){
+				//log.info("report not null"+report.getScLoaReportAttachment().getFileName());
+				downloadFile(report.getScLoaReportAttachment());
 			}
 		}
-		if(null!=report){
-			//log.info("report not null"+report.getScLoaReportAttachment().getFileName());
-			downloadFile(report.getScLoaReportAttachment());
-		}
-	}
 	}
 	
 	public String constructUserConditionFields() {
@@ -8957,7 +8880,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */	
 	private void validateSupplierWitnessDetails(ScLoa scLoa, ScLoaWitness scLoaWitness, String outcome) {
 		Locale locale = new FacesScopes().getUserLocale();
-
+		
 		if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			if (scLoa.getSupplierSignDate() == null) {
 				throw new EpException(MessageConst.ERROR_760400,
@@ -9150,7 +9073,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		boolean QtTypepk7 = false;
 			
 		if (null != getManagedBean().getScLoa().getQtType()) {
-			qtType = getManagedBean().getScLoa().getQtType(); 
+			qtType = getManagedBean().getScLoa().getQtType();
 		}
 			
 		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
@@ -9167,7 +9090,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 		// 34420-start
 		// MC
-		if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
+		if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
 				&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
 			return false;
 		}
@@ -9182,14 +9105,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 			
 		if (StringUtils.isEmpty(getManagedBean().getBondReqSelectedVal())) {
-			if (getManagedBean().getScLoa().isBondReq()) { 
+			if (getManagedBean().getScLoa().isBondReq()) {
 				getManagedBean().setBondReqSelectedVal(getManagedBean().getYesParameterId());
 			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
 				getManagedBean().setBondReqSelectedVal(getManagedBean().getNoParameterId());
 			}
 		}
 			
-		if (null != qtType && ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
+		if (null != qtType && ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())) {
 			QtTypepk7 = true;
 				
@@ -9198,8 +9121,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 			
-		if (QtTypepk7 && null != fulfilmentType 
-				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
+		if (QtTypepk7 && null != fulfilmentType
+				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType())
 				&& ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType.getParameterCode())) {
 				
 			if (null == getManagedBean().getBondReqSelectedVal()) {
@@ -9209,7 +9132,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 				
 			// If Contract Type is selected and its not 'Ministry', then return false.
-			if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
+			if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
 					&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
 				return false;
 			}
@@ -9268,7 +9191,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		PmParameter contractType = null;
 		
 		if (null != getManagedBean().getScLoa().getQtType()) {
-			qtType = getManagedBean().getScLoa().getQtType(); 
+			qtType = getManagedBean().getScLoa().getQtType();
 		}
 		
 		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
@@ -9279,12 +9202,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			contractType = getManagedBean().getScLoa().getContractType();
 		}
 		
-		// 34420-start
-		if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) && !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
+ 		// 34420-start
+		if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
+				&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
 			return false;
 		}
 		// 34420-end
-			
+		
 		if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
 			getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
 		}
@@ -9301,9 +9225,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		
-		if (null != qtType && null != fulfilmentType && ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
+		if (null != qtType && null != fulfilmentType
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
-				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
+				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType())
 				&& ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType.getParameterCode())) {
 			
 			if (null == getManagedBean().getAgreemetSelectedVal()) {
@@ -9329,7 +9254,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		return false;
 	}
-	
+		
 	public void setPk7DropDownValues() {
 	    getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
 	}
@@ -9338,7 +9263,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		getManagedBean().getScLoa().setJustificationType(getReasonByCategoryAndCode(
 				ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode));
 	}
-	
+		
 	public boolean isPk7Periodic() {
 		PmParameter qtType = null;
 		PmParameter fulfilmentType = null;
@@ -9347,8 +9272,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			qtType = getManagedBean().getScLoa().getQtType();
 		}
 
-		if (null != getManagedBean().getScLoa().getScQt()
-				&& null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
 			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType();
 		}
 
@@ -9362,10 +9286,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				&& null != fulfilmentType
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
-				&& ((ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) && ParameterConst.FULFILMENT_TYPE_SCHEDULED
-						.equals(fulfilmentType.getParameterCode())) || (ParameterTypeConst.FULFILMENT_TYPE
-						.equals(fulfilmentType.getParameterType()) && ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-						.equals(fulfilmentType.getParameterCode())))) {
+				&& ((ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
+				&& ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType.getParameterCode()))
+				|| (ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
+				&& ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentType.getParameterCode())))) {
 
 			if (null == getManagedBean().getScLoa().getJustificationType()) {
 				getManagedBean().getScLoa().setJustificationType(new PmReason());
@@ -9376,8 +9300,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		return false;
 	}
-	//#24540 - end -
-	
+	// #24540 - end -
+
 	// #34413 - Start
 	/**
 	 * Method to return true, if dropdown of Special Item / Item In PK 7 is
@@ -9423,7 +9347,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 	}
-	// Bug #33674@Syazani -- End 14/09/2022	
+	// Bug #33674@Syazani -- End 14/09/2022
 	
 	// Bug #35078@Syazani -- Start 14/09/2023
 	public boolean isQtAudit() {
@@ -9520,52 +9444,65 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return false;
 	}
 	// #36757 End Vinod
-
+	
+	// #32648 populate lampiran 7 if LOA at supplier - start
+	public boolean isDpAuditOrQtAuditOrQtMaint() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| QTConstants.PORTLET_NAME_DL_CREATE
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// #32648 populate lampiran 7 if LOA at supplier - end
+	
 	// #26130 - Start.
 	/**
-     * @param scLoaReportAttachment
-     * @param scLoa
-     * @throws Exception
-     * @throws FileNotFoundException
-     */
+	 * @param scLoaReportAttachment
+	 * @param scLoa
+	 * @throws Exception
+	 * @throws FileNotFoundException
+	 */
 	private void generaateUpdatedLampiraA3PDF(ScLoaReportAttachment scLoaReportAttachment, ScLoa scLoa)
 			throws Exception, FileNotFoundException {
 		VelocityContext context = new VelocityContext();
 		ScQt scQt = getManagedBean().getScQt();
-		
+
 		if (scQt != null
 				&& (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || ParameterConst.DOCTYPE_DIRECT_NEGO
 						.equals(scLoa.getScLoiLoa().getDocType()))
 				&& (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())
 						|| ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode()) || ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
 							.equals(scQt.getFulfilmentType().getParameterCode()))) {
-			
+
 			TplSpecMaster productSpecMaster = getManagedBean().getProdTemplateSpecBean().getSpecMaster();
 			TplSpecMaster serviceSpecMaster = getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
 			List<TplSpecMaster> specMasters = null;
-			
+
 			if (null != productSpecMaster || null != serviceSpecMaster) {
 				specMasters = new ArrayList<>();
-				
+
 				if (null != productSpecMaster) {
 					specMasters.add(productSpecMaster);
 				}
-				
+
 				if (null != serviceSpecMaster) {
 					specMasters.add(serviceSpecMaster);
 				}
 			}
-			
+
 			constructSupplierSpecificationAndRemarks(context, scLoa, specMasters);
 
 			// scLoa
 			context.put("scLoa", scLoa);
 
 			FileInputStream inputStream = null;
-			
+
 			try {
 				String filePath = getActualFilePath(scLoaReportAttachment);
-				
+
 				if (filePath.endsWith(".gz")) {
 					if (!filePath.endsWith("_merged.pdf.gz")) {
 						inputStream = new FileInputStream(new File(filePath));
@@ -9573,11 +9510,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						filePath = filePath.replace(".pdf.gz", ".pdf");
 
 						File pdfFile = new File(filePath);
-						
+
 						if (pdfFile.exists()) {
 							pdfFile.delete();
 						}
-						
+
 						Path path = FileSystems.getDefault().getPath(filePath);
 
 						try {
@@ -9588,7 +9525,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 						String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
 						File file = new File(filePath);
-						
+
 						mergePdf(file, filePath, tempFilePath, context);
 
 						String destinatonZipFilepath = filePath.replace(".pdf", "_merged.pdf.gz");
@@ -9596,17 +9533,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						FileInputStream fileInput = null;
 						FileOutputStream fileOutputStream = null;
 						GZIPOutputStream gzipOuputStream = null;
-						
+
 						try {
 							fileOutputStream = new FileOutputStream(destinatonZipFilepath);
 							gzipOuputStream = new GZIPOutputStream(fileOutputStream);
 							fileInput = new FileInputStream(filePath);
 							int bytes_read;
-							
+
 							while ((bytes_read = fileInput.read(buffer)) > 0) {
 								gzipOuputStream.write(buffer, 0, bytes_read);
 							}
-							
+
 							gzipOuputStream.finish();
 						} catch (IOException ex) {
 							ex.printStackTrace();
@@ -9622,7 +9559,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						if (file.exists()) {
 							file.delete();
 						}
-						
+
 						if (!scLoaReportAttachment.getFilePath().endsWith("_merged.pdf.gz")) {
 							String filepath = scLoaReportAttachment.getFilePath().replace(".pdf.gz", "_merged.pdf.gz");
 							scLoaReportAttachment.setFilePath(filepath);
@@ -9632,11 +9569,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					if (!filePath.endsWith("_merged.pdf")) {
 						String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
 						File file = new File(filePath);
-						
+
 						mergePdf(file, filePath, tempFilePath, context);
-						
+
 						file.renameTo(new File(filePath.replace(".pdf", "_merged.pdf")));
-						
+
 						scLoaReportAttachment.setFilePath(scLoaReportAttachment.getFilePath().replace(".pdf",
 								"_merged.pdf"));
 					}
@@ -9650,18 +9587,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #26130 - End.
 
 	// #26130 - Start.
-    /**
-     * @param file
-     * @param filePath
-     * @param tempFilePath
-     * @param context
-     * @throws IOException
-     */
+	/**
+	 * @param file
+	 * @param filePath
+	 * @param tempFilePath
+	 * @param context
+	 * @throws IOException
+	 */
 	@SuppressWarnings("unchecked")
 	public void mergePdf(File file, String filePath, String tempFilePath, VelocityContext context) throws IOException {
 		PDDocument sstDocument = null;
 		PDDocument lampiranA3Doc = null;
-		
+
 		try {
 			sstDocument = PDDocument.load(file);
 			int noOfPages = sstDocument.getNumberOfPages();
@@ -9669,13 +9606,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			List<TplSpecMaster> specMasters = (List<TplSpecMaster>) context.get("masters");
 			boolean serviceItemFound = false;
 			boolean productItemFound = false;
-			
+
 			if (CollectionUtils.isNotEmpty(specMasters) && specMasters.size() > 0) {
 				for (TplSpecMaster tplSpecMaster : specMasters) {
-					
+
 					if (null != tplSpecMaster) {
 						String itemType = getParameterDescForReport(tplSpecMaster.getItemTypeCode());
-						
+
 						if (itemType.equals("Perkhidmatan") || itemType.equals("Service")) {
 							serviceItemFound = true;
 						} else if (itemType.equals("Produk") || itemType.equals("Product")) {
@@ -9683,7 +9620,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						}
 					}
 				}
-				
+
 				context.put("specCombineProduct", retrieveDLSpecProduct(specMasters));
 				context.put("specCombineService", retrieveDLSpecService(specMasters));
 			}
@@ -9693,13 +9630,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			sb.append(" ");
 			sb.append("daripada");
 			sb.append(" ");
-			
+
 			if ((productItemFound && serviceItemFound) || (productItemFound && !serviceItemFound)) {
 				noOfPages = noOfPages + 1;
 			}
-			
+
 			sb.append(noOfPages);
-			
+
 			context.put("pageNo", sb.toString());
 
 			if ((productItemFound && serviceItemFound) || (productItemFound && !serviceItemFound)) {
@@ -9709,16 +9646,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				sb.append("daripada");
 				sb.append(" ");
 				sb.append(noOfPages);
-				
+
 				context.put("serviceItemPageNo", sb.toString());
-				
+
 				noOfPages = noOfPages - 1;
 			}
 
 			if (!productItemFound && serviceItemFound) {
 				context.put("serviceItemPageNo", sb.toString());
 			}
-			
+
 			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOA_AGREEMENT_LAMPIRAN_A3,
 					context, new FileOutputStream(tempFilePath));
 
@@ -9727,25 +9664,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			lampiranA3Doc = PDDocument.load(tempFilePath);
-			
+
 			for (int i = 0; i < noOfPages - 1; i++) {
 				PDPage page = (PDPage) sstDocument.getDocumentCatalog().getAllPages().get(i);
 				page.setMediaBox(PDPage.PAGE_SIZE_A4);
 			}
 
 			noOfPages = lampiranA3Doc.getNumberOfPages();
-						
+
 			for (int i = 0; i < noOfPages; i++) {
 				PDPage page = (PDPage) lampiranA3Doc.getDocumentCatalog().getAllPages().get(i);
 				page.setMediaBox(PDPage.PAGE_SIZE_A4);
-				
+
 				sstDocument.addPage(page);
 			}
-			
+
 			sstDocument.save(filePath);
-			
+
 			File tempFile = new File(tempFilePath);
-			
+
 			if (tempFile.exists()) {
 				tempFile.delete();
 			}
@@ -9758,14 +9695,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				lampiranA3Doc.close();
 		}
 	}
-    // #26130 - End.
+	// #26130 - End.
 
 	// #26130 start
 	public TplSpecQuestion retrieveDLSpecService(List<TplSpecMaster> specMasters) {
 		TplSpecQuestion specQuestion = new TplSpecQuestion();
 		List<List<HashMap<String, Object>>> listDL = new ArrayList<>();
 		List<HashMap<String, Object>> listSpecDL = new ArrayList<>();
-		
+
 		for (TplSpecMaster master : specMasters) {
 
 			String itemType = getParameterDescForReport(master.getItemTypeCode());
@@ -9802,7 +9739,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		TplSpecQuestion specQuestion = new TplSpecQuestion();
 		List<List<HashMap<String, Object>>> listDL = new ArrayList<>();
 		List<HashMap<String, Object>> listSpecDL = new ArrayList<>();
-		
+
 		for (TplSpecMaster master : specMasters) {
 
 			String itemType = getParameterDescForReport(master.getItemTypeCode());
@@ -9829,7 +9766,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				specQuestion.setListOfNonZonalProduct(listSpecDL);
 			}
 		}
-		
+
 		return specQuestion;
 	}
 	// #26130 -end-
@@ -9846,11 +9783,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		map.put("clItem", question.getClItem());
 		map.put("uomName", question.getClUom().getUomName());
 		map.put("spesifikasi", whiteSpace);
-		
+
 		if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
-			map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+			map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
 		}
-		
+
 		if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 			map.put("clUomFrequency", (null != question.getClUomFrequency()) ? question.getClUomFrequency().toString()
 					: getDefaultValue());
@@ -9861,12 +9798,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		// end
 		map.put("qty", (null != question.getClQuantity()) ? question.getClQuantity().toString() : getDefaultValue());
-		
+
 		if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0) {
 			// ada tier
 			if (getFirstValue) {
 				String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
-				
+
 				map.put("tierQty", tierValue);
 			} else {
 				map.put("tierQty", whiteSpace);
@@ -9883,13 +9820,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			for (String specVal : question.getSpecList()) {
 				listSpec.add(specVal);
 			}
-			
+
 			map.put("specVal", listSpec);
 		}
 
 		map.put("specType", specType);
 		map.put("itemType", itemType);
-		
+
 		int rowspan = question.getSpecList().size() + 1;
 
 		map.put("rowSpan", rowspan);
@@ -9905,26 +9842,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		String whiteSpace = "&nbsp;";
 		List<HashMap<String, Object>> listZonalDLSpec = new ArrayList<HashMap<String, Object>>();
 		List<String> listSpec = new ArrayList<>();
-		
+
 		if (question.getQuestionType().equalsIgnoreCase("I")) {
 			map.put("questionType", question.getQuestionType());
-			
+
 			if (specType.equalsIgnoreCase("F")) {
 				Boolean getFirstValue = true;
-				
+
 				for (TplSpecAnswer answer : question.getTplSpecAnswers()) {
 					map = new HashMap<>();
-					
+
 					if (getFirstValue) {
 						// start
 						map.put("clItem", question.getClItem());
 						map.put("uomName", question.getClUom().getUomName());
 						map.put("spesifikasi", whiteSpace);
-						
+
 						if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
 							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						}
-						
+
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 							map.put("clUomFrequency", (null != question.getClUomFrequency()) ? question
 									.getClUomFrequency().toString() : getDefaultValue());
@@ -9949,11 +9886,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						map.put("clItem", whiteSpace);
 						map.put("uomName", whiteSpace);
 						map.put("spesifikasi", whiteSpace);
-						
+
 						if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
 							map.put("clPriceTypeCode", whiteSpace);
 						}
-						
+
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 							map.put("clUomFrequency", whiteSpace);
 							map.put("clUomPerDay", whiteSpace);
@@ -9972,26 +9909,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							for (String specVal : question.getSpecList()) {
 								listSpec.add(specVal);
 							}
-							
+
 							map.put("specVal", listSpec);
 						}
 						zoneQty = zoneQty + 1;
 					}
-					
+
 					map.put("specType", specType);
 					map.put("itemType", itemType);
-					
+
 					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
 
 					map.put("rowSpan", rowspan);
-					
+
 					listZonalDLSpec.add(map);
 				}
 
 			} else if (specType.equalsIgnoreCase("T")) {
 				String defaultValueBM = "T/B";
 				Boolean getFirstValue = true;
-				
+
 				for (TplSpecZoneQty zone : question.getTplSpecZoneQties()) {
 					map = new HashMap<>();
 
@@ -10000,7 +9937,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						map.put("clItem", question.getClItem());
 						map.put("uomName", question.getClUom().getUomName());
 						map.put("spesifikasi", whiteSpace);
-						
+
 						if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
 							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						}
@@ -10022,7 +9959,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						if (zone.getTplSpecQuestion().getTplSpecTierQties().size() > 0) {
 							// ada tier
 							String tierValue = retrieveTierQuantity(zone.getTplSpecQuestion().getTplSpecTierQties());
-							
+
 							if (getFirstValue) {
 								map.put("tierQty", tierValue);
 							} else {
@@ -10035,28 +9972,28 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								map.put("tierQty", whiteSpace);
 							}
 						}
-						
+
 						getFirstValue = false;
-						
+
 						if (zoneQty == question.getTplSpecZoneQties().size()) {
 							for (String specVal : question.getSpecList()) {
 								listSpec.add(specVal);
 							}
-							
+
 							map.put("specVal", listSpec);
 						}
-						
+
 						zoneQty = zoneQty + 1;
 					} else {
 						// second zonal onward start
 						map.put("clItem", whiteSpace);
 						map.put("uomName", whiteSpace);
 						map.put("spesifikasi", whiteSpace);
-						
+
 						if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
 							map.put("clPriceTypeCode", whiteSpace);
 						}
-						
+
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 							map.put("clUomFrequency", whiteSpace);
 							map.put("clUomPerDay", whiteSpace);
@@ -10071,7 +10008,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							// ada tier
 							if (getFirstValue) {
 								String tierValue = retrieveTierQuantity(zone.getTplSpecQuestion().getTplSpecTierQties());
-								
+
 								map.put("tierQty", tierValue);
 							} else {
 								map.put("tierQty", whiteSpace);
@@ -10088,20 +10025,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							for (String specVal : question.getSpecList()) {
 								listSpec.add(specVal);
 							}
-							
+
 							map.put("specVal", listSpec);
 						}
-						
+
 						zoneQty = zoneQty + 1;
 					}
-					
+
 					map.put("specType", specType);
 					map.put("itemType", itemType);
-					
+
 					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
 
 					map.put("rowSpan", rowspan);
-					
+
 					listZonalDLSpec.add(map);
 				}
 			} else {
@@ -10116,23 +10053,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					for (String specVal : question.getSpecList()) {
 						listSpec.add(specVal);
 					}
-					
+
 					map.put("specVal", listSpec);
 				}
-				
+
 				zoneQty = zoneQty + 1;
-				
+
 				map.put("specType", specType);
 				map.put("itemType", itemType);
-				
+
 				int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
 
 				map.put("rowSpan", rowspan);
-				
+
 				listZonalDLSpec.add(map);
 			}
 		}
-		
+
 		return listZonalDLSpec;
 	}
 	// #26130 -end-
@@ -10140,11 +10077,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #26130 -start-
 	public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties) {
 		StringBuffer sb = new StringBuffer();
-		
+
 		for (TplSpecTierQty qty : listTplSpecTierQties) {
 			sb.append(qty.getFromQty() + " - " + qty.getToQty() + "<br />");
 		}
-		
+
 		return sb.toString();
 	}
 	// #26130 -end-
@@ -10152,7 +10089,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #26130 - start
 	public String getDefaultValue() {
 		String defaultValue = "T/B";
-		
+
 		return defaultValue;
 	}
 	// #26130 - end
@@ -10173,19 +10110,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	// #29007 -end-
 
-	// #32648 populate lampiran 7 if LOA at supplier - start
-	public boolean isDpAuditOrQtAuditOrQtMaint() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
-				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-				|| QTConstants.PORTLET_NAME_QT_SEARCH
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-				|| SourcingConstants.PORTLET_NAME_DP_SEARCH
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-						|| QTConstants.PORTLET_NAME_DL_CREATE
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
-	}
-	// #32648 populate lampiran 7 if LOA at supplier - end
-	
 	/*#29007 Start Vinod*/
 	public String getItemNameSearchCriteria() {
 		return itemNameSearchCriteria;

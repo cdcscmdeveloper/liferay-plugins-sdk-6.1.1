@@ -1966,7 +1966,6 @@ public class TemplateSpecBackingBean extends
 				}
 
 				if (templateSpecHelper.isPriceTypeTariff(priceType)) {
-					// TODO - calculate tariff price.
 
 				} else if (templateSpecHelper.isPriceTypeTier(priceType)
 						&& (tierSpecQuestionId == null || tierSpecQuestionId
@@ -2751,8 +2750,8 @@ public class TemplateSpecBackingBean extends
 					){
 					if (specEstimationId == specEstimation.getSpecEstimationId()){
 						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
-						totalEstAmount = totalEstAmount.add(specEstimation
-								.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani // bugs #26234 add decimal point
+						totalEstAmount = totalEstAmount.add(specEstimation.getEstimatedCost()).setScale(2, 
+								QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani // bugs #26234 add decimal point
 					}
 				}
 				else {
@@ -2772,8 +2771,8 @@ public class TemplateSpecBackingBean extends
 					} //#25039-End
 
 					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
-						totalEstAmount = totalEstAmount.add(specEstimation
-								.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
+						totalEstAmount = totalEstAmount.add(specEstimation.getEstimatedCost()).setScale(2, 
+								QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
 		};
@@ -2801,8 +2800,10 @@ public class TemplateSpecBackingBean extends
 
 			BigDecimal totalIndicativePrice = new BigDecimal("0.00");//Bug #29808
 			BigDecimal zeroChangeTo1 = new BigDecimal("1.00");//Bug #29808
-			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024	//Bug #29808
-		
+
+			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, 
+					QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024	//Bug #29808
+
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
 
@@ -2968,22 +2969,22 @@ public class TemplateSpecBackingBean extends
 			}
 		}
 	}
-	// #25039 End - version zonal	
+	// #25039 End - version zonal
 	
 	// #31134&11104 -start-
 	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
 		int count = 0;
-		
+
 		for (TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()) {
 			if (retrieveAns != null && retrieveAns.getTplSpecTierQty() != null) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 	// #31134&11104 -end-
-
+	
 	// #35384, #36248_haziq - start
 	/**
 	 * #36248 To validate Wieghtage input value
@@ -3003,5 +3004,4 @@ public class TemplateSpecBackingBean extends
 
 	}
 	// #35384, #36248_haziq - End
-
 }

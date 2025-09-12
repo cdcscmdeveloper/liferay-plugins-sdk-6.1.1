@@ -16,12 +16,14 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 
-import my.ep.biz.service.sm.remarks.ISmRemarksSO;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
@@ -43,12 +45,17 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
-import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApprovedCategoryCodesBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApproverRemarksBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementOverlappingCategoryBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformationBackingBean;
+//#28895_35501 End
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.DateUtils;
@@ -62,8 +69,6 @@ import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.model.Role;
 
 @ManagedBean(name = "supplierDataMaintenanceBackingBean")
 @RequestScoped
@@ -156,6 +161,13 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 		this.getManagedBean().setApproverRemark(null);
 		
+		// #28895_35501 Start - AUDIT TRAIL SM
+		this.getManagedBean().setOldSmAppl((SmAppl) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSmAppl()));
+		this.getManagedBean()
+				.setOldApprovedCategoryList(CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getApprovedCategoryList()));
+		this.getManagedBean().setOldPoApprOverlappedRemark(this.getManagedBean().getPoApprOverlappedRemark());
+		this.getManagedBean().setOldApproverRemark(this.getManagedBean().getApproverRemark());
+		// #28895_35501 End
 		//#30766 & #34209 - START
 		getManagedBean().setTempCategoryLs(new HashMap<Long, String>());
 		for(SmSupplierCategory supCat : this.getManagedBean().getSmAppl().getSmSupplierCategories()){
@@ -370,7 +382,23 @@ public class SupplierDataMaintenanceBackingBean extends
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
-
+			
+			//26238 - start
+			if(resDTO.isSuccessful()){
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+					auditSmBackingBean = new AuditSupplierManagementApprovedCategoryCodesBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+					auditSmBackingBean = new AuditSupplierManagementOverlappingCategoryBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+					auditSmBackingBean = new AuditSupplierManagementApproverRemarksBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+				}
+				// #28895_35501 End				
+			}
 		} catch (OptimisticLockException opt) {
 			throw new EpException(opt.getMessage());
 		} catch (PersistenceException pers) {

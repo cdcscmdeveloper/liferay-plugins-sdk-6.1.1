@@ -74,7 +74,14 @@
 		<h:panelGroup id="panelHeaderException">
 		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
 			 <ui:include src="amendmentButtons.xhtml" />
+			 <!-- Enhancement 15851 - shaqimi start -->
+			 <ui:fragment rendered="#{!ctBackingBean.managedBean.viewSCL}">
 		     <ui:include src="amendmentHeader.xhtml" />
+			 </ui:fragment>
+			 <ui:fragment rendered="#{ctBackingBean.managedBean.viewSCL}">
+			 	<ui:include src="viewscl/amendmentHeader.xhtml"/>
+			 </ui:fragment>
+		     <!-- Enhancement 15851 - shaqimi end -->
 		  </h:panelGroup>
 		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -128,14 +135,15 @@
 		    and amendmentBackingBean.managedBean.ackFA eq null}"
 			actionListener="#{amendmentBackingBean.setTabValue('SC')}" update=":form" />
 		
+	 		<!--  Enhancement 15851 - shaqimi start -->
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.details']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
+			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa or ctBackingBean.managedBean.viewSCL}"
 			actionListener="#{amendmentBackingBean.setTabValue('LOD')}" update=":form" />
 	 
 		  <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.loa.content']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
+			rendered="#{amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa or ctBackingBean.managedBean.viewSCL}" 
 			actionListener="#{amendmentBackingBean.setTabValue('CNT')}" update=":form" />
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.view.loa']}"
@@ -170,7 +178,7 @@
 	
 	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA}"
+			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
 			actionListener="#{amendmentBackingBean.setTabValue('SE')}" update=":form" />
 	
 		</p:tabMenu>
@@ -293,8 +301,8 @@
 				</p:commandButton>
 			</div>
 		</p:confirmDialog>
-	
-		<p:confirmDialog message="#{amendmentBackingBean.getCancelConfirmationContent(ctBackingBean.managedBean.contractVer.docType)}"
+		
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
@@ -303,8 +311,66 @@
 					action="#{amendmentBackingBean.saveContractAmendment('CANCEL')}"
 					onstart="cancelConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="cancelConfirmDlg.hide()" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" update="@form"
+				onclick="cancelConfirmDlg.hide()">
+				<f:setPropertyActionListener
+					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
+				</p:commandButton>
+			</div>
+		</p:confirmDialog>
+		
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.officer.amendment']}"
+			severity="alert" widgetVar="cancelofficerConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					partialSubmit="true" process="@this"
+					action="#{amendmentBackingBean.saveContractAmendment('CANCEL')}"
+					onstart="cancelofficerConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" update="@form"
+				onclick="cancelofficerConfirmDlg.hide()">
+				<f:setPropertyActionListener
+					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
+				</p:commandButton>
+			</div>
+		</p:confirmDialog>
+		
+			<p:confirmDialog message="#{lbl['lbl.msg.confirm.reject.amendment']}"
+			severity="alert" widgetVar="rejectConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					partialSubmit="true" process="@this"
+					action="#{amendmentBackingBean.preRejectContractAmendment('REJECT')}"
+					onstart="rejectConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" update="@form"
+				onclick="rejectConfirmDlg.hide()">
+				<f:setPropertyActionListener
+					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
+				</p:commandButton>
+			</div>
+		</p:confirmDialog>
+		
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.supplier.reject.amendment']}"
+			severity="alert" widgetVar="supplierrejectConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					partialSubmit="true" process="@this"
+					action="#{amendmentBackingBean.preRejectContractAmendment('REJECT')}"
+					onstart="supplierrejectConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" update="@form"
+				onclick="supplierrejectConfirmDlg.hide()">
+				<f:setPropertyActionListener
+					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
+				</p:commandButton>
 			</div>
 		</p:confirmDialog>
 	</ui:define>  

@@ -274,8 +274,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	/**
 	 * Logger instance.
 	 */
-	public static Logger log = EpLogger
-			.getLogger(SourcingBaseBackingBean.class);
+	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
 	
 	//private static final String UTF = "UTF-8";
 	
@@ -822,7 +821,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected IQTDetailSO getQTDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
-
+	
 	/**
 	 * To initialize remarks.
 	 * 
@@ -930,9 +929,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return StreamContent instance
 	 * @throws IOException
 	 */
-	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
-ATTACHMENT scAttachment, String contentType)
-			throws IOException {
+	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(ATTACHMENT scAttachment, String contentType) throws IOException {
 		ByteArrayOutputStream tmpOut = null;
 		FileInputStream in = null;
 		try {
@@ -949,10 +946,8 @@ ATTACHMENT scAttachment, String contentType)
 					}
 					tmpOut.write(buf, 0, len);
 				}
-				in.close();
-				tmpOut.close();
-				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
-						tmpOut.size());
+				
+				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0, tmpOut.size());
 
 				ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
 
@@ -961,6 +956,8 @@ ATTACHMENT scAttachment, String contentType)
 				return null;
 			}
 		} finally {
+			in.close();
+			tmpOut.close();
 		}
 	}
 
@@ -2419,7 +2416,6 @@ ATTACHMENT scAttachment, String contentType)
 	public boolean isQTStatusEvaluation(Long currentStatusId) {
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL);
 	}
-
 	// 25037 - end
 
 	
@@ -4119,13 +4115,13 @@ ATTACHMENT scAttachment, String contentType)
 			String reportNames = "";
 
 			resetUnSavedReportContent(scQtFinalizationReportList);
-
+			
 			//Bug #33988@Syazani -- Start 27/09/2022 
 			if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
 				validateDuplicateSets = new HashSet<String>();
 			}
 			//Bug #33988@Syazani -- End 27/09/2022
-			
+
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
 				//Bug #33988@Syazani -- Start 27/09/2022 
@@ -4133,7 +4129,7 @@ ATTACHMENT scAttachment, String contentType)
 					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
 				}
 				//Bug #33988@Syazani -- End 27/09/2022 
-				
+
 				if (null != scQtFinalizationReport.getPmDocument()) {
 					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
 						if (SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
@@ -4729,13 +4725,10 @@ ATTACHMENT scAttachment, String contentType)
 	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
 		BigDecimal actualIntendedPrice = new BigDecimal(0);
 
-		// 36678 add condition status id related to 35061 -start-
-		if ("createQt".equals(ScreenType)
-				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+		if ("createQt".equals(ScreenType)) {
 			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
 		} else {
-			actualIntendedPrice = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : new BigDecimal(0);
-			// 36678 related to 35061 -end-
+			actualIntendedPrice = scQt.getEstimatedAmount();
 		}
 
 		if (!scQt.isPanel() && actualIntendedPrice != null) {
@@ -4749,13 +4742,6 @@ ATTACHMENT scAttachment, String contentType)
 				return Boolean.TRUE;
 			}
 		}
-
-		// #36678 set null if user change above 50k. related to #35061,#37899
-		if (scQt.getJustificationProcValue() != null && scQt.getQtStatus() != null
-				&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
-			scQt.setJustificationProcValue(null);
-		}
-		// #36678, #35061, #37899 -end-
 
 		return Boolean.FALSE;
 	}
@@ -5028,8 +5014,8 @@ ATTACHMENT scAttachment, String contentType)
 		}
 		// No need to explicitly close the stream; it's done automatically
 	}
-	// Bug #35485@Syazani 08/02/2024 -- End
-		
+	// Bug #35485@Syazani 08/02/2024 -- End	
+	
 	// #26226 - Start
 	/**
 	 * @param context
@@ -5147,7 +5133,7 @@ ATTACHMENT scAttachment, String contentType)
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
 							// #25025 - End fixing sonarlint
-
+							
 							/** This code is for LOA with Single Item Details **/
 							if (items.size() == 1) {
 								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
@@ -5871,6 +5857,7 @@ ATTACHMENT scAttachment, String contentType)
 			specSO = null;
 		}
 	}
+	// #26130 -end-
 	
 	// Bug #36438@Syazani - 24/10/2024 -- Start
 	private void loopScQtCheckListsConstructSupplierSpecificationAndRemarks(List<ScQtCheckList> scQtCheckLists,
@@ -5879,6 +5866,7 @@ ATTACHMENT scAttachment, String contentType)
 		// #26130 #97 - End
 		for (ScQtCheckList scQtCheckList : scQtCheckLists) {
 			List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+
 			TplSpecMaster master = null;
 			// Bug #36438@Syazani - 24/10/2024 -- Start
 			// Making sure it didn't impact original value
@@ -5914,7 +5902,8 @@ ATTACHMENT scAttachment, String contentType)
 				masters.add(master);
 			}	// Bug #36438@Syazani - 24/10/2024
 		}
-	} // Bug #36438@Syazani - 24/10/2024
+	} 
+	// Bug #36438@Syazani - 24/10/2024
 
 	// #26130 -end-
 
@@ -6463,99 +6452,105 @@ ATTACHMENT scAttachment, String contentType)
 		return isExist;
 	}
 	// 26130 - end
+
+	// 11104-start
 	/***
-	 * 11104
+	 * 
 	 * check status for sample Radio buttons.
+	 * 
 	 * @param currentStatusId
-	 * @return  status
+	 * @return status
 	 */
-	public boolean isQTSampleStatus(Long currentStatusId){//11104-start
-  		List<Long> CheckStatus=new ArrayList<Long>();
-  		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
-  		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF);
-  		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
-  		CheckStatus.add(QTStatusConst.SE_PENDING_ENDORSMENT);
-  		CheckStatus.add(QTStatusConst.SE_PENDING_SIGNOFF);
-  		return CheckStatus.contains(currentStatusId);
- 
-  	}//11104-End
+	public boolean isQTSampleStatus(Long currentStatusId) {
+		List<Long> CheckStatus = new ArrayList<Long>();
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF);
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+		CheckStatus.add(QTStatusConst.SE_PENDING_ENDORSMENT);
+		CheckStatus.add(QTStatusConst.SE_PENDING_SIGNOFF);
+
+		return CheckStatus.contains(currentStatusId);
+	}
+	// 11104-End
+
+	// 11104_newEndorseStart
 	/***
-	 * 11104_newEndorseStart
+	 * 
 	 * get TemplatespecQuestion based on Checklist.
+	 * 
 	 * @param sampleSpecs
-	 * @return  List<TplSpecQuestion>
+	 * @return List<TplSpecQuestion>
 	 */
-	protected List<TplSpecQuestion> getTemplateSampleQuestions(ScQtCheckList sampleSpecs){//11104_newEndorseStart
-		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.COMMON_COMPONENT,
-						ITemplateSpecSO.class);
+	protected List<TplSpecQuestion> getTemplateSampleQuestions(ScQtCheckList sampleSpecs) {// 11104_newEndorseStart
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		specReqDTO.setSpecMaster(sampleSpecs.getScQtDoc()
-				.getTplSpecMaster());
+
+		specReqDTO.setSpecMaster(sampleSpecs.getScQtDoc().getTplSpecMaster());
 		specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 		specReqDTO.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM);
-		TemplateSpecResDTO tmpresDTO = templateSpecSO
-				.getTemplateMaster(specReqDTO);
-		 return tmpresDTO.getSpecMaster()
-		.getTplSpecQuestions();
-	}//11104_newEndorseStart
+
+		TemplateSpecResDTO tmpresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+
+		return tmpresDTO.getSpecMaster().getTplSpecQuestions();
+	}
+	// 11104_newEndorseEnd
+
+	// 11104_newEndorseStart
 	/***
-	 * 11104_newEndorseStart
-	 * check Sample Item exist in the questions for work in progress qt.
+	 * Start check Sample Item exist in the questions for work in progress qt.
+	 * 
 	 * @param scQt
-	 * @return  boolean
+	 * @return boolean
 	 */
-	public boolean  checkISSampleExistWIPChecklist(ScQt scQt){//11104_newEndorseStart
+	public boolean checkISSampleExistWIPChecklist(ScQt scQt) {
 		boolean qtSample = scQt.isSampleReq();
-		 if (qtSample
-				&& !isQTStatusPublished(scQt
-						.getQtStatus().getStatusId())
+
+		if (qtSample && !isQTStatusPublished(scQt.getQtStatus().getStatusId())
 				&& SourcingConstants.SAMPLE_WIP_CHECK.equals(scQt.getDemoNotificationCheck())) {
 			return Boolean.TRUE;
-		} else if (qtSample
-				&& !isQTStatusPublished(scQt
-						.getQtStatus().getStatusId())
-				&& null == scQt
-						.getDemoNotificationCheck()) {
-			
+		} else if (qtSample && !isQTStatusPublished(scQt.getQtStatus().getStatusId())
+				&& null == scQt.getDemoNotificationCheck()) {
+
 			return Boolean.FALSE;
-		} else if(qtSample) {
-			IQTSpecSO qtSpecSO=BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		} else if (qtSample) {
+			IQTSpecSO qtSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
 			SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
 			specificationReqDTO.setScQt(scQt);
-			specificationReqDTO
-					.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			SpecificationResDTO specificationResDTO = qtSpecSO
-					.retrieveTechnicalService(specificationReqDTO);
+			specificationReqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+
+			SpecificationResDTO specificationResDTO = qtSpecSO.retrieveTechnicalService(specificationReqDTO);
 			List<ScQtCheckList> sampleTemplateSpecChecklist = new ArrayList<>();
-			for (ScQtCheckList sampleCheckList : specificationResDTO
-					.getTechnicalCheckList()) {
-				if (QTConstants.TEMPLETE_SPEC_CODE
-						.equalsIgnoreCase(sampleCheckList.getDefinationType()
-								.getParameterCode())
-						&& QTStatusConst.TS_COMPLETED.equals(sampleCheckList
-								.getPmStatus().getStatusId())) {
+
+			for (ScQtCheckList sampleCheckList : specificationResDTO.getTechnicalCheckList()) {
+				if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(sampleCheckList.getDefinationType()
+						.getParameterCode())
+						&& QTStatusConst.TS_COMPLETED.equals(sampleCheckList.getPmStatus().getStatusId())) {
 					sampleTemplateSpecChecklist.add(sampleCheckList);
 				}
 			}
+
 			return checkWiPSampleQuestionExist(sampleTemplateSpecChecklist);
-			
 		}
+
 		return Boolean.FALSE;
-	}//11104_newEndorseEnd
-	private boolean checkWiPSampleQuestionExist(List<ScQtCheckList> sampleTemplateSpecChecklist){//11104_newEndorseStart
-		for (ScQtCheckList sampleSpecs : sampleTemplateSpecChecklist) {	
+	}
+	// 11104_newEndorseEnd
+
+	// 11104_newEndorseStart
+	private boolean checkWiPSampleQuestionExist(List<ScQtCheckList> sampleTemplateSpecChecklist) {
+		for (ScQtCheckList sampleSpecs : sampleTemplateSpecChecklist) {
 			for (TplSpecQuestion specQuestion : getTemplateSampleQuestions(sampleSpecs)) {
 				if (BooleanUtils.isTrue(specQuestion.isSampleReq())) {
 					return Boolean.TRUE;
 				}
 			}
-
 		}
+
 		return Boolean.FALSE;
-	}//11104_newEndorseEnd
+	}
+	// 11104_newEndorseEnd
 	
 	// 25037 - Start
 	/**
@@ -7107,6 +7102,7 @@ ATTACHMENT scAttachment, String contentType)
 		return reportList;
 	}
 	// 37622 - end
+	
 	// #29007 Start vinod
 	/**
 	 * This method will check the BPM version and status to insert item spec

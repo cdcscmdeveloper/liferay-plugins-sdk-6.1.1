@@ -115,7 +115,6 @@ import my.ep.util.SLAUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -2853,9 +2852,13 @@ public class SPDetailBackingBean extends
 							sampleSubmissionDtls.get(0));
 				}
 			}
-			if(null!=resDTO.getScQtProposal()){//33509 &33191&11104 - start
-				getManagedBean().setQtProposal(resDTO.getScQtProposal());	
-			}//33509 &33191&11104 - End
+
+			// 33509 &33191&11104 - start
+			if (null != resDTO.getScQtProposal()) {
+				getManagedBean().setQtProposal(resDTO.getScQtProposal());
+			}
+			// 33509 &33191&11104 - End
+
 			getManagedBean().setScQtSampleLable(resDTO.getScQtSampleLable());
 			return NAV_TO_SAMPLING_ADDRESS_PAGE;
 		} finally {
@@ -3270,7 +3273,6 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 						&& tecProposalCheckList.isSubmitted()) {
 					resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
 				} else {
-					// TODO add exception remarks
 					throw new EpException(
 							"Please Complete Technical Non Gov Company Experiences first");
 				}
@@ -5222,7 +5224,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		title = title.replaceAll(">", "&#62;");
 		title = title.replaceAll("\r\n", "<br />");
 		context.put("QTTitle", title);
-		context.put("bean", this);//11104
+		context.put("bean", this); // 11104
+
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.SUPPLIER_PROPOSAL_PRINT_LABEL, context,
 				new FileOutputStream(getActualFilePath(attachment)));

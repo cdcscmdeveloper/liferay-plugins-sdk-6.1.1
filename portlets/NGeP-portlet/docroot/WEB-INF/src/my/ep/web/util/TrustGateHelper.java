@@ -14,14 +14,10 @@ import javax.faces.context.FacesContext;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.sm.SupplierManagementConst;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.constant.SPKIConst;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,12 +36,12 @@ public class TrustGateHelper {
 	private static KMCClient client;
 	private static KMCRequestBuilder reqBuilder;
 	private static String dns;
-	//34807
+	// 34807
 	private static String revokeUrl;
 	private static String changePinUrl;
 	private static String resetPinUrl;
 	private static String updateCRUrl;
-	
+
 	public static Logger log = Logger.getLogger(TrustGateHelper.class);
 
 	public KMCClient getKMCClient() {
@@ -56,43 +52,40 @@ public class TrustGateHelper {
 		String filePath = substring + SPKIConst.TRUSTGATE_CONFIG_FILE_PATH;
 
 		File f = new File(filePath);
-		KMCClient client=null;
+		KMCClient client = null;
 		try {
 			client = KMCClientFactory.getInstance(f);
 		} catch (Exception e) {
 			log.info("Error while getKMCClient");
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		return client;
 	}
 
-	public List<String> getChallengeQuestion(String identificationNo,
-			String epNo, String selectedQuest) {
-		log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
-				+ "||" + selectedQuest);
+	public List<String> getChallengeQuestion(String identificationNo, String epNo, String selectedQuest) {
+		log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo + "||" + selectedQuest);
 		List<String> retVal = new ArrayList<String>();
 		try {
 			log.info("Before Get Client=======================");
 			KMCClient client = getClient();
-			log.info("After Get Client======================="+client);
+			log.info("After Get Client=======================" + client);
 			KMCRequestBuilder reqbuilder = getReqBuilder();
-			log.info("After Get reqbuilder======================="+reqbuilder);
-			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder
-					.getChallengeQuestions(identificationNo, 10, epNo);
-			log.info("After Get GetChallengeQuestionResponse======================="+res);
+			log.info("After Get reqbuilder=======================" + reqbuilder);
+			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder.getChallengeQuestions(identificationNo, 10, epNo);
+			log.info("After Get GetChallengeQuestionResponse=======================" + res);
 
-			//#30425 - Start
-			//remove all validation to spkibackingBean
-					if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
-						log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
-					} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
-						log.info("50; " + MessageConst.ERROR_DIGICERT_776060);
-					} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
-						log.info("0; " + MessageConst.ERROR_DIGICERT_776061);
-					} else {
-						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
-					}
-			//#30425 - End
+			// #30425 - Start
+			// remove all validation to spkibackingBean
+			if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+				log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
+			} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+				log.info("50; " + MessageConst.ERROR_DIGICERT_776060);
+			} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+				log.info("0; " + MessageConst.ERROR_DIGICERT_776061);
+			} else {
+				log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
+			}
+			// #30425 - End
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -109,17 +102,15 @@ public class TrustGateHelper {
 			}
 
 		} catch (Exception ex) {
-			log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
-					+ "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
-			ex.printStackTrace();
+			log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo + "||" + selectedQuest + " ERROR MSG:", ex);
+			log.error(ex.getMessage(), ex);
 			throw new EpException(ex.getMessage());
 
 		}
 		return retVal;
 	}
 
-	private List<String> getChallQuest(String selectedQuest,
-			List<String> questions) {
+	private List<String> getChallQuest(String selectedQuest, List<String> questions) {
 		log.info("#25061 getChallQuest");
 		log.info("#25061 selectedQuest " + selectedQuest);
 		List<String> retVal = new ArrayList<String>();
@@ -133,21 +124,17 @@ public class TrustGateHelper {
 		return retVal;
 	}
 
-	public SpkiVO getSignedData(String identificationNo, String epNo,
-			String pin, Map<Object, Object> challenges, String dataForSigning) {
-		log.info("BEFORE TRUSTGATE SIGNING:" + identificationNo + "||" + epNo
-				+ "||" + pin + "||" + dataForSigning);
+	public SpkiVO getSignedData(String identificationNo, String epNo, String pin, Map<Object, Object> challenges, String dataForSigning) {
+		log.info("BEFORE TRUSTGATE SIGNING:" + identificationNo + "||" + epNo + "||" + pin + "||" + dataForSigning);
 		byte[] signedData = null;
 		SpkiVO vo = new SpkiVO();
 		try {
 			KMCClient client = getClient();
 			KMCRequestBuilder reqbuilder = getReqBuilder();
-			IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(
-					identificationNo, epNo, pin.toCharArray(), challenges,
+			IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), challenges,
 					new ByteArrayInputStream(dataForSigning.getBytes()));
 
-			log.info("TRUSTGATE SIGNING STATUS CODE:" + res.getStatusCode()
-					+ " MESSAGE:" + res.getStatusMessage());
+			log.info("TRUSTGATE SIGNING STATUS CODE:" + res.getStatusCode() + " MESSAGE:" + res.getStatusMessage());
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -156,58 +143,39 @@ public class TrustGateHelper {
 
 			default:
 				if (res.getStatusCode() == SPKIConst.ERROR_CERT_REVOKED) {
-					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_TRUSTGATE_776057,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
+					vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_TRUSTGATE_776057, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_USER_INVALID) {
-					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_TRUSTGATE_776058,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
+					vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_TRUSTGATE_776058, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
-					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_TRUSTGATE_776059,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
+					vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_TRUSTGATE_776059, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
-					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_TRUSTGATE_776060,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
+					vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_TRUSTGATE_776060, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
-					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_TRUSTGATE_776061,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
+					vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_TRUSTGATE_776061, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				//START 28683	
 				} else if (res.getStatusCode() == SPKIConst.CERT_EXPIRED) {
-					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_TRUSTGATE_776063,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
+					vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_TRUSTGATE_776063, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else {
-					log.info("getSignedData res.getStatusCode()==="+res.getStatusCode());
-					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_TRUSTGATE_776062,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
+					log.info("getSignedData res.getStatusCode()===" + res.getStatusCode());
+					vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_TRUSTGATE_776062, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				}
 				//END 28683
 
 			}
 		} catch (Exception e) {
-			log.info("TRUSTGATE SIGNING:" + identificationNo + "||" + epNo
-					+ "||" + pin + "||" + dataForSigning + "  ERROR MSG:"
-					+ e.getMessage());
-			e.printStackTrace();
-			vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_776062,
-					MessageUtils.BUNDLE_COMMON_MESSAGES,
-					new FacesScopes().getUserLocale()));
+			log.info("TRUSTGATE SIGNING:" + identificationNo + "||" + epNo + "||" + pin + "||" + dataForSigning + "  ERROR MSG:" + e.getMessage());
+			log.error(e.getMessage(), e);
+			vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_776062, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
 		}
 		vo.setSignedData(signedData);
-		log.info("AFTER TRUSTGATE SIGNING:" + identificationNo + "||" + epNo
-				+ "||" + pin + "||" + dataForSigning);
+		log.info("AFTER TRUSTGATE SIGNING:" + identificationNo + "||" + epNo + "||" + pin + "||" + dataForSigning);
 		return vo;
 	}
 
@@ -216,8 +184,7 @@ public class TrustGateHelper {
 		try {
 			KMCClient client = getClient();
 			KMCRequestBuilder reqbuilder = getReqBuilder();
-			IKMCAPIResponse.GenSecToken res = reqbuilder.generateToken(
-					identificationNo, epNo);
+			IKMCAPIResponse.GenSecToken res = reqbuilder.generateToken(identificationNo, epNo);
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
 				tok = res.TOKEN;
@@ -227,7 +194,7 @@ public class TrustGateHelper {
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage(), ex);
 			throw new EpException(ex.getMessage());
 		}
 
@@ -239,54 +206,47 @@ public class TrustGateHelper {
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance()
-				.getExternalContext();
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-		String url4 = getDns() + "/" +getTgUrl("revoke") + encodedtoken;//34807
-		RequestContext.getCurrentInstance().execute("window.open('"+url4+"', '_blank')");
-		//externalContext.redirect(url4);
+		String url4 = getDns() + "/" + getTgUrl("revoke") + encodedtoken;// 34807
+		RequestContext.getCurrentInstance().execute("window.open('" + url4 + "', '_blank')");
+		// externalContext.redirect(url4);
 	}
+	
+	public void resetPIN(String identificationNo, String epNo, String email) throws IOException, PortalException, SystemException {
+		log.info("TRUSTGATE RESET:" + identificationNo + "||" + epNo + "||" + email);
 
-	public void resetPIN(String identificationNo, String epNo, String email)
-			throws IOException, PortalException, SystemException {
-		log.info("TRUSTGATE RESET:" + identificationNo + "||" + epNo + "||"
-				+ email);
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance()
-				.getExternalContext();
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-		String url = getDns() + "/" + getTgUrl("resetpin") + encodedtoken;//34807
+		String url = getDns() + "/" + getTgUrl("resetpin") + encodedtoken;// 34807
 
 		externalContext.redirect(url);
 	}
 
-	public void changePIN(String identificationNo, String epNo)
-			throws IOException, PortalException, SystemException {
+	public void changePIN(String identificationNo, String epNo) throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE CHANGE PIN:" + identificationNo + "||" + epNo);
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance()
-				.getExternalContext();
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-		String url = getDns() + "/" + getTgUrl("changepin") + encodedtoken;//34807
+		String url = getDns() + "/" + getTgUrl("changepin") + encodedtoken;// 34807
 
 		externalContext.redirect(url);
 	}
+	
+	public void updateChallResp(String identificationNo, String epNo) throws IOException, PortalException, SystemException {
+		log.info("TRUSTGATE UPDATE CHALL RESP:" + identificationNo + "||" + epNo);
 
-	public void updateChallResp(String identificationNo, String epNo)
-			throws IOException, PortalException, SystemException {
-		log.info("TRUSTGATE UPDATE CHALL RESP:" + identificationNo + "||"
-				+ epNo);
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
-		ExternalContext externalContext = FacesContext.getCurrentInstance()
-				.getExternalContext();
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-		String url = getDns() + "/" + getTgUrl("updateCR") + encodedtoken;//34807
+		String url = getDns() + "/" + getTgUrl("updateCR") + encodedtoken;// 34807
 
 		externalContext.redirect(url);
 	}
@@ -296,7 +256,7 @@ public class TrustGateHelper {
 			try {
 				instance = new TrustGateHelper();
 			} catch (Exception e) {
-
+				log.error(e.getMessage(), e);
 			}
 		}
 		return instance;
@@ -308,10 +268,10 @@ public class TrustGateHelper {
 		if (client == null) {
 			try {
 				client = getInstance().getKMCClient();
-				log.info("getClient====================================="+client);
+				log.info("getClient=====================================" + client);
 			} catch (Exception e) {
 				log.info("getClient=====================================Error");
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 		return client;
@@ -326,7 +286,7 @@ public class TrustGateHelper {
 				log.info("reqBuilder=====================================");
 			} catch (Exception e) {
 				log.info("reqBuilder=====================================Error");
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 		return reqBuilder;
@@ -335,46 +295,45 @@ public class TrustGateHelper {
 	public static String getDns() {
 		if (StringUtils.isBlank(dns)) {
 			try {
-				dns = EpPropertiesUtils.getInstance().getProperty(
-						"trustgate.dns");
+				dns = EpPropertiesUtils.getInstance().getProperty("trustgate.dns");
 				// default value
 				if (StringUtils.isBlank(dns)) {
 					dns = "https://digitalid.msctrustgate.com";
 				}
 			} catch (Exception e) {
-
+				log.error(e.getMessage(), e);
 			}
 		}
 		return dns;
 	}
-	//34807
+
+	// 34807
 	/*
 	 * To get TG URL by type
-	 * 
-	 * */
+	 */
 	public static String getTgUrl(String type) {
-		if("revoke".equalsIgnoreCase(type)){
+		if ("revoke".equalsIgnoreCase(type)) {
 			if (StringUtils.isBlank(revokeUrl)) {
 				revokeUrl = EpPropertiesUtils.getInstance().getProperty("trustgate.revoke");
 			}
 			return revokeUrl;
-		}else if("updateCR".equalsIgnoreCase(type)){
+		} else if ("updateCR".equalsIgnoreCase(type)) {
 			if (StringUtils.isBlank(updateCRUrl)) {
 				updateCRUrl = EpPropertiesUtils.getInstance().getProperty("trustgate.updatecr");
 			}
 			return updateCRUrl;
-		}else if("resetpin".equalsIgnoreCase(type)){
+		} else if ("resetpin".equalsIgnoreCase(type)) {
 			if (StringUtils.isBlank(resetPinUrl)) {
 				resetPinUrl = EpPropertiesUtils.getInstance().getProperty("trustgate.resetpin");
 			}
 			return resetPinUrl;
-		}else if("changepin".equalsIgnoreCase(type)){
+		} else if ("changepin".equalsIgnoreCase(type)) {
 			if (StringUtils.isBlank(changePinUrl)) {
 				changePinUrl = EpPropertiesUtils.getInstance().getProperty("trustgate.changepin");
 			}
 			return changePinUrl;
-		}else{
+		} else {
 			return "";
-		}		
+		}
 	}
 }

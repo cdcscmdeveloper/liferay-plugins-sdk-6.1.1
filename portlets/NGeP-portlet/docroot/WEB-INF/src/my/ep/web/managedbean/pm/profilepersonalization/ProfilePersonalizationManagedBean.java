@@ -19,6 +19,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.pm.ChallengeQAList;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -61,6 +62,8 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean showRobExpiredDate = false;
 	private boolean showRobExpiredDateMesej = false;
 	
+	// #28895_35501 - AUDIT TRAIL SM
+	private PmUser oldSelectedUser;
 	public ProfilePersonalizationManagedBean(){}
 	
 	/**
@@ -379,4 +382,13 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 		this.showRobExpiredDateMesej = showRobExpiredDateMesej;
 	}
 
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public PmUser getOldSelectedUser() {
+		return oldSelectedUser;
+	}
+
+	public void setOldSelectedUser(PmUser oldSelectedUser) {
+		this.oldSelectedUser = oldSelectedUser;
+	}
+	// #28895_35501 End
 }

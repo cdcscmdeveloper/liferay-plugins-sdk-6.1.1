@@ -14,6 +14,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -71,6 +72,12 @@ public class ViewSuppProfileManagedBean extends
 	private Map<Long, String> tempCategoryLs; //#30766 & #34209
 	
 	private SmPersonnel smPersonnel;
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private SmAppl oldSmAppl;
+	private List<SmSupplierCategory> oldApprovedCategoryList;
+	private String oldPoApprOverlappedRemark;
+	private String oldApproverRemark;
+	// #28895_35501 End
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -385,4 +392,37 @@ public class ViewSuppProfileManagedBean extends
 		this.tempCategoryLs = tempCategoryLs;
 	}
 	//#30766 & #34209 - END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public SmAppl getOldSmAppl() {
+		return oldSmAppl;
+	}
+
+	public void setOldSmAppl(SmAppl oldSmAppl) {
+		this.oldSmAppl = oldSmAppl;
+	}
+
+	public List<SmSupplierCategory> getOldApprovedCategoryList() {
+		return oldApprovedCategoryList;
+	}
+
+	public void setOldApprovedCategoryList(List<SmSupplierCategory> oldApprovedCategoryList) {
+		this.oldApprovedCategoryList = oldApprovedCategoryList;
+	}
+
+	public String getOldPoApprOverlappedRemark() {
+		return oldPoApprOverlappedRemark;
+	}
+
+	public void setOldPoApprOverlappedRemark(String oldPoApprOverlappedRemark) {
+		this.oldPoApprOverlappedRemark = oldPoApprOverlappedRemark;
+	}
+
+	public String getOldApproverRemark() {
+		return oldApproverRemark;
+	}
+
+	public void setOldApproverRemark(String oldApproverRemark) {
+		this.oldApproverRemark = oldApproverRemark;
+	}
+	// #28895_35501 End
 }

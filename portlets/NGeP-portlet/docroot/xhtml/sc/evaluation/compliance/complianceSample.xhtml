@@ -10,30 +10,27 @@
 		rendered="#{evaluationBackingBean.managedBean.countDays gt 0 or(evaluationBackingBean.managedBean.countDays eq 0 and evaluationBackingBean.managedBean.currentTime lt 12)}">
 		<h:panelGroup>
 			<table style="width: 50%">
+
 				<tr>
-					<td><h:outputLabel style="width:140px;" value="#{lbl['lbl.sc.eva.smpl.open.date']}" /></td>
+					<td><h:outputLabel style="width:140px;"
+							value="#{lbl['lbl.sc.eva.smpl.open.date']}" /></td>
 					<td><p:inputText
 							value="#{evaluationBackingBean.managedBean.scQt.sampleClosingDate}"
 							readonly="true" disabled="true">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText>
-					</td>
+						</p:inputText></td>
 				</tr>
 
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.remaining.day']}" /></td>
 					<td><p:inputText
 							value="#{evaluationBackingBean.managedBean.countDays}"
-							readonly="true" disabled="true">
-						</p:inputText>
-					</td>
+							readonly="true" disabled="true"></p:inputText></td>
 				</tr>
 			</table>
 		</h:panelGroup>
 	</ui:fragment>
-
-
 	<ui:fragment
 		rendered="#{evaluationBackingBean.managedBean.countDays lt 0 or(evaluationBackingBean.managedBean.countDays eq 0 and evaluationBackingBean.managedBean.currentTime ge 12)}">
 		<p:panel
@@ -56,8 +53,10 @@
 				<ui:remove><!-- 6906 - start --></ui:remove>
 				<ui:param name="isRejected"
 					value="#{not empty complianceSample.scQtProposal.supplierRejectionRemark}" />
+				<ui:remove> #11104 - change width -start- </ui:remove>
 				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-					style="width:20%; text-align:center;">
+					style="width:30%; text-align:center;">
+				<ui:remove> #11104 - change width -end- </ui:remove>
 					<table
 						style="table-layout: fixed; margin: auto !important; max-width: 90px !important">
 						<tr>
@@ -67,8 +66,7 @@
 							<td style="text-align: center; border: 0 !important"><ac:iconRejectRemarkBox
 									show="#{isRejected}" id="remarkId"
 									remark="#{complianceSample.scQtProposal.supplierRejectionRemark.remark}"
-									supplierCode="#{complianceSample.scQtProposal.supplierNo}" />
-							</td>
+									supplierCode="#{complianceSample.scQtProposal.supplierNo}" /></td>
 						</tr>
 					</table>
 				</p:column>
@@ -87,29 +85,22 @@
 				</p:column>
             	<ui:remove> #11104 - end </ui:remove>
             
-				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;text-align: center;">
+				<p:column headerText="#{lbl['lbl.sc.action']}"
+					style="width:10%;text-align: center;">
 
 					<p:commandButton value="#{lbl['lbl.sc.btn.compliance']}"
 						rendered="#{!evaluationBackingBean.sampleChecklistCompleted(complianceSample)}"
 						process="@this" partialSubmit="true"
 						action="#{evaluationBackingBean.complianceSampleItems(complianceSample)}"
-						disabled="#{isRejected}" />
-					<ui:remove><!-- 6906 --></ui:remove>
-
+						disabled="#{isRejected}" /><ui:remove><!-- 6906 --></ui:remove>
+						
 					<p:commandButton value="#{lbl['lbl.btn.view']}"
 						rendered="#{evaluationBackingBean.sampleChecklistCompleted(complianceSample)}"
 						process="@this" partialSubmit="true"
 						action="#{evaluationBackingBean.complianceSampleItems(complianceSample)}"
-						disabled="#{isRejected}" />
-					<ui:remove><!-- 6906 --></ui:remove>
-
+						disabled="#{isRejected}" /><ui:remove><!-- 6906 --></ui:remove>
 				</p:column>
-
 			</p:dataTable>
-
-
 		</p:panel>
-
 	</ui:fragment>
-
 </ui:composition>

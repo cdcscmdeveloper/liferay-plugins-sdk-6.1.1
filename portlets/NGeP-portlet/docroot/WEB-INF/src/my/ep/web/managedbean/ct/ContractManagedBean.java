@@ -163,6 +163,33 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Long applID;
 	//End Fix - #33674
 	
+	//Bug 34142, 15851 - shaqimi start 04/12/2022
+	private boolean amendFromTaskList = false;
+	private boolean amendFromViewPage = false;
+	private boolean hasAmendmentLoaNo = false;
+	private boolean viewContractFromAgreement = false;
+	private boolean viewSCL = false;
+	private boolean viewSCLFromContract = false;
+	private boolean viewSclFromAgreement;
+	private boolean backFromSCL = false;
+	private boolean backFromContract = false;
+	private boolean inPage = false;
+	private boolean fromViewPage = false;
+	private String docTypeFromTaskList = null;
+	private Long contractIdFromTaskList = null;
+	private Long contractVerIdFromTaskList = null;
+	private String taskNameFromTaskList = null;
+	private String taskIdFromTaskList = null;
+	private String docTypeFromAgreementTaskList = null;
+	private Long contractIdFromAgreementTaskList = null;
+	private Long docIdFromAgreementTaskList = null;
+	private Long agreementIdFromAgreementTaskList = null;
+	private String taskIdFromAgreementTaskList = null;
+	private Long contractVerIdFromAgreementTaskList = null;
+	private Long statusIdFromTaskList = null;
+	private String[] outcomesFromContract = null;
+	//Bug 34142, 15851 - shaqimi end 04/12/2022
+	
 	//#28854 - start
 	private List<String> itemSpecification;
 	private String newOfferSpec;
@@ -1292,119 +1319,330 @@ public class ContractManagedBean extends BaseManagedBean {
 	}	
 	// End - 28479
 	
-		// Start Fix - #31740
-		/**
-		 * Populate only changes related to agency
-		 */
-		public Map<Long, CtAgency> getSelectedAgencyChanges() {
-			if(selectedAgencyChanges==null) {
-				selectedAgencyChanges = new HashMap<Long, CtAgency>();
-			}
-			return selectedAgencyChanges;
-		}
+	//#15851 - start
+	public boolean isHasAmendmentLoaNo() {
+		return hasAmendmentLoaNo;
+	}
 
-		public void setSelectedAgencyChanges(Map<Long, CtAgency> selectedAgencyChanges) {
-			this.selectedAgencyChanges = selectedAgencyChanges;
+	public void setHasAmendmentLoaNo(boolean hasAmendmentLoaNo) {
+		this.hasAmendmentLoaNo = hasAmendmentLoaNo;
+	}
+	//#15851 - end
+	
+	// Start Fix - #31740
+	/**
+	 * Populate only changes related to agency
+	 */
+	public Map<Long, CtAgency> getSelectedAgencyChanges() {
+		if (selectedAgencyChanges == null) {
+			selectedAgencyChanges = new HashMap<Long, CtAgency>();
 		}
-		
-		public Map<Long, CtAgency> getAgencyDataDeletion() {
-			if(agencyDataDeletion==null) {
-				agencyDataDeletion = new HashMap<Long, CtAgency>();
-			}
-			return agencyDataDeletion;
-		}
+		return selectedAgencyChanges;
+	}
 
-		public void setAgencyDataDeletion(Map<Long, CtAgency> agencyDataDeletion) {
-			this.agencyDataDeletion = agencyDataDeletion;
-		}
-		// End Fix - #31740
-		
-		// Start Fix - #33674
-		public String getBankInfoDetails() {
-			return bankInfoDetails;
-		}
+	public void setSelectedAgencyChanges(Map<Long, CtAgency> selectedAgencyChanges) {
+		this.selectedAgencyChanges = selectedAgencyChanges;
+	}
 
-		public void setBankInfoDetails(String bankInfoDetails) {
-			this.bankInfoDetails = bankInfoDetails;
+	public Map<Long, CtAgency> getAgencyDataDeletion() {
+		if (agencyDataDeletion == null) {
+			agencyDataDeletion = new HashMap<Long, CtAgency>();
 		}
+		return agencyDataDeletion;
+	}
 
-		public Map<String, SmSupplierBank> getSupplierBankAccNo() {
-			if (supplierBankAccNo == null) {
-				supplierBankAccNo = new HashMap<String, SmSupplierBank>();
-			}
-			return supplierBankAccNo;
-		}
+	public void setAgencyDataDeletion(Map<Long, CtAgency> agencyDataDeletion) {
+		this.agencyDataDeletion = agencyDataDeletion;
+	}
 
-		public void setSupplierBankAccNo(Map<String, SmSupplierBank> supplierBankAccNo) {
-			this.supplierBankAccNo = supplierBankAccNo;
-		}
+	// End Fix - #31740
 
-		public Map<String, SmSupplierBank> getSupplierBankName() {
-			if (supplierBankName == null) {
-				supplierBankName = new HashMap<String, SmSupplierBank>();
-			}
-			return supplierBankName;
-		}
+	// Enhancement 15851 - shaqimi start
+	public boolean isFromViewPage() {
+		return fromViewPage;
+	}
 
-		public void setSupplierBankName(Map<String, SmSupplierBank> supplierBankName) {
-			this.supplierBankName = supplierBankName;
-		}
+	public void setFromViewPage(boolean fromViewPage) {
+		this.fromViewPage = fromViewPage;
+	}
 
-		public Long getApplID() {
-			return applID;
-		}
+	public boolean isAmendFromViewPage() {
+		return amendFromViewPage;
+	}
 
-		public void setApplID(Long applID) {
-			this.applID = applID;
-		}
-	    //End Fix - #33674
-		
-		/* #28854 start*/
-		public String getNewOfferSpec() {
-			return newOfferSpec;
-		}
+	public void setAmendFromViewPage(boolean amendFromViewPage) {
+		this.amendFromViewPage = amendFromViewPage;
+	}
 
-		public void setNewOfferSpec(String newOfferSpec) {
-			this.newOfferSpec = newOfferSpec;
-		}
+	public boolean isViewSCL() {
+		return viewSCL;
+	}
 
-		public String getSupplierOffer() {
-			return supplierOffer;
-		}
+	public void setViewSCL(boolean viewSCL) {
+		this.viewSCL = viewSCL;
+	}
 
-		public void setSupplierOffer(String supplierOffer) {
-			this.supplierOffer = supplierOffer;
-		}	
+	// Enhancement 15851 - shaqimi end
 
-		public List<String> getItemSpecification() {
-			return itemSpecification;
-		}
+	// Start Fix - #33674
+	public String getBankInfoDetails() {
+		return bankInfoDetails;
+	}
 
-		public void setItemSpecification(List<String> itemSpecification) {
-			this.itemSpecification = itemSpecification;
-		}
+	public void setBankInfoDetails(String bankInfoDetails) {
+		this.bankInfoDetails = bankInfoDetails;
+	}
 
-		public List<ScRequestItemSpecOffer> getScRequestItemSpecOfferList() {
-			return scRequestItemSpecOfferList;
+	public Map<String, SmSupplierBank> getSupplierBankAccNo() {
+		if (supplierBankAccNo == null) {
+			supplierBankAccNo = new HashMap<String, SmSupplierBank>();
 		}
-		public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
-			this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
-		}	
-		/* #28854 end*/
-		
-		//#29983 start
-		/**
-		 * @return the businessRegNoNew
-		 */
-		public String getBusinessRegNoNew() {
-			return businessRegNoNew;
-		}
+		return supplierBankAccNo;
+	}
 
-		/**
-		 * @param businessRegNoNew the businessRegNoNew to set
-		 */
-		public void setBusinessRegNoNew(String businessRegNoNew) {
-			this.businessRegNoNew = businessRegNoNew;
+	public void setSupplierBankAccNo(Map<String, SmSupplierBank> supplierBankAccNo) {
+		this.supplierBankAccNo = supplierBankAccNo;
+	}
+
+	public Map<String, SmSupplierBank> getSupplierBankName() {
+		if (supplierBankName == null) {
+			supplierBankName = new HashMap<String, SmSupplierBank>();
 		}
-		//#29983 end
+		return supplierBankName;
+	}
+
+	public void setSupplierBankName(Map<String, SmSupplierBank> supplierBankName) {
+		this.supplierBankName = supplierBankName;
+	}
+
+	public Long getApplID() {
+		return applID;
+	}
+
+	public void setApplID(Long applID) {
+		this.applID = applID;
+	}
+
+	// End Fix - #33674
+
+	// Bug 34142 - shaqimi start 16112022
+	public boolean isViewSCLFromContract() {
+		return viewSCLFromContract;
+	}
+
+	public void setViewSCLFromContract(boolean viewSCLFromContract) {
+		this.viewSCLFromContract = viewSCLFromContract;
+	}
+
+	// Bug 34142 - shaqimi end 16112022
+
+	// Bug 34142, 15851 - shaqimi start 04/12/2022
+	public boolean isViewSclFromAgreement() {
+		return viewSclFromAgreement;
+	}
+
+	public void setViewSclFromAgreement(boolean viewSclFromAgreement) {
+		this.viewSclFromAgreement = viewSclFromAgreement;
+	}
+
+	public String[] getOutcomesFromContract() {
+		return outcomesFromContract;
+	}
+
+	public void setOutcomesFromContract(String[] outcomesFromContract) {
+		this.outcomesFromContract = outcomesFromContract;
+	}
+
+	// Bug 34142, 15851 - shaqimi end 04/12/2022
+
+	/* #28854 start */
+	public String getNewOfferSpec() {
+		return newOfferSpec;
+	}
+
+	public void setNewOfferSpec(String newOfferSpec) {
+		this.newOfferSpec = newOfferSpec;
+	}
+
+	public String getSupplierOffer() {
+		return supplierOffer;
+	}
+
+	public void setSupplierOffer(String supplierOffer) {
+		this.supplierOffer = supplierOffer;
+	}
+
+	public List<String> getItemSpecification() {
+		return itemSpecification;
+	}
+
+	public void setItemSpecification(List<String> itemSpecification) {
+		this.itemSpecification = itemSpecification;
+	}
+
+	public List<ScRequestItemSpecOffer> getScRequestItemSpecOfferList() {
+		return scRequestItemSpecOfferList;
+	}
+
+	public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
+		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
+	}
+
+	/* #28854 end */
+
+	// #29983 start
+	/**
+	 * @return the businessRegNoNew
+	 */
+	public String getBusinessRegNoNew() {
+		return businessRegNoNew;
+	}
+
+	/**
+	 * @param businessRegNoNew
+	 *            the businessRegNoNew to set
+	 */
+	public void setBusinessRegNoNew(String businessRegNoNew) {
+		this.businessRegNoNew = businessRegNoNew;
+	}
+
+	// #29983 end
+
+	// Bug 34142, 15851 - shaqimi start 04/12/2022
+	public boolean isAmendFromTaskList() {
+		return amendFromTaskList;
+	}
+
+	public void setAmendFromTaskList(boolean amendFromTaskList) {
+		this.amendFromTaskList = amendFromTaskList;
+	}
+
+	public boolean isBackFromSCL() {
+		return backFromSCL;
+	}
+
+	public void setBackFromSCL(boolean backFromSCL) {
+		this.backFromSCL = backFromSCL;
+	}
+
+	public String getDocTypeFromTaskList() {
+		return docTypeFromTaskList;
+	}
+
+	public void setDocTypeFromTaskList(String docTypeFromTaskList) {
+		this.docTypeFromTaskList = docTypeFromTaskList;
+	}
+
+	public String getTaskNameFromTaskList() {
+		return taskNameFromTaskList;
+	}
+
+	public void setTaskNameFromTaskList(String taskNameFromTaskList) {
+		this.taskNameFromTaskList = taskNameFromTaskList;
+	}
+
+	public Long getContractIdFromTaskList() {
+		return contractIdFromTaskList;
+	}
+
+	public void setContractIdFromTaskList(Long contractIdFromTaskList) {
+		this.contractIdFromTaskList = contractIdFromTaskList;
+	}
+
+	public Long getContractVerIdFromTaskList() {
+		return contractVerIdFromTaskList;
+	}
+
+	public void setContractVerIdFromTaskList(Long contractVerIdFromTaskList) {
+		this.contractVerIdFromTaskList = contractVerIdFromTaskList;
+	}
+
+	public boolean isViewContractFromAgreement() {
+		return viewContractFromAgreement;
+	}
+
+	public void setViewContractFromAgreement(boolean viewContractFromAgreement) {
+		this.viewContractFromAgreement = viewContractFromAgreement;
+	}
+
+	public String getTaskIdFromTaskList() {
+		return taskIdFromTaskList;
+	}
+
+	public void setTaskIdFromTaskList(String taskIdFromTaskList) {
+		this.taskIdFromTaskList = taskIdFromTaskList;
+	}
+
+	public String getDocTypeFromAgreementTaskList() {
+		return docTypeFromAgreementTaskList;
+	}
+
+	public void setDocTypeFromAgreementTaskList(String docTypeFromAgreementTaskList) {
+		this.docTypeFromAgreementTaskList = docTypeFromAgreementTaskList;
+	}
+
+	public Long getContractIdFromAgreementTaskList() {
+		return contractIdFromAgreementTaskList;
+	}
+
+	public void setContractIdFromAgreementTaskList(Long contractIdFromAgreementTaskList) {
+		this.contractIdFromAgreementTaskList = contractIdFromAgreementTaskList;
+	}
+
+	public Long getDocIdFromAgreementTaskList() {
+		return docIdFromAgreementTaskList;
+	}
+
+	public void setDocIdFromAgreementTaskList(Long docIdFromAgreementTaskList) {
+		this.docIdFromAgreementTaskList = docIdFromAgreementTaskList;
+	}
+
+	public Long getAgreementIdFromAgreementTaskList() {
+		return agreementIdFromAgreementTaskList;
+	}
+
+	public void setAgreementIdFromAgreementTaskList(Long agreementIdFromAgreementTaskList) {
+		this.agreementIdFromAgreementTaskList = agreementIdFromAgreementTaskList;
+	}
+
+	public String getTaskIdFromAgreementTaskList() {
+		return taskIdFromAgreementTaskList;
+	}
+
+	public void setTaskIdFromAgreementTaskList(String taskIdFromAgreementTaskList) {
+		this.taskIdFromAgreementTaskList = taskIdFromAgreementTaskList;
+	}
+
+	public Long getContractVerIdFromAgreementTaskList() {
+		return contractVerIdFromAgreementTaskList;
+	}
+
+	public void setContractVerIdFromAgreementTaskList(Long contractVerIdFromAgreementTaskList) {
+		this.contractVerIdFromAgreementTaskList = contractVerIdFromAgreementTaskList;
+	}
+
+	public boolean isBackFromContract() {
+		return backFromContract;
+	}
+
+	public void setBackFromContract(boolean backFromContract) {
+		this.backFromContract = backFromContract;
+	}
+
+	public Long getStatusIdFromTaskList() {
+		return statusIdFromTaskList;
+	}
+
+	public void setStatusIdFromTaskList(Long statusIdFromTaskList) {
+		this.statusIdFromTaskList = statusIdFromTaskList;
+	}
+
+	public boolean isInPage() {
+		return inPage;
+	}
+
+	public void setInPage(boolean inPage) {
+		this.inPage = inPage;
+	}
+	// Bug 34142, 15851 - shaqimi end 04/12/2022
 }

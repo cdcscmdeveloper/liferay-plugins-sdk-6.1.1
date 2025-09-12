@@ -27,8 +27,7 @@ public class SSTConstant {
 	public static String answerRemark = "answerRemark";
 	public static final String specValue ="specVal";
 	public static final String nbsp = "&nbsp";
-	// 26226 - end
-
+	// 26226 - end 
 	// 29006 start
 	/**
 	 * Represent fulfilment type code for Lampiran A3
@@ -78,13 +77,7 @@ public class SSTConstant {
 	 * This prefix is typically used to identify or reference justifications related to new supplier offers.
 	 */
 	public static final String NEW_SUPPLIER_OFFER_JUSTIFICATON_ = "NSOJ_";
-	// 29006 end
-	// #29007 - start 
-	public static final String LESS_THAN_SYMBOL = "&#60;";
-	public static final String GREATER_THAN_SYMBOL = "&#62;";
-	public static final String PROTEGE_UPPERCASE_E = "&#201;";
-	public static final String PROTEGE_LOWERCASE_E = "&#233;";
-	
+	// 29006 end 
 	// 35295 @zaim - start
 	/**
 	 * Represent rowspan needed for item and spec in SST
@@ -156,6 +149,10 @@ public class SSTConstant {
 	public static final String HEADER_TENDER = "Tender";
 	public static final String HEADER_SEBUT_HARGA = "Sebut Harga";
 	public static final String DOCUMENT_TYPE = "docType";
+	public static final String PROTEGE_UPPERCASE_E = "&#201;";
+	public static final String PROTEGE_LOWERCASE_E = "&#233;";
+	public static final String LESS_THAN_SYMBOL = "&#60;";
+	public static final String GREATER_THAN_SYMBOL = "&#62;";
 	// 25025 - end
 
 	// #36757 Start Vinod

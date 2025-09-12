@@ -193,8 +193,6 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
-//Bug #34882@Syazani 26/06/2023
-//#12177 Refactoe
 
 // Auto-generated Javadoc
 /**
@@ -239,7 +237,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private static final Locale myLocale = new Locale(
 			SourcingConstants.MALAY_LANGUAGE_CODE,
 			SourcingConstants.MALAYSIA_COUNTRY_CODE);
-
 	// 29007 -end-
 
 	/**
@@ -1420,8 +1417,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scQtSchedule.setEndYear(endYear);
 				}
 				this.sortFrequentScheduleList(scLoa.getScQtSchedules());
-
-			} catch (ParseException e) {
+			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
 		} else{
@@ -1806,7 +1802,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 		}
 		if(scLoaReportAttachmentGenerated != null) {
-			
+
 			// #29006 - start
 			String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll(
 					"/", "-") : scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");
@@ -1814,7 +1810,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// #25025&29006 - start
 			scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName, 18).trim());
 			// #25025&29006 - end
+
 		}
+		
+		// #29006 - start
+		if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)) {
+			getManagedBean().setUpdatedLampiranA3DownloadedFlag(true);
+		}
+
+		// Add current report title into
+		// managedBean.downloadedLoaReportsTitleList
+		// only if the title does not exist in the said list
+		if (CollectionUtils.isEmpty(getManagedBean().getDownloadedLoaReportsTitleList())) {
+			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
+			getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
+		} else {
+			if (!getManagedBean().getDownloadedLoaReportsTitleList().contains(scLoaReport.getTitle())) {
+				getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
+			}
+		}
+		// #29006 - end
 		
 		// #29006 - start
 		if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)) {
@@ -2253,6 +2268,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param scQt the sc qt
 	 * @throws Exception the exception
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void generateAgreementLetterDocFromVelocity(ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
 		debugLogger("generateAgreementLetterDocFromVelocity");
 		populateAttachmentDetails(attachment);
@@ -2523,17 +2539,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		// #26130 - End
 
-		// #26130 - Start
-		if (scQt != null
-				&& (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || ParameterConst.DOCTYPE_DIRECT_NEGO
-						.equals(scLoa.getScLoiLoa().getDocType()))
-				&& (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())
-						|| ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode()) || ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-							.equals(scQt.getFulfilmentType().getParameterCode()))) {
-			constructSupplierSpecificationAndRemarks(context, scLoa);
-		}
-		// #26130 - End
-
 		// #26226 - Start
 		if ((ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType()))
 				&& (ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode()
@@ -2543,7 +2548,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			constructPRSupplierSpecificationAndRemarks(context, scLoa);
 		}
 		// #26226 - End
-
+		
 		// #29006 - start
 		ArrayList list = new ArrayList();
 		Map map = new HashMap();
@@ -2572,7 +2577,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		context.put("scLoiLoaItemList", list);
 		// #29006 - end
-
+		
 		// scLoa
 		context.put("scLoa", scLoa);
 
@@ -4281,7 +4286,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 		return loaReviseStatus;
 	}
-	
 	// #22211 - end
 	
 	// #27797 & 29006 - start
@@ -4299,7 +4303,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	// #27797 & 29006 - end
-	
 	/**
 	 * Update bpm task action.
 	 * update bpm - save data into database and BPM process will route to the next respective user.
@@ -4340,15 +4343,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return the string
 	 */
 	private String prepareOriginalText(SmSupplier smSupplier, boolean isGovtSeller) {
-		/*
-		 * The first one is the Government user, it is the combination of IC.No,
-		 * > Organization Code and Country Code. >
-		 * 0000000081102813580400000000000211602001MY > IC No. , Organization
-		 * code, Country code > > The second one is for Supplier, it is the
-		 * combination of IC. No, Reg No and > Country Code. >
-		 * 00000000680427115037000000000KT0143162-VMY > IC No. , Registration
-		 * No., Country code
-		 */
 		FacesScopes facesScopes = new FacesScopes();
 		StringBuilder sb = new StringBuilder();
 		String countryCode ="";
@@ -4533,7 +4527,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						throw new EpException(
 								MessageConst.ERROR_760441, new String[] {loaReport.getTitle()});
 					}
-					
 					if (statusId.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
 							&& loaReport.getDefinationType().getParameterCode()
 									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)
@@ -8579,9 +8572,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/sc/loa/loarequest/supplierProposalUpdate.xhtml");
-	}
-	
-	
+	}	
 	
 	// #29007 -start-
 	/**
@@ -11950,8 +11941,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoiLoaItem.setTplSpecAnswerLampiranA3(listItem);
 		}
 	}
-
 	// 29006 end
+	
 	// #25790 - start
 	/**
 	 * Navigate to RequestNote view page.
@@ -12025,8 +12016,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		}
 	}
-
 	// #26770 - End fix sonarlint.
+	
 	// 26770 start fix sonarlint
 	/**
 	 * Will display 4 Category Code per line. If more than 4, the category code
@@ -12054,8 +12045,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		return categoryCode;
 	}
-
 	// 26770 - end fix sonarlint
+	
 	// #26770 - Start.
 	/**
 	 * @param scQt

@@ -195,6 +195,11 @@ public class ViewApplHistoryBackingBean extends
 			
 		}
 		// 25792 - end
+		// #28895_35501 Start - AUDIT TRAIL SM
+		if(outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)){
+			initAuditTab();
+		}
+		// #28895_35501 End
 	}
 
 	/**
@@ -203,6 +208,8 @@ public class ViewApplHistoryBackingBean extends
 	public void preRenderViewApplicationHistory() {
 		renewSesionObject();
 		initLogin();
+		// #28895_35501 - AUDIT TRAIL SM
+		checkAuditAccess();
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(true);
@@ -708,7 +715,6 @@ public class ViewApplHistoryBackingBean extends
 			}
 		});
 	}
-
 	// #36401 - End
 
 	/**
