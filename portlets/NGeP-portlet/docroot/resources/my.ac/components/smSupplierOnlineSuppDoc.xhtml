@@ -159,7 +159,7 @@
 			</p:column>
 			<!-- #38890 -->
 			<p:column style="width : 10%; text-align:center;" rendered="#{cc.attrs.hasAI}">
-				<p:outputPanel rendered="false">
+				<p:outputPanel rendered="#{not empty table.mappedFieldAI}">
 					<p:graphicImage id="imgHasAI" value="/css/images/design/ackno.png" />
 					<p:tooltip for="imgHasAI" value="#{table.mappedFieldAI}" />
 				</p:outputPanel>
@@ -186,7 +186,7 @@
 				showButtons="false"/>
 			<!-- #28807 - End -->
 			<!-- #38890 -->
-			<p:ajax event="close" listener="#{backingBean.processAI()}" />
+			<p:ajax event="close" listener="#{backingBean.processAI()}" update="#{cc.attrs.tableId}" />
 		</p:dialog>
 
 		<!-- harris -->

@@ -68,8 +68,6 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 					managedBeans.getPmSalutation().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 							: AuditConst.PM_AUD_INACTIVE, AuditConst.PM_AUD_ACTION_TYPE_INS);
 		}
-		managedBeans.setPmSalutation(null);
-		managedBeans.setOldPmSalutation(null);
 		auditPMReqDTO.setObjList(objList);
 		return auditPMReqDTO;
 	}
