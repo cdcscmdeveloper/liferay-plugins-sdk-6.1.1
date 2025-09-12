@@ -196,7 +196,12 @@ public class gpkiBackingBean implements Serializable {
 	 */
 	public void showError() {
 		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		log.info("--35488--err- "+map.get("response"));
+		PmUser user = new FacesScopes().getUserSessionBean();
+		String icNo="";
+		if(user != null){
+			icNo = user.getIdentificationNo().trim();
+		}
+		log.info("GPKI Sign Error: IC No:"+icNo+", Response:"+map.get("response"));
 		String statusMsg = map.get("statusMsg");
 		String extMsg = map.get("extMsg");
 		String field = map.get("field");
