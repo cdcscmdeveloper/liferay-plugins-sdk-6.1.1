@@ -227,7 +227,7 @@ import org.primefaces.model.StreamedContent;
 public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBean> {
 	//new #25726/25725 
 	private static final String CONTRACT_DETAILS_ID = "contractDetailsId";
-	private static final int CONTRACT_DURATION_4 = 4;
+	private static final int CONTRACT_DURATION_4_MONTH = 4;
 
 	private static final long serialVersionUID = 1L;
 
@@ -6708,7 +6708,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED))
 				|| (loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
-		boolean isContractDurationAbove4 = loa.getContractDuration().compareTo(BigDecimal.valueOf(CONTRACT_DURATION_4)) > 0;
+		boolean isContractDurationAbove4 = loa.getContractDuration().compareTo(BigDecimal.valueOf(CONTRACT_DURATION_4_MONTH)) > 0;
 		boolean isOneOff = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
 				.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		boolean isDocTypeQuotation = loa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION);
@@ -12835,7 +12835,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public boolean isContractPeriodAbove4() {
 
 		return this.getManagedBean().getScLoa().getContractDuration() != null ? this.getManagedBean().getScLoa()
-				.getContractDuration().compareTo(BigDecimal.valueOf(CONTRACT_DURATION_4)) > 0 : false;
+				.getContractDuration().compareTo(BigDecimal.valueOf(CONTRACT_DURATION_4_MONTH)) > 0 : false;
 
 	}
 }

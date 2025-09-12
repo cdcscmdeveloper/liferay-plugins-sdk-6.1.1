@@ -245,7 +245,7 @@ import org.primefaces.model.TreeNode;
 @RequestScoped
 public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBean> {
 	//new #25726
-	private static final int CONTRACT_DURATION_4 = 4;
+	private static final int CONTRACT_DURATION_4_MONTH = 4;
 
 	//20231122@asyrafhaziq_25726 - Issue 18
 	private static final String CONTRACT_DURATION_MID_VALUE = "5";
@@ -11868,7 +11868,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		boolean isPeriodic = ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentCode) ||
 		           ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentCode);
 		boolean isOneOff = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentCode);
-		boolean isContractDurationAbove4 = loa.getContractDuration().compareTo(BigDecimal.valueOf(CONTRACT_DURATION_4)) > 0;
+		boolean isContractDurationAbove4 = loa.getContractDuration().compareTo(BigDecimal.valueOf(CONTRACT_DURATION_4_MONTH)) > 0;
 		// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type codes
 		boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(loa.getQtType().getParameterType()) &&
 		           ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(loa.getQtType().getParameterCode());
@@ -13405,7 +13405,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public boolean isContractPeriodAbove4() {
 
 		return this.getManagedBean().getScLoa().getContractDuration() != null ? this.getManagedBean().getScLoa()
-				.getContractDuration().compareTo(BigDecimal.valueOf(CONTRACT_DURATION_4)) > 0 : false;
+				.getContractDuration().compareTo(BigDecimal.valueOf(CONTRACT_DURATION_4_MONTH)) > 0 : false;
 
 	}
 	//new #25726 - End
