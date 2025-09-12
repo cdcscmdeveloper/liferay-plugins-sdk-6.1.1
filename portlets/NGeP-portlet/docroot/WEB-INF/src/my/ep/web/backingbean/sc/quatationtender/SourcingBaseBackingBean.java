@@ -2208,8 +2208,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			 * codes and refactor old code.
 			 */
 			List<String> flTypeCodes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_ONE_OFF,
-					ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN,
-					ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED, 
 					ParameterConst.FULFILMENT_TYPE_SCHEDULED,
 					ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			boolean isQTtypePK7 = null != scLoa.getQtType()
