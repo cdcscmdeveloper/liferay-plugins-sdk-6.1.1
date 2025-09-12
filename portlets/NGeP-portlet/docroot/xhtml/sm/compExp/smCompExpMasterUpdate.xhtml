@@ -282,7 +282,7 @@
 							<p:ajax event="change"
 								update=":#{p:component('smCompExpCatCodes')}, :#{p:component('addCatBtn')}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								listener="#{smCompExpBB.checkDuplicateCatCode(smCompExpCatCode.categoryL3.categoryL3Id, index)}" />
+								listener="#{smCompExpBB.checkDuplicateMasterCatCode(smCompExpCatCode.categoryL3.categoryL3Id, index)}" />
 						</p:selectOneMenu>
 					</p:column>
 				</p:dataTable>

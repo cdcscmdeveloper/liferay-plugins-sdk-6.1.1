@@ -78,6 +78,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void proceedAfterTnC() {
 		this.getManagedBean().setDraftExist(checkSmCompExpDraftExist());
+		this.getManagedBean().getMasterFedDataModel().reloadData();
+		this.getManagedBean().getMasterNonFedDataModel().reloadData();
 		SmCommonUtil.redirectToPage(smCompExpMainXhtml, "", null, null);
 	}
 
@@ -95,6 +97,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Redirect to Sm Company Experience Draft list screen
 	 */
 	public void redirectToDraft() {
+		this.getManagedBean().getDraftSmDataModel().reloadData();
+		this.getManagedBean().getDraftCtDataModel().reloadData();
 		SmCommonUtil.redirectToPage(smCompExpDraftXhtml, "", null, null);
 	}
 
@@ -367,7 +371,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 	}
 
-	private String cleanFileReferenceNo(String fileNo) {
+	private String cleanFileReferenceNo(String input) {
+		String fileNo = input;
 		fileNo = fileNo.replaceAll("\\s+", "");
 		fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");
 		fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");
@@ -390,7 +395,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 	}
 
-	private String cleanFileExtensionNo(String fileNo) {
+	private String cleanFileExtensionNo(String input) {
+		String fileNo = input;
 		fileNo = fileNo.replaceAll("\\s+", "");
 		fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+", "");
 		return fileNo;
@@ -613,34 +619,41 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	/**
-	 * Check for duplicate Code Category
+	 * Check for duplicate Draft Code Category
 	 * 
 	 * @param categoryL3Id
 	 * @param index
 	 *            int
 	 */
-	public void checkDuplicateCatCode(Long categoryL3Id, int index) {
+	public void checkDuplicateDraftCatCode(Long categoryL3Id, int index) {
 		int i = 0;
 		// Expected Max Size in loop (30) based on NGEP_PDS database
-		if (this.getManagedBean().isDraftUpdate()) {
-			for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
-				if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
-					this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
-					throw new EpException(MessageConst.ERROR_775222);
-				}
+		for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
+			if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
+				this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
+				throw new EpException(MessageConst.ERROR_775222);
 			}
-			this.getManagedBean().setSmCompExpCatDraftNotComplete(false);
-		} else if (this.getManagedBean().isMasterUpdate()) {
-			for (SmCompExpCatMaster cat : this.getManagedBean().getSelectedMaster().getCompExpMasterCats()) {
-				if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
-					this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
-					throw new EpException(MessageConst.ERROR_775222);
-				}
-			}
-			this.getManagedBean().setSmCompExpCatMasterNotComplete(false);
 		}
+		this.getManagedBean().setSmCompExpCatDraftNotComplete(false);
+	}
 
-		
+	/**
+	 * Check for duplicate Draf Code Category
+	 * 
+	 * @param categoryL3Id
+	 * @param index
+	 *            int
+	 */
+	public void checkDuplicateMasterCatCode(Long categoryL3Id, int index) {
+		int i = 0;
+		// Expected Max Size in loop (30) based on NGEP_PDS database
+		for (SmCompExpCatMaster cat : this.getManagedBean().getSelectedMaster().getCompExpMasterCats()) {
+			if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
+				this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+				throw new EpException(MessageConst.ERROR_775222);
+			}
+		}
+		this.getManagedBean().setSmCompExpCatMasterNotComplete(false);
 	}
 
 	/**
@@ -649,7 +662,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void delSmCompExpCatDraft() {
 		List<SmCompExpCatDraft> catList = this.getManagedBean().getSmCompExpCatDraftList();
 		List<SmCompExpCatDraft> selectedList = this.getManagedBean().getSelectedSmCompExpCatDraft();
-		this.getManagedBean().setSmCompExpCatDraftNotComplete(true);
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatDraft selected : selectedList) {
 			catList.remove(selected);
@@ -674,7 +686,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void delSmCompExpCatMaster() {
 		List<SmCompExpCatMaster> catList = this.getManagedBean().getSelectedMaster().getCompExpMasterCats();
 		List<SmCompExpCatMaster> selectedList = this.getManagedBean().getSelectedSmCompExpCatMaster();
-		this.getManagedBean().setSmCompExpCatMasterNotComplete(true);
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatMaster selected : selectedList) {
 			catList.remove(selected);
@@ -690,9 +701,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else {
 			this.getManagedBean().getSelectedMaster().setCompExpMasterCats(catList);
 		}
-		this.getManagedBean().setSelectedSmCompExpCatDraft(null);
+		this.getManagedBean().setSelectedSmCompExpCatMaster(null);
 	}
-
 
 	/**
 	 * Validate field
@@ -796,7 +806,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
-			this.getManagedBean().getDraftSmDataModel().reloadData();
 			redirectToDraft();
 		}
 	}
@@ -861,7 +870,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		resDTO = getSmCompExpSo().declareDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
 			deactivateDraft();
-			this.getManagedBean().getDraftSmDataModel().reloadData();
 			redirectToDraft();
 		}
 	}
@@ -882,8 +890,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deactivateDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
-			this.getManagedBean().getDraftSmDataModel().reloadData();
-			this.getManagedBean().getDraftCtDataModel().reloadData();
 			redirectToDraft();
 		}
 	}

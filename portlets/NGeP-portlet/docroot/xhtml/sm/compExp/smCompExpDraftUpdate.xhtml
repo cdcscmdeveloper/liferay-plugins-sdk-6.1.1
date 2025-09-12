@@ -238,8 +238,8 @@
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.supp.doc']}" /></td>
-						<td><p:commandLink id="suppDoc"
-								oncomplete="smCompExpSuppDocUploadDialogWV.show();return false;"
+						<td><p:commandLink id="suppDoc" onclick="blockWidget.show()"
+								oncomplete="smCompExpSuppDocUploadDialogWV.show();return false;blockWidget.hide()"
 								process="@form" update=":form">
 								<p:graphicImage value="/css/images/design/upload.png"
 									style="margin-right:2px;" />
@@ -329,7 +329,7 @@
 								<p:ajax event="change"
 									update=":#{p:component('smCompExpCatCodes')}, :#{p:component('addCatBtn')}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									listener="#{smCompExpBB.checkDuplicateCatCode(smCompExpCatCode.categoryL3.categoryL3Id, index)}" />
+									listener="#{smCompExpBB.checkDuplicateDraftCatCode(smCompExpCatCode.categoryL3.categoryL3Id, index)}" />
 							</p:selectOneMenu>
 						</p:column>
 					</c:if>
