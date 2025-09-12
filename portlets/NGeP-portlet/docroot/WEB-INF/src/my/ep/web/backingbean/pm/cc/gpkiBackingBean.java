@@ -196,7 +196,7 @@ public class gpkiBackingBean implements Serializable {
 	 */
 	public void showError() {
 		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		PmUser user = new FacesScopes().getUserSessionBean();
+		PmUser user = getPmUserFromLoginId();
 		String icNo="";
 		if(user != null){
 			icNo = user.getIdentificationNo().trim();
