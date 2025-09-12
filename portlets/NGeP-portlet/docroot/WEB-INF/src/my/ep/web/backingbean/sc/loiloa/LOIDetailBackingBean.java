@@ -6890,11 +6890,18 @@ public class LOIDetailBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();	
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+		
 		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+		
+		if(!isZonal){
+			return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+		}
+		
+		return false;
 	}
 
 	// #28777 & #29729 - End
@@ -6912,16 +6919,21 @@ public class LOIDetailBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+
 		if (CollectionUtils.isNotEmpty(zoneDetails)
 				&& zoneActiveIndex != -1
 				&& sourcingIntegrationSO.flagZonesDisqualifiedSupplierBranchDeleted(qtId, supplierId,
-						zoneDetails.get(zoneActiveIndex).getSpecZoneId())) {
+						zoneDetails.get(zoneActiveIndex).getSpecZoneId()) && isZonal) {
 			return true;
 		}
-		return sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(qtId, supplierId);
-	}
 
-	// #28777 & #29729 - End
+		if (!isZonal) {
+			sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(qtId, supplierId);
+		}
+
+		return false;
+	}
 
 	// #28777 & #29729 - End
 
@@ -6937,11 +6949,18 @@ public class LOIDetailBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();	
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+		
 		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+		
+		if(!isZonal){
+			return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+		}
+		
+		return false;
 	}
 
 	// #28777 & #29729 - End
