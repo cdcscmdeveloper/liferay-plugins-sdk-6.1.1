@@ -544,16 +544,21 @@
 												value="#{lbl['lbl.sm.person.mailAddr']} " /></b></u></td>
 								</tr>
 								<tr>
-									<td></td>				
+									<td></td>
+									<!-- #36718 - Change listener method call -->
 									<td style="float: left;"><p:selectBooleanCheckbox
-											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}">
+											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+											id="addrSame">
 											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
-											<!-- #36718 - Change listener method call -->
-											<p:ajax event="change" update="@([id$=MailingAddressInfo])"
-												partialSubmit="true" process="@this @([id$=MailingAddressInfo])"
-												listener="#{smPersonnelBackingBean.onTickSameAsPermForMail(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
-												smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}" />
-										</p:selectBooleanCheckbox><p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
+											<p:ajax
+												event="change"
+												partialSubmit="true"
+												process="@this"
+												update="@([id$=MailingAddressInfo])"
+												listener="#{smPersonnelBackingBean.onTickSameAsPermForMail(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}"
+												onstart="blockWidget.show()"
+												oncomplete="blockWidget.hide()" />
+										</p:selectBooleanCheckbox> <p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
 									<td></td>				
 								</tr>
 								<tr>
@@ -764,6 +769,11 @@
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 													size="35">
+													<!-- #36718 - Start  -->
+													<p:ajax
+														process="@this"
+														update="@this basicMailAddPostCodeMyMsg" />
+													<!-- #36718 - End  -->
 													<f:validator validatorId="postcodeValidator" />
 												</p:inputText>
 												<p:message id="basicMailAddPostCodeMyMsg" for="basicMailAddPostCodeMy"
