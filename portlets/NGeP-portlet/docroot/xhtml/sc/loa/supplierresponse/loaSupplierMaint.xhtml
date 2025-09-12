@@ -22,10 +22,6 @@
 	
 		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
-		<ui:remove>Reopen #25726 note 110 issue 8</ui:remove>
-		<ui:param name="isFulfilmentTypeNonPeriodicScheduled"
-			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled}" />
-		<ui:remove>#25726 end</ui:remove>
 		
 		<ui:include src="loaSupplierButtons.xhtml" />
 		
@@ -52,8 +48,8 @@
 					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(3)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
-					
-					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{!(isFulfilmentTypeScheduled or isFulfilmentTypeNonPeriodicScheduled)}" actionListener="#{lOADetailBackingBean.tabChangeAction(4)}">	
+					<ui:remove>new #25726</ui:remove>
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{!isFulfilmentTypeScheduled}" actionListener="#{lOADetailBackingBean.tabChangeAction(4)}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
 					
