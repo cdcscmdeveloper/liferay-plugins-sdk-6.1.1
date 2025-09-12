@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit; //#13847
 
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper; //#38514
+import my.ep.helper.EntityHelper; //#24333
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -5053,4 +5053,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//#38198 end		
 	}
 	//Enhancement 15851 - End
+	
+	/**
+	 * Method to check if PK7 is from DP.
+	 * 
+	 * @return true if PK7 is from DP, false otherwise
+	 */
+	public boolean isPk7FromDp() {
+	    String procType = EntityHelper.getNestedProperty(
+	        getManagedBean().getContractVer(),
+	        "ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType"
+	    );
+	    boolean hasValidProcType = ParameterTypeConst.PROCUREMENT_TYPE.equals(procType); // case-sensitive
+	    boolean hasJustification = newJustification() != null;
+	    return hasValidProcType && hasJustification;
+	}
 }  
