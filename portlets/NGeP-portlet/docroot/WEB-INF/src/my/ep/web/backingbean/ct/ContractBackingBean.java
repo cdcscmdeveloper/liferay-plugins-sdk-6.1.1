@@ -5053,4 +5053,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//#38198 end		
 	}
 	//Enhancement 15851 - End
+	
+	/**
+	 * Method to check if PK7 is from DP.
+	 * 
+	 * @return true if PK7 is from DP, false otherwise
+	 */
+	public boolean isPk7FromDp() {
+	    String procType = EntityHelper.getNestedProperty(
+	        getManagedBean().getContractVer(),
+	        "ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType"
+	    );
+	    boolean hasValidProcType = ParameterTypeConst.PROCUREMENT_TYPE.equals(procType); // case-sensitive
+	    boolean hasJustification = newJustification() != null;
+	    return hasValidProcType && hasJustification;
+	}
 }  
