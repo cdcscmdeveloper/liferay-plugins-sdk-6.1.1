@@ -58,7 +58,7 @@
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
 
 			<ui:remove> #28777#29729 - Start </ui:remove>
-			<p:remoteCommand name="fetchDisqualifiedSuppliers" actionListener="#{consolidationReportBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
+			<p:remoteCommand name="fetchDisqualifiedSuppliers" actionListener="#{suppFinalizationBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 					         process="@this" update="@([id$=disqualSuppDetailsPopupId])" oncomplete="disqualSuppDetailsPopup.show(); return false;"/>
 							 
 			<h:outputText escape="false"
