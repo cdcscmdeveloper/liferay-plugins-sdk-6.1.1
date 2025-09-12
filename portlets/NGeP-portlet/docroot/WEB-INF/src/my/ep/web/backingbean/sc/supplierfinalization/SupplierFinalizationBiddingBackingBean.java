@@ -635,6 +635,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				bidReqDTO.setQtId(getManagedBean().getScQt().getQtId());
 				bidReqDTO.setRecommendType(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG);
 				bidReqDTO.setSpecZoneId(selectedZoneId);
+				bidReqDTO.setBidScheduleId(bidScheduleList.get(0).getBidScheduleId());// #28777&#29729
 				
 				BiddingResDTO bidResDTO = null;
 				if (CollectionUtils.isEmpty(shortlistedSuppliers) || CollectionUtils.isEmpty(notShortlistedSuppliers)) {// #28777&#29729
@@ -1026,6 +1027,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			reqDTO.setSpecZoneId(selectedZoneId);
 			reqDTO.setScBidSchedule(bidItem.getScBidSchedule());
 			reqDTO.setBidItemId(bidItem.getScRequestItem().getRequestNoteItemId());
+			reqDTO.setBidScheduleId(bidItem.getScBidSchedule().getBidScheduleId());// #28777&#29729
 			
 			BiddingResDTO resDTO = null;
 			if (CollectionUtils.isEmpty(shortlistedSuppliers) || CollectionUtils.isEmpty(notShortlistedSuppliers)) {// #28777&#29729
@@ -3333,11 +3335,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getBiddingZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+		
 		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+		
+		if(!isZonal){
+			return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+		}
+		
+		return false;
 	}
 
 	// #28777 & #29729 - End
@@ -3354,11 +3363,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getBiddingZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+		
 		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+		
+		if(!isZonal){
+			return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+		}
+		
+		return false;
 	}
 
 	// #28777 & #29729 - End
