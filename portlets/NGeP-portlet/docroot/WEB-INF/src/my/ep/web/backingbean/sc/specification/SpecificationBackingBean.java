@@ -24813,23 +24813,18 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @return result true or false.
 	 * 
 	 */
+	//#38679
 	public void checkhaszeroquantity() {
-		this.getManagedBean().setZoneQtyHasZeroVal(false);
-		for (ScQtCheckList checkList : this.getManagedBean().getQt().getScQtChecklists())
-			if (checkList.getDocCategory().equalsIgnoreCase("1")) {
-				for (TplSpecQuestion specQuestion : checkList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
-					if (null != specQuestion && null != specQuestion.getTplSpecZoneQties()) {
-						for (TplSpecZoneQty zoneqty : specQuestion.getTplSpecZoneQties()) {
-							if (zoneqty.getQty().equals(new BigDecimal(0))) {
-								this.getManagedBean().setZoneQtyHasZeroVal(true);
-								break;
-							}
-						}
-					}
-				}
+		ITemplateSpecSO templateSpecSO = null;
+		boolean hasQuantityZero = false;
+		templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+				ITemplateSpecSO.class);
+			
+		 hasQuantityZero = templateSpecSO.validateQuantityItem(this.getManagedBean().getQt().getQtId());
+				 
+		this.getManagedBean().setZoneQtyHasZeroVal(hasQuantityZero);
 
-			}
 	}
-	// #38679
+	//#38679
 	
 }
