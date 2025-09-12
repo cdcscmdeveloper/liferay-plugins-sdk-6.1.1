@@ -12146,7 +12146,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			scWreqDTO.setDocId(this.getManagedBean().getScLoa().getLoaId());
 
-			return workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus().getPmStatus().getStatusId();
+			return workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus() != null ? 
+					workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus().getPmStatus().getStatusId() : CommonConstants.RETURN_ZERO_LONG_ID;
 		}
 		return CommonConstants.RETURN_ZERO_LONG_ID;
 	}
@@ -12616,7 +12617,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (isQTMaintenanceScreen()) {
 			getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX);
 		}
-	}// 25791-end	
+		
+		//29661 -start-
+		else if(isCheckProposalPortlet() || isCheckEvaluationPortlet()){
+			getManagedBean().setSelectedTabIndex(QTConstants.TAB_LOA_INDEX);
+			
+		}
+		//29661 -end-
+	}// 25791-end
+	
+	
 	
 	// #29007 Start vinod
 	private void checkAndInsertItemSpecOffer() {
@@ -12898,6 +12908,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//#21692 - End
 	
 	//#21692 - Start
+	/**
+	 * Must validate html for LOA WIP first
+	 * @param isWithBPM
+	 */
+	public void validateBeforePopupWIP() {
+		RequestContext.getCurrentInstance().execute("cancelLoaPopup3.show()");
+	}
+	//#21692 - End
+	
+	//#21692 - Start
 	private boolean checkingForEPVNotification(ScLoa scLoa) {
 		// List of statuses to enable notification
 		List<Long> statusEnabledCancel = new ArrayList<>();
@@ -12908,11 +12928,41 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		boolean statusEnabled = isLOAStatusAbleToCancel() != null
 				&& statusEnabledCancel.contains(isLOAStatusAbleToCancel());
-		boolean isQTValid = checkProposalValidityDateReachByQt(getManagedBean().getScQt())
-				&& this.validateSupportedTask(scLoa.getScQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+		boolean isQTValid = checkProposalValidityDateReachByQt(getManagedBean().getScQt());
 
 		return isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId()) && statusEnabled
 				&& isQTValid && !isQTMaintenanceScreen();
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Enable LOA without BPM (LOA Submission) to be cancelled for rejecting
+	 * proposal validity extension
+	 */
+	public void cancelLOAWIP() {
+		try {
+			ScLoa scLoa = getManagedBean().getScLoa();
+			/**
+			 * Will update LOA workflow status: Cancelled (Not agree with
+			 * extension validity period) and ScQtRecommendDtl: IS_LOA_AWARDED =
+			 * FALSE and RECORD_STATUS = Rejected (4). IF all LOAs' status
+			 * either Completed, Rejected OR Cancelled (Not agree with extension
+			 * validity period), QT will exit and goes to Refinalization.
+			 */
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
+			reqDTO.setDocId(scLoa.getLoaId());
+			QuationTenderResDTO resDTO = getQTDetailSO().exitEPVLOAOperation(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700031, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(), Boolean.TRUE);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("LOI", "CancelLOAWithoutBPM", getManagedBean().getScLoa().getLoaNo(),
+					"cancelLOAWithoutBPM", getUserIdSessionFromLoginId(), e);
+		}
 	}
 	//#21692 - End
 }

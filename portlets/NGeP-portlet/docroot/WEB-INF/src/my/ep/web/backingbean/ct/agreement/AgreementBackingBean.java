@@ -570,7 +570,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			long expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime();
 			for (CtContractAmount contractAmt : resDTO.getCtContractVer().getCtContractAmounts()) {
 				if (contractAmt.getEffDate().getTime() <= expDate && contractAmt.getExpDate().getTime() >= expDate
-//						&& (contractAmt.getIsBondAttachment() == null || contractAmt.getIsBondAttachment() == ContractConst.STATUS_COMPLETE)
+						&& (contractAmt.getIsBondAttachment() == null || contractAmt.getIsBondAttachment() == ContractConst.STATUS_COMPLETE)
 						&& contractAmt.isBondReq()) {
 					getManagedBean().setBondAttachmentCompleted(true);
 					break;

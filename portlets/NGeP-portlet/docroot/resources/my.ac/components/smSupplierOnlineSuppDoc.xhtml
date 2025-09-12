@@ -13,6 +13,7 @@
 		<cc:attribute name="smApplSupportDocs" required="true" />
 		<cc:attribute name="mandatory" default="false"/>
 		<cc:attribute name="uploadDialogId" default="false"/>
+		<cc:attribute name="hasAI" default="false"/>
 	</cc:interface>
 
 	<cc:implementation>
@@ -23,7 +24,7 @@
 			
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" rendered="#{cc.attrs.mandatory}"
+					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="#{cc.attrs.hasAI ? 6 : 5}" rendered="#{cc.attrs.mandatory}"
 						style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
 					<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" rendered="#{!cc.attrs.mandatory}"
 						style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
@@ -40,6 +41,8 @@
 						style="width : 10%;text-align: center  !important;" />
 					<p:column headerText="#{lbl['lbl.pm.document.name']}"
 						style="width : 20%;overflow: hidden !important;" />
+					<p:column headerText="AI Assistant" rendered="#{cc.attrs.hasAI}"
+						style="width : 10%;overflow: hidden !important;" /> <!-- 38890 -->
                 </p:row>
 			</p:columnGroup>
 
@@ -154,6 +157,13 @@
 				</ui:repeat>
 				<!-- #28807 - End -->
 			</p:column>
+			<!-- #38890 -->
+			<p:column style="width : 10%; text-align:center;" rendered="#{cc.attrs.hasAI}">
+				<p:outputPanel rendered="#{not empty table.mappedFieldAI}">
+					<p:graphicImage id="imgHasAI" value="/css/images/design/ackno.png" />
+					<p:tooltip for="imgHasAI" value="#{table.mappedFieldAI}" />
+				</p:outputPanel>
+			</p:column>
 		</p:dataTable>
 		
 		<p:dialog id="#{cc.attrs.uploadDialogId}" widgetVar="#{cc.attrs.uploadDialogId}" modal="true"
@@ -175,6 +185,8 @@
 				multiple="true"
 				showButtons="false"/>
 			<!-- #28807 - End -->
+			<!-- #38890 -->
+			<p:ajax event="close" listener="#{backingBean.processAI()}" />
 		</p:dialog>
 
 		<!-- harris -->

@@ -1621,17 +1621,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 
 			// 24333 - Start
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa() != null) {
-				ScLoa ctloa = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa();
-				if (ctloa.getGstAmt() == null) {
-					ctloa.setGstAmt(BigDecimal.ZERO);
-				}
-				if (ctloa.getSstAmt() == null) {
-					ctloa.setSstAmt(BigDecimal.ZERO);
-				}
-				ctBackingBean.getManagedBean().setOriginalOverallAmount(ctloa.getLoaAmt().add(ctloa.getGstAmt().add(ctloa.getSstAmt())));
-
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getOverallCtAmtPbond() == null){
+				ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().setOverallCtAmtPbond(BigDecimal.ZERO);
 			}
+			ctBackingBean.getManagedBean().setOriginalOverallAmount(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getOverallCtAmtPbond());
 			// 24333 - Start
 			
 			// Amendment process	  
@@ -1719,9 +1712,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//Enhancement #26186/#29793/#32860/#34097 start  start - retrieve disciplinary info
 			if (checkContractConditionForSupplier()) {
-				Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
-				if (!statusId.equals(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT)
-						&& !statusId.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
+				if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+						.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
 					checkAndSetDA();
 				}
 				checkSupplierDataMaintenance(); // #34097
@@ -2205,6 +2197,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null))
 						&& (!getManagedBean().isValidationDA())) {
 					//#32860 end
+					//#26186 start
+					if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+						RequestContext.getCurrentInstance().execute("sendParamToSupplierDA();");
+					}
+					//#26186 end
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
@@ -2786,20 +2783,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 					
 							throw new EpException(MessageConst.ERROR_750079, new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()});
-				}else {
-							// Validation for amendment extension period for expired
-							// contract
-							// 28848
-							if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
-									&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0 && ctBackingBean
-											.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)) { // 32418
-
-								getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-								
-								throw new EpException(MessageConst.ERROR_750073);
-							}
-						}
+				}
 					}
 				
 			// End Fix - #33952, #25956
@@ -2813,6 +2797,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			   throw new EpException(MessageConst.ERROR_750074);
 			  }
 			//32418 End
+			//Start Fix - #38613, #33287 - *apply for both contract expired and non-expired
+			// Validation for amendment when extension period - 0 
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0 && ctBackingBean
+							.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)) { // 32418
+
+				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
+				throw new EpException(MessageConst.ERROR_750073);
+			}
+			//End Fix - #38613, #33287
 			// Validation for amendment effective date
 			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() != null
@@ -7757,6 +7753,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
 
 		boolean contractStatus = !statusId.equals(ContractStatusConst.FA_LOA_COMPLETED)
+				&& !statusId.equals(ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT)
 				&& !statusId.equals(ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT);
 
 		return getManagedBean().getTaskName() != null && !ctBackingBean.getManagedBean().isViewSCL() && contractStatus;
@@ -8988,6 +8985,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						getManagedBean().getCtLetterOfAcceptance().clear();
 					}
 					setAmendmentContractVer(reqDTO);
+					setCtContractAmountForViewSL(); //#38823
 					
 //					if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
 						ctBackingBean.getManagedBean().setViewContract(true);
@@ -9507,13 +9505,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					.getSupplierId());
 			if(CollectionUtils.isNotEmpty(suppCategory)){
 				for (SmSupplierCategory supCat : suppCategory) {
-					sb.append("(");
-					appendCategorySupplier(sb, supCat);
-					sb.append(")");
+					appendSupplierCategoryMsg(sb, supCat);
 				}
 			}
 
 			if (StringUtils.isNotBlank(sb.toString())) {
+				sb.insert(0, "(");
+			    sb.append(")");
 				String[] params = new String[] { sb.toString() };
 				this.getManagedBean().setSupplierMsg(
 						ResourceBundleUtils.getMessage("lbl.ct.amend.supplier.maintenance.cancel.category", params,
@@ -9535,8 +9533,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @param sb The stringbuilder of the message
 	 * @param supCat The list of the category code of the supplier
 	 */
-	private void appendCategorySupplier(StringBuilder sb, SmSupplierCategory supCat) {
-		if(StringUtils.isNotBlank(sb.replace(0, 1, "").toString())){
+	private void appendSupplierCategoryMsg(StringBuilder sb, SmSupplierCategory supCat) {
+		if(StringUtils.isNotBlank(sb.toString())){
 			sb.append(", ");
 		}
 		sb.append(supCat.getCategoryL1Name().trim());
@@ -9770,5 +9768,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	// #34097/#26186 end
+	
+	//#38823 start
+	/**
+	 * re-setting CtContractAmount in CtContractVer for ViewSCL to show previous
+	 * CtContractAmount amendment details
+	 */
+	public void setCtContractAmountForViewSL(){
+		Date asAtDate = ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate();
+		for (CtContractAmount ctContractAmount : ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts()) {
+			if (ctContractAmount.getEffDate().getTime() <= asAtDate.getTime()
+					&& ctContractAmount.getExpDate().getTime() >= asAtDate.getTime()) {
+				ctBackingBean.getManagedBean().getContractVer().setCtContractAmount(ctContractAmount);
+			}
+		}
+	}
+	//#38823 end
 	
 	}

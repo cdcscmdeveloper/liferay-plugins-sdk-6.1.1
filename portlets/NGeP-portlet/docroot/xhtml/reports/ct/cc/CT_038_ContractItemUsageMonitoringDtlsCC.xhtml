@@ -8,7 +8,7 @@
 	<h:outputText value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.reportUrl}" /><br/><br/>
 	<table style="width: 100%;">
 		<tr>
-			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.ministry']}" /></td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.ministry']}" styleClass="required" /></td>
 			<td colspan="3">
 				<ac:lov id="lovCtMinistry"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
@@ -128,7 +128,7 @@
 		</tr>
 		<!--Start - #29416-->
 		<tr>
-			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.crclrnolabel']}" /></td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.crclrnolabel']}" styleClass="required" /></td>
 			<td>
 				<p:inputText value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.circularNo}"  maxlength="60" style="width:300px">
 					<p:ajax event="blur" partialSubmit="true" />

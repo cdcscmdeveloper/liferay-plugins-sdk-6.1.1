@@ -1,0 +1,23 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection" />
+
+	<ui:define name="content">
+	
+	<br/>
+	bank
+	<ac:smAIAssistant aiDlg="ai" docType="bank"/>
+	<br/>
+	epf
+	<ac:smAIAssistant aiDlg="ai2" docType="epf"/>
+	<br/>
+	tenancy
+	<ac:smAIAssistant aiDlg="ai3" docType="tenancy"/>
+	</ui:define>
+</ui:composition>

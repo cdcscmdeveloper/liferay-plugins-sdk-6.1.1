@@ -529,9 +529,7 @@ public interface QTConstants {
 	// 36671 - end
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
-	
-	//36678
-	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+
 	// #36757 Start Vinod 04/12/2024
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 Start Vinod 04/12/2024
@@ -547,4 +545,40 @@ public interface QTConstants {
 	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
 	
 	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
+	
+	
+	
+	
+	// 29661 -start-
+	public static final String SPECIFICATION_FINANCIAL_GOVERNMENT_EXPERIENCE = "/xhtml/sc/specification/specificationCommittee/specFinGovCompExp.xhtml?faces-redirect=true";
+	public static final String SPECIFICATION_NONFINANCIAL_GOVERNMENT_EXPERIENCE = "/xhtml/sc/specification/specificationCommittee/specFinNonGovCompExp.xhtml?faces-redirect=true";
+
+	public static final String PROPOSAL_FINANCIAL_GOVERNMENT_EXPERIENCE = "/xhtml/sc/supplierproposal/financialproposal/supFinGovCompExp.xhtml";
+	public static final String PROPOSAL_NONFINANCIAL_GOVERNMENT_EXPERIENCE = "/xhtml/sc/supplierproposal/financialproposal/supFinNonGovCompExp.xhtml";
+	public static final String COMPANY_EXPERIENCE_REMINDER_POPUP = "compExpRemPopUp.show()";
+	public static final String EVALUATION_FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE = "/xhtml/sc/evaluation/evaluationStage/financial/evaFinGovCompExp.xhtml";
+	public static final String EVALUATION_FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE = "/xhtml/sc/evaluation/evaluationStage/financial/evaFinNonGovCompExp.xhtml";
+	public static final String COMPANY_EXP_STATUS_ALL = "lbl.sc.comp.exp.all";
+	public static final String COMPANY_EXP_STATUS_INACTIVE = "lbl.sc.comp.exp.inactive";
+	public static final String COMPANY_EXP_STATUS_EFFECTIVE = "lbl.sc.comp.exp.effective";
+	public static final String COMPANY_EXP_STATUS_EXPIRED = "lbl.sc.comp.exp.expired";
+	public static final String COMPANY_EXP_STATUS_TERMINATED = "lbl.sc.comp.exp.terminated";
+	public static final String NUMBER_OF_CONTRACTS = "lbl.sc.supplier.proposal.comp.exp.no.of.contract";
+	public static final String VALUE_OF_CONTRACTS = "lbl.sc.supplier.proposal.comp.exp.val.contract";
+	public static final String EVALUATION_FINANCIAL_OTHER_LIST_SUPPLIER_MAIN = "/xhtml/sc/evaluation/evaluationStage/financial/financialOtherListSuppliersMain.xhtml";
+	public static final String LABEL_TEXT_NA = "lbl.txt.na";
+	public static final String EVALUATION__GOV_PROC_RELATED = "evaGovRelated";
+	public static final String EVALUATION__GOV__NONPROC_RELATED = "evaGovNotRelated";
+	public static final String EVALUATION__NONGOV_PROC_RELATED = "evaNonGovRelated";
+	public static final String EVALUATION__NONGOV__NONPROC_RELATED = "evaNonGovNotRelated";
+	public static final String PROPOSAL__GOV_PROC_RELATED = "proposalGovProcRelated";
+	public static final String PROPOSAL__GOV__NONPROC_RELATED = "proposalGovNonProcRelated";
+	public static final String PROPOSAL__NONGOV_PROC_RELATED = "proposalNonGovProcRelated";
+	public static final String PROPOSAL__NONGOV__NONPROC_RELATED = "proposalNonGovNonProcStatusRelated";
+	public static final String COMP_EXP_SUPPORTING_DOCUMENTS = "NGeP-LOA-Report";
+	public static final String PROPOSAL_EVALUATION_PORTLET = "ProposalEvaluation_WAR_NGePportlet";
+	public static final int TAB_LOA_INDEX = 1;
+
+	// 29661- end-
+
 }

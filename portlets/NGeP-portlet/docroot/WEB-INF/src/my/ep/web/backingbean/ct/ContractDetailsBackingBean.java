@@ -1279,7 +1279,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 				//#24333 - End	
 				//#29713 - removed old commented block
-
 		      //#24333 - Start
 				if( contractAmt.getCtPerformanceBonds().size() > 0 && action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 					contractAmt.setIsBondAttachment(ParameterConst.FLAG_INT_YES);
