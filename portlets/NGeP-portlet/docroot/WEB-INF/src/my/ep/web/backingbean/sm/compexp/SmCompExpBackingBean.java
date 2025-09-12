@@ -275,7 +275,21 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		smCompExpCatDraft.setCategoryL3(new PmCategoryL3());
 
 		this.getManagedBean().getSmCompExpCatDraftList().add(smCompExpCatDraft);
-		this.getManagedBean().setSmCompExpCatDrafNotComplete(true);
+		this.getManagedBean().setSmCompExpCatDraftNotComplete(true);
+	}
+
+	/**
+	 * Add new Sm Company Experience Category Draft
+	 */
+	public void addSmCompExpCatMaster() {
+		SmCompExpCatMaster smCompExpCatMaster = new SmCompExpCatMaster();
+
+		smCompExpCatMaster.setCategoryL1(new PmCategoryL1());
+		smCompExpCatMaster.setCategoryL2(new PmCategoryL2());
+		smCompExpCatMaster.setCategoryL3(new PmCategoryL3());
+
+		this.getManagedBean().getSelectedMaster().getCompExpMasterCats().add(smCompExpCatMaster);
+		this.getManagedBean().setSmCompExpCatMasterNotComplete(true);
 	}
 
 	/**
@@ -286,7 +300,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setSupplierSubDivCatList(null);
 
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		SmSupplier supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
+		SmSupplier supplier = new SmSupplier();
+		if (this.getManagedBean().isDraftUpdate()) {
+			supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
+		} else if (this.getManagedBean().isMasterUpdate()) {
+			supplier = this.getManagedBean().getSelectedMaster().getSmSupplier();
+		}
 		reqDTO.setSupplierTypeCode(supplier.getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(supplier.getBusinessType());
 		reqDTO.setApplId(supplier.getSmAppl().getApplId());
@@ -421,9 +440,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	/**
-	 * Handle Category Code select all event
+	 * Handle Draft Category Code select all event
 	 */
-	public void selectAllCatCodes() {
+	public void selectAllDraftCatCodes() {
 		List<SmCompExpCatDraft> selectedList = new ArrayList<>();
 
 		if (this.getManagedBean().isSelectedAll()) {
@@ -446,12 +465,37 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	/**
-	 * Handle Category Code single select event
+	 * Handle Master Category Code select all event
+	 */
+	public void selectAllMasterCatCodes() {
+		List<SmCompExpCatMaster> selectedList = new ArrayList<>();
+
+		if (this.getManagedBean().isSelectedAll()) {
+			this.getManagedBean().setSelected(true);
+			// Expected Max Size in loop (30) based on NGEP_PDS database
+			for (SmCompExpCatMaster cat : this.getManagedBean().getSelectedMaster().getCompExpMasterCats()) {
+				cat.setSelected(true);
+				selectedList.add(cat);
+			}
+		} else {
+			this.getManagedBean().setSelected(false);
+			// Expected Max Size in loop (30) based on NGEP_PDS database
+			for (SmCompExpCatMaster cat : this.getManagedBean().getSelectedMaster().getCompExpMasterCats()) {
+				cat.setSelected(false);
+				selectedList.remove(cat);
+			}
+		}
+
+		this.getManagedBean().setSelectedSmCompExpCatMaster(selectedList);
+	}
+
+	/**
+	 * Handle Draft Category Code single select event
 	 * 
 	 * @param index
 	 *            int
 	 */
-	public void selectCatCode(int index) {
+	public void selectDraftCatCode(int index) {
 		List<SmCompExpCatDraft> selectedList = this.getManagedBean().getSelectedSmCompExpCatDraft();
 
 		if (null == selectedList || selectedList.isEmpty()) {
@@ -473,6 +517,33 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	/**
+	 * Handle Master Category Code single select event
+	 * 
+	 * @param index
+	 *            int
+	 */
+	public void selectMasterCatCode(int index) {
+		List<SmCompExpCatMaster> selectedList = this.getManagedBean().getSelectedSmCompExpCatMaster();
+
+		if (null == selectedList || selectedList.isEmpty()) {
+			selectedList = new ArrayList<>();
+		}
+
+		SmCompExpCatMaster selected = this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index);
+
+		if (selected.isSelected()) {
+			selected.setSelected(true);
+			selectedList.add(selected);
+		} else {
+			this.getManagedBean().setSelectedAll(false);
+			selected.setSelected(false);
+			selectedList.remove(selected);
+		}
+
+		this.getManagedBean().setSelectedSmCompExpCatMaster(selectedList);
+	}
+
+	/**
 	 * Retrieve Supplier Sub Code Category List
 	 * 
 	 * @param categoryL1Id
@@ -482,12 +553,18 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void getSupplierSubCatList(Long categoryL1Id, int index) {
 		this.getManagedBean().setSupplierSubDivCatList(null);
-		this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL2().setCategoryL2Id(null);
-		this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
-
+		SmSupplier supplier = new SmSupplier();
+		if (this.getManagedBean().isDraftUpdate()) {
+			this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL2().setCategoryL2Id(null);
+			this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
+			supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
+		} else if (this.getManagedBean().isMasterUpdate()) {
+			this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL2().setCategoryL2Id(null);
+			this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+			supplier = this.getManagedBean().getSelectedMaster().getSmSupplier();
+		}
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL1Id(categoryL1Id);
-		SmSupplier supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
 		reqDTO.setSupplierTypeCode(supplier.getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(supplier.getBusinessType());
 		reqDTO.setApplId(supplier.getSmAppl().getApplId());
@@ -511,11 +588,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 *            int
 	 */
 	public void getSupplierSubDivCatList(Long categoryL2Id, int index) {
-		this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
-
+		SmSupplier supplier = new SmSupplier();
+		if (this.getManagedBean().isDraftUpdate()) {
+			this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
+			supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
+		} else if (this.getManagedBean().isMasterUpdate()) {
+			supplier = this.getManagedBean().getSelectedMaster().getSmSupplier();
+			this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+		}
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
-		SmSupplier supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
 		reqDTO.setSupplierTypeCode(supplier.getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(supplier.getBusinessType());
 		reqDTO.setApplId(supplier.getSmAppl().getApplId());
@@ -540,27 +622,39 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void checkDuplicateCatCode(Long categoryL3Id, int index) {
 		int i = 0;
 		// Expected Max Size in loop (30) based on NGEP_PDS database
-		for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
-			if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
-				this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
-				throw new EpException(MessageConst.ERROR_775222);
+		if (this.getManagedBean().isDraftUpdate()) {
+			for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
+				if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
+					this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
+					throw new EpException(MessageConst.ERROR_775222);
+				}
 			}
+			this.getManagedBean().setSmCompExpCatDraftNotComplete(false);
+		} else if (this.getManagedBean().isMasterUpdate()) {
+			for (SmCompExpCatMaster cat : this.getManagedBean().getSelectedMaster().getCompExpMasterCats()) {
+				if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
+					this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+					throw new EpException(MessageConst.ERROR_775222);
+				}
+			}
+			this.getManagedBean().setSmCompExpCatMasterNotComplete(false);
 		}
-		this.getManagedBean().setSmCompExpCatDrafNotComplete(false);
+
+		
 	}
 
 	/**
-	 * Delete selected Code Category
+	 * Delete selected Draft Code Category
 	 */
-	public void delSmCompExpCat() {
+	public void delSmCompExpCatDraft() {
 		List<SmCompExpCatDraft> catList = this.getManagedBean().getSmCompExpCatDraftList();
 		List<SmCompExpCatDraft> selectedList = this.getManagedBean().getSelectedSmCompExpCatDraft();
-		this.getManagedBean().setSmCompExpCatDrafNotComplete(true);
+		this.getManagedBean().setSmCompExpCatDraftNotComplete(true);
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatDraft selected : selectedList) {
 			catList.remove(selected);
 			if (null == selected.getCategoryL3().getCategoryL3Id()) {
-				this.getManagedBean().setSmCompExpCatDrafNotComplete(false);
+				this.getManagedBean().setSmCompExpCatDraftNotComplete(false);
 			}
 		}
 		if (catList.isEmpty()) {
@@ -573,6 +667,32 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 		this.getManagedBean().setSelectedSmCompExpCatDraft(null);
 	}
+
+	/**
+	 * Delete selected Master Code Category
+	 */
+	public void delSmCompExpCatMaster() {
+		List<SmCompExpCatMaster> catList = this.getManagedBean().getSelectedMaster().getCompExpMasterCats();
+		List<SmCompExpCatMaster> selectedList = this.getManagedBean().getSelectedSmCompExpCatMaster();
+		this.getManagedBean().setSmCompExpCatMasterNotComplete(true);
+		// Expected Max Size in loop (30) based on NGEP_PDS database
+		for (SmCompExpCatMaster selected : selectedList) {
+			catList.remove(selected);
+			if (null == selected.getCategoryL3().getCategoryL3Id()) {
+				this.getManagedBean().setSmCompExpCatMasterNotComplete(false);
+			}
+		}
+		if (catList.isEmpty()) {
+			addSmCompExpCatMaster();
+			this.getManagedBean().setSupplierSubCatList(null);
+			this.getManagedBean().setSupplierSubDivCatList(null);
+
+		} else {
+			this.getManagedBean().getSelectedMaster().setCompExpMasterCats(catList);
+		}
+		this.getManagedBean().setSelectedSmCompExpCatDraft(null);
+	}
+
 
 	/**
 	 * Validate field
@@ -841,6 +961,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else {
 			initSuppDoc();
 		}
+
+		getSupplierMainCatList();
+		this.getManagedBean().setSmCompExpCatMasterNotComplete(false);
+		this.getManagedBean().setSelectedSmCompExpCatMaster(null);
 
 		SmCommonUtil.redirectToPage(smCompExpMasterUpdateXhtml, "", null, null);
 	}

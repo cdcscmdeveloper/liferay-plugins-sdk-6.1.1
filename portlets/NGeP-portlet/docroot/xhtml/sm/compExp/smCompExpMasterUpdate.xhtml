@@ -221,20 +221,24 @@
 					<p:column style="width:2%">
 						<f:facet name="header">
 							<p:selectBooleanCheckbox value="#{smCompExpMB.selectedAll}">
-								<p:ajax listener="#{smCompExpBB.selectAllCatCodes}"
+								<p:ajax listener="#{smCompExpBB.selectAllMasterCatCodes}"
 									update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}" />
 							</p:selectBooleanCheckbox>
 						</f:facet>
 						<p:selectBooleanCheckbox value="#{smCompExpCatCode.selected}">
-							<p:ajax listener="#{smCompExpBB.selectCatCode(index)}"
+							<p:ajax listener="#{smCompExpBB.selectMasterCatCode(index)}"
 								update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}" />
 						</p:selectBooleanCheckbox>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-						<h:outputText styleClass="mandatory" value="*" />
+						<h:outputText value="#{smCompExpCatCode.categoryL1Name}"
+							rendered="#{!smCompExpCatCode.brandNew}" />
+						<h:outputText styleClass="mandatory" value="*"
+							rendered="#{smCompExpCatCode.brandNew}" />
 						<p:selectOneMenu id="mainDDId"
 							label="#{lbl['lbl.sm.projDtls.mainCat']}"
-							value="#{smCompExpCatCode.categoryL1.categoryL1Id}">
+							value="#{smCompExpCatCode.categoryL1.categoryL1Id}"
+							rendered="#{smCompExpCatCode.brandNew}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems itemLabel="#{main.categoryName}"
 								itemValue="#{main.categoryL1Id}"
@@ -245,10 +249,14 @@
 						</p:selectOneMenu>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-						<h:outputText styleClass="mandatory" value="*" />
+						<h:outputText value="#{smCompExpCatCode.categoryL2Name}"
+							rendered="#{!smCompExpCatCode.brandNew}" />
+						<h:outputText styleClass="mandatory" value="*"
+							rendered="#{smCompExpCatCode.brandNew}" />
 						<p:selectOneMenu id="subDDId"
 							label="#{lbl['lbl.sm.projDtls.subCat']}"
-							value="#{smCompExpCatCode.categoryL2.categoryL2Id}">
+							value="#{smCompExpCatCode.categoryL2.categoryL2Id}"
+							rendered="#{smCompExpCatCode.brandNew}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems itemLabel="#{sub.categoryName}"
 								itemValue="#{sub.categoryL2Id}"
@@ -259,10 +267,14 @@
 						</p:selectOneMenu>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-						<h:outputText styleClass="mandatory" value="*" />
+						<h:outputText value="#{smCompExpCatCode.categoryL3Name}"
+							rendered="#{!smCompExpCatCode.brandNew}" />
+						<h:outputText styleClass="mandatory" value="*"
+							rendered="#{smCompExpCatCode.brandNew}" />
 						<p:selectOneMenu id="subDivDDId"
 							label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
-							value="#{smCompExpCatCode.categoryL3.categoryL3Id}">
+							value="#{smCompExpCatCode.categoryL3.categoryL3Id}"
+							rendered="#{smCompExpCatCode.brandNew}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems itemLabel="#{subDiv.categoryName}"
 								itemValue="#{subDiv.categoryL3Id}"
@@ -276,14 +288,14 @@
 				</p:dataTable>
 				<div align="right">
 					<p:commandButton id="addCatBtn"
-						action="#{smCompExpBB.addSmCompExpCatDraft}"
-						disabled="#{smCompExpMB.smCompExpCatDrafNotComplete}"
+						action="#{smCompExpBB.addSmCompExpCatMaster}"
+						disabled="#{smCompExpMB.smCompExpCatMasterNotComplete}"
 						onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 						update=":#{p:component('smCompExpCatCodes')}, @this"
 						value="#{lbl['lbl.sm.button.add']}">
 					</p:commandButton>
 					<p:commandButton id="delCatBtn"
-						disabled="#{empty smCompExpMB.selectedSmCompExpCatDraft}"
+						disabled="#{empty smCompExpMB.selectedSmCompExpCatMaster}"
 						onclick="confirmDelSelectedCatDialogWV.show()" process="@this"
 						value="#{lbl['lbl.sm.button.delete']}">
 					</p:commandButton>
@@ -324,6 +336,21 @@
 					value="#{lbl['lbl.sm.comp.exp.yes.btn']}" />
 				<p:commandButton value="#{lbl['lbl.sm.comp.exp.no.btn']}"
 					onclick="confirmDelSuppDocDialogWV.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog closable="true"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			id="confirmDelSelectedCatId"
+			message="#{lbl['lbl.sm.upload.delete.message']}" severity="alert"
+			widgetVar="confirmDelSelectedCatDialogWV">
+			<div align="right">
+				<p:commandButton action="#{smCompExpBB.delSmCompExpCatMaster}"
+					onclick="confirmDelSelectedCatDialogWV.hide();"
+					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+					update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}, :#{p:component('addCatBtn')}"
+					value="#{lbl['lbl.sm.comp.exp.yes.btn']}" />
+				<p:commandButton value="#{lbl['lbl.sm.comp.exp.no.btn']}"
+					onclick="confirmDelSelectedCatDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
 	</ui:define>

@@ -20,6 +20,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmCompExpCatDraft;
+import my.ep.persistence.entity.sm.SmCompExpCatMaster;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
@@ -57,7 +58,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private String smCompExpFilePath;
 	private List<SmCompExpCatDraft> smCompExpCatDraftList;
 	private boolean smCompExpCatDraftListEmpty;
-	private boolean smCompExpCatDrafNotComplete;
+	private boolean smCompExpCatDraftNotComplete;
 	private List<PmCategoryL1> supplierMainCatList;
 	private List<PmCategoryL2> supplierSubCatList;
 	private List<PmCategoryL3> supplierSubDivCatList;
@@ -73,6 +74,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private SmCompExpMaster selectedMaster;
 	private boolean draftUpdate;
 	private boolean masterUpdate;
+	private boolean smCompExpCatMasterNotComplete;
+	private List<SmCompExpCatMaster> selectedSmCompExpCatMaster;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -213,12 +216,12 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.smCompExpCatDraftListEmpty = smCompExpCatDraftListEmpty;
 	}
 
-	public boolean isSmCompExpCatDrafNotComplete() {
-		return smCompExpCatDrafNotComplete;
+	public boolean isSmCompExpCatDraftNotComplete() {
+		return smCompExpCatDraftNotComplete;
 	}
 
-	public void setSmCompExpCatDrafNotComplete(boolean smCompExpCatDrafNotComplete) {
-		this.smCompExpCatDrafNotComplete = smCompExpCatDrafNotComplete;
+	public void setSmCompExpCatDraftNotComplete(boolean smCompExpCatDraftNotComplete) {
+		this.smCompExpCatDraftNotComplete = smCompExpCatDraftNotComplete;
 	}
 
 	public List<PmCategoryL1> getSupplierMainCatList() {
@@ -424,6 +427,22 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setMasterUpdate(boolean masterUpdate) {
 		this.masterUpdate = masterUpdate;
+	}
+
+	public boolean isSmCompExpCatMasterNotComplete() {
+		return smCompExpCatMasterNotComplete;
+	}
+
+	public void setSmCompExpCatMasterNotComplete(boolean smCompExpCatMasterNotComplete) {
+		this.smCompExpCatMasterNotComplete = smCompExpCatMasterNotComplete;
+	}
+
+	public List<SmCompExpCatMaster> getSelectedSmCompExpCatMaster() {
+		return selectedSmCompExpCatMaster;
+	}
+
+	public void setSelectedSmCompExpCatMaster(List<SmCompExpCatMaster> selectedSmCompExpCatMaster) {
+		this.selectedSmCompExpCatMaster = selectedSmCompExpCatMaster;
 	}
 
 }
