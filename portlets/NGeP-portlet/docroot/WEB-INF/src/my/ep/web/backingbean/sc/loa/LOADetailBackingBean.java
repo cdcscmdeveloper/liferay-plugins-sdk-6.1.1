@@ -1830,24 +1830,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// #29006 - end
-		
-		// #29006 - start
-		if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)) {
-			getManagedBean().setUpdatedLampiranA3DownloadedFlag(true);
-		}
-
-		// Add current report title into
-		// managedBean.downloadedLoaReportsTitleList
-		// only if the title does not exist in the said list
-		if (CollectionUtils.isEmpty(getManagedBean().getDownloadedLoaReportsTitleList())) {
-			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
-			getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
-		} else {
-			if (!getManagedBean().getDownloadedLoaReportsTitleList().contains(scLoaReport.getTitle())) {
-				getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
-			}
-		}
-		// #29006 - end
 
 		// #19336, #25201, #17376, #19287 -start-
 		try {
