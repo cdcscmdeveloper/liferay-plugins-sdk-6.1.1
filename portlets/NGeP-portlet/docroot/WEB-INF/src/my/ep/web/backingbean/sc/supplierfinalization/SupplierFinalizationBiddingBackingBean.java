@@ -635,6 +635,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				bidReqDTO.setQtId(getManagedBean().getScQt().getQtId());
 				bidReqDTO.setRecommendType(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG);
 				bidReqDTO.setSpecZoneId(selectedZoneId);
+				bidReqDTO.setBidScheduleId(bidScheduleList.get(0).getBidScheduleId());// #28777&#29729
 				
 				BiddingResDTO bidResDTO = null;
 				if (CollectionUtils.isEmpty(shortlistedSuppliers) || CollectionUtils.isEmpty(notShortlistedSuppliers)) {// #28777&#29729
@@ -1026,6 +1027,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			reqDTO.setSpecZoneId(selectedZoneId);
 			reqDTO.setScBidSchedule(bidItem.getScBidSchedule());
 			reqDTO.setBidItemId(bidItem.getScRequestItem().getRequestNoteItemId());
+			reqDTO.setBidScheduleId(bidItem.getScBidSchedule().getBidScheduleId());// #28777&#29729
 			
 			BiddingResDTO resDTO = null;
 			if (CollectionUtils.isEmpty(shortlistedSuppliers) || CollectionUtils.isEmpty(notShortlistedSuppliers)) {// #28777&#29729
