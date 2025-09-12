@@ -1242,44 +1242,48 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (ctBB.getManagedBean().getCtContractAmount().isBondReq()
 					&& !ctBB.getManagedBean().isDirectPurchase()
 					&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
-				//#24333 - Start
-				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-				Date CurrentDate = new Date();
+				// #24333 - Start
+				Date currentDate = new Date();
 
-				for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()){
-					//#24333 - Start
-			        boolean hasNewBonds = contractAmt.getCtPerformanceBondsNew() != null
-			                && !contractAmt.getCtPerformanceBondsNew().isEmpty();
-			        boolean hasOriginalBonds = contractAmt.getCtPerformanceBondsOriginal() != null
-			                && !contractAmt.getCtPerformanceBondsOriginal().isEmpty();
+				// Get bond data from the source contract
+				CtContractAmount uiBondData = ctBB.getManagedBean().getCtContractAmount();
+				List<CtPerformanceBond> newBonds = uiBondData.getCtPerformanceBondsNew();
+				List<CtPerformanceBond> originalBonds = uiBondData.getCtPerformanceBondsOriginal();
+				Date ctValueExpDate = ctContractVer.getCtContractValue().getExpDate();
+				
+				// Combine original and new bonds into a single list ONCE, before the main loop
+		        List<CtPerformanceBond> allBonds = new ArrayList<>();
+		        if (originalBonds != null) {
+		            allBonds.addAll(originalBonds);
+		        }
+		        if (newBonds != null) {
+		            allBonds.addAll(newBonds);
+		        }
+		        
+				// Use a single loop to process all contract amounts
+				for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()) {
+					// Check if the contract is active or extended
+					 Date eff = contractAmt.getEffDate();
+				     Date exp = contractAmt.getExpDate();
+				     boolean isCurrentlyActive = !currentDate.before(eff) && !currentDate.after(exp);
+				     boolean isContractExtend = exp.equals(ctValueExpDate);
 
-			        if ((contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
-							&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue()
-							&& (hasNewBonds || hasOriginalBonds))
-							||( contractAmt.isBrandNew() && dateFormat.format(contractAmt.getEffDate()).compareTo(dateFormat.format(CurrentDate))<=0
-									&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0)){
-						contractAmt.setTotalBondAmt(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt());
-	
-						if(ctBB.isContractExtendOrIsBond() && hasNewBonds){
-							List<CtPerformanceBond> originalBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());
-					        List<CtPerformanceBond> newBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew());
+					if (isCurrentlyActive || isContractExtend) {
+						 // Update total amount and clear existing bonds
+		                contractAmt.setTotalBondAmt(uiBondData.getTotalBondAmt());
+		                contractAmt.getCtPerformanceBonds().clear();
+		                
+		                // Clone all bonds from the combined list
+		                cloneAndAddBonds(contractAmt, allBonds);
+		            }
 
-					        List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>();
-					        result = ListUtils.union(newBond, originalBond);
-							contractAmt.setCtPerformanceBonds( result);
-						} else {
-							contractAmt.setCtPerformanceBonds(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());
-						}
-					}
-
-					if( contractAmt.getCtPerformanceBonds().size() > 0 && action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
-						contractAmt.setIsBondAttachment(ParameterConst.FLAG_INT_YES);
-					} else {
-						contractAmt.setIsBondAttachment(ParameterConst.FLAG_INT_NO);
-					}
-					//#24333 - End
+					// Set flag attachment
+					boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
+					contractAmt.setIsBondAttachment(!contractAmt.getCtPerformanceBonds().isEmpty() && isApproved ? ParameterConst.FLAG_INT_YES
+							: ParameterConst.FLAG_INT_NO);
 				}
 			}
+			// 24333 - End
 			
 			//#13847 start
 			if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
@@ -3453,6 +3457,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0){
 					processPerformanceBonds(contractAmt, docType, isAmendment); //#24333
 					ctBB.getManagedBean().setCtContractAmount(contractAmt);
+					ctBB.getManagedBean().setTotalBondAmt(contractAmt.getTotalBondAmt()); //#24333
 					break;
 				}
 				//Bug #26542 -end				
@@ -4231,8 +4236,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		 *            whether the document is an amendment
 		 */
 		private void processPerformanceBonds(CtContractAmount contractAmt, String docType, boolean isAmendment) {
-			
-			ctBB.getManagedBean().setTotalBondAmt(contractAmt.getTotalBondAmt());
+
 			// Check if the document is relevant for bond processing
 			if (!isAmendment
 					|| !(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
@@ -4381,6 +4385,44 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		private void blockSubmission(String tab) {
 		    setTabValue(tab);
 		    throwExceptions(MessageConst.ERROR_100022, "lbl.ct.menu.performance.bond");
+		}
+		
+		/**
+		 * Clones and adds a list of performance bonds to a contract amount.
+		 * 
+		 * @param parent
+		 *            The target contract amount.
+		 * @param bondsToClone
+		 *            The list of bonds to clone.
+		 */
+		private void cloneAndAddBonds(CtContractAmount parent, List<CtPerformanceBond> bondsToClone) {
+			for (CtPerformanceBond bond : bondsToClone) {
+				parent.getCtPerformanceBonds().add(cloneBond(bond, parent));
+			}
+		}
+
+		/**
+		 * Creates a copy of a performance bond and assigns it to a new contract
+		 * amount. Includes file attachment info (filename and path).
+		 * 
+		 * @param src
+		 *            the bond to copy
+		 * @param parent
+		 *            the new contract amount that will own the bond
+		 * @return a new bond with the same data and new parent
+		 */
+		private CtPerformanceBond cloneBond(CtPerformanceBond src, CtContractAmount parent) {
+			CtPerformanceBond clone = new CtPerformanceBond();
+			clone.setBondAmount(src.getBondAmount());
+			clone.setRefNo(src.getRefNo());
+			clone.setFileName(src.getFileName());
+			clone.setFilePath(src.getFilePath());
+			clone.setEffDate(src.getEffDate());
+			clone.setExpDate(src.getExpDate());
+			clone.setFinancialOrg(src.getFinancialOrg());
+			clone.setBondNew(src.isBondNew());
+			clone.setCtContractAmount(parent);
+			return clone;
 		}
 		// #24333 - End
 }
