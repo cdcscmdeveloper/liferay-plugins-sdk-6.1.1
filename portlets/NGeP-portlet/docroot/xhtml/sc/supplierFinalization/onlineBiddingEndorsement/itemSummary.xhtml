@@ -290,7 +290,7 @@
 				style="text-align:center;">
 				<h:outputText
 					value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}"
-					rendered="#{itemSupplierDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalBiddingBackingBean.managedBean.biddingZoneDetails.get(suppFinalBiddingBackingBean.managedBean.zoneActiveIndex).branchDeactivated}" />
+					rendered="#{itemSupplierDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalBiddingBackingBean.managedBean.biddingZoneDetails.get(suppFinalBiddingBackingBean.managedBean.zoneActiveIndex).branchDeactivated or itemSupplierDis.supplierDeactivated}" />
 			</p:column>
 		</p:dataTable>
 		<ui:remove> #28777#29729 - End </ui:remove>
