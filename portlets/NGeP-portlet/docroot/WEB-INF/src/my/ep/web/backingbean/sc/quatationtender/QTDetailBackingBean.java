@@ -7782,10 +7782,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getManagedBean().getFulfilmentType())
 						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
 								.equalsIgnoreCase(this.getManagedBean()
-										.getFulfilmentType())
-										|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
-										.equalsIgnoreCase(this.getManagedBean()
-												.getFulfilmentType())) {
+										.getFulfilmentType())) {
 					reqDTO.setQtdetail(fulfilMentDtls);
 					detailSO.validateSCFulfillmentSchedules(reqDTO);
 				}
@@ -13107,16 +13104,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 					ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 					docDefTypeReqDTO
 							.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-					//Reopen #25726 note 110
-					if(null != this.getManagedBean().getFulfilmentType()){
-						if(this.getManagedBean().getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
-							docDefTypeReqDTO
-							.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
-						}else{
-							docDefTypeReqDTO
-							.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
-						}
-					}
+					//new #25726
+					docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
 					//#25726 end
 					ParameterResDTO docDefTypeResDTO = parameterSo
 							.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
