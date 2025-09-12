@@ -3440,8 +3440,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (((ctContractVer.getCtAmendment().getAmendmentLoa().isBondReq()
 						|| ctContractVer.getCtContract().getLoa().isBondReq()) //24333
 						&& !ctContractVer.getCtContractAmount().isBondExempted()
-						&& !ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+						&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
+								|| ctBackingBean.isPk7FromDp()))) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 				}
 				if (getManagedBean().isDecisionPbQcLOA() && !ctBackingBean.getManagedBean().isViewSCL()) {
@@ -3454,8 +3455,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//24333 - Start
 			if (!getManagedBean().isPrepareLOA() && ctContractVer.getCtContract().getLoa().isBondReq()
 					&& !ctContractVer.getCtContractAmount().isBondExempted()
-					&& !ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
+					&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
+							|| ctBackingBean.isPk7FromDp())){
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithBond);
 			}
 			//24333 - End
@@ -3485,8 +3487,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) { //24333
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
 			if ((ctContractVer.getCtContract().getLoa().isBondReq() && !ctContractVer.getCtContractAmount().isBondExempted())
-					&& !ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+					&& (!ctContractVer.getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
+							|| ctBackingBean.isPk7FromDp())) { //#24333
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 			}
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
