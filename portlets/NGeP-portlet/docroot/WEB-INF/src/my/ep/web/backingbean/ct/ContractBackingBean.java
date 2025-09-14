@@ -5142,32 +5142,42 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    return filteredList.isEmpty() ? originalList : filteredList;
 	}
 	// 24333 - End
-	
-	//Start - #30045
+	// Start - #30045
+	/**
+	 * Determines whether the current contract's procurement type corresponds to a PK7 agency type.
+	 * <p>
+	 * This method resolves the effective {@link PmParameter} for the contract and safely checks its
+	 * parameter code and parameter type against predefined constants to decide if the contract
+	 * is considered a PK7 agency.
+	 * </p>
+	 *
+	 * <p>
+	 * The contract is classified as a PK7 agency if either of the following conditions is true:
+	 * <ul>
+	 *   <li>The parameter code equals {@link ParameterConst#QUOTATION_TENDER_TYPE_ITEM_IN_PK7}
+	 *       and the parameter type equals {@link ParameterTypeConst#PROCUREMENT_TYPE}.</li>
+	 *   <li>The parameter code equals {@link ParameterConst#QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP}
+	 *       and the parameter type equals {@link ParameterTypeConst#QUOTATION_TENDER_TYPE}.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @return {@code true} if the contract is identified as a PK7 agency; 
+	 *         {@code false} if no matching procurement type is found or the resolved parameter is {@code null}.
+	 */
 	public boolean isPk7Agencies() {
-		boolean isPk7 = false;
-	    PmParameter procTypeValue = null;
-	    
-	    procTypeValue = EntityHelper.getNestedProperty(
-	        getManagedBean(),
-	        "contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType"
-	    );
+	    PmParameter procValue = resolveProcTypeForPk7();
 
-	    if (procTypeValue == null) {
-	        procTypeValue = EntityHelper.getNestedProperty(
-	            getManagedBean(),
-	            "contractVer.ctContract.loa.qtType"
-	        );
+	    if (procValue == null) {//avoid NullPointerException
+	        return false;
 	    }
-	    
-	    if((procTypeValue.getParameterCode().equalsIgnoreCase(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7) && procTypeValue.getParameterType().equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) 
-	    		|| (procTypeValue.getParameterCode().equalsIgnoreCase(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP) && procTypeValue.getParameterType().equalsIgnoreCase(ParameterTypeConst.QUOTATION_TENDER_TYPE))){		
-	    		String procurementType = getParameterDesc(procTypeValue);	
-		 	    log.info("procTypeValue :::::::::::::::::::::::::::::::::::::: " + procTypeValue);
-		 	    log.info("procurementType :::::::::::::::::::::::::::::::::::::: " + procurementType);
-	 	   isPk7 = true;
-	    }	   
-	    return isPk7;
+
+	    String proCode = procValue.getParameterCode();
+	    String procType = procValue.getParameterType();
+
+	    return (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equalsIgnoreCase(proCode)
+	                && ParameterTypeConst.PROCUREMENT_TYPE.equalsIgnoreCase(procType))
+	            || (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP.equalsIgnoreCase(proCode)
+	                && ParameterTypeConst.QUOTATION_TENDER_TYPE.equalsIgnoreCase(procType));
 	}
 	//End - #30045
 }  
