@@ -62,7 +62,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	private static List<SmApplDocFile> docs = new ArrayList<>();
 	private static String folderAI = Calendar.getInstance().get(Calendar.YEAR) + "/SM/APPLICATION/AI/";
-	private static String mentionTextStr = "mentionText";
+	private static String valueStr = "value";
 	private static String confidence = "confidence";
 	private static String fieldsStr = "fields";
 	private static String resultsStr = "results";
@@ -707,7 +707,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(mentionTextStr, "");
+					String text = entity.optString(valueStr, "");
 					double conf = entity.optDouble(confidence, 0.0);
 					if (conf < minConfidence){
 						log.info("Patut skip la kan? " + conf);
@@ -838,7 +838,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(mentionTextStr, "");
+					String text = entity.optString(valueStr, "");
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
 						continue;
 					}
@@ -868,7 +868,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				for (int j = 0; j < properties.length(); j++) {
 					JSONObject prop = properties.getJSONObject(j);
 					String propType = prop.optString("type", "");
-					String propText = prop.optString(mentionTextStr, "");
+					String propText = prop.optString(valueStr, "");
 
 					if ("Alamat_Majikan".equals(propType)) {
 						empAlamat = propText.trim();
@@ -895,7 +895,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			for (int j = 0; j < empProperties.length(); j++) {
 				JSONObject prop = empProperties.getJSONObject(j);
 				String propType = prop.optString("type", "");
-				String propText = prop.optString(mentionTextStr, "");
+				String propText = prop.optString(valueStr, "");
 
 				switch (propType) {
 				case "No_Ahli_KWSP":
@@ -936,7 +936,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(mentionTextStr, "");
+					String text = entity.optString(valueStr, "");
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
 						continue;
 					}
