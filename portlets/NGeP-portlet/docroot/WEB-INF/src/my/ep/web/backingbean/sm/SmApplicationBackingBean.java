@@ -12926,6 +12926,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	// harris
 	public void deleteSupDocFileAttachment() {
+		getManagedBean().getSmApplDocFile().setValidatedAI(0);	//#38890
 
 		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
 		// #37775 - Start
