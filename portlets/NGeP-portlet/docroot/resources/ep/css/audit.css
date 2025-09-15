@@ -40,7 +40,7 @@
 .equal-width-tabs .ui-tabmenu-nav {
     display: grid !important;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
-    gap: 1px !important;
+    gap: 1px !important; /* jarak antar tab */
     padding: 0 !important;
     margin: 0 !important;
     align-items: stretch !important;
@@ -56,6 +56,7 @@
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    box-sizing: border-box; /* Pastikan padding tidak menambah ukuran */
 }
 
 .equal-width-tabs .ui-tabmenuitem > a {
@@ -68,6 +69,8 @@
     padding: 4px 8px !important;        /* Adjusted padding */
     color: inherit !important;
     text-decoration: none !important;
+    box-sizing: border-box; /* Pastikan padding tidak overflow */
+    background-clip: padding-box; /* Batasi background dalam padding */
 }
 
 .equal-width-tabs .ui-tabmenuitem > a .ui-menuitem-text {
@@ -86,7 +89,7 @@
 .equal-width-tabs .ui-tabmenuitem:nth-child(n+13) {
     min-width: 260px !important; 
     max-width: none !important;
-    align-self: flex-start !important;
+    align-self: stretch !important; /* Ubah ke stretch untuk konsistensi */
     height: 40px !important; /* Consistent reduced height */
 }
 
@@ -106,7 +109,7 @@
 .equal-width-tabs .ui-tabmenuitem:nth-child(n+5) {
     min-width: 260px !important; 
     max-width: none !important;
-    align-self: flex-start !important;
+    align-self: stretch !important; /* Ubah ke stretch untuk konsistensi */
     height: 40px !important; /* Consistent reduced height */
 }
 
