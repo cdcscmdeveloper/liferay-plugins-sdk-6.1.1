@@ -11,19 +11,6 @@
 			<td colspan="4"><h:outputText
 					value="#{tfRptBB.managedBean.reportUrl}" /><br /> <br /></td>
 		</tr>
-		<!--<tr>
-			<td>
-			<p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" />
-			<p:outputLabel value="*" styleClass="mandatory" /></td>
-			<td colspan="3">
-				<ac:lov id="lovAccountingOff"
-					lovId="PM_AG_OFFICE" size="100" update="@form"
-					readonly="true" headerText="#{lbl['lbl.fl.accounting.ofc']}"
-					value="#{tfRptBB.managedBean.agOff.offDesc}"
-					saveObject="tfRptBB.managedBean.agOff"
-					label="#{lbl['lbl.fl.accounting.ofc']}"
-					conditionField="" /></td>
-		</tr>-->
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
@@ -118,7 +105,7 @@
 							<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
 							<p:ajax event="change" process="@this"
 								listener="#{tfRptBB.allAgOffChecked}"
-								update=":form:selectOffDropdown , :form:inputOfficeName , :form:slbtn"
+								update=":form:selectOffDropdown , :form:inputOfficeName , :form:slbtn , :form:accountingSR"
 								partialSubmit="true" />
 						</h:selectOneRadio>
 					</td>
