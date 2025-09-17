@@ -159,10 +159,21 @@
 			</p:column>
 			<!-- #38890 -->
 			<p:column style="width : 10%; text-align:center;" rendered="#{cc.attrs.hasAI}">
-				<p:outputPanel rendered="#{not empty table.mappedFieldAI}">
-					<p:graphicImage id="imgHasAI" value="/css/images/design/ackno.png" />
-					<p:tooltip for="imgHasAI" value="#{table.mappedFieldAI}" />
-				</p:outputPanel>
+				<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 1}">
+						<p:graphicImage id="imgHasAI1" value="/css/images/design/ico-check.png" />
+						<p:tooltip for="imgHasAI1">
+							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 2}">
+						<p:graphicImage id="imgHasAI2" value="/css/images/design/ico-reject.png" />
+						<p:tooltip for="imgHasAI2">
+							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<br/>
+				</ui:repeat>
 			</p:column>
 		</p:dataTable>
 		
@@ -173,7 +184,7 @@
 			onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;">
 			<!-- #28807 - Start -->
 			<p:fileUpload widgetVar="uploadWV" 
-				allowTypes="/(\.|\/)(pdf|doc|docx|zip)$/"
+				allowTypes="/(\.|\/)(pdf|doc|docx|zip|json)$/"
 				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
 				invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
@@ -186,7 +197,8 @@
 				showButtons="false"/>
 			<!-- #28807 - End -->
 			<!-- #38890 -->
-			<p:ajax event="close" listener="#{backingBean.processAI()}" update="#{cc.attrs.tableId}" />
+			<p:ajax event="close" listener="#{backingBean.processAI()}" update="#{cc.attrs.tableId}" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 		</p:dialog>
 
 		<!-- harris -->
