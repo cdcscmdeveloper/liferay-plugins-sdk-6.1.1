@@ -86,6 +86,14 @@ public class RegenerateDocumentsServlet extends HttpServlet {
 			
 			if(qt!=null){
 				bb.getManagedBean().setQt(qt);
+				/**
+				 * Will regenerate documents after all suppliers replied to Proposal Validity Extension.
+				 * List of reports:
+				 * TP - Kenyataan Tawaran Pembekal
+				 * SS - Syarat-syarat Am/ Arahan/Syarat-syarat Khas
+				 * TK - Terma Kontrak
+				 * KT - Kertas Taklimat
+				 */
 				bb.reGenerateDocuments(qt.getQtId(), QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
 			}else{
 				throw new EpException("Failed to obtain qt detail.");
