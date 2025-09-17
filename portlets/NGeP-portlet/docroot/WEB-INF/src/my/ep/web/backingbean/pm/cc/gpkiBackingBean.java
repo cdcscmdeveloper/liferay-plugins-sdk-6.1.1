@@ -201,7 +201,7 @@ public class gpkiBackingBean implements Serializable {
 		if(user != null){
 			icNo = user.getIdentificationNo().trim();
 		}
-		log.info("--35488--err- "+map.get("response"));
+		//log.info("--35488--err- "+map.get("response"));
 		log.info("GPKI Sign Error: Response:"+map.get("response")+" : IC No:"+icNo);
 		String statusMsg = map.get("statusMsg");
 		String extMsg = map.get("extMsg");
@@ -216,7 +216,7 @@ public class gpkiBackingBean implements Serializable {
 		if(field != null){
 			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
 		}
-		log.info("GPKI TB SIGN ERROR: "+statusMsg+" || IC User:"+icNo);
+		log.info("GPKI TB SIGN ERROR: "+statusMsg+" : IC User:"+icNo);
 		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
 
