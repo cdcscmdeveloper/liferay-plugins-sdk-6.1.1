@@ -153,8 +153,6 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	/************ AUDIT START #28895-35509 *************/
 	private PmOrgProfile auditOldPMOrgProfile;
 	private PmOrgProfile newPmOrgProfile;
-	private PmContact newContactPerson;
-	private PmAddress newOfficeAddress;
 	private PmAddress auditBillingAddress;
 	private PmContact auditContactPerson;
 	private List<PmAddressType> oldReceivingAddressList = new ArrayList<>();

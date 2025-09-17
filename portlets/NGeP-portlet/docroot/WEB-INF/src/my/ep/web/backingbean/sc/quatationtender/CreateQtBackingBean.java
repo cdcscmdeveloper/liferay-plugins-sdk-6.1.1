@@ -1462,8 +1462,7 @@ public class CreateQtBackingBean extends
 								ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			} else if ((ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN
-							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()))) {
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) ) {
 				this.getManagedBean()
 						.getQt()
 						.setScheduleType(
@@ -1471,8 +1470,7 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setTotalProgressivePayment(0);
 
 			} else if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
-							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())))) {
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) )) {
 				this.getManagedBean()
 						.getQt()
 						.setScheduleType(
@@ -1569,11 +1567,8 @@ public class CreateQtBackingBean extends
 	 */
 	private boolean updatefullfillmentDetails(PmParameter newFulfilmentType,PmParameter previousFulfilmentType ) {
 		
-		if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()) || 
-			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()))&&
-			(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()) || 
-			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()))){
-			
+		if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode())&&
+			ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()) ){
 			List<ScQtSchedule> scheduleList = this.getManagedBean()
 					.getScheduleList();
 
