@@ -1749,6 +1749,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 								SearchCondition.CONDITION_OR.value())));
 				
 				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
+				//Start - #30045
+				if(isPk7Agencies()){
+					reqDTO.setPk7Related(true);
+				}
+				//End - #30045
 				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getOrgProfileResultBean();
