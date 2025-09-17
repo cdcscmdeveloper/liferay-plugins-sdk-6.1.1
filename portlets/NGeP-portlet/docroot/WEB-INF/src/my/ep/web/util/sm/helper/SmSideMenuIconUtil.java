@@ -159,6 +159,7 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditBank(false);
+				
 				// #28895_35501 - AUDIT TRAIL SM
 				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(), bean.getSmAppl())) {
@@ -171,6 +172,7 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
+				
 				// #28895_35501 - AUDIT TRAIL SM
 				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(), bean.getSupplierAppl())) {
@@ -180,6 +182,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
 				bean.getEditVO().setAppEditBank(false);
+				
 				// #28895_35501 - AUDIT TRAIL SM
 				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(), bean.getSupplierAppl())) {

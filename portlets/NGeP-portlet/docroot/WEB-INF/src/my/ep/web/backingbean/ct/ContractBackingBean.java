@@ -29,6 +29,19 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -37,7 +50,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
-import my.ep.biz.service.ct.dtl.IContractItemSO; //Fix - #34961
+import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -66,8 +79,8 @@ import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
-import my.ep.dto.ct.dtl.ContractItemReqDTO; //Fix - #34961
-import my.ep.dto.ct.dtl.ContractItemResDTO; //Fix - #34961
+import my.ep.dto.ct.dtl.ContractItemReqDTO;
+import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.ct.dtl.ContractZoneReqDTO;
 import my.ep.dto.ct.dtl.ContractZoneResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -152,19 +165,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.ToggleSelectEvent;
-import org.primefaces.event.UnselectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
-import org.apache.commons.collections.Predicate; //Fix - #34961
 
 /**
  * Backing Bean For Contract
@@ -3040,6 +3041,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to indicate the label flag for new price of contract item.
 	 */
+	/*
 	private void itemPriceZoneLabelList(CtContractItem ctContractItem) {
 		if (!ctContractItem.getCtItemPrices().isEmpty()) {
 			for (int temp = 0;temp<ctContractItem.getCtItemPrices().size(); temp++) {
@@ -3086,10 +3088,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 	}
+	*/
 
 	/**
 	 * The method used to indicate the label flag for new max qty of contract item.
 	 */
+	/*
 	private void itemMaxQtyZoneLabelList(CtContractItem ctContractItem) {
 		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
 			for (CtItemMaxQty zonelOfItem : ctContractItem.getCtItemMaxQties()) {
@@ -3123,6 +3127,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 	}
+	*/
 	
 	// #34961 start
 	/**
@@ -3139,12 +3144,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						&& preCtContractItem.getScRequestItem().getRequestNoteItemId().equals(ctContractItem.getScRequestItem().getRequestNoteItemId())) {
 
 					Predicate conditionPredicate;
-					for (final CtItemPrice currentCtItemPrice : ctContractItem
-							.getCtItemPrices()) {
+					for (final CtItemPrice currentCtItemPrice : ctContractItem.getCtItemPrices()) {
 						List<CtItemPrice> itemPriceSelect;
 						currentCtItemPrice.setChangeZoneLabel(false);
-						if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(
-										ParameterConst.PRICE_TYPE_TIER)
+						if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
 								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
 								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
 								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
@@ -3169,17 +3172,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 									return itemPricePredicate.getUnitPrice().equals(currentCtItemPrice.getUnitPrice())
 											&& itemPricePredicate.getEffDate().equals(currentCtItemPrice.getEffDate())
 											&& itemPricePredicate.getCtContractZone().getZoneName() != null
-											&& itemPricePredicate.getCtContractZone().getZoneName()
-											.equalsIgnoreCase(currentCtItemPrice.getCtContractZone().getZoneName());
+											&& itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(currentCtItemPrice.getCtContractZone().getZoneName());
 								}
 							};
 						}
 
-						itemPriceSelect = (List<CtItemPrice>) CollectionUtils
-								.select(preCtContractItem.getCtItemPrices(),
-										conditionPredicate);
-						if (CollectionUtils.isEmpty(itemPriceSelect)
-								&& itemPriceSelect.isEmpty()) {
+						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(preCtContractItem.getCtItemPrices(), conditionPredicate);
+						if (CollectionUtils.isEmpty(itemPriceSelect) && itemPriceSelect.isEmpty()) {
 							currentCtItemPrice.setChangeZoneLabel(true);
 						}
 					}
@@ -3187,10 +3186,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		} catch (Exception e) {
 			log.info(e);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 

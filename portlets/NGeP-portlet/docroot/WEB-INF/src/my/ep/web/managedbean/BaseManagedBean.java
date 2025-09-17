@@ -168,7 +168,7 @@ public abstract class BaseManagedBean implements Serializable {
 	// #28784 - Demo WIP - To display QT BPM version
 	private String bpmVersionNo;
 	// #29007 End
-	
+
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
 

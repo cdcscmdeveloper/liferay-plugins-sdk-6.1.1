@@ -21,7 +21,7 @@ import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;//#28854
-import my.ep.comparator.ct.CtContractItemComparator; //#36726 || #33287
+import my.ep.comparator.ct.CtContractItemComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
