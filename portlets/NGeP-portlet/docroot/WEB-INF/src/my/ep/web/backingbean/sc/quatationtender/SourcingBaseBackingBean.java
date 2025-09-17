@@ -1004,10 +1004,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
+		//21692 - Start
+		HttpServletResponse res;
+		if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
+			res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		} else {
+			PortletResponse portletResponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			res = com.liferay.portal.util.PortalUtil
+					.getHttpServletResponse(portletResponse);
+		}
+		//21692 - End
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try{
