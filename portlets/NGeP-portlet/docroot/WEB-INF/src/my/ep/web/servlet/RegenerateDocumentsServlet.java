@@ -20,13 +20,12 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.QTFieldConst;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.exception.EpException;
-import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.util.PasswordUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import org.apache.log4j.Logger;
+
 import org.picketbox.util.StringUtil;
 
 /**
@@ -35,26 +34,22 @@ import org.picketbox.util.StringUtil;
 @WebServlet("/regenerateDocumentsServlet")
 public class RegenerateDocumentsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = EpLogger
-			.getLogger(RegenerateDocumentsServlet.class);   
 	private static String token = "JgMfrR75RtsPNVb4Sk6msCpv488aS4Uq5VzKj4";
-    private FacesContextFactory facesContextFactory;
-    private Lifecycle lifecycle;
-    
-    @Override
-	public void init(ServletConfig config) throws ServletException {
-        super.init(config);
+	private FacesContextFactory facesContextFactory;
+	private Lifecycle lifecycle;
 
-        LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
-                .getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-        facesContextFactory = (FacesContextFactory) FactoryFinder
-                .getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-        lifecycle = lifecycleFactory
-                .getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
-    }
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+
+		LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
+				.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+		facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+		lifecycle = lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+	}
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		log.info("RegenerateDocumentsServlet begin..");
-		
+
 		facesContextFactory.getFacesContext(request.getSession().getServletContext(), request, response, lifecycle);
 		PrintWriter out = response.getWriter();
 
@@ -62,30 +57,15 @@ public class RegenerateDocumentsServlet extends HttpServlet {
 			String qtId = request.getParameter("qtId");
 			String tokenHash = request.getParameter("token");
 			String hostUrl = request.getServerName() + ":" + request.getServerPort();
-			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("hostUrl", hostUrl);              
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("hostUrl", hostUrl);
 
-			if(StringUtil.isNullOrEmpty(request.getParameter("token")) || !PasswordUtils.decrypt(tokenHash).equals(token)){
+			if (StringUtil.isNullOrEmpty(request.getParameter("token"))
+					|| !PasswordUtils.decrypt(tokenHash).equals(token)) {
 				throw new EpException("Failed token validation.");
 			}
 			QTDocumentsBackingBean bb = new QTDocumentsBackingBean();
-			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(new Long(qtId));
-			
-			/*
-			 * TRACE HI-EXEC TIME
-			 * Development #29385
-			 */
-			long startTime = System.currentTimeMillis();
-			ScQt qt = qtDetailSO.retriveQTDetails(reqDTO).getQtDetail();
-			SLAUtils.getInstance().logHiExecInfo("QT","RegenerateDocumentsServlet.doGet", startTime);
-			/*
-			 * END
-			 */
-			
-			if(qt!=null){
-				bb.getManagedBean().setQt(qt);
+
+			if (qtId != null) {
 				/**
 				 * Will regenerate documents after all suppliers replied to Proposal Validity Extension.
 				 * List of reports:
@@ -94,22 +74,21 @@ public class RegenerateDocumentsServlet extends HttpServlet {
 				 * TK - Terma Kontrak
 				 * KT - Kertas Taklimat
 				 */
-				bb.reGenerateDocuments(qt.getQtId(), QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
-			}else{
+				bb.reGenerateDocuments(new Long(qtId), QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
+			} else {
 				throw new EpException("Failed to obtain qt detail.");
 			}
 			out.print("Success");
 		} catch (Exception e) {
 			e.printStackTrace();
-			if(e.getMessage()==null){
+			if (e.getMessage() == null) {
 				out.print("Failed without message");
-			}else{
+			} else {
 				out.print(e.getMessage());
 			}
 		} finally {
 			out.close();
 		}
-		log.info("RegenerateDocumentsServlet end..");
 	}
-	
+
 }

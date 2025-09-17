@@ -2232,10 +2232,13 @@ return scQt;
 			proposalReqDTO.setQtId(qt.getQtId());
 			boolean isAllAccepted = false;
 			int totalAccepted = proposalSO.getTotalQtValidityAcceptedSuppliers(proposalReqDTO);
-			int totalSupplierReplied = proposalSO.getTotalSuppliersRespondEPV(proposalReqDTO);//#21692
+			int totalSupplierNotRespondEPV = proposalSO.getTotalSuppliersNotRespondEPV(proposalReqDTO);//#21692
 			dataType.getSupplierList();
 			//#21692 - Start
-			isAllAccepted = totalSupplierReplied - 1 == 0 && (totalAccepted != 0 || BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome));
+			int supplierCurrentlyRespondEPV = 1;
+			int allSupplierRespond = 0;
+			isAllAccepted = totalSupplierNotRespondEPV - supplierCurrentlyRespondEPV == allSupplierRespond
+					&& (totalAccepted != 0 || BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome));
 			if (isAllAccepted) {
 				approveApprovalRequests(qt, approvalRequests, true);
 			}
