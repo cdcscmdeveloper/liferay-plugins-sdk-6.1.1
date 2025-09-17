@@ -2232,7 +2232,7 @@ return scQt;
 			proposalReqDTO.setQtId(qt.getQtId());
 			boolean isAllAccepted = false;
 			int totalAccepted = proposalSO.getTotalQtValidityAcceptedSuppliers(proposalReqDTO);
-			int totalSupplierReplied = proposalSO.getTotalSuppliersRepliedEPV(proposalReqDTO);//#21692
+			int totalSupplierReplied = proposalSO.getTotalSuppliersRespondEPV(proposalReqDTO);//#21692
 			dataType.getSupplierList();
 			//#21692 - Start
 			isAllAccepted = totalSupplierReplied - 1 == 0 && (totalAccepted != 0 || BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome));
