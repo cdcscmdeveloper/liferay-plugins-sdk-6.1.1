@@ -10198,7 +10198,7 @@ private void retriveCommitteeRemarksList(){
 				//#21692 - end
 				
 				//29661 -start-
-				validateProposalScoredtls(contract);
+				validateProposalScoredtls(contract,getManagedBean().getScQtChecklist());
 				
 				//29661 -end-
 				if (null != contract.getUserScore() && null != this.getManagedBean().getUserScores()) {
@@ -20086,10 +20086,19 @@ private void retriveCommitteeRemarksList(){
 	 * validate proposal user score details.
 	 * 
 	 * @param proposalScore
+	 * @param scQtCheckList
 	 */
-	private void validateProposalScoredtls(ScQtProposalScore proposalScore) {
+	private void validateProposalScoredtls(ScQtProposalScore proposalScore,
+			ScQtCheckList scQtCheckList) {
 		BigDecimal userScore = proposalScore.getUserScore();
-		if (null == userScore) {
+		List<String> docDefKeys = Arrays.asList(
+				SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE,
+				SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE);
+		PmDocument document = null != scQtCheckList.getPmDocument() ? scQtCheckList
+				.getPmDocument() : null;
+		boolean isUserScore = null != document && null == userScore
+				&& docDefKeys.contains(document.getDocDefinitionKey());
+		if (isUserScore) {
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] { ResourceBundleUtils.getMessage(
 							SourcingConstants.EVALUATION_USER_SCORE,
