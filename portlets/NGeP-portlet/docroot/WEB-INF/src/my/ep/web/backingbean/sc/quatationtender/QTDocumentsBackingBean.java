@@ -30,6 +30,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
@@ -2406,9 +2407,16 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		VelocityContext context = new VelocityContext();
 
-		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() + ":"
-				+ fs.getRequest().getServerPort();
+		//#21692 - Start
+		String hostUrl = "";
+		if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
+			hostUrl = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl");
+		} else {
+			FacesScopes fs = new FacesScopes();
+			hostUrl = fs.getRequest().getServerName() + ":"
+					+ fs.getRequest().getServerPort();
+		}
+		//#21692 - End
 		context.put("hostUrl", hostUrl);
 
 		context.put("commonUtils", commonUtils);
