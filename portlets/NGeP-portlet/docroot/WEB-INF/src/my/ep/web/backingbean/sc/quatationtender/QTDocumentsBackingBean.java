@@ -3228,7 +3228,8 @@ public class QTDocumentsBackingBean extends
 	// Bug #36702@Syazani 28/11/2024 -- End
 	
 	// Bug #38731@Syazani 20/08/2025 -- Start
-	private boolean isLocationContainsDivision(List<TplSpecZoneDtl> specZoneDtls, List<TplSpecLoc> locationDetails, VelocityContext context) {
+	private boolean isLocationContainsDivision(List<TplSpecZoneDtl> specZoneDtls, List<TplSpecLoc> locationDetails,
+			VelocityContext context) {
 		boolean isLocationContainsDivision = false;
 		if (!CollectionUtils.isEmpty(specZoneDtls)) {
 			for (TplSpecZoneDtl tplSpecZoneDtl : specZoneDtls) {
