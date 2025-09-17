@@ -57,6 +57,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.comparator.WorklistItemVOComparator;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -905,6 +906,17 @@ public class SupplierFinalizationBackingBean extends
 				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
 				this.getManagedBean().setScQtCommittee(scQtCommittee);
 
+				//#21692 - Start
+				List<Long> statuses = new ArrayList<>();
+				statuses.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
+				statuses.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
+				statuses.add(QTStatusConst.SF_PENDING_SIGN_OFF);
+
+				List<Long> signOffStatus = new ArrayList<>();
+				signOffStatus.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
+				signOffStatus.add(QTStatusConst.SF_PENDING_SIGN_OFF);
+				//#21692 - End
+
 				// Committee Details
 				if (scQtCommittee != null) {
 					// #25037 - start
@@ -937,6 +949,14 @@ public class SupplierFinalizationBackingBean extends
 						}
 						for (ScQtCommitteeActivity commActivity 
 									: scQtCommittee.getCommitteeActivities()) {
+							//#21692 - Start
+							boolean isSecretary = commActivity.getScCommitteeMember().getMemberRole().getParameterCode()
+									.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+							commActivity.setSignedOff(!isSecretary ? commActivity.isSignedOff() : signOffStatus.contains(
+									this.getManagedBean().getCurrentStatusId()));
+							commActivity.setAttended(!isSecretary || commActivity.isAttended()? commActivity.isAttended() : statuses.contains(
+									this.getManagedBean().getCurrentStatusId()));
+							//#21692 - End
 							committeeEndorsementList.add(commActivity);
 						}
 					} else {
@@ -1255,8 +1275,32 @@ public class SupplierFinalizationBackingBean extends
 		//35087
 		switch (evaluationStageId) {
 			case 1 : if (getManagedBean().getScQt().isDemoRequired()) {
-						 evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
-						 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.presentation.demo.stage";
+						//#28784 - Start
+						boolean isQtNewVersion = validateSupportedTask(getManagedBean().getScQt().getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						boolean isItemize = getManagedBean().isItemize();
+						boolean isItemRowSelected = getManagedBean().isItemRowSelect();
+						ScQtRecommend selectedItem = getManagedBean().getSelectedItem();
+						if (!isItemize || !isQtNewVersion) {
+				    		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+						} else {
+				    		int wipStatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		
+				    		if (wipStatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				        		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+				    		} else {
+				        		evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
+		
+				        		if (isItemRowSelected && selectedItem != null) {
+				            		selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
+				        		} else {
+				            		getManagedBean().setQualifiedSuppliersByEvalStage(null);
+				            		return;
+				        		}
+				    		}
+						}
+						// Set evaluation header (always the same regardless of itemize/WIP status)
+						evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_DEMO_EVAL_STAGE;
+						//#28784 - End
 					 } else {
 						// #21695 tec by itemize result pop up farid - start
 						if (getManagedBean().isItemize()) {
@@ -3277,10 +3321,14 @@ public class SupplierFinalizationBackingBean extends
 		
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		long downFilesSize = reportAttachment.getFileSize() != null ? reportAttachment.getFileSize() : 0;
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
-		if (downFilesSize <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
-			regenEvaluationDownload(reportAttachment, true);
+		//#28784 - Start
+		if (scQtFinalizationReport.getPmDocument() != null) {
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+			if (downFilesSize <= SourcingConstants.FILE_SIZE && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+				regenEvaluationDownload(reportAttachment, true);
+			}
 		}
+		//#28784 - End
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	

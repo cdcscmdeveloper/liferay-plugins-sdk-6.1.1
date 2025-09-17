@@ -4149,12 +4149,8 @@ return scQt;
 				if (approvalRequest.getDecisionType() == null) {
 					approvalRequest.setDecisionType(pmParameter);
 				}
-
-				ScQt scQt = getManagedBean().getQt();
-				if (scQt.getMofDate() != null) {
-					if (approvalRequest.getDecisionCertPBM() == null) {
-						approvalRequest.setDecisionCertPBM(pmParameter);
-					}
+				if (approvalRequest.getDecisionCertPBM() == null) {
+					approvalRequest.setDecisionCertPBM(pmParameter);
 				}
 			}
 		}
