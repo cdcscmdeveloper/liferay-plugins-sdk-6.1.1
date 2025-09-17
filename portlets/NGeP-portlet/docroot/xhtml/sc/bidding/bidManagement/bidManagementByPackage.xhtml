@@ -269,9 +269,16 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 				style="text-align:center;">
-				<h:outputText
-					rendered="#{biddingBB.checkDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId) or biddingBB.checkZonesDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId, biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.specZoneId)}"
-					value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
+				   <c:choose>
+					    <c:when test="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl ne null}">	
+				             <h:outputText rendered="#{biddingBB.checkZonesDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId, biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.specZoneId) or item.supplierDeactivated}"
+					         value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
+				        </c:when>
+				        <c:otherwise>
+		                     <h:outputText rendered="#{biddingBB.checkDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId) or item.supplierDeactivated}"
+					         value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" /> 
+					    </c:otherwise>
+				    </c:choose>
 			</p:column>
 		</p:dataTable>
 		<ui:remove> #28777#29729 - End </ui:remove>

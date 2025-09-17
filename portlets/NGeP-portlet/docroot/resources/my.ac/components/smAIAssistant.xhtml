@@ -1,0 +1,138 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<cc:interface>
+		<cc:attribute name="aiDlg" default="aiDlg"/>
+		<cc:attribute name="docType" default="bank" />
+		<cc:attribute name="showBtn" default="true" />
+		<cc:attribute name="smAppl" type="my.ep.persistence.entity.sm.SmAppl" default="#{null}"/>
+		<cc:attribute name="updateId" default=""/>
+		<cc:attribute name="postProcess" default=""/>
+	</cc:interface>
+
+	<cc:implementation>
+		<ui:param name="ai" value="#{smAIDocBackingBean}" />
+		<p:commandButton value="AI Assistant" onclick="#{cc.attrs.aiDlg}.show()" rendered="#{cc.attrs.showBtn}" 
+			action="#{ai.clearDocs()}" update="docs#{cc.attrs.aiDlg}" 
+			immediate="true">
+				<p:ajax partialSubmit="true" process="@this" />
+		</p:commandButton>
+		<p:graphicImage id="tt#{cc.attrs.aiDlg}" value="/css/images/design/tooltips.png" />
+		<p:tooltip id="tt2#{cc.attrs.aiDlg}" for="tt#{cc.attrs.aiDlg}">
+			<p:outputLabel escape="false" value="Click the AI Assistant and upload XXX for data extraction" />
+		</p:tooltip>&#160;
+		<br/>
+		<h:outputText styleClass="instruction" 
+			value="Disclaimer: Please review and verify AI-generated data. The system is not responsible for data accuracy or integrity." />
+		
+		
+		<p:blockUI block="#{cc.attrs.aiDlg}" widgetVar="block#{cc.attrs.aiDlg}">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+	
+		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
+			dynamic="true" resizable="false" width="500px" 
+			styleClass="pop_up_top" header="#{lbl['lbl.sm.sme.action.choose']}"
+			onShow="singleUploadListener(uploadWV);"
+			onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;">
+			
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+			
+			<h:outputText value="#{lbl['lbl.sm.instruction.attachment']}" styleClass="instruction" escape="false" />
+			<h:outputText value="#{lbl['lbl.sm.suppDoc.online.multipleDoc']}" styleClass="instruction" />
+			<br/>
+			<p:dataTable id="docs#{cc.attrs.aiDlg}" var="doc" value="#{ai.getDocs()}" emptyMessage="">
+				<p:column headerText="Uploaded Files">
+					<h:commandLink id="file" value="#{doc.fileName}" >
+            			<p:fileDownload value="#{ai.commonDownload(doc.filePath, doc.fileName)}" />
+        			</h:commandLink>
+				</p:column>
+				<p:column>
+					<p:commandLink action="#{ai.deleteDoc(doc)}" update="docs#{cc.attrs.aiDlg}">
+						<p:graphicImage value="/css/images/design/trash.png" />
+					</p:commandLink> 
+				</p:column>
+			</p:dataTable>
+			<br/>
+			
+			<!-- allowTypes="/(\.|\/)(pdf|doc|docx)$/" -->
+			<p:fileUpload widgetVar="uploadWV" 
+				allowTypes="/(\.|\/)(pdf|doc|docx|json)$/"
+				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
+				invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
+				fileUploadListener="#{ai.handleSupDocFileAttachment}"
+				update="docs#{cc.attrs.aiDlg}"
+				uploadLabel="#{lbl['lbl.btn.upload']}"  
+				label="#{lbl['lbl.btn.addfile']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				multiple="true"
+				showButtons="false"/>
+			
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.bpm.process']}" 
+					action="#{ai.processDoc(cc.attrs.docType)}"
+					onstart="block#{cc.attrs.aiDlg}.show()" 
+					oncomplete="block#{cc.attrs.aiDlg}.hide();#{cc.attrs.aiDlg}.hide();ok#{cc.attrs.aiDlg}.show();"
+					update="ok#{cc.attrs.aiDlg}"/>
+				<p:commandButton value="#{lbl['lbl.btn.close']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
+			</div>
+		</p:dialog>
+		
+		<p:dialog id="ok#{cc.attrs.aiDlg}" widgetVar="ok#{cc.attrs.aiDlg}" modal="true" styleClass="confirm-ui-dialog"
+			resizable="false" closable="false"
+			width="#{cc.attrs.docType eq 'EPF' ? 600 : 400}" 
+			height="#{cc.attrs.docType eq 'EPF' ? 500 : 100}" 
+			header="#{lbl['lbl.sm.projDtls.success']}">
+			<table width="100%">
+				<tr>
+					<td align="left" style="white-space: normal; word-wrap: break-word !important;">
+					<p:outputLabel value="AI has successfully extracted the data. Click 'OK' to accept and populate into the fields, or click 'No' to cancel." 
+						escape="false" style="padding-left:0px"
+						rendered="#{cc.attrs.docType != 'EPF'}"/>
+					<p:outputLabel value="AI has successfully extracted the data. Please select the personnel and click 'OK' to accept and populate into the fields, or click 'No' to cancel." 
+						escape="false" style="padding-left:0px"
+						rendered="#{cc.attrs.docType eq 'EPF'}"/>
+					</td>
+				</tr>
+			</table>
+			<p:outputPanel rendered="#{cc.attrs.docType eq 'EPF'}" style="width:100%;height:300px;overflow:auto;" >
+				<p:spacer height="1" />
+				<p:dataTable id="dt#{cc.attrs.aiDlg}" var="emp" value="#{ai.getEmployees()}" rowKey="#{emp}"
+					selection="#{ai.selectedEmployees}" >
+					<ac:paginator for="dt#{cc.attrs.aiDlg}" />
+					<p:column selectionMode="multiple" style="width:2%" />
+					<p:column headerText="#{lbl['lbl.sm.person.name']}">
+						<h:outputText value="#{emp.nama}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.person.icNo']}">
+						<h:outputText value="#{emp.noPengenalanDiri}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.person.epfNo']}">
+						<h:outputText value="#{emp.noAhliKWSP}" />
+					</p:column>
+				</p:dataTable>
+			</p:outputPanel>
+			
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="OK-1" onclick="ok#{cc.attrs.aiDlg}.hide();" 
+					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl, cc.attrs.postProcess)}"
+					rendered="#{empty cc.attrs.updateId}"/>
+				<p:commandButton value="OK-2" onclick="ok#{cc.attrs.aiDlg}.hide();" 
+					update=":#{p:component(cc.attrs.updateId)}"
+					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl, cc.attrs.postProcess)}"
+					rendered="#{not empty cc.attrs.updateId}"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="ok#{cc.attrs.aiDlg}.hide();"/>
+			</div>
+		</p:dialog>
+	</cc:implementation>
+</ui:component>
