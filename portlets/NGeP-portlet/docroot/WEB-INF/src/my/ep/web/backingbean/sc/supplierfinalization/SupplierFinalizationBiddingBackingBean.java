@@ -626,6 +626,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				bidReqDTO.setQtId(getManagedBean().getScQt().getQtId());
 				bidReqDTO.setRecommendType(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG);
 				bidReqDTO.setSpecZoneId(selectedZoneId);
+				bidReqDTO.setBidScheduleId(bidScheduleList.get(0).getBidScheduleId());// #28777&#29729
 
 				BiddingResDTO bidResDTO = null;
 				if (CollectionUtils.isEmpty(shortlistedSuppliers) || CollectionUtils.isEmpty(notShortlistedSuppliers)) {// #28777&#29729
@@ -1012,6 +1013,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			reqDTO.setSpecZoneId(selectedZoneId);
 			reqDTO.setScBidSchedule(bidItem.getScBidSchedule());
 			reqDTO.setBidItemId(bidItem.getScRequestItem().getRequestNoteItemId());
+			reqDTO.setBidScheduleId(bidItem.getScBidSchedule().getBidScheduleId());// #28777&#29729
 			
 			BiddingResDTO resDTO = null;
 			if (CollectionUtils.isEmpty(shortlistedSuppliers) || CollectionUtils.isEmpty(notShortlistedSuppliers)) {// #28777&#29729
@@ -1274,6 +1276,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 		statuses.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
 		statuses.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
 		statuses.add(QTStatusConst.SF_PENDING_SIGN_OFF);
+
+		List<Long> signOffStatus = new ArrayList<>();
+		signOffStatus.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
+		signOffStatus.add(QTStatusConst.SF_PENDING_SIGN_OFF);
 		//#38540 - End
 		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
 		List<ScQtCommitteeActivity> committeeActivities = scQtCommittee
@@ -1306,8 +1312,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 					ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
 					activity.setScQtCommittee(scQtCommittee);
 					activity.setScCommitteeMember(member);
-					activity.setAttended(activity.isAttended() ? activity.isAttended() : statuses.contains(this
-							.getManagedBean().getCurrentStatusId()));//#38540
+					//#21692 - Start
+					boolean isSecretary = activity.getScCommitteeMember().getMemberRole().getParameterCode()
+							.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					activity.setSignedOff(!isSecretary ? activity.isSignedOff() : signOffStatus.contains(this
+							.getManagedBean().getCurrentStatusId()));
+					activity.setAttended(!isSecretary || activity.isAttended() ? activity.isAttended() : statuses.contains(this
+							.getManagedBean().getCurrentStatusId()));
+					//#21692 - End
 					setUserDetails(activity);
 					missingActivities.add(activity);
 				}
@@ -3311,11 +3323,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getBiddingZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+		
 		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+		
+		if(!isZonal){
+			return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+		}
+		
+		return false;
 	}
 
 	// #28777 & #29729 - End
@@ -3332,11 +3351,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getBiddingZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+		
 		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+		
+		if(!isZonal){
+			return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+		}
+		
+		return false;
 	}
 
 	// #28777 & #29729 - End
