@@ -2590,7 +2590,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 		
 		// Bug #38731@Syazani 20/08/2025 -- Start
-		if (locationLevel.equalsIgnoreCase("District")) {
+		if (!StringUtils.isBlank(locationLevel) && "District".equalsIgnoreCase(locationLevel)) {
 			isLocLevelDistrictContainsDivision = isLocationContainsDivision(specZoneDtls, locationDetails, context);
 		}
 		context.put("isLocLevelDistrictContainsDivision", isLocLevelDistrictContainsDivision);
