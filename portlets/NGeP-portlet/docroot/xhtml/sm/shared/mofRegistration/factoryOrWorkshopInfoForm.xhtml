@@ -16,7 +16,8 @@
 		id="smFacilityFactoryDtPanel" rendered="#{backingBean.managedBean.showFactoryPanel}">
 		<p:outputPanel id="factoryPan" rendered="#{backingBean.managedBean.showFactoryPanel}">
 			<br />
-			<ui:repeat var="factoryCatVar" value="#{backingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
+			<!-- #28775 - 38500 -->
+			<c:forEach var="factoryCatVar" items="#{backingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
 				<table style="width: 100%;">
 					<!-- 29380 - Site Visit Grouping Enhancement -28775 - start -->
 					<tr>
@@ -40,8 +41,8 @@
 				<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
 					value="#{factoryCatVar.facilityList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rowKey="#{fac}" rowIndexVar="index" id="facDt">
-					<ac:paginator for="facDt" />
+					rowKey="#{fac}" rowIndexVar="index" id="facDt_#{factoryCatVarStatus.index}">
+					<ac:paginator for="facDt_#{factoryCatVarStatus.index}" /><!-- #28775 - 38498 -->
 					
 					<p:column style="width: 5% !important;" rendered="#{not empty factoryCatVar.facilityList and !backingBean.managedBean.upsCannotEdit}">
 						<f:facet name="header">
@@ -107,7 +108,7 @@
 	
 				</p:dataTable><br />
 				
-			</ui:repeat>
+			</c:forEach><!-- #28775 - 38500 -->
 			
 			<p:spacer height="2px;" />
 			<div align="right">
@@ -117,10 +118,11 @@
 					action="#{backingBean.assignNewFactoryBean}"
 					update=":form:tt:factoryDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #28775 - 38498 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="factoryPan"
-					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtn(factoryCatVar.facilityList)}"
+					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.factoryFacilitiesVOList)}"
 					update=":#{p:component('smFacilityFactoryDtPanel')},@this" 
 					oncomplete="factoryDeletePopUp.show()" />
 			</div>

@@ -14,7 +14,7 @@
 					<div align="right" style="width: 100%">
 						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="budgetThreSaveBtn"
-							partialSubmit="true" oncomplete="saveBudgetThreInfoDlg.show();"/>
+							partialSubmit="true" oncomplete="if (!args.validationFailed) saveBudgetThreInfoDlg.show();"/>
 						<!-- 34445 end -->
 					</div>
 				</td>

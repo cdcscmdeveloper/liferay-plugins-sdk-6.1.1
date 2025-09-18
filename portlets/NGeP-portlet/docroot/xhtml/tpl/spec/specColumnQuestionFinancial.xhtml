@@ -17,10 +17,6 @@
 	<ui:decorate template="specColumnQuestionFinancialHeader.xhtml"> <!-- #25039 change specColumnQuestionViewHeader.xhtml from to specColumnQuestionHeader.xhtml-->
 	<ui:define name="otherHeaderSection">
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
-<!-- #25726 START -->	
-	<ui:param name="isFulfilmentTypeNonPeriodicScheduled" 
-		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeNonPeriodicScheduled}" />
-<!-- #25726 END -->
 <!-- 	#25039 Begin to change indicative label -->	
 	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:97px;" rendered="#{isSpecTypeFinancial}" >
 		<f:facet name="header">
@@ -92,8 +88,8 @@
 						isItemTypeService,
 						isFulfilmentTypeScheduled, 
 						templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].tplSpecZoneDtl.specZoneId,
-						question.getSpecQuestionId(),
-						isFulfilmentTypeNonPeriodicScheduled)}"></p:ajax>
+						question.getSpecQuestionId())}"></p:ajax>
+						<!-- new #25726 -->
 						<!-- #25726 end -->
 						<!-- #25039#152 comment
 						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />  -->

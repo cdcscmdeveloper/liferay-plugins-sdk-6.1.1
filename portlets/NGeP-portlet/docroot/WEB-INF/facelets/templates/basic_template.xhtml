@@ -147,55 +147,13 @@
 				  }
 				}
 		 <!--#36681 - end -->
-		 
-	    // Initialize and show dialog
-	    function showCustomDialog(title, message) {
-	        // Set dialog content
-	        jQuery("#dialogTitle").text(title);
-	        jQuery("#dialogMessage").text(message);
-	        
-	        // Position and show dialog (centered)
-	        jQuery("#customDialog").css({
-	            "position": "fixed",
-	            "top": "50%",
-	            "left": "50%",
-	            "transform": "translate(-50%, -50%)",
-	            "z-index": "10000"
-	        }).show();
-	        
-	        // Add backdrop overlay
-	        jQuery("body").append('<div id="dialogBackdrop" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;"></div>');
-	    }
-
-	    // Close dialog
-	    function closeCustomDialog() {
-	        jQuery("#customDialog").hide();
-	        jQuery("#dialogBackdrop").remove();
-	    }
-	    
-	    function redirectToLogout() {
-	        // First, close the dialog
-	        jQuery("#customDialog").hide();
-	        jQuery("#dialogBackdrop").remove();
-
-	        // Then, redirect the user
-	        window.location.href = "http://ngepdevaus01.eperolehan.com.my:7777/oam/server/logout?end_url=http://ngepdevwps01.eperolehan.com.my:8888/c/portal/logout";
-	    }
 	    
 	</script>
 </h:head>
 
 <h:body>
-	
-	<div id="customDialog" style="display: none; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
-	    <h3 id="dialogTitle">Attention Required</h3>
-	    <p id="dialogMessage"></p>
-	    <!-- <button id="dialogCloseBtn" onclick="redirectToLogout()">OK</button> -->
-	</div>
 
 	<h:form id="form">
-		 
-		 <h:inputHidden id="#{CommonConstants.TOKEN_UNIQUE_ID}" value="#{tokenManagerMB.token}" />
 	    
 		<div id="content" style="width: 100%;">
 		

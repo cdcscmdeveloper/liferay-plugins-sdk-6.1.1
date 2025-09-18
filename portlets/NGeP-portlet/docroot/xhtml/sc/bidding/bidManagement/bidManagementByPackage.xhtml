@@ -119,7 +119,7 @@
 					value="#{(item.scBidSupplier.bumi)? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			<ui:remove>26247 - start</ui:remove>
-			<p:column>
+			<p:column style="white-space:normal;width:18%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 					<ac:iconTooltip
@@ -211,6 +211,17 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
+			
+			<p:column style="white-space:normal;width:18%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+				</f:facet>
+				<ac:disciplinaryActionYesNo
+					supplier="#{item.scBidSupplier.smSupplier}" index="#{index}"/>
+			</p:column>
+			
 			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}">
 				<h:outputText
 					rendered="#{item.scBidSupplier.packageStartPrice ne item.bidPriceTotal}"
@@ -258,9 +269,16 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 				style="text-align:center;">
-				<h:outputText
-					rendered="#{biddingBB.checkDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId)}"
-					value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
+				   <c:choose>
+					    <c:when test="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl ne null}">	
+				             <h:outputText rendered="#{biddingBB.checkZonesDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId, biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.specZoneId) or item.supplierDeactivated}"
+					         value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
+				        </c:when>
+				        <c:otherwise>
+		                     <h:outputText rendered="#{biddingBB.checkDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId) or item.supplierDeactivated}"
+					         value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" /> 
+					    </c:otherwise>
+				    </c:choose>
 			</p:column>
 		</p:dataTable>
 		<ui:remove> #28777#29729 - End </ui:remove>

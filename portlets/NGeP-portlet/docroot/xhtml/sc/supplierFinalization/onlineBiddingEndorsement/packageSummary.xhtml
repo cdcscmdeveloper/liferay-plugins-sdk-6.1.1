@@ -92,13 +92,24 @@
 				<h:outputText value="#{(price.scBidSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			<ui:remove>26247 - start</ui:remove>
-			<p:column>
+			<ui:param name="supplier"
+				value="#{price.scBidSupplier.smSupplier}" />
+			<ui:param name="mofExpired"
+				value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+			<p:column styleClass="#{mofExpired ? 'red-background':''}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
+				</f:facet>
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+			</p:column>
+			<p:column style="white-space:normal;width:18%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
 				<ac:disciplinaryActionYesNo
-					supplier="#{price.scBidSupplier.smSupplier}" index="#{rowIndex}"/>
+					supplier="#{supplier}" index="#{rowIndex}"/>
 			</p:column>
 			<ui:remove>26247 - end</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}" style="width:10%; white-space:normal; text-align:right;">
@@ -203,35 +214,27 @@
 				<h:outputText
 					value="#{(priceDis.scBidSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
-
-			<ui:remove>
-				Bug 31101 - WIP Impact 
-			</ui:remove>
-			<p:column>
+			
+			<ui:param name="supplier"
+				value="#{priceDis.scBidSupplier.smSupplier}" />
+			<ui:param name="mofExpired"
+				value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+			<p:column styleClass="#{mofExpired ? 'red-background':''}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
+				</f:facet>
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+			</p:column>			
+			<p:column style="white-space:normal;width:18%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
-				<p:commandLink onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide()"
-					style="color:red; font-weight:bold;"
-					rendered="#{priceDis.scBidSupplier.smSupplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(priceDis.scBidSupplier.smSupplier)}"
-					process="@this" partialSubmit="true" update=":form">
-					<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-						styleClass="warning" />
-				</p:commandLink>
-				<p:spacer width="2" />
-
-				<h:outputText
-					rendered="#{!priceDis.scBidSupplier.smSupplier.disciplinaryActions}"
-					value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+				<ac:disciplinaryActionYesNo
+					supplier="#{supplier}" index="#{rowIndex}"/>
 			</p:column>
-
-			<ui:remove>
-				Bug 31101 - END
-			</ui:remove>
-
+			
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}"
 				style="width:10%; white-space:normal; text-align:right;">
 				<h:outputText value="#{priceDis.scBidSupplier.packageStartPrice}">
@@ -298,11 +301,11 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
+	        <p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 				style="text-align:center;">
 				<h:outputText
 					value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}"
-					rendered="#{priceDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}" />
+					rendered="#{priceDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalBiddingBackingBean.managedBean.biddingZoneDetails.get(suppFinalBiddingBackingBean.managedBean.zoneActiveIndex).branchDeactivated or priceDis.supplierDeactivated}" />
 			</p:column>
 		</p:dataTable>
 		<ui:remove> #28777#29729 - End </ui:remove>

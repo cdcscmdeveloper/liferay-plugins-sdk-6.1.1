@@ -14,7 +14,7 @@
 					<!-- 34445 start -->
 					<p:commandButton value="#{lbl['lbl.btn.save']}" id="orgTypeFeeSaveBtn"
 						partialSubmit="true" process=":form:settingTabId:feeSettingId"
-						oncomplete="saveOrgTypeInfoDlg.show();"/>
+						oncomplete="if (!args.validationFailed) saveOrgTypeInfoDlg.show();"/>
 					<!-- 34445 end -->
 				</div>
 			</td>

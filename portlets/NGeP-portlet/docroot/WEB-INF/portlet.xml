@@ -9702,6 +9702,39 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
+		<portlet-name>dpApprovalExceedThreshold</portlet-name>
+		<display-name>Direct Purchase Approval Exceed Threshold</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/directpurchase/exceedThresholdApproval/preRenderDpApprovalExceedThreshold.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Direct Purchase Approval Exceed Threshold</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
 		<portlet-name>scQuotationTenderSearch</portlet-name>
 		<display-name>Quotation / Tender Search</display-name>
 		<portlet-class>
@@ -11351,6 +11384,40 @@
 		<portlet-info>
 			<title>Test SPKI</title>
 			<short-title>Test SPKI</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- #38890 -->
+	<portlet>
+		<portlet-name>testSmAI</portlet-name>
+		<display-name>Test SM AI</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sm/ai/testAI.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Test SM AI</title>
+			<short-title>Test SM AI</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>

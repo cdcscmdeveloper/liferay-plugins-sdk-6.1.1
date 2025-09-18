@@ -73,12 +73,12 @@
 						<ui:remove>#29474 - end</ui:remove>
 						
 						<!-- #25726 START -->
+						<!-- new #25726 remove non periodic to condition -->
 						<c:if
-							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'
-							or specificationBackingBean.managedBean.fulfilmentType eq 'NPA' or specificationBackingBean.managedBean.fulfilmentType eq 'NPS'}">
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								disabled="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PA' 
-								 or specificationBackingBean.managedBean.fulfilmentType eq 'OF' or specificationBackingBean.managedBean.fulfilmentType eq 'NPA'}"
+								 or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
 								update="@form" 
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#29474</ui:remove>
@@ -148,12 +148,12 @@
 							src="/xhtml/sc/quatationtender/quotationTenderDetails/specQuotationTenderPaymentDeduction.xhtml" />
 					</c:if>
 					<ui:remove>#29474 - end</ui:remove>
+					<!-- new #25726 remove non periodic to condition -->
 					<c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '9'}"><ui:remove>#29474</ui:remove>
 
 						<c:if
-							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'
-							or specificationBackingBean.managedBean.fulfilmentType eq 'NPS' or specificationBackingBean.managedBean.fulfilmentType eq 'NPA'}">
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
 
 							<ui:include
 								src="/xhtml/sc/specification/specificationCommittee/fulfilmentSchedule.xhtml" />

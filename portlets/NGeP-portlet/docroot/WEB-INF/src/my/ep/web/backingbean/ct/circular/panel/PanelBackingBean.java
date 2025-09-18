@@ -83,6 +83,7 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory; //#30014 
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
@@ -91,6 +92,9 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCategoryL1; //#30014
+import my.ep.persistence.entity.pm.common.PmCategoryL2; //#30014
+import my.ep.persistence.entity.pm.common.PmCategoryL3; //#30014
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -264,7 +268,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().getCircularVer().setCircularAttachments(resDTO.getCircularVer().getCircularAttachments());
 			initializeRemarks();
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList(RoleCode.BPK_PQ_APPROVER.value()));
-
+			
 			if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
 				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 				List<PmUser> invalidApproverList = new ArrayList<PmUser>();
@@ -530,6 +534,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 			}
+			
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null){
 				circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
@@ -565,10 +570,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				// #35506 Start
 				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
 				if (auditCtBean.getAuditCtConfigState()) {
-					if (getManagedBean().isUpdateAction() && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+					CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+					
+					if ((getManagedBean().isUpdateAction() || ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_APPROVAL)
+							|| ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_REVISION_APPROVAL)
+							|| ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_REVISION))
+							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))) {
-
-						CtCircularVer ctCircularVer = getManagedBean().getCircularVer();					
+											
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
 						auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
 						auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
@@ -979,6 +988,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				}
 			}
 		}
+		//#30014 - Start
+		if (getManagedBean().getCircularVer().getCtPanelCategoryList().size() == 0
+				|| getManagedBean().getCircularVer().getCtPanelCategoryList().isEmpty()) {
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				getManagedBean().setSelectedTabIndex(2);
+				throw new EpException(MessageConst.ERROR_750088, new String[] { ResourceBundleUtils.getMessage("lbl.ct.menu.category.code",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+			}
+		}
+		//#30014 - End
 
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)  
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
@@ -3381,4 +3400,100 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		this.getManagedBean().setAttachFileIndex(attachmentIndex);
 	}
 	//end
+	
+	// #30014 - Start
+	/**
+	 * Adds the new category action.
+	 * 
+	 * @param pmCategoryL3
+	 *            the pm category l3
+	 */
+	public void addNewCategoryCode(PmCategoryL3 pmCategoryL3) {
+
+		if (pmCategoryL3 == null || pmCategoryL3.getPmCategoryL2() == null || pmCategoryL3.getPmCategoryL2().getPmCategoryL1() == null) {
+			throw new IllegalArgumentException(MessageConst.ERROR_750089);
+		}
+
+		CtCircularVer circularVer = getManagedBean().getCircularVer();
+		List<CtPanelCategory> ctCategoryList = circularVer.getCtPanelCategoryList();
+		if (ctCategoryList == null) {
+			ctCategoryList = new ArrayList<>();
+			circularVer.setCtPanelCategoryList(ctCategoryList);
+		}
+
+		Long l1Id = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Id();
+		Long l2Id = pmCategoryL3.getPmCategoryL2().getCategoryL2Id();
+		Long l3Id = pmCategoryL3.getCategoryL3Id();
+		
+		String categoryCode = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+                + pmCategoryL3.getPmCategoryL2().getCategoryL2Code()
+                + pmCategoryL3.getCategoryL3Code();
+
+		String categoryName = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryName();
+
+		// Duplicate Check
+		for (CtPanelCategory existing : ctCategoryList) {
+			if (existing.getPmCategoryL1().getCategoryL1Id().equals(l1Id) &&
+				existing.getPmCategoryL2().getCategoryL2Id().equals(l2Id) &&
+				existing.getPmCategoryL3().getCategoryL3Id().equals(l3Id)) {
+				throw new EpException(MessageConst.ERROR_750090, new String[] {categoryCode, categoryName}); // Duplicate message Error
+			}
+		}
+		
+		ctCategoryList.add(createPanelCategory(pmCategoryL3, circularVer));
+	}
+	
+	/**
+	 * Creates a new CtPanelCategory based on the selected category L3 and circular version.
+	 *
+	 * @param pmCategoryL3 the selected category L3
+	 * @param circularVer the associated circular version
+	 * @return a new fully populated CtPanelCategory
+	 */
+	private CtPanelCategory createPanelCategory(PmCategoryL3 pmCategoryL3, CtCircularVer circularVer) {
+		PmCategoryL2 l2 = pmCategoryL3.getPmCategoryL2();
+		PmCategoryL1 l1 = l2.getPmCategoryL1();
+
+		CtPanelCategory category = new CtPanelCategory();
+		category.setCtCircularVer(circularVer);
+		category.setPmCategoryL1(l1);
+		category.setPmCategoryL2(l2);
+		category.setPmCategoryL3(pmCategoryL3);
+		category.setPmCategoryL1Name(l1.getCategoryName());
+		category.setPmCategoryL2Name(l2.getCategoryName());
+		category.setPmCategoryL3Name(pmCategoryL3.getCategoryName());
+		category.setCategoryType(pmCategoryL3.getCategoryTypeCode());
+
+		return category;
+	}
+
+	/**
+	 * Delete category code.
+	 */
+	public void deleteCategoryCode() {
+
+		List<CtPanelCategory> all = getManagedBean().getCircularVer().getCtPanelCategoryList();
+		if (all == null) {
+			all = new ArrayList<CtPanelCategory>();
+		}
+
+		List<CtPanelCategory> selected = getManagedBean().getSelectedCategoryList();
+		if (selected == null || selected.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760146);
+		}
+
+		if (all.size() == selected.size()) {
+			all.clear();
+		} else {
+			all.removeAll(new ArrayList<CtPanelCategory>(selected));
+		}
+
+		getManagedBean().setSelectedCategoryList(new ArrayList<CtPanelCategory>());
+	}
+
+	public void onCategorySelectionChange() {
+
+	}
+	// #30014 - End
+
 }

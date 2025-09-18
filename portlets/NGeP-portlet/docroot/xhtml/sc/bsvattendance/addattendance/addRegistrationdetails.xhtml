@@ -30,17 +30,16 @@
 				<h:outputText value="#{lbl[scQtBriefReg.attended ? 'lbl.txt.yes' : 'lbl.txt.no']}" />
 			</p:column>
 			
-			<p:column style="text-align: center;">
+			<ui:remove>26247 - start</ui:remove>
+			<p:column style="white-space:normal;width:18%;text-align: center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
-				<ui:remove>26247 - start</ui:remove>
 				<ac:disciplinaryActionYesNo
 					supplier="#{scQtBriefReg.supplier}" index="#{index}"/>
-				<ui:remove>26247 - end</ui:remove>
 			</p:column>
-
+			<ui:remove>26247 - end</ui:remove>
 		</p:dataTable>
 
 		<table style="width: 100%">
@@ -148,10 +147,8 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column style="width:22%;white-space: normal;">
-				<!-- #30447 start -->
-				<h:outputText value="#{noticeBoardBackingBean.supplierSalutation(scQtBriefAttendace.icPassPort).concat(' ').concat(scQtBriefAttendace.name)}"
+				<h:outputText value="#{scQtBriefAttendace.name}"
 					rendered="#{scQtBriefAttendace.authorized}" />
-				<!-- #30447 end -->
 				<p:inputText value="#{scQtBriefAttendace.name}"
 					rendered="#{!scQtBriefAttendace.authorized}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"

@@ -44,7 +44,6 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.primefaces.event.TabChangeEvent;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -118,6 +117,7 @@ public class AuditCodificationManagementReportBackingBean extends
 		getManagedBean().setAuditCMSearchBean(auditCMSearchBean);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
+		getManagedBean().setActiveIndex(0);
 		loadCIDetails();
 		loadCEDetails();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, auditCDView);

@@ -237,7 +237,9 @@ public class AuditProcurementPlanBackingBeanTemplate extends BaseBackingBean imp
 
 		} else {
 
-			if (AuditPPConst.PP_PENDING_REVISION_APPROVAL.equals(resDTO.getWorkflowStatus().getPmStatus().getStatusId())) {
+			if (AuditPPConst.PP_PENDING_APPROVAL.equals(resDTO.getWorkflowStatus().getPmStatus().getStatusId())
+					|| AuditPPConst.PP_PENDING_REVISION_APPROVAL.equals(resDTO.getWorkflowStatus().getPmStatus()
+							.getStatusId())) {
 				auSpDTO.setStatusId(AuditPPConst.PP_PENDING_REVISION);
 				auSpDTO.setRoleCode(AuditPPConst.PLAN_APPROVER_OFFICER);
 			} else if (AuditPPConst.PP_PENDING_VERIFICATION.equals(resDTO.getWorkflowStatus().getPmStatus().getStatusId())
