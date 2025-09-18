@@ -4465,6 +4465,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		newBond.setExpDate(cal.getTime());
 		newBond.setEffDate(contractValue.getEffDate());
+		newBond.setPrevId(bond.getPrevId());
 
 		return newBond;
 	}
@@ -4577,6 +4578,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		clone.setExpDate(src.getExpDate());
 		clone.setFinancialOrg(src.getFinancialOrg());
 		clone.setBondNew(src.isBondNew());
+		clone.setPrevId(src.getPrevId());
 		clone.setCtContractAmount(parent);
 		return clone;
 	}
