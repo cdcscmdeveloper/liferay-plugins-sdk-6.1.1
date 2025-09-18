@@ -348,7 +348,7 @@
 				<div align="right">
 					<p:commandButton id="addCatBtn"
 						action="#{smCompExpBB.addSmCompExpCatDraft}"
-						disabled="#{smCompExpMB.smCompExpCatDrafNotComplete}"
+						disabled="#{smCompExpMB.smCompExpCatDraftNotComplete}"
 						onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 						rendered="#{smCompExpMB.smCompExpCatDraftListEmpty}"
 						update=":#{p:component('smCompExpCatCodes')}, @this"

@@ -51,7 +51,6 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private SmCompExpDraft selectedDraft;
 	private String headerTitle;
 	private boolean disableClienType;
-	private Date contractEffDateTemp;
 	private Date maxEffDate;
 	private Date minExpDate;
 	private List<SmCompExpMasterDoc> smCompExpDocList;
@@ -158,14 +157,6 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setDisableClienType(boolean disableClienType) {
 		this.disableClienType = disableClienType;
-	}
-
-	public Date getContractEffDateTemp() {
-		return contractEffDateTemp;
-	}
-
-	public void setContractEffDateTemp(Date contractEffDateTemp) {
-		this.contractEffDateTemp = contractEffDateTemp;
 	}
 
 	public Date getMaxEffDate() {

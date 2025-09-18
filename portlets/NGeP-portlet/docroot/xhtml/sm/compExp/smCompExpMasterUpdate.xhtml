@@ -46,8 +46,8 @@
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
 					<td style="width: 66%"><p:inputText id="agencyName" size="60"
-							value="#{smCompExpMB.selectedMaster.agencyName}" /> <p:commandLink
-							action="#{smPtjPopupBB.initPtjPopup}"
+							value="#{smCompExpMB.selectedMaster.agencyName}" readonly="true" />
+						<p:commandLink action="#{smPtjPopupBB.initPtjPopup}"
 							oncomplete="blockWidget.hide(),smPtjPopupWV.show()"
 							onclick="blockWidget.show()" update=":form" process="@form">
 							<p:graphicImage value="/css/images/design/search.png" />
@@ -83,8 +83,7 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /> <p:outputLabel
-							styleClass="mandatory" value="*" /></td>
+							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /></td>
 					<td style="width: 66%"><p:inputTextarea cols="100"
 							value="#{smCompExpMB.selectedMaster.title}" /></td>
 				</tr>
@@ -186,7 +185,7 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.supp.doc']}" /></td>
-					<td><p:commandLink id="suppDoc"
+					<td><p:commandLink id="suppDoc" onclick="blockWidget.show()"
 							oncomplete="smCompExpSuppDocUploadDialogWV.show();return false;"
 							process="@form" update=":form">
 							<p:graphicImage value="/css/images/design/upload.png"
@@ -301,6 +300,17 @@
 					</p:commandButton>
 				</div>
 			</p:panel>
+		</div>
+		<div align="right">
+			<p:commandButton id="btnDeclare"
+				value="#{lbl['lbl.sm.comp.exp.master.update.save']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				partialSubmit="true" update="@form"
+				action="#{smCompExpBB.onSaveMaster(true)}" />
+			<p:commandButton id="btnDelete"
+				value="#{lbl['lbl.sm.comp.exp.update.delete.btn']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{smCompExpBB.onDeleteMaster}" />
 		</div>
 		<ac:smPtjPopup okAction="smCompExpBB.selectAgencyAction" />
 		<p:dialog dynamic="true" header="#{lbl['lbl.bpm.choose.file']}"
