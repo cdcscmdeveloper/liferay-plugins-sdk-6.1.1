@@ -377,9 +377,15 @@ public class UnitOfMeasurementBackingBean extends
 		log.info("saveMeasurementDtls");
 
 		String messageId = null;
-
-		// PmUom oldPmUom=this.getManagedBean().getOldPmUom();
+		//#34445 - Start
+		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
 		PmUom pmUom = this.getManagedBean().getPmUom();
+		
+		try {
+		//#34445 - End
+			
+		// PmUom oldPmUom=this.getManagedBean().getOldPmUom();
      	validationMessage(pmUom);
 
 		UomReqDTO reqDTO = new UomReqDTO();
@@ -387,12 +393,9 @@ public class UnitOfMeasurementBackingBean extends
 
 		String[] msgParam = new String[] { pmUom.getUomCode() };
 
-		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+		
 
-	
 
-		try {
 			if (pmUom.isBrandNew()) {
 				messageId = MessageConst.TD_80600;
 			} else {
@@ -484,7 +487,13 @@ public class UnitOfMeasurementBackingBean extends
 				}
 				/************ AUDIT #28895_35509 *************/
 			}
-		} catch (Exception e) {
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml";
+		}
+		//#34445 End
+		catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			iUomSO = null;

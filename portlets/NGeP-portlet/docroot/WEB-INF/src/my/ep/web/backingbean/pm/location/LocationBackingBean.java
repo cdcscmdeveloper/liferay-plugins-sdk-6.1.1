@@ -261,6 +261,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		String message = null;
 		String[] messageParam = null;
 		Long locationId = null;
+		Long locationMcgId = null; //#34445
+		
+		try { //#34445
 
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IStateSO.class);
@@ -281,6 +284,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			// #32753 - END
 
 			reqDTO.setPmState(state);
+			locationMcgId = getManagedBean().getState().getStateId(); //#34445
 			/************ AUDIT #28895_35509 START *************/
 			reqDTO.setStateId(getManagedBean().getState().getStateId());
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getState().getStateId() != null) {
@@ -323,6 +327,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 			reqDTO.setPmDivision(division);
 			reqDTO.setStateId(division.getPmState().getStateId());
+			locationMcgId = getManagedBean().getDivision().getDivisionId(); //#34445
 			/************ AUDIT #28895_35509 START *************/
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getDivision().getDivisionId() != null) {
 				reqDTO.setDivisionId(getManagedBean().getDivision().getDivisionId());
@@ -374,6 +379,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			reqDTO.setPmDistrict(district);
 			reqDTO.setStateId(district.getPmState().getStateId());
 			reqDTO.setDivisionId(null != district.getPmDivision() ? district.getPmDivision().getDivisionId() : null);
+			locationMcgId = getManagedBean().getDistrict().getDistrictId(); //#34445
 			/************ AUDIT #28895_35509 *************/
 			reqDTO.setDistrictId(getManagedBean().getDistrict().getDistrictId());
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getDistrict().getDistrictId() != null) {
@@ -414,6 +420,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 			reqDTO.setPmCity(city);
 			reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());
+			locationMcgId = getManagedBean().getCity().getCityId(); //#34445
 			/************ AUDIT #28895_35509 *************/
 			reqDTO.setCityId(getManagedBean().getCity().getCityId());
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getCity().getCityId() != null) {
@@ -453,6 +460,20 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			return NAV_TO_SEARCH;
 		}
 
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			if (locationMcgId != null && getManagedBean().getSelectedType() != null) {
+				maintainLocation(getManagedBean().getSelectedType(), locationMcgId);
+			}
+			return NAV_TO_MAINTAIN;
+
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Unexpected error: " + e.getMessage()));
+			return null;
+		}
+		//#34445 End
 	}
 
 	/** #35509 getCountryAuditVal() START **/

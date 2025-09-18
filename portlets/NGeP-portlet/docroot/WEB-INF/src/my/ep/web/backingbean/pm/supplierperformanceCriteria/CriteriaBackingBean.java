@@ -248,24 +248,31 @@ public class CriteriaBackingBean extends
 	public String saveSupplierCriteriaDtls() {
 		log.info("saveSupplierCriteriaDtls - Start");
 		String returnPage = null;
+		
+		try { // #34445
+			
+			if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
+				generateCriteriaCode();
 
-		if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
-			generateCriteriaCode();
+			}
 
+			if (DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean().getSelectedCriteria().getRecordStatusFlg()
+					.intValue()) {
+				validateCriteriaDesc();
+			}
+
+			if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
+				returnPage = createCriteria(this.getManagedBean().getSelectedCriteria());
+			} else {
+				returnPage = updateCriteria(this.getManagedBean().getSelectedCriteria());
+			}
+			
+		// #34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
 		}
-
-		if (DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean()
-				.getSelectedCriteria().getRecordStatusFlg().intValue()) {
-			validateCriteriaDesc();
-		}
-
-		if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
-			returnPage = createCriteria(this.getManagedBean()
-					.getSelectedCriteria());
-		} else {
-			returnPage = updateCriteria(this.getManagedBean()
-					.getSelectedCriteria());
-		}
+		//#34445 End
 		log.info("saveSupplierCriteriaDtls - End");
 		return returnPage;
 	}
