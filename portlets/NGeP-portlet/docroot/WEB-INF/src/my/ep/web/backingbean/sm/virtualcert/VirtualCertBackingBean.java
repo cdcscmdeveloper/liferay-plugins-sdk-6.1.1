@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -39,6 +38,10 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "virtualCertBackingBean")
 @RequestScoped
 public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(VirtualCertBackingBean.class);
 	private final static String XHTML_VIRTUAL_DET = "/xhtml/sm/virtualcert/virtualCertDet.xhtml";
 	private final static String XHTML_QUESTIONNAIRE = "/xhtml/sm/questionnaire/questionnaireView.xhtml";
@@ -99,7 +102,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 					.getMofAccountBySuppIdAndSuppType(supp.getSupplierId(),
 							supp.getSmAppl().getSupplierType());
 			if (mofAcc != null) {
-				Date today = new Date();
+				//Date today = new Date();
 				/*if (!(today.compareTo(mofAcc.getExpDate()) < 0)) {
 					fc.addMessage(
 							null,

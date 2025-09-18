@@ -742,7 +742,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			this.getManagedBean().setSegmentTitleEng(
 					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
 
-			//35503 Start - To get code and title for all code
+			// 35503 Start - To get code and title for all code
 			this.getManagedBean().setAuditCommodityCode(commodity.getUnspscCode());
 			this.getManagedBean().setAuditCommodityTitle(commodity.getUnspscTitle());
 			this.getManagedBean().setAuditCommodityTitleEng(commodity.getUnspscTitleEng());
@@ -761,12 +761,12 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitle());
 			this.getManagedBean().setAuditSegmentTitleEng(
 					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
-			//35503 End
+			// 35503 End
 
-			//20200406@azza - CR25551 - Start
+			// 20200406@azza - CR25551 - Start
 			this.getManagedBean().setExtension(null);
 			this.getManagedBean().setStatus(null);
-			//20200406@azza - CR25551 - End
+			// 20200406@azza - CR25551 - End
 			this.getManagedBean().setData(null);
 			this.getExtensionAttributeSearchData().resetData();
 			this.getManagedBean().setDisableSelectBtn(true);
@@ -970,7 +970,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			}
 		}
 		//35503 End - for audit trail required
-		
+
 		renewSesionObject(); 
 		
 		FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
@@ -1469,7 +1469,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			//35503 End
 
 			resDTO = unspscSO.updateMeasurementExtensionStatus(reqDTO);
-		}
+		} 
 		
 		if (this.getManagedBean().getData().equals("c")) {
 
@@ -1492,21 +1492,21 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 					log.info("Color id for CmColor " + resDTO.getCmColor().getColorId());
 				}
-				
+
 				//35503 Start - Fix as-is bug
 				reqDTO.getColorExtensionStatusList().add(resDTO.getCmColor());
 				//35503 End - Fix as-is bug
 			}
-			
+
 			log.info("------ start to update color ------");
-			
+
 			//35503 Start
 			this.getManagedBean().getAuditColourExtList().addAll(reqDTO.getColorExtensionStatusList());
 			//35503 End
-			
+
 			//35503 Start - Fix as-is bug
 			resDTO = unspscSO.updateColorExtensionStatus(reqDTO);
-			//35503 End - Fix as-is bug			
+			//35503 End - Fix as-is bug
 		}
 		
 		//35503 Start - for audit trail required
@@ -1530,7 +1530,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		context.addMessage(null, fm);
 
 		FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
-				.handleNavigation(FacesContext.getCurrentInstance(), null, CommonUIConst.ACKNOWLEDGE_PAGE);			
+				.handleNavigation(FacesContext.getCurrentInstance(), null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 				
 	
