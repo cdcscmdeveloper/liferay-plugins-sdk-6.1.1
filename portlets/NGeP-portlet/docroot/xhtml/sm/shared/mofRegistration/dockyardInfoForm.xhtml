@@ -10,14 +10,16 @@
 		id="smDocDtPanel" rendered="#{backingBean.managedBean.showDockyardPanel}">
 		<p:outputPanel id="dockyardPan" rendered="#{backingBean.managedBean.showDockyardPanel}">
 			<br />
-			<ui:repeat var="dockyardCatVar" value="#{backingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
+			<!-- #28775 - 38500 -->
+			<c:forEach var="dockyardCatVar" items="#{backingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
 				<table style="width: 100%;">
 					<!-- 29380 - Site Visit Grouping Enhancement -28775 - start -->
 					<tr>
-						<td style="white-space: nowrap; float: left;">
+						<td>
 							<!-- #28175 -->
 						    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(dockyardCatVar, false, true)})" />
+						    	(#{backingBean.getSupplierCategoryName(dockyardCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 					<tr>
@@ -34,8 +36,8 @@
 				<p:dataTable var="doc" widgetVar="smFacilityDockDtWidVar"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{dockyardCatVar.facilityList}"
-					rowKey="#{doc}" rowIndexVar="index" id="docDt">
-					<ac:paginator for="docDt" />
+					rowKey="#{doc}" rowIndexVar="index" id="docDt_#{dockyardCatVarStatus.index}">
+					<ac:paginator for="docDt_#{dockyardCatVarStatus.index}" /><!-- #28775 - 38498 -->
 					
 					<p:column style="width: 5% !important;" rendered="#{not empty dockyardCatVar.facilityList and !backingBean.managedBean.upsCannotEdit}">
 						<f:facet name="header">
@@ -101,7 +103,7 @@
 					</p:column>
 	
 				</p:dataTable><br />
-			</ui:repeat>
+			</c:forEach><!-- #28775 - 38500 -->
 			
 			<p:spacer height="2px;" />
 			<div align="right">
@@ -109,10 +111,11 @@
 					partialSubmit="true" action="#{backingBean.assignNewDockyardBean}"
 					update=":form:tt:dockYardDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #28775 - 38498 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="dockyardPan" partialSubmit="true" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					update=":#{p:component('smDocDtPanel')},@this" 
-					id="delDockyardBtnId" disabled="#{backingBean.disableDeleteBtn(dockyardCatVar.facilityList)}"
+					id="delDockyardBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.dockYardFacilitiesVOList)}"
 					oncomplete="dockyardDeletePopUp.show()" />
 			</div>
 			<br />
@@ -126,16 +129,18 @@
 		
 		<p:ajax event="close" listener="#{backingBean.cancelDockyardSaveorUpdate}"/>
 		
-		<p:outputPanel id="dockYardBlockPanelId" layout="block">
+		<!-- #36718 - add rendered to not trigger mandatory when not shown -->
+		<p:outputPanel id="dockYardBlockPanelId" layout="block" rendered="#{backingBean.managedBean.showDockyardPanel}">
 			<p:messages id="dockYardDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="false" closable="true" />
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.dockyard.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35"
 							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.name']}" maxlength="50"
+							label="#{lbl['lbl.sm.facility.dockyard.name']}" maxlength="50"
 							id="smFacDockName"
 							value="#{backingBean.managedBean.selectedDockyardFacility.facilityName}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}" >
@@ -174,11 +179,13 @@
 					</td>
 				</tr>
 				
+				<!-- #34159 - add disableValidation attribute-->
 				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedDockyardFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.dockFacilityStates}"
 					divisionItems="#{backingBean.managedBean.dockFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.dockFacilityDistricts}" cityItems="#{backingBean.managedBean.dockFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL}" panelId="dockYardBlockPanelId" disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+					facilityPanel="#{SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL}" panelId="dockYardBlockPanelId" disabled="#{backingBean.managedBean.upsCannotEdit}"
+					disableValidation="#{param['disableValidation']}"/>
 					
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -300,11 +307,15 @@
 			</table>
 			<br />
 			<div align="right">
+				<!-- #34159 - START - add param disablevalidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateDockYardToSmAppl}"
 					partialSubmit="true" process="dockYardDialog"
 					onclick="dockyardBlockWidget.show();" oncomplete="dockyardBlockWidget.hide();"
-					update=":#{p:component('smDocDtPanel')}, @([id$=Msg])" />
+					update=":#{p:component('smDocDtPanel')}, @([id$=Msg])" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelDockyardSaveorUpdate}"

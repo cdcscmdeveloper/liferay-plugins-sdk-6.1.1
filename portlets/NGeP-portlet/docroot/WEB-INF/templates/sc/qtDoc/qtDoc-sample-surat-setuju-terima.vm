@@ -5,6 +5,12 @@
 		@page { 
 			@bottom-right { 
 				font-family: Arial;
+				font-size: 14.5px;
+				font-weight: normal;
+				font-style: normal;
+				line-height: 20px;
+				text-decoration: none;
+				color: #333333;
 				content: counter(page) " daripada " counter(pages); 
 			}
 		}
@@ -82,11 +88,9 @@
 		.text_header_submenu {
 			font-family: Arial;
 			font-size: 14.5px;
-			font-weight: bold;
-			font-style: normal;
+			font-weight: normal
+			font-style: bold;
 			line-height: 20px;
-			text-decoration: underline;
-			
 		}	
 		
 		.submenu_padding {
@@ -117,9 +121,16 @@
 			font-weight: normal;
 			font-style: normal;
 			line-height: 20px;
-			text-decoration: none;
 			color: #333333;
 			text-decoration:underline;
+		}
+		.underlineLampiranA{
+			font-family: Arial;
+			font-size: 14.5px;
+			font-weight: bold;
+			font-style: normal;
+			line-height: 20px;
+			border-bottom: 1.5px solid #333333;
 		}
 
 		##26770 - end
@@ -132,14 +143,24 @@
 		<td align="center" class="text_family_header">SURAT SETUJU TERIMA</td>
 	</tr>
 	<tr>
-		<td align="center" class="text_family_header">(Bagi $procurementMode Bekalan/Perkhidmatan) <br /><br /><br /></td>
+		<td align="center" class="text_family_header">(Bagi Sebut Harga/Tender, Bekalan/Perkhidmatan) <br /><br /><br /></td>
 	</tr>
+	##26770 - note 664 start
 	<tr>
-		<td align="right" class="text_family">Rujukan Kami : ............................................</td>
+			<table align="right" class="text_family">
+				<tr style="margin-bottom:1px;">
+					<td valign="top"> Rujukan Kami</td>
+					<td valign="top">:</td>
+					<td valign="top">............................................</td>
+				</tr>
+				<tr>
+					<td valign="top">Tarikh</td>
+					<td valign="top">:</td>
+					<td valign="top">............................................</td>
+				</tr>
+			</table>
 	</tr>
-	<tr>
-		<td align="right" class="text_family">Tarikh : ............................................</td>
-	</tr>
+	##26770 - note 664 end
 	<tr>
 		<td class="text_family">
 			............................................<br/>
@@ -153,9 +174,9 @@
 	<tr>
 		<td>
 			<span class="text_family">Tuan, </span><br /> <br /> 
-			<span class="text_family_bold">$procurementMode Untuk : </span>
+			<span class="text_family_bold">Sebut Harga/Tender Untuk : </span>
 			<span class="text_family">$title </span><br />  
-			<span class="text_family_bold"> No. $procurementMode : </span>
+			<span class="text_family_bold"> No. Sebut Harga/Tender/Kontrak : </span>
 			<span class="text_family">$qtNo</span>
 			<br/><br/>
 		</td>
@@ -164,10 +185,10 @@
 		<td>
 			<p>
 				Dengan ini dimaklumkan bahawa 
-				Kerajaan telah bersetuju menerima tawaran $procurementMode.toLowerCase() syarikat tuan 
+				Kerajaan telah bersetuju menerima tawaran sebut harga/tender syarikat tuan 
 				dengan harga sebanyak Ringgit Malaysia .........................................................
 				(RM...........................) yang merupakan harga kontrak bagi tempoh kontrak selama 
-				............... tertakluk kepada dokumen $procurementMode.toLowerCase() yang menjadi 
+				............... tertakluk kepada dokumen sebut harga/tender yang menjadi 
 				sebahagian daripada perolehan ini dan Surat Setuju Terima ini berserta dengan 
 				<b><i>Lampiran A</i></b> kepada Surat Setuju Terima iaitu maklumat terperinci 
 				kontrak (selepas ini disebut sebagai "Surat ini").
@@ -177,7 +198,7 @@
 				2.	<span class="text_indent">Dengan </span>pengakuan penerimaan Surat ini, suatu kontrak 
 				yang mengikat terbentuk antara Kerajaan dengan syarikat tuan. Satu dokumen kontrak 
 				hendaklah ditandatangani dengan kadar segera dengan memasukkan semua terma sebagaimana 
-				dokumen $procurementMode.toLowerCase() serta semua terma dalam <b><i>Lampiran A</i></b>. 
+				dokumen sebut harga/tender serta semua terma dalam <b><i>Lampiran A</i></b>. 
 				Sehingga dokumen kontrak tersebut ditandatangani, Surat ini hendaklah terus mengikat 
 				kedua-dua pihak.
 			</p>
@@ -188,7 +209,7 @@
 				2018 akan dikeluarkan sebelum sebarang pembayaran dibuat.</span>
 				
 			</p>
-			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk Perolehan Bekalan yang diberi pengecualian cukai di bawah Perintah Cukai Jualan (Orang Yang Dikecualikan Daripada Pembayaran Cukai) 2018.</span>
+			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk Perolehan Bekalan yang diberi pengecualian cukai di bawah Perintah Cukai Jualan (Orang Yang Dikecualikan Daripada Pembayaran Cukai) 2018</span>
 			<p style="margin-bottom:1px">
 				<span class="text_family" >*3.	<span class="text_indent">Harga</span> kontrak adalah termasuk peruntukan Kerajaan 
 				sebanyak ..............................% cukai jualan memandangkan barangan ini dikenakan cukai dan syarikat tuan telah berdaftar 
@@ -230,7 +251,7 @@
 			
 			<p>
 				4. <span class="text_indent">Adalah</span> dimaklumkan bahawa tiada pembekalan 
-				barang/ perkhidmatan boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan 
+				barang/perkhidmatan boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan 
 				dokumen-dokumen berikut: 
 			</p>
 			
@@ -355,7 +376,7 @@
 				di perenggan 6 dan 7 atau arahan oleh Kerajaan, Kerajaan berhak untuk tidak mempertimbangkan sebarang 
 				tawaran kontrak baharu atau pelanjutan kontrak pada masa hadapan kepada syarikat tuan.</span>
 			</p>
-			<span class="text_family_small_black">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ-RTW berdasarkan PP/PK1.2. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+			<span class="text_family_small_black">(Perenggan ini terpakai sekiranya Harga Kontrak melebihi nilai ambang dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ-RTW berdasarkan PP/PK1.12. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 		<p>
 					## #26770 #503 - start
 					## 9
@@ -369,14 +390,14 @@
 					</p>
 					<p>
 					## 11
-						<span class="text_family">*11.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan sekurang-kurangnya seratus peratus (100%) daripada Nilai Kontrak Perolehan Utama.</span>
+						<span class="text_family">*11.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan nilai seperti termaktub di bawah PP/PK 1.7.</span>
 					</p>
 					<div style="text-align:justify; margin-bottom:1px !important">
 						## 12					
-						<span class="text_family">*12.<span class="text_indent">Syarikat </span> Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kontrak Perolehan Utama dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP dan</span>
+						<span class="text_family">*12.<span class="text_indent">Syarikat </span> Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kredit ICP Mandatori dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP dan</span>
 					</div>		
 					<span class="text_family">penyempumaan sepenuhnya jumlah Nilai Kredit ICP Mandatori. </span>
-					<br/><span class="text_family_small_black">(Perenggan 9 hingga perenggan 12  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+					<br/><span class="text_family_small_black">*(Perenggan 9 hingga perenggan 12  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 						
 			<p>
 				13. <span class="text_indent">Syarikat</span> tuan juga adalah diingatkan bahawa Kerajaan berhak 
@@ -403,7 +424,7 @@
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(e)</td>
-								<td>syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses $procurementMode.toLowerCase() sehingga dokumen kontrak ditandatangani; </td>
+								<td>syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses *sebut harga/tender sehingga dokumen kontrak ditandatangani; </td>
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(f)</td>
@@ -415,7 +436,7 @@
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(h)</td>
-								<td>syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen $procurementMode.toLowerCase(); </td>
+								<td>syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen *sebut harga/tender; </td>
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(i)</td>
@@ -447,7 +468,7 @@
 			## #26770 #503 - start
 			<p>
 				14.	<span class="text_indent">Sekiranya</span> Surat ini dibatalkan atas alasan seperti yang ditetapkan di perenggan 13, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan. 
-					<br/><span class="text_family_small_black" style="color: red;">*perenggan 9 sekiranya perenggan berkaitan ICP dipotong kerana perolehan tidak melibatkan ICP, manakala perenggan 13 sekiranya perolehan melibatkan ICP</span>
+					<br/><span class="text_family_small_black">*perenggan 9 sekiranya perenggan berkaitan ICP dipotong kerana perolehan tidak melibatkan ICP, manakala perenggan 13 sekiranya perolehan melibatkan ICP.</span>
 			</p>
 			## #26770 #503 - end
 			<p>
@@ -498,7 +519,7 @@
 				<span class="text_family">Dengan ini disahkan bahawa yang bertandatangan di bawah ini mengakui penerimaan Surat ini 
 				dan lampiran yang berkaitan yang rujukannya ialah ............................................................. bertarikh ...................................................... dan bersetuju dengan terma dan syarat yang terkandung dalam 
 				Surat ini tanpa syarat yang mana salinan kepada Surat ini telah pun disimpan, dan selanjutnya disahkan bahawa 
-				tiada apa-apa terma, syarat atau stipulasi tambahan kepada yang terkandung dalam dokumen $procurementMode.toLowerCase() 
+				tiada apa-apa terma, syarat atau stipulasi tambahan kepada yang terkandung dalam dokumen *sebut harga/tender 
 				dan Surat ini telah dikenakan.</span>
 			</p>
 			<br/><br/><br/>
@@ -565,7 +586,11 @@
 			<table>
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header">1. </td>
-					<td class="text_header_submenu">Pendaftaran Syarikat Dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">Pendaftaran Syarikat Dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi</span></td>
+				</tr>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header"></td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</span></td>
 				</tr>
 			</table>		
 		</td>
@@ -586,7 +611,7 @@
 			<table>
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header">2. </td>
-					<td class="text_header_submenu">Pendaftaran dengan Kementerian Kewangan (jika berdaftar)</td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">Pendaftaran dengan Kementerian Kewangan (jika berdaftar)</span></td>
 				</tr>
 			</table>
 		</td>
@@ -625,7 +650,11 @@
 			<table >
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header">3. </td>
-					<td class="text_header_submenu">Pendaftaran Cukai Jualan dan Cukai Perkhidmatan (CJCP) dengan Jabatan	Kastam Diraja Malaysia (jika berdaftar)</td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">Pendaftaran Cukai Jualan dan Cukai Perkhidmatan (CJCP) dengan Jabatan	Kastam Diraja</span></td>
+				</tr>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header"></td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">Malaysia (jika berdaftar)</span></td>
 				</tr>
 			</table>
 		</td>
@@ -645,7 +674,7 @@
 			<table>
 					<tr>
 						<td align="center" style="vertical-align: top;" class="text_family_header">4. </td>
-						<td class="text_header_submenu">Harga dan Tempoh Kontrak</td>
+						<td class="text_header_submenu"><span class="underlineLampiranA">Harga dan Tempoh Kontrak</span></td>
 					</tr>
 			</table>
 		</td>
@@ -653,7 +682,7 @@
 	<tr valign="top">
 		<td>
 				<td align="left" class="submenu_padding"><span class="text_family">4.1</span></td>
-				<td align="left"><span class="text_family">Harga $procurementMode (butiran harga seperti di <b><i>Lampiran A1</i></b>)</span></td>
+				<td align="left"><span class="text_family">Harga *Sebut Harga/Tender (butiran harga seperti di <b><i>Lampiran A1</i></b>)</span></td>
 		</td>
 		<td class="text_family">:</td>
 		<td class="text_family">RM ..............................................................</td>
@@ -706,7 +735,7 @@
 			<table>
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header">5. </td>
-					<td class="text_header_submenu">Tempoh dan Jadual Pembekalan Barang/Penyempurnaan Perkhidmatan</td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">Tempoh dan Jadual Pembekalan Barang/Penyempurnaan Perkhidmatan</span></td>
 				</tr>
 			</table>		
 		</td>
@@ -726,7 +755,11 @@
 		<table>
 			<tr>
 				<td align="center" style="vertical-align: top;" class="text_family_header">6. </td>
-				<td class="text_header_submenu">Spesifikasi Pembekalan/Skop Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</td>
+				<td class="text_header_submenu"><span class="underlineLampiranA">Spesifikasi Pembekalan/Spesifikasi/Skop Perkhidmatan/Service Level Agreement (SLA)</span></td>
+			</tr>
+			<tr>
+				<td align="center" style="vertical-align: top;" class="text_family_header"></td>
+				<td class="text_header_submenu"><span class="underlineLampiranA">(sekiranya berkaitan)</span></td>
 			</tr>
 		</table>
 		</td>
@@ -734,21 +767,20 @@
 	<tr>
 		<td align="left" class="submenu_padding" colspan="3">
 			<span class="text_family">
-				Spesifikasi Pembekalan/Skop Perkhidmatan/SLA yang	ditetapkan seperti di <b><i>Lampiran A3</i></b>
+				Spesifikasi Pembekalan/Spesifikasi/Skop Perkhidmatan/SLA yang	ditetapkan seperti di <b><i>Lampiran A3</i></b>
 			</span>
 		</td>
 	</tr>
 	
 </table>	
 	
-<div class="break-after"><br/></div>
 <table width="100%">
 	<tr>
 		<td colspan="3">
 			<table>
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header">7. </td>
-					<td class="text_header_submenu">*Bon Pelaksanaan</td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">*Bon Pelaksanaan</span></td>
 				</tr>
 			</table>	
 		</td>
@@ -800,7 +832,7 @@
 			<table>
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header">8. </td>
-					<td class ="text_header_submenu">No. Kod Majikan PERKESO/No. Pendaftaran KWSP/*Polisi Insurans (jika berkaitan)</td>
+					<td class ="text_header_submenu"><span class="underlineLampiranA">No. Kod Majikan PERKESO/No. Pendaftaran KWSP/*Polisi Insurans (jika berkaitan)</span></td>
 				</tr>
 			</table>
 		</td>
@@ -849,7 +881,7 @@
 			<table>
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header">9. </td>
-					<td class="text_header_submenu">Kenaan *Denda/Tolakan/<i>Liquidated & Ascertained Damages (LAD)</i></td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">Kenaan *Denda/Tolakan/<i>Liquidated & Ascertained Damages (LAD)</i></span></td>
 				</tr>
 				<tr>
 					<td></td>
@@ -874,7 +906,10 @@
 			<table>
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header" >10. </td>
-					<td class="text_header_submenu"><i>*Professional Training and Education for Growing Entrepreneurs - Ready To Work</i> (PROTÉGÉ-RTW) (jika berkaitan)</td>
+					<td class="text_header_submenu"><span class="underlineLampiranA"><i>*Professional Training and Education for Growing Entrepreneurs - Ready To Work</i></span></td>
+				</tr><tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header" ></td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">(PROTÉGÉ-RTW) (jika berkaitan)</span></td>
 				</tr>
 				<tr>
 					<td></td>
@@ -923,8 +958,8 @@
 									<td align="top">
 										<span class="text_family">Formula : </span>
 									</td>
-									<td>
-										<span class="text_family" style="text-decoration:underline;padding-left:15px;"> 1% X Harga Kontrak*</span>
+									<td class="text_family">
+										<span class="underlineLampiranA" style="font-weight:normal !important;"> 1% X Harga Kontrak*</span>
 										
 									</td>
 								</tr>
@@ -956,7 +991,7 @@
 			<table>
 				<tr>
 					<td align="center" style="vertical-align: top;" class="text_family_header" >11. </td>
-					<td class="text_header_submenu">*Bon Pelaksanaan Program Kolaborasi Industri (<i>Industrial Collaboration Program</i> - ICP)</td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">*Bon Pelaksanaan Program Kolaborasi Industri (<i>Industrial Collaboration Program</i> - ICP)</span></td>
 				</tr>		
 			</table>
 		</td>
@@ -988,19 +1023,63 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="3" class="text_family"><br/><br/><br/><br/><br/><br/>*<i>potong mana
-				yang tidak berkenaan</i></td>
-	</tr>			
+		<td align="left" class="submenu_padding"><span
+			class="text_family_small_black"><i>*potong mana yang tidak berkenaan</i></span></td>
+	</tr>
+	##25025 & 26770 add point 12
+	<tr>
+		<td colspan="3" >
+			<table>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header" >12. </td>
+					<td class="text_header_submenu"><span class="underlineLampiranA">Pegawai Yang Boleh Dihubungi (Pentadbir Kontrak)</span></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><span class="text_family_small_black">*sebarang perubahan perlu dimaklumkan kepada pihak yang berkenaan</span></td>
+				</tr>
+				
+				
+			</table>
+		</td>
+	</tr>	
+	<tr>
+			<td align="left" class="submenu_padding"><span class="text_family">12.1 Nama</span></td>
+			<td class="text_family">:</td>
+			<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+			<td align="left" class="submenu_padding"><span class="text_family">12.2 Nombor Telefon</span></td>
+			<td class="text_family">:</td>
+			<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr valign="top">
+			<td align="left" class="submenu_padding"><span class="text_family">12.3 Alamat E-mel</span></td>
+			<td class="text_family">:</td>
+			<td class="text_family">.....................................................................</td>
+	</tr>
+	##25025 & 26770 end point 12
 </table>
 	
 <div class="break-after"><br/></div>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
-		<td align="left" class="text_header_submenu"><b>Salinan Kepada :</b><br/><br/>
+		<td align="left" class="text_header_submenu"><span class="underlineLampiranA"><b>Salinan Kepada :</b></span><br/><br/>
 		</td>
 	</tr>
 	<tr>
 		<td align="left">
+				
+				<p style="text-align:left;">
+					<span class="text_family">
+						Ketua Setiausaha Perbendaharaan<br/>
+						Bahagian Perolehan Kerajaan<br/>
+						Aras 4, Blok Utara, Kompleks Kementerian Kewangan<br/>
+						Presint 2, Pusat Pentadbiran Kerajaan Persekutuan<br/>
+						<b>62592 PUTRAJAYA</b><br/>
+						(u.p.: Ketua Seksyen Dasar Perolehan) 
+					</span>
+				</p>
 				
 				<p style="text-align:left;">
 					<span class="text_family">
@@ -1024,8 +1103,15 @@
 						(u.p.: Pengarah Bahagian Cukai Dalam Negeri (SST)) 
 					</span>
 				</p>
-
-				
+				<p style="text-align:left;">
+					<span class="text_family">
+						Sekretariat<br/>
+						Majlis Perundingan Gaji Negara<br/>
+						Kementerian Sumber Manusia<br/>
+						Aras 7, Blok D3, Kompleks D<br/>
+						<b>62530 PUTRAJAYA</b>
+					</span>
+				</p>
 				<p style="text-align:left;">
 					<span class="text_family">
 						Professional Training and Education for Growing Entrepreneurs (PROTÉGÉ)<br/>

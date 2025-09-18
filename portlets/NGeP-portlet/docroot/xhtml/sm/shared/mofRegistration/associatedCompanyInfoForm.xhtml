@@ -202,13 +202,25 @@
 						<p:inputText value="#{backingBean.managedBean.selectedAssocCompany.mofNo}"
 							size="35" id="assocMofNoId"
 							disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+						<!-- 37771 -->
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges 
+									and not empty backingBean.managedBean.selectedAssocCompany.mofNo}"
+							oriValue="#{backingBean.managedBean.latestAssocCompany.mofNo}" 
+							currValue="#{backingBean.managedBean.selectedAssocCompany.mofNo}" 
+							alertValue="#{backingBean.managedBean.latestAssocCompany.mofNo}"/>
+						
 					</td>
 				</tr>
+				<!-- #36718 - START - add panel for refresh address -->
+				<p:panel id="assocAddrPanelId" style="border: none;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="100"
-							required="#{backingBean.managedBean.valueReqd}"
+					<td>
+						<!-- #36718 - add !empty param['disableValidation'] -->
+						<p:inputText maxlength="100"
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.companyaddress']}" id="assocCompCmpAddr"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}"
 							size="35" 
@@ -256,8 +268,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
-							required="#{backingBean.managedBean.valueReqd}"
+					<td>
+					<!-- #34159 - START -->
+						<p:selectOneMenu
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.country']}" id="asocCompCntrId"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.countryId}"
 							style="width: 207px;margin-bottom: 5px;background-color:white;"
@@ -265,15 +279,18 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="assCountry"
 								value="#{backingBean.managedBean.countryItems}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=assocAddrPanelId])"
 								listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="assocState,assocDivision,assocDist,assocCity,postCodeAssocPanelId" />
+								update="assocState,divisionLabelAssocPanelId,divisionAssocDropdownPanelId,assocDist,assocCity,postCodeAssocPanelId" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END --> 
+					<!-- 37771 -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmCountry.countryId}" 
-							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId}" 
+							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.countryId}" 
 							alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
 							 	not empty backingBean.managedBean.latestAssocCompany.smAddress) ?
 								backingBean.getCountryLabelById(backingBean.managedBean.latestAssocCompany.smAddress.pmCountry.countryId)
@@ -287,8 +304,9 @@
 							value="*" styleClass="mandatory" /></td>
 					<td>
 					<!-- Start 31736 -->
-					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							required="#{backingBean.managedBean.valueReqd}"
+					<!-- #34159 - START -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.state']}"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.stateId}"
 							id="assocState"
@@ -296,10 +314,12 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="assState"
 								value="#{backingBean.managedBean.assocCompanyStates}"/>
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=assocAddrPanelId])"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="divisionAssocDropdownPanelId,divisionLabelAssocPanelId,divisionAssocDropdownPanelId,assocDist,assocCity" />
+								update="divisionAssocDropdownPanelId,divisionLabelAssocPanelId,divisionAssocDropdownPanelId,assocDist,assocCity,postCodeAssocPanelId" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END --> 
 						<!-- END 31736 -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
@@ -325,7 +345,7 @@
 				<td class="tdContent">
 					<h:panelGroup id="divisionAssocDropdownPanelId">
 					<!-- #34159 - START -->
-						<p:selectOneMenu id="assocDivision" required="#{backingBean.managedBean.valueReqd}"
+						<p:selectOneMenu id="assocDivision" required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.divisionId}"
 						style="width: 207px;margin-bottom: 5px;background-color:white;"
@@ -336,17 +356,20 @@
 							value="#{backingBean.managedBean.assocCompanyDivisions}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change" process="@this"
+						<!-- #36718 - process panel when change address dropdown -->
+						<p:ajax event="change" process="@this @([id$=assocAddrPanelId])"
 							listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="assocDist,assocCity" />
+								update="assocDist,assocCity,postCodeAssocPanelId" />
 					</p:selectOneMenu>
 					<!-- #34159 - END -->
 					<!-- END 31736 -->
+					<!-- #37771 -->
 					<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
-									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId
+									and backingBean.managedBean.selectedAssocCompany.smAddress.divisionId ne null}"
 							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmDivision.divisionId}" 
-							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDivision.divisionId}" 
+							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.divisionId}" 
 							alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
 							 	not empty backingBean.managedBean.latestAssocCompany.smAddress) ?
 								backingBean.getDivisionLabelById(backingBean.managedBean.latestAssocCompany.smAddress.pmDivision.divisionId)
@@ -361,18 +384,22 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 	
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							id="assocDist" required="#{backingBean.managedBean.valueReqd}"
+					<!-- #34159 - START -->
+					<td>
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							id="assocDist" required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.district']}"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.districtId}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="assDist"
 								value="#{backingBean.managedBean.assocCompanyDistricts}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=assocAddrPanelId])"
 								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="assocCity" />
+								update="assocCity,postCodeAssocPanelId" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END --> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
@@ -388,18 +415,22 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							id="assocCity" required="#{backingBean.managedBean.valueReqd}"
+				<td>
+					<!-- #34159 - START -->
+					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							id="assocCity" required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.towncity']}"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.cityId}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="assCity"
 								value="#{backingBean.managedBean.assocCompanyCities}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=assocAddrPanelId])"
 								listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="assocCity" />
+								update="assocCity,postCodeAssocPanelId" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END --> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
@@ -412,14 +443,16 @@
 						<p:message id="assocCityMsg" for="assocCity" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
+				
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:outputPanel id="postCodeAssocPanelId">
 							<p:outputPanel
 								rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.countryId==backingBean.managedBean.myCountryId}">
+								<!-- #36718 - add !empty param['disableValidation'] -->
 								<p:inputText maxlength="5"
-									required="#{backingBean.managedBean.valueReqd}"
+									required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 									label="#{lbl['lbl.sm.postcode']}" id="assocCmpyPostCodeMy"
 									value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -457,6 +490,8 @@
 							</p:outputPanel>
 						</p:outputPanel></td>
 				</tr>
+				</p:panel>
+				<!-- #36718 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td>
@@ -496,6 +531,7 @@
 			<!-- </p:panel> -->
 			<br />
 			<div align="right">
+				<!-- #34159 - START - add param disableValidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					id="assocCompPopUpSaveBtn"
@@ -504,7 +540,9 @@
 					partialSubmit="true" process="asDisp"
 					update=":form:tt:asoc, @([id$=Msg]),:#{p:component('delAssocBtnId')}" >
 					<f:param name="validate" value="true" />
+					<f:param name="disableValidation" value="true" /> 
 				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"

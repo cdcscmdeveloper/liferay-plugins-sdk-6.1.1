@@ -18,11 +18,12 @@ import my.ep.dto.pm.common.report.RPTRequestResDTO;//#32675 - shaqimi
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.sm.SmPersonnel;
+//import my.ep.persistence.entity.sm.SmPersonnel; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;//#32675 - shaqimi
 import my.ep.web.backingbean.report.ct.cc.ContractItemMonitoringCCRptBackingBean;
+import my.ep.web.backingbean.report.ct.cc.ContractItemUsageMonitoringDtlsBackingBean; //#34889
 import my.ep.web.backingbean.report.ct.cc.ContractManagementReportBackingBean;
 import my.ep.web.backingbean.report.ct.cc.ListOfCircularRptBackingBean;
 import my.ep.web.backingbean.report.ct.cc.StatementOfOrderRptBackingBean;
@@ -125,6 +126,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		//#30918 - start
 		ContractManagementReportBackingBean ctManagementReportBB = new ContractManagementReportBackingBean();
 		//#30918 - end
+		ContractItemUsageMonitoringDtlsBackingBean ccContractItemUsageMonitoringDtlsBackingBean = new ContractItemUsageMonitoringDtlsBackingBean(); //#34889 
+
 		
 		// reset common search criteria
 		resetSearch();
@@ -142,6 +145,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		//#30918 -start
 		ctManagementReportBB.resetSearch();
 		//#30918 - end
+		ccContractItemUsageMonitoringDtlsBackingBean.resetSearch(); //#34889
 	}
 	
 	/**
@@ -174,7 +178,9 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 			PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 	
 			if (!getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_MC_VAL) 
-					|| !getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_CC_VAL)){
+					|| !getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_CC_VAL)
+						|| !getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_MC_VAL) //Fix - #34889
+							|| !getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_CC_VAL)){ //Fix - #34889
 				
 				if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
@@ -233,11 +239,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					if (!getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
 						getManagedBean().setSelectedPTJ(pmOrgProfile);
 					}
-//					getManagedBean().setSelectedMinistry(
-//							retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-//					getManagedBean().setSelectedKumpulanPTJ(
-//							retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
-//					getManagedBean().setSelectedPTJ(pmOrgProfile);
 					
 				
 					//#Assign val to ContractItemMonitoringCCRptBakingBean
@@ -246,24 +247,13 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					ccContractItemMonitoringRptBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
 					//cc
 					ccContractItemMonitoringRptBB.getManagedBean().setDisableMinistryField(true);
-					ccContractItemMonitoringRptBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())? true:false);
+					ccContractItemMonitoringRptBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					//mc
 					getManagedBean().setDisableMinistryField(true);
-					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())? true:false);
+					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));//Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 				}
 				
-				else if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
-						//|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) nordin change 26/6/2023
-						|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())){
+				else if (isItemUsageReportRoles()){ //re-endorsed #29416
 					
 					log.info("called here");
 					
@@ -287,6 +277,50 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					
 				}
 			}//29416 - end 
+			
+			//Start Fix -  #34889
+			if(getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_MC_VAL)
+					|| getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_CC_VAL)){
+				
+				ContractItemUsageMonitoringDtlsBackingBean ccContractItemUsageMonitoringDtlsReportBB = new ContractItemUsageMonitoringDtlsBackingBean();
+
+				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
+						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+					
+					defaultValueRoles(pmOrgProfile);
+					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
+					auditInternalRolesCheck(pmOrgProfile);
+			
+					//#Assign val to ContractItemMonitoringCentralReportDtlsBackingBean
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setSelectedMinistry(getManagedBean().getSelectedMinistry());
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setSelectedKumpulanPTJ(getManagedBean().getSelectedKumpulanPTJ());			
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
+					//cc
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableMinistryField(true);
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));
+					//mc
+					getManagedBean().setDisableMinistryField(true);
+					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));
+				} else if (isNoDefaultValues()) {
+					// cc
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableMinistryField(false);
+					// mc
+					getManagedBean().setDisableMinistryField(false);
+
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableOrgField(false);
+					getManagedBean().setDisableOrgField(false);
+
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setSelectedMinistry(null);
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setSelectedKumpulanPTJ(null);				
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setSelectedPTJ(null);
+
+					getManagedBean().setSelectedMinistry(null);
+					getManagedBean().setSelectedKumpulanPTJ(null);
+					getManagedBean().setSelectedPTJ(null);
+				}
+			}
+			//End Fix - #34889
 		}
 		
 		//#30918 - start
@@ -338,8 +372,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					// cc
 					ctManagementReportBB.getManagedBean().setDisableMinistryField(true);
 					ctManagementReportBB.getManagedBean().setDisableOrgField(
-							getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()) ? true : false);
-
+							getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+					ctManagementReportBB.getManagedBean().setSupplierVisible(true);
 				}
 			}
 			else if (getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_MANAGEMENT_RPT_CC_VAL)) {
@@ -377,14 +411,33 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		}
 		// #30918 - end
 	}
+	//Start - #34889
+	/**
+	 * @param pmOrgProfile
+	 */
+	private void auditInternalRolesCheck(PmOrgProfile pmOrgProfile) {
+		if (!getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			getManagedBean().setSelectedPTJ(pmOrgProfile);
+		}
+	}
 	
+	/**
+	 * @param pmOrgProfile
+	 */
+	private void defaultValueRoles(PmOrgProfile pmOrgProfile) {
+		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			getManagedBean().setSelectedMinistry(pmOrgProfile);
+		} else {
+			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+		}
+	}
+	//End - #34889
 	/**
 	 * The method used to reset the search criteria for report.
 	 */
 	@Override
 	public void resetSearch() {
-		log.debug("resetSearch: ctReportBB");
-		
+		log.info("resetSearch: ctReportBB :::::::::::::::::::::::::::::::::::::::::: ");
 		//#29416 Nordin start
 		if (!getManagedBean().isDisableMinistryField()) 
 		{
@@ -416,7 +469,17 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		getManagedBean().setProcurementMode(null);
 		getManagedBean().setStatus(null);
 		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
-		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());	
+		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
+		// Start fix- #29416
+		if (getManagedBean().isLovItemReportNameTriggered()) {
+			getManagedBean().setLovItemReportNameTriggered(false);
+			RequestContext.getCurrentInstance().execute("resetAllData();");
+		}		
+		getManagedBean().setFormattedSelectedItems(null);
+		getManagedBean().setLovSelectedItemList(null);
+		getManagedBean().setSelectedSupplier(null);
+		
+		// End fix- #29416
 	}
 
 	/**
@@ -478,7 +541,15 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 			map.put(CtReportConst.PARAM_KEY_TO_DATE, df.format(
 					getManagedBean().getToDate()));
 		}
-		
+		//Start - #29416
+		if (getManagedBean().getSelectedSupplier() != null) {
+			map.put(CtReportConst.PARAM_KEY_SUPPLIER_NAME, getManagedBean()
+					.getSelectedSupplier().getOrgProfileId().toString());
+		}
+		if (getManagedBean().getContractItemId() != null) {
+			map.put(CtReportConst.PARAM_KEY_ITEM_NAME, getManagedBean().getContractItemId());
+		}
+		//End - #29416
 		if (MapUtils.isNotEmpty(map)) {
 			// mandatory map values
 			map.put(CtReportConst.PARAM_KEY_REPORT, getManagedBean()
@@ -562,4 +633,51 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		}
 	}
 	//#32675 - shaqimi end
+	
+	//start re-endorsed - #29416
+	private boolean isItemUsageReportRoles() {
+	    String[] roles = {
+	        RoleCode.BPK_AUDITOR.value(),
+	        RoleCode.BPK_CC_APPROVER.value(),
+	        RoleCode.BASIC_SUPPLIER_ADMIN.value(),
+	        RoleCode.BASIC_SUPPLIER_USER.value(),
+	        RoleCode.EP_ADMIN.value(),
+	        RoleCode.AUDITOR_GENERAL.value(),
+	        RoleCode.BPK_CCA.value(),
+	        RoleCode.AUDITOR_INTERNAL.value(),
+	        RoleCode.MIN_CONTRACT_ADMIN.value(),
+	        RoleCode.CT_APPROVER.value(),
+	        RoleCode.REQUISITIONER.value(),
+	        RoleCode.BPK_CQ_APPROVER.value()
+	    };
+
+	    for (String role : roles) {
+	        if (getFacesScopes().hasRoleUser(role)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	//End re-endorsed - #29416
+	
+	//Start Fix - #34889
+	private boolean isNoDefaultValues() {
+	    String[] roles = {
+	        RoleCode.BPK_AUDITOR.value(),
+	        RoleCode.MIN_CONTRACT_ADMIN.value(),
+	        RoleCode.CT_APPROVER.value(),
+	        RoleCode.EP_ADMIN.value(),
+	        RoleCode.BPK_CCA.value(),
+	        RoleCode.BPK_CC_APPROVER.value(),
+	        RoleCode.BPK_CQ_APPROVER.value()
+	    };
+
+	    for (String role : roles) {
+	        if (getFacesScopes().hasRoleUser(role)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	//End Fix - #34889
 }

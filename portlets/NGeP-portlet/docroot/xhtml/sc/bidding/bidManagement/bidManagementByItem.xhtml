@@ -6,6 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:remove> #28777#29729 - Start </ui:remove>
+	<ui:param name="isDisqualified"
+		value="#{biddingBB.managedBean.disqualified}"></ui:param>
+	<ui:remove> #28777#29729 - End </ui:remove>
+
 	<p:panel header="#{lbl['lbl.sc.item.details']}" toggleable="true">
 
 		<p:dataTable id="biddingListBMBI" selectionMode="single" rows="10"
@@ -17,15 +22,20 @@
 			<p:ajax event="rowSelect" listener="#{biddingBB.rowSelectListener}"
 				update="@([id$=itemPriceLineChartPanel],[id$=itemizedSupplierPricesPanel])" />
 			<ac:paginator for="biddingListBMBI"></ac:paginator>
-
-			<p:column headerText="#{lbl['lbl.sc.item.name']}">
-				<h:outputText style="white-space : normal;" id="itemNameBMBI"
+			
+            <ui:remove> #25791 start </ui:remove>
+			<p:column style="width : 400px;" headerText="#{lbl['lbl.sc.item.name']}">
+				<h:outputText style="white-space : normal;word-wrap: break-word;"
+					id="itemNameBMBI" escape="false"
 					value="#{bidItem.scRequestItem.itemName}" />
+				<ui:remove> #25791 end </ui:remove>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.item.description']}">
-
-				<h:outputText style="white-space : normal;" id="itemDescBMBI"
+			<ui:remove> #25791 start </ui:remove>
+			<p:column style="width : 350px;" headerText="#{lbl['lbl.sc.item.description']}">
+				<h:outputText style="white-space : normal;word-wrap: break-word;"
+					id="itemDescBMBI" escape="false"
 					value="#{bidItem.scRequestItem.itemDesc}" />
+				<ui:remove> #25791 end </ui:remove>
 			</p:column>
 			<p:column style="width : 60px" headerText="#{lbl['lbl.sc.uom']}">
 
@@ -83,6 +93,14 @@
 			</c:if>
 
 			<h:panelGroup id="itemizedSupplierPricesPanel">
+
+				<ui:remove> #28777#29729 - Start </ui:remove>
+				<h:outputText escape="false"
+					value="#{lbl['lbl.sc.list.qualified.supplier']}"
+					style="font-weight:bold; font-size: 15px;"
+					rendered="#{isDisqualified}" />
+				<ui:remove> #28777#29729 - End </ui:remove>
+
 				<p:dataTable id="rankingList" rowIndexVar="index" rows="10"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{biddingBB.managedBean.bidPriceItems}" var="bidPriceItem">
@@ -101,6 +119,17 @@
 						<h:outputText id="isBumiVBI"
 							value="#{(bidPriceItem.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 					</p:column>
+					<ui:remove>26247 - start</ui:remove>
+					<p:column style="white-space:normal;width:18%;">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+						</f:facet>
+						<ac:disciplinaryActionYesNo
+							supplier="#{bidPriceItem.supplier}" index="#{index}"/>
+					</p:column>
+					<ui:remove>26247 - end</ui:remove>
 					<p:column style="align : center; width : 14%"
 						headerText="#{lbl['lbl.sc.starting.price']}">
 						<h:outputText id="itemStartPriceVBI" style="float : right"
@@ -146,6 +175,97 @@
 					</p:column>
 
 				</p:dataTable>
+
+				<ui:remove> #28777#29729 - Start </ui:remove>
+				<h:outputText escape="false"
+					value="#{lbl['lbl.sc.list.disqualified.supplier']}"
+					style="font-weight:bold; font-size: 15px;"
+					rendered="#{isDisqualified}" />
+				<p:dataTable id="rankingListDisqualified" rowIndexVar="index"
+					rows="10"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{biddingBB.managedBean.bidPriceItemsDisqualified}"
+					var="bidPriceItem" rendered="#{isDisqualified}">
+					<ac:paginator for="rankingList"></ac:paginator>
+					<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+						style="align : center; width : 14%">
+						<h:outputText id="supplierCodeVBI"
+							value="#{bidPriceItem.supplierNo}" />
+					</p:column>
+					<p:column style="align : center; width : 14%"
+						headerText="#{lbl['lbl.sc.bumiputra.status']}">
+						<h:outputText id="isBumiVBI"
+							value="#{(bidPriceItem.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
+					</p:column>
+					
+					<p:column style="white-space:normal;width:18%;">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+						</f:facet>
+						<ac:disciplinaryActionYesNo
+							supplier="#{bidPriceItem.supplier}" index="#{index}"/>
+					</p:column>
+					
+					<p:column style="align : center; width : 14%"
+						headerText="#{lbl['lbl.sc.starting.price']}">
+						<h:outputText id="itemStartPriceVBI" style="float : right"
+							value="#{biddingBB.itemizedStartPriceTotal(bidPriceItem)}">
+						</h:outputText>
+					</p:column>
+					<p:column style=" align : center; width : 14%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.last.bid.price']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.last.bid.price.tooltip']}" />
+						</f:facet>
+						<div style="align: right">
+							<p:commandLink id="bidPriceVBI"
+								rendered="#{!((bidPriceItem.startingPrice - bidPriceItem.bidPrice) == 0)}"
+								style="float : right" oncomplete="priceHistory.show();"
+								action="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
+								update="@([id$=historyPricePopupPanel])">
+								<h:outputText value="#{bidPriceItem.bidPriceTotal}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText>
+							</p:commandLink>
+						</div>
+
+					</p:column>
+					<p:column style=" align : center; width : 15%"
+						headerText="#{lbl['lbl.sc.difference.rm']}">
+						<h:outputText id="differenceVBI" style="float : right"
+							rendered="#{bidPriceItem.bumi and biddingBB.managedBean.nonBumiAvail and (biddingBB.managedBean.lowestNonBumiOfferedPrice lt bidPriceItem.bidPriceTotal)}"
+							value="#{biddingBB.managedBean.lowestNonBumiOfferedPrice - bidPriceItem.bidPriceTotal}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style=" align : center; width : 15%"
+						headerText="#{lbl['lbl.sc.cost.saving']}">
+						<h:outputText id="savingVBI" style="float : right"
+							value="#{biddingBB.managedBean.selectedBidItem.estimatedCost - bidPriceItem.bidPriceTotal}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
+						style="text-align:center;">
+						    <c:choose>
+							    <c:when test="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl ne null}">	
+						             <h:outputText rendered="#{biddingBB.checkZonesDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, bidPriceItem.supplier.supplierId, biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.specZoneId) or bidPriceItem.supplierDeactivated}"
+							         value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
+						        </c:when>
+						        <c:otherwise>
+				                     <h:outputText rendered="#{biddingBB.checkDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, bidPriceItem.supplier.supplierId) or bidPriceItem.supplierDeactivated}"
+							         value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" /> 
+							    </c:otherwise>
+						    </c:choose>
+					</p:column>
+				</p:dataTable>
+				<ui:remove> #28777#29729 - End </ui:remove>
+
 			</h:panelGroup>
 		</h:panelGrid>
 	</p:panel>

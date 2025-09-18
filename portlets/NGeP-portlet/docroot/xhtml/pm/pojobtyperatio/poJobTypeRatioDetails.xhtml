@@ -23,15 +23,41 @@
 								value="#{lbl['lbl.btn.back']}" immediate="true" update=":form"
 								process="@this" action="#{poJobTypeRatioBackingBean.backToMain()}"
 								style="float:left;" /></td>
-						<td><p:commandButton id="saveBtnId"
-								value="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}"
-								action="#{poJobTypeRatioBackingBean.savePoJobRatio()}"
-								update="@([id$=Msg])" style="float:right;"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-								<f:param name="disableValidation" value="true" />
-							</p:commandButton></td>
+						<td>
+							<!-- 34445 start -->
+							<c:choose>
+								<c:when test="#{poJobTypeRatioBackingBean.managedBean.poJobTypeRatio.brandNew}">
+									<p:commandButton id="saveBtnId" value="#{lbl['lbl.btn.save']}"
+										oncomplete="if (!args.validationFailed) saveInfoDlg.show()" style="float:right;">
+										<f:param name="disableValidation" value="true" />
+									</p:commandButton>
+								</c:when>
+								<c:otherwise>
+									<p:commandButton id="updateBtnId" value="#{lbl['lbl.btn.update']}"
+										oncomplete="if (!args.validationFailed) updateInfoDlg.show()" style="float:right;">
+										<f:param name="disableValidation" value="true" />
+									</p:commandButton>
+								</c:otherwise>
+							</c:choose>
+							<!-- 34445 end -->
+						</td>
 					</tr>
 				</table>
+				<!-- 34445 start -->
+				<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
+					okAction="poJobTypeRatioBackingBean.savePoJobRatio()"
+					width="400" height="100"
+					title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+					content="#{lbl['lbl.pm.btn.save.msg']}"
+					update="@([id$=Msg])"/>
+					
+				<ac:confirmationPopupSM id="updateInfoDlg" widget="updateInfoDlg"
+					okAction="poJobTypeRatioBackingBean.savePoJobRatio()"
+					width="400" height="100"
+					title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+					content="#{lbl['lbl.pm.btn.update.msg']}"
+					update="@([id$=Msg])"/>
+				<!-- 34445 end -->
 			</div>
 			<p:outputPanel id="jobTypeRatioCrtOpId">
 				<table width="100%">

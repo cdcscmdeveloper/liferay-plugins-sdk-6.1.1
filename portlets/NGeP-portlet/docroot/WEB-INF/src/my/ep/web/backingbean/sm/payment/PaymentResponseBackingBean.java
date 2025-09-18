@@ -114,9 +114,13 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
 		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
+		
 		// #26307 start
 		String cardType = null; 
 		String extraP = httpServletRequest.getParameter("extraP");
+		
+		log.info("##############################################orderId:"+orderId+"  tranID:"+tranID+"  amount:"+amount+"  extraP:"+extraP);
+		
 		boolean fromManualPayment = false;
 		//Start //26307
 		boolean skipChecking = false;
@@ -647,8 +651,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 				//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 				//START 35182
-				if (pyPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {					
-					pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);					
+				if (pyPayment.getPyBill() != null
+						&& pyPayment.getPyBill().getBillType()
+								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+					pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);
 				}
 				//END 35182
 				pymtReqDTO.setValidPayment(validPayment);

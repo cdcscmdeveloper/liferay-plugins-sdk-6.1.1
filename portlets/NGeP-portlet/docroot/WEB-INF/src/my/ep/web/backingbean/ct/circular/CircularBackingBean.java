@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.ct.circular;
 
 import java.util.ArrayList;
+import java.util.Collections; //#30014
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -286,21 +287,35 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		try {
 			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 			String languageCode = new FacesScopes().getUserLocale().getLanguage();
-
+			
 			int i = 1;
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setModuleCode(ModuleCodeConst.CONTRACT_MANAGEMENT);
 			reqDTO.setDocType(getManagedBean().getSearchCircularDocType());
 			reqDTO.setLanguageCode(languageCode);
-			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+			//#30014 - Start
+			StatusResDTO resDTO = (reqDTO.getDocType() != null)
+			        ? statusSO.retrieveStatusDescList(reqDTO)
+			        : new StatusResDTO();			
 
 			List<PmStatusDesc> list =  resDTO.getStatusDescList();
-			items = new SelectItem[list.size()+1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-
+			if (list == null) {
+	            list = Collections.emptyList();
+	        }
+			items = new SelectItem[list.size() + 1];
+	        items[0] = new SelectItem(
+	                null,
+	                ResourceBundleUtils.getMessage(
+	                        "lbl.txt.select",
+	                        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+	                        new FacesScopes().getUserLocale()
+	                )
+	        );
+	        //#340014 - End
 			for(PmStatusDesc statusDesc : list) {
 				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
-			}
+			}			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -546,12 +561,13 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterCode(parameterCode);
 			reqDTO.setParameterType(paramenterType);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-				pmParam = resDTO.getPmParameter();
-				getManagedBean().setPmParameterId(pmParam.getParameterId());
-				getManagedBean().setProcurementModeCode(pmParam.getParameterCode());
+			if (parameterCode != null) {
+				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+				if (resDTO.isSuccessful()) {
+					pmParam = resDTO.getPmParameter();
+					getManagedBean().setPmParameterId(pmParam.getParameterId());
+					getManagedBean().setProcurementModeCode(pmParam.getParameterCode());
+				}
 			}
 		} catch (NoResultException e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CircularBackingBean", null,
@@ -568,9 +584,16 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * selected by the user
 	 */
 	public void getCircularTypeOnChange() {
-		if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
-			getManagedBean().setPqCircularType(true);
+		if (getManagedBean().getSearchCircularDocType() != null) {
+			if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+				getManagedBean().setPqCircularType(true);
+			} else {
+				getManagedBean().setPqCircularType(false);
+				getManagedBean().setProcurementMode(null);
+				getManagedBean().setProcurementModeCode(null);
+			}
 		} else {
+			// case when user choose (select one) in drop-down menu
 			getManagedBean().setPqCircularType(false);
 		}
 	}

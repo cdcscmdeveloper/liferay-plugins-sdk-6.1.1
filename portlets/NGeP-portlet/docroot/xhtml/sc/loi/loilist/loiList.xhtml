@@ -62,24 +62,16 @@
 					<h:outputText value="#{loiLoa.smSupplier.companyName}" />
 				</p:column>
 				
-				<p:column style="text-align: center;">
+				<ui:remove>26247 - start</ui:remove>
+				<p:column style="text-align:center;white-space:normal;width:18%;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 						<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 					</f:facet>
-					
-					<!-- #31033 start -->
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{loiLoa.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(loiLoa.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<!-- #31033 End -->
-					
-					<h:outputText rendered="#{!loiLoa.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					<ac:disciplinaryActionYesNo
+						supplier="#{loiLoa.smSupplier}" index="#{rowIndex}"/>
 				</p:column>
+				<ui:remove>26247 - end</ui:remove>
 						
 				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" style="width:15%" rendered="#{!isMultipleLoi}">
 					<h:selectOneMenu value="#{loiLoa.loiRequired}" 
@@ -198,11 +190,5 @@
 			</h:panelGroup>
 		</p:panel>
 		<ui:include src="loiItemDetailPopup.xhtml" />
-		<!-- Bug #31033 #32560 Start -->
-		<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-		<!-- Bug #31033 #32560 end -->
 	</ui:define>
 </ui:composition>

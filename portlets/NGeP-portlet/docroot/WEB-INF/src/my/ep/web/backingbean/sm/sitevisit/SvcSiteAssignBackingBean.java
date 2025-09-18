@@ -354,6 +354,7 @@ public class SvcSiteAssignBackingBean extends
 		getManagedBean().setCategoryLs(new ArrayList<SmSupplierCategory>());
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
 		List<SmSupplierCategory> tempL = new ArrayList<>();
+		//max loop: 39
 		for(SmSvTask svTask : smAppl.getSmSvTasks()){
 			tempL.addAll(getSiteVisitCategoryCode(smAppl, svTask.getPmCategoryL3()));
 			if(smAppl.isSiteVisitGroup() && svTask.getSmSvTaskGroups() != null){
@@ -421,28 +422,28 @@ public class SvcSiteAssignBackingBean extends
 		if(svTask == null || svTask.getSmSvAddress() == null){
 			return "";
 		}
-		String s = "";
+		String facTypes = "";
 		if(svTask.getSmSvAddress().getFacilityType() != null){
-			s = svTask.getSmSvAddress().getFacilityType();
+			facTypes = svTask.getSmSvAddress().getFacilityType();
 		}
 		if(svTask.getPmCategoryL3() != null){
-			s += "<br/>" + svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+			facTypes += "<br/>" + svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ svTask.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
 					+ svTask.getPmCategoryL3().getCategoryL3Code();
 		}		
 		if(!getManagedBean().getSmAppl().isSiteVisitGroup()){
-			return s;
+			return facTypes;
 		}
 		
 		for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
 			String catCode = svTGroup.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ svTGroup.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
 					+ svTGroup.getPmCategoryL3().getCategoryL3Code();
-			if(!s.contains(catCode)){
-				s = s.concat("<br/>"+catCode);
+			if(!facTypes.contains(catCode)){
+				facTypes = facTypes.concat("<br/>"+catCode);
 			}
 		}
-		return s;
+		return facTypes;
 	}
 	//28775 - Site Visit Grouping Enhancement - 28775 - end
 }

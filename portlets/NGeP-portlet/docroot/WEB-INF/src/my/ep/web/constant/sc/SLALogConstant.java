@@ -31,12 +31,13 @@ public class SLALogConstant {
 	public static final String QT_SLA_DOT_SEPARATOR = ".";
 	//12471 - end
 
-	//#29187 Start Vinod
-	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
-	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
-	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
-	//#29187 End Vinod
 	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
+	
+	// 25037 - start
+	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
+	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
+	// 25037 - end
+	
 	/*
 	 * METHOD_NAME
 	 */
@@ -57,7 +58,24 @@ public class SLALogConstant {
 	public static final String QT_CHECK_SPEC_COMPLIANCE = "checkTechnicalSpecCompliance";
 	public static final String QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES = "getMandatorySpecDropdownValues";
 	public static final String QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES = "getMandatorySpecAndComplianceDropdownValues";
+	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
+	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
 	//#29187 End Vinod
+	//#10141 Start Vinod
+	public static final String QT_INITIATE_INACTIVE_CHECKLIST_PROCESS_FOR_DOC = "initiateInactiveChecklistProcessForDoc";
+	public static final String QT_SPEC_PRE_RENDER_VIEW = "preRenderView";
+	public static final String QT_DOWNLOAD_SCORE_REPORT = "downloadScoreReport";
+	public static final String QT_DOWNLOAD_REPORT_SPEC_PREPARE = "downloadReportSpecPrepare";
+	public static final String QT_PREVIEW_FILE = "previewFile";
+	public static final String QT_PREVIEW_FILE_BY_INPUT_STREAM = "previewFileByInputStream";
+	public static final String QT_DOWNLOAD_TECHNICAL_CHECKLIST_PRIVIEW = "downloadTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_FINANCIAL_CHECKLIST_PRIVIEW = "downloadFinancialChecklistPreview";
+	public static final String QT_DOWNLOAD_SELECTED_TECHNICAL_CHECKLIST_PRIVIEW = "downloadSelectedTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW = "downloadSelectedFinancialChecklistPreview";
+	public static final String QT_SPEC_SCORE_PREVIEW_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_GET_SCORE_REPORT = "getScoreReport";
+	//#10141 End Vinod
 	//#29468 Start Vinod
 	public static final String QT_CREATE_TEMPLATE_SPEC_PAGING_DATA_MODEL = "CreateTemplateSpecPagingDataModel";
 	public static final String QT_GET_CATEGORYCODES_FOR_CLONE = "getCategoryCodesForClone";
@@ -73,7 +91,28 @@ public class SLALogConstant {
 	//12471 - end
 	//06022024@Sonarqube QT#58 - haziq
 	public static final String QT_CALC_TOTAL_AMOUNT = "calcTotalAmount";
+	// 25037 - start
+	public static final String QT_PRERENDER_GENERIC_APPROVAL = "preRenderGenericApproval";
+	public static final String QT_UPDATE_GENERIC_APPROVAL_TASK = "updateGenericApprovalTask";
+	public static final String QT_PRESUBMIT_GENERIC_APPROVAL_TASK = "preSubmitGenericApprovalTask";
+	public static final String QT_PREPARE_COMMITTEE_HISTORY = "prepareCommitteeHistory";
+	public static final String QT_PREPARE_QT_INFO = "prepareQTInfo";
 
+	// 25037 - end
+	
+	// 25791-start
+	public static final String QT_DETAIL_BACKING_BEAN = "QTDetailBackingBean";
+	public static final String QT_RETRIVE_CONTRACT_DETAILS_LOA = "retrieveContractDtlsByLoa";
+	public static final String QT_VIEW_LOA_CONTRACT_PAGING_MODEL = "ViewLoaContractPagingDataModel";
+	public static final String QT_VIEW_CONTRACT_PAGING_MODEL = "ViewContractPagingDataModel";
+	public static final String QT_VIEW_NORMAL_LOA_TRACKING_DTLS_PAGE = "viewNormalLoaTrackingDetailsPage";
+	public static final String VIEW_LOA_CONTRACT_DETAILS_PAGE = "viewLoaContractDetailsPage";
+	public static final String VIEW_DL_LOA_CONTRACT_TRACKING_DETAILS = "viewLoaContractTrackingDtls";
+	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQtLoaContractDtls";
+	public static final String VIEW_QT_BID_SCHEDULES_DATA_MODEL = "ScheduleBiddingPagingDataModel";
+	
+	// 25791-end
+	
 	private SLALogConstant(){
 		
 	}	

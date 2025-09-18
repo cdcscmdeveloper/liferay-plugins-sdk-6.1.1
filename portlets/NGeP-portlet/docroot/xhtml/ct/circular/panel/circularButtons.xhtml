@@ -27,13 +27,25 @@
 						oncomplete="blockWidget.hide();"
 						action="#{panelBackingBean.gpkiSignAction(action)}"/>
 				</ui:repeat></td>
-			<c:if test="#{panelBackingBean.managedBean.action eq 'view' }">
-				<td style="text-align: right;">
-					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
-						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(panelBackingBean.managedBean.circularVer.docType,
-						panelBackingBean.managedBean.circular.circularId)}"  />
-				</td>
+				<!--#35506 start-->
+				<td style="float: right;">
+				<c:if test="#{panelBackingBean.managedBean.action eq 'view' and circularBackingBean.isAuditCheck()}">
+			<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
+						action="#{auditContractBackingBean.redirectToAudittrailView(
+                panelBackingBean.managedBean.circular.circularType,
+                panelBackingBean.managedBean.circular.circularId,
+                panelBackingBean.managedBean.circularVer.docType)}"
+						immediate="true" />
 			</c:if>
+			<c:if test="#{panelBackingBean.managedBean.action eq 'view' }">
+			&#160;&#160;
+					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiaryForCircularContract(panelBackingBean.managedBean.circularVer.docType,
+						panelBackingBean.managedBean.circular.circularId, panelBackingBean.managedBean.circular.circularNo)}"  /> <!-- #36608 -->
+
+			</c:if>
+			</td>
+			<!--#35506 end-->
 		</tr>
 	</table>
 </ui:composition>

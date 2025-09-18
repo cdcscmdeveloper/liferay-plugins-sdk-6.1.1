@@ -117,8 +117,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.branch.branchName']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText label=" #{lbl['lbl.sm.branch.branchName']}" id="supBranchName"
-							maxlength="100" required="#{bb.managedBean.valueReqd}"
+					<td>
+						<!-- #36718 - add required condition -->
+						<p:inputText label=" #{lbl['lbl.sm.branch.branchName']}" id="supBranchName"
+							maxlength="100" required="#{bb.managedBean.valueReqd and !empty param['disableValidation']}"
 							value="#{bb.managedBean.selectedBranch.branchName}"
 							size="35" >
 								<p:ajax process="@this" partialSubmit="true"/>
@@ -129,7 +131,9 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.agency.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText required="#{bb.managedBean.valueReqd}"
+					<td>
+						<!-- #36718 - add required condition -->
+						<p:inputText required="#{bb.managedBean.valueReqd and !empty param['disableValidation']}" 
 							label="#{lbl['lbl.sm.agency.address']}" id="supBrnAddr"
 							maxlength="100"
 							value="#{bb.managedBean.selectedBranch.smAddress.address1}"
@@ -161,18 +165,22 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
-							required="#{bb.managedBean.valueReqd}"
+					<td>
+						<!-- #34159 - START -->
+						<p:selectOneMenu
+							required="#{bb.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.country']}" id="supBrnCntry"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmCountry.countryId}"
 							style="width: 207px;margin-bottom: 5px;background-color:white;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="branchCountry"
 								value="#{bb.managedBean.countryLs}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=branchBlockPanel])"
 								listener="#{bb.onChangeCountry(bb.managedBean.selectedBranch.smAddress.pmCountry,'BRANCH_ADDRESS')}"
-								update="supBrnCntry,branchState,branchDist,branchDivision,branchCity,postCodeBranchPanelId" />
+								update="supBrnCntry,branchState,branchDist,divisionBranchInfoLabelPanelId,divisionBranchInfoDropdownPanelId,branchCity,postCodeBranchPanelId" />
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
@@ -180,18 +188,22 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							required="#{bb.managedBean.valueReqd}"
+					<td>
+						<!-- #34159 - START -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							required="#{bb.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.state']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmState.stateId}"
 							id="branchState">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnState"
 								value="#{bb.managedBean.branchCompanyStates}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=branchBlockPanel])"
 								listener="#{bb.onChangeState(bb.managedBean.selectedBranch.smAddress.pmState,'BRANCH_ADDRESS')}"
-								update="divisionBranchInfoLabelPanelId,divisionBranchInfoDropdownPanelId,branchDist,branchCity" />
+								update="divisionBranchInfoLabelPanelId,divisionBranchInfoDropdownPanelId,branchDist,branchCity,postCodeBranchPanelId" />
 						</p:selectOneMenu>
+						<!-- #34159 - END -->
 						<p:message id="branchStateMsg" for="branchState" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
@@ -208,19 +220,20 @@
 					<td>
 				<p:outputPanel id="divisionBranchInfoDropdownPanelId">
 				<ui:fragment rendered="#{bb.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
-					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					required="#{bb.managedBean.valueReqd}"
+						<!-- #34159 - START -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							required="#{bb.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.division']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmDivision.divisionId}"
 							id="branchDivision">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnDivision"
 								value="#{bb.managedBean.branchCompanyDivisions}" />
-							<p:ajax event="change" process="@this"
-							listener="#{bb.onChangeDivision(bb.managedBean.selectedBranch.smAddress.pmDivision,'BRANCH_ADDRESS')}"
-								update="branchDist,branchCity" />
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=branchBlockPanel])"
+								listener="#{bb.onChangeDivision(bb.managedBean.selectedBranch.smAddress.pmDivision,'BRANCH_ADDRESS')}"
+								update="branchDist,branchCity,postCodeBranchPanelId" />
 						</p:selectOneMenu>
-						<!-- #34159 - START -->
 						<p:message id="branchDivisionMsg" for="branchDivision" showSummary="true" showDetail="false" display="icon" />
 						<!-- #34159 - END -->
 						</ui:fragment>
@@ -233,32 +246,41 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							id="branchDist" required="#{bb.managedBean.valueReqd}"
+					<td>
+						<!-- #34159 - START -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							id="branchDist" required="#{bb.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.district']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmDistrict.districtId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnDist" 
 								value="#{bb.managedBean.branchCompanyDistricts}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=branchBlockPanel])"
 								listener="#{bb.onChangeDistrict(bb.managedBean.selectedBranch.smAddress.pmDistrict,'BRANCH_ADDRESS')}"
-								update="branchDist,branchCity" />
+								update="branchDist,branchCity,postCodeBranchPanelId" />
 						</p:selectOneMenu>
+						<!-- #34159 - END -->
 						<p:message id="branchDistMsg" for="branchDist" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							id="branchCity" required="#{bb.managedBean.valueReqd}"
+					<td>
+						<!-- #34159 - START -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							id="branchCity" required="#{bb.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.towncity']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmCity.cityId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="branchCity"
 								value="#{bb.managedBean.branchCompanyCities}" />
-							<p:ajax event="change" process="@this" update="branchCity" />
+							<!-- #36718 - process panel, update postcode -->
+							<p:ajax event="change" process="@this @([id$=branchBlockPanel])" update="branchCity,postCodeBranchPanelId"
+								listener="#{bb.onChangeCity(bb.managedBean.selectedBranch.smAddress.pmCity,'BRANCH_ADDRESS')}" />
 						</p:selectOneMenu>
+						<!-- #34159 - END -->
 						<p:message id="branchCityMsg" for="branchCity" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
@@ -268,8 +290,9 @@
 					<td><p:outputPanel id="postCodeBranchPanelId">
 							<p:outputPanel
 								rendered="#{bb.managedBean.selectedBranch.smAddress.pmCountry.countryId==bb.managedBean.myCountryId}">
+								<!-- #36718 - add required condition -->
 								<p:inputText maxlength="5"
-									required="#{bb.managedBean.valueReqd}"
+									required="#{bb.managedBean.valueReqd} and !empty param['disableValidation']}"
 									label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeMy"
 									value="#{bb.managedBean.selectedBranch.smAddress.postcode}"
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -282,8 +305,9 @@
 							</p:outputPanel>
 							<p:outputPanel
 								rendered="#{bb.managedBean.selectedBranch.smAddress.pmCountry.countryId!=bb.managedBean.myCountryId}">
+								<!-- #36718 - add required condition -->
 								<p:inputText maxlength="10"
-									required="#{bb.managedBean.valueReqd}"
+									required="#{bb.managedBean.valueReqd} and !empty param['disableValidation']}"
 									label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeForeign"
 									value="#{bb.managedBean.selectedBranch.smAddress.postcode}"
 									size="35">
@@ -320,8 +344,10 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.person.composition.poc']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-								required="#{bb.managedBean.valueReqd}"
+						<td>
+							<!-- #36718 - add required condition -->
+							<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+								required="#{bb.managedBean.valueReqd and !empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.person.composition.poc']}" id="brnPerVal"
 								value="#{bb.managedBean.selectedBranch.smPersonnel.personnelId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -343,12 +369,16 @@
 	
 			<br />
 			<div align="right">
+				<!-- #34159 - START - add param disablevalidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 					id="branchPopUpSaveBtn"
 					action="#{bb.addOrUpdateBranchToSmAppl}"
 					onclick="branchBlockWidget.show();" oncomplete="branchBlockWidget.hide();"
 					partialSubmit="true" process="banchDialog"
-					update=":form:dt,@([id$=Msg]),:#{p:component('pnlBankInfo')}" />
+					update=":form:dt,@([id$=Msg]),:#{p:component('pnlBankInfo')}" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					partialSubmit="true" process="@this"
 					action="#{bb.assignCancelBranchBean}" />

@@ -50,7 +50,9 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.date']}" /></td>
+				<ui:remove>#33787 Start Vinod updated lable for 4.1 -> 3. -> 4.</ui:remove>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.establishment.date']}" /></td>
+				<ui:remove>#33787 End Vinod</ui:remove>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.establishDate}">
 						<f:convertDateTime

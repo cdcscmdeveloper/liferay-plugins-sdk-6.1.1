@@ -90,7 +90,7 @@
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableContractAmount}">
-				   			<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
+				   			<p:ajax  event="blur" update="@this overAllAmts" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
@@ -118,7 +118,7 @@
 						     		or ctBackingBean.managedBean.disableGstAmount}"
 			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.gstAmount}" label="#{lbl['lbl.ct.gst.amt']}" >
-			   				<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
+			   				<p:ajax  event="blur" update="@this overAllAmts" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						<p:inputText styleClass="ppRightBtn" style="width:130px;"
@@ -149,7 +149,7 @@
 						     or ctBackingBean.managedBean.disableStaxAmount}"	
 						     rendered="#{ctBackingBean.managedBean.staxCheckingGUI}"		   				 
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.staxAmount}" label="#{lbl['lbl.ct.stax.amt']}" >
-			   				<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
+			   				<p:ajax  event="blur" update="@this overAllAmts" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						<p:inputText styleClass="ppRightBtn" style="width:130px;"
@@ -235,12 +235,14 @@
 		 </h:panelGrid>		 	
 		   <h:panelGrid columns="3" 
 		     rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq}">
+		     <!-- #13847 start-->
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"
 				 disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}" style="text-align:top;">
-				 <p:ajax event="change" update="@all" process="@all" partialSubmit="true"></p:ajax>
+				 <p:ajax event="change" update="@all" process="@all" partialSubmit="true" listener="#{ctBackingBean.bondExempDocReset()}"></p:ajax>
 			  </p:selectBooleanCheckbox>
+			  <!-- #13847 end-->
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">
 				  <h:outputText value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />

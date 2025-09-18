@@ -430,7 +430,18 @@ public class LOIDetailManagedBean extends BaseManagedBean {
     private PmOrgProfile ministryOrgProfile;
 	//#12487 end
     
-	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private List<ScQtEvaluationResultDtl> disqualifiedSupplierList;
+	private List<ScQtRecommend> disqualifiedRecommendList;
+	// #28777 & #29729 - End
+
+	//#21692 - Start
+	private boolean ableToCancelLOI;
+	private boolean ableToCancelLOIWithoutBPM;
+	private boolean ableToSubmitLOI;
+	private boolean ableToCancelWIP;
+	//#21692 - End
 
 	
 	
@@ -2394,7 +2405,24 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
 	}
+
+	public List<ScQtEvaluationResultDtl> getDisqualifiedSupplierList() {
+		return disqualifiedSupplierList;
+	}
+
+	public void setDisqualifiedSupplierList(List<ScQtEvaluationResultDtl> disqualifiedSupplierList) {
+		this.disqualifiedSupplierList = disqualifiedSupplierList;
+	}
+	
+	public List<ScQtRecommend> getDisqualifiedRecommendList() {
+		return disqualifiedRecommendList;
+	}
+
+	public void setDisqualifiedRecommendList(List<ScQtRecommend> disqualifiedRecommendList) {
+		this.disqualifiedRecommendList = disqualifiedRecommendList;
+	}
 	//#28777 & #29729 - End
+	
 	//#30008 - Start
 	public String getJustification() {
 		return justification;
@@ -2463,5 +2491,53 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.ministryOrgProfile = ministryOrgProfile;
 	}
 	//#12487 end
+
+	//#36339, #21692 - Start
+	public boolean isAbleToCancelLOI() {
+		return ableToCancelLOI;
+	}
+	//#36339, #21692 - End
+
+	//#36339, #21692 - Start
+	public void setAbleToCancelLOI(boolean ableToCancelLOI) {
+		this.ableToCancelLOI = ableToCancelLOI;
+	}
+	//#36339, #21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelLOIWithoutBPM() {
+		return ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelLOIWithoutBPM(boolean ableToCancelLOIWithoutBPM) {
+		this.ableToCancelLOIWithoutBPM = ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToSubmitLOI() {
+		return ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToSubmitLOI(boolean ableToSubmitLOI) {
+		this.ableToSubmitLOI = ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelWIP() {
+		return ableToCancelWIP;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelWIP(boolean ableToCancelWIP) {
+		this.ableToCancelWIP = ableToCancelWIP;
+	}
+	//#21692 - End
 	
 }

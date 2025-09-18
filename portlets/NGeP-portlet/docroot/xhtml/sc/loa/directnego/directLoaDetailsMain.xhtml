@@ -72,7 +72,8 @@
 									value="1" />
 							</p:menuitem>
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-								actionListener="#{directLOABackingBean.searchSupplierItemByName}" update="@form"><!-- #29007 Added actionListener Vinod -->
+								actionListener="#{directLOABackingBean.searchSupplierItemByName}"
+								update="@form"> <ui:remove>#29007 Added actionListener Vinod</ui:remove>
 								<f:setPropertyActionListener
 									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 									value="2" />
@@ -91,7 +92,7 @@
 							</p:menuitem>
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								update="@form"
-								disabled="#{!(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled || directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"> <!-- #25726 add non periodic to condition -->
+								disabled="#{!(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled )}"> <!-- #25726 add non periodic to condition --><!-- new #25726 remove non periodic to condition -->
 								<f:setPropertyActionListener
 									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 									value="5" />

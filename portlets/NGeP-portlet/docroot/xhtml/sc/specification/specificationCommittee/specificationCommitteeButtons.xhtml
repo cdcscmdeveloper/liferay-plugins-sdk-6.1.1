@@ -55,10 +55,12 @@
 								action="#{specificationBackingBean.submitAction(bpmAction)}"
 								update="@([id$=#{submitConfirmId2}])" 
 								rendered="#{isClone}" />
-
+							<ui:remove><!-- Add Disable #29732 below--></ui:remove>
+							<ui:remove>#10141 Added disableButtonForInactiveChecklist Vinod</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button" style="float:right;" rendered="#{!isClone}"
+								disabled ="#{(specificationBackingBean.managedBean.disableButtonForInactiveChecklist or specificationBackingBean.managedBean.checkUserCanRevise) and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"
 								action="#{specificationBackingBean.submitAction(bpmAction)}" />
 						</ui:fragment>
 					</ui:repeat>
@@ -91,10 +93,11 @@
 						<ui:fragment rendered="#{bpmAction ne '~'}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-                          
+                            <ui:remove><!-- #29732 add disable--></ui:remove>                      
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button" style="float:right;"
+								disabled ="#{specificationBackingBean.managedBean.checkUserCanRevise and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"						
 								action="#{specificationBackingBean.specCommitteMaintenanceBpmTask(bpmAction)}" />
 								
 						</ui:fragment>
@@ -233,6 +236,34 @@
 					onclick="revicespecMaintenanceEndorsmentDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
+		<ui:remove> #10141 Start Vinod </ui:remove>
+		<p:dialog id="inActiveChecklistNotificationId"
+			widgetVar="inActiveChecklistNotification" showHeader="false"
+			resizable="false" width="30%" onstart="blockWidget.show();"
+			closable="false" modal="true">
+			<p:outputPanel name="inActiveChecklistNotificationPanel"
+				id="inActiveChecklistNotificationPanel" autoUpdate="true">
+				<h:outputText escape="false"
+					value="#{specificationBackingBean.managedBean.inActiveChecklistNotificationText}" />
+			</p:outputPanel>
+
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen ne specificationBackingBean.getSpecMaintenance()}"
+					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" partialSubmit="true"
+					process="@form" update="@form"
+					action="#{specificationBackingBean.specCommitteBpmTask(bpAction)}" />
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
+					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" partialSubmit="true"
+					process="@form" update="@form"
+					action="#{specificationBackingBean.submitSpecMaintenanceDtls('Submit')}" />
+			</div>
+		</p:dialog>
+		<ui:remove> #10141 End Vinod </ui:remove>
 		<ui:remove><!-- 25037 - start - note 510--></ui:remove>
 		<p:dialog id="inactiveSCMembersPopupId" widgetVar="inactiveSCMembersPopup"
 			resizable="false"

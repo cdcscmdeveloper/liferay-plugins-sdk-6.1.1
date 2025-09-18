@@ -140,8 +140,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
-			//30713 - Start
-			SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
+			//30713 & 36474 - Start 
 			//31792 - START
 			Boolean resubmitExpired = false;
 			if(rejectedWf != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(supplier.getSmAppl().getApplType())){
@@ -158,7 +157,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				}
 			}
 			//31792 - END
-			//30713 - End
+			//30713 & 36474- End
 			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
 			
 			//Self Request Supplier Admin
@@ -256,7 +255,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 							if(wfStatus != null){
 								PmStatus wfStat = wfStatus.getPmStatus();
-								//31792
+								//31792 & 36474
 								//32627 START
 								if(wfStat != null && !resubmitExpired &&
 									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
@@ -287,7 +286,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									path = MOF_REG_PATH;
 									getManagedBean().setFlowStatus(1);
 									
-									if(rejectedWf != null && !resubmitExpired){
+									if(rejectedWf != null && !resubmitExpired){ //#36474
 										path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
 								//#35579 --start--
 										if(wfStat != null &&
@@ -779,20 +778,16 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * @param supplier
 	 */
 	private void mofUserAction(SmSupplier supplier){
-		Map<String,String> mofActionMap = new HashMap<String, String>();
+		Map<String,String> mofActionMap = new HashMap<>();
 		
 		SmCompanyBasic companyBasic = retrieveSmCompanyBasic(supplier.getSupplierId());
 		if(companyBasic.isWithFederal() && supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 			if(checkPendingSoftCertRequest(supplier.getSupplierId())){
-				//String msg = getLabelFromProperties("lbl.sm.basic.softcert.request"); 
-				//String softCertImg = getLabelFromProperties("lbl.sm.softcert.request.image");
-				
 				mofActionMap.put("SC", MOF_SOFTCERT_REQUEST);
 			}
 			
 			String catalogue = checkCatalogueUpload(supplier.getSupplierId()); 
 			if(catalogue == null){
-				//mofActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
 				mofActionMap.put("CU", CATALOGUE_MAINTENANCE_PAGE);
 			}else{
 				if(!catalogue.equalsIgnoreCase(CATALOGUE_PUBLISHED)){
@@ -808,10 +803,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				mofReqDTO.setLoginId(pmUser.getLoginId());
 				Integer exisitingBasicMOFFlg = SmServiceLookup.getMofAccountSO().checkExpiredDowngradedToBasic(mofReqDTO).getBasicMOFRenewFlg();
 				log.info("This is the value of the integer" + exisitingBasicMOFFlg);
-				if (exisitingBasicMOFFlg != my.ep.constant.sm.SupplierManagementConst.RECORD_STATUS_DELETED) {
-					if (exisitingBasicMOFFlg == my.ep.constant.sm.SupplierManagementConst.MOF_CAN_RENEW) {
-						mofActionMap.put("RNMOF", RENEW_MOF);
-					}
+				//#38116
+				if (exisitingBasicMOFFlg != null && exisitingBasicMOFFlg == my.ep.constant.sm.SupplierManagementConst.MOF_CAN_RENEW) {
+					mofActionMap.put("RNMOF", RENEW_MOF);
 				}
 			}	
 		}

@@ -128,6 +128,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			temp.put(SCProcessNameConst.DIRECT_PURCHASE_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 			temp.put(SCProcessNameConst.SUBMIT_DIRECT_PURCHASE, SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 			temp.put(SCProcessNameConst.SUPPLIER_CODIFICATION_PROCESS_NAME, SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
+			temp.put(SCProcessNameConst.CODIFY_PURCHASE_REQUEST_PROCESS_NAME, SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);//#36119
 
 			temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 			//temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865				
@@ -523,9 +524,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
 			//END - 22211
 			//#25037-START
-			temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
-					+ SCProcessNameConst.REVISE_EVALUATION_MEETING,
-					SourcingConstants.NAV_PAGE_REVISE_EVAL_MEETING);
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
 					+ SCProcessNameConst.GENERIC_APPROVAL_APPROVE,
 					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
@@ -602,6 +600,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SUPPLIER_CODIFICATION_PROCESS_NAME),
 					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.CODIFY_PURCHASE_REQUEST_PROCESS_NAME),
+					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);//#36119
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME), SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);			
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.REQUISITIONER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
@@ -644,6 +644,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					"contract-suspension");
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME),
 					"contract-suspension");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_INIT_PROCESS_NAME), contractReqadminConstStr);
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_PROCESS_NAME), contractReqadminConstStr);
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_APPROVER_INIT_PROCESS_NAME), contractReqadminConstStr);
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME)+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME)+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
@@ -666,6 +669,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)+ CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME,
 					"change-bank-account");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_NAME), "contract-owner-management");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME), "contract-owner-management");
 
 			// Fulfilment Management - Start
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME)+ FLProcessNameConst.SUBMIT_PHIS_CR, "contract-request");
@@ -1070,9 +1075,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
 			// #27502 - End 
 			//#25037-START
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME)
-					+ SCProcessNameConst.REVISE_EVALUATION_MEETING,
-					SourcingConstants.NAV_PAGE_REVISE_EVAL_MEETING);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME)
 					+ SCProcessNameConst.GENERIC_APPROVAL_APPROVE,
 					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
@@ -1237,10 +1239,17 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
+			//#26186 start
+			if (taskName != null && taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				externalContext.redirect(commonUrl + "/" + url + "?taskId="
+						+ taskId +"&claim=" + claim+"&docNo="+docNo+"&taskName=" + taskName);
+			}else{
 			//26238 -  Disciplinary Action - 28111
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId="
 					+ taskId +"&claim=" + claim+"&docNo="+docNo);/*#31422-basri 190821*/
+			}
+			//#26186 end
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {
@@ -1572,7 +1581,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	    	bpmSO.claimTask(reqDTO);
 		}
 		*/
-
+	   
+	  //#37924 - Start
+	  if(this.getManagedBean().getCurrentTaskDocType()!= null){
 		//#21387 - Start
 		if(this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
 			
@@ -1585,7 +1596,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 						 claimTaskByTaskId(getDocNumber.getTaskId());
 					 } 
 				 } 
-			}//#21387 - End			
+			}//#21387 - End
+		  }//#37924 - End
 		}else{
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 	    	reqDTO.setCtxToken(token);

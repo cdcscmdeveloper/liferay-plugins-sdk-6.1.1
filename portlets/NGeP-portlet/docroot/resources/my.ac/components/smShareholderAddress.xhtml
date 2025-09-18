@@ -6,6 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
+	<!-- #34159 - Add new attribute - disableValidation -->
 	<cc:interface>
 		<cc:attribute name="bBean" required="true" />
 		<cc:attribute name="showTick" default="false"/>
@@ -26,11 +27,16 @@
 		<cc:attribute name="stateItems" required="true"/>
 		<cc:attribute name="districtItems" required="true"/>
 		<cc:attribute name="cityItems" required="true"/>
+		<cc:attribute name="disableValidation" required="true"/>
+		<!-- #36718 - Start -->
+		<cc:attribute name="disablePostCodeValidator" required="false" default="false" />
+		<!-- #36718 - End -->
 	</cc:interface>
 
 	<cc:implementation>
-		
-		
+	
+	<!-- #36718 - START - add for refresh -->
+	<p:panel id="shareholderAddrPanel" style="border: none;">	
 		<table style="width: 100%">
 			<tr><td colspan="2"><u><b><h:outputText value="#{cc.attrs.addressTitle}" /></b></u></td></tr>
 			<tr>
@@ -53,9 +59,11 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 						
-				<td><p:inputText id="#{cc.attrs.addrId}" maxlength="100"
+				<td>
+					<!-- #36718 - START - add !empty cc.attrs.disableValidation in required condition -->
+					<p:inputText id="#{cc.attrs.addrId}" maxlength="100"
 						label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.address']}"
-						required="#{!cc.attrs.addrObj.sameAsPerm}"
+						required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 						readonly="#{cc.attrs.addrObj.sameAsPerm}"
 						disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.addressSsmNull)}"
 						value="#{cc.attrs.addrObj.smAddress.address1}"
@@ -112,9 +120,11 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
+					<td>
+						<!-- #34159 - START - change required condition -->
+						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.country']}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm and !empty param['disableValidation']}"
 							id="#{cc.attrs.countryId}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.countrySsmNull)}"
 							value="#{cc.attrs.addrObj.smAddress.countryId}"
@@ -122,10 +132,12 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="" />
 							<f:selectItems value="#{cc.attrs.bBean.managedBean.countryItems}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
+							<p:ajax event="change" process="@this @([id$=shareholderAddrPanel])"
 								listener="#{cc.attrs.bBean.onChangeCountry(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.stateId},#{cc.attrs.divisionId},#{cc.attrs.districtId},#{cc.attrs.cityId},:#{p:component(cc.attrs.addrPanelId)}" />
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
 								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
@@ -144,21 +156,24 @@
 					  <!-- #32014 - END -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
+					<td>
+						<!-- #34159 - START - change required condition -->
+						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.state']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.stateSsmNull)}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 							style="width: 207px;margin-bottom: 5px;"
 							value="#{cc.attrs.addrObj.smAddress.stateId}"
 							id="#{cc.attrs.stateId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="" />
 							<f:selectItems value="#{cc.attrs.stateItems}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
+							<p:ajax event="change" process="@this @([id$=shareholderAddrPanel])"
 								listener="#{cc.attrs.bBean.onChangeState(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="divisionSharLabelPanelId,divisionSharDropdownPanelId,#{cc.attrs.districtId},#{cc.attrs.cityId}" />
-
+								update="divisionSharLabelPanelId,divisionSharDropdownPanelId,#{cc.attrs.districtId},#{cc.attrs.cityId},:#{p:component(cc.attrs.addrPanelId)}" />
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
 								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
@@ -182,19 +197,22 @@
 					<td>
 					<p:outputPanel id="divisionSharDropdownPanelId">
 				<ui:fragment rendered="#{cc.attrs.addrObj.smAddress.pmState.adoptDivision}">
+					<!-- #34159 - START - change required condition -->
 					<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.division']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 							style="width: 207px;margin-bottom: 5px;" id="#{cc.attrs.divisionId}"
 							value="#{cc.attrs.addrObj.smAddress.divisionId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="" />
 							<f:selectItems value="#{cc.attrs.divisionItems}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
+							<p:ajax event="change" process="@this @([id$=shareholderAddrPanel])"
 							 listener="#{cc.attrs.bBean.onChangeDistrictByDivision(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
+								update="#{cc.attrs.districtId},#{cc.attrs.cityId},:#{p:component(cc.attrs.addrPanelId)}" />
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<!-- #35086 -->
 						<ac:smFieldChangeAlert 
 							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
@@ -219,19 +237,23 @@
 					 <!-- #32014 - END -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
+					<td>
+						<!-- #34159 - START - change required condition -->
+						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.district']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 							style="width: 207px;margin-bottom: 5px;" id="#{cc.attrs.districtId}"
 							value="#{cc.attrs.addrObj.smAddress.districtId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="" />
 							<f:selectItems value="#{cc.attrs.districtItems}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
+							<p:ajax event="change" process="@this @([id$=shareholderAddrPanel])"
 								listener="#{cc.attrs.bBean.onChangeDistrict(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="#{cc.attrs.cityId}" />
+								update="#{cc.attrs.cityId},:#{p:component(cc.attrs.addrPanelId)}" />
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
 								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
@@ -244,19 +266,23 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
+					<td>
+						<!-- #34159 - START - change required condition -->
+						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.towncity']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 							style="width: 207px;margin-bottom: 5px;" id="#{cc.attrs.cityId}"
 							value="#{cc.attrs.addrObj.smAddress.cityId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="" />
 							<f:selectItems  value="#{cc.attrs.cityItems}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
+							<p:ajax event="change" process="@this @([id$=shareholderAddrPanel])"
 								listener="#{cc.attrs.bBean.onChangeCity(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="#{cc.attrs.cityId}" />
+								update="#{cc.attrs.cityId},:#{p:component(cc.attrs.addrPanelId)}" />
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
 								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
@@ -272,17 +298,28 @@
 					<td><p:outputPanel id="postCodeMailPanelId">
 							<p:outputPanel
 								rendered="#{cc.attrs.addrObj.smAddress.countryId==cc.attrs.bBean.managedBean.myCountryId}">
+								<!-- #36718 - START - add !empty cc.attrs.disableValidation in required condition -->
 								<p:inputText maxlength="5"
-									required="#{!cc.attrs.addrObj.sameAsPerm}"
+									required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 									disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.postcodeSsmNull)}"
 									label="#{cc.attrs.addressTitle} -#{lbl['lbl.sm.postcode']}"
 									id="#{cc.attrs.postCodeId}My"
 									value="#{cc.attrs.addrObj.smAddress.postcode}"
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 									size="35">
-									<f:validator validatorId="postcodeValidator" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,#{cc.attrs.postCodeId}MyMsg" />
+									<!-- #36718 - Start -->
+									<f:validator validatorId="postcodeValidator" disabled="#{cc.attrs.disablePostCodeValidator}" />
+									<c:choose>
+										<c:when test="#{cc.attrs.disablePostCodeValidator}">
+											<p:ajax event="blur" process="@this" partialSubmit="true" update="@this,#{cc.attrs.postCodeId}MyMsg"
+												listener="#{cc.attrs.bBean.checkPostcode(cc.attrs.addrObj.smAddress.postcode)}"
+												oncomplete="scrollToMessages()" />
+										</c:when>
+										<c:otherwise>
+											<p:ajax process="@this" partialSubmit="true" update="@this,#{cc.attrs.postCodeId}MyMsg" />
+										</c:otherwise>
+									</c:choose>
+									<!-- #36718 - Start -->
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
@@ -296,8 +333,9 @@
 							</p:outputPanel>
 							<p:outputPanel
 								rendered="#{cc.attrs.addrObj.smAddress.countryId!=cc.attrs.bBean.managedBean.myCountryId}">
+								<!-- #36718 - START - add !empty cc.attrs.disableValidation in required condition -->
 								<p:inputText maxlength="10"
-									required="#{!cc.attrs.addrObj.sameAsPerm}"
+									required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 									disabled="#{cc.attrs.addrObj.sameAsPerm}"
 									label="#{cc.attrs.addressTitle} -#{lbl['lbl.sm.postcode']}"
 									id="#{cc.attrs.postCodeId}Foreign"
@@ -319,6 +357,7 @@
 						</p:outputPanel></td>
 				</tr>
 		</table>
-		
+	</p:panel>
+	<!-- #36718 - END - add for refresh -->
 	</cc:implementation>
 </ui:composition>

@@ -149,12 +149,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean reviseInvoice = false;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	
 	//24956 start
-    private boolean CtTypeMinistry;
+    private boolean ctTypeMinistry;
     //24956 end
     
     //30911 start
@@ -162,6 +162,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
     //30911 end
 
     private boolean isSupplementContractComplete = true; //28719
+    
+    //#35508 start
+  	private String originalSupplierInvRef;
+  	private String originalBankAccNoName;
+  	//#35508 end
 
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
@@ -1237,12 +1242,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -1256,11 +1261,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
 
 	//24956 start
 	public boolean isCtTypeMinistry() {
-		return CtTypeMinistry;
+		return ctTypeMinistry;
 	}
 
 	public void setCtTypeMinistry(boolean ctTypeMinistry) {
-		CtTypeMinistry = ctTypeMinistry;
+		this.ctTypeMinistry = ctTypeMinistry;
 	}
 	//24956 end
 	
@@ -1298,4 +1303,20 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.isSupplementContractComplete = isSupplementContractComplete;
 	}
 	//28719-end	
+
+	public String getOriginalSupplierInvRef() {
+		return originalSupplierInvRef;
+	}
+
+	public void setOriginalSupplierInvRef(String originalSupplierInvRef) {
+		this.originalSupplierInvRef = originalSupplierInvRef;
+	}
+
+	public String getOriginalBankAccNoName() {
+		return originalBankAccNoName;
+	}
+
+	public void setOriginalBankAccNoName(String originalBankAccNoName) {
+		this.originalBankAccNoName = originalBankAccNoName;
+	}
 }

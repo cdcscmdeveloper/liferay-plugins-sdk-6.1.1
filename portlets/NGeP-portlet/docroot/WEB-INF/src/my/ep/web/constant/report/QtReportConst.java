@@ -108,7 +108,17 @@ public class QtReportConst implements Serializable {
 	public static final String LABEL_PENDING_PROPOSAL_SUBMISSION = "lbl.rpt.pending.proposal.submission";
 	public static final String LABEL_PROPOSAL_SUBMITTED  = "lbl.rpt.proposal.submitted";
 	// 14306 - End (Harun)
+	// #10141 Start Vinod
+	public static final String PARAM_MAP_P_QTCHECKLISTIDS = "p_qtchecklistids";
+	public static final String PARAM_MAP_P_LANGUAGE = "p_language";
+	public static final String PARAM_MAP_P_WEIGHTAGE = "P_WEIGHTAGE";
+	public static final String PARAM_MAP_P_QTID = "P_QTID";
+	public static final String PARAM_MAP_P_ZONEID = "P_ZONEID";
+	public static final String PARAM_MAP_P_SCORE_TYPE = "P_SCORE_TYPE";
+	// #10141 End Vinod
 	
+	public static final String VELOCITY_CTX_KEY_MOFNO  = "mofNo";// 29819
+
 	
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL

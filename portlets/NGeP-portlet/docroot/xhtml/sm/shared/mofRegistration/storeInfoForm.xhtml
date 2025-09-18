@@ -10,13 +10,15 @@
 		id="smStrDtPanel" rendered="#{backingBean.managedBean.showStorePanel}">
 		<p:outputPanel id="storePan" rendered="#{backingBean.managedBean.showStorePanel}">
 			<br />
-			<ui:repeat var="storeCatVar" value="#{backingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
+			<!-- #28775 - 38500 -->
+			<c:forEach var="storeCatVar" items="#{backingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
 				<table style="width: 100%;">
 					<tr>
-						<td style="white-space: nowrap; float: left;">
+						<td>
 							<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 						    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(storeCatVar, false, true)})" />
+						    	(#{backingBean.getSupplierCategoryName(storeCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 				</table>
@@ -25,8 +27,8 @@
 				<p:dataTable var="stor" widgetVar="smFacStoreDtWidVar"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{storeCatVar.facilityList}"
-					rowKey="#{stor}" rowIndexVar="index" id="storeDt">
-					<ac:paginator for="storeDt" />
+					rowKey="#{stor}" rowIndexVar="index" id="storeDt_#{storeCatVarStatus.index}">
+					<ac:paginator for="storeDt_#{storeCatVarStatus.index}" /><!-- #28775 - 38498 -->
 					
 					<p:column style="width: 5% !important;" rendered="#{not empty storeCatVar.facilityList and !backingBean.managedBean.upsCannotEdit}">
 						<f:facet name="header">
@@ -36,8 +38,8 @@
 								listener="#{backingBean.selectAll(storeCatVar.selected,storeCatVar.facilityList)}"/>
 				          </p:selectBooleanCheckbox>
 				       </f:facet>
-				       <!-- #30043 -->
-						<p:selectBooleanCheckbox value="#{stor.selected}" disabled="#{stor.facilityType eq 'B' or stor.facilityType eq 'H'}">
+				       <!-- #30043, #28775 (38498) -->
+						<p:selectBooleanCheckbox value="#{stor.selected}" >
 							<p:ajax event="change" update="@this,:#{p:component('storePan')}" 
 								process="@this" partialSubmit="true" />
 						</p:selectBooleanCheckbox>
@@ -90,7 +92,7 @@
 						</p:commandLink>
 					</p:column>
 				</p:dataTable><br />
-			</ui:repeat>
+			</c:forEach><!-- #28775 - 38500 -->
 			
 			<p:spacer height="2px;" />
 			<div align="right">
@@ -98,9 +100,10 @@
 					action="#{backingBean.assignNewStoreBean}"
 					update=":form:tt:storeDialog" partialSubmit="true" process="@this" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #28775 - 38498 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					process="storePan" partialSubmit="true"
-					id="delStoreBtnId" disabled="#{backingBean.disableDeleteBtn(storeCatVar.facilityList)}"
+					id="delStoreBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.storeFacilitiesVOList)}"
 					update=":#{p:component('smStrDtPanel')},@this" oncomplete="storeDeletePopUp.show()" />
 			</div>
 			<br />
@@ -114,16 +117,18 @@
 		
 		<p:ajax event="close" listener="#{backingBean.cancelStoreSaveorUpdate}"/>
 		
-		<p:outputPanel layout="block" id="storeBlockPanel">
+		<!-- #36718 - add rendered to not trigger mandatory when not shown -->
+		<p:outputPanel layout="block" id="storeBlockPanel" rendered="#{backingBean.managedBean.showStorePanel}">
 			<p:messages id="storeDialogMsg" showSummary="false" showDetail="true"
 				autoUpdate="false" closable="true" />
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.store.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50"
 							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.name']}" id="smStoreName"
+							label="#{lbl['lbl.sm.facility.store.name']}" id="smStoreName"
 							value="#{backingBean.managedBean.selectedStoreFacility.facilityName}" 
 							disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
@@ -165,7 +170,8 @@
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.storeFacilityStates}"
 					divisionItems="#{backingBean.managedBean.storeFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.storeFacilityDistricts}" cityItems="#{backingBean.managedBean.storeFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_STORE_FACILITY_PANEL}" panelId="storeBlockPanel" disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+					facilityPanel="#{SupplierManagementConst.SM_STORE_FACILITY_PANEL}" panelId="storeBlockPanel" disabled="#{backingBean.managedBean.upsCannotEdit}"
+					disableValidation="#{param['disableValidation']}"/>  <!-- #34159 -->
 					
 				
 				<tr>
@@ -285,12 +291,15 @@
 			</table>
 			<br />
 			<div align="right">
+				<!-- #34159 - START - add param disablevalidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
-
 					action="#{backingBean.addOrUpdateStoreToSmApplNew}"
 					partialSubmit="true" process="storeDialog"
 					onclick="storeBlockWidget.show();" oncomplete="storeBlockWidget.hide();"
-					update=":#{p:component('smStrDtPanel')}, @([id$=Msg])" />
+					update=":#{p:component('smStrDtPanel')}, @([id$=Msg])" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 
 					process="@this" partialSubmit="true"

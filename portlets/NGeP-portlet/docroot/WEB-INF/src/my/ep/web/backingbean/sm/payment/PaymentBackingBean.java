@@ -52,6 +52,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.payment.PaymentManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -701,7 +702,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			PmStatus pyStatus = SmCommonUtil.getInstance()
 					.retrievePmStatusById(statusCode);
 			pyPayment.setPmStatus(pyStatus);
-
+			
+			//START 36227
+			if (pyPayment.getPyBill() != null
+					&& pyPayment.getPyBill().getBillType()
+							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+				pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);
+			}
+			//END 36227
+			
 			paymentOrder.setChannelName("");
 			smPaymentRes.setTransactionId(txID);
 			smPaymentRes.setErrorCode("");

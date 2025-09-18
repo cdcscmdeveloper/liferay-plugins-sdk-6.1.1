@@ -6015,7 +6015,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/pm/notify/prerenderPmNotify.xhtml
+				/xhtml/pm/notify/notify.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
@@ -8202,7 +8202,69 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
-	</portlet>	
+	</portlet>
+	<portlet>
+		<portlet-name>pmAuSearch</portlet-name>
+		<display-name>PM Audit Search</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/audit/pm/auditPreRenderPM.xhtml</value>			
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>PM Audit Search</title>
+			<short-title>PM Audit Search</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>pmAuUserOrgSearch</portlet-name>
+		<display-name>PM Audit User Organisation Search</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/audit/pm/userOrgAuditPreRender.xhtml</value>			
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>PM Audit User Organisation Search</title>
+			<short-title>PM Audit User Organisation Search</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 		<portlet>
 		<portlet-name>tempUserSearch</portlet-name>
 		<display-name>Temp User Search</display-name>
@@ -9623,6 +9685,39 @@
 		</supports>
 		<portlet-info>
 			<title>Direct Purchase Search</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>dpApprovalExceedThreshold</portlet-name>
+		<display-name>Direct Purchase Approval Exceed Threshold</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/directpurchase/exceedThresholdApproval/preRenderDpApprovalExceedThreshold.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Direct Purchase Approval Exceed Threshold</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -11271,5 +11366,71 @@
 		</security-role-ref>
 	</portlet>
 	<!--#27827-end-->
-	
+	<portlet>
+		<portlet-name>testSpki</portlet-name>
+		<display-name>Test SPKI</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sm/testSpki/testSpki.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Test SPKI</title>
+			<short-title>Test SPKI</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- #38890 -->
+	<portlet>
+		<portlet-name>testSmAI</portlet-name>
+		<display-name>Test SM AI</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sm/ai/testAI.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Test SM AI</title>
+			<short-title>Test SM AI</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 </portlet-app>

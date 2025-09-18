@@ -3162,13 +3162,20 @@ public class SmCommonUtil {
 	 */
 	public static SmAppl getActiveApplBySupplier(SmSupplier supplier) {
 		SmAppl activeAppl = null;
+		//38517 - START
+		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+
+		if (supplier.getSmAppl() != null){
+			mofRegistrationReqDTO.setSmAppl(supplier.getSmAppl());
+		}
+		
 		if (supplier != null) {
-			MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
 			mofRegistrationReqDTO.setSupplierId(supplier.getSupplierId());
 			activeAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveActiveSmApplBySupp(mofRegistrationReqDTO)
 					.getSmAppl();
 		}
+		//38517 - END
 		return activeAppl;
 	}
 
@@ -3604,9 +3611,6 @@ public class SmCommonUtil {
 		}
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setAppl(latestAppl);
-		//#32510 - start
-		latestAppl.setApplNo("");
-		//#32510 - end
 		return SmServiceLookup.getPersonnelSO().getSoftcertDocNo(reqDTO)
 				.getSoftcertDocNo();
 	}
@@ -4226,6 +4230,12 @@ public class SmCommonUtil {
 			SmAddress smAddress) {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		SelectItem item = null;
+		//#36718 - START
+		item = new SelectItem();
+		item.setLabel(SmCommonUtil.getMessage("lbl.txt.select", null));
+		item.setValue(null);
+		items.add(item);
+		//#36718 - END
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		if (SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
 				.contains(businessType)) {
@@ -4247,11 +4257,13 @@ public class SmCommonUtil {
 							.retrieveLocalAuthorityOrgProfileByAddress(reqDTO)
 							.getOrgProfileList();
 					if (!EntityHelper.isCollectionEmpty(orgProfileList)) {
-						item = new SelectItem();
+						//#36718 - START
+						/*item = new SelectItem();
 						item.setLabel(SmCommonUtil.getMessage("lbl.txt.select",
 								null));
 						item.setValue(null);
-						items.add(item);
+						items.add(item);*/
+						//#36718 - END
 						for (PmOrgProfile orgProfile : orgProfileList) {
 							item = new SelectItem();
 							item.setLabel(orgProfile.getPmOrgValidity()
@@ -6488,45 +6500,53 @@ public class SmCommonUtil {
 		return SmServiceLookup.getReviewApplicationSO().cancelBumiApplicationFromBumiStatus(smAppl);
 	}
 	//#32304 - end
-
-	public static void ssmIdentificationTypeError(SsmResDTO resDTO){
-		log.info("ssm status: "+ resDTO.getStatusCode());
-		if (resDTO.getSmPersonnelAll() != null && resDTO.getSmPersonnelAll().size()>0 ) {
-			boolean errMsg = false;
+	//#29582- start
+	public static void ssmIdentificationTypeError(SsmResDTO resDTO) {
+		if (resDTO.getSmPersonnelAll() != null) {
+			boolean hasMykadOwnerOrDirector = false;
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
+
 			for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
 				if (per.getIdentificationTypeSsm() != null) {
 					String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
 							ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
-					if (ssmTypeDesc == null){
-						ssmTypeDesc =ParameterHelper.getInstance().getParameterDesc(
+					if (ssmTypeDesc == null) {
+						ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
 								ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
 					}
+
 					sb.append("<br/>");
 					sb.append(++i + ". ");
 					sb.append(per.getName() + " ");
 					sb.append("("
 							+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-							+ " ");
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
 					sb.append(per.getIdentificationNo() + ", ");
 					sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
 					sb.append(per.getIdentificationTypeSsm() + " = ");
 					sb.append(ssmTypeDesc + ")");
 					sb.append("<br/>");
-					errMsg = true;
+				}
+
+				// Check for MYKAD owner/director and break if found
+				if (per.getIdentificationTypeSsm() != null
+						&& per.getIdentificationType().equals(ParameterConst.IDENTIFICATION_TYPES_MYKAD)) {
+					hasMykadOwnerOrDirector = true;
+					break;
 				}
 			}
-			if (errMsg) {
-				if (resDTO.isBasicAcc() || SupplierManagementConst.ACC_BASIC.equals(resDTO.getSmAppl().getApplType())){
-					throw new EpException(MessageConst.ERROR_775196);
-				}else{
+
+			// Handle error based on application type
+			if (hasMykadOwnerOrDirector) {
+				if (resDTO.isBasicAcc() || SupplierManagementConst.ACC_BASIC.equals(resDTO.getSmAppl().getApplType())) {
+					throw new EpException(MessageConst.ERROR_775196); 
+				} else {
 					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
 				}
 			}
-		}//#29582- end
+		}//#29582- start
 	}
 	
 	/**
