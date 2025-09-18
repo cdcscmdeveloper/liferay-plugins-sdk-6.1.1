@@ -1,0 +1,193 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<h:outputText value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.reportUrl}" /><br/><br/>
+	<table style="width: 100%;">
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.ministry']}" styleClass="required" /></td>
+			<td colspan="3">
+				<ac:lov id="lovCtMinistry"
+					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
+					disabled="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.disableMinistryField}"
+					readonly="true" headerText="#{lbl['lbl.ct.ministry']}"
+					value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+					saveObject="ccContractItemUsageMonitoringDtlsReportBB.managedBean.selectedMinistry"
+					postUpdateListener="ccContractItemUsageMonitoringDtlsReportBB.onChangeMinistry"
+					conditionField="#{ccContractItemUsageMonitoringDtlsReportBB.constructMinistryConditionFields()}" /></td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.jabatan']}" /></td>
+			<td colspan="3">
+				<ac:lov id="lovCtKumpulanPTJ"
+					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
+					headerText="#{lbl['lbl.ct.jabatan']}" readonly="true"
+					disabled="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.disableOrgField}"
+					value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
+					saveObject="ccContractItemUsageMonitoringDtlsReportBB.managedBean.selectedKumpulanPTJ"
+					conditionField="#{ccContractItemUsageMonitoringDtlsReportBB.constructKumpulanPTJConditionFields()}"
+					postUpdateListener="ccContractItemUsageMonitoringDtlsReportBB.onChangeKumpulanPTJ" /></td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.ptj']}" /></td>
+			<td colspan="3">
+				<ac:lov id="lovCtPTJ"
+					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
+					headerText="#{lbl['lbl.ct.ptj']}" update="@form"
+					disabled="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.disableOrgField}"
+					value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.selectedPTJ.pmOrgValidity.orgName}"
+					saveObject="ccContractItemUsageMonitoringDtlsReportBB.managedBean.selectedPTJ"
+					conditionField="#{ccContractItemUsageMonitoringDtlsReportBB.constructPTJConditionFields()}" /></td>
+		</tr>
+
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
+			<td>
+				<p:inputText value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.contractNo}"  maxlength="17" style="width:300px">
+					<p:ajax event="change" partialSubmit="true" process="@this" listener="#{ccContractItemUsageMonitoringDtlsReportBB.onChangeContractNo()}"/>
+				</p:inputText>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.physical.no']}" /></td>
+			<td colspan="2">
+				<p:inputText value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.contractPhysicalNo}"  maxlength="100" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no.item.monitoring']}" />
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
+			<td>
+				<p:inputText value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.loaNo}"  maxlength="17" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" /></td>
+			<td colspan="2">
+				<p:inputText value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.loaPhysicalNo}"  maxlength="100" style="width:300px">					
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.reference.no.item.monitoring']}" />
+			</td>
+		</tr>
+
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.agreement']}" /></td>
+			<td>
+				<p:selectOneMenu value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.agreement}" style="width:300px">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" />
+				</p:selectOneMenu>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.proc.method']}" /></td>
+			<td>
+				<p:selectOneMenu value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.procurementMode}" style="width:300px">
+					<f:selectItems value="#{ccContractItemUsageMonitoringDtlsReportBB.getProcurementModeDropdownValues()}" />
+					<p:ajax event="change" partialSubmit="true" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.status']}" /></td>
+			<td>
+				<p:selectOneMenu value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.status}" style="width:300px">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.effective']}" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.inactive']}" itemValue="2"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.expired']}" itemValue="3"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.ct.terminated']}" itemValue="4"></f:selectItem>
+					<p:ajax event="change" partialSubmit="true" />
+				</p:selectOneMenu>		
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.eff.date.from.2']}" /></td>
+			<td>
+				<table><tr>
+					<td class="columnDateFromClass">
+						<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true"
+							value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.fromDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.ct.date.range.to']}" style="width:55px;" /></td>
+					<td>
+						<p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.toDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+				</tr></table>
+			</td>
+		</tr>
+
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.crclrnolabel']}" styleClass="required" /></td>
+			<td>
+				<p:inputText value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.circularNo}"  maxlength="60" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.central.name']}" /></td>
+			<td>
+				<p:inputText value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.circularName}"  maxlength="500" style="width:300px">
+					<p:ajax event="blur" partialSubmit="true" />
+				</p:inputText>
+			</td>
+		</tr>
+
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.eff.date.from.2']}" /></td>
+			<td>
+				<table><tr>
+					<td class="columnDateFromClass">
+						<p:calendar showOn="button" navigator="true" display="inline" readonlyInput="true"
+							value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.circularEffFromDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.ct.date.range.to']}" style="width:55px;" /></td>
+					<td>
+						<p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.circularEffToDate}" size="9"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form">
+						</p:calendar>
+					</td>
+				</tr></table>
+			</td>
+
+			<td style="width: 20%"><p:outputLabel value="#{lbl['lbl.rpt.itmName']}" /></td>
+			<td colspan="2"><ac:lovItemName id="ctReportItemName"
+					lovId="CT_CONTRACT_ITEM_USAGE_MONITORING" readonly="true" size="60"
+					headerText="#{lbl['lbl.rpt.itmName']}"
+					value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.formattedSelectedItems}"
+					saveObject="ccContractItemUsageMonitoringDtlsReportBB.managedBean.lovSelectedItemList"
+					selectionMode="multiple"
+					postUpdateListener="ccContractItemUsageMonitoringDtlsReportBB.checkValue()"
+					update="@form" flagBean="ccContractItemUsageMonitoringDtlsReportBB" /></td>
+		</tr>
+		<tr>
+			<td style="width: 20%"><p:outputLabel
+					value="#{lbl['lbl.ct.name.supplier']}" /></td>
+			<td colspan="2"><ac:lov id="ctSupplierName" readonly="true"
+					size="40" lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT"
+					headerText="#{lbl['lbl.ct.name.supplier']}" update="@form"
+					value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.selectedSupplier.smSupplier.companyName}"
+					saveObject="ccContractItemUsageMonitoringDtlsReportBB.managedBean.selectedSupplier" /></td>
+		</tr>
+		
+	</table>
+	<br/>
+	<ac:generateReportItemUsageDtls bBean="#{ccContractItemUsageMonitoringDtlsReportBB}"
+		reportMainBean="#{ctReportBB}">
+	</ac:generateReportItemUsageDtls>
+</ui:composition>

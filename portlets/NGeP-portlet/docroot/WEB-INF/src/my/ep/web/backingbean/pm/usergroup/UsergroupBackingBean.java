@@ -669,7 +669,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 
 		/** AUDIT 28895_35509 START **/
 		if (reqDto.getUserGroup() != null && reqDto.getUserGroup().getUserGroupId() != null && !userGroup.isBrandNew()) {
-			System.out.println("userGroup.isBrandNew() :::: " + userGroup.isBrandNew());
 			UserGroupResDTO resDTOOld = userGrpSo.retrieveUserGroupByUserGroupId(reqDto);
 			this.getManagedBean().setUserGroupOld(resDTOOld.getUserGroup());			
 		}
@@ -679,6 +678,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		/** AUDIT 28895_35509 START **/
 		this.getManagedBean().setUserGroupUpdate(resDTO.getUserGroupUpdate());
 		this.getManagedBean().setUserGroupNew(resDTO.getUserGroupNew());
+		if (null != resDTO.getUserGroupNew()) {
+			this.getManagedBean().setRoleDesc(
+					PmCommonUtil.getRoleDescByRoleCodeAndLanguage(resDTO.getUserGroupNew().getRoleCode(), "ms"));
+		}
 		/** AUDIT 28895_35509 END **/
 		this.getManagedBean().setUserGroup(resDTO.getUserGroup());
 		if (resDTO.isSuccessful()) {

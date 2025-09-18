@@ -436,14 +436,15 @@
 							<p:message id="basicOffFacCityMsg" for="basicOffFacCity"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
-					</p:outputPanel>
+					
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:outputPanel id="postCodeOffFacPanelId">
 								<p:outputPanel
 									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId==backingBean.managedBean.myCountryId}">
-									<p:inputText maxlength="5" required="true"
+									<!-- #36718 - change required condition -->
+									<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostMyCode"
 										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
 										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -464,7 +465,8 @@
 								</p:outputPanel>
 								<p:outputPanel
 									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId!=backingBean.managedBean.myCountryId}">
-									<p:inputText maxlength="10" required="true"
+									<!-- #36718 - change required condition -->
+									<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostForeignCode"
 										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
 										size="35"
@@ -522,9 +524,10 @@
 							disabled="#{backingBean.managedBean.upsCannotEdit}" />
 							<!-- Disable for UPS 32008 - END -->
 					</p:outputPanel>
-					<!-- #36718 - END -->
 					</td>
 				</tr>
+				</p:outputPanel>
+				<!-- #36718 - END -->
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">

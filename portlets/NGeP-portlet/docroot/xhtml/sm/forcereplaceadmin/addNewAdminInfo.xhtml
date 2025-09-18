@@ -201,13 +201,17 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="newAdminEmail"
+					<td>
+						<!-- #32617 - START - add validator message -->
+						<p:inputText id="newAdminEmail"
 							label="#{lbl['lbl.sm.userprofile.email']}"
-							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}"
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}" 
+							validatorMessage="Email Address - Invalid Email Format"
 							size="40" required="true"><!-- #28765 Added <p:ajax event --><p:ajax event="change" partialSubmit="true" process="@this" />
 							<f:validateRegex 
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-							</p:inputText>
+						</p:inputText>
+						<!-- #32617 - END -->
 						<p:message id="newAdminEmailMsg" for="newAdminEmail"
 							showSummary="true" showDetail="false" display="icon" /></td>
 	

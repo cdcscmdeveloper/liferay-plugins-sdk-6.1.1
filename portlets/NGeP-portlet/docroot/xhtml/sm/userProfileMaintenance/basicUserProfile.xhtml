@@ -373,7 +373,7 @@
 												value="#{smPersonnelBackingBean.managedBean.permAddCountryList}" />
 											<!-- #13320 - added division -->
 											<!-- #33592-->
-											<p:ajax event="change"
+											<p:ajax event="change" process="@([id$=PermanentAddressInfo])"
 												update="basicPermAddStateList, basicPermAddDivisionList, basicPermAddDistrictList, basicPermAddCityList,basicPermAddPostCodePanelId,divisionBasicProLabelPanelId,divisionBasicProDropdownPanelId"
 												listener="#{smPersonnelBackingBean.onChangeCountry(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, 'I')}" />
 										</p:selectOneMenu> 
@@ -432,8 +432,8 @@
 													<f:selectItems
 														value="#{smPersonnelBackingBean.managedBean.permAddDivisionList}" />
 													<!-- #13320 - added division -->
-													<!-- #36718 - updte basicPermAddPostCodePanelId -->
-													<p:ajax event="change"
+													<!-- #36718 - updte basicPermAddPostCodePanelId, process panel -->
+													<p:ajax event="change" process="@([id$=PermanentAddressInfo])"
 														update="basicPermAddDistrictList, basicPermAddCityList, basicPermAddPostCodePanelId"
 														listener="#{smPersonnelBackingBean.onChangeDivision(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, 'I')}"/>
 												</p:selectOneMenu>
@@ -459,8 +459,9 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddDistrictList}" />
 											<!-- #13320 - added division -->
-											<!-- #36718 - update basicPermAddPostCodePanelId -->
+											<!-- #36718 - update basicPermAddPostCodePanelId, process panel -->
 											<p:ajax event="change" update="basicPermAddCityList, basicPermAddPostCodePanelId"
+												process="@([id$=PermanentAddressInfo])"
 												listener="#{smPersonnelBackingBean.onChangeDistrict(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, 'I')}" />
 										</p:selectOneMenu>
 									<!-- #34159 - End  -->
@@ -483,7 +484,7 @@
 												value="#{smPersonnelBackingBean.managedBean.permAddCityList}" />
 											<p:ajax event="change" 
 												update="basicPermAddPostCodePanelId" 
-												process="@this"
+												process="@([id$=PermanentAddressInfo])"
 												listener="#{smPersonnelBackingBean.onChangeCity(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, 'I')}"/>
 										</p:selectOneMenu>
 									<!-- #34159 - End  -->
