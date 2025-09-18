@@ -384,9 +384,6 @@ public class UnitOfMeasurementBackingBean extends
 		PmUom pmUom = this.getManagedBean().getPmUom();
 		
 		try {
-		//#34445 - End
-
-			// PmUom oldPmUom=this.getManagedBean().getOldPmUom();
 			validationMessage(pmUom);
 
 			UomReqDTO reqDTO = new UomReqDTO();
@@ -398,21 +395,6 @@ public class UnitOfMeasurementBackingBean extends
 				messageId = MessageConst.TD_80600;
 			} else {
 				messageId = MessageConst.TD_80601;
-
-				/*
-				 * if(oldPmUom!=null && pmUom!=null &&
-				 * !oldPmUom.getRecordStatusFlg
-				 * ().equals(pmUom.getRecordStatusFlg())){
-				 * if(pmUom.getRecordStatusFlg
-				 * ().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-				 * recordStatusMessageId = MessageConst.TD_80603; } else{
-				 * recordStatusMessageId = MessageConst.TD_80602; }
-				 * reqDTO.getTrackDairyVOs
-				 * ().add(PmCommonUtil.assignTrackingDairyForUOM
-				 * (pmUom.getUomId(),
-				 * pmUom.getUomCode(),getPmActionDesc(recordStatusMessageId
-				 * ,msgParam))); }
-				 */
 			}
 			reqDTO.setTrackingStatus(true);
 
@@ -461,7 +443,7 @@ public class UnitOfMeasurementBackingBean extends
 				}
 				/************ AUDIT #28895_35509 *************/
 			}
-		//#34445 Start
+
 		} catch (EpException e) {
 			handleException(e);
 			return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml";

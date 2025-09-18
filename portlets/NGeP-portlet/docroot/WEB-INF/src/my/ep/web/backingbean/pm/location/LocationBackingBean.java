@@ -475,6 +475,11 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				maintainLocation(getManagedBean().getSelectedType(), locationMsgId);
 			}
 			return NAV_TO_MAINTAIN;
+			
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Unexpected error: " + e.getMessage()));
+			return null;
 		}
 		//#34445 End
 	}
