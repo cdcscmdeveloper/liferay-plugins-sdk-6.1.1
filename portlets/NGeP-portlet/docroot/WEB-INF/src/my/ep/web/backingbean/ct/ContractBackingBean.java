@@ -5160,9 +5160,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The contract is classified as a PK7 agency if either of the following conditions is true:
 	 * <ul>
 	 *   <li>The parameter code equals {@link ParameterConst#QUOTATION_TENDER_TYPE_ITEM_IN_PK7}
-	 *       and the parameter type equals {@link ParameterTypeConst#PROCUREMENT_TYPE}.</li>
+	 *       and the parameter type equals {@link ParameterTypeConst#PROCUREMENT_TYPE} -> WIP.</li>
 	 *   <li>The parameter code equals {@link ParameterConst#QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP}
-	 *       and the parameter type equals {@link ParameterTypeConst#QUOTATION_TENDER_TYPE}.</li>
+	 *       and the parameter type equals {@link ParameterTypeConst#QUOTATION_TENDER_TYPE} -> WIP.</li>
+	 *   <li>The parameter code equals {@link ParameterConst#DP_SPECIAL_ITEM_PK7_TYPE}
+	 *       and the parameter type equals {@link ParameterTypeConst#CT_DP_NEW_SPECIAL_ITEM_WITH_APPROVAL}
+	 *       OR  {@link ParameterTypeConst#CT_DP_NEW_PK7_WP_ITEM}.</li>
 	 * </ul>
 	 * </p>
 	 *
@@ -5170,19 +5173,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         {@code false} if no matching procurement type is found or the resolved parameter is {@code null}.
 	 */
 	public boolean isPk7Agencies() {
-	    PmParameter procValue = resolveProcTypeForPk7();
+		PmParameter procValue = resolveProcTypeForPk7();
 
-	    if (procValue == null) {//avoid NullPointerException
-	        return false;
-	    }
+		if (procValue == null) {// avoid NullPointerException
+			return false;
+		}
 
-	    String proCode = procValue.getParameterCode();
-	    String procType = procValue.getParameterType();
+		String proCode = procValue.getParameterCode();
+		String procType = procValue.getParameterType();
 
-	    return (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equalsIgnoreCase(proCode)
-	                && ParameterTypeConst.PROCUREMENT_TYPE.equalsIgnoreCase(procType))
-	            || (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP.equalsIgnoreCase(proCode)
-	                && ParameterTypeConst.QUOTATION_TENDER_TYPE.equalsIgnoreCase(procType));
+		return (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equalsIgnoreCase(proCode) && ParameterTypeConst.PROCUREMENT_TYPE
+						.equalsIgnoreCase(procType))
+				|| (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP.equalsIgnoreCase(proCode) && ParameterTypeConst.QUOTATION_TENDER_TYPE
+						.equalsIgnoreCase(procType))
+				|| (ParameterConst.DP_SPECIAL_ITEM_PK7_TYPE.equalsIgnoreCase(proCode) && ParameterTypeConst.CT_DP_NEW_SPECIAL_ITEM_WITH_APPROVAL
+						.equalsIgnoreCase(procType))
+				|| (ParameterConst.DP_SPECIAL_ITEM_PK7_TYPE.equalsIgnoreCase(proCode) && ParameterTypeConst.CT_DP_NEW_PK7_WP_ITEM
+						.equalsIgnoreCase(procType));
 	}
 	//End - #30045
 }  
