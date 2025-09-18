@@ -26,13 +26,24 @@
 						action="#{smPersonnelBackingBean.cancelUserMOFUpdate}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
 				<!-- 34810 - start  -->
-				<td style="white-space: nowrap; float: right;"><p:commandButton
-						value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.checkingBeforeSave()}"
-						onclick="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
+				<!-- #34159 - START - add param disableValidation -->
+				<!-- 34810, #34400 - start  -->
+				<td style="white-space: nowrap; float: right;">
+					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+						oncomplete="if (!args.validationFailed) confirmDlg.show()" >
+						<f:param name="disableValidation" value="true" />
+					</p:commandButton>
+				</td>
+				<!-- #34159 - END -->
 				<!-- 34810 - end  -->
 			</tr>
 		</table>
+		<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
+			okAction="smPersonnelBackingBean.checkingBeforeSave()"
+			content="#{lbl['lbl.sm.confirm.user.profile']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 
 
 		<p:panel id="UserProfile" toggleable="true">
@@ -418,7 +429,9 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:inputText maxlength="100" required="true"
+									<td>
+										<!-- #36718 - change required -->
+										<p:inputText maxlength="100" required="#{!empty param['disableValidation']}"
 											id="permAdd1" label="#{lbl['lbl.sm.address']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.address1}"
 											size="35"
@@ -455,32 +468,42 @@
 									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
 
-									<td><p:selectOneMenu id="basicPermAddCountryList"
+									<td>
+										<!-- #34159 - Start  --> 
+										<p:selectOneMenu id="basicPermAddCountryList"
 											label="#{lbl['lbl.sm.country']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId}"
-											style="width: 207px;margin-bottom: 5px;" required="true"
+											style="width: 207px;margin-bottom: 5px;" 
+											required="#{!empty param['disableValidation']}"
 											disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddCountryList}" />
-												<p:ajax event="change" update="basicPermAddStateList, divisionPermanentFormLabelPanelId, divisionPermanentFormDropdownPanelId, basicPermAddDivisionList, basicPermAddDistrictList, basicPermAddCityList"
-												listener="#{smPersonnelBackingBean.updatePermAddLists(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId,null,null,null)}" />
-										</p:selectOneMenu> <p:message id="basicPermAddCountryListMsg"
+											<p:ajax event="change"
+												update="basicPermAddStateList, divisionPermanentFormLabelPanelId, divisionPermanentFormDropdownPanelId, basicPermAddDivisionList, basicPermAddDistrictList, basicPermAddCityList, basicPermAddPostCodePanelId"
+												listener="#{smPersonnelBackingBean.onChangeCountry(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, 'I')}" />
+										</p:selectOneMenu> 
+										<!-- #34159 - End  --> 
+										<p:message id="basicPermAddCountryListMsg"
 											for="basicPermAddCountryList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu id="basicPermAddStateList"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu id="basicPermAddStateList"
 											label="#{lbl['lbl.sm.state']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmState.stateId}"
-											style="width: 207px;margin-bottom: 5px;" required="true"
+											style="width: 207px;margin-bottom: 5px;" required="#{!empty param['disableValidation']}"
 											disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
-											<p:ajax event="change" update="divisionPermanentFormLabelPanelId, divisionPermanentFormDropdownPanelId, basicPermAddDivisionList, basicPermAddDistrictList, basicPermAddCityList"
-												listener="#{smPersonnelBackingBean.updatePermAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmState.stateId,null,null)}" />
-										</p:selectOneMenu> <p:message id="basicPermAddStateListMsg"
+											<p:ajax event="change" update="divisionPermanentFormLabelPanelId, divisionPermanentFormDropdownPanelId, basicPermAddDivisionList, basicPermAddDistrictList, basicPermAddCityList, basicPermAddPostCodePanelId"
+												listener="#{smPersonnelBackingBean.onChangeState(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, 'I')}" />
+										</p:selectOneMenu> 
+									<!-- #34159 - End  -->
+										<p:message id="basicPermAddStateListMsg"
 											for="basicPermAddStateList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -497,7 +520,9 @@
 									<td>
 									<p:outputPanel id="divisionPermanentFormDropdownPanelId">
 									<ui:fragment rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmState.adoptDivision}">
-									<p:selectOneMenu required="true"
+										<!-- #34159 - Start  -->
+										<p:selectOneMenu 
+											required="#{!empty param['disableValidation']}"
 											label="#{lbl['lbl.sm.division']}"
 											id="basicPermAddDivisionList"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmDivision.divisionId}"
@@ -507,9 +532,12 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddDivisionList}" />
-											<p:ajax event="change" update="basicMailAddDistrictList, basicMailAddCityList"
-												listener="#{smPersonnelBackingBean.updatePermAddLists(null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmDivision.divisionId,null)}" />
-										</p:selectOneMenu> <p:message id="basicPermAddDivisionListMsg"
+											<p:ajax event="change"
+												update="basicPermAddDistrictList, basicPermAddCityList, basicPermAddPostCodePanelId"
+												listener="#{smPersonnelBackingBean.onChangeDivision(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, 'I')}" />
+										</p:selectOneMenu>
+										<!-- #34159 - End  -->
+										<p:message id="basicPermAddDivisionListMsg"
 											for="basicPermAddDivisionList" showSummary="true"
 											showDetail="false" display="icon" />
 											</ui:fragment>
@@ -520,7 +548,9 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu required="true"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu required="#{!empty param['disableValidation']}"
 											label="#{lbl['lbl.sm.district']}"
 											id="basicPermAddDistrictList"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmDistrict.districtId}"
@@ -530,16 +560,21 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddDistrictList}" />
-											<p:ajax event="change" update="basicPermAddCityList"
-												listener="#{smPersonnelBackingBean.updatePermAddLists(null,null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmDistrict.districtId)}" />
-										</p:selectOneMenu> <p:message id="basicPermAddDistrictListMsg"
+											<p:ajax event="change" 
+												update="basicPermAddCityList, basicPermAddPostCodePanelId"
+												listener="#{smPersonnelBackingBean.onChangeDistrict(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, 'I')}" />
+										</p:selectOneMenu> 
+									<!-- #34159 - End  -->
+										 <p:message id="basicPermAddDistrictListMsg"
 											for="basicPermAddDistrictList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu required="true"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu required="#{!empty param['disableValidation']}"
 											label="#{lbl['lbl.sm.towncity']}" id="basicPermAddCityList"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCity.cityId}"
 											style="width: 207px;margin-bottom: 5px;"
@@ -548,8 +583,13 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddCityList}" />
-											<p:ajax event="change" update="@this" process="@this" />
-										</p:selectOneMenu> <p:message id="basicPermAddCityListMsg"
+											<p:ajax event="change" 
+												update="basicPermAddPostCodePanelId" 
+												listener="#{smPersonnelBackingBean.onChangeCity(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, 'I')}"
+												process="@this" />
+										</p:selectOneMenu> 
+									<!-- #34159 - End  -->
+										<p:message id="basicPermAddCityListMsg"
 											for="basicPermAddCityList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -559,7 +599,8 @@
 									<td><p:outputPanel id="basicPermAddPostCodePanelId">
 											<p:outputPanel
 												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId==smPersonnelBackingBean.managedBean.myCountryId}">
-												<p:inputText maxlength="5" required="true"
+												<!-- #36718 - Change Required value  -->
+												<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 													label="#{lbl['lbl.sm.postcode']}"
 													id="basicPermAddPostCodeMy"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}"
@@ -576,7 +617,8 @@
 											</p:outputPanel>
 											<p:outputPanel
 												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId!=smPersonnelBackingBean.managedBean.myCountryId}">
-												<p:inputText maxlength="10" required="true"
+												<!-- #36718 - Change Required value  -->
+												<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
 													label="#{lbl['lbl.sm.postcode']}"
 													id="basicPermAddPostCodeForeign"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}"
@@ -605,8 +647,9 @@
 									<td></td>
 									<td style="float: left;"><p:selectBooleanCheckbox
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}">
+											<!-- #36718 - process division, district, city dropdown -->
 											<p:ajax event="change" update="@([id$=MailingAddressInfo])"
-												partialSubmit="true" process="@this"
+												partialSubmit="true" process="@this,basicMailAddDivisionList,basicMailAddDistrictList,basicMailAddCityList"
 												listener="#{smPersonnelBackingBean.onTickSameAsPermForMail(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
 												smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}" />
 										</p:selectBooleanCheckbox> <p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
@@ -615,11 +658,13 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:inputText maxlength="100"
+									<td>
+										<!-- #36718 - add required condition -->
+										<p:inputText maxlength="100"
 											label="#{lbl['lbl.sm.address']}" id="mailAdd1"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.address1}"
 											size="35"
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}" />
 										<p:message id="mailAdd1Msg" for="mailAdd1" showSummary="true"
@@ -648,8 +693,9 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
+									<!-- #34159 - Start -->
 									<td><p:selectOneMenu id="basicMailAddCountryList"
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											label="#{lbl['lbl.sm.country']}"
@@ -659,18 +705,24 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
+											<!-- #36718 - add @([id$=MailingAddressInfo]) to ajax process -->
 											<p:ajax event="change"
-												update="basicMailAddStateList, divisionMailingFormLabelPanelId, divisionMailingFormDropdownPanelId, basicMailAddDivisionList, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId" process="@this" partialSubmit="true"
-												listener="#{smPersonnelBackingBean.updateMailAddLists(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId,null,null,null)}" />
-										</p:selectOneMenu> <p:message id="basicMailAddCountryListMsg"
+												update="basicMailAddStateList, divisionMailingFormLabelPanelId, divisionMailingFormDropdownPanelId, basicMailAddDivisionList, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId"
+												process="@this @([id$=MailingAddressInfo])" partialSubmit="true"
+												listener="#{smPersonnelBackingBean.onChangeCountry(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress, 'M')}" />
+										</p:selectOneMenu>  
+										<p:message id="basicMailAddCountryListMsg"
 											for="basicMailAddCountryList" showSummary="true"
 											showDetail="false" display="icon" /></td>
+									<!-- #34159 - End -->
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											label="#{lbl['lbl.sm.state']}" id="basicMailAddStateList"
@@ -680,10 +732,13 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
+											<!-- #36718 - add @([id$=MailingAddressInfo]) to ajax process, update basicMailAddPostCodePanelId -->
 											<p:ajax event="change"
-												update="divisionMailingFormLabelPanelId, divisionMailingFormDropdownPanelId, basicMailAddDivisionList, basicMailAddDistrictList, basicMailAddCityList" process="@this" partialSubmit="true"
-												listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.stateId,null,null)}" />
-										</p:selectOneMenu> <p:message id="basicMailAddStateListMsg"
+												update="divisionMailingFormLabelPanelId, divisionMailingFormDropdownPanelId, basicMailAddDivisionList, basicMailAddDistrictList, basicMailAddCityList, basicMailAddPostCodePanelId" process="@this @([id$=MailingAddressInfo])" partialSubmit="true"
+												listener="#{smPersonnelBackingBean.onChangeState(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress, 'M')}" />
+										</p:selectOneMenu> 
+									<!-- #34159 - End  -->
+										<p:message id="basicMailAddStateListMsg"
 											for="basicMailAddStateList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -700,8 +755,9 @@
 									<td>
 									<p:outputPanel id="divisionMailingFormDropdownPanelId">
 									<ui:fragment rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.adoptDivision}">
-									<p:selectOneMenu
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											label="#{lbl['lbl.sm.division']}" id="basicMailAddDivisionList"
@@ -711,11 +767,14 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
+											<!-- #36718 - add @([id$=MailingAddressInfo]) to ajax process, update basicMailAddPostCodePanelId -->
 											<p:ajax event="change"
-												update="basicMailAddDistrictList, basicMailAddCityList"
-												process="@this" partialSubmit="true"
-												listener="#{smPersonnelBackingBean.updateMailAddLists(null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmDivision.divisionId,null)}" />
-										</p:selectOneMenu> <p:message id="basicMailAddDivListMsg"
+												update="basicMailAddDistrictList, basicMailAddCityList, basicMailAddPostCodePanelId"
+												process="@this @([id$=MailingAddressInfo])" partialSubmit="true"
+												listener="#{smPersonnelBackingBean.onChangeDivision(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress, 'M')}" />
+										</p:selectOneMenu> 
+									<!-- #34159 - End  -->
+										 <p:message id="basicMailAddDivListMsg"
 											for="basicMailAddDivisionList" showSummary="true"
 											showDetail="false" display="icon" />
 											</ui:fragment>
@@ -726,8 +785,10 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											id="basicMailAddDistrictList"
@@ -738,17 +799,22 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddDistrictList}" />
-											<p:ajax event="change" update="basicMailAddCityList" process="@this" partialSubmit="true"
-												listener="#{smPersonnelBackingBean.updateMailAddLists(null,null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmDistrict.districtId)}" />
-										</p:selectOneMenu> <p:message id="basicMailAddDistrictListMsg"
+											<!-- #36718 - add @([id$=MailingAddressInfo]) to ajax process, update basicMailAddPostCodePanelId -->
+											<p:ajax event="change" update="basicMailAddCityList, basicMailAddPostCodePanelId"
+												process="@this @([id$=MailingAddressInfo])" partialSubmit="true"
+												listener="#{smPersonnelBackingBean.onChangeDistrict(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress, 'M')}" />
+										</p:selectOneMenu> <!-- #34159 - End  -->
+										<p:message id="basicMailAddDistrictListMsg"
 											for="basicMailAddDistrictList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											id="basicMailAddCityList" label="#{lbl['lbl.sm.towncity']}"
@@ -758,8 +824,14 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCityList}" />
-											<p:ajax process="@this" partialSubmit="true"/>
-										</p:selectOneMenu> <p:message id="basicMailAddCityListMsg"
+											<!-- #36718 - add @([id$=MailingAddressInfo]) to ajax process, update basicMailAddPostCodePanelId, add listener -->
+											<p:ajax process="@this @([id$=MailingAddressInfo])" 
+												listener="#{smPersonnelBackingBean.onChangeCity(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress, 'M')}" 
+												update="basicMailAddPostCodePanelId" 
+												partialSubmit="true"/>
+										</p:selectOneMenu> 
+									<!-- #34159 - End  -->
+										<p:message id="basicMailAddCityListMsg"
 											for="basicMailAddCityList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -767,10 +839,11 @@
 									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
 									<td><p:outputPanel id="basicMailAddPostCodePanelId">
-											<p:outputPanel
-												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId==smPersonnelBackingBean.managedBean.myCountryId}">
+											<!--  #36718 - START - change from p:panel to c:if because not working for negative scenario -->
+											<c:if
+												test="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId==smPersonnelBackingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="5"
-													required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+													required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 													label="#{lbl['lbl.sm.postcode']}"
 													id="basicMailAddPostCodeMy"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode}"
@@ -783,11 +856,11 @@
 												<p:message id="basicMailAddPostCodeMyMsg"
 													for="basicMailAddPostCodeMy" showSummary="true"
 													showDetail="false" display="icon" />
-											</p:outputPanel>
-											<p:outputPanel
-												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId!=smPersonnelBackingBean.managedBean.myCountryId}">
+											</c:if>
+											<c:if
+												test="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId!=smPersonnelBackingBean.managedBean.myCountryId}">
 												<p:inputText maxlength="10"
-													required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+													required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 													label="#{lbl['lbl.sm.postcode']}"
 													id="basicMailAddPostCodeForeign"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode}"
@@ -798,7 +871,8 @@
 												<p:message id="basicMailAddPostCodeForeignMsg"
 													for="basicMailAddPostCodeForeign" showSummary="true"
 													showDetail="false" display="icon" />
-											</p:outputPanel>
+											</c:if>
+											<!--  #36718 - END -->
 										</p:outputPanel></td>
 								</tr>
 							</table>
@@ -816,7 +890,10 @@
 								</tr>
 								<tr>
 									<td></td>
-									<td style="float: left;"><p:selectBooleanCheckbox
+									<td style="float: left;">
+										<!-- #36718 - Start - add disabled option-->
+										<p:selectBooleanCheckbox
+											disabled="#{smPersonnelBackingBean.managedBean.editMode}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}">
 											<p:ajax event="change"
 												update="@([id$=ResidentialAddressInfo])"
@@ -865,8 +942,10 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu id="basicResAddCountryList"
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start -->
+										<p:selectOneMenu id="basicResAddCountryList"
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
 														or smPersonnelBackingBean.managedBean.editMode}"
@@ -879,17 +958,20 @@
 												value="#{smPersonnelBackingBean.managedBean.resAddCountryList}" />
 											<p:ajax event="change"
 												update="basicResAddStateList, divisionResidentialFormLabelPanelId, divisionResidentialFormDropdownPanelId, basicResAddDivisionList, basicResAddDistrictList, basicResAddCityList,basicResAddPostCodePanelId" process="@this" partialSubmit="true"
-												listener="#{smPersonnelBackingBean.updateResAddLists(smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmCountry.countryId,null,null,null)}" />
-												
-										</p:selectOneMenu> <p:message id="basicResAddCountryListMsg"
+												listener="#{smPersonnelBackingBean.onChangeCountry(smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress, 'R')}" />
+										</p:selectOneMenu> 
+									<!-- #34159 - End  -->
+										<p:message id="basicResAddCountryListMsg"
 											for="basicResAddCountryList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
 														or smPersonnelBackingBean.managedBean.editMode}"
@@ -902,8 +984,10 @@
 												value="#{smPersonnelBackingBean.managedBean.resAddStateList}" />
 											<p:ajax event="change"
 												update="divisionResidentialFormLabelPanelId, divisionResidentialFormDropdownPanelId, basicResAddDivisionList, basicResAddDistrictList, basicResAddCityList" process="@this" partialSubmit="true"
-												listener="#{smPersonnelBackingBean.updateResAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmState.stateId,null,null)}" />
-										</p:selectOneMenu> <p:message id="basicResAddStateListMsg"
+												listener="#{smPersonnelBackingBean.onChangeState(smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress, 'R')}" />
+										</p:selectOneMenu> 
+									<!-- #34159 - Start  -->
+										 <p:message id="basicResAddStateListMsg"
 											for="basicResAddStateList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -919,8 +1003,9 @@
 									<td>
 									<p:outputPanel id="divisionResidentialFormDropdownPanelId">
 									<ui:fragment rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmState.adoptDivision}">
+												<!-- #34159 - Start  -->
 												<p:selectOneMenu
-													required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+													required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm and !empty param['disableValidation']}"
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
 													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm or smPersonnelBackingBean.managedBean.editMode}"
 													label="#{lbl['lbl.sm.division']}"
@@ -934,8 +1019,9 @@
 													<p:ajax event="change"
 														update="basicResAddDistrictList, basicResAddCityList"
 														process="@this" partialSubmit="true"
-														listener="#{smPersonnelBackingBean.updateResAddLists(null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmDivision.divisionId,null)}" />
+														listener="#{smPersonnelBackingBean.onChangeDivision(smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress, 'R')}" />
 												</p:selectOneMenu>
+												<!-- #34159 - End  -->
 												<p:message id="basicResAddDivListMsg"
 											for="basicResAddDivisionList" showSummary="true"
 											showDetail="false" display="icon" />
@@ -947,8 +1033,10 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
 														or smPersonnelBackingBean.managedBean.editMode}"
@@ -961,16 +1049,20 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.resAddDistrictList}" />
 											<p:ajax event="change" update="basicResAddCityList" process="@this" partialSubmit="true"
-												listener="#{smPersonnelBackingBean.updateResAddLists(null,null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmDistrict.districtId)}" />
-										</p:selectOneMenu> <p:message id="basicResAddDistrictListMsg"
+												listener="#{smPersonnelBackingBean.onChangeDistrict(smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress, 'R')}" />
+										</p:selectOneMenu> 
+									<!-- #34159 - End  -->
+										 <p:message id="basicResAddDistrictListMsg"
 											for="basicResAddDistrictList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
 														or smPersonnelBackingBean.managedBean.editMode}"
@@ -982,7 +1074,9 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.resAddCityList}" />
 											<p:ajax process="@this" partialSubmit="true"/>
-										</p:selectOneMenu> <p:message id="basicResAddCityListMsg"
+										</p:selectOneMenu> 
+									<!-- #34159 - End  -->
+										<p:message id="basicResAddCityListMsg"
 											for="basicResAddCityList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -1038,7 +1132,10 @@
 								</tr>
 								<tr>
 									<td></td>
-									<td style="float: left;"><p:selectBooleanCheckbox
+									<td style="float: left;">
+										<!-- #36718 - Start - add disabled option-->
+										<p:selectBooleanCheckbox
+											disabled="#{smPersonnelBackingBean.managedBean.editMode}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsComp}">
 											<p:ajax event="change"
 												update="@([id$=officeAddressInfo])"
@@ -1083,8 +1180,10 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu id="basicOffAddCountryList"
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start -->
+										<p:selectOneMenu id="basicOffAddCountryList"
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm or smPersonnelBackingBean.managedBean.editMode}"
 											label="#{lbl['lbl.sm.country']}"
@@ -1096,16 +1195,20 @@
 												value="#{smPersonnelBackingBean.managedBean.offAddCountryList}" />
 											<p:ajax event="change"
 												update="basicOffAddStateList, divisionOfficeFormLabelPanelId, divisionOfficeFormDropdownPanelId, basicOffAddDivisionList, basicOffAddDistrictList, basicOffAddCityList, basicOffAddPostCodePanelId" process="@this" partialSubmit="true"
-												listener="#{smPersonnelBackingBean.updateOffAddLists(smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmCountry.countryId,null,null,null)}"/>
-										</p:selectOneMenu> <p:message id="basicOffAddCountryListMsg"
+												listener="#{smPersonnelBackingBean.onChangeCountry(smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress, 'O')}"/>
+										</p:selectOneMenu>
+									<!-- #34159 - End  --> 
+										<p:message id="basicOffAddCountryListMsg"
 											for="basicOffAddCountryList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm or smPersonnelBackingBean.managedBean.editMode}"
 											label="#{lbl['lbl.sm.state']}" id="basicOffAddStateList"
@@ -1117,8 +1220,10 @@
 												value="#{smPersonnelBackingBean.managedBean.offAddStateList}" />
 											<p:ajax event="change"
 												update="divisionOfficeFormLabelPanelId, divisionOfficeFormDropdownPanelId, basicOffAddDivisionList, basicOffAddDistrictList, basicOffAddCityList"  process="@this" partialSubmit="true"
-												listener="#{smPersonnelBackingBean.updateOffAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmState.stateId,null,null)}" />
-										</p:selectOneMenu> <p:message id="basicOffAddStateListMsg"
+												listener="#{smPersonnelBackingBean.onChangeState(smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress, 'O')}" />
+										</p:selectOneMenu> 
+									<!-- #34159 - End  --> 
+										<p:message id="basicOffAddStateListMsg"
 											for="basicOffAddStateList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -1135,8 +1240,9 @@
 									<td>
 									<p:outputPanel id="divisionOfficeFormDropdownPanelId">
 									<ui:fragment rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmState.adoptDivision}">
+											<!-- #34159 - Start  -->
 												<p:selectOneMenu
-													required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+													required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm and !empty param['disableValidation']}"
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
 													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm or smPersonnelBackingBean.managedBean.editMode}"
 													label="#{lbl['lbl.sm.division']}"
@@ -1150,8 +1256,9 @@
 													<p:ajax event="change"
 														update="basicOffAddDistrictList, basicOffAddCityList"
 														process="@this" partialSubmit="true"
-														listener="#{smPersonnelBackingBean.updateOffAddLists(null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmDivision.divisionId,null)}" />
+														listener="#{smPersonnelBackingBean.onChangeDivision(smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress, 'O')}" />
 												</p:selectOneMenu>
+											<!-- #34159 - End  -->
 												<p:message id="basicOffAddDivListMsg"
 											for="basicOffAddDivisionList" showSummary="true"
 											showDetail="false" display="icon" />
@@ -1163,8 +1270,10 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm or smPersonnelBackingBean.managedBean.editMode}"
 											id="basicOffAddDistrictList"
@@ -1176,16 +1285,20 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.offAddDistrictList}" />
 											<p:ajax event="change" update="basicOffAddCityList" process="@this" partialSubmit="true"
-												listener="#{smPersonnelBackingBean.updateOffAddLists(null,null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmDistrict.districtId)}" />
-										</p:selectOneMenu> <p:message id="basicOffAddDistrictListMsg"
+												listener="#{smPersonnelBackingBean.onChangeDistrict(smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress, 'O')}" />
+										</p:selectOneMenu>
+									<!-- #34159 - End  --> 
+										<p:message id="basicOffAddDistrictListMsg"
 											for="basicOffAddDistrictList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+									<td>
+									<!-- #34159 - Start  -->
+										<p:selectOneMenu
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm or smPersonnelBackingBean.managedBean.editMode}"
 											id="basicOffAddCityList" label="#{lbl['lbl.sm.towncity']}"
@@ -1196,7 +1309,9 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.offAddCityList}" />
 												<p:ajax process="@this" partialSubmit="true"/>
-										</p:selectOneMenu> <p:message id="basicOffAddCityListMsg"
+										</p:selectOneMenu> 
+									<!-- #34159 - End  -->
+										<p:message id="basicOffAddCityListMsg"
 											for="basicOffAddCityList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>

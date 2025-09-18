@@ -32,9 +32,9 @@
 					<p:dataTable var="techComplianceList" id="sampleComplianceListId"
 					    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						rows="10"
-						value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
+						value="#{evaluationBackingBean.managedBean.technicalComplinaceList}"
 						rowIndexVar="index" style="width:100%"
-						rowKey="#{techComplianceList}">
+						rowKey="#{techComplianceList}"><ui:remove>#11104 Start </ui:remove>
 						<ac:paginator for="sampleComplianceListId" />
 
 

@@ -27,10 +27,14 @@
 						src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
 					<div align="right" style="padding-top: 10px;">
 						<p:defaultCommand target="saveBtn" />
+						<!-- #34159 - START -->
 						<p:commandButton id="saveBtn" value="#{lbl['lbl.sm.button.save']}"
 							onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{backingBean.addOrUpdateShareHolderToSmAppl}" 
-							update=":form" process="shrHolderPanGroup"/>
+							update=":form" process="shrHolderPanGroup">
+							<f:param name="disableValidation" value="true" />
+						</p:commandButton>
+						<!-- #34159 - END -->
 					</div>
 				</c:otherwise>
 			</c:choose>

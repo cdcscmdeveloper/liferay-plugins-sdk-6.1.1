@@ -13,7 +13,6 @@ package my.ep.web.managedbean.sc.quationtender;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +28,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -92,6 +92,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtHistory;
@@ -135,6 +136,12 @@ import my.ep.web.type.sc.quationtender.CloneAll;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;//#25138 Reendorsed
 import org.primefaces.model.TreeNode;
+
+//25791 -start-
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
+
+//25791 -end-
+
 
 /**
  * The Class QTDetailManagedBean.
@@ -1160,9 +1167,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The financial scoring. */
 	private List<ScQtCheckList> financialScoring;
-
+	
+	//37813,35384 -start
 	/** The tech points. */
-	private int techPoints;
+	private BigDecimal techPoints;
+	//37813,35384 -end
 
 	/** The fin points. */
 	private int finPoints;
@@ -1654,8 +1663,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> paramTypes = null;
 	//#25692-End
 	
-	public boolean proposalValidityChangeValue; //#21692
+	//#21692 - Start
+	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
+	private ScQtEpvSupplierResponse suppResp;
+	private boolean chmnFinalizationRejectEPV;
+	private boolean proposalValidityRevised;
+	private boolean nullEPVRemark;
+	private List<String> toBeRemoveEPVAttachments;
+	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
+	private boolean noSupplierExistForEPV;
+	private boolean userAbleToChangePBSecretary;
+	//#21692 - End
 	
 	// #29468 Vinod Start
 	private TreeNode rootCategoryTree;
@@ -1698,21 +1717,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
-	//#25037-START
+	// 25037 - start
 	private boolean showHistory;
 	private Paginator committeeHistories;
 	private String currentCommitteeDesc;
 	private ScCommitteeMemberHistory selectedCommitteeHistory;
 	private Paginator selectedHistoryMember;
 	private boolean committeeReviseFlow;
-	private List<QtCommitteeMemberBean>memberHistoryList;
+	private List<QtCommitteeMemberBean> memberHistoryList;
 	private ScQtApprovalRequest scQtApprovalRequest;
 	private boolean specUpdateInProgress;
 	private ScQtApprovalRequest doaaRequest;
 	private boolean doaRequestEditable;
 	private List<ScQtContactPerson> newDoaList;
 	private List<ScQtContactPerson> prevDoaList;
-	private List<PmUser> deskOfficerAssistantList; 
+	private List<PmUser> deskOfficerAssistantList;
 	private ScQtRequestContent requestContent;
 	private boolean reapproval;
 	private String prevDOAs;
@@ -1722,7 +1741,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean committeeUpdateFlow;
 	private List<String> mainTaskNames;
 
-	//#25037-END
+	// 25037 - end
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
 	private boolean showPopUpBPKApprovalNeeded=false;
@@ -1855,7 +1874,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCategory> backupCategoryCode;
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
-	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
 	//Bug #35061 - asyrafhaziq 
@@ -1869,6 +1887,33 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	//#29732
 	private boolean isFromSubmitCatChange;
+	private boolean isCheckUserCanRevise;
+
+	private boolean isSampleShowHide;//11104wip
+
+	// 25791-start
+	private List<ScQt> qtTrackingdiaryView;
+	private String qtAuditORMaintenanceView;
+	private List<ScLoa> qtLoaTrackingDtls;
+	private ScQt viewTrackingDiaryQTDL;
+	private List<ScLoaForQt> loaContractTrackingDtls;
+	private ScLoaForQt loaContractTrackingDtl;
+	private List<VCtContract> loaContractListTracking;
+	private IPagingDataModel<ScLoa> viewQtDlLoaContractTrackingDtls;
+	private IPagingDataModel<VCtContract> viewLoaContractDataModel;
+	private Map<Long, VCtContract> checkLoaContract;
+	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
+	// 25791-End
+	//28895 - 35500 start
+	/** The newly added sc qt committee */
+	private List<ScCommitteeMember> newScCommitteeMemberAuditTrailList;
+	/** The deleted sc qt committee */
+	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
+	/** The pmuser contactperson list that had been deleted */
+	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
+	
+	private boolean auditViewRole;
+	//#28895 - 35500 end
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -8391,21 +8436,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFinancialScoring(List<ScQtCheckList> financialScoring) {
 		this.financialScoring = financialScoring;
 	}
-
-	/**
-	 * @return the techPoints
-	 */
-	public int getTechPoints() {
-		return techPoints;
-	}
-
-	/**
-	 * @param techPoints the techPoints to set
-	 */
-	public void setTechPoints(int techPoints) {
-		this.techPoints = techPoints;
-	}
-
+	
+	//37813,35384 remove tech setter and getter.
 	/**
 	 * @return the finPoints
 	 */
@@ -11738,39 +11770,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
-	
-	// #21692 - start
-	/**
-	 * @return the proposalValidityChangeValue
-	 */
-	public boolean isProposalValidityChangeValue() {
-		return proposalValidityChangeValue;
-	}
-
-	/**
-	 * @param proposalValidityChangeValue
-	 *            the proposalValidityChangeValue to set
-	 */
-	public void setProposalValidityChangeValue(boolean proposalValidityChangeValue) {
-		this.proposalValidityChangeValue = proposalValidityChangeValue;
-	}
-	// #21692 - end
-
-	public ScQtEpvSupplierResponse getSuppResp() {
-		return suppResp;
-	}
-
-	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
-		this.suppResp = suppResp;
-	}
-
-	public String getEpvAttachmentValue() {
-		return epvAttachmentValue;
-	}
-
-	public void setEpvAttachmentValue(String epvAttachmentValue) {
-		this.epvAttachmentValue = epvAttachmentValue;
-	}
 
 	public String getMsgConfirmBelowIndi() {
 		return msgConfirmBelowIndi;
@@ -11843,6 +11842,348 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
 		this.isFromSubmitCatChange = isFromSubmitCatChange;
 	}
-}
+	
+	/**
+	 * @return the isCheckUserCanRevise
+	 */
+	public boolean ischeckUserCanRevise() {
+		return isCheckUserCanRevise;
+	}
 
-// ***25201
+	/**
+	 * @param isCheckUserCanRevise
+	 *            the isCheckUserCanRevise to set
+	 */
+	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
+		this.isCheckUserCanRevise = isCheckUserCanRevise;
+	}
+	
+	/**
+	 * 11104-Start
+	 * @return the isSampleShowHide
+	 */
+	public boolean isSampleShowHide() {
+		return isSampleShowHide;
+	}
+	
+	/**
+	 * @param isSampleShowHide the isSampleShowHide to set
+	 */
+	public void setSampleShowHide(boolean isSampleShowHide) {
+		this.isSampleShowHide = isSampleShowHide;
+	}//11104-End
+
+	//#21692 - Start
+	public boolean isChmnFinalizationRejectEPV() {
+		return chmnFinalizationRejectEPV;
+	}
+
+	public void setChmnFinalizationRejectEPV(boolean chmnFinalizationRejectEPV) {
+		this.chmnFinalizationRejectEPV = chmnFinalizationRejectEPV;
+	}
+
+	public boolean isProposalValidityRevised() {
+		return proposalValidityRevised;
+	}
+
+	public void setProposalValidityRevised(boolean proposalValidityRevised) {
+		this.proposalValidityRevised = proposalValidityRevised;
+	}
+	
+	/**
+	 * @return the proposalValidityChangeValue
+	 */
+	public boolean isProposalValidityChangeValue() {
+		return proposalValidityChangeValue;
+	}
+
+	/**
+	 * @param proposalValidityChangeValue
+	 *            the proposalValidityChangeValue to set
+	 */
+	public void setProposalValidityChangeValue(boolean proposalValidityChangeValue) {
+		this.proposalValidityChangeValue = proposalValidityChangeValue;
+	}
+
+	public ScQtEpvSupplierResponse getSuppResp() {
+		return suppResp;
+	}
+
+	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
+		this.suppResp = suppResp;
+	}
+
+	public String getEpvAttachmentValue() {
+		return epvAttachmentValue;
+	}
+
+	public void setEpvAttachmentValue(String epvAttachmentValue) {
+		this.epvAttachmentValue = epvAttachmentValue;
+	}
+
+	public boolean isNullEPVRemark() {
+		return nullEPVRemark;
+	}
+
+	public void setNullEPVRemark(boolean nullEPVRemark) {
+		this.nullEPVRemark = nullEPVRemark;
+	}
+	//#21692 - End
+
+	// 25791-start
+	/**
+	 * @return the qtTrackingdiaryView
+	 */
+	public List<ScQt> getQtTrackingdiaryView() {
+		return qtTrackingdiaryView;
+	}
+
+	/**
+	 * @param qtTrackingdiaryView
+	 *            the qtTrackingdiaryView to set
+	 */
+	public void setQtTrackingdiaryView(List<ScQt> qtTrackingdiaryView) {
+		this.qtTrackingdiaryView = qtTrackingdiaryView;
+	}
+
+	/**
+	 * @return the qtAuditORMaintenanceView
+	 */
+	public String getQtAuditORMaintenanceView() {
+		return qtAuditORMaintenanceView;
+	}
+
+	/**
+	 * @param qtAuditORMaintenanceView
+	 *            the qtAuditORMaintenanceView to set
+	 */
+	public void setQtAuditORMaintenanceView(String qtAuditORMaintenanceView) {
+		this.qtAuditORMaintenanceView = qtAuditORMaintenanceView;
+	}
+
+	/**
+	 * @return the qtLoaTrackingDtls
+	 */
+	public List<ScLoa> getQtLoaTrackingDtls() {
+		return qtLoaTrackingDtls;
+	}
+
+	/**
+	 * @param qtLoaTrackingDtls
+	 *            the qtLoaTrackingDtls to set
+	 */
+	public void setQtLoaTrackingDtls(List<ScLoa> qtLoaTrackingDtls) {
+		this.qtLoaTrackingDtls = qtLoaTrackingDtls;
+	}
+
+	/**
+	 * @return the viewTrackingDiaryQTDL
+	 */
+	public ScQt getViewTrackingDiaryQTDL() {
+		return viewTrackingDiaryQTDL;
+	}
+
+	/**
+	 * @param viewTrackingDiaryQTDL
+	 *            the viewTrackingDiaryQTDL to set
+	 */
+	public void setViewTrackingDiaryQTDL(ScQt viewTrackingDiaryQTDL) {
+		this.viewTrackingDiaryQTDL = viewTrackingDiaryQTDL;
+	}
+
+	/**
+	 * @return the loaContractTrackingDtls
+	 */
+	public List<ScLoaForQt> getLoaContractTrackingDtls() {
+		return loaContractTrackingDtls;
+	}
+
+	/**
+	 * @param loaContractTrackingDtls
+	 *            the loaContractTrackingDtls to set
+	 */
+	public void setLoaContractTrackingDtls(List<ScLoaForQt> loaContractTrackingDtls) {
+		this.loaContractTrackingDtls = loaContractTrackingDtls;
+	}
+
+	/**
+	 * @return the loaContractTrackingDtl
+	 */
+	public ScLoaForQt getLoaContractTrackingDtl() {
+		return loaContractTrackingDtl;
+	}
+
+	/**
+	 * @param loaContractTrackingDtl
+	 *            the loaContractTrackingDtl to set
+	 */
+	public void setLoaContractTrackingDtl(ScLoaForQt loaContractTrackingDtl) {
+		this.loaContractTrackingDtl = loaContractTrackingDtl;
+	}
+
+	/**
+	 * @return the loaContractListTracking
+	 */
+	public List<VCtContract> getLoaContractListTracking() {
+		return loaContractListTracking;
+	}
+
+	/**
+	 * @param loaContractListTracking
+	 *            the loaContractListTracking to set
+	 */
+	public void setLoaContractListTracking(List<VCtContract> loaContractListTracking) {
+		this.loaContractListTracking = loaContractListTracking;
+	}
+
+	/**
+	 * @return the viewQtDlLoaContractTrackingDtls
+	 */
+	public IPagingDataModel<ScLoa> getViewQtDlLoaContractTrackingDtls() {
+		return viewQtDlLoaContractTrackingDtls;
+	}
+
+	/**
+	 * @param viewQtDlLoaContractTrackingDtls
+	 *            the viewQtDlLoaContractTrackingDtls to set
+	 */
+	public void setViewQtDlLoaContractTrackingDtls(IPagingDataModel<ScLoa> viewQtDlLoaContractTrackingDtls) {
+		this.viewQtDlLoaContractTrackingDtls = viewQtDlLoaContractTrackingDtls;
+	}
+
+	/**
+	 * @return the viewLoaContractDataModel
+	 */
+	public IPagingDataModel<VCtContract> getViewLoaContractDataModel() {
+		return viewLoaContractDataModel;
+	}
+
+	/**
+	 * @param viewLoaContractDataModel
+	 *            the viewLoaContractDataModel to set
+	 */
+	public void setViewLoaContractDataModel(IPagingDataModel<VCtContract> viewLoaContractDataModel) {
+		this.viewLoaContractDataModel = viewLoaContractDataModel;
+	}
+
+	/**
+	 * @return the checkLoaContract
+	 */
+	public Map<Long, VCtContract> getCheckLoaContract() {
+		return checkLoaContract;
+	}
+
+	/**
+	 * @param checkLoaContract
+	 *            the checkLoaContract to set
+	 */
+	public void setCheckLoaContract(Map<Long, VCtContract> checkLoaContract) {
+		this.checkLoaContract = checkLoaContract;
+	}
+	
+	/**
+	 * @return the searchBidScheduleDataModel
+	 */
+	public IPagingDataModel<ScBidScheduleForQT> getSearchBidScheduleDataModel() {
+		return searchBidScheduleDataModel;
+	}
+
+	/**
+	 * @param searchBidScheduleDataModel the searchBidScheduleDataModel to set
+	 */
+	public void setSearchBidScheduleDataModel(
+			IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel) {
+		this.searchBidScheduleDataModel = searchBidScheduleDataModel;
+	}
+	
+	// 25791-End
+
+	//28895 - 35500 start
+	public List<ScCommitteeMember> getNewScCommitteeMemberAuditTrailList() {
+		return newScCommitteeMemberAuditTrailList;
+	}
+
+	public void setNewScCommitteeMemberAuditTrailList(List<ScCommitteeMember> newScCommitteeMemberAuditTrailList) {
+		this.newScCommitteeMemberAuditTrailList = newScCommitteeMemberAuditTrailList;
+	}
+
+	public List<ScCommitteeMember> getDeletedScCommitteeMemberAuditTrailList() {
+		return deletedScCommitteeMemberAuditTrailList;
+	}
+
+	public void setDeletedScCommitteeMemberAuditTrailList(List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList) {
+		this.deletedScCommitteeMemberAuditTrailList = deletedScCommitteeMemberAuditTrailList;
+	}
+
+	public List<ScQtContactPerson> getPmUserDeletedContactPersonList() {
+		return pmUserDeletedContactPersonList;
+	}
+
+	public void setPmUserDeletedContactPersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
+		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
+	}
+
+	public boolean isAuditViewRole() {
+		return auditViewRole;
+	}
+
+	public void setAuditViewRole(boolean auditViewRole) {
+		this.auditViewRole = auditViewRole;
+	}
+	//28895 - 35500 end
+	//#21692 #note-504 - Start
+	public List<String> getToBeRemoveEPVAttachments() {
+		return toBeRemoveEPVAttachments;
+	}
+
+	public void setToBeRemoveEPVAttachments(List<String> toBeRemoveEPVAttachments) {
+		this.toBeRemoveEPVAttachments = toBeRemoveEPVAttachments;
+	}
+	//#21692 #note-504 - End
+
+	//#21692 #note-504 - Start
+	public List<ScQtEpvApprovalReqAttachment> getAllEPVAttachments() {
+		return allEPVAttachments;
+	}
+
+	public void setAllEPVAttachments(List<ScQtEpvApprovalReqAttachment> allEPVAttachments) {
+		this.allEPVAttachments = allEPVAttachments;
+	}
+	//#21692 #note-504 - End
+	
+	//37813,35384 -start
+	/**
+	 * @return the techPoints
+	 */
+	public BigDecimal getTechPoints() {
+		return techPoints;
+	}
+
+	/**
+	 * @param techPoints the techPoints to set
+	 */
+	public void setTechPoints(BigDecimal techPoints) {
+		this.techPoints = techPoints;
+	}
+	//37813,35384 -end
+	
+	//#21692 note-569 - Start
+	public boolean isNoSupplierExistForEPV() {
+		return noSupplierExistForEPV;
+	}
+
+	public void setNoSupplierExistForEPV(boolean noSupplierExistForEPV) {
+		this.noSupplierExistForEPV = noSupplierExistForEPV;
+	}
+	//#21692 note-569 - End
+
+	//#21692 - End
+	public boolean isUserAbleToChangePBSecretary() {
+		return userAbleToChangePBSecretary;
+	}
+
+	public void setUserAbleToChangePBSecretary(boolean userAbleToChangePBSecretary) {
+		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
+	}
+	//#21692 - End
+}

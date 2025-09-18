@@ -5,6 +5,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<style>
+		.command-link {
+			display: inline-block;
+			/* Ensures the command link is treated like an inline element */
+			color: #009ae5 !important; /* Ensures the link color is applied */
+			text-decoration: none; /* Removes the underline */
+		}
+	</style>
 
 	<p:panel id="requestNoteItemDetails" toggleable="true"
 		toggleSpeed="500">
@@ -51,12 +59,17 @@
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}"
 					style="white-space: normal;">
-					<p:commandLink value="#{requestNoteDtl.requestItem.itemName}"
+					<ui:remove> #36950 start @zaim</ui:remove>
+					<p:commandLink styleClass="command-link"
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 						update=":form:itemDtlPopup" partialSubmit="true" process="@this"
-						oncomplete="itemDtlPopup.show();" />
+						oncomplete="itemDtlPopup.show();">
+						 <h:outputText value="#{requestNoteBackingBean.handleSpecialCharacterForView(requestNoteDtl.requestItem.itemName)}" escape="false" />
+					</p:commandLink>
+					<ui:remove> #36950 end @zaim</ui:remove>
 					<p:spacer width="2px;" />
 					<p:commandLink partialSubmit="true" process="@this"
+						styleClass="command-link"
 						actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}"
 						rendered="#{!empty requestNoteDtl.requestItem.purchaseInDefault}">
 						<p:graphicImage value="/css/images/design/ico-view.png"
@@ -65,6 +78,7 @@
 					<p:spacer width="2px;" />
 					<h:panelGroup rendered="#{requestNoteDtl.showPurchaseInquiry}">
 						<p:commandLink partialSubmit="true" process="@this"
+							styleClass="command-link"
 							id="prInquiryResponse"
 							actionListener="#{requestNoteBackingBean.showPurchaseInquiry(requestNoteDtl)}">
 							<p:graphicImage value="/css/images/design/ico-view.png"
@@ -85,6 +99,7 @@
 					<ui:fragment
 						rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A' or requestNoteDtl.procurementType.parameterCode eq 'P'}">
 						<p:commandLink value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,requestNoteDtl.procurementType.parameterCode)}"
+							styleClass="command-link"
 							partialSubmit="true" process="@this" update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
@@ -156,6 +171,7 @@
 							<p:column styleClass="ppPanelGrid"
 								style="border:none !important; padding-left: 1px;padding-right: 0px;vertical-align: super;width:12%;">
 								<p:commandLink
+									styleClass="command-link"
 									action="#{requestNoteBackingBean.supplierViewAction}"
 									partialSubmit="true" process="@this" id="supplierViewId"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -174,24 +190,31 @@
 					</p:panelGrid>
 				</p:column>
 				
-				<!-- 26284 Start -->
+				<ui:remove>#26284 - Start</ui:remove>
 				<p:column style="white-space:normal;text-align:center;">
 					<f:facet name="header" style="white-space:normal;">
 						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}"/>
 					</f:facet>	
-					<h:panelGroup rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}">
-						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					<h:panelGroup rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier ne null and requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}">
+						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" styleClass="command-link"
 							rendered="#{requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}"
 							action="#{requestNoteBackingBean.supplierDisciplinaryActionInfo(requestNoteDtl.scRequestSupplierItem.smSupplier)}" 
-							process="@this" partialSubmit="true" update=":form">
+							process="@this" partialSubmit="true" update=":form" style="width: 100%;">
 							<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
 						</p:commandLink>
-						<h:outputText rendered="#{!requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>	
+						<h:outputText rendered="#{!requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>
+						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							rendered="#{requestNoteBackingBean.getDisciplinaryActionCancelOrBlacklist(requestNoteDtl.scRequestSupplierItem.smSupplier)}"
+							action="#{requestNoteBackingBean.supplierDisciplinaryActionStatus()}" 
+							process="@this" partialSubmit="true" update="@([id$=disciplinaryActionRequestNoteDlgId])">
+							<p:graphicImage id="daSupplierAlertGI"
+								value="/css/images/design/exclamation.png" />
+						</p:commandLink>
 					</h:panelGroup>	
 					<h:outputText rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId eq null}" value="#{lbl['lbl.sc.no.available']}"/>																			   
 				</p:column>
-				<!-- 26284 End -->
+				<ui:remove>#26284 - End</ui:remove>
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"
 					style="width: 45px;white-space: normal;">
@@ -213,6 +236,7 @@
 							rendered="#{requestNoteBackingBean.checkPriceOffered(requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode)}">
 							<div style="text-align: center;">
 								<p:commandLink partialSubmit="true" update=":form:pricingPopup"
+									styleClass="command-link"
 									process="@this"
 									actionListener="#{requestNoteBackingBean.showPricing(requestNoteDtl)}"
 									oncomplete="pricingPopup.show();">
@@ -496,8 +520,9 @@
 		</p:panel>
 	</p:dialog>
 	
-	<!-- 26284 Start -->
+	<ui:remove>#26284 - Start</ui:remove>
+	<ac:scRequestNotePopupMessage voObject="#{requestNoteBackingBean.managedBean.popupMessage}"/>
 	<ac:disciplinaryActionHistory voList="#{requestNoteBackingBean.managedBean.disciplineVOs}" btnView="true"/>
-	<!-- 26284 End -->
+	<ui:remove>#26284 - End</ui:remove>
 				
 </ui:composition>

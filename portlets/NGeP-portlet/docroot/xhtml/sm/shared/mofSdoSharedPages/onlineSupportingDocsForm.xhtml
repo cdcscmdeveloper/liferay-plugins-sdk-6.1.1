@@ -48,13 +48,16 @@
 			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="500" width="1400">
 				<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="pnlInquiryId">
 					<table>
-					<tr>
-						<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
-					</tr>
-					<tr>
-						<td><p:inputText size="50" id="resInquirySubId" disabled="true" 
+					<c:if
+						test="#{backingBean.managedBean.selectedInquiryResponse.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
+						<tr>
+							<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
+						</tr>
+						<tr>
+							<td><p:inputText size="50" id="resInquirySubId" disabled="true" 
 								value="#{backingBean.managedBean.selectedInquiryResponse.inquirySubject}" /></td>
-					</tr>
+						</tr>
+					</c:if>
 					
 					<tr>
 						<td>#{lbl['lbl.sm.supportingdoc.inquirydate']}</td>

@@ -77,6 +77,16 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_PERSONNEL_NAME = "PPERSONNELNAME";
 	//15174 - end
 
+	//#32521 - START
+	public static final String PARAM_DA_STATUS = "PDASTATUS";
+	public static final String PARAM_USER_ID2 = "PUSER2"; //param indicator for second user_id in same report.
+	//#32521 - END
+	// #34031 Start
+	public static final String PARAM_VISIT_DATE_FROM = "PFROMVISITDATE";
+	public static final String PARAM_VISIT_DATE_TO = "PTOVISITDATE";
+	public static final String SM_REVISIT_RPT_VAL = "SM_101";
+	// #34031 End
+
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
 	public static final String SM_CAT_STATIC_BY_YEAR_RPT_VAL = "SM_003";
@@ -153,6 +163,9 @@ public class SmReportConst implements Serializable {
 	// #29617
 	public static final String SM_SME_SUPPLIER_RPT_VAL = "SM_096";
 
+	//#32521 - START
+	public static final String SM_APPLICATION_PROCESSED_RPT_VAL = "SM_097";
+	//#32521 - END
 	// Screen fields constants
 	public static final String SM_ZONE_SEMENANJUNG = "Semenanjung";
 	public static final String SM_ZONE_SABAH = "Sabah";
@@ -680,4 +693,14 @@ public class SmReportConst implements Serializable {
 	}
 	// #29617 end
 
+	//#32521 - START
+	public String getSmApplicationProcessedRptVal() {
+		return SM_APPLICATION_PROCESSED_RPT_VAL;
+	}
+	//#32521 - END
+	// #34031 Start
+	public String getSmRevisitRptVal() {
+		return SM_REVISIT_RPT_VAL;
+	}
+	// #34031 End
 }

@@ -81,6 +81,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	private SmSoftcertDoc supportDoc;
 	private String revokeMessage;
+	private boolean agreeDeclare;		//#34400
 
 	@ManagedProperty(value = "#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -487,5 +488,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setRevokeMessage(String revokeMessage) {
 		this.revokeMessage = revokeMessage;
+	}
+	
+	//#34400
+	public boolean isAgreeDeclare() {
+		return agreeDeclare;
+	}
+
+	public void setAgreeDeclare(boolean agreeDeclare) {
+		this.agreeDeclare = agreeDeclare;
 	}
 }

@@ -18,6 +18,14 @@
 	{
 	width: 250px;
 }
+
+.left-align {
+	text-align: left;
+}
+
+.left-align a {
+	text-align: left;
+}
 </style>
 		<p:blockUI block=":form" widgetVar="blkContractSearchAuditTable">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -33,37 +41,42 @@
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.panel.ptj']}"
 					style="width:25%;white-space:normal;"
 					styleClass="column-align-center">
-					<div align="left">
+					<div class="left-align">
 						<h:outputText value="#{metadata.ptj}" />
 					</div>
 				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.ct.audit.circular.panel.doc.type']}"
 					style="width:10%;" styleClass="column-align-center">
-					<h:outputText
-						value="#{circularBackingBean.checkDpCode(metadata.docType)}"
-						style="text-align:left; float:left;" />
+					<div class="left-align">
+						<h:outputText
+							value="#{circularBackingBean.checkDpCode(metadata.docType)}" />
+					</div>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.panel.doc.no']}"
 					style="width:10%;" styleClass="column-align-center">
-					<p:commandLink value="#{metadata.docNo}" styleClass="blue_font"
-						style="text-align:left; float:left;"
-						action="#{purchaseRequestBackingBean.navigateRequestNotePage(metadata.scRequestNote.requestNoteId)}"
-						onstart="blkContractSearchAuditTable.show()"
-						oncomplete="blkContractSearchAuditTable.hide()">
-					</p:commandLink>
+					<div class="left-align">
+						<p:commandLink value="#{metadata.docNo}" styleClass="blue_font"
+							style="color:#009ae5 !important;"
+							action="#{purchaseRequestBackingBean.navigateRequestNotePage(metadata.scRequestNote.requestNoteId)}"
+							onstart="blkContractSearchAuditTable.show()"
+							oncomplete="blkContractSearchAuditTable.hide()">
+						</p:commandLink>
+					</div>
 				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.ct.audit.circular.panel.doc.title']}"
-					style="width:10%;" styleClass="column-align-center">
-					<h:outputText value="#{metadata.docTitle}"
-						style="text-align:left; float:left;" />
+					styleClass="column-align-center" style="width:15%; white-space:normal;">
+					<div class="left-align">
+						<h:outputText value="#{metadata.docTitle}"/>
+					</div>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.panel.status']}"
 					style="width:10%;" styleClass="column-align-center">
-					<h:outputText
-						value="#{circularBackingBean.getStatusDescById(metadata.status)}"
-						style="text-align:left; float:left;" />
+					<div class="left-align">
+						<h:outputText
+							value="#{circularBackingBean.getStatusDescById(metadata.status)}"/>
+					</div>
 				</p:column>
 			</p:dataTable>
 		</div>

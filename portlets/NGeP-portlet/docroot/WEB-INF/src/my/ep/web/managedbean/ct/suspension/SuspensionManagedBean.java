@@ -5,6 +5,8 @@ package my.ep.web.managedbean.ct.suspension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;//#29214
 import java.util.HashMap;
 import java.util.List;
@@ -215,17 +217,39 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 					}
 				}
 			
-				searchBean.getSortColumns().add(new SearchOrderBean("itemType.parameterCode")); //35985
-				searchBean.getSortColumns().add(new SearchOrderBean("scRequestItem.cmItem.extensionCode")); //35985	
+				//searchBean.getSortColumns().add(new SearchOrderBean("itemType.parameterCode")); //35985
+				//searchBean.getSortColumns().add(new SearchOrderBean("scRequestItem.cmItem.extensionCode")); //35985	
 				
 				ContractItemReqDTO reqDTO=new ContractItemReqDTO();
 				reqDTO.setContractItemSearchBean(searchBean);
 			
 
 				IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
-				ContractItemResDTO resDTO = null;
-				resDTO=contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
-				return resDTO.getContractItemResultBean();
+				//#36257,#28854 - Start
+				ContractItemResDTO resDTO = contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
+		        ISearchResultBean<CtContractItem> resultBean = resDTO.getContractItemResultBean();
+		        
+			    //#39038 - Start
+			    // APPLY PERUBAHAN DARI updateItemMap KE ITEM YANG DITAMPILKAN
+				Map<Long, CtContractItem> updateItemMap = contractBb.getManagedBean().getUpdateItemMap();				
+			    // Terapkan perubahan dengan metode helper
+			    for (CtContractItem currentItem : resultBean.getResultList()) {
+			        applyChangesToItem(currentItem, updateItemMap);
+			      }
+			    //#39038 - End
+		        
+		     // Simplified sorting logic: itemType first, then itemName, both case-insensitive
+		        Collections.sort(resultBean.getResultList(), new Comparator<CtContractItem>() {
+		            @Override
+		            public int compare(CtContractItem item1, CtContractItem item2) {
+		                int itemTypeComparison = item1.getItemType().getParameterCode().compareToIgnoreCase(item2.getItemType().getParameterCode());
+		                return (itemTypeComparison != 0) 
+		                        ? itemTypeComparison 
+		                        : item1.getScRequestItem().getItemName().compareToIgnoreCase(item2.getScRequestItem().getItemName());
+		            }
+		        });
+				return resultBean;
+				//#36257,#28854 - End
 				//return null;
 				
 			} catch (Exception e) {
@@ -235,6 +259,34 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 			return null;
 		}
 
+		// #39038 - Start
+		/**
+		 * Applies pending updates to a contract item from a map of changes.
+		 * 
+		 * @param item
+		 *            the {@link CtContractItem} to update.
+		 * @param updateMap
+		 *            the map containing changed items, keyed by ID.
+		 */
+		private void applyChangesToItem(CtContractItem item, Map<Long, CtContractItem> updateMap) {
+			// Pastikan item tidak null dan memiliki RequestNoteItemId
+			if (item == null || item.getScRequestItem() == null) {
+				return;
+			}
+			Long itemId = item.getScRequestItem().getRequestNoteItemId();
+			if (itemId == null) {
+				return;
+			}
+
+			// Jika item sudah diubah, terapkan perubahannya
+			if (updateMap.containsKey(itemId)) {
+				CtContractItem changedItem = updateMap.get(itemId);
+				item.setRecordStatusFlg(changedItem.getRecordStatusFlg());
+				item.setEffDate(changedItem.getEffDate());
+				item.setExpDate(changedItem.getExpDate());
+			}
+		}
+		// #39038 - End
 	}
 
 

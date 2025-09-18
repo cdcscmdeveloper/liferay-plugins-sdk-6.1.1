@@ -12,6 +12,11 @@
 		<cc:attribute name="dialogWidth" default="1100px" />
 		<cc:attribute name="dialogHeight" default="500px" />
 		<cc:attribute name="voList" type="java.util.List" required="true" />
+		<!--  Start 13362 -->
+		<cc:attribute name="showButton" default="" />
+		<cc:attribute name="bBean" />
+		<!--  end 13362 -->
+		<cc:attribute name="voList" type="java.util.List" required="true" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -78,7 +83,14 @@
 		
 			</p:column>
 		</p:dataTable>
-		
+		<!--  Start 13362 -->
+		<div style="width: 100%" align="right">
+		<p:commandButton  value="#{lbl['lbl.btn.download']}" ajax="false" immediate="true" rendered="#{not empty cc.attrs.showButton}">
+				<p:fileDownload value="#{cc.attrs.bBean.generateAndDownloadOverlapCategoryDetailsExcel()}"/>
+				<f:ajax execute="@this" render="@form"  />
+		</p:commandButton>
+		</div>
+		<!--  End 13362 -->
 	</p:dialog>
 			
 	</cc:implementation>

@@ -6,7 +6,9 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -41,7 +43,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private int activeIndex;
 	private SmSvTask smSvTask;
 	private SmSvAddress selectedSmSvAddress;
-	//private Map<String,SmSvTemplate> smSvTemplateMap;
 	private Map<String,List<SmSvAddress>> smSvAddressMap;
 	private Map<String,SmFacility> smSvFacilityMap;
 	private SmSvTemplate selectedSvTemplate;
@@ -73,30 +74,22 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private int cheqNonBumi;
 	private int cheqNonMalaysian;
 	
-//	private List<SmSvEquipment> dockyardEquipMain;
-//	private List<SmSvEquipment> dockyardEquipBeating;
-//	private Map<Long,PmParameterDesc> dockyardEquipmentMap;
-//	private Map<Long,PmParameterDesc> dockWorkLicenseInsMap;
-	
 	private List<SmSvEquipment> workshopEquipMain;
 	private List<SmSvEquipment> workshopEquipBeating;
 	private Map<Long,PmParameterDesc> workshopEquipmentMap;
 	
 	private SmMachineDtl[] selectedDockyardMachine;
 	private SmMachineDtl[] selectedWorkshopMachine;
-	
-	//private Map<Long, PmParameterDesc> printingParamMap;
-	//private Map<Long, String> printingCategoryCodeMap;
+
 	private SmSvPrintwork[] selectedPrintWorks;
 	
 	private List<SmSupplierCategory> categoryApplicable;
-	//private Map<Integer,SmSvTemplate> indexPageMap;
 	private SmPersonnel contactPerson;
 	
 	private Integer lastIndex;
 
-	private List<String> higherManagementNames = new ArrayList<String>();
-	private List<String> managementNames = new ArrayList<String>();
+	private List<String> higherManagementNames = new ArrayList<>();
+	private List<String> managementNames = new ArrayList<>();
 	
 	private SmSvAdtMachine selectedAdtMachine;
 	private SmSvMachine selectedSvMachine;
@@ -108,7 +101,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private String attachmentDeleteMsg;
 	private boolean viewMode;
 	
-	//private SmSvAdtMachine oriAdtMachine;
 	private Object oriSelectedMachine;
 	private Long svTaskId;
 	private SmAppl smAppl;
@@ -134,7 +126,20 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	//#28774 - Start
 	private SmSvAssistantOfficer selectedAssistantOfficer;
 	//#28774 - End
-	
+	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	private List<SmSvTemplate> templates;
+	private String parameterDesc;
+	private boolean licensed;
+	private String activePage;
+	private List<PmMachine> travellingSoftwareList;
+	private SelectItem[] identificationTypes;
+	//28775 - Site Visit Grouping Enhancement - 28775 - end	
+	//29379 - Site Visit Grouping Enhancement - 28775
+	private Object workshopObject;
+	private SmSvWorker selectedSmSvWorker;
+	private SmSvWorker oriSelectedSmSvWorker;
+	// 34795 -start
+	private String zoneCode;
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -192,14 +197,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.selectedSmSvAddress = selectedSmSvAddress;
 	}
 
-/*	public Map<String, SmSvTemplate> getSmSvTemplateMap() {
-		return smSvTemplateMap;
-	}
-
-	public void setSmSvTemplateMap(Map<String, SmSvTemplate> smSvTemplateMap) {
-		this.smSvTemplateMap = smSvTemplateMap;
-	}*/
-
 	public SmSvTemplate getSelectedSvTemplate() {
 		return selectedSvTemplate;
 	}
@@ -207,16 +204,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setSelectedSvTemplate(SmSvTemplate selectedSvTemplate) {
 		this.selectedSvTemplate = selectedSvTemplate;
 	}
-
-//	public List<SmSvInterviewee> getSelectedIntervieweeLs() {
-//		if(selectedIntervieweeLs == null)
-//			selectedIntervieweeLs = new ArrayList<SmSvInterviewee>();
-//		return selectedIntervieweeLs;
-//	}
-//
-//	public void setSelectedIntervieweeLs(List<SmSvInterviewee> selectedIntervieweeLs) {
-//		this.selectedIntervieweeLs = selectedIntervieweeLs;
-//	}
 
 	public int getTotalBOD() {
 		return totalBOD;
@@ -370,32 +357,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.cheqNonMalaysian = cheqNonMalaysian;
 	}
 
-//	public List<SmSvEquipment> getDockyardEquipMain() {
-//		return dockyardEquipMain;
-//	}
-//
-//	public void setDockyardEquipMain(List<SmSvEquipment> dockyardEquipMain) {
-//		this.dockyardEquipMain = dockyardEquipMain;
-//	}
-
-/*	public Map<Long, PmParameterDesc> getDockyardEquipmentMap() {
-		return dockyardEquipmentMap;
-	}
-
-	public void setDockyardEquipmentMap(
-			Map<Long, PmParameterDesc> dockyardEquipmentMap) {
-		this.dockyardEquipmentMap = dockyardEquipmentMap;
-	}
-
-	public Map<Long, PmParameterDesc> getDockWorkLicenseInsMap() {
-		return dockWorkLicenseInsMap;
-	}
-
-	public void setDockWorkLicenseInsMap(
-			Map<Long, PmParameterDesc> dockWorkLicenseInsMap) {
-		this.dockWorkLicenseInsMap = dockWorkLicenseInsMap;
-	}*/
-
 	public SmMachineDtl[] getSelectedDockyardMachine() {
 		return selectedDockyardMachine;
 	}
@@ -403,14 +364,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setSelectedDockyardMachine(SmMachineDtl[] selectedDockyardMachine) {
 		this.selectedDockyardMachine = selectedDockyardMachine;
 	}
-
-//	public List<SmSvEquipment> getDockyardEquipBeating() {
-//		return dockyardEquipBeating;
-//	}
-//
-//	public void setDockyardEquipBeating(List<SmSvEquipment> dockyardEquipBeating) {
-//		this.dockyardEquipBeating = dockyardEquipBeating;
-//	}
 
 	public List<SmSvEquipment> getWorkshopEquipMain() {
 		return workshopEquipMain;
@@ -461,14 +414,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 			SmSvManufacturingDoc[] selectedAddFinancialDoc) {
 		this.selectedAddFinancialDoc = selectedAddFinancialDoc;
 	}
-	
-	/*public Map<Long, String> getPrintingCategoryCodeMap() {
-		return printingCategoryCodeMap;
-	}
-
-	public void setPrintingCategoryCodeMap(Map<Long, String> printingCategoryCodeMap) {
-		this.printingCategoryCodeMap = printingCategoryCodeMap;
-	}*/
 
 	public SmSvPrintwork[] getSelectedPrintWorks() {
 		return selectedPrintWorks;
@@ -485,14 +430,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setCategoryApplicable(List<SmSupplierCategory> categoryApplicable) {
 		this.categoryApplicable = categoryApplicable;
 	}
-
-	/*public Map<Integer, SmSvTemplate> getIndexPageMap() {
-		return indexPageMap;
-	}
-
-	public void setIndexPageMap(Map<Integer, SmSvTemplate> indexPageMap) {
-		this.indexPageMap = indexPageMap;
-	}*/
 
 	public SmPersonnel getContactPerson() {
 		return contactPerson;
@@ -606,14 +543,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setViewMode(boolean viewMode) {
 		this.viewMode = viewMode;
 	}
-
-/*	public SmSvAdtMachine getOriAdtMachine() {
-		return oriAdtMachine;
-	}
-
-	public void setOriAdtMachine(SmSvAdtMachine oriAdtMachine) {
-		this.oriAdtMachine = oriAdtMachine;
-	}*/
 
 	public Long getSvTaskId() {
 		return svTaskId;
@@ -776,4 +705,89 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setFromReport(boolean fromReport) {
 		this.fromReport = fromReport;
 	}
+	
+	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	public List<SmSvTemplate> getTemplates() {
+		return templates;
+	}
+
+	public void setTemplates(List<SmSvTemplate> templates) {
+		this.templates = templates;
+	}
+
+	public String getParameterDesc() {
+		return parameterDesc;
+	}
+
+	public void setParameterDesc(String parameterDesc) {
+		this.parameterDesc = parameterDesc;
+	}
+
+	public boolean getLicensed() {
+		return licensed;
+	}
+
+	public void setLicensed(boolean isLicensed) {
+		this.licensed = isLicensed;
+	}
+
+	public String getActivePage() {
+		return activePage;
+	}
+
+	public void setActivePage(String activePage) {
+		this.activePage = activePage;
+	}
+
+	public List<PmMachine> getTravellingSoftwareList() {
+		return travellingSoftwareList;
+	}
+
+	public void setTravellingSoftwareList(List<PmMachine> travellingSoftwareList) {
+		this.travellingSoftwareList = travellingSoftwareList;
+	}
+
+	public SelectItem[] getIdentificationTypes() {
+		return identificationTypes;
+	}
+
+	public void setIdentificationTypes(SelectItem[] identificationTypes) {
+		this.identificationTypes = identificationTypes;
+	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
+
+	//29379 - Site Visit Grouping Enhancement - 28775 - start
+	public Object getWorkshopObject() {
+		return workshopObject;
+	}
+
+	public void setWorkshopObject(Object workshopObject) {
+		this.workshopObject = workshopObject;
+	}
+	
+	public SmSvWorker getSelectedSmSvWorker() {
+		return selectedSmSvWorker;
+	}
+
+	public void setSelectedSmSvWorker(SmSvWorker selectedSmSvWorker) {
+		this.selectedSmSvWorker = selectedSmSvWorker;
+	}
+
+	public SmSvWorker getOriSelectedSmSvWorker() {
+		return oriSelectedSmSvWorker;
+	}
+
+	public void setOriSelectedSmSvWorker(SmSvWorker oriSelectedSmSvWorker) {
+		this.oriSelectedSmSvWorker = oriSelectedSmSvWorker;
+	}
+	//29379 - Site Visit Grouping Enhancement - 28775 - end
+	// 34795 -start
+	public String getZoneCode() {
+		return zoneCode;
+	}
+
+	public void setZoneCode(String zoneCode) {
+		this.zoneCode = zoneCode;
+	}
+	// 34795 -end
 }

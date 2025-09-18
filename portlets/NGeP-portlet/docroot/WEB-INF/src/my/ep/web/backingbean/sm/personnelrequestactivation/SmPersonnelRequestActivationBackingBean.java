@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -31,17 +32,18 @@ public class SmPersonnelRequestActivationBackingBean extends
 	 */
 	public void preRenderRequestActivation() {
 		renewSesionObject();
-		//27848 - start
+		//26238 - 27848 - start
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-		List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-		if(activeDisc != null){
-			String labelNameVal = "";
+		if (currSupp != null){
+			List<SmDisciplinaryAction> activeDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+			if (!EntityHelper.isCollectionEmpty(activeDA) && SmApplicationUtil.hasCannotLoginDA(activeDA)){
 			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-							new String[] { labelNameVal })));
+								new String[] { "" })));
+			}
 		}
 		getManagedBean().setSmSupplier(currSupp);
-		//27848 - end
+		//26238 - 27848 - end
 		initExpiredPersonnels();
 		getManagedBean().setTargetPage("1");
 		SmCommonUtil.setMDCUserId();

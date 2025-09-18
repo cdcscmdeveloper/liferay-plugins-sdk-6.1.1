@@ -1186,7 +1186,7 @@ public class CreateQtBackingBean extends
 			}
 			
 			//Start Reopen 9019 #note-289 remove the alert message while save
-			if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
+			//#35061 - remove to allow show the the panel 
 				// 25729#174 start
 				//BugBug #35061 - asyrafhaziq
 				// get total indicative price threshold validation value
@@ -1202,7 +1202,6 @@ public class CreateQtBackingBean extends
 					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 				}
 				// 25729#174 end
-			}
 			//End Reopen 9019 #note-289 remove the alert message while save
 			
 		} finally {
@@ -1608,16 +1607,20 @@ public class CreateQtBackingBean extends
 	 *            (Long locationLevelId).
 	 */
 	public void selectZoneLocationLevel(AjaxBehaviorEvent event) {
+		// Bug #36730@Syazani 07/01/2025 -- Start
+		if (this.getManagedBean().getQt().isZonal() && null != this.getManagedBean().getZoneGeneralTrees()
+				&& !this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+			// Bug #36730@Syazani 07/01/2025 -- End
+			this.getManagedBean().setZoneGeneralTrees(null);
+			this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
 
-		if (this.getManagedBean().getQt().isZonal()) {
-			if (null != this.getManagedBean().getZoneGeneralTrees()
-					&& !this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
-				this.getManagedBean().setZoneGeneralTrees(null);
-				this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
+			// Bug #36730@Syazani 07/01/2025 -- Start
+			Long eventLocationLevelId = (Long) event.getComponent().getAttributes().get("value");
+			if (null != eventLocationLevelId) {
+				reinstateZoneLocationLevel(eventLocationLevelId);
 			}
-
+			// Bug #36730@Syazani 07/01/2025 -- End
 		}
-
 	}
 	
 	/**
@@ -4087,7 +4090,9 @@ public class CreateQtBackingBean extends
 				.getScQtCheckSt2techProposal();
 
 		if (null == st2technicalproposalList) {
-			st2technicalproposalList = new ArrayList<ScQtCheckList>();
+			// 11104-start
+			st2technicalproposalList = new ArrayList<>();
+			// 11104-end
 
 		}
 		if(type == true){
@@ -4150,23 +4155,18 @@ public class CreateQtBackingBean extends
 			//reqDTO.setScQt(this.getManagedBean().getQt());
 			//reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 			//SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
-			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
-			for (ScQtCheckList checklist : scQtTechChecklist) {
-				if (checklist.getDefinationType().getParameterCode()
-						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired){
-//							&& checklist.getQtChecklistId() != null) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
-
-					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)){
-//							&& checklist.getQtChecklistId() != null) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
-					}
+			//28748 - 38426 - start
+			if (this.isStatusLessThanOrEquals(status,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH,
+					QTStatusConst.QT_ORDERED_STATUSES)) {
+				//note937 Issue 2 - Start
+				boolean oneTier = type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER) && demoRequired;
+				if (oneTier) {
+					RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
 				}
-			} 
-			
+				//note937 Issue 2 - End
+			}
+			//28748 - 38426 - end
 			
 			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				this.getManagedBean().setDemoType(true);
@@ -4220,17 +4220,7 @@ public class CreateQtBackingBean extends
 				reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 				scQtTechChecklist = specSo.retrieveCheckLists(reqDTO).getTechnicalCheckList();
 			}
-
-			if (null != scQtTechChecklist) {
-				for (ScQtCheckList checklist : scQtTechChecklist) {
-					if (checklist.getDefinationType().getParameterCode()
-							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-						RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
-
-					}
-				}
-			}
-
+			RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");//note937 Issue 1
 		} else {
 			RequestContext.getCurrentInstance().execute("demoDialogConfirm.hide()");
 		}
@@ -4279,6 +4269,7 @@ public class CreateQtBackingBean extends
 		this.getManagedBean().getQt().setEvaluationType(ParameterConst.EVALUATION_TYPES_TWO_TIER);
 		this.getManagedBean().setDemoType(true);
 		this.getManagedBean().getQt().setDemoRequired(true);
+		this.getManagedBean().setDemoEvalDisabled(false);//#28784 disable evaluation method during sc maintenance
 	}
 	
 	//#29521 - start
@@ -4300,7 +4291,23 @@ public class CreateQtBackingBean extends
 		this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
 		
 	}
-	//9019 End 
+	//9019 End
+	
+	// Bug #36730@Syazani 07/01/2025 -- Start
+	private void reinstateZoneLocationLevel(Long eventLocationLevelId) {
+		PmParameter zoneLocationLevel = new PmParameter();
+		ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt().getScQtSupplierCriteria();
+		Long sourceLocationLevelId = null != supplierCriteria && null != supplierCriteria.getLocationLevel()
+				&& null != supplierCriteria.getLocationLevel().getParameterId() ? supplierCriteria.getLocationLevel()
+				.getParameterId() : 0L;
+		zoneLocationLevel.setParameterId(eventLocationLevelId);
+		this.getManagedBean().getQt().setZoneLocationLevel(zoneLocationLevel);
+		if (!sourceLocationLevelId.equals(eventLocationLevelId) && 0l != sourceLocationLevelId
+				&& null != supplierCriteria) {
+			supplierCriteria.setLocationLevel(zoneLocationLevel);
+		}
+	}
+	// Bug #36730@Syazani 07/01/2025 -- End
 }
 
 

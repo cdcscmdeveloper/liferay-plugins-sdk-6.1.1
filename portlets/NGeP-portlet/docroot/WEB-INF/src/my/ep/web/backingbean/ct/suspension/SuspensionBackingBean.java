@@ -6,10 +6,11 @@ package my.ep.web.backingbean.ct.suspension;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap; //#39038
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map; //#39038
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -22,6 +23,7 @@ import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
+import my.ep.comparator.ct.CtContractItemComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -49,6 +51,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -71,6 +74,11 @@ import org.primefaces.model.DualListModel;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
+
+import my.ep.persistence.entity.ct.CtContractVer; //35506
+import my.ep.constant.ct.audit.AuditContractConst; //35506
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 
 /**
  * Backing Bean For Contract Suspension Details
@@ -170,16 +178,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setTaskId(taskId);
 			return;
 		}/*End if statement to check  login user */
-		// 20997 - start : to reset search list after save
-	    //added reloadDatatable() for #28643
-		if(getManagedBean().getTaskId()!= null){
-			
-		  getManagedBean().getSuspensionProductListingPagingDataModel().reloadDatatable();
-		}
-		
-	
-		
-		// 20997 - end
+
 		/*Return when not call from tasklist*/
 		if(taskId==null) 
 		 return;
@@ -193,6 +192,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		ctReqDTO.setContractId(new Long(dataType.getContractId()));
 		ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 		ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
+		
 		setSuspensionContractVer(ctReqDTO);
 		/*End*/
 	}
@@ -200,6 +200,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	/**
 	 * This  method used to set retrieve value from BPM or contract maintenance
 	 */
+	@SuppressWarnings("unchecked") //#36726
 	public void setSuspensionContractVer(ContractReqDTO reqDTO){
 		ctBB.renewSesionObject();
 		IContractSuspensionSO contractSuspensionSO= null;
@@ -216,6 +217,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE, getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
+			
+			//#15851 start
+			if(getManagedBean().getTaskId()!= null){
+				ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());//#15851
+			}
+			//#15851 end
 
 			//CT_CHANGE_LOG
 			ctBB.getManagedBean().setUpdateAgencyMap(resDTO.getUpdateAgencyMap());
@@ -230,7 +237,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 			/*If statement  for check contact item start*/
 			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
-				Collections.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItem());
+				CustomUtils.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItemComparator()); //#36726
 
 				for (CtContractItem contractItem : getManagedBean().getContractVer().getCtContractItems()) {
 					getManagedBean().getContractItemList().add(contractItem);
@@ -526,22 +533,39 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 			validateSuspensionDetails(outcome);		
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
-			//#20997 - to copy from searching list to items list
-			if (getManagedBean().getSuspensionProductListingPagingDataModel() != null && getManagedBean().getSuspensionProductListingPagingDataModel().getList() != null) {
-				for (CtContractItem ctContractItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {			
-					for(CtContractItem ctItem : this.getManagedBean().getContractVer().getCtContractItems()){
-						if(ctContractItem.getContractItemId().equals(ctItem.getContractItemId())
-								|| ctItem.getScRequestItem().getRequestNoteItemId().equals(ctContractItem.getScRequestItem().getRequestNoteItemId())) {
-							ctItem.setEffDate(ctContractItem.getEffDate());
-							ctItem.setExpDate(ctContractItem.getExpDate());
-							if(ctContractItem.getRecordStatusFlg() != null) {
-								ctItem.setRecordStatusFlg(ctContractItem.getRecordStatusFlg().intValue());
-							}
+			//#39038 - Start
+			// Step 1: Ambil updateItemMap yang menyimpan perubahan dari semua halaman
+			Map<Long, CtContractItem> updateItemMap = ctBB.getManagedBean().getUpdateItemMap();
+			// Jika tidak ada perubahan, skip
+			if (updateItemMap != null && !updateItemMap.isEmpty()) {
+				// Step 2: Ambil list asli dari kontrak (semua item, semua halaman)
+				List<CtContractItem> originalItems = getManagedBean().getContractVer().getCtContractItems();
+
+				// Buat lookup map untuk O(1) access
+				// Step 3: Untuk setiap perubahan di updateItemMap, update item aslinya
+				Map<Long, CtContractItem> originalItemMap = new HashMap<>();
+				for (CtContractItem item : originalItems) {
+					if (item.getScRequestItem() != null) {
+						originalItemMap.put(item.getScRequestItem().getRequestNoteItemId(), item);
+					}
+				}
+
+				// Terapkan perubahan
+				for (Map.Entry<Long, CtContractItem> entry : updateItemMap.entrySet()) {
+					Long itemId = entry.getKey();
+					CtContractItem changed = entry.getValue();
+					CtContractItem target = originalItemMap.get(itemId);
+
+					if (target != null && changed != null) {
+						target.setEffDate(changed.getEffDate());
+						target.setExpDate(changed.getExpDate());
+						if (changed.getRecordStatusFlg() != null) {
+							target.setRecordStatusFlg(changed.getRecordStatusFlg().intValue());
 						}
 					}
 				}
 			}
-			//#20997 - end
+			//#39038 - End
 
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			reqDTO = new ContractReqDTO();
@@ -577,6 +601,38 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
+				
+				// #35506 Start
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				if (auditCtBean.getAuditCtConfigState()) {
+					if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+							|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+
+						CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+						AuditContractReqDTO auCtData = new AuditContractReqDTO();
+						auCtData.setDocId(ctContractVer.getCtContract().getContractId());
+						auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+						auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer().getContractVerId());
+						auCtData.setDocType(resDTO.getCtContractVer().getDocType());
+						auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
+						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
+
+						if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+						}
+
+						if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						}
+
+						auditCtBean.saveAuditData(auCtData);
+					}
+				}
+				// #35506 End
+				
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 
@@ -780,59 +836,85 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}
 	}
 
+	// #28854 - Start
 	/**
 	 * The method used to invoke and initiate the item specification dialog.
 	 */
 	public void viewItemSpecDlg(CtContractItem ctContractItem) {
-		/*#28854 start*/
-		IRequestItemSO requestItemSO = null;
+		// Start of method implementation
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
-		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-		
-		Long requestItemId = this.getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();		
-		
-		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-			List<String> itemSpecList = new ArrayList<>();
-			List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);			
-			
-			for(ScRequestItemSpecOffer itemSpecOffer: itemSpecOfferList){
-				if(itemSpecOffer.getQuestionType().equals(ContractConst.QUESTION_TYPE_ITEM)){
-					if(itemSpecOffer.getSupplierOffer() != null && !itemSpecOffer.getSupplierOffer().isEmpty()){
-						getManagedBean().setSupplierOffer(itemSpecOffer.getSupplierOffer());
-					}else{
-						getManagedBean().setSupplierOffer(null);
-					}	
-											
-					if(itemSpecOffer.getNewOfferSpec() != null && !itemSpecOffer.getNewOfferSpec().isEmpty()){	
-						getManagedBean().setNewOfferSpec(itemSpecOffer.getNewOfferSpec());
-					}else{
-						getManagedBean().setNewOfferSpec(null);
-					}
-				}
-				else if(itemSpecOffer.getQuestionType().equals(ContractConst.QUESTION_TYPE_SPEC)){
-					itemSpecList.add(itemSpecOffer.getItemSpec());				
-				}	
-			}
-			getManagedBean().setItemSpecification(itemSpecList);
+		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
+		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode()
+				.getParameterCode();
+
+		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			handleDirectPurchaseMode(requestItemSO, requestItemId);
+		} else if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)
+				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)
+				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
+			handleQuotationTenderOrDirectNegoMode(requestItemSO, requestItemId);
 		}
-		
-		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
-			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);	
-			
-			Iterator<ScRequestItemSpecOffer> itr = scRequestItemSpecOffer.iterator();
-			while (itr.hasNext()){
-				ScRequestItemSpecOffer scRequestItemSpecOfferTemp = itr.next();
-				if(scRequestItemSpecOfferTemp.getQuestionType().equals(ContractConst.QUESTION_TYPE_ITEM)){
-					itr.remove();
-					}
-			}
-		
-			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);		
-		}				
-		/*#28854 end*/
+
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
+
+	/**
+	 * Handles the logic specific to the direct purchase procurement mode.
+	 * 
+	 * @param requestItemSO
+	 *            the service object used to retrieve item specifications; must
+	 *            not be null
+	 * @param requestItemId
+	 *            the ID of the request item; must not be null
+	 */
+	private void handleDirectPurchaseMode(IRequestItemSO requestItemSO, Long requestItemId) {
+		List<String> itemSpecList = new ArrayList<>();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+
+		for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
+			String questionType = itemSpecOffer.getQuestionType();
+			if (ContractConst.QUESTION_TYPE_ITEM.equals(questionType)) {
+				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
+				itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			}
+		}
+		getManagedBean().setItemSpecification(itemSpecList);
+	}
+
+	/**
+	 * Handles the logic for procurement modes that involve quotations, tenders,
+	 * or direct negotiations.
+	 * 
+	 * @param requestItemSO
+	 *            the service object used to retrieve item specifications; must
+	 *            not be null
+	 * @param requestItemId
+	 *            the ID of the request item; must not be null
+	 */
+	private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
+		List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
+
+		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator(); iterator.hasNext();) {
+			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
+
+			// Encoding by directly applying to non-null fields
+			itemSpecOffer.setItemSpec(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			itemSpecOffer.setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+			itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+
+			// Remove items with specific question type
+			if (ContractConst.QUESTION_TYPE_ITEM.equals(itemSpecOffer.getQuestionType())) {
+				iterator.remove();
+			}
+		}
+
+		getManagedBean().setScRequestItemSpecOfferList(itemSpecOffers);
+	}
+	// #28854 - End
 	
 	/**
 	 * The method used to concat both Item code and Item Name.
@@ -975,14 +1057,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			FacesContext fc = FacesContext.getCurrentInstance();
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
-			ctBB.getManagedBean().setViewSCL(true);
-
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			
-			//To reset status from FU, NT, FW
-			ctBB.getManagedBean().setDocTypeFromTaskList(null);
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setDocTypeFromTaskList(this.getManagedBean().getContractVer().getDocType());
+			ctBB.getManagedBean().setStatusIdFromTaskList(getManagedBean().getContractVer().getStatus().getStatusId());
 			ctBB.getManagedBean().setContractIdFromTaskList(null);
-			ctBB.getManagedBean().setContractVerIdFromTaskList(null);
 			ctBB.getManagedBean().setTaskNameFromTaskList(null);
 
 			if(ctBB.getManagedBean().isViewContractFromAgreement()){

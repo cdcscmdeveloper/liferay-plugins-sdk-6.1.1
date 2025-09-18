@@ -13,8 +13,16 @@
 		<!-- #32587 start -->
 		<p:panel header="#{lbl['lbl.sm.softcert.provider']}" toggleable="true">
 			<div align="right">
-				<p:commandButton id="btnSave" value="#{lbl['lbl.btn.save']}" update="dtRuleValue"
-					action="#{softCertProviderBB.saveSoftCertProvider()}" />
+				<!-- 34445 start -->
+				<p:commandButton id="btnSave" value="#{lbl['lbl.btn.save']}" oncomplete="saveInfoDlg.show()"/>
+				
+				<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
+					okAction="softCertProviderBB.saveSoftCertProvider()"
+					width="400" height="100"
+					title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+					content="#{lbl['lbl.pm.btn.save.msg']}"
+					update="@([id$=dtRuleValue])"/>
+				<!-- 34445 end -->
 			</div>
 
 			<p:dataTable value="#{softCertProviderBB.managedBean.configRule.configRuleValues}"

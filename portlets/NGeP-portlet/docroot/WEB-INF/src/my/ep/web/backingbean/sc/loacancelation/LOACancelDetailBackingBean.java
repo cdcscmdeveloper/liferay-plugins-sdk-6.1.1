@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode; // Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -154,8 +155,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 
 	/** The flag. */
 	private boolean flag;
-	private boolean sqExpiredMessageFlag = false;
-
+//	private boolean sqExpiredMessageFlag = false; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 	private static final String  BRANCH_INFO_TITLE = "Branch Information";
 
 	private static final String MALAY_NA = "T/B";
@@ -892,7 +892,10 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
-			getQtAwardSO().validateCancelLoaRequiredRemark(reqDTO);	
+			//#38093 - Start
+			reqDTO.setCancelPrepareLoaActionMethod(true);
+			//#38093 - End
+			getQtAwardSO().validateCancelLoaRequiredRemark(reqDTO);				
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
@@ -1036,7 +1039,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setDigiSignData(digiSign);
-			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+			//#38093 - Start
+			reqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
+			//#38093 - End
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
@@ -2328,9 +2333,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		userReqDTO.setUserId(approverUserId);
-		PmUser approverUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
-		
-		return approverUser;
+		return userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser(); //return the current Approval User Profile //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 	}
 
 	/**
@@ -2763,9 +2766,11 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		}else{
 			totalAmount = loaAmount;
 		}
-		minSL1M = integerDF.format(((totalAmount)
-				.divide(hundred))
-				.divide(value,0, BigDecimal.ROUND_HALF_UP));
+		//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		minSL1M = integerDF.format(
+				  (totalAmount.divide(hundred))
+				  .divide(value, RoundingMode.HALF_UP));
+		//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		context.put("minSL1M", minSL1M);
 	}
 
@@ -3294,21 +3299,21 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
 				if(currentDate.compareTo(cal.getTime()) >= 0){
 					validDate = false;
-					sqExpiredMessageFlag = true;
+					//sqExpiredMessageFlag = true; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				}
 			}	
 		}			
 		return validDate;	
 	}
 	
-	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+	public void handleFileUpload(FileUploadEvent event) throws IOException { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		if (event.getFile() != null) {
 			ScLoa scLoa = getManagedBean().getScLoa();
 			ScLoaCancelAttachment attachment = new ScLoaCancelAttachment();
 
 			List<ScLoaCancelAttachment> attachments = scLoa.getScLoaCancelAttachments();
 			if (null == attachments) {
-				attachments = new ArrayList<ScLoaCancelAttachment>();
+				attachments = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				scLoa.setScLoaCancelAttachments(attachments);
 			}
 			attachment.setScLoa(scLoa);

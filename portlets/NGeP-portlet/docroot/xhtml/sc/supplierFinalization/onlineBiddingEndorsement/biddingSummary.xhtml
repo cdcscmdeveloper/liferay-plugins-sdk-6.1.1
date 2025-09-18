@@ -37,6 +37,11 @@
 		</h:column>
 	</h:panelGrid>
 
+	<ui:remove> #28777#29729 - Start </ui:remove>
+	<ui:param name="isDisqualified"
+		value="#{suppFinalBiddingBackingBean.checkListDisqualifiedSupplierBranchDeleted(suppFinalBiddingBackingBean.managedBean.scQt.qtId)}"></ui:param>
+	<ui:remove> #28777#29729 - End </ui:remove>
+
 	<p:outputPanel id="itemSupplierPanel">
 		<table style="border: 0px;width:100%;">
 			<tr>
@@ -65,26 +70,17 @@
 				</td>
 			</tr>
 		</table>	
-	</p:outputPanel>	
-	
-    <ui:remove> #28777#29729 - Start </ui:remove>
-	<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/supplierBranchListPopup.xhtml" />
+	</p:outputPanel>
+
+	<ui:remove> #28777#29729 - Start </ui:remove>
+	<ui:include
+		src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/supplierBranchListPopup.xhtml" />
 	<ui:remove> #28777#29729 - End </ui:remove>
-	
+
 	<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true">
 		<ac:scRemarkAndAttachment
 		remarkList="#{suppFinalBiddingBackingBean.managedBean.getFinalizationRemarks()}"
 		showAttachment="false"
 		header=""/>
 	</p:panel>
-	<ui:remove>
-		#31061 #32560- SHAFFUL 
-	</ui:remove>
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<ui:remove>
-		#31061 #32560- END
-	</ui:remove>
 </ui:composition>
