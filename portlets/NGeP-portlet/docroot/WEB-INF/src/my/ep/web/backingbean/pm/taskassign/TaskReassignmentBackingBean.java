@@ -1194,11 +1194,10 @@ public class TaskReassignmentBackingBean extends
 									.getTaskAssignmentSearchBean().getDocType()
 									.getPmParameter().getParameterCode());
 						}
-						
+
 						reqDTO.setState(BpmConstants.STATE_ASSIGNED);
 						reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 						responseDTO = bpmSO.getReassignedItems(reqDTO);
-
 
 						// Set resultBean for UI
 						resultBean = new SearchResultBean<WorklistItemVO>();
@@ -2883,6 +2882,62 @@ public class TaskReassignmentBackingBean extends
 										.getUserId())),searchBean);
 				
 			}
+		
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
+			
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
+			
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
+			
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
+			
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
+			
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
+			
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
 			
 			isSearched = true;
 			break;

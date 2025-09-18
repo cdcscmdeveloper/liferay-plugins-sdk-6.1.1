@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="quotationTndrMainDeskOfficerAdminAssistantPanel"
+		header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true"
+		style="width:100% !important; min-width: 100% !important">
+		<p:dataTable var="doa"
+			value="#{approvalBackingBean.managedBean.prevDoaList}">
+			<p:column headerText="#{lbl['lbl.sc.prev.doa']}"
+				style="width: 50%; min-width: 50%">
+				<h:outputText value="#{doa.user.userName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+				style="width: 50%; min-width: 50%">
+				<h:outputText value="#{doa.user.identificationNo}" />
+			</p:column>
+		</p:dataTable>
+		<br />
+		<ui:fragment
+			rendered="#{approvalBackingBean.managedBean.taskName eq 'Approve Approval Request'}">
+			<p:dataTable var="doa"
+				value="#{approvalBackingBean.managedBean.pmuserContactpersonList}">
+				<p:column headerText="#{lbl['lbl.sc.new.doa']}"
+					style="width: 50%; min-width: 50%">
+					<h:outputText value="#{doa.user.userName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+					style="width: 50%; min-width: 50%">
+					<h:outputText value="#{doa.user.identificationNo}" />
+				</p:column>
+			</p:dataTable>
+		</ui:fragment>
+		<ui:fragment
+			rendered="#{approvalBackingBean.managedBean.taskName eq 'Revise Approval Request'}">
+			<p:dataTable id="doaTableId" var="deskofficeradmin"
+				value="#{approvalBackingBean.managedBean.pmuserContactpersonList}"
+				selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				rowKey="#{deskofficeradmin}" rowIndexVar="rowIndex" rows="10">
+
+				<ac:paginator for="doaTableId" />
+				<p:ajax event="rowSelect"
+					update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
+				<p:ajax event="rowUnselect"
+					update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
+				<p:ajax event="rowSelectCheckbox"
+					update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
+				<p:ajax event="rowUnselectCheckbox"
+					update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
+				<p:ajax event="toggleSelect"
+					update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
+				<p:column selectionMode="multiple" style="width:2%" />
+
+				<p:column headerText="#{lbl['lbl.sc.new.doa']}">
+					<p:selectOneMenu value="#{deskofficeradmin.userId}" required="true"
+						requiredMessage="#{lbl['lbl.sc.required.select.doa']}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{approvalBackingBean.managedBean.deskOfficerAdmin}"
+							var="user" itemLabel="#{user.userName}"
+							itemValue="#{user.userId}" />
+						<p:ajax event="change" update="doaTableId"
+							listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin,rowIndex)}" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+					style="width: 50%; min-width: 50%">
+					<h:outputText value="#{deskofficeradmin.user.identificationNo}" />
+				</p:column>
+			</p:dataTable>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					styleClass="BtnSpacing" process="@this, doaTableId"
+					partialSubmit="true"
+					action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
+					update="doaTableId" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					id="quotationTndrDeskOfficerAdminAssistantDeleteBtnId"
+					disabled="#{empty approvalBackingBean.managedBean.selectedpmuserContactpersonList}"
+					styleClass="BtnSpacing" process="@this, doaTableId"
+					partialSubmit="true" oncomplete="doaaDeletePopUp.show()"
+					update="@([id$=#{doaaDeleteId}])" />
+			</div>
+
+		</ui:fragment>
+	</p:panel>
+	<ui:param name="doaaDeleteId" value="doaaDeleteId" />
+	<ac:confirmationPopup id="#{doaaDeleteId}" widget="doaaDeletePopUp"
+		okAction="qTScheduleDetailBackingBean.deleteDeskOfficerAdminAssistant"
+		width="40%" height="100"
+		title="#{lbl['lbl.sc.qt.desk.officer.admin']}"
+		content="#{lbl['lbl.sc.dialog.confirm.doaa.dtls']}"
+		update="@([id$=quotationTndrMainDeskOfficerAdminAssistantPanel])" />
+	<ac:scRemarkAndAttachment remarkList="#{doaRequest.appRequestRemarks}"
+		fileUploadListener="approvalBackingBean.handleFileUpload"
+		showAttachment="false" />
+</ui:composition>

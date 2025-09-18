@@ -44,10 +44,11 @@
 				      <h:outputText value="#{lbl['lbl.ct.days']}" />
 			      </h:panelGroup>	
 			      
+			      <!-- #33752 start -->
 		       <p:outputLabel value="#{lbl['lbl.ct.start.date']}" styleClass="required"/>
 		   	       <h:panelGrid columns="2">
 		   	          <p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
-		   			      navigator="true" size="12" showOn="button" required="false" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
+		   			      navigator="true" size="12" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
 		       		      disabled="#{panelBackingBean.managedBean.viewContract}" 
 		       		      pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 		       	            <p:ajax event="dateSelect" process="@this" update=":form:popupButtonCal1" />
@@ -60,14 +61,15 @@
    		                 <p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
    		            	     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
          	                 mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="12" navigator="true"
-         	                 showOn="button" required="false" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}"
+         	                 showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}"
          	                 disabled="#{panelBackingBean.managedBean.viewContract}">
          	                  <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
                                 <f:validator validatorId="primeDateRangeValidator" />
          	           </p:calendar>
          	          <p:message for="popupButtonCal1" display="icon" />
          	       </h:panelGrid>	
-
+					<!-- #33752 end -->
+					
 		          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
 			         <h:panelGroup id="uploadCircularPg">
 		 			<h:panelGrid columns="5">
@@ -83,7 +85,7 @@
 											<td></td>
 											<td>
 											 	<h:commandLink action="#{panelBackingBean.downloadFile(attachAggreement)}" 
-											 		styleClass="blue_font" value="#{attachAggreement.fileName}" />			
+											 		styleClass="blue_font" style="color:#009ae5 !important;" value="#{attachAggreement.fileName}" /> <!-- Fix -#30866 -->			
 										     	<p:commandLink action="#{panelBackingBean.setAttachmentIndex(attachAggreementIndex)}"
 								   	                 onclick="deleteAttachFile.show();" rendered="#{!panelBackingBean.managedBean.viewContract}">
 								   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>

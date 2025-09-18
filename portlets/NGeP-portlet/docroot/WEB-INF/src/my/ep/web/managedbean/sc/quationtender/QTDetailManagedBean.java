@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -22,9 +23,10 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QTActivityBean;
 import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.factory.EpLogger;
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -60,6 +62,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -87,6 +90,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
@@ -101,6 +105,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.util.CustomUtils;	// Bug #35219@Syazani 07/11/2023
@@ -110,6 +115,7 @@ import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.SampleQuestionBean;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -117,7 +123,6 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
@@ -134,8 +139,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
-	private static final Logger log = EpLogger
-			.getLogger(QTDetailManagedBean.class);
+	//private static final Logger log = EpLogger.getLogger(QTDetailManagedBean.class);
 	
 	/** The qt. */
 	private ScQt qt;
@@ -1094,8 +1098,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The financial scoring. */
 	private List<ScQtCheckList> financialScoring;
 
+	// 37813,35384 -start
 	/** The tech points. */
-	private int techPoints;
+	private BigDecimal techPoints;
+	// 37813,35384 -end
 
 	/** The fin points. */
 	private int finPoints;
@@ -1649,7 +1655,49 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2techProposalLstClone = new ArrayList<ScQtCheckList>();
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
-	
+
+	// #11104-start
+	private ScQtCheckList sampleCheckList;
+	private TplSpecQuestion sampleSpecQuestion;
+	private String sampleItemName;
+	private int sampleTotalScore;
+	private List<ScQtCheckList> sampleSpecCheckList;
+	private List<BriefingZoneBean> sampleAddressBean;
+	private Map<Long, SampleQuestionBean> existingSampleSpecQuestions;
+	private boolean isSampleShowHide; // 11104wip
+	// #11104-End
+
+	// 25037 - start
+	private boolean showHistory;
+	private Paginator committeeHistories;
+	private String currentCommitteeDesc;
+	private ScCommitteeMemberHistory selectedCommitteeHistory;
+	private Paginator selectedHistoryMember;
+	private boolean committeeReviseFlow;
+	private List<QtCommitteeMemberBean> memberHistoryList;
+	private ScQtApprovalRequest scQtApprovalRequest;
+	private ScQtApprovalRequest doaaRequest;
+	private boolean doaRequestEditable;
+	private List<ScQtContactPerson> newDoaList;
+	private List<ScQtContactPerson> prevDoaList;
+	private List<PmUser> deskOfficerAssistantList;
+	private ScQtRequestContent requestContent;
+	private boolean reapproval;
+	private String prevDOAs;
+	private String[] roleFilterList;
+	private Long currentQTStatus;
+	private Long currentCMTStatus;
+	private boolean committeeUpdateFlow;
+	private List<String> mainTaskNames;
+	private List<TabBean> readOnlyCommitteeTabBean; // Bug 32277
+	// 25037 - end
+
+	private String msgConfirmBelowIndi; // Bug #35061 - asyrafhaziq
+
+	// #25426 - Start
+	private boolean firstViewPageCAUsers = false;
+	// #25426 - End
+
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -8162,20 +8210,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the techPoints
-	 */
-	public int getTechPoints() {
-		return techPoints;
-	}
-
-	/**
-	 * @param techPoints the techPoints to set
-	 */
-	public void setTechPoints(int techPoints) {
-		this.techPoints = techPoints;
-	}
-
-	/**
 	 * @return the finPoints
 	 */
 	public int getFinPoints() {
@@ -10413,5 +10447,347 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
-	
+
+	// 11104-start
+	/**
+	 * @return the sampleCheckList
+	 */
+	public ScQtCheckList getSampleCheckList() {
+		return sampleCheckList;
+	}
+
+	/**
+	 * @param sampleCheckList
+	 *            the sampleCheckList to set
+	 */
+	public void setSampleCheckList(ScQtCheckList sampleCheckList) {
+		this.sampleCheckList = sampleCheckList;
+	}
+
+	/**
+	 * @return the sampleSpecQuestion
+	 */
+	public TplSpecQuestion getSampleSpecQuestion() {
+		return sampleSpecQuestion;
+	}
+
+	/**
+	 * @param sampleSpecQuestion
+	 *            the sampleSpecQuestion to set
+	 */
+	public void setSampleSpecQuestion(TplSpecQuestion sampleSpecQuestion) {
+		this.sampleSpecQuestion = sampleSpecQuestion;
+	}
+
+	/**
+	 * @return the sampleItemName
+	 */
+	public String getSampleItemName() {
+		return sampleItemName;
+	}
+
+	/**
+	 * @param sampleItemName
+	 *            the sampleItemName to set
+	 */
+	public void setSampleItemName(String sampleItemName) {
+		this.sampleItemName = sampleItemName;
+	}
+
+	/**
+	 * @return the sampleTotalScore
+	 */
+	public int getSampleTotalScore() {
+		return sampleTotalScore;
+	}
+
+	/**
+	 * @param sampleTotalScore
+	 *            the sampleTotalScore to set
+	 */
+	public void setSampleTotalScore(int sampleTotalScore) {
+		this.sampleTotalScore = sampleTotalScore;
+	}
+
+	/**
+	 * @return the sampleSpecCheckList
+	 */
+	public List<ScQtCheckList> getSampleSpecCheckList() {
+		return sampleSpecCheckList;
+	}
+
+	/**
+	 * @param sampleSpecCheckList
+	 *            the sampleSpecCheckList to set
+	 */
+	public void setSampleSpecCheckList(List<ScQtCheckList> sampleSpecCheckList) {
+		this.sampleSpecCheckList = sampleSpecCheckList;
+	}
+
+	/**
+	 * 
+	 * @return the sampleAddressBean
+	 */
+	public List<BriefingZoneBean> getSampleAddressBean() {
+		return sampleAddressBean;
+	}
+
+	/**
+	 * @param sampleAddressBean
+	 *            the sampleAddressBean to set
+	 */
+	public void setSampleAddressBean(List<BriefingZoneBean> sampleAddressBean) {
+		this.sampleAddressBean = sampleAddressBean;
+	}
+
+	/**
+	 * 
+	 * @return the existingSampleSpecQuestions
+	 */
+	public Map<Long, SampleQuestionBean> getExistingSampleSpecQuestions() {
+		return existingSampleSpecQuestions;
+	}
+
+	/**
+	 * @param existingSampleSpecQuestions
+	 *            the existingSampleSpecQuestions to set
+	 */
+	public void setExistingSampleSpecQuestions(Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
+		this.existingSampleSpecQuestions = existingSampleSpecQuestions;
+	}
+
+	/**
+	 * 
+	 * @return the isSampleShowHide
+	 */
+	public boolean isSampleShowHide() {
+		return isSampleShowHide;
+	}
+
+	/**
+	 * @param isSampleShowHide
+	 *            the isSampleShowHide to set
+	 */
+	public void setSampleShowHide(boolean isSampleShowHide) {
+		this.isSampleShowHide = isSampleShowHide;
+	}
+	// 11104-End
+
+	// 25037 - start
+	public boolean isShowHistory() {
+		return showHistory;
+	}
+
+	public void setShowHistory(boolean showHistory) {
+		this.showHistory = showHistory;
+	}
+
+	public Paginator getCommitteeHistories() {
+		return committeeHistories;
+	}
+
+	public void setCommitteeHistories(Paginator committeeHistories) {
+		this.committeeHistories = committeeHistories;
+	}
+
+	public String getCurrentCommitteeDesc() {
+		return currentCommitteeDesc;
+	}
+
+	public void setCurrentCommitteeDesc(String currentCommitteeDesc) {
+		this.currentCommitteeDesc = currentCommitteeDesc;
+	}
+
+	public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
+		return selectedCommitteeHistory;
+	}
+
+	public void setSelectedCommitteeHistory(ScCommitteeMemberHistory selectedCommitteeHistory) {
+		this.selectedCommitteeHistory = selectedCommitteeHistory;
+	}
+
+	public Paginator getSelectedHistoryMember() {
+		return selectedHistoryMember;
+	}
+
+	public void setSelectedHistoryMember(Paginator selectedHistoryMember) {
+		this.selectedHistoryMember = selectedHistoryMember;
+	}
+
+	public boolean isCommitteeReviseFlow() {
+		return committeeReviseFlow;
+	}
+
+	public void setCommitteeReviseFlow(boolean committeeReviseFlow) {
+		this.committeeReviseFlow = committeeReviseFlow;
+	}
+
+	public List<QtCommitteeMemberBean> getMemberHistoryList() {
+		return memberHistoryList;
+	}
+
+	public void setMemberHistoryList(List<QtCommitteeMemberBean> memberHistoryList) {
+		this.memberHistoryList = memberHistoryList;
+	}
+
+	public ScQtApprovalRequest getScQtApprovalRequest() {
+		return scQtApprovalRequest;
+	}
+
+	public void setScQtApprovalRequest(ScQtApprovalRequest scQtApprovalRequest) {
+		this.scQtApprovalRequest = scQtApprovalRequest;
+	}
+
+	public ScQtApprovalRequest getDoaaRequest() {
+		return doaaRequest;
+	}
+
+	public void setDoaaRequest(ScQtApprovalRequest doaaRequest) {
+		this.doaaRequest = doaaRequest;
+	}
+
+	public boolean isDoaRequestEditable() {
+		return doaRequestEditable;
+	}
+
+	public void setDoaRequestEditable(boolean doaRequestEditable) {
+		this.doaRequestEditable = doaRequestEditable;
+	}
+
+	public List<ScQtContactPerson> getNewDoaList() {
+		return newDoaList;
+	}
+
+	public void setNewDoaList(List<ScQtContactPerson> newDoaList) {
+		this.newDoaList = newDoaList;
+	}
+
+	public List<PmUser> getDeskOfficerAssistantList() {
+		return deskOfficerAssistantList;
+	}
+
+	public void setDeskOfficerAssistantList(List<PmUser> deskOfficerAssistantList) {
+		this.deskOfficerAssistantList = deskOfficerAssistantList;
+	}
+
+	public List<ScQtContactPerson> getPrevDoaList() {
+		return prevDoaList;
+	}
+
+	public void setPrevDoaList(List<ScQtContactPerson> prevDoaList) {
+		this.prevDoaList = prevDoaList;
+	}
+
+	public boolean isReapproval() {
+		return reapproval;
+	}
+
+	public void setReapproval(boolean reapproval) {
+		this.reapproval = reapproval;
+	}
+
+	public ScQtRequestContent getRequestContent() {
+		return requestContent;
+	}
+
+	public void setRequestContent(ScQtRequestContent requestContent) {
+		this.requestContent = requestContent;
+	}
+
+	public String getPrevDOAs() {
+		return prevDOAs;
+	}
+
+	public void setPrevDOAs(String prevDOAs) {
+		this.prevDOAs = prevDOAs;
+	}
+
+	public String[] getRoleFilterList() {
+		return roleFilterList;
+	}
+
+	public void setRoleFilterList(String[] roleFilterList) {
+		this.roleFilterList = roleFilterList;
+	}
+
+	public Long getCurrentQTStatus() {
+		return currentQTStatus;
+	}
+
+	public void setCurrentQTStatus(Long currentQTStatus) {
+		this.currentQTStatus = currentQTStatus;
+	}
+
+	public Long getCurrentCMTStatus() {
+		return currentCMTStatus;
+	}
+
+	public void setCurrentCMTStatus(Long currentCMTStatus) {
+		this.currentCMTStatus = currentCMTStatus;
+	}
+
+	public boolean isCommitteeUpdateFlow() {
+		return committeeUpdateFlow;
+	}
+
+	public void setCommitteeUpdateFlow(boolean committeeUpdateFlow) {
+		this.committeeUpdateFlow = committeeUpdateFlow;
+	}
+
+	public List<String> getMainTaskNames() {
+		return mainTaskNames;
+	}
+
+	public void setMainTaskNames(List<String> mainTaskNames) {
+		this.mainTaskNames = mainTaskNames;
+	}
+
+	// Bug 32277 - start
+	public List<TabBean> getReadOnlyCommitteeTabBean() {
+		return readOnlyCommitteeTabBean;
+	}
+
+	public void setReadOnlyCommitteeTabBean(List<TabBean> readOnlyCommitteeTabBean) {
+		this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
+	}
+	// Bug 32277 - end
+	// 25037 - end
+
+	// Bug #35061 -start-
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
+
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
+	}
+	// Bug #35061 -end-
+
+	// #25426 - Start
+	public boolean isFirstViewPageCAUsers() {
+		return firstViewPageCAUsers;
+	}
+
+	public void setFirstViewPageCAUsers(boolean firstViewPageCAUsers) {
+		this.firstViewPageCAUsers = firstViewPageCAUsers;
+	}
+	// #25426 - End
+
+	// 37813,35384 -start
+	/**
+	 * @return the techPoints
+	 */
+	public BigDecimal getTechPoints() {
+		return techPoints;
+	}
+
+	/**
+	 * @param techPoints
+	 *            the techPoints to set
+	 */
+	public void setTechPoints(BigDecimal techPoints) {
+		this.techPoints = techPoints;
+	}
+	// 37813,35384 -end	
+
 }

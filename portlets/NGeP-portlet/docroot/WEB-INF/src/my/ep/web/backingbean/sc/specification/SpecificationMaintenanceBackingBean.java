@@ -439,6 +439,33 @@ public void specCommitteeMaintenancereset() {
 	}
 
 	/**
+	 * The method used to get the specificationMaintenance edit details.
+	 * 
+	 * @param scQt
+	 * @param isEditable
+	 * @param popup
+	 */
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable, boolean popup) {
+		editSpecificationMaintenance(scQt, isEditable, true, false, null);
+		if (popup) {
+			this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
+			if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
+				SpecificationBackingBean specBB = new SpecificationBackingBean();
+				// temporary while awaiting #29474 close in SIT -start-
+				// remove when #29474 ready for UAT
+				specBB.qtChecklistTabChange(9);
+				// temporary while awaiting #29474 close in SIT -end-
+
+				// use this when #29474 ready for UAT -start-
+				// specBB.qtChecklistTabChange(10);
+				// use this when #29474 ready for UAT -end-
+				// RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
+			}
+		}
+		// 25037 - end - note 510
+	}
+
+	/**
 	 * The method  used to get the specificationMaintenance edit details.
 	 * @param ScQt scQt.
 	 * @param Boolean true/false.
@@ -528,6 +555,24 @@ public void specCommitteeMaintenancereset() {
 		
 		specBB.retriveTechnicalCheckList(); // #11104, #1873
 
+		// #11104 -start-
+		List<ScQtCheckList> technicalChekclist = this.getManagedBean().getScQtCheckSt2techProposal();
+		boolean isSampleWip = specBB.checkSampleRadioShowHideInSpecPrepareAndMaintenance(); // 11104Wip
+
+		if (null != technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)) {
+
+			for (ScQtCheckList checkList : technicalChekclist) {
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList.getDefinationType()
+						.getParameterCode())) {
+					scQt_.setSampleReq(Boolean.TRUE);
+					checkList.setSampleWip(isSampleWip); // 11104Wip
+					break;
+
+				}
+			}
+		}
+		// #11104-End
+
 		this.getManagedBean().setCurrentStatusId(scQt.getQtStatus().getStatusId());
 		this.getManagedBean().setSpecMaintenanceScreen(QTConstants.SPEC_MAINTENANCE);
 		this.getManagedBean().setLoginRoleType("SC");
@@ -581,6 +626,11 @@ public void specCommitteeMaintenancereset() {
 				this.getManagedBean().setChecklist(false);
 			}
 		}
+		//#33795 - start
+		if (!isSpecCommittee()) {
+			this.getManagedBean().setChecklist(false);
+		}
+		//#33795 - end
 		// #15391 - end
 
 		// 29464-start
@@ -589,6 +639,8 @@ public void specCommitteeMaintenancereset() {
 		if (redirect) {
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
+
+		this.getManagedBean().setSampleShowHide(isSampleWip); // 11104Wip
 
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);
@@ -701,13 +753,16 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		// 1873 note 125 end
 	}
 
-private boolean checkStatus(Long statusId){
-	
-	return isQTStatusInBetween(statusId,
-			QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-			QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-	
-}
+	private boolean checkStatus(Long statusId) {
+		// 25037 - start
+		if (QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)) {
+			return false;
+		}
+		// 25037 - end
+		return isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+				QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+
+	}
 
 	// #15391 - start
 	public boolean isSpecCommittee() {

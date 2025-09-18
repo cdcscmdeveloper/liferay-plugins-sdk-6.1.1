@@ -15,12 +15,6 @@
 
 	<div class="ppRightBtn">
 		<!-- 25692 -start- -->
-		<p:commandButton value="#{lbl['lbl.btn.clone']}"
-			styleClass="BtnSpacing"
-			disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
-			actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
-			oncomplete="screen2.show();" process="@this"
-			update="@([id$=cloneid])" />
 		<p:commandButton id="committeeapproveradd" styleClass="BtnSpacing"
 			disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
 			value="#{lbl['lbl.btn.add']}" process="@this"

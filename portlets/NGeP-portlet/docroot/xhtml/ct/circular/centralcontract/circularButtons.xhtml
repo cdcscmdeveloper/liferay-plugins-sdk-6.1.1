@@ -11,10 +11,10 @@
 		enableAutoUpdate="#{centralContractBackingBean.enableAutoUpdate()}"	/>
 	<table style="width: 100%;">
 		<tr>
-			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+			<td><!--#33511 start--><p:commandButton value="#{lbl['lbl.btn.back']}"
 					immediate="true" action="#{centralContractBackingBean.backAction}"
-					rendered="#{centralContractBackingBean.managedBean.action != null}"
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /></td>
+					rendered="#{centralContractBackingBean.managedBean.action != null and centralContractBackingBean.managedBean.taskId==null}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><!--#33511 end--></td>
 			<td class="ppRightBtn"><ui:repeat var="action"
 					value="#{centralContractBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel"
@@ -27,7 +27,8 @@
 			<c:if test="#{centralContractBackingBean.managedBean.action eq 'view'}">
 				<td style="text-align: right">
 					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
-						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(centralContractBackingBean.managedBean.circularVer.docType, centralContractBackingBean.managedBean.circular.circularId)}"  />
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiaryForCircularContract(centralContractBackingBean.managedBean.circularVer.docType, centralContractBackingBean.managedBean.circular.circularId, 
+						centralContractBackingBean.managedBean.circular.circularNo)}"  /> <!-- #36608 -->
 				</td>
 			</c:if>				
 		</tr>

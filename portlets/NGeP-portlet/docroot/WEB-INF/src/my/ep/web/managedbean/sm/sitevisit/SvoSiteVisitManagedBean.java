@@ -132,7 +132,9 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	//#28774 - Start
 	private SmSvAssistantOfficer selectedAssistantOfficer;
 	//#28774 - End
-
+	// 34795 -start
+	private String zoneCode;
+	
 	public Object getBpmPojo() {
 		return bpmPojo;
 	}
@@ -765,4 +767,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.selectedAssistantOfficer = selectedAssistantOfficer;
 	}
 	//#28774 - End
+	// 34795 -start
+	public String getZoneCode() {
+		return zoneCode;
+	}
+
+	public void setZoneCode(String zoneCode) {
+		this.zoneCode = zoneCode;
+	}
+	// 34795 -end
 }

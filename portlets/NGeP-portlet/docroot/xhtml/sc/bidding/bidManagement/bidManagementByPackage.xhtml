@@ -6,6 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<!-- #29466 - START -->
+	<ui:param name="manufacturercategoryCode"
+		value="#{biddingBB.checkManufacturerCategoryCodes(biddingBB.managedBean.scQt)}"></ui:param>
+	<!-- #29466 - END -->
 	<p:panel header="#{lbl['lbl.sc.item.details']}"
 		id="itemDetailsByPackage" toggleable="true">
 
@@ -125,7 +129,10 @@
 				</h:outputText>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.pref.margin']}">
+			<!-- #29466 - START -->
+			<p:column
+				headerText="#{lbl[manufacturercategoryCode ?'lbl.sc.pref.margin.manufacturer' : 'lbl.sc.pref.margin']}">
+				<!-- #29466 - END -->
 				<h:outputText style="float : right" value="#{item.prefMargin}"
 					rendered="#{item.scBidSupplier.bumi}">
 					<f:convertNumber

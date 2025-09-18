@@ -66,25 +66,20 @@
 				             </td>
 				              <td>
 						     	<c:choose>
-										<!-- 29464 -start- --><!-- 25426,30477 -start- -->
-										<c:when
-											test="#{qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_BPK_APPROVAL or 
+					     				<!-- 29464 -start- --><!-- 25426,30477 -start- -->
+	                                   <c:when test="#{qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_BPK_APPROVAL or 
 	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL or 
 	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_REVISION_PUBLICATION or
 	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_PUBLICATION or
 	                                                   qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId) or
 	                                                   qTDetailBB.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT}">
 											<!-- 25426,30477 -end- --><!-- 29464 -end- -->
-											<p:selectOneRadio label="#{lbl['lbl.sc.open.for']}"
-												value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}"
-												disabled="true">
-												<f:selectItems
-													value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
-												<p:ajax event="change" process="@this" partialSubmit="true"
-													update="@form" listener="#{createQtBB.openForChange}"></p:ajax>
-											</p:selectOneRadio>
-										</c:when>
-										<c:otherwise>  
+					                       <p:selectOneRadio label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}" disabled="true" >
+												 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
+												 <p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				
+								           </p:selectOneRadio>	
+							           </c:when>
+							           <c:otherwise>  
 										    <p:selectOneRadio required="true" label="#{lbl['lbl.sc.open.for']}" value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.openFor}" disabled="#{qTDetailBB.managedBean.readOnly}">
 											 <f:selectItems value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 												<p:ajax event="change" process="@this" partialSubmit="true" update="@form" listener="#{createQtBB.openForChange}"></p:ajax>				

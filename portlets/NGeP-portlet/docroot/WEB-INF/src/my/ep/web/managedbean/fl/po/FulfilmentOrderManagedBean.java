@@ -188,6 +188,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private int yepButtonFlag =0;
 	//34316-End
 	
+	private boolean isDpContinuityView = false;//#25790 note 266
+
     /**
 	 * @return the pendingDoDataModel
 	 */
@@ -1567,5 +1569,27 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.yepButtonFlag = yepButtonFlag;
 	}
 	//34316 - end
+	
+	// #25790 - start
+	/**
+	 * Checks if from DP continuity view.
+	 * 
+	 * @return {@code true} if from DP continuity view, {@code false} otherwise.
+	 */
+	public boolean isDpContinuityView() {
+		return isDpContinuityView;
+	}
+
+	/**
+	 * Sets the DP continuity view .
+	 * 
+	 * @param isDpContinuityView
+	 *            {@code true} to enable the DP continuity view, {@code false}
+	 *            to disable it.
+	 */
+	public void setDpContinuityView(boolean isDpContinuityView) {
+		this.isDpContinuityView = isDpContinuityView;
+	}
+	// #25790 - end
 
 }

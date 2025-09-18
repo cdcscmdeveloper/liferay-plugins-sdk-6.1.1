@@ -14,6 +14,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.common.ScRequestItem;//#31558, #28854
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean;
@@ -134,8 +135,8 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 	}
 
 	/** to concat Itemcode and Item Name */
-
-	public String contactItem(CtContractItem ctItem) {
+	//#31558 start
+	public ScRequestItem contactItem(CtContractItem ctItem) {
 		
 		String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
 		String itemName=ctItem.getScRequestItem().getItemName();
@@ -147,10 +148,15 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 		{
 			itemName=ParameterConst.ITEM_NAME;
 		}
-		String result = itemName +","+ itemcode;
+		//String result = itemName +","+ itemcode;
+		ScRequestItem scRequestItem = new ScRequestItem();
+		scRequestItem.setItemName(itemName);
+		scRequestItem.setCmItem(ctItem.getScRequestItem().getCmItem());
+		scRequestItem.getCmItem().setExtensionCode(itemcode);
 		
-		return result;	     
+		return scRequestItem;
 	}
+	//#31558 end
 	
 	public String contactItemProd(CtContractItem ctItem) {
 		

@@ -54,11 +54,13 @@
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.mofno']}">
-						<h:outputText value="#{voSub.mofNo}" />
+						<h:outputText value="#{voSub.mofNo}" rendered="#{voSub.mofNo ne 'null'}" />
+						<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{voSub.mofNo eq 'null'}" />
 					</p:column>
 		
 					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.expdate']}">
-						<h:outputText value="#{voSub.expDate}" />
+						<h:outputText value="#{voSub.expDate}" rendered="#{voSub.expDate ne 'null'}" />
+						<h:outputText value="#{lbl['lbl.sm.sme.txt.no.available']}" rendered="#{voSub.expDate eq 'null'}" />
 					</p:column>
 		
 					<p:column headerText="#{lbl['lbl.sm.overlapped.category.personnel.regno']}">

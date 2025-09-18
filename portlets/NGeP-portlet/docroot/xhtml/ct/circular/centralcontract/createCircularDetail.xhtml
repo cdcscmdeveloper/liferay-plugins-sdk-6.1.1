@@ -46,11 +46,11 @@
 						<p:spacer width="5" />
 						<h:outputText value="#{lbl['lbl.ct.months']}" />
 					</h:panelGroup>
-				    
+				    <!-- #33752 start -->
 					<p:outputLabel value="#{lbl['lbl.ct.start.date']}"  styleClass="required" />
 					<h:panelGrid columns="2">
 		   				<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
-							navigator="true" size="10" showOn="button" required="false" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
+							navigator="true" size="10" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
 		      				disabled="#{centralContractBackingBean.managedBean.viewContract}" 
 		      				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 	     					<p:ajax event="dateSelect" process="@this" update=":form:popupButtonCal1" />
@@ -63,14 +63,15 @@
 	   					<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
 	   						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 	         	            mindate="#{centralContractBackingBean.managedBean.circularVer.startDate}" size="10" navigator="true"
-	         	            showOn="button" required="false" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}"
+	         	            showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}"
 	         	            disabled="#{centralContractBackingBean.managedBean.viewContract}">
 	         	            <f:attribute name="startDate" value="#{centralContractBackingBean.managedBean.circularVer.startDate}" />
                  			<f:validator validatorId="primeDateRangeValidator" />
 	         	   		</p:calendar>
 	         	   		<p:message for="popupButtonCal1" display="icon" />
 	         		</h:panelGrid>
-				
+					<!-- #33752 end -->
+					
 					 <p:outputLabel value="#{lbl['lbl.ct.pid']}"  />
 					 <h:panelGrid columns="3">
 			   			<p:selectBooleanCheckbox disabled="#{centralContractBackingBean.managedBean.viewContract}" 
@@ -99,7 +100,7 @@
 											<td></td>
 											<td>
 											 	<h:commandLink action="#{centralContractBackingBean.downloadFile(attachAggreement)}" 
-											 		styleClass="blue_font" value="#{attachAggreement.fileName}" />			
+											 		styleClass="blue_font" style="color:#009ae5 !important;" value="#{attachAggreement.fileName}" /><!-- Fix #30866 -->			
 										     	<p:commandLink action="#{centralContractBackingBean.setAttachmentIndex(attachAggreementIndex)}"
 								   	                 onclick="deleteCircularFileDlg.show();" rendered="#{!centralContractBackingBean.managedBean.viewContract}">
 								   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>

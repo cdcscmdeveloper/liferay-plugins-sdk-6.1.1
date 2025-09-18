@@ -53,6 +53,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.comparator.ct.CtItemPriceComparator; //#36726 || #33287
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -109,12 +110,14 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils; //#36726 || #33287
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -126,6 +129,7 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 
 /**
  * Central Contract Circular Backingbean
@@ -244,15 +248,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 
 			if(getManagedBean().getCircularVer().getCtCircularContracts() != null && !getManagedBean().getCircularVer().getCtCircularContracts().isEmpty()) {
-				Collections.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract());
+				CustomUtils.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract()); //#36726 || #33287
 				for(CtCircularContract ctCircularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 
 					if(ctCircularContract.getCtCircularItems() != null && !ctCircularContract.getCtCircularItems().isEmpty())
-						Collections.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem());
+						CustomUtils.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem()); //#36726 || #33287
 
 					for(CtCircularItem circularItem : ctCircularContract.getCtCircularItems()){
 						if(circularItem.getCtContractItem() != null)
-							Collections.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPrice());
+							CustomUtils.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPriceComparator()); //#36726 || #33287
 					}
 				}
 			}
@@ -638,6 +642,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			 //#cr 28713 - start
 			 if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
 					 && (getManagedBean().getCircularVer().getCircularAttachments().size() < 1 ) ){
+				 getManagedBean().setSelectedTabIndex(0); //#33752
 				 throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
 						 ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			 } //#cr 28713 - end
@@ -1096,15 +1101,39 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
+		CircularBackingBean circularBB = new CircularBackingBean(); //#30866
 		if(getManagedBean().isChkCancelPage()) {
-			getManagedBean().setChkCancelPage(false);
-			return "/xhtml/ct/circular/panel/cancelCircularBase.xhtml?faces-redirect=true";
+			//#33533 /#33752 start
+			PanelBackingBean panelBB = new PanelBackingBean();
+
+			panelBB.getManagedBean().setAction(null);
+			panelBB.getManagedBean().setViewContract(false); //set false view contract because its not for view
+			panelBB.getManagedBean().setTaskIdFromTaskList(getManagedBean().getTaskIdFromTaskList()); //set back the task id from tasklist
+			panelBB.getManagedBean().setTaskId(getManagedBean().getTaskIdFromTaskList());
+			panelBB.getManagedBean().setOutComes(getManagedBean().getOutComesFromTaskList()); //set back the button from the tasklist
+			getManagedBean().setChkCancelPage(false); //set false from cancel page
+			
+			if(getManagedBean().getTaskIdFromTaskList()==null){
+				panelBB.getManagedBean().setUpdateAction(true);
+				panelBB.getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
+				initializeRemarks();
+				ctBB = new ContractBackingBean(panelBB.getManagedBean().getFileDirectory());
+				ctBB.getManagedBean().setViewContract(panelBB.getManagedBean().isViewContract()); 
+				ctBB.initializeRemarkAndAttachement(null, panelBB.getManagedBean().getRemarkList(), panelBB.getManagedBean().getAttachmentList());
+			}
+			
+			return getManagedBean().getBackToPreviousPage(); //return the previous page (cancel circular page)
+			//return "/xhtml/ct/circular/panel/cancelCircularBase.xhtml?faces-redirect=true";
+			//#33533 /#33752 end
 		} else if(getManagedBean().isFromCircularNotice()) {
 			return "../portal/circularListing.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isChkCentralCircular()) {
 			return getManagedBean().getGotoPreviewPage();
 		} else if(getManagedBean().getGotoPreviewPage()!=null) {
 			return getManagedBean().getGotoPreviewPage();
+		} else if (circularBB.getManagedBean()
+				.isContinuityCircularAuditSearch()) { // Fix -#30866
+			return "/xhtml/ct/viewcontract/resultViewCircularContract.xhtml?faces-redirect=true"; // Fix -#30866
 		} else {
 			return "search.xhtml?faces-redirect=true";
 		}
@@ -1260,7 +1289,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			// Temp setTextBeforeSign : CircularNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
-			sb.append(getManagedBean().getCircularVer().getCircularNo());
+			sb.append(getManagedBean().getCircularVer().getCircularNo().trim()); //#33752 
 			sb.append(ContractConst.SEPRATE_LINE);
 			if(getManagedBean().getCircularVer().getCtCircular().getLatestCircularVer() != null){
 				sb.append(ContractConst.CIRCULAR_UPDATE);
@@ -1283,7 +1312,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 			sb.append(outcome);
 			sb.append(ContractConst.SEPRATE_LINE);
-			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
+			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo().trim()); //#33752
 			getManagedBean().setTextBeforeSign(sb.toString());
 			// set action
 			getManagedBean().setAction(outcome);

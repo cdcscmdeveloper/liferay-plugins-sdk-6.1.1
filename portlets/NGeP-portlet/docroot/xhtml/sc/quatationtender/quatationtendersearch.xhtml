@@ -140,11 +140,13 @@
 								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
 								partialSubmit="true" process="@this"/>
 							<!-- 32050,32209 -end- -->
+							<!-- 37978 - Start -->
 							<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								rendered="#{scQt.actionRender[2]}"
-								icon="ui-icon-view" action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}" 
+								icon="ui-icon-view" action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId, null)}" 
 								partialSubmit="true" process="@this"/>
+							<!-- 37978 - End -->
 							<p:menuitem id="menuItem4" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								rendered="#{scQt.actionRender[3]}"

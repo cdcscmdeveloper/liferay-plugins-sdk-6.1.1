@@ -442,6 +442,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			stopInstrBB.getManagedBean().setSelectedTabIndex(0);
 			stopInstrBB.populateStopInstrItem();
 			stopInstrBB.populateChargeLineData();
+			stopInstrBB.getManagedBean().setSearchFunctionType(getManagedBean().getSearchFunctionType());//36386
 			if(isFlFulfilmentApprover()){
 				stopInstrBB.checkCogstr();
 			}
@@ -587,6 +588,13 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+				
+				//#35508 fl audit trail - set original DO supplier ref no
+				if(resDTO.getFlDeliveryOrder() != null){
+					doBB.getManagedBean().setOriginalSupplierDoRef(resDTO.getFlDeliveryOrder().getSupplierDoRef());
+				}
+				//#35508 fl audit trail
+				
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else { // view
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
@@ -634,6 +642,13 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			} else {
 				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
+			//#35508 fl audit trail
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) && resDTO.getInvoice() != null){
+				String originalBankAccNoName = resDTO.getInvoice().getAccountNo()+" "+resDTO.getInvoice().getPaymentBankName();
+				invBB.getManagedBean().setOriginalBankAccNoName(originalBankAccNoName);
+				invBB.getManagedBean().setOriginalSupplierInvRef(resDTO.getInvoice().getSupplierInvoiceRef());
+			}
+			//#35508 fl audit trail
 			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
 			if(resDTO.isTaxable()){
 				invBB.getManagedBean().setTaxable(true);
@@ -886,6 +901,15 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		renewSesionObject();
 		defaultPtjAndMinistryValues();
 	}
+	
+	//36386-Start
+	/**
+	 * Reset Search Results.
+	 */
+	public void resetSearchResult(){
+		getManagedBean().getFlDocumentDataModel().resetData();
+	}
+	//36386-End
 	
 	/**
 	 * Gets the procurement type list based on procurement type and language code.

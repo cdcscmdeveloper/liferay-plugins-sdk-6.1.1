@@ -184,6 +184,7 @@ import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
 import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
@@ -233,8 +234,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	private static final long serialVersionUID = 1L;
 
-	/*13984 Schedule/ Phase Information*/
-    private static List<ScheduleInfo> schInfo;
+	//38255 -remove private static List<ScheduleInfo> schInfo;
     private static String orgCode;
     private static String orgName;
     private static List<VCmSupplierItem> ctRequestListCR;
@@ -302,6 +302,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		List<ScheduleInfo> scheduleInfo = new ArrayList<>();// 38255
 
 		if (this.getManagedBean().getCtRequestList() != null && this.getManagedBean().getCtRequestList().size() > 0) {
 
@@ -313,7 +314,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setContractId(supplierItemView.getContractId());
 
 			ContractResDTO resDTO;
-			FulfilmentResDTO resfDTO;
+			//38255 remove -FulfilmentResDTO resfDTO;
 			
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
@@ -326,7 +327,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			Long orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
 			
 			flReqDTO.setOrgProfileId(orgProfileId);
-			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
+			List<FulfilmentResDTO> scheduleDetails = requestSO.getFulfilmentScheduleDetails(flReqDTO);// 38255
 			
 			reqDTO.setOrgProfileId(orgProfileId);
 			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
@@ -335,66 +336,51 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
 				setAvailableNoListCR(getManagedBean().getAvailableNoList());
 			}
-			schInfo = new ArrayList<ScheduleInfo>();
+			//38255-Start
+			for (FulfilmentResDTO detail : scheduleDetails) {
 
-			if (null != getManagedBean().getAvailableNoList()) {
-			for (int i = 0; i < resfDTO.getDocNos().size() ; i++) {
-				int j = i + 1;
-				if (j > resfDTO.getDocNos().size()) {
+				ScheduleInfo schInfo = new ScheduleInfo();
+				schInfo.setSchNo(detail.getFlSchNo() != null ? detail.getFlSchNo().toString() : " ");
+				schInfo.setCrNo(detail.getDocNo());
+				
+				String crStatus = getStatusDescById(detail.getDocStatus()) !=null ? getStatusDescById(detail.getDocStatus()) :"";
+				schInfo.setCrNoStatus("(" + crStatus + ")");
+				schInfo.setCoNo(detail.getFlOrderDocNo() != null ? detail.getFlOrderDocNo() : " ");
+				
+				String pocoStatus = getStatusDescById(detail.getFlOrderDocStatus()) !=null ? getStatusDescById(detail.getFlOrderDocStatus()) :"";
+				schInfo.setCoNoStatus("(" + pocoStatus + ")");
 
-					resfDTO.getDocNos().add("");
-				}
-				if (j > resfDTO.getFlOrderDocNos().size()) {
+				scheduleInfo.add(schInfo);
 
-					resfDTO.getFlOrderDocNos().add("");
-				}
-				if (j > resfDTO.getFlOrderDocNoStatus().size()) {
-
-					resfDTO.getFlOrderDocNoStatus().add("");
-				}
-				if (j > resfDTO.getDocNoStatus().size()) {
-
-					resfDTO.getDocNoStatus().add("");
-				}
-				if (j > resfDTO.getFlSchNos().size()) {
-					resfDTO.getFlSchNos().add("");
-				}
-	    			
-	    			schInfo.add(new ScheduleInfo(resfDTO.getFlSchNos().get(i), resfDTO.getDocNos().get(i), resfDTO
-							.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos().get(i), resfDTO.getFlOrderDocNoStatus()
-							.get(i)));
 			}
-            resfDTO.getFlFulfilmentRequest();
-            
-            IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-            OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
-    		orgReqDTO.setOrgProfileId(orgProfileId);
-    		OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(orgReqDTO);
-    		
-    		String orgCode = "";
+
+			IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
+			orgReqDTO.setOrgProfileId(orgProfileId);
+			OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(orgReqDTO);
+
+			String orgCode = "";
 			String orgName = "";
-			if(orgResDTO != null && orgResDTO.getPmOrgProfile() !=null){
-    			orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
+			if (orgResDTO != null && orgResDTO.getPmOrgProfile() != null) {
+				orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
 				orgName = orgResDTO.getPmOrgProfile().getOrgName();
-    		}
-            
+			}
+
 			setOrgCode(orgCode);
 			setOrgName(orgName);
-		   
-		    getManagedBean().setFlRequest(resfDTO.getFlFulfilmentRequest());
-		
-		}
+
 		}
 
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-		
-		setSchInfo(schInfo);
-		return schInfo;
+
+		getManagedBean().setSchInfo(scheduleInfo);
+		return scheduleInfo;
+		//38255-End
 
 	}
-	
 
 	public String getOrgCode() {
 		return orgCode;
@@ -11409,19 +11395,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
-	/*13984 Schedule info instance variables*/	
-	public List<ScheduleInfo> getSchInfo() {
-		if (schInfo == null)
-			schInfo = new ArrayList<ScheduleInfo>();
-		
-        log.info("schInfo is : "+schInfo);
-		return schInfo;
-	}
-
-	public void setSchInfo(List<ScheduleInfo> schInfo) {
-		this.schInfo = schInfo;
-	}
-	/*13984 Schedule No. instance variables for table*/
+	//38255-remove getSchInfo and setSchInfo
 	
 	//bazlin 13984 back catalogue
 	public List<VCmSupplierItem> getCtRequestListCR() {

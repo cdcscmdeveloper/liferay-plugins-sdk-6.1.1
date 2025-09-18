@@ -54,12 +54,15 @@
 		</td>
 		<td>
 			<h:panelGroup id="maxScorePG">
+			<ui:remove> #11104 - add onkeypress </ui:remove>
 				<p:inputText id="maxScore" style="text-align:right;"
 					value="#{templateSpecBean.selectedSpecQuestion.maxScore}" 
 					required="true" size="15" maxlength="3"
+					onkeypress="if (event.keyCode == 46) { return false; }"
 					disabled="#{!editable}"
 					label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}"
 					rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}">
+					<ui:remove> #11104 -end- </ui:remove>
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
 				</p:inputText>
 				<p:message id="maxScoreMsg" for="maxScore" display="icon" />
@@ -73,13 +76,17 @@
 		</td>
 		<td>
 			<h:panelGroup rendered="#{isWeightageReq}">	<!-- Bug #35307@Syazani 12/12/2023 -->
-				<p:inputText id="weightage" style="text-align:right;" 
-					value="#{templateSpecBean.selectedSpecQuestion.weightage}" 
-					required="true" size="15" maxlength="19"
-					disabled="#{!editable}"
-					label="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}">
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" maxIntegerDigits="2" />
-				</p:inputText> <ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.tooltip']}" />
+			  		<ui:remove><!-- #35384,#36248_haziq - Start --></ui:remove>
+					<p:inputText id="weightage" style="text-align:right;"
+						value="#{templateSpecBean.selectedSpecQuestion.weightage}"
+						required="true" size="15" maxlength="19" disabled="#{!editable}"
+						label="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}"
+						validator="#{templateSpecBackingBean.validateWeightage}">
+						<ac:validateNumber maxIntegerDigits="3" maxFractionDigits="2"
+							min="0.01" max="100"></ac:validateNumber>
+					<ui:remove><!-- #35384,#36248_haziq - End --></ui:remove>
+					</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.tooltip']}" />
 				<p:message id="weightageMsg" for="weightage" display="icon" />
 				
 			</h:panelGroup>

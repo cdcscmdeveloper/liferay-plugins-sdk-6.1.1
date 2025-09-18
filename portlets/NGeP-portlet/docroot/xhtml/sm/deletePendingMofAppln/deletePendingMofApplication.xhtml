@@ -92,13 +92,16 @@
 						<td style="vertical-align: top"><p:outputLabel
 								value="#{lbl['lbl.sm.reason']} : " /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td><p:inputTextarea cols="122"
+						<td>
+							<!-- #38195 --> 
+							<p:inputTextarea cols="122"
 								style="margin-bottom : 5px;width: 75%;" rows="5"
 								required="#{backingBean.managedBean.rejectReasonReqd}"
 								id="delPendResn" label="#{lbl['lbl.sm.reason']}" 
 								value="#{backingBean.managedBean.supplierRemarks}"
 								maxlength="2500"
-								validatorMessage="#{lbl['lbl.sm.reason']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}">
+								validatorMessage="#{lbl['lbl.sm.reason']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+								converter="trimConverter">
 								<f:validateLength maximum="2500" />
 							</p:inputTextarea> <p:message id="delPendResnMsg" for="delPendResn" display="icon" /></td>
 	

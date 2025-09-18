@@ -273,7 +273,9 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml</value>
+			<!-- Bug 34142, 15851, 33096 - shaqimi start -->
+			<value>/xhtml/ct/fulfilmentdetails/amendment/preRenderAmendmentTab.xhtml</value>
+			<!-- Bug 34142, 15851, 33096 - shaqimi end -->
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -10894,4 +10896,72 @@
 		</security-role-ref>
 	</portlet>
 	<!-- Enhancement 25627-end- -->
+	<!-- 25037 - start -->
+	<portlet>
+		<portlet-name>maintenanceRequestApproval</portlet-name>
+		<display-name>Maintenance Request Approval</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/quatationtender/maintenanceRequest/approval/prerenderMaintenanceRequestApproval.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Maintenance Request Approval</title>
+			<short-title>Maintenance Request Approval</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- 25037 - end -->
+	<portlet>
+		<portlet-name>testSpki</portlet-name>
+		<display-name>Test SPKI</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sm/testSpki/testSpki.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Test SPKI</title>
+			<short-title>Test SPKI</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 </portlet-app>

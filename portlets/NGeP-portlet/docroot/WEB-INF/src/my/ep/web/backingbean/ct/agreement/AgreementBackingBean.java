@@ -73,6 +73,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
+import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -90,6 +91,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;//#15851
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
@@ -139,6 +141,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	private String agreementZipFileName = null;
 	private String agreementZipFilePath = null;
+
+	//26686 start
+	private String contractAmtChange = null;
+	private String gstAmtChange = null;
+	private String sTaxAmtChange = null;	
+	//26686 end
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -214,6 +222,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 */
 	public void preRenderAgreement() {
 		renewSesionObject();
+		ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi 06/12/2022
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"agreementTab.xhtml?faces-redirect=true");
 	}
@@ -232,11 +241,79 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
+			
+			//Bug 34142, 15851 - shaqimi start 04/12/2022
+			if(!ctBB.getManagedBean().isInPage()){
+				if(ctBB.getManagedBean().isBackFromSCL() || ctBB.getManagedBean().isBackFromContract()){
+					getManagedBean().setSelectedTabIndex(0);
+					ctBB.getManagedBean().setBackFromSCL(false);
+					ctBB.getManagedBean().setBackFromContract(false);
+				}
+				
+				if(taskId != null && !taskId.isEmpty()){
+					ctBB.getManagedBean().setTaskIdFromAgreementTaskList(taskId);
+				} else {
+					if(ctBB.getManagedBean().getTaskIdFromAgreementTaskList() != null && !ctBB.getManagedBean().getTaskIdFromAgreementTaskList().isEmpty()){
+						taskId = ctBB.getManagedBean().getTaskIdFromAgreementTaskList();
+					}
+				}
+				ctBB.getManagedBean().setInPage(true);
+			}
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			
 			if (taskId == null) {
+				//Enhancement 15851 - shaqimi start
+				if(!getManagedBean().isFromViewSCL()){
+					return;
+				} else {
+					agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+					ctReqDTO = new ContractAgreementReqDTO();
+					resDTO = new ContractAgreementResDTO();
+					
+					ctReqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+					ctReqDTO.setDocId(getManagedBean().getContractVer().getContractVerId());
+					ctReqDTO.setAgreementId(getManagedBean().getCtAgreement().getAgreementId());
+					ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
+
+					resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
+					setCtAgreementDetails(resDTO);
+					
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_AGREEMENT_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)) {
+						getManagedBean().setFinalAgreement(true);
+					}
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)) {
+						getManagedBean().setApproveFinalAgreement(true);
+					}
+					
+					getManagedBean().setFromViewSCL(false);
+					return;
+				}
+				//Enhancement 15851 - shaqimi end
+			}
+			
+			//Bug 34142, 15851 - shaqimi start 04/12/2022
+			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+			
+			if (ctBB.getManagedBean().getDocTypeFromAgreementTaskList() != null){
+				ctReqDTO = new ContractAgreementReqDTO();
+				
+				ctReqDTO.setDocId(ctBB.getManagedBean().getDocIdFromAgreementTaskList());
+				ctReqDTO.setDocType(ctBB.getManagedBean().getDocTypeFromAgreementTaskList());
+				ctReqDTO.setContractId(ctBB.getManagedBean().getContractIdFromAgreementTaskList());
+				ctReqDTO.setAgreementId(ctBB.getManagedBean().getAgreementIdFromAgreementTaskList());
+				
+				resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+				setCtAgreementDetails(resDTO);
+				ctBB.getManagedBean().setBackFromSCL(false);
+				ctBB.getManagedBean().setBackFromContract(false);
 				return;
 			}
-			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+			
 			ctReqDTO = new ContractAgreementReqDTO();
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
 			CTAgreementDataType dataType =  super.getBpmTaskDetails(CTAgreementDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});		
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setDocId(new Long(dataType.getDocId()));
@@ -276,15 +353,34 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				resDTO = agreementSO.retrieveAgreement(ctReqDTO);
 				setCtAgreementDetails(resDTO);
 			}
-
-			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)
-					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)
-					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FINALIST_AGREEMENT_HT_NAME)) {
+			
+			//Bug 34142, 15851 - shaqimi start 04/12/2022
+			ctBB.getManagedBean().setDocIdFromAgreementTaskList(ctReqDTO.getDocId());
+			ctBB.getManagedBean().setDocTypeFromAgreementTaskList(ctReqDTO.getDocType());
+			ctBB.getManagedBean().setContractIdFromAgreementTaskList(ctReqDTO.getContractId());
+			ctBB.getManagedBean().setAgreementIdFromAgreementTaskList(ctReqDTO.getAgreementId());
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			
+//#28715 - Remove Code
+//			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)
+//					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)
+//					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FINALIST_AGREEMENT_HT_NAME)) {
+//				getManagedBean().setFinalAgreement(true);
+//			}
+//			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)) {
+//				getManagedBean().setApproveFinalAgreement(true);
+//			}
+			//#28715 -Start
+			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_AGREEMENT_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)) {
 				getManagedBean().setFinalAgreement(true);
 			}
-			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)) {
+			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)) {
 				getManagedBean().setApproveFinalAgreement(true);
 			}
+			//#28715 -End
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
@@ -523,17 +619,15 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSupplierWitness());
 
 			// Generate agreement File
-			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)
+			//#28715
+			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)
 					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				log.info("------------ Bug #30924 : APPROVE -----------------");
 				generateAgreementFile();
-				log.info("------------ Bug #30924 : agreementZipFilePath = "+agreementZipFilePath);
-				log.info("------------ Bug #30924 :  agreementZipFileName= "+ agreementZipFileName);
 				getManagedBean().getCtAgreement().setFilePath(DocumentRepositoryUtils.getDBFilePath(agreementZipFilePath.replace("\\", "/")));
 				getManagedBean().getCtAgreement().setFileName(agreementZipFileName);
 			}
 
-			Long statusId = getManagedBean().getCtAgreement().getStatus().getStatusId();
+			//Long statusId = getManagedBean().getCtAgreement().getStatus().getStatusId();
 			boolean isBrandNew = getManagedBean().getCtAgreement().isBrandNew();
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 			reqDTO.setAttachments(getManagedBean().getAttachmentList());
@@ -553,13 +647,13 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				String messageId = MessageConst.INFO_700005;
 				String prefix = "";
 				String nextRole = null;
-
-				if(statusId.longValue()==ContractStatusConst.AC_PENDING_AGREEMENT_CREATION.longValue() || statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_APPROVAL.longValue() || 
-						statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_REVISION.longValue() || statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_REVISION_APPROVAL.longValue() || 
-						statusId.longValue()==ContractStatusConst.SA_PENDING_SUPPLEMENTAL_AGREEMENT_CREATION.longValue() || statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_APPROVAL.longValue() || 
-						statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_REVISION.longValue() || statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_REVISION_APPROVAL.longValue()) {
-					prefix = ResourceBundleUtils.getMessage("lbl.ct.draft", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-				}
+				//#28715 -Start
+//				if(statusId.longValue()==ContractStatusConst.AC_PENDING_AGREEMENT_CREATION.longValue() || statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_APPROVAL.longValue() || 
+//						statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_REVISION.longValue() || statusId.longValue()==ContractStatusConst.AC_PENDING_DRAFT_AGREEMENT_REVISION_APPROVAL.longValue() || 
+//						statusId.longValue()==ContractStatusConst.SA_PENDING_SUPPLEMENTAL_AGREEMENT_CREATION.longValue() || statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_APPROVAL.longValue() || 
+//						statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_REVISION.longValue() || statusId.longValue()==ContractStatusConst.SA_PENDING_DRAFT_SUPPLEMENTAL_AGREEMENT_REVISION_APPROVAL.longValue()) {
+//					prefix = ResourceBundleUtils.getMessage("lbl.ct.draft", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+//				}
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					messageId = MessageConst.INFO_700021;
 					if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
@@ -779,7 +873,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			throw new EpException(MessageConst.ERROR_750010);
 		}
 
-		// Contract Approver cannot approve the draft agreement if:-
+	/**	// Contract Approver cannot approve the draft agreement if:-
 		// -FD Creation still in process.
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
 				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)) {			
@@ -789,13 +883,15 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}		
-		}
+		} **/
 
 		// Contract Admin cannot submit the finalist agreement if:-
 		// -Performance bond not complete
 		// -FD Update/FD Creation/Change Bank process still in process. 
+		//#28715
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)) {
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME))) {
 
 			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
@@ -817,8 +913,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 		// Contract Approver cannot approve the final agreement if:-
 		// -Disclaimer is not checked
+		//#28715
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) 
-				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)) {			
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)) {			
 			if (!getManagedBean().isAgreementDisclaimer()) {
 				getManagedBean().setSelectedTabIndex(2);
 				throw new EpException(MessageConst.ERROR_750042);
@@ -882,6 +979,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			sb.append(ContractConst.SEPRATE_LINE);
 			sb.append(getManagedBean().getContractVer().getDocType());
 			sb.append(ContractConst.SEPRATE_LINE);
+			//#28715
 			if(getManagedBean().isApproveFinalAgreement()){
 				sb.append(ContractConst.AGREEMENT_FINAL);
 			} else {
@@ -960,17 +1058,20 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 * @return the role of login user
 	 */
 	private String getUserRole() {
-		String userRole = null;		
+		String userRole = null;	
+		//#28715
+		//log.info("Check Task :"+getManagedBean().getTaskName().toString());
 		if (getManagedBean().getTaskName() == null
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_AC_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_DRAFT_AGREEMENT_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_DRAFT_AGREEMENT_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_AGREEMENT_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FINALIST_AGREEMENT_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
+//				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_DRAFT_AGREEMENT_HT_NAME)
+//				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)
+//				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)
+//				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)
+				) {
 			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_MINISTRY)
 					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
@@ -981,8 +1082,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				userRole = RoleCode.BPK_CCA.value();
 			}
 		} else if (getManagedBean().getTaskName() != null
-				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_DRAFT_AGREEMENT_HT_NAME)
-						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME))) {
+				//#28715
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)
+						)) {
 			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_MINISTRY)
 					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
@@ -1063,8 +1166,20 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { 
 				reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
 			}
-			reqDTO.setApprovalLimit(getContractAmt().add(getGstAmt().add(getStaxAmt())));
+			
+			//#26686 - start 
+			BigDecimal approvalLimit;
+			if (getManagedBean().getCtAgreement().getCtAmendment() != null && (getManagedBean().getCtAgreement().getCtAmendment().isValueChange()
+					|| getManagedBean().getCtAgreement().getCtAmendment().isValueChangeByGst() || getManagedBean().getCtAgreement().getCtAmendment().isValueChangeByStax())) {
+				setContractSignerChanges();					
+				approvalLimit = setLimitContractSigner();
+			} else {
+				approvalLimit = getContractAmt().add(getGstAmt().add(getStaxAmt()));
+			}					
+			
+			reqDTO.setApprovalLimit(approvalLimit);
 			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			//#26686 - end
 
 			List<PmUser> list = resDTO.getUserList();
 			items = new SelectItem[list.size() + 1];
@@ -1077,6 +1192,11 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			userSO = null;
 			reqDTO = null;
 			resDTO = null;
+			//#26686 start- reset value from global variable
+			contractAmtChange = null;
+			gstAmtChange = null;
+			sTaxAmtChange = null;
+			//#26686 end
 		}
 		return items;
 	}
@@ -1142,11 +1262,16 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		ctReqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
+		ctBB.getManagedBean().setViewContractFromAgreement(true);//Bug 34142 - shaqimi 16112022
+		ctBB.getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
+		ctBB.getManagedBean().setContractVerIdFromAgreementTaskList(contractVerId); //15851
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
+		contractDetailsBB.getManagedBean().setLoaContractVerList(null); //#15851
+		contractDetailsBB.getManagedBean().setLoaContractVerId(null); //#15851
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
 		contractDetailsBB.setValidateContractField(ctReqDTO);
 		contractDetailsBB.getManagedBean().setSelectedTabIndex(0);
-		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId());
+		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId()+"?faces-redirect=true"); //15851
 		return CONTRACT_PAGE;
 	}
 
@@ -1157,18 +1282,49 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 * @return the navigate URL 
 	 */
 	public void goToLoaView(ScLoa scLoa) {
-		if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+		//#15851 - start
+		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		
+		ctBB.getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
+		
+		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+			AmendmentBackingBean abb = new AmendmentBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+
+			//Bug 34142, 15851 - shaqimi start 04/12/2022
+			if(ctBB.getManagedBean().getTaskIdFromAgreementTaskList() != null){
+				ctBB.getManagedBean().setAmendFromTaskList(true);
+			}
+			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			
+			getManagedBean().setFromViewSCL(true);
+			
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true"); //15851
+			abb.getManagedBean().setTrackingDairyView(true);
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setViewSclFromAgreement(true); //#15851
+			//Bug 33096 - shaqimi start
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+			//Bug 33096 - shaqimi end
+			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
+		}
+		//#15851 - end
+		else if(scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
 			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
+			directLoaBackingBean.getManagedBean().setIconForDL(true); //28854
 			directLoaBackingBean.viewLOA(scLoa.getLoaId());
+			ctBB.getManagedBean().setBackFromSCL(true);//Bug 34142, 15851 - shaqimi 04/12/2022
 		} else {
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
 			loaDetailBackingBean.viewLOA(scLoa.getLoaId());
+			ctBB.getManagedBean().setBackFromSCL(true);//Bug 34142, 15851 - shaqimi 04/12/2022
 		}
 	}
 
@@ -1597,42 +1753,29 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	private void generateAgreementFile() {
 		List<File> fileList = new ArrayList<File>();
 
-		log.info( "Bug #30924 getManagedBean().getCtAgreement().getContractDocumentAttachments() :"+getManagedBean().getCtAgreement().getContractDocumentAttachments());
 		for (CtAttachment ctAttachment : getManagedBean().getCtAgreement().getContractDocumentAttachments()) {
 			if (StringUtils.isNotBlank(ctAttachment.getFilePath())) {
 				fileList.add(new File(DocumentRepositoryUtils.getBaseDir() + ctAttachment.getFilePath()));
 			}
-		}	
-		log.info("------------ Bug #30924 -  in generateAgreementFile : fileList.size() = "+fileList.size());					
+		}		
 		try {
 			if (fileList.size() == 1) {
 				agreementZipFilePath = fileList.get(0).getPath();
 				agreementZipFileName = fileList.get(0).getName();
-				log.info("------------ Bug #30924 -  in generateAgreementFile : fileList.get(0).getPath() = "+fileList.get(0).getPath());
-				log.info("------------ Bug #30924 -  in generateAgreementFile :  fileList.get(0).getName() = "+ fileList.get(0).getName());
 			} else {	// Generate agreement zip file
 				String zipFileName = "agreement.zip";
-				log.info("Bug #30924 - getManagedBean().getAgreementType() = "+getManagedBean().getAgreementType());
 				if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
 					zipFileName = "supplemental_agreement.zip";
-					log.info("Bug #30924 - zipFileName 11 :"+zipFileName);
 				}
-				log.info("Bug #30924 - zipFileName 22 :"+zipFileName);
-				File zipFile = new File(getManagedBean().getFileDirectory()+ zipFileName);
-				log.info("Bug #30924 - zipFile :"+zipFile.toString());
+				File zipFile = new File(getManagedBean().getFileDirectory()+ zipFileName);		
 				zipFile.createNewFile();
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
-				log.info("Bug #30924 - filelist = "+fileList.size());
-				log.info("------------ Bug #30924 - in generateAgreementFile : zipFile.getPath() Before = "+zipFile.getPath());
-				log.info("------------ Bug #30924 - in generateAgreementFile :  zipFile.getName() Before = "+ zipFile.getName());
 				for (File file : fileList) {
-					log.info("Bug #30924 - file.getName() = "+file.getName());
 					zos.putNextEntry(new ZipEntry(file.getName()));	
 					// Get the file
 					FileInputStream fis = null;
 					try {
 						fis = new FileInputStream(file);
-						log.info("------------ Bug #30924 -  in generateAgreementFile 33 ");
 					} catch (FileNotFoundException fnfe) {
 						zos.write(("ERROR: Could not find file " + file
 								.getName()).getBytes());
@@ -1640,19 +1783,15 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 						continue;
 					}
 					BufferedInputStream fif = new BufferedInputStream(fis);
-					log.info("------------ Bug #30924 -  in generateAgreementFile 44 ");
 					// Write the contents of the file
 					int data = 0;
 					while ((data = fif.read()) != -1) {
 						zos.write(data);
 					}
-					log.info("------------ Bug #30924 -  in generateAgreementFile 55 ");
 					fif.close();
 					zos.closeEntry();
 				}
 				zos.close();
-				log.info("------------ Bug #30924 - in generateAgreementFile : zipFile.getPath() After = "+zipFile.getPath());
-				log.info("------------ Bug #30924 - in generateAgreementFile :  zipFile.getName() After = "+ zipFile.getName());
 				agreementZipFilePath = zipFile.getPath();
 				agreementZipFileName = zipFile.getName();
 			}
@@ -1794,13 +1933,15 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 *         false, if approver setting tab menu is not required
 	 */
 	public boolean isApproverSetting() {
+		//#28715
 		if (isContractAdmin() && (getManagedBean().getTaskName() == null
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_AC_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_DRAFT_AGREEMENT_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FINALIST_AGREEMENT_HT_NAME))) {
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_AGREEMENT_HT_NAME)
+//				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)
+//				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FINALIST_AGREEMENT_HT_NAME)
+				)) {
 			return true;
 		} else {
 			return false;
@@ -2628,4 +2769,103 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 		commonDownloadUtil(filePath.toString(), ContractConst.DOCNAME_AGREEMENT_GUIDELINE);
 	}
+	
+	//#26686 - start
+	
+	public void setContractSignerChanges() {
+		CtContractAmount ctContractAmt = null;
+		if(getManagedBean().getContractVer().getCtContractAmounts() != null && getManagedBean().getContractVer().getCtContractAmounts().size() >= 2){
+			List<CtContractAmount> listContractAmounts = getManagedBean().getContractVer().getCtContractAmounts();
+			sortContractAmount(listContractAmounts);
+			ctContractAmt = listContractAmounts.get(listContractAmounts.size() - 2);
+		}else{
+			ctContractAmt = getManagedBean().getContractVer().getCtContractAmounts().get(0);
+		}
+		if(ctContractAmt.getGstAmount()== null){
+			ctContractAmt.setGstAmount(BigDecimal.ZERO);
+		}
+		if(ctContractAmt.getStaxAmount()== null){
+			ctContractAmt.setStaxAmount(BigDecimal.ZERO);
+		}
+
+		// Determine the type of changes
+		if (getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount().compareTo(BigDecimal.ZERO) > 0) {
+			contractAmtChange = new String(ContractConst.ADD_AMOUNT);
+		} else if (getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount().compareTo(BigDecimal.ZERO) < 0) {
+			contractAmtChange = new String(ContractConst.DEDUCT_AMOUNT);
+		} else {
+			contractAmtChange = new String(ContractConst.NO_CHANGE_AMOUNT);
+		} 
+
+		if (getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().compareTo(ctContractAmt.getGstAmount()) > 0) {
+			gstAmtChange = new String(ContractConst.ADD_AMOUNT);
+		} else if (getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().compareTo(ctContractAmt.getGstAmount()) < 0) {
+			gstAmtChange = new String(ContractConst.DEDUCT_AMOUNT);
+		} else {
+			gstAmtChange = new String(ContractConst.NO_CHANGE_AMOUNT);
+		} 
+
+		if (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount().compareTo(ctContractAmt.getStaxAmount()) > 0) {
+			sTaxAmtChange = new String(ContractConst.ADD_AMOUNT);
+		} else if (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount().compareTo(ctContractAmt.getStaxAmount()) < 0) {
+			sTaxAmtChange = new String(ContractConst.DEDUCT_AMOUNT);
+		} else {
+			sTaxAmtChange = new String(ContractConst.NO_CHANGE_AMOUNT);
+		} 		
+	}
+	
+	public BigDecimal setLimitContractSigner() {
+		// Calculation of new Contract Signer limit bases on the changes
+		CtContractAmount ctContractAmount = null;
+		BigDecimal result = BigDecimal.ZERO;
+		BigDecimal newAdditionAmt = BigDecimal.ZERO;
+		BigDecimal newAdditionGst = BigDecimal.ZERO;
+		BigDecimal newAdditionSst = BigDecimal.ZERO;
+		BigDecimal additionGst = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount();
+		BigDecimal additionSst = getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount();
+		BigDecimal additionContract = getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount();
+		
+		if(getManagedBean().getContractVer().getCtContractAmounts() != null && getManagedBean().getContractVer().getCtContractAmounts().size() >= 2){
+			List<CtContractAmount> listContractAmounts = getManagedBean().getContractVer().getCtContractAmounts();
+			sortContractAmount(listContractAmounts);
+			ctContractAmount = listContractAmounts.get(listContractAmounts.size() - 2);
+		}else{
+			ctContractAmount = getManagedBean().getContractVer().getCtContractAmounts().get(0);
+		}
+
+		if (contractAmtChange.equals(ContractConst.ADD_AMOUNT)) {
+			newAdditionAmt = additionContract;
+
+		}else if(contractAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+		
+			newAdditionAmt = ctContractAmount.getContractAmount().add(additionContract);
+		}
+		
+		if (gstAmtChange.equals(ContractConst.ADD_AMOUNT)) {
+			newAdditionGst = additionGst.subtract(ctContractAmount.getGstAmount());
+		}else if(gstAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+			newAdditionGst = additionGst;
+		}
+		
+		if (sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)) {
+			newAdditionSst = additionSst.subtract(ctContractAmount.getStaxAmount());
+		}else if(sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+			newAdditionSst = additionSst;
+		}
+
+		// Addition in contract and tax
+		return result = newAdditionAmt.add(newAdditionGst.add(newAdditionSst));
+			
+	}
+
+	public void sortContractAmount (List<CtContractAmount> list){
+		if(list!=null){
+			Collections.sort(list, new Comparator<CtContractAmount>() {	
+				public int compare(CtContractAmount l1, CtContractAmount l2) {
+					return l1.getExpDate().compareTo(l2.getExpDate());
+				}
+			});
+		}
+	}
+	//#26686 - end
 }

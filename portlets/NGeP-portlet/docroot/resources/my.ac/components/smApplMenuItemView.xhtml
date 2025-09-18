@@ -1,0 +1,27 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="suppEdit" default="false" />
+		<cc:attribute name="bean" required="true"/>
+		<cc:attribute name="section" required="true"/>
+		<cc:attribute name="tabNo" required="true"/>
+		<cc:attribute name="label" required="true"/>
+	</cc:interface>
+
+	<cc:implementation>
+		<p:commandLink actionListener="#{cc.attrs.bean.setTabValue(cc.attrs.tabNo, cc.attrs.section)}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update=":form">
+			<h:outputText value="#{cc.attrs.label}" style="vertical-align:top !important;"/>&#160;&#160;
+			<p:graphicImage value="/css/images/design/ico-uneditable.png" rendered="#{cc.attrs.suppEdit}" 
+				style="vertical-align:top !important;" />&#160;
+			<h:outputText value="S" rendered="#{cc.attrs.suppEdit}" 
+				title="#{lbl['tt.sm.edit.by.supp']}" style="color:red !important;"/>
+		</p:commandLink>
+	</cc:implementation>
+
+</ui:component>

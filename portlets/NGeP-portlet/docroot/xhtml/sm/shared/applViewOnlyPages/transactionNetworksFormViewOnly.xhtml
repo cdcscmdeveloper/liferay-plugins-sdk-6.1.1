@@ -14,27 +14,47 @@
 					<td><p:selectBooleanCheckbox disabled="true"
 							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withFederal}" /></td>
 					<td style="valign:middle; float:left;"><h:outputText
-							value="#{lbl['lbl.sm.busNtw.fdrGov']}" /></td>
+							value="#{lbl['lbl.sm.busNtw.fdrGov']}" />
+						<ac:smCheckBoxChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.withFederal}" 
+							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withFederal}" /></td>
 
 					<td><p:selectBooleanCheckbox disabled="true" 
 							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withState}" /></td>
 					<td style="valign:middle; float:left;"><h:outputText
-							value="#{lbl['lbl.sm.busNtw.stateGov']}" /></td>
+							value="#{lbl['lbl.sm.busNtw.stateGov']}" />
+						<ac:smCheckBoxChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.withState}" 
+							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withState}" /></td>
 
 					<td><p:selectBooleanCheckbox disabled="true"
 							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withStatutory}" /></td>
 					<td style="valign:middle; float:left;"><h:outputText
-							value="#{lbl['lbl.sm.busNtw.statBody']}" /></td>
+							value="#{lbl['lbl.sm.busNtw.statBody']}" />
+						<ac:smCheckBoxChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.withStatutory}" 
+							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withStatutory}" /></td>
 
 					<td><p:selectBooleanCheckbox disabled="true"
 							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withGlc}" /></td>
 					<td style="valign:middle; float:left;"><h:outputText
-							value="#{lbl['lbl.sm.busNtw.glc']}" /></td>
+							value="#{lbl['lbl.sm.busNtw.glc']}" />
+						<ac:smCheckBoxChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.withGlc}" 
+							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withGlc}" /></td>
 
 					<td><p:selectBooleanCheckbox disabled="true"
 							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withOthers}" /></td>
 					<td style="valign:middle; float:left;"><h:outputText
-							value="#{lbl['lbl.sm.busNtw.others']}" /></td>
+							value="#{lbl['lbl.sm.busNtw.others']}" />
+						<ac:smCheckBoxChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.withOthers}" 
+							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withOthers}" /></td>
 				</tr>
 				
 			</table>

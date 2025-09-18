@@ -16,13 +16,34 @@
 	text-align: left;
 	position: running(header);
 }
-
+## #25025 -start
 .footer {
-	display: block;
-	text-align: left;
-	position: running(footer);
-}
-
+		   position: fixed;
+		   left: 0;
+		   bottom: 0;
+		   text-align: left;
+		}
+		
+		.standard{
+			font-family:Arial;
+			font-size:11px;
+			font-weight:normal;
+			font-style:normal;
+			text-decoration:none;
+			color:#333333;
+		}
+		
+		.redText{
+			text-align:justify;
+			font-family:Arial;
+			font-size:12px;
+			font-weight:normal;
+			font-style:normal;
+			text-decoration:none;
+			color:red;
+		}
+		
+## #25025 - end
 p {text-align: justify;}
 
 .text_family {
@@ -34,23 +55,25 @@ p {text-align: justify;}
 }
 
 .title-text {
-	font-family: Albertus Medium;
+	font-family: Arial;
 	font-weight: normal;
 	font-size: 15px;
 }
 
+## #26770 -start
 .text_family_header {
-	font-weight: Arial;
-	font-size: 18px;
+	font-family: Arial;
+	font-size: 14px;
 	font-weight: bold;
 }
+## #26770 -end
 </style>
 </head>
 <body>
 
-	<div class='header'>
-		<span class='title-text'>No.Surat Setuju Terima :$loaNo</span>
-	</div>
+	## #25025 #528 -start
+		<span class='title-text'>No. Surat Setuju Terima : $loaNo</span>
+	## #25025 #528 -stop
 	<br />
 	<br />
 	<br />
@@ -64,87 +87,114 @@ p {text-align: justify;}
 		</tr>
 		<tr>
 			<td colspan="2"><p>
-					<span class="text_family"> Dengan ini disahkan bahawa yang
+			## #25025 #505 -start
+				<span class="text_family"> Dengan ini disahkan bahawa yang
 						bertandatangan di bawah ini mengakui penerimaan Surat ini dan
-						lampiran yang berkaitan yang rujukannya ialah $fileNo bertarikh
-						$govtSignDate dan bersetuju dengan terma dan syarat yang
+						lampiran yang berkaitan yang rujukannya ialah <span style="border-bottom: 1px solid;">$fileNo</span> bertarikh
+						<span style="border-bottom: 1px solid;">$govtSignDate</span> dan bersetuju dengan terma dan syarat yang
 						terkandung dalam Surat ini tanpa syarat yang mana salinan kepada
 						Surat ini telah pun disimpan, dan selanjutnya disahkan bahawa
 						tiada apa-apa terma, syarat atau stipulasi tambahan kepada yang
-						terkandung dalam dokumen *sebut harga/tender dan Surat ini telah
+						terkandung dalam dokumen $headerTitle.toLowerCase() dan Surat ini telah
 						dikenakan. </span>
 				</p></td>
+			## #25025 #505 -stop
 		</tr>
-	</table>
+		 
 
-	<table align="left" width="50%">
-		<tr>
-			<td colspan="3"><br />__________________________________</td>
+	 <tr class="text_family">
+				<tr>
+					<td colspan="3" style="width:49%" ><br />__________________________________</td>
+					<td style="width: 1%"> </td>
+					<td colspan="3" style="width:50%"><br />__________________________________</td>
 
-		</tr>
-		<tr>
-			<td style ="width:100px">Nama Penuh</td>
-			<td>:</td>
-			<td style="white-space: normal;">$supplierSignerUser</td>
-		</tr>
-		<tr>
-			<td>No. Kad Pengenalan</td>
-			<td>:</td>
-			<td>$supplierSignerIcNo</td>
-		</tr>
-		<tr valign="top">
-			<td>Alamat</td>
-			<td>:</td>
-			<td style="white-space: normal;">$supplierSignerAddress</td>
-		</tr>
-		<tr>
-			<td>Tarikh</td>
-			<td>:</td>
-			<td>$supplierSignDate</td>
-		</tr>
-		<tr>
+				</tr>
+				<tr>
+					<td valign="top" style="width:19%">Nama Penuh</td>
+					<td valign="top" style="width:1%" >:</td>
+					<td valign="top" style="white-space: normal;width:30%">$supplierSignerUser</td>
+					<td valign="top" style="width: 1%"> </td>
+					##26770 - start
+					## #25025 #505 -start
+					<td valign="top" style ="width:19%">Nama Penuh Saksi</td>
+					## #25025 #505 -stop
+					##26770 - end	
+					<td valign="top" style="width:1%">:</td>
+					<td valign="top" style="white-space: normal; width:30%">$supplierWitnessUser</td>
+				</tr>
+				<tr>
+					<td valign="top">No. Kad Pengenalan</td>
+					<td valign="top">:</td>
+					<td valign="top">$supplierSignerIcNo</td>
+					<td style="width: 1%"> </td>
+					<td valign="top">No. Kad Pengenalan</td>
+					<td valign="top">:</td>
+					<td valign="top">$supplierWitnessIcNo</td>
+				</tr>
+				<tr>
+					<td valign="top">Alamat</td>
+					<td valign="top">:</td>
+					<td valign="top" style="white-space: normal;">$supplierSignerAddress</td>
+					<td valign="top" style="width: 1%"> </td>
+					<td valign="top">Alamat</td>
+					<td valign="top">:</td>
+					<td valign="top" style="white-space: normal;">$!supplierWitnessAddress</td>
+				</tr>
+				<tr>
+					<td>Tarikh</td>
+					<td>:</td>
+					<td>$supplierSignDate</td>
+					<td style="width: 1%"> </td>
+					<td>Tarikh</td>
+						 
+																	 
+					  
+	   
+		 
+
+								  
+	  
+																
+	   
+	  
+												 
+					<td>:</td>
+					<td>$supplierSignDate</td>
+
+				</tr>
+	  
+							  
+			 
+								
+		
+	</tr>
+	<tr class="text_family">
+			## #25025 - start
 			<td colspan="3"><br />
-			<br /> Meterai atau Cop Syarikat <br /> *<i>potong mana yang tidak
+																 
+			
+			<br /> Meterai atau Cap Syarikat <br /> <br/> *<i>potong mana yang tidak
 				berkenaan</i></td>
-		</tr>
-	</table>
+				## #25025 - end
+			 
+							 
+	</tr>
 
-	<table align="right" width="50%">
-		<tr>
-			<td colspan="3"><br />__________________________________</td>
-		</tr>
-		<tr>
-			<td style ="width:100px">Nama Penuh Saksi</td>
-			<td>:</td>
-			<td style="white-space: normal;">$supplierWitnessUser</td>
-
-		</tr>
-		<tr>
-			<td>No. Kad Pengenalan</td>
-			<td>:</td>
-			<td>$supplierWitnessIcNo</td>
-
-		</tr>
-		<tr valign="top">
-			<td>Alamat</td>
-			<td>:</td>
-			<td style="white-space: normal;">$!supplierWitnessAddress</td>
-
-		</tr>
-		<tr>
-			<td>Tarikh</td>
-			<td>:</td>
-			<td>$supplierSignDate</td>
-		</tr>
-
-	</table>
-
-	<div class='footer'>
-		<span style='font-size: 11px; font-family: Times New Roman;'>Tandatangan
-			& Cop (Kerajaan) :__________________<br /> Tandatangan & Cop
-			(Syarikat ) : ___________________
-		</span>
-	</div>
+</table>
+	
+##25025 & #26770 - start
+<section class="footer">
+	<span class="standard">
+	Tandatangan & Cap (Kerajaan) : .......................
+	<br/><br/>
+	Tandatangan & Cap (Syarikat) : .......................<br/>
+	</span>
+	<span class="redText">
+	Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
+	Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
+	</span>
+</section>
+##25025 & #26770 - end
 
 </body>
 </html>

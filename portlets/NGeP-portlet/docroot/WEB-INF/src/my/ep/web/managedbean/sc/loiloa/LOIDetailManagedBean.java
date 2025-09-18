@@ -11,6 +11,7 @@
 package my.ep.web.managedbean.sc.loiloa;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,7 @@ import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.primefaces.model.MenuModel;
 
 // TODO: Auto-generated Javadoc
@@ -403,6 +405,12 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	// #11134 -start-
 	private List<ScLoiRemark> supplierRemarks;
 	// #11134 -end
+	
+	// #29007 Start Vinod
+	private String loiSupplierProposalspec;
+	private boolean renderInstruction = true;
+
+	// #29007 End Vinod
 
     /**
      * Gets the spki backing bean.
@@ -1753,6 +1761,19 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * @param selectedRecommendList the selectedRecommendList to set
 	 */
 	public void setSelectedRecommendList(List<ScQtRecommend> selectedRecommendList) {
+		// #33267, #6906 - Start.
+		if (CollectionUtils.isNotEmpty(selectedRecommendList)) {
+			Iterator<ScQtRecommend> iterator = selectedRecommendList.iterator();
+
+			while (iterator.hasNext()) {
+				ScQtRecommend scQtRecommend = iterator.next();
+
+				if (null != scQtRecommend && CollectionUtils.isEmpty(scQtRecommend.getAwardSupplierList())) {
+					iterator.remove();
+				}
+			}
+		}
+		// #33267, #6906 - End.
 		this.selectedRecommendList = selectedRecommendList;
 	}
 
@@ -2317,5 +2338,23 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.supplierRemarks = supplierRemarks;
 	}
 	// #11134 -end-
+	
+	// #29007 Start Vinod
+	public String getLoiSupplierProposalspec() {
+		return loiSupplierProposalspec;
+	}
+
+	public void setLoiSupplierProposalspec(String loiSupplierProposalspec) {
+		this.loiSupplierProposalspec = loiSupplierProposalspec;
+	}
+
+	public boolean isRenderInstruction() {
+		return renderInstruction;
+	}
+
+	public void setRenderInstruction(boolean renderInstruction) {
+		this.renderInstruction = renderInstruction;
+	}
+	// #29007 End Vinod
 	
 }

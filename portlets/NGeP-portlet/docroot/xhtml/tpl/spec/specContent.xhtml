@@ -220,11 +220,13 @@
 						</div>
 						
 						<div class="ppRightBtn">
+						  <!-- 34148 -start- -->
 							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 								action="#{templateSpecBackingBean.zoneEstCostOkAction(templateSpecBean)}"
 								partialSubmit="true"
 								process="@this, zoneEstimationPnl"
-								update="zoneEstimationPnl, @(.calcEstAmount), @(.indicativeBtn)"> <!--#25039#67 add indicativeBtn -->
+								update="zoneEstimationPnl, @(.calcEstAmount)"> <!--#25039#67 add indicativeBtn -->
+								<!-- 34148 -end- -->
 								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 

@@ -13,8 +13,9 @@
 			<td width="35%"><ac:lov id="pmCompanyName" readonly="true"
 					lovId="PM_ORG_PROFILE_WITH_COMPANY_REPORT" size="50" update="@form"
 					headerText="#{lbl['lbl.rpt.companyName']}"
+					conditionField="#{pmReportsBackingBean.constructConditionFieldsSupplierList()}"
 					value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
-					saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" /></td>
+					saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" /></td> <!-- #29991 add conditionField -->
 			<td width="15%"></td>
 			<td width="35%"></td>
 		</tr>

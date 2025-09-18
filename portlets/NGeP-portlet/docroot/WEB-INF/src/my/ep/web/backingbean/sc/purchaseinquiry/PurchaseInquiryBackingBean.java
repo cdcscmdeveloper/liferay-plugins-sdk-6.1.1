@@ -5,7 +5,6 @@ package my.ep.web.backingbean.sc.purchaseinquiry;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -37,7 +36,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -86,7 +84,6 @@ import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -1844,6 +1841,18 @@ public class PurchaseInquiryBackingBean extends
 	 * @return the textBeforeSign
 	 */
 	public String getTextBeforeSign() {
+		// #36466 -start-
+		StringBuilder sb = new StringBuilder();
+
+		if (getManagedBean().getScPrInquiry() != null) {
+			sb.append(getManagedBean().getScPrInquiry().getPrInquiryNo());
+		}
+
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+
+		textBeforeSign = sb.toString();
+		// #36466 -end-
+
 		return textBeforeSign;
 	}
 
@@ -1924,4 +1933,27 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 	// End - #26129
+	
+	// #25790 - start
+	/**
+	 * Retrieve purchase inquiry.
+	 * 
+	 * @param purchaseInqId
+	 *            the purchase Inquiry Id
+	 * @return ScPrInquiry
+	 */
+	public ScPrInquiry retrievePurchaseInquiry(long purchaseInqId) {
+		IPrInquirySO prInquirySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IPrInquirySO.class);
+		ScPrInquiry prInquiry;
+		// Purchase Inquiry
+		PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
+		prInquiryReqDTO.setPrInquiryId(purchaseInqId);
+		prInquiryReqDTO.setFetchSubEntity(true);
+		PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
+		prInquiry = prInquiryResDTO.getPrInquiryDetail();
+		getManagedBean().setTrackingDairyView(true);
+		return prInquiry;
+	}
+	// #25790 - end
 }

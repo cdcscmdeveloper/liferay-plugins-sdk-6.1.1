@@ -15,7 +15,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.bond.no.days']}" styleClass="required" />
 			<p:selectOneMenu id="bondSubmissionPeriod" style="width:200px;"
 				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondSubmissionPeriod}"
-				disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}">
+				disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails or ctBackingBean.managedBean.viewSCL}"> <!-- 15851 -->
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="14" itemValue="14"></f:selectItem>
 					<f:selectItem itemLabel="30" itemValue="30"></f:selectItem>
@@ -55,11 +55,18 @@
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />		
 			</p:inputText>
 			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" />
+			<h:panelGrid columns="4">
 			<p:inputText disabled="true" style="width:200px;" styleClass="ppRightBtn"
 			    value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.valueChange) 
 			    	? amendmentBackingBean.newOverallContractAmount() : lbl['lbl.txt.na']}"  >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			
 			</p:inputText>
+			<p:spacer width="2"/>
+			    <p:graphicImage id="iconToolTipAmts" value="/css/images/design/tooltips.png" /> 
+				  	<p:tooltip id="amtsTooltipSource" for="iconToolTipAmts">
+						<h:outputText id="amtsLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.new.overall.contract.amt']}" />
+					</p:tooltip>
+			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.pb.percentage']}" />
 			<p:inputText style="width:200px;" disabled="true" styleClass="ppRightBtn"
 				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondPercentage}">

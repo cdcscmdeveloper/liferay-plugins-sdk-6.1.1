@@ -16,11 +16,35 @@
 							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.equiOwner']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.equityOwner}" /></td></tr>
 							<c:if test="#{viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT and 
 										viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT}">
-								<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.dir']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.director}" /></td></tr>
-								<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.hghMngmt']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.higherManagement}" /></td></tr>
+								<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.dir']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.director}" />
+										<!-- #32008 -->
+										<ac:smCheckBoxChangeAlertView 
+											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+												and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+											oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.director}" 
+											currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.director}" /></td></tr>
+								<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.hghMngmt']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.higherManagement}" />
+										<!-- #32008 -->
+										<ac:smCheckBoxChangeAlertView 
+											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+												and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+											oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.higherManagement}" 
+											currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.higherManagement}" /></td></tr>
 							</c:if>
-							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.mngmt']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.management}" /></td></tr>
-							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.stf']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.clerical}" /></td></tr>
+							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.mngmt']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.management}" />
+									<!-- #32008 -->
+									<ac:smCheckBoxChangeAlertView 
+										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+											and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+										oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.management}" 
+										currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.management}" /></td></tr>
+							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.stf']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.clerical}" />
+									<!-- #32008 -->
+									<ac:smCheckBoxChangeAlertView 
+										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+											and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+										oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.clerical}" 
+										currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.clerical}" /></td></tr>
 						</table>
 					</td>
 				</tr>
@@ -35,13 +59,49 @@
 							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.equiOwner']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.equityOwner}" /></td></tr>
 							<c:if test="#{viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT and 
 									viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT}">
-								<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.dir']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.director}" /></td></tr>
-								<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.hghMngmt']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.higherManagement}" /></td></tr>
+								<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.dir']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.director}" />
+										<!-- #32008 -->
+										<ac:smCheckBoxChangeAlertView 
+											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+												and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+											oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.director}" 
+											currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.director}" /></td></tr>
+								<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.hghMngmt']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.higherManagement}" />
+										<!-- #32008 -->
+										<ac:smCheckBoxChangeAlertView 
+											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+												and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+											oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.higherManagement}" 
+											currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.higherManagement}" /></td></tr>
 							</c:if>
-							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.mngmt']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.management}" /></td></tr>
-							<tr><td><p:outputLabel value="#{lbl['lbl.sm.professional']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.prof}" /></td></tr>
-							<tr><td><p:outputLabel value="#{lbl['lbl.sm.professional.semi']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.semiProf}" /></td></tr>
-							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.composition.clrStf']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.clerical}" /></td></tr>
+							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.mngmt']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.management}" />
+									<!-- #32008 -->
+									<ac:smCheckBoxChangeAlertView 
+										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+											and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+										oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.management}" 
+										currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.management}" /></td></tr>
+							<tr><td><p:outputLabel value="#{lbl['lbl.sm.professional']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.prof}" />
+									<!-- #32008 -->
+									<ac:smCheckBoxChangeAlertView 
+										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+											and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+										oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.prof}" 
+										currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.prof}" /></td></tr>
+							<tr><td><p:outputLabel value="#{lbl['lbl.sm.professional.semi']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.semiProf}" />
+									<!-- #32008 -->
+									<ac:smCheckBoxChangeAlertView 
+										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+											and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+										oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.semiProf}" 
+										currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.semiProf}" /></td></tr>
+							<tr><td><p:outputLabel value="#{lbl['lbl.sm.person.composition.clrStf']}" styleClass="outputLabel-view" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.clerical}" />
+									<!-- #32008 -->
+									<ac:smCheckBoxChangeAlertView 
+										isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+											and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+										oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.clerical}" 
+										currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.clerical}" /></td></tr>
 						</table>
 					</td>
 				</tr>
