@@ -4644,9 +4644,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 *            The list of bonds to clone.
 	 */
 	private void cloneAndAddBonds(CtContractAmount parent, List<CtPerformanceBond> bondsToClone) {
-		for (CtPerformanceBond bond : bondsToClone) {
-			parent.getCtPerformanceBonds().add(cloneBond(bond, parent));
-		}
+	    if (parent == null || bondsToClone == null) {
+	        return; // Avoid NullPointerException
+	    }
+
+	    List<CtPerformanceBond> targetBonds = parent.getCtPerformanceBonds();
+	    boolean isBrandNew = parent.isBrandNew();
+
+	    for (CtPerformanceBond bond : bondsToClone) {
+	        if (bond != null) {
+	            targetBonds.add(isBrandNew ? cloneBond(bond, parent) : bond);
+	        }
+	    }
 	}
 
 	/**
