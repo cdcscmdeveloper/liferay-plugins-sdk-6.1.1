@@ -329,9 +329,7 @@ public class RaceBackingBean extends
 			returnUrl = NAV_TO_MAINTAIN;
 		}
 		//#34445 End
-		catch (Exception e) {
-			throw e;
-		} finally {
+		finally {
 			raceSO = null;
 		}
 		return returnUrl;

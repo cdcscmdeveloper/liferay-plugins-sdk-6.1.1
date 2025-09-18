@@ -35,7 +35,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
@@ -354,9 +353,7 @@ public class SalutationBackingBean extends
 			returnUrl = NAV_TO_MAINTAIN;
 		}
 		//#34445 End
-		catch (Exception e) {
-			throw e;
-		} finally {
+		finally {
 			salutationSO = null;
 		}
 		return returnUrl;

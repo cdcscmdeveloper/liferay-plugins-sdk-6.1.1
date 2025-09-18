@@ -249,8 +249,9 @@ public class CriteriaBackingBean extends
 		log.info("saveSupplierCriteriaDtls - Start");
 		String returnPage = null;
 		
-		try { // #34445
-			
+		//#34445 Start
+		try {
+
 			if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
 				generateCriteriaCode();
 
@@ -266,8 +267,7 @@ public class CriteriaBackingBean extends
 			} else {
 				returnPage = updateCriteria(this.getManagedBean().getSelectedCriteria());
 			}
-			
-		// #34445 Start
+
 		} catch (EpException e) {
 			handleException(e);
 			return NAV_TO_MAINTAIN;
