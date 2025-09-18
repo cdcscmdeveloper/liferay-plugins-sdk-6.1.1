@@ -19378,13 +19378,12 @@ private void retriveCommitteeRemarksList(){
 	private void validateUserScoreForTemplate(TplSpecAnswer tplSpecAnswer, boolean isTechSpec) {
 		TplSpecQuestion question = tplSpecAnswer.getTplSpecQuestion();
 		String questionType = question.getQuestionType();
-		boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
 		boolean isFinSpec = QTConstants.FINANCIAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
 				&& questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM);
 		boolean isUserScoreNull = question.getScoreTypeCode() != null
 				&& ParameterConst.SCORE_TYPE_USER.equals(question.getScoreTypeCode().getParameterCode())
 				&& tplSpecAnswer.getUserScore() == null;
-		if ((isFinSpec || (!isNotOffered && isTechSpec)) && isUserScoreNull) {
+		if (isFinSpec && isUserScoreNull) {
 			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 					QTConstants.LBL_TPL_SPEC_CONTENT_USER_SCORE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()) });
@@ -19393,20 +19392,14 @@ private void retriveCommitteeRemarksList(){
 
 	// #29187 End Vinod
 	// #29187 Start Vinod
-	private void validateMandatorySpecAndRemark(TplSpecAnswer tplSpecAnswer, boolean isTechSpec, boolean isComplianceNull) {
-		if(isTechSpec){
-			boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
-			if (isComplianceNull && !isNotOffered) {
-				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-						QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()) });
-			}
+	private void validateMandatorySpecAndRemark(TplSpecAnswer tplSpecAnswer, boolean isTechSpec,
+			boolean isComplianceNull) {
+		if (isTechSpec) {
 			boolean isCompliance = tplSpecAnswer.getCompliance() != null
 					&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
 			String remark = tplSpecAnswer.getUserRemark();
 
-			if (isCompliance
-					&& StringUtils.isEmpty(remark)) {
+			if (isCompliance && StringUtils.isEmpty(remark)) {
 				throw new EpException(MessageConst.ERROR_775180);
 			}
 		}
