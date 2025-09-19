@@ -12078,6 +12078,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			reqDTO.setScQt(getManagedBean().getQt());
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 			// 1873 - start - note 97
 			SpecificationResDTO resDTO = new SpecificationResDTO();
@@ -12845,6 +12846,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			// code if alredy checklist exist need to remove existing finalcialspec
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 			SpecificationResDTO resDTO = new SpecificationResDTO();
 			try {
