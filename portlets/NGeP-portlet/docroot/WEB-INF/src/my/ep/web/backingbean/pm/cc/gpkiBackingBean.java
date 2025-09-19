@@ -196,7 +196,13 @@ public class gpkiBackingBean implements Serializable {
 	 */
 	public void showError() {
 		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		log.info("--35488--err- "+map.get("response"));
+		PmUser user = getPmUserFromLoginId();
+		String icNo="";
+		if(user != null){
+			icNo = user.getIdentificationNo().trim();
+		}
+		//log.info("--35488--err- "+map.get("response"));
+		log.info("GPKI Sign Error: Response:"+map.get("response")+" : IC No:"+icNo);
 		String statusMsg = map.get("statusMsg");
 		String extMsg = map.get("extMsg");
 		String field = map.get("field");
@@ -210,7 +216,7 @@ public class gpkiBackingBean implements Serializable {
 		if(field != null){
 			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
 		}
-		log.info("#35488 MyGPKI: "+statusMsg);
+		log.info("GPKI TB SIGN ERROR: "+statusMsg+" : IC User:"+icNo);
 		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
 
