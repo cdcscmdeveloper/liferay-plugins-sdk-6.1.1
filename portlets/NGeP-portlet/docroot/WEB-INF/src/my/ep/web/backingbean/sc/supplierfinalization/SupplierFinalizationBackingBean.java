@@ -11167,11 +11167,18 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
-		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+
+		if (isZonal && CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
 				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+
+		if (!isZonal && sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// #28777 & #29729 - End
@@ -11188,11 +11195,18 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
-		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+
+		if (isZonal && CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
 				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+
+		if (!isZonal && sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// #28777 & #29729 - End
