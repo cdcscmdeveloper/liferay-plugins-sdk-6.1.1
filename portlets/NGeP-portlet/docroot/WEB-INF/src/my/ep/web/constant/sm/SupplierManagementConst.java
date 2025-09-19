@@ -767,8 +767,6 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_DISCIPLINARY_ACTION_INFO = "disciplinaryActionInfoTab";
 	// #34031
 	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
-	// #9299
-	public static final String SM_COMP_EXP_FILE_PATH = "/SM/COMPEXP/";
 	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
