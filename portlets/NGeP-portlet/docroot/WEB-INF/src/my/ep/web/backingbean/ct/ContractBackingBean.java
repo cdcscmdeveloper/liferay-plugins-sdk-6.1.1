@@ -4606,7 +4606,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	                      ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
 	    BigDecimal bondAmt = getManagedBean().getTotalBondAmt();
-	    if (bondAmt.compareTo(BigDecimal.ZERO) == 0) {
+	    if (bondAmt == null || bondAmt.compareTo(BigDecimal.ZERO) == 0) {
 	        return na;
 	    }
 
