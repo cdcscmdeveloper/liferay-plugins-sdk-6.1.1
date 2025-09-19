@@ -6888,19 +6888,19 @@ public class LOIDetailBackingBean extends
 	public Boolean checkInstructionSupplierBranchDeleted(Long qtId) {
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();	
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
-		
-		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
+
+		if (isZonal && CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
 			return true;
 		}
-		
-		if(!isZonal){
-			return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+
+		if (!isZonal && sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)) {
+			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -6921,15 +6921,16 @@ public class LOIDetailBackingBean extends
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 
-		if (CollectionUtils.isNotEmpty(zoneDetails)
+		if (isZonal
+				&& CollectionUtils.isNotEmpty(zoneDetails)
 				&& zoneActiveIndex != -1
 				&& sourcingIntegrationSO.flagZonesDisqualifiedSupplierBranchDeleted(qtId, supplierId,
-						zoneDetails.get(zoneActiveIndex).getSpecZoneId()) && isZonal) {
+						zoneDetails.get(zoneActiveIndex).getSpecZoneId())) {
 			return true;
 		}
 
-		if (!isZonal) {
-			sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(qtId, supplierId);
+		if (!isZonal && sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(qtId, supplierId)) {
+			return true;
 		}
 
 		return false;
@@ -6951,15 +6952,15 @@ public class LOIDetailBackingBean extends
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 		
-		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
+		if (isZonal && CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
 			return true;
 		}
-		
-		if(!isZonal){
-			return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+
+		if (!isZonal && sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId)) {
+			return true;
 		}
-		
+
 		return false;
 	}
 

@@ -1087,7 +1087,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			resDTO = biddingSO.retrieveLastBidPricesByItem(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
-				
+		
 				// #28777 & #29729 - Start
 				if (isDisqualified) {
 					processSelectBiddingItem(resDTO.getBidPriceItemsDisqualified(), disSupplierCodes,
