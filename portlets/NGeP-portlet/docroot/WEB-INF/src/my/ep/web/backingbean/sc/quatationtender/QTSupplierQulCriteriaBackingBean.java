@@ -2129,7 +2129,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	// #29732 Start
 		@SuppressWarnings("null")
 		public void onClickHistoryIcon(String catCode, String catCodeLevel,
-				Long catCodeID,Long qtCateId) {
+				Long catCodeId,Long qtCateId) {
 			boolean processAfter = false;
 			ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 					.getInstance().getServiceObject(
@@ -2143,13 +2143,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 				for(ScQtCategory categoryCodeEdit : findQtCatCode){
 					if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()){
 						if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
-							reqDTO.setCategoryL1Id(catCodeID);
+							reqDTO.setCategoryL1Id(catCodeId);
 							resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
 						} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
-							reqDTO.setCategoryL2Id(catCodeID);
+							reqDTO.setCategoryL2Id(catCodeId);
 							resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
 						} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
-							reqDTO.setCategoryL3Id(catCodeID);
+							reqDTO.setCategoryL3Id(catCodeId);
 							resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 						}
 							processAfter = true;
