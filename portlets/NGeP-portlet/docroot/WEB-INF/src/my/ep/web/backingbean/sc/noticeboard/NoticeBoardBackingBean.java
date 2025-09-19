@@ -3593,7 +3593,7 @@ public class NoticeBoardBackingBean extends
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
 
-		List<ScQtCategory> findQtCatCode = retrieveScQtCategorytByQtCatID(qtCateId);
+		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
 		if (null != findQtCatCode && !findQtCatCode.isEmpty()) {
 			for (ScQtCategory categoryCodeEdit : findQtCatCode) {
 				if (categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()) {
@@ -3643,10 +3643,10 @@ public class NoticeBoardBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 	}
 
-	public List<ScQtCategory> retrieveScQtCategorytByQtCatID(Long qtCateId) {
+	public List<ScQtCategory> retrieveScQtCategoryByQtCatID(Long qtCateId) {
 		List<ScQtCategory> listCategoryDB = new ArrayList();
 		IQTSpecSO specSO = getSpecSO();
-		listCategoryDB = specSO.retrieveScQtCategorytByQtCatID(this.getManagedBean().getScQt().getQtId(), qtCateId);
+		listCategoryDB = specSO.retrieveScQtCategoryByQtCatID(this.getManagedBean().getScQt().getQtId(), qtCateId);
 
 		return listCategoryDB;
 	}
