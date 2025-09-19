@@ -12038,7 +12038,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 									finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 									finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
 									// Bug #38208@Syazani 12/06/2025 - line removed
-
+									
 									localCheckList.setPmStatus(scQtCheckList.getPmStatus());
 
 									updatedCheckLists.add(localCheckList);
@@ -12082,6 +12082,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			reqDTO.setScQt(getManagedBean().getQt());
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 			// 1873 - start - note 97
 			SpecificationResDTO resDTO = new SpecificationResDTO();
@@ -12765,7 +12766,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 								finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 								finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
 								// Bug #38208@Syazani 12/06/2025 - line removed
-							
+								
 								scQtCheckList.setEdited(false);
 
 								updatedCheckLists.add(finChecklist);
@@ -12849,6 +12850,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			// code if alredy checklist exist need to remove existing finalcialspec
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 			SpecificationResDTO resDTO = new SpecificationResDTO();
 			try {
@@ -12934,13 +12936,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().getQt().setSampleReq(issample); // 11104ReendorseStart728
 
 				saveSpecMaintenanceWorkFlowStatus();
-				
+
 				// 11104-Reendorse794 -start-
 				if (issample && SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 					sampleDetailsPendingTemplateSpec();
 				}
 				// 11104-Reendorse794 -end-
-				
+
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 			return null;
