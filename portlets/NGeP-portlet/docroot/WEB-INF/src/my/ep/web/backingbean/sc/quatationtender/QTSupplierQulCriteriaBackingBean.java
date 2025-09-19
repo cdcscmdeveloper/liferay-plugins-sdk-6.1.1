@@ -2237,7 +2237,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		public List<ScQtCategory> retrieveCurrentScQtCategoryCode(){
 			List<ScQtCategory> listCategoryDB = new ArrayList();
 			IQTSpecSO specSO = getSpecSO();
-			listCategoryDB = specSO.retrieveScQtCategoryByQtID(getManagedBean().getQt().getQtId());
+			listCategoryDB = specSO.retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
 			
 			return listCategoryDB;
 		}
