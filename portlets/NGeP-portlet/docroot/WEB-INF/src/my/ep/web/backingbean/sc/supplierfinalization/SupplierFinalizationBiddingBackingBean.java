@@ -946,7 +946,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 			getManagedBean().setSelectedItemBeans(selectedItemBeans);
 		}
 		
-	
 		try {
 			biddingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
