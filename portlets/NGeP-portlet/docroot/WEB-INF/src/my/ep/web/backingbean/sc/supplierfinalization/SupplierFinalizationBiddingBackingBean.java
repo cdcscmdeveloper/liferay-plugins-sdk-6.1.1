@@ -1014,6 +1014,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				resDTO = biddingSO.retrieveShortlistedSuppliersForBidding(reqDTO);
 				shortlistedSuppliers = resDTO.getShortlistedSuppliers();
 				notShortlistedSuppliers = resDTO.getNotShortlistedSuppliers(); // #28777&#29729
+				
 				if (isZonal) {
 					Map<Long,List<ScQtEvaluationResultDtl>> shortlistedSuppliersMap = null;
 					shortlistedSuppliersMap = itemShortlistedSuppliersByZone
