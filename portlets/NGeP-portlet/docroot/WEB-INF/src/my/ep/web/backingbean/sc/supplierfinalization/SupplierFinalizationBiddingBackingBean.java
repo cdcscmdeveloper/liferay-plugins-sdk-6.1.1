@@ -1079,7 +1079,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 			
 			reqDTO.setBidItemId(bidItem.getBidItemId());
 			resDTO = biddingSO.retrieveLastBidPricesByItem(reqDTO);
-			
 			if (resDTO.isSuccessful()) {
 		
 				// #28777 & #29729 - Start
