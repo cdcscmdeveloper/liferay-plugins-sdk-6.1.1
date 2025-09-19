@@ -1946,6 +1946,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean auditViewRole;
 	//#28895 - 35500 end
+	private boolean updateCatDesc; //#29732
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12412,4 +12413,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
 	}
 	//#21692 - End
+	
+	//#29732
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
+
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+	//#29732
 }
