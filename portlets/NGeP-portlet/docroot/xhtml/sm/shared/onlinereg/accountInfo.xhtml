@@ -151,7 +151,7 @@
 				<td class="tdContent">
 					<p:outputPanel id="regNoPanelId">
 					<!--  #16052019 - SSM INTEGRATION CR - Fahmi  -->
-						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="30"
+						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="20"
 							value="#{registrationBackingBean.managedBean.smSupp.regNo}" converter="toUpperCaseConverter"
 							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
 							size="40" label="#{lbl['lbl.sm.businessregno']}" >
