@@ -328,7 +328,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	    	}
 		}
 		
-		checkCatCodeWipIcon(); //#29732
+		checkCatCodeWIPIcon(); //#29732
 	}
 
 	
@@ -2171,7 +2171,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 
 		// #29732 Start - reOpen Fix
-		public String checkCatCodeWipIcon() {
+		public String checkCatCodeWIPIcon() {
 
 			String catCodeList = ""; 
 			Integer recordstatusInactive = 0;
