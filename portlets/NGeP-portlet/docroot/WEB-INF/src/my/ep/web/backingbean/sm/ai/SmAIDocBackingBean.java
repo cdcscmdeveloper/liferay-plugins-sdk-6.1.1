@@ -64,16 +64,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static String folderAI = Calendar.getInstance().get(Calendar.YEAR) + "/SM/APPLICATION/AI/";
 	private static String mentionTextStr = "mentionText";
 	private static String confidence = "confidence";
-	private static String entitiesStr = "entities";
-	private static String extractedDataStr = "extractedData";
+	private static String fieldsStr = "fields";
+	private static String resultsStr = "results";
 	private static String googleUrl = EpPropertiesUtils.getInstance().getProperty("google.doc.url");
 	private static double minConfidence = 0.95;
+	private static double minScoreFuzzyMatch = 0.8;
 	
 	private static EPFEntity epf = null;
 	private static TenancyEntity tenancy = null;
 	private List<EPFEntity.EmployeeInfo> selectedEmployees;
 	
-	private static String tempGoogleUrl = "http://192.168.62.17:5000/process-v2";
+	private static String tempGoogleUrl = "http://192.168.62.17:5000/process";
 	//172.23.114.72, 192.168.62.17 (dev), 192.168.120.238 (jenkins)"
 	
 	
@@ -118,7 +119,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		//process multiple docs
 		List<JSONArray> entities = new ArrayList<>();
 		for (SmApplDocFile doc : docs){
-			entities.add(sendDocumentOCR(docType, doc.getFilePath(), doc.getFileName()));
+			JSONArray arr = sendDocumentOCR("bank", doc.getFilePath(), doc.getFileName());
+			if (arr != null){
+				entities.add(arr);
+			}
 		}
 		
 		if ("EPF".equals(docType)){
@@ -135,13 +139,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static JSONArray sendDocumentOCR(String docType, String filepath, String filename){
 		if (filename.endsWith(".json")){
 			log.info("skip AI");
-			byte[] fileData = getFakeData(filepath + filename);
-			return getJsonEntities(fileData);
+			return getFakeData(filepath + filename);
 			
 		} else if (filename.endsWith("ai_demo.pdf")){
 			InputStream is;
 			try {
-				is = sendDocumentToExternalService(filepath, filename);
+				is = sendDocumentToExternalService(docType, filepath, filename);
 				return getJsonEntitiesFromStream(is);
 			} catch (IOException e) {
 				log.error(" ", e);
@@ -236,7 +239,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		List<JSONArray> entities = new ArrayList<>();
 		for (SmApplDocFile doc : suppDoc.getSmApplDocFiles()){
-			entities.add(sendDocumentOCR("bank", doc.getFilePath(), doc.getFileName()));
+			JSONArray arr = sendDocumentOCR("bank", doc.getFilePath(), doc.getFileName());
+			if (arr != null){
+				entities.add(arr);
+			}
 		}
 		List<BankStatementEntity> banks = processBank(entities);
 		
@@ -249,29 +255,52 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static void validateBankEntity(SmAppl appl, List<BankStatementEntity> banks){
 		String companyNameSupp = appl.getSmSupplier().getCompanyName();
 		log.info("...processBankStatement1\t..." + companyNameSupp);
-		Map<String, String> bankAccounts = new HashMap<>();
+		Map<String, String> supplierAccounts = new HashMap<>();
 		for (SmSupplierBank suppBank : appl.getSmSupplierBanks()){
-			bankAccounts.put(suppBank.getAccountNo(), suppBank.getPmFinancialOrg().getFinOrgName());
+			supplierAccounts.put(suppBank.getAccountNo(), suppBank.getPmFinancialOrg().getFinOrgName());
 		}
+		List<String> supplierBanks = new ArrayList<>(supplierAccounts.values());
+		
+		boolean hasWrongCompanyName = false;
+		StringBuilder errMsg = new StringBuilder();
 		for (BankStatementEntity bank : banks){
 			String companyNameJson = bank.accountHolderName;
 			
 			log.info("...processBankStatement\t..." + companyNameJson);
-			String bankName = bankAccounts.get(bank.accountNo);
+			String bankName = supplierAccounts.get(bank.accountNo);
 			if (bankName == null){
-				bankName = "";
+				errMsg.append("\nAccount No.: " + bank.accountNo);
+				
+				bankName = fuzzyMatchList(bank.bankName, supplierBanks);
+				if (StringUtils.isEmpty(bankName)){
+					errMsg.append("\nBank Name: " + bank.bankName);
+				}
+				
+			} else {
+				double score =  fuzzyMatchJaroWinkler(bankName, bank.bankName);
+				log.info("Score: "+score+"\tBank1: "+bankName+"\tBank2:"+bank.bankName);
+				if (score < minScoreFuzzyMatch){
+					errMsg.append("\nBank Name: " + bank.bankName);
+				}
 			}
 			log.info("account no:"+bank.accountNo);
 			log.info("match with bank:"+bankName);
-
 			if (!StringUtils.equals(companyNameJson, companyNameSupp)){
-				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-						SmCommonUtil.getMessage("lbl.sm.ai.bank.verify", new String[] { "" }));
-				FacesContext.getCurrentInstance().addMessage("ai", msg);
+				hasWrongCompanyName = true;
 			}
+			
 		}
-		
-		//check for bank name, bank account
+		if (hasWrongCompanyName){
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.ai.bank.verify", new String[] { "" }));
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
+		}
+		if (!StringUtils.isEmpty(errMsg.toString())){
+			errMsg.insert(0, "The information in your bank statement(s) does not match with" +
+					" any existing Bank Account Details in Bank Information section:");
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, errMsg.toString());
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
+		}
 	}
 	
 	/**
@@ -353,9 +382,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 
-	private static byte[] getFakeData(String filepath) {
+	private static JSONArray getFakeData(String filepath) {
 		if (!filepath.endsWith(".json")){
-			return new byte[0];
+			return null;
 		}
 		try {
 			//based on commonUploadFile()
@@ -363,35 +392,40 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/";
 			tempDir += filepath;
 			File file = new File(tempDir);
-			return Files.readAllBytes(file.toPath());
+			String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+			return parseJsonEntities(content);
 		} catch (IOException e) {
-			log.error(" Error parsing JSON", e);
+			log.error(" Error reading JSON file", e);
 		}
-		return new byte[0];
+		return null;
 	}
 
-	private static JSONArray getJsonEntities(byte[] fileData) {
-		if (fileData == null || fileData.length < 1){
+	private static JSONArray parseJsonEntities(String jsonContent) {
+		if (StringUtils.isEmpty(jsonContent)) {
 			return null;
 		}
 		try {
-			String content = new String(fileData, StandardCharsets.UTF_8);
-			JSONObject root = new JSONObject(content);
-			if (!root.has(extractedDataStr)) {
-				log.warn("  No extractedData found in JSON");
+			JSONObject root = new JSONObject(jsonContent);
+			if (!root.has("data")) {
+				log.warn("  No data found in JSON");
 				return null;
 			}
-			JSONObject extractedData = root.getJSONObject(extractedDataStr);
-			if (!extractedData.has(entitiesStr)) {
-				log.warn("  No entities found in extractedData");
+			JSONObject data = root.getJSONObject("data");
+			if (!data.has(resultsStr)) {
+				log.warn("  No results found in data");
 				return null;
 			}
-			JSONArray entities = extractedData.getJSONArray(entitiesStr);
-			if (entities.length() == 0) {
-				log.warn("  No entities found");
+			JSONObject results = data.getJSONObject(resultsStr);
+			if (!results.has(fieldsStr)) {
+				log.warn("  No fields found in results");
 				return null;
 			}
-			return entities;
+			JSONArray fields = results.getJSONArray(fieldsStr);
+			if (fields.length() == 0) {
+				log.warn("  No fields found");
+				return null;
+			}
+			return fields;
 		} catch (JSONException e) {
 			log.error(" Error parsing JSON", e);
 		}
@@ -402,37 +436,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (inputStream == null) {
 			return null;
 		}
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 			StringBuilder content = new StringBuilder();
 			String line;
 			while ((line = reader.readLine()) != null) {
 				content.append(line);
 			}
-			
-			JSONObject root = new JSONObject(content.toString());
-			if (!root.has("data")) {
-				log.warn("  No data found in JSON");
-				return null;
-			}
-			JSONObject data = root.getJSONObject("data");
-			if (!data.has(extractedDataStr)) {
-				log.warn("  No extractedData found in data");
-				return null;
-			}
-			JSONObject extractedData = data.getJSONObject(extractedDataStr);
-			if (!extractedData.has(entitiesStr)) {
-				log.warn("  No entities found in extractedData");
-				return null;
-			}
-			JSONArray entities = extractedData.getJSONArray(entitiesStr);
-			if (entities.length() == 0) {
-				log.warn("  No entities found");
-				return null;
-			}
-			return entities;
-		} catch (IOException | JSONException e) {
+			return parseJsonEntities(content.toString());
+		} catch (IOException e) {
 			log.error(" Error reading InputStream", e);
 		}
 		return null;
@@ -448,7 +459,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 
-	private static InputStream sendDocumentToExternalService(String filepath, String filename) 
+	private static InputStream sendDocumentToExternalService(String docType, String filepath, String filename) 
 			throws IOException {
 		
 		if (StringUtils.isEmpty(googleUrl)) {
@@ -478,7 +489,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		sb.append("--").append(boundary).append(crlf);
 		sb.append("Content-Disposition: form-data; name=\"documentType\"").append(crlf);
 		sb.append(crlf);
-		sb.append("bank").append(crlf);
+		sb.append(docType).append(crlf);
 		
 		sb.append("--").append(boundary).append(crlf);
 		sb.append("Content-Disposition: form-data; name=\"file\"; filename=\"")
@@ -486,7 +497,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		sb.append("Content-Type: application/pdf").append(crlf);
 		sb.append(crlf);
 		
-		OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
+		OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
 		out.write(sb.toString());
 		out.flush();
 		
@@ -505,7 +516,157 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 		throw new IOException("HTTP Error " + statusCode + ": " + conn.getResponseMessage());
 	}
+	
+	private static String fuzzyMatchList(String target, List<String> list){
+		if (StringUtils.isEmpty(target) || EntityHelper.isCollectionEmpty(list)){
+			return "";
+		}
+		double bestScore = 0;
+		String bestResult = "";
+		for (String s : list){
+			double score = fuzzyMatchJaroWinkler(target, s);
+			if (score > bestScore && score > minScoreFuzzyMatch){
+				bestScore = score;
+				bestResult = s;
+			}
+		}
+		return bestResult;
+	}
+	
 
+	/**
+	 * Fuzzy match using Levenshtein, case-insensitive. Higher score == better match. 
+	 * Jaro-Winkler is prob better for bank name matching use-case.
+	 * @deprecated fuzzyMatchJaroWinkler more accurate
+	 * @param st1
+	 * @param st2
+	 * @return score
+	 */
+	@Deprecated
+	private static double fuzzyMatch(String st1, String st2) {
+		if (StringUtils.isEmpty(st1) || StringUtils.isEmpty(st2)){
+			return 0.0;
+		}
+		String s1 = st1.toLowerCase().trim();
+		String s2 = st2.toLowerCase().trim();
+		
+		if (s1.equals(s2)){
+			return 1.0;
+		}
+		int maxLen = Math.max(s1.length(), s2.length());
+		if (maxLen == 0){
+			return 1.0;
+		}
+		int distance = StringUtils.getLevenshteinDistance(s1, s2);
+		return 1.0 - ((double) distance / maxLen);
+	}
+	
+	/**
+	 * Fuzzy match using Jaro-Winkler, better matching for "maybank" and "maybank investment banking"
+	 * @param st1
+	 * @param st2
+	 * @return
+	 */
+	private static double fuzzyMatchJaroWinkler(String st1, String st2) {
+		if (StringUtils.isEmpty(st1) || StringUtils.isEmpty(st2)){
+			return 0.0;
+		}
+		String s1 = st1.toLowerCase().trim();
+		String s2 = st2.toLowerCase().trim();
+		double jaroSim = jaroSimilarity(s1, s2);
+		if (jaroSim < 0.7) {
+			return jaroSim;
+		}
+		int prefixLength = 0;
+        int maxPrefix = Math.min(4, Math.min(s1.length(), s2.length()));
+        
+        for (int i = 0; i < maxPrefix; i++) {
+            if (s1.charAt(i) == s2.charAt(i)) {
+                prefixLength++;
+            } else {
+                break;
+            }
+        }
+        
+        return jaroSim + (0.1 * prefixLength * (1 - jaroSim));
+	}
+	
+	/**
+	 * New commons-lang.jar can just use StringUtils.getJaroWinkler
+	 * @param s1
+	 * @param s2
+	 * @return
+	 */
+    private static double jaroSimilarity(String st1, String st2) {
+        if (st1 == null || st2 == null){
+        	return 0.0;
+        }
+        if (st1.equals(st2)){
+        	return 1.0;
+        }
+        
+        String s1 = st1.toLowerCase();
+        String s2 = st2.toLowerCase();
+        
+        int len1 = s1.length();
+        int len2 = s2.length();
+        
+        if (len1 == 0 && len2 == 0){
+        	return 1.0;
+        }
+        if (len1 == 0 || len2 == 0){
+        	return 0.0;
+        }
+        
+        int matchWindow = Math.max(len1, len2) / 2 - 1;
+        if (matchWindow < 0){
+        	matchWindow = 0;
+        }
+        
+        boolean[] s1Matches = new boolean[len1];
+        boolean[] s2Matches = new boolean[len2];
+        
+        int matches = 0;
+        int transpositions = 0;
+        
+        // Find matches
+        for (int i = 0; i < len1; i++) {
+            int start = Math.max(0, i - matchWindow);
+            int end = Math.min(i + matchWindow + 1, len2);
+            
+            for (int j = start; j < end; j++) {
+                if (s2Matches[j] || s1.charAt(i) != s2.charAt(j)){
+                	continue;
+                }
+                s1Matches[i] = true;
+                s2Matches[j] = true;
+                matches++;
+                break;
+            }
+        }
+        
+        if (matches == 0){
+        	return 0.0;
+        }
+        
+        // Count transpositions
+        int k = 0;
+        for (int i = 0; i < len1; i++) {
+            if (!s1Matches[i]){
+            	continue;
+            }
+            while (!s2Matches[k]){
+            	k++;
+            }
+            if (s1.charAt(i) != s2.charAt(k)){
+            	transpositions++;
+            }
+            k++;
+        }
+        
+        return ((double) matches / len1 + (double) matches / len2 + 
+                (double) (matches - transpositions / 2) / matches) / 3.0;
+    }
 
 	private static class BankStatementEntity {
 		private String bankName;
