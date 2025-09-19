@@ -27,9 +27,12 @@ import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmCompExpCatDraft;
 import my.ep.persistence.entity.sm.SmCompExpCatMaster;
+import my.ep.persistence.entity.sm.SmCompExpCatMasterHistory;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
+import my.ep.persistence.entity.sm.SmCompExpMasterHistory;
+import my.ep.persistence.entity.sm.SmCompExpMasterHistoryDoc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -1012,24 +1015,81 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		error = validateDate(error, contractEffDate, contractExpDate);
 		error = validateList(error, sourceType, smCompExpDocList);
 
-		if (!error && !update) {
-			if (null != this.getManagedBean().getSelectedDraft().getOrgProfile()) {
-				SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-				reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
-				reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
-				reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
-				checkDuplicate(getSmCompExpSo().checkDuplicate(reqDTO));
-			} else {
-				declareSmComExp();
-			}
-		}
 		if (!error && update) {
 			updateSmComExpMaster();
 		}
 	}
 
 	private void updateSmComExpMaster() {
-		
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
+		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
+		SmCompExpMaster master = resDTO.getMaster();
+		SmCompExpMasterHistory history = new SmCompExpMasterHistory();
+
+		history.setSmSupplier(master.getSmSupplier());
+		history.setSmAppl(master.getSmSupplier().getSmAppl());
+		history.setTitle(master.getTitle());
+		history.setProcumentMode(master.getProcumentMode());
+		history.setOriAgencyName(master.getOriAgencyName());
+		history.setAgencyName(master.getAgencyName());
+		history.setOrgProfile(master.getOrgProfile());
+		history.setFileReferenceNo(master.getFileReferenceNo());
+		history.setFileExtensionNo(master.getFileExtensionNo());
+		history.setLoaNo(master.getLoaNo());
+		history.setContractValue(master.getContractValue());
+		history.setPaymentMethod(master.getPaymentMethod());
+		history.setClientType(master.getClientType());
+		history.setContractEffDate(master.getContractEffDate());
+		history.setContractExpDate(master.getContractExpDate());
+		history.setContractStatus(master.getContractStatus());
+		history.setSourceType(SmApplicationUtil.retrievePmParameterById(master.getSourceType().getParameterId()));
+
+		List<SmCompExpMasterHistoryDoc> newDocList = new ArrayList<SmCompExpMasterHistoryDoc>();
+		for (SmCompExpMasterDoc doc : this.getManagedBean().getSmCompExpDocList()) {
+			SmCompExpMasterHistoryDoc newDoc = new SmCompExpMasterHistoryDoc();
+			newDoc.setFileName(doc.getFileName());
+			newDoc.setFilePath(doc.getFilePath());
+			newDoc.setCompExpMasterHistory(history);
+			newDocList.add(newDoc);
+		}
+		history.setCompExpMasterHistoryDocs(newDocList);
+
+		List<SmCompExpCatMasterHistory> newCatList = new ArrayList<>();
+		// Expected Max Size in loop (30) based on NGEP_PDS database
+		for (SmCompExpCatMaster oldCat : master.getCompExpMasterCats()) {
+			SmCompExpCatMasterHistory newCat = new SmCompExpCatMasterHistory();
+			CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
+
+			reqDTO2.setCategoryL1Id(oldCat.getCategoryL1().getCategoryL1Id());
+			oldCat.setCategoryL1(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL1DtlById(reqDTO2).getCategoryL1());
+			newCat.setCategoryL1(oldCat.getCategoryL1());
+			newCat.setCategoryL1Name(oldCat.getCategoryL1().getCategoryName());
+
+			reqDTO2.setCategoryL2Id(oldCat.getCategoryL2().getCategoryL2Id());
+			oldCat.setCategoryL2(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL2DtlById(reqDTO2).getCategoryL2());
+			newCat.setCategoryL2(oldCat.getCategoryL2());
+			newCat.setCategoryL2Name(oldCat.getCategoryL2().getCategoryName());
+
+			reqDTO2.setCategoryL3Id(oldCat.getCategoryL3().getCategoryL3Id());
+			oldCat.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO2).getCategoryL3());
+			newCat.setCategoryL3(oldCat.getCategoryL3());
+			newCat.setCategoryL3Name(oldCat.getCategoryL3().getCategoryName());
+
+			newCat.setCompExpMasterHistory(history);
+			newCatList.add(newCat);
+		}
+		history.setCompExpCatMasterHistorys(newCatList);
+
+		SmCompExpReqDTO reqDTO3 = new SmCompExpReqDTO();
+		reqDTO3.setHistory(history);
+
+		SmCompExpResDTO resDTO1;
+		resDTO1 = getSmCompExpSo().declareDraft(reqDTO);
+		if (resDTO.isSuccessful()) {
+			deactivateDraft();
+			redirectToDraft();
+		}
 	}
 
 	/**
@@ -1037,5 +1097,18 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void onDeleteMaster() {
 		RequestContext.getCurrentInstance().execute("confirmDelMasterDialogWV.show();");
+	}
+
+	/**
+	 * Delete selected Master
+	 */
+	public void delSmCompExpMaster() {
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
+		SmCompExpResDTO resDTO;
+		resDTO = getSmCompExpSo().deleteMaster(reqDTO);
+		if (resDTO.isSuccessful()) {
+			proceedAfterTnC();
+		}
 	}
 }

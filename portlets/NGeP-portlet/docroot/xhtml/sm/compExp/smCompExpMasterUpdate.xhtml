@@ -363,5 +363,20 @@
 					onclick="confirmDelSelectedCatDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
+		<p:confirmDialog closable="true"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			id="confirmDelMasterDialogId"
+			message="#{lbl['lbl.sm.comp.exp.master.delete.msg']}" severity="alert"
+			widgetVar="confirmDelMasterDialogWV">
+			<div align="right">
+				<p:commandButton action="#{smCompExpBB.delSmCompExpMaster}"
+					onclick="confirmDelMasterDialogWV.hide();"
+					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+					process="@form" update=":form"
+					value="#{lbl['lbl.sm.comp.exp.yes.btn']}" />
+				<p:commandButton value="#{lbl['lbl.sm.comp.exp.no.btn']}"
+					onclick="confirmDelMasterDialogWV.hide();" />
+			</div>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
