@@ -703,8 +703,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
 	
 	// 29661 -start-
-	private String companyExpProcRelated = SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
-	private String companyExpNonProcRelated = SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
+	private int companyExpProcRelated = SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
+	private int companyExpNonProcRelated = SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
 	private BigDecimal companyExpProcRelatedValue;
 	private BigDecimal companyExpNonProcRelatedValue;
 	private List<ScQtPRPExperience> companyExpProcRelatedList;
@@ -4583,7 +4583,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the companyExpProcRelated
 	 */
-	public String getCompanyExpProcRelated() {
+	public int getCompanyExpProcRelated() {
 		return companyExpProcRelated;
 	}
 
@@ -4591,14 +4591,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 * @param companyExpProcRelated
 	 *            the companyExpProcRelated to set
 	 */
-	public void setCompanyExpProcRelated(String companyExpProcRelated) {
+	public void setCompanyExpProcRelated(int companyExpProcRelated) {
 		this.companyExpProcRelated = companyExpProcRelated;
 	}
 
 	/**
 	 * @return the companyExpNonProcRelated
 	 */
-	public String getCompanyExpNonProcRelated() {
+	public int getCompanyExpNonProcRelated() {
 		return companyExpNonProcRelated;
 	}
 
@@ -4606,7 +4606,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 * @param companyExpNonProcRelated
 	 *            the companyExpNonProcRelated to set
 	 */
-	public void setCompanyExpNonProcRelated(String companyExpNonProcRelated) {
+	public void setCompanyExpNonProcRelated(int companyExpNonProcRelated) {
 		this.companyExpNonProcRelated = companyExpNonProcRelated;
 	}
 

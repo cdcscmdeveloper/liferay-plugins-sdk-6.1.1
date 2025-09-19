@@ -19939,14 +19939,11 @@ private void retriveCommitteeRemarksList(){
 		this.getManagedBean().setContractStatusvalueProcRelated(null);
 		this.getManagedBean().setContractStatusvalueNonProcRelated(null);
 
-		String procContractStatus = null != this.getManagedBean()
-				.getCompanyExpProcRelated() ? this.getManagedBean()
-				.getCompanyExpProcRelated()
-				: SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
-		String nonProcContractStatus = null != this.getManagedBean()
-				.getCompanyExpNonProcRelated() ? this.getManagedBean()
-				.getCompanyExpNonProcRelated()
-				: SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
+		int procContractStatus = this.getManagedBean()
+				.getCompanyExpProcRelated();
+
+		int nonProcContractStatus = this.getManagedBean()
+				.getCompanyExpNonProcRelated();
 		EvaluationReqDTO evaluationProcReqDTO = setDetailsToReqDTO(
 				scQtProposalChecklist, this.getManagedBean().getScQt(),
 				clientType, procContractStatus, Boolean.TRUE);
@@ -19993,7 +19990,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param contractStatus
 	 * @return empty.
 	 */
-	public void changeContractStatusProcRelated(String contractStatus) {
+	public void changeContractStatusProcRelated(int contractStatus) {
 
 		this.getManagedBean().setContractStatusvalueProcRelated(null);
 		String clientType;
@@ -20036,7 +20033,7 @@ private void retriveCommitteeRemarksList(){
 	 * @param contractStatus
 	 * @return empty.
 	 */
-	public void changeContractStatusNonProcRelated(String contractStatus) {
+	public void changeContractStatusNonProcRelated(int contractStatus) {
 
 		this.getManagedBean().setContractStatusvalueNonProcRelated(null);
 

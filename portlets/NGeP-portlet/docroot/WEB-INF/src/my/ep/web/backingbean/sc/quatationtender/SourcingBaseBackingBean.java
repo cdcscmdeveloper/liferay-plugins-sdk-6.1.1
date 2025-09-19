@@ -7567,7 +7567,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	protected EvaluationReqDTO setDetailsToReqDTO(
 			ScQtProposalChecklist scQtProposalChecklist, ScQt scQt,
-			String clientType, String contractStatus, boolean isSearchOperator) {
+			String clientType, int contractStatus, boolean isSearchOperator) {
 
 		Long qtId = scQt.getQtId();
 		EvaluationReqDTO evaluationReqDTO = new EvaluationReqDTO();
@@ -7654,12 +7654,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param isTerminated
 	 * @return boolean.
 	 */
-	public boolean checkContractStatusType(String contractStatus,
+	public boolean checkContractStatusType(int contractStatus,
 			boolean isTerminated) {
 
-		if (Integer
-				.valueOf(SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_TERMINATED) == Integer
-				.valueOf(contractStatus)
+		if (SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_TERMINATED == contractStatus
 				&& isTerminated) {
 
 			return Boolean.TRUE;
@@ -7677,41 +7675,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param contractStatusValue
 	 * @return String
 	 */
-	public String checkContractStatusLabel(String contractStatusValue) {
+	public String checkContractStatusLabel(int contractStatusValue) {
 
-		Integer contractStatus = Integer.valueOf(contractStatusValue);
+		final Locale locale = new FacesScopes().getUserLocale();
 
-		if (Integer
-				.valueOf(SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_INACTIVE) == contractStatus) {
-
-			return ResourceBundleUtils.getMessage(
-					QTConstants.COMPANY_EXP_STATUS_INACTIVE,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else if (Integer
-				.valueOf(SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_EFFECTIVE) == contractStatus) {
-
-			return ResourceBundleUtils.getMessage(
-					QTConstants.COMPANY_EXP_STATUS_EFFECTIVE,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else if (Integer
-				.valueOf(SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_EXPIRED) == contractStatus) {
-
-			return ResourceBundleUtils.getMessage(
-					QTConstants.COMPANY_EXP_STATUS_EXPIRED,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else if (Integer
-				.valueOf(SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_TERMINATED) == contractStatus) {
-
-			return ResourceBundleUtils.getMessage(
-					QTConstants.COMPANY_EXP_STATUS_TERMINATED,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
+		final String key;
+		switch (contractStatusValue) {
+		case SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_INACTIVE:
+			key = QTConstants.COMPANY_EXP_STATUS_INACTIVE;
+			break;
+		case SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_EFFECTIVE:
+			key = QTConstants.COMPANY_EXP_STATUS_EFFECTIVE;
+			break;
+		case SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_EXPIRED:
+			key = QTConstants.COMPANY_EXP_STATUS_EXPIRED;
+			break;
+		case SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_TERMINATED:
+			key = QTConstants.COMPANY_EXP_STATUS_TERMINATED;
+			break;
+		default:
+			return ""; // unknown status
 		}
 
-		return " ";
+		return ResourceBundleUtils.getMessage(key,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+
 	}
 
 	// 29661 -end-
@@ -7723,7 +7711,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param content
 	 * @return String
 	 */
-	public String getLableContent(String content) {
+	public String getLabelContent(String content) {
 
 		boolean isNotEmpty = StringUtils.isNotBlank(content)
 				&& StringUtils.isNotEmpty(content);
@@ -7986,7 +7974,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	protected EvaluationResDTO retrieveContractStatusValueCount(
 			ScQtProposalChecklist scQtProposalChecklist, ScQt scQt,
-			String clientType, String contractStatus, boolean isSearchOperator) {
+			String clientType, int contractStatus, boolean isSearchOperator) {
 		try {
 
 			EvaluationReqDTO evaluationReqDTO = setDetailsToReqDTO(

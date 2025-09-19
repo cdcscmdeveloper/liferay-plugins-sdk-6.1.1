@@ -41,13 +41,13 @@
 				rendered="#{experience.loaNo ne null and isTerminated}"
 				partialSubmit="true">
 				<h:outputText escape="false"
-					value="#{evaluationBackingBean.getLableContent(experience.loaNo)}" />
+					value="#{evaluationBackingBean.getLabelContent(experience.loaNo)}" />
 			</p:commandLink>
 			<h:outputText escape="false"
 				rendered="#{experience.loaNo ne null and !isTerminated}"
-				value="#{evaluationBackingBean.getLableContent(experience.loaNo)}" />
+				value="#{evaluationBackingBean.getLabelContent(experience.loaNo)}" />
 			<h:outputText rendered="#{experience.loaNo eq null}"
-				value="#{evaluationBackingBean.getLableContent(experience.loaNo)}" />
+				value="#{evaluationBackingBean.getLabelContent(experience.loaNo)}" />
 
 		</p:column>
 		<p:column style="width:10%;white-space: normal;"
@@ -114,7 +114,7 @@
 				action="#{evaluationBackingBean.downloadCompExpLOAReports(experience)}">
 			</p:commandButton>
 
-			<h:outputText value="#{evaluationBackingBean.getLableContent(' ')}"
+			<h:outputText value="#{evaluationBackingBean.getLabelContent(' ')}"
 				rendered="#{!evaluationBackingBean.loaReportCheck(experience)}"></h:outputText>
 
 

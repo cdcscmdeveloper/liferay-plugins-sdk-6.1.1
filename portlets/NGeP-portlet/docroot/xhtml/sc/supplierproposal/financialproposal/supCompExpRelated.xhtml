@@ -116,7 +116,7 @@
 			headerText="#{lbl['lbl.sc.fin.letter.accept.no']}">
 
 			<h:outputText
-				value="#{supplierProposalDetailBackingBean.getLableContent(experience.loaNo)}" />
+				value="#{supplierProposalDetailBackingBean.getLabelContent(experience.loaNo)}" />
 
 		</p:column>
 		<p:column style="width:10%;white-space: normal;"
@@ -161,7 +161,7 @@
 				ajax="false" />
 
 			<h:outputText
-				value="#{supplierProposalDetailBackingBean.getLableContent(' ')}"
+				value="#{supplierProposalDetailBackingBean.getLabelContent(' ')}"
 				rendered="#{!supplierProposalDetailBackingBean.loaReportCheck(experience)}"></h:outputText>
 		</p:column>
 	</p:dataTable>
