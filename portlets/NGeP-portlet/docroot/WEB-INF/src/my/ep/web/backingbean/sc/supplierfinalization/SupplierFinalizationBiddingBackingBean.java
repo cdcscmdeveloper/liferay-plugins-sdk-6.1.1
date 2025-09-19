@@ -643,7 +643,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 				if (bidResDTO.isSuccessful()) {
 					processPackageBidSchedules(bidScheduleList, bidResDTO.getBidPackages(),
-							bidResDTO.getBidPackagesDisqualified(), awardedSupplier);// #28777&#29729
+							bidResDTO.getBidPackagesDisqualified(), awardedSupplier);
 					if (isZonal) {
 						this.getManagedBean().getBidSchedulesByZone()
 							.put(selectedZoneId, bidScheduleList);
@@ -1015,13 +1015,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 				resDTO = biddingSO.retrieveShortlistedSuppliersForBidding(reqDTO);
 				shortlistedSuppliers = resDTO.getShortlistedSuppliers();
 				notShortlistedSuppliers = resDTO.getNotShortlistedSuppliers(); // #28777&#29729
-				
-				log.info(" hatta reqDTO.getSpecZoneId() "+reqDTO.getSpecZoneId());
-				
-				log.info(" hatta shortlistedSuppliers "+shortlistedSuppliers);
-				
-				log.info(" hatta notShortlistedSuppliers "+notShortlistedSuppliers);
-				
 				if (isZonal) {
 					Map<Long,List<ScQtEvaluationResultDtl>> shortlistedSuppliersMap = null;
 					shortlistedSuppliersMap = itemShortlistedSuppliersByZone
