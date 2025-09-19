@@ -28,6 +28,9 @@
 		<cc:attribute name="districtItems" required="true"/>
 		<cc:attribute name="cityItems" required="true"/>
 		<cc:attribute name="disableValidation" required="true"/>
+		<!-- #36718 - Start -->
+		<cc:attribute name="disablePostCodeValidator" required="false" default="false" />
+		<!-- #36718 - End -->
 	</cc:interface>
 
 	<cc:implementation>
@@ -304,9 +307,19 @@
 									value="#{cc.attrs.addrObj.smAddress.postcode}"
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 									size="35">
-									<f:validator validatorId="postcodeValidator" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,#{cc.attrs.postCodeId}MyMsg" />
+									<!-- #36718 - Start -->
+									<f:validator validatorId="postcodeValidator" disabled="#{cc.attrs.disablePostCodeValidator}" />
+									<c:choose>
+										<c:when test="#{cc.attrs.disablePostCodeValidator}">
+											<p:ajax event="blur" process="@this" partialSubmit="true" update="@this,#{cc.attrs.postCodeId}MyMsg"
+												listener="#{cc.attrs.bBean.checkPostcode(cc.attrs.addrObj.smAddress.postcode)}"
+												oncomplete="scrollToMessages()" />
+										</c:when>
+										<c:otherwise>
+											<p:ajax process="@this" partialSubmit="true" update="@this,#{cc.attrs.postCodeId}MyMsg" />
+										</c:otherwise>
+									</c:choose>
+									<!-- #36718 - Start -->
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
