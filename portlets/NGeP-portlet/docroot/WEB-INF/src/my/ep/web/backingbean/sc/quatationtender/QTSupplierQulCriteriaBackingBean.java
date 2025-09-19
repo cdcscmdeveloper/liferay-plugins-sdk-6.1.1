@@ -2138,7 +2138,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
 			
-			List<ScQtCategory> findQtCatCode = retrieveScQtCategorytByQtCatID(qtCateId);
+			List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
 			if( null != findQtCatCode && !findQtCatCode.isEmpty()){
 				for(ScQtCategory categoryCodeEdit : findQtCatCode){
 					if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()){
@@ -2237,15 +2237,15 @@ public class QTSupplierQulCriteriaBackingBean extends
 		public List<ScQtCategory> retrieveCurrentScQtCategoryCode(){
 			List<ScQtCategory> listCategoryDB = new ArrayList();
 			IQTSpecSO specSO = getSpecSO();
-			listCategoryDB = specSO.retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
+			listCategoryDB = specSO.retrieveScQtCategoryByQtID(getManagedBean().getQt().getQtId());
 			
 			return listCategoryDB;
 		}
 		
-		public List<ScQtCategory> retrieveScQtCategorytByQtCatID(Long qtCateId){
+		public List<ScQtCategory> retrieveScQtCategoryByQtCatID(Long qtCateId){
 			List<ScQtCategory> listCategoryDB = new ArrayList();
 			IQTSpecSO specSO = getSpecSO();
-			listCategoryDB = specSO.retrieveScQtCategorytByQtCatID(getManagedBean().getQt().getQtId(),qtCateId);
+			listCategoryDB = specSO.retrieveScQtCategoryByQtCatID(getManagedBean().getQt().getQtId(),qtCateId);
 			
 			return listCategoryDB;
 		}
