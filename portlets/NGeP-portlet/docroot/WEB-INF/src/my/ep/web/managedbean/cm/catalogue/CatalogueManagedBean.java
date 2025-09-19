@@ -74,6 +74,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.backingbean.cm.catalogue.ScheduleInfo;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -575,6 +576,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean catDPScreen = false;
 	private boolean addPromotion = false;
 	//#30457 - end 1/08/2022
+	//38255-Start
+	private List<ScheduleInfo> schInfo;
+	//38255-End
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -4469,6 +4473,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.addPromotion = addPromotion;
 	}
 	// #30457 - End
+	
+	//38255-Start
+	public List<ScheduleInfo> getSchInfo() {
+		if (schInfo == null)
+			schInfo = new ArrayList<>();
+		return schInfo;
+	}
+
+	public void setSchInfo(List<ScheduleInfo> schInfo) {
+		this.schInfo = schInfo;
+	}
+	//38255-End
 	
 	//#26282 and SonarQube fixing - Start
 	/**

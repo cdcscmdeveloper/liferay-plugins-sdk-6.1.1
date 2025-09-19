@@ -10,8 +10,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
-
-import my.ep.dto.pm.authorization.role.AdminDetailsDTO;
 import my.ep.dto.pm.authorization.role.AdminResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
@@ -19,7 +17,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.pm.ChallengeQAList;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -62,13 +59,17 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean showRobExpiredDate = false;
 	private boolean showRobExpiredDateMesej = false;
 	//26238
-	private boolean disciplinaryAction; 
 	private String disciplinaryActionMsg; 
+	//26247 - start
+	private String qtDisciplinaryActionMsg; 
+	private Long qtId; 
+	//26247 - end
 	
-	//26238 -  START Disciplinary Action - 28111
-	private SmSupplier smSupplier;
 	// #28895_35501 - AUDIT TRAIL SM
 	private PmUser oldSelectedUser;
+	
+	private String ctSupplierMsgNonDA; //#26186
+	
 	public ProfilePersonalizationManagedBean(){}
 	
 	/**
@@ -386,14 +387,6 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	public void setShowRobExpiredDateMesej(boolean showRobExpiredDateMesej) {
 		this.showRobExpiredDateMesej = showRobExpiredDateMesej;
 	}
-	//26238
-	public boolean isDisciplinaryAction() {
-		return disciplinaryAction;
-	}
-
-	public void setDisciplinaryAction(boolean disciplinaryAction) {
-		this.disciplinaryAction = disciplinaryAction;
-	}
 
 	public String getDisciplinaryActionMsg() {
 		return disciplinaryActionMsg;
@@ -402,14 +395,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
 		this.disciplinaryActionMsg = disciplinaryActionMsg;
 	}
-
-	public SmSupplier getSmSupplier() {
-		return smSupplier;
-	}
-
-	public void setSmSupplier(SmSupplier smSupplier) {
-		this.smSupplier = smSupplier;
-	}
+	
 	// #28895_35501 Start - AUDIT TRAIL SM
 	public PmUser getOldSelectedUser() {
 		return oldSelectedUser;
@@ -420,4 +406,37 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	}
 	// #28895_35501 End
 
+	//26247 - start
+	public String getQtDisciplinaryActionMsg() {
+		return qtDisciplinaryActionMsg;
+	}
+
+	public void setQtDisciplinaryActionMsg(String qtDisciplinaryActionMsg) {
+		this.qtDisciplinaryActionMsg = qtDisciplinaryActionMsg;
+	}
+
+	public Long getQtId() {
+		return qtId;
+	}
+
+	public void setQtId(Long qtId) {
+		this.qtId = qtId;
+	}
+	//26247 - end
+
+	//#26186 start
+	/**
+	 * @return the ctSupplierMsgNonDA
+	 */
+	public String getCtSupplierMsgNonDA() {
+		return ctSupplierMsgNonDA;
+	}
+
+	/**
+	 * @param ctSupplierMsgNonDA the ctSupplierMsgNonDA to set
+	 */
+	public void setCtSupplierMsgNonDA(String ctSupplierMsgNonDA) {
+		this.ctSupplierMsgNonDA = ctSupplierMsgNonDA;
+	}
+	//#26186 end
 }

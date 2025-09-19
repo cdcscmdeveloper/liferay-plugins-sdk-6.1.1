@@ -80,6 +80,8 @@ import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang3.StringUtils;
+//#34031
+import my.ep.persistence.entity.sm.SmRevisit;
 
 public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
@@ -277,8 +279,12 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private Date poRemarkAfterSiteVisitCreatedDate;
 	private String secondPoUserName = null;
 	// #29664 - start
+	//26238 - start
 	private boolean basicAccountMaintenance; //27437 : Disciplinary action
 	private SmSupplierOwner smSuppOwner; //26238
+	private boolean flagBlacklistCancel;	//28146
+	private boolean disableDownloadButtonDAHistory;	// 28342
+	//26238 - end
 	private boolean viewSupplierMaintenancePage; // #26639
 	
 	//28281 - start
@@ -361,13 +367,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 	//28771- end
 	
-	//26238 -  Disciplonary action - 28146
-	private boolean flagBlacklistCancel;
-	
-	// 28342 : Disciplinary Action - start
-	private boolean disableDownloadButtonDAHistory;
-	// 28342 : Disciplinary Action - end
-	
 	//28637
 	private boolean viewCatCode;
 	
@@ -389,6 +388,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		private List<SmApplSupportDoc> missinDocs;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean auditAccess;
+	// #34031 Start
+	private List<SmRevisit> smRevisitList;
+	private SmRevisit currentSmRevisit;
+	// #34031 End=
+	private Long currRegStatusId;
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2607,4 +2611,30 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.auditAccess = auditAccess;
 	}
 	// #28895_35501 End
+	// #34031 Start
+	public List<SmRevisit> getSmRevisitList() {
+		return smRevisitList;
+	}
+
+	public void setSmRevisitList(List<SmRevisit> smRevisitList) {
+		this.smRevisitList = smRevisitList;
+	}
+
+	public SmRevisit getCurrentSmRevisit() {
+		return currentSmRevisit;
+	}
+
+	public void setCurrentSmRevisit(SmRevisit currentSmRevisit) {
+		this.currentSmRevisit = currentSmRevisit;
+	}
+	// #34031 End
+	// #38856 End
+	public Long getCurrRegStatusId() {
+		return currRegStatusId;
+	}
+
+	public void setCurrRegStatusId(Long currRegStatusId) {
+		this.currRegStatusId = currRegStatusId;
+	}
+	// #38856 End
 }

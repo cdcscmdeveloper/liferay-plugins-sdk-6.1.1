@@ -308,7 +308,7 @@
 							<!-- #36718 - process panel when change address dropdown -->
 							<p:ajax event="change" process="@this @([id$=assocAddrPanelId])"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="divisionAssocDropdownPanelId,divisionLabelAssocPanelId,divisionAssocDropdownPanelId,assocDist,assocCity" />
+								update="divisionAssocDropdownPanelId,divisionLabelAssocPanelId,divisionAssocDropdownPanelId,assocDist,assocCity,postCodeAssocPanelId" />
 						</p:selectOneMenu> 
 					<!-- #34159 - END --> 
 						<!-- END 31736 -->
@@ -350,7 +350,7 @@
 						<!-- #36718 - process panel when change address dropdown -->
 						<p:ajax event="change" process="@this @([id$=assocAddrPanelId])"
 							listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="assocDist,assocCity" />
+								update="assocDist,assocCity,postCodeAssocPanelId" />
 					</p:selectOneMenu>
 					<!-- #34159 - END -->
 					<!-- END 31736 -->
@@ -386,7 +386,7 @@
 							<!-- #36718 - process panel when change address dropdown -->
 							<p:ajax event="change" process="@this @([id$=assocAddrPanelId])"
 								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="assocCity" />
+								update="assocCity,postCodeAssocPanelId" />
 						</p:selectOneMenu> 
 					<!-- #34159 - END --> 
 						<ac:smFieldChangeAlert 
@@ -417,7 +417,7 @@
 							<!-- #36718 - process panel when change address dropdown -->
 							<p:ajax event="change" process="@this @([id$=assocAddrPanelId])"
 								listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
-								update="assocCity" />
+								update="assocCity,postCodeAssocPanelId" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
@@ -431,8 +431,7 @@
 						<p:message id="assocCityMsg" for="assocCity" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
-				</p:panel>
-				<!-- #36718 - END -->
+				
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -480,6 +479,8 @@
 							</p:outputPanel>
 						</p:outputPanel></td>
 				</tr>
+				</p:panel>
+				<!-- #36718 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td>

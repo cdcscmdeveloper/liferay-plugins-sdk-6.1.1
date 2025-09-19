@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sm.softcertprovider;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -19,6 +20,11 @@ public class SoftCertProviderManagedBean extends BaseManagedBean{
 	private List<PmParameterDesc> providerLs;
 	private PmConfigRuleValue deleteRuleValue;
 	private PmConfigRule ruleType;
+	
+	/************ AUDIT START #28895-35509 *************/
+	private List<PmConfigRuleValue> newRuleValue;
+	private Map<Long,PmConfigRuleValue> existingConfigValueMap;
+	/************ AUDIT END #28895-35509 *************/
 
 	public PmConfigRule getConfigRule() {
 		return configRule;
@@ -51,5 +57,24 @@ public class SoftCertProviderManagedBean extends BaseManagedBean{
 	public void setRuleType(PmConfigRule ruleType) {
 		this.ruleType = ruleType;
 	}
+	
+	/************ AUDIT START #28895-35509 *************/
+	public Map<Long, PmConfigRuleValue> getExistingConfigValueMap() {
+		return existingConfigValueMap;
+	}
+
+	public void setExistingConfigValueMap(Map<Long, PmConfigRuleValue> existingConfigValueMap) {
+		this.existingConfigValueMap = existingConfigValueMap;
+	}
+
+	public List<PmConfigRuleValue> getNewRuleValue() {
+		return newRuleValue;
+	}
+
+	public void setNewRuleValue(List<PmConfigRuleValue> newRuleValue) {
+		this.newRuleValue = newRuleValue;
+	}
+
+	/************AUDIT************/
 
 }

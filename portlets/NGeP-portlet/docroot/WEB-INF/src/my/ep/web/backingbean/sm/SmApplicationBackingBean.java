@@ -1,7 +1,10 @@
 package my.ep.web.backingbean.sm;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -43,12 +46,15 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
@@ -71,7 +77,9 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
+import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -92,6 +100,8 @@ import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.jaxb.sm.common.notification.SMNotificationCommonDataType;
+import my.ep.jaxb.sm.mofappcandata.SMMOFAppCanDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -169,6 +179,8 @@ import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.BpmCommonUtils;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -186,6 +198,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.AddressUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -211,6 +224,22 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
@@ -219,6 +248,7 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "backingBean")
 @RequestScoped
@@ -391,6 +421,207 @@ public class SmApplicationBackingBean extends
 				"overlapCategoryDialog.show();");
 	}
 	
+	//13362 START
+	public CellStyle columnStyle(Workbook wb, 
+			CreationHelper createHelper,
+			Boolean isCellListHeader,
+			Boolean isBold, 
+			Boolean isHAlignCenter,
+			Boolean isFormatDate,
+			Boolean isWrapTxt
+			){
+		
+		Font contentFont = wb.createFont();
+		contentFont.setFontHeightInPoints((short)10);  
+		contentFont.setFontName("Arial"); 
+		if(isBold)contentFont.setBold(true);
+		else contentFont.setBold(false);
+		
+		CellStyle cellStyle = wb.createCellStyle();
+		if(isCellListHeader){
+			cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());  
+			cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		}
+		if(isHAlignCenter)cellStyle.setAlignment(HorizontalAlignment.CENTER);
+		if(isFormatDate)cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy"));
+		if(isWrapTxt)cellStyle.setWrapText(true);
+		cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
+	
+		cellStyle.setFont(contentFont);
+		cellStyle.setBorderTop(BorderStyle.THIN);
+		cellStyle.setBorderBottom(BorderStyle.THIN);
+		cellStyle.setBorderLeft(BorderStyle.THIN);
+		cellStyle.setBorderRight(BorderStyle.THIN);
+		
+		return cellStyle;
+}
+
+	public void generateAndDownloadOverlapCategoryDetailsExcel()throws FileNotFoundException, IOException,
+		EncryptedDocumentException, InvalidFormatException {
+		
+		//START: Generate Report In Excel
+		String[] colHeaderReportList = {
+					SmCommonUtil.getMessageMalay("lbl.sm.userprofile.num", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.name", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.idno", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.rolename", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.compname", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.mofno", null),  
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.expdate", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.regno", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.applno", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.application.status", null)
+		};
+		
+		//CREATE WORKBOOK
+		Workbook wb = new XSSFWorkbook();
+	
+		//OPTIONAL - Set font
+		Font contentFont = wb.createFont();
+		contentFont.setBold(true);
+		contentFont.setFontHeightInPoints((short)10); 
+		contentFont.setFontName("Arial");
+			
+		//OPTIONAL - Set cell style (cell alignment/Cell format/etc ...)
+		CreationHelper createHelper = wb.getCreationHelper();
+		CellStyle titleStyle = wb.createCellStyle(); 
+		titleStyle.setFont(contentFont);
+		
+		CellStyle columnHeaderStyle = columnStyle(wb,createHelper,true,true,true,false,false);
+		CellStyle colStyleDate = columnStyle(wb,createHelper,false,false,true,true,false);
+		CellStyle colStyleString = columnStyle(wb,createHelper,false,false,false,false,true);
+		CellStyle colStyleBil = columnStyle(wb,createHelper,false,false,true,false,true);
+		//END CELL STYLE
+		
+		//CREATE SHEET
+		Sheet sheetLaporan = wb.createSheet("Sheet1");	
+	
+		//CREATE ROW & CELL(COLUMN) - MAKLUMAT PERTINDIHAN BIDANG
+		Row titleRow = sheetLaporan.createRow(0); //Create Row
+		Cell cellTitleRow = titleRow.createCell(0);//Create Cell (Column)
+		cellTitleRow.setCellValue(StringUtils.upperCase(SmCommonUtil.getMessageMalay("lbl.sm.overlapping.category", null))); // Set Column Value
+		cellTitleRow.setCellStyle(titleStyle);  
+		sheetLaporan.addMergedRegionUnsafe(new CellRangeAddress(0,0,0,9)); //to merge cell in selected row
+		
+		List<SmBulkApplOverlapCatVO> overlapCategoryList = SmApplicationUtil.checkOverLappingCategoriesMalay(getManagedBean());
+		
+		if(overlapCategoryList != null){
+			log.info("OVERLAP CATEGORY SIZE ---->"+ overlapCategoryList.size());
+			for(int x=0; x<overlapCategoryList.size(); x++){
+				//Create Group Title Row & Cell by Category Code
+				int addRowIndexGroupTitle = sheetLaporan.getLastRowNum()+2;
+				Row subTitleRow = sheetLaporan.createRow(addRowIndexGroupTitle);
+				Cell cellSubTitleRow = subTitleRow.createCell(0); 
+				cellSubTitleRow.setCellValue(overlapCategoryList.get(x).getCategoryCode()+" "+overlapCategoryList.get(x).getCategoryName());
+				cellSubTitleRow.setCellStyle(titleStyle); 	
+				sheetLaporan.addMergedRegionUnsafe(new CellRangeAddress(addRowIndexGroupTitle,addRowIndexGroupTitle,0,9));//to merge cell in selected row
+			
+				if(overlapCategoryList.get(x).getOverlapInfoList() != null){
+					//Create Row & Cell Title Header
+					Row headerRowList = sheetLaporan.createRow(addRowIndexGroupTitle+2);
+					for(int i = 0; i < colHeaderReportList.length; i++) {
+						Cell cell = headerRowList.createCell(i);
+						cell.setCellValue(colHeaderReportList[i]);
+						cell.setCellStyle(columnHeaderStyle);
+					}
+					
+					//Create Row - Populate Data from resultSet List
+					int rowid = headerRowList.getRowNum()+1; //To get Header Row Number/Index In Excel
+					int countRow = 1; //Initialize to count number of record (populate Cell No. value)
+					for(int y=0; y<overlapCategoryList.get(x).getOverlapInfoList().size(); y++){
+						//Start Populate data for each cell.
+						Row rowDtl = sheetLaporan.createRow(rowid++);
+						Cell cellBil = rowDtl.createCell(0); //CELL : No
+						cellBil.setCellValue(countRow);
+						cellBil.setCellStyle(colStyleBil);
+						
+						Cell cellPersonnelName = rowDtl.createCell(1); //CELL : Nama Personnel
+						cellPersonnelName.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getPersonnelName());
+						cellPersonnelName.setCellStyle(colStyleString);
+						
+						Cell cellIdNo = rowDtl.createCell(2); //CELL : Identification No
+						cellIdNo.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getIdentificationNo());
+						cellIdNo.setCellStyle(colStyleString);
+						
+						Cell cellRole = rowDtl.createCell(3); //CELL : Role In Company
+						cellRole.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getRole());
+						cellRole.setCellStyle(colStyleString);
+						
+						Cell cellCompanyName = rowDtl.createCell(4); //CELL : Company Name
+						cellCompanyName.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getCompanyName());
+						cellCompanyName.setCellStyle(colStyleString);
+						
+						Cell cellMofNo = rowDtl.createCell(5); //CELL : MOF NO.
+						cellMofNo.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getMofNo());
+						cellMofNo.setCellStyle(colStyleString);
+						
+						Cell cellExpDate = rowDtl.createCell(6); //CELL : Tarikh Luput
+						cellExpDate.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getExpDate());
+						cellExpDate.setCellStyle(colStyleString);
+						
+						Cell cellRegNo = rowDtl.createCell(7); //CELL : Business Registration No
+						cellRegNo.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getRegNo());
+						cellRegNo.setCellStyle(colStyleString);
+						
+						Cell cellApplNo = rowDtl.createCell(8); //CELL : Application No.
+						cellApplNo.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getApplNo());
+						cellApplNo.setCellStyle(colStyleString);
+						
+						Cell cellStatus = rowDtl.createCell(9); //CELL : Application Status
+						cellStatus.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getApplStatus());
+						cellStatus.setCellStyle(colStyleString);
+						
+						countRow++;
+					}
+				}
+			}
+		}else{
+			log.info("Overlap is null !!!! ");
+		}
+		
+		// Resize all columns to fit the content size
+		for(int i = 0; i < colHeaderReportList.length; i++) {   
+			if(i==0)sheetLaporan.setColumnWidth(i, 8*256);//Col : Bil
+			else if(i==1)sheetLaporan.setColumnWidth(i, 52*256); //Col : Personnel Name
+			else if(i==2)sheetLaporan.setColumnWidth(i, 21*256); //Col : No. Pengenalan
+			else if(i==3)sheetLaporan.setColumnWidth(i, 52*256); //Col : Role
+			else if(i==4)sheetLaporan.setColumnWidth(i, 52*256); //Col : Company Name
+			else if(i==5)sheetLaporan.setColumnWidth(i, 20*256); //Col : Mof. No			
+			else if(i==6)sheetLaporan.setColumnWidth(i, 13*256); //Col : Tarikh
+			else if(i==7)sheetLaporan.setColumnWidth(i, 27*256); //Col : Reg. No
+			else if(i==8)sheetLaporan.setColumnWidth(i, 20*256); //Col : Application No.
+			else if(i==9)sheetLaporan.setColumnWidth(i, 25*256); //Col : Status
+		}
+				
+		//END - Generate Report In EXCEL
+	
+		//START: Download 
+		PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+		
+		response.setContentType("application/ms-excel");
+		response.setHeader("Expires:", "0"); // eliminates browser caching
+		response.setHeader("Content-Disposition", "attachment; filename=\"SM_OverlappingDetails.xlsx\"");
+		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.flushBuffer();
+		
+		OutputStream outStream = response.getOutputStream();
+		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		wb.write(outByteStream);//Write into file
+		byte [] outArray = outByteStream.toByteArray();					
+		
+		outStream.write(outArray);
+		outStream.flush();
+		outStream.close();
+		wb.close();//Close Workbook
+		
+		//END: Download
+	}
+
+	//13362 END
+	/**
+	 * Change business type & display comfirmation dialog
+	 */
 	public void onChangeBussType() {
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
 		RequestContext.getCurrentInstance().execute(
@@ -1053,66 +1284,17 @@ public class SmApplicationBackingBean extends
 		SmSupplier smApplSupplier = new SmSupplier();
 
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-		boolean redirectToBankInfoTab = false;
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		
 		log.info("[proceedToApplication] #31754 fromBpm: " + fromBpm);
 		if (!fromBpm) {
 			subStartTime = System.currentTimeMillis();
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "getCurrentSupplier-1", 
 					subStartTime); //20211005@fadhli - #31754
 			boolean cannotProceedAlertMsg = false;
-			//26238 - start 28144
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
-				if (currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-2", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(discList != null && discList.size() > 0){
-						for(SmDisciplinaryAction disc : discList){
-							if(disc.isBumiputeraCancel()){
-								throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-										null));
-							}else if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
-								if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
-									throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-											null));
-								}
-							}
-						}
-					}
-				}
-			} 
-			//26238 - end 28144
-			
-			//27748 : Disciplinary Action - #26238 - start 
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-				if(currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-3", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								getManagedBean().getEditVO().setDisciplinary(true);
-								// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-								redirectToBankInfoTab = true;
-								// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
-							}
-						}
-					}
-				}	
-			}				
-			//27748 : Disciplinary Action - #26238 - end
+			//26238, 28144
+			checkActiveDisciplinaryAction(currSupp, applicationType);
 			
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -1234,7 +1416,8 @@ public class SmApplicationBackingBean extends
 						"SmApplicationBackingBean.proceedToApplication", "rejectedApplExist-8", 
 						subStartTime); //20211005@fadhli - #31754
 				//31792 - START
-				if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
+				if (rejectedAppl != null && (my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())
+						|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF))) { //36064
 				//31792 - END
 					Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 					long diff = currentDate.getTime()
@@ -1255,32 +1438,6 @@ public class SmApplicationBackingBean extends
 					SmCommonUtil.redirectToPage(
 							"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
 				}
-				
-				//26238 - start
-				//check disciplinary action on supplier
-				if (currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-9", 
-							subStartTime); //20211005@fadhli - #31754
-//					SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disciplinary : activeDisc){
-							if(disciplinary.isSuspendRegistration() 
-									|| disciplinary.isCancelRegistration()
-									|| disciplinary.isBlacklistOwner()){
-								FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-										SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-												new String[] { labelNameVal })));
-								
-								//27848
-								return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
-							}
-						}					
-					}
-				}							
-				//26238 - end
 
 				// #29583 - start
 				/* comment - this code does not exist in prd
@@ -1554,15 +1711,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setSmStaffTotals(
 					SmApplicationUtil.getStaffList(smAppl));
 		}
-
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-		if(redirectToBankInfoTab){
-			getManagedBean().setTabActiveIndex(4);
-		} else {
-			getManagedBean().setTabActiveIndex(0);
-		}
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
-
+		
+		checkActiveDisciplinaryAction(currSupp, applicationType);
+		
 		if (!fromBpm) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 
@@ -1984,34 +2135,6 @@ public class SmApplicationBackingBean extends
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setAllSectionEditorVO-29", 
 				subStartTime); //20211005@fadhli - #31754
-		
-		//27805: Disciplinary Action - start
-		if(!fromBpm){
-			subStartTime = System.currentTimeMillis();
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-					"SmApplicationBackingBean.proceedToApplication", "subStartTime-30", 
-					subStartTime); //20211005@fadhli - #31754
-			
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-				if(currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-31", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
-								getManagedBean().getEditVO().setDisciplinary(true);
-							}
-						}
-					}
-				}	
-			}
-		}
-		//27805: Disciplinary Action - end
 
 		subStartTime = System.currentTimeMillis();
 		// show or hide travel software panel
@@ -2629,30 +2752,6 @@ public class SmApplicationBackingBean extends
 				}
 		}
 	//END 28767
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-		if (fromBpm) {
-		
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-				SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-				if(currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-35", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								getManagedBean().getEditVO().setDisciplinary(true);
-								getManagedBean().setTabActiveIndex(4);
-							}
-						}
-					}
-				}	
-			}				
-		}
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 		// 35311 - Start
 		//#36340 - Start
 		if ((EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmApplSupportDocs())) && (getManagedBean().getSmAppl().getPmStatus() != null
@@ -2675,6 +2774,42 @@ public class SmApplicationBackingBean extends
 				subStartTime); //20211005@fadhli - #31754
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
+	}
+	
+	//#26238
+	private void checkActiveDisciplinaryAction(SmSupplier currSupp, String applType){
+		if (currSupp == null){
+			return;
+		}
+		long startTime = System.currentTimeMillis();
+		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
+				.getExternalContext().getRequest()).getRequestedSessionId(); 
+		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
+				"SmApplicationBackingBean", "checkActiveDisciplinaryAction", startTime); //20211005@fadhli - #31754
+		if (EntityHelper.isCollectionEmpty(discList)){
+			return;
+		}
+		String errorDA = SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action", null);
+		boolean hasCannotLoginDA = SmApplicationUtil.hasCannotLoginDA(discList);
+		List<String> disableApplTypes = Arrays.asList(
+				ParameterConst.NEW_SM_APPLN_FOR_MOF, ParameterConst.NEW_SM_APPLN_FOR_BUMI, 
+				ParameterConst.NEW_SM_APPLN_FOR_RENEW, ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
+		if (hasCannotLoginDA && disableApplTypes.contains(applType)){
+			throw new EpException(errorDA);
+		}
+		if (ParameterConst.NEW_SM_APPLN_FOR_BUMI.equalsIgnoreCase(applType)){
+			for(SmDisciplinaryAction disc : discList) {
+				if(disc.isBumiputeraCancel()){
+					throw new EpException(errorDA);
+				}
+			}
+		}
+		//#26238 Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration
+		if(ParameterConst.NEW_SM_APPLN_FOR_UPDATE.equalsIgnoreCase(applType)){
+			SmApplicationUtil.enableBankSectionOnly(getManagedBean(), discList);
+		}
+		getManagedBean().setTabActiveIndex(getManagedBean().getEditVO().isDisciplinary() ? 4 : 0);
 	}
 	
 	//#3460 - Start
@@ -3922,14 +4057,14 @@ public class SmApplicationBackingBean extends
 					if (getManagedBean().isPoApproverPersonnelRoleMsg()) {
 						throw new EpException(MessageConst.ERROR_760551, new String[] {getManagedBean().getPersonnelRoleMsg() });
 					}//#30762 -End
-					if (getManagedBean().isPoApproverPersonnelErr()) {
+					/*if (getManagedBean().isPoApproverPersonnelErr()) {
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}
+					}*/ //Commented for #31130
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
-					if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
+					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
 						throw new EpException(MessageConst.ERROR_722599, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}
+					}*/ //Commented for 31130 --210525
 					//#31130 -end
 					
 					//#32236 start
@@ -3997,14 +4132,15 @@ public class SmApplicationBackingBean extends
 					if (getManagedBean().isPoApproverPersonnelRoleMsg()) {
 						throw new EpException(MessageConst.ERROR_760551, new String[] {getManagedBean().getPersonnelRoleMsg() });
 					}//#30762 -End
-					if (getManagedBean().isPoApproverPersonnelErr()) {
+					/*if (getManagedBean().isPoApproverPersonnelErr()) {
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}
+					}*/ //Commented for #31130
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
-					if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
+					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
 						throw new EpException(MessageConst.ERROR_722599, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}//#31130 -end
+					}*/ //Commented for 31130 --210525
+					//#31130 -end
 					
 					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
 					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
@@ -4108,16 +4244,6 @@ public class SmApplicationBackingBean extends
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl(),
 					getManagedBean().getCurrentPageType());
-			//32617  && 35208 START
-			if(getManagedBean().getSmSupplier().getSmAppl() != null){
-				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
-						getManagedBean().getSmSupplier().getSmAppl());
-			}
-			if(getManagedBean().getSmAppl() != null){
-				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
-						getManagedBean().getSmAppl());
-			}
-			//32617  && 35208 END
 
 			// init GST information
 			initGst();
@@ -4367,14 +4493,11 @@ public class SmApplicationBackingBean extends
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				validSave = SmApplicationUtil.validateBasicInfoBeforeSave(
 						validSave, getManagedBean(), currentTab);
-				//#27853
-				if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
-					//START 27748 - SM Disciplinary action - 26238
-					if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+				//#27853, 27748 - SM Disciplinary action - 26238
+				boolean isDisciplinary = getManagedBean().getEditVO()!= null && getManagedBean().getEditVO().isDisciplinary();
+				if (!isDisciplinary && !getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
 						SmApplicationUtil.validateCoordinate(getManagedBean());
 					}
-					//END 27748
-				}
 			}
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
@@ -4476,20 +4599,7 @@ public class SmApplicationBackingBean extends
 
 	private void validateBeforeSubmit() {
 		//START 26238 -  Disciplonary action - 27748
-		if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-			if(this.getManagedBean().getSmAppl().getSmSupplier() != null){
-				List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(this.getManagedBean().getSmAppl().getSmSupplier());
-				
-				if(activeDisc != null && activeDisc.size() > 0){
-					for(SmDisciplinaryAction disc : activeDisc){
-						if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
-							getManagedBean().getEditVO().setDisciplinary(true);
-						}
-					}
-				}
-			}	
-		}
-	
+		SmApplicationUtil.enableBankSectionOnly(getManagedBean(), null);
 		if(getManagedBean().getEditVO()!=null && getManagedBean().getEditVO().isDisciplinary()){
 			return;
 		}
@@ -6943,12 +7053,30 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateWorkshopToSmAppl() {
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
 		final int minEmployee = 2;
-		if(getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().size() < minEmployee){
+		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+		
+		if(smFac.getSmSvWorkers().size() < minEmployee){
 			throw new EpException(
 					SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null), null);
 		}
+		//validate for no duplicate IC/passport
+		for(SmSvWorker worker1 : smFac.getSmSvWorkers()){
+			for(SmSvWorker worker2 : smFac.getSmSvWorkers()){
+				if(!worker1.equals(worker2) 
+						&& worker1.getIdentificationNo().equals(worker2.getIdentificationNo())){
+					throw new EpException(MessageConst.ERROR_722524,
+							new String[] { worker1.getIdentificationNo() });
+				}
+			}
+			//#28775 - 38366
+			worker1.setOldExpertise(worker1.getExpertise());
+			worker1.setOldIdentificationNo(worker1.getIdentificationNo());
+			worker1.setOldIdentificationTypeId(worker1.getIdentificationTypeId());
+			worker1.setOldName(worker1.getName());
+			worker1.setOldWorkExpYear(worker1.getWorkExpYear());
+		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
-		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+		
 		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
@@ -11088,8 +11216,8 @@ public class SmApplicationBackingBean extends
 			sourcingIntegrationSO.checkQTSupplierBranchDeleted(getManagedBean().getSmAppl().getSmSupplier().getSupplierId(),  getManagedBean().getSmAppl().getSmSupplierBranches(), getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0));
 		}
 		//#28777 - END
-		return submitPOorApproverReviewToBPM(decision);
-
+		//#34400
+		return "";
 	}
 
 	//#31386 - START
@@ -11131,13 +11259,86 @@ public class SmApplicationBackingBean extends
 		IReviewApplicationSO reqSO = null;
 
 		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
+		//#38195 START
+		if (StringUtils.isNotBlank(getManagedBean().getApplnRejectionRemarks())) {
+			SmApplicationUtil.manageAndSaveNewSmRemarksWithRoleCode(getManagedBean()
+					.getSmAppl().getApplId(),
+					ParameterConst.SM_APPLN_FOR_DELETE_PENDING_APPL_DECISION_REJECT,
+					getManagedBean().getApplnRejectionRemarks(),  getManagedBean().getRoleCode());
+		}
+		
+		PmState state = this.getManagedBean().getSmAppl().getSmCompanyBasic()
+				.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
+		if (state != null && state.getStateId() != null) {
+			PmZone zone = SmApplicationUtil.retrieveZoneByStateId(state
+					.getStateId());
+			log.info("*** ZONE SENT TO BPM ***** " + zone.getZoneName());
+			if (zone != null && zone.getZoneName() != null) {
+				reqDTO.setLocation(zone.getZoneName().toUpperCase());
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_722568);
+		}
+		
+		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
+			if (reqDTO.getLocation().equalsIgnoreCase(
+					SupplierManagementConst.SM_STATE_NAME_SABAH)) {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.sabah", null));
+			} else if (reqDTO.getLocation().equalsIgnoreCase(
+					SupplierManagementConst.SM_STATE_NAME_SARAWAK)) {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.sarawak", null));
+			} else {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.semunanjung", null));
+			}
+		}
+		
 		reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", IReviewApplicationSO.class);
 		reqDTO.setOutcome(res);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-		reqDTO.setBpmPojo(getManagedBean().getPayLoad());
+		
+		SMMOFAppCanDataType smAppCanObj = (SMMOFAppCanDataType) getManagedBean().getPayLoad();
+		//if old version & approve outcome use payload to set bpmpojo
+		if (reqDTO.getOutcome()
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE) ) {
+			reqDTO.setBpmPojo(getManagedBean().getPayLoad());
+		}else{
+			if(checkWIPVersion()){
+				reqDTO.setBpmPojo(getManagedBean().getPayLoad());
+			}else{
+				SMNotificationCommonDataType notif = new SMNotificationCommonDataType();
+				SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");	
+				
+				notif.setCompanyName(getManagedBean().getSmSupplier().getCompanyName() != null
+						? getManagedBean().getSmSupplier().getCompanyName() : " ");
+				notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo() != null
+						? getManagedBean().getSmSupplier().getRegNo() : " ");
+				notif.setPaymentMethods("");
+				notif.setNotifLink("");
+				notif.setNotifDescription("");
+				notif.setAddress(reqDTO.getNotifSignAddr());
+				notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
+				notif.setApplSubmitDate(sdf.format(getManagedBean().getSmAppl().getApplSubmitDate()));
+				notif.setApplRejectDate(sdf.format(new Date()));
+				notif.setMofNo(!getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
+						? getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofNo() : " ");
+				notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().isEmpty() ? AddressUtils.getFullAddress(this.getManagedBean().getSmAppl().getSmCompanyBasic()
+								.getSmCompanyAddresses().get(0).getSmAddress()) : " ");
+				notif.setSuppReason(getManagedBean().getSupplierRemarks() != null 
+						? getManagedBean().getSupplierRemarks() : " ");
+				notif.setPoReason(getManagedBean().getApplnRejectionRemarks() != null
+						? getManagedBean().getApplnRejectionRemarks() : " ");
+				smAppCanObj.setNotificationData(notif);
+				reqDTO.setBpmPojo(smAppCanObj); 
+			}
+		}
+		reqDTO.setCurrWorkflowStatus(smAppCanObj.getCurrWfStatus().longValue());
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
 
@@ -12923,16 +13124,20 @@ public class SmApplicationBackingBean extends
 					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setCountryId(addr.getCountryId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
+		//#36718 - END
 	}
 
 	/**
@@ -12978,15 +13183,19 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
 				}
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
+		//#36718 - END
 		//#36483 - END
 		
 		/*//13320-start
@@ -13043,16 +13252,16 @@ public class SmApplicationBackingBean extends
 					&& addr.getDistrictId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDistrictId(addr.getDistrictId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+		//#36718 - END
 	}
 
 	/**
@@ -13072,16 +13281,19 @@ public class SmApplicationBackingBean extends
 					&& addr.getCityId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setCityId(addr.getCityId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
+		//#36718 - END
 	}
 
 	/**
@@ -14135,17 +14347,24 @@ public class SmApplicationBackingBean extends
 						.getSelectedShareHolders());
 	}
 
+	//#28775 - 38498
+	/**
+	 * Disable delete button
+	 * @param facilitiesVOList
+	 * @return
+	 */
 	public boolean disableDeleteBtnFacility(List<PmCategoryL3> facilitiesVOList) {
 		boolean retVal = true;
-		if (!EntityHelper.isCollectionEmpty(facilitiesVOList)) {
-			for (PmCategoryL3 l3 : facilitiesVOList) {
-				if (!EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
-					for (SmFacility fac : l3.getFacilityList()) {
-						if (fac.isSelected()) {
-							retVal = false;
-							break;
-						}
-					}
+		if (EntityHelper.isCollectionEmpty(facilitiesVOList)){
+			return true;
+		}
+		for (PmCategoryL3 l3 : facilitiesVOList){
+			if (EntityHelper.isCollectionEmpty(l3.getFacilityList())){
+				continue;
+			}
+			for (SmFacility fac : l3.getFacilityList()){
+				if (fac.isSelected()){
+					return false;
 				}
 			}
 		}
@@ -14970,7 +15189,7 @@ public class SmApplicationBackingBean extends
 		//Add checking check expired for KN
 		SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
 		//31792 - START
-		if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
+		if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) { 
 		//31792 - END
 			Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 			long diff = currentDate.getTime()
@@ -15590,10 +15809,11 @@ public class SmApplicationBackingBean extends
 
 	private void setFacilityAddressSameAs(SmFacility facilityBean) {
 		getManagedBean().setFacAddresSameAs(StringUtils.EMPTY);
+		//#28775 - 38499
+		String[] exclude = new String[] {"pmDivision", "ssmData", "countrySsmNull" };
 		if (!EntityHelper.isObjectDifference(getManagedBean().getSmAppl()
 				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
-				.getSmAddress(), facilityBean.getSmAddress(), new String[] {
-				 "pmDivision" })) {
+				.getSmAddress(), facilityBean.getSmAddress(), exclude)) {
 			getManagedBean().setFacAddresSameAs("HQ");
 		} else if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
 				.getSmSupplierBranches())) {
@@ -16288,6 +16508,7 @@ public class SmApplicationBackingBean extends
 	public void validateRole(SmPersonnel personnel){
 		if(personnel.isEquityOwner() || personnel.isDirector() || personnel.isDirOrHghrMngmt()){
 			personnel.setClerical(false);
+			personnel.setSemiProf(false);//#38610
 		}
 	}
 	public BigDecimal calPercentage(BigDecimal totalCapitalCompany,BigDecimal shareAmt){
@@ -16764,16 +16985,19 @@ public class SmApplicationBackingBean extends
 					&& addr.getDivisionId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(addr.getDivisionId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
+		//#36718 - END
 	}
 	//13320-End	
 	
@@ -18241,4 +18465,40 @@ public class SmApplicationBackingBean extends
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());		
 	}
 	//#36594 - End
+	//#38195 START
+	/**
+	 * This method will compare between old and latest BPM version 
+	 *            .
+	 * @return boolean.
+	 */
+	public boolean checkWIPVersion() {
+		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
+
+		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
+		cReqDTO.setCompositeValidityId(SupplierManagementConst.COMPOSITE_VALIDITY_ID_SM_DEL_PEN);
+
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
+				.getMinCompositeVersion();
+		String version = this.getManagedBean().getBpmVersionNo();
+
+		return isOldVersion(minVersion, version);
+	}
+
+	/**
+	 * Method to check if bpm is old version will return true
+	 * 
+	 * @param Long workFlowStatus, String minVersion, String version
+	 *            .
+	 * @return boolean.
+	 */
+	private boolean isOldVersion(String minVersion, String version) {
+		boolean isOldVersion = StringUtils.isNotBlank(minVersion) && StringUtils.isNotBlank(version)
+				&& CustomUtils.compositeVersionComparator(version, minVersion) < 0;
+		if (isOldVersion) {
+			return true;
+		}
+		return false;
+	}
+	//#38195 END
 }

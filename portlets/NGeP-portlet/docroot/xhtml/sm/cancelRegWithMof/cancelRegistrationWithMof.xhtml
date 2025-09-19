@@ -34,11 +34,13 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.mof.reg.reason.delete']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputTextarea cols="60" style="margin-bottom:8px;"
+					<td>
+						<!-- #38195 -->
+						<p:inputTextarea cols="60" style="margin-bottom:8px;"
 							id="cancelReson" label="#{lbl['lbl.sm.mof.reg.reason.delete']}"
 							validatorMessage="#{lbl['lbl.sm.mof.reg.reason.delete']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 							value="#{backingBean.managedBean.supplierRemarks}"
-							maxlength="2500">
+							maxlength="2500" converter="trimConverter">
 							<p:ajax event="blur" process="@this"
 								update="cancelReson,@([id$=Msg])" />
 							<f:validateLength maximum="2500" />
@@ -66,10 +68,18 @@
 				</tr>
 			</table>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					action="#{backingBean.onDisplayConfirmCanceMofRegistration}" update="@([id$=Msg])" id="submitBtnId"/>
+				<!-- #34400 - start -->
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"  id="submitBtnId"
+					oncomplete="if (!args.validationFailed) confirmDlg.show()" />
 			</div>
 		</p:panel>
+		<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
+			bean="#{backingBean}"
+			okAction="onDisplayConfirmCanceMofRegistration"
+			content="#{lbl['lbl.sm.confirm.cancel.mof']}" 
+			update="@([id$=Msg])"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
 			dynamic="true" resizable="false" width="700px" height="200"
 			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"

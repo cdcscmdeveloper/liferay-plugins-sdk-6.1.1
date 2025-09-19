@@ -649,28 +649,9 @@ public class CommonApplBackingBean extends
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
 			smApplBB.getManagedBean().setDraftedAppl(true);
-			
-			//27641,27736 : Disciplinary Action - 26238 - start
-			SmSupplier currentSupplier = SmApplicationUtil.getCurrentSupplier();
-			List<SmDisciplinaryAction> activeDisc = new ArrayList<SmDisciplinaryAction>();
-			if(currentSupplier != null){
-				//27876: Disciplinary Action - start - <27876>
-				activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier);
-				//27876: Disciplinary Action - End- <27876>
-			}
-			
-			if(activeDisc != null && activeDisc.size() > 0){
-				log.info("***Navigate to bank info***");
-				for(SmDisciplinaryAction disc : activeDisc){
-					if(disc.isSuspendRegistration()){
-						smApplBB.getManagedBean().getEditVO().setDisciplinary(true);
-					}
-				}				
-			}			
-			//27641,27736 : Disciplinary Action - 26238 - end
+			//#26238 -- 27641,27736,27876
 			setNavigationForDraftAppl(appl.getApplType());
-			// }
-
+			SmApplicationUtil.checkAndRedirectIfInvalid(appl);//#37784
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT)) {
 			log.info(" ******* The selected process name is  Draft Maintain Account******"
@@ -791,6 +772,8 @@ public class CommonApplBackingBean extends
 						srcObj.getSupplierList());
 			}*/
 			smApplBB.getManagedBean().setPayLoad(srcObj);
+			smApplBB.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo()); //#38195
+			
 			SmRemaksResDTO remResDTO = getRemarksByDoc(
 					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
 					appl.getApplId());
