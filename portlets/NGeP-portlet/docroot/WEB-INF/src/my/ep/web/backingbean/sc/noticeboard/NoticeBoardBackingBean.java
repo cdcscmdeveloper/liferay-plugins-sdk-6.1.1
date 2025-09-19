@@ -40,6 +40,7 @@ import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO; //#29732
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -3524,27 +3525,44 @@ public class NoticeBoardBackingBean extends
 	
 	// #29732 Start
 	public void onClickHistoryIcon(String catCode, String catCodeLevel,
-			Long catCodeID) {
+			Long catCodeId,Long qtCateId) {
+		boolean processAfter = false;
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
 						ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
-
-		if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
-			reqDTO.setCategoryL1Id(catCodeID);
-			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
-			reqDTO.setCategoryL2Id(catCodeID);
-			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
-			reqDTO.setCategoryL3Id(catCodeID);
-			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+		
+		List<ScQtCategory> findQtCatCode = retrieveScQtCategorytByQtCatID(qtCateId);
+		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
+			for(ScQtCategory categoryCodeEdit : findQtCatCode){
+				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()){
+					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+						reqDTO.setCategoryL1Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+						reqDTO.setCategoryL2Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+						reqDTO.setCategoryL3Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+					}
+						processAfter = true;
+				}else{
+					this.getManagedBean().setHistoryList(null);
+				}
+			}
+		}else{
+			this.getManagedBean().setHistoryList(null);
 		}
-		getManagedBean().setHistoryList(
-				updateCreatedUserName(resDTO.getRemarkList()));
-		getManagedBean().setHisCatCode(catCode);
+		
+		if(processAfter){
+			getManagedBean().setHistoryList(
+					updateCreatedUserName(resDTO.getRemarkList()));
+			getManagedBean().setHisCatCode(catCode);
+		}
+
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
 
@@ -3559,6 +3577,24 @@ public class NoticeBoardBackingBean extends
 	}
 	// #29732 End
 	// #29732 Start - fix ReOpen
+	/**
+	 * Gets the spec so.
+	 * 
+	 * @return the spec so
+	 */
+	private IQTSpecSO getSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+	}
+	
+	public List<ScQtCategory> retrieveScQtCategorytByQtCatID(Long qtCateId){
+		List<ScQtCategory> listCategoryDB = new ArrayList();
+		IQTSpecSO specSO = getSpecSO();
+		listCategoryDB = specSO.retrieveScQtCategorytByQtCatID(this.getManagedBean().getScQt().getQtId(),qtCateId);
+		
+		return listCategoryDB;
+	}
+	
 	public String toDate(Timestamp changedDate){
 		String pattern = CommonConstants.DEFAULT_12HR_DATETIME_FORMAT;
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
