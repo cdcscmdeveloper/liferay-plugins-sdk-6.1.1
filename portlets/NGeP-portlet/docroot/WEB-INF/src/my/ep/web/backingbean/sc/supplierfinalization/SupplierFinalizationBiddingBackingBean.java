@@ -3410,22 +3410,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 	// #28777 & #29729 - End
 	
-	// #28777 & #29729 - Start
-	/**
-	 * Method to check list had disqualified zones
-	 * 
-	 * @param qtId
-	 * @param specZoneId
-	 * @return true or false
-	 **/
-	public Boolean checkListZonesDisqualifiedSupplierBranchDeleted(Long qtId, Long specZoneId) {
-		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		return sourcingIntegrationSO.checkListZonesDisqualifiedSupplierBranchDeleted(qtId, specZoneId);
-	}
-
-	// #28777 & #29729 - End
-	
 	//#21692 - Start
 	public boolean supplierRejectEPV(ScQtProposal proposal) {
 		return proposal.getIsAgreeQtExtendPeriod() == null ? false : proposal
