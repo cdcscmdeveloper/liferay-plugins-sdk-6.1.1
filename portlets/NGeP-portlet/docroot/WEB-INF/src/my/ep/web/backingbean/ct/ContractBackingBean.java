@@ -1755,7 +1755,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				//Start - #30045
 				if(isPk7Agencies()){
 					reqDTO.setPk7Related(true);
-					reqDTO.setReasonCode(reasonCode);
+					if(!reasonCode.isEmpty()){
+						reqDTO.setReasonCode(reasonCode);
+					}
+					
 				}
 				//End - #30045
 				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
@@ -2611,7 +2614,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IReasonSO.class);
 				reasonCode = reasonSO.getReasonCodeAppliedForCt(reasonId);
-				if(reasonCode != null){
+				if(!reasonCode.isEmpty()){
 					reqDTO.setReasonCode(reasonCode);
 					List<Long> listAffected = orgProfileSO.retrieveAffectedAgencies(reqDTO);
 					reqDTO.setPk7Related(true);
