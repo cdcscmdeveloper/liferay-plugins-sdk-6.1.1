@@ -4510,28 +4510,29 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//26238 - END
 	//Start - #30045
 	/**
-	 * Resolves the procurement type for PK7 by checking two possible property paths.
-	 * <ul>
-	 *   <li>First attempts to fetch from contract items' request note details.</li>
-	 *   <li>If not found (null), falls back to contract LOA quotation type.</li>
-	 * </ul>
+	 * <p>
+	 * If a {@link PmReason} is found in either check, the contract is considered 
+	 * to be PK7-related. If both checks return {@code null}, the contract is 
+	 * treated as a normal (non-PK7) contract.
+	 * </p>
 	 *
-	 * @return a {@link PmParameter} instance if found, otherwise {@code null}.
+	 * @return the {@link PmReason} indicating the PK7 justification type,
+	 *         or {@code null} if the contract is not PK7-related.
 	 */
-	public PmParameter resolveProcTypeForPk7() {
-	    PmParameter procType = (PmParameter) EntityHelper.getNestedProperty(
+	public PmReason resolveProcTypeForPk7() {
+		PmReason reasonId = (PmReason) EntityHelper.getNestedProperty(
 	        getManagedBean(),
-	        "contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType"
+	        "contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType"
 	    );
 
-	    if (procType == null) {
-	        procType = (PmParameter) EntityHelper.getNestedProperty(
+	    if (reasonId == null) {
+	    	reasonId = (PmReason) EntityHelper.getNestedProperty(
 	            getManagedBean(),
-	            "contractVer.ctContract.loa.qtType"
+	            "contractVer.ctContract.loa.justificationType"
 	        );
 	    }
 
-	    return procType;
+	    return reasonId;
 	}
 	//End - #30045
 }

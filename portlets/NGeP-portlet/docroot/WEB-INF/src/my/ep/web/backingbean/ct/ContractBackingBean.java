@@ -205,7 +205,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	private static final Map<String, String> months;
-	
+	//Start - #30045
+	private Long reasonId = null;
+	private String reasonCode = null;
+	//End - #30045
 	static
 	{
 		months = new HashMap<String, String>();
@@ -1752,6 +1755,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				//Start - #30045
 				if(isPk7Agencies()){
 					reqDTO.setPk7Related(true);
+					reqDTO.setReasonCode(reasonCode);
 				}
 				//End - #30045
 				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
@@ -2598,15 +2602,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		try {
 			int i = 0;
-			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			OrgProfileResDTO resDTO = new OrgProfileResDTO();
 			//Start - #30045
 			if (isPk7Agencies()) {
-				List<Long> listAffected = orgProfileSO.retrieveAffectedAgencies();
-				reqDTO.setPk7Related(true);
-				reqDTO.setOrgProfileIdListForPk7(listAffected);
+				IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IReasonSO.class);
+				reasonCode = reasonSO.getReasonCodeAppliedForCt(reasonId);
+				if(reasonCode != null){
+					reqDTO.setReasonCode(reasonCode);
+					List<Long> listAffected = orgProfileSO.retrieveAffectedAgencies(reqDTO);
+					reqDTO.setPk7Related(true);
+					reqDTO.setOrgProfileIdListForPk7(listAffected);
+				}
+				
 			}
 			//End - #30045
 			resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
@@ -2616,7 +2627,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 		return items;
@@ -5149,47 +5159,32 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	// 24333 - End
 	// Start - #30045
 	/**
-	 * Determines whether the current contract's procurement type corresponds to a PK7 agency type.
+	 * Determines whether the current contract or request is associated 
+	 * with a PK7 or Special Item agency based on its resolved {@link PmReason}.
 	 * <p>
-	 * This method resolves the effective {@link PmParameter} for the contract and safely checks its
-	 * parameter code and parameter type against predefined constants to decide if the contract
-	 * is considered a PK7 agency.
+	 * The method attempts to resolve the procurement type by calling 
+	 * {@code resolveProcTypeForPk7()}. If no reason is found, the method 
+	 * immediately returns {@code false} to avoid {@link NullPointerException}.
 	 * </p>
 	 *
 	 * <p>
-	 * The contract is classified as a PK7 agency if either of the following conditions is true:
-	 * <ul>
-	 *   <li>The parameter code equals {@link ParameterConst#QUOTATION_TENDER_TYPE_ITEM_IN_PK7}
-	 *       and the parameter type equals {@link ParameterTypeConst#PROCUREMENT_TYPE} -> WIP.</li>
-	 *   <li>The parameter code equals {@link ParameterConst#QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP}
-	 *       and the parameter type equals {@link ParameterTypeConst#QUOTATION_TENDER_TYPE} -> WIP.</li>
-	 *   <li>The parameter code equals {@link ParameterConst#DP_SPECIAL_ITEM_PK7_TYPE}
-	 *       and the parameter type equals {@link ParameterTypeConst#CT_DP_NEW_SPECIAL_ITEM_WITH_APPROVAL}
-	 *       OR  {@link ParameterTypeConst#CT_DP_NEW_PK7_WP_ITEM}.</li>
-	 * </ul>
+	 * Currently, the decision is simplified to check whether the resolved 
+	 * {@link PmReason} has a non-null {@code reasonId}. If the {@code reasonId} 
+	 * is not {@code null}, the contract is considered to fall under PK7 or 
+	 * special item rules.
 	 * </p>
 	 *
-	 * @return {@code true} if the contract is identified as a PK7 agency; 
-	 *         {@code false} if no matching procurement type is found or the resolved parameter is {@code null}.
+	 * @return {@code true} if a valid {@link PmReason} with a non-null 
+	 *         {@code reasonId} is resolved; {@code false} otherwise.
 	 */
 	public boolean isPk7Agencies() {
-		PmParameter procValue = resolveProcTypeForPk7();
-
-		if (procValue == null) {// avoid NullPointerException
+		PmReason reason = resolveProcTypeForPk7();
+		if (reason == null) {// avoid NullPointerException
 			return false;
+		} else {
+			reasonId = reason.getReasonId();
 		}
-
-		String proCode = procValue.getParameterCode();
-		String procType = procValue.getParameterType();
-
-		return (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equalsIgnoreCase(proCode) && ParameterTypeConst.PROCUREMENT_TYPE
-						.equalsIgnoreCase(procType))
-				|| (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP.equalsIgnoreCase(proCode) && ParameterTypeConst.QUOTATION_TENDER_TYPE
-						.equalsIgnoreCase(procType))
-				|| (ParameterConst.DP_SPECIAL_ITEM_PK7_TYPE.equalsIgnoreCase(proCode) && ParameterTypeConst.CT_DP_NEW_SPECIAL_ITEM_WITH_APPROVAL
-						.equalsIgnoreCase(procType))
-				|| (ParameterConst.DP_SPECIAL_ITEM_PK7_TYPE.equalsIgnoreCase(proCode) && ParameterTypeConst.CT_DP_NEW_PK7_WP_ITEM
-						.equalsIgnoreCase(procType));
+		return reasonId != null;
 	}
 	//End - #30045
 }  
