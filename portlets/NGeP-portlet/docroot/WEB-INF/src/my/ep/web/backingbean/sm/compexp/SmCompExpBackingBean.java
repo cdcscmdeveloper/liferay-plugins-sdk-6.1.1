@@ -14,7 +14,6 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * @redmine #9299 
- * Backing Bean for SM Company Experience
  */
 @ManagedBean(name = "smCompExpBB")
 @RequestScoped
@@ -22,14 +21,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	private static final long serialVersionUID = 1L;
 	private static String updateInfoTncXhtml = "updateInfoTnc.xhtml";
-	private static String updateMainXhtml = "updateMain.xhtml";
+	private static String updateInfoMainXhtml = "updateInfoMain.xhtml";
 
 	/**
 	 * Prerender for Update Info
 	 */
 	public void preRenderUpdateInfo() {
 		renewSesionObject();
-		this.getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
+		this.getManagedBean().setSupplier(SmApplicationUtil.getCurrentSupplier());
 		SmCommonUtil.redirectToPage(updateInfoTncXhtml, "", null, null);
 	}
 
@@ -38,7 +37,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void proceedAfterUpdateTnC() {
 		this.getManagedBean().setDraftExist(checkDraftExist());
-		SmCommonUtil.redirectToPage(updateMainXhtml, "", null, null);
+		SmCommonUtil.redirectToPage(updateInfoMainXhtml, "", null, null);
 	}
 
 	private boolean checkDraftExist() {
@@ -49,6 +48,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	private ISmCompExpSO smCompExpSo() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+	}
+
+	/**
+	 * Redirect to Update Draft list screen
+	 */
+	public void redirectToDraft() {
+		this.getManagedBean().getDraftSmDataModel().reloadData();
 	}
 
 }
