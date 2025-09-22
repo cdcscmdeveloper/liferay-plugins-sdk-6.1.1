@@ -4519,7 +4519,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return the {@link PmReason} indicating the PK7 justification type,
 	 *         or {@code null} if the contract is not PK7-related.
 	 */
-	public PmReason resolveProcTypeForPk7() {
+	public PmReason resolveProcTypeForCtPk7() {
 		PmReason reason = null;
 		reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
 				"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");

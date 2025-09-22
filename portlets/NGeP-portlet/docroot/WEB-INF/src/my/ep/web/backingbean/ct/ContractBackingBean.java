@@ -5181,13 +5181,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         {@code reasonId} is resolved; {@code false} otherwise.
 	 */
 	public boolean isPk7Agencies() {
-		PmReason reason = resolveProcTypeForPk7();
+		PmReason reason = resolveProcTypeForCtPk7();
 		if (reason == null) {// avoid NullPointerException
 			return false;
 		} else {
 			reasonId = reason.getReasonId();
 		}
-		return reasonId != null;
+		return true;
 	}
 	//End - #30045
 }  
