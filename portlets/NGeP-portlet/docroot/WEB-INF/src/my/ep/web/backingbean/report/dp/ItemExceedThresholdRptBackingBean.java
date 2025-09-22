@@ -13,12 +13,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
-import my.ep.dto.pm.common.report.RPTRequestReqDTO;
-import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -28,11 +24,8 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.constant.report.DpReportConst;
-import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.dp.ItemExceedThresholdRptManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -40,7 +33,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 /**
  * @author zaim
@@ -59,10 +51,11 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	private static final String ORG_TYPE_CODE_PARAM = "orgTypeCode.parameterCode^";
 	private static final String RECORD_STATUS_PARAM = "|recordStatus^1";
 	
-	List<String> enableFieldRole = Arrays.asList(RoleCode.SYS_ADMIN.value(), RoleCode.AUDITOR_INTERNAL.value(),
+	private List<String> enableFieldRole = Arrays.asList(RoleCode.SYS_ADMIN.value(), RoleCode.AUDITOR_INTERNAL.value(),
 			RoleCode.AUDITOR_GENERAL.value(), RoleCode.BPK_AUDITOR.value(), RoleCode.BPK_APPROVER.value());
 
-	List<String> disableFieldRole = Arrays.asList(RoleCode.REQUISITIONER.value(), RoleCode.RN_APPROVER.value());
+	private List<String> disableFieldRole = Arrays.asList(RoleCode.REQUISITIONER.value(), RoleCode.RN_APPROVER.value());
+
 	/**
 	 * Constructor for class ItemExceedThresholdRptBackingBean.
 	 */
@@ -73,6 +66,9 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		initializeOrgFieldValue();
 	}
 	
+	/**
+	 * @param params
+	 */
 	public void generateReport(LinkedHashMap<String, String> params){
 		
 		if (!reportValidationFields()){
@@ -113,72 +109,46 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	}
 
 	@Override
-	public LinkedHashMap<String, String> getparams() { 
-		LinkedHashMap<String, String> map = new LinkedHashMap<>();
-		validateCriteria();
-		
-		if (getManagedBean().getSelectedMinistry() != null) {
-			map.put(DpReportConst.PARAM_KEY_MINISTRY, getManagedBean().getSelectedMinistry().getOrgProfileId()
-					.toString());
-		}
-		if (getManagedBean().getSelectedKumpulanPTJ() != null) {
-			map.put(DpReportConst.PARAM_KEY_KUMPULAN_PTJ, getManagedBean().getSelectedKumpulanPTJ().getOrgProfileId()
-					.toString());
-		}
-		if (getManagedBean().getSelectedPTJ() != null) {
-			map.put(DpReportConst.PARAM_KEY_PTJ, getManagedBean().getSelectedPTJ().getOrgProfileId().toString());
-		}
+	public LinkedHashMap<String, String> getparams() {
+	    LinkedHashMap<String, String> map = new LinkedHashMap<>();
+	    validateCriteria();
 
-		if (StringUtils.isNotEmpty(getManagedBean().getCentralPanelContract())) {
-			map.put(DpReportConst.PARAM_KEY_CENTRAL_PANEL_CONTRACT, getManagedBean().getCentralPanelContract());
-		}
+	    addIfNotNull(map, DpReportConst.PARAM_KEY_MINISTRY, getManagedBean().getSelectedMinistry());
+	    addIfNotNull(map, DpReportConst.PARAM_KEY_KUMPULAN_PTJ, getManagedBean().getSelectedKumpulanPTJ());
+	    addIfNotNull(map, DpReportConst.PARAM_KEY_PTJ, getManagedBean().getSelectedPTJ());
+	    addIfNotEmpty(map, DpReportConst.PARAM_KEY_CENTRAL_PANEL_CONTRACT, getManagedBean().getCentralPanelContract());
+	    addIfNotEmpty(map, DpReportConst.PARAM_KEY_CIRCULAR_NO, getManagedBean().getCircularNo());
+	    addIfNotNull(map, DpReportConst.PARAM_KEY_STATUS, getManagedBean().getStatus());
+	    addIfNotEmpty(map, DpReportConst.PARAM_KEY_ITEM_CODE, getManagedBean().getItemCode());
+	    addIfNotNull(map, DpReportConst.PARAM_KEY_PROCUREMENT_TYPE, getManagedBean().getProcurementType());
+	    addIfNotEmpty(map, DpReportConst.PARAM_KEY_ITEM_NAME, getManagedBean().getItemName());
+	    addIfNotEmpty(map, DpReportConst.PARAM_KEY_REASON, getManagedBean().getReason());
+	    addIfNotEmpty(map, DpReportConst.PARAM_KEY_RN_NO, getManagedBean().getRnNo());
+	    addIfNotEmpty(map, DpReportConst.PARAM_KEY_GROUP, getManagedBean().getGroupBy());
+	    addIfNotEmpty(map, DpReportConst.PARAM_KEY_FINANCIAL_YEAR, getManagedBean().getFinancialYear());
 
-		if (StringUtils.isNotEmpty(getManagedBean().getCircularNo())) {
-			map.put(DpReportConst.PARAM_KEY_CIRCULAR_NO, getManagedBean().getCircularNo());
-		}
+	    if (MapUtils.isNotEmpty(map)) {
+	        // mandatory map values
+	        map.put(DpReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
+	        map.put(DpReportConst.PARAM_KEY_REPORT_ID, getManagedBean().getReportCode());
+	        map.put(DpReportConst.PARAM_KEY_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
+	    } else {
+	        throw new EpException(MessageConst.ERROR_REPORT_780003);
+	    }
 
-		if (getManagedBean().getStatus() != null) {
-			map.put(DpReportConst.PARAM_KEY_STATUS, getManagedBean().getStatus().toString());
-		}
+	    return map;
+	}
 
-		if (StringUtils.isNotEmpty(getManagedBean().getItemCode())) {
-			map.put(DpReportConst.PARAM_KEY_ITEM_CODE, getManagedBean().getItemCode());
-		}
+	private void addIfNotEmpty(Map<String, String> map, String key, String value) {
+	    if (StringUtils.isNotEmpty(value)) {
+	        map.put(key, value);
+	    }
+	}
 
-		if (getManagedBean().getProcurementType() != null) {
-			map.put(DpReportConst.PARAM_KEY_PROCUREMENT_TYPE, getManagedBean().getProcurementType().toString());
-		}
-
-		if (StringUtils.isNotEmpty(getManagedBean().getItemName())) {
-			map.put(DpReportConst.PARAM_KEY_ITEM_NAME, getManagedBean().getItemName());
-		}
-
-		if (StringUtils.isNotEmpty(getManagedBean().getReason())) {
-			map.put(DpReportConst.PARAM_KEY_REASON, getManagedBean().getReason());
-		}
-
-		if (StringUtils.isNotEmpty(getManagedBean().getRnNo())) {
-			map.put(DpReportConst.PARAM_KEY_RN_NO, getManagedBean().getRnNo());
-		}
-
-		if (StringUtils.isNotEmpty(getManagedBean().getGroupBy())) {
-			map.put(DpReportConst.PARAM_KEY_GROUP, getManagedBean().getGroupBy());
-		}
-
-		if (StringUtils.isNotEmpty(getManagedBean().getFinancialYear())) {
-			map.put(DpReportConst.PARAM_KEY_FINANCIAL_YEAR, getManagedBean().getFinancialYear());
-		}
-
-		if (MapUtils.isNotEmpty(map)) {
-			// mandatory map values
-			map.put(DpReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
-			map.put(DpReportConst.PARAM_KEY_REPORT_ID, getManagedBean().getReportCode());
-			map.put(DpReportConst.PARAM_KEY_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
-		} else {
-			throw new EpException(MessageConst.ERROR_REPORT_780003);
-		}
-
-		return map;
+	private void addIfNotNull(Map<String, String> map, String key, Object obj) {
+	    if (obj != null) {
+	        map.put(key, obj.toString());
+	    }
 	}
 
 	/* (non-Javadoc)
@@ -299,17 +269,16 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 * @return the procurement mode dropdown values
 	 */
 	public SelectItem[] getProcurementModeDropdownValues() {
-		Long PARAM_CODE_G2G = 1013L;
+		Long paramCodeG2g = 1013L;
 		SelectItem[] items = getDropdownValuesBySearchBean("RPT", null);
 
 		List<SelectItem> list = new ArrayList<>();
 		for (SelectItem item : items) {
 
-			if (item.getValue() == null) {
-				list.add(item);
-			} else if (!item.getValue().equals(PARAM_CODE_G2G)) {
-				list.add(item);
+			if (item.getValue() == null || !item.getValue().equals(paramCodeG2g)) {
+			    list.add(item);
 			}
+
 		}
 		
 		SelectItem[] filtered = list.toArray(new SelectItem[list.size()]);
@@ -444,19 +413,17 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 */
 	public boolean reportValidationFields() {
 		boolean isHasError = false;
-		
-		if (getManagedBean().getSelectedMinistry() == null || getManagedBean().getSelectedMinistry().getMinstryId() == null){
-			isHasError = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-							MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-									"lbl.rpt.ministry", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-			FacesContext.getCurrentInstance().validationFailed();
+		if (getManagedBean().isDisableRole() && (getManagedBean().getSelectedMinistry() == null || getManagedBean().getSelectedMinistry().getMinstryId() == null)){
+				isHasError = true;
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+										"lbl.rpt.ministry", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().validationFailed();
 		}
-		
 		if (getManagedBean().getCentralPanelContract() == null){
 			isHasError = true;
 			FacesContext.getCurrentInstance().addMessage(
