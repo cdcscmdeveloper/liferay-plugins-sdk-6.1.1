@@ -1920,7 +1920,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	private boolean shouldDisableMaintenance(SmSupplier supplier,
 			String mofStatus) {
 		return isDeletedStatus(supplier, mofStatus)
-				|| isCancelRegStatus(mofStatus)
+				|| isCancelRegStatus(mofStatus, supplier)
 				|| isActiveWithPendingDA(supplier, mofStatus);
 	}
 
@@ -1932,11 +1932,13 @@ public class SupplierDataMaintenanceBackingBean extends
 				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED);
 	}
 
-	private boolean isCancelRegStatus(String mofStatus) {
+	private boolean isCancelRegStatus(String mofStatus, SmSupplier supplier) {
+		//#39079 - START
 		boolean basicDA = getManagedBean().isCancelRegistration()
 				|| getManagedBean().isBlacklistOwnerOrDirector()
-				|| getManagedBean().isSuspendRegistration();
-
+				|| StringUtils
+						.isNotEmpty(checkNonActiveDAWithPending(supplier));
+		//#39079 - END
 		return mofStatus
 				.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG)
 				&& basicDA;
@@ -2985,14 +2987,19 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void unSelectCancelBumiCategories() {
 		unSelectSuspendCategories();
-		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
-				|| !getManagedBean().isEditDisciplinaryActionCheckBox()){
+		boolean multipleCategory = getManagedBean().isBumiputeraStatusCancel()
+				&& (getManagedBean().isCancelCategoryCode() || getManagedBean()
+						.isManufacturerStatusCancel());
+		if (!getManagedBean().getSmSupplier().isBumi()
+				|| !getManagedBean().isBumiputeraStatusCancel()
+				|| multipleCategory
+				|| !getManagedBean().isEditDisciplinaryActionCheckBox()) {
 			return;
 		}
 		List<SmSupplierCategory> selectList = new ArrayList<>();
 		List<SmSupplierCategory> prevSelect = getManagedBean().getSelectedApprovedCategories();
 		if (prevSelect == null){
-			prevSelect = new ArrayList<SmSupplierCategory>();
+			prevSelect = new ArrayList<>();
 		}
 		Iterator<SmSupplierCategory> it = getManagedBean().getApprovedCategoryList().iterator();
 		while (it.hasNext()) {
