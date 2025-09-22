@@ -95,7 +95,8 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	//#35489 - End
 	private boolean suppGovSellerUser = false; // #36489
 
-	/************ START: AUDIT #28895-35509 *************/
+	/************ AUDIT #28895-35509 *************/
+	private Long brandNewUserOrgId;
 	private PmUser oldAuditPmUser;
 	private PmUserOrg oldAuditPmUserOrg;
 	private List<PmUserRole> oldAuditPmUserRoles;
@@ -104,7 +105,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private PmUserOrg newAuditPmUserOrg;
 	private List<PmUserRole> newAuditPmUserRoles;
 	private List<PmAddressType> newAuditPmAddressTypes;
-	/************ END: AUDIT #28895-35509 *************/
+	/************ AUDIT #28895-35509 *************/
 	
 	public ProfileManagementManagedBean(){}
 	
@@ -852,7 +853,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	}
 	//#36489 - End
 
-	/************ START: AUDIT #35509 *************/
+	/************ AUDIT *************/
 	public PmUser getOldAuditPmUser() {
 		return oldAuditPmUser;
 	}
@@ -953,5 +954,19 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setNewAuditPmAddressTypes(List<PmAddressType> newAuditPmAddressTypes) {
 		this.newAuditPmAddressTypes = newAuditPmAddressTypes;
 	}
-	/************ END: AUDIT #35509 *************/
+
+	/**
+	 * @return the brandNewUserOrgId
+	 */
+	public Long getBrandNewUserOrgId() {
+		return brandNewUserOrgId;
+	}
+
+	/**
+	 * @param brandNewUserOrgId the brandNewUserOrgId to set
+	 */
+	public void setBrandNewUserOrgId(Long brandNewUserOrgId) {
+		this.brandNewUserOrgId = brandNewUserOrgId;
+	}
+	/************ AUDIT *************/
 }
