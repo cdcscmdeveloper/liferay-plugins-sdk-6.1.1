@@ -7189,13 +7189,20 @@ public class LOIDetailBackingBean extends
 	public Boolean checkInstructionSupplierBranchDeleted(Long qtId) {
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();	
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
-		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+
+		if (isZonal && CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
 				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+
+		if (!isZonal && sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// #28777 & #29729 - End
@@ -7213,13 +7220,21 @@ public class LOIDetailBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
-		if (CollectionUtils.isNotEmpty(zoneDetails)
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+
+		if (isZonal
+				&& CollectionUtils.isNotEmpty(zoneDetails)
 				&& zoneActiveIndex != -1
 				&& sourcingIntegrationSO.flagZonesDisqualifiedSupplierBranchDeleted(qtId, supplierId,
 						zoneDetails.get(zoneActiveIndex).getSpecZoneId())) {
 			return true;
 		}
-		return sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(qtId, supplierId);
+
+		if (!isZonal && sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(qtId, supplierId)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// #28777 & #29729 - End
@@ -7236,11 +7251,18 @@ public class LOIDetailBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getMultiLOIZoneDetails();	
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
-		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+		
+		if (isZonal && CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
 				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+
+		if (!isZonal && sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// #28777 & #29729 - End
