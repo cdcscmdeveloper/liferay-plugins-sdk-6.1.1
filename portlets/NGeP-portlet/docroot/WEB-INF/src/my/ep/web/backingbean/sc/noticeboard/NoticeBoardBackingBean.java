@@ -3573,7 +3573,7 @@ public class NoticeBoardBackingBean extends
 			IQTNoticeBoardSO noticeBoardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 			PmSalutation salutation = noticeBoardSO.retrieveSalutationByIdentificationNo(identificationNo);
-
+			
 			if (salutation != null) {
 				salutationName = salutation.getSalutationName();
 			}

@@ -5754,6 +5754,14 @@ public class RuleCatalogueBackingBean extends
 		return !result.isEmpty() ? result : configRuleValuesList;
 	}
 	
+	/**
+	 * #36738
+	 * check whether the date is matched
+	 * @param value
+	 * @param searchedEffectiveDate
+	 * @param searchedExpiryDate
+	 * @return
+	 */
 	private boolean isMatch(PmConfigRuleValue value, Date searchedEffectiveDate, Date searchedExpiryDate) {
 		if (searchedEffectiveDate != null) {
 			return searchedEffectiveDate.equals(value.getEffDate());
@@ -5811,7 +5819,6 @@ public class RuleCatalogueBackingBean extends
 	    // filter by limit
 	    if (searchedLimit != null && !searchedLimit.isEmpty()) {
 	        searchedPtjApprovalList = searchByLimit(ptjApprovalList, searchedLimit);
-	        ptjApprovalList = searchedPtjApprovalList;
 	    }
 		
 		sortPmPtjSpecialApprovalByMinistryName(searchedPtjApprovalList);
@@ -5833,8 +5840,14 @@ public class RuleCatalogueBackingBean extends
 	        String value = useName 
 	            ? ptjApproval.getPmOrgProfile().getOrgValidity().getOrgName()
 	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();
-
-	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))) {
+	            
+	            String searchRegex = value
+				        .replace("%", ".*?")  
+				        .replace("_", ".")   
+				        .replace("?", ".")    
+				        .replace("*", ".*?");    
+	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
+	        		|| value.toLowerCase().matches(searchRegex)) {
 	            result.add(ptjApproval);
 	        }
 	    }
