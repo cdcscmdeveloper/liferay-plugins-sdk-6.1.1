@@ -6717,30 +6717,36 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	// #25725 - note 125/128 - start
 	/**
 	 * To check is reason PK2
+	 * @param loa
 	 * @return boolean isReasonPK2
 	 */
 	public boolean isReasonPK2(ScLoa loa) { // #25725 - note 146 - change to public
 		boolean isReasonPK2 = false;
-		if (loa.getScQuote().getJustificationType() != null) {
-			if (loa.getScQuote().getJustificationType().getReasonCode().equals(ParameterConst.PK2_REASON_CODE)) {
-				isReasonPK2 = true;
-			}
+		//new #25725 - Start	
+		if (loa.getScQuote() != null && loa.getScQuote().getJustificationType() != null
+				&& ParameterConst.PK2_REASON_CODE.equals(loa.getScQuote().getJustificationType().getReasonCode())) {
+			isReasonPK2 = true;
 		}
+		//new #25725 - End
 		return isReasonPK2;
 	}
 	// #25725 - note 125/128 - end
 	// #25725 - note 146 - start
 	/**
 	 * To check is reason special item
+	 * @param loa
 	 * @return boolean isReasonSpecialItem
 	 */
 	public boolean isReasonSpecialItem(ScLoa loa) {
 		boolean isReasonSpecialItem = false;
-		if (loa.getScQuote().getJustificationType() != null) {
-			if (loa.getScQuote().getJustificationType().getReasonCode().equals(ParameterConst.SPECIAL_ITEM_REASON_CODE)) {
-				isReasonSpecialItem = true;
-			}
+		//new #25725 - Start
+		if (loa.getScQuote() != null
+				&& loa.getScQuote().getJustificationType() != null
+				&& loa.getScQuote().getJustificationType().getReasonCode()
+						.equals(ParameterConst.SPECIAL_ITEM_REASON_CODE)) {
+			isReasonSpecialItem = true;
 		}
+		//new #25725 - End
 		return isReasonSpecialItem;
 	}
 	
@@ -12020,7 +12026,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (isEditableStatus ) {
 			boolean needsApprovalLetter ;
 			boolean isPeriodicBelow4 = isPeriodic && !isContractPeriodAbove4;
-            boolean isSpecialCondtion = !isPK7(scLoa) && isPK2OrSpecial	&& isOver500K;
+            boolean isSpecialCondtion = (!isPK7(scLoa) || isPK2OrSpecial)	&& isOver500K;
 			if (!isDocTypeQuotation) {
 				needsApprovalLetter = isPeriodicBelow4 && isSpecialCondtion;
 			} else {
