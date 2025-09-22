@@ -4520,19 +4520,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *         or {@code null} if the contract is not PK7-related.
 	 */
 	public PmReason resolveProcTypeForPk7() {
-		PmReason reasonId = (PmReason) EntityHelper.getNestedProperty(
-	        getManagedBean(),
-	        "contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType"
-	    );
-
-	    if (reasonId == null) {
-	    	reasonId = (PmReason) EntityHelper.getNestedProperty(
-	            getManagedBean(),
-	            "contractVer.ctContract.loa.justificationType"
-	        );
-	    }
-
-	    return reasonId;
+		PmReason reason = null;
+		reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
+				"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");
+		
+		if (reason == null) {
+			reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
+					"contractVer.ctContract.loa.justificationType");
+		}
+		return reason;
 	}
 	//End - #30045
 }
