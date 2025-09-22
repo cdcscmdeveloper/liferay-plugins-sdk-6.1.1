@@ -431,7 +431,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
 				.getSelectedpmuserContactpersonList();
 		//#28895 - 35500 start
-		List<ScQtContactPerson> deletedContactList = new ArrayList<ScQtContactPerson>();
+		List<ScQtContactPerson> deletedContactList = new ArrayList<>();
 		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
 		//#28895 - 35500 end
 		
