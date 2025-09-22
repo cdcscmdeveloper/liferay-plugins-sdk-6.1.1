@@ -1829,6 +1829,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String catCodeList;
 	private boolean currentInSpecMaint;//#29732 first time spec maint
 	private boolean categoryDescriptionChange;//#29732 flag to check category has change
+	private boolean updateCatDesc; //#29732
 
 	// #29732 End
 	
@@ -12186,4 +12187,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
 	}
 	//#21692 - End
+	
+	//#29732
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
+
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+	//#29732
 }
