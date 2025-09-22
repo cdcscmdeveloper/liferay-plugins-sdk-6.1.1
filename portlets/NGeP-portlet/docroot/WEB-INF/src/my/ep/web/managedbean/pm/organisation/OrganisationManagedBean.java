@@ -152,6 +152,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	
 	/************ AUDIT START #28895-35509 *************/
 	private PmOrgProfile auditOldPMOrgProfile;
+	private PmOrgProfile newPmOrgProfile;
 	private PmAddress auditBillingAddress;
 	private PmContact auditContactPerson;
 	private List<PmAddressType> oldReceivingAddressList = new ArrayList<>();
@@ -1425,6 +1426,20 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 */
 	public void setNewAuditProfileGroup(List<PmProfileGroup> newAuditProfileGroup) {
 		this.newAuditProfileGroup = newAuditProfileGroup;
+	}
+
+	/**
+	 * @return the newPmOrgProfile
+	 */
+	public PmOrgProfile getNewPmOrgProfile() {
+		return newPmOrgProfile;
+	}
+
+	/**
+	 * @param newPmOrgProfile the newPmOrgProfile to set
+	 */
+	public void setNewPmOrgProfile(PmOrgProfile newPmOrgProfile) {
+		this.newPmOrgProfile = newPmOrgProfile;
 	}
 	/************ AUDIT END #28895-35509 *************/
 
