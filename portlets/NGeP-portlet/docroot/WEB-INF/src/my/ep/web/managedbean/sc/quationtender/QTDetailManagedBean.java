@@ -1937,6 +1937,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean auditViewRole;
 	//#28895 - 35500 end
+	private boolean updateCatDesc; //#29732
 	
 	//#35320
 	private boolean afterSF;
