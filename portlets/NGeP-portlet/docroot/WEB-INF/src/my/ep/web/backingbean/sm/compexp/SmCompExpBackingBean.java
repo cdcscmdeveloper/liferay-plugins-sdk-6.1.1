@@ -13,7 +13,8 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
- * @redmine #9299 Backing Bean for SM Company Experience
+ * @redmine #9299 
+ * Backing Bean for SM Company Experience
  */
 @ManagedBean(name = "smCompExpBB")
 @RequestScoped
