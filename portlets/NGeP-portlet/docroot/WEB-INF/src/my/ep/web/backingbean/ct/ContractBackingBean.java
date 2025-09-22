@@ -5189,5 +5189,32 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return true;
 	}
+
+	/**
+	 * <p>
+	 * If a {@link PmReason} is found in either check, the contract is
+	 * considered to be PK7-related. If both checks return {@code null}, the
+	 * contract is treated as a normal (non-PK7) contract.
+	 * </p>
+	 * 
+	 * @return the {@link PmReason} indicating the PK7 justification type, or
+	 *         {@code null} if the contract is not PK7-related.
+	 */
+	public PmReason resolveProcTypeForCtPk7() {
+		PmReason reason = null;
+		reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
+				"contractVer.ctContract.loa.justificationType");
+
+		if (reason == null) {
+			List<CtContractItem> items = getManagedBean().getContractVer().getCtContractItems();
+			if(items != null){
+				if(items.get(0).getScRequestItem().getRequestNote() != null){
+					reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
+							"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");
+				}
+			}
+		}
+		return reason;
+	}
 	//End - #30045
 }  
