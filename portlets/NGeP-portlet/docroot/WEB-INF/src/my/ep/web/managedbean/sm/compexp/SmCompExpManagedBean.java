@@ -10,5 +10,14 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class SmCompExpManagedBean extends BaseManagedBean {
 	
 	private static final long serialVersionUID = 1L;
+	private boolean agreeUpdateTnC;
+
+	public boolean isAgreeUpdateTnC() {
+		return agreeUpdateTnC;
+	}
+
+	public void setAgreeUpdateTnC(boolean agreeUpdateTnC) {
+		this.agreeUpdateTnC = agreeUpdateTnC;
+	}
 
 }

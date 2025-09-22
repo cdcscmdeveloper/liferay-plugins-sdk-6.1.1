@@ -24,4 +24,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCommonUtil.redirectToPage(updateInfoTncXhtml, "", null, null);
 	}
 	
+	public void proceedAfterUpdateTnC(){
+		
+	}
+	
 }
