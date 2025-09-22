@@ -12391,6 +12391,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 	
+	//#29732
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
+
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+	// #29732
+	
 	//#35320 - Start
 	public boolean isAfterSF() {
 		return afterSF;
