@@ -161,13 +161,10 @@
 						<table style="width: 100%">
 							<tr>
 								<td><p:outputLabel
-										value=" #{lbl['lbl.sm.projDtls.doneFor']}" /><p:outputLabel
-							value="*" styleClass="mandatory" /></td> <!-- #38991 -->
+										value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
 								<td><p:selectOneRadio
 										value="#{backingBean.managedBean.selectedCompanyExperience.clientType}"
-										disabled="#{backingBean.managedBean.upsCannotEdit}"
-										required="#{backingBean.managedBean.valueReqd}"
-							            label="#{lbl['lbl.sm.projDtls.doneFor']}" id="supCntrPrjDneFr"> <!-- #38991 -->
+										disabled="#{backingBean.managedBean.upsCannotEdit}">
 										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
 											itemValue="F" />
 										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
@@ -181,8 +178,6 @@
 										alertValue="#{empty backingBean.managedBean.latestCompanyExperience.clientType ?  lbl['lbl.sm.no.available'] :
 										(backingBean.managedBean.latestCompanyExperience.clientType eq 'F' 
 										? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.nonfdrGov'])}"/>
-										<p:message id="supCntrPrjDneFrMsg" for="supCntrPrjDneFr"
-							             showSummary="true" showDetail="false" display="icon" /> <!-- #38991 -->
 								</td>
 							</tr>
 							<tr>

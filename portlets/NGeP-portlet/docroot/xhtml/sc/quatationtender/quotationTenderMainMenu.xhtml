@@ -124,10 +124,9 @@
 									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemPaymentDeduction)}"
 									/>
 									<ui:remove>#29474 - start</ui:remove>
-								<!-- new #25726 remove non periodic to condition -->	
 								<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 									disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen 
-										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff}"
+										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
 									action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 									process="@form"
 									rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}"
@@ -177,10 +176,9 @@
 						style="white-space: normal;" process="@form"
 						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemPublishDetail)}" />
 					<ui:remove>#29474 - start</ui:remove>
-					<!-- new #25726 remove non periodic to condition -->
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 						disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen 
-										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff}"
+										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
 						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 						process="@form"
 						rendered="#{isMaintancePendingChklistStatus and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule)}"
@@ -200,10 +198,9 @@
 						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
 						process="@form"
 						rendered="#{isMaintancePendingChklistStatus and qTDetailBB.displayMenuItem(qTDetailBB.menuItemDocuments)}" />
-					<!-- new #25726 remove non periodic to condition -->
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 						disabled="#{qTDetailBB.managedBean.fulfilmentType eq null or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeAsAndWhen 
-										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff}"
+										or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeOneOff or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen}"
 						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 						process="@form"
 						rendered="#{isQTStatusScheduleDocAndAfter and qTDetailBB.displayMenuItem(qTDetailBB.menuItemFulfilmentSchhedule) and  !qTDetailBB.disableFieldsforCommitteeRevision()}"

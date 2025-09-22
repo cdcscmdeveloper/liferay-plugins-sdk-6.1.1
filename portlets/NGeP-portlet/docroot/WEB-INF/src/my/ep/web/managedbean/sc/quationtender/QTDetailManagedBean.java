@@ -1939,6 +1939,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#28895 - 35500 end
 	private boolean updateCatDesc; //#29732
 	
+	//#35320
+	private boolean afterSF;
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12388,13 +12391,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 	
-	//#29732
-	public boolean getUpdateCatDesc() {
-		return updateCatDesc;
+	//#35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
 	}
 
-	public void setUpdateCatDesc(boolean updateCatDesc) {
-		this.updateCatDesc = updateCatDesc;
-	}
-	//#29732
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}//#35320 - End
 }

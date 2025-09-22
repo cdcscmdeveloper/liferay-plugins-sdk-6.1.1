@@ -2619,7 +2619,7 @@ public class QTDocumentsBackingBean extends
 		}
 		
 		// Bug #38731@Syazani 20/08/2025 -- Start
-		if (!StringUtils.isBlank(locationLevel) && "District".equalsIgnoreCase(locationLevel)) {
+		if ("District".equalsIgnoreCase(locationLevel)) {
 			isLocLevelDistrictContainsDivision = isLocationContainsDivision(specZoneDtls, locationDetails, context);
 		}
 		context.put("isLocLevelDistrictContainsDivision", isLocLevelDistrictContainsDivision);
@@ -3228,17 +3228,14 @@ public class QTDocumentsBackingBean extends
 	// Bug #36702@Syazani 28/11/2024 -- End
 	
 	// Bug #38731@Syazani 20/08/2025 -- Start
-	private boolean isLocationContainsDivision(List<TplSpecZoneDtl> specZoneDtls, List<TplSpecLoc> locationDetails,
-			VelocityContext context) {
+	private boolean isLocationContainsDivision(List<TplSpecZoneDtl> specZoneDtls, List<TplSpecLoc> locationDetails, VelocityContext context) {
 		boolean isLocationContainsDivision = false;
 		if (!CollectionUtils.isEmpty(specZoneDtls)) {
 			for (TplSpecZoneDtl tplSpecZoneDtl : specZoneDtls) {
-				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs()) && !isLocationContainsDivision) {
+				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs())) {
 					tplSpecZoneDtl.setTplSpecZoneLocs(removeDuplicatebyDivisionIDbyTplSpecZoneLoc(tplSpecZoneDtl
 							.getTplSpecZoneLocs()));
 					isLocationContainsDivision = loopFindisLocationContainsPmDivision(tplSpecZoneDtl);
-				} else if (isLocationContainsDivision) {
-					break;
 				}
 			}
 		}
@@ -3256,7 +3253,7 @@ public class QTDocumentsBackingBean extends
 
 		return isLocationContainsDivision;
 	}
-
+	
 	private boolean loopFindisLocationContainsPmDivision(TplSpecZoneDtl tplSpecZoneDtl) {
 		for (TplSpecZoneLoc tplSpecZoneLoc : tplSpecZoneDtl.getTplSpecZoneLocs()) {
 			if (null != tplSpecZoneLoc.getPmDivision()) {

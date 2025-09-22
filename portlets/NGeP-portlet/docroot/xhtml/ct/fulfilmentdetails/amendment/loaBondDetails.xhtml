@@ -48,7 +48,7 @@
 			
 			<p:outputLabel id="bondAmountId" value="#{lbl['lbl.ct.bond.bondamount']}" />
 			<p:inputText for="bondAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.totalBondAmt == null ? 0.0: ctBackingBean.managedBean.totalBondAmt}"  disabled="true">
+	  			value="#{ctBackingBean.managedBean.ctContractAmount.totalBondAmt == null ? 0.0: ctBackingBean.managedBean.ctContractAmount.totalBondAmt}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			<p:outputLabel />
@@ -259,17 +259,18 @@
 				
 			<p:outputLabel value="#{lbl['lbl.ct.bond.bondamount']}" />			  
 			<p:inputText style="width:200px;" disabled="true"  styleClass="ppRightBtn"
-			  value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt != null 
-        				? ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt 
-        				: (ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt != null 
-           				? ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt 
-           				: 0.0)}">
+			  value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt != null 
+            			? ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt 
+            			: (ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt != null 
+                    	? ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt 
+                    	: 0.0)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />				
 			</p:inputText>
 			
 			<p:outputLabel />
 			<p:inputTextarea autoResize="false" disabled="true" rows="4" 
 				style="width:200px;margin-bottom:5px;"
+				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt != null }"
 			   	value="#{amendmentBackingBean.getBondAmountInText()}" />
 		<p:spacer width="2" />
 		<!--     	

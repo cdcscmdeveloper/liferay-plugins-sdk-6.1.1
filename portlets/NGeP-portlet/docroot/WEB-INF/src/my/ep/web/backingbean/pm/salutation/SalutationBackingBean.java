@@ -347,18 +347,12 @@ public class SalutationBackingBean extends
 				}
 				/************ END AUDIT #28895_35509 *************/
 				}
-		//#34445 Start
-		} catch (EpException e) {
-			handleException(e);
-			returnUrl = NAV_TO_MAINTAIN;
-		}
-		//#34445 End
-		catch (Exception e) {
-			throw e;
-		} finally {
-			salutationSO = null;
-		}
-		return returnUrl;
+		 }catch(Exception e){
+			 throw e;
+		 }finally{
+			 salutationSO = null;
+		 }
+		 return returnUrl;
 	 }
 	 public boolean isExistSalutationCode(PmSalutation salutation) {
 		 ISalutationSO reqSO = null;

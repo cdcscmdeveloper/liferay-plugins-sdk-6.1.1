@@ -169,8 +169,7 @@
 			rendered="#{(amendmentBackingBean.managedBean.ackFA eq null or amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa or ctBackingBean.managedBean.viewSCL)
 			 and (ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq or ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq)
 			 and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
-			 and (ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
-			 || ctBackingBean.isPk7FromDp())}"
+			 and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
 			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.performance.bond']))}" update=":form" />
 	<!-- END #24333 -->	
 			

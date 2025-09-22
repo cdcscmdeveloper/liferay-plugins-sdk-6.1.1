@@ -131,7 +131,6 @@ public class BSVAttendanceBackingBean extends
 			// getting Briefing Same As Site Visit value
 			ScQt scQt = resDTO.getScQt();
 			this.getManagedBean().setScQt(scQt);
-			this.getManagedBean().setDaImposedSupplierIds(new ArrayList<Long>());// 26247(39088)
 			if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
 				// Need to construct tab bean for zone
@@ -364,7 +363,6 @@ public class BSVAttendanceBackingBean extends
 				reqDTO.setZoneBsvList(zoneBsvList);
 			}
 			//Bug 31475 - shaqimi end
-			reqDTO.setDaImposedSupplierIds(this.getManagedBean().getDaImposedSupplierIds());// 26247(39088)
 			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
 			if (resDTO.isSuccessful()) {
 				/*Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
@@ -908,13 +906,6 @@ public class BSVAttendanceBackingBean extends
 				SmSupplier smSupplier = getQtBriefingSO().evaluateDisciplinaryActions(registration.getSupplier(),
 						scQt.getQtId());
 				registration.setSupplier(smSupplier);
-				// 26247(39088) - start
-				List<Long> daImposedList = this.getManagedBean().getDaImposedSupplierIds();
-				if (daImposedList != null && this.disabledQTProcess(smSupplier)
-						&& !daImposedList.contains(smSupplier.getSupplierId())) {
-					daImposedList.add(smSupplier.getSupplierId());
-				}
-				// 26247(39088) - end
 			}	
 		}	
 		briefing.setToBeattand(count);

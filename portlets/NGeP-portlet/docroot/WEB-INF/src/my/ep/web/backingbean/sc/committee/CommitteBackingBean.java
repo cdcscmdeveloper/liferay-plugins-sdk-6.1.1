@@ -697,10 +697,20 @@ public class CommitteBackingBean extends
 
 		ScQt scQt = getManagedBean().getQt();
 		String qtNo = scQt.getQtNo();
-		String committeeTypeDesc = ParameterHelper.getInstance().getParameterDesc(
-										ParameterTypeConst.SC_COMMITTEE_TYPE, 
-										scQtCommittee.getScCommittee()
-										.getCommitteeType().getParameterCode());
+		
+		// #35320 - Set QCA, QCB to QQC - Start
+		String committeeTypeDesc = null;
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(scQtCommittee.getScCommittee()
+				.getCommitteeType().getParameterCode())
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(scQtCommittee.getScCommittee()
+						.getCommitteeType().getParameterCode())) {
+			committeeTypeDesc = ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
+					ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+		} else {
+
+			committeeTypeDesc = ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
+					scQtCommittee.getScCommittee().getCommitteeType().getParameterCode());
+		}// #35320 - End
 		
 		CommitteResDTO resDTO = null;
 		ICommitteSO committeSo = null;

@@ -35,14 +35,13 @@
 	
 	<!-- 34445 start -->
 	<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
-		okParam="#{criteriaBackingBean.saveSupplierCriteriaDtls()}"
-		hasParam="true"
+		okAction="criteriaBackingBean.saveSupplierCriteriaDtls()"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.pm.btn.save.msg']}"/>
 		
 	<ac:confirmationPopupSM id="updateInfoDlg" widget="updateInfoDlg"
-		okAction="criteriaBackingBean.saveSupplierCriteriaDtls"
+		okAction="criteriaBackingBean.saveSupplierCriteriaDtls()"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.pm.btn.update.msg']}"/>

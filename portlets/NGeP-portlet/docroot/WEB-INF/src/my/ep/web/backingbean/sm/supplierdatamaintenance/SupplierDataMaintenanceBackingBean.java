@@ -1902,7 +1902,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	private boolean shouldDisableMaintenance(SmSupplier supplier, String mofStatus) {
-		return isDeletedStatus(supplier, mofStatus) || isCancelRegStatus(mofStatus, supplier)
+		return isDeletedStatus(supplier, mofStatus) || isCancelRegStatus(mofStatus)
 				|| isActiveWithPendingDA(supplier, mofStatus);
 	}
 
@@ -1912,14 +1912,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		return !hasPending && StringUtils.isNotEmpty(mofStatus)
 				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED);
 	}
-	//#39079 - START
-	private boolean isCancelRegStatus(String mofStatus, SmSupplier supplier) {
+
+	private boolean isCancelRegStatus(String mofStatus) {
 		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector()
-				|| StringUtils.isNotEmpty(checkNonActiveDAWithPending(supplier));
+				|| getManagedBean().isSuspendRegistration();
 
 		return mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA;
 	}
-	//#39079 - END
+
 	private boolean isActiveWithPendingDA(SmSupplier supplier, String mofStatus) {
 	    return mofStatus.equals(SupplierManagementConst.MOF_STATUS_ACTIVE)
 	        && StringUtils.isNotEmpty(checkNonActiveDAWithPending(supplier));
@@ -2964,19 +2964,14 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void unSelectCancelBumiCategories() {
 		unSelectSuspendCategories();
-		boolean multipleCategory = getManagedBean().isBumiputeraStatusCancel()
-				&& (getManagedBean().isCancelCategoryCode() || getManagedBean()
-						.isManufacturerStatusCancel());
-		if (!getManagedBean().getSmSupplier().isBumi()
-				|| !getManagedBean().isBumiputeraStatusCancel()
-				|| multipleCategory
-				|| !getManagedBean().isEditDisciplinaryActionCheckBox()) {
+		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
+				|| !getManagedBean().isEditDisciplinaryActionCheckBox()){
 			return;
 		}
 		List<SmSupplierCategory> selectList = new ArrayList<>();
 		List<SmSupplierCategory> prevSelect = getManagedBean().getSelectedApprovedCategories();
 		if (prevSelect == null){
-			prevSelect = new ArrayList<>();
+			prevSelect = new ArrayList<SmSupplierCategory>();
 		}
 		Iterator<SmSupplierCategory> it = getManagedBean().getApprovedCategoryList().iterator();
 		while (it.hasNext()) {
