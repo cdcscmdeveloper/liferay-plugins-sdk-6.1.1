@@ -396,6 +396,8 @@
 		<portlet id="FirstTimeMessage"></portlet>
 		<portlet id="spkiTest"></portlet>
 		<portlet id="testSmAI"></portlet><!-- #38890 -->
+		<!-- #9299 -->
+		<portlet id="smCompExpUpdateInfo"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
