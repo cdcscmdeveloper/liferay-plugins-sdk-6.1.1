@@ -3255,7 +3255,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
-
 				/************START AUDIT #28895_35509 shaqimi 24072025*************/
 				if(getManagedBean().getSelectedUser().isBrandNew()){
 					user.setUserId(resDTO.getPmUser().getUserId());
@@ -3272,16 +3271,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					getManagedBean().setNewAuditPmUser(user);
 					getManagedBean().setNewAuditPmUserOrg(userOrg);
 					setNewAuditPmUserRoles(userOrg.getPmUserRoles());
-					getManagedBean().setNewAuditPmUserRoles(userOrg.getPmUserRoles());
 					getManagedBean().setNewAuditPmAddressTypes(getManagedBean().getSelectedReceivingAddrTypes());
 					getManagedBean().setOldAuditPmUser(oldPmUser);
 					getManagedBean().setOldAuditPmUserOrg(oldPmUserOrg);
 					getManagedBean().setOldAuditPmUserRoles(oldPmUserRoles);
 					getManagedBean().setOldAuditPmAddressTypes(oldPmAddressTypes);
-				}
-				
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
-					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_OUSR);
 				}
 				/************ END AUDIT #28895_35509 shaqimi 24072025 *************/
 				
