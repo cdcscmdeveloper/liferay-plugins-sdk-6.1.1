@@ -1424,7 +1424,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						"SmApplicationBackingBean.proceedToApplication", "rejectedApplExist-8", 
 						subStartTime); //20211005@fadhli - #31754
 				//31792 - START
-				if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
+				if (rejectedAppl != null && (my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())
+						|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF))) { //36064
 				//31792 - END
 					Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 					long diff = currentDate.getTime()
@@ -8772,6 +8773,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			//#36718 - START
 			String panelName = StringUtils.EMPTY;
 			
+			if (srcAddr.getPostcode() != null && StringUtils.isNotBlank(srcAddr.getPostcode())
+					&& (!StringUtils.isNumeric(srcAddr.getPostcode()) || srcAddr.getPostcode().length() != 5)) {
+				destAddr.setSameAsPerm(false);
+				String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
+				throw new EpException(errMsg, null);
+			}
+			
 			if (destAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
 					panelName = SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL;
 			}
@@ -12919,6 +12927,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	// harris
 	public void deleteSupDocFileAttachment() {
+		getManagedBean().getSmApplDocFile().setValidatedAI(0);	//#38890
 
 		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
 		// #37775 - Start
@@ -12931,7 +12940,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				List<SmApplDocFile> updatedFiles = new ArrayList<>(mainDoc.getSmApplDocFiles());
 				updatedFiles.set(0, this.getManagedBean().getSmApplDocFile());
 				mainDoc.setSmApplDocFiles(updatedFiles);
-				mainDoc.setMappedFieldAI("");	//#38890
 			} else {
 				// #28807 - Start
 				mainDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
@@ -13106,6 +13114,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setCountryId(addr.getCountryId());
 			}
+			// #36718 - Start
+			getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+			// #36718 - End
 		}
 		//#36483 - END
 		//#36718 - START
@@ -13114,10 +13125,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
-		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
-		populateLocalAuthority(getManagedBean().getSmSupplier(),
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.getSmCompanyAddresses().get(0).getSmAddress());
+		
+		populateLocalAuthority(getManagedBean().getSmSupplier(), getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
+				.getSmAddress());
 		//#36718 - END
 	}
 
@@ -13164,6 +13174,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
 				}
 			}
+			// #36718 - Start
+			getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+			// #36718 - End
 		}
 		//#36718 - START
 		if(!addr.isSsmData()){
@@ -13171,10 +13184,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
-		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
-		populateLocalAuthority(getManagedBean().getSmSupplier(),
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.getSmCompanyAddresses().get(0).getSmAddress());
+		populateLocalAuthority(getManagedBean().getSmSupplier(), getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
+				.getSmAddress());
 		//#36718 - END
 		//#36483 - END
 		
@@ -13232,6 +13243,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					&& addr.getDistrictId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDistrictId(addr.getDistrictId());
 			}
+			// #36718 - Start
+			getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+			// #36718 - End
 		}
 		//#36483 - END
 		//#36718 - START
@@ -13240,7 +13254,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
-		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
 		//#36718 - END
 	}
 
@@ -13261,6 +13274,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					&& addr.getCityId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setCityId(addr.getCityId());
 			}
+			// #36718 - Start
+			getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+			// #36718 - End
 		}
 		//#36483 - END
 		//#36718 - START
@@ -13269,7 +13285,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
-		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
@@ -16975,6 +16990,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					&& addr.getDivisionId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(addr.getDivisionId());
 			}
+			
+			// #36718 - Start
+			getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+			// #36718 - End
 		}
 		//#36483 - END
 		//#36718 - START
@@ -16983,7 +17002,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
-		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
