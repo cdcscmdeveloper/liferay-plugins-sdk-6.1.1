@@ -203,6 +203,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				reqDTO.setCoGstr(true);
 			}
 			resDTO = orderSO.stopFulfilment(reqDTO);
+			
+			log.info("resDTO.isSuccessful()=="+resDTO.isSuccessful());
+			log.info("resDTO.getErrorMessage()=="+resDTO.getErrorMessage());
 
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700005;
@@ -654,6 +657,25 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 						getManagedBean().getTextBeforeSign());
 			}
 		}
+		
+		if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
+			IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);;
+			Long fulfilmentOrderId = getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId();
+		    String docType = ParameterConst.DOCTYPE_STOP_DELIVERY;
+
+		    FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		    reqDTO.setFulfilmentOrderId(fulfilmentOrderId);
+		    reqDTO.setDocType(docType);
+		    
+//		    FulfilmentResDTO resDTO = orderSO.checkExistingLock(reqDTO);
+//		    log.info("resDTO.isAllowToProceed()==="+resDTO.isAllowToProceed());
+//		    
+//		    if (!resDTO.isAllowToProceed()) {
+//		    	throw new EpException(MessageConst.ERROR_740071);
+//		    }
+		    
+		}
+		
 		return saveStopInstruction(getManagedBean().getButtonAction());
 	}
 	
