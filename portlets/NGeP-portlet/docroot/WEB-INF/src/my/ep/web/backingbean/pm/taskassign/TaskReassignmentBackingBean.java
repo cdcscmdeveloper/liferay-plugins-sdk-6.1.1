@@ -207,9 +207,6 @@ public class TaskReassignmentBackingBean extends
 		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION);
 		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
 		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION);
-		excludeStatusIds.add(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
-		excludeStatusIds.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION);
-		excludeStatusIds.add(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION);
 		
 		excludeProcessForTR.add(SCProcessNameConst.VIEW_SCORING);
 		excludeProcessForTR.add(SCProcessNameConst.UPDATE_SCORING);
