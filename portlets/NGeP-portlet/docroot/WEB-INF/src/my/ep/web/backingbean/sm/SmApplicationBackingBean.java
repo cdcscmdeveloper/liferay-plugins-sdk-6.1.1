@@ -1416,7 +1416,8 @@ public class SmApplicationBackingBean extends
 						"SmApplicationBackingBean.proceedToApplication", "rejectedApplExist-8", 
 						subStartTime); //20211005@fadhli - #31754
 				//31792 - START
-				if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
+				if (rejectedAppl != null && (my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())
+						|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF))) { //36064
 				//31792 - END
 					Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 					long diff = currentDate.getTime()
@@ -13123,6 +13124,9 @@ public class SmApplicationBackingBean extends
 					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setCountryId(addr.getCountryId());
 			}
+			// #36718 - Start
+			getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+			// #36718 - End
 		}
 		//#36483 - END
 		//#36718 - START
@@ -13132,7 +13136,6 @@ public class SmApplicationBackingBean extends
 		
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
-		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
@@ -13182,6 +13185,9 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
 				}
 			}
+			// #36718 - Start
+			getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+			// #36718 - End
 		}
 		//#36718 - START
 		if(!addr.isSsmData()){
@@ -13190,7 +13196,6 @@ public class SmApplicationBackingBean extends
 		
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
-		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
@@ -13251,6 +13256,9 @@ public class SmApplicationBackingBean extends
 					&& addr.getDistrictId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDistrictId(addr.getDistrictId());
 			}
+			// #36718 - Start
+			getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+			// #36718 - End
 		}
 		//#36483 - END
 		//#36718 - START
@@ -13259,7 +13267,6 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
-		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
 		//#36718 - END
 	}
 
@@ -13280,6 +13287,9 @@ public class SmApplicationBackingBean extends
 					&& addr.getCityId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setCityId(addr.getCityId());
 			}
+			// #36718 - Start
+			getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+			// #36718 - End
 		}
 		//#36483 - END
 		//#36718 - START
@@ -13288,7 +13298,6 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
-		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
@@ -15188,7 +15197,7 @@ public class SmApplicationBackingBean extends
 		//Add checking check expired for KN
 		SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
 		//31792 - START
-		if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
+		if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) { 
 		//31792 - END
 			Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 			long diff = currentDate.getTime()
@@ -16984,6 +16993,9 @@ public class SmApplicationBackingBean extends
 					&& addr.getDivisionId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(addr.getDivisionId());
 			}
+			// #36718 - Start
+			getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+			// #36718 - End
 		}
 		//#36483 - END
 		//#36718 - START
@@ -16992,7 +17004,6 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
-		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
@@ -18500,4 +18511,19 @@ public class SmApplicationBackingBean extends
 		return false;
 	}
 	//#38195 END
+	
+	// #36718 - Start
+	/**
+	 * To check postcode by using listener
+	 * 
+	 * @param postcode
+	 */
+	public void checkPostcode(String postcode) {
+		if (postcode != null && StringUtils.isNotBlank(postcode) && (!StringUtils.isNumeric(postcode) || postcode.length() != 5)) {
+			String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
+			throw new EpException(errMsg, null);
+		}
+	}
+	// #36718 - End
+
 }

@@ -1920,7 +1920,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	private boolean shouldDisableMaintenance(SmSupplier supplier,
 			String mofStatus) {
 		return isDeletedStatus(supplier, mofStatus)
-				|| isCancelRegStatus(mofStatus)
+				|| isCancelRegStatus(mofStatus, supplier)
 				|| isActiveWithPendingDA(supplier, mofStatus);
 	}
 
@@ -1932,11 +1932,13 @@ public class SupplierDataMaintenanceBackingBean extends
 				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED);
 	}
 
-	private boolean isCancelRegStatus(String mofStatus) {
+	private boolean isCancelRegStatus(String mofStatus, SmSupplier supplier) {
+		//#39079 - START
 		boolean basicDA = getManagedBean().isCancelRegistration()
 				|| getManagedBean().isBlacklistOwnerOrDirector()
-				|| getManagedBean().isSuspendRegistration();
-
+				|| StringUtils
+						.isNotEmpty(checkNonActiveDAWithPending(supplier));
+		//#39079 - END
 		return mofStatus
 				.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG)
 				&& basicDA;
