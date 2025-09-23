@@ -203,9 +203,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				reqDTO.setCoGstr(true);
 			}
 			resDTO = orderSO.stopFulfilment(reqDTO);
-			
-			log.info("resDTO.isSuccessful()=="+resDTO.isSuccessful());
-			log.info("resDTO.getErrorMessage()=="+resDTO.getErrorMessage());
 
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700005;
@@ -657,25 +654,6 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 						getManagedBean().getTextBeforeSign());
 			}
 		}
-		
-		if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
-			IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);;
-			Long fulfilmentOrderId = getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId();
-		    String docType = ParameterConst.DOCTYPE_STOP_DELIVERY;
-
-		    FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		    reqDTO.setFulfilmentOrderId(fulfilmentOrderId);
-		    reqDTO.setDocType(docType);
-		    
-//		    FulfilmentResDTO resDTO = orderSO.checkExistingLock(reqDTO);
-//		    log.info("resDTO.isAllowToProceed()==="+resDTO.isAllowToProceed());
-//		    
-//		    if (!resDTO.isAllowToProceed()) {
-//		    	throw new EpException(MessageConst.ERROR_740071);
-//		    }
-		    
-		}
-		
 		return saveStopInstruction(getManagedBean().getButtonAction());
 	}
 	
@@ -1037,6 +1015,15 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_STOP_DELIVERY);
 		reqDTO.setActionCode(FulfilmentConst.STOP_FULFILMENT);
 		// 36247-End
+		
+		//38104-Start
+		reqDTO.setFulfilmentOrderId(getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
+		FulfilmentResDTO resDTOSdi = orderSO.retrieveStopInstructionByOrder(reqDTO);
+		if(resDTOSdi.getFlStopInstr()!=null) {
+			throw new EpException(MessageConst.ERROR_740069);
+		}
+		//38104-End 
+		
 		resDTO= orderSO.validatePOCOCurrentStatus(reqDTO);
 		
 		allowToProceed = resDTO.isFlag();		
