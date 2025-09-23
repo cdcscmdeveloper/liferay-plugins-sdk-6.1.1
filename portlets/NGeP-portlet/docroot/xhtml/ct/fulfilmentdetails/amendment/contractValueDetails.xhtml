@@ -1,0 +1,170 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel id="contractValue" header="#{lbl['lbl.ct.menu.contract.value']}" toggleable="true" toggleSpeed="500">
+	
+	<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth190">
+	<p:outputLabel value="#{lbl['lbl.ct.overall.contract.amount']}" />
+	<h:panelGrid columns="4" >
+	
+		<p:inputText id="overallAmount" styleClass="ppRightBtn" style="width:80px;"  
+		   value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}" 
+		   disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
+			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			 <p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this" listener="#{amendmentBackingBean.changeAdditionalValue}"
+			   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
+		</p:inputText>
+		<p:spacer width="1"/>
+	    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.overall.amt']}" />
+		<p:message for="overallAmount" display="icon" />
+	</h:panelGrid>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.type.change.contract.value']}" />
+	<h:panelGrid columns="2" >
+	
+		<p:selectOneRadio id="typeContractValue" >  
+			<f:selectItem itemLabel="Reduction of Contract Amount" itemValue="reduction" />
+       		<f:selectItem itemLabel="Addition of Contract Amount" itemValue="addition" />
+        </p:selectOneRadio>
+		<p:spacer width="1"/>
+	    
+	</h:panelGrid>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.total.contract.utilization']}"  style="font-weight: bold;"/>
+	<p:spacer width="1"/>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.total.usage.with']}" />
+	<p:inputText id="usageWith" styleClass="ppRightBtn" style="width:80px;"  >
+			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+	</p:inputText>
+		
+	<p:outputLabel value="#{lbl['lbl.ct.total.usage.before']}" />
+	<p:inputText id="usageBefore" styleClass="ppRightBtn" style="width:80px;"  >
+			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+	</p:inputText>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.total.contract.reduced']}" />
+	<p:inputText id="contractReduced" styleClass="ppRightBtn" style="width:80px;"  >
+			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+	</p:inputText>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.maximum.additional']}" />
+	<p:inputText id="maxAdditional" styleClass="ppRightBtn" style="width:80px;"  >
+			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+	</p:inputText>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.change.contract.amt']}"  style="font-weight: bold;"/>
+	<p:spacer width="1"/>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.reduction.amt']}" />
+	<p:inputText id="reductionAmt" styleClass="ppRightBtn" style="width:80px;"  >
+			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+	</p:inputText>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.additional.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
+	<h:panelGrid columns="4" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
+	
+		<p:inputText id="addValueTxt" styleClass="ppRightBtn" style="width:80px;"  
+		   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}" 
+		   disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			 <p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this" listener="#{amendmentBackingBean.changeAdditionalValue}"
+			   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
+		</p:inputText>
+		<p:spacer width="1"/>
+	    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.contract.amount']}" />
+	    <p:spacer width="1"/>
+		<p:message for="addValueTxt" display="icon" />
+	</h:panelGrid>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.additional.percentage']}" />
+	<p:inputText id="addPercentage" styleClass="ppRightBtn" style="width:80px;"  >
+			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+	</p:inputText>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.gst.sst']}"  style="font-weight: bold;"/>
+	<p:spacer width="1"/>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.new.gst.amt']}" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}"/>
+	<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
+		
+		<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
+		   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
+		   disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
+		   		or ctBackingBean.managedBean.disableGstAmount}"
+		   rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"><!-- Enhancement 15851 - shaqimi -->
+			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			 <p:ajax event="blur" update="newGstAmtTxt, overallAmt" process="@this" 
+			   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
+		</p:inputText>
+		<p:message for="newGstAmtTxt" display="icon" />
+		<p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
+  				 rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.txt.na']}">
+		</p:inputText>
+		<p:spacer width="1"/>
+	    <p:graphicImage id="iconToolTipGst" value="/css/images/design/tooltips.png" /> 
+		  	<p:tooltip id="gstTooltipSource" for="iconToolTipGst" style="max-width: 450px; z-index: 9999;">
+				<h:outputText id="gstLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.additional.new.gst.amt']}" />
+			</p:tooltip>
+	</h:panelGrid>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.new.stax.amt']}" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}"/>
+	<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
+	
+		<p:inputText id="newStaxAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
+		   disabled = "#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
+		   		or ctBackingBean.managedBean.disableStaxAmount}"
+		   		rendered="#{ctBackingBean.managedBean.staxCheckingGUI}" 
+		   		value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}"><!-- Enhancement 15851 - shaqimi -->
+			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			 <p:ajax event="blur" update="newStaxAmtTxt, overallAmt" process="@this" 
+			   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
+		</p:inputText>
+		<p:message for="newStaxAmtTxt" display="icon" />
+		<p:spacer width="1"/>
+	    <p:graphicImage id="iconToolTipSst" value="/css/images/design/tooltips.png" /> 
+		  	<p:tooltip id="sstTooltipSource" for="iconToolTipSst" style="max-width: 500px; z-index: 9999;">
+				<h:outputText id="sstLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.additional.new.stax.amt']}" />
+			</p:tooltip>
+	</h:panelGrid>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.current.contract.amt']}"  style="font-weight: bold;"/>
+	<p:spacer width="1"/>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
+	<h:panelGrid columns="4" rendered="#{amendmentBackingBean.getAmendValue(1)}">
+	
+		<p:inputText id="addValue" styleClass="ppRightBtn" style="width:90px;" disabled="true"
+			value="#{amendmentBackingBean.newContractAmt()}" >
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
+		<p:spacer width="1"/>
+		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.contract.amount']}" />
+	</h:panelGrid>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
+	<h:panelGrid columns="4" rendered="#{amendmentBackingBean.getAmendValue(1)}">
+	
+		<p:inputText id="overallAmt" styleClass="ppRightBtn" style="width:90px;" disabled="true"
+			value="#{amendmentBackingBean.newOverallContractAmount()}" >
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
+	    <p:spacer width="1"/>
+	    <p:graphicImage id="iconToolTipAmt" value="/css/images/design/tooltips.png" /> 
+		  	<p:tooltip id="amtTooltipSource" for="iconToolTipAmt">
+				<h:outputText id="amtLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.new.overall.contract.amt']}" />
+			</p:tooltip>
+	</h:panelGrid>
+	
+	<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt.eff.date']}" />
+	<p:inputText id="newCtAmtEffDate" styleClass="ppRightBtn" style="width:80px;"  >
+	</p:inputText>
+	
+	</h:panelGrid>
+			
+	</p:panel>
+</ui:composition>
