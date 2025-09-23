@@ -853,7 +853,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	}
 	//#36489 - End
 
-	/************ AUDIT *************/
+	/************ START: AUDIT #35509 *************/
 	public PmUser getOldAuditPmUser() {
 		return oldAuditPmUser;
 	}
@@ -968,5 +968,5 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setBrandNewUserOrgId(Long brandNewUserOrgId) {
 		this.brandNewUserOrgId = brandNewUserOrgId;
 	}
-	/************ AUDIT *************/
+	/************ END: AUDIT #35509 *************/
 }
