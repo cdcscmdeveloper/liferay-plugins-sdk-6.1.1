@@ -3255,6 +3255,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/origin/release-sit
 				/************START AUDIT #28895_35509 shaqimi 24072025*************/
 				if(getManagedBean().getSelectedUser().isBrandNew()){
 					user.setUserId(resDTO.getPmUser().getUserId());
@@ -3271,12 +3275,23 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					getManagedBean().setNewAuditPmUser(user);
 					getManagedBean().setNewAuditPmUserOrg(userOrg);
 					setNewAuditPmUserRoles(userOrg.getPmUserRoles());
+<<<<<<< HEAD
+=======
+					getManagedBean().setNewAuditPmUserRoles(userOrg.getPmUserRoles());
+>>>>>>> refs/remotes/origin/release-sit
 					getManagedBean().setNewAuditPmAddressTypes(getManagedBean().getSelectedReceivingAddrTypes());
 					getManagedBean().setOldAuditPmUser(oldPmUser);
 					getManagedBean().setOldAuditPmUserOrg(oldPmUserOrg);
 					getManagedBean().setOldAuditPmUserRoles(oldPmUserRoles);
 					getManagedBean().setOldAuditPmAddressTypes(oldPmAddressTypes);
 				}
+<<<<<<< HEAD
+=======
+				
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_OUSR);
+				}
+>>>>>>> refs/remotes/origin/release-sit
 				/************ END AUDIT #28895_35509 shaqimi 24072025 *************/
 				
 				uploadAttachments();
