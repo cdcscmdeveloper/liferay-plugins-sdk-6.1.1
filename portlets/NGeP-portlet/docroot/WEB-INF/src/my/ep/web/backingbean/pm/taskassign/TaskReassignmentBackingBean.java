@@ -51,9 +51,11 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.pm.ProfileManagementStatusConst;
+import my.ep.constant.sc.QTStatusConst;  //#38680
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.constants.SCProcessNameConst; //#38680
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
@@ -152,6 +154,11 @@ public class TaskReassignmentBackingBean extends
 	private static final Map<String, String> adminRolesForBulkReassignment = new HashMap<>();
 	private static final List<String> invalidRolesForBulkReassignmentLst = new ArrayList<String>();
 	private static final Map<Long, String> excludeRolesForBulkReassignment = new HashMap<Long,String>();
+	
+	//#38680 - Start
+	private static final List<Long> excludeStatusIds = new ArrayList<Long>();
+	private static final List<String> excludeProcessForTR = new ArrayList<String>();
+	//#38680 - End
 
 	static {		
 		adminRolesForBulkReassignment.put(RoleCode.UPS_ADMIN.value(), RoleCode.UPS_ADMIN.value());
@@ -186,7 +193,37 @@ public class TaskReassignmentBackingBean extends
 		invalidRolesForBulkReassignmentLst.add(RoleCode.OC_SECRETARY.value());
 		invalidRolesForBulkReassignmentLst.add(RoleCode.PBA_MEMBER.value());
 		invalidRolesForBulkReassignmentLst.add(RoleCode.PPB_MEMBER.value());
-		//invalidRolesForBulkReassignmentLst.add(RoleCode.PPB_SECRETARY.value()); //for test validation
+		
+		//#38680- Start
+		excludeStatusIds.add(QTStatusConst.SE_PENDING_ENDORSMENT);
+		excludeStatusIds.add(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
+		excludeStatusIds.add(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING);
+		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
+		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF);
+		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION);
+		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+		excludeStatusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION);
+		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
+		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION);
+
+		excludeProcessForTR.add(SCProcessNameConst.VIEW_SCORING);
+		excludeProcessForTR.add(SCProcessNameConst.UPDATE_SCORING);
+		excludeProcessForTR.add(SCProcessNameConst.VIEW_EC_EVALUATION);
+		excludeProcessForTR.add(SCProcessNameConst.UPDATE_EC_EVALUATION);
+		excludeProcessForTR.add(SCProcessNameConst.VIEW_OC_EVALUATION);
+		excludeProcessForTR.add(SCProcessNameConst.UPDATE_OC_EVALUATION);
+		excludeProcessForTR.add(SCProcessNameConst.VIEW_TEC_EVALUATION);
+		excludeProcessForTR.add(SCProcessNameConst.UPDATE_TEC_EVALUATION);
+		excludeProcessForTR.add(SCProcessNameConst.VIEW_FEC_EVALUATION);
+		excludeProcessForTR.add(SCProcessNameConst.UPDATE_FEC_EVALUATION);
+		excludeProcessForTR.add(SCProcessNameConst.VIEW_FC_SELECTION);
+		excludeProcessForTR.add(SCProcessNameConst.UPDATE_FC_SELECTION);
+		//#38680- End
 	}
 	//[#25018] - end
 	
@@ -649,6 +686,9 @@ public class TaskReassignmentBackingBean extends
 			
 			if (bpmResDTO.getWorklistVO() != null) {
 				for (WorklistItemVO task : bpmResDTO.getWorklistVO().getWorklistItem()) {
+					//#38680- Start
+					if (!(excludeStatusIds.contains(task.getDocStatus()
+							.longValue()) && isTaskName(task.getTaskName()))) {
 					for (String loginId : task.getAssignees()) {
 						user = PmCommonUtil.retrieveUserByLoginId(loginId);
 						
@@ -665,6 +705,7 @@ public class TaskReassignmentBackingBean extends
 								user.getRecordStatusFlg()+" : "+
 								this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
 					}
+				   }//#38680- End
 				}
 			}
 		}
@@ -1218,16 +1259,31 @@ public class TaskReassignmentBackingBean extends
 											.getWorklistItem().size());
 							log.info("BPM total******"
 									+ responseDTO.getWorklistVO().getTotal());
-							/*
-							 * if(responseDTO.getWorklistVO().getWorklistItem()!=
-							 * null) { // markup data
-							 * markupWorklistItem(responseDTO
-							 * .getWorklistVO().getWorklistItem()); }
-							 */
+
 							resultBean.setTotalRecord(responseDTO
 									.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
+							
+							//#38680- Start
+							List<WorklistItemVO> src = resultBean.getResultList();
+							if (src != null && !src.isEmpty()) {
+							    List<WorklistItemVO> filtered = new java.util.ArrayList<WorklistItemVO>(src.size());
+							    for (WorklistItemVO w : src) {
+							        boolean exclude = (w != null
+							                && w.getDocStatus() != null
+							                && excludeStatusIds != null
+							                && excludeStatusIds.contains(w.getDocStatus().longValue())
+							                && isTaskName(w.getTaskName()));
+							        if (!exclude) filtered.add(w);
+							    }
+							    int removed = src.size() - filtered.size();
+							    resultBean.setResultList(filtered);
+
+							    int total = (responseDTO.getWorklistVO() == null) ? 0 : responseDTO.getWorklistVO().getTotal();
+							    resultBean.setTotalRecord(Math.max(0, total - removed));
+							}
+							//#38680- End
 							
 							//[#25018] - start
 							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
@@ -2779,7 +2835,30 @@ public class TaskReassignmentBackingBean extends
 							SearchOperator.OPERATOR_NOT_IN.value(),
 								new ArrayList<Long>(Arrays.asList(userId,
 									getFacesScopes().getUserSessionBean()
-										.getUserId()))));			
+										.getUserId()))));
+			
+			//#38680- Start
+			String role = roleList.toString().replace("[", "").replace("]", "")
+					.split(",")[0].trim();
+			String committeeType = role.split("_")[0];
+			if (excludeStatusIds.contains(vo.getStatus().getStatusId())
+					&& isCommitteeType(committeeType)) {
+				// Filter By - roleCode
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmUserOrgs.pmUserRoles.pmRole.roleCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								roleList));
+
+				// Filter By - role status
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmUserOrgs.pmUserRoles.recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+			}
+			//#38680- End
+			
 			// Order by user name
 			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
 			
@@ -4703,7 +4782,6 @@ public class TaskReassignmentBackingBean extends
 				committeReqDTO.setOrgProfileId(orgProfileId);
 				//end Bug #25021
 				committeReqDTO.setSearchValue(getManagedBean().getSearchUserName()); //Fix - #34699
-				//return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
 				return committeSO.retrieveUserListByCommTypeForTaskReassignment(committeReqDTO).getUserResultBean(); //Fix - #34699
 			} finally {
 				committeSO = null;
@@ -4711,4 +4789,42 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 		//End Fix - #34699
+		
+	//#38680- Start
+	/**
+	 * Check Activity Name
+	 * 
+	 * @param taskName
+	 * @return the indicator taskName.
+	 */
+	public boolean isTaskName(String taskName) {
+		return SCProcessNameConst.VIEW_SCORING.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.UPDATE_SCORING.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.VIEW_EC_EVALUATION.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.UPDATE_EC_EVALUATION.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.VIEW_OC_EVALUATION.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.UPDATE_OC_EVALUATION.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.VIEW_TEC_EVALUATION.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.UPDATE_TEC_EVALUATION.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.VIEW_FEC_EVALUATION.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.UPDATE_FEC_EVALUATION.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.VIEW_FC_SELECTION.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.UPDATE_FC_SELECTION.equalsIgnoreCase(taskName);
+	}
+
+	/**
+	 * Check Committee Type
+	 * 
+	 * @param committeeType
+	 *            the committee type
+	 * @return the indicator committee type.
+	 */
+	public boolean isCommitteeType(String committeeType) {
+		return ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeType) ||
+				ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType) ||
+				ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(committeeType) ||
+				ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(committeeType) ||
+				ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(committeeType);
+	}
+	//#38680- End
 }
