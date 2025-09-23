@@ -2078,9 +2078,13 @@ public class SpecificationBackingBean extends
 							+ list.getQtScoreWeightage().getScore().intValue();
                      }
 					score = (int) addScore;
+					// Bug #38254@Syazani 15/07/2025 -- Start
 					if (list.isScoringReq()) {
 						this.getManagedBean().getTechnicalScoring().add(list);
+					} else {
+						list.getQtScoreWeightage().setScore(new BigDecimal(0));
 					}
+					// Bug #38254@Syazani 15/07/2025 -- End
 					if(null!=list.getQtScoreWeightage() && null!=list.getQtScoreWeightage().getScore()){
 					list.getQtScoreWeightage().setScore(list.getQtScoreWeightage().getScore());
 					}
@@ -12205,6 +12209,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			reqDTO.setScQt(getManagedBean().getQt());
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 			// 1873 - start - note 97
 			SpecificationResDTO resDTO = new SpecificationResDTO();
@@ -12972,6 +12977,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			// code if alredy checklist exist need to remove existing finalcialspec
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 			SpecificationResDTO resDTO = new SpecificationResDTO();
 			try {
@@ -13061,7 +13067,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				// 11104-Reendorse794 -start-
 				if (issample && SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 					sampleDetailsPendingTemplateSpec();
-				   }// 11104-Reendose794
+				}
+				// 11104-Reendorse794 -end-
+
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 			return null;

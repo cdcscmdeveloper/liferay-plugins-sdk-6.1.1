@@ -17,8 +17,15 @@
 			</td>
 		
 			<td class="tdContent">
-				<ac:smReportCompanyNameLOV bBean="#{suppPerformRptBB}" 
-				saveObj="suppPerformRptBB.managedBean.selectedOrgProfile" update=":form:OrgMofNO"/>
+				<ac:lov id="smCompanyName" readonly="true" style="width:289px;"
+					lovId="SM_PERFORMANCE_REPORT" size="40"
+					headerText="#{lbl['lbl.rpt.cmpName']}" 
+					value="#{suppPerformRptBB.managedBean.selectedSupplierPerformance.companyName}" 
+					saveObject="suppPerformRptBB.managedBean.selectedSupplierPerformance" 
+					displayResultWhenFirstLoad = "false" 
+					displayResultWhenReset = "false" 
+					update=":form:OrgMofNO" />
+				<ac:lovPopup />
 			</td>
 			
 			<td class="tdTitle">

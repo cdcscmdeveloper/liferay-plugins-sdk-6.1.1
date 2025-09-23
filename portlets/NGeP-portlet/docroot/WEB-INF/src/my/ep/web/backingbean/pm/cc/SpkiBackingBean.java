@@ -129,9 +129,13 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions() {
 		// #30425 - Start
-		// start checking for validation
-		validateInternalSPKI(getSupplier().getEpNo());
-		// end checking for validation
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PRD, ONLY FOR PRE_PRD, PDS, UAT, SIT AND DEV ONLY <<<<<<<<<
+		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+			// start checking for validation
+			validateInternalSPKI(getSupplier().getEpNo());
+			// end checking for validation
+		}
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PRD, ONLY FOR PRE_PRD, PDS, UAT, SIT AND DEV ONLY <<<<<<<<<
 		// #30425 - End, #36605
 		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(null)) {
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
@@ -157,10 +161,14 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions(String identificationNo) {
 		// #30425 - Start
-		// start checking for validation (for checking cert expiration)
-		validateInternalSPKI(getSupplier().getEpNo());
-		// end checking for validation
-		// #30425 - End, #36605
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PRD, ONLY FOR PRE_PRD, PDS, UAT, SIT AND DEV ONLY <<<<<<<<<
+		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+			// start checking for validation (for checking cert expiration)
+			validateInternalSPKI(getSupplier().getEpNo());
+			// end checking for validation
+		}
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PRD, ONLY FOR PRE_PRD, PDS, UAT, SIT AND DEV ONLY <<<<<<<<<
+		// #30425 - End #36605
 		
 		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(identificationNo)) {
 			// #30425 - Start
