@@ -50,26 +50,30 @@ public class DisciplinaryActionRest {
 			//replace recalling or retrieve data that cause other data include in next retrieve data
 			//that occur error data has been update from last read.
 			//27426 : Disciplinary Action - start 
-			
-			//NO 1 : find data with end date less than current date to release DA
-			SupplierDataMaintenanceResDTO resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction(false);
-			releaseDA(resDTO.getSmDisciplinaryActions());
-			
-			//NO 2: find data pending DA, (data with active txn will update DA after complete all txn)
-			resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction();
-			updatePendingDA(resDTO.getSmDisciplinaryActions());
-			
+			SupplierDataMaintenanceResDTO resDTO = null;
+			//change to no 1
 			//28798: Disciplinary Action - start - 26238 - reopen
 			//NO 3 : find data pending Cancel Registration or Blacklist Owner / Director of Company 
 			//and get all active for cancel registration and blacklist
 			resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveBlacklistCancelDisciplinaryAction();
 			updatePendingBlacklistAndCancel(resDTO.getSmDisciplinaryActions());
 			
+			//change to no 2
 			//31100 start - find data pending suspend register
 			//NO 4 : find data pending suspend register , update pending txn for DA suspend and release if DA suspend expired
 			resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction(true);
 			//26238 : Disciplinary Action -32710- end -
 			updatePendingSuspend(resDTO.getSmDisciplinaryActions());
+			
+			//NO 1 : find data with end date less than current date to release DA
+			resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction(false);
+			releaseDA(resDTO.getSmDisciplinaryActions());
+			
+			//NO 2: find data pending DA, (data with active txn will update DA after complete all txn)
+			resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction();
+			updatePendingDA(resDTO.getSmDisciplinaryActions());
+			
+			
 			
 			log.info("UpdateDisciplinaryActionJob New Function After For");
 			return Response.status(200).entity("success calling process disciplinary action !!").build();
