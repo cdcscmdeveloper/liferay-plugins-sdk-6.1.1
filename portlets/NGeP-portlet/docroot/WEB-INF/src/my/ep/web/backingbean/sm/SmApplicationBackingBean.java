@@ -14733,6 +14733,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			
 		}
+		//#38890
+		SmAIDocBackingBean.validateBank(getManagedBean().getSmAppl());
 	}
 	
 	//3460 - Start
