@@ -3299,14 +3299,26 @@ return	remarksNotFound;
 						this.getManagedBean().setBpkCentralContract(true);
 					}
 					
-					if (!isCurrentCommitteeAuthorisedToSubmit && !getManagedBean().isBpkCentralContract()) {//#30324 - End
-						String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
-																committeeType);
-						
-						throw new EpException(MessageConst.ERROR_760394, new String[] { 
-												committeeName, String.valueOf(totalIntendedPrice.intValue()) });
-					}
+				// 39077 -start-
+				boolean isBriefMsgShow = this.getManagedBean()
+						.isReviseBriefMsg();
+				boolean isMessageShow = !isCurrentCommitteeAuthorisedToSubmit
+						&& !getManagedBean().isBpkCentralContract()
+						&& !isBriefMsgShow;
+				if (isMessageShow) {// #30324 - End
+					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
+					// 39077 -end-
+					
+					String committeeName = getParameterDesc(
+							ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+
+					throw new EpException(MessageConst.ERROR_760394,
+							new String[] {
+									committeeName,
+									String.valueOf(totalIntendedPrice
+											.intValue()) });
 				}
+			}
 				
 				if (getManagedBean().isSubmit() && 
 						!getManagedBean().isInitialDecisionFwdToBPK() &&
@@ -3833,12 +3845,24 @@ return	remarksNotFound;
 					this.getManagedBean().setBpkCentralContract(true);
 				}
 				
-				if (!isCurrentCommitteeAuthorisedToSubmit && !getManagedBean().isBpkCentralContract()) {//#30324 - End
-					String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
-															committeeType);
-					
-					throw new EpException(MessageConst.ERROR_760394, new String[] { 
-											committeeName, String.valueOf(totalIntendedPrice.intValue()) });
+				// 39077 -start-
+				boolean isBriefMsgShow = this.getManagedBean()
+						.isReviseBriefMsg();
+				boolean isMessageShow = !isCurrentCommitteeAuthorisedToSubmit
+						&& !getManagedBean().isBpkCentralContract()
+						&& !isBriefMsgShow;
+				if (isMessageShow) {// #30324 - End
+					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
+					// 39077 -end-
+
+					String committeeName = getParameterDesc(
+							ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+
+					throw new EpException(MessageConst.ERROR_760394,
+							new String[] {
+									committeeName,
+									String.valueOf(totalIntendedPrice
+											.intValue()) });
 				}
 			}
 			//#26169 - START
