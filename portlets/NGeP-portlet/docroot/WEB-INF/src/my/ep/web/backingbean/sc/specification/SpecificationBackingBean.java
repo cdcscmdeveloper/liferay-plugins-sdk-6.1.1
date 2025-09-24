@@ -302,11 +302,12 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 	private int tempNewChecklistIndex = 0;
 	// Bug #35219@Syazani 07/11/2023 -- End
 
-    //11104-start
-	public static final String TECHNICAL_CHECKLIST_SAMPLE_MAIN="/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleMain.xhtml?faces-redirect=true";	
-	public static final String TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW="/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";
-	public static final String SPECIFICATION_CHECKLIST_MAIN_PAGE="/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+	//11104-start
+	public static final String TECHNICAL_CHECKLIST_SAMPLE_MAIN = "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleMain.xhtml?faces-redirect=true";
+	public static final String TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW = "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";
+	public static final String SPECIFICATION_CHECKLIST_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 	//11104-end
+
 	/**
 	 * Instantiates a new specification backing bean.
 	 */
@@ -346,8 +347,7 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 			validatePrepareQtChecklist();
 
 			// #25638 -start-
-			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.specification.details.for"), this.getManagedBean().getQt().getQtNo(), 
-					Boolean.FALSE);
+			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.specification.details.for"), this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
 			// #25638 -end-
 		} finally {
 
@@ -707,13 +707,10 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 				
 			}
 			// #11104-start
-			else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-					.equalsIgnoreCase(checkList.getDefinationType()
-							.getParameterCode())) {
-				if (QTStatusConst.TS_PENDING_SUBMISSION.equals(checkList
-						.getPmStatus().getStatusId())) {
+			else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList.getDefinationType()
+					.getParameterCode())) {
+				if (QTStatusConst.TS_PENDING_SUBMISSION.equals(checkList.getPmStatus().getStatusId())) {
 					this.getManagedBean().setActiveIndex(2);
-
 					throw new EpException(MessageConst.ERROR_760521);
 				}
 			}
@@ -1059,8 +1056,7 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 		case 0:
 			if (!this.getManagedBean().isReadOnly()) {
 				//Bug #35688@Syazani 10/07/2024 -- Start
-				specReqDTO
-						.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_GENERAL_INFORMATION,isFromTabSpecCommitteDtlsLoad).getScQt());
+				specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_GENERAL_INFORMATION,isFromTabSpecCommitteDtlsLoad).getScQt());
 				//Bug #35688@Syazani 10/07/2024 -- End #29732 adding param
 				specSo.validateSpecCommitteGeneralInfo(specReqDTO);
 			}
@@ -1083,11 +1079,9 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 
 		case 2:
 			// Bug #35688@Syazani 10/07/2024, #29732 adding param -start-
-			specSo.validateCheckList(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_CHECKLIST,
-					isFromTabSpecCommitteDtlsLoad));
+			specSo.validateCheckList(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_CHECKLIST, isFromTabSpecCommitteDtlsLoad));
 
-			specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_CHECKLIST,
-					isFromTabSpecCommitteDtlsLoad).getScQt()); // #34656
+			specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_CHECKLIST, isFromTabSpecCommitteDtlsLoad).getScQt()); // #34656
 			// Bug #35688@Syazani 10/07/2024, #29732 adding param -end-
 
 			// 1873 - start- note 52
@@ -1284,8 +1278,7 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 			// 1873 note 182 end
 			// #11104-start
 			else if (this.getManagedBean().getQt().isSampleReq()) {
-				checksampleChecklist(this.getManagedBean()
-						.getScQtCheckSt2techProposal());
+				checksampleChecklist(this.getManagedBean().getScQtCheckSt2techProposal());
 			}
 			// #11104-End
 			
@@ -1347,7 +1340,7 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 			// #34656 validate - end
 
 			retriveRecommendationDetails();
-
+			
 			if (!this.getManagedBean().isReadOnly()
 			// 1873 note 149 -start-
 					&& this.getManagedBean().isTechnicalOtherCheckList()
@@ -1972,8 +1965,7 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 
 			// #11104-start
 			if (this.getManagedBean().getQt().isSampleReq()) {
-				checksampleChecklist(this.getManagedBean()
-						.getScQtCheckSt2techProposal());
+				checksampleChecklist(this.getManagedBean().getScQtCheckSt2techProposal());
 			}
 			// #11104-End
 			checkDemoVersion(getManagedBean().getQt());//#28784 -  Demo WIP
@@ -3241,8 +3233,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	*/
 	
 	/*
-	private void populateProgressivePayment(
-			List<ScQtProgressivePayment> progressivePayments) throws ParseException {
+	private void populateProgressivePayment(List<ScQtProgressivePayment> progressivePayments) throws ParseException {
 		if (!EntityHelper.isCollectionEmpty(progressivePayments)) {
 			this.getManagedBean().setTotalProgressivePayment(
 					progressivePayments.size());
@@ -3783,11 +3774,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							&& (currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT)
 									|| currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
 									|| currentStatusId.equals(QTStatusConst.QT_PENDING_MSC_APPROVAL)
-									|| (currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) && !this
-											.getManagedBean().isReadOnly())
+									|| (currentStatusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) 
+									&& !this.getManagedBean().isReadOnly())
 									|| currentStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT)
-									//33819 - start
-									|| currentStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF) 									
+									// 33819 - start
+									|| currentStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF)
 									//33819 - end
 									|| !this.getManagedBean().isReadOnly())) {
 						initializeRemarks(this.getManagedBean().getQt(), this
@@ -3851,7 +3842,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				});
 			}
 			// 25037 - end
-
+			
 			this.getManagedBean().setCommitteeActivities(
 					committeeActivities);
 
@@ -4369,11 +4360,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
 
-			if (paramDesc
-					.getPmParameter()
-					.getParameterId()
-					.equals(Long.valueOf(list.getDefinationType()
-							.getParameterId()))) {
+			if (paramDesc.getPmParameter().getParameterId().equals(Long.valueOf(list.getDefinationType().getParameterId()))) {
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
 				list.setDefinationType((PmParameter) paramDesc.getPmParameter().cloneEntity()); // Bug #34065@Syazani 01/11/2022
 				break;
@@ -4499,8 +4486,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
 		// 11104-start-
-		if (this.getManagedBean().getSpecMaintenanceScreen()
-				.equals(getSpecMaintenance())
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(getSpecMaintenance())
 				&& !this.getManagedBean().isSampleShowHide()) {
 			recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE);
 		}
@@ -4508,8 +4494,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		
 		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION);
 		if (null != this.getManagedBean().getQt()
-				&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt()
-						.getEvaluationType())) {
+				&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt().getEvaluationType())) {
 			// #28784 - Demo WIP and normal Demo
 			if (!this.getManagedBean().isNewVersion()) {
 				recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
@@ -4654,7 +4639,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		checklist.set(index, list);
 		this.getManagedBean().setScQtCheckSt2techProposal(checklist);
 		// Bug #35219@Syazani 07/11/2023 -- End
-
 	}
 
 	/**
@@ -4694,7 +4678,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				break;
 			}
 		}
-
+		
 		// Bug #35219@Syazani 07/11/2023 -- Start
 		selectOneItemActionAndDefinationBugRepair(checklist, this.getManagedBean().getScQtCheckSt2financeProposalLstClone(), index);
 		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), this.getManagedBean().getScQtCheckSt2techProposalLstClone(), null);
@@ -5468,27 +5452,19 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				// #8979,#30917,#31151 -End
 
 				return "/xhtml/sc/boSctemplatespec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
-			} 
+			}
 			// #11104-start
-			else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-					.equalsIgnoreCase(checkList.getDefinationType()
-							.getParameterCode())) {
-				List<ScQtCheckList> technicalChecklist = this.getManagedBean()
-						.getScQtCheckSt2techProposal();
-				this.getManagedBean().setSampleSpecCheckList(
-						new ArrayList<ScQtCheckList>());
+			else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+				List<ScQtCheckList> technicalChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
+				this.getManagedBean().setSampleSpecCheckList(new ArrayList<ScQtCheckList>());
 				this.getManagedBean().getQt().setSampleReq(Boolean.TRUE);
 				for (ScQtCheckList checklist : technicalChecklist) {
-					if (QTConstants.TEMPLETE_SPEC_CODE
-							.equalsIgnoreCase(checklist.getDefinationType()
-									.getParameterCode())
-							&& QTStatusConst.TS_COMPLETED.equals(checklist
-									.getPmStatus().getStatusId())) {
+					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())
+							&& QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId())) {
 						if (checkList.isBrandNew()) {
 							checklist.setCloned(Boolean.TRUE);
 						}
-						this.getManagedBean().getSampleSpecCheckList()
-								.add(checklist);
+						this.getManagedBean().getSampleSpecCheckList().add(checklist);
 					}
 				}
 				return TECHNICAL_CHECKLIST_SAMPLE_MAIN;
@@ -6301,8 +6277,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							checkList.setScQtCheckListValue(null);
 						} else {
 							// #21695, #25138 -end-
-							this.getManagedBean()
-							.setStartYear(String.valueOf(year));
+							this.getManagedBean().setStartYear(String.valueOf(year));
 							this.getManagedBean().setEndYear(String.valueOf(year));
 							//Bug #32862 - start
 							this.getManagedBean().setBankstmntTomonth(null);
@@ -8759,12 +8734,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			endmonth = retriveMonthDtls(new Integer(this.getManagedBean()
 					.getToMonth()));
-			 //Bug #32862 - start
+			//Bug #32862 - start
 			//Date d1 = new Date();
 			//SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-			 //Bug #32862 - end
+			//Bug #32862 - end
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-			 //Bug #32862 - start
+			//Bug #32862 - start
 			//String localDate = format.format(d1);
 			String date = "01";  
 			//Bug #32862 - end
@@ -13268,7 +13243,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			reqDTO.setScQt(getManagedBean().getQt());
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
+
 			// 1873 - start - note 97
 			SpecificationResDTO resDTO = new SpecificationResDTO();
 			
@@ -14110,6 +14086,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			// code if alredy checklist exist need to remove existing finalcialspec
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 			SpecificationResDTO resDTO = new SpecificationResDTO();
 			try {
