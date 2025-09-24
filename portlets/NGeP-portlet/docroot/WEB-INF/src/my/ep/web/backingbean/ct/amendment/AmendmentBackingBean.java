@@ -2209,7 +2209,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						&& (!getManagedBean().isValidationDA())) {
 					//#32860 end
 					//#26186 start
-					if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+					if(getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
 						RequestContext.getCurrentInstance().execute("sendParamToSupplierDA();");
 					}
 					//#26186 end
