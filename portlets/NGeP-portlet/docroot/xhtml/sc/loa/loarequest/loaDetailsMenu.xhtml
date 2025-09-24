@@ -742,11 +742,7 @@
 							<!-- #25726 START -->													
 							<!-- #25725 note 165  --><!-- new #25726 - Start -->
 						<h:panelGroup
-							rendered="#{isEditableStatus and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and 
-							lOADetailBackingBean.managedBean.above500K and (isPeriodic and !isContractPeriodAbove4) and 
-							(!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || ((((isPeriodic and isContractPeriodAbove4) || isOneOff) and 
-							(!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and 
-							(lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)))}"
+							rendered="#{isEditableStatus and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)}"
 							required="true">
 							<!-- new #25726 - End -->
 							<!-- #25726 END -->
