@@ -2,7 +2,7 @@
    MAIN PANEL WRAPPER
    =============================== */
 .audit-main-panel {
-    overflow-x: auto;
+    overflow-x: hidden;
     max-width: 100%;
 }
 
