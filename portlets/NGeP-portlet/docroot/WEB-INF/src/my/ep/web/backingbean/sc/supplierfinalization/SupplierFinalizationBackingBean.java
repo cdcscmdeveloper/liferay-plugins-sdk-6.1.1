@@ -11071,9 +11071,11 @@ public class SupplierFinalizationBackingBean extends
 						&& null != meeting.getMeetingStatus().getStatusId()
 						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
 						&& meeting.getMeetingDate().before(proposalValidityEndDate);
-				if ((this.getManagedBean().isSecretaryUser() && meetingStatusAndDate && meeting.getRecordStatusFlg()
-						.equals(DbValueConst.RECORD_STATUS_ACTIVE)) || meetingStatusAndDate) {
+				boolean meetingStatusAndRecordStatusActive = meeting.getRecordStatusFlg()
+						.equals(DbValueConst.RECORD_STATUS_ACTIVE) && ((this.getManagedBean().isSecretaryUser() && meetingStatusAndDate) || meetingStatusAndDate);
+				if (meetingStatusAndRecordStatusActive) {
 					lessThanValidityEndDate = true;
+					break;
 				} else {
 					lessThanValidityEndDate = false;
 				}
