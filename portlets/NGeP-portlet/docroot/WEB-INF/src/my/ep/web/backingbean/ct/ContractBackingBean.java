@@ -91,6 +91,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper; //#24333
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -4604,14 +4605,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    String na = ResourceBundleUtils.getMessage("lbl.txt.na", 
 	                      ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
-	    // Retrieve contract amount and total bond amount
-	    CtContractAmount contractAmount = getManagedBean().getCtContractAmount();
-	    if (contractAmount == null || contractAmount.getTotalBondAmt() == null) {
-	        return na;
-	    }
-
-	    BigDecimal bondAmt = contractAmount.getTotalBondAmt();
-	    if (bondAmt.compareTo(BigDecimal.ZERO) == 0) {
+	    BigDecimal bondAmt = getManagedBean().getTotalBondAmt();
+	    if (bondAmt == null || bondAmt.compareTo(BigDecimal.ZERO) == 0) {
 	        return na;
 	    }
 
@@ -4631,19 +4626,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    return na;
 	}
 
-
 	/**
 	 * The method used to retrieve thecontract period
 	 * 
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
-		if (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)) {
 
-			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
-		} else {
-			return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
-		}
+		return String.valueOf(getManagedBean().getCtContractAmount().getContractPeriodBond());
 	}
 	
 	/**
@@ -4724,6 +4714,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				|| statusId == ContractStatusConst.FA_PENDING_VERIFICATION.longValue()
 				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION.longValue()
 				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT.longValue()
 				|| statusId == ContractStatusConst.FA_LOA_COMPLETED.longValue();
 	}
 	//#24333 - End
@@ -5137,6 +5128,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    }
 
 	    return filteredList.isEmpty() ? originalList : filteredList;
+	}
+	
+	/**
+	 * Method to check if PK7 is from DP.
+	 * 
+	 * @return true if PK7 is from DP, false otherwise
+	 */
+	public boolean isPk7FromDp() {
+
+		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+		    String procType = EntityHelper.getNestedProperty(
+			        getManagedBean().getContractVer(),
+			        "ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType"
+			    );
+			    boolean hasValidProcType = ParameterTypeConst.PROCUREMENT_TYPE.equals(procType); // case-sensitive
+			    boolean hasJustification = newJustification() != null;
+			    return hasValidProcType && hasJustification;
+		}
+		return false;
 	}
 	// 24333 - End
 }  

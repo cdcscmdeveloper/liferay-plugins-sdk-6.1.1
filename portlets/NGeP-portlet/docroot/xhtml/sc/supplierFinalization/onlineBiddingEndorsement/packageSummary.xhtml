@@ -301,11 +301,11 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
+	        <p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 				style="text-align:center;">
 				<h:outputText
 					value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}"
-					rendered="#{priceDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalBiddingBackingBean.managedBean.biddingZoneDetails.get(suppFinalBiddingBackingBean.managedBean.zoneActiveIndex).branchDeactivated}" />
+					rendered="#{priceDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalBiddingBackingBean.managedBean.biddingZoneDetails.get(suppFinalBiddingBackingBean.managedBean.zoneActiveIndex).branchDeactivated or priceDis.supplierDeactivated}" />
 			</p:column>
 		</p:dataTable>
 		<ui:remove> #28777#29729 - End </ui:remove>
