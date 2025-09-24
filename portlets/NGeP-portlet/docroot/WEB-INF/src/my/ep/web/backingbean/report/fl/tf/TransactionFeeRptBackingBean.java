@@ -283,6 +283,7 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 	 */
 	public void allAgOffChecked(AjaxBehaviorEvent e) {
 		String valCheck = (String) e.getComponent().getAttributes().get("value");
+		this.agOffice = null;
 		this.getManagedBean().setInputAgOff(null);
 		this.getManagedBean().setIsAllAgOff(valCheck);
 		searchAccountingOffice();
