@@ -82,7 +82,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	//172.23.114.72, 192.168.62.17 (dev)"
 	
 	
-
 	/**
 	 * @param event
 	 */
@@ -134,7 +133,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (filename.endsWith(".json")){
 			log.info("skip AI");
 			String content = getFakeData(filepath, filename);
-			return new JsonWrapper(filename, System.currentTimeMillis(), content, docType);
+			return new JsonWrapper(System.currentTimeMillis(), content, docType);
 		}
 		if (!filename.endsWith("ai_demo.pdf")){
 			return null;
@@ -150,7 +149,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 					"SmAIDocbackingBean.sendDocumentOCR", "1:"+filename, startTime);
 			String content = getRawContent(is);
-			return new JsonWrapper(filename, startTime, content, docType);
+			return new JsonWrapper(startTime, content, docType);
 		} catch (IOException e) {
 			log.error(" ", e);
 		}
@@ -287,6 +286,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		List<DocEntity> docEntities = processBank(jsonWrappers);
 		validateBankEntity(appl, suppDoc, docEntities);
+		showErrorMessage(docEntities);
 		
 		SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 				"SmAIDocbackingBean.sendDocumentOCR", "2", startTime);
@@ -337,58 +337,76 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		List<BankStatementEntity> bankEntities = new ArrayList<>();
 		for (DocEntity entity : docEntities){
 			bankEntities.addAll(entity.bankStatements);
-			for (SmApplDocFile file : suppDoc.getSmApplDocFiles()){
-				if (entity.apiId.equals(file.getAiApiResponseId())){
-					file.setMappedFieldAI(entity.toString().replace("\n", "<br/>"));
-					file.setValidatedAI(entity.error ? 2 : 0);
-				}
-			}
 		}
 		
 		//compare with new/modified banks only
 		Map<String, String> supplierAccounts = new HashMap<>();	
 		for (SmSupplierBank suppBank : appl.getSmSupplierBanks()){
-			if ("U".equals(suppBank.getChangedFieldStatus()) || "N".equals(suppBank.getChangedFieldStatus())){
+			if (!StringUtils.isEmpty(suppBank.getChangedFieldStatus())){
 				supplierAccounts.put(suppBank.getAccountNo(), suppBank.getPmFinancialOrg().getFinOrgName());	
 			}
 		}
 		List<String> supplierBanks = new ArrayList<>(supplierAccounts.values());
-		
 		String companyNameSupp = appl.getSmSupplier().getCompanyName();
-		log.info("...validate_bank1\t..." + companyNameSupp);
-		boolean hasWrongCompanyName = false;
-		StringBuilder errMsg = new StringBuilder();
 		
 		for (BankStatementEntity bank : bankEntities){
 			String companyNameJson = bank.accountHolderName;
-			int validatedAI = 1;  //1-ok, 2-err
-			
-			log.info("...validate_bank\t..." + companyNameJson);
 			String bankName = supplierAccounts.get(bank.accountNo);
+			log.info("account no:"+bank.accountNo);
+			log.info("match with bank:"+bankName);
 			if (bankName == null){
-				validatedAI = 2;
-				errMsg.append("\n\nAccount No.: " + bank.accountNo);
+				bank.validAccountNo = false;
 				
 				bankName = fuzzyMatchList(bank.bankName, supplierBanks);
 				if (StringUtils.isEmpty(bankName)){
-					errMsg.append("\nBank Name: " + bank.bankName);
+					bank.validBankName = false;
 				}
-				
+			
+			//account no. exists
 			} else {
-				double score =  fuzzyMatchJaroWinkler(bankName, bank.bankName);
+				double score = fuzzyMatchJaroWinkler(bankName, bank.bankName);
 				log.info("Score: "+score+"\tBank1: "+bankName+"\tBank2:"+bank.bankName);
 				if (score < minScoreFuzzyMatch){
-					validatedAI = 2;
-					errMsg.append("\nBank Name: " + bank.bankName);
+					bank.validBankName = false;
 				}
 			}
-			log.info("account no:"+bank.accountNo);
-			log.info("match with bank:"+bankName);
 			if (!StringUtils.equals(companyNameJson, companyNameSupp)){
-				hasWrongCompanyName = true;
-				validatedAI = 2;
+				bank.validAccountHolderName = false;
 			}
-			setMappedFieldAI(suppDoc, bank.apiId, validatedAI);
+		}
+		
+		for (SmApplDocFile file : suppDoc.getSmApplDocFiles()){
+			for (DocEntity entity : docEntities){
+				if (entity.apiId.equals(file.getAiApiResponseId())){
+					file.setMappedFieldAI(entity.getLabel());
+					file.setValidatedAI(entity.hasError() ? 2 : 1); //1-ok, 2-err
+				}
+			}
+		}
+	}
+	
+	private static void showErrorMessage(List<DocEntity> docEntities){
+		boolean hasWrongCompanyName = false;
+		StringBuilder sb = new StringBuilder();
+		
+		for (DocEntity doc : docEntities){
+			if (EntityHelper.isCollectionEmpty(doc.bankStatements)){
+				continue;
+			}
+			for (BankStatementEntity bank : doc.bankStatements){
+				if (!bank.validAccountHolderName){
+					hasWrongCompanyName = true;
+				}
+				if (!bank.validBankName){
+					sb.append("\nBank Name: ").append(bank.bankName);
+				}
+				if (!bank.validAccountNo){
+					sb.append("\nAccount No.: ").append(bank.accountNo);
+				}
+				if (!bank.validBankName || ! bank.validAccountNo){
+					sb.append("\n");
+				}
+			}
 		}
 		
 		if (hasWrongCompanyName){
@@ -396,27 +414,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					SmCommonUtil.getMessage("lbl.sm.ai.bank.verify", new String[] { "" }));
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
-		if (!StringUtils.isEmpty(errMsg.toString())){
-			errMsg.insert(0, "The information in your bank statement(s) does not match with" +
+		if (!StringUtils.isEmpty(sb.toString())){
+			sb.insert(0, "The information in your bank statement(s) does not match with" +
 					" any existing Bank Account Details in Bank Information section:");
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, errMsg.toString());
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, sb.toString());
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 	}
-	
-	private static void setMappedFieldAI(SmApplSupportDoc suppDoc, Long apiId, int validatedAI){
-		if (EntityHelper.isCollectionEmpty(suppDoc.getSmApplDocFiles())){
-			return;
-		}
-		for (SmApplDocFile file : suppDoc.getSmApplDocFiles()){
-			//skip file that has already been marked as error
-			if (apiId.equals(file.getAiApiResponseId()) && file.getValidatedAI() != 2){
-				file.setValidatedAI(validatedAI);
-				break;
-			}
-		}
-	}
-	
+		
 	/**
 	 * @param jsonWrappers
 	 * @return
@@ -627,6 +632,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					+ conn.getResponseMessage());
 			return conn.getInputStream();
 		} catch (IOException e){
+			log.error("Response error",e);
 			return conn.getErrorStream();
 		}
 	}
@@ -757,15 +763,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	private static class JsonWrapper {
 		private JSONArray entities;
-		private String filename;
 		private long timeTakenMs;
 		private String rawContent;
 		private String ocrType;
 		private long apiId;
 		
-		private JsonWrapper(String filename, long startTime, String rawContent, String ocrType) {
+		private JsonWrapper(long startTime, String rawContent, String ocrType) {
 			this.entities = parseJsonEntities(rawContent);
-			this.filename = filename;
 			this.timeTakenMs = System.currentTimeMillis() - startTime;
 			this.rawContent = rawContent;
 			this.ocrType = ocrType;
@@ -794,7 +798,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					String entityId = bankEntity.getString("entity");
 					JSONArray properties = bankEntity.getJSONArray(propertiesStr);
 					BankStatementEntity bankStatement = new BankStatementEntity(
-							properties, entityId, this.apiId);
+							properties, entityId);
 					this.bankStatements.add(bankStatement);
 				}
 			} catch (JSONException e){
@@ -804,16 +808,43 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		
 		@Override
-		public String toString(){
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			for (BankStatementEntity bank : this.bankStatements){
+				sb.append(bank.entityId).append(":\n");
+				sb.append(bank.toString()).append("\n");
+			}
+			return sb.toString();
+		}
+		
+		private String getLabel() {
 			StringBuilder sb = new StringBuilder();
 			if (this.error){
 				return "Please upload valid document.";
 			}
-			for (BankStatementEntity bank : this.bankStatements){
-				sb.append(bank.entityId.substring(5)).append(":\n");
-				sb.append(bank.toString()).append("\n");
+			if (this.bankStatements.size() == 1){
+				return bankStatements.get(0).getLabel().replace("\n", "<br/>");
 			}
-			return sb.toString();
+			for (BankStatementEntity bank : this.bankStatements){
+				sb.append("Bank " + bank.entityId.substring(5)).append(":\n");
+				sb.append(bank.getLabel()).append("\n");
+			}
+			return sb.toString().replace("\n", "<br/>");
+		}
+		
+		private boolean hasError() {
+			if (this.error){
+				return true;
+			}
+			if (EntityHelper.isCollectionEmpty(bankStatements)){
+				return false;
+			}
+			for (BankStatementEntity bank : bankStatements){
+				if (!bank.validAccountHolderName || !bank.validAccountNo || !bank.validBankName){
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 
@@ -822,11 +853,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		private String accountNo;
 		private String accountHolderName;
 		private String entityId;
-		private Long apiId;
+		private boolean validBankName = true;
+		private boolean validAccountNo = true;
+		private boolean validAccountHolderName = true;
 
-		private BankStatementEntity(JSONArray properties, String entityId, Long apiId) throws JSONException {
+		private BankStatementEntity(JSONArray properties, String entityId) throws JSONException {
 			this.entityId = entityId;
-			this.apiId = apiId;
 			
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
@@ -866,6 +898,39 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 			if (accountNo != null) {
 				sb.append("Account No.: ").append(accountNo).append("\n");
+			}
+			return sb.toString();
+		}
+		
+		public String getLabel() {
+			StringBuilder sb = new StringBuilder();
+			String err1 = "<span style='color: red;'>";
+			String err2 = "</span>";
+			String yes = "&#x2713; ";
+			String no = "&#x2717; ";
+			if (accountHolderName != null) {
+				String s = "Company: " + accountHolderName + "\n";
+				if (!validAccountHolderName){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			if (bankName != null) {
+				String s = "Bank name: " + bankName + "\n";
+				if (!validBankName){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			if (accountNo != null) {
+				String s = "Account No.: " + accountNo + "\n";
+				if (!validAccountNo){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
 			}
 			return sb.toString();
 		}
