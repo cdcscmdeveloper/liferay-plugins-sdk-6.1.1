@@ -1244,9 +1244,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (ctBB.getManagedBean().getCtAddress() != null) {
 			ctContractVer.getCtContractValue().setSupplierAddress(ctBB.getManagedBean().getCtAddress());
 		}
-
+		//#24333 - Start
 		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() &&
-		        !ctBB.getManagedBean().isDirectPurchase() &&
+				(!ctBB.getManagedBean().isDirectPurchase() ||  ctBB.isPk7FromDp()) &&
 		        !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
 
 		        Date currentDate = new Date();
@@ -1901,9 +1901,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 		
-		//basri -  #29441 During Notification Setting, no need to validate 
+		//basri -  #29441 During Notification Setting, no need to validate
 		// Validation for performance bond
-		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()
+		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && (!ctBB.getManagedBean().isDirectPurchase() || ctBB.isPk7FromDp())
 				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()
 				&& (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
 				&& !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
