@@ -5621,45 +5621,8 @@ public class SimpleQuoteBackingBean extends
 			ScQuote quote = getManagedBean().getScQuote();
 			
 			//#38916
-			//Calculate for Product
 			log.info("Recalculation SAVE action");
-			List<TplSpecAnswer> calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();	
-			if(calcSpecAnswersProduct != null){		
-				log.info("==============================================================");
-				log.info("Bug 38916 Product (set all to null)");
-				for(TplSpecAnswer specAnswerProduct : calcSpecAnswersProduct){
-					specAnswerProduct.setAnswerNumeric(null);
-					log.info("SpecAnswerId : " + specAnswerProduct.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerProduct.getAnswerNumeric());
-				}
-				
-				getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(getManagedBean().getProductTemplateSpecBean());
-				calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
-				
-				log.info("Bug 38916 Product (After calculation)");
-				for(TplSpecAnswer specAnswerProduct : calcSpecAnswersProduct){
-					log.info("SpecAnswerId : " + specAnswerProduct.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerProduct.getAnswerNumeric());
-				}
-			}			
-			
-			//Calculate for Service
-			List<TplSpecAnswer> calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList(); 
-			if(calcSpecAnswersService != null){
-				log.info("==============================================================");	
-				log.info("Bug 38916 Service (set all to null)");
-				for(TplSpecAnswer specAnswerService : calcSpecAnswersService){
-					specAnswerService.setAnswerNumeric(null);
-					log.info("SpecAnswerId : " + specAnswerService.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerService.getAnswerNumeric());
-				}
-				
-				getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(getManagedBean().getServiceTemplateSpecBean());
-				calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
-				
-				log.info("Bug 38916 Service (After calculation)");
-				for(TplSpecAnswer specAnswerService : calcSpecAnswersService){
-					log.info("SpecAnswerId : " + specAnswerService.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerService.getAnswerNumeric());
-				}
-				log.info("==============================================================");
-			}
+			recalculationSpecAnswer();
 			//#38916
 
 			// tpl spec - product
@@ -5803,45 +5766,8 @@ public class SimpleQuoteBackingBean extends
 		}
 		
 		//#38916
-		//Calculate for Product
 		log.info("Recalculation SUBMIT action");
-		List<TplSpecAnswer> calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();	
-		if(calcSpecAnswersProduct != null){		
-			log.info("==============================================================");
-			log.info("Bug 38916 Product (set all to null)");
-			for(TplSpecAnswer specAnswerProduct : calcSpecAnswersProduct){
-				specAnswerProduct.setAnswerNumeric(null);
-				log.info("SpecAnswerId : " + specAnswerProduct.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerProduct.getAnswerNumeric());
-			}
-			
-			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(getManagedBean().getProductTemplateSpecBean());
-			calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
-			
-			log.info("Bug 38916 Product (After calculation)");
-			for(TplSpecAnswer specAnswerProduct : calcSpecAnswersProduct){
-				log.info("SpecAnswerId : " + specAnswerProduct.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerProduct.getAnswerNumeric());
-			}
-		}			
-		
-		//Calculate for Service
-		List<TplSpecAnswer> calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList(); 
-		if(calcSpecAnswersService != null){
-			log.info("==============================================================");	
-			log.info("Bug 38916 Service (set all to null)");
-			for(TplSpecAnswer specAnswerService : calcSpecAnswersService){
-				specAnswerService.setAnswerNumeric(null);
-				log.info("SpecAnswerId : " + specAnswerService.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerService.getAnswerNumeric());
-			}
-			
-			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(getManagedBean().getServiceTemplateSpecBean());
-			calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
-			
-			log.info("Bug 38916 Service (After calculation)");
-			for(TplSpecAnswer specAnswerService : calcSpecAnswersService){
-				log.info("SpecAnswerId : " + specAnswerService.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerService.getAnswerNumeric());
-			}
-			log.info("==============================================================");
-		}
+		recalculationSpecAnswer();
 		//#38916
 		
 		//gpki for only govt seller
@@ -5877,6 +5803,7 @@ public class SimpleQuoteBackingBean extends
 			boolean isProdContainPrice = Boolean.FALSE;
 			boolean isServiceContainPrice = Boolean.FALSE;
 			boolean isProduct = Boolean.FALSE;
+			
 			// validate tpl spec - product before spki authenticate
 			List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean()
 					.getSpecAnswerList();
@@ -8433,4 +8360,50 @@ public class SimpleQuoteBackingBean extends
 		
 	}
 	//36301 - end
+	
+	//#38916 - Start
+	/**
+	 * To recalculate spec answer before submission.
+	 */
+	private void recalculationSpecAnswer(){
+		//Calculate for Product
+		List<TplSpecAnswer> calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();	
+		if(calcSpecAnswersProduct != null){		
+			log.info("==============================================================");
+			log.info("Bug 38916 Product (set all to null)");
+			for(TplSpecAnswer specAnswerProduct : calcSpecAnswersProduct){
+				specAnswerProduct.setAnswerNumeric(null);
+				log.info("SpecAnswerId : " + specAnswerProduct.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerProduct.getAnswerNumeric());
+			}
+			
+			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(getManagedBean().getProductTemplateSpecBean());
+			calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
+			
+			log.info("Bug 38916 Product (After calculation)");
+			for(TplSpecAnswer specAnswerProduct : calcSpecAnswersProduct){
+				log.info("SpecAnswerId : " + specAnswerProduct.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerProduct.getAnswerNumeric());
+			}
+		}			
+		
+		//Calculate for Service
+		List<TplSpecAnswer> calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList(); 
+		if(calcSpecAnswersService != null){
+			log.info("==============================================================");	
+			log.info("Bug 38916 Service (set all to null)");
+			for(TplSpecAnswer specAnswerService : calcSpecAnswersService){
+				specAnswerService.setAnswerNumeric(null);
+				log.info("SpecAnswerId : " + specAnswerService.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerService.getAnswerNumeric());
+			}
+			
+			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(getManagedBean().getServiceTemplateSpecBean());
+			calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+			
+			log.info("Bug 38916 Service (After calculation)");
+			for(TplSpecAnswer specAnswerService : calcSpecAnswersService){
+				log.info("SpecAnswerId : " + specAnswerService.getSpecAnswerId() + " - AnswerNumeric : " + specAnswerService.getAnswerNumeric());
+			}
+			log.info("==============================================================");
+		}
+	}
+	//#38916 - End
 }
