@@ -40,6 +40,10 @@
 					<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
 				</p:outputPanel>
 			</ui:remove>
+			<!-- #38890 -->
+			&#160;<p:graphicImage value="/css/images/design/upload_ai.png" 
+						rendered="#{cc.attrs.label eq lbl['lbl.sm.docsReviewLbl']
+								or cc.attrs.label eq lbl['lbl.sm.personStepLbl']}"/>
 		</p:commandLink>
 	</cc:implementation>
 

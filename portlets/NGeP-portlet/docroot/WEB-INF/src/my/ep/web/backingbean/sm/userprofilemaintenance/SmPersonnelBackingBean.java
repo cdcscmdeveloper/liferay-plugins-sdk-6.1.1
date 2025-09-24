@@ -927,6 +927,12 @@ public class SmPersonnelBackingBean extends
 				throw new EpException(MessageConst.ERROR_722656,
 						new String[] { addrType });
 			} else {
+				if (srcAddr.getPostcode() != null && StringUtils.isNotBlank(srcAddr.getPostcode())
+						&& (!StringUtils.isNumeric(srcAddr.getPostcode()) || srcAddr.getPostcode().length() != 5)) {
+					destAddr.setSameAsPerm(false);
+					String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
+					throw new EpException(errMsg, null);
+				}
 				destAddr.setSmAddress((SmAddress) srcAddr.deepCopy());
 				updateMailAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
 			}
@@ -4207,4 +4213,18 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setOldOrg(orgProfile);
 	}
 	// #28895_35501 End
+	
+	// #36718 - Start
+	/**
+	 * To check postcode by using listener
+	 * @param postcode
+	 */
+	public void checkPostcode(String postcode) {
+		if (postcode != null && StringUtils.isNotBlank(postcode)
+				&& (!StringUtils.isNumeric(postcode) || postcode.length() != 5)) {
+			String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
+			throw new EpException(errMsg, null);
+		}
+	}
+	// #36718 - End
 }

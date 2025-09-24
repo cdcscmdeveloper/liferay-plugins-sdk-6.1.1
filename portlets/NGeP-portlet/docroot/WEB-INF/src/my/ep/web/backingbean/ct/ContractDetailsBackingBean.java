@@ -84,6 +84,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;//24333
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
@@ -1243,53 +1244,50 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (ctBB.getManagedBean().getCtAddress() != null) {
 			ctContractVer.getCtContractValue().setSupplierAddress(ctBB.getManagedBean().getCtAddress());
 		}
+		//#24333 - Start
+		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() &&
+				(!ctBB.getManagedBean().isDirectPurchase() ||  ctBB.isPk7FromDp()) &&
+		        !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
 
-		if (ctBB.getManagedBean().getCtContractAmount().isBondReq()
-				&& !ctBB.getManagedBean().isDirectPurchase()
-				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+		        Date currentDate = new Date();
+		        CtContractAmount uiBondData = ctBB.getManagedBean().getCtContractAmount();
+		        Date ctValueExpDate = ctContractVer.getCtContractValue().getExpDate();
 
-				// #24333 - Start
-				Date currentDate = new Date();
-
-				// Get bond data from the source contract
-				CtContractAmount uiBondData = ctBB.getManagedBean().getCtContractAmount();
-				List<CtPerformanceBond> newBonds = uiBondData.getCtPerformanceBondsNew();
-				List<CtPerformanceBond> originalBonds = uiBondData.getCtPerformanceBondsOriginal();
-				Date ctValueExpDate = ctContractVer.getCtContractValue().getExpDate();
-				
-				// Combine original and new bonds into a single list ONCE, before the main loop
-		        List<CtPerformanceBond> allBonds = new ArrayList<>();
-		        if (originalBonds != null) {
-		            allBonds.addAll(originalBonds);
+		        // Combine bonds from the UI into a single list.
+		        List<CtPerformanceBond> allBondsFromUI = new ArrayList<CtPerformanceBond>();
+		        if (uiBondData.getCtPerformanceBondsOriginal() != null) {
+		            allBondsFromUI.addAll(uiBondData.getCtPerformanceBondsOriginal());
 		        }
-		        if (newBonds != null) {
-		            allBonds.addAll(newBonds);
+		        if (uiBondData.getCtPerformanceBondsNew() != null) {
+		            allBondsFromUI.addAll(uiBondData.getCtPerformanceBondsNew());
 		        }
-		        
-				// Use a single loop to process all contract amounts
-				for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()) {
-					// Check if the contract is active or extended
-					 Date eff = contractAmt.getEffDate();
-				     Date exp = contractAmt.getExpDate();
-				     boolean isCurrentlyActive = !currentDate.before(eff) && !currentDate.after(exp);
-				     boolean isContractExtend = exp.equals(ctValueExpDate);
 
-					if (isCurrentlyActive || isContractExtend) {
-						 // Update total amount and clear existing bonds
-		                contractAmt.setTotalBondAmt(uiBondData.getTotalBondAmt());
-		                contractAmt.getCtPerformanceBonds().clear();
-		                
-		                // Clone all bonds from the combined list
-		                cloneAndAddBonds(contractAmt, allBonds);
+		        for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()) {
+		            Date eff = contractAmt.getEffDate();
+		            Date exp = contractAmt.getExpDate();
+
+		            // Calculate active or extended conditions once.
+		            boolean isActiveOrExtend = (!currentDate.before(eff) && !currentDate.after(exp)) 
+			                || (exp != null && exp.equals(ctValueExpDate));
+
+		            if (!isActiveOrExtend) {
+		                continue;
 		            }
+		            // Update total amount
+		            contractAmt.setTotalBondAmt(uiBondData.getTotalBondAmt());
+		            
+		            // Pass the `isEffectiveContract` flag to the sync method.
+		            boolean isEffectiveContract = !currentDate.before(eff) && !currentDate.after(exp);
+		            syncBondsToTarget(contractAmt, allBondsFromUI, isEffectiveContract);
 
-					// Set flag attachment
-					boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
-					contractAmt.setIsBondAttachment(!contractAmt.getCtPerformanceBonds().isEmpty() && isApproved ? ParameterConst.FLAG_INT_YES
-							: ParameterConst.FLAG_INT_NO);
-				}
-			}
-			// 24333 - End
+		            // Set the attachment flag with more readable logic.
+		            boolean isApproved = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
+		            boolean hasBonds = !contractAmt.getCtPerformanceBonds().isEmpty();
+		            int flag = (hasBonds && isApproved) ? ParameterConst.FLAG_INT_YES : ParameterConst.FLAG_INT_NO;
+		            contractAmt.setIsBondAttachment(flag);
+		        }
+		    }
+		// 24333 - End
 		
 		//#13847 start
 		if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
@@ -1903,9 +1901,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 		
-		//basri -  #29441 During Notification Setting, no need to validate 
+		//basri -  #29441 During Notification Setting, no need to validate
 		// Validation for performance bond
-		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()
+		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && (!ctBB.getManagedBean().isDirectPurchase() || ctBB.isPk7FromDp())
 				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()
 				&& (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
 				&& !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
@@ -4467,96 +4465,109 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	// #24333,#36491 - Start
 	/**
-	 * Processes performance bonds by classifying them as new or original and
-	 * handles bond requirements based on document type and amendment status.
-	 * 
-	 * @param contractAmt
-	 *            the contract amount containing performance bonds
-	 * @param docType
-	 *            the type of document
-	 * @param isAmendment
-	 *            whether the document is an amendment
+	 * Processes and classifies performance bonds based on the document type and amendment status.
+	 *
+	 * @param contractAmt The contract amount containing the performance bonds.
+	 * @param docType     The type of the document.
+	 * @param isAmendment A flag indicating if the document is an amendment.
 	 */
 	private void processPerformanceBonds(CtContractAmount contractAmt, String docType, boolean isAmendment) {
-		
-		ctBB.getManagedBean().setTotalBondAmt(contractAmt.getTotalBondAmt());
-		// Check if the document is relevant for bond processing
-		if (!isAmendment
-				&& !(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT) || docType
-							.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
-			contractAmt.setCtPerformanceBondsOriginal(contractAmt.getCtPerformanceBonds());
-			return;
-		}
-		log.info("processPerformanceBonds method test : set List ");
-		List<CtPerformanceBond> bondNew = new ArrayList<>();
-		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
-		ctBB.isContractExtendOrIsBond();
-		boolean hasNewBond = false;
-		CtPerformanceBond emptyNewBond = null;
+	    ctBB.getManagedBean().setTotalBondAmt(contractAmt.getTotalBondAmt());
+	    boolean isContractExtend = ctBB.isContractExtendOrIsBond();
 
-		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
-			if (bond.isBondNew()) {
-				hasNewBond = true;
-				bondNew.add(bond);
-			} else {
-				bondOriginal.add(bond);
+	    // Guard Clause: Exit early if bond processing is not required.
+	    if (shouldSkipBondProcessing(docType, isAmendment)) {
+	        contractAmt.setCtPerformanceBondsOriginal(contractAmt.getCtPerformanceBonds());
+	        return;
+	    }
 
-				// Save potential bond to clone only if brand new and eligible
-				if (emptyNewBond == null && ctBB.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
-						&& ctBB.getManagedBean().isDisableOriginalBond() && bond.isBrandNew()) {
+	    // store to partition bonds into 'new' and 'original'.
+	    List<CtPerformanceBond> bondNew = new ArrayList<CtPerformanceBond>();
+	    List<CtPerformanceBond> bondOriginal = new ArrayList<CtPerformanceBond>();
 
-					emptyNewBond = bond;
-				}
-			}
-		}
+	    for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
+	        CtPerformanceBond clonedBond = cloneBond(bond, contractAmt, bond.isBrandNew(), isContractExtend);
+	        if (clonedBond.isBondNew()) {
+	            bondNew.add(clonedBond);
+	        } else {
+	            bondOriginal.add(clonedBond);
+	        }
+	    }
 
-		// Only create new bond if NONE exist
-		if (!hasNewBond && emptyNewBond != null) {
-			for (CtPerformanceBond bond : bondOriginal) {
-			bondNew.add(createNewBondFrom(bond));
-			}
-		}
+	    // If no new bonds exist and conditions are met, create new bonds from the original ones.
+	    if (bondNew.isEmpty() && shouldCreateNewBond()) {
+	        CtContractValue contractValue = ctBB.getManagedBean().getContractVer().getCtContractValue();
+	        for (CtPerformanceBond bond : bondOriginal) {
+	            bondNew.add(createNewBondFrom(bond, contractValue));
+	        }
+	    }
 
 	    // Sorting both lists by bond name (case-insensitive)
-	    Comparator<CtPerformanceBond> nameComparator = new Comparator<CtPerformanceBond>() {
+	    Comparator<CtPerformanceBond> byRefNo = new Comparator<CtPerformanceBond>() {
+	        @Override
 	        public int compare(CtPerformanceBond b1, CtPerformanceBond b2) {
-	            return b1.getRefNo().compareToIgnoreCase(b2.getRefNo());
+	            // Ensure getRefNo() is not null to avoid NullPointerException
+	            String refNo1 = b1.getRefNo() == null ? "" : b1.getRefNo();
+	            String refNo2 = b2.getRefNo() == null ? "" : b2.getRefNo();
+	            return refNo1.compareToIgnoreCase(refNo2);
 	        }
 	    };
+	    
+	    // Use Collections.sort()
+	    Collections.sort(bondNew, byRefNo);
+	    Collections.sort(bondOriginal, byRefNo);
 
-	    Collections.sort(bondNew, nameComparator);
-	    Collections.sort(bondOriginal, nameComparator);
-		contractAmt.setCtPerformanceBondsNew(bondNew);
-		contractAmt.setCtPerformanceBondsOriginal(bondOriginal);
+	    contractAmt.setCtPerformanceBondsNew(bondNew);
+	    contractAmt.setCtPerformanceBondsOriginal(bondOriginal);
 	}
 	
 	/**
-	 * Creates a new performance bond based on an existing bond, extending the expiration date by one year.
+	 * Synchronizes (updates or inserts) a list of bonds to a target contract amount.
 	 *
-	 * @param bond The original performance bond.
-	 * @return A new performance bond with updated attributes.
+	 * @param targetContractAmount The destination contract amount.
+	 * @param sourceBonds          The list of source bonds from the UI.
+	 * @param isEffectiveContract  A flag indicating if the contract is currently effective.
 	 */
-	private CtPerformanceBond createNewBondFrom(CtPerformanceBond bond) {
-		CtPerformanceBond newBond = new CtPerformanceBond();
-		newBond.setPerformanceBondId(null);
-		newBond.setBondNew(true);
-		newBond.setRefNo(bond.getRefNo());
-		newBond.setFinancialOrg(bond.getFinancialOrg());
-		newBond.setFinancialOrgName(bond.getFinancialOrgName());
-		newBond.setBondAmount(bond.getBondAmount());
+	private void syncBondsToTarget(CtContractAmount target, List<CtPerformanceBond> sourceBonds, boolean isEffectiveContract) {
+	    if (target == null || sourceBonds == null) return;
 
-		CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
-		CtContractValue contractValue = contractVer.getCtContractValue();
+	    List<CtPerformanceBond> targetBonds = target.getCtPerformanceBonds();
 
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(contractValue.getExpDate());
-		cal.add(Calendar.YEAR, 1);
+	    // Buat map untuk bond yang sudah ada berdasarkan ID (hanya untuk effective contract)
+	    Map<Long, CtPerformanceBond> existingByIdMap = new HashMap<>();
+	    if (isEffectiveContract && !target.isBrandNew()) {
+	        for (CtPerformanceBond bond : targetBonds) {
+	            if (bond.getPerformanceBondId() != null) {
+	                existingByIdMap.put(bond.getPerformanceBondId(), bond);
+	            }
+	        }
+	    }
 
-		newBond.setExpDate(cal.getTime());
-		newBond.setEffDate(contractValue.getEffDate());
+	    // Clear target bonds only after creating the map to preserve existing IDs
+	    targetBonds.clear();
 
-		return newBond;
+	    for (CtPerformanceBond src : sourceBonds) {
+	        if (src == null) continue;
+
+	        CtPerformanceBond bondToSave;
+
+	        if (target.isBrandNew() || !isEffectiveContract) {
+	            // Untuk brand new atau extended contract, selalu buat bond baru
+	            bondToSave = copyBondData(new CtPerformanceBond(), src, true, target);
+	        } else {
+	            // Untuk effective contract, update bond yang sudah ada berdasarkan ID
+	            CtPerformanceBond existing = existingByIdMap.get(src.getPerformanceBondId());
+	            if (existing != null) {
+	                // Update bond yang sudah ada tanpa mengubah ID
+	                bondToSave = copyBondData(existing, src, false, null);
+	            } else {
+	                // Jika ID tidak ditemukan (bond baru ditambahkan), buat baru
+	                bondToSave = copyBondData(new CtPerformanceBond(), src, true, target);
+	            }
+	        }
+
+	        targetBonds.add(bondToSave);
+	    }
 	}
 
 	// #24333,#36491 - End
@@ -4635,42 +4646,144 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	
 	/**
-	 * Clones and adds a list of performance bonds to a contract amount.
+	 * Creates a copy of a performance bond and assigns it to a new contract amount.
+	 * Includes file attachment info (filename and path).
 	 * 
+	 * @param target
+	 *            The target bond to copy data into.
+	 * @param source
+	 *            The source bond to copy from.
+	 * @param forInsert
+	 *            Flag to indicate if this is a new bond (needs new ID).
 	 * @param parent
-	 *            The target contract amount.
-	 * @param bondsToClone
-	 *            The list of bonds to clone.
+	 *            The new contract amount that will own the bond.
+	 * @return The updated bond with copied data.
 	 */
-	private void cloneAndAddBonds(CtContractAmount parent, List<CtPerformanceBond> bondsToClone) {
-		for (CtPerformanceBond bond : bondsToClone) {
-			parent.getCtPerformanceBonds().add(cloneBond(bond, parent));
-		}
+	private CtPerformanceBond copyBondData(CtPerformanceBond target, CtPerformanceBond source, boolean forInsert, CtContractAmount parent) {
+	    if (target == null || source == null) return target;
+
+	    if (forInsert) {
+	        target.setPerformanceBondId(null); // ID akan digenerate oleh sistem
+	        if (parent != null) {
+	            target.setCtContractAmount(parent);
+	        }
+	    }
+
+	    // Copy all mutable fields
+	    target.setBondAmount(source.getBondAmount()); // Copy bond amount
+	    target.setRefNo(source.getRefNo()); // Copy reference number
+	    target.setFileName(source.getFileName()); // Copy file name
+	    target.setFilePath(source.getFilePath()); // Copy file path
+	    target.setEffDate(source.getEffDate()); // Copy effective date
+	    target.setExpDate(source.getExpDate()); // Copy expiration date
+	    target.setFinancialOrg(source.getFinancialOrg()); // Copy financial organization
+	    target.setFinancialOrgName(source.getFinancialOrgName()); // Copy financial organization Name
+	    target.setBondNew(source.isBondNew()); // Copy bond new status
+	    target.setPrevId(source.getPrevId());
+	    return target;
+	}
+	
+	/**
+	 * Creates a copy of a performance bond and assigns it to a new contract amount.
+	 * Includes file attachment info (filename and path).
+	 * 
+	 * @param src The bond to copy.
+	 * @param parent The new contract amount that will own the bond.
+	 * @return A new bond with the same data and new parent.
+	 */
+	private CtPerformanceBond cloneBond(CtPerformanceBond src, CtContractAmount parent, boolean isBrandNew, boolean isContractExtend) {
+	    CtPerformanceBond clone = new CtPerformanceBond();
+	    if (src != null) {
+	    	// Set performanceBondId based on conditions
+	        if (isBrandNew) {
+	            clone.setPerformanceBondId(null); // Generate new ID only for new or extend without ID
+	        } else {
+	            clone.setPerformanceBondId(src.getPerformanceBondId()); // Retain existing ID
+	        }
+	        clone.setBondAmount(src.getBondAmount()); // Copy bond amount
+	        clone.setRefNo(src.getRefNo()); // Copy reference number
+	        clone.setFileName(src.getFileName()); // Copy file name
+	        clone.setFilePath(src.getFilePath()); // Copy file path
+	        clone.setEffDate(src.getEffDate()); // Copy effective date
+	        clone.setExpDate(src.getExpDate()); // Copy expiration date
+	        PmFinancialOrg newOrg = new PmFinancialOrg();
+	        if (src.getFinancialOrg() != null) {
+	            newOrg.setFinancialOrgId(src.getFinancialOrg().getFinancialOrgId());
+	        }
+	        clone.setFinancialOrg(newOrg); // Copy financial organization
+	        clone.setFinancialOrgName(src.getFinancialOrgName()); // Copy financial organization Name
+	        clone.setBondNew(src.isBondNew()); // Copy bond new status
+	        clone.setPrevId(src.getPrevId()); // Copy prevId bond
+	        clone.setCtContractAmount(parent); // Set the new parent contract amount
+	    }
+	    return clone;
 	}
 
 	/**
-	 * Creates a copy of a performance bond and assigns it to a new contract
-	 * amount. Includes file attachment info (filename and path).
-	 * 
-	 * @param src
-	 *            the bond to copy
-	 * @param parent
-	 *            the new contract amount that will own the bond
-	 * @return a new bond with the same data and new parent
+	 * Creates a new bond from an existing one (e.g., for contract extensions).
+	 *
+	 * @param existingBond  The old bond to be used as a template.
+	 * @param contractValue The contract information for effective and expiration dates.
+	 * @return A new bond object.
 	 */
-	private CtPerformanceBond cloneBond(CtPerformanceBond src, CtContractAmount parent) {
-		CtPerformanceBond clone = new CtPerformanceBond();
-		clone.setBondAmount(src.getBondAmount());
-		clone.setRefNo(src.getRefNo());
-		clone.setFileName(src.getFileName());
-		clone.setFilePath(src.getFilePath());
-		clone.setEffDate(src.getEffDate());
-		clone.setExpDate(src.getExpDate());
-		clone.setFinancialOrg(src.getFinancialOrg());
-		clone.setBondNew(src.isBondNew());
-		clone.setCtContractAmount(parent);
-		return clone;
+	private CtPerformanceBond createNewBondFrom(CtPerformanceBond existingBond, CtContractValue contractValue) {
+	    if (existingBond == null || existingBond == null) {
+	        return existingBond;
+	    }
+	    
+	    CtPerformanceBond newBond = new CtPerformanceBond();
+	    newBond.setPerformanceBondId(null); // Always a new ID.
+	    newBond.setBondNew(true);
+	    newBond.setBondAmount(existingBond.getBondAmount()); // Copy bond amount
+	    newBond.setRefNo(existingBond.getRefNo()); // Copy reference number
+		PmFinancialOrg newOrg = new PmFinancialOrg();
+	    if (existingBond.getFinancialOrg() != null) {
+	        newOrg.setFinancialOrgId(existingBond.getFinancialOrg().getFinancialOrgId());
+	    }
+	    newBond.setFinancialOrg(newOrg); // Copy financial organization
+	    newBond.setFinancialOrgName(existingBond.getFinancialOrgName()); // Copy financial organization Name
+	    newBond.setEffDate(contractValue.getEffDate());
+	    newBond.setExpDate(getExtendedExpDate(contractValue));
+	    newBond.setFileName(null);
+	    newBond.setFilePath(null);
+	    newBond.setPrevId(existingBond.getPrevId());
+	    return newBond;
+	}
+
+	/**
+	 * Helper to check if the bond classification process should be skipped.
+	 *
+	 * @param docType     The type of the document.
+	 * @param isAmendment The amendment status.
+	 * @return True if the process should be skipped.
+	 */
+	private boolean shouldSkipBondProcessing(String docType, boolean isAmendment) {
+	    return !isAmendment && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+	           && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+	           && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING);
+	}
+
+	/**
+	 * Helper to check for conditions that require automatic creation of a new bond.
+	 *
+	 * @return True if a new bond should be created.
+	 */
+	private boolean shouldCreateNewBond() {
+	    return (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() || ctBB.getManagedBean().getCtContractAmount().isBondReq())
+	           && ctBB.getManagedBean().isDisableOriginalBond();
+	}
+
+	/**
+	 * Calculates an extended expiration date by adding one year to the contract's expiration date.
+	 *
+	 * @param contractValue The contract value information.
+	 * @return The new, extended date.
+	 */
+	private Date getExtendedExpDate(CtContractValue contractValue) {
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(contractValue.getExpDate());
+	    cal.add(Calendar.YEAR, 1);
+	    return cal.getTime();
 	}
 	// #24333 - End
-	
 }

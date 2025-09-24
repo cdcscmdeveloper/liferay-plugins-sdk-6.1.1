@@ -312,8 +312,7 @@
 									<c:choose>
 										<c:when test="#{cc.attrs.disablePostCodeValidator}">
 											<p:ajax event="blur" process="@this" partialSubmit="true" update="@this,#{cc.attrs.postCodeId}MyMsg"
-												listener="#{cc.attrs.bBean.checkPostcode(cc.attrs.addrObj.smAddress.postcode)}"
-												oncomplete="scrollToMessages()" />
+												listener="#{cc.attrs.bBean.checkPostcode(cc.attrs.addrObj.smAddress.postcode)}" />
 										</c:when>
 										<c:otherwise>
 											<p:ajax process="@this" partialSubmit="true" update="@this,#{cc.attrs.postCodeId}MyMsg" />
