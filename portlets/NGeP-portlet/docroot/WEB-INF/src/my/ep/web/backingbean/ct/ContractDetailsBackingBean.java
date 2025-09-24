@@ -3845,12 +3845,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			PmOrgProfile orgProfile = null;
 			
 			//Enhancement 29418 - shaqimi start 21/10/2022
+			//#35238 start
 			Boolean hasPBQCRole = 
 					(getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
 							|| getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QCB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.QQC_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QQC_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QQC_CHAIRPERSON.value())
 							|| getFacesScopes().hasRoleUser(RoleCode.PBA_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PBA_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
 							|| getFacesScopes().hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PBB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
 							|| getFacesScopes().hasRoleUser(RoleCode.PPB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value()));
+			//#35238 end
 			//Enhancement 29418 - shaqimi end 21/10/2022
 			
 			if (userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
@@ -4376,8 +4379,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return true if user has either one of the describe roles
 	 */
 	public boolean isAuditContinuityRoleCheck() {
+		//#35238 start
 		return (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QQC_SECRETARY.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())
@@ -4393,6 +4398,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()));
+		//#35238 end
 	}
 
 	/**
@@ -4401,16 +4407,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return true if user has either one of described roles
 	 */
 	public boolean isAuditRoleForChairpersonAndMember() {
+		//#35238 start
 		return (getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.QCB_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QQC_MEMBER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.PBA_MEMBER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.PBB_MEMBER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.PPB_MEMBER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QQC_CHAIRPERSON.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.PBA_CHAIRPERSON.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(
 				RoleCode.PPB_CHAIRPERSON.value()));
+		//#35238 end
 	}
 
 	/**
