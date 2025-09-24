@@ -17642,6 +17642,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
 		// 29732 -end-
+		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);//#29732 added spec maintenance status pending approval having issue data has already been removed
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
