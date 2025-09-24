@@ -17482,7 +17482,6 @@ public class SpecificationBackingBean extends
 		SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 
 		specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
-		specReqDTOCatChange.getScQt().setScQtCategorys(this.getManagedBean().getQtCategoryList());
 		specSo.validateSupplierQulificationInfoCatChange(specReqDTOCatChange);
 		String changedCatCodeList = checkCatCodeChange();
 		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
