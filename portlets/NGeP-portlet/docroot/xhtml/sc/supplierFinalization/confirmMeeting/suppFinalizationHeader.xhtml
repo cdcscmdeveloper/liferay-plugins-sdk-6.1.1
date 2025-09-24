@@ -7,9 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<ui:param name="scQt" value="#{suppFinalMeetingBackingBean.managedBean.scQt}" />
-	<!-- 27668@hatta - start -->
+	<ui:remove> #27668 - Start </ui:remove>
     <ui:param name="validatevalue" value="#{suppFinalizationBackingBean.handleProposalValidityDays(scQt)}"></ui:param>
-    <!-- 27668@hatta - end -->
+    <ui:remove> #27668 - End </ui:remove>
 	<div align="left" class="header-info header-spacing">
 		<table style="width:100%;">
 			<tr>
@@ -33,15 +33,15 @@
 suppFinalMeetingBackingBean.isQTStatusPublished(suppFinalMeetingBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}
 				</td>
 				<td style="width:5%;">
-					<!-- 27668@hatta - start --> <h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" /> <!-- 27668@hatta - end -->
+					<ui:remove> #27668 - Start </ui:remove> <h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" /> <ui:remove> #27668 - End </ui:remove>
 				</td>
 				<td style="width:22%;" class="header-info-text">
-					<!-- 27668@hatta - start --> #{scQt.qtValidityPeriod} <!-- 27668@hatta - end -->
+					<ui:remove> #27668 - Start </ui:remove> #{scQt.qtValidityPeriod} <ui:remove> #27668 - End </ui:remove>
 				</td>
 			</tr>
-			<!-- 27668@hatta - start -->
+			<ui:remove> #27668 - Start </ui:remove>
 			<tr>
-			    <td style="width: 10%;">  <ui:remove> #27668 - Start </ui:remove> <h:outputLabel value="#{lbl['lbl.sc.title']}" /> <ui:remove> #27668 - End </ui:remove></td>
+			    <td style="width: 10%;"><h:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td style="width: 27%;" class="header-info-text"><h:outputText value="#{scQt.qtTitle}" /></td>
 				
 				<td style="width: 5%;"><h:outputLabel
@@ -70,7 +70,7 @@ suppFinalMeetingBackingBean.isQTStatusPublished(suppFinalMeetingBackingBean.mana
 					</td>
 				</c:if>
 		   </tr>
-	       <!-- 27668@hatta - end -->
+	       <ui:remove> #27668 - End </ui:remove>
 		</table>
 	</div>
 
