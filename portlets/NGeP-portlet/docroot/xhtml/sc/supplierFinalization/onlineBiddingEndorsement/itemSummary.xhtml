@@ -61,6 +61,10 @@
 			value="#{suppFinalBiddingBackingBean.managedBean.scQt.closingDate}">
 			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 		</h:outputText>	
+		<ui:remove>21692 - Start</ui:remove>
+		<br/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']} " escape="false" />
+		<ui:remove>21692 - End</ui:remove>
 		<p:dataTable id="supplierItemTbl" var="itemSupplier"
 			value="#{suppFinalBiddingBackingBean.managedBean.bidItemSuppliers}"
 			rows="10" rowKey="#{itemSupplier}" rowIndexVar="rowIndex" 
@@ -147,7 +151,8 @@
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or 
-					  									itemSupplier.supplier.disciplinaryActions)}" />				
+					  									itemSupplier.supplier.disciplinaryActions) or
+					  									suppFinalBiddingBackingBean.supplierRejectEPV(itemSupplier.scQtProposal)}" /><ui:remove>21692</ui:remove>			
 		</p:dataTable>
 	</p:panel>
 

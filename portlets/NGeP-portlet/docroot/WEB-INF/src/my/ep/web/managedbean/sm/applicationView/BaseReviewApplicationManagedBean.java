@@ -389,6 +389,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		private SmApplInquiry poToSupplierInquiry;
 		private List<SmApplInquiry> poSupplierInquiryHistory;
 		private List<SmApplSupportDoc> missinDocs;
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean auditAccess;
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2577,5 +2579,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.allMachineDtls = allMachineDtls;
 	}
 	//#30766 & #34209 - END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isAuditAccess() {
+		return auditAccess;
+	}
+
+	public void setAuditAccess(boolean auditAccess) {
+		this.auditAccess = auditAccess;
+	}
+	// #28895_35501 End
 		
 }

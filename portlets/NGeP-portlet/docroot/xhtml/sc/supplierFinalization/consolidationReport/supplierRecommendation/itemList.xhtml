@@ -10,6 +10,11 @@
 		<ui:remove>#18685 start</ui:remove>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.item']} " escape="false" />
 		<ui:remove>#18685 end</ui:remove>
+		<ui:remove>21692 - Start</ui:remove>
+		<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+			<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />
+		</c:forEach>
+		<ui:remove>21692 - End</ui:remove>
 		<p:dataTable id="itemListTbl" var="item"
 			value="#{consolidationReportBackingBean.managedBean.itemsList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

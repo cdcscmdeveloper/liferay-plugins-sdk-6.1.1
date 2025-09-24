@@ -38,14 +38,14 @@
 	        <f:attribute name="labelName" value="#{cc.attrs.label}" />
 		</p:inputText>	
 		<!-- 29487 - View bank details by factoring user_endorsed - Start -->
-		<p:graphicImage id="#{phonePanelId}teleno"	value="/css/images/design/ico-tooltips.png" rendered="#{!financialOrgBackingBean.isRoleFactoringUser()}" />
+		<p:graphicImage id="#{phonePanelId}teleno" value="/css/images/design/ico-tooltips.png" rendered="#{!financialOrgBackingBean.isRoleFactoringUser()}" />
 		<!-- 29487 - View bank details by factoring user_endorsed - End -->
 		<p:tooltip	id="#{phonePanelId}tfno" for="#{phonePanelId}teleno">
 			<p:outputLabel escape="false" value="#{cc.attrs.isMobile ? lbl['tt.sm.registration.user.mobileno'] : lbl['tt.sm.registration.company.telephoneno']}"  />
 		</p:tooltip>
 		&#160;
 		<p:selectOneMenu value="#{cc.attrs.telcoId}" rendered="#{cc.attrs.isMobile and !cc.attrs.hideTelco}" label="#{cc.attrs.label} - #{lbl['lbl.sm.telco']}"
-			style="width: 100px" id="telcoCompId" disabled="#{cc.attrs.disabled}">
+			style="width: 100px" id="telcoCompId" disabled="#{cc.attrs.disabled}" required="#{cc.attrs.isMobile and !cc.attrs.hideTelco and cc.attrs.required}">
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{applicationBean.telcoItems}" />
 			<p:ajax process="@this" event="change" update="@this" partialSubmit="true"/>

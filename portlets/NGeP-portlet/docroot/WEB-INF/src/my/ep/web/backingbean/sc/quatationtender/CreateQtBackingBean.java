@@ -717,7 +717,8 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 
 					// #28784 - Start
-					if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType().getParameterCode())) {
+					if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(technicalchecklist.getDefinationType()
+							.getParameterCode())) {
 						if (null != technicalchecklist.getPmStatus()
 								&& QTStatusConst.TS_COMPLETED.equals(technicalchecklist.getPmStatus().getStatusId())) {
 							technicalchecklist.setPmStatus(status);
@@ -2739,6 +2740,15 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null != newValue) {
 				qtDtl.validateNewValueForValidityDays((int) newValue);
 			}
+
+			//#21692 - Start
+			if (null != newValue && null != valueBean.getOldValue()
+					&& (int) newValue > (int) valueBean.getOldValue()) {
+				this.getManagedBean().setProposalValidityChangeValue(true);
+			} else {
+				this.getManagedBean().setProposalValidityChangeValue(false);
+			}
+			//#21692 - End
 		}
 		// #29425 - end
 
@@ -3554,6 +3564,13 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	//20200210@asyrafhaziq_Bug #27381&#26694  - End
 
+	//#21692 - Start
+	/**
+	 * Check if current QT Status is in between QT Publication and QT Closed/Awarded
+	 * 
+	 * @param currentStatusId
+	 * @return
+	 */
 	public boolean isQTStatusInProposalValidPeriodExtApproval(Long currentStatusId) {
 		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION, QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
 				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION, QTStatusConst.QT_PENDING_LOI, QTStatusConst.QT_PENDING_LOA,
@@ -3566,6 +3583,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		return Boolean.FALSE;
 	}
+	//#21692 - End
 
 	/* :::Enhancement #25638 #29 - start::: */
 	public boolean isStatusInQTReviseGroupStatus(Long currentStatusId) {
@@ -3686,6 +3704,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	// #21695 Farid END 3/7/2021
 
+	// #28784 -start-
 	/**
 	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
 	 * #28784 - Include Demo WIP
@@ -3699,21 +3718,20 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && this.getManagedBean().isNewVersion()){
 			String type = (String) event.getComponent().getAttributes().get("value");
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
-			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
-		
-			for (ScQtCheckList checklist : scQtTechChecklist) {
-				if (checklist.getDefinationType().getParameterCode()
-						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
 
-					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
-					}
+			//#28784 - 38426 - start
+			if (this.isStatusLessThanOrEquals(status,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH,
+					QTStatusConst.QT_ORDERED_STATUSES)) {
+				// note937 Issue 2 - Start
+				boolean oneTier = type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER) && demoRequired;
+
+				if (oneTier) {
+					RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
 				}
+				// note937 Issue 2 - End
 			}
+			//#28784 - 38426 - end
 
 			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)
 					&& !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
@@ -3723,22 +3741,22 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().getQt().setDemoRequired(false);
 			}
 
-			//#28784 - Start
 			if (null != status
 					&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) && !this.getManagedBean().isQtSpecMaintanance() && !this
 							.getManagedBean().isMaintanceFlow()) && !demoRequired) {
 				this.getManagedBean().setDemoSpecialCase(true);
 				this.getManagedBean().setDemoEvalDisabled(true);
 			}
-			
-		} else if(!this.getManagedBean().isNewVersion()) {
+
+		} else if (!this.getManagedBean().isNewVersion()) {
 			this.getManagedBean().setDemoType(false);
-		}//#28784 - End		
-		
+		}
+
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 	}
 	// #28784 -end-
-	
+
+	// #28784 -start-
 	/**
 	 * #28784 - check demo radio button and display popup to delete
 	 * @param event
@@ -3746,6 +3764,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void validateDemoTechList(AjaxBehaviorEvent event) {
 		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
 		this.getManagedBean().getQt().setDemoRequired(type);
+
 		if (type == false) {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
@@ -3758,16 +3777,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				scQtTechChecklist = specSo.retrieveCheckLists(reqDTO).getTechnicalCheckList();
 			}
 
-			if (null != scQtTechChecklist) {
-				for (ScQtCheckList checklist : scQtTechChecklist) {
-					if (checklist.getDefinationType().getParameterCode()
-							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-						RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
-
-					}
-				}
-			}
-
+			RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");//note937 Issue 1
 		} else {
 			RequestContext.getCurrentInstance().execute("demoDialogConfirm.hide()");
 		}
@@ -3775,9 +3785,9 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QTDetailBackingBean detailBB = new QTDetailBackingBean();
 		detailBB.checkDemoPresentationByStatus();
 	}
-
 	// #28784 -end-
-	
+
+	// #28784 -start-
 	/*
 	 * #28784 - Delete Demo tech checklist if user change yes to no
 	 */
@@ -3827,6 +3837,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getQt().setEvaluationType(ParameterConst.EVALUATION_TYPES_TWO_TIER);
 		this.getManagedBean().setDemoType(true);
 		this.getManagedBean().getQt().setDemoRequired(true);
+		this.getManagedBean().setDemoEvalDisabled(false); // disable evaluation method during sc maintenance
 	}
 	// #28784 -end-
 }

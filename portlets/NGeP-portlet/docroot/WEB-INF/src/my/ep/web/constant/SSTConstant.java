@@ -1,5 +1,9 @@
 package my.ep.web.constant;
 
+/**
+ * @author zaim
+ *
+ */
 public class SSTConstant {
 
 	// 26226 - start
@@ -60,6 +64,12 @@ public class SSTConstant {
 	public static final String PROTEGE_LOWERCASE_E = "&#233;";
 	public static final String AND_SYMBOL = "&#38;";
 	public static final String BREAKLINE ="<br />";
+	public static final String FILE_NO = "fileNo";
+	public static final String UNDERLINE_SHORT = "______________";
+	public static final String MOF_NO = "mofNo";
+	public static final String HEADER_TENDER = "Tender";
+	public static final String HEADER_SEBUT_HARGA = "Sebut Harga";
+	public static final String DOCUMENT_TYPE = "docType";
 	//25025 - end
 	
 	//29006 start
@@ -101,6 +111,17 @@ public class SSTConstant {
 	 */
 	public static final String HTML_ENTITY_LINE_SEPARATOR = "<br/>";
 
+	/**
+	 * Constant representing the prefix for a new supplier offer.
+	 * This is used as a standard identifier or key prefix in various parts of the application.
+	 */
+	public static final String NEW_SUPPLIER_OFFER_ = "NSO_";
+
+	/**
+	 * Constant representing the prefix for a new supplier offer justification.
+	 * This prefix is typically used to identify or reference justifications related to new supplier offers.
+	 */
+	public static final String NEW_SUPPLIER_OFFER_JUSTIFICATON_ = "NSOJ_";
 	//29006 end
 	// 35295 @zaim - start
 	/**
@@ -139,5 +160,11 @@ public class SSTConstant {
 	 */
 	public static final String ADD_WHITESPACE = " ";
 	// 36122 - end
+
+	// #36757 Start Vinod
+	public static final String produk = "Produk";
+	public static final String product = "Product";
+	// #36757 End Vinod
+
 }
 

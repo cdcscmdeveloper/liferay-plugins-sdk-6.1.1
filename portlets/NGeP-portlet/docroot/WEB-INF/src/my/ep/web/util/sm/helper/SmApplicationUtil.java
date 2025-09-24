@@ -55,6 +55,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -2166,21 +2167,26 @@ public class SmApplicationUtil {
 		boolean validPersonnels = true;
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
+		managedBean.setPoApproverAcedemicErr(false);//#31130
 		SmAppl appl = managedBean.getSmAppl();
 		for (SmPersonnel per : appl.getSmPersonnels()) {
-			if (per.getSmStaffAcademics() == null
-					|| per.getSmStaffAcademics().isEmpty()) {
+			//#31130 --START 040725
+			if ((per.getPmUser() != null || per.getEpRole() != null) && (per.getSmStaffAcademics() == null
+					|| per.getSmStaffAcademics().isEmpty())) {
+				//#31130 --END 040725
 				sb.append("<br/>");
 				sb.append(++i + ". ");
 				sb.append(per.getName());
 				validPersonnels = false;
 			}
 		}
-		if (!validPersonnels) {
+		//#31130 --START 040725
+		if (!validPersonnels && managedBean.isSupplierUser()){//#31130
 			validSave = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
-			throw new EpException(MessageConst.ERROR_722599,
-					new String[] { sb.toString() });
+		}else if (!validPersonnels && (managedBean.isApproverUser()|| managedBean.isPoUser())){
+			managedBean.setPoApproverAcedemicErr(true);
+			managedBean.setMsgPersonnelErr(sb.toString());
+		//#31130 --END 040725
 		}
 
 		return validSave;
@@ -2217,6 +2223,7 @@ public class SmApplicationUtil {
 		boolean validPersonnels = true; //#30444
 		boolean displayError = false; //#30444 --31072021--
 		boolean showerror = false;
+		managedBean.setPoApproverPersonnelErr(false); //#31130 040725
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			//16052019 - SSM INTEGRATION CR - To check address complete or not
 			/*if(managedBean.isSsmIntegrationActive() && managedBean.isCompanyValidWithSSM()){
@@ -2229,13 +2236,38 @@ public class SmApplicationUtil {
 			//#28693
 			if ((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() == null)
 					// #30718 - start
-					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null && (per.getPmCountry().getCountryId() == 131L))
+					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null 
+							&& (per.getPmCountry() != null && per.getPmCountry().getCountryId() == 131L)) //#31130 -040725
 					// #30718 - end
-					|| per.getPmRace() == null) {
+					//#31130 --START 040725
+					|| per.getPmRace() == null || per.getTitle() == null
+					|| per.getDesignation() == null 
+					|| per.getPmCountry() == null || per.getIdentificationNo() == null
+					|| per.getIdentificationTypeId() == null || per.getBirthDate() == null 
+					|| (per.getWorkExperienceYear() == null && appl.getSupplierType().equalsIgnoreCase(
+							SupplierManagementConst.STYPE_CONSULTANT)) 
+					|| ((per.getMobileArea() == null || per.getMobileNo() == null|| per.getMobileTelcoId() == null)
+							&& per.isAuthorized() == true)
+					|| per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
-			} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
-				validPersonnel = false;
-			}
+			} //#31130 --END 040725
+			
+			//31130-start 040725
+			for (SmPersonnelAddress addressPer : per.getSmPersonnelAddresses()){
+				if (addressPer.getSmAddress() == null
+						|| (addressPer.getSmAddress() != null && addressPer.getSmAddress().getAddress1().isEmpty()
+								|| addressPer.getSmAddress().getPostcode() == null
+								|| addressPer.getSmAddress().getCountryId() == null
+								|| addressPer.getSmAddress().getStateId() == null
+								|| addressPer.getSmAddress().getDistrictId() == null 
+								|| addressPer.getSmAddress().getCityId() == null) 
+								|| addressPer.getSmPersonnel() == null
+								|| addressPer.getSmAddress().getPostcode().isEmpty()
+								|| addressPer.getSmAddress().getDistrictId()== 1
+								|| addressPer.getSmAddress().getCityId() == 1 ) {
+					validPersonnel = false;
+				}
+			}//31130-end 040725
 			//#30444 --START--25082021--
 			if ((per.isClerical() && per.isManagement() 
 					&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(
@@ -2246,7 +2278,14 @@ public class SmApplicationUtil {
 				validPersonnels = false;
 			}
 			//#30444 --END--25082021--
-			if(!validPersonnel){
+			//#31130 --START--040725--
+			if((per.getPmUser() != null || per.getEpRole() != null)
+					&&(!validPersonnel || (appl.getSupplierType().equalsIgnoreCase(
+					SupplierManagementConst.STYPE_CONSULTANT) 
+					&& ((per.getSmStaffAcademics() == null || per.getSmStaffAcademics().isEmpty())
+					|| (per.isEquityOwner() && (per.getSmStaffExperiences() == null || per.getSmStaffExperiences().isEmpty()))
+					|| (per.isEquityOwner() && (per.getSmAssociationBodies() == null || per.getSmAssociationBodies().isEmpty())))))){
+				//#31130 --END--040725--
 				sb.append(++i + ". ");
 				sb.append(per.getName());
 				// sb.append(",  ");
@@ -2362,14 +2401,22 @@ public class SmApplicationUtil {
 		// end #30076
 
 		//16052019 - SSM INTEGRATION CR #27219
-		//31130
-		if (showerror && managedBean.isSupplierUser() && !managedBean.isDisAllowOwnerEdit()) {
+		//31130 040725
+		if (showerror && managedBean.isSupplierUser() && !managedBean.isDisAllowOwnerEdit() && !managedBean.isApproverUser() && !managedBean.isPoUser()) {
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}
 			throw new EpException(MessageConst.ERROR_721082,
 					new String[] { sb.toString() });
 		}
+		//#31130-start 040725
+		if (showerror && (managedBean.isApproverUser() || managedBean.isPoUser())){
+			managedBean.setPoApproverPersonnelErr(true);
+			managedBean.setMsgPersonnelErr(sb.toString());
+			}else{
+				managedBean.setPoApproverPersonnelErr(false);
+				}
+		//#31130-end 040725
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
 			StringBuilder errMsg = new StringBuilder();
@@ -3627,6 +3674,8 @@ public class SmApplicationUtil {
 		managedBean.setOverLappedCategoryExists(false);
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
+		//13362
+		managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
 
 		if (overlapCategoryVO != null) {
 			managedBean.setOverLappedCategoryExists(overlapCategoryVO
@@ -3637,12 +3686,29 @@ public class SmApplicationUtil {
 					.getOverLappedCategoryRemarks());
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
+			//13362
+			managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
 			managedBean.setOverLappedCategoryExists(true); //#31018
 		} else {
 			managedBean.setOverlapDocs(null);//#31018
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
 				overlapCategoryVO);
+	}
+
+	//13362
+	public static List<SmBulkApplOverlapCatVO>  checkOverLappingCategoriesMalay(
+			SmApplicationManagedBean managedBean) {
+		log.info("Inside checkOverLappingCategoriesMalay === ");
+		SmOverlapCategoryVO overlapCategoryMalay = null;
+		managedBean.getSmAppl().setOverlapLanguage(CommonConstants.LANGUAGE_CODE_MALAY);
+		overlapCategoryMalay = getOverlapCategoryVO(managedBean.getSmAppl());
+
+		if (overlapCategoryMalay != null) {
+			managedBean.setOverlapCategoryListMalay(overlapCategoryMalay
+					.getOverlapCategoryMalayList());
+		}
+		return overlapCategoryMalay.getOverlapCategoryMalayList();
 	}
 
 	public static void validateOverlapCategoryJustificationAndSuppDocs(
@@ -3727,11 +3793,24 @@ public class SmApplicationUtil {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
 		reqDTO.setApplId(smAppl.getApplId());
+		
+		//13362
+		if (smAppl.getOverlapLanguage() != null){
+			reqDTO.setLangCode(CommonConstants.LANGUAGE_CODE_MALAY);
+			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
+					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+			if (!EntityHelper.isCollectionEmpty(resultList)
+					&& !resultList.isEmpty()) {
+				retVal = new SmOverlapCategoryVO();
+				retVal.setOverlapCategoryMalayList(getOverlapCategoryVOList(
+						resultList, smAppl.getSupplierType(), smAppl.getOverlapLanguage()));
+			}
+		}else{
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
 		if (!EntityHelper.isCollectionEmpty(resultList)
-				&& resultList.size() > 0) {
+				&& !resultList.isEmpty()) {
 			retVal = new SmOverlapCategoryVO();
 			retVal.setOverLappedCategoryExist(true);
 			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
@@ -3748,7 +3827,48 @@ public class SmApplicationUtil {
 					+ System.lineSeparator()
 					+ getOverlappedCategoryRemarks(resultList));
 			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
-					resultList, smAppl.getSupplierType()));
+					resultList, smAppl.getSupplierType(), smAppl.getOverlapLanguage())); //ganti dgn overlap lang
+			
+			//13362 - START setApplnOverlapRemarks
+			String companyName = "";
+			String mofNo = "";
+			String catCode = "";
+			String catCodeCombine = "";
+			int index = 0;
+			
+			if(resultList != null){
+				for (Object[] arrI : resultList){ 
+					catCode = arrI[0].toString() + arrI[1] + arrI[2];
+					if("".equalsIgnoreCase(companyName)){
+						companyName = arrI[4].toString();
+						log.info("MOF NO == "+arrI[5]);
+						mofNo = arrI[5] != null ? arrI[5].toString() : "null";
+						catCodeCombine += companyName + ", " +  mofNo + ", " + " (";
+						index ++;
+					}
+					if (index == 1){
+						catCodeCombine = catCodeCombine + catCode;
+					}
+					if(arrI[4].toString().equalsIgnoreCase(companyName) && index != 1){
+						catCodeCombine = catCodeCombine + ", " + catCode;
+					}else{
+						companyName = arrI[4].toString();
+						log.info("MOF NO == "+arrI[5]);
+						mofNo = arrI[5] != null ? arrI[5].toString() : "null";
+						
+						if (index == 1){
+							catCodeCombine = catCodeCombine + "";
+							index++;
+						}else{
+							catCodeCombine = catCodeCombine + ")," + " " + companyName + ", " +  mofNo + ", " + " (" + catCode;
+						}
+					}	
+				}
+				catCodeCombine = catCodeCombine + "" + ")";
+				retVal.setApplnOverLapRemarks(catCodeCombine);
+			}
+			//13362 - END
+		}
 		}
 		return retVal;
 	}
@@ -3882,7 +4002,7 @@ public class SmApplicationUtil {
 	}
 
 	private static List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList(
-			List<Object[]> resultList, String suppType) {
+			List<Object[]> resultList, String suppType, String lang) {
 		List<SmBulkApplOverlapCatVO> retVal = new ArrayList<SmBulkApplOverlapCatVO>();
 
 		if (!EntityHelper.isCollectionEmpty(resultList)) {
@@ -3892,7 +4012,14 @@ public class SmApplicationUtil {
 			String catCode = StringUtils.EMPTY;
 			String isActiveAppl = StringUtils.EMPTY;
 			String applStatus = StringUtils.EMPTY;
-			String language = new FacesScopes().getUserLocale().getLanguage();
+			String language = null;
+			//13362
+			if (lang != null){
+				language = CommonConstants.LANGUAGE_CODE_MALAY;
+			}
+			else{
+				language = new FacesScopes().getUserLocale().getLanguage();
+			}
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
@@ -3951,7 +4078,7 @@ public class SmApplicationUtil {
 					voSubTmp.setIdentificationNo(arr[16] + "");
 					voSubTmp.setRole(getRoleName(arr[9] + "", arr[10] + "",
 							arr[11] + "", arr[15] + "", arr[12] + "", arr[13]
-									+ "", arr[14] + "", suppType));
+									+ "", arr[14] + "", suppType, lang));
 					voSubTmp.setCompanyName(arr[4] + "");
 					voSubTmp.setMofNo(arr[5] + "");
 					if (StringUtils.isBlank(voSubTmp.getMofNo())) {
@@ -4005,8 +4132,65 @@ public class SmApplicationUtil {
 
 	private static String getRoleName(String equityOwner, String director,
 			String higherManagement, String clerical, String management,
-			String prof, String semiProf, String suppType) {
+			String prof, String semiProf, String suppType, String lang) {
 		StringBuilder sb = new StringBuilder();
+		//13362
+		if (lang != null){
+			if (equityOwner.equals("1")) {
+				sb.append(
+						SmCommonUtil.getMessageMalay(
+								SupplierManagementConst.PERSONNEL_EQUI_OWNER, null))
+						.append(",");
+			}
+			if (director.equals("1")) {
+				sb.append(
+						SmCommonUtil.getMessageMalay(
+								SupplierManagementConst.PERSONNEL_DIR_ROLENAME,
+								null)).append(",");
+			}
+			if (higherManagement.equals("1")) {
+				sb.append(
+						SmCommonUtil.getMessageMalay(
+								SupplierManagementConst.PERSONNEL_HGHR_ROLENAME,
+								null)).append(",");
+			}
+			if (management.equals("1")) {
+				sb.append(
+						SmCommonUtil
+								.getMessageMalay(
+										SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
+										null)).append(",");
+			}
+			if (clerical.equals("1")) {
+				if (suppType.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+					sb.append(
+							SmCommonUtil
+									.getMessageMalay(
+											SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
+											null)).append(",");
+				} else {
+					sb.append(
+							SmCommonUtil
+									.getMessageMalay(
+											SupplierManagementConst.PERSONNEL_STAFF_ROLENAME,
+											null)).append(",");
+				}
+			}
+			if (prof.equals("1")) {
+				sb.append(
+						SmCommonUtil
+								.getMessageMalay(
+										SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
+										null)).append(",");
+			}
+			if (semiProf.equals("1")) {
+				sb.append(
+						SmCommonUtil
+								.getMessageMalay(
+										SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
+										null)).append(",");
+			}
+			}else{
 		if (equityOwner.equals("1")) {
 			sb.append(
 					SmCommonUtil.getMessage(
@@ -4061,6 +4245,8 @@ public class SmApplicationUtil {
 									SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
 									null)).append(",");
 		}
+			}
+		
 		return sb.length() > 0 ? StringUtils.removeEnd(sb.toString(), ",")
 				: StringUtils.EMPTY;
 	}
@@ -13829,12 +14015,16 @@ public class SmApplicationUtil {
 			if (StringUtils.isBlank(searchQuery)) {
 				resultList = rejectReasons;
 			} else {
-				for (PmReasonDesc tmp : rejectReasons) {
-					if (StringUtils.upperCase(tmp.getReasonDesc()).contains(
+				//#37896 START
+				for (PmReasonDesc tmp : rejectReasons) {					
+					String stringtest = tmp.getReasonDesc().replaceAll("\\s{2,}"," ").trim();
+
+					if (StringUtils.upperCase(stringtest).contains(
 							StringUtils.upperCase(searchQuery))) {
 						resultList.add(tmp);
 					}
 				}
+				//#37896 END
 			}
 		}
 		return resultList;
@@ -15257,5 +15447,32 @@ public class SmApplicationUtil {
 	    }
 	}
 	//#37605 END
+	
+	// #37784 -STRAT
+	/*
+	 * Checks the application record status. If it is either DELETED or
+	 * CANCELLED, redirects the user to the application error page with an
+	 * appropriate message.
+	 * 
+	 * @param appl the application object to check
+	 */
+	public static void checkAndRedirectIfInvalid(SmAppl appl) {
+		if (appl != null) {
+			Long statusId = appl.getPmStatus().getStatusId();
+			boolean isDeletedOrCancelled = appl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+					|| appl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED;
 
+			boolean isPendingVerificationStatus = SupplierManagementConst.PM_STATUS_PENDING_SUPPORTING_DOCUMENT_VERIFICATION
+					.equals(String.valueOf(statusId));
+
+			boolean isPendingPaymentStatus = statusId == SupplierManagementConst.PM_STATUS_PENDING_PROCESS_FEE;
+
+			if (isDeletedOrCancelled || isPendingVerificationStatus || isPendingPaymentStatus) {
+				SmCommonUtil.redirectToPage(SmApplicationUtil.getApplicationErrorPage(), MessageConst.ERROR_760600,
+						null, FacesMessage.SEVERITY_INFO);
+				return;
+			}
+		}
+	}
+	// #37784- END
 }

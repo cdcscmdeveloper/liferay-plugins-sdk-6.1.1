@@ -43,6 +43,10 @@ import org.primefaces.context.RequestContext;
 //#28175 start
 //#28175 ReOpen
 //#28175 end
+//#28895_35501 Start - AUDIT TRAIL SM
+import com.liferay.compat.portal.util.PortalUtil;
+import javax.servlet.http.HttpServletRequest;
+//#28895_35501 End
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -62,6 +66,16 @@ public class ViewSuppProfileBackingBean extends
 		long startTime = System.currentTimeMillis();
 		renewSesionObject();
 		initLogin();
+		// #28895_35501 Start - AUDIT TRAIL SM
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String isAudit = originalServletRequest.getParameter("isAudit");
+		if (SmCommonUtil.md5("true").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(true);
+		} else if (SmCommonUtil.md5("false").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(false);
+		}
+		// #28895_35501 End
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);

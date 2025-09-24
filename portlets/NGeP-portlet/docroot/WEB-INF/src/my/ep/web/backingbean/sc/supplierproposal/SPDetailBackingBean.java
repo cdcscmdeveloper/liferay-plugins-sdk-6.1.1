@@ -1133,25 +1133,19 @@ public class SPDetailBackingBean extends
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
-
-		// #21695 - Start - fix completed financial proposal still ticked after
-		// technical proposal updated
+		// #21695 - Start - fix completed financial proposal still ticked after technical proposal updated
 		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
 			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
 				if (finProposalChecklist.getScQtCheckList().getTitle()
 						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
 						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
-					
 					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
-					prepareFinancialAction(finProposalChecklist);
-					saveFinancialSpecificationAction(false, true);
-					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(false);
+					finProposalChecklist.setSubmitted(false);
 					break;
 				}
 			}
 		}
-		// #21695 - End - fix completed financial proposal still ticked after technical proposal updated
 
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
@@ -1324,45 +1318,46 @@ public class SPDetailBackingBean extends
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
-							for (TplSpecAnswer specAnswer : templateSpecBean
-									.getSpecAnswerList()) {
+							for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
+								//#21695 
 								
 								if(null==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
 									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
 								}	//#28785-End
-
+								
 								if (specAnswer.getRatePerUom() != null
 										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
-									// #21695 farid IN MONITORING START
 								}
 								//Bug_34259 - Start
-								else if (specAnswer.getRatePerUom() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
+								else if (specAnswer.getRatePerUom() != null
+											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 								
-								} else if (specAnswer.getRatePerUom() == null
+								}else if (specAnswer.getRatePerUom() == null
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
-
-								} else if (specAnswer.getRatePerUom() == null
+							
+								}else if (specAnswer.getRatePerUom() == null
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
-
-								} else if (specAnswer.getRatePerUom() != null
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+							
+								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
-
-								} else if (specAnswer.getRatePerUom() != null
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+							
+								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
-									// #21695 farid IN MONITORING END
-								} 
+								//#21695 	
+								}
 								//Bug_34259 - End
 								else{
-									specAnswer.setDeleted(true);
-									toDeleteZoneAnswers.add(specAnswer);
+									//#21695 as is error for tender , 2times deleted if user null the value of the rate per uom.
+									 if (!ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode())) {
+										specAnswer.setDeleted(true);
+										toDeleteZoneAnswers.add(specAnswer);
+									 }
 								}
 							}
 							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
@@ -1440,49 +1435,53 @@ public class SPDetailBackingBean extends
             		super.setUserDetails(answer);
             	}
             }
-			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
-			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
-					.getTplSpecQuestion().getClPriceTypeCode()
-					.getParameterCode());
+            //#21695 check null
+            if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){ //#21695
+            	TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
+    			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
+    					.getTplSpecQuestion().getClPriceTypeCode()
+    					.getParameterCode());
 
-			BigDecimal compareTotalAmount = new BigDecimal(99999999999.99);
+    			BigDecimal compareTotalAmount = new BigDecimal(99999999999.99);
 
-			if (isPriceTypeTier) {
-				BigDecimal quantity;
-				if (answers.get(0).getTplSpecZoneQty() != null) {
-					quantity = answers.get(0).getTplSpecZoneQty().getQty();
-				} else {
-					quantity = answers.get(0).getTplSpecQuestion()
-							.getClQuantity();
-				}
+    			if (isPriceTypeTier) {
+    				BigDecimal quantity;
+    				if (answers.get(0).getTplSpecZoneQty() != null) {
+    					quantity = answers.get(0).getTplSpecZoneQty().getQty();
+    				} else {
+    					quantity = answers.get(0).getTplSpecQuestion()
+    							.getClQuantity();
+    				}
 
-				for (TplSpecAnswer answer : answers) {
-					//20200701@asyrafhaziq - Bug #28464 - Start
-					BigDecimal totalPrice = tplHelper.calculateTotalAmount(
-							answer.getTplSpecQuestion(),
-							answer.getRatePerUom(), quantity);	
-					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) == 1) {
-						throw new EpException(MessageConst.ERROR_760437);
-					}
-					//20200701@asyrafhaziq - Bug #28464 - End
-				}
+    				for (TplSpecAnswer answer : answers) {
+    					//20200701@asyrafhaziq - Bug #28464 - Start
+    					BigDecimal totalPrice = tplHelper.calculateTotalAmount(
+    							answer.getTplSpecQuestion(),
+    							answer.getRatePerUom(), quantity);	
+    					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) == 1) {
+    						throw new EpException(MessageConst.ERROR_760437);
+    					}
+    					//20200701@asyrafhaziq - Bug #28464 - End
+    				}
 
-			} else {
-				for (TplSpecAnswer answer : answers) {
-					if (answer.getAnswerNumeric() != null
-							&& answer.getAnswerNumeric().compareTo(
-									compareTotalAmount) == 1) {
-						throw new EpException(MessageConst.ERROR_760437);
-					} else if (answer.getTplSpecQuestion().getTplSpecMaster()
-							.getTotalAmount() != null
-							&& answer.getTplSpecQuestion().getTplSpecMaster()
-									.getTotalAmount()
-									.compareTo(compareTotalAmount) == 1) {
-						throw new EpException(MessageConst.ERROR_760437);
-					}
-				}
-			}
-			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+    			} else {
+    				for (TplSpecAnswer answer : answers) {
+    					if (answer.getAnswerNumeric() != null
+    							&& answer.getAnswerNumeric().compareTo(
+    									compareTotalAmount) == 1) {
+    						throw new EpException(MessageConst.ERROR_760437);
+    					} else if (answer.getTplSpecQuestion().getTplSpecMaster()
+    							.getTotalAmount() != null
+    							&& answer.getTplSpecQuestion().getTplSpecMaster()
+    									.getTotalAmount()
+    									.compareTo(compareTotalAmount) == 1) {
+    						throw new EpException(MessageConst.ERROR_760437);
+    					}
+    				}
+    			}
+    			
+            }
+            proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(getManagedBean().getQt());
 			proposalReqDTO.setCompletedProposalChecklist(completedFinSpec);
@@ -5995,9 +5994,19 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		}
 	}
 
-	//#25089@hatta - start
-	public void onTabChange(TabChangeEvent event){
-		if(event.getTab().getId().equals("tab1")){
+	// #25089@hatta - start
+	public void onTabChange(TabChangeEvent event) {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+
+		if (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId())) {
+			return;
+		}
+		// #38852 End 12/08/2025 Vinod
+
+		if (event.getTab().getId().equals("tab1")) {
 			try {
 				Thread.sleep(500);
 				RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
@@ -6006,12 +6015,22 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			}
 		}
 	}
-		
-	public void dafaultPopUpSupplierInfo(){
-	   RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+
+	public void dafaultPopUpSupplierInfo() {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+
+		if (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId())) {
+			return;
+		}
+		// #38852 End 12/08/2025 Vinod
+
+		RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
 	}
-	//#25089@hatta - end
-		
+	// #25089@hatta - end
+
 	//#28792-start			
 	private void validateFinacialProposalAttachments(boolean validationSuspend){
 		

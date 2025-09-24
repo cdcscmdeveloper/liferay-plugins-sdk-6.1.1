@@ -30,6 +30,7 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
+import my.ep.persistence.entity.sc.loaloi.ScLoa; //#24333
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -147,6 +148,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> agencySelected;
 	
 	private boolean contractExpired;
+	// #24333 - Start
+	private List<ScLoa> bondDetail;
+	private boolean extendContract = false;
+	private boolean disableOriginalBond = false;
+	private BigDecimal originalOverallAmount;
+	// #24333 - End
 	
 	// Start - 28479	
 	private boolean isErr100033 = false;
@@ -198,10 +205,19 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String supplierOffer;
 	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
 	//#28854 - end
+
+	//#13847 - start
+	private boolean disableDeferment = false;
+	//13847 end
 	
 	//#29983 start
 	private String businessRegNoNew;
 	//#29983 end
+	
+	//24333 - Start
+	private BigDecimal bondPercentage;
+	private BigDecimal totalBondAmt;
+	//24333 - End
 
 	/**
 	 * @return the fileDirectory
@@ -1486,6 +1502,16 @@ public class ContractManagedBean extends BaseManagedBean {
 	}	
 	/* #28854 end*/
 	
+	//#13847 start
+	public boolean isDisableDeferment() {
+		return disableDeferment;
+	}
+
+	public void setDisableDeferment(boolean disableDeferment) {
+		this.disableDeferment = disableDeferment;
+	}
+	//#13847 end
+	
 	//#29983 start
 	/**
 	 * @return the businessRegNoNew
@@ -1639,4 +1665,57 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.inPage = inPage;
 	}
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
+	
+	//#24333 - Start
+	public List<ScLoa> getBondDetail() {
+		if(bondDetail == null){
+			bondDetail = new ArrayList<ScLoa>();
+	}
+		return bondDetail;
+	}
+
+	public void setBondDetail(List<ScLoa> bondDetail) {
+		this.bondDetail = bondDetail;
+	}
+
+	public boolean isExtendContract() {
+		return extendContract;
+	}
+
+	public void setExtendContract(boolean extendContract) {
+		this.extendContract = extendContract;
+	}
+	
+	public boolean isDisableOriginalBond() {
+		return disableOriginalBond;
+	}
+
+	public void setDisableOriginalBond(boolean disableOriginalBond) {
+		this.disableOriginalBond = disableOriginalBond;
+	}
+	
+	public BigDecimal getOriginalOverallAmount() {
+		return originalOverallAmount;
+	}
+
+	public void setOriginalOverallAmount(BigDecimal originalOverallAmount) {
+		this.originalOverallAmount = originalOverallAmount;
+	}	
+
+	public BigDecimal getBondPercentage() {
+		return bondPercentage;
+	}
+
+	public void setBondPercentage(BigDecimal bondPercentage) {
+		this.bondPercentage = bondPercentage;
+	}	
+
+	public BigDecimal getTotalBondAmt() {
+		return totalBondAmt;
+	}
+
+	public void setTotalBondAmt(BigDecimal totalBondAmt) {
+		this.totalBondAmt = totalBondAmt;
+	}
+	//#24333 - End
 }
