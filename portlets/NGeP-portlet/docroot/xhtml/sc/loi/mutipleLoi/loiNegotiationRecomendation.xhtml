@@ -300,7 +300,8 @@
 								<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none">
 									<ui:param name="supplier" value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 									<ui:param name="mofExpired" value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
-										<h:panelGroup layout="block" style="padding: 0 10px 0 10px" styleClass="#{mofExpired ? 'red-background':''}">
+										<h:panelGroup rendered="#{isPendingNegotiationStatus or (!isPendingNegotiationStatus and recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}"
+											layout="block" style="padding: 0 10px 0 10px" styleClass="#{mofExpired ? 'red-background':''}">
 											<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 											<h:outputText escape="false" value="&#60;br &#47;&#62;"/>
 										</h:panelGroup>
