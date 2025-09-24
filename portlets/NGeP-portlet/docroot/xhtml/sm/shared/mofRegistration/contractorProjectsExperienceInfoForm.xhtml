@@ -151,7 +151,7 @@
 	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
 		widgetVar="contDialog" resizable="false" showEffect="fade"
 		closable="true" hideEffect="fade" modal="true" id="contDialog"
-		width="850px" height="500px">
+		width="850px" height="500px" onShow="setTimeout(() => document.activeElement.blur(), 10)"> <!-- #38991 -->
 		
 		<p:outputPanel layout="block" id="contExpBlockPanel">
 			<p:messages id="contractPrjMsg" showSummary="false" showDetail="true"
