@@ -105,6 +105,8 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		getManagedBean().setGroupBy(null);
 		getManagedBean().setRnNo(null);
 		getManagedBean().setFinancialYear(null);
+		getManagedBean().setDisableReason(false);
+		getManagedBean().setCentralPanelContractSelected(false);
 
 	}
 
