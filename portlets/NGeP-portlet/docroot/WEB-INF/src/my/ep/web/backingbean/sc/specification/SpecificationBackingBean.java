@@ -1378,6 +1378,9 @@ public class SpecificationBackingBean extends
 		case 0:
 
 			retriveSpecdetails(this.getManagedBean().getQt().getQtId());
+			// #39062 Start Vinod 23/09/2025
+			updateEstimatedAmount();
+			// #39062 End Vinod 23/09/2025
 			break;
 		case 1:
 			retriveSupplierQualificationCriteria("SC");
@@ -12579,6 +12582,11 @@ public class SpecificationBackingBean extends
 	 * @return navigate to acknowledgement page.
 	 */
 	public void specCommitteBpmTask(String action) {
+		// #39062 Start Vinod 23/09/2025
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			updateEstimatedAmount();
+		}
+		// #39062 End Vinod 23/09/2025
 // #29732 Start - reOpen Fix
 		if (!this.getManagedBean().getQt().isPanel() && (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
@@ -23100,5 +23108,26 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 
 	}
+	
+	// #39062 Start Vinod 23/09/2025
+	/**
+	 * This method is to update Estimated Amount when the amount is updated.
+	 * 
+	 * @param
+	 * 
+	 */
+	private void updateEstimatedAmount() {
+		ScQt scQt = this.getManagedBean().getQt();
+		SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+		estimatedReqDTo.setQtId(scQt.getQtId());
+
+		IQTSpecSO specSO = getSpecSO();
+		SpecificationResDTO resTO = specSO.calCulateTemplateSpecEstimations(estimatedReqDTo);
+
+		if (null != resTO && null != resTO.getTotalSpecEstimatedAmount()) {
+			scQt.setEstimatedAmount(resTO.getTotalSpecEstimatedAmount().setScale(2, QTConstants.QT_ROUNDING_MODE));
+		}
+	}
+	// #39062 End Vinod 23/09/2025
 	
 }
