@@ -1934,6 +1934,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
+	/** The pmuser contactperson list that had been modified with the original pm user's name */
+	private HashMap<ScQtContactPerson, PmUser> modifiedDoaList;
 	
 	private boolean auditViewRole;
 	//#28895 - 35500 end
@@ -12359,6 +12361,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setAuditViewRole(boolean auditViewRole) {
 		this.auditViewRole = auditViewRole;
+	}
+	
+	public HashMap<ScQtContactPerson, PmUser> getModifiedDoaList() {
+		return modifiedDoaList;
+	}
+
+	public void setModifiedDoaList(HashMap<ScQtContactPerson, PmUser> modifiedDoaList) {
+		this.modifiedDoaList = modifiedDoaList;
 	}
 	//#28895 - 35500 end
 	
