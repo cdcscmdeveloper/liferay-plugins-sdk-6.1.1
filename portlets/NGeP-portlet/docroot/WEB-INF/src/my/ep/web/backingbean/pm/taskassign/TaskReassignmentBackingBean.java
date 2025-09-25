@@ -173,7 +173,7 @@ public class TaskReassignmentBackingBean extends
 			SCProcessNameConst.UPDATE_FC_SELECTION,
 			SCProcessNameConst.ENDORSE_SCORING,
 			SCProcessNameConst.SIGNOFF_SCORING);
-	
+
 	private static final Set<String> COMMITTEE_TYPES;
 	//#38680 - End
 
