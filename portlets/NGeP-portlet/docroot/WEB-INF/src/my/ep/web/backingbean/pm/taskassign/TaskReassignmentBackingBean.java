@@ -8,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections; //#38680
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,7 +52,9 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.pm.ProfileManagementStatusConst;
+import my.ep.constant.sc.QTStatusConst; //#38680
 import my.ep.constants.BpmConstants;
+import my.ep.constants.SCProcessNameConst; //#38680
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
@@ -148,8 +151,29 @@ public class TaskReassignmentBackingBean extends
 	
 	//[#25018] - start	
 	private static final Map<String, String> adminRolesForBulkReassignment = new HashMap<>();
-	private static final List<String> invalidRolesForBulkReassignmentLst = new ArrayList<String>();
-	private static final Map<Long, String> excludeRolesForBulkReassignment = new HashMap<Long,String>();
+	private static final List<String> invalidRolesForBulkReassignmentLst = new ArrayList<>(); //Sonarlint fixing #38680
+	private static final Map<Long, String> excludeRolesForBulkReassignment = new HashMap<>(); //Sonarlint fixing #38680
+	
+	//#38680 - Start
+	private static final List<Long> excludeStatusIds = new ArrayList<>();
+	private static final List<String> excludeProcessForTR = Arrays.asList(
+			SCProcessNameConst.VIEW_SCORING,
+			SCProcessNameConst.UPDATE_SCORING,
+			SCProcessNameConst.VIEW_EC_EVALUATION,
+			SCProcessNameConst.UPDATE_EC_EVALUATION,
+			SCProcessNameConst.VIEW_OC_EVALUATION,
+			SCProcessNameConst.UPDATE_OC_EVALUATION,
+			SCProcessNameConst.VIEW_TEC_EVALUATION,
+			SCProcessNameConst.UPDATE_TEC_EVALUATION,
+			SCProcessNameConst.VIEW_FEC_EVALUATION,
+			SCProcessNameConst.UPDATE_FEC_EVALUATION,
+			SCProcessNameConst.VIEW_FC_SELECTION,
+			SCProcessNameConst.UPDATE_FC_SELECTION,
+			SCProcessNameConst.ENDORSE_SCORING,
+			SCProcessNameConst.SIGNOFF_SCORING);
+	
+	private static final Set<String> COMMITTEE_TYPES;
+	//#38680 - End
 
 	static {		
 		adminRolesForBulkReassignment.put(RoleCode.UPS_ADMIN.value(), RoleCode.UPS_ADMIN.value());
@@ -184,7 +208,36 @@ public class TaskReassignmentBackingBean extends
 		invalidRolesForBulkReassignmentLst.add(RoleCode.OC_SECRETARY.value());
 		invalidRolesForBulkReassignmentLst.add(RoleCode.PBA_MEMBER.value());
 		invalidRolesForBulkReassignmentLst.add(RoleCode.PPB_MEMBER.value());
-		//invalidRolesForBulkReassignmentLst.add(RoleCode.PPB_SECRETARY.value()); //for test validation
+		
+		//#38680- Start
+		excludeStatusIds.add(QTStatusConst.SE_PENDING_ENDORSMENT);
+		excludeStatusIds.add(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
+		excludeStatusIds.add(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION);
+		excludeStatusIds.add(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION);
+		excludeStatusIds.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION);
+		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
+		excludeStatusIds.add(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING);
+		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
+		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF);
+		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION);
+		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+		excludeStatusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION);
+		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION);
+		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
+
+		Set<String> s = new HashSet<>();
+		s.add(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+		s.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
+		s.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+		s.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+		s.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
+		COMMITTEE_TYPES = Collections.unmodifiableSet(s);
+		//#38680- End
 	}
 	//[#25018] - end
 	
@@ -647,6 +700,9 @@ public class TaskReassignmentBackingBean extends
 			
 			if (bpmResDTO.getWorklistVO() != null) {
 				for (WorklistItemVO task : bpmResDTO.getWorklistVO().getWorklistItem()) {
+					//#38680- Start
+					if (!(excludeStatusIds.contains(task.getDocStatus()
+							.longValue()) && isTaskName(task.getTaskName()))) {
 					for (String loginId : task.getAssignees()) {
 						user = PmCommonUtil.retrieveUserByLoginId(loginId);
 						
@@ -663,6 +719,7 @@ public class TaskReassignmentBackingBean extends
 								user.getRecordStatusFlg()+" : "+
 								this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
 					}
+				  }//#38680- End
 				}
 			}
 		}
@@ -1383,16 +1440,15 @@ public class TaskReassignmentBackingBean extends
 											.getWorklistItem().size());
 							log.info("BPM total******"
 									+ responseDTO.getWorklistVO().getTotal());
-							/*
-							 * if(responseDTO.getWorklistVO().getWorklistItem()!=
-							 * null) { // markup data
-							 * markupWorklistItem(responseDTO
-							 * .getWorklistVO().getWorklistItem()); }
-							 */
+
 							resultBean.setTotalRecord(responseDTO
 									.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
+							
+							//#38680- Start
+							removeChairAndMemberFromTR(resultBean, responseDTO);
+							//#38680- End
 							
 							// #7465 Re-open issues on 24/11/2023
 							if (CollectionUtils.isNotEmpty(responseDTO.getWorklistVO().getWorklistItem())) {
@@ -2724,7 +2780,30 @@ public class TaskReassignmentBackingBean extends
 							SearchOperator.OPERATOR_NOT_IN.value(),
 								new ArrayList<Long>(Arrays.asList(userId,
 									getFacesScopes().getUserSessionBean()
-										.getUserId()))));			
+										.getUserId()))));
+			
+			//#38680- Start
+			String role = roleList.toString().replace("[", "").replace("]", "")
+					.split(",")[0].trim();
+			String committeeType = role.split("_")[0];
+			if (excludeStatusIds.contains(vo.getStatus().getStatusId())
+					&& isCommitteeType(committeeType)) {
+				// Filter By - roleCode
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmUserOrgs.pmUserRoles.pmRole.roleCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								roleList));
+
+				// Filter By - role status
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmUserOrgs.pmUserRoles.recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+			}
+			//#38680- End
+			
 			// Order by user name
 			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
 			
@@ -4667,4 +4746,80 @@ public class TaskReassignmentBackingBean extends
 		}
 	}
 	//7465, 29822 - end
+	
+	//#38680- Start
+	/**
+	 * Check Activity Name
+	 * 
+	 * @param taskName
+	 * @return the indicator taskName.
+	 */
+	public static boolean isTaskName(String taskName) {
+		if (taskName == null) {
+			return false;
+		}
+		String t = taskName.trim();
+		for (String notAllowed : excludeProcessForTR) {
+			if (notAllowed.equalsIgnoreCase(t)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check Committee Type
+	 * 
+	 * @param committeeType
+	 *            the committee type
+	 * @return the indicator committee type.
+	 */
+	public static boolean isCommitteeType(String committeeType) {
+		if (committeeType == null) {
+			return false;
+		}
+		for (String t : COMMITTEE_TYPES) {
+			if (t.equalsIgnoreCase(committeeType)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * remove task for role chairperson and member to do Task Reasgnment.
+	 * 
+	 * @param resultBean
+	 * @param responseDTO
+	 * 
+	 */
+	public void removeChairAndMemberFromTR(
+			SearchResultBean<WorklistItemVO> resultBean,
+			BpmResponseDTO responseDTO) {
+		List<WorklistItemVO> src = resultBean.getResultList();
+		if (src != null && !src.isEmpty()) {
+			List<WorklistItemVO> filtered = new java.util.ArrayList<>(
+					src.size());
+			for (WorklistItemVO w : src) {
+				boolean exclude = false;
+				Integer status = w.getDocStatus();
+				if (excludeStatusIds.contains(status.longValue())
+						&& isTaskName(w.getTaskName())) {
+					exclude = true;
+				}
+
+				if (!exclude) {
+					filtered.add(w);
+				}
+			}
+
+			int removed = src.size() - filtered.size();
+			resultBean.setResultList(filtered);
+
+			int total = (responseDTO.getWorklistVO() == null) ? 0 : responseDTO
+					.getWorklistVO().getTotal();
+			resultBean.setTotalRecord(Math.max(0, total - removed));
+		}
+	}
+	//#38680- End
 }
