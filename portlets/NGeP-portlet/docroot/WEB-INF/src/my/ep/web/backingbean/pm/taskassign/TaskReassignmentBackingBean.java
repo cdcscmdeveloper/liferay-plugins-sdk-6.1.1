@@ -699,25 +699,26 @@ public class TaskReassignmentBackingBean extends
 			
 			if (bpmResDTO.getWorklistVO() != null) {
 				for (WorklistItemVO task : bpmResDTO.getWorklistVO().getWorklistItem()) {
-					//#38680- Start
+					// #38680- Start
 					if (!(excludeStatusIds.contains(task.getDocStatus().longValue()) && isTaskName(task.getTaskName()))) {
-					for (String loginId : task.getAssignees()) {
-						user = PmCommonUtil.retrieveUserByLoginId(loginId);
-						
-						// Ensures only users within the selected Organization will be listed
-						if (userOrgList != null && userOrgList.size() > 0) {
-							for (PmUser orgList : userOrgList) {
-								if (orgList.getLoginId().equals(user.getLoginId())) {
-									users.add(user);
+						for (String loginId : task.getAssignees()) {
+							user = PmCommonUtil.retrieveUserByLoginId(loginId);
+
+							// Ensures only users within the selected
+							// Organization will be listed
+							if (userOrgList != null && userOrgList.size() > 0) {
+								for (PmUser orgList : userOrgList) {
+									if (orgList.getLoginId().equals(user.getLoginId())) {
+										users.add(user);
+									}
 								}
 							}
+							log.info("USER.INFO= ["+user.getLoginId()+" "+user.getUserName()+"] "+
+									profileId+" : "+orgCode+" : "+
+									user.getRecordStatusFlg()+" : "+
+									this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
 						}
-						log.info("USER.INFO= ["+user.getLoginId()+" "+user.getUserName()+"] "+
-								profileId+" : "+orgCode+" : "+
-								user.getRecordStatusFlg()+" : "+
-								this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
-					}
-				  }//#38680- End
+					}// #38680- End
 				}
 			}
 		}
