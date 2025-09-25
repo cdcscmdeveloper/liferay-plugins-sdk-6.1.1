@@ -4366,7 +4366,7 @@ return	remarksNotFound;
 				.getScQtFinalizationReportAttachment();
 
 		List<Long> allowedStatusIds = Arrays.asList(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION,
-				QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION, QTStatusConst.QT_SF_MOF_COMMIEEE);
+				QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION, QTStatusConst.SF_MOF_COMMITTEE);// 26247
 
 		if ((allowedStatusIds.contains(getManagedBean().getCurrentStatusId()) && isGenerateReport)
 				|| null == reportAttachment) {
