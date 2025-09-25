@@ -5057,7 +5057,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    }
 
 	    // Skip bond calculation if direct purchase or bond exempted
-	    if (getManagedBean().isDirectPurchase() || getManagedBean().getCtContractAmount().isBondExempted()) {
+	    if ((getManagedBean().isDirectPurchase() && !isPk7FromDp()) || getManagedBean().getCtContractAmount().isBondExempted()) {
 	        return total;
 	    }
 
