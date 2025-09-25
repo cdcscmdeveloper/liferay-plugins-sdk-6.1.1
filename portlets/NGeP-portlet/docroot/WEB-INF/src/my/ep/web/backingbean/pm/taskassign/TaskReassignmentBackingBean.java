@@ -156,7 +156,7 @@ public class TaskReassignmentBackingBean extends
 	
 	//#38680 - Start
 	private static final List<Long> excludeStatusIds = new ArrayList<>();
-	private static final List<String> NOT_ALLOWED_TASKS = Arrays.asList(
+	private static final List<String> excludeProcessForTR = Arrays.asList(
 			SCProcessNameConst.VIEW_SCORING,
 			SCProcessNameConst.UPDATE_SCORING,
 			SCProcessNameConst.VIEW_EC_EVALUATION,
@@ -212,9 +212,13 @@ public class TaskReassignmentBackingBean extends
 		//#38680- Start
 		excludeStatusIds.add(QTStatusConst.SE_PENDING_ENDORSMENT);
 		excludeStatusIds.add(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL);
-		excludeStatusIds.add(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL);		
+		excludeStatusIds.add(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
+		excludeStatusIds.add(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION);
 		excludeStatusIds.add(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION);
 		excludeStatusIds.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION);
 		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
 		excludeStatusIds.add(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING);
 		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
@@ -223,8 +227,8 @@ public class TaskReassignmentBackingBean extends
 		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
 		excludeStatusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION);
-		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
 		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION);
+		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
 		
 		Set<String> s = new HashSet<>();
 		s.add(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
@@ -4776,7 +4780,7 @@ public class TaskReassignmentBackingBean extends
 			return false;
 		}
 		String t = taskName.trim();
-		for (String notAllowed : NOT_ALLOWED_TASKS) {
+		for (String notAllowed : excludeProcessForTR) {
 			if (notAllowed.equalsIgnoreCase(t)) {
 				return true;
 			}
