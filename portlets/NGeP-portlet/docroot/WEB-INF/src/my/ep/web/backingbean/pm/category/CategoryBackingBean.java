@@ -1355,6 +1355,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			}
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = "/xhtml/pm/category/categoryl1.xhtml";
+		//#34445 End
 		} catch (Exception e) {
 			throw(e);
 		} finally {

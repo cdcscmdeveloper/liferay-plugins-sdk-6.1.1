@@ -1107,6 +1107,11 @@ public class BusinessNatureBackingBean extends
 				}
 			}
 
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
+		//#34445 End
 		} catch (Exception e) {
 			throw (e);
 		} finally {
