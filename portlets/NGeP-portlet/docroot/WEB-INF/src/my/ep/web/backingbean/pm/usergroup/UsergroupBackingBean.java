@@ -96,6 +96,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	private static final Logger logger = EpLogger.getLogger(UsergroupBackingBean.class);
 
 	private String NAV_TO_MAIN = "userGroupSearchMain";
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/usergroupsearch/userGroupMaintenance.xhtml"; //#34445
 
 	private IPagingDataModel<PmUserGroup> userGroupList = new UserGroupProfilePagingDataModel();
 
@@ -733,7 +734,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			}
 		} catch (EpException e) {
 			handleException(e);
-			return "/xhtml/pm/usergroupsearch/userGroupMaintenance.xhtml";
+			return NAV_TO_MAINTAIN;
 		}
 		//#34445 End
 	}

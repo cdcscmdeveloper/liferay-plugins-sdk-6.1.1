@@ -74,6 +74,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	private IPagingDataModel<PmCertBody> profCertBodyModel = new CertBodyPagingDataModel();
 	
 	private String NAV_TO_MAIN =  "professionalCertifiedBodyMain";
+	public static final String NAV_TO_MAINTAIN =  "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml"; //#34445
 
 	public ProfCertifiedBodyBackingBean() {
 		log.info("inside constructor");
@@ -468,7 +469,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 		} catch (EpException e) {
 			handleException(e);
-			redirectUrl = "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
+			redirectUrl = NAV_TO_MAINTAIN;
 		//#34445 End
 
 		} catch (Exception e) {
