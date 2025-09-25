@@ -545,4 +545,8 @@ public interface QTConstants {
 	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
 	
 	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
+	// #39112 Start Vinod 25/09/2025
+	public static final String LBL_SC_REMARK = "lbl.sc.remark";
+	public static final String REMARK_MESSAGE_ID = "remarkMsg";
+	// #39112 End Vinod 25/09/2025
 }
