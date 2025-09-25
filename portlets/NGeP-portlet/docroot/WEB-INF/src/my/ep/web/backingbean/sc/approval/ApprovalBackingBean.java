@@ -3002,7 +3002,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @param outcome
 	 */
-	public void preSubmitGenericApprovalTask(String outcome) throws EpException {
+	public void preSubmitGenericApprovalTask(String outcome) {
 		try {
 			String taskName = this.getManagedBean().getTaskName();
 			taskName = taskName == null ? "" : taskName;
