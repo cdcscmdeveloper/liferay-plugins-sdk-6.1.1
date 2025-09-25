@@ -1766,7 +1766,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					return resDTO.getOrgProfileResultBean();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_CONTRACTBACKINGBEAN, null,
+						"ContractBackingBean.pageChangeListener()", null, e);
 			}
 			return null;
 		}
@@ -2630,6 +2631,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
 		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_CONTRACTBACKINGBEAN, null,
+					"ContractBackingBean.getMinistryDropdown()", null, e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 		return items;
@@ -5207,11 +5210,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		if (reason == null) {
 			List<CtContractItem> items = getManagedBean().getContractVer().getCtContractItems();
-			if(items != null){
-				if(items.get(0).getScRequestItem().getRequestNote() != null){
-					reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
-							"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");
-				}
+			if (items != null && items.get(0).getScRequestItem().getRequestNote() != null) {
+				reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
+								"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");
 			}
 		}
 		return reason;
