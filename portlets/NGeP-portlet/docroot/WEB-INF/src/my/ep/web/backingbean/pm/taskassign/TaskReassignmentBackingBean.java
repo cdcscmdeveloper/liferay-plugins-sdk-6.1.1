@@ -159,7 +159,7 @@ public class TaskReassignmentBackingBean extends
 	//#38680 - Start
 	private static final List<Long> excludeStatusIds = new ArrayList<>();
 	
-	private static final List<String> NOT_ALLOWED_TASKS = Arrays.asList(
+	private static final List<String> excludeProcessForTR = Arrays.asList(
 			SCProcessNameConst.VIEW_SCORING,
 			SCProcessNameConst.UPDATE_SCORING,
 			SCProcessNameConst.VIEW_EC_EVALUATION,
@@ -215,10 +215,13 @@ public class TaskReassignmentBackingBean extends
 		//#38680- Start
 		excludeStatusIds.add(QTStatusConst.SE_PENDING_ENDORSMENT);
 		excludeStatusIds.add(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
 		excludeStatusIds.add(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL);
 		excludeStatusIds.add(QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION);
 		excludeStatusIds.add(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION);
 		excludeStatusIds.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION);
 		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
 		excludeStatusIds.add(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING);
 		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
@@ -1282,7 +1285,7 @@ public class TaskReassignmentBackingBean extends
 									.getWorklistVO().getWorklistItem());
 							
 							//#38680- Start
-							removeTaskForChairAndMemberExcludeStatus(resultBean, responseDTO);
+							removeChairAndMemberFromTR(resultBean, responseDTO);
 							//#38680- End
 							
 							//[#25018] - start
@@ -4802,7 +4805,7 @@ public class TaskReassignmentBackingBean extends
 			return false;
 		}
 		String t = taskName.trim();
-		for (String notAllowed : NOT_ALLOWED_TASKS) {
+		for (String notAllowed : excludeProcessForTR) {
 			if (notAllowed.equalsIgnoreCase(t)) {
 				return true;
 			}
@@ -4837,7 +4840,7 @@ public class TaskReassignmentBackingBean extends
 	 * @param responseDTO
 	 * 
 	 */
-	public void removeTaskForChairAndMemberExcludeStatus(
+	public void removeChairAndMemberFromTR(
 			SearchResultBean<WorklistItemVO> resultBean,
 			BpmResponseDTO responseDTO) {
 		List<WorklistItemVO> src = resultBean.getResultList();
