@@ -1280,7 +1280,7 @@ public class TaskReassignmentBackingBean extends
 									.getWorklistVO().getWorklistItem());
 							
 							//#38680- Start
-							removeTaskForChairAndMemberExcludeStatus(resultBean, responseDTO);
+							removeChairAndMemberFromTR(resultBean, responseDTO);
 							//#38680- End
 							
 							//[#25018] - start
@@ -4814,7 +4814,7 @@ public class TaskReassignmentBackingBean extends
 	 * @param responseDTO
 	 * 
 	 */
-	public void removeTaskForChairAndMemberExcludeStatus(SearchResultBean<WorklistItemVO> resultBean,
+	public void removeChairAndMemberFromTR(SearchResultBean<WorklistItemVO> resultBean,
 			BpmResponseDTO responseDTO) {
 		List<WorklistItemVO> src = resultBean.getResultList();
 		if (src != null && !src.isEmpty()) {
