@@ -158,7 +158,6 @@ public class TaskReassignmentBackingBean extends
 	
 	//#38680 - Start
 	private static final List<Long> excludeStatusIds = new ArrayList<>();
-	
 	private static final List<String> excludeProcessForTR = Arrays.asList(
 			SCProcessNameConst.VIEW_SCORING,
 			SCProcessNameConst.UPDATE_SCORING,
@@ -232,9 +231,7 @@ public class TaskReassignmentBackingBean extends
 		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION);
 		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION);
 		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
-		
-		
-		
+
 		Set<String> s = new HashSet<>();
 		s.add(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		s.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
@@ -4831,8 +4828,7 @@ public class TaskReassignmentBackingBean extends
 	    }
 	    return false;
 	}
-	
-	
+
 	/**
 	 * remove task for role chairperson and member to do Task Reasgnment.
 	 * 
