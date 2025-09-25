@@ -3107,7 +3107,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String remarkStr = remark == null ? "" : remark.getRemark();
 
 		if (this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REVISE) && StringUtils.isEmpty(remarkStr)) {
-			// #39112 Start Vinod 25/09/2025 - replaced EpException with FacesContext.
+			// #39113 Start Vinod 25/09/2025 - replaced EpException with FacesContext.
 			FacesContext.getCurrentInstance().addMessage(
 					QTConstants.REMARK_MESSAGE_ID,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
@@ -3116,7 +3116,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 			return;
-			// #39112 End Vinod 25/09/2025
+			// #39113 End Vinod 25/09/2025
 		}
 		if (digiSign != null) {
 			updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_DOA_ASSIGNMENT, reqDTO.getQtdetail().getQtId(),
