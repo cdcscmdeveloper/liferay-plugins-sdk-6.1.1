@@ -152,7 +152,7 @@ public class TaskReassignmentBackingBean extends
 	private PagingDataModel<PmUser> userListDataModel = new userPagingDataModel();
 	
 	//[#25018] - start	
-	private static final Map<String, String> adminRolesForBulkReassignment = new HashMap<>(); //Sonarlint fixing #38680
+	private static final Map<String, String> adminRolesForBulkReassignment = new HashMap<>();
 	private static final List<String> invalidRolesForBulkReassignmentLst = new ArrayList<>(); //Sonarlint fixing #38680
 	private static final Map<Long, String> excludeRolesForBulkReassignment = new HashMap<>(); //Sonarlint fixing #38680
 	
