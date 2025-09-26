@@ -409,7 +409,11 @@
 						required="true" id="fileNoId"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
 						label="#{lbl['lbl.sc.qt.fileno']}" size="28" >
-						<p:ajax event="blur" process="fileNoId" update="fileNoId"/>
+						<!-- #29661 start -->
+						<p:ajax event="blur" process="fileNoId" update="fileNoId"
+						partialSubmit="true" 
+						listener="#{createQtBB.setFileNo(directLOABackingBean.managedBean.scQt)}"/>
+						<!-- #29661 end -->
 						</p:inputText>
 						 <p:spacer width="1px" />
 						
@@ -418,7 +422,12 @@
 						value="#{directLOABackingBean.managedBean.scLoa.fileExtNo}"
 						size="1" label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
 						maxlength="3" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" >
-						<p:ajax event="blur" process="fileExtNo" update="fileExtNo"/>
+						<!-- 29661 start -->
+						<p:ajax event="blur"  process="@this" 
+						partialSubmit="true" update="@this"
+						listener="#{directLOABackingBea.setFileExtNo(directLOABackingBean.managedBean.scLoa)}">
+						</p:ajax>
+						<!-- 29661 end -->
 						</p:inputText>
 						 <p:message
 						id="fileExtNoMsg" for="fileExtNo" display="icon" />
