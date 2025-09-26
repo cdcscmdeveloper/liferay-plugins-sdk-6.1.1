@@ -404,8 +404,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 				generateCertBodyCode();
 			}
 			statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
-			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					ICertBodySO.class);
+			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 
 			String messageId = null;
 			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
@@ -466,12 +465,10 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 				}
 
 			}
-
 		} catch (EpException e) {
 			handleException(e);
 			redirectUrl = NAV_TO_MAINTAIN;
 		//#34445 End
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

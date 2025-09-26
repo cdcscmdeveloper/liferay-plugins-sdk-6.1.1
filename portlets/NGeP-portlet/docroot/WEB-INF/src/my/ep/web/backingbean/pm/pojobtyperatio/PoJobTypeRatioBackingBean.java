@@ -277,8 +277,7 @@ public class PoJobTypeRatioBackingBean extends BaseBackingBean<PoJobTypeRatioMan
 							MessageConst.INFO_779301, new String[] {});
 					initJobWeightMap();
 					getManagedBean().setPoJobTypeRatio(resDTO.getPoJobTypeRatio());
-					PmPoJobTypeRatio oriPoJobTypeRatio = (PmPoJobTypeRatio) (SerializationUtils.clone(resDTO
-							.getPoJobTypeRatio()));
+					PmPoJobTypeRatio oriPoJobTypeRatio = (PmPoJobTypeRatio) (SerializationUtils.clone(resDTO.getPoJobTypeRatio()));
 					getManagedBean().setOriPoJobTypeRatio(oriPoJobTypeRatio);
 					return NAV_TO_DETAILS;
 				}
