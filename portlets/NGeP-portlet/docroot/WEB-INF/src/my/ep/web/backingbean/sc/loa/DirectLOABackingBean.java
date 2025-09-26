@@ -5575,6 +5575,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		public void approveBeforeupdateBpmTaskAction(String outcome) {
 			debugLogger("approveBeforeupdateBpmTaskAction");
 			
+			
+			// new #25726 - start
+			ScLoa scLoa = this.getManagedBean().getScLoa();
+			boolean newBond = validateNewBond(scLoa);
+
+			boolean approvalLetter = validateApprovalLetter(scLoa);
+
+			if (!approvalLetter || !newBond) {
+				return;
+			}
+			// new #25726 - end
+			
 			/*#29007 Start Vinod*/
 			if (BpmOutcomeConst.BPM_VERIFY.equals(outcome) && this.getManagedBean().getLoaBpmVerify() == null) {
 				this.verifyConfirmationForLampiranA3(outcome);
@@ -12968,8 +12980,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			String fulfilmentCode = scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
 
-			isCheckLOAReport = !ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentCode)
-					&& !ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentCode);
+			isCheckLOAReport = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentCode);
 
 		}
 
