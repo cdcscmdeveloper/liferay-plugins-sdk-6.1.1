@@ -707,7 +707,7 @@ public class TaskReassignmentBackingBean extends
 							user = PmCommonUtil.retrieveUserByLoginId(loginId);
 
 							// Ensures only users within the selected Organization will be listed
-							if (userOrgList != null && userOrgList.size() > 0) {
+							if (userOrgList != null && !userOrgList.isEmpty()) {
 								for (PmUser orgList : userOrgList) {
 									if (orgList.getLoginId().equals(
 											user.getLoginId())) {
@@ -1268,20 +1268,19 @@ public class TaskReassignmentBackingBean extends
 											.getWorklistItem().size());
 							log.info("BPM total******"
 									+ responseDTO.getWorklistVO().getTotal());
-							/*
-							 * if(responseDTO.getWorklistVO().getWorklistItem()!=
-							 * null) { // markup data
-							 * markupWorklistItem(responseDTO
-							 * .getWorklistVO().getWorklistItem()); }
-							 */
+
 							resultBean.setTotalRecord(responseDTO
 									.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
 							
+							//#38680- Start
+							removeChairAndMemberFromTR(resultBean, responseDTO);
+							//#38680- End
+							
 							//[#25018] - start
-							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
-									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty()
+							        && !resultBean.getResultList().isEmpty()) { //#38680 : Fixing the SonarLint issue by using isEmpty only
 								getManagedBean().setAllUserTasks(new ArrayList <WorklistItemVO>());
 								getManagedBean().setCheckAllUserTasksEnabled(true);
 								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
@@ -1446,10 +1445,6 @@ public class TaskReassignmentBackingBean extends
 									.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
-							
-							//#38680- Start
-							removeChairAndMemberFromTR(resultBean, responseDTO);
-							//#38680- End
 							
 							// #7465 Re-open issues on 24/11/2023
 							if (CollectionUtils.isNotEmpty(responseDTO.getWorklistVO().getWorklistItem())) {
@@ -4666,30 +4661,32 @@ public class TaskReassignmentBackingBean extends
 		PmUser pmUser = this.getManagedBean().getTaskAssignmentSearchBean().getUser();
 		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-		List<PmPendingRemoveTask> hasActivePendingList = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(pmUser
-				.getLoginId());
-		
-		if(hasActivePendingList != null){
-			for(PmPendingRemoveTask hasActivePending : hasActivePendingList){
-				if (hasActivePending != null) {
-					if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
-						this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
-						this.getManagedBean().setShowRemoveProcessMessageGroup(true);
-					} else {
-						this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
-						this.getManagedBean().setShowRemoveProcessMessageOther(true);
+		//#38680 - Start : Fixing potential NullPointerException for pmUser.getLoginId()
+		if (pmUser != null && pmUser.getLoginId() != null && !pmUser.getLoginId().isEmpty()) {
+			List<PmPendingRemoveTask> hasActivePendingList = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(pmUser.getLoginId());
+
+			if (hasActivePendingList != null) {
+				for (PmPendingRemoveTask hasActivePending : hasActivePendingList) {
+					if (hasActivePending != null) {
+						if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
+							this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+							this.getManagedBean().setShowRemoveProcessMessageGroup(true);
+						} else {
+							this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+							this.getManagedBean().setShowRemoveProcessMessageOther(true);
+						}
 					}
 				}
 			}
-		}
-		
-		if(hasActivePendingList == null || hasActivePendingList.size() == 0){
-			//no pending
-			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
-			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
-			this.getManagedBean().setShowRemoveProcessMessageGroup(false);
-			this.getManagedBean().setShowRemoveProcessMessageOther(false);
-		}
+
+			if (hasActivePendingList == null || hasActivePendingList.size() == 0) {
+				// no pending
+				this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
+				this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
+				this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+				this.getManagedBean().setShowRemoveProcessMessageOther(false);
+			}
+		}//#38680 - End
 	}
 	/**
 	 * To get user id
