@@ -9883,7 +9883,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		// Check business conditions
 		if (!BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)
-				|| !CTProcessNameConst.VERIFY_FA_HT_NAME.equalsIgnoreCase(getManagedBean().getTaskName())) {
+				&& !CTProcessNameConst.VERIFY_FA_HT_NAME.equalsIgnoreCase(getManagedBean().getTaskName())) {
 			return false;
 		}
 
