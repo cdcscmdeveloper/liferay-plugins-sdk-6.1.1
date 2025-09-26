@@ -652,7 +652,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 					setUserDetails(userGroup, groupUser);
 				}
 			}
-			// logger.info("[#26037] - calling setUserDetails...end");
 
 			changeUserGroupStatus(pmUserGroupUsers);
 			userGroup.setPmUserGroupUsers(pmUserGroupUsers);
