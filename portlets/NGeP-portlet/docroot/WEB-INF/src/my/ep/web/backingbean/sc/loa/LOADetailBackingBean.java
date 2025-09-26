@@ -223,7 +223,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private static final String  BRANCH_INFO_TITLE = "Branch Information";
 
 	private static final String MALAY_NA = "T/B";
-
+	
 	// #29006 - start
 	private String notAvailabilityStr = MALAY_NA;
 	private String selectedSupplierOffer = StringUtils.EMPTY;
@@ -1830,6 +1830,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String definitionType = scLoaReport.getDefinationType().getParameterCode();
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
 		StringBuilder filename = new StringBuilder();//26226
+		
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType) 
 				|| ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD.equals(definitionType) 
 				|| ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD.equals(definitionType) 
@@ -2175,6 +2176,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param scQt the sc qt
 	 * @throws Exception the exception
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void generateAgreementLetterDocFromVelocity(ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
 		debugLogger("generateAgreementLetterDocFromVelocity");
 		populateAttachmentDetails(attachment);
@@ -2206,6 +2208,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// ##25025 #509 -start
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		// ##25025 #509 -end
+
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
 		context.put("loaNo", scLoa.getLoaNo());
 		// ##25025 #509 -start
@@ -2293,7 +2297,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// 25025 - end
 		if (scLoa.getBondPercentage() != null) {
 			bondPercentage = percentageDF.format(scLoa.getBondPercentage()) + SSTConstant.SIGN_PERCENTAGE; // 25025
-			bondPercentageText  = NumberWordUtil.convert(scLoa.getBondPercentage().toString());
+			bondPercentageText = NumberWordUtil.convert(scLoa.getBondPercentage().toString());
 		}
 		// 25025 - start
 		context.put(SSTConstant.BOND_PERCENTAGE_TEXT, bondPercentageText);
@@ -2345,7 +2349,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				loaSigner = contractSigner.getUserName();
 			}
 		}
-		context.put("loaSigner", loaSigner);	
+		context.put("loaSigner", loaSigner);
 		
 		String loaSignerDesig = StringUtils.isNotEmpty(scLoa.getLoaSignerDesig())?  scLoa.getLoaSignerDesig(): SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
@@ -2679,6 +2683,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		context.put(SSTConstant.HEADER_TITLE, headerTitle); // 25025 fix sonarlint
 		// #25025 - end
+		
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
 		context.put("supplierSignerAddress", supplierAddressTable);
@@ -4031,7 +4036,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// #26770 - Start.
 			validateReportAttachment();
 			// #26770 - End.
-				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
+			RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			//22111 - START
 			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
@@ -4124,7 +4129,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 		return loaReviseStatus;
 	}
-	
 	// #22211 - end
 	
 	// #27797 & 29006 - start
@@ -4183,15 +4187,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return the string
 	 */
 	private String prepareOriginalText(SmSupplier smSupplier, boolean isGovtSeller) {
-		/*
-		 * The first one is the Government user, it is the combination of IC.No,
-		 * > Organization Code and Country Code. >
-		 * 0000000081102813580400000000000211602001MY > IC No. , Organization
-		 * code, Country code > > The second one is for Supplier, it is the
-		 * combination of IC. No, Reg No and > Country Code. >
-		 * 00000000680427115037000000000KT0143162-VMY > IC No. , Registration
-		 * No., Country code
-		 */
 		FacesScopes facesScopes = new FacesScopes();
 		StringBuilder sb = new StringBuilder();
 		String countryCode ="";
@@ -4376,10 +4371,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						throw new EpException(
 								MessageConst.ERROR_760441, new String[] {loaReport.getTitle()});
 					}
-					if(statusId.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT) && 
-							loaReport.getDefinationType().getParameterCode().equals(
-									ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD) &&
-									null == loaReport.getScLoaReportAttachment() && !loaReport.getTitle().contains(lampiranA3SubStr)) {//#29007 Vinod added lampiranA3SubStr
+					if (statusId.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
+							&& loaReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD)
+							&& null == loaReport.getScLoaReportAttachment()
+							&& !loaReport.getTitle().contains(lampiranA3SubStr)) {//#29007 Vinod added lampiranA3SubStr
 						throw new EpException(MessageConst.ERROR_760441,
 								new String[] {loaReport.getTitle()});
 					}
@@ -6732,13 +6727,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String overallctAmt = SSTConstant.UNDERLINE;
 		String overallctAmtWording = SSTConstant.UNDERLINE;
 		// #25025,#26770 -end-
-		BigDecimal sstAmt = scLoa.getSstAmt();		
+		
+		BigDecimal sstAmt = scLoa.getSstAmt();
 		
 		if (sstAmt != null && loaAmount != null) {// 20230706@asyrafhaziq- SQUBE Bug NullPointer#3 - 25025, 26770 merge to prevent error
 			sstAmount = amountDF.format(sstAmt);
 			overallctAmt = amountDF.format(loaAmount.add(sstAmt));
+
 			//log.info(":::setSstInfoForAgreementLetter(). loaId: "+ scLoa.getLoaId() +". overallctAmt inc. sstAmt: "+ overallctAmt);
 			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.add(sstAmt).toString()));						
+
 		} else if (loaAmount != null) {// 20230706@asyrafhaziq- SQUBE Bug NullPointer#3 - 25025,26770 merge to  prevent error
 			overallctAmt = amountDF.format(loaAmount);
 			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
@@ -6751,7 +6749,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// #25025,#26770 -end-
 				
 	}	
-	//end Enhancement #24259 #24269	
+	//end Enhancement #24259 #24269
 
 	/**
 	 * @param context
