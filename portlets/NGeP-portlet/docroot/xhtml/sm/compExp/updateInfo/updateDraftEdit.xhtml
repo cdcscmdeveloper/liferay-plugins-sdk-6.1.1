@@ -1,0 +1,40 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{smCompExpMB.editHeader}");
+		</script>
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<p:messages autoUpdate="true" closable="true" id="messages"
+			showDetail="true" showSummary="false" />
+		<div align="left">
+			<p:commandButton action="#{smCompExpBB.redirectToDraftMain}"
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				value="#{lbl['lbl.sm.comp.exp.update.back']}" />
+		</div>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sm.comp.exp.update.draft.edit.instruction']}" />
+		<div align="center">
+			<table style="table-layout: fixed; width: 100%">
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.project.done']}" /></td>
+					<td style="width: 66%"><p:selectOneRadio disabled="#{smCompExpBB.disableClienType}">
+							<f:selectItems value="#{smCompExpMB.clientTypeItems}"></f:selectItems>
+						</p:selectOneRadio></td>
+				</tr>
+			</table>
+		</div>
+	</ui:define>
+</ui:composition>
