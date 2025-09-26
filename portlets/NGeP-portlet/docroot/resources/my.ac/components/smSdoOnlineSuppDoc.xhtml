@@ -21,7 +21,7 @@
 					
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" rendered="#{cc.attrs.mandatory}"
+					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="#{cc.attrs.hasAI ? 6 : 5}" rendered="#{cc.attrs.mandatory}"
 						style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
 					<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" rendered="#{!cc.attrs.mandatory}"
 						style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
@@ -68,7 +68,7 @@
 	        </p:column>
 	        
 	        <!-- #38890 -->
-	        <p:column style="width:3% !important; white-space:normal;overflow: hidden !important;"
+	        <p:column style="width:3% !important; white-space:normal;overflow: hidden !important; text-align:center;"
 	        	rendered="#{cc.attrs.hasAI}">
 	        	<ui:repeat var="applDocs" value="#{suppDoc.smApplDocFiles}">
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 1}">
