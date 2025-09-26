@@ -3946,13 +3946,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				updateContractDetails(scLoa);
 				validateContractDetails(scLoa);
 				
-				//new #25726 - start
-				boolean newBond = validateNewBond(scLoa,true);
-
-				if (!newBond) {
-					return;
-				}
-				//new #25726 - end
+			
 				if (scLoa != null)// 20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 					scLoa.setScLoaWorkFlowStatuses(null); //Sonarqube #83
 				// To avoid insert workflow status when direct submit without save.
@@ -3970,13 +3964,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scLoa.setBondReq(false);
 				 }
 				
+				//new #25726 - start
+				boolean newBond = validateNewBond(scLoa);
+				
 				//#25725 start
 				boolean approvalLetter = validateApprovalLetter(scLoa);
 				
-				if(approvalLetter == false){
+				if(!approvalLetter || !newBond){
 					return;
 				}				
 				//#25725 end
+				//new #25726 - end
 	
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setScLoa(scLoa);
@@ -4393,21 +4391,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		//new #25726 - start
 		ScLoa scLoa = this.getManagedBean().getScLoa();
-		boolean newBond = validateNewBond(scLoa,false);
-
-		if (!newBond) {
+		boolean newBond = validateNewBond(scLoa);
+		//#25725 start
+		boolean approvalLetter = validateApprovalLetter(scLoa);				
+		
+		if (!newBond ||!approvalLetter ) {
 			return;
 		}
-		//new #25726 - end
-	
-		//#25725 start
-		boolean approvalLetter = validateApprovalLetter(scLoa);
-		
-		if(approvalLetter == false){
-			return;
-		}				
 		//#25725 end
-        
+		//new #25726 - end
 		this.getManagedBean().setAction(outcome);
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
@@ -12008,20 +12000,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param isFulfilmentCheck
 	 * @return
 	 */
-	private boolean validateNewBond(ScLoa scLoa, boolean isFulfilmentCheck) {
+	private boolean validateNewBond(ScLoa scLoa) {
 
 		boolean isCheckLOAReport = false;
 		if (scLoa != null && CollectionUtils.isNotEmpty(scLoa.getScLoaReports()) && null == scLoa.getScQuote()
-				&& !scLoa.isBrandNew()) {
+				&& !scLoa.isBrandNew() && scLoa.getScLoiLoa() != null) {
 
-			if (isFulfilmentCheck && scLoa.getScLoiLoa() != null) {
 				String fulfilmentCode = scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
 
-				isCheckLOAReport = !ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentCode)
-						&& !ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentCode);
-			} else {
-				isCheckLOAReport = true;
-			}
+				isCheckLOAReport = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentCode);
 		}
 
 		if (isCheckLOAReport) {
