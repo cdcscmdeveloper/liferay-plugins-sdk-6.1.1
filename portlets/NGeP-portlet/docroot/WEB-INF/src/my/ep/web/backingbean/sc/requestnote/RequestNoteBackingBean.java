@@ -5577,8 +5577,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// #25725 add fullfilment type non periodic to the
 					// condition.
 					// add fix for 24348 calculation for RN
-					if (!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
-							&& !fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
+					if (!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 						if (itemDurationMonth != null) {
 							zonalSubTotalAmount = zonalSubTotalAmount.multiply(itemDurationMonth);
 						} else {
@@ -5592,9 +5591,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 				// - start- #27797
 				if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
-						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
-						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
+						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 					if (priceType.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
 						BigDecimal highestZonePrice = BigDecimal.ZERO;
 
@@ -6192,14 +6189,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		private void errorMessage(ScRequestNoteDtl rnDtl, SupplierDataMaintenanceResDTO responseDto, DisciplinaryActionContext context) {
 			String supplierName = rnDtl.getScRequestSupplierItem().getSmSupplier() != null ? rnDtl
 					.getScRequestSupplierItem().getSmSupplier().getCompanyName() : StringUtils.EMPTY;
-	
+
 			switch (context) {
 			case ACTIVE:
 				if (responseDto.isDisciplinaryActionDeletedDue()) {
-					throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
-				}
-				break;
-	
+			        throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
+			    } else if (responseDto.isDisciplinaryActionPendingTransaction()) {
+			        throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+			    } else {
+			        throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+			    }
+
 			case AFTER_ENDED:
 				if (responseDto.isDisciplinaryActionPendingTransaction() || responseDto.isDisciplinaryActionDeletedDue()) {
 					throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
@@ -6435,8 +6435,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
-			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
-			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);
 			reqDTO.setFulfillmentTypes(fulfilmentTypes);
 			reqDTO.setUserIdRequired(false);
 

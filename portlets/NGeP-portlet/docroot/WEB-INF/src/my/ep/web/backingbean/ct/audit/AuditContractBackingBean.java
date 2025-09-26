@@ -311,11 +311,12 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		if (!auditCTList.isEmpty()) {
 			colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType4;
 
-			noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
+			noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDataCellStyleString();
 			cellStyleString = new ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE).buildDataCellStyleString();
 			cellStyleDateTime = new ExcelCellStyleBuilder(wb).buildDataCellStyleDateTime();
 
 			for (AuditContractResDTO rpt : auditCTList) {
+				boolean isNewSheet = false;
 				if (rpt.getGroupSectionId() != null && !currentGroupSecId.contains(rpt.getGroupSectionId())) {
 					String sheetName = getUniqueSheetName(wb, getValidSheetName(getCurrentReportTab(rpt.getGroupSectionId().longValue())));
 
@@ -339,10 +340,16 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 
 					currentGroupSecId.add(rpt.getGroupSectionId());
 					rowIndex = sheetRptAudit.getLastRowNum() + 1;
+					isNewSheet = true;
 				}
 
 				if (rpt.getDocNo() == null && rpt.getActionBy() == null) {
 					createNotFoundRecord(sheetRptAudit, rowIndex, colHeaderDataTableRpt.length, noRecordsStyle);
+					if (isNewSheet) {
+			            for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
+			                sheetRptAudit.autoSizeColumn(i + 1);
+			            }
+			        }
 				} else {
 					Row currRow = sheetRptAudit.createRow(rowIndex++);
 					createCell(currRow, 1, rpt.getCreatedDate(), cellStyleDateTime);
@@ -487,8 +494,8 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_ZO, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_ZO));
 		map.put(AuditContractConst.AU_SECTION_AG, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_AG));
 		map.put(AuditContractConst.AU_SECTION_PD, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PD));
-		map.put(AuditContractConst.AU_SECTION_SD, new TabHeaderPair(ReportExcelAuditConstant.TAB_DESK_OFFICER));
-		map.put(AuditContractConst.AU_SECTION_DE, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_SD));
+		map.put(AuditContractConst.AU_SECTION_SD, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_SD));
+		map.put(AuditContractConst.AU_SECTION_DE, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_DE));
 		map.put(AuditContractConst.AU_SECTION_SC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_SC));
 		map.put(AuditContractConst.AU_SECTION_PB, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PB));
 		map.put(AuditContractConst.AU_SECTION_PBD, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PBD));
@@ -498,7 +505,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_CMN, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CMN));
 		map.put(AuditContractConst.AU_SECTION_FNS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FNS));
 		map.put(AuditContractConst.AU_SECTION_CO, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CO));
-		
+		map.put(AuditContractConst.AU_SECTION_DCA, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_DCA));
 
 		map.put(AuditContractConst.AU_SECTION_CC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CC));
 		map.put(AuditContractConst.AU_SECTION_PC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PC));
@@ -646,6 +653,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	    map.put(12, AuditContractConst.AU_SECTION_CMN);
 	    map.put(13, AuditContractConst.AU_SECTION_FNS);
 	    map.put(14, AuditContractConst.AU_SECTION_CO);
+	    map.put(15, AuditContractConst.AU_SECTION_DCA);
 	    return map;
 	}
 	

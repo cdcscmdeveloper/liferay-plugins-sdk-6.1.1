@@ -128,7 +128,6 @@ public class ContractItemUsageMonitoringDtlsBackingBean extends CtReportBaseBack
 	        getManagedBean().setMinistryFlag(null);
 	    }
 
-	    log.info(" check for all ministry ::::::::::::::::::: " + getManagedBean().getMinistryFlag());
 	    map.put(CtReportConst.PARAM_KEY_ALLMINISTRY_FLAG, getManagedBean().getMinistryFlag());
 
 	    // Mandatory parameters
@@ -168,7 +167,6 @@ public class ContractItemUsageMonitoringDtlsBackingBean extends CtReportBaseBack
 					.getDefaultOutputType());
 			reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
 			reqDTO.setParametersMap(params);
-			log.info(" getManagedBean().getCircularNo() :::::::::::::::::::::::::::::::::: "+getManagedBean().getCircularNo());
 			try {
 				RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
 				isReportError = reportValidationFields(params, isReportError);
