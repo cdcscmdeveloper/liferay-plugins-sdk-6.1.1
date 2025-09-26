@@ -8053,7 +8053,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return true if DA is true, PBQC and/or MOF decision is true.
 	 */
 	public boolean checkValidationDA(){
-		return getManagedBean().isDisciplinaryAction() && !getManagedBean().isDisciplinaryActionCancel()
+		return !getManagedBean().isDisciplinaryActionNotification() && !getManagedBean().isDisciplinaryActionCancel()
 				&& (isPbqcAuthorityDA() || isMofAuthorityDA());
 	}
 	
