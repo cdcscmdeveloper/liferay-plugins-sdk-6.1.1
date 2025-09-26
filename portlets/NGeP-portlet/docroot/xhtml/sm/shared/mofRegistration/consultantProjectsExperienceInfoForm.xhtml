@@ -148,7 +148,7 @@
 	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
 		widgetVar="consDialog" id="consDialog" resizable="false"
 		closable="true" showEffect="fade" hideEffect="fade" modal="true"
-		width="850px" height="500px">
+		width="850px" height="500px" onShow="setTimeout(() => document.activeElement.blur(), 10)">
 		
 		<p:outputPanel layout="block" id="consExpBlockPanel">
 			<p:messages id="consultPrjMsg" showSummary="false" showDetail="true"
