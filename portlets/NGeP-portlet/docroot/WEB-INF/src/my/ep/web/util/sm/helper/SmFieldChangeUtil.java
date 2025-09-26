@@ -207,7 +207,9 @@ public class SmFieldChangeUtil {
 					setEquityCompanyFieldChangeStatus(latestAppl, currAppl);
 
 				} else if (currentPage
-						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)
+						|| currentPage
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) { //#38890
 					// smSupplierBanks
 					setBankFieldChangeStatus(latestAppl, currAppl);
 				}
