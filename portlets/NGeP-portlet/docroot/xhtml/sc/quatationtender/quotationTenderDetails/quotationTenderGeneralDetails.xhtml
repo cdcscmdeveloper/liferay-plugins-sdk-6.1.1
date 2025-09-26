@@ -269,8 +269,8 @@
 						label="#{lbl['lbl.sc.qt.fileno']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isFileNoMandatory(scQt) or not empty param['skipmenuvalidation'] or not empty param['skipsaveclonevalidation']}"
 						value="#{scQt.fileNo}" style="width:653px;" maxlength="50"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FILE_NO) or isReadOnly}">
-						<p:ajax event="blur" partialSubmit="true" update="@this"
-							listener="#{createQtBB.setFileNo(scQt)}"></p:ajax>
+						<!-- 29661 start --><p:ajax event="blur" partialSubmit="true" update="@this"
+							listener="#{createQtBB.setFileNo(scQt)}"></p:ajax> <!-- 29661 end -->
 					</p:inputText> <p:message id="filenoMsg" for="fileno" display="icon" /></td>
 			</tr>
 			<tr>
