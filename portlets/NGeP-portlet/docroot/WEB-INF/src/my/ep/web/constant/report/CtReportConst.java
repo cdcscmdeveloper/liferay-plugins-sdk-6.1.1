@@ -16,6 +16,10 @@ public class CtReportConst implements Serializable {
 	public static final String CT_LIST_OF_CIRCULAR_PQ_RPT_VAL = "CT_023";
 	public static final String CT_STATEMENT_OF_ORDER_PQ_RPT_VAL = "CT_024";
 	
+	// #29416 added Contract Item Usage Monitoring Report
+	public static final String CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_CC_VAL = "CT_027";
+	public static final String CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_MC_VAL = "CT_028";
+	
 	// Report Parameter Key
 	public static final String PARAM_KEY_REPORT = "report";
 	public static final String PARAM_KEY_REPORT_ID = "PREPORTID";
