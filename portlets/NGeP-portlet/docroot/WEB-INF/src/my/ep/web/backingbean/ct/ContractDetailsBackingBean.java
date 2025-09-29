@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet; //#30014
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1329,7 +1330,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			log.debug("Record saved successfully");
 			String messageId = MessageConst.INFO_700005;
 			String nextRole = null;
-		 
+					 
 			// Start Fix - #31740
 			if(ctBB.getManagedBean().getSelectedAgencyChanges() != null){
 			    if(ctBB.getManagedBean().getSelectedAgencyChanges().size()>0) {
@@ -1354,6 +1355,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				  // log.info(" getSelectedAgencyChanges after clear() ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
 
 			}
+			//#30014 - Start
+			sendToSmModuleForCompanyExp(resDTO, action, contractSO);
+			//#30014 - End
 			
 			// #35506 Start
 			AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
@@ -4786,4 +4790,53 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    return cal.getTime();
 	}
 	// #24333 - End
+	
+	// #30014 - Start
+	/**
+	 * Sends contract data to SM module for Company Experience if conditions are
+	 * met (specific doc types and APPROVE action).
+	 * 
+	 * @param resDTO
+	 *            the contract response data
+	 * @param action
+	 *            the BPM action process
+	 * @param contractSO
+	 *            the contract service object
+	 */
+	private void sendToSmModuleForCompanyExp(ContractResDTO resDTO, String action, IContractSO contractSO) {
+		// Validate input
+		if (resDTO.getContract() == null || resDTO.getCtContractVer() == null) {
+			return;
+		}
+
+		// Get docType safely
+		String docType = null;
+		if (ctBB.getManagedBean() != null && ctBB.getManagedBean().getContractVer() != null) {
+			docType = ctBB.getManagedBean().getContractVer().getDocType();
+		}
+
+		// Check conditions action process
+		if (!BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+			return;
+		}
+
+		if (!isValidDocTypeForCallSp(docType)) {
+			return;
+		}
+
+		// All conditions met send to SP
+		contractSO.insertCtToSmModule(resDTO.getContract().getContractId(), resDTO.getCtContractVer().getContractVerId());
+	}
+
+	/**
+	 * Checks if the given docType is eligible for process to call SP.
+	 */
+	private boolean isValidDocTypeForCallSp(String docType) {
+		HashSet<String> validDocTypes = new HashSet<>();
+		validDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+		validDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		validDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT);
+		return validDocTypes.contains(docType);
+	}
+	// #30014 - End
 }
