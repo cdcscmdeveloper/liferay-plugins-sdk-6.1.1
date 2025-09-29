@@ -29,7 +29,7 @@
 				</ui:repeat></td>
 				<!--#35506 start-->
 				<td style="float: right;">
-				<c:if test="#{panelBackingBean.managedBean.action eq 'view' and circularBackingBean.isAuditRoleCheck}">
+				<c:if test="#{panelBackingBean.managedBean.action eq 'view' and circularBackingBean.isAuditRoleCheck()}">
 			<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
 						action="#{auditContractBackingBean.redirectToAudittrailView(
                 panelBackingBean.managedBean.circular.circularType,
