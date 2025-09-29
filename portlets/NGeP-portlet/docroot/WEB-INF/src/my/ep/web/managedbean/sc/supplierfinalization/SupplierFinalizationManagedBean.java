@@ -336,6 +336,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<String> disabledSupplierIds;
 
 	// 26247 - end
+
+	// 39077 -start-
+	private boolean isReviseBriefMsg = Boolean.FALSE;
+
+	// 39077 -end-
 	
 	/**
 	 * @return the activeIndex
@@ -2643,5 +2648,24 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disabledSupplierIds = disabledSupplierIds;
 	}
 	// 26247 - end
+	
+	// 39077 -start-
+	/**
+	 * @return the isReviseBriefMsg
+	 */
+	public boolean isReviseBriefMsg() {
+		return isReviseBriefMsg;
+	}
+
+	/**
+	 * @param isReviseBriefMsg
+	 *            the isReviseBriefMsg to set
+	 */
+	public void setReviseBriefMsg(boolean isReviseBriefMsg) {
+		this.isReviseBriefMsg = isReviseBriefMsg;
+	}
+	// 39077 -end-
+	
+	
 }
 // ***25201
