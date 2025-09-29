@@ -198,17 +198,7 @@
 		
 		<p:spacer width="2" />	
 		
-		<p:panel  id="bondSpl" toggleable="true" rendered="#{ctBackingBean.isAlreadyAmendment()
-             and ctBackingBean.isContractExtendOrIsBond()
-             and (
-                 (ctBackingBean.managedBean.viewContract 
-                  and ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faLoaCompleted)
-                 or
-                 (ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractUpdate)
-                 or
-                 (ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement)
-                 or
-                 ctBackingBean.managedBean.notificationSetting)}" toggleSpeed="500">
+		<p:panel  id="bondSpl" toggleable="true" rendered="#{ctBackingBean.isBondPanelRendered()}" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.spl.bond']}"/>
 	   	</f:facet>
