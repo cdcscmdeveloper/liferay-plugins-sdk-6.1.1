@@ -292,14 +292,26 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			 </td>
 			<td colspan="3">
-				<p:inputText disabled="#{isDocTypeQuotation || !isEditableStatus || lOADetailBackingBean.managedBean.readOnly}"
-					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="29" maxlength="50"/>
+			<!-- #29661 start -->
+				<p:inputText id="fileNo" disabled="#{isDocTypeQuotation || !isEditableStatus || lOADetailBackingBean.managedBean.readOnly}"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="29" maxlength="50">
+					<p:ajax event="blur"  process="@this" 
+					partialSubmit="true" update="@this"
+					listener="#{createQtBB.setFileNo(lOADetailBackingBean.managedBean.scLoa.scQt)}">
+					</p:ajax>
+				</p:inputText>
 				<p:inputText id="fileExtNo"  style="margin-left: 2px;width: 28px; text-align:right;"
 					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="6"
 					required="true"
 					label="#{lbl['lbl.sc.qt.fileno']}"
 					maxlength="3"
-					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">					
+					<p:ajax event="blur"  process="@this" 
+					partialSubmit="true" update="@this"
+					listener="#{lOADetailBackingBean.setFileExtNo(lOADetailBackingBean.managedBean.scLoa)}">
+					</p:ajax>
+					</p:inputText>		
+					<!-- #29661 end -->
 				<p:message id="fileExtNoMsg" for="fileExtNo" display="icon" />
 			</td>
 		</tr>

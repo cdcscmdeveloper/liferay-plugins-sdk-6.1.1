@@ -5150,4 +5150,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return false;
 	}
 	// 24333 - End
+	
+	//#35506 - Start
+	/**
+	 * method to determine specific user roles for audit CT Trail
+	 * 
+	 * Only allow user with specific designated role and the request is only
+	 * 
+	 * @return true if user has either one of the describe roles
+	 */
+	public boolean isAuditRoleCheck() {
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.SYS_ADMIN.value());
+	}
+	//#35506 - End
 }  
