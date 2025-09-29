@@ -3299,14 +3299,26 @@ return	remarksNotFound;
 						this.getManagedBean().setBpkCentralContract(true);
 					}
 					
-					if (!isCurrentCommitteeAuthorisedToSubmit && !getManagedBean().isBpkCentralContract()) {//#30324 - End
-						String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
-																committeeType);
-						
-						throw new EpException(MessageConst.ERROR_760394, new String[] { 
-												committeeName, String.valueOf(totalIntendedPrice.intValue()) });
-					}
+				// 39077 -start-
+				boolean isBriefMsgShow = this.getManagedBean()
+						.isReviseBriefMsg();
+				boolean isMessageShow = !isCurrentCommitteeAuthorisedToSubmit
+						&& !getManagedBean().isBpkCentralContract()
+						&& !isBriefMsgShow;
+				if (isMessageShow) {// #30324 - End
+					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
+					// 39077 -end-
+					
+					String committeeName = getParameterDesc(
+							ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+
+					throw new EpException(MessageConst.ERROR_760394,
+							new String[] {
+									committeeName,
+									String.valueOf(totalIntendedPrice
+											.intValue()) });
 				}
+			}
 				
 				if (getManagedBean().isSubmit() && 
 						!getManagedBean().isInitialDecisionFwdToBPK() &&
@@ -3833,12 +3845,24 @@ return	remarksNotFound;
 					this.getManagedBean().setBpkCentralContract(true);
 				}
 				
-				if (!isCurrentCommitteeAuthorisedToSubmit && !getManagedBean().isBpkCentralContract()) {//#30324 - End
-					String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
-															committeeType);
-					
-					throw new EpException(MessageConst.ERROR_760394, new String[] { 
-											committeeName, String.valueOf(totalIntendedPrice.intValue()) });
+				// 39077 -start-
+				boolean isBriefMsgShow = this.getManagedBean()
+						.isReviseBriefMsg();
+				boolean isMessageShow = !isCurrentCommitteeAuthorisedToSubmit
+						&& !getManagedBean().isBpkCentralContract()
+						&& !isBriefMsgShow;
+				if (isMessageShow) {// #30324 - End
+					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
+					// 39077 -end-
+
+					String committeeName = getParameterDesc(
+							ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+
+					throw new EpException(MessageConst.ERROR_760394,
+							new String[] {
+									committeeName,
+									String.valueOf(totalIntendedPrice
+											.intValue()) });
 				}
 			}
 			//#26169 - START
@@ -4342,7 +4366,7 @@ return	remarksNotFound;
 				.getScQtFinalizationReportAttachment();
 
 		List<Long> allowedStatusIds = Arrays.asList(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION,
-				QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION, QTStatusConst.QT_SF_MOF_COMMIEEE);
+				QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION, QTStatusConst.SF_MOF_COMMITTEE);// 26247
 
 		if ((allowedStatusIds.contains(getManagedBean().getCurrentStatusId()) && isGenerateReport)
 				|| null == reportAttachment) {
@@ -9947,10 +9971,27 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			//role permission with no organization restriction
 			//add role code as necessary
-			List <String> roleToCheck = new ArrayList<String>();
-			roleToCheck.add(RoleCode.BPK_AUDITOR.value());
 			
-			ISearchBean<PmUserRole> searchBean = new SearchBean<PmUserRole>();
+			// 29661 -start-
+			List<String> roleToCheck = new ArrayList<>();
+			roleToCheck.add(RoleCode.BPK_AUDITOR.value());
+
+			roleToCheck.addAll(Arrays.asList(RoleCode.QCA_MEMBER.value(),
+					RoleCode.QCA_CHAIRPERSON.value(),
+					RoleCode.QCB_MEMBER.value(),
+					RoleCode.QCB_CHAIRPERSON.value(),
+					RoleCode.PBA_MEMBER.value(),
+					RoleCode.PBA_CHAIRPERSON.value(),
+					RoleCode.PBB_MEMBER.value(),
+					RoleCode.PBB_CHAIRPERSON.value(),
+					RoleCode.FPB_MEMBER.value(),
+					RoleCode.FPB_CHAIRPERSON.value(),
+					RoleCode.PPB_MEMBER.value(),
+					RoleCode.PPB_CHAIRPERSON.value()));
+
+			ISearchBean<PmUserRole> searchBean = new SearchBean<>();
+			// 29661 -end-
+			
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(
 							"pmUserOrg.pmUser.userId", 
@@ -11168,16 +11209,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
-		
-		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
+
+		if (isZonal && CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
 			return true;
 		}
-		
-		if(!isZonal){
-			return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+
+		if (!isZonal && sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)) {
+			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -11197,13 +11238,13 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 
-		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
-				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated() && isZonal) {
+		if (isZonal && CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
 			return true;
 		}
 
-		if (!isZonal) {
-			return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+		if (!isZonal && sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId)) {
+			return true;
 		}
 
 		return false;

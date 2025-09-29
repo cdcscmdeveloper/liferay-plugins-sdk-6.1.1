@@ -1259,6 +1259,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		alreadyExecute = false;//avoid duplicate execute function setDefaultApproverReviewSection() && setDefaultPoReviewSection()
 		getManagedBean().setRedirectToPersonPage(false);
 		assignValReqdToFalse();
+		getManagedBean().setMofNumber(null); //#39076
 		if (!applicationType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 
@@ -1424,7 +1425,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						"SmApplicationBackingBean.proceedToApplication", "rejectedApplExist-8", 
 						subStartTime); //20211005@fadhli - #31754
 				//31792 - START
-				if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
+				if (rejectedAppl != null && (my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())
+						|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF))) { //36064
 				//31792 - END
 					Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 					long diff = currentDate.getTime()
@@ -2000,13 +2002,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		List<SmMofAccount> accounts = getManagedBean().getSmSupplier()
 				.getSmMofAccounts();
+		//#39076
+		Collections.sort(accounts, new Comparator<SmMofAccount>() {
+			@Override
+			public int compare(SmMofAccount o1, SmMofAccount o2) {
+				if (o1.getCreatedDate() == null || o2.getCreatedDate() == null)
+					return 0;
+				return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+			}
+		});
 		if (!EntityHelper.isCollectionEmpty(accounts)) {
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
 						getManagedBean().getSmSupplier().getSmAppl()
 								.getSupplierType())
-						&& account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+						&& !account.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 					getManagedBean().setMofNumber(account.getMofNo());
 				}
 			}
@@ -14732,6 +14742,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			
 		}
+		//#38890
+		SmAIDocBackingBean.validateBank(getManagedBean().getSmAppl());
 	}
 	
 	//3460 - Start
@@ -18598,4 +18610,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return false;
 	}
 	//#38195 END
+	
+	// #36718 - Start
+	/**
+	 * To check postcode by using listener
+	 * 
+	 * @param postcode
+	 */
+	public void checkPostcode(String postcode) {
+		if (postcode != null && StringUtils.isNotBlank(postcode) && (!StringUtils.isNumeric(postcode) || postcode.length() != 5)) {
+			String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
+			throw new EpException(errMsg, null);
+		}
+	}
+	// #36718 - End
 }

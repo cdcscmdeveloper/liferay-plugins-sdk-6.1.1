@@ -4606,7 +4606,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	                      ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
 	    BigDecimal bondAmt = getManagedBean().getTotalBondAmt();
-	    if (bondAmt.compareTo(BigDecimal.ZERO) == 0) {
+	    if (bondAmt == null || bondAmt.compareTo(BigDecimal.ZERO) == 0) {
 	        return na;
 	    }
 
@@ -5090,7 +5090,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    }
 
 	    // Skip bond calculation if direct purchase or bond exempted
-	    if (getManagedBean().isDirectPurchase() || getManagedBean().getCtContractAmount().isBondExempted()) {
+	    if ((getManagedBean().isDirectPurchase() && !isPk7FromDp()) || getManagedBean().getCtContractAmount().isBondExempted()) {
 	        return total;
 	    }
 
@@ -5136,13 +5136,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return true if PK7 is from DP, false otherwise
 	 */
 	public boolean isPk7FromDp() {
-	    String procType = EntityHelper.getNestedProperty(
-	        getManagedBean().getContractVer(),
-	        "ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType"
-	    );
-	    boolean hasValidProcType = ParameterTypeConst.PROCUREMENT_TYPE.equals(procType); // case-sensitive
-	    boolean hasJustification = newJustification() != null;
-	    return hasValidProcType && hasJustification;
+
+		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+		    String procType = EntityHelper.getNestedProperty(
+			        getManagedBean().getContractVer(),
+			        "ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType"
+			    );
+			    boolean hasValidProcType = ParameterTypeConst.PROCUREMENT_TYPE.equals(procType); // case-sensitive
+			    boolean hasJustification = newJustification() != null;
+			    return hasValidProcType && hasJustification;
+		}
+		return false;
 	}
 	// 24333 - End
 }  
