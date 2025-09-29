@@ -49,6 +49,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmFieldChangeUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 
@@ -326,6 +327,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				entities.add(entity);
 			}
 		}
+		SmFieldChangeUtil.setBankFieldChangeStatus(appl);
 		validateBankEntity(appl, bankStatementDoc, entities);
 	}
 	
