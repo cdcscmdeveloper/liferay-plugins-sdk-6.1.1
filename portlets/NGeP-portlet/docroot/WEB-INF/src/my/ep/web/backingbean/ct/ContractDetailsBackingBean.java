@@ -4513,9 +4513,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		 * @return True if the process should be skipped.
 		 */
 		private boolean shouldSkipBondProcessing(String docType, boolean isAmendment) {
-		    return !isAmendment && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+		    return !isAmendment || (!docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 		           && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-		           && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING);
+		           && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING));
 		}
 
 		/**
