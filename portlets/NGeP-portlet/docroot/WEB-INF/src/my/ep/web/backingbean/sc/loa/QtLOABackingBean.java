@@ -501,11 +501,34 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 						getManagedBean().getBackToPreviousPage());
 	}
 	
+	// 29661 -start-
+	/**
+	 * check portlet is from qtMaintenace/Audit/Support/proposal/Evaluation
+	 * screens.
+	 * 
+	 * @return boolean.
+	 */
 	private boolean isQTMaintenanceScreen() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
-				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		// 29661 -start-
+		boolean compExp = QTConstants.PORTLET_NAME_SUPPLIER_PROPOSAL
+				.equals(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PROPOSAL_EVALUATION_PORTLET
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		// 29661 -end-
+
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
+				|| QTConstants.PORTLET_NAME_QT_TECHSUPP
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+
+				// 29661 -start-
+				|| compExp;
+		// 29661 -end-
 	}
+
+	// 29661 -end-
 	
 	//#21692 - Start
 	/**

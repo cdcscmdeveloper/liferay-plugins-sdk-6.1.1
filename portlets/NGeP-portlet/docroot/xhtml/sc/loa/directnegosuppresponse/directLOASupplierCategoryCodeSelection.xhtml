@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<!-- #29661 -->
+	<p:panel id="panelResult"
+		header="#{lbl['lbl.sc.category.code.procurement']}" toggleable="true">
+		<p:row>
+			<p:column>
+				<p:dataTable id="selectedCategoryTable" var="categorySelected"
+					value="#{directLOABackingBean.managedBean.procurementRelatedCategoryList}"
+					rowIndexVar="index" rows="10" lazy="true"
+					selection="#{directLOABackingBean.managedBean.selectedCategoryList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowKey="#{categorySelected}">
+
+					<ac:paginator for="selectedCategoryTable"></ac:paginator>
+
+					<p:column headerText="#{lbl['lbl.sc.sr.cat.code']}">
+									#{categorySelected.pmCategoryL1.categoryL1Code}#{categorySelected.pmCategoryL2.categoryL2Code}#{categorySelected.pmCategoryL3.categoryL3Code}
+									</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.main.category']}"
+						style="width:25%;white-space: normal;">
+						<h:outputText value="#{categorySelected.categoryL1Name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.sub.category']}"
+						style="width:25%;white-space: normal;">
+						<h:outputText value="#{categorySelected.categoryL2Name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
+						style="width:25%;white-space: normal;">
+						<h:outputText value="#{categorySelected.categoryL3Name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.category.type']}"
+						style="width:10%;white-space:normal;">
+						<h:outputText
+							value="#{directLOABackingBean.getParameterDesc(categorySelected.pmCategoryL3.categoryTypeCode)}" />
+					</p:column>
+
+				</p:dataTable>
+				<p:spacer width="12px"></p:spacer>
+			</p:column>
+		</p:row>
+	</p:panel>
+
+</ui:composition>

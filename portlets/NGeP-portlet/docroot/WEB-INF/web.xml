@@ -126,6 +126,15 @@
 	    <servlet-name>liferayOIMServlet</servlet-name>
 	    <url-pattern>/createLiferayOIM/*</url-pattern>
 	 </servlet-mapping>
+	 
+	 <servlet>
+		<servlet-name>paymentResponseServlet</servlet-name>
+		<servlet-class>my.ep.web.servlet.PaymentResponseServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>paymentResponseServlet</servlet-name>
+		<url-pattern>/paymentResponseServlet/*</url-pattern>
+	</servlet-mapping>
 
 	<!-- Quartz Startup Config 
 	<context-param>
