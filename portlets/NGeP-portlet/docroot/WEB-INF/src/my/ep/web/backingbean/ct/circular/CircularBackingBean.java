@@ -734,7 +734,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.SYS_ADMIN.value());
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
 	}
 	//#35506 - End
 }
