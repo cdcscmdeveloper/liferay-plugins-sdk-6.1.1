@@ -84,8 +84,10 @@ public class SyncProcBoardFromPMRest {
 						user.put("Role", "Chairperson");
 						failedUser.add(user);
 					}
-					if (count == 10)
+					
+					if (count == 10) {
 						break;
+					}
 				}
 			}
 			count = 0;
