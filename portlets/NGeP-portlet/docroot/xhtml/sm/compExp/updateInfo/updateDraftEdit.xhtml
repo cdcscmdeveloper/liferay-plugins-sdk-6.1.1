@@ -29,10 +29,52 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.update.project.done']}" /></td>
-					<td style="width: 66%"><p:selectOneRadio disabled="#{smCompExpBB.disableClienType}">
+							value="#{lbl['lbl.sm.comp.exp.update.project.done']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:selectOneRadio
+							disabled="#{smCompExpMB.disableClienType}"
+							value="#{smCompExpMB.draft.clientType}">
 							<f:selectItems value="#{smCompExpMB.clientTypeItems}"></f:selectItems>
+							<p:ajax event="change" listener="#{smCompExpBB.clientTypeChange}"
+								oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+								update=":form" process="@form" />
 						</p:selectOneRadio></td>
+				</tr>
+				<p:outputPanel id="oriAgencyPanel"
+					rendered="#{smCompExpMB.draft.clientType eq ParameterConst.clientTypeFederal and smCompExpMB.draft.oriAgencyName ne null}">
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2 mandatory"
+								value="#{lbl['lbl.sm.comp.exp.update.ori.agency.name']}" /></td>
+						<td style="width: 66%"><p:outputLabel
+								styleClass="outputLabel-view mandatory"
+								value="#{smCompExpMB.draft.oriAgencyName}" /> <p:graphicImage
+								id="oriAgencyNameToolTipsId"
+								value="/css/images/design/tooltips.png" /> <p:tooltip
+								for="oriAgencyNameToolTipsId"
+								value="#{lbl['lbl.sm.comp.exp.update.ori.agency.name.tooltips']}" /></td>
+					</tr>
+				</p:outputPanel>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /></td>
+					<td style="width: 66%"><p:inputText id="agencyName"
+							readonly="#{smCompExpMB.draft.clientType eq null or smCompExpMB.draft.agencyName ne null
+							or smCompExpMB.draft.clientType eq ParameterConst.clientTypeFederal}"
+							size="60" value="#{smCompExpMB.draft.agencyName}" />
+							<p:outputPanel rendered="#{smCompExpMB.draft.clientType eq ParameterConst.clientTypeFederal}">
+							<p:commandLink action="#{smPtjPopupBB.initPtjPopup}"
+								oncomplete="blockWidget.hide(),smPtjPopupWV.show()"
+								onclick="blockWidget.show()" update=":form" process="@form">
+								<p:graphicImage value="/css/images/design/search.png" />
+								<p:graphicImage id="agencyNameToolTipsId"
+									value="/css/images/design/tooltips.png" />
+								<p:tooltip for="agencyNameToolTipsId"
+									value="#{lbl['lbl.sm.comp.exp.update.agency.name.tooltip']}" />
+							</p:commandLink>
+						</p:outputPanel>
+							</td>
 				</tr>
 			</table>
 		</div>

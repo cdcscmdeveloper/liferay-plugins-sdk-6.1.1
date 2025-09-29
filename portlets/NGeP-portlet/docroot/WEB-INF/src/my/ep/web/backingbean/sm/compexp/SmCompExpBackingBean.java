@@ -84,10 +84,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().setEditHeader(lblDraftHeaderSm);
 		}
 		
-		if(null != draft.getClientType() && draft.getClientType().isEmpty()){
-			this.getManagedBean().setDisableClienType(false);
-		} else {
+		if(null != draft.getClientType() && !draft.getClientType().isEmpty()){
 			this.getManagedBean().setDisableClienType(true);
+		} else {
+			this.getManagedBean().setDisableClienType(false);
 		}
 		initClientType();
 		
@@ -110,10 +110,24 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 		SelectItem clientTypeNonFed = new SelectItem();
 		clientTypeNonFed.setLabel(SmCommonUtil.getMessage(lblClientTypeNonFed, null));
-		clientTypeNonFed.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
+		clientTypeNonFed.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
 		items.add(clientTypeNonFed);
 		
 		this.getManagedBean().setClientTypeItems(items);
+	}
+
+	/**
+	 * Listener for clienType
+	 */
+	public void clientTypeChange() {
+		String oriAgencyName = this.getManagedBean().getDraft().getOriAgencyName();
+		if (this.getManagedBean().getDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_NON_FEDERAL)) {
+			if (null != oriAgencyName && !oriAgencyName.isEmpty()) {
+				this.getManagedBean().getDraft().setAgencyName(oriAgencyName);
+			}
+		} else if (this.getManagedBean().getDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_FEDERAL)) {
+			this.getManagedBean().getDraft().setAgencyName(null);
+		}
 	}
 
 }
