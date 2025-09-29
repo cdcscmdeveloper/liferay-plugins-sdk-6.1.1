@@ -220,6 +220,22 @@ public class SmFieldChangeUtil {
 			// smManufacturingDtls
 		}
 	}
+	
+	//#38890
+	public static void setBankFieldChangeStatus(SmAppl currAppl){
+		if (currAppl == null){
+			return;
+		}
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(currAppl.getSmSupplier().getSupplierId());
+		SmAppl latestAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveLatestSmApplWithChildBySupplierId(reqDTO)
+				.getSmAppl();
+		if (latestAppl == null){
+			return;
+		}
+		setBankFieldChangeStatus(latestAppl, currAppl);
+	}
 
 	/**
 	 * Set current personnel entities object change field status for displaying
