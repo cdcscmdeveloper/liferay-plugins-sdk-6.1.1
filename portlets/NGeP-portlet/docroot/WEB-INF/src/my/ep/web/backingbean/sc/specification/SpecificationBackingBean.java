@@ -1402,6 +1402,9 @@ public class SpecificationBackingBean extends
 		case 0:
 
 			retriveSpecdetails(this.getManagedBean().getQt().getQtId());
+			// #39062 Start Vinod 23/09/2025
+			updateEstimatedAmount();
+			// #39062 End Vinod 23/09/2025
 			break;
 		case 1:
 			retriveSupplierQualificationCriteria("SC");
@@ -6299,6 +6302,10 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/boSctemplatespec/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
+				//29661-start-
+				String docDefinationKey=checkList.getPmDocument()
+						.getDocDefinitionKey();
+				//29661-end-
 				this.getManagedBean().setCriteriaType(0);
 				this.getManagedBean().setOtherCriteriaType(0);
 				this.getManagedBean().setCheckListScore(null);
@@ -7005,6 +7012,33 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "/xhtml/sc/specification/specificationCommittee/financialCheckListPaidUpCapital.xhtml?faces-redirect=true";
 				}
+				// 29661-start-
+				else if (SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE
+						.equalsIgnoreCase(docDefinationKey)) {
+					ScQtCheckList checkListValueScore = fetchCheckListValueScore(
+							checkList,
+							QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV);
+					this.getManagedBean()
+							.setCriteriaType(
+									QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV);
+					this.getManagedBean().setChecklistScoreType(
+							QTConstants.USER_SCORE);
+					this.getManagedBean().setScQtChecklist(checkListValueScore);
+					return QTConstants.SPECIFICATION_FINANCIAL_GOVERNMENT_EXPERIENCE;
+				} else if (SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE
+						.equalsIgnoreCase(docDefinationKey)) {
+					ScQtCheckList checkListValueScore = fetchCheckListValueScore(
+							checkList,
+							QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV);
+					this.getManagedBean()
+							.setCriteriaType(
+									QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV);
+					this.getManagedBean().setChecklistScoreType(
+							QTConstants.USER_SCORE);
+					this.getManagedBean().setScQtChecklist(checkListValueScore);
+					return QTConstants.SPECIFICATION_NONFINANCIAL_GOVERNMENT_EXPERIENCE;
+				}
+				// 29661-end-
 			}
 		} finally {
 			specSo = null;
@@ -12575,6 +12609,11 @@ if (null != checklist && !checklist.isEmpty()) {
 	 * @return navigate to acknowledgement page.
 	 */
 	public void specCommitteBpmTask(String action) {
+		// #39062 Start Vinod 23/09/2025
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			updateEstimatedAmount();
+		}
+		// #39062 End Vinod 23/09/2025
 		// #29732 Start - reOpen Fix
 		if (!this.getManagedBean().getQt().isPanel() && (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
@@ -17521,6 +17560,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		IQTSpecSO specSo = getSpecSO();
 		SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 		specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
+		specReqDTOCatChange.getScQt().setScQtCategorys(this.getManagedBean().getQtCategoryList());
 		specSo.validateSupplierQulificationInfoCatChange(specReqDTOCatChange);
 		String changedCatCodeList = checkCatCodeChange();
 		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
@@ -17642,6 +17682,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
 		// 29732 -end-
+		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);//#29732 added spec maintenance status pending approval having issue data has already been removed
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
@@ -24777,5 +24818,134 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 	// 11104 -end-
+	
+	// 29661 -start-
+	/**
+	 * set checklist Value to current checklist.
+	 * 
+	 * @param fetchValue
+	 * @param initialValue
+	 * @param checkList
+	 * @return ScQtCheckList
+	 */
+	private ScQtCheckList setCheckListValue(ScQtCheckListValue fetchValue,
+			ScQtCheckList finGNGovCheckList) {
+		if (null == fetchValue) {
+			this.getManagedBean().setChecklistScoreType(null);
+			return createCheckListValue(finGNGovCheckList);
+		} else {
+			finGNGovCheckList.setScQtCheckListValue(fetchValue);
+		}
+		return finGNGovCheckList;
+	}
+
+	// 29661 -end-
+	// 29661 -start-
+	/**
+	 * create checklistvalue object and set to the checklist.
+	 * 
+	 * @param finGNGovCheckList
+	 * @return ScQtCheckList
+	 */
+	private ScQtCheckList createCheckListValue(ScQtCheckList finGNGovCheckList) {
+		ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+		setUserDetails(checkListValue);
+		checkListValue.setScQtCheckList(finGNGovCheckList);
+		finGNGovCheckList.setScQtCheckListValue(checkListValue);
+		return finGNGovCheckList;
+	}
+
+	// 29661 -end-
+	// 29661 -start-
+	/**
+	 * create checklist score and set to the checklist.
+	 * 
+	 * @param checkListScore
+	 * @param finGNGovCheckList
+	 * @param existingValue
+	 * @param criteriaType
+	 * @return ScQtCheckList
+	 */
+	private ScQtCheckList setCheckListScore(
+			List<ScQtCheckListScore> checkListScore,
+			ScQtCheckList finGNGovCheckList, ScQtCheckListValue existingValue,
+			int criteriaType) {
+		if (CollectionUtils.isNotEmpty(checkListScore)) {
+			this.getManagedBean().setScQtCheckListScore(checkListScore.get(0));
+		} else {
+			this.getManagedBean().setChecklistScoreType(QTConstants.USER_SCORE);
+			ScQtCheckListScore checklistScore = new ScQtCheckListScore();
+			checklistScore.setCriteriaType(criteriaType);
+			checklistScore.setScoreType(new BigDecimal(QTConstants.USER_SCORE));
+			setUserDetails(checklistScore);
+			this.getManagedBean().setScQtCheckListScore(checklistScore);
+
+		}
+		if (null != existingValue) {
+			finGNGovCheckList.setScQtCheckListValue(existingValue);
+		}
+		if (null == finGNGovCheckList.getScQtCheckListValue()) {
+			return createCheckListValue(finGNGovCheckList);
+		}
+		return finGNGovCheckList;
+
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * fetch checklist value and checklist score data from db.
+	 * 
+	 * @param checkList
+	 * @param scoreCriteriaType
+	 * @return ScQtCheckList
+	 */
+	private ScQtCheckList fetchCheckListValueScore(ScQtCheckList checkList,
+			int scoreCriteriaType) {
+		try {
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			specReqDTO.setScQtCheckList(checkList);
+			SpecificationResDTO specResDTO = getQtSpecSO()
+					.retrieveCheckListScoreNValue(specReqDTO);
+			ScQtCheckList checkListValue = setCheckListValue(
+					specResDTO.getScQtCheckListValue(), checkList);
+			return setCheckListScore(specResDTO.getCheckListScores(),
+					checkListValue, specResDTO.getScQtCheckListValue(),
+					scoreCriteriaType);
+
+		} catch (Exception e) {
+			Long qtId = this.getManagedBean().getQt().getQtId();
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
+					String.valueOf(qtId),
+					SLALogConstant.FETCH_CHECKLIST_VALUE_SCORE,
+					getUserIdSessionFromLoginId(), e);
+		}
+		return checkList;
+	}
+
+	// 29661 -end-
+	
+	// #39062 Start Vinod 23/09/2025
+	/**
+	 * This method is to update Estimated Amount when the amount is updated.
+	 * 
+	 * @param
+	 * 
+	 */
+	private void updateEstimatedAmount() {
+		ScQt scQt = this.getManagedBean().getQt();
+		SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+		estimatedReqDTo.setQtId(scQt.getQtId());
+
+		IQTSpecSO specSO = getSpecSO();
+		SpecificationResDTO resTO = specSO.calCulateTemplateSpecEstimations(estimatedReqDTo);
+
+		if (null != resTO && null != resTO.getTotalSpecEstimatedAmount()) {
+			scQt.setEstimatedAmount(resTO.getTotalSpecEstimatedAmount().setScale(2, QTConstants.QT_ROUNDING_MODE));
+		}
+	}
+	// #39062 End Vinod 23/09/2025
 	
 }

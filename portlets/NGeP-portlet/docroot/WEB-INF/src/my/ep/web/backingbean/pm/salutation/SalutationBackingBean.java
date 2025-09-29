@@ -344,6 +344,7 @@ public class SalutationBackingBean extends
 				/************ AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SALUTATION)) {
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SALUTATION);
+					getManagedBean().setOldPmSalutation(null);
 				}
 				/************ END AUDIT #28895_35509 *************/
 				}
