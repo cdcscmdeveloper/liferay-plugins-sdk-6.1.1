@@ -67,6 +67,29 @@ public class DpReportConst implements Serializable {
 	public static final String DP_SIMPLE_QUOTE_LIST_INVITED_SUPPLIER_RPT_VAL = "SC_068";
 	public static final String DP_LOA_RPT_VAL = "SC_069";
 	public static final String DP_LOA_CONTENT_RPT_VAL = "SC_070";
+	//26059 - start
+	public static final String DP_ITEM_EXCEED_THRESHOLD_RPT = "SC_093";
+	public static final Long PARAM_ID_SPECIAL_ITEM = 1015L;
+	public static final Long PARAM_ID_PK7 = 1014L;
+	public static final String REPORT_CODE_RPT_PK7 = "PK7W";
+	//Report Constant
+	public static final String PARAM_KEY_MINISTRY = "PMINIS";
+	public static final String PARAM_KEY_KUMPULAN_PTJ = "PFJA";
+	public static final String PARAM_KEY_PTJ = "PPTJ";
+	public static final String PARAM_KEY_CENTRAL_PANEL_CONTRACT = "PCENTRALPANELCONTRACT";
+	public static final String PARAM_KEY_CIRCULAR_NO = "PCIRCULARNO";
+	public static final String PARAM_KEY_STATUS = "PSTATUS";
+	public static final String PARAM_KEY_ITEM_CODE = "PITEMCODE";
+	public static final String PARAM_KEY_PROCUREMENT_TYPE = "PPROCUREMENTTYPE";
+	public static final String PARAM_KEY_ITEM_NAME = "PITEMNAME";
+	public static final String PARAM_KEY_GROUP = "PGROUP";
+	public static final String PARAM_KEY_RN_NO = "PREQUESTNOTENUMBER";
+	public static final String PARAM_KEY_REASON = "PREASON";
+	public static final String PARAM_KEY_FINANCIAL_YEAR = "PFINANCIALYEAR";
+	public static final String PARAM_KEY_REPORT_ID = "PREPORTID";
+	public static final String PARAM_KEY_USER_ID = "PUSER";
+	
+	//26059 - end
 	
 	public DpReportConst() {
 	}
@@ -147,5 +170,14 @@ public class DpReportConst implements Serializable {
 	public String getDpLoaContentRptVal() {
 		return DP_LOA_CONTENT_RPT_VAL;
 	}
+
+	//26059 - start
+	/**
+	 * @return the dpItemExceedThresholdRpt
+	 */
+	public String getDpItemExceedThresholdRpt() {
+		return DP_ITEM_EXCEED_THRESHOLD_RPT;
+	}
+	//26059 - end
 
 }
