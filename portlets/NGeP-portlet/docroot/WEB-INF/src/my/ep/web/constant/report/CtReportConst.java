@@ -98,5 +98,19 @@ public class CtReportConst implements Serializable {
 	public String getCtStatementOfOrderPqRptVal() {
 		return CT_STATEMENT_OF_ORDER_PQ_RPT_VAL;
 	}
-	
+	// Start - #29416
+	/**
+	 * @return the ctContractItemUsageMonitoringRptCcVal
+	 */
+	public String getCtContractItemUsageMonitoringRptCcVal() {
+		return CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_CC_VAL;
+	}
+
+	/**
+	 * @return the ctContractItemUsageMonitoringRptMcVal
+	 */
+	public String getCtContractItemUsageMonitoringRptMcVal() {
+		return CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_MC_VAL;
+	}
+	// End - #29416
 }
