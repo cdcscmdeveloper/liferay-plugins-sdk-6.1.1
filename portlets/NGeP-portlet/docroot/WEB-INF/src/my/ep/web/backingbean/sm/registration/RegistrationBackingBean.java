@@ -117,7 +117,6 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -5645,18 +5644,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		perReqDTO.setSmSupplierId(supplier.getSupplierId());
 		
 		//27915: Disciplinary Action - start - 26238
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelDABySupplierId(perReqDTO);
-		//27915: Disciplinary Action - end - 26238
 		for(SmDisciplinaryAction disc : discList){
 			getManagedBean().setWarning(disc.isWarning());
 			getManagedBean().setCancelCategory(disc.isCancelCategory());
 			getManagedBean().setSuspendRegistration(disc.isSuspendRegistration());
 			getManagedBean().setCancelRegistration(disc.isCancelRegistration());
 			getManagedBean().setBlacklistowner(disc.isBlacklistOwner());
-					
-			if(!disc.isWarning()){
-				setBlacklistownerDirectorList(personnelResDTO);
-			}
+			//26238 - 38419
+			getManagedBean().setBlacklistownerDirectorList(getPersonnelBlacklist(
+					disc.getDisciplinaryActionId()));
 			String pattern = "dd/MM/yyyy";
 			getManagedBean().setStartDate(DateUtils.dateToString(pattern, disc.getStartDate()));
 			getManagedBean().setEndDate(DateUtils.dateToString(pattern, disc.getEndDate()));
@@ -5674,23 +5670,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				|| getManagedBean().isBlacklistowner());
 	}
 	
-	private void setBlacklistownerDirectorList(PersonnelResDTO personnelResDTO){
-		if(personnelResDTO == null || personnelResDTO.getSmPersonnelList().isEmpty()){
-			return;
-		}
-		List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<>();
-		
-		for(SmPersonnel per : personnelResDTO.getSmPersonnelList()){
-			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-			if(per.isCancelRegistration() || per.isSuspendRegistration() || per.isBlacklisted()){
-				if (per.isDirector() || per.isEquityOwner()){
-					blacklistOwner.setIcNo(per.getIdentificationNo());
-				}
-				blacklistownerDirectorList.add(blacklistOwner);
-			}
-		}
-		getManagedBean().setBlacklistownerDirectorList(blacklistownerDirectorList);
-	} //26238 - end
+	//26238 - end
 	
 	//16052019 - SSM INTEGRATION CR => START
 	public void listenerChangeRole(){
