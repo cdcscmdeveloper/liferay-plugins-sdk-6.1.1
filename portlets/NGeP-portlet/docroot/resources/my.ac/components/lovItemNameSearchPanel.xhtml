@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+   	xmlns:p="http://primefaces.org/ui">
+   	
+	<h:panelGrid columns="2" id="lovCriteriaContractNo" cellpadding="5" cellspacing="0">
+		<!-- Label for mcContractNo -->
+		<p:outputLabel for="mcContractNo" value="#{lbl['lbl.ct.contract.no']}"
+			style="font-weight:bold; margin-bottom: 5px; margin-right: 10px;"
+			rendered="#{not empty ctReportBB.managedBean.contractNo}" />
+
+		<p:inputText id="mcContractNo"
+			value="#{ctReportBB.managedBean.contractNo}" readonly="true"
+			style="width: 87%; margin-left: 8px;"
+			rendered="#{not empty ctReportBB.managedBean.contractNo}" />
+
+		<!-- Label for ccContractNo -->
+		<p:outputLabel for="ccContractNo" value="#{lbl['lbl.ct.contract.no']}"
+			style="font-weight:bold; margin-bottom: 5px; margin-right: 10px;"
+			rendered="#{not empty ccContractItemMonitoringRptBB.managedBean.contractNo}" />
+
+		<p:inputText id="ccContractNo"
+			value="#{ccContractItemMonitoringRptBB.managedBean.contractNo}"
+			readonly="true" style="width: 87%; margin-left: 8px;"
+			rendered="#{not empty ccContractItemMonitoringRptBB.managedBean.contractNo}" />
+	</h:panelGrid>
+
+	<h:panelGrid columns="2" id="lovCriteriaItem" cellspacing="0">		
+		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchField}">
+			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+			<f:selectItems value="#{lovBackingBean.searchOptions}" />
+		</p:selectOneMenu>
+		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchValue}" style="margin-bottom: 5px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }" autocomplete="off"/>
+
+	</h:panelGrid>
+   	
+</ui:composition>
