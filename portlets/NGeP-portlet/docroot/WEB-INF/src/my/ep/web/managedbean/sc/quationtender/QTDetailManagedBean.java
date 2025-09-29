@@ -1833,6 +1833,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean categoryDescriptionChange;//#29732 flag to check category has change
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
+	private boolean updateCatDesc; //#29732
 	// #29732 End
 	
 	//====#31913 bug related to #25138==== start
@@ -11716,5 +11717,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
 	//#21692 - End
+	
+	//#29732
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
 
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+	//#29732
 }
