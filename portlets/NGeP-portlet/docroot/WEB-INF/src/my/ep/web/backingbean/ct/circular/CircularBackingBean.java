@@ -725,11 +725,10 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	
 	//#35506 - Start
 	/**
-	 * method to determine specific user roles for audit CT Trail
-	 * 
-	 * Only allow user with specific designated role and the request is only
-	 * 
-	 * @return true if user has either one of the describe roles
+	 * Determines if the user has a specific role for audit CT Trail access.
+	 * Only users with designated roles (Auditor General, Auditor Internal, BPK Auditor, or System Admin) are allowed.
+	 *
+	 * @return true if the user has one of the specified roles, false otherwise
 	 */
 	public boolean isAuditRoleCheck() {
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
