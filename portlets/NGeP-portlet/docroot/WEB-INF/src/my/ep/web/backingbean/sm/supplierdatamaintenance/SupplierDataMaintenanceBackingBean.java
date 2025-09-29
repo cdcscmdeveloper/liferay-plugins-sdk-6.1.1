@@ -2016,10 +2016,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		//27857: Disciplinary Action - end - 26238
 				
 		//28198: Disciplinary Action - start - 26238
-		List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disc);
-		String remark = EntityHelper.isCollectionEmpty(remarksList) ? disc.getRemark()
-				: remarksList.get(0).getRemark();
-		discipline.getSmDiscplinaryAction().setRemark(remark);
+		discipline.getSmDiscplinaryAction().setRemark(disc.getRemark()); // 39115
 		//28198: Disciplinary Action - end - 26238
 		discipline.getSmDiscplinaryAction().setStartDate(disc.getStartDate());
 		discipline.getSmDiscplinaryAction().setEndDate(disc.getEndDate());
