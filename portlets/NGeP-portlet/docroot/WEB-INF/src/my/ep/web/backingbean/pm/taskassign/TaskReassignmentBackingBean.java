@@ -8,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections; //#38680
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -152,12 +153,28 @@ public class TaskReassignmentBackingBean extends
 	
 	//[#25018] - start	
 	private static final Map<String, String> adminRolesForBulkReassignment = new HashMap<>();
-	private static final List<String> invalidRolesForBulkReassignmentLst = new ArrayList<String>();
-	private static final Map<Long, String> excludeRolesForBulkReassignment = new HashMap<Long,String>();
+	private static final List<String> invalidRolesForBulkReassignmentLst = new ArrayList<>(); //Sonarlint fixing #38680
+	private static final Map<Long, String> excludeRolesForBulkReassignment = new HashMap<>(); //Sonarlint fixing #38680
 	
 	//#38680 - Start
-	private static final List<Long> excludeStatusIds = new ArrayList<Long>();
-	private static final List<String> excludeProcessForTR = new ArrayList<String>();
+	private static final List<Long> excludeStatusIds = new ArrayList<>();
+	private static final List<String> excludeProcessForTR = Arrays.asList(
+			SCProcessNameConst.VIEW_SCORING,
+			SCProcessNameConst.UPDATE_SCORING,
+			SCProcessNameConst.VIEW_EC_EVALUATION,
+			SCProcessNameConst.UPDATE_EC_EVALUATION,
+			SCProcessNameConst.VIEW_OC_EVALUATION,
+			SCProcessNameConst.UPDATE_OC_EVALUATION,
+			SCProcessNameConst.VIEW_TEC_EVALUATION,
+			SCProcessNameConst.UPDATE_TEC_EVALUATION,
+			SCProcessNameConst.VIEW_FEC_EVALUATION,
+			SCProcessNameConst.UPDATE_FEC_EVALUATION,
+			SCProcessNameConst.VIEW_FC_SELECTION,
+			SCProcessNameConst.UPDATE_FC_SELECTION,
+			SCProcessNameConst.ENDORSE_SCORING,
+			SCProcessNameConst.SIGNOFF_SCORING);
+
+	private static final Set<String> COMMITTEE_TYPES;
 	//#38680 - End
 
 	static {		
@@ -197,9 +214,13 @@ public class TaskReassignmentBackingBean extends
 		//#38680- Start
 		excludeStatusIds.add(QTStatusConst.SE_PENDING_ENDORSMENT);
 		excludeStatusIds.add(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
 		excludeStatusIds.add(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION);
 		excludeStatusIds.add(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION);
 		excludeStatusIds.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL);
+		excludeStatusIds.add(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION);
 		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
 		excludeStatusIds.add(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING);
 		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
@@ -208,21 +229,16 @@ public class TaskReassignmentBackingBean extends
 		excludeStatusIds.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
 		excludeStatusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION);
-		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
 		excludeStatusIds.add(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION);
+		excludeStatusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION);
 
-		excludeProcessForTR.add(SCProcessNameConst.VIEW_SCORING);
-		excludeProcessForTR.add(SCProcessNameConst.UPDATE_SCORING);
-		excludeProcessForTR.add(SCProcessNameConst.VIEW_EC_EVALUATION);
-		excludeProcessForTR.add(SCProcessNameConst.UPDATE_EC_EVALUATION);
-		excludeProcessForTR.add(SCProcessNameConst.VIEW_OC_EVALUATION);
-		excludeProcessForTR.add(SCProcessNameConst.UPDATE_OC_EVALUATION);
-		excludeProcessForTR.add(SCProcessNameConst.VIEW_TEC_EVALUATION);
-		excludeProcessForTR.add(SCProcessNameConst.UPDATE_TEC_EVALUATION);
-		excludeProcessForTR.add(SCProcessNameConst.VIEW_FEC_EVALUATION);
-		excludeProcessForTR.add(SCProcessNameConst.UPDATE_FEC_EVALUATION);
-		excludeProcessForTR.add(SCProcessNameConst.VIEW_FC_SELECTION);
-		excludeProcessForTR.add(SCProcessNameConst.UPDATE_FC_SELECTION);
+		Set<String> s = new HashSet<>();
+		s.add(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+		s.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
+		s.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+		s.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+		s.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
+		COMMITTEE_TYPES = Collections.unmodifiableSet(s);
 		//#38680- End
 	}
 	//[#25018] - end
@@ -689,23 +705,24 @@ public class TaskReassignmentBackingBean extends
 					//#38680- Start
 					if (!(excludeStatusIds.contains(task.getDocStatus()
 							.longValue()) && isTaskName(task.getTaskName()))) {
-					for (String loginId : task.getAssignees()) {
-						user = PmCommonUtil.retrieveUserByLoginId(loginId);
-						
-						// Ensures only users within the selected Organization will be listed
-						if (userOrgList != null && userOrgList.size() > 0) {
-							for (PmUser orgList : userOrgList) {
-								if (orgList.getLoginId().equals(user.getLoginId())) {
-									users.add(user);
+						for (String loginId : task.getAssignees()) {
+							user = PmCommonUtil.retrieveUserByLoginId(loginId);
+
+							//Ensures only users within the selected Organization will be listed
+							if (userOrgList != null && !userOrgList.isEmpty()) {
+								for (PmUser orgList : userOrgList) {
+									if (orgList.getLoginId().equals(
+											user.getLoginId())) {
+										users.add(user);
+									}
 								}
 							}
+							log.info("USER.INFO= ["+user.getLoginId()+" "+user.getUserName()+"] "+
+									profileId+" : "+orgCode+" : "+
+									user.getRecordStatusFlg()+" : "+
+									this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
 						}
-						log.info("USER.INFO= ["+user.getLoginId()+" "+user.getUserName()+"] "+
-								profileId+" : "+orgCode+" : "+
-								user.getRecordStatusFlg()+" : "+
-								this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getRecordStatusFlg());
-					}
-				   }//#38680- End
+					}//#38680- End
 				}
 			}
 		}
@@ -1266,28 +1283,12 @@ public class TaskReassignmentBackingBean extends
 									.getWorklistVO().getWorklistItem());
 							
 							//#38680- Start
-							List<WorklistItemVO> src = resultBean.getResultList();
-							if (src != null && !src.isEmpty()) {
-							    List<WorklistItemVO> filtered = new java.util.ArrayList<WorklistItemVO>(src.size());
-							    for (WorklistItemVO w : src) {
-							        boolean exclude = (w != null
-							                && w.getDocStatus() != null
-							                && excludeStatusIds != null
-							                && excludeStatusIds.contains(w.getDocStatus().longValue())
-							                && isTaskName(w.getTaskName()));
-							        if (!exclude) filtered.add(w);
-							    }
-							    int removed = src.size() - filtered.size();
-							    resultBean.setResultList(filtered);
-
-							    int total = (responseDTO.getWorklistVO() == null) ? 0 : responseDTO.getWorklistVO().getTotal();
-							    resultBean.setTotalRecord(Math.max(0, total - removed));
-							}
+							removeChairAndMemberFromTR(resultBean, responseDTO);
 							//#38680- End
 							
 							//[#25018] - start
-							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
-									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty()
+							        && !resultBean.getResultList().isEmpty()) { //#38680 : Fixing the SonarLint issue by using isEmpty only
 								getManagedBean().setAllUserTasks(new ArrayList <WorklistItemVO>());
 								getManagedBean().setCheckAllUserTasksEnabled(true);
 								for (WorklistItemVO worklist : responseDTO.getWorklistVO().getWorklistItem()) {
@@ -4285,30 +4286,32 @@ public class TaskReassignmentBackingBean extends
 		PmUser pmUser = this.getManagedBean().getTaskAssignmentSearchBean().getUser();
 		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-		List<PmPendingRemoveTask> hasActivePendingList = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(pmUser
-				.getLoginId());
-		
-		if(hasActivePendingList != null){
-			for(PmPendingRemoveTask hasActivePending : hasActivePendingList){
-				if (hasActivePending != null) {
-					if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
-						this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
-						this.getManagedBean().setShowRemoveProcessMessageGroup(true);
-					} else {
-						this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
-						this.getManagedBean().setShowRemoveProcessMessageOther(true);
+		//#38680 - Start : Fixing potential NullPointerException for pmUser.getLoginId()
+		if (pmUser != null && pmUser.getLoginId() != null && !pmUser.getLoginId().isEmpty()) {
+			List<PmPendingRemoveTask> hasActivePendingList = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(pmUser.getLoginId());
+
+			if (hasActivePendingList != null) {
+				for (PmPendingRemoveTask hasActivePending : hasActivePendingList) {
+					if (hasActivePending != null) {
+						if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
+							this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
+							this.getManagedBean().setShowRemoveProcessMessageGroup(true);
+						} else {
+							this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
+							this.getManagedBean().setShowRemoveProcessMessageOther(true);
+						}
 					}
 				}
 			}
-		}
-		
-		if(hasActivePendingList == null || hasActivePendingList.size() == 0){
-			//no pending
-			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
-			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
-			this.getManagedBean().setShowRemoveProcessMessageGroup(false);
-			this.getManagedBean().setShowRemoveProcessMessageOther(false);
-		}
+
+			if (hasActivePendingList == null || hasActivePendingList.size() == 0) {
+				// no pending
+				this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
+				this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
+				this.getManagedBean().setShowRemoveProcessMessageGroup(false);
+				this.getManagedBean().setShowRemoveProcessMessageOther(false);
+			}
+		} //#38680 - End
 	}
 	/**
 	 * To get user id
@@ -4797,19 +4800,17 @@ public class TaskReassignmentBackingBean extends
 	 * @param taskName
 	 * @return the indicator taskName.
 	 */
-	public boolean isTaskName(String taskName) {
-		return SCProcessNameConst.VIEW_SCORING.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.UPDATE_SCORING.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.VIEW_EC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.UPDATE_EC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.VIEW_OC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.UPDATE_OC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.VIEW_TEC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.UPDATE_TEC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.VIEW_FEC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.UPDATE_FEC_EVALUATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.VIEW_FC_SELECTION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.UPDATE_FC_SELECTION.equalsIgnoreCase(taskName);
+	public static boolean isTaskName(String taskName) {
+		if (taskName == null) {
+			return false;
+		}
+		String t = taskName.trim();
+		for (String notAllowed : excludeProcessForTR) {
+			if (notAllowed.equalsIgnoreCase(t)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -4819,12 +4820,52 @@ public class TaskReassignmentBackingBean extends
 	 *            the committee type
 	 * @return the indicator committee type.
 	 */
-	public boolean isCommitteeType(String committeeType) {
-		return ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeType) ||
-				ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType) ||
-				ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(committeeType) ||
-				ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(committeeType) ||
-				ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(committeeType);
+	public static boolean isCommitteeType(String committeeType) {
+	    if (committeeType == null){
+	    	return false;
+	    }
+	    for (String t : COMMITTEE_TYPES) {
+	        if (t.equalsIgnoreCase(committeeType)){
+	        	return true;
+	        }
+	    }
+	    return false;
+	}
+
+	/**
+	 * remove task for role chairperson and member to do Task Reasgnment.
+	 * 
+	 * @param resultBean
+	 * @param responseDTO
+	 * 
+	 */
+	public void removeChairAndMemberFromTR(
+			SearchResultBean<WorklistItemVO> resultBean,
+			BpmResponseDTO responseDTO) {
+		List<WorklistItemVO> src = resultBean.getResultList();
+		if (src != null && !src.isEmpty()) {
+			List<WorklistItemVO> filtered = new java.util.ArrayList<>(
+					src.size());
+			for (WorklistItemVO w : src) {
+				boolean exclude = false;
+				Integer status = w.getDocStatus();
+				if (excludeStatusIds.contains(status.longValue())
+						&& isTaskName(w.getTaskName())) {
+					exclude = true;
+				}
+
+				if (!exclude) {
+					filtered.add(w);
+				}
+			}
+
+			int removed = src.size() - filtered.size();
+			resultBean.setResultList(filtered);
+
+			int total = (responseDTO.getWorklistVO() == null) ? 0 : responseDTO
+					.getWorklistVO().getTotal();
+			resultBean.setTotalRecord(Math.max(0, total - removed));
+		}
 	}
 	//#38680- End
 }
