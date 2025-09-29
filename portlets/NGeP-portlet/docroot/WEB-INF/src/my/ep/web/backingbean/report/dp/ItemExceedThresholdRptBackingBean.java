@@ -432,7 +432,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		}
 
 		if (getManagedBean().getProcurementType().compareTo(DpReportConst.PARAM_ID_SPECIAL_ITEM) == 0) {
-			param = ReasonCategory.JUSTIFICATION_SI.value();
+			param = DpReportConst.REPORT_CODE_RPT_SPECIAL_ITEM;
 		} else if (getManagedBean().getProcurementType().compareTo(DpReportConst.PARAM_ID_PK7) == 0) {
 			param = DpReportConst.REPORT_CODE_RPT_PK7;
 		}
