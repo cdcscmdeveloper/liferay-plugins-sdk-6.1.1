@@ -2249,6 +2249,17 @@ public class SmPersonnelBackingBean extends
 	 * @throws Exception
 	 */
 	public void save() {
+		
+		//#36718 - Start - to validate perm addr postcode since use listener.
+		getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPostcode();
+		if(getManagedBean().getBasicSmPersonnelPermanentAddress() != null){
+			SmAddress addr = getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress();
+			if(addr != null && addr.getPostcode()!= null){
+				checkPostcode(addr.getPostcode());
+			}
+		}
+		//#36718 - End
+		
 		if (getManagedBean().getBasicSmPersonnel() != null && !(getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE)) {
 			//#26050 - start
 			validatePendingTask(getManagedBean().getBasicSmPersonnel());
