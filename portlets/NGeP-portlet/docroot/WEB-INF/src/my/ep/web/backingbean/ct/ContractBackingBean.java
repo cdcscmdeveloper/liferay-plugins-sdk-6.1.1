@@ -5054,6 +5054,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	//Enhancement 15851 - End
 	
+	//#24333 - Start
 	/**
 	 * Method to check if PK7 is from DP.
 	 * 
@@ -5073,4 +5074,50 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return false;
 	}
+	
+	/**
+	 * Determines if the bond panel should be rendered based on contract
+	 * conditions.
+	 * 
+	 * @return true if the panel should be rendered, false otherwise
+	 */
+	public boolean isBondPanelRendered() {
+		if (getManagedBean().getContractVer() == null || getManagedBean().getContractVer().getStatus() == null) {
+			return false;
+		}
+
+		if (!isAlreadyAmendment() || !isContractExtendOrIsBond()) {
+			return false;
+		}
+
+		return isRenderConditionSatisfied();
+	}
+
+	/**
+	 * Checks if any condition that triggers bond panel rendering is satisfied.
+	 */
+	private boolean isRenderConditionSatisfied() {
+
+		if (getManagedBean().isViewContract()) {
+			return true;
+		}
+
+		// View contract with FA_LOA_COMPLETED status
+		boolean isFaLoaCompleted = getManagedBean().getContractVer().getStatus() != null
+				&& getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_LOA_COMPLETED;
+		if (getManagedBean().isViewContract() && isFaLoaCompleted) {
+			return true;
+		}
+
+		// Specific document types
+		String docType = getManagedBean().getContractVer().getDocType();
+		if (ParameterConst.DOCTYPE_CONTRACT_UPDATE.equals(docType)
+				|| ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT.equals(docType)) {
+			return true;
+		}
+
+		// Notification setting enabled
+		return getManagedBean().isNotificationSetting();
+	}
+	// #24333 - End
 }  
