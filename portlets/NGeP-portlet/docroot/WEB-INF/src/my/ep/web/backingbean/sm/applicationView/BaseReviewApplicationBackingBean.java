@@ -5138,7 +5138,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		DisciplinaryActionVO rem = new DisciplinaryActionVO();
 		rem.setRemarks(da.getRemark());
 		remList.add(rem);
-		// 39115 - END
 		
 		if(!active){
 			List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
@@ -5151,6 +5150,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 		}
+		// 39115 - END
 		// 28198: Disciplinary Action - end - 26238
 		return remList;
 	}
