@@ -48,7 +48,7 @@ public class SmSideMenuIconUtil {
 			String sectionType) {
 		SmApplicationUtil.checkOverLappingCategories(bean); //#31018
 		if (bean.isSupplierUser()) {
-			enableBankSectionOnly(bean);
+			SmApplicationUtil.enableBankSectionOnly(bean, null); //#26238 (39061)
 		}
 		
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
@@ -499,23 +499,6 @@ public class SmSideMenuIconUtil {
 		} */
 	}
 	
-	//27641, 27736 : Disciplinary Action - #26238 - START 
-	public static void enableBankSectionOnly(SmApplicationManagedBean bean) {
-		if(bean.getSmSupplier() != null){
-			List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
-			
-			if(activeDisc != null && activeDisc.size() > 0){
-				for(SmDisciplinaryAction disc : activeDisc){
-					if(disc.isSuspendRegistration()){
-						bean.getEditVO().setDisciplinary(true);
-					}
-				}						
-			} else {
-				bean.getEditVO().setDisciplinary(false);
-			}
-		}				
-	}
-	//27641, 27736 : Disciplinary Action - #26238 - END
 
 	public static void setAllSectionEditorVO(SmApplicationManagedBean bean,
 			boolean setAll, String page) {
