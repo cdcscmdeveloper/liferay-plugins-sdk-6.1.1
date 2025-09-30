@@ -1,0 +1,160 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<cc:interface>
+		<cc:attribute name="mBean" required="true" />
+		<cc:attribute name="bBean" required="true" />
+	</cc:interface>
+	<cc:implementation>
+		<p:dialog id="compExpViewPopup"
+			header="#{lbl['lbl.sm.comp.exp.master.popup.header.ct.qt']}"
+			widgetVar="compExpViewPopupWV" modal="true" styleClass="pop_up_top"
+			position="top" width="700px">
+			<div align="center">
+				<table>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2
+								value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /></td>
+						<td style="width: 66%"><p:selectOneRadio disabled="true"
+								id="clientType"
+								value="#{cc.attrs.mBean.selectedMaster.clientType}">
+								<f:selectItems value="#{cc.attrs.mBean.clientTypeItems}"></f:selectItems>
+							</p:selectOneRadio></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /></td>
+						<td style="width: 66%"><h:outputText
+								styleClass="outputLabel-view"
+								value="#{cc.attrs.mBean.selectedMaster.agencyName}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /></td>
+						<td style="width: 66%"><h:outputText
+								styleClass="outputLabel-view"
+								value="#{cc.attrs.mBean.selectedMaster.fileReferenceNo} #{cc.attrs.mBean.selectedMaster.fileExtensionNo}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
+						<td style="width: 66%"><h:outputText
+								styleClass="outputLabel-view"
+								value="#{cc.attrs.mBean.selectedMaster.loaNo}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /></td>
+						<td style="width: 66%"><h:outputText
+								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+								styleClass="outputLabel-view"
+								value="#{cc.attrs.mBean.selectedMaster.title}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /></td>
+						<td style="width: 66%"><h:outputText
+								styleClass="outputLabel-view"
+								value="#{cc.attrs.mBean.selectedMaster.contractValue}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
+						<td style="width: 66%"><h:outputText
+								styleClass="outputLabel-view"
+								value="#{cc.attrs.bBean.getParameterDesc(cc.attrs.mBean.selectedMaster.paymentMethod)}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /></td>
+						<td style="width: 66%"><h:outputText
+								styleClass="outputLabel-view"
+								value="#{cc.attrs.bBean.getParameterDesc(cc.attrs.mBean.selectedMaster.procumentMode)}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" />
+						</td>
+						<td style="width: 66%"><h:outputText
+								styleClass="outputLabel-view"
+								value="#{cc.attrs.mBean.selectedMaster.contractEffDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" />
+						</td>
+						<td style="width: 66%"><h:outputText
+								styleClass="outputLabel-view"
+								value="#{cc.attrs.mBean.selectedMaster.contractExpDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status']}" /></td>
+						<td style="width: 66%"><c:if
+								test="#{cc.attrs.mBean.selectedMaster.contractStatus eq ParameterConst.contractStatusInactive}">
+								<h:outputText styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.comp.exp.update.contract.status.inactive']}" />
+							</c:if> <c:if
+								test="#{cc.attrs.mBean.selectedMaster.contractStatus eq ParameterConst.contractStatusEffective}">
+								<h:outputText styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.comp.exp.update.contract.status.effective']}" />
+							</c:if> <c:if
+								test="#{cc.attrs.mBean.selectedMaster.contractStatus eq ParameterConst.contractStatusExpired}">
+								<h:outputText styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.comp.exp.update.contract.status.expired']}" />
+							</c:if> <c:if
+								test="#{cc.attrs.mBean.selectedMaster.contractStatus eq ParameterConst.contractStatusTerminated}">
+								<h:outputText styleClass="outputLabel-view"
+									value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
+							</c:if></td>
+					</tr>
+				</table>
+				<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
+					toggleable="true">
+					<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
+						value="#{cc.attrs.mBean.selectedMaster.compExpMasterCats}"
+						var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
+						<ac:paginator for="smCompExpCatCodes" />
+						<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+							<h:outputText value="#{smCompExpCatCode.categoryL1Name}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+							<h:outputText value="#{smCompExpCatCode.categoryL2Name}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+							<h:outputText value="#{smCompExpCatCode.categoryL3Name}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.sm.comp.exp.master.popup.btn.ok']}"
+						oncomplete="compExpViewPopupWV.hide()" process="@this" />
+				</div>
+			</div>
+		</p:dialog>
+	</cc:implementation>
+</ui:composition>

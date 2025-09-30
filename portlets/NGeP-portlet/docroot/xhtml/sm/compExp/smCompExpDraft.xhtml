@@ -1,0 +1,133 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{lbl['lbl.sm.comp.exp.draft.screen.name']}");
+		</script>
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<div align="left">
+			<p:commandButton action="#{smCompExpBB.proceedAfterTnC}"
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				value="#{lbl['lbl.sm.comp.exp.draft.btn.back']}" />
+		</div>
+		<p:panel header="#{lbl['lbl.sm.comp.exp.draft.header.sm']}"
+			toggleable="true">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sm.comp.exp.draft.instruction.sm']}" />
+			<p:dataTable
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				id="draftSmDataTable" lazy="true" rowIndexVar="index" rows="10"
+				value="#{smCompExpMB.draftSmDataModel}" var="draftSm">
+				<ac:paginator for="draftSmDataTable" />
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+							style="text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
+							style="text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
+							style="text-align: center !important;" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{draftSm.title}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{draftSm.contractValue}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{draftSm.contractEffDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<p:commandLink
+						action="#{smCompExpBB.redirectToDraftUpdate(draftSm)}"
+						oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+						partialSubmit="true" process="@this" update=":form">
+						<p:graphicImage value="/css/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.sm.comp.exp.draft.header.ct']}"
+			toggleable="true">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sm.comp.exp.draft.instruction.ct']}" />
+			<p:dataTable
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				id="draftCtDataTable" lazy="true" rowIndexVar="index" rows="10"
+				value="#{smCompExpMB.draftCtDataModel}" var="draftCt">
+				<ac:paginator for="draftCtDataTable" />
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+							style="text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
+							style="text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
+							style="text-align: center !important;" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{draftCt.title}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{draftCt.contractValue}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{draftCt.contractEffDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<p:commandLink
+						action="#{smCompExpBB.redirectToDraftUpdate(draftCt)}"
+						oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+						partialSubmit="true" process="@this" update=":form">
+						<p:graphicImage value="/css/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</ui:define>
+</ui:composition>
