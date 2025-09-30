@@ -71,6 +71,7 @@ public class UnitOfMeasurementBackingBean extends
 			.getLogger(UnitOfMeasurementManagedBean.class);
 	//Navigation Details
 	public static final String NAV_TO_SEARCH = "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml"; //#34445
 		
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	public static final boolean SEARCH_DEFAULT = false;
@@ -446,7 +447,7 @@ public class UnitOfMeasurementBackingBean extends
 
 		} catch (EpException e) {
 			handleException(e);
-			return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml";
+			return NAV_TO_MAINTAIN;
 		}
 		//#34445 End
 		catch (Exception e) {
