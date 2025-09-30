@@ -1173,7 +1173,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			
 			//#35500 fix issue 1 Start
-			if (approvalRequest.getApproverAction().getParameterCode()!= ParameterConst.FLAG_ACCEPT && supplierApprove){
+			if (!approvalRequest.getApproverAction().getParameterCode().equals(ParameterConst.FLAG_ACCEPT) && supplierApprove){
 				supplierApprove = false;
 			}
 			//#35500 fix issue 1 End

@@ -3024,11 +3024,12 @@ public class CreateQtBackingBean extends
 	 */
 	public void setFileNo(ScQt scQt) {
 		//#29661 start
+		if (scQt != null){
 		String fileNo = scQt.getFileNo();
 		fileNo = trimFileNo(fileNo);
-		scQt.setFileNo(fileNo);
+		scQt.setFileNo(fileNo);		
+		}
 		//#29961 end
-		
 	}
 	
 	/**
