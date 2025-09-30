@@ -72,6 +72,7 @@ public class DpReportConst implements Serializable {
 	public static final Long PARAM_ID_SPECIAL_ITEM = 1015L;
 	public static final Long PARAM_ID_PK7 = 1014L;
 	public static final String REPORT_CODE_RPT_PK7 = "PK7W";
+	public static final String REPORT_CODE_RPT_SPECIAL_ITEM = "SIT";
 	//Report Constant
 	public static final String PARAM_KEY_MINISTRY = "PMINIS";
 	public static final String PARAM_KEY_KUMPULAN_PTJ = "PFJA";

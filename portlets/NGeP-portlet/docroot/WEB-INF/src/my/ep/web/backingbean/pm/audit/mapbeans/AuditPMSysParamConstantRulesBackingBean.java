@@ -150,14 +150,14 @@ public class AuditPMSysParamConstantRulesBackingBean {
 	}
 
 	private void getExpDate(PmConfigRuleValue ruleValueOld, PmConfigRuleValue updateVal, int ruleValueOldInt) {
-		spRuleValTypeAddUpdateDeleteAuditDetail(updateVal, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID,
+		spRuleValTypeAddUpdateDeleteAuditDetail(updateVal, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_EXPDATE_FIELDLABELID,
 				ruleValueOldInt == 0 ? null : simpleDateFormat.format(ruleValueOld.getExpDate()), 
 						updateVal.getExpDate() != null ? simpleDateFormat.format(updateVal.getExpDate()) : null, AuditConst.PM_AUD_ACTION_TYPE_UPD);
 	}
 
 	private void getEffDate(PmConfigRuleValue ruleValueOld, PmConfigRuleValue updateVal) {
 		if (updateVal.getEffDate() != null && !ruleValueOld.getEffDate().equals(updateVal.getEffDate())) {
-			spRuleValTypeAddUpdateDeleteAuditDetail(updateVal, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, 
+			spRuleValTypeAddUpdateDeleteAuditDetail(updateVal, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_EFFDATE_FIELDLABELID, 
 					simpleDateFormat.format(ruleValueOld.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()), 
 					AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
@@ -174,10 +174,10 @@ public class AuditPMSysParamConstantRulesBackingBean {
 	public void processSPRulesValueTypeCreateDeleted(PmConfigRuleValue newCreatedItem, PmConfigRuleValue deletedItem) {
 		PmConfigRuleValue ruleValueType = ruleTypeNewOrDeleted(newCreatedItem, deletedItem);
 
-		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID,
+		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_EFFDATE_FIELDLABELID,
 				getEffectiveDate(newCreatedItem, null), getEffectiveDate(null, deletedItem));
 
-		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID,
+		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_EXPDATE_FIELDLABELID,
 				getExpiryDate(newCreatedItem, null), getExpiryDate(null, deletedItem));
 
 		if ((ruleValueType.getRuleDataTypeCode().matches("A|N|M|P") && ruleValueType.getRuleRangeType() != BigInteger.valueOf(2))
