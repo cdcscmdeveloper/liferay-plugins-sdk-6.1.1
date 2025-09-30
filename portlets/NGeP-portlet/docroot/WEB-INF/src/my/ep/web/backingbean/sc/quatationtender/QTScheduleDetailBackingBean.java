@@ -526,7 +526,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 				modifiedDoaList.remove(contactPerson);
 				modifiedDoaList.put(contactPerson, originalDOA);
 			} else {
-				modifiedDoaList.put(contactPerson, originalDOACP.getUser());
+				modifiedDoaList.put(contactPerson, originalDOA);
 			}
 		}
 		this.getManagedBean().setNewDoaList(newDoaList);
