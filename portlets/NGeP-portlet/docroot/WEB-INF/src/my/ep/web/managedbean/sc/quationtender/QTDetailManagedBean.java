@@ -1829,10 +1829,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String hisCatCode;
 	private List<PmRemarkCategory> historyList;
 	private String catCodeList;
-	private boolean currentInSpecMaint;//#29732 first time spec maint
-	private boolean categoryDescriptionChange;//#29732 flag to check category has change
+	private boolean currentInSpecMaint; // first time spec maint
+	private boolean categoryDescriptionChange; // flag to check category has change
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
+	private boolean updateCatDesc;
 	// #29732 End
 	
 	//====#31913 bug related to #25138==== start
@@ -11717,4 +11718,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 
+	// #29732 -start-
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
+
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+	// #29732 -end-
 }

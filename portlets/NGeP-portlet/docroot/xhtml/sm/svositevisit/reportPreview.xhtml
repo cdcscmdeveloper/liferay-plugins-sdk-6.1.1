@@ -4,24 +4,33 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:param name="viewFlag" value="true" />
 	
-	<!-- #12483 - START -->
-	<p:dialog widgetVar="submissionConfirmDlg" id="submissionConfirmDlg" modal="true" height="100" width="500">
+	<!-- #12483 - START, #34400 -->
+	<p:dialog widgetVar="submissionConfirmDlg" id="submissionConfirmDlg" modal="true" height="100" width="500"
+		header="#{lbl['lbl.btn.dialog.cofirm.header']}">
    			 #{lbl['lbl.sm.rptpreview.want.proceed/download.qmark']}	
    			<div align="right">
    			<!-- #32963 - start -->
 			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" onclick="submissionConfirmDlg.hide()">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(null)}" />
-				</p:commandButton>
-			<!-- #32963 - end -->	
-			<p:commandButton value="#{lbl['lbl.btn.proceed']}" oncomplete="submissionConfirmDlg.hide()"
-				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
+			</p:commandButton>
+			<!-- #32963 - end -->
+			<!-- #34400 -->
+			<p:commandButton value="#{lbl['lbl.btn.proceed']}" onclick="submissionConfirmDlg.hide(); confirmProceedDlg.show();"/>
 		</div>
 	</p:dialog>
 	<!-- #12483 - END -->
+	<ac:confirmationPopupSM id="confirmProceedDlg" widget="confirmProceedDlg"
+		okParam="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"
+		hasParam="true"
+		content="#{lbl['lbl.sm.confirm.sitevisit']}" 
+		update="@([id$=Msg])"
+		loadingWidget="blockWidget" />
+	<!-- #34400 - end -->
 	
 	<p:dialog widgetVar="attachmentDeleteDlg" id="attachmentDeleteDlg" modal="true" height="100" width="500">
    			 #{svoSiteVisitBackingBean.managedBean.attachmentDeleteMsg}
