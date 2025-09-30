@@ -12,7 +12,9 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
+import java.text.DateFormat; //#24333
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols; //24333
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale; //24333
 import java.util.Map;
 import java.util.Set;
 
@@ -145,6 +148,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.ct.CtAddressUtil;
+import my.ep.util.shared.PerformanceBondUtil;//24333
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
@@ -1554,18 +1558,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
 			}
 			
-			// 24333 -Start
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa() != null) {
-				ScLoa ctloa = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa();
-				if (ctloa.getGstAmt() == null) {
-					ctloa.setGstAmt(BigDecimal.ZERO);
-				}
-				if (ctloa.getSstAmt() == null) {
-					ctloa.setSstAmt(BigDecimal.ZERO);
-				}
-				ctBackingBean.getManagedBean().setOriginalOverallAmount(ctloa.getLoaAmt().add(ctloa.getGstAmt().add(ctloa.getSstAmt())));
+			// 24333 - Start
+			List<CtContractAmount> ctAmounts = ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts();
+			BigDecimal overall = BigDecimal.ZERO;
+			BigDecimal totalBond = BigDecimal.ZERO;
+			BigDecimal periodBond = BigDecimal.ZERO;
 
+			if (ctAmounts != null && !ctAmounts.isEmpty()) {
+			    CtContractAmount selectedAmount = getSelectedContractAmount(ctAmounts);
+			    if (selectedAmount != null) {
+			        overall = selectedAmount.getOverallCtAmtPbond() != null ? selectedAmount.getOverallCtAmtPbond() : BigDecimal.ZERO;
+			        totalBond = selectedAmount.getTotalBondAmt() != null ? selectedAmount.getTotalBondAmt() : BigDecimal.ZERO;
+			        periodBond = new BigDecimal(selectedAmount.getContractPeriodBond());
+			    }
 			}
+
+			ctBackingBean.getManagedBean().setOriginalOverallAmount(overall);
+			ctBackingBean.getManagedBean().setTotalBondAmt(totalBond);
+			ctBackingBean.getManagedBean().setBondPercentage(PerformanceBondUtil.calculatePerformanceBondPercentage(overall, periodBond));
 			// 24333 - End
 
 			// Amendment process
@@ -3441,8 +3451,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
 						|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) //24333
 						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
-						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+						&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))
+								|| ctBackingBean.isPk7FromDp())) { //24333
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 				}
 				if (getManagedBean().isDecisionPbQcLOA() && !ctBackingBean.getManagedBean().isViewSCL()) { //#15851
@@ -3455,8 +3466,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//24333 - Start
 			if (!getManagedBean().isPrepareLOA() && ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
+					&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
+							|| ctBackingBean.isPk7FromDp())){ //24333
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithBond);
 			}
 			//24333 - End
@@ -3475,8 +3487,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
 			if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() //#24333
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+					&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))
+							|| ctBackingBean.isPk7FromDp())) { //24333
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 			}
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
@@ -3744,8 +3757,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public String calculateNewContractPeriod(boolean isCalculateNew) {
 		if (isCalculateNew) {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod()
-					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
+			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().intValue()
+					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()); //#24333
 		} else {
 			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract()
 					.getLatestContractVer().getCtContractValue().getContractPeriod());
@@ -3754,43 +3767,45 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	//#24333 - Start
 	/**
-	 * The method used to retrieve the bond amount
-	 * in text format.
-	 * 
-	 * @return  bond amount in text format.
+	 * Retrieves the bond amount in text format (in words).
+	 * Returns "N/A" if bond amount is not available or zero.
+	 *
+	 * @return bond amount in words, or "N/A" if null or zero
 	 */
 	public String getBondAmountInText() {
-		String lang = new FacesScopes().getUserLocale().getLanguage();
-		
-		 if (ctBackingBean.getManagedBean().getContractVer() == null ||
-			        ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null ||
-			        ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null ||
-			        ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
-			        return "";
-			    }
+		FacesScopes scopes = new FacesScopes();
+	    Locale locale = scopes.getUserLocale();
+	    String lang = locale.getLanguage();
 
-			    BigDecimal bondAmount = ctBackingBean
-			        .getManagedBean().getContractVer()
-			        .getCtAmendment().getAmendmentLoa().getBondAmt();
+	    String na = ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
-			    if (bondAmount.compareTo(BigDecimal.ZERO) == 0) {
-			        return "";
-			    }
+	    // Traverse the object chain with null checks
+	    CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
+	    if (contractVer == null || 
+	        contractVer.getCtAmendment() == null || 
+	        contractVer.getCtAmendment().getAmendmentLoa() == null || 
+	        contractVer.getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
+	        return na;
+	    }
 
-			    // Format the amount to two decimal places
-			    DecimalFormat decimalFormat = new DecimalFormat("#.00");
-			    String formattedAmount = decimalFormat.format(bondAmount);
+	    BigDecimal bondAmt = contractVer.getCtAmendment().getAmendmentLoa().getBondAmt();
 
-			    // Convert to words based on language
-			    if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
-			        return NumberWordUtilEn.convert(formattedAmount);
-			    }
+	    if (BigDecimal.ZERO.compareTo(bondAmt) == 0) {
+	        return na;
+	    }
 
-			    if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
-			        return NumberWordUtil.convert(formattedAmount);
-			    }
+	    // Format to 2 decimal places
+	    DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(locale));
+	    String formatted = df.format(bondAmt);
 
-			    return "";
+	    // Convert based on language
+	    if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
+	        return NumberWordUtilEn.convert(formatted);
+	    } else if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
+	        return NumberWordUtil.convert(formatted);
+	    }
+
+	    return na;
 	}
 	//#24333 - End
 
@@ -8390,4 +8405,41 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	//#38823 end
+	
+	//#24333 - Start
+	/**
+	 * Determines the primary contract amount to use.
+	 * <p>
+	 * The method returns the first active contract amount found in the list.
+	 * If no active contract is found, it defaults to the last one in the list.
+	 * </p>
+	 *
+	 * @param ctAmounts The list of contract amounts. Must not be null or empty.
+	 * @return The selected {@link CtContractAmount}.
+	 */
+	private CtContractAmount getSelectedContractAmount(List<CtContractAmount> ctAmounts) {
+	    // Find the first active contract amount
+	    for (CtContractAmount ctAmount : ctAmounts) {
+	        if (isContractActive(ctAmount, new Date())) {
+	            return ctAmount;
+	        }
+	    }
+	    // If no active contract is found, return the last one
+	    return ctAmounts.get(ctAmounts.size() - 1);
+	}
+	
+	/**
+	 * Checks if a contract is active on a current date.
+	 *
+	 * @param contractAmt The contract to validate.
+	 * @param now The date to check against.
+	 * @return {@code true} if active; {@code false} otherwise.
+	 */
+	private boolean isContractActive(CtContractAmount contractAmt, Date now) {
+	    if (contractAmt == null || contractAmt.getEffDate() == null || contractAmt.getExpDate() == null) {
+	        return false;
+	    }
+	    return !contractAmt.getEffDate().after(now) && !contractAmt.getExpDate().before(now);
+	}
+	//#24333 - End
 }

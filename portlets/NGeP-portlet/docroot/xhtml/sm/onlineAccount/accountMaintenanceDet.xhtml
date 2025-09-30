@@ -51,13 +51,20 @@
 		<h:outputText rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}" value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
 					
 			 <div align="right">
-			 <!--#12492-START-->
-				<p:commandButton value="#{lbl['lbl.btn.declare']}" actionListener="#{registrationBackingBean.CheckBankAccount('fromNext')}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])" 
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+			 <!--#12492-START, #34400 -->
+				<p:commandButton value="#{lbl['lbl.btn.declare']}" actionListener="#{registrationBackingBean.CheckBankAccount('fromNext')}" 
+					oncomplete="if (!args.validationFailed) confirmDlg.show()" >
 					<f:param name="disableValidation" value="true" />
 				</p:commandButton>
 			 <!--#12492-END-->
 			</div>
+			<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
+				bean="#{registrationBackingBean}"
+				okAction="updateBasicSupplier"
+				content="#{lbl['lbl.sm.confirm.basic.maintenance']}" 
+				update="@([id$=Msg])"
+				loadingWidget="blockWidget" />
+			<!-- #34400 - end -->
 		</p:outputPanel>
 		
 		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />

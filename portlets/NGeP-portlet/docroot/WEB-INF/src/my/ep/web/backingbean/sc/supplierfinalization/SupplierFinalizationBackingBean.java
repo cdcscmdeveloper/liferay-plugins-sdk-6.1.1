@@ -2890,12 +2890,24 @@ public class SupplierFinalizationBackingBean extends
 					committeeSO = null;
 				}
 				
-				if (!isCurrentCommitteeAuthorisedToSubmit) {
-					String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
-															committeeType);
-					
-					throw new EpException(MessageConst.ERROR_760394, new String[] { 
-											committeeName, String.valueOf(totalIntendedPrice.intValue()) });
+			
+				// 39077 -start-
+				boolean isBriefMsgShow = this.getManagedBean()
+						.isReviseBriefMsg();
+				boolean isMessageShow = !isCurrentCommitteeAuthorisedToSubmit
+						&& !isBriefMsgShow;
+				if (isMessageShow) {// #30324 - End
+					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
+					// 39077 -end-
+
+					String committeeName = getParameterDesc(
+							ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+
+					throw new EpException(MessageConst.ERROR_760394,
+							new String[] {
+									committeeName,
+									String.valueOf(totalIntendedPrice
+											.intValue()) });
 				}
 			}
 			//#26169 - START
@@ -10215,11 +10227,23 @@ public class SupplierFinalizationBackingBean extends
 					committeeSO = null;
 				}
 
-				if (!isCurrentCommitteeAuthorisedToSubmit) {
-					String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+				// 39077 -start-
+				boolean isBriefMsgShow = this.getManagedBean()
+						.isReviseBriefMsg();
+				boolean isMessageShow = !isCurrentCommitteeAuthorisedToSubmit
+						&& !isBriefMsgShow;
+				if (isMessageShow) {// #30324 - End
+					this.getManagedBean().setReviseBriefMsg(Boolean.TRUE);
+					// 39077 -end-
+					
+					String committeeName = getParameterDesc(
+							ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
 
-					throw new EpException(MessageConst.ERROR_760394, new String[] { committeeName,
-							String.valueOf(totalIntendedPrice.intValue()) });
+					throw new EpException(MessageConst.ERROR_760394,
+							new String[] {
+									committeeName,
+									String.valueOf(totalIntendedPrice
+											.intValue()) });
 				}
 			}
 
@@ -11071,9 +11095,11 @@ public class SupplierFinalizationBackingBean extends
 						&& null != meeting.getMeetingStatus().getStatusId()
 						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
 						&& meeting.getMeetingDate().before(proposalValidityEndDate);
-				if ((this.getManagedBean().isSecretaryUser() && meetingStatusAndDate && meeting.getRecordStatusFlg()
-						.equals(DbValueConst.RECORD_STATUS_ACTIVE)) || meetingStatusAndDate) {
+				boolean meetingStatusAndRecordStatusActive = meeting.getRecordStatusFlg()
+						.equals(DbValueConst.RECORD_STATUS_ACTIVE) && ((this.getManagedBean().isSecretaryUser() && meetingStatusAndDate) || meetingStatusAndDate);
+				if (meetingStatusAndRecordStatusActive) {
 					lessThanValidityEndDate = true;
+					break;
 				} else {
 					lessThanValidityEndDate = false;
 				}

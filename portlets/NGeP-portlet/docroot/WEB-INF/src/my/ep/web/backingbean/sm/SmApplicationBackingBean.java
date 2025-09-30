@@ -10556,8 +10556,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 		RequestContext.getCurrentInstance().update(updateIds);
-		return submitPOorApproverReviewToBPM(decision);
-
+		
+		//#34400
+		return "";
 	}
 
 	/**

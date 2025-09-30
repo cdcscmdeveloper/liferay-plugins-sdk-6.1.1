@@ -2232,17 +2232,22 @@ return scQt;
 			proposalReqDTO.setQtId(qt.getQtId());
 			boolean isAllAccepted = false;
 			int totalAccepted = proposalSO.getTotalQtValidityAcceptedSuppliers(proposalReqDTO);
+			int totalSupplierNotRespondEPV = proposalSO.getTotalSuppliersNotRespondEPV(proposalReqDTO);//#21692
 			dataType.getSupplierList();
-			int totalSuppliers = dataType.getSupplierList().size();
+			//#21692 - Start
+			int supplierCurrentlyRespondEPV = 1;
+			int allSupplierRespond = 0;
+			isAllAccepted = totalSupplierNotRespondEPV - supplierCurrentlyRespondEPV == allSupplierRespond
+					&& (totalAccepted != 0 || BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome));
+			if (isAllAccepted) {
+				approveApprovalRequests(qt, approvalRequests, true);
+			}
+			//#21692 - End
 			// Generate document if last supplier accept.
 			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
 				// P1 - update proposal validity period if all suppliers approved.
 				// P2 - update proposal validity period if one of suppliers approved.
 				
-				isAllAccepted = totalSuppliers > 0 && totalSuppliers == totalAccepted+1;
-				if (isAllAccepted) {
-					approveApprovalRequests(qt, approvalRequests, true);
-				}
 				if (null != digiSign) {
 					ProposalReqDTO proposalReqDto=new ProposalReqDTO();
 					proposalReqDto.setQtId(qt.getQtId());
@@ -4149,12 +4154,8 @@ return scQt;
 				if (approvalRequest.getDecisionType() == null) {
 					approvalRequest.setDecisionType(pmParameter);
 				}
-
-				ScQt scQt = getManagedBean().getQt();
-				if (scQt.getMofDate() != null) {
-					if (approvalRequest.getDecisionCertPBM() == null) {
-						approvalRequest.setDecisionCertPBM(pmParameter);
-					}
+				if (approvalRequest.getDecisionCertPBM() == null) {
+					approvalRequest.setDecisionCertPBM(pmParameter);
 				}
 			}
 		}
