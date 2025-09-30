@@ -89,35 +89,35 @@
 		
 		<p:dialog id="ok#{cc.attrs.aiDlg}" widgetVar="ok#{cc.attrs.aiDlg}" modal="true" styleClass="confirm-ui-dialog"
 			resizable="false" closable="false"
-			width="#{cc.attrs.docType eq 'EPF' ? 600 : 400}" 
-			height="#{cc.attrs.docType eq 'EPF' ? 500 : 100}" 
+			width="#{cc.attrs.docType eq 'epf' ? 600 : 400}" 
+			height="#{cc.attrs.docType eq 'epf' ? 500 : 100}" 
 			header="#{lbl['lbl.sm.projDtls.success']}">
 			<table width="100%">
 				<tr>
 					<td align="left" style="white-space: normal; word-wrap: break-word !important;">
 					<p:outputLabel value="AI has successfully extracted the data. Click 'OK' to accept and populate into the fields, or click 'No' to cancel." 
 						escape="false" style="padding-left:0px"
-						rendered="#{cc.attrs.docType != 'EPF'}"/>
+						rendered="#{cc.attrs.docType != 'epf'}"/>
 					<p:outputLabel value="AI has successfully extracted the data. Please select the personnel and click 'OK' to accept and populate into the fields, or click 'No' to cancel." 
 						escape="false" style="padding-left:0px"
-						rendered="#{cc.attrs.docType eq 'EPF'}"/>
+						rendered="#{cc.attrs.docType eq 'epf'}"/>
 					</td>
 				</tr>
 			</table>
-			<p:outputPanel rendered="#{cc.attrs.docType eq 'EPF'}" style="width:100%;height:300px;overflow:auto;" >
+			<p:outputPanel rendered="#{cc.attrs.docType eq 'epf'}" style="width:100%;height:300px;overflow:auto;" >
 				<p:spacer height="1" />
 				<p:dataTable id="dt#{cc.attrs.aiDlg}" var="emp" value="#{ai.getEmployees()}" rowKey="#{emp}"
 					selection="#{ai.selectedEmployees}" >
 					<ac:paginator for="dt#{cc.attrs.aiDlg}" />
 					<p:column selectionMode="multiple" style="width:2%" />
 					<p:column headerText="#{lbl['lbl.sm.person.name']}">
-						<h:outputText value="#{emp.nama}" />
+						<h:outputText value="#{emp.employeeName}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.person.icNo']}">
-						<h:outputText value="#{emp.noPengenalanDiri}" />
+						<h:outputText value="#{emp.nricNumber}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.person.epfNo']}">
-						<h:outputText value="#{emp.noAhliKWSP}" />
+						<h:outputText value="#{emp.kwspNumber}" />
 					</p:column>
 				</p:dataTable>
 			</p:outputPanel>
