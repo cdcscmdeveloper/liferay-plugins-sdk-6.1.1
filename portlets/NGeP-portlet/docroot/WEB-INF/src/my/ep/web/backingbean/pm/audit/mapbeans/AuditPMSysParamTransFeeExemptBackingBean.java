@@ -212,7 +212,7 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	}
 
 	private void getExpDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal, int pmfeeMainInt) {
-		spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID, 
+		spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAM_SPFEE_EXPDATE_FIELDLABELID, 
 				pmfeeMainInt == 0 ? null : simpleDateFormat.format(pmfeeMain.getExpDate()), 
 						updateVal.getExpDate() != null ? simpleDateFormat.format(updateVal.getExpDate()) : null,
 				AuditConst.PM_AUD_ACTION_TYPE_UPD);
@@ -220,7 +220,7 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 
 	private void getEffDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
 		if (updateVal.getEffDate() != null && !pmfeeMain.getEffDate().equals(updateVal.getEffDate())) {
-			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, 
+			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAM_SPFEE_EFFDATE_FIELDLABELID, 
 					simpleDateFormat.format(pmfeeMain.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 	}
@@ -234,10 +234,10 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	 */
 	public void processSPTFeeCreateDeleted(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
 		PmFeeExemption pmFeeExemption = newCreatedItem != null ? newCreatedItem : deletedItem;
-		handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID,
+		handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_EFFDATE_FIELDLABELID,
 				getEffectiveDate(newCreatedItem, null), getEffectiveDate(null, deletedItem));
 
-		handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID,
+		handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_EXPDATE_FIELDLABELID,
 				getExpiryDate(newCreatedItem, null), getExpiryDate(null, deletedItem));
 
 		if (feeExemptionOrgType != null) {
