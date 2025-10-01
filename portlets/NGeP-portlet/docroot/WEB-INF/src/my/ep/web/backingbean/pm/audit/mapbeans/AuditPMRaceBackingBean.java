@@ -70,6 +70,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 		}
 
+		managedBeans.setOldPmRace(null);
 		auditPMReqDTO.setObjList(objList);
 		return auditPMReqDTO;
 	}
