@@ -186,7 +186,11 @@
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{biddingBB.managedBean.bidPriceItemsDisqualified}"
 					var="bidPriceItem" rendered="#{isDisqualified}">
-					<ac:paginator for="rankingList"></ac:paginator>
+					<ac:paginator for="rankingListDisqualified"></ac:paginator>
+					<p:column headerText="#{lbl['lbl.sc.ranking']}"
+						style=" align : center; width : 14%">
+						<h:outputText id="itemRankVBI" value="#{bidPriceItem.ranking}" />
+					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 						style="align : center; width : 14%">
 						<h:outputText id="supplierCodeVBI"
