@@ -298,6 +298,9 @@ public class SupplierManagementConst {
 	public static final String MOL_SUCCESS = my.ep.constant.sm.SupplierManagementConst.MOL_SUCCESS;
 	public static final String MOL_FAIL = my.ep.constant.sm.SupplierManagementConst.MOL_FAIL;
 	public static final String MOL_PENDING = my.ep.constant.sm.SupplierManagementConst.MOL_PENDING;
+	public static final String PAYMENT_GATEWAY_SUCCESS = "SUCC";
+	public static final String PAYMENT_GATEWAY_FAIL = "FAIL";
+	public static final String PAYMENT_GATEWAY_PENDING = "PEND";
 	public static final String PAYMENT_INVALID_RES = my.ep.constant.sm.SupplierManagementConst.PAYMENT_INVALID_RES;
 
 	public static final String PM_STATUS_PAYMENT = "SPY";
