@@ -110,7 +110,7 @@
 						<p:commandLink action="#{smCompExpBB.redirectToUpdateMaster(masterFed)}"
 							oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 							partialSubmit="true" process="@this" update=":form"
-							rendered="#{masterFed.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}">
+							rendered="#{masterFed.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and masterFed.recordStatus}">
 							<p:graphicImage id="actionEditId"
 								value="/css/images/design/edit.png" />
 							<p:tooltip for="actionEditId"

@@ -191,7 +191,7 @@
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-right:2px;" />
 						</p:commandLink> <p:outputPanel id="smCompExpSuppDocListPanelId">
-							<ui:repeat value="#{smCompExpMB.smCompExpDocList}" var="doc">
+							<ui:repeat value="#{smCompExpMB.selectedMaster.compExpMasterDocs}" var="doc">
 								<br />
 								<h:commandLink id="file" ajax="false"
 									value="#{smCompExpBB.getShortFileName(doc.fileName)}">
