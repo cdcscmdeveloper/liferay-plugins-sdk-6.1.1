@@ -1041,30 +1041,6 @@ public class BusinessNatureBackingBean extends
 				/************ AUDIT END #28895-35509 *************/
 				if (this.getManagedBean().isBrandNew()) {
 					returnUrl = "/xhtml/pm/businessnature/businessNatureMain.xhtml";
-					// if (Integer.valueOf(this.getManagedBean()
-					// .getPmBusinessNature().getBusinessLevel()) > 10) {
-					// BusinessNatureReqDTO businessNatureReqDTO = new
-					// BusinessNatureReqDTO();
-					// businessNatureReqDTO.setBusinessLevel(this
-					// .getManagedBean().getPmBusinessNature()
-					// .getParentBusinessNature().getBusinessLevel());
-					// businessNatureReqDTO.setBusinessNatureId(this
-					// .getManagedBean().getPmBusinessNature()
-					// .getParentBusinessNature()
-					// .getBusinessNatureId());
-					// BusinessNatureResDTO businessNatureResDTO =
-					// businessNatureSO
-					// .retrieveBusinessNatureFetchAll(businessNatureReqDTO);
-					//
-					// businessNatureResDTO
-					// .getBusinessNature()
-					// .getChildBusinessNatures()
-					// .add(this.getManagedBean()
-					// .getPmBusinessNature());
-					// reqDTO.setBusinessNature(businessNatureResDTO
-					// .getBusinessNature());
-					// businessNatureSO.saveBusinessNatureDtls(reqDTO);
-					// }
 
 					FacesContext
 							.getCurrentInstance()
