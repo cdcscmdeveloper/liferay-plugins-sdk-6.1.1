@@ -1,0 +1,188 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:param name="chkDefinationKey"
+		value="#{supplierProposalDetailBackingBean.managedBean.checkListDefintionKey}"></ui:param>
+	<ui:param name="scQt"
+		value="#{supplierProposalDetailBackingBean.managedBean.qt}"></ui:param>
+	<ui:param name="isProposal"
+		value="#{QTStatusConst.QT_PROPOSAL_PREPARATION eq supplierProposalDetailBackingBean.managedBean.qt.qtStatus.statusId}"></ui:param>
+	<ui:param name="isTerminated" value="false"></ui:param>
+
+	<p:panel id="finGovCmpYear" style="width:100% !important;"
+		toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.federal.gov']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.spec.fin.comp.exp.fed.gov.tooltip']}" />
+		</f:facet>
+		<p:spacer height="5px;"></p:spacer>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.supplier.proposal.comp.exp.instruction']}"
+			escape="false" />
+		<p:spacer height="5px;"></p:spacer>
+		<table>
+			<tr>
+				<td><p:outputLabel style="font-weight: bold;"
+						value="#{supplierProposalDetailBackingBean.managedBean.year}" />
+					<p:outputLabel style="font-weight: bold;"
+						value="#{lbl['lbl.sc.spec.fin.comp.exp.since.year']} " /></td>
+			</tr>
+		</table>
+
+	</p:panel>
+
+	<p:spacer height="5px;"></p:spacer>
+	<p:panel id="cmpExpRelated" toggleable="true"
+		style="width:100% !important;">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.proc.related']}" />
+		</f:facet>
+		<p:spacer height="3px;"></p:spacer>
+		<div align="left" class="header-info header-spacing">
+			<table border="0" cellspacing="0" cellpadding="0" style="width: 100%">
+				<tr>
+
+					<td class="header-info-text" style="text-transform: uppercase;"><h:outputLabel
+							value="#{lbl['lbl.sc.fin.comp.exp.proc.related.table.header']}" />
+					</td>
+				</tr>
+			</table>
+		</div>
+		<p:spacer height="2px;"></p:spacer>
+		<c:if test="#{isProposal}">
+			<ui:param name="cmpExpGovNGov" value="proposalGovStatusRelated" />
+			<ui:param name="cmpExpPrcNonPrc" value="proposalGovRelated" />
+			<ui:param name="cmpContractStatus"
+				value="#{supplierProposalDetailBackingBean.managedBean.contractStatusvalueProcRelated}" />
+			<ui:param name="cmpExpProcNonProcList"
+				value="#{supplierProposalDetailBackingBean.managedBean.companyExpProcRelatedList}" />
+			<ui:include
+				src="/xhtml/sc/supplierproposal/financialproposal/supCompExpRelated.xhtml" />
+		</c:if>
+		<c:if test="#{!isProposal}">
+			<ui:param name="cmpExpContSts" value="proposalGovProcStatusRelated" />
+			<ui:param name="cmpContractStatus"
+				value="#{supplierProposalDetailBackingBean.managedBean.contractStatusvalueProcRelated}" />
+			<ui:param name="docDefinationKey"
+				value="#{supplierProposalDetailBackingBean.managedBean.checkListDefintionKey}"></ui:param>
+			<ui:include
+				src="/xhtml/sc/evaluation/evaluationStage/financial/evaCompExpContractStatusValue.xhtml" />
+			<p:spacer height="5px"></p:spacer>
+			<ui:param name="cmpExpPrcNonPrc" value="proposalGovProcRelated" />
+			<ui:param name="cmpExpProcNonProcList"
+				value="#{supplierProposalDetailBackingBean.managedBean.companyExpProcRelatedPagingModel}" />
+			<ui:include
+				src="/xhtml/sc/evaluation/evaluationStage/financial/evaCompExpRelated.xhtml" />
+		</c:if>
+		<p:spacer height="10px"></p:spacer>
+		<table>
+			<tr>
+				<td style="width: 150px;"><p:outputLabel
+						value="#{lbl['lbl.sc.fin.comp.exp.tot.no.of.contracts']}" /></td>
+				<td><p:inputText readonly="true" style="width:auto;"
+						value="#{supplierProposalDetailBackingBean.managedBean.companyExpProcRelatedContracts}"></p:inputText>
+
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 230px;"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.total.contract.amount']}" /></td>
+				<td><p:inputText readonly="true" style="width:auto;"
+						value="#{supplierProposalDetailBackingBean.managedBean.companyExpProcRelatedValue}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT )}"
+							maxIntegerDigits="14" />
+					</p:inputText></td>
+			</tr>
+
+		</table>
+
+	</p:panel>
+
+	<p:spacer height="10px;"></p:spacer>
+	<p:panel id="cmpExpNonPrc" toggleable="true"
+		style="width:100% !important;">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.non.prc.related']}" />
+		</f:facet>
+		<p:spacer height="3px;"></p:spacer>
+		<div align="left" class="header-info header-spacing">
+			<table border="0" cellspacing="0" cellpadding="0" style="width: 100%">
+				<tr>
+
+					<td class="header-info-text" style="text-transform: uppercase;"><h:outputLabel
+							value="#{lbl['lbl.sc.fin.comp.exp.proc.related.table.header']}" />
+					</td>
+				</tr>
+			</table>
+		</div>
+
+
+		<p:spacer height="2px;"></p:spacer>
+		<c:if test="#{isProposal}">
+			<ui:param name="cmpExpGovNGov" value="proposalGovStatusNotRelated" />
+			<ui:param name="cmpExpPrcNonPrc" value="proposalGovNotRelated" />
+			<ui:param name="cmpContractStatus"
+				value="#{supplierProposalDetailBackingBean.managedBean.contractStatusvalueNonProcRelated}" />
+			<ui:param name="cmpExpProcNonProcList"
+				value="#{supplierProposalDetailBackingBean.managedBean.companyExpNonProcRelatedList}" />
+			<ui:include
+				src="/xhtml/sc/supplierproposal/financialproposal/supCompExpRelated.xhtml" />
+		</c:if>
+		<c:if test="#{!isProposal}">
+			<ui:param name="cmpExpContSts"
+				value="proposalGovNonProcStatusRelated" />
+			<ui:param name="cmpContractStatus"
+				value="#{supplierProposalDetailBackingBean.managedBean.contractStatusvalueNonProcRelated}" />
+			<ui:param name="docDefinationKey"
+				value="#{supplierProposalDetailBackingBean.managedBean.checkListDefintionKey}"></ui:param>
+			<ui:include
+				src="/xhtml/sc/evaluation/evaluationStage/financial/evaCompExpContractStatusValue.xhtml" />
+			<p:spacer height="5px"></p:spacer>
+			<ui:param name="cmpExpPrcNonPrc" value="proposalGovNonProcRelated" />
+			<ui:param name="cmpExpProcNonProcList"
+				value="#{supplierProposalDetailBackingBean.managedBean.companyExpNonProcRelatedPagingModel}" />
+			<ui:include
+				src="/xhtml/sc/evaluation/evaluationStage/financial/evaCompExpRelated.xhtml" />
+		</c:if>
+
+		<p:spacer height="10px"></p:spacer>
+		<table>
+			<tr>
+				<td style="width: 150px;"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.total.no.contracts']}" /></td>
+				<td><p:inputText readonly="true" style="width:auto;"
+						value="#{supplierProposalDetailBackingBean.managedBean.companyExpNonProcRelatedContracts}"></p:inputText>
+
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 230px;"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.total.contract.amount']}" /></td>
+				<td><p:inputText readonly="true" style="width:auto;"
+						value="#{supplierProposalDetailBackingBean.managedBean.companyExpNonProcRelatedValue}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT )}"
+							maxIntegerDigits="14" />
+					</p:inputText></td>
+			</tr>
+
+		</table>
+
+	</p:panel>
+
+	<c:if
+		test="#{supplierProposalDetailBackingBean.managedBean.closeCompanyExpReminderPopUp eq SourcingConstants.OPEN_REMINDER_POPUP_VALUE}">
+		<p:poll interval="1"
+			listener="#{supplierProposalDetailBackingBean.showCompanyExpPopUp}"
+			widgetVar="stopPoller" />
+	</c:if>
+	<ui:include
+		src="/xhtml/sc/supplierproposal/financialproposal/supCompExpReminderPopUp.xhtml" />
+</ui:composition>

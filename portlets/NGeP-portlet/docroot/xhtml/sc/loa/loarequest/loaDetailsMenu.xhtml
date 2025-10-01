@@ -292,14 +292,27 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			 </td>
 			<td colspan="3">
-				<p:inputText disabled="#{isDocTypeQuotation || !isEditableStatus || lOADetailBackingBean.managedBean.readOnly}"
-					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="29" maxlength="50"/>
+			<!-- #29661 start -->
+				<p:inputText id="fileNo" disabled="#{isDocTypeQuotation || !isEditableStatus || lOADetailBackingBean.managedBean.readOnly}"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="29" maxlength="50">
+					<p:ajax event="blur"  process="@this" 
+					partialSubmit="true" update="@this"
+					listener="#{createQtBB.setFileNo(lOADetailBackingBean.managedBean.scLoa != null 
+        						? lOADetailBackingBean.managedBean.scLoa.scQt : null)}">
+					</p:ajax>
+				</p:inputText>
 				<p:inputText id="fileExtNo"  style="margin-left: 2px;width: 28px; text-align:right;"
 					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="6"
 					required="true"
 					label="#{lbl['lbl.sc.qt.fileno']}"
 					maxlength="3"
-					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">					
+					<p:ajax event="blur"  process="@this" 
+					partialSubmit="true" update="@this"
+					listener="#{lOADetailBackingBean.setFileExtNo(lOADetailBackingBean.managedBean.scLoa)}">
+					</p:ajax>
+					</p:inputText>		
+					<!-- #29661 end -->
 				<p:message id="fileExtNoMsg" for="fileExtNo" display="icon" />
 			</td>
 		</tr>
@@ -742,11 +755,7 @@
 							<!-- #25726 START -->													
 							<!-- #25725 note 165  --><!-- new #25726 - Start -->
 						<h:panelGroup
-							rendered="#{isEditableStatus and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and 
-							lOADetailBackingBean.managedBean.above500K and (isPeriodic and !isContractPeriodAbove4) and 
-							(!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || ((((isPeriodic and isContractPeriodAbove4) || isOneOff) and 
-							(!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and 
-							(lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)))}"
+							rendered="#{isEditableStatus and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)}"
 							required="true">
 							<!-- new #25726 - End -->
 							<!-- #25726 END -->

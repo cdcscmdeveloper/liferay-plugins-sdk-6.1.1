@@ -511,8 +511,10 @@
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}"
 													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 													size="35">
-													<f:validator validatorId="postcodeValidator" />
-													<p:ajax process="@this" partialSubmit="true" update="@this,basicPermAddPostCodeMyMsg" />
+													<!-- #36718 - Start  -->
+													<p:ajax process="@this" partialSubmit="true" update="@this,basicPermAddPostCodeMyMsg"
+														listener="#{smPersonnelBackingBean.checkPostcode(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode)}" />
+													<!-- #36718 - End  -->
 												</p:inputText>
 												<p:message id="basicPermAddPostCodeMyMsg" for="basicPermAddPostCodeMy"
 													showSummary="true" showDetail="false" display="icon" />

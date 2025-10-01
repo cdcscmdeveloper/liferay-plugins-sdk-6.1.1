@@ -2087,7 +2087,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				
 				// End Fix - #33256, #33287, #34110
-  
+				
+				//#30014 - Start
+				sendToSmModuleForCompanyExp(resDTO, outcome);
+				//#30014 - End
+				
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
@@ -2213,7 +2217,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						&& (!getManagedBean().isValidationDA())) {
 					//#32860 end
 					//#26186 start
-					if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+					if(getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
 						RequestContext.getCurrentInstance().execute("sendParamToSupplierDA();");
 					}
 					//#26186 end
@@ -7916,10 +7920,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Date pbqcDate = StringUtils.isNotBlank(EntityHelper.getStringNestedProperty(ctBackingBean.getManagedBean(),
 				"contractVer.ctAmendment.pbqcDecisionDate")) ? ctBackingBean.getManagedBean().getContractVer()
 				.getCtAmendment().getPbqcDecisionDate() : null;
+		Boolean isDate = pbqcDate != null && getManagedBean().getDisciplinaryActionStartDate() != null;
+
 		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
-				&& pbqcDate != null
-				&& (pbqcDate.equals(getManagedBean().getDisciplinaryActionStartDate()) || 
-						pbqcDate.after(getManagedBean().getDisciplinaryActionStartDate()));
+				&& isDate
+				&& (pbqcDate.equals(getManagedBean().getDisciplinaryActionStartDate()) 
+						|| pbqcDate.after(getManagedBean().getDisciplinaryActionStartDate()));
 	}
 	
 	/**
@@ -7929,10 +7935,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Date mofDate = StringUtils.isNotBlank(EntityHelper.getStringNestedProperty(ctBackingBean.getManagedBean(),
 				"contractVer.ctAmendment.mofDecisionDate")) ? ctBackingBean.getManagedBean().getContractVer()
 				.getCtAmendment().getMofDecisionDate() : null;
+		Boolean isDate = mofDate != null && getManagedBean().getDisciplinaryActionStartDate() != null;
+		
 		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()
-				&& mofDate != null
-				&& (mofDate.equals(getManagedBean().getDisciplinaryActionStartDate()) || 
-						mofDate.after(getManagedBean().getDisciplinaryActionStartDate()));
+				&& isDate
+				&& (mofDate.equals(getManagedBean().getDisciplinaryActionStartDate()) 
+						|| mofDate.after(getManagedBean().getDisciplinaryActionStartDate()));
 	}
 
 	
@@ -8040,17 +8048,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * Process to validate the DA again after the PBM/MOF Decision DATE has been key in and being submit.
-	 * (isDisciplinaryActionNotification - false) to check the type of punishment.
+	 * Process to validate the DA again after the PBM/MOF Decision DATE has been
+	 * key in and being submit.
+	 * 
+	 * <p>
 	 * Once the DA has been validate, it will do the following 
-	 * 1. Set the BPM outcome to SAVE so that the contract will not undergo Tracking Diary and BPM process in SO file.
-	 * 2. Set the checkValidationDisciplinaryAction to true so that after the record has been saved, it will skip checkDA process.
+	 * 1. Set the BPM outcome to SAVE so that the contract will not undergo
+	 * Tracking Diary and BPM process in SO file. 
+	 * 2. Set the checkValidationDisciplinaryAction to true so that after the record has
+	 * been saved, it will skip checkDA process.
 	 * 
 	 * @return true if DA is true, PBQC and/or MOF decision is true.
 	 */
-	public boolean checkValidationDA(){
-		return getManagedBean().isDisciplinaryAction() && !getManagedBean().isDisciplinaryActionCancel()
-				&& (isPbqcAuthorityDA() || isMofAuthorityDA());
+	public boolean checkValidationDA() {
+		return checkSevereDA() && (isPbqcAuthorityDA() || isMofAuthorityDA());
+	}
+	
+	/**
+	 * Validates Disciplinary Action is applicable. 
+	 * 
+	 * @return true if has DA, severe DA (Hukuman Berat) and did not have cancel
+	 *         button
+	 */
+	public boolean checkSevereDA() {
+		return getManagedBean().isDisciplinaryAction() && !getManagedBean().isDisciplinaryActionNotification()
+				&& !getManagedBean().isDisciplinaryActionCancel();
 	}
 	
 	/**
@@ -9545,8 +9567,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/**
 	 * Method to append message contain category code for supplier.
-	 * By default StringBUilder sb has '(', it has been replace with empty
-	 * to check whether it is really empty
 	 * 
 	 * @param sb The stringbuilder of the message
 	 * @param supCat The list of the category code of the supplier
@@ -9839,5 +9859,52 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    return !contractAmt.getEffDate().after(now) && !contractAmt.getExpDate().before(now);
 	}
 	//#24333 - End
+	
+	// #30014 - Start
+	/**
+	 * Sends contract data to SM module if outcome is ACKNOWLEDGE for Company
+	 * Experience.
+	 * 
+	 * @param resDTO
+	 *            the contract response data
+	 * @param outcome
+	 *            the BPM outcome
+	 */
+	private void sendToSmModuleForCompanyExp(ContractResDTO resDTO, String outcome) {
+		if (!shouldSendToSmModule(resDTO, outcome)) {
+			return;
+		}
+
+		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
+		Long contractVerId = resDTO.getCtContractVer().getContractVerId();
+
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		contractSO.insertCtToSmModule(contractId, contractVerId);
+	}
+
+	/**
+	 * Checks whether the contract data should be sent to the SM module.
+	 */
+	private boolean shouldSendToSmModule(ContractResDTO resDTO, String outcome) {
+		CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
+		if (resDTO == null || resDTO.getCtContractVer() == null) {
+			return false;
+		}
+		// Check ID are not null
+		Long contractId = contractVer.getCtContract().getContractId();
+		Long contractVerId = resDTO.getCtContractVer().getContractVerId();
+		if (contractId == null || contractVerId == null) {
+			return false;
+		}
+
+		// Check business conditions
+		if (!BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)
+				|| !CTProcessNameConst.VERIFY_FA_HT_NAME.equalsIgnoreCase(getManagedBean().getTaskName())) {
+			return false;
+		}
+
+		return true;
+	}
+	// #30014 - End
 	
 	}
