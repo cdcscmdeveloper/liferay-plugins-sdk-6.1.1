@@ -116,10 +116,11 @@
 						<td colspan='2'>&#160;</td>
 					</tr>
 					<!-- #38890 - start -->
-					<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R' and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}">
+					<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R' 
+									and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}">
 					<tr>
 						<td colspan="2">
-							<ac:smAIAssistant aiDlg="tenancyAI" smAppl="#{backingBean.managedBean.smAppl}" docType="tnc"/>
+							<ac:smAIAssistant aiDlg="tenancyAI" smAppl="#{backingBean.managedBean.smAppl}" docType="tenancy"/>
 						</td>
 					</tr>
 					</p:outputPanel>
