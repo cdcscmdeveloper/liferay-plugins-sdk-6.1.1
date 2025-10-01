@@ -3014,7 +3014,7 @@ public class TemplateSpecBackingBean extends
 	 * @param isItemTypeService
 	 *            the item type service flag
 	 */
-	// FARID #21695 START
+	// FARID #21695 START (merge to pds by 38916)
 	public void calcAllSpecAnswerTotalAmount(TemplateSpecBean templateSpecBean) {
 
 		List<TplSpecAnswer> specAnswerList = templateSpecBean.getSpecAnswerList();
