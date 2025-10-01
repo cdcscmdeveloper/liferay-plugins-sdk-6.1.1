@@ -250,23 +250,30 @@ public class CriteriaBackingBean extends
 		log.info("saveSupplierCriteriaDtls - Start");
 		String returnPage = null;
 
-		if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
-			generateCriteriaCode();
+		//#34445 Start
+		try {
+			
+			if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
+				generateCriteriaCode();
 
-		}
+			}
 
-		if (DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean()
-				.getSelectedCriteria().getRecordStatusFlg().intValue()) {
-			validateCriteriaDesc();
-		}
+			if (DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean().getSelectedCriteria().getRecordStatusFlg()
+					.intValue()) {
+				validateCriteriaDesc();
+			}
 
-		if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
-			returnPage = createCriteria(this.getManagedBean()
-					.getSelectedCriteria());
-		} else {
-			returnPage = updateCriteria(this.getManagedBean()
-					.getSelectedCriteria());
+			if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
+				returnPage = createCriteria(this.getManagedBean().getSelectedCriteria());
+			} else {
+				returnPage = updateCriteria(this.getManagedBean().getSelectedCriteria());
+			}
+
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
 		}
+		//#34445 End
 		log.info("saveSupplierCriteriaDtls - End");
 		return returnPage;
 	}
