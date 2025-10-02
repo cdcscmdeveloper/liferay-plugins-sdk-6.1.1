@@ -1140,6 +1140,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 		if (resDto.isSuccessful()) {
 			resDto = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
+			validateDemoDuplicate(reqDto, resDto.getScQtDemo(), qtDemoSO);
 
 			this.getManagedBean().setScQtDemo(resDto.getScQtDemo());
 			this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
@@ -1647,5 +1648,13 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			}
 		}
 		this.getManagedBean().setSelectedContactList(selectedDemoContact);
+	}
+	
+	private void validateDemoDuplicate(DemoReqDTO reqDTO, ScQtDemo qtDemo, IQTDemoSO qtDemoSO) {
+		/**
+		 * Retrieve all existing ScQtDemo and check if got duplicate.
+		 * If got duplicate, delete it and only retaining qtDemo.
+		 */
+		qtDemoSO.validateDemoListByQtId(reqDTO, qtDemo);
 	}
 }
