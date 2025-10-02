@@ -66,6 +66,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private static String filePathDateFormat = "yyyyMMdd_HHmmss";
 	private static String smCompExpMasterUpdateXhtml = "smCompExpMasterUpdate.xhtml";
 	private static String lblClientTypeFed = "lbl.sm.comp.exp.update.client.type.federal";
+	private static String lblClientTypeNonFed = "lbl.sm.comp.exp.update.client.type.other";
+	private static String smCompExpNewXhtml = "smCompExpNew.xhtml";
 
 	/**
 	 * Prerender for Sm Company Experience
@@ -346,10 +348,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (this.getManagedBean().isDraftUpdate()) {
 			this.getManagedBean().getSelectedDraft().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
 			this.getManagedBean().getSelectedDraft().setOrgProfile(orgProfile);
-		}
-		if (this.getManagedBean().isMasterUpdate()) {
+		} else if (this.getManagedBean().isMasterUpdate()) {
 			this.getManagedBean().getSelectedMaster().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
 			this.getManagedBean().getSelectedMaster().setOrgProfile(orgProfile);
+		} else {
+			this.getManagedBean().getNewMaster().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
+			this.getManagedBean().getNewMaster().setOrgProfile(orgProfile);
 		}
 	}
 
@@ -980,18 +984,25 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void redirectToUpdateMaster(SmCompExpMaster selectedMaster) {
 		this.getManagedBean().setMasterUpdate(true);
 		this.getManagedBean().setDraftUpdate(false);
-		this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.master.update.fed.header.self.declared", null));
+		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
+		if (selectedMaster.getClientType().equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
+			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.master.update.fed.header.self.declared", null));
+			SelectItem clientTypeFederalItem = new SelectItem();
+			clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
+			clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
+			this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
+		} else if (selectedMaster.getClientType().equals(ParameterConst.CLIENT_TYPE_NON_FEDERAL)) {
+			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.master.update.non.fed.header.self.declared", null));
+			SelectItem clientTypeNonFederalItem = new SelectItem();
+			clientTypeNonFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeNonFed, null));
+			clientTypeNonFederalItem.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
+			this.getManagedBean().getClientTypeItems().add(clientTypeNonFederalItem);
+		}
 
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
 		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
-
-		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
-		SelectItem clientTypeFederalItem = new SelectItem();
-		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
-		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
-		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
 
 		dateChange();
 
@@ -1156,5 +1167,44 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (resDTO.isSuccessful()) {
 			proceedAfterTnC();
 		}
+	}
+
+	/**
+	 * Check if history exist
+	 */
+	public boolean checkSmCompExpHistoryExist(Long masterId) {
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setMasterId(masterId);
+		return getSmCompExpSo().checkSmCompExpHistoryExist(reqDTO);
+	}
+
+	/**
+	 * Initialize history view popup dialog
+	 * 
+	 * @param selectedMaster
+	 */
+	public void initHistPopup(Long masterId) {
+		this.getManagedBean().setHistMasterId(masterId);
+		this.getManagedBean().getHistoryDataModel().reloadData();
+	}
+
+	/**
+	 * Redirect to Add New Company Experience
+	 */
+	public void redirectToAddNew() {
+		this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.add.new", null));
+		this.getManagedBean().setNewMaster(new SmCompExpMaster());
+		
+		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
+		SelectItem clientTypeFederalItem = new SelectItem();
+		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
+		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
+		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
+		SelectItem clientTypeNonFederalItem = new SelectItem();
+		clientTypeNonFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeNonFed, null));
+		clientTypeNonFederalItem.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
+		this.getManagedBean().getClientTypeItems().add(clientTypeNonFederalItem);
+		
+		SmCommonUtil.redirectToPage(smCompExpNewXhtml, "", null, null);
 	}
 }

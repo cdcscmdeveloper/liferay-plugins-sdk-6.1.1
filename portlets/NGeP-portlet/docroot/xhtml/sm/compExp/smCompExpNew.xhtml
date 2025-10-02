@@ -1,0 +1,174 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{smCompExpMB.headerTitle}");
+		</script>
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<p:messages autoUpdate="true" closable="true" id="messages"
+			showDetail="true" showSummary="false" />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sm.comp.exp.add.new.instruction']}" escape="false" />
+		<div align="center">
+			<table style="table-layout: fixed; width: 100%">
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:selectOneRadio id="clientType"
+							label="#{lbl['lbl.sm.comp.exp.update.project.for']}"
+							value="#{smCompExpMB.newMaster.clientType}">
+							<p:ajax event="change" oncomplete="blockWidget.hide()"
+								onstart="blockWidget.show()" update=":form" process="@form" />
+							<f:selectItems value="#{smCompExpMB.clientTypeItems}"></f:selectItems>
+						</p:selectOneRadio> <p:graphicImage
+							rendered="#{smCompExpMB.newMaster.clientType ne null}"
+							id="projectForToolTipsId" value="/css/images/design/tooltips.png" />
+						<p:tooltip for="projectForToolTipsId">
+							<p:outputLabel escape="false"
+								style="text-align: left !important;"
+								rendered="#{smCompExpMB.newMaster.clientType eq ParameterConst.clientTypeFederal}"
+								value="#{lbl['lbl.sm.comp.exp.add.new.fed.tooltip']}" />
+							<p:outputLabel escape="false"
+								style="text-align: left !important;"
+								rendered="#{smCompExpMB.newMaster.clientType eq ParameterConst.clientTypeNonFederal}"
+								value="#{lbl['lbl.sm.comp.exp.add.new.non.fed.tooltip']}" />
+						</p:tooltip></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:inputText id="agencyName" size="60"
+							readonly="#{smCompExpMB.newMaster.clientType eq null or smCompExpMB.newMaster.clientType eq ParameterConst.clientTypeFederal}"
+							value="#{smCompExpMB.newMaster.agencyName}" /> <p:outputPanel
+							rendered="#{smCompExpMB.newMaster.clientType eq ParameterConst.clientTypeFederal}">
+							<p:commandLink action="#{smPtjPopupBB.initPtjPopup}"
+								oncomplete="blockWidget.hide(),smPtjPopupWV.show()"
+								onclick="blockWidget.show()" update=":form" process="@form">
+								<p:graphicImage value="/css/images/design/search.png" />
+							</p:commandLink>
+						</p:outputPanel> <p:graphicImage
+							rendered="#{smCompExpMB.newMaster.clientType ne null}"
+							id="agencyNameToolTipsId" value="/css/images/design/tooltips.png" />
+						<p:tooltip for="agencyNameToolTipsId">
+							<p:outputLabel escape="false"
+								style="text-align: left !important;"
+								rendered="#{smCompExpMB.newMaster.clientType eq ParameterConst.clientTypeFederal}"
+								value="#{lbl['lbl.sm.comp.exp.add.new.agency.name.fed.tooltip']}" />
+							<p:outputLabel escape="false"
+								style="text-align: left !important;"
+								rendered="#{smCompExpMB.newMaster.clientType eq ParameterConst.clientTypeNonFederal}"
+								value="#{lbl['lbl.sm.comp.exp.add.new.agency.name.non.fed.tooltip']}" />
+						</p:tooltip></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td style="width: 66%"><p:inputText id="fileReferenceNo"
+							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
+							value="#{smCompExpMB.newMaster.fileReferenceNo}">
+							<p:ajax event="blur"
+								listener="#{smCompExpBB.trimFileReferenceNo}"
+								update="fileReferenceNo" />
+						</p:inputText> <p:spacer width="3px" /> <p:inputText id="fileExtensionNo"
+							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
+							maxlength="3" size="3"
+							value="#{smCompExpMB.newMaster.fileExtensionNo}">
+							<p:ajax event="blur"
+								listener="#{smCompExpBB.trimFileExtensionNo}"
+								update="fileExtensionNo" />
+						</p:inputText> <p:graphicImage id="fileReferenceNoToolTipsId"
+							value="/css/images/design/tooltips.png" /> <p:tooltip
+							for="fileReferenceNoToolTipsId">
+							<img
+								src="/NGeP-portlet/images/suratSetujuTerima_fileReference_tooltip.jpeg" />
+						</p:tooltip></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
+					<td style="width: 66%"></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
+					<td style="width: 66%"></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.contract.status']}" /></td>
+					<td style="width: 66%"></td>
+				</tr>
+			</table>
+			<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
+				toggleable="true"></p:panel>
+			<table style="table-layout: fixed; width: 100%">
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label2"
+						value="#{lbl['lbl.sm.comp.exp.update.supp.doc']}" /> <p:outputLabel
+						styleClass="mandatory" value="*" /></td>
+				<td style="width: 66%"></td>
+			</table>
+		</div>
+		<div align="right">
+			<p:commandButton action="#{smCompExpBB.proceedAfterTnC}"
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				value="#{lbl['lbl.sm.comp.exp.add.new.cancel']}" />
+		</div>
+		<ac:smPtjPopup okAction="smCompExpBB.selectAgencyAction" />
+	</ui:define>
+</ui:composition>

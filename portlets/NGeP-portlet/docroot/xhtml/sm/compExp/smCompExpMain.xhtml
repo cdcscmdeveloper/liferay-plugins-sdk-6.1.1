@@ -107,19 +107,31 @@
 							<p:tooltip for="actionViewId"
 								value="#{lbl['lbl.sm.comp.exp.master.list.source.type']} #{smCompExpBB.getParameterDesc(ParameterTypeConst.compExpSourceType,masterFed.sourceType.parameterCode)}" />
 						</p:commandLink>
-						<p:commandLink action="#{smCompExpBB.redirectToUpdateMaster(masterFed)}"
+						<p:commandLink
+							action="#{smCompExpBB.redirectToUpdateMaster(masterFed)}"
 							oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 							partialSubmit="true" process="@this" update=":form"
-							rendered="#{masterFed.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and masterFed.recordStatus}">
+							rendered="#{masterFed.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and masterFed.recordStatusFlg eq ParameterConst.recordStatusActive}">
 							<p:graphicImage id="actionEditId"
 								value="/css/images/design/edit.png" />
 							<p:tooltip for="actionEditId"
 								value="#{lbl['lbl.sm.comp.exp.master.list.source.type']} #{smCompExpBB.getParameterDesc(ParameterTypeConst.compExpSourceType,masterFed.sourceType.parameterCode)}" />
 						</p:commandLink>
+						<p:commandLink
+							action="#{smCompExpBB.initHistPopup(masterFed.compExpMasterId)}"
+							oncomplete="blockWidget.hide(),compExpHistPopupWV.show()"
+							onstart="blockWidget.show()" partialSubmit="true" process="@this"
+							update=":form"
+							rendered="#{smCompExpBB.checkSmCompExpHistoryExist(masterFed.compExpMasterId)}">
+							<p:graphicImage id="actionHistId"
+								value="/css/images/design/ico-hist.png" />
+							<p:tooltip for="actionHistId"
+								value="#{lbl['lbl.sm.comp.exp.hist.tooltip']}" />
+						</p:commandLink>
 					</p:column>
 				</p:dataTable>
 			</p:panel>
-			<!-- p:panel header="#{lbl['lbl.sm.comp.exp.master.list.non.fed.panel']}"
+			<p:panel header="#{lbl['lbl.sm.comp.exp.master.list.non.fed.panel']}"
 				toggleable="true">
 				<p:dataTable
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -182,11 +194,39 @@
 						</ui:repeat>
 					</p:column>
 					<p:column>
-						a
+						<p:commandLink
+							action="#{smCompExpBB.redirectToUpdateMaster(masterNonFed)}"
+							oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+							partialSubmit="true" process="@this" update=":form"
+							rendered="#{masterNonFed.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and masterNonFed.recordStatusFlg eq ParameterConst.recordStatusActive}">
+							<p:graphicImage id="actionEditId"
+								value="/css/images/design/edit.png" />
+							<p:tooltip for="actionEditId"
+								value="#{lbl['lbl.sm.comp.exp.master.list.source.type']} #{smCompExpBB.getParameterDesc(ParameterTypeConst.compExpSourceType,masterNonFed.sourceType.parameterCode)}" />
+						</p:commandLink>
+						<p:commandLink
+							action="#{smCompExpBB.initHistPopup(masterNonFed.compExpMasterId)}"
+							oncomplete="blockWidget.hide(),compExpHistPopupWV.show()"
+							onstart="blockWidget.show()" partialSubmit="true" process="@this"
+							update=":form"
+							rendered="#{smCompExpBB.checkSmCompExpHistoryExist(masterNonFed.compExpMasterId)}">
+							<p:graphicImage id="actionHistId"
+								value="/css/images/design/ico-hist.png" />
+							<p:tooltip for="actionHistId"
+								value="#{lbl['lbl.sm.comp.exp.hist.tooltip']}" />
+						</p:commandLink>
 					</p:column>
 				</p:dataTable>
-			</p:panel -->
+			</p:panel>
 		</p:panel>
+		<div align="right">
+			<p:commandButton id="addNewBtn"
+				action="#{smCompExpBB.redirectToAddNew}"
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				update=":form" value="#{lbl['lbl.sm.comp.exp.add.new']}">
+			</p:commandButton>
+		</div>
 		<ac:compExpViewPopup mBean="#{smCompExpMB}" bBean="#{smCompExpBB}" />
+		<ac:compExpHistPopup mBean="#{smCompExpMB}" bBean="#{smCompExpBB}" />
 	</ui:define>
 </ui:composition>

@@ -24,6 +24,7 @@ import my.ep.persistence.entity.sm.SmCompExpCatMaster;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
+import my.ep.persistence.entity.sm.SmCompExpMasterHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.SLAUtils;
@@ -75,6 +76,10 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private boolean masterUpdate;
 	private boolean smCompExpCatMasterNotComplete;
 	private List<SmCompExpCatMaster> selectedSmCompExpCatMaster;
+	private Long histMasterId;
+	private transient IPagingDataModel<SmCompExpMasterHistory> historyDataModel = new HistoryPagingDataModel();
+	private SmCompExpMaster newMaster;
+	
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -356,7 +361,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	public void setMasterFedDataModel(IPagingDataModel<SmCompExpMaster> masterFedDataModel) {
 		this.masterFedDataModel = masterFedDataModel;
 	}
-	
+
 	private class MasterNonFedPagingDataModel extends PagingDataModel<SmCompExpMaster> {
 
 		private static final long serialVersionUID = 1L;
@@ -434,6 +439,56 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setSelectedSmCompExpCatMaster(List<SmCompExpCatMaster> selectedSmCompExpCatMaster) {
 		this.selectedSmCompExpCatMaster = selectedSmCompExpCatMaster;
+	}
+
+	public Long getHistMasterId() {
+		return histMasterId;
+	}
+
+	public void setHistMasterId(Long histMasterId) {
+		this.histMasterId = histMasterId;
+	}
+
+	private class HistoryPagingDataModel extends PagingDataModel<SmCompExpMasterHistory> {
+
+		private static final long serialVersionUID = 1L;
+
+		public HistoryPagingDataModel() {
+			super("historyDataTable", false);
+		}
+
+		@Override
+		public ISearchResultBean<SmCompExpMasterHistory> pageChangeListener(ISearchBean<SmCompExpMasterHistory> searchBean) {
+
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setMasterId(histMasterId);
+
+			try {
+				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+				return smCompExpSo.retriveSmCompExpHistoryList(reqDTO, searchBean).getHistoryResultBean();
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
+						"ISmCompExpSO", logKey.getUserId(), e);
+				throw new EpException(MessageConst.ERROR_000001);
+			}
+		}
+
+	}
+
+	public IPagingDataModel<SmCompExpMasterHistory> getHistoryDataModel() {
+		return historyDataModel;
+	}
+
+	public void setHistoryDataModel(IPagingDataModel<SmCompExpMasterHistory> historyDataModel) {
+		this.historyDataModel = historyDataModel;
+	}
+
+	public SmCompExpMaster getNewMaster() {
+		return newMaster;
+	}
+
+	public void setNewMaster(SmCompExpMaster newMaster) {
+		this.newMaster = newMaster;
 	}
 
 }

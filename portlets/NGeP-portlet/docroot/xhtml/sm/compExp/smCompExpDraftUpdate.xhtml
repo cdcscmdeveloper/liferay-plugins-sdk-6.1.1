@@ -76,10 +76,6 @@
 								oncomplete="blockWidget.hide(),smPtjPopupWV.show()"
 								onclick="blockWidget.show()" update=":form" process="@form">
 								<p:graphicImage value="/css/images/design/search.png" />
-								<p:graphicImage id="agencyNameToolTipsId"
-									value="/css/images/design/tooltips.png" />
-								<p:tooltip for="agencyNameToolTipsId"
-									value="#{lbl['lbl.sm.comp.exp.update.agency.name.tooltip']}" />
 							</p:commandLink>
 						</p:outputPanel></td>
 				</tr>
@@ -209,7 +205,7 @@
 							<p:graphicImage id="contractStatusInactiveToolTipsId"
 								value="/css/images/design/tooltips.png" />
 							<p:tooltip for="contractStatusInactiveToolTipsId"
-								value="#{lbl['lbl.sm.comp.exp.update.contract.status.inactive.toolptip']}" />
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.inactive.tooltip']}" />
 						</c:if> <c:if
 							test="#{smCompExpMB.selectedDraft.contractStatus eq ParameterConst.contractStatusEffective}">
 							<p:outputLabel styleClass="outputLabel-view"
@@ -217,7 +213,7 @@
 							<p:graphicImage id="contractStatusEffectiveToolTipsId"
 								value="/css/images/design/tooltips.png" />
 							<p:tooltip for="contractStatusEffectiveToolTipsId"
-								value="#{lbl['lbl.sm.comp.exp.update.contract.status.effective.toolptip']}" />
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.effective.tooltip']}" />
 						</c:if> <c:if
 							test="#{smCompExpMB.selectedDraft.contractStatus eq ParameterConst.contractStatusExpired}">
 							<p:outputLabel styleClass="outputLabel-view"
@@ -225,7 +221,7 @@
 							<p:graphicImage id="contractStatusExpiredToolTipsId"
 								value="/css/images/design/tooltips.png" />
 							<p:tooltip for="contractStatusExpiredToolTipsId"
-								value="#{lbl['lbl.sm.comp.exp.update.contract.status.expired.toolptip']}" />
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.expired.tooltip']}" />
 						</c:if> <c:if
 							test="#{smCompExpMB.selectedDraft.contractStatus eq ParameterConst.contractStatusTerminated}">
 							<p:outputLabel styleClass="outputLabel-view"
