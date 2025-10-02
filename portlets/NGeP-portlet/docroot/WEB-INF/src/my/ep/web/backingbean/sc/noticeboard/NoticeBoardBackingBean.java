@@ -919,7 +919,7 @@ public class NoticeBoardBackingBean extends
 		supplierReqDTO.setQtId(qtId);
 		NoticeBoardResDTO supplierResDTO = boardSO.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
 		ScQtSupplier scQtSupplier = supplierResDTO.getScQtSupplier();
-		if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+		if (scQtSupplier != null && scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
 			return true;
 		}
 		return false;
