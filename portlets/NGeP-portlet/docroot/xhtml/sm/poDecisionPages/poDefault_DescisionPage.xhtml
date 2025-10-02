@@ -103,7 +103,9 @@
 						</c:when>
 						<c:when
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
-							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
+							or backingBean.managedBean.specialCategoryRechecked}">
+							<!-- #26671 - Site Visit Grouping Enhancement -28775 -->
 							
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -285,8 +287,14 @@
 											<h:outputText value="#{lbl['lbl.sm.po.splNotes2']}"
 												styleClass="splNotesFonts" escape="false" />
 										</c:when>
+										
+										<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
 										<c:when
-											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
+												or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
+												or backingBean.managedBean.specialCategoryRechecked}">
+											<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->
+											
 											<h:outputText value="#{lbl['lbl.sm.po.splNotes3']}"
 												styleClass="splNotesFonts" escape="false" />
 										</c:when>
@@ -323,7 +331,8 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
-	<p:dialog width="70%" height="60%" closable="false"
+	<!-- #28775 -->
+	<p:dialog width="70%" height="60%" closable="false" resizable="false"
 		header="#{lbl['lbl.sm.assign.site.visit']}" widgetVar="svcDialog"
 		id="svcDialog" showEffect="fade" hideEffect="fade"
 		modal="true">

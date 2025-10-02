@@ -1861,19 +1861,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						if (asAtTime >= contractAmt.getEffDate().getTime() && asAtTime <= contractAmt.getExpDate().getTime()) {
 							boolean previouslyHasBond = contractAmt.getCtPerformanceBonds() != null && !contractAmt.getCtPerformanceBonds().isEmpty();
 
-			                if (previouslyHasBond) {
-			                    if (ctBB.isContractExtendOrIsBond()) {
-			                        if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() == null ||
-			                            ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().isEmpty()) {
-			                            blockSubmission("PB");
-			                        }
-			                    }
+							if (previouslyHasBond) {
+								List<CtPerformanceBond> bondsToCheck = ctBB.isContractExtendOrIsBond() ? ctBB.getManagedBean().getCtContractAmount()
+										.getCtPerformanceBondsNew() : ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal();
 
-			                    if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal() == null ||
-			                        ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().isEmpty()) {
-			                        blockSubmission("PB");
-			                    }
-			                }
+								if (bondsToCheck == null || bondsToCheck.isEmpty()) {
+									blockSubmission("PB");
+								}
+							}
 							//#24333 - End
 						}
 					} 

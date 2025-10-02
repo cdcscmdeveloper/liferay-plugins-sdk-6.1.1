@@ -1,13 +1,13 @@
 #parse("templates/sm/sitevisit/shared/header.vm")
-#set($bumi = "Bumiputera")
-#set($nonBumi = "Non-Bumiputera")
-#set($nonMy = "Non-Malaysian")
+#set($bumi = $smVmUtil.getDescByLabel('lbl.sm.person.bumi'))
+#set($nonBumi = $smVmUtil.getDescByLabel('lbl.sm.person.composition.nonBumi'))
+#set($nonMy = $smVmUtil.getDescByLabel('lbl.sm.person.composition.Frg'))
 
 
 <table width='100%'>
 	<tr align='center' style="background-color: #3366ff;">
 	    <td>
-	    	<font style='color:#ffffff;font-weight: bold;'>$templateType - Section B</font>
+	    	<font style='color:#ffffff;font-weight: bold;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.section') B</font>
 	    </td>
     </tr>
     <tr><td><br /></td></tr>
@@ -15,39 +15,39 @@
 
 <table  class="sTable">
 	<tr>
-		<td width="40%" class="txtBold"><u>Financial</u></td>
+		<td width="40%" class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.financial')</u></td>
 		<td></td>
 		
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Cheque Signatories</td>
-		<td class="sColTwentyPerc">$totolCheqSignatory person(s)</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.cheque.signatories')</td>
+		<td class="sColTwentyPerc">$totolCheqSignatory $smVmUtil.getDescByLabel('lbl.sm.sv.templ.individu')</td>
 		<td class="sColTwentyPerc"><br /></td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Bumiputera</td>
-		<td class="sColTwentyPerc">$bumiCheqSign person(s)</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.bumiputera')</td>
+		<td class="sColTwentyPerc">$bumiCheqSign $smVmUtil.getDescByLabel('lbl.sm.sv.templ.individu')</td>
 		<td class="sColTwentyPerc">$bumiCheqSignPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Non-Bumiputera</td>
-		<td class="sColTwentyPerc">$nonBumiCheqSign person(s)</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.non.bumiputera')</td>
+		<td class="sColTwentyPerc">$nonBumiCheqSign $smVmUtil.getDescByLabel('lbl.sm.sv.templ.individu')</td>
 		<td class="sColTwentyPerc">$nonBumiCheqSignPct%</td>
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Non-Malaysian</td>
-		<td class="sColTwentyPerc">$nonMalaysianCheqSign person(s)</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.non.malaysian')</td>
+		<td class="sColTwentyPerc">$nonMalaysianCheqSign $smVmUtil.getDescByLabel('lbl.sm.sv.templ.individu')</td>
 		<td class="sColTwentyPerc">$nonMalaysianCheqSignPct%</td>
 	</tr>
 </table>
 	
 <table  class="sTable">
 	<tr>
-		<td class="txtBold">Bank Information</td>
+		<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.bank.info')</td>
 	</tr>
 </table>
 
@@ -57,27 +57,26 @@
 		<td valign="top">
 		<table>
 			<tr><td>$velocityCount.</td></tr>
-			<tr><td><p style="width: 10px;height: 10px;background: white;border:solid thin black;" /></td></tr>
 		</table>
 		</td>
 		
 		<td valign="top">
 			<table>
 			<tr>
-				<td class="txtBold">Bank Name</td>
+				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.bank.name')</td>
 				<td>
 					$bank.smSupplierBank.pmFinancialOrg.finOrgName
 				</td>
 			</tr>
 						
 			<tr>
-				<td class="txtBold">Account No.</td>
+				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.acc.no')</td>
 				<td>$bank.smSupplierBank.accountNo<br /></td>
 			</tr>
 			
 			##14055 start - add cheque signatory status			
 			<tr>
-				<td class="txtBold">Cheque Signatory Name</td>
+				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.cheque.signatory.name')</td>
 				#foreach($signatory in $bank.smSupplierBank.smChequeSignatories)										
 					<tr>
 						<td>$velocityCount. $signatory.smPersonnel.name</td>
@@ -97,13 +96,19 @@
 			##14055 end
 						
 			<tr>
-				<td valign="top" class="txtBold">Terms and Conditions</td>
+				<td valign="top" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.term.condition')</td>
 				<td valign="top">$!bank.smSupplierBank.signatureInstruction</td>
+			</tr>
+			
+			<tr>
+				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.verifyLbl')</td>
+				<td>#if($bank.valid) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+						#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>
 			</tr>
 			
 			##14055 start - change placement of the Remarks
 			<tr>
-				<td class="txtBold">Remarks:</td>
+				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.remark'):</td>
 				
 				##29645 start - display remark data
 				##28774 - Start - set height to minimum 100px. if exceeded will become larger
@@ -114,21 +119,6 @@
 			</tr>
 			##14055 end
 			
-			#*	
-			#if($review)
-				<tr>
-					<td valign="top" class="txtBold">Valid</td>
-					<td valign="top">
-						#if($bank.valid)Yes #else No #end
-					</td>
-				</tr>
-							
-				<tr>
-					<td valign="top" class="txtBold">Remark</td>
-					<td valign="top">$!bank.remark</td>
-				</tr>
-			#end*#
-			
 			</table>
 		</td>		
 	</tr>
@@ -136,18 +126,24 @@
 </table>
 <br /><br />
 
+<!-- #28775 -->
+#if($bankInfo && $bankInfo.size() > 1)
+    <div style="page-break-before: always;"></div>
+#end
+
 <table class="sTable">
 	#if($review)
 		<tr>
-			<td class="txtBold" width="40%"><u>Check List</u></td>
-			<td class="txtBold"><u>Available</u></td>
-			<td class="txtBold"><u>Remark</u></td>
+			<td class="txtBold" width="40%"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.check.list')</u></td>
+			<td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.availableLbl')</u></td>
+			<td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.remark')</u></td>
 		</tr>
 		#if($financialCheckList.size() > 0)
 			#foreach($finCheckItem in $financialCheckList)
 				<tr>
-			    	<td>$finCheckItem.pmParameter.pmParameterDescs.get(0).codeDesc</td>
-			    	<td>#if($finCheckItem.valid)Yes #else No #end</td>
+			    	<td>$smVmUtil.getParameterDesc($finCheckItem.pmParameter)</td>
+			    	<td>#if($finCheckItem.valid)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			    		#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>
 			    	<td>$!finCheckItem.remark</td>
 			    </tr>
 			<tr><td><br /></td></tr>
@@ -155,7 +151,7 @@
   		#end
 	#else
 		<tr>
-			<td class="txtBold"><u>Check List</u></td>
+			<td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.check.list')</u></td>
 		</tr>
 		#if($financialCheckList.size() > 0)
 			#foreach($finCheckItem in $financialCheckList)
