@@ -13372,7 +13372,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param scLoa
 	 */
 	private void setDisciplinaryAction(ScLoa scLoa) {
-		if (scLoa.isBrandNew()) {
+		if (null == scLoa || null == scLoa.getScLoiLoa()) {
 			return;
 		}
 		Long qtId = scLoa.getScLoiLoa().getDocId();
