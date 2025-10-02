@@ -148,7 +148,6 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean.FinalizationEndorsementReportDTO;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -3584,8 +3583,8 @@ public class SupplierFinalizationBackingBean extends
 		return reportAttachment;
 	}
 	
-	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) 
-										   throws Exception {
+	/*
+	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) throws Exception {
 		populateAttachmentDetails(attachment);
 
 		FacesScopes facesScopes = new FacesScopes();
@@ -3626,6 +3625,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}*/
+		/*
 		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
 				StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
@@ -3636,6 +3636,7 @@ public class SupplierFinalizationBackingBean extends
 		// #18685 - End
 		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
 	}
+	*/
 	
 	// 36715 START
 	private void generateKertasTaklimatRtf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) throws Exception {
@@ -4218,7 +4219,7 @@ public class SupplierFinalizationBackingBean extends
 				if (isQTRefinalized()) {
 					disableAwardedItems(scQtFinalization.getScQtRecommends());
 					
-					// Check if the any of the suppliers has awarded LOA's 
+					// Check if the any of the suppliers has awarded LOA's To be removed [Not in use]
 					/******Start******/
 					reqDTO = new SuppFinalizationReqDTO();
 					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
@@ -7844,8 +7845,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean isZonal = scQt.isZonal(); 
 		boolean isItemized = true;
 		List<TplSpecZoneDtl> zoneDtls = getManagedBean().getZoneDetails();
-		String recommendTypeCode = getManagedBean().getScQtFinalization()
-									.getRecommendedTypeId().getParameterCode();
+		String recommendTypeCode = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
 		if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 						  .equals(recommendTypeCode)) {
 			isItemized = false;
@@ -8054,7 +8054,7 @@ public class SupplierFinalizationBackingBean extends
 		reqDTO.setDocNumber(scQt.getQtNo());
 		
 		SuppFinalizationReqDTO sfReqDTO = new SuppFinalizationReqDTO();
-		Set<String> fetchSet = new HashSet();
+		Set<String> fetchSet = new HashSet<String>();
 		fetchSet.add("finalizationCommittee");
 		sfReqDTO.setFetchSet(fetchSet);
 		sfReqDTO.setQtId(scQt.getQtId());
@@ -10458,7 +10458,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	// #28834 - End.
-
+	
 	// Bug #35379 = #34720@Syazani 07/06/2022 -- Start
 	/**
 	 * Check for duplicate report related to UUM Definiation Key Report This

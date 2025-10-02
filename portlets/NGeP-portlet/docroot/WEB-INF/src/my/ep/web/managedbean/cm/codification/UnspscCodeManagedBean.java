@@ -20,6 +20,10 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class UnspscCodeManagedBean extends BaseManagedBean {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private CmRequestCode requestCode;
 	private String segmentTitle;
 	private String segmentDesc;
@@ -128,7 +132,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private boolean disableRevise = false;
 	private boolean renderV2 = false;
 	
-	//35503 start
+	// 35503 start
 	private transient List<List<String>> auditCommodityList;
 	private transient List<List<String>> auditClassList;
 	private transient List<List<String>> auditFamilyList;
@@ -137,7 +141,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private String auditClassCode;
 	private String auditFamilyCode;
 	private String auditSegmentCode;
-	//35503 end
+	// 35503 end
 
 	public boolean isRecommendExtension(){
 		return this.recommendExtension;
@@ -824,7 +828,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 		this.showRecommend = showRecommend;
 	}
 	
-	//35503 start
+	// 35503 start
 	public List<List<String>> getAuditCommodityList() {
 		if (auditCommodityList == null)
 			auditCommodityList = new ArrayList<>();
@@ -896,5 +900,5 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	public void setAuditSegmentCode(String auditSegmentCode) {
 		this.auditSegmentCode = auditSegmentCode;
 	}
-	//35503 end
+	// 35503 end
 }
