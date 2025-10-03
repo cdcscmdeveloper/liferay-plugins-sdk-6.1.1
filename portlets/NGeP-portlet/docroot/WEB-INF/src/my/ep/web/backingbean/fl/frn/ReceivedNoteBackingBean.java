@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
 import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -48,6 +49,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
@@ -87,6 +89,7 @@ import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -546,6 +549,15 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				flBB.getManagedBean().setHideRemarks(false);
 			}
 		}
+		
+		// 28855 - Start
+		String docType = getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType();
+		if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+			getManagedBean().setContractFlag(true);
+		} else {
+			getManagedBean().setContractFlag(false);
+		}
+		// 28855 - End
 	}
 
 	/**
@@ -1695,6 +1707,80 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		RequestContext.getCurrentInstance().execute("rejectionRemarksHistory.hide()");
 	}
 	
+	// 28855 - start
+	/**
+	 * Populates item information and specifications for a fulfilment item based
+	 * on the provided address.
+	 * 
+	 * @param flItemAddr
+	 *            The fulfilment item address containing the details of the
+	 *            item.
+	 */
+	public void frnItemInfoList(FlFulfilmentItemAddr flItemAddr) {
+		IRequestItemSO requestItemSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+
+		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
+
+		getManagedBean().setSpecificationList(
+				requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+
+		if (!getManagedBean().getSpecificationList().isEmpty()) {
+			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
+			for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
+				if (specification.getSupplierOffer() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					getManagedBean().setSupplierOffer(specification.getSupplierOffer());
+				}
+				if (specification.getNewOfferSpec() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
+				}
+				if (specification.getItemSpec() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
+					getManagedBean().setItemSpecification(specification.getItemSpec());
+					getManagedBean().getItemSpecList().add(specification);
+				}
+			}
+
+		} else {
+			getManagedBean().setSupplierOffer(null);
+			getManagedBean().setNewOfferedSpec(null);
+			getManagedBean().setItemSpecification(null);
+			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
+		}
+
+		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
+				.getFulfilmentRequest().getCtContract().getContractId() : null;
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
+		reqFDTO.setContractId(contractId);
+		String loaDocType = fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
+
+		if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			getManagedBean().setDpFlag(true);
+			String supplierOffer = getManagedBean().getSupplierOffer();
+			if (supplierOffer != null && supplierOffer.length() > 0) {
+				String trimWipDpZone = supplierOffer.replace("<br/>", " ");
+				getManagedBean().setSupplierOffer(trimWipDpZone);
+			}
+		} else {
+			getManagedBean().setDpFlag(false);
+			if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
+				getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
+			}
+		}
+	}
+
+	// 28855 - end
+	
 	//30468-start
 	/**
 	 * validate  received amount 
@@ -1736,6 +1822,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 		reqDTO.setActionCode(action);// 36361
 		reqDTO.setDeliveryOrderId(deliveryOrderId);// 36361
+		// 38104-Start
+		if (getManagedBean().getFulfilmentNote() != null
+				&& getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
+			reqDTO.setFulfilmentNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
+		}
+		// 38104-End
 		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
 
 		Boolean allowToProceed = resDTO.isFlag();

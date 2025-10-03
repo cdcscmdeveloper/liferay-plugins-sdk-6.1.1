@@ -191,6 +191,11 @@ public class ViewApplHistoryBackingBean extends
 			
 		}
 		// 25792 - end
+		// #28895_35501 Start - AUDIT TRAIL SM
+		if(outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)){
+			initAuditTab();
+		}
+		// #28895_35501 End
 	}
 
 	/**
@@ -200,6 +205,8 @@ public class ViewApplHistoryBackingBean extends
 	public void preRenderViewApplicationHistory() {
 		renewSesionObject();
 		initLogin();
+		// #28895_35501 - AUDIT TRAIL SM
+		checkAuditAccess();
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(true);
@@ -383,10 +390,10 @@ public class ViewApplHistoryBackingBean extends
 		this.getManagedBean().setPreRegistration(true);
 		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
-			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+			//List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+			
 			//start #29956
 			getManagedBean().setResubmitAppl(resubmission);
-			
 			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
 			
 			if(displayPopupDowngradeSSMOwner){

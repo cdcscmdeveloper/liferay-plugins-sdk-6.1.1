@@ -601,6 +601,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRecommendRejectReason;
 	//#15629 - END
 	
+	// #30974 && 37896 - START
+	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
+	private List<PmReasonDesc> selectedRejectReasonDescs;
+	private boolean showDifferenceRejection;
+	// #30974 && 37896 - END
+	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
 	
@@ -609,7 +615,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean emptyMandatoryDocHistory;
 	private boolean emptyNonMandatoryDocHistory;
 	//#11641 - END
-
+	
 	private boolean poApproverPersonnelErr;//#31130-start
 	private String msgPersonnelErr;
 	private boolean poApproverAcedemicErr;//#31130-end
@@ -638,6 +644,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	private boolean allowedToSiteVisit;
 	// 31043 END
+	// #34831 - Start
+	private boolean basicSupplier;
+	// #34831 - End
 	
 	// #34392 - start
 	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
@@ -735,6 +744,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				setMofSupplier(true);
 			}
+			
+			// #34831 - Start
+			if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+					|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)) {
+				setBasicSupplier(true);
+			}
+			// #34831 - End
 		}
 		// if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
 		// setPoUser(true);
@@ -4645,7 +4661,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.checkBranch = checkBranch;
 	}
 	//#32968 END
-
+	
 	//31130-start
 	public boolean isPoApproverPersonnelErr() {
 		return poApproverPersonnelErr;
@@ -4688,13 +4704,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPersonnelRoleMsg(String personnelRoleMsg) {
 		this.personnelRoleMsg = personnelRoleMsg;
 	}
-	//30762-End 
-
+	//30762-End
+	
 	//Start 32008
 	public boolean isUpsCannotEdit() {
 		return upsCannotEdit;
 	}
-
+	
 	public void setUpsCannotEdit(boolean upsCannotEdit) {
 		this.upsCannotEdit = upsCannotEdit;
 	}
@@ -4759,4 +4775,38 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
 	}
 	//#34392 - end
+
+	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
+		return selectedRecommendRejectReasonDescs;
+	}
+
+	public void setSelectedRecommendRejectReasonDescs(
+			List<PmReasonDesc> selectedRecommendRejectReasonDescs) {
+		this.selectedRecommendRejectReasonDescs = selectedRecommendRejectReasonDescs;
+	}
+
+	public List<PmReasonDesc> getSelectedRejectReasonDescs() {
+		return selectedRejectReasonDescs;
+	}
+
+	public void setSelectedRejectReasonDescs(
+			List<PmReasonDesc> selectedRejectReasonDescs) {
+		this.selectedRejectReasonDescs = selectedRejectReasonDescs;
+	}
+
+	public boolean isShowDifferenceRejection() {
+		return showDifferenceRejection;
+	}
+
+	public void setShowDifferenceRejection(boolean showDifferenceRejection) {
+		this.showDifferenceRejection = showDifferenceRejection;
+	}
+
+	public boolean isBasicSupplier() {
+		return basicSupplier;
+	}
+
+	public void setBasicSupplier(boolean basicSupplier) {
+		this.basicSupplier = basicSupplier;
+	}
 }

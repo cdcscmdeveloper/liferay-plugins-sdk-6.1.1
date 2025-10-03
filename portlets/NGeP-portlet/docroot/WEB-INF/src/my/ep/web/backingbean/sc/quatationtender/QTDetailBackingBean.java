@@ -51,9 +51,13 @@ import my.ep.biz.bean.search.sc.QTSearchBean;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
@@ -98,12 +102,20 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.division.DivisionReqDTO;
+import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
@@ -902,12 +914,11 @@ public class QTDetailBackingBean extends
 			//bug #30435, Enhancement #25077 - end
 			
 			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
-
+			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			FacesScopes facesScopes = new FacesScopes();
-			quationTenderReqDTO.setToken(facesScopes
-					.getBPMAuthenticationCtxToken());
+			quationTenderReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			quationTenderReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
@@ -1198,13 +1209,22 @@ public class QTDetailBackingBean extends
 	 *            the ScQt instance
 	 * @param previousPageUrl
 	 * 				the previous page url.
+	 * @param scLoaQT
+	 * 				the scLoaQT object
 	 * @return the navigation page
 	 */
-	public String viewDirectLOADetails(ScQt scQt, String previousPageUrl) {
+	public String viewDirectLOADetails(ScQt scQt, String previousPageUrl, ScLoaForQt scLoaQT) {	// Bug #37978@Syazani 22/04/2025
 		debugLogger("viewDirectLOADetails");
 		
 		Long qtId = scQt.getQtId();
-		Long loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
+		// Bug #37978@Syazani 22/04/2025 -- Start
+		Long loaId;
+		if (scLoaQT != null) {
+			loaId = scLoaQT.getLoaId();
+		} else {
+			loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
+		}
+		// Bug #37978@Syazani 22/04/2025 -- End
 		
 		return new DirectLOABackingBean().retriveLoaDetails(loaId, previousPageUrl, true);
 	}	
@@ -1330,8 +1350,8 @@ public class QTDetailBackingBean extends
 								scLoaForQt.getScLoiLoa().getScQt().getQtId(), scLoaForQt.getLoaId(), previousPageUrl, true);
 						/* Bug #27412 END */
 					} else {
-						if(ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())){
-							return viewDirectLOADetails(scQt, previousPageUrl);
+						if (ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())) {
+							return viewDirectLOADetails(scQt, previousPageUrl, scLoaForQt); // Bug #37978@Syazani 22/04/2025
 						} else {
 							otherArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
 							bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, otherArgs);
@@ -1350,20 +1370,19 @@ public class QTDetailBackingBean extends
 				viewLoiListDetails(scQt, previousPageUrl);
 				
 				return null;
-			} else if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType)){
-				// ***19287#42 , ******17376#55  
-				if(scQt.getLoiLoa()!=null && ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scQt.getLoiLoa().getDocType())){
+			} else if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType)) {
+				// ***19287#42 , ******17376#55
+				if (scQt.getLoiLoa() != null && ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scQt.getLoiLoa().getDocType())) {
 					DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 					directLoaBackingBean.renewSesionObject();
-					
-					return viewDirectLOADetails(scQt, previousPageUrl);
-				}else{	
+					return viewDirectLOADetails(scQt, previousPageUrl, null); // Bug #37978@Syazani 22/04/2025
+				} else {
 					QtLOABackingBean bb = new QtLOABackingBean();
 					bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, null);
-					
+
 					return null;
 				}
-				
+
 			} else {
 				return null;
 			}
@@ -1586,13 +1605,54 @@ public class QTDetailBackingBean extends
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
 						ScAddress scAddress = scQtSampleSubmission.getScAddress();
+						// 11104-start
+						BriefingZoneBean briefingsamplebean = null;
+
+						if (CollectionUtils.isNotEmpty(this.getManagedBean().getSampleAddressBean())) {
+							for (BriefingZoneBean briefBean : this.getManagedBean().getSampleAddressBean()) {
+								if (briefBean.getTplSpecZoneDtl().getSpecZoneId()
+										.equals(scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId())
+										|| scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId() == scQtSampleSubmission
+												.getTplSpecZoneDtl().getSpecZoneId()) {
+									briefingsamplebean = briefBean;
+								}
+							}
+						}
+						// 11104-End
 
 						if (null != scAddress) {
 							if (scAddress.getPmDivision() != null
 									&& scAddress.getPmDivision()
 											.getDivisionId() == null) {
 								scAddress.setPmDivision(null);
+
+								// 11104-start
+								if (null != briefingsamplebean && null != briefingsamplebean.getDivisionId()) {
+									scAddress.setPmDivision(retrievePmDivsById(briefingsamplebean.getDivisionId()));
+								}
+								// 11104-End
 							}
+
+							// 11104-start
+							if (null != scAddress.getPmState() && scAddress.getPmState().getStateId() == null) {
+								if (null != briefingsamplebean && null != briefingsamplebean.getStateId()) {
+									scAddress.setPmState(retrievePmStateById(briefingsamplebean.getStateId()));
+								}
+							}
+
+							if (null != scAddress.getPmDistrict() && scAddress.getPmDistrict().getDistrictId() == null) {
+								if (null != briefingsamplebean && null != briefingsamplebean.getDistrictid()) {
+									scAddress.setPmDistrict(retrievePmDistById(briefingsamplebean.getDistrictid()));
+								}
+							}
+
+							if (null != scAddress.getPmCity() && scAddress.getPmCity().getCityId() == null) {
+								if (null != briefingsamplebean && null != briefingsamplebean.getCityId()) {
+									scAddress.setPmCity(retrievePmCityById(briefingsamplebean.getCityId()));
+								}
+							}
+							// 11104-End
+
 							scAddress.setPmCountry(retrieveCountry());
 						}
 						scQtSampleSubmission.setScQt(getManagedBean().getQt());
@@ -3546,24 +3606,22 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}
-
-		if (SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
+		
+		if (SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName) || SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
 			// #11299 Start Vinod updated error message
-			List<ScQtApproverSettings> approverSettings = this.getManagedBean().getPublicationApproval()
-					.getApproverSettings();
+			ScQtApproval approverPublication = this.getManagedBean().getPublicationApproval();
 
-			if (CollectionUtils.isEmpty(approverSettings)) {
+			if (approverPublication == null || CollectionUtils.isEmpty(approverPublication.getApproverSettings())) {
 				this.getManagedBean().setResetBpkCurrentArea(false); // #25077
 				throw new EpException(MessageConst.ERROR_775174);
 			}
 
 			if ((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
-					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) || currentStatus
-						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) 
+					|| currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
 
-				validatePublicationApproverInactive(approverSettings);
+				validatePublicationApproverInactive(approverPublication.getApproverSettings());
 				validateDOAInactive();
 				validateBPKInactive();
 			}
@@ -4171,10 +4229,27 @@ public class QTDetailBackingBean extends
 			if (!this.getManagedBean().getQt().isPanel()) {
 				if (CollectionUtils.isEmpty(this.getManagedBean()
 						.getQtCategoryList())) {
-					List<ScQtCategory> categoryResults = tenderResDTO
-							.getCategories();
 
-					this.getManagedBean().setQtCategoryList(categoryResults);
+					// 29732&29466 fix duplicate issues -start-
+					List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+					// 29732 fix duplicate issues while deleting the category
+					// and add the same id -start-
+					if (null != removeCategoryCodes) {
+						List<ScQtCategory> categoryResultsnew;
+						categoryResultsnew = this.getManagedBean().getQtCategoryList();
+						if (null == categoryResultsnew || CollectionUtils.isEmpty(categoryResultsnew)) {
+							this.getManagedBean().setQtCategoryList(this.getManagedBean().getTobeRemoveCategoryCodes());
+							this.getManagedBean().setTobeRemoveCategoryCodes(null);
+						} else {
+							this.getManagedBean().setQtCategoryList(categoryResultsnew);
+						}
+
+					} else {
+						List<ScQtCategory> categoryResults = tenderResDTO.getCategories();
+
+						this.getManagedBean().setQtCategoryList(categoryResults);
+					}
+					// 29732&29466 -end-
 
 				}
 
@@ -6485,6 +6560,8 @@ public class QTDetailBackingBean extends
 					if (isMaintancePendingChklistStatus) {
 						retrieveDocumentTabDtl();
 					} else {
+						this.getManagedBean().setSubmit(Boolean.FALSE); // 11104
+
 						retrieveScheduleTabDtl();
 					}
 				}
@@ -6754,6 +6831,14 @@ public class QTDetailBackingBean extends
 
 			updateApprovalDetails(this.getManagedBean().getQt());
 			retrieveApprovalTabDtl();
+
+			// 11104-start
+			if (this.getManagedBean().getQt().isSampleReq()) {
+				this.getManagedBean().setSubmit(true);
+				retrieveScheduleTabDtl();
+			}
+			// 11104-End
+
 			// 25037 - start
 			boolean showPopup = validateIsCommitteeFormed(confirmResetReendorse);
 			if (showPopup) {
@@ -10378,7 +10463,84 @@ public class QTDetailBackingBean extends
 		return 0;
 	}
 	// #29425 - end
-	
+
+	// 11104-start
+	/**
+	 * Retrieve pm state by id.
+	 * 
+	 * @param stateId
+	 *            - Long state id
+	 * @return PmState object
+	 */
+	public static PmState retrievePmStateById(Long stateId) {
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IStateSO.class);
+		StateReqDTO reqDTO = new StateReqDTO();
+
+		reqDTO.setStateId(stateId);
+
+		StateResDTO resDTO = reqSO.retriveStateDetailsByID(reqDTO);
+
+		return resDTO.getPmState();
+	}
+	// 11104-End
+
+	// 11104-start
+	/**
+	 * Retrieve pm city by id.
+	 * 
+	 * @param cityId
+	 *            - Long the city id
+	 * @return PmCity object
+	 */
+	public static PmCity retrievePmCityById(Long cityId) {
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ICitySO.class);
+		CityReqDTO reqDTO = new CityReqDTO();
+
+		reqDTO.setCityId(cityId);
+
+		CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
+
+		return resDTO.getPmCity();
+	}
+	// 11104-End
+
+	// 11104-start
+	/**
+	 * Retrieve pm dist by id.
+	 * 
+	 * @param distId
+	 *            - Long the dist id
+	 * @return PmDistrict object
+	 */
+	public static PmDistrict retrievePmDistById(Long distId) {
+		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+
+		reqDTO.setDistrictId(distId);
+
+		DistrictResDTO resDTO = reqSO.retriveDistrictByID(reqDTO);
+
+		return resDTO.getPmDistrict();
+	}
+	// 11104-End
+
+	// 11104-start
+	public static PmDivision retrievePmDivsById(Long divnId) {
+		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
+		DivisionReqDTO reqDTO = new DivisionReqDTO();
+
+		reqDTO.setDivisionId(divnId);
+
+		DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
+
+		return resDTO.getPmDivision();
+	}
+	// 11104-End
+
 	// 25037 - start
 	/**
 	 * Prepare and navigate to committee history view.

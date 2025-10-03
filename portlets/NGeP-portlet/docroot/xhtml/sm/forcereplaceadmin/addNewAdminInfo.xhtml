@@ -19,9 +19,7 @@
 
 	<ui:define name="contentSection">
 		<p:outputPanel id="verification2Panel">
-		<!-- #34159 - START -->
-		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" escape="false"/>
-		<!-- #34159 - END -->
+		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
 	
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -193,13 +191,16 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="newAdminEmail"
+					<td>
+						<!-- #32617 - START - add validator message -->
+						<p:inputText id="newAdminEmail"
 							label="#{lbl['lbl.sm.userprofile.email']}"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.email}"
+							validatorMessage="Email Address - Invalid Email Format"
 							size="40" required="true"><p:ajax event="change" partialSubmit="true" process="@this" />
-							<f:validateRegex 
-						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-							</p:inputText>
+							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						</p:inputText>
+						<!-- #32617 - END -->
 						<p:message id="newAdminEmailMsg" for="newAdminEmail"
 							showSummary="true" showDetail="false" display="icon" /></td>
 	

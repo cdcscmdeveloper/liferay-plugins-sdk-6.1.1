@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -104,6 +105,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.util.CustomUtils;	// Bug #35219@Syazani 07/11/2023
@@ -113,6 +115,7 @@ import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.SampleQuestionBean;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -1652,7 +1655,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2techProposalLstClone = new ArrayList<ScQtCheckList>();
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
-	
+
+	// #11104-start
+	private ScQtCheckList sampleCheckList;
+	private TplSpecQuestion sampleSpecQuestion;
+	private String sampleItemName;
+	private int sampleTotalScore;
+	private List<ScQtCheckList> sampleSpecCheckList;
+	private List<BriefingZoneBean> sampleAddressBean;
+	private Map<Long, SampleQuestionBean> existingSampleSpecQuestions;
+	private boolean isSampleShowHide; // 11104wip
+	// #11104-End
+
 	// 25037 - start
 	private boolean showHistory;
 	private Paginator committeeHistories;
@@ -1683,10 +1697,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #25426 - Start
 	private boolean firstViewPageCAUsers = false;
 	// #25426 - End
-	
-	// #36678 related to #35061 -start-
-	public boolean isFieldProcurementJustification = false;
-	// #36678 related to #35061 -end-
 
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10438,6 +10448,131 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
 
+	// 11104-start
+	/**
+	 * @return the sampleCheckList
+	 */
+	public ScQtCheckList getSampleCheckList() {
+		return sampleCheckList;
+	}
+
+	/**
+	 * @param sampleCheckList
+	 *            the sampleCheckList to set
+	 */
+	public void setSampleCheckList(ScQtCheckList sampleCheckList) {
+		this.sampleCheckList = sampleCheckList;
+	}
+
+	/**
+	 * @return the sampleSpecQuestion
+	 */
+	public TplSpecQuestion getSampleSpecQuestion() {
+		return sampleSpecQuestion;
+	}
+
+	/**
+	 * @param sampleSpecQuestion
+	 *            the sampleSpecQuestion to set
+	 */
+	public void setSampleSpecQuestion(TplSpecQuestion sampleSpecQuestion) {
+		this.sampleSpecQuestion = sampleSpecQuestion;
+	}
+
+	/**
+	 * @return the sampleItemName
+	 */
+	public String getSampleItemName() {
+		return sampleItemName;
+	}
+
+	/**
+	 * @param sampleItemName
+	 *            the sampleItemName to set
+	 */
+	public void setSampleItemName(String sampleItemName) {
+		this.sampleItemName = sampleItemName;
+	}
+
+	/**
+	 * @return the sampleTotalScore
+	 */
+	public int getSampleTotalScore() {
+		return sampleTotalScore;
+	}
+
+	/**
+	 * @param sampleTotalScore
+	 *            the sampleTotalScore to set
+	 */
+	public void setSampleTotalScore(int sampleTotalScore) {
+		this.sampleTotalScore = sampleTotalScore;
+	}
+
+	/**
+	 * @return the sampleSpecCheckList
+	 */
+	public List<ScQtCheckList> getSampleSpecCheckList() {
+		return sampleSpecCheckList;
+	}
+
+	/**
+	 * @param sampleSpecCheckList
+	 *            the sampleSpecCheckList to set
+	 */
+	public void setSampleSpecCheckList(List<ScQtCheckList> sampleSpecCheckList) {
+		this.sampleSpecCheckList = sampleSpecCheckList;
+	}
+
+	/**
+	 * 
+	 * @return the sampleAddressBean
+	 */
+	public List<BriefingZoneBean> getSampleAddressBean() {
+		return sampleAddressBean;
+	}
+
+	/**
+	 * @param sampleAddressBean
+	 *            the sampleAddressBean to set
+	 */
+	public void setSampleAddressBean(List<BriefingZoneBean> sampleAddressBean) {
+		this.sampleAddressBean = sampleAddressBean;
+	}
+
+	/**
+	 * 
+	 * @return the existingSampleSpecQuestions
+	 */
+	public Map<Long, SampleQuestionBean> getExistingSampleSpecQuestions() {
+		return existingSampleSpecQuestions;
+	}
+
+	/**
+	 * @param existingSampleSpecQuestions
+	 *            the existingSampleSpecQuestions to set
+	 */
+	public void setExistingSampleSpecQuestions(Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
+		this.existingSampleSpecQuestions = existingSampleSpecQuestions;
+	}
+
+	/**
+	 * 
+	 * @return the isSampleShowHide
+	 */
+	public boolean isSampleShowHide() {
+		return isSampleShowHide;
+	}
+
+	/**
+	 * @param isSampleShowHide
+	 *            the isSampleShowHide to set
+	 */
+	public void setSampleShowHide(boolean isSampleShowHide) {
+		this.isSampleShowHide = isSampleShowHide;
+	}
+	// 11104-End
+
 	// 25037 - start
 	public boolean isShowHistory() {
 		return showHistory;
@@ -10637,17 +10772,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.firstViewPageCAUsers = firstViewPageCAUsers;
 	}
 	// #25426 - End
-	
-	// #36678 related to #35061 -start-
-	public boolean isFieldProcurementJustification() {
-		return isFieldProcurementJustification;
-	}
 
-	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
-		this.isFieldProcurementJustification = isFieldProcurementJustification;
-	}
-	// #36678 related to #35061 -end-
-	
 	// 37813,35384 -start
 	/**
 	 * @return the techPoints
@@ -10664,4 +10789,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.techPoints = techPoints;
 	}
 	// 37813,35384 -end	
+
 }

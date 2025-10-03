@@ -471,11 +471,10 @@ public class SmApplicationUtil {
 			//Enhancement #11765
 			sortSupplierCategory(catList);
 			for (SmSupplierCategory cat : catList) {
-				// Bug #26031 - filter valid category
-				// //Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
-				//#30766 - START
+				// //Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen{
+				//#30766 & #34209 - START
 				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED && cat.getPoDecFlg() == null) {
-				//#30766 - END
+				//#30766 & #34209 - END
 					//Enhancement #11765
 					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
 				}
@@ -2169,22 +2168,23 @@ public class SmApplicationUtil {
 		managedBean.setPoApproverAcedemicErr(false);//#31130
 		SmAppl appl = managedBean.getSmAppl();
 		for (SmPersonnel per : appl.getSmPersonnels()) {
-			if (per.getSmStaffAcademics() == null
-					|| per.getSmStaffAcademics().isEmpty()) {
+			//#31130 --START 050625
+			if ((per.getPmUser() != null || per.getEpRole() != null) && (per.getSmStaffAcademics() == null
+					|| per.getSmStaffAcademics().isEmpty())) {
+				//#31130 --END 050625
 				sb.append("<br/>");
 				sb.append(++i + ". ");
 				sb.append(per.getName());
 				validPersonnels = false;
 			}
 		}
-		if (!validPersonnels && managedBean.isSupplierUser()){//#31130
+		// #31130 --START 040725
+		if (!validPersonnels && managedBean.isSupplierUser()) {// #31130
 			validSave = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
-			throw new EpException(MessageConst.ERROR_722599,
-					new String[] { sb.toString() });
-		}else if (!validPersonnels && (managedBean.isApproverUser()|| managedBean.isPoUser())){
+		} else if (!validPersonnels && (managedBean.isApproverUser() || managedBean.isPoUser())) {
 			managedBean.setPoApproverAcedemicErr(true);
 			managedBean.setMsgPersonnelErr(sb.toString());
+			// #31130 --END 040725
 		}
 
 		return validSave;
@@ -2223,6 +2223,7 @@ public class SmApplicationUtil {
 		boolean validPersonnels = true; //#30444
 		boolean displayError = false; //#30444 --31072021--
 		boolean showerror = false;
+		managedBean.setPoApproverPersonnelErr(false); //#31130 040725
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			//16052019 - SSM INTEGRATION CR - To check address complete or not
 			/*if(managedBean.isSsmIntegrationActive() && managedBean.isCompanyValidWithSSM()){
@@ -2235,15 +2236,23 @@ public class SmApplicationUtil {
 			//#28693
 			if ((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() == null)
 					// #30718 - start
-					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null && (per.getPmCountry().getCountryId() == 131L))
+					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null 
+					&& (per.getPmCountry() != null && per.getPmCountry().getCountryId() == 131L)) //#31130 -040725
 					// #30718 - end
-					//31130
-					|| per.getPmRace() == null || per.getTitle() == null) {
+					//#31130 --START 040725
+					|| per.getPmRace() == null || per.getTitle() == null
+					|| per.getDesignation() == null 
+					|| per.getPmCountry() == null || per.getIdentificationNo() == null
+					|| per.getIdentificationTypeId() == null || per.getBirthDate() == null 
+					|| (per.getWorkExperienceYear() == null && appl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))
+					|| ((per.getMobileArea() == null || per.getMobileNo() == null|| per.getMobileTelcoId() == null)
+					&& per.isAuthorized() == true)
+					|| per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
-			} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
-				validPersonnel = false;
-			}
-			//31130-start
+			} 
+			//#31130 --END 040725
+			
+			//31130-start 040725
 			for (SmPersonnelAddress addressPer : per.getSmPersonnelAddresses()){
 				if (addressPer.getSmAddress() == null
 						|| (addressPer.getSmAddress() != null && addressPer.getSmAddress().getAddress1().isEmpty()
@@ -2258,18 +2267,23 @@ public class SmApplicationUtil {
 								|| addressPer.getSmAddress().getCityId() == 1 ) {
 					validPersonnel = false;
 				}
-			}//31130-end
+			}//31130-end 040725
 			//#30444 --START--25082021--
 			if ((per.isClerical() && per.isManagement() 
-					&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))
-							|| (per.isClerical() && per.isManagement() && !per.isEquityOwner()
-									&& managedBean.getBusinessTypeVal().equalsIgnoreCase(
-											SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))){
+					&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))
+					|| (per.isClerical() && per.isManagement() && !per.isEquityOwner()
+					&& managedBean.getBusinessTypeVal().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT))){
 				validPersonnels = false;
 			}
 			//#30444 --END--25082021--
-			if(!validPersonnel){
+			//#31130 --START--040725--
+			if((per.getPmUser() != null || per.getEpRole() != null)
+					&&(!validPersonnel || (appl.getSupplierType().equalsIgnoreCase(
+					SupplierManagementConst.STYPE_CONSULTANT) 
+					&& ((per.getSmStaffAcademics() == null || per.getSmStaffAcademics().isEmpty())
+					|| (per.isEquityOwner() && (per.getSmStaffExperiences() == null || per.getSmStaffExperiences().isEmpty()))
+					|| (per.isEquityOwner() && (per.getSmAssociationBodies() == null || per.getSmAssociationBodies().isEmpty())))))){
+				//#31130 --END--040725--
 				sb.append(++i + ". ");
 				sb.append(per.getName());
 				// sb.append(",  ");
@@ -2385,7 +2399,7 @@ public class SmApplicationUtil {
 		// end #30076
 
 		//16052019 - SSM INTEGRATION CR #27219
-		//31130
+		//31130 040725
 		if (showerror && managedBean.isSupplierUser() && !managedBean.isDisAllowOwnerEdit() && !managedBean.isApproverUser() && !managedBean.isPoUser()) {
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
@@ -2393,16 +2407,14 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_721082,
 					new String[] { sb.toString() });
 		}
-		//#31130-start
+		//#31130-start 040725
 		if (showerror && (managedBean.isApproverUser() || managedBean.isPoUser())){
 			managedBean.setPoApproverPersonnelErr(true);
 			managedBean.setMsgPersonnelErr(sb.toString());
-		}//#31130-end
-		//#31130-start 06122022
-		else{
+		} else {
 			managedBean.setPoApproverPersonnelErr(false);
 		}
-		//#31130-end 06122022				
+		//#31130-end 040725
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
 			if(managedBean.isSupplierUser()){ //#30762 171123
@@ -11061,7 +11073,7 @@ public class SmApplicationUtil {
 			String fileNameAndPath = tmpPath + fileName;
 			String vm = "/sm/application/MOF-declaration-form.vm";
 			VelocityContext context = new VelocityContext();
-			FacesScopes fs = new FacesScopes();
+			//FacesScopes fs = new FacesScopes();
 			// context.put("hostUrl", fs.getRequest().getServerName() + ":"
 			// + fs.getRequest().getServerPort());
 			context.put("hostUrl", SmCommonUtil.getBasePortalUrl());
@@ -12273,15 +12285,7 @@ public class SmApplicationUtil {
 						PmDivision div = new PmDivision();
 						div.setDivisionId(addr.getSmAddress().getPmDivision()
 								.getDivisionId());
-						//#34159 - START
-						IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
-								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-										IDivisionSO.class);
-						DivisionReqDTO reqDTO = new DivisionReqDTO();
-						reqDTO.setDivisionId(div.getDivisionId());
-						DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
-						smAddress.setPmDivision(resDTO.getPmDivision());
-						//#34159 - END
+						smAddress.setPmDivision(div);
 						smAddress.setDivisionId(div.getDivisionId());
 					}
 					//#13320 - added division - end
@@ -12297,15 +12301,7 @@ public class SmApplicationUtil {
 					if(addr.getSmAddress().getPmCity() != null){
 						PmCity city = new PmCity();
 						city.setCityId(addr.getSmAddress().getPmCity().getCityId());
-						//#34159 - START
-						ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
-								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-										ICitySO.class);
-						CityReqDTO reqDTO = new CityReqDTO();
-						reqDTO.setCityId(city.getCityId());
-						CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
-						smAddress.setPmCity(resDTO.getPmCity());
-						//#34159 - END
+						smAddress.setPmCity(city);
 						smAddress.setCityId(city.getCityId());
 					}
 					//END 27879
@@ -12584,7 +12580,6 @@ public class SmApplicationUtil {
 					bean.setInquirySiteVisitAfter(false);
 				}
 				//#34392 - end
-
 			}
 			// if Supplier (Respond to PO inquiry)
 			// START 14530
@@ -12875,14 +12870,15 @@ public class SmApplicationUtil {
 									.getSelectedShareHolder()
 									.getIdentificationTypeId()));
 		}
-		//start - #30064
-		if(bean.getSelectedShareHolder().getIdentificationType()!=null 
-			&& ParameterConst.PERMANENT_RESIDENCE_TYPES.equalsIgnoreCase(bean.getSelectedShareHolder().getIdentificationType().getParameterCode())){
+		// start - #30064
+		if (bean.getSelectedShareHolder().getIdentificationType() != null
+				&& ParameterConst.PERMANENT_RESIDENCE_TYPES.equalsIgnoreCase(bean.getSelectedShareHolder()
+						.getIdentificationType().getParameterCode())) {
 			bean.getSelectedShareHolder().setIdentificationTypeId(
-				SmApplicationUtil.retrievePmParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES,
-					ParameterConst.IDENTIFICATION_TYPES_IC).getParameterId());
+					SmApplicationUtil.retrievePmParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES,
+							ParameterConst.IDENTIFICATION_TYPES_IC).getParameterId());
 		}
-		//end - #30064
+		// end - #30064
 		if (bean.getSelectedShareHolder().getIdentificationType() == null) {
 			bean.getSelectedShareHolder().setIdentificationType(
 					new PmParameter());
@@ -12980,13 +12976,13 @@ public class SmApplicationUtil {
 						retVal = false;
 					}
 					//27821
-					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){ 
+					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){
 						retVal = false;
 					}
-					//29582, 30064, 35300 start 
+					//29582,35300 start 
 					if (smPersonnel.getIdentificationType() != null && smPersonnel.isPermanentResident() ){
 						retVal = false;
-					}//29582, 30064, 35300 end 
+					}//29582,35300 end 
 					// #28831 - start
 				} else {
 					if (smPersonnel.getIdentificationType() != null
@@ -13109,6 +13105,18 @@ public class SmApplicationUtil {
 					   bean.getSelectedShareHolder().setDisableEquityOwner(false);
 					   bean.getSelectedShareHolder().setDisableStaff(false);
 				   }
+				// #38610-start
+				if (bean.getSelectedShareHolder().isClerical()) {
+					bean.getSelectedShareHolder().setProf(false);
+					bean.getSelectedShareHolder().setManagement(false);
+					bean.getSelectedShareHolder().setEquityOwner(false);
+					bean.getSelectedShareHolder().setSemiProf(false);
+					bean.getSelectedShareHolder().setHigherManagement(false);
+					bean.getSelectedShareHolder().setDisableProf(true);
+					bean.getSelectedShareHolder().setDisableManagement(true);
+					bean.getSelectedShareHolder().setDisableEquityOwner(true);
+					bean.getSelectedShareHolder().setDisableSemiProf(true);
+				}// #38610-end
 				 if(bean.getSelectedShareHolder().isEquityOwner()
 							|| bean.getSelectedShareHolder().isManagement()
 							|| bean.getSelectedShareHolder().isDirector()
@@ -13994,12 +14002,16 @@ public class SmApplicationUtil {
 			if (StringUtils.isBlank(searchQuery)) {
 				resultList = rejectReasons;
 			} else {
-				for (PmReasonDesc tmp : rejectReasons) {
-					if (StringUtils.upperCase(tmp.getReasonDesc()).contains(
+				//#37896 START
+				for (PmReasonDesc tmp : rejectReasons) {					
+					String stringtest = tmp.getReasonDesc().replaceAll("\\s{2,}"," ").trim();
+
+					if (StringUtils.upperCase(stringtest).contains(
 							StringUtils.upperCase(searchQuery))) {
 						resultList.add(tmp);
 					}
 				}
+				//#37896 END
 			}
 		}
 		return resultList;
@@ -14423,7 +14435,7 @@ public class SmApplicationUtil {
 	private Map<Integer, Date> getPoKpiStartDate(Long docId, Long stateId) {
 		int pauseDays = 0;
 		Date startDate = new Date();
-		Map<Integer, Date> mapDate = new HashMap();
+		Map<Integer, Date> mapDate = new HashMap<Integer, Date>();
 		SmWorkFlowStatusReqDTO swReqDTO = new SmWorkFlowStatusReqDTO();
 		swReqDTO.setStatusIds(Arrays
 				.asList(new Long[] {
@@ -14442,7 +14454,7 @@ public class SmApplicationUtil {
 			startDate = workFlowList.get(0).getCreatedDate();
 			if (workFlowList.size() > 1) {
 				Iterator<SmWorkflowStatus> wfIter = workFlowList.iterator();
-				SmWorkflowStatus wfStart = wfIter.next();
+				//SmWorkflowStatus wfStart = wfIter.next();
 				int i = 0;
 				while (wfIter.hasNext()) {
 					i++;
@@ -14502,7 +14514,7 @@ public class SmApplicationUtil {
 	public Map<Integer, Date> getPoKpiEndDateByCompanyState(Date startDate,
 			int numDays, int pauseDays, Long stateId) {
 		int daysLeft = numDays;
-		Map<Integer, Date> mapDate = new HashMap();
+		Map<Integer, Date> mapDate = new HashMap<Integer, Date>();
 		Calendar dateCal = Calendar.getInstance();
 		dateCal.setTime(startDate);
 
@@ -14842,8 +14854,8 @@ public class SmApplicationUtil {
 			e.printStackTrace();
 		}
 	}
-	//13320-end	
-	
+	//13320-end
+		
 	//STATR 25474
 	public static SmAppl getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
 			Long supplierId, String applType) {
@@ -15221,4 +15233,29 @@ public class SmApplicationUtil {
 	    }
 	}
 	//#37605 END
+	
+	// #37784 -STRAT
+	/*
+	 * Checks the application record status. If it is either DELETED or
+	 * CANCELLED, redirects the user to the application error page with an
+	 * appropriate message.
+	 * 
+	 * @param appl the application object to check
+	 */
+	public static void checkAndRedirectIfInvalid(SmAppl appl) {
+		if (appl != null) {
+			Long statusId = appl.getPmStatus().getStatusId();
+			boolean isDeletedOrCancelled = appl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED || appl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED;
+
+			boolean isPendingVerificationStatus = SupplierManagementConst.PM_STATUS_PENDING_SUPPORTING_DOCUMENT_VERIFICATION.equals(String.valueOf(statusId));
+
+			boolean isPendingPaymentStatus = statusId == SupplierManagementConst.PM_STATUS_PENDING_PROCESS_FEE;
+
+			if (isDeletedOrCancelled || isPendingVerificationStatus || isPendingPaymentStatus) {
+				SmCommonUtil.redirectToPage(SmApplicationUtil.getApplicationErrorPage(), MessageConst.ERROR_760600, null, FacesMessage.SEVERITY_INFO);
+				return;
+			}
+		}
+	}
+	// #37784- END
 }

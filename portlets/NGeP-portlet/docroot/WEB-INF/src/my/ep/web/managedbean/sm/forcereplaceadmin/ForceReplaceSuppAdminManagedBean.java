@@ -1,23 +1,21 @@
 package my.ep.web.managedbean.sm.forcereplaceadmin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
 import my.ep.persistence.entity.sm.SmSupplier;
+
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.ReactivateSupplierVO;
-//#28765 - Start
-import java.util.ArrayList;
-import my.ep.web.vo.SoftcertUploadSuppDocVO;
-import my.ep.persistence.entity.pm.common.PmDocument;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
-//#28765 - End
 
 @ManagedBean(name = "forceReplaceSuppAdminMb")
 @SessionScoped
@@ -31,12 +29,10 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private List<SelectItem> nationalities;
 	private List<SelectItem> permCountries;
 	private List<SelectItem> permStates;
-	private List<SelectItem> permDivisions; //#34159
 	private List<SelectItem> permDistricts;
 	private List<SelectItem> permCities;
 	private List<SelectItem> mailCountries;
 	private List<SelectItem> mailStates;
-	private List<SelectItem> mailDivisions; //#34159
 	private List<SelectItem> mailDistricts;
 	private List<SelectItem> mailCities;
 	private List<SelectItem> salutationItems;
@@ -90,6 +86,11 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private boolean disabledRoleClericalStaff = false;
 	//33563 - END
 	
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private String oldIdentification;
+	private String newIdentifiction;
+	// #28895_35501 End
+
 	public ForceReplaceSuppAdminManagedBean() {
 		
 	}
@@ -506,20 +507,22 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	public void setDisplayRolePanel(boolean displayRolePanel) {
 		this.displayRolePanel = displayRolePanel;
 	}
-
-	public List<SelectItem> getPermDivisions() {
-		return permDivisions;
-	}
-
-	public void setPermDivisions(List<SelectItem> permDivisions) {
-		this.permDivisions = permDivisions;
-	}
 	
-	public List<SelectItem> getMailDivisions() {
-		return mailDivisions;
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public String getOldIdentification() {
+		return oldIdentification;
 	}
 
-	public void setMailDivisions(List<SelectItem> mailDivisions) {
-		this.mailDivisions = mailDivisions;
+	public void setOldIdentification(String oldIdentification) {
+		this.oldIdentification = oldIdentification;
 	}
+
+	public String getNewIdentifiction() {
+		return newIdentifiction;
+	}
+
+	public void setNewIdentifiction(String newIdentifiction) {
+		this.newIdentifiction = newIdentifiction;
+	}
+	// #28895_35501 End
 }

@@ -54,12 +54,15 @@
 		</td>
 		<td>
 			<h:panelGroup id="maxScorePG">
+			<ui:remove> #11104 - add onkeypress </ui:remove>
 				<p:inputText id="maxScore" style="text-align:right;"
 					value="#{templateSpecBean.selectedSpecQuestion.maxScore}" 
 					required="true" size="15" maxlength="3"
+					onkeypress="if (event.keyCode == 46) { return false; }"
 					disabled="#{!editable}"
 					label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}"
 					rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}">
+					<ui:remove> #11104 -end- </ui:remove>
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
 				</p:inputText>
 				<p:message id="maxScoreMsg" for="maxScore" display="icon" />

@@ -507,7 +507,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//Enhancement #26339 -end-	
 
 	private boolean hasPreviousMeeting; //#29473, #31675
-	
+
+	private boolean itemSampleReq; // #11104
+
 	// 25037 - start
 	private EvaluationMeetingBackingBean meetingBB;
 	private List<ScCommitteeMember> committeeMemberActivity;
@@ -3478,7 +3480,24 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.hasPreviousMeeting = hasPreviousMeeting;
 	}
 	// #29473, #31675 -End
-	
+
+	// 11104-start
+	/**
+	 * @return the itemSampleReq
+	 */
+	public boolean isItemSampleReq() {
+		return itemSampleReq;
+	}
+
+	/**
+	 * @param itemSampleReq
+	 *            the itemSampleReq to set
+	 */
+	public void setItemSampleReq(boolean itemSampleReq) {
+		this.itemSampleReq = itemSampleReq;
+	}
+	// #11104-End
+
 	// 25037 - start
 	public EvaluationMeetingBackingBean getMeetingBB() {
 		return meetingBB;

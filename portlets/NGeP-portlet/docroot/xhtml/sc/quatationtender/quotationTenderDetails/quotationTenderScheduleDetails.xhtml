@@ -14,6 +14,11 @@
 		value="#{!qTDetailBB.enableFieldByStatusNFiledName('DESK_OFFICER_ASSISTANT') and qTDetailBB.managedBean.doaRequestEditable}" />
 	<ui:remove> 25037 - end </ui:remove>
 	
+	<ui:remove> #11104 - start </ui:remove>
+	<ui:param name="schedulecoordinatingofficer"
+		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_SCHEDULE_COORDINATE_OFFICER)}" />
+	<ui:remove> #11104 - end </ui:remove>
+
 	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true"
 		id="scheduleDetalsPublishingClosing">
 		<table style="width: 100%">
@@ -491,6 +496,48 @@
 						</table>
 					</td>
 				</tr>
+                <ui:remove> #11104 - start </ui:remove>
+                	<ui:fragment rendered="#{isSampleExist}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.coordinate.officer']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:inputText id="samplecoordinatingofficer"
+										required="#{isRequire}"
+										disabled="#{schedulecoordinatingofficer}"
+										label="#{lbl['lbl.sc.coordinate.officer']}"
+										value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtSampleSubmission.scAddress.contactPerson}"
+										size="30" maxlength="85" /></td>
+								<td><p:message id="samplecoordinatingofficerrMsg"
+										for="samplecoordinatingofficer" display="icon" /></td>
+							</tr>
+						</table>
+					</td>
+
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:inputText id="samplecoordinatingofficerContactNo"
+										required="#{isRequire}"
+										disabled="#{schedulecoordinatingofficer}"
+										label="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no.validation.msg']}"
+										value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtSampleSubmission.scAddress.contactMobileNo}"
+										size="20" maxlength="20"
+										validator="#{webappBean.checkPhoneNumber}" /></td>
+								<td><p:message id="samplecoordinatingofficerContactNoMsg"
+										for="samplecoordinatingofficerContactNo" display="icon" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				</ui:fragment>
+              <ui:remove> #11104 - end </ui:remove>
 			</table>
 		</p:panel>
 	</c:if>

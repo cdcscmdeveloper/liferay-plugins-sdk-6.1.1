@@ -147,8 +147,7 @@
 				</td>
 				<td class="tdContent">
 					<h:panelGroup id="divisionCompInfoDropdownPanelId" rendered="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
-					<!-- #34159 - START -->
-						<p:selectOneMenu id="busDivision" required="#{!empty param['disableValidation']}"
+						<p:selectOneMenu id="busDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId}"
 						style="width:80%">
@@ -161,8 +160,6 @@
 							listener="#{bb.onChangeDivision(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision,'COMPANY_ADDRESS')}"
 							update="busDistrict,busCity" />
 					</p:selectOneMenu>
-					<p:message id="busDivisionMsg" for="busDivision" display="icon" />
-					<!-- #34159 - END -->
 					</h:panelGroup>
 				</td>
             </tr>

@@ -98,7 +98,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatus;	// Bug #37829@Syazani 13/03/2024
 import my.ep.persistence.entity.sc.common.ScActor; //Bug #32682
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
@@ -253,16 +253,16 @@ public class SupplierFinalizationBackingBean extends
 
 			loadInitialData(qtId);
 			prepareUpdateCommitteeMember(); // 25037
+
+			// #18685 - Start.
+			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
+			// #18685 - End.
 			
 			// Bug #37829@Syazani 13/03/2024 -- Start
 			if (!validateCurrentStatus()) {
 				throw new EpException(MessageConst.ERROR_721018);
 			}
 			// Bug #37829@Syazani 13/03/2024 -- End
-
-			// #18685 - Start.
-			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
-			// #18685 - End.
 			
 			// 28834 starts
 			if (getManagedBean().getQtRefinalized() && ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes())
@@ -1306,6 +1306,9 @@ public class SupplierFinalizationBackingBean extends
 		if (getManagedBean().getCurrentZone() != null && evaluationStageId==2) { //#26440
 			 selectedZoneId = getManagedBean().getCurrentZone().getSpecZoneId();
 		 }
+
+		this.getManagedBean().setCheckCategoryCodeQt(this.getManagedBean().getScQt()); // #29466
+
 		getManagedBean().setQualifiedSuppliersByEvalStage(
 				new QualifiedSuppliersPagingDataModel(
 						"evaluationQualifiedSuppliers", qtId,
@@ -1346,7 +1349,7 @@ public class SupplierFinalizationBackingBean extends
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 			finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));//35381 - Related 6906
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
-			
+
 			// 6906 - start - note 117
 			String desicion = scQtFinalization.getDecision() == null ? null : scQtFinalization.getDecision()
 					.getParameterCode();
@@ -2260,7 +2263,7 @@ public class SupplierFinalizationBackingBean extends
 						new FacesScopes().getUserLocale()) });
 			}
 			// 6906 - end - note 117
-			
+
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId)
@@ -2273,7 +2276,6 @@ public class SupplierFinalizationBackingBean extends
 					) {
 
 				this.getManagedBean().setSubmit(true);
-
 			}
 			
 			// Bug #32682 #27502 & #34921 - Start
@@ -3625,7 +3627,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}*/
-	/*
+		/*
 		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
 				StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
@@ -4552,7 +4554,7 @@ public class SupplierFinalizationBackingBean extends
 		List<Long> rejectedRecommendIds = getManagedBean().getRejectedScQtRecommendIds();
 		rejectedRecommendIds = rejectedRecommendIds == null ? new ArrayList<Long>() : rejectedRecommendIds;
 		// 33380 - end
-		
+
 		if (CollectionUtils.isNotEmpty(scQtRecommends)) {
 			for (ScQtRecommend recommend : scQtRecommends) {
 				if (recommend.getRecommendDtls() != null) {
@@ -6610,7 +6612,7 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setSelectionMode(recommendCount > 0 ? QTConstants.SELECTION_MODE_MULTIPLE : QTConstants.SELECTION_MODE_SINGLE);
 		}
 		// 33380 - end
-		
+
 		if (scQtRecommend.isSelected()) {
 			getManagedBean().setSelectedItem(scQtRecommend);
 			getManagedBean().getSelectedItemList().add(scQtRecommend);
@@ -7874,8 +7876,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean isZonal = scQt.isZonal(); 
 		boolean isItemized = true;
 		List<TplSpecZoneDtl> zoneDtls = getManagedBean().getZoneDetails();
-		String recommendTypeCode = getManagedBean().getScQtFinalization()
-									.getRecommendedTypeId().getParameterCode();
+		String recommendTypeCode = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
 		if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 						  .equals(recommendTypeCode)) {
 			isItemized = false;
@@ -8084,7 +8085,7 @@ public class SupplierFinalizationBackingBean extends
 		reqDTO.setDocNumber(scQt.getQtNo());
 		
 		SuppFinalizationReqDTO sfReqDTO = new SuppFinalizationReqDTO();
-		Set<String> fetchSet = new HashSet();
+		Set<String> fetchSet = new HashSet<String>();
 		fetchSet.add("finalizationCommittee");
 		sfReqDTO.setFetchSet(fetchSet);
 		sfReqDTO.setQtId(scQt.getQtId());

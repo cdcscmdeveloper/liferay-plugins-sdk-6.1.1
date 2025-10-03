@@ -231,6 +231,8 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
+				
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 
 				if (specMaster.getSpecTypeCode() != null &&
 						ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode())
@@ -2565,9 +2567,12 @@ public class TemplateSpecBackingBean extends
 	}
 	
 	public String replaceWithBR(String specDetails) {
-		
-		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
-				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		// 35521 @zaim - start
+		String spec = specDetails.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY); // 36103 @zaim
+		spec = spec.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		spec = spec.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER); // 36103 @zaim
+		return spec;
+		// 35521 @zaim - end
 	}
 	
 	/**
@@ -2745,7 +2750,8 @@ public class TemplateSpecBackingBean extends
 					){
 					if (specEstimationId == specEstimation.getSpecEstimationId()){
 						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
-						totalEstAmount = totalEstAmount.add(specEstimation.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani // bugs #26234 add decimal point
+						totalEstAmount = totalEstAmount.add(specEstimation.getEstimatedCost()).setScale(2, 
+								QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani // bugs #26234 add decimal point
 					}
 				}
 				else {
@@ -2765,9 +2771,9 @@ public class TemplateSpecBackingBean extends
 					} //#25039-End
 
 					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
-						totalEstAmount = totalEstAmount.add(specEstimation.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
-
-					}
+						totalEstAmount = totalEstAmount.add(specEstimation.getEstimatedCost()).setScale(2, 
+								QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
+					} // bugs #26234 
 				}
 		};
 
@@ -2794,9 +2800,10 @@ public class TemplateSpecBackingBean extends
 
 			BigDecimal totalIndicativePrice = new BigDecimal("0.00");//Bug #29808
 			BigDecimal zeroChangeTo1 = new BigDecimal("1.00");//Bug #29808
-			
-			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024	//Bug #29808
-		
+
+			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, 
+					QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024	//Bug #29808
+
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
 
@@ -2963,7 +2970,21 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	// #25039 End - version zonal
+	
+	// #31134&11104 -start-
+	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
+		int count = 0;
 
+		for (TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()) {
+			if (retrieveAns != null && retrieveAns.getTplSpecTierQty() != null) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	// #31134&11104 -end-
+	
 	// #35384, #36248_haziq - start
 	/**
 	 * #36248 To validate Wieghtage input value
@@ -2982,6 +3003,60 @@ public class TemplateSpecBackingBean extends
 		}
 
 	}
-	// #35384, #36248_haziq - End	
+	// #35384, #36248_haziq - End
 	
+	/**
+	 * Calculate the total amount and amount per year for all spec answer for
+	 * each item.
+	 * 
+	 * @param templateSpecBean
+	 *            the TemplateSpecBean instance
+	 * @param isItemTypeService
+	 *            the item type service flag
+	 */
+	// FARID #21695 START (merge to pds by 38916)
+	public void calcAllSpecAnswerTotalAmount(TemplateSpecBean templateSpecBean) {
+
+		List<TplSpecAnswer> specAnswerList = templateSpecBean.getSpecAnswerList();
+
+		if (specAnswerList != null) {
+			for (TplSpecAnswer specAnswer : specAnswerList) {
+				if (null != specAnswer) {
+					TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+					BigDecimal quantity = null;
+
+					if (specAnswer.getTplSpecZoneQty() != null) {
+						quantity = specAnswer.getTplSpecZoneQty().getQty();
+					} else {
+						quantity = specQuestion.getClQuantity();
+					}
+
+					BigDecimal totalPrice = TemplateSpecHelper.getInstance().calcTotalAmount(specQuestion,
+							specAnswer.getRatePerUom(), quantity);
+
+					if (totalPrice != null
+							&& templateSpecBean.getSpecMaster().getItemTypeCode().getParameterCode() == ParameterConst.ITEM_TYPE_SERVICE) {
+						TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+						BigDecimal amountPerYear = BigDecimal.valueOf(totalPrice.doubleValue());
+						BigDecimal itemDurationMonth = specQuestion.getClDurationMonth();
+
+						if (itemDurationMonth != null) {
+							amountPerYear = amountPerYear.divide(itemDurationMonth, 2, RoundingMode.HALF_UP);
+						} else {
+							BigDecimal durationMonth = specMaster.getDurationMonth();
+
+							if (durationMonth != null) {
+								amountPerYear = amountPerYear.divide(durationMonth, 2, RoundingMode.HALF_UP);
+							}
+						}
+
+						specAnswer.setAmountPerYear(amountPerYear.multiply(BigDecimal.valueOf(12)));
+					}
+					specAnswer.setAnswerNumeric(totalPrice);
+				}
+			}
+		}
+
+	}
+	// FARID #21695 END
 }

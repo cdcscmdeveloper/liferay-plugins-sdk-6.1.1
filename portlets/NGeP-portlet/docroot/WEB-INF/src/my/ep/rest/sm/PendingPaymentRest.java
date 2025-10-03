@@ -27,7 +27,6 @@ public class PendingPaymentRest {
 			// #36401 - Start
 			resDTO = SmServiceLookup.getPendingPaymentSO().updateSmPendingProcessIsPickup(resDTO);
 			// #36401 - End
-			
 			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
 				// #36401 - Start
 				log.info("#36401 :: logger :: " + smPendingProcess.getApplId() + "Attempt :: "

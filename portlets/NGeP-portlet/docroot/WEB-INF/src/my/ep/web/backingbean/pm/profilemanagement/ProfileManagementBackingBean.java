@@ -2058,7 +2058,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
 				roleReqDTO.setAssignRole(true);
-				
 				logger.info("..getFacesScopes().getUserSessionBean().getUserId()=" + getFacesScopes().getUserSessionBean().getUserId());
 
 				roleReqDTO.setSearchRoleBean(searchBeanData);
@@ -4157,6 +4156,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return null;
 	}
+	
+	//#29594 - START
+	public String retrieveMinistryName() {
+		return retrieveMinistryCodeNameByOrgProfileId(getManagedBean().getSelectedUserOrg().getPmOrgProfile()
+				.getOrgProfileId());
+	}
+	
+	public String retrievePTJGroupName() {
+		return retrieveJabatanCodeNameByOrgProfileId(getManagedBean().getSelectedUserOrg().getPmOrgProfile()
+				.getOrgProfileId());
+	}
+	//#29594 - END
 	
 	/*** checks If Selected Receiving Address Type. */
 	// #35769 - Start // fixing null pointer after inactive user

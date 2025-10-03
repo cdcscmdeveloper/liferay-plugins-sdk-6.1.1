@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +36,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;//#29418
+import java.util.zip.ZipOutputStream;//#29418
 
 import javax.ejb.TransactionAttribute; //#21387
 import javax.ejb.TransactionAttributeType;	//#21387								  										  
@@ -64,6 +64,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -75,6 +76,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -86,9 +88,9 @@ import my.ep.dto.pm.common.language.LanguageReqDTO;
 import my.ep.dto.pm.common.language.LanguageResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -110,6 +112,8 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
@@ -156,7 +160,6 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -181,6 +184,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	private static final long serialVersionUID = 1L;
 
 	private static Logger log = Logger.getLogger(BaseBackingBean.class);
+	private static final int MAX_LENGTH = 53; //#29418
 
 	private Class<T> managedBeanClazz;
 	private String managedBeanName;
@@ -188,9 +192,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	private static final String UTF = "UTF-8";
 	//27346 - start
 	String fileInitName;
-	private String tmpPath = null;
-	private String tmpFolder = "SsmInfoTemplate" + "/";
-	private StreamedContent file;
+	//private String tmpPath = null;
+	//private String tmpFolder = "SsmInfoTemplate" + "/";
+	//private StreamedContent file;
 	//27346 -  end
 	@SuppressWarnings("unchecked")
 	public BaseBackingBean() {
@@ -1672,6 +1676,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return filename;
 	}
+	
+	//#29418 start
+	/**
+	 * Gets the medium file name.
+	 *
+	 * @param filename the filename
+	 * @return the short file name
+	 */
+	public String getMediumFileName(String filename) {
+        if (StringUtils.isEmpty(filename) || filename.length() <= MAX_LENGTH) {
+            return filename;
+        }
+
+        StringBuilder truncatedFilename = new StringBuilder(filename.substring(0, MAX_LENGTH));
+        truncatedFilename.append("...");
+        
+        return truncatedFilename.toString();
+    }
+	//#29418 end
 
 	/**
 	 * Retrieve jabatan by org profile id.
@@ -2255,7 +2278,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
 			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
 			// 25037 - end
-
+			// #29007 Start Vinod
+			this.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo());
+			// #29007 End Vinod
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -2969,6 +2994,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			this.getManagedBean().setSmSupplierSsm(new SmSupplier());
+			//#24819 - START
+			if(this.getManagedBean().getSmSupplier() == null){
+				this.getManagedBean().setSmSupplier(new SmSupplier());
+				this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
+			}
+			//#24819 - END
 			/*this.getManagedBean().setBusinessTypeParamCode(getManagedBean().getSmAppl().getSupplierType()
 					.equals("J") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT
 					: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);*/
@@ -3124,6 +3155,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		context.put("businessNaturelbl", ResourceBundleUtils.getMessage("lbl.sm.nature.of.biz.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
 		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
+		context.put("ssmNewRegNo", this.getManagedBean().getSmSupplier().getSsmNewRegNo());	//#24819
 		context.put("smAddress", this.getManagedBean().getSmAddress());
 		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
 		context.put("directorInfo", this.getManagedBean().getSmPersonnelDirectorSsm());
@@ -3484,6 +3516,126 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	
+	//#29594 - START
+	public String retrieveMinistryCodeNameByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
+			return orgProfile.getOrgCode().concat(" - ").concat(orgProfile.getOrgName());
+		} else {
+			log.info("Ministry not found : " + orgProfileId);
+			return "";
+		}
+	}
+	
+	public String retrieveJabatanCodeNameByOrgProfileId(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
+		String jabatan = "";
+		if (resDTO.getPmOrgProfile() != null) {
+			jabatan = resDTO.getPmOrgProfile().getOrgCode().concat(" - ").concat(resDTO.getPmOrgProfile().getOrgName());
+		}
+		return jabatan;
+	}
+	//#29594 - END
+	
+	//Enhancement 29418 -start
+
+	/**
+	 * To get Actual file path for attachement.
+	 * 
+	 * @param attachment
+	 * @return filePath.
+	 */
+	/*protected String getActualFilePath(ScAttachment attachment) {
+		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		StringBuilder actualFilePath = new StringBuilder(docRepoBaseDir);
+		actualFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		actualFilePath.append(attachment.getFilePath());
+
+		return actualFilePath.toString();
+	}*/
+
+	/**
+	 * Generate report.
+	 *
+	 * @param reportFile the report file
+	 * @param paramMap the param map
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	protected void generateReportPDF(String contractNo, List<String> reportFiles,
+			Map<String, Map<String, String>> paramMaps) throws IOException { 
+		
+		PortletResponse portalresponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil
+				.getHttpServletResponse(portalresponse);
+		response.setContentType("Content-type: text/zip");
+		response.setHeader("Content-Disposition",
+				"attachment; filename="+ contractNo + "_Amendment Update.zip");
+		
+		Map<String, String> paramMap;
+		
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
+				response.getOutputStream()));
+		
+		for(String reportFile : reportFiles){
+			String fileType = "";
+
+			paramMap = paramMaps.get(reportFile);
+			
+			if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL)){
+				fileType = "_Amendment Detail";
+			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE)){
+				fileType = "_Zone";
+			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY)){
+				fileType = "_Agency";
+			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL) ||
+					reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL)){
+				fileType = "_Item";
+			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION)){
+				fileType = "_Deduction";
+			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE)){
+				fileType = "_Schedule";
+			}
+			
+			zos.putNextEntry(new ZipEntry(contractNo + fileType + ".pdf"));
+			
+			String reportUrl = generateReportURL(reportFile, paramMap);
+	
+			HttpURLConnection urlConnection = null;
+			URL obj = new URL(reportUrl);
+			urlConnection = (HttpURLConnection) obj.openConnection();
+	
+			BufferedInputStream buf = new BufferedInputStream(
+					urlConnection.getInputStream());
+			
+			int size = 0;
+			while ((size = buf.read()) != -1) {
+				zos.write(size);
+			}
+			buf.close();
+		}
+		zos.closeEntry();
+		zos.close();
+		response.flushBuffer();		
+		FacesContext.getCurrentInstance().responseComplete();
+	}
+	//Enhancement 29418 - end
+	
 	//#31849, #32682, #35489 start
 	/**
 	 * Method to return current session userId from user screenName(loginId)
@@ -3535,6 +3687,40 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	// 33410 - END
+
+	// #29466 - START
+	public boolean checkManufacturerCategoryCodes(ScQt scQt) {
+		boolean manufacturer = false;
+
+		if (null != scQt && !scQt.isPanel()) {
+			List<ScQtCategory> qtCategories = null;
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+
+			reqDTO.setQtId(scQt.getQtId());
+
+			qtCategories = getQtDetailSO().getQtCategoryByQtId(reqDTO).getCategories();
+
+			if (null != qtCategories && CollectionUtils.isNotEmpty(qtCategories)) {
+				for (ScQtCategory category : qtCategories) {
+					if (SourcingConstants.MANUFACTURER_CATEGORY_CODE.equals(category.getPmCategoryL3().getCategoryL3Code())) {
+						manufacturer = true;
+						break;
+					}
+				}
+			}
+		} else {
+			manufacturer = false;
+		}
+
+		return manufacturer;
+	}
+	// #29466 -end-
+
+	// #29466 -start-
+	private IQTDetailSO getQtDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+	}
+	// #29466 - END
 	
 	//#21387 - Start
 	/**
@@ -3746,4 +3932,28 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return isPersonnelOwnerDirectorNull;
 	}
 	//END #29956
+	
+	// #28854 - Start
+	/**
+	 * Processes the given string by replacing newline characters with HTML line
+	 * break tags and encoding the < and > characters to their HTML entity
+	 * equivalents. If the string is null, empty or contains only whitespace, it
+	 * returns null.
+	 * 
+	 * @param value
+	 *            the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by
+	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
+	 *         respectively; {@code null} if the input is null or empty
+	 */
+	public String encodeHtmlStringOrNull(String value) {
+		if (value == null || value.trim().isEmpty()) {
+			return null;
+		}
+		// Replace < and > with their HTML entity equivalents
+		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+		// Replace any newline characters (\r\n or \n) with <br/>
+		return formatted.replaceAll("(\r\n|\n)", "<br/>");
+	}
+	// #28854 - End
 }

@@ -378,8 +378,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 
 	/** The request note dtl. */
 	private ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
+
 	// #25790 - end
-	
+
 	// #36119 - start
 	/** The new sourcing dp bpm version flag */
 	private boolean sourcingDpNewBpmVer = Boolean.FALSE;
