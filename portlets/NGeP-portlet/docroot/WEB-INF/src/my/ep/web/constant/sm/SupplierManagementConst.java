@@ -1552,5 +1552,15 @@ public class SupplierManagementConst {
 		return AU_TAB_ID_DISCIPLINARY_ACTION_INFO;
 	}
 	// #28895_35501_DA End
+	
+	// 36504 - START
+	public String getSECTION_REV_ROLE_PO() {
+		return SECTION_REV_ROLE_PO;
+	}
+	
+	public String getSECTION_REV_ROLE_APP() {
+		return SECTION_REV_ROLE_APP;
+	}
+	// 36504 - END
 
 }
