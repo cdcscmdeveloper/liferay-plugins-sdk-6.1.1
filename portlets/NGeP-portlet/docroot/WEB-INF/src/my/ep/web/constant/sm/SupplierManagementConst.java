@@ -301,6 +301,8 @@ public class SupplierManagementConst {
 	public static final String PAYMENT_GATEWAY_SUCCESS = "SUCC";
 	public static final String PAYMENT_GATEWAY_FAIL = "FAIL";
 	public static final String PAYMENT_GATEWAY_PENDING = "PEND";
+	public static final String PAYMENT_GATEWAY_CHANNEL_MGATE = "MGATE";
+	public static final String PAYMENT_GATEWAY_CHANNEL_FPX = "FPX";
 	public static final String PAYMENT_INVALID_RES = my.ep.constant.sm.SupplierManagementConst.PAYMENT_INVALID_RES;
 
 	public static final String PM_STATUS_PAYMENT = "SPY";
