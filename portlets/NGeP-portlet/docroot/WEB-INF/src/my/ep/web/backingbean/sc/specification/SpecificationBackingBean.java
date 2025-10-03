@@ -1901,30 +1901,9 @@ public class SpecificationBackingBean extends
 				templateSpecBackingbean
 						.updateItemWeightageReq(templateSpecBean);
 
-			} else {
-				//#21695 fix panel disable weightage 27/1/2022 start
-				if (this.getManagedBean().getQt().isPartial() == true){
-					this.getManagedBean().setSpecItemWeightageRequired(true);
-					if(this.getManagedBean().getTemplateSpecBean() != null){
-						if(this.getManagedBean().getTemplateSpecBean().getSpecMaster() != null){
-							this.getManagedBean().getTemplateSpecBean().getSpecMaster().setWeightageReq(false);
-							this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
-							if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null){
-								for(TplSpecQuestion specQuestWeightage : this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
-									if(specQuestWeightage!=null){
-										specQuestWeightage.setWeightageReq(false);
-										this.getManagedBean().setSpecItemWeightageRequired(true);
-									}
-								}
-							}
-							
-						}
-					}
-				}else{
-				this.getManagedBean().setSpecItemWeightageRequired(false);
-				}
-				//#21695 fix panel disable weightage 27/1/2022 end
-			}
+			} 
+			// #38679 remove (no longer needed because requirement has changed)
+			
 			templateSpecBean.setSpecMaster(specMaster);
 			if (this.getManagedBean().getQt().isZonal()
 					&& this.getManagedBean().getQt().getQtType()
@@ -2424,6 +2403,7 @@ public class SpecificationBackingBean extends
 				techWeightageSum();
 				techScoreSum();
 				checkhaszeroquantity(); //#38679
+
 //#28948 Start - remove this (fixed in #21695)			
 				//#25635 danial 11/3/2020
 //				if(null!=this.getManagedBean().getTechnicalItemScoreSetting()){
@@ -15325,25 +15305,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().setIndex(-1);
 			this.getManagedBean().setAutoUpdate(true);
 			
-			// #21695 farid, if partial set weightage to false and disable, always set to direct scoring		
-						if (this.getManagedBean().getQt().isPartial() == true){
-							this.getManagedBean().setSpecItemWeightageRequired(true);
-							if(this.getManagedBean().getTemplateSpecBean() != null){
-								if(this.getManagedBean().getTemplateSpecBean().getSpecMaster() != null){
-									this.getManagedBean().getTemplateSpecBean().getSpecMaster().setWeightageReq(false);
-									this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
-									if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null){
-										for(TplSpecQuestion specQuestWeightage : this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
-											if(specQuestWeightage!=null){
-												specQuestWeightage.setWeightageReq(false);
-											}
-										}
-									}
-									
-								}
-							}
-						}
-			//END #21695	
+			// #38679 remove (no longer needed coz requirement has changed)
 			
 			templateSpecSO = null;
 			RequestContext.getCurrentInstance().execute(
@@ -24820,151 +24782,151 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	// 11104 -end-
 	
 	// 29661 -start-
-		/**
-		 * set checklist Value to current checklist.
-		 * 
-		 * @param fetchValue
-		 * @param initialValue
-		 * @param checkList
-		 * @return ScQtCheckList
-		 */
-		private ScQtCheckList setCheckListValue(ScQtCheckListValue fetchValue,
-				ScQtCheckList finGNGovCheckList) {
-			if (null == fetchValue) {
-				this.getManagedBean().setChecklistScoreType(null);
-				return createCheckListValue(finGNGovCheckList);
-			} else {
-				finGNGovCheckList.setScQtCheckListValue(fetchValue);
-			}
-			return finGNGovCheckList;
-		}
-
-		// 29661 -end-
-		// 29661 -start-
-		/**
-		 * create checklistvalue object and set to the checklist.
-		 * 
-		 * @param finGNGovCheckList
-		 * @return ScQtCheckList
-		 */
-		private ScQtCheckList createCheckListValue(ScQtCheckList finGNGovCheckList) {
-			ScQtCheckListValue checkListValue = new ScQtCheckListValue();
-			setUserDetails(checkListValue);
-			checkListValue.setScQtCheckList(finGNGovCheckList);
-			finGNGovCheckList.setScQtCheckListValue(checkListValue);
-			return finGNGovCheckList;
-		}
-
-		// 29661 -end-
-		// 29661 -start-
-		/**
-		 * create checklist score and set to the checklist.
-		 * 
-		 * @param checkListScore
-		 * @param finGNGovCheckList
-		 * @param existingValue
-		 * @param criteriaType
-		 * @return ScQtCheckList
-		 */
-		private ScQtCheckList setCheckListScore(
-				List<ScQtCheckListScore> checkListScore,
-				ScQtCheckList finGNGovCheckList, ScQtCheckListValue existingValue,
-				int criteriaType) {
-			if (CollectionUtils.isNotEmpty(checkListScore)) {
-				this.getManagedBean().setScQtCheckListScore(checkListScore.get(0));
-			} else {
-				this.getManagedBean().setChecklistScoreType(QTConstants.USER_SCORE);
-				ScQtCheckListScore checklistScore = new ScQtCheckListScore();
-				checklistScore.setCriteriaType(criteriaType);
-				checklistScore.setScoreType(new BigDecimal(QTConstants.USER_SCORE));
-				setUserDetails(checklistScore);
-				this.getManagedBean().setScQtCheckListScore(checklistScore);
-
-			}
-			if (null != existingValue) {
-				finGNGovCheckList.setScQtCheckListValue(existingValue);
-			}
-			if (null == finGNGovCheckList.getScQtCheckListValue()) {
-				return createCheckListValue(finGNGovCheckList);
-			}
-			return finGNGovCheckList;
-
-		}
-
-		// 29661 -end-
-
-		// 29661 -start-
-		/**
-		 * fetch checklist value and checklist score data from db.
-		 * 
-		 * @param checkList
-		 * @param scoreCriteriaType
-		 * @return ScQtCheckList
-		 */
-		private ScQtCheckList fetchCheckListValueScore(ScQtCheckList checkList,
-				int scoreCriteriaType) {
-			try {
-				SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
-				specReqDTO.setScQtCheckList(checkList);
-				SpecificationResDTO specResDTO = getQtSpecSO()
-						.retrieveCheckListScoreNValue(specReqDTO);
-				ScQtCheckList checkListValue = setCheckListValue(
-						specResDTO.getScQtCheckListValue(), checkList);
-				return setCheckListScore(specResDTO.getCheckListScores(),
-						checkListValue, specResDTO.getScQtCheckListValue(),
-						scoreCriteriaType);
-
-			} catch (Exception e) {
-				Long qtId = this.getManagedBean().getQt().getQtId();
-				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
-						SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
-						String.valueOf(qtId),
-						SLALogConstant.FETCH_CHECKLIST_VALUE_SCORE,
-						getUserIdSessionFromLoginId(), e);
-			}
-			return checkList;
-		}
-
-		// 29661 -end-
-		
-		// #39062 Start Vinod 23/09/2025
-		/**
-		 * This method is to update Estimated Amount when the amount is updated.
-		 * 
-		 * @param
-		 * 
-		 */
-		private void updateEstimatedAmount() {
-			ScQt scQt = this.getManagedBean().getQt();
-			SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
-			estimatedReqDTo.setQtId(scQt.getQtId());
-
-			IQTSpecSO specSO = getSpecSO();
-			SpecificationResDTO resTO = specSO.calCulateTemplateSpecEstimations(estimatedReqDTo);
-
-			if (null != resTO && null != resTO.getTotalSpecEstimatedAmount()) {
-				scQt.setEstimatedAmount(resTO.getTotalSpecEstimatedAmount().setScale(2, QTConstants.QT_ROUNDING_MODE));
-			}
-		}
-		// #39062 End Vinod 23/09/2025
-	
-	// #38679
 	/**
-	 * set flag that has 0 quantity for checking.
+	 * set checklist Value to current checklist.
 	 * 
-	 * @return result true or false.
+	 * @param fetchValue
+	 * @param initialValue
+	 * @param checkList
+	 * @return ScQtCheckList
+	 */
+	private ScQtCheckList setCheckListValue(ScQtCheckListValue fetchValue,
+			ScQtCheckList finGNGovCheckList) {
+		if (null == fetchValue) {
+			this.getManagedBean().setChecklistScoreType(null);
+			return createCheckListValue(finGNGovCheckList);
+		} else {
+			finGNGovCheckList.setScQtCheckListValue(fetchValue);
+		}
+		return finGNGovCheckList;
+	}
+
+	// 29661 -end-
+	// 29661 -start-
+	/**
+	 * create checklistvalue object and set to the checklist.
+	 * 
+	 * @param finGNGovCheckList
+	 * @return ScQtCheckList
+	 */
+	private ScQtCheckList createCheckListValue(ScQtCheckList finGNGovCheckList) {
+		ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+		setUserDetails(checkListValue);
+		checkListValue.setScQtCheckList(finGNGovCheckList);
+		finGNGovCheckList.setScQtCheckListValue(checkListValue);
+		return finGNGovCheckList;
+	}
+
+	// 29661 -end-
+	// 29661 -start-
+	/**
+	 * create checklist score and set to the checklist.
+	 * 
+	 * @param checkListScore
+	 * @param finGNGovCheckList
+	 * @param existingValue
+	 * @param criteriaType
+	 * @return ScQtCheckList
+	 */
+	private ScQtCheckList setCheckListScore(
+			List<ScQtCheckListScore> checkListScore,
+			ScQtCheckList finGNGovCheckList, ScQtCheckListValue existingValue,
+			int criteriaType) {
+		if (CollectionUtils.isNotEmpty(checkListScore)) {
+			this.getManagedBean().setScQtCheckListScore(checkListScore.get(0));
+		} else {
+			this.getManagedBean().setChecklistScoreType(QTConstants.USER_SCORE);
+			ScQtCheckListScore checklistScore = new ScQtCheckListScore();
+			checklistScore.setCriteriaType(criteriaType);
+			checklistScore.setScoreType(new BigDecimal(QTConstants.USER_SCORE));
+			setUserDetails(checklistScore);
+			this.getManagedBean().setScQtCheckListScore(checklistScore);
+
+		}
+		if (null != existingValue) {
+			finGNGovCheckList.setScQtCheckListValue(existingValue);
+		}
+		if (null == finGNGovCheckList.getScQtCheckListValue()) {
+			return createCheckListValue(finGNGovCheckList);
+		}
+		return finGNGovCheckList;
+
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * fetch checklist value and checklist score data from db.
+	 * 
+	 * @param checkList
+	 * @param scoreCriteriaType
+	 * @return ScQtCheckList
+	 */
+	private ScQtCheckList fetchCheckListValueScore(ScQtCheckList checkList,
+			int scoreCriteriaType) {
+		try {
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			specReqDTO.setScQtCheckList(checkList);
+			SpecificationResDTO specResDTO = getQtSpecSO()
+					.retrieveCheckListScoreNValue(specReqDTO);
+			ScQtCheckList checkListValue = setCheckListValue(
+					specResDTO.getScQtCheckListValue(), checkList);
+			return setCheckListScore(specResDTO.getCheckListScores(),
+					checkListValue, specResDTO.getScQtCheckListValue(),
+					scoreCriteriaType);
+
+		} catch (Exception e) {
+			Long qtId = this.getManagedBean().getQt().getQtId();
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
+					String.valueOf(qtId),
+					SLALogConstant.FETCH_CHECKLIST_VALUE_SCORE,
+					getUserIdSessionFromLoginId(), e);
+		}
+		return checkList;
+	}
+
+	// 29661 -end-
+	
+	// #39062 Start Vinod 23/09/2025
+	/**
+	 * This method is to update Estimated Amount when the amount is updated.
+	 * 
+	 * @param
 	 * 
 	 */
+	private void updateEstimatedAmount() {
+		ScQt scQt = this.getManagedBean().getQt();
+		SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+		estimatedReqDTo.setQtId(scQt.getQtId());
+
+		IQTSpecSO specSO = getSpecSO();
+		SpecificationResDTO resTO = specSO.calCulateTemplateSpecEstimations(estimatedReqDTo);
+
+		if (null != resTO && null != resTO.getTotalSpecEstimatedAmount()) {
+			scQt.setEstimatedAmount(resTO.getTotalSpecEstimatedAmount().setScale(2, QTConstants.QT_ROUNDING_MODE));
+		}
+	}
+	// #39062 End Vinod 23/09/2025
+	
 	// #38679
 	public void checkhaszeroquantity() {
-		ITemplateSpecSO templateSpecSO = null;
-		boolean hasQuantityZero = false;
-		templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-				ITemplateSpecSO.class);
+		this.getManagedBean().setZoneQtyHasZeroVal(false);
+		for (ScQtCheckList checkList : this.getManagedBean().getQt().getScQtChecklists())
+			if (checkList.getDocCategory().equalsIgnoreCase("1")) {
+				for (TplSpecQuestion specQuestion : checkList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
+					if (null != specQuestion && null != specQuestion.getTplSpecZoneQties()) {
+						for (TplSpecZoneQty zoneqty : specQuestion.getTplSpecZoneQties()) {
+							if (zoneqty.getQty().equals(new BigDecimal(0))) {
+								this.getManagedBean().setZoneQtyHasZeroVal(true);
+								break;
+							}
+						}
+					}
+				}
 
-		hasQuantityZero = templateSpecSO.validateQuantityItem(this.getManagedBean().getQt().getQtId());
-
-		this.getManagedBean().setZoneQtyHasZeroVal(hasQuantityZero);
+			}
 	}
 	// #38679
 }
