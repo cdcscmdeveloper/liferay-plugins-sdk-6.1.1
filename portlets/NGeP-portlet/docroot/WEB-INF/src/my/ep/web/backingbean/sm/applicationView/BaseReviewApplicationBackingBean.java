@@ -116,6 +116,7 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 // #29617
 import my.ep.persistence.entity.sm.SmSmeSupplier;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
@@ -2435,6 +2436,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//31480 start
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(getManagedBean().getSmAppl().getSmSupplier());
 		//31480 end
+		// 36504 - START
+		getManagedBean().setOtherDescChange(false);
+		// 36504 - END
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
@@ -2443,6 +2447,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 				catList.add(cat);
 			}
+			
+			// 36504 - START
+			String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+			cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD) || catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+				cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory()) && !getManagedBean().isOtherDescChange()){
+					getManagedBean().setOtherDescChange(true);
+				}
+			}
+			// 36504 - END
+						
 			if (getManagedBean().isViewApplicationHistory()) {
 				// for history load all category
 				//32815 - start
@@ -4728,12 +4744,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		List<DisciplinaryActionVO> voList = new ArrayList<>();
 		if(currSupp != null) {
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
-			voList = getDisciplinaryActionVOList(resultList, currSupp);
+			voList = getDisciplinaryActionVOList(resultList, currSupp, false);
 		}
 		return voList;
 	}
 	
-	private static List<DisciplinaryActionVO> getDisciplinaryActionVOList(List<SmDisciplinaryAction> daList, SmSupplier currSupp){
+	private static List<DisciplinaryActionVO> getDisciplinaryActionVOList(List<SmDisciplinaryAction> daList, SmSupplier currSupp, boolean active){
 		List<DisciplinaryActionVO> voList = new ArrayList<>();
 		Long supplierId = currSupp.getSupplierId();
 		if (EntityHelper.isCollectionEmpty(daList) || supplierId == null){
@@ -4764,7 +4780,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			retVal.setStartDate(DateUtils.dateToString(pattern, da.getStartDate()));
 			retVal.setEndDate(DateUtils.dateToString(pattern, da.getEndDate()));
 			
-			retVal.setRemarksList(getRemarksDA(da));
+			retVal.setRemarksList(getRemarksDA(da, active));
 
 			retVal.setWarning(da.isWarning());
 			retVal.setCancelCategory(da.isCancelCategory());
@@ -4819,13 +4835,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().setStartDate(DateUtils.dateToString(pattern, disc.getStartDate()));
 			getManagedBean().setEndDate(DateUtils.dateToString(pattern, disc.getEndDate()));
 			getManagedBean().setRemarks(disc.getRemark());
-			//28198: Disciplinary Action - start - 26238
-			List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disc);
-					
-			if(!EntityHelper.isCollectionEmpty(remarksList)){
-				getManagedBean().setRemarks(remarksList.get(0).getRemark());
-			}
-			//28198: Disciplinary Action - end - 26238
 		}
 	}
 	
@@ -5126,26 +5135,31 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<DisciplinaryActionVO> getActiveDisciplinaryActionVO(SmSupplier currSupp) {
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-		List<DisciplinaryActionVO> voList =  getDisciplinaryActionVOList(resultList, currSupp);
-		return voList;
+		return getDisciplinaryActionVOList(resultList, currSupp, true);
 	}
 	//31033 end
 	
-	private static List<DisciplinaryActionVO> getRemarksDA(SmDisciplinaryAction da){
+	private static List<DisciplinaryActionVO> getRemarksDA(SmDisciplinaryAction da, boolean active){
 		// 28198: Disciplinary Action - start - 26238
 		List<DisciplinaryActionVO> remList = new ArrayList<>();
-		List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
-					.retrieveActiveSmDisciplinaryActionRemarksByDA(da);
-		if (!EntityHelper.isCollectionEmpty(remarksList)) {
-			for (SmDisciplinaryActionRemarks remarks : remarksList) {
-				DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
-				rem1.setRemarks(remarks.getRemark());
-				remList.add(rem1);
-			}
-		}
+		
+		// 39115 - START
 		DisciplinaryActionVO rem = new DisciplinaryActionVO();
 		rem.setRemarks(da.getRemark());
 		remList.add(rem);
+		
+		if(!active){
+			List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
+					.retrieveActiveSmDisciplinaryActionRemarksByDA(da);
+			if (!EntityHelper.isCollectionEmpty(remarksList)) {
+				for (SmDisciplinaryActionRemarks remarks : remarksList) {
+					DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
+					rem1.setRemarks(remarks.getRemark());
+					remList.add(rem1);
+				}
+			}
+		}
+		// 39115 - END
 		// 28198: Disciplinary Action - end - 26238
 		return remList;
 	}
@@ -5468,4 +5482,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 	// #34031 End
 	
+	//36504 - START
+	/**
+	 * 
+	 * @param applId
+	 * @return
+	 */
+	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(Long supplierCategoryId) {
+		if (supplierCategoryId == null) {
+			return null;
+		}
+		
+		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistory(supplierCategoryId);
+	}  
+	//36504 - END
 }

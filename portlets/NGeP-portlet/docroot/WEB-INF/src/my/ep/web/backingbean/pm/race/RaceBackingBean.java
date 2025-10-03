@@ -347,11 +347,15 @@ public class RaceBackingBean extends
 								IRaceSO.class);
 				ISearchBean<PmRace> searchBean = new SearchBean<PmRace>();
 				
+				//#34445 Start
+				/*
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(), 
 								DbValueConst.RECORD_STATUS_ACTIVE
 				));
+				*/
+				//#34445 End
 				
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("raceCode",
