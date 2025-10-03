@@ -301,6 +301,8 @@ public class SupplierManagementConst {
 	public static final String PAYMENT_GATEWAY_SUCCESS = "SUCC";
 	public static final String PAYMENT_GATEWAY_FAIL = "FAIL";
 	public static final String PAYMENT_GATEWAY_PENDING = "PEND";
+	public static final String PAYMENT_GATEWAY_CHANNEL_MGATE = "MGATE";
+	public static final String PAYMENT_GATEWAY_CHANNEL_FPX = "FPX";
 	public static final String PAYMENT_INVALID_RES = my.ep.constant.sm.SupplierManagementConst.PAYMENT_INVALID_RES;
 
 	public static final String PM_STATUS_PAYMENT = "SPY";
@@ -1554,5 +1556,15 @@ public class SupplierManagementConst {
 		return AU_TAB_ID_DISCIPLINARY_ACTION_INFO;
 	}
 	// #28895_35501_DA End
+	
+	// 36504 - START
+	public String getSECTION_REV_ROLE_PO() {
+		return SECTION_REV_ROLE_PO;
+	}
+	
+	public String getSECTION_REV_ROLE_APP() {
+		return SECTION_REV_ROLE_APP;
+	}
+	// 36504 - END
 
 }

@@ -2,7 +2,6 @@ package my.ep.web.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,8 +28,8 @@ import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.AESEncryptor;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.PaymentUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -108,7 +107,7 @@ public class PaymentResponseServlet extends HttpServlet {
 		log.info("getsession servlet: -"+req.getSession().getAttribute("orderidS"));
 		// #26307 start
 		String cardType = null;
-		if(channel.equals("MGATE")){
+		if(channel.equals(SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE)){
 			cardType = ParameterConst.CARD_TYPES_CREDIT;
 		}
 		
@@ -196,7 +195,7 @@ public class PaymentResponseServlet extends HttpServlet {
 					}
 					
 					//32422 START
-					Timestamp bankDate = getFormattedTrxdate(paydate);
+					Timestamp bankDate = PaymentUtil.getFormattedTrxdate(paydate);
 					log.info("channel---------"+channel);
 					paymentOrder.setChannelName(channel);
 					
@@ -256,29 +255,4 @@ public class PaymentResponseServlet extends HttpServlet {
 
 	}
 	
-	private Timestamp getFormattedTrxdate(String dateStr) {
-		String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-		Timestamp sqlTimestamp = new Timestamp(System.currentTimeMillis());
-		try {
-			// 1. Parse the string into a java.util.Date object
-			Date parsedDate = sdf.parse(dateStr);
-			System.out.println("Successfully parsed to java.util.Date: "
-					+ parsedDate);
-
-			// 2. Get the timestamp as a long (milliseconds since epoch)
-			long millis = parsedDate.getTime();
-			System.out.println("Timestamp as long (milliseconds):   " + millis);
-
-			// 3. Convert to a java.sql.Timestamp object
-			sqlTimestamp = new Timestamp(millis);
-			System.out.println("Converted to java.sql.Timestamp:    "
-					+ sqlTimestamp);
-
-		} catch (ParseException e) {
-			System.err.println("Error: Failed to parse the date string.");
-			e.printStackTrace();
-		}
-		return sqlTimestamp;
-	}
 }
