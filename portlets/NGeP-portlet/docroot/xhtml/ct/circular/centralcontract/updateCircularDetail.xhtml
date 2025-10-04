@@ -59,17 +59,14 @@
 		        <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal4" 
 			             style="width:115px;" disabled="true">
 				        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
-
-				<p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
-					<p:selectBooleanCheckbox id="extensionId"
-						value="#{centralContractBackingBean.managedBean.circularExtension}"
-						disabled="#{centralContractBackingBean.managedBean.viewContract}">
-					<p:ajax event="change" update="extensionDateSection"
-						listener="#{centralContractBackingBean.chkCircularExtension}"
-						process="@this" /> <!-- 39213 -->
-					</p:selectBooleanCheckbox>
-					<f:verbatim /><f:verbatim />
-				<div/>
+				
+			  <p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
+			   	        <p:selectBooleanCheckbox id="extensionId" value="#{centralContractBackingBean.managedBean.circularExtension}"
+			   	        	 disabled="#{centralContractBackingBean.managedBean.viewContract}">
+			                 <p:ajax event="change" update="extensionDateSection" listener="#{centralContractBackingBean.chkCircularExtension}" process="@this"/> <!-- 39213 -->
+			           </p:selectBooleanCheckbox>
+			             <f:verbatim/> <f:verbatim/>
+			    <div/>
 			    <h:panelGrid id="extensionDateSection" columns="2"> <!-- 39213 -->
 		        <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" styleClass="required"  rendered="#{centralContractBackingBean.managedBean.circularExtension}" />
 			    <p:calendar  value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
@@ -81,7 +78,7 @@
 		       </p:calendar>
 		         <f:verbatim/> <f:verbatim/>
 		       
-		    <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required" />
+		    <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required"   rendered="#{centralContractBackingBean.managedBean.circularExtension}"  />
 		   <p:calendar size="10"  value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
 		         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
 				   disabled="#{centralContractBackingBean.managedBean.viewContract}"
