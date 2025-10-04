@@ -4819,13 +4819,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().setStartDate(DateUtils.dateToString(pattern, disc.getStartDate()));
 			getManagedBean().setEndDate(DateUtils.dateToString(pattern, disc.getEndDate()));
 			getManagedBean().setRemarks(disc.getRemark());
-			//28198: Disciplinary Action - start - 26238
-			List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disc);
-					
-			if(!EntityHelper.isCollectionEmpty(remarksList)){
-				getManagedBean().setRemarks(remarksList.get(0).getRemark());
-			}
-			//28198: Disciplinary Action - end - 26238
 		}
 	}
 	
@@ -5133,21 +5126,24 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private static List<DisciplinaryActionVO> getRemarksDA(SmDisciplinaryAction da, boolean active){
 		// 28198: Disciplinary Action - start - 26238
 		List<DisciplinaryActionVO> remList = new ArrayList<>();
-		List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
-					.retrieveActiveSmDisciplinaryActionRemarksByDA(da);
-		if (!EntityHelper.isCollectionEmpty(remarksList)) {
-			for (SmDisciplinaryActionRemarks remarks : remarksList) {
-				DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
-				rem1.setRemarks(remarks.getRemark());
-				remList.add(rem1);
-				if(active){
-					return remList;
-				}
-			}
-		}
+		
+		// 39115 - START
 		DisciplinaryActionVO rem = new DisciplinaryActionVO();
 		rem.setRemarks(da.getRemark());
 		remList.add(rem);
+		
+		if(!active){
+			List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
+					.retrieveActiveSmDisciplinaryActionRemarksByDA(da);
+			if (!EntityHelper.isCollectionEmpty(remarksList)) {
+				for (SmDisciplinaryActionRemarks remarks : remarksList) {
+					DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
+					rem1.setRemarks(remarks.getRemark());
+					remList.add(rem1);
+				}
+			}
+		}
+		// 39115 - END
 		// 28198: Disciplinary Action - end - 26238
 		return remList;
 	}
