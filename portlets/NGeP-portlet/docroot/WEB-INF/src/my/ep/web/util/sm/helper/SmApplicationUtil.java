@@ -176,6 +176,7 @@ import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -4584,8 +4585,24 @@ public class SmApplicationUtil {
 		} else {
 			List<SmSupplierCategory> catList = new ArrayList<>();
 			List<SmSupplierCategory> apprvList = new ArrayList<>();
+			// 36504 - START
+			managedBean.setOtherDescChange(false);
+			// 36504 - END
 			for (SmSupplierCategory cat : managedBean.getSmAppl()
 					.getSmSupplierCategories()) {
+				
+				// 36504 - START
+				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD) || catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+					managedBean.getOtherDescDataModel().reloadData();
+					if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory()) && !managedBean.isOtherDescChange()){
+						managedBean.setOtherDescChange(true);
+					}
+				}
+				// 36504 - END
+				
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0
 						|| cat.getRecordStatusFlg()
@@ -4690,6 +4707,9 @@ public class SmApplicationUtil {
 		List<SmSupplierCategory> existingList = new ArrayList<SmSupplierCategory>();
 		//#34209 START - to remove category with deleted status in the list - fix issue active category show in addcat list
 		List<SmSupplierCategory> delCatList = new ArrayList<SmSupplierCategory>();
+		// 36504 - START
+		managedBean.setOtherDescChange(false);
+		// 36504 - END
 		for(SmSupplierCategory filtCat : managedBean.getSmAppl().getSmSupplier()
 				.getSmAppl().getSmSupplierCategories()){
 			if(filtCat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
@@ -4703,6 +4723,18 @@ public class SmApplicationUtil {
 				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
+			
+			// 36504 - START
+			String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+			cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD) || catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+				cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory()) && !managedBean.isOtherDescChange()){
+					managedBean.setOtherDescChange(true);
+				}
+			}
+			// 36504 - END
+			
 			if (validStatus.contains(cat.getRecordStatusFlg()) && cat.getPmCategoryL3() != null) {
 
 				SmSupplierCategory tmp = (SmSupplierCategory) EntityHelper
@@ -15960,5 +15992,21 @@ public class SmApplicationUtil {
 		return resDTO.getSmDisciplinaryActions();
 	}
 	//#26282 - End
+	
+	//36504 - START
+	/**
+	 * 
+	 * @param applId
+	 * @return
+	 */
+	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(Long supplierCategoryId) {
+		if (supplierCategoryId == null) {
+			return null;
+		}
+		
+		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistory(supplierCategoryId);
+	}  
+	//36504 - END
+	
 }
 
