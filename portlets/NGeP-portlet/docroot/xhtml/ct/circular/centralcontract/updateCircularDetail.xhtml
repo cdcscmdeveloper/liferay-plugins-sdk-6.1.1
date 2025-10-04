@@ -67,8 +67,13 @@
 			           </p:selectBooleanCheckbox>
 			             <f:verbatim/> <f:verbatim/>
 			    <div/>
+<<<<<<< HEAD
 			    <h:panelGrid id="extensionDateSection" columns="2"> <!-- 39213 -->
 		        <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" styleClass="required"  rendered="#{centralContractBackingBean.managedBean.circularExtension}" />
+=======
+			    <h:panelGrid id="extensionDateSection" columns="2" rendered="#{centralContractBackingBean.managedBean.circularExtension}" > <!-- 39213 -->
+		        <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" styleClass="required" />
+>>>>>>> refs/remotes/origin/master
 			    <p:calendar  value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
 			         maxdate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
 			         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
@@ -78,7 +83,7 @@
 		       </p:calendar>
 		         <f:verbatim/> <f:verbatim/>
 		       
-		    <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required"   rendered="#{centralContractBackingBean.managedBean.circularExtension}"  />
+		    <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required" />
 		   <p:calendar size="10"  value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
 		         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
 				   disabled="#{centralContractBackingBean.managedBean.viewContract}"
