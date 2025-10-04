@@ -2011,7 +2011,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)
 					&& !CTProcessNameConst.VERIFY_FA_HT_NAME.equalsIgnoreCase(getManagedBean().getTaskName())) {
 				ctBackingBean.getManagedBean().getContractVer().getCtContract().setCompExprDate(new Date());
-				ctBackingBean.getManagedBean().getContractVer().getCtContract().setCompExprFlag(4);	
+				ctBackingBean.getManagedBean().getContractVer().getCtContract().setCompExprFlag(ContractConst.COMP_EXP_APP_RLTM);	
 			}
 			//#30014 - End
 

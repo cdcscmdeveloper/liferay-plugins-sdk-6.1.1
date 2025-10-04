@@ -1301,7 +1301,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#30014 - Start (Set Company Experience Date and Flag to 4 - App Realtime/Data Patching)
 		if (isValidDocTypeForCallSp(ctBB.getManagedBean().getContractVer().getDocType()) && action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			ctContractVer.getCtContract().setCompExprDate(new Date());
-			ctContractVer.getCtContract().setCompExprFlag(4);			
+			ctContractVer.getCtContract().setCompExprFlag(ContractConst.COMP_EXP_APP_RLTM);			
 		}
 		//#30014 - End
 		
