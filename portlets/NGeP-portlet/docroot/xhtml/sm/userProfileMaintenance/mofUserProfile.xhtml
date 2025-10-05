@@ -25,12 +25,20 @@
 						immediate="true"
 						action="#{smPersonnelBackingBean.cancelUserMOFUpdate}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
-				<td style="white-space: nowrap; float: right;"><p:commandButton
-						value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.saveUserMOFUpdate()}"
-						onclick="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
+				<!-- #34400 - start  -->		
+				<td style="white-space: nowrap; float: right;">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+						oncomplete="if (!args.validationFailed) confirmDlg.show()" >
+					</p:commandButton>
+				</td>
 			</tr>
 		</table>
+		<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
+			okAction="smPersonnelBackingBean.saveUserMOFUpdate()"
+			content="#{lbl['lbl.sm.confirm.user.profile']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 
 
 		<p:panel id="UserProfile" toggleable="true">

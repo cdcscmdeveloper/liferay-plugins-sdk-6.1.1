@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1147,10 +1148,11 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 			Long qtId = scQt.getQtId();
-			
-			// #28784 - Demo WIP
+
+			// #28784 - Demo WIP -start-
 			boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
 			this.getManagedBean().setNewVersion(isQtNewVersion);
+			// #28784 - Demo WIP -end-
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setMaintanceFlow(true);
@@ -4029,6 +4031,13 @@ public class QTDetailBackingBean extends
 									//21692 - End
 								}
 							}
+							//#21692 - Start
+							if (CollectionUtils.isNotEmpty(qtApproval.getHistoryApprovalRequests())) {
+								LinkedHashSet<ScQtApprovalRequest> removeDuplicate = new LinkedHashSet<>(qtApproval.getHistoryApprovalRequests());
+								List<ScQtApprovalRequest> noDuplicate = new ArrayList<>(removeDuplicate);
+								qtApproval.setHistoryApprovalRequests(noDuplicate);
+							}
+							//#21692 - End
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval,
 									retrieveFinalizationCommitteeType()));
@@ -5461,21 +5470,20 @@ public class QTDetailBackingBean extends
 						}
 
 						scQt = tenderResDTO.getQtDetail();
-						
-						//#28784 - Demo WIP
-						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-						this.getManagedBean().setNewVersion(isQtNewVersion);
 
 						getManagedBean().setQt(scQt);
 
-						//#28784 - Include Demo WIP
-						if (demoRequired && this.getManagedBean().isNewVersion()){
+						// #28784 - Demo WIP -start-
+						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(),
+								CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						this.getManagedBean().setNewVersion(isQtNewVersion);
+
+						if (demoRequired && this.getManagedBean().isNewVersion()) {
 							getManagedBean().getQt().setDemoRequired(demoRequired);
 							getManagedBean().getQt().setEvaluationType(evalType);
 						}
 						// #28784 -end-
 
-						getManagedBean().setQt(scQt);
 						this.getManagedBean().setPanel(scQt.isPanel());
 						Long currentStatus = this.getManagedBean().getQt()
 								.getQtStatus().getStatusId();
@@ -5520,10 +5528,11 @@ public class QTDetailBackingBean extends
 							this.getManagedBean().setPtjSpecialApproval(scQt.getPtjSpecialApproval());
 						}
 
-						//#28784 - Include Demo WIP
-						if(this.getManagedBean().isNewVersion()){
-							checkDemoPresentationByStatus();	
+						// #28784 - Include Demo WIP -start-
+						if (this.getManagedBean().isNewVersion()) {
+							checkDemoPresentationByStatus();
 						}
+						// #28784 - Include Demo WIP -end-
 					}
 
 					this.getManagedBean().setAmendMentBean(
