@@ -1948,14 +1948,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		// set registration status list exclude current registration status only
 		// if registration list size more than one
+//		37925 START
 		getManagedBean().setRegStatusDescList(
-				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
+				SmApplicationUtil.getInstance().retrieveRegistrationStatusListBySupplierTypeApplType(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
 		getManagedBean().setRecommendRegStatusDescList(
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
+		setPopupRecommendDisplay();
+//		37925 END
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setBusinessAndHadApprovedSpecialCatcode-23", 
 				subStartTime); //20211005@fadhli - #31754
@@ -18677,4 +18680,150 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	//36504 - END
+//	#37925 START
+	private void setPopupRecommendDisplay() {
+	    clearRegistrationStatusDisplay();
+	    
+	    SmAppl smAppl = getManagedBean().getSmAppl();
+	    String companyCountry = getCompanyCountry(smAppl);
+	    String applType = smAppl.getApplType();
+	    String supplierType = smAppl.getSupplierType();
+
+	    SmSupplier smSupplier = getManagedBean().getSmSupplier();
+	    String businessType = smSupplier.getBusinessType();
+	    
+	    boolean isForeignCompany = !SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA.equalsIgnoreCase(companyCountry);
+	    
+	    setCountryOriginDisplay(companyCountry, applType, businessType, isForeignCompany);
+	    setRegistrationStatusAndCheckboxDisplays(companyCountry, supplierType, applType, isForeignCompany);
+	}
+
+	private String getCompanyCountry(SmAppl smAppl) {
+	    String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
+	    return (country != null && !country.isEmpty()) ? country : SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
+	}
+
+	private void setCountryOriginDisplay(String companyCountry, String applType, String businessType, boolean isForeignCompany) {
+	    // Reset country origin displays for BUMI applications
+	    if (SupplierManagementConst.APPL_TYPE_BUMI.equalsIgnoreCase(applType)) {
+	        getManagedBean().setDisplayLabelCountryOriginLocal(false);
+	        getManagedBean().setDisplayLabelCountryOriginForeign(false);
+	        return;
+	    }
+	    
+	    // Configure displays for ROC business types
+	    boolean isRocBusinessType = isRocBusinessType(businessType);
+	    if (isRocBusinessType) {
+	        getManagedBean().setDisplayLabelCountryOriginForeign(isForeignCompany);
+	        getManagedBean().setDisplayLabelCountryOriginLocal(!isForeignCompany);
+	    }
+	}
+
+	private boolean isRocBusinessType(String businessType) {
+	    return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD.equalsIgnoreCase(businessType)
+	            || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(businessType);
+	}
+
+	private void setRegistrationStatusAndCheckboxDisplays(String companyCountry, String supplierType, 
+	        String applType, boolean isForeignCompany) {
+	    
+	    if (isForeignCompany) {
+	        foreignRegistrationStatusAndCheckboxDisplay(isForeignCompany);
+	    } else {
+	        if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
+	            localConstructorRegistrationStatusAndCheckboxDisplays(applType);
+	        } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
+	            localConsultantRegistrationStatusAndCheckboxDisplays(isForeignCompany);
+	        }
+	        // Default case - no action needed
+	    }
+	}
+
+	public void clearRegistrationStatusDisplay() {
+	    getManagedBean().setDisplayLabelCountryOriginForeign(false);
+	    getManagedBean().setDisplayLabelCountryOriginLocal(false);
+	    getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
+	    getManagedBean().setDisplayLabelRegistrationStatus(false);
+	    getManagedBean().setDisplayDropdownRegStatus(false);
+	}
+
+	public void localConstructorRegistrationStatusAndCheckboxDisplays(String applType) {
+	    PmStatusDesc currentStatusDesc = SmApplicationUtil.getCurrRegStatusDesc(getManagedBean().getSmAppl());
+	    
+	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType) || 
+	        SupplierManagementConst.APPL_TYPE_BUMI.equals(applType)) {
+	        assignValReqdToFalse();
+	        getManagedBean().setDisplayLabelRegistrationStatus(true);
+	    } else if (SupplierManagementConst.APPL_TYPE_UPDATE.equals(applType) || 
+	               SupplierManagementConst.APPL_TYPE_CATEGORY.equals(applType) || 
+	               SupplierManagementConst.APPL_TYPE_RENEWAL.equals(applType)) {
+	        if (isRegisteredStatus(currentStatusDesc)) {
+	            assignValReqdToFalse();
+	            getManagedBean().setDisplayLabelRegistrationStatus(true);
+	        } else {
+	            assignValReqdToTrue();
+	            getManagedBean().setDisplayCheckboxChangeCurrentStatus(true);
+	            getManagedBean().setDisplayDropdownRegStatus(true);
+	            updateRegistrationStatusList(currentStatusDesc);
+	        }
+	    }
+	    // Default case - no action needed
+	}
+
+	private boolean isRegisteredStatus(PmStatusDesc statusDesc) {
+	    return statusDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
+	}
+
+	private void updateRegistrationStatusList(PmStatusDesc currentStatusDesc) {
+	    List<PmStatusDesc> regStatusList = getManagedBean().getRegStatusDescList();
+	    if (!EntityHelper.isCollectionEmpty(regStatusList)) {
+	        List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
+	        for (PmStatusDesc pmStatusDesc : regStatusList) {
+	            if (pmStatusDesc.getStatusDescId() != currentStatusDesc.getStatusDescId()) {
+	                newList.add(pmStatusDesc);
+	            }
+	        }
+	        getManagedBean().setRegStatusDescList(newList);
+	    }
+	}
+
+	public void localConsultantRegistrationStatusAndCheckboxDisplays(boolean isForeignCompany) {
+	    assignValReqdToFalse();
+	    setRegistrationStatusValue(isForeignCompany);
+	    getManagedBean().setDisplayLabelRegistrationStatus(true);
+	}
+
+	public void foreignRegistrationStatusAndCheckboxDisplay(boolean isForeignCompany) {
+	    assignValReqdToFalse();
+	    getManagedBean().setDisplayLabelCountryOriginForeign(true);
+	    
+	    setRegistrationStatusValue(isForeignCompany);
+	    getManagedBean().setDisplayLabelRegistrationStatus(true);
+	}
+
+	public void setRegistrationStatusValue(boolean isForeignCompany) {
+	    String language = new FacesScopes().getUserLocale().getLanguage();
+	    long targetStatusId = isForeignCompany ? 
+	            SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN : 
+	            SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
+	    
+	    for (PmStatusDesc pmStatusDesc : getManagedBean().getRegStatusDescList()) {
+	        if (language.equalsIgnoreCase(pmStatusDesc.getLanguageCode()) 
+	                && pmStatusDesc.getPmStatus().getStatusId() == targetStatusId) {
+	            updateRegistrationStatus(pmStatusDesc);
+	            break; // Exit loop once match is found
+	        }
+	    }
+	}
+
+	private void updateRegistrationStatus(PmStatusDesc pmStatusDesc) {
+	    getManagedBean().setCurrRegStatus(pmStatusDesc.getStatusName());
+	    
+	    if (getManagedBean().isPoUser()) {
+	        getManagedBean().setPoRecommendStatusId(pmStatusDesc.getPmStatus().getStatusId());
+	    } else if (getManagedBean().isApproverUser()) {
+	        getManagedBean().setApprovedStatusId(pmStatusDesc.getPmStatus().getStatusId());
+	    }
+	}
+//	#37925 END
 }

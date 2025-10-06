@@ -16009,6 +16009,78 @@ public class SmApplicationUtil {
 		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistory(supplierCategoryId);
 	}  
 	//36504 - END
-	
+
+//	#37925 START
+	public List<PmStatusDesc> retrieveRegistrationStatusListBySupplierTypeApplType(String suppType,String applType) {
+		List<PmStatusDesc> descList = new ArrayList<PmStatusDesc>();
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		if (!StringUtils.isBlank(applType)
+				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+			descList = SmServiceLookup.getStatusSO()
+					.retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
+		} else {
+			List<String> consultantRegStatus = Arrays
+					.asList(new String[] {
+							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
+									+ "",
+							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN
+									+ "" });
+			
+			List<String> contractorRegStatus = Arrays
+					.asList(new String[] {
+							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
+									+ "",
+							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME
+									+ "",
+							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA
+									+ "" });
+			descList = SmServiceLookup.getStatusSO()
+					.retrieveRegStatusList(reqDTO).getStatusDescList();
+			if (!EntityHelper.isCollectionEmpty(descList)
+					&& !StringUtils.isBlank(suppType) && suppType.equals("J")) {
+				List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
+				for (PmStatusDesc statDesc : descList) {
+					if (statDesc.getPmStatus() != null
+							&& statDesc.getPmStatus().getStatusId() != null
+							&& (consultantRegStatus.contains(statDesc
+									.getPmStatus().getStatusId().toString()))) {
+						newList.add(statDesc);
+					}
+				}
+				descList = newList;
+			} else if (!EntityHelper.isCollectionEmpty(descList)
+					&& !StringUtils.isBlank(suppType) && suppType.equals("K")) {
+				List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
+				for (PmStatusDesc statDesc : descList) {
+					if (statDesc.getPmStatus() != null
+							&& statDesc.getPmStatus().getStatusId() != null
+							&& (contractorRegStatus.contains(statDesc
+									.getPmStatus().getStatusId().toString()))) {
+						if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_MOF)){
+							if(statDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED){
+								newList.add(statDesc);
+								continue;
+							}
+						} else if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_UPDATE)
+								|| applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY)
+								|| applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_RENEWAL)){
+							if(statDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
+									|| statDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA
+									|| statDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME){
+								newList.add(statDesc);
+								continue;
+							}
+						} else {
+							newList.add(statDesc);
+						}
+					}
+				}
+				descList = newList;
+			}
+		}
+		return descList;
+	}
+//	#37925 END
 }
 
