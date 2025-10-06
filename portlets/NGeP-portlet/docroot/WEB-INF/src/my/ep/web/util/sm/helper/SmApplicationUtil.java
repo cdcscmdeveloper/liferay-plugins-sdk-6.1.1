@@ -15788,11 +15788,10 @@ public class SmApplicationUtil {
 				bean.getEditVO().setDisciplinary(false);
 				return;
 			}
+			//39061
 			List<SmDisciplinaryAction> activeDA = EntityHelper.isCollectionEmpty(daList) ?
-					retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier()) : daList;
-			if(EntityHelper.isCollectionEmpty(activeDA)){
-				return;
-			}
+					retrieveActiveSmDisciplinaryActionBySupplierForCMCD(bean.getSmSupplier()) : daList;
+			
 			if(hasCannotLoginDA(activeDA)){
 				bean.getEditVO().setDisciplinary(true);
 				return;
