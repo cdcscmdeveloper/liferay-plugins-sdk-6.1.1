@@ -142,50 +142,64 @@ public class DisciplinaryActionRest {
 		if (EntityHelper.isCollectionEmpty(daList)){
 			return;
 		}
-		Date today = new Date(); 
-		for(SmDisciplinaryAction da: daList){
-			log.info("updateBCDAList. supplier id=============="+da.getSmSupplier().getSupplierId()); 
-			if(da.getSmSupplier() == null){
-				continue;
-			}
+		
+		try {
+			DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date today = new Date();
+			Date todayWithZeroTime = formatter.parse(formatter.format(today));
 
-			if(da.getStartDate().compareTo(today) <= 0){
-				if(da.isPendingBlacklist() || da.isPendingCancel()){
-					da.getSmSupplier();
-					da.getSmSupplier().getSmAppl();
-							
-					UserReqDTO reqDTO2 = new UserReqDTO();
-					reqDTO2.setUserId(da.getChangedBy());
-					UserResDTO resDTO1 = SmServiceLookup.getUserSO().retrieveUserByUserId(reqDTO2);
-					PmUser user =  resDTO1.getPmUser();
-							
-					UserReqDTO reqDTO3 = new UserReqDTO();
-					reqDTO3.setUserIds(new ArrayList<Long>());
-					reqDTO3.getUserIds().add(user.getUserId());
-					List<PmUserRole> userRoles = SmServiceLookup.getUserSO().retrieveUserRoleListByUserIds(reqDTO3).getUserRoleList();
-							
-					 SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(da, user, userRoles);
-					
-					//31100,30878 start
-					Long disciplinaryActionId = da.getDisciplinaryActionId();
-				
-					if(disciplinaryActionId != null){
-						SmDisciplinaryAction smDA =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
-						if( (smDA.isBlacklistOwner() || smDA.isCancelRegistration()) 
-								&& (!smDA.isPendingCancel() && !smDA.isPendingBlacklist() )){
-							smDA.getSmSupplier();
-							 SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(smDA);	
-						}
-					}
-					//31100,30878 end
+			for(SmDisciplinaryAction da: daList){
+				log.info("updateBCDAList. supplier id=============="+da.getSmSupplier().getSupplierId()); 
+				if(da.getSmSupplier() == null){
+					continue;
 				}
-				//29597 : Disciplinary Action - 26238
-				if( (da.isBlacklistOwner() || da.isCancelRegistration()) && 
-						(!da.isPendingCancel() && !da.isPendingBlacklist() )){
-					da.getSmSupplier();
-					 SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(da);	
-				}	
+	
+				if(da.getStartDate().compareTo(todayWithZeroTime) <= 0){
+					if(da.isPendingBlacklist() || da.isPendingCancel()){
+						da.getSmSupplier();
+						da.getSmSupplier().getSmAppl();
+								
+						UserReqDTO reqDTO2 = new UserReqDTO();
+						reqDTO2.setUserId(da.getChangedBy());
+						UserResDTO resDTO1 = SmServiceLookup.getUserSO().retrieveUserByUserId(reqDTO2);
+						PmUser user =  resDTO1.getPmUser();
+								
+						UserReqDTO reqDTO3 = new UserReqDTO();
+						reqDTO3.setUserIds(new ArrayList<Long>());
+						reqDTO3.getUserIds().add(user.getUserId());
+						List<PmUserRole> userRoles = SmServiceLookup.getUserSO().retrieveUserRoleListByUserIds(reqDTO3).getUserRoleList();
+								
+						 SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(da, user, userRoles);
+						
+						//31100,30878 start
+						Long disciplinaryActionId = da.getDisciplinaryActionId();
+					
+						if(disciplinaryActionId != null){
+							SmDisciplinaryAction smDA =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
+							if( (smDA.isBlacklistOwner() || smDA.isCancelRegistration()) 
+									&& (!smDA.isPendingCancel() && !smDA.isPendingBlacklist() )){
+								smDA.getSmSupplier();
+								 SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(smDA);	
+							}
+						}
+						//31100,30878 end
+					}
+					//29597 : Disciplinary Action - 26238
+					if( (da.isBlacklistOwner() || da.isCancelRegistration()) && 
+							(!da.isPendingCancel() && !da.isPendingBlacklist() )){
+						da.getSmSupplier();
+						
+						// 39104 - START
+						if (da.getStartDate().compareTo(todayWithZeroTime) == 0 && da.isBlacklistOwner()){
+							da.setFutureImposed(true);
+						}
+						// 39104 - END
+						 SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(da);	
+					}	
+				}
 			}
+		} catch (Exception ex) {
+			log.error("UpdateDisciplinaryActionJob Error="+ex);
 		}
 	}
 	
