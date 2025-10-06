@@ -184,7 +184,6 @@
 									action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}"
 									partialSubmit="true" process="@this" />
 								<!-- 32050,32209 -end- -->
-								<!-- 37978 - Start -->
 								<ui:remove> #25791 start </ui:remove>
 								<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -192,7 +191,6 @@
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<!-- 37978 - End -->
 								<p:menuitem id="meI3Com" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED eq scQt.qtStatus.statusId}"
