@@ -63,31 +63,31 @@
 			  <p:outputLabel value="#{lbl['lbl.ct.circular.extension']}" />
 			   	        <p:selectBooleanCheckbox id="extensionId" value="#{centralContractBackingBean.managedBean.circularExtension}"
 			   	        	 disabled="#{centralContractBackingBean.managedBean.viewContract}">
-			                 <p:ajax event="change" update=":form:ccc" listener="#{centralContractBackingBean.chkCircularExtension}" process="@this"/> 
+			                 <p:ajax event="change" update=":form:extStartLbl :form:popupButtonCal5 :form:extEndLbl :form:popupButtonCal6" listener="#{centralContractBackingBean.chkCircularExtension}" process="@this"/> 
 			           </p:selectBooleanCheckbox>
-			             <f:verbatim/> <f:verbatim/>
-		        <p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}" styleClass="required"  rendered="#{centralContractBackingBean.managedBean.circularExtension}" />
-			    <p:calendar  value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
+			           <f:verbatim/> <f:verbatim/>
+			           
+		        <p:outputLabel id="extStartLbl" value="#{lbl['lbl.ct.extension.start.date']}" styleClass="required"  style="#{centralContractBackingBean.managedBean.circularExtension ? '' : 'display:none;'}" />
+			    <p:calendar id="popupButtonCal5" value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
 			         maxdate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
 			         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
 			         disabled="#{centralContractBackingBean.managedBean.viewContract}"
-			         rendered="#{centralContractBackingBean.managedBean.circularExtension}"  size="10"  id="popupButtonCal5" showOn="button"
-				     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+			         size="10" showOn="button"
+				     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+				     style="#{centralContractBackingBean.managedBean.circularExtension ? '' : 'display:none;'}">
 		       </p:calendar>
-		         <f:verbatim/> <f:verbatim/>
+		       <f:verbatim/> <f:verbatim/>
 		       
-		    <p:outputLabel value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required"   rendered="#{centralContractBackingBean.managedBean.circularExtension}"  />
-		   <p:calendar size="10"  value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
+		    <p:outputLabel id="extEndLbl" value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required" style="#{centralContractBackingBean.managedBean.circularExtension ? '' : 'display:none;'}"/>
+		   <p:calendar id="popupButtonCal6" size="10"  value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
 		         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
 				   disabled="#{centralContractBackingBean.managedBean.viewContract}"
-				   rendered="#{centralContractBackingBean.managedBean.circularExtension}" 
 				   required="true" label="#{lbl['lbl.ct.extension.end.date']}"
-				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
-				</p:calendar>
-				
-			  	      <f:verbatim/> <f:verbatim/>
-				
-				
+				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button"
+				   style="#{centralContractBackingBean.managedBean.circularExtension ? '' : 'display:none;'}">
+				</p:calendar>				
+			  	<f:verbatim/> <f:verbatim/>
+								
 		    <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
 		 		<h:panelGroup id="uploadCircularPg1">
 		 			<h:panelGrid columns="5">
@@ -105,7 +105,7 @@
 											<td></td>
 											<td>
 											 	<h:commandLink action="#{centralContractBackingBean.downloadFile(attachAggreement)}" 
-											 		styleClass="blue_font" style="color:#009ae5 !important;" value="#{attachAggreement.fileName}" /> <!-- Fix #30866 -->			
+											 		styleClass="blue_font" style="color:#009ae5 !important;" value="#{attachAggreement.fileName}" /><!-- Fix #30866 -->			
 										     	<p:commandLink action="#{centralContractBackingBean.setAttachmentIndex(attachAggreementIndex)}"
 								   	                 onclick="deleteCircularFileDlg.show();" rendered="#{!centralContractBackingBean.managedBean.viewContract}">
 								   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>

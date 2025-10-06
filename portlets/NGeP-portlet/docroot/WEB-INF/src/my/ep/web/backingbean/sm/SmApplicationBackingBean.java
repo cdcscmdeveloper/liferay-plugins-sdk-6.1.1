@@ -165,6 +165,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -1802,6 +1803,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							getManagedBean().getBusinessTypeVal()));
 			//31043 START
 			initNonMandatoryAndMandatoryDocs();
+			//this.getManagedBean().getOtherDescDataModel().reloadData();
 			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean()); 
 			//31043 END
 			if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
@@ -2799,7 +2801,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		long startTime = System.currentTimeMillis();
 		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
 				.getExternalContext().getRequest()).getRequestedSessionId(); 
-		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+		//39061
+		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplierForCMCD(currSupp);
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean", "checkActiveDisciplinaryAction", startTime); //20211005@fadhli - #31754
 		if (EntityHelper.isCollectionEmpty(discList)){
@@ -12909,7 +12912,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					log.info(i+". NAME -> " + doc.getSmApplDocFiles().get(i).getFileName());
 				}
 				//#28807 - END
-				doc.getSmApplDocFiles().get(0).setFilePath(filePath);
+				//doc.getSmApplDocFiles().get(0).setFilePath(filePath); //39076 
 
 				getManagedBean()
 						.getSmAppl()
@@ -13532,9 +13535,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void setDefaultApproverReviewSection() {
 		//#Enhancement #11765
 		if(!alreadyExecute && SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC.equalsIgnoreCase(getManagedBean().getCurrentPageType())){ //#36576
+			//#26238 (39072)
 			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
-					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
-					.isApproverUser());
+					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType());
 			if (catList.size() != 0) {
 				FacesContext fc = FacesContext.getCurrentInstance();
 				//#Enhancement #11765
@@ -13603,10 +13606,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					throw new EpException(MessageConst.ERROR_722570);
 				}
 			}
-		////END Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+		////END Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen, #26238 (39072)
 			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
-					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
-					.isApproverUser());
+					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType());
 			if (catList.size() != 0) {
 				alreadyExecute = true;
 				FacesContext fc = FacesContext.getCurrentInstance();				
@@ -18624,4 +18626,55 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	// #36718 - End
+	
+	//36504 - START
+	public void otherDescriptionHistory() {
+		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");
+	}
+	
+	public void otherDescriptionEdit(SmSupplierCategory smSupCat) {
+		
+		getManagedBean().setSelectedCategory(smSupCat);
+		getManagedBean().setOtherDescEdited(smSupCat.getOtherDesc());
+		getManagedBean().setUpdateRecordTC(false);
+		RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.show();");
+	}
+	
+	public void resetOtherDescriptionEdit() {
+		getManagedBean().setOtherDescEdited(getManagedBean().getSelectedCategory().getOtherDesc());
+	}
+	
+	public void saveOtherDescriptionEdit() {
+		try{
+			SmSuppCatOtherDescHistory smSuppCatOtherDescHistory = new SmSuppCatOtherDescHistory();
+			smSuppCatOtherDescHistory.setOtherDesc(getManagedBean().getSelectedCategory().getOtherDesc());
+			smSuppCatOtherDescHistory.setSmAppl(getManagedBean().getSelectedCategory().getSmAppl());
+			smSuppCatOtherDescHistory.setSmSupplierCategory(getManagedBean().getSelectedCategory());
+
+			if (getManagedBean().isPoUser()) {
+				smSuppCatOtherDescHistory.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
+			} else if (getManagedBean().isApproverUser()) {
+				smSuppCatOtherDescHistory.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+			}
+			
+			SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(smSuppCatOtherDescHistory);
+			
+			getManagedBean().getSelectedCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
+	        SmServiceLookup.getMofRegistrationSO().updateSmSupplierCategory(getManagedBean().getSelectedCategory());
+	        
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_721228, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			
+		}  catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
+			RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.hide();");
+		}
+	}
+	//36504 - END
 }

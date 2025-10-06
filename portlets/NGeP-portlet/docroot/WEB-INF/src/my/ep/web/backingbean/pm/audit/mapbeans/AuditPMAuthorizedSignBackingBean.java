@@ -87,7 +87,6 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 				if (newCertSign.getEffDate().equals(savedCertSign.getEffDate())) {
 					signatoryName.setRoleCode(roleCode);
 					signatoryName.setDocType(savedCertSign.getSinnatoryName());
-					signatoryName.setDocNo(savedCertSign.getSinnatoryName());
 					signatoryName.setDocGroupId(docGroupId);
 					signatoryName.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
 					signatoryName.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -101,7 +100,6 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 
 					effectiveDate.setRoleCode(roleCode);
 					effectiveDate.setDocType(savedCertSign.getSinnatoryName());
-					effectiveDate.setDocNo(savedCertSign.getSinnatoryName());
 					effectiveDate.setDocGroupId(docGroupId);
 					effectiveDate.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
 					effectiveDate.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -119,7 +117,6 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 					AuditPMSPDTO addStatus = new AuditPMSPDTO();
 					addStatus.setRoleCode(roleCode);
 					addStatus.setDocType(savedCertSign.getSinnatoryName());
-					addStatus.setDocNo(savedCertSign.getSinnatoryName());
 					addStatus.setDocGroupId(docGroupId);
 					addStatus.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
 					addStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -143,7 +140,6 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 			AuditPMSPDTO expiryDate = new AuditPMSPDTO();
 			expiryDate.setRoleCode(roleCode);
 			expiryDate.setDocType(savedCertSign.getSinnatoryName());
-			expiryDate.setDocNo(savedCertSign.getSinnatoryName());
 			expiryDate.setDocGroupId(docGroupId);
 			expiryDate.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
 			expiryDate.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -161,7 +157,6 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 		AuditPMSPDTO expiryDate = new AuditPMSPDTO();
 		expiryDate.setRoleCode(roleCode);
 		expiryDate.setDocType(signatory.getSinnatoryName());
-		expiryDate.setDocNo(signatory.getSinnatoryName());
 		expiryDate.setDocGroupId(docGroupId);
 		expiryDate.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
 		expiryDate.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -209,7 +204,6 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 				AuditPMSPDTO detailStatus = new AuditPMSPDTO();
 				detailStatus.setRoleCode(roleCode);
 				detailStatus.setDocType(signatory.getSinnatoryName());
-				detailStatus.setDocNo(signatory.getSinnatoryName());
 				detailStatus.setDocGroupId(docGroupId);
 				detailStatus.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
 				detailStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
