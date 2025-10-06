@@ -53,6 +53,7 @@ import my.ep.util.BpmCommonUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.ai.SmAIDocBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sdoreview.SdoReviewManagedBean;
@@ -208,6 +209,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		
 		//initialized mandatory and non mandatory supporting documents
 		initNonMandatoryAndMandatoryDocs();
+		SmAIDocBackingBean.validateBank(getManagedBean().getSmAppl()); //#38890
 	}
 
 	/**
