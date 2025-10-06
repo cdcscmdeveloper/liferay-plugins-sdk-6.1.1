@@ -32,7 +32,9 @@ import my.ep.util.PasswordUtils;
 import my.ep.web.util.AESEncryptor;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.json.JSONObject;
 
 public class PaymentUtil {
 	public static Logger log = Logger.getLogger(PaymentUtil.class);
@@ -189,14 +191,13 @@ public class PaymentUtil {
 			String clientKey, Long orderId, BigDecimal amount, String billName,
 			String email, String mobile, String billDesc, String country,
 			String cancelUrl) {
-        DecimalFormat df = new DecimalFormat("0.00"); 
-        String amountStr = df.format(amount);
+		DecimalFormat df = new DecimalFormat("0.00");
+		String amountStr = df.format(amount);
 		String payload = "";
 		StringBuilder sb = new StringBuilder();
 		sb.append("merchantCode#").append(merchantCode).append(";");
 		sb.append("orderId#").append(orderId).append(";");
-		sb.append("amount#").append(amountStr)
-				.append(";");
+		sb.append("amount#").append(amountStr).append(";");
 		sb.append("billName#").append(billName).append(";");
 		sb.append("email#").append(email).append(";");
 		sb.append("mobile#").append(mobile).append(";");
@@ -211,7 +212,7 @@ public class PaymentUtil {
 		}
 		return payload;
 	}
-	
+
 	public static String constructJsonPayload(String merchantCode,
 			String clientKey, Long orderId, BigDecimal amount, String billName,
 			String email, String mobile, String billDesc, String country,
@@ -239,34 +240,35 @@ public class PaymentUtil {
 		}
 		return payload;
 	}
-	
+
 	public static Map<String, String> parseJson(String json) {
-        Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<String, String>();
 
-        // 1. Remove the outer curly braces
-        String content = json.trim();
-        if (content.startsWith("{") && content.endsWith("}")) {
-            content = content.substring(1, content.length() - 1);
-        }
+		// 1. Remove the outer curly braces
+		String content = json.trim();
+		if (content.startsWith("{") && content.endsWith("}")) {
+			content = content.substring(1, content.length() - 1);
+		}
 
-        // 2. Split the string into key-value pairs by comma
-        String[] pairs = content.split(",");
+		// 2. Split the string into key-value pairs by comma
+		String[] pairs = content.split(",");
 
-        for (String pair : pairs) {
-            // 3. Split each pair into key and value by colon
-            String[] keyValue = pair.split(":", 2); // Split only on the first colon
+		for (String pair : pairs) {
+			// 3. Split each pair into key and value by colon
+			String[] keyValue = pair.split(":", 2); // Split only on the first
+													// colon
 
-            if (keyValue.length == 2) {
-                // 4. Clean up key and value: remove whitespace and quotes
-                String key = keyValue[0].trim().replace("\"", "");
-                String value = keyValue[1].trim().replace("\"", "");
+			if (keyValue.length == 2) {
+				// 4. Clean up key and value: remove whitespace and quotes
+				String key = keyValue[0].trim().replace("\"", "");
+				String value = keyValue[1].trim().replace("\"", "");
 
-                map.put(key, value);
-            }
-        }
-        return map;
-    }
-	
+				map.put(key, value);
+			}
+		}
+		return map;
+	}
+
 	public static Timestamp getFormattedTrxdate(String dateStr) {
 		String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
@@ -291,5 +293,26 @@ public class PaymentUtil {
 			e.printStackTrace();
 		}
 		return sqlTimestamp;
+	}
+
+	public static JSONObject getPaymentGatewayJson(String payload) {
+		JSONObject jsonObject = null;
+		if (!StringUtils.isBlank(payload)) {
+			try {
+				log.info("encrypted payload:"+payload);
+				payload = AESEncryptor
+						.decrypt(
+								payload,
+								SmCommonUtil
+										.getInstance()
+										.getCDCPaymentGatewayVKeyByBillType(
+												my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE));
+				log.info("decrypted payload:"+payload);
+				jsonObject = new JSONObject(payload);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		return jsonObject;
 	}
 }
