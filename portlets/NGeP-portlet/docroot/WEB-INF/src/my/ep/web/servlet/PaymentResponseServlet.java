@@ -3,9 +3,6 @@ package my.ep.web.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,10 +24,8 @@ import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
-import my.ep.web.util.AESEncryptor;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.PaymentUtil;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
@@ -77,31 +72,21 @@ public class PaymentResponseServlet extends HttpServlet {
         String errorDesc = StringUtils.EMPTY;
 		String appcode = StringUtils.EMPTY;
 		String tranID = StringUtils.EMPTY;
-		boolean isValidPayload = false;
-		try {
-			payload = AESEncryptor
-					.decrypt(
-							payload,
-							SmCommonUtil
-									.getInstance()
-									.getCDCPaymentGatewayVKeyByBillType(
-											my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE));
-			JSONObject jsonObject = new JSONObject(payload);
-			
-			orderId = jsonObject.getString("orderId");
-			tranID = jsonObject.getString("transId");
-	        status = jsonObject.getString("status");
-	        paydate = jsonObject.getString("trxDate");
-	        paymentMethod = jsonObject.getString("paymentType");
-	        channel = jsonObject.getString("channel");
-	        errorCode = jsonObject.getString("errCode");
-	        errorDesc = jsonObject.getString("errDesc");
-	        isValidPayload = true;
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
+		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
+		if (jsonObject != null) {
+			try {
+				orderId = jsonObject.getString("orderId");
+				tranID = jsonObject.getString("transId");
+				status = jsonObject.getString("status");
+				paydate = jsonObject.getString("trxDate");
+				paymentMethod = jsonObject.getString("paymentType");
+				channel = jsonObject.getString("channel");
+				errorCode = jsonObject.getString("errCode");
+				errorDesc = jsonObject.getString("errDesc");
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		} 
 		
 		req.getSession().setAttribute("orderidS", orderId);
 		log.info("getsession servlet: -"+req.getSession().getAttribute("orderidS"));
@@ -127,7 +112,7 @@ public class PaymentResponseServlet extends HttpServlet {
 			reqDTO.setPaymentId(ordId);
 			PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
 			
-			if(isValidPayload){
+			if(!StringUtils.isBlank(payload) && jsonObject!=null){
 				boolean validPayment = false;
 
 				if (resDTO.getPyPayment() != null) {
@@ -246,7 +231,7 @@ public class PaymentResponseServlet extends HttpServlet {
 					}
 					pymtReqDTO.setPaymentType(paymentType);
 					pymtReqDTO.setMethodName("doPost-MolPayServlet");
-					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
+//					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
 					log.info(">>>>Before paymentBackendUpdate<<<");
 				}else{
 					log.info("No SmPayment Object is found");
