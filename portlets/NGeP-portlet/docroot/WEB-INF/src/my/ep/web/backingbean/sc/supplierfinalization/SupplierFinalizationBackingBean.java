@@ -8540,12 +8540,27 @@ public class SupplierFinalizationBackingBean extends
 				
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				reqDTO.setQtId(qtId);
+				//#38679
+				IQTEvaluationSO evaluationSO=null;
+				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTEvaluationSO.class);
+				EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+				long qtId = reqDTO.getQtId();
+				req4SerDTO.setQtId(qtId);
+				int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+				//#38679
 				//#21695 tec by itemize result pop up farid - start
 				if (null != selectedZoneId && (SourcingConstants.EVAL_STAGE_FINANCIAL_ITM.equalsIgnoreCase(evaluationStage) || SourcingConstants.EVAL_STAGE_FINANCIAL_PKG.equalsIgnoreCase(evaluationStage)
 						|| SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM.equalsIgnoreCase(evaluationStage))) {
 				//#21695 tec by itemize result pop up farid - start
 					reqDTO.setSpecZoneId(selectedZoneId);
 				}
+				// #38679
+				if(wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && null != selectedZoneId && (SourcingConstants.EVAL_STAGE_TECHNICAL.equalsIgnoreCase(evaluationStage) ||  SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO.equalsIgnoreCase(evaluationStage))){
+					reqDTO.setTecSpecZoneId(selectedZoneId);
+				}
+				// #38679
 				/*
 				 * BUG 34212 - FIX SORT ITEMIZE & PACKAGE IN SUPPLIER FINALIZATION START
 				 */
