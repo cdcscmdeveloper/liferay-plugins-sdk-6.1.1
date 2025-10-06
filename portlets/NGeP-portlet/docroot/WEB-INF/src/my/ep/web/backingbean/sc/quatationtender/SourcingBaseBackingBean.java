@@ -7260,8 +7260,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		boolean isSuspendRegistration = viewSuppProfileBean.evaluateSuspendRegistration(supplier);
 
-		return Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction,
-				isSuspendRegistration).contains(true)
+		return !Integer.valueOf(DbValueConst.RECORD_STATUS_ACTIVE).equals(supplier.getRecordStatusFlg())
+				|| Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction,
+						isSuspendRegistration).contains(true)
 				|| !Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_EXPIRED).contains(
 						mofRecordStatus);
 	}
