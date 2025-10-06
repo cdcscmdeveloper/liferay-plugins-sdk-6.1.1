@@ -1949,6 +1949,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean auditViewRole;
 	//#28895 - 35500 end
 	private boolean updateCatDesc; //#29732
+
+	private boolean zoneQtyHasZeroVal;//#38679
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12423,7 +12425,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
 	}
 	//#21692 - End
-	
+
 	//#29732
 	public boolean getUpdateCatDesc() {
 		return updateCatDesc;
@@ -12433,4 +12435,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.updateCatDesc = updateCatDesc;
 	}
 	//#29732
+	
+	//#38679
+	public boolean isZoneQtyHasZeroVal() {
+		return zoneQtyHasZeroVal;
+	}
+	
+	public void setZoneQtyHasZeroVal(boolean zoneQtyHasZeroVal) {
+		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
+	}
+	//#38679
 }
