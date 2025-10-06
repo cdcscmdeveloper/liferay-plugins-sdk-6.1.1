@@ -2793,7 +2793,8 @@ public class SmApplicationBackingBean extends
 		long startTime = System.currentTimeMillis();
 		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
 				.getExternalContext().getRequest()).getRequestedSessionId(); 
-		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+		//39061
+		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplierForCMCD(currSupp);
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean", "checkActiveDisciplinaryAction", startTime); //20211005@fadhli - #31754
 		if (EntityHelper.isCollectionEmpty(discList)){
