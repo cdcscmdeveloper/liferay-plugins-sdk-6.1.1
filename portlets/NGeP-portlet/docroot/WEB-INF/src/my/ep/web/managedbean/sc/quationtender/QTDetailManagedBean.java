@@ -13,6 +13,7 @@ package my.ep.web.managedbean.sc.quationtender;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1829,6 +1830,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String catCodeList;
 	private boolean currentInSpecMaint;//#29732 first time spec maint
 	private boolean categoryDescriptionChange;//#29732 flag to check category has change
+	private boolean updateCatDesc; //#29732
 
 	// #29732 End
 	
@@ -1911,6 +1913,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
+	/** The pmuser contactperson list that had been modified with the original pm user's name */
+	private HashMap<ScQtContactPerson, PmUser> modifiedDoaList;
+
 	
 	private boolean auditViewRole;
 	//#28895 - 35500 end
@@ -12130,6 +12135,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setAuditViewRole(boolean auditViewRole) {
 		this.auditViewRole = auditViewRole;
 	}
+	
+	public HashMap<ScQtContactPerson, PmUser> getModifiedDoaList() {
+		return modifiedDoaList;
+	}
+
+	public void setModifiedDoaList(HashMap<ScQtContactPerson, PmUser> modifiedDoaList) {
+		this.modifiedDoaList = modifiedDoaList;
+	}
 	//28895 - 35500 end
 	//#21692 #note-504 - Start
 	public List<String> getToBeRemoveEPVAttachments() {
@@ -12186,4 +12199,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
 	}
 	//#21692 - End
+	
+	//#29732
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
+
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+	//#29732
+
+	
 }

@@ -12,8 +12,10 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
+import java.text.DateFormat; //#24333
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.text.DecimalFormatSymbols; //24333
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -26,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale; //24333
 import java.util.Map;
 import java.util.Set;
 
@@ -148,6 +151,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.ct.CtAddressUtil;
+import my.ep.util.shared.PerformanceBondUtil;//24333
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
@@ -1626,19 +1630,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			// 24333 - Start
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa() != null) {
-				ScLoa ctloa = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa();
-				if (ctloa.getGstAmt() == null) {
-					ctloa.setGstAmt(BigDecimal.ZERO);
-				}
-				if (ctloa.getSstAmt() == null) {
-					ctloa.setSstAmt(BigDecimal.ZERO);
-				}
-				ctBackingBean.getManagedBean().setOriginalOverallAmount(
-						ctloa.getLoaAmt().add(ctloa.getGstAmt().add(ctloa.getSstAmt())));
+			List<CtContractAmount> ctAmounts = ctBackingBean.getManagedBean().getContractVer().getCtContractAmounts();
+			BigDecimal overall = BigDecimal.ZERO;
+			BigDecimal totalBond = BigDecimal.ZERO;
+			BigDecimal periodBond = BigDecimal.ZERO;
 
+			if (ctAmounts != null && !ctAmounts.isEmpty()) {
+			    CtContractAmount selectedAmount = getSelectedContractAmount(ctAmounts);
+			    if (selectedAmount != null) {
+			        overall = selectedAmount.getOverallCtAmtPbond() != null ? selectedAmount.getOverallCtAmtPbond() : BigDecimal.ZERO;
+			        totalBond = selectedAmount.getTotalBondAmt() != null ? selectedAmount.getTotalBondAmt() : BigDecimal.ZERO;
+			        periodBond = new BigDecimal(selectedAmount.getContractPeriodBond());
+			    }
 			}
-			// 24333 - Start
+
+			ctBackingBean.getManagedBean().setOriginalOverallAmount(overall);
+			ctBackingBean.getManagedBean().setTotalBondAmt(totalBond);
+			ctBackingBean.getManagedBean().setBondPercentage(PerformanceBondUtil.calculatePerformanceBondPercentage(overall, periodBond));
+			// 24333 - End
 			
 			// Amendment process	  
 			// Redmine 19600 - Amendment with Supplement
@@ -2214,6 +2223,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null))
 						&& (!getManagedBean().isValidationDA())) {
 					//#32860 end
+					//#26186 start
+					if(getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+						RequestContext.getCurrentInstance().execute("sendParamToSupplierDA();");
+					}
+					//#26186 end
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
@@ -3422,8 +3436,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
 						|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) //24333
 						&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
-						&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+						&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))
+								|| ctBackingBean.isPk7FromDp())) { //24333
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 				}
 				if (getManagedBean().isDecisionPbQcLOA() && !ctBackingBean.getManagedBean().isViewSCL()) { //#15851
@@ -3436,8 +3451,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//24333 - Start
 			if (!getManagedBean().isPrepareLOA() && ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
+					&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
+							|| ctBackingBean.isPk7FromDp())){ //24333
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithBond);
 			}
 			//24333 - End
@@ -3456,8 +3472,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) { //24333
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
 			if ((ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+					&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+							ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)
+							|| ctBackingBean.isPk7FromDp())) { //24333
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 			}
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
@@ -4250,8 +4267,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public String calculateNewContractPeriod(boolean isCalculateNew) {
 		if (isCalculateNew) {
-			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getContractPeriod()
-					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
+			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().intValue()
+					+ ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()); //#24333
 		} else {
 			return String.valueOf(ctBackingBean.getManagedBean().getContractVer().getCtContract()
 					.getLatestContractVer().getCtContractValue().getContractPeriod());
@@ -4260,45 +4277,45 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	//#24333 - Start
 	/**
-	 * The method used to retrieve the new bond amount
-	 * in text format.
-	 * 
-	 * @return new bond amount in text format.
+	 * Retrieves the bond amount in text format (in words).
+	 * Returns "N/A" if bond amount is not available or zero.
+	 *
+	 * @return bond amount in words, or "N/A" if null or zero
 	 */
-
 	public String getBondAmountInText() {
-		String lang = new FacesScopes().getUserLocale().getLanguage();
+		FacesScopes scopes = new FacesScopes();
+	    Locale locale = scopes.getUserLocale();
+	    String lang = locale.getLanguage();
 
-		if (ctBackingBean == null
-				|| ctBackingBean.getManagedBean() == null
-				|| ctBackingBean.getManagedBean().getContractVer() == null
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
-			return "";
-		}
+	    String na = ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 
-		BigDecimal bondAmount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()
-				.getBondAmt();
+	    // Traverse the object chain with null checks
+	    CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
+	    if (contractVer == null || 
+	        contractVer.getCtAmendment() == null || 
+	        contractVer.getCtAmendment().getAmendmentLoa() == null || 
+	        contractVer.getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
+	        return na;
+	    }
 
-		if (bondAmount.compareTo(BigDecimal.ZERO) == 0) {
-			return "";
-		}
+	    BigDecimal bondAmt = contractVer.getCtAmendment().getAmendmentLoa().getBondAmt();
 
-		// Format the amount to two decimal places
-		DecimalFormat decimalFormat = new DecimalFormat("#.00");
-		String formattedAmount = decimalFormat.format(bondAmount);
+	    if (BigDecimal.ZERO.compareTo(bondAmt) == 0) {
+	        return na;
+	    }
 
-		// Convert to words based on language
-		if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
-			return NumberWordUtilEn.convert(formattedAmount);
-		}
+	    // Format to 2 decimal places
+	    DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(locale));
+	    String formatted = df.format(bondAmt);
 
-		if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
-			return NumberWordUtil.convert(formattedAmount);
-		}
+	    // Convert based on language
+	    if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
+	        return NumberWordUtilEn.convert(formatted);
+	    } else if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
+	        return NumberWordUtil.convert(formatted);
+	    }
 
-		return "";
+	    return na;
 	}
 	//#24333 - End
 	
@@ -7726,10 +7743,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Date pbqcDate = StringUtils.isNotBlank(EntityHelper.getStringNestedProperty(ctBackingBean.getManagedBean(),
 				"contractVer.ctAmendment.pbqcDecisionDate")) ? ctBackingBean.getManagedBean().getContractVer()
 				.getCtAmendment().getPbqcDecisionDate() : null;
+		Boolean isDate = pbqcDate != null && getManagedBean().getDisciplinaryActionStartDate() != null;
+
 		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
-				&& pbqcDate != null
-				&& (pbqcDate.equals(getManagedBean().getDisciplinaryActionStartDate()) || 
-						pbqcDate.after(getManagedBean().getDisciplinaryActionStartDate()));
+				&& isDate
+				&& (pbqcDate.equals(getManagedBean().getDisciplinaryActionStartDate()) 
+						|| pbqcDate.after(getManagedBean().getDisciplinaryActionStartDate()));
 	}
 	
 	/**
@@ -7739,10 +7758,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Date mofDate = StringUtils.isNotBlank(EntityHelper.getStringNestedProperty(ctBackingBean.getManagedBean(),
 				"contractVer.ctAmendment.mofDecisionDate")) ? ctBackingBean.getManagedBean().getContractVer()
 				.getCtAmendment().getMofDecisionDate() : null;
+		Boolean isDate = mofDate != null && getManagedBean().getDisciplinaryActionStartDate() != null;
+		
 		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()
-				&& mofDate != null
-				&& (mofDate.equals(getManagedBean().getDisciplinaryActionStartDate()) || 
-						mofDate.after(getManagedBean().getDisciplinaryActionStartDate()));
+				&& isDate
+				&& (mofDate.equals(getManagedBean().getDisciplinaryActionStartDate()) 
+						|| mofDate.after(getManagedBean().getDisciplinaryActionStartDate()));
 	}
 
 	
@@ -7850,17 +7871,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * Process to validate the DA again after the PBM/MOF Decision DATE has been key in and being submit.
-	 * (isDisciplinaryActionNotification - false) to check the type of punishment.
+	 * Process to validate the DA again after the PBM/MOF Decision DATE has been
+	 * key in and being submit.
+	 * 
+	 * <p>
 	 * Once the DA has been validate, it will do the following 
-	 * 1. Set the BPM outcome to SAVE so that the contract will not undergo Tracking Diary and BPM process in SO file.
-	 * 2. Set the checkValidationDisciplinaryAction to true so that after the record has been saved, it will skip checkDA process.
+	 * 1. Set the BPM outcome to SAVE so that the contract will not undergo
+	 * Tracking Diary and BPM process in SO file. 
+	 * 2. Set the checkValidationDisciplinaryAction to true so that after the record has
+	 * been saved, it will skip checkDA process.
 	 * 
 	 * @return true if DA is true, PBQC and/or MOF decision is true.
 	 */
-	public boolean checkValidationDA(){
-		return getManagedBean().isDisciplinaryAction() && !getManagedBean().isDisciplinaryActionCancel()
-				&& (isPbqcAuthorityDA() || isMofAuthorityDA());
+	public boolean checkValidationDA() {
+		return checkSevereDA() && (isPbqcAuthorityDA() || isMofAuthorityDA());
+	}
+	
+	/**
+	 * Validates Disciplinary Action is applicable. 
+	 * 
+	 * @return true if has DA, severe DA (Hukuman Berat) and did not have cancel
+	 *         button
+	 */
+	public boolean checkSevereDA() {
+		return getManagedBean().isDisciplinaryAction() && !getManagedBean().isDisciplinaryActionNotification()
+				&& !getManagedBean().isDisciplinaryActionCancel();
 	}
 	
 	/**
@@ -9512,5 +9547,42 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	//#38823 end
+	
+	//#24333 - Start
+	/**
+	 * Determines the primary contract amount to use.
+	 * <p>
+	 * The method returns the first active contract amount found in the list.
+	 * If no active contract is found, it defaults to the last one in the list.
+	 * </p>
+	 *
+	 * @param ctAmounts The list of contract amounts. Must not be null or empty.
+	 * @return The selected {@link CtContractAmount}.
+	 */
+	private CtContractAmount getSelectedContractAmount(List<CtContractAmount> ctAmounts) {
+	    // Find the first active contract amount
+	    for (CtContractAmount ctAmount : ctAmounts) {
+	        if (isContractActive(ctAmount, new Date())) {
+	            return ctAmount;
+	        }
+	    }
+	    // If no active contract is found, return the last one
+	    return ctAmounts.get(ctAmounts.size() - 1);
+	}
+	
+	/**
+	 * Checks if a contract is active on a current date.
+	 *
+	 * @param contractAmt The contract to validate.
+	 * @param now The date to check against.
+	 * @return {@code true} if active; {@code false} otherwise.
+	 */
+	private boolean isContractActive(CtContractAmount contractAmt, Date now) {
+	    if (contractAmt == null || contractAmt.getEffDate() == null || contractAmt.getExpDate() == null) {
+	        return false;
+	    }
+	    return !contractAmt.getEffDate().after(now) && !contractAmt.getExpDate().before(now);
+	}
+	//#24333 - End
 	
 	}

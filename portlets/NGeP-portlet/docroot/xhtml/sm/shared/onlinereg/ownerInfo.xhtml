@@ -175,16 +175,18 @@
 			}
 		</script>
 	
-		<!-- 27691 - start - Add/Delete Supplier Owner -->
+		<!-- 27691 - start - Add/Delete Supplier Owner, #26238 (39153) -->
 		<p:outputPanel id="suppOwnersActionPanel" 
 			rendered="#{registrationBackingBean.showSupplierOwnersActionPanel}">
 			<div align="right">
 				<p:commandButton id="addOwnerBtnId" value="#{lbl['lbl.btn.add']}" partialSubmit="true"
 					action="#{registrationBackingBean.addSupplierOwner}"
+					disabled="#{registrationBackingBean.managedBean.activeDisicplinaryAction}"
 					process="@this,tableOwner"
 					update="@this,tableOwner,deleteOwnerBtnId"/>
 				<p:commandButton id="deleteOwnerBtnId" value="#{lbl['lbl.btn.delete']}" partialSubmit="true"
-					disabled="#{empty registrationBackingBean.managedBean.selectedSuppOwners}"
+					disabled="#{empty registrationBackingBean.managedBean.selectedSuppOwners
+								or registrationBackingBean.managedBean.activeDisicplinaryAction}"
 					process="@this,tableOwner"
 					onclick="ownerDeletePopUp.show();"/>
 			</div>
