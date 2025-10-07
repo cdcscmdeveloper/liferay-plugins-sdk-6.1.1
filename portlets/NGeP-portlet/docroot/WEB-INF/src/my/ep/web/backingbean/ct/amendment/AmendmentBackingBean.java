@@ -2006,6 +2006,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setCtCommitteeMembers(getManagedBean().getUpdatedCommitteeMembers());
 			}
 			//26753 - end
+			
+			//#30014 - Start (Set Company Experience Date and Flag to 4 - App Realtime/Data Patching)
+			if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)
+					&& !CTProcessNameConst.VERIFY_FA_HT_NAME.equalsIgnoreCase(getManagedBean().getTaskName())) {
+				ctBackingBean.getManagedBean().getContractVer().getCtContract().setCompExprDate(new Date());
+				ctBackingBean.getManagedBean().getContractVer().getCtContract().setCompExprFlag(ContractConst.COMP_EXP_APP_RLTM);	
+			}
+			//#30014 - End
 
 			reqDTO.setCtContract(ctBackingBean.getManagedBean().getContractVer().getCtContract());
 			reqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
