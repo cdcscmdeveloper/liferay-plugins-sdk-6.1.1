@@ -88,6 +88,7 @@ import org.primefaces.model.UploadedFile;
 import com.liferay.portal.util.PortalUtil;
 //#28895_35501 Start - AUDIT TRAIL SM
 import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.constants.CTProcessNameConst; //#26186
 import my.ep.util.CustomUtils;
@@ -1866,7 +1867,12 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param qtId     previously available qtId (may be overridden)
 	 */
 	private void handleQtMsg(HttpServletRequest originalServletRequest, SmSupplier smSupplier, Long id) {
-		String qtIdParam = originalServletRequest.getParameter(PARAM_QT_ID );
+		String currentUrl = PortalUtil.getCurrentURL(originalServletRequest);
+		if (null == currentUrl || !currentUrl.contains(SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL.split("\\?")[0])) {
+			return;
+
+		}
+		String qtIdParam = originalServletRequest.getParameter(PARAM_QT_ID);
 		Long qtId = id; // keep original value unless overridden
 		SmSupplier supplier = smSupplier;
 		this.getManagedBean().setQtId(qtId);
