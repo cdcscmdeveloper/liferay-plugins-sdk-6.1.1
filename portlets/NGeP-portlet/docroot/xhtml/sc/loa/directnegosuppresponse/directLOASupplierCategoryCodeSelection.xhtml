@@ -13,7 +13,7 @@
 			<p:column>
 				<p:dataTable id="selectedCategoryTable" var="categorySelected"
 					value="#{directLOABackingBean.managedBean.procurementRelatedCategoryList}"
-					rowIndexVar="index" rows="10" lazy="true"
+					rowIndexVar="index" rows="10" 
 					selection="#{directLOABackingBean.managedBean.selectedCategoryList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{categorySelected}">
