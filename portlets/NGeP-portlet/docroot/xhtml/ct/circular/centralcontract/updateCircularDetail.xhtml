@@ -65,28 +65,28 @@
 			   	        	 disabled="#{centralContractBackingBean.managedBean.viewContract}">
 			                 <p:ajax event="change" update=":form:extStartLbl :form:popupButtonCal5 :form:extEndLbl :form:popupButtonCal6" listener="#{centralContractBackingBean.chkCircularExtension}" process="@this"/> 
 			           </p:selectBooleanCheckbox>
-			             <f:verbatim/> <f:verbatim/>
-		        <p:outputLabel id="extStartLbl" value="#{lbl['lbl.ct.extension.start.date']}" styleClass="required" style="#{centralContractBackingBean.managedBean.circularExtension ? '' : 'display:none;'}"/>
+			           <f:verbatim/> <f:verbatim/>
+			             
+		        <p:outputLabel id="extStartLbl" value="#{lbl['lbl.ct.extension.start.date']}" styleClass="required"  style="#{centralContractBackingBean.managedBean.circularExtension ? '' : 'display:none;'}" />
 			    <p:calendar id="popupButtonCal5" value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonly="true"
 			         maxdate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
 			         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}"
-			         rendered="#{centralContractBackingBean.managedBean.circularExtension}"  size="10" showOn="button"
+			         disabled="#{centralContractBackingBean.managedBean.viewContract}"
+			         size="10" showOn="button"
 				     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 				     style="#{centralContractBackingBean.managedBean.circularExtension ? '' : 'display:none;'}">
 		       </p:calendar>
-		         <f:verbatim/> <f:verbatim/>
+		       <f:verbatim/> <f:verbatim/>
 		       
-		    <p:outputLabel id="extEndLbl" value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required" style="#{centralContractBackingBean.managedBean.circularExtension ? '' : 'display:none;'}"/>
+		   <p:outputLabel id="extEndLbl" value="#{lbl['lbl.ct.extension.end.date']}" styleClass="required" style="#{centralContractBackingBean.managedBean.circularExtension ? '' : 'display:none;'}"/>
 		   <p:calendar id="popupButtonCal6" size="10"  value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}"  navigator="true"
 		         mindate="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" readonlyInput="true"  styleClass="calendarDateField" 
 				   disabled="#{centralContractBackingBean.managedBean.viewContract}"
-				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" 
+				   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button"
 				   style="#{centralContractBackingBean.managedBean.circularExtension ? '' : 'display:none;'}">
-				</p:calendar>
-				
-			  	      <f:verbatim/> <f:verbatim/>
-				
-				
+				</p:calendar>				
+			  	<f:verbatim/> <f:verbatim/>
+								
 		    <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
 		 		<h:panelGroup id="uploadCircularPg1">
 		 			<h:panelGrid columns="5">
