@@ -398,6 +398,8 @@
 		<portlet id="testSmAI"></portlet><!-- #38890 -->
 		<!-- #9299 start -->
 		<portlet id="smCompExp"></portlet>
+		<portlet id="smCompExpAlert"></portlet>
+		<!-- #9299 end -->
 	</category>
 
 	<category name="category.ep.wp">

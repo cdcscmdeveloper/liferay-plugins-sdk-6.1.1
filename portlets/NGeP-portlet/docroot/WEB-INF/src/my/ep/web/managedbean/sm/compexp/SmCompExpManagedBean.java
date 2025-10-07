@@ -47,6 +47,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	private SmSupplier supplier;
 	private boolean agreeTnC;
+	private boolean alertFlag;
 	private boolean draftExist;
 	private transient IPagingDataModel<SmCompExpDraft> draftSmDataModel = new DraftSmPagingDataModel();
 	private SmCompExpDraft selectedDraft;
@@ -87,6 +88,14 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setSupplier(SmSupplier supplier) {
 		this.supplier = supplier;
+	}
+
+	public boolean isAlertFlag() {
+		return alertFlag;
+	}
+
+	public void setAlertFlag(boolean alertFlag) {
+		this.alertFlag = alertFlag;
 	}
 
 	public boolean isAgreeTnC() {

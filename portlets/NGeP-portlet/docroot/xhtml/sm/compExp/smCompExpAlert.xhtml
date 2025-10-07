@@ -1,0 +1,26 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+	<ui:define name="contentSection">
+		<style>
+			.blink_img{animation:1s blinker linear infinite; -webkit-animation:1s blinker linear infinite;-moz-animation:1s blinker linear infinite}
+			@-moz-keyframes blinker{0%{opacity: 1.0}50%{opacity: 0.0}100%{opacity: 1.0}}
+			@-webkit-keyframes blinker{0%{opacity: 1.0}50%{opacity: 0.0}100%{opacity: 1.0}}
+			@keyframes blinker{0%{opacity: 1.0}50%{opacity: 0.0}100%{opacity: 1.0}}
+		</style>
+		<span class='blink_img'> <p:graphicImage
+				value="/css/images/priority.png" />
+		</span>
+		<p:spacer width="5" />
+		<h:outputText style="color:blue;"
+			value="#{lbl['lbl.sm.comp.exp.alert.part.one']}" />
+		<a href="comp-exp?alert"><h:outputText
+				style="color:blue;text-decoration: underline"
+				value="#{lbl['lbl.sm.comp.exp.alert.part.two']}" /> </a>
+		<h:outputText style="color:blue;"
+			value="#{lbl['lbl.sm.comp.exp.alert.part.three']}" />
+	</ui:define>
+</ui:composition>

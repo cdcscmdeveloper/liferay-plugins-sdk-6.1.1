@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.compexp;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,8 +9,10 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.compexp.ISmCompExpSO;
@@ -49,6 +52,8 @@ import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
+import com.liferay.portal.util.PortalUtil;
+
 /**
  * BackingBean for Sm Company Experience
  * 
@@ -60,6 +65,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	private static final long serialVersionUID = 1L;
 	private static String smCompExpTncXhtml = "smCompExpTnc.xhtml";
+	private static String alertFlag = "?alert";
+	private static String smCompExpAlertXhtml = "smCompExpAlert.xhtml";
 	private static String smCompExpMainXhtml = "smCompExpMain.xhtml";
 	private static String smCompExpDraftXhtml = "smCompExpDraft.xhtml";
 	private static String smCompExpDraftUpdateXhtml = "smCompExpDraftUpdate.xhtml";
@@ -70,22 +77,49 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private static String smCompExpNewXhtml = "smCompExpNew.xhtml";
 
 	/**
+	 * Prerender for Company Experience Alert
+	 */
+	public void preRenderSmCompExpAlert() {
+		this.getManagedBean().setSupplier(SmApplicationUtil.getCurrentSupplier());
+		if (checkSmCompExpDraftExist()) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, smCompExpAlertXhtml);
+		}
+	}
+	
+	/**
 	 * Prerender for Sm Company Experience
 	 */
 	public void preRenderSmCompExp() {
 		renewSesionObject();
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		if (PortalUtil.getCurrentCompleteURL(request).contains(alertFlag)) {
+			this.getManagedBean().setAlertFlag(true);
+		}
+		
 		this.getManagedBean().setSupplier(SmApplicationUtil.getCurrentSupplier());
-		SmCommonUtil.redirectToPage(smCompExpTncXhtml, "", null, null);
+		
+		if (this.getManagedBean().isAlertFlag()) {
+			redirectToDraft();
+		} else {
+			SmCommonUtil.redirectToPage(smCompExpTncXhtml, "", null, null);
+		}
 	}
 
 	/**
 	 * Redirect to Sm Company Experience main screen
+	 * @throws IOException 
 	 */
-	public void proceedAfterTnC() {
-		this.getManagedBean().setDraftExist(checkSmCompExpDraftExist());
-		this.getManagedBean().getMasterFedDataModel().reloadData();
-		this.getManagedBean().getMasterNonFedDataModel().reloadData();
-		SmCommonUtil.redirectToPage(smCompExpMainXhtml, "", null, null);
+	public void proceedAfterTnC() throws IOException {
+		if (this.getManagedBean().isAlertFlag()) {
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();			
+			externalContext.redirect("./");
+		} else {
+			this.getManagedBean().setDraftExist(checkSmCompExpDraftExist());
+			this.getManagedBean().getMasterFedDataModel().reloadData();
+			this.getManagedBean().getMasterNonFedDataModel().reloadData();
+			SmCommonUtil.redirectToPage(smCompExpMainXhtml, "", null, null);
+		}
 	}
 
 	private boolean checkSmCompExpDraftExist() {
@@ -1025,8 +1059,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Validate field before save update
 	 * 
 	 * @param update
+	 * @throws IOException 
 	 */
-	public void onSaveMaster(boolean update) {
+	public void onSaveMaster(boolean update) throws IOException {
 		boolean error = false;
 		String clienType = this.getManagedBean().getSelectedMaster().getClientType();
 		String agencyName = this.getManagedBean().getSelectedMaster().getAgencyName();
@@ -1046,7 +1081,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 	}
 
-	private void updateSmComExpMaster() {
+	private void updateSmComExpMaster() throws IOException {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
@@ -1158,8 +1193,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	/**
 	 * Delete selected Master
+	 * @throws IOException 
 	 */
-	public void delSmCompExpMaster() {
+	public void delSmCompExpMaster() throws IOException {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
 		SmCompExpResDTO resDTO;
