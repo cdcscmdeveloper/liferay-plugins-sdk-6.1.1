@@ -24917,7 +24917,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
 		this.getManagedBean().setZoneQtyHasZeroVal(templateSpecSO.validateQuantityItem(this.getManagedBean().getQt().getQtId()));
-			
 	}
 	// #38679
 }
