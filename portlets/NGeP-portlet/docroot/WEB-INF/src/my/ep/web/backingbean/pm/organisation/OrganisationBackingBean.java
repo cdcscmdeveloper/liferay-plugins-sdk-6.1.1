@@ -1393,7 +1393,7 @@ public class OrganisationBackingBean extends
 				getManagedBean().setAuditOldPMOrgProfile(offResDTO.getPmOrgProfile() == null ? 
 						new PmOrgProfile() : offResDTO.getPmOrgProfile());
 				getManagedBean().setAuditBillingAddress(offAddressResDTO.getPmAddress() == null ? 
-						this.getManagedBean().getOfficeAddress() : offAddressResDTO.getPmAddress());
+						new PmAddress() : offAddressResDTO.getPmAddress());
 				getManagedBean().setOldReceivingAddressList(offRcvAddressResDTO.getAddressTypeList() == null ?
 						getManagedBean().getAddressTypesList() : offRcvAddressResDTO.getAddressTypeList());
 				getManagedBean().setAuditSmSupplierBanks(supplierResDTO.getSmSupplierBankList() == null ?
