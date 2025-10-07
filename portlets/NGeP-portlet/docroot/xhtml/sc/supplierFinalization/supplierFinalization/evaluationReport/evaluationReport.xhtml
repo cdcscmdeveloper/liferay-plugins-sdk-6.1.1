@@ -30,9 +30,9 @@
 			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:15%; white-space:normal; text-align: center;">
 				<ui:fragment
-					rendered="#{report.pmDocument ne null and
+					rendered="#{suppFinalizationBackingBean.managedBean.demoReq || report.pmDocument ne null and
 										 	suppFinalizationBackingBean.managedBean.getDirectdownloaddocdefkeys()
-										 		.contains(report.pmDocument.docDefinitionKey)}">
+										 		.contains(report.pmDocument.docDefinitionKey)}"><!-- #28784 -->
 					<p:commandButton id="download" icon="ui-icon-download"
 						style="background-color:transparent !important; border:0px none;"
 						ajax="false" immediate="true"

@@ -80,6 +80,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.comparator.sc.WorkflowStatusComparator;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
@@ -227,7 +228,7 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
+import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
 import my.ep.web.backingbean.sc.bidding.ScheduleBiddingBackingBean;
@@ -270,6 +271,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.util.Constants;
+//Fix - #30866
 
 /**
  * The Class QTDetailBackingBean.
@@ -815,6 +817,8 @@ public class QTDetailBackingBean extends
 			// #31610, #9019 -end-
 			
 			validateQtDetails();
+			
+			checkDemoPresentationByStatus(); // #28784
 
 			// #31610, #9019 -start-
 			/*
@@ -1084,6 +1088,11 @@ public class QTDetailBackingBean extends
 
 			Long qtId = scQt.getQtId();
 
+			// #28784 - Demo WIP -start-
+			boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+			this.getManagedBean().setNewVersion(isQtNewVersion);
+			// #28784 - Demo WIP -end-
+
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setMaintanceFlow(true);
 			reqDTO.setQtId(qtId);
@@ -1121,6 +1130,35 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setQt(selectedScQt);
 			}
 			// #25692 -end-
+
+			// #28784 -start-
+			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+			Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt()
+					.getQtStatus().getStatusId() : null;
+
+			if (null != status && !status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
+					&& !status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+					&& this.getManagedBean().isMaintanceFlow() && !demoRequired
+					&& !status.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
+					&& !status.equals(QTStatusConst.CMT_PENDING_APPROVAL)
+					&& !status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
+					&& !status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)) {
+				this.getManagedBean().setDemoEvalDisabled(true);
+			}
+
+			if (null != status && !status.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
+					&& !status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
+					&& !status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+					&& this.getManagedBean().isMaintanceFlow() && !status.equals(QTStatusConst.CMT_PENDING_APPROVAL)
+					&& !status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
+					&& !status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)) {
+				this.getManagedBean().setDemoDisabled(false);
+				this.getManagedBean().setDemoType(true);
+				this.getManagedBean().setDemoAction(true);
+			}
+
+			checkDemoPresentationByStatus();
+			// #28784 -end-
 
 			if ( QTStatusConst.QT_CANCELLED.equals(currentStatus) && null == selectedScQt
 							.getQtType()) {
@@ -5195,8 +5233,29 @@ public class QTDetailBackingBean extends
 								.isEmpty())) {
 					tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 					if (tenderResDTO.getQtDetail() != null) {
+						// #28784 -start-
+						boolean demoRequired = false;
+						String evalType = null;
+
+						if (scQt != null) {
+							demoRequired = scQt.isDemoRequired();
+							evalType = scQt.getEvaluationType();
+						}
+
 						scQt = tenderResDTO.getQtDetail();
+
 						getManagedBean().setQt(scQt);
+
+						// #28784 - Demo WIP -start-
+						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(),
+								CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						this.getManagedBean().setNewVersion(isQtNewVersion);
+
+						if (demoRequired && this.getManagedBean().isNewVersion()) {
+							getManagedBean().getQt().setDemoRequired(demoRequired);
+							getManagedBean().getQt().setEvaluationType(evalType);
+						}
+						// #28784 -end-
 						this.getManagedBean().setPanel(scQt.isPanel());
 						Long currentStatus = this.getManagedBean().getQt()
 								.getQtStatus().getStatusId();
@@ -5240,6 +5299,11 @@ public class QTDetailBackingBean extends
 							this.getManagedBean().setPtjSpecialApproval(scQt.getPtjSpecialApproval());
 						}
 
+						// #28784 - Include Demo WIP -start-
+						if (this.getManagedBean().isNewVersion()) {
+							checkDemoPresentationByStatus();
+						}
+						// #28784 - Include Demo WIP -end-
 					}
 
 					this.getManagedBean().setAmendMentBean(
@@ -5271,6 +5335,15 @@ public class QTDetailBackingBean extends
 						scQt.setDecExpectedIntendedPrice(tmpExpectedIntendedPrice);
 					}
 					// this.getManagedBean().setContractType(scQt.getContractType());
+
+					// #28784 -start-
+					if (this.getManagedBean().getQt().isDemoRequired()) {
+						this.getManagedBean().setDemoAction(true);
+						this.getManagedBean().setDemoType(true);
+					}
+
+					checkDemoPresentationByStatus();
+					// #28784 -end-
 				}
 			} finally {
 				QtDetailsSO = null;
@@ -10889,5 +10962,334 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setPrevDOAs(generateDOACompareStr(this.getManagedBean().getPmuserContactpersonList()));
 	}
 	// 25037 - end
+	
+	/*
+	 * Set evaluation Type and demo required radio button to show or disabled, 
+	 * #28784
+	 */
+	public void checkDemoPresentationByStatus() {
+		if (this.getManagedBean().isNewVersion()) {
+			ScQt scQt = this.getManagedBean().getQt();
+			Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt()
+					.getQtStatus().getStatusId() : null;
+			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+			String taskName = this.getManagedBean().getTaskName() == null ? "" : this.getManagedBean().getTaskName();
+			ScWorkFlowStatus specMainworkflow = this.getManagedBean().getSpecMaintenanceWorkFlowStatus();
+			Long workflowStatusId = ParameterConst.PM_PARAMETERID_ZERO;
+			this.getManagedBean().setDemoEvalDisabled(false);
+			this.getManagedBean().setDemoSpecialCase(false);
+			this.getManagedBean().setDemoDisabled(false);
+			if (specMainworkflow != null && specMainworkflow.getPmStatus() != null) {
+				workflowStatusId = specMainworkflow.getPmStatus().getStatusId();
+			}
+			String role = getUserRoleCode();
+			if (demoRequired) {
+				this.getManagedBean().getQt().setDemoRequired(true);
+			} else {
+				this.getManagedBean().getQt().setDemoRequired(false);
+			}
+			
+			boolean qtStatus = !workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT)
+					&& !workflowStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF) && !workflowStatusId
+					.equals(QTStatusConst.SE_PENDING_REVISION);
+			
+			if (scQt.getEvaluationType() != null
+					&& scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)
+					&& null != status && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 
+				if (null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+						&& !this.getManagedBean().isQtSpecMaintanance()) {
+					this.getManagedBean().setDemoDisabled(false);
+				}
+
+				if (null != status
+						&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+								&& !this.getManagedBean().isQtSpecMaintanance() && !this.getManagedBean()
+								.isMaintanceFlow()) && demoRequired) {
+					this.getManagedBean().setDemoSpecialCase(true);
+					this.getManagedBean().setDemoEvalDisabled(false);
+				}
+
+				if (null != status
+						&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+								&& !this.getManagedBean().isQtSpecMaintanance() && !this.getManagedBean()
+								.isMaintanceFlow()) && !demoRequired) {
+					this.getManagedBean().setDemoSpecialCase(true);
+					this.getManagedBean().setDemoEvalDisabled(true);
+				}
+
+				if (this.getManagedBean().isMaintanceFlow()
+						&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) && !demoRequired) {
+					this.getManagedBean().setDemoDisabled(false);
+					this.getManagedBean().setDemoEvalDisabled(false);
+				}
+
+				boolean checkStatus = status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						|| status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
+						|| status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)
+						|| status.equals(QTStatusConst.QT_PENDING_DOCUMENT_REVISION)
+						|| status.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
+						|| status.equals(QTStatusConst.QT_REVISION_PUBLICATION);
+				
+				boolean workflowStat = !workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT)
+						&& !workflowStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF) && !workflowStatusId
+						.equals(QTStatusConst.SE_PENDING_REVISION);
+
+				if (null != status && checkStatus && workflowStat && getManagedBean().isMaintanceFlow() && demoRequired
+						&& !taskName.equalsIgnoreCase(SCProcessNameConst.ENDORSE_SCORING)
+						&& !taskName.equalsIgnoreCase(SCProcessNameConst.SIGNOFF_SCORING) && role != null
+						&& role.equals(RoleCode.SC_SECRETARY.value())) {// #28784
+					this.getManagedBean().setDemoEvalDisabled(false);
+					this.getManagedBean().setDemoSpecialCase(true);
+					this.getManagedBean().setDemoDisabled(true);
+				}
+
+				boolean newStatus = status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						|| status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
+						|| status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)
+						|| status.equals(QTStatusConst.QT_REVISION_PUBLICATION) || status
+							.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION);
+				
+				boolean newWorkflow = !workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT)
+						&& !workflowStatusId.equals(QTStatusConst.SE_PENDING_SIGNOFF) && !workflowStatusId
+						.equals(QTStatusConst.SE_PENDING_REVISION);
+				 
+				// #28784 note #507 - start
+				if (null != status && newStatus && this.getManagedBean().isMaintanceFlow() && !demoRequired
+						&& role != null && role.equals(RoleCode.SC_SECRETARY.value()) && newWorkflow) {
+					this.getManagedBean().setDemoEvalDisabled(true);
+					this.getManagedBean().setDemoSpecialCase(false);
+					this.getManagedBean().setDemoDisabled(true);
+				}
+
+				boolean stdStatus = status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						|| status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
+						|| status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)
+						|| status.equals(QTStatusConst.QT_REVISION_PUBLICATION) || status
+							.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION);
+				
+				if (null != status && stdStatus && workflowStatusId.equals(QTStatusConst.SE_PENDING_REVISION)
+						&& this.getManagedBean().isMaintanceFlow() && !isSpecCommittee() && role != null
+						&& role.equals(RoleCode.SC_SECRETARY.value())) {
+					this.getManagedBean().setDemoEvalDisabled(true);
+					this.getManagedBean().setDemoSpecialCase(false);
+					this.getManagedBean().setDemoDisabled(true);
+				}
+				// #28784 note #507 - end
+
+				if (null != status
+						&& (status.equals(QTStatusConst.QT_REVISION_PUBLICATION) || status
+								.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)) && role != null
+						&& (role.equals(RoleCode.RN_APPROVER.value()) || role.equals(RoleCode.DESK_OFFICER.value()))) {
+					this.getManagedBean().setDemoSpecialCase(true);
+				}
+
+				if (null != status && (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION))
+						&& !status.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)) {
+					this.getManagedBean().setDemoType(true);
+					this.getManagedBean().setDemoAction(true);
+				}
+
+				if (null != status
+						&& (status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && role != null && role
+								.equals(RoleCode.SC_SECRETARY.value()))) {
+					this.getManagedBean().setDemoDisabled(true);
+					this.getManagedBean().setDemoEvalDisabled(false);
+				}
+
+				if (null != status && status.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)) {
+					this.getManagedBean().setDemoType(false);
+					this.getManagedBean().setDemoAction(false);
+				}
+
+			} else if (this.getManagedBean().isMaintanceFlow() && !demoRequired && null != status
+					&& !status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+					&& !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && role != null
+					&& role.equals(RoleCode.SC_SECRETARY.value())) {
+				this.getManagedBean().setDemoDisabled(true);
+				this.getManagedBean().setDemoEvalDisabled(true);
+				this.getManagedBean().setDemoType(true);
+				this.getManagedBean().setDemoAction(true);
+			} else if (scQt.getEvaluationType() != null
+					&& scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
+					&& !demoRequired && null != status && status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+					&& role != null && role.equals(RoleCode.SC_SECRETARY.value())) {
+				this.getManagedBean().setDemoDisabled(true);
+				this.getManagedBean().setDemoEvalDisabled(true);
+				this.getManagedBean().setDemoType(false);
+				this.getManagedBean().setDemoAction(false);
+			} else if (this.getManagedBean().isMaintanceFlow() && null != status
+					&& status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) && !demoRequired
+					&& !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && role != null
+					&& role.equals(RoleCode.SC_SECRETARY.value()) && qtStatus) {
+				this.getManagedBean().setDemoDisabled(true);
+				this.getManagedBean().setDemoEvalDisabled(true);
+			} else {
+				this.getManagedBean().setDemoType(false);
+				this.getManagedBean().setDemoAction(false);
+			}
+		}
+	}
+	// #28784 -end-
+	
+	// #28784 note #507 - start
+	public boolean isSpecCommittee() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil
+				.getDisplayPortletId());
+	}
+	// #28784 -end-
+	
+	// #28784 - start
+	public void retrieveDemoQtDetails(Long qtId) {
+		if (null != qtId) {
+			IQTDetailSO QtDetailsSO;
+			
+			try {
+				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setMaintanceFlow(this.getManagedBean().isMaintanceFlow());
+				tenderReqDTO.setQtId(qtId);
+				tenderReqDTO.setBdgDtlsReq(true);
+				QuationTenderResDTO tenderResDTO = null;
+				ScQt scQt = this.getManagedBean().getQt();
+				
+				if (null == scQt
+						|| (scQt.isZonal() && null != this.getManagedBean().getZoneGeneralTrees() && this
+								.getManagedBean().getZoneGeneralTrees().isEmpty())) {
+					long startTime = System.currentTimeMillis();
+					tenderResDTO = QtDetailsSO.retriveDemoQTDetails(tenderReqDTO);
+					SLAUtils.getInstance().logHiExecInfo("QT", "QTDetailBackingBean.retrieveQuationTenderDetails",
+							startTime);
+					if (tenderResDTO.getQtDetail() != null) {
+						scQt = tenderResDTO.getQtDetail();
+						getManagedBean().setQt(scQt);
+						this.getManagedBean().setPanel(scQt.isPanel());
+						Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
+						this.getManagedBean().setCurrentStatusId(currentStatus);
+						getManagedBean().getCtContract().setContractNo(
+								this.getManagedBean().getQt().getExistingContractNo());
+
+						if (this.getManagedBean().getQt().isZonal()) {
+							if (null != this.getManagedBean().getQt().getZoneLocationLevel()) {
+								this.getManagedBean().setStateCodes(
+										this.getManagedBean().getQt().getZoneLocationLevel().getParameterCode());
+							}
+
+							// Populate zone detail into tree node
+							if (scQt.getScQtSupplierCriteria() != null
+									&& scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+								List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
+										.getTplSpecZoneDtls();
+								populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+								// setting into zones bean to validate zones while adding
+								if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+									List<ZonesBean> zoneBeanLst = new ArrayList<ZonesBean>();
+									for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
+										ZonesBean bean = new ZonesBean();
+										bean.setTplSpecZoneDtl(specZoneDtl);
+										zoneBeanLst.add(bean);
+									}
+									this.getManagedBean().setBeans(zoneBeanLst);
+								}
+							}
+						}
+						// Setting special approval info for login user
+						if (scQt.getObtainSpecialApproval() != null && !scQt.getObtainSpecialApproval()) {
+							this.getManagedBean().setPtjSpecialApproval(
+									getPtjSpecialApprovalByOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId()));
+
+						} else {
+							this.getManagedBean().setPtjSpecialApproval(scQt.getPtjSpecialApproval());
+						}
+
+						if (scQt.getEvaluationType() != null
+								&& scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
+							Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean()
+									.getQt().getQtStatus().getStatusId() : null;
+							if (null != status && (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
+								this.getManagedBean().setDemoType(true);
+							}
+						}
+					}
+
+					this.getManagedBean().setAmendMentBean(tenderResDTO.getAmendMentBean());
+					if (this.getManagedBean().getGosodos() == null) {
+						this.getManagedBean().setGosodos(tenderResDTO.getBudgetDtls());
+					}
+					if (null != getManagedBean().getQt() && null == getManagedBean().getQt().getProcurementTypeCatId()) {
+						getManagedBean().getQt().setProcurementTypeCatId(new PmParameter());
+					}
+
+				} else {
+					if (scQt.getEstimatedAmount() == null) {
+						BigDecimal estimatedAmount = QtDetailsSO.getdecryptedEstAmount(qtId);
+						scQt.setEstimatedAmount(estimatedAmount);
+						scQt.setDecryptedEstAmt(estimatedAmount);
+					}
+
+					if (scQt.getTmpExpectedIntendedPrice() == null) {
+						BigDecimal tmpExpectedIntendedPrice = QtDetailsSO.getDecryptedExpectedIntendedPrice(qtId);
+						scQt.setTmpExpectedIntendedPrice(tmpExpectedIntendedPrice);
+						scQt.setDecExpectedIntendedPrice(tmpExpectedIntendedPrice);
+					}
+				}
+			} finally {
+				QtDetailsSO = null;
+			}
+		}
+	}
+	// #28784 - end
+	
+	// #28784 note-#634 - Start
+	/**
+	 * To Retrieve zonal Detail by qt id.
+	 * 
+	 * @param QuationTenderReqDTO
+	 * 
+	 * @return QuationTenderResDTO
+	 * 
+	 */
+	public void retrieveZonalDetailAfterDemoDeletion(Long qtId) {
+		if (null != qtId) {
+			IQTDetailSO qtDetailsSO;
+			try {
+				qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+				
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setMaintanceFlow(this.getManagedBean().isMaintanceFlow());
+				tenderReqDTO.setQtId(qtId);
+				tenderReqDTO.setBdgDtlsReq(true);
+				
+				ScQt scQt = this.getManagedBean().getQt();
+				QuationTenderResDTO tenderResDTO = qtDetailsSO.retrieveZonalDetail(tenderReqDTO);
+
+				if (tenderResDTO.getQtDetail() != null) {
+					ScQt newScQt = tenderResDTO.getQtDetail();
+					
+					scQt.setScQtSupplierCriteria(newScQt.getScQtSupplierCriteria());
+					
+					getManagedBean().setQt(scQt);
+
+					if (null != this.getManagedBean().getQt().getZoneLocationLevel()) {
+						this.getManagedBean().setStateCodes(
+								this.getManagedBean().getQt().getZoneLocationLevel().getParameterCode());
+					}
+					// Populate zone detail into tree node
+					if (scQt.getScQtSupplierCriteria() != null
+							&& scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
+						// #28784 zone missing after demo = no (if not save) - Start
+						List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias()
+								.getTplSpecZoneDtls();
+						populateZoneDetailIntoTreeNode(scQt, specZoneDtls);
+						// #28784 zone missing after demo = no (if not save) - End
+					}
+				}
+			} catch(Exception e) {
+				//SLAUtils.getInstance().logSLAError("QT", "RetrieveZonalDetailForDemo", qtId.toString(), "retrieveZonalDetailAfterDemoDeletion", getUserIdSessionFromLoginId(), e);
+			}
+		}
+	}
+	// #28784 note-#634 - End
 }
