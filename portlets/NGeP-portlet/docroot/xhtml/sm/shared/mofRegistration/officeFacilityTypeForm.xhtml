@@ -120,7 +120,17 @@
 									and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}">
 					<tr>
 						<td colspan="2">
-							<ac:smAIAssistant aiDlg="tenancyAI" smAppl="#{backingBean.managedBean.smAppl}" docType="tenancy"/>
+							<p:commandButton value="AI Assistant" onclick="tenancyAI.show()" immediate="true">
+									<p:ajax partialSubmit="true" process="@this" />
+							</p:commandButton>
+							<p:graphicImage id="tttenancyAI" value="/css/images/design/tooltips.png" />
+							<p:tooltip id="tt2tenancyAI" for="tttenancyAI">
+								<p:outputLabel value="For Rented Business Office, click the AI Assistant and upload the Stamped Premise Rental Agreement for data extraction" />
+							</p:tooltip>&#160;
+							<br/>
+							<h:outputText styleClass="instruction" 
+								value="Disclaimer: Please review and verify AI-generated data. The system is not responsible for data accuracy or integrity." />
+							
 						</td>
 					</tr>
 					</p:outputPanel>
@@ -607,4 +617,6 @@
 		</p:confirmDialog>
 		<!-- 29480 - Update: remove code for Re-endorsed CR -->
 	</p:panel>
+	<!-- #38890 -->
+	<ac:smAIAssistant aiDlg="tenancyAI" smAppl="#{backingBean.managedBean.smAppl}" docType="tenancy"/>
 </ui:composition>
