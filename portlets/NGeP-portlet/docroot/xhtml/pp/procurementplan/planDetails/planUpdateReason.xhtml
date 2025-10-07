@@ -73,13 +73,17 @@
 			</table>
 		</p:dataGrid>
  		<div class="ppRightBtn">
-		  	<p:commandButton id="updReasonOk" value="#{lbl['lbl.btn.ok']}"  immediate="true" oncomplete="confirmCmd();" />
-		  	<p:commandButton id="updReasonCancel" value="#{lbl['lbl.btn.cancel']}" immediate="true" oncomplete="cancelCmdRjt();" />		
-		</div>  
-		<!--  <div class="ppRightBtn">
-		  <p:commandButton id="cmdReasonOk" value="#{lbl['lbl.btn.ok']}"  immediate="true" oncomplete="confirmCmd();" />
-		  <p:commandButton id="cmdReasonCancel" value="#{lbl['lbl.btn.cancel']}" immediate="true" oncomplete="cancelCmdRjt();" />		
-		</div> -->     
+				<!-- #35502, Fix as-is bug: #38696 Start -->
+				<p:commandButton id="updReasonOk" value="#{lbl['lbl.btn.ok']}"
+					process=":form:updReason"
+					action="#{pPlanBackingBean.confirmReasonCloseDialog}"
+					update="@form" />
+				<p:commandButton id="updReasonCancel"
+					value="#{lbl['lbl.btn.cancel']}"
+					oncomplete="dlUpdateReasonWv.hide();" process="@this"
+					immediate="true" update="@form" />
+				<!--#35502, Fix as-is bug: #38696 End -->
+			</div>   
 		</p:outputPanel>
 	</p:dialog>
 	
