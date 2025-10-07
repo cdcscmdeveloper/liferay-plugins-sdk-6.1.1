@@ -1298,6 +1298,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		//#13847 end
 		
+		//#30014 - Start (Set Company Experience Date and Flag to 4 - App Realtime/Data Patching)
+		if (isValidDocTypeForCallSp(ctBB.getManagedBean().getContractVer().getDocType()) && action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			ctContractVer.getCtContract().setCompExprDate(new Date());
+			ctContractVer.getCtContract().setCompExprFlag(ContractConst.COMP_EXP_APP_RLTM);			
+		}
+		//#30014 - End
+		
 		reqDTO.setCtContractVer(ctContractVer);
 		// Start - #28292/#26475
 		reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
@@ -1926,19 +1933,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							// Bug #25359 
 							// Fahmi alter condition with putra
 							//#24333 - Start
-			                if (previouslyHasBond) {
-			                    if (ctBB.isContractExtendOrIsBond()) {
-			                        if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() == null ||
-			                            ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().isEmpty()) {
-			                            blockSubmission("PB");
-			                        }
-			                    }
+							if (previouslyHasBond) {
+								List<CtPerformanceBond> bondsToCheck = ctBB.isContractExtendOrIsBond() ? ctBB.getManagedBean().getCtContractAmount()
+										.getCtPerformanceBondsNew() : ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal();
 
-			                    if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal() == null ||
-			                        ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().isEmpty()) {
-			                        blockSubmission("PB");
-			                    }
-			                }
+								if (bondsToCheck == null || bondsToCheck.isEmpty()) {
+									blockSubmission("PB");
+								}
+							}
 							//#24333 - End
 						}
 					} 

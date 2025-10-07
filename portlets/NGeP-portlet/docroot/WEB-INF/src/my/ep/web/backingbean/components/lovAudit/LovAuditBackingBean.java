@@ -165,10 +165,10 @@ public class LovAuditBackingBean implements Serializable {
 					log.info("filterBeangetSearchField###$$$ ::: " + filterBean.getSearchField());
 					log.info("filterBean ###$$$ getSearchValue::: " + filterBean.getSearchValue());
 					if (filterBean.getSearchField() != null) {
-						if ("userName".equalsIgnoreCase(filterBean.getSearchField())) {
-							reqDTO.setUserName(filterBean.getSearchValue().toString());
-						} else if ("identificationNo".equalsIgnoreCase(filterBean.getSearchField())) {
+						if ("identificationNo".equalsIgnoreCase(filterBean.getSearchField())) {
 							reqDTO.setIdentificationNo(filterBean.getSearchValue().toString());
+						} else if ("userName".equalsIgnoreCase(filterBean.getSearchField())) {
+							reqDTO.setUserName(filterBean.getSearchValue().toString());
 						}
 					}
 

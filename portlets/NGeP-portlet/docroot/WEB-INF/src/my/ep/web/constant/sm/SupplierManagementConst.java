@@ -298,6 +298,11 @@ public class SupplierManagementConst {
 	public static final String MOL_SUCCESS = my.ep.constant.sm.SupplierManagementConst.MOL_SUCCESS;
 	public static final String MOL_FAIL = my.ep.constant.sm.SupplierManagementConst.MOL_FAIL;
 	public static final String MOL_PENDING = my.ep.constant.sm.SupplierManagementConst.MOL_PENDING;
+	public static final String PAYMENT_GATEWAY_SUCCESS = "SUCC";
+	public static final String PAYMENT_GATEWAY_FAIL = "FAIL";
+	public static final String PAYMENT_GATEWAY_PENDING = "PEND";
+	public static final String PAYMENT_GATEWAY_CHANNEL_MGATE = "MGATE";
+	public static final String PAYMENT_GATEWAY_CHANNEL_FPX = "FPX";
 	public static final String PAYMENT_INVALID_RES = my.ep.constant.sm.SupplierManagementConst.PAYMENT_INVALID_RES;
 
 	public static final String PM_STATUS_PAYMENT = "SPY";
@@ -782,6 +787,15 @@ public class SupplierManagementConst {
 	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
 	//26238 - END
 	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
+	
+//	#37925 START
+	public static final String APPL_TYPE_UPDATE = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE;
+	public static final String APPL_TYPE_MOF = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF;
+	public static final String APPL_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BASIC;
+	public static final String APPL_TYPE_RENEWAL = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_RENEWAL;
+	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
+	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
+//	#37925 END
 	
 	public String getCOMPANY_TYPE_CLBG() {
 		return COMPANY_TYPE_CLBG;
@@ -1549,5 +1563,48 @@ public class SupplierManagementConst {
 		return AU_TAB_ID_DISCIPLINARY_ACTION_INFO;
 	}
 	// #28895_35501_DA End
+	
+	// 36504 - START
+	public String getSECTION_REV_ROLE_PO() {
+		return SECTION_REV_ROLE_PO;
+	}
+	
+	public String getSECTION_REV_ROLE_APP() {
+		return SECTION_REV_ROLE_APP;
+	}
+	// 36504 - END
 
+//	#37925 START
+	public static String getApplTypeBumi() {
+		return APPL_TYPE_BUMI;
+	}
+
+	public static String getApplTypeCategory() {
+		return APPL_TYPE_CATEGORY;
+	}
+
+	public static String getApplTypeUpdate() {
+		return APPL_TYPE_UPDATE;
+	}
+
+	public static String getApplTypeMof() {
+		return APPL_TYPE_MOF;
+	}
+
+	public static String getApplTypeBasic() {
+		return APPL_TYPE_BASIC;
+	}
+
+	public static String getApplTypeRenewal() {
+		return APPL_TYPE_RENEWAL;
+	}
+
+	public static String getSsmCompanyCountryDefault() {
+		return SSM_COMPANY_COUNTRY_DEFAULT;
+	}
+
+	public static String getSsmCompanyCountryMalaysia() {
+		return SSM_COMPANY_COUNTRY_MALAYSIA;
+	}
+//	#37925 END
 }

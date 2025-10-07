@@ -114,15 +114,16 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
 			this.docId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
 
-			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_ZONE_FIELDLABELID, null, managedBeans.getAuditPmZone().getZoneName(), 
-					AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_INS);
-
-			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_DOCUMENTNAME_FIELDLABELID, null, managedBeans.getResDTO()
-					.getDocument().getDocName(), AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_INS);
-
+			/* 1 */
 			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_DISPLAY_PRIORITY_FIELDLABELID, null, managedBeans.getResDTO()
 					.getDocument().getDisplaySeq(), AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_INS);
-
+			/* 2 */
+			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_DOCUMENTNAME_FIELDLABELID, null, managedBeans.getResDTO()
+					.getDocument().getDocName(), AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_INS);
+			/* 3 */
+			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_ZONE_FIELDLABELID, null, managedBeans.getAuditPmZone().getZoneName(), 
+					AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_INS);
+			/* 4 */
 			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_STATUS_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
 					.getRecordStatusFlg() == 1 ? AuditPMSupplierMgtConfigConst.PM_AUD_ACTIVE
 					: AuditPMSupplierMgtConfigConst.PM_AUD_INACTIVE, AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_INS);
@@ -142,25 +143,26 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 	}
 
 	private void handleCheckboxUpdateAdded(SupportDocumentManagedBean managedBeans, boolean updated) {
-		updatedAddAppTypeChkbox(managedBeans, updated);
+		updatedAddAppTypeChkbox(managedBeans, updated); // 5
 
-		updatedAddCompTypeChkbox(managedBeans, updated);
+		updatedAddCompTypeChkbox(managedBeans, updated); // 6
+		
+		updatedAddCategoryChkbox(managedBeans, updated); // 7
 
-		updatedAddSupplierTypeChkbox(managedBeans, updated);
+		updatedAddSupplierTypeChkbox(managedBeans, updated); // 8
 
-		updatedAddCategoryChkbox(managedBeans, updated);
+		updatedAddCertBodyChkbox(managedBeans, updated); // 9
 
-		updatedAddCertBodyChkbox(managedBeans, updated);
+		updatedMandatoryChkbox(managedBeans, updated); // 10
 
-		updatedMandatoryChkbox(managedBeans, updated);
+		updatedLicenseChkbox(managedBeans, updated); // 11
 
-		updatedLicenseChkbox(managedBeans, updated);
+		updatedHardCopyChkbox(managedBeans, updated); // 12
 
-		updatedHardCopyChkbox(managedBeans, updated);
-
-		updatedGSTChkbox(managedBeans, updated);
+		updatedGSTChkbox(managedBeans, updated); // 13
 	}
 
+	/* 5 */
 	private void updatedAddAppTypeChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isByAppType() != managedBeans.getSelectedDocumentOld().isByAppType()
@@ -184,6 +186,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
+	/* 6 */
 	private void updatedAddCompTypeChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
 		// /* Restriction Document - detailObjCompTypeChkbox */
 		if (null != managedBeans.getSelectedDocumentOld()
@@ -213,29 +216,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
-	private void updatedAddSupplierTypeChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
-		// /* Restriction Document - detailObjSupplierTypeChkbox */
-		if (null != managedBeans.getSelectedDocumentOld()
-				&& managedBeans.getSelectedDocument().isBySupplierType() != managedBeans.getSelectedDocumentOld()
-						.isBySupplierType() || !updated) {
-			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-			this.docId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-			detailObj(
-					AuditPMSupplierMgtConfigConst.PM_AUD_SD_SUPPLIERTYPECHKBOX_FIELDLABELID,
-					updated ? oldValue(managedBeans.getSelectedDocument().isBySupplierType(), managedBeans
-							.getSelectedDocumentOld().isBySupplierType(), updated, "isBySupplierType") : null,
-							yesNo(managedBeans.getSelectedDocument().isBySupplierType()), actionType(updated));
-
-			if (null != managedBeans.getSuppTypeRestrictionsOld()
-					&& newValue(managedBeans.getSelectedDocument().isBySupplierType()) != null
-					&& newValue(managedBeans.getSelectedDocument().isBySupplierType()).equalsIgnoreCase(
-							AuditPMSupplierMgtConfigConst.PM_AUD_INACTIVE)) {
-				managedBeans.setDeleteSuppTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
-				managedBeans.getDeleteSuppTypeRestrictionsAudit().addAll(managedBeans.getSuppTypeRestrictionsOld());
-			}
-		}
-	}
-
+	/* 7 */
 	private void updatedAddCategoryChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
 		// /* Restriction Document - detailObjCategoryChkbox */
 		if (null != managedBeans.getSelectedDocumentOld()
@@ -265,6 +246,31 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
+	/* 8 */
+	private void updatedAddSupplierTypeChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
+		// /* Restriction Document - detailObjSupplierTypeChkbox */
+		if (null != managedBeans.getSelectedDocumentOld()
+				&& managedBeans.getSelectedDocument().isBySupplierType() != managedBeans.getSelectedDocumentOld()
+						.isBySupplierType() || !updated) {
+			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+			this.docId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+			detailObj(
+					AuditPMSupplierMgtConfigConst.PM_AUD_SD_SUPPLIERTYPECHKBOX_FIELDLABELID,
+					updated ? oldValue(managedBeans.getSelectedDocument().isBySupplierType(), managedBeans
+							.getSelectedDocumentOld().isBySupplierType(), updated, "isBySupplierType") : null, yesNo(managedBeans
+							.getSelectedDocument().isBySupplierType()), actionType(updated));
+
+			if (null != managedBeans.getSuppTypeRestrictionsOld()
+					&& newValue(managedBeans.getSelectedDocument().isBySupplierType()) != null
+					&& newValue(managedBeans.getSelectedDocument().isBySupplierType()).equalsIgnoreCase(
+							AuditPMSupplierMgtConfigConst.PM_AUD_INACTIVE)) {
+				managedBeans.setDeleteSuppTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
+				managedBeans.getDeleteSuppTypeRestrictionsAudit().addAll(managedBeans.getSuppTypeRestrictionsOld());
+			}
+		}
+	}
+
+	/* 9 */
 	private void updatedAddCertBodyChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isByCertBody() != managedBeans.getSelectedDocumentOld().isByCertBody()
@@ -287,35 +293,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
-	private void updatedMandatoryChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
-		if (null != managedBeans.getSelectedDocumentOld()
-				&& managedBeans.getSelectedDocument().isMandatory() != managedBeans.getSelectedDocumentOld().isMandatory()
-				|| !updated) {
-			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-			this.docId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-			detailObj(
-					AuditPMSupplierMgtConfigConst.PM_AUD_SD_MANDATORYCHKBOX_FIELDLABELID,
-					updated ? oldValue(managedBeans.getSelectedDocument().isMandatory(), managedBeans.getSelectedDocumentOld()
-							.isMandatory(), updated, "isMandatory") : null, yesNo(managedBeans.getSelectedDocument()
-							.isMandatory()), actionType(updated));
-		}
-	}
-
-	private void updatedLicenseChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
-		/* Document Type - detailObjLicenseChkbox */
-		if (null != managedBeans.getSelectedDocumentOld()
-				&& managedBeans.getSelectedDocument().isLicenseReq() != managedBeans.getSelectedDocumentOld().isLicenseReq()
-				|| !updated) {
-			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-			this.docId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-			detailObj(
-					AuditPMSupplierMgtConfigConst.PM_AUD_SD_LICENSECHKBOX_FIELDLABELID,
-					updated ? oldValue(managedBeans.getSelectedDocument().isLicenseReq(), managedBeans.getSelectedDocumentOld()
-							.isLicenseReq(), updated, "isLicenseReq") : null, yesNo(managedBeans.getSelectedDocument()
-							.isLicenseReq()), actionType(updated));
-		}
-	}
-
+	/* 10 */
 	private void updatedHardCopyChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
 		/* Document Type - detailObjHardCopyChkbox */
 		if (null != managedBeans.getSelectedDocumentOld()
@@ -331,6 +309,38 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
+	/* 11 */
+	private void updatedLicenseChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
+		/* Document Type - detailObjLicenseChkbox */
+		if (null != managedBeans.getSelectedDocumentOld()
+				&& managedBeans.getSelectedDocument().isLicenseReq() != managedBeans.getSelectedDocumentOld().isLicenseReq()
+				|| !updated) {
+			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+			this.docId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+			detailObj(
+					AuditPMSupplierMgtConfigConst.PM_AUD_SD_LICENSECHKBOX_FIELDLABELID,
+					updated ? oldValue(managedBeans.getSelectedDocument().isLicenseReq(), managedBeans.getSelectedDocumentOld()
+							.isLicenseReq(), updated, "isLicenseReq") : null, yesNo(managedBeans.getSelectedDocument()
+							.isLicenseReq()), actionType(updated));
+		}
+	}
+
+	/* 12 */
+	private void updatedMandatoryChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
+		if (null != managedBeans.getSelectedDocumentOld()
+				&& managedBeans.getSelectedDocument().isMandatory() != managedBeans.getSelectedDocumentOld().isMandatory()
+				|| !updated) {
+			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+			this.docId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+			detailObj(
+					AuditPMSupplierMgtConfigConst.PM_AUD_SD_MANDATORYCHKBOX_FIELDLABELID,
+					updated ? oldValue(managedBeans.getSelectedDocument().isMandatory(), managedBeans.getSelectedDocumentOld()
+							.isMandatory(), updated, "isMandatory") : null, yesNo(managedBeans.getSelectedDocument()
+							.isMandatory()), actionType(updated));
+		}
+	}
+
+	/* 13 */
 	private void updatedGSTChkbox(SupportDocumentManagedBean managedBeans, boolean updated) {
 		/* Document Type - detailObjGSTChkbox */
 		if (null != managedBeans.getSelectedDocumentOld()
@@ -345,17 +355,25 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 	}
 
 	private void updateCreateTablist(SupportDocumentManagedBean managedBeans, boolean updated) {
+		/* 14/15/16/17/18/19/20/21 */
 		updatedCreatedAppTypeCodeTabList(managedBeans, updated);
-		updatedCreatedSuppTypeCodeTabList(managedBeans, updated);
-		updatedCreatedCertBodyTypeCodeTabList(managedBeans, updated);
 
+		/* 22 */
 		if (null != managedBeans.getNewCompanyCodeTypeAuditList() && !managedBeans.getNewCompanyCodeTypeAuditList().isEmpty())
 			updatedCreatedCompTypeCodeTabList(managedBeans, updated);
 
+		/* 23 */
+		updatedCreatedSuppTypeCodeTabList(managedBeans, updated);
+
+		/* 24/25/26/27 */
 		if (null != managedBeans.getNewCategoryL3AuditList() && !managedBeans.getNewCategoryL3AuditList().isEmpty())
 			updatedCreatedCatTypeCodeTabList(managedBeans, updated);
+
+		/* 28 */
+		updatedCreatedCertBodyTypeCodeTabList(managedBeans, updated);
 	}
 
+	/* 14/15/16/17/18/19/20/21 */
 	private void updatedCreatedAppTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
 		if (null != managedBeans.getMandatoryUpdatedPmDocumentRestrList()
@@ -380,6 +398,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
+	/* 22 */
 	private void updatedCreatedCompTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
 		if (null != managedBeans.getNewCompanyCodeTypeAuditList() && !managedBeans.getNewCompanyCodeTypeAuditList().isEmpty()) {
@@ -399,6 +418,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
+	/* 23 */
 	private void updatedCreatedSuppTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
 		if (null != managedBeans.getMandatoryUpdatedPmDocumentRestrList()
@@ -422,6 +442,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
+	/* 24/25/26/27 */
 	private void updatedCreatedCatTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
 		if (null != managedBeans.getNewCategoryL3AuditList() && !managedBeans.getNewCategoryL3AuditList().isEmpty()) {
@@ -438,6 +459,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
+	/* 28 */
 	private void updatedCreatedCertBodyTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
 		if (null != managedBeans.getMandatoryUpdatedPmDocumentRestrList()
@@ -507,6 +529,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
+	/* 15-21 */
 	private void getUpdatedRowFieldAppTypeTabValList(SupportDocumentManagedBean managedBeans) {
 		if (null != managedBeans.getSelectedDocument().getPmDocumentRestrs()) {
 			for (PmDocumentRestr pmDocumentRestr : managedBeans.getAppTypeRestrictions()) {
@@ -523,7 +546,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 	}
 
-	/* update field value in the row list for AppType Tab */
+	/* update field value in the row list for AppType Tab #15-21 */
 	private void updatedRowFieldAppTypeTabValList(SupportDocumentManagedBean managedBeans) {
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getAppTypeRestrictions()) {
 			for (PmDocumentRestr pmDocumentRestrOld : managedBeans.getAppTypeRestrictionsOld()) {
@@ -538,18 +561,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			SupportDocumentManagedBean managedBeans) {
 		/*
 		 * Restriction Document - AppTypeList - Section : TextList -
-		 * isAsscProjChanged()
-		 */
-		if (!Boolean.valueOf(pmDocumentRestr.isAsscProjChanged()).equals(pmDocumentRestrOld.isAsscProjChanged())) {
-			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
-			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_ASSCPROJECT_FIELDLABELID,
-					yesNo(pmDocumentRestrOld.isAsscProjChanged()), yesNo(pmDocumentRestr.isAsscProjChanged()),
-					AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_UPD);
-		}
-		/*
-		 * Restriction Document - AppTypeList - Section : TextList -
-		 * isCompanyInfoChanged
+		 * isCompanyInfoChanged #15
 		 */
 		if (!Boolean.valueOf(pmDocumentRestr.isCompanyInfoChanged()).equals(pmDocumentRestrOld.isCompanyInfoChanged())) {
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
@@ -560,7 +572,19 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 		/*
 		 * Restriction Document - AppTypeList - Section : TextList -
-		 * isPersonnelBranchChanged()
+		 * isAsscProjChanged() #16
+		 */
+		if (!Boolean.valueOf(pmDocumentRestr.isAsscProjChanged()).equals(pmDocumentRestrOld.isAsscProjChanged())) {
+			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
+			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_ASSCPROJECT_FIELDLABELID,
+					yesNo(pmDocumentRestrOld.isAsscProjChanged()), yesNo(pmDocumentRestr.isAsscProjChanged()),
+					AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_UPD);
+		}
+
+		/*
+		 * Restriction Document - AppTypeList - Section : TextList -
+		 * isPersonnelBranchChanged() #17
 		 */
 		if (pmDocumentRestrOld.isPersonnelBranchChanged() != pmDocumentRestr.isPersonnelBranchChanged()) {
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
@@ -571,17 +595,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 		/*
 		 * Restriction Document - AppTypeList - Section : TextList -
-		 * isBankChanged()
-		 */
-		if (pmDocumentRestrOld.isBankChanged() != pmDocumentRestr.isBankChanged()) {
-			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
-			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_BANKINFO_FIELDLABELID, yesNo(pmDocumentRestrOld.isBankChanged()),
-					yesNo(pmDocumentRestr.isBankChanged()), AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_UPD);
-		}
-		/*
-		 * Restriction Document - AppTypeList - Section : TextList -
-		 * isCapitalEquityChanged()
+		 * isCapitalEquityChanged() #18
 		 */
 		if (pmDocumentRestrOld.isCapitalEquityChanged() != pmDocumentRestr.isCapitalEquityChanged()) {
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
@@ -590,15 +604,26 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 					yesNo(pmDocumentRestrOld.isCapitalEquityChanged()), yesNo(pmDocumentRestr.isCapitalEquityChanged()),
 					AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_UPD);
 		}
-		// /* Facility Type : Home/Business Office (Y/N) */
+		/*
+		 * Restriction Document - AppTypeList - Section : TextList -
+		 * isBankChanged() #19
+		 */
+		if (pmDocumentRestrOld.isBankChanged() != pmDocumentRestr.isBankChanged()) {
+			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
+			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_BANKINFO_FIELDLABELID, yesNo(pmDocumentRestrOld.isBankChanged()),
+					yesNo(pmDocumentRestr.isBankChanged()), AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_UPD);
+		}
+
+		// /* Facility Type : Home/Business Office (Y/N) #20-21*/
 		updatedRowFieldAppTypeTabFacilityType(pmDocumentRestrOld, pmDocumentRestr, managedBeans);
 
 	}
 
-	/* Facility Type : Home/Business Office (Y/N) */
+	/* Facility Type : Home/Business Office (Y/N) #20-21 */
 	private void updatedRowFieldAppTypeTabFacilityType(PmDocumentRestr pmDocumentRestrOld, PmDocumentRestr pmDocumentRestr,
 			SupportDocumentManagedBean managedBeans) {
-		/* Facility Type : Home Office (Y/N) */
+		/* Facility Type : Home Office (Y/N) #20 */
 		if (pmDocumentRestrOld.isHomeOffice() != pmDocumentRestr.isHomeOffice()
 				&& pmDocumentRestr.getDocumentRestrId().equals(pmDocumentRestrOld.getDocumentRestrId())) {
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
@@ -607,7 +632,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 					yesNo(pmDocumentRestrOld.isHomeOffice()), yesNo(pmDocumentRestr.isHomeOffice()),
 					AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_UPD);
 		}
-		/* Facility Type : Business Office (Y/N) */
+		/* Facility Type : Business Office (Y/N) #21 */
 		if (pmDocumentRestrOld.isBusinessOffice() != pmDocumentRestr.isBusinessOffice()
 				&& pmDocumentRestr.getDocumentRestrId().equals(pmDocumentRestrOld.getDocumentRestrId())) {
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
@@ -620,22 +645,27 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 
 	private void deleted(SupportDocumentManagedBean managedBeans) {
 		AuditPMSupportingDocumentDeletedBackingBean deletedMapbean = new AuditPMSupportingDocumentDeletedBackingBean();
+		/* 14-21 */
 		if (null != managedBeans.getDeleteAppTypeRestrictionsAuditList()
 				&& !managedBeans.getDeleteAppTypeRestrictionsAuditList().isEmpty()) {
 			objList.addAll(deletedMapbean.deleteAppType(managedBeans, roleCode));
 		}
+		/* 22 */
 		if (null != managedBeans.getDeleteComTypeRestrictionsAudit()
 				&& !managedBeans.getDeleteComTypeRestrictionsAudit().isEmpty()) {
 			objList.addAll(deletedMapbean.deleteComType(managedBeans, roleCode));
 		}
+		/* 23 */
 		if (null != managedBeans.getDeleteSuppTypeRestrictionsAudit()
 				&& !managedBeans.getDeleteSuppTypeRestrictionsAudit().isEmpty()) {
 			objList.addAll(deletedMapbean.deleteSuppType(managedBeans, roleCode));
 		}
+		/* 24-27 */
 		if (null != managedBeans.getDeleteCategoryRestrictionsAudit()
 				&& !managedBeans.getDeleteCategoryRestrictionsAudit().isEmpty()) {
 			objList.addAll(deletedMapbean.deleteCategoryType(managedBeans, roleCode));
 		}
+		/* 28 */
 		if (null != managedBeans.getDeleteCertBodyRestrictionsAudit()) {
 			objList.addAll(deletedMapbean.deleteCertBodyType(managedBeans, roleCode));
 		}

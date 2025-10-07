@@ -36,7 +36,6 @@ import org.primefaces.json.JSONObject;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ai.AIApiResponse;
-import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -71,11 +70,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static String fieldsStr = "fields";
 	private static String resultsStr = "results";
 	private static String propertiesStr = "properties";
+	private static String normalizedValueStr = "normalizedValue";
 	private static String googleUrl = EpPropertiesUtils.getInstance().getProperty("google.doc.url");
 	private static double minConfidence = 0.95;
 	private static double minScoreFuzzyMatch = 0.8;
 	
-	private static EPFEntity epf = null;
+	private static List<EPFEntity> epfs = null;
 	private static TenancyEntity tenancy = null;
 	private List<EPFEntity.EmployeeInfo> selectedEmployees;
 	
@@ -101,17 +101,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	/**
 	 * Test
-	 * @param docType
+	 * @param type
 	 */
-	public static void processDoc(String docType){
-		log.info("...wip\t"+docs.size() +"\t_" + docType);
-		if (EntityHelper.isCollectionEmpty(docs)){
+	public static void processDoc(String type){
+		if (StringUtils.isEmpty(type) || EntityHelper.isCollectionEmpty(docs)){
 			return;
 		}
+		String docType = type.trim();
+		log.info("...wip\t"+docs.size() +"\t_" + docType);
+		log.info("tenancy".equals(docType));
+		
 		//process multiple docs
 		List<JsonWrapper> entities = new ArrayList<>();
 		for (SmApplDocFile doc : docs){
-			JsonWrapper result = sendDocumentOCR("bank", doc.getFilePath(), doc.getFileName());
+			JsonWrapper result = sendDocumentOCR(docType, doc.getFilePath(), doc.getFileName());
 			if (result != null){
 				entities.add(result);
 			}
@@ -120,7 +123,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if ("epf".equals(docType)){
 			processEPF(entities);
 			
-		} else if ("tnc".equals(docType)){
+		} else if ("tenancy".equals(docType)){
 			processTenancyAgreement(entities);
 			
 		} else {
@@ -194,10 +197,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
-		if ("EPF".equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
+		if ("epf".equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
 			submitEPF(appl);
 			
-		} else if ("TNC".equals(docType)){
+		} else if ("tenancy".equals(docType)){
 			submitTenancy();
 		}
 		//save smAppl
@@ -212,11 +215,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (appl.getSmPersonnels() == null){
 			appl.setSmPersonnels(new ArrayList<SmPersonnel>());
 		}
+		Map<String, SmPersonnel> personnels = new HashMap<>();
+		for (SmPersonnel per : appl.getSmPersonnels()){
+			personnels.put(per.getIdentificationNo(), per);
+		}
+		
+		//check for dupe IC
 		for (EPFEntity.EmployeeInfo employee : selectedEmployees) {
-			SmPersonnel per = new SmPersonnel();
-			per.setName(employee.getNama());
-			per.setIdentificationNo(employee.getNoPengenalanDiri());
-			per.setEpfNo(employee.getNoAhliKWSP());
+			SmPersonnel per = personnels.get(employee.getNricNumber());
+			if (per != null){
+				per.setEpfNo(employee.getKwspNumber());
+				continue;
+			}
+			per = new SmPersonnel();
+			per.setName(employee.getEmployeeName());
+			per.setIdentificationNo(employee.getNricNumber());
+			per.setEpfNo(employee.getKwspNumber());
 			
 			//SmApplicationUtil - setDefaultPersonnelValues()
 			// or check SssmSO on how to save SmPersonnels
@@ -224,7 +238,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			per.setEpRole("");
 			per.setShareAmt(new BigDecimal(0));
 			per.setSharePercentage(new BigDecimal(0));
-			per.setTitle(new PmSalutation());
 			per.setRevNo(1);
 			per.setSmAppl(appl);
 			per.setBumiFlg(1);
@@ -237,12 +250,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	//wip
 	private void submitTenancy(){
 		SmFacility basicCompany = new SmFacility();
-		if (!StringUtils.isEmpty(tenancy.namaPemilikPremis)){
-			basicCompany.setOwnerName(tenancy.namaPemilikPremis);
+		if (!StringUtils.isEmpty(tenancy.getLandlordsName())){
+			basicCompany.setOwnerName(tenancy.getLandlordsName());
 		}
-		if (!StringUtils.isEmpty(tenancy.sewaanBulanan)){
+		if (!StringUtils.isEmpty(tenancy.getMonthlyRental())){
 			try {
-				BigDecimal rent = new BigDecimal(tenancy.sewaanBulanan);
+				BigDecimal rent = new BigDecimal(tenancy.getMonthlyRental());
 				basicCompany.setRentalRate(rent);
 			} catch (NumberFormatException e) {
 				log.error("Invalid Rent", e);
@@ -412,14 +425,15 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		
 		if (hasWrongCompanyName){
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.ai.bank.verify", new String[] { "" }));
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+					"The company name in your bank statement(s) does not match the registered Business/Company Name" +
+					" in Company Information section. Feel free to proceed or update the Business/Company Name as needed.");
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 		if (!StringUtils.isEmpty(sb.toString())){
-			sb.insert(0, "The information in your bank statement(s) does not match with" +
-					" any existing Bank Account Details in Bank Information section:");
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, sb.toString());
+			sb.insert(0, "Your bank statement(s) does not match with any newly added/updated bank in" +
+					" Bank Information section. Feel free to proceed or update the Bank Information section as needed:");
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, sb.toString());
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 	}
@@ -462,18 +476,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param entities
 	 */
 	public static void processEPF(List<JsonWrapper> entities){
+		epfs = new ArrayList<>();
 		if (EntityHelper.isCollectionEmpty(entities)){
 			return;
 		}
-		List<EPFEntity> ees = new ArrayList<>();
 		for (JsonWrapper entityWrapper : entities){
 			EPFEntity ee = new EPFEntity(entityWrapper.entities);
-			ees.add(ee);
-			if (epf == null){
-				epf = ee;
-			}
+			epfs.add(ee);
 		}
-		log.info(epf);
 	}
 	
 	/**
@@ -498,7 +508,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 	
 	public List<EPFEntity.EmployeeInfo> getEmployees() {
-		return epf != null ? epf.getEmployees() : new ArrayList<EPFEntity.EmployeeInfo>();
+		if (epfs == null){
+			return new ArrayList<>();
+		}
+		List <EPFEntity.EmployeeInfo> employees = new ArrayList<>();
+		for (EPFEntity epf : epfs){
+			employees.addAll(epf.getEmployees());
+		}
+		return employees;
 	}
 
 
@@ -866,7 +883,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
 				String text = property.optString(valueStr, "");
-				String value = property.optString("normalizedValue", text);
+				String value = property.optString(normalizedValueStr, text);
 				double conf = property.optDouble(confidence, 0.0);
 				if (conf < minConfidence){
 					log.info("Patut skip la kan? " + conf);
@@ -942,32 +959,72 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * JSON mapping for EPF document
 	 * @author AI
 	 */
-	public static class EPFEntity {		//outdated format
+	public static class EPFEntity {
 		private EmployerInfo employer;
 		private List<EmployeeInfo> employees;
 
 		private static class EmployerInfo {
-			private String noRujukan;
-			private String nama;
-			private String alamat;
+			private String employerName;
+			private String referenceNumber;
+			private String employerAddress;
+			private String entityId;
+			private String postcode;
+			private String country;
+			private String state;
+			private String district;
+			private String city;
+			private String normalizedAddress;
 
-			public EmployerInfo(String noRujukan, String nama, String alamat) {
-				this.noRujukan = noRujukan;
-				this.nama = nama;
-				this.alamat = alamat;
+			private EmployerInfo(JSONArray properties, String entityId) throws JSONException {
+				this.entityId = entityId;
+
+				for (int i = 0; i < properties.length(); i++) {
+					JSONObject property = properties.getJSONObject(i);
+					String type = property.optString("type", "");
+					String text = property.optString(valueStr, "");
+					String value = property.optString(normalizedValueStr, text);
+					double conf = property.optDouble(confidence, 0.0);
+					if (conf < minConfidence) {
+						log.info("Low confidence for employer field: " + conf);
+					}
+					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)) {
+						continue;
+					}
+					switch (type) {
+					case "employer_name":
+						this.employerName = value.trim();
+						break;
+					case "reference_number":
+						this.referenceNumber = value.trim();
+						break;
+					case "employer_address":
+						this.employerAddress = value.trim();
+						JSONObject addressComponents = property.optJSONObject("addressComponents");
+						if (addressComponents != null) {
+							this.postcode = addressComponents.optString("postcode", "").trim();
+							this.country = addressComponents.optString("country", "").trim();
+							this.state = addressComponents.optString("state", "").trim();
+							this.district = addressComponents.optString("district", "").trim();
+							this.city = addressComponents.optString("city", "").trim();
+							this.normalizedAddress = addressComponents.optString("normalized_Address", "").trim();
+						}
+						break;
+					default:
+					}
+				}
 			}
 
 			@Override
 			public String toString() {
 				StringBuilder sb = new StringBuilder();
-				if (nama != null) {
-					sb.append("employer: ").append(nama).append("\n");
+				if (employerName != null) {
+					sb.append("Employer: ").append(employerName).append("\n");
 				}
-				if (noRujukan != null) {
-					sb.append("employer reference: ").append(noRujukan).append("\n");
+				if (referenceNumber != null) {
+					sb.append("Reference Number: ").append(referenceNumber).append("\n");
 				}
-				if (alamat != null) {
-					sb.append("employer address: ").append(alamat).append("\n");
+				if (employerAddress != null) {
+					sb.append("Address: ").append(employerAddress).append("\n");
 				}
 				return sb.toString();
 			}
@@ -978,40 +1035,61 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		 * @author AI
 		 */
 		public static class EmployeeInfo implements Serializable {
-			
+
 			private static final long serialVersionUID = 1L;
-			private String noAhliKWSP;
-			private String noPengenalanDiri;
-			private String nama;
-			private String carumanMajikan;
-			private String carumanPekerja;
-			
-			/**
-			 * @param noAhliKWSP
-			 * @param noPengenalanDiri
-			 * @param nama
-			 * @param carumanMajikan
-			 * @param carumanPekerja
-			 */
-			public EmployeeInfo(String noAhliKWSP, String noPengenalanDiri, String nama, 
-					String carumanMajikan, String carumanPekerja) {
-				this.noAhliKWSP = noAhliKWSP;
-				this.noPengenalanDiri = noPengenalanDiri;
-				this.nama = nama;
-				this.carumanMajikan = carumanMajikan;
-				this.carumanPekerja = carumanPekerja;
+			private String kwspNumber;
+			private String nricNumber;
+			private String employeeName;
+			private String employeeContribution;
+			private String employerContribution;
+			private String entityId;
+
+			private EmployeeInfo(JSONArray properties, String entityId) throws JSONException {
+				this.entityId = entityId;
+
+				for (int i = 0; i < properties.length(); i++) {
+					JSONObject property = properties.getJSONObject(i);
+					String type = property.optString("type", "");
+					String text = property.optString(valueStr, "");
+					String value = property.optString(normalizedValueStr, text);
+					double conf = property.optDouble(confidence, 0.0);
+					if (conf < minConfidence) {
+						log.info("Low confidence for employee field: " + conf);
+					}
+					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)) {
+						continue;
+					}
+					switch (type) {
+					case "KWSP_number":
+						this.kwspNumber = value.trim();
+						break;
+					case "NRIC_number":
+						this.nricNumber = value.trim();
+						break;
+					case "employee_name":
+						this.employeeName = value.trim();
+						break;
+					case "employee_contribution":
+						this.employeeContribution = value.trim();
+						break;
+					case "employer_contribution":
+						this.employerContribution = value.trim();
+						break;
+					default:
+					}
+				}
 			}
 
-			public String getNoAhliKWSP() {
-				return this.noAhliKWSP;
+			public String getKwspNumber() {
+				return this.kwspNumber;
 			}
 
-			public String getNoPengenalanDiri() {
-				return this.noPengenalanDiri;
+			public String getNricNumber() {
+				return this.nricNumber;
 			}
 
-			public String getNama() {
-				return this.nama;
+			public String getEmployeeName() {
+				return this.employeeName;
 			}
 		}
 
@@ -1019,16 +1097,15 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			this.employees = new ArrayList<>();
 			try {
 				for (int i = 0; i < entities.length(); i++) {
-					JSONObject entity = entities.getJSONObject(i);
-					String type = entity.optString("type", "");
-					String text = entity.optString(valueStr, "");
-					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
-						continue;
-					}
-					if ("employer".equals(type)){
-						parseEmployer(entity, text);
-					} else if ("employee".equals(type)){
-						parseEmployee(entity);
+					JSONObject entityObj = entities.getJSONObject(i);
+					String entityId = entityObj.getString("entity");
+					JSONArray properties = entityObj.getJSONArray(propertiesStr);
+
+					if (entityId.startsWith("employee-")) {
+						EmployeeInfo employee = new EmployeeInfo(properties, entityId);
+						this.employees.add(employee);
+					} else if (entityId.startsWith("employer-")) {
+						this.employer = new EmployerInfo(properties, entityId);
 					}
 				}
 
@@ -1036,77 +1113,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				log.error("Error EPFEntity", e);
 			}
 		}
-		
+
 		public List<EmployeeInfo> getEmployees() {
 			return employees != null ? employees : new ArrayList<EmployeeInfo>();
 		}
-
-		private void parseEmployer(JSONObject entity, String text) throws JSONException{
-			String empNoRujukan = null;
-			String empNama = null;
-			String empAlamat = null;
-			
-			JSONArray properties = entity.optJSONArray(propertiesStr);
-			if (properties != null) {
-				for (int j = 0; j < properties.length(); j++) {
-					JSONObject prop = properties.getJSONObject(j);
-					String propType = prop.optString("type", "");
-					String propText = prop.optString(valueStr, "");
-
-					if ("Alamat_Majikan".equals(propType)) {
-						empAlamat = propText.trim();
-					}
-				}
-			} else {
-				// Fallback to mentionText if no properties
-				empAlamat = text.trim();
-			}
-			this.employer = new EmployerInfo(empNoRujukan, empNama, empAlamat);
-		}
-		
-		private void parseEmployee(JSONObject entity) throws JSONException{
-			String noAhli = null;
-			String noPengenalan = null;
-			String nama = null;
-			String carumanMaj = null;
-			String carumanPek = null;
-
-			JSONArray empProperties = entity.optJSONArray(propertiesStr);
-			if (empProperties == null){
-				return;
-			}
-			for (int j = 0; j < empProperties.length(); j++) {
-				JSONObject prop = empProperties.getJSONObject(j);
-				String propType = prop.optString("type", "");
-				String propText = prop.optString(valueStr, "");
-
-				switch (propType) {
-				case "No_Ahli_KWSP":
-					noAhli = propText.trim();
-					break;
-				case "No_Pengenalan_Diri":
-					noPengenalan = propText.trim();
-					break;
-				case "Nama_Pekerja":
-					nama = propText.trim();
-					break;
-				case "Caruman_Majikan":
-					carumanMaj = propText.trim();
-					break;
-				case "Caruman_Pekerja":
-					carumanPek = propText.trim();
-					break;
-				default:
-				}
-			}
-			this.employees.add(new EmployeeInfo(noAhli, noPengenalan, nama, carumanMaj, carumanPek));
-		}
 	}
 
-	private static class TenancyEntity {	//outdated format
-		private String alamatSewaanPremis;
-		private String namaPemilikPremis;
-		private String sewaanBulanan;
+	private static class TenancyEntity {
+		private String agreementDate;
+		private String landlordsName;
+		private String monthlyRental;
+		private String premisesAddress;
+		private String rentalDuration;
+		private String tenantsName;
+		private String propertyType;
 		private String postcode;
 		private String country;
 		private String state;
@@ -1120,19 +1140,37 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
 					String text = entity.optString(valueStr, "");
+					String value = entity.optString(normalizedValueStr, text);
+					double conf = entity.optDouble(confidence, 0.0);
+
+					if (conf < minConfidence) {
+						log.info("Low confidence for tenancy field: " + conf);
+					}
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
 						continue;
 					}
 					switch (type) {
-					case "Alamat_Sewaan-Premis":
-						this.alamatSewaanPremis = text.trim();
-						setAddress(entity);
+					case "agreement_date":
+						this.agreementDate = value.trim();
 						break;
-					case "Nama_Pemilik-Premis":
-						this.namaPemilikPremis = text.trim();
+					case "landlords_name":
+						this.landlordsName = value.trim();
 						break;
-					case "Sewaan_Bulanan":
-						this.sewaanBulanan = text.trim();
+					case "monthly_rental":
+						this.monthlyRental = value.trim();
+						break;
+					case "premises_address":
+						this.premisesAddress = value.trim();
+						setAddress(entity.optJSONObject("addressComponents"));
+						break;
+					case "rental_duration":
+						this.rentalDuration = value.trim();
+						break;
+					case "tenants_name":
+						this.tenantsName = value.trim();
+						break;
+					case "property_type":
+						this.propertyType = value.trim();
 						break;
 					default:
 					}
@@ -1142,8 +1180,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 		}
 		
-		private void setAddress(JSONObject entity){
-			JSONObject addressComponents = entity.optJSONObject("addressComponents");
+		public void setAddress(JSONObject addressComponents){
 			if (addressComponents != null) {
 				this.postcode = addressComponents.optString("postcode", "").trim();
 				this.country = addressComponents.optString("country", "").trim();
@@ -1152,6 +1189,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				this.city = addressComponents.optString("city", "").trim();
 				this.normalizedAddress = addressComponents.optString("normalized_Address", "").trim();
 			}
+		}
+
+		public String getLandlordsName() {
+			return landlordsName;
+		}
+
+		public String getMonthlyRental() {
+			return monthlyRental;
 		}
 	}
 }
