@@ -133,7 +133,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>paymentResponseServlet</servlet-name>
-		<url-pattern>/paymentResponseServlet/*</url-pattern>
+		<url-pattern>/paymentResponseCallBack/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Quartz Startup Config 

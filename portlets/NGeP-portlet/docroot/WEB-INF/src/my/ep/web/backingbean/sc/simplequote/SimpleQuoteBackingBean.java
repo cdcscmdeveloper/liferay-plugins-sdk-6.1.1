@@ -4900,7 +4900,9 @@ public class SimpleQuoteBackingBean extends
 		}
 		// #28536 - end
 
-		criteria.append("recordStatus^1");
+		//#39112 - Start
+		//criteria.append("recordStatus^1"); 
+		//#39112 - End
 		return criteria.toString();
 	}
 	
