@@ -19,31 +19,20 @@
 
 	<cc:implementation>
 		<ui:param name="ai" value="#{smAIDocBackingBean}" />
-		<p:commandButton value="AI Assistant" onclick="#{cc.attrs.aiDlg}.show()" rendered="#{cc.attrs.showBtn}" 
-			action="#{ai.clearDocs()}" update="docs#{cc.attrs.aiDlg}" 
-			immediate="true">
-				<p:ajax partialSubmit="true" process="@this" />
-		</p:commandButton>
-		<p:graphicImage id="tt#{cc.attrs.aiDlg}" value="/css/images/design/tooltips.png" />
-		<p:tooltip id="tt2#{cc.attrs.aiDlg}" for="tt#{cc.attrs.aiDlg}">
-			<p:outputLabel value="Click the AI Assistant and upload the EPF Contribution Statement for data extraction" 
-				rendered="#{cc.attrs.docType eq 'epf'}"/>
-			<p:outputLabel value="For Rented Business Office, click the AI Assistant and upload the Stamped Premise Rental Agreement for data extraction" 
-				rendered="#{cc.attrs.docType eq 'tenancy'}"/>
-		</p:tooltip>&#160;
-		<br/>
-		<h:outputText styleClass="instruction" 
-			value="Disclaimer: Please review and verify AI-generated data. The system is not responsible for data accuracy or integrity." />
+		<p:remoteCommand name="resetDoc" action="#{ai.clearDocs()}" update="docs#{cc.attrs.aiDlg}"/>
 		
-		
-		<p:blockUI block="#{cc.attrs.aiDlg}" widgetVar="block#{cc.attrs.aiDlg}">
-			<p:graphicImage value="/css/images/ai/load.gif" />
+		<p:blockUI block=":form" widgetVar="block#{cc.attrs.aiDlg}">
+			<p:outputPanel style="display: flex; flex-direction: column;align-items: center;">
+				<p:outputLabel value="AI Processing In-Progress..."/>
+				<p:spacer width="10" />
+				<p:graphicImage value="/css/images/ai/load.gif"/>
+			</p:outputPanel>
 		</p:blockUI>
 	
 		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
 			dynamic="true" resizable="false" width="500px" 
 			styleClass="pop_up_top" header="#{lbl['lbl.sm.sme.action.choose']}"
-			onShow="singleUploadListener(uploadWV);"
+			onShow="resetDoc(); singleUploadListener(uploadWV);"
 			onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;">
 			
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
@@ -82,9 +71,9 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.bpm.process']}" 
-					action="#{ai.processDoc(cc.attrs.docType)}"
-					onstart="block#{cc.attrs.aiDlg}.show()" 
-					oncomplete="block#{cc.attrs.aiDlg}.hide();#{cc.attrs.aiDlg}.hide();ok#{cc.attrs.aiDlg}.show();"
+					action="#{ai.processDoc(cc.attrs.docType, cc.attrs.smAppl)}"
+					onstart="#{cc.attrs.aiDlg}.hide(); block#{cc.attrs.aiDlg}.show()" 
+					oncomplete="block#{cc.attrs.aiDlg}.hide();if (args.success) ok#{cc.attrs.aiDlg}.show();"
 					update="ok#{cc.attrs.aiDlg}"/>
 				<p:commandButton value="#{lbl['lbl.btn.close']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
 			</div>
@@ -92,8 +81,8 @@
 		
 		<p:dialog id="ok#{cc.attrs.aiDlg}" widgetVar="ok#{cc.attrs.aiDlg}" modal="true" styleClass="confirm-ui-dialog"
 			resizable="false" closable="false"
-			width="#{cc.attrs.docType eq 'epf' ? 600 : 400}" 
-			height="#{cc.attrs.docType eq 'epf' ? 500 : 100}" 
+			width="#{cc.attrs.docType eq 'epf' ? 700 : 400}" 
+			height="#{cc.attrs.docType eq 'epf' ? 600 : 100}" 
 			header="#{lbl['lbl.sm.projDtls.success']}">
 			<table width="100%">
 				<tr>
