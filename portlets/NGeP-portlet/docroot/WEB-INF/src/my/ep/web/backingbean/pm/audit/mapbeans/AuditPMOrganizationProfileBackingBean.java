@@ -105,6 +105,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		} else if (orgType.equals(ParameterConst.ORG_TYPE_BPK) || orgType.equals(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA) ||
 				orgType.equals(ParameterConst.ORG_TYPE_SUPPORT)) {
 			setOrgName();
+			setAddUpdateGeneralDetails();
 		} else if (!orgType.equals(ParameterConst.ORG_TYPE_PTJ_GROUP)) {
 			setOtherCategory();
 		}
@@ -160,17 +161,18 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 			if(pmAddress.getAddress1() != null && !pmAddress.getAddress1().isEmpty()){
 				address += pmAddress.getAddress1();
 			}
+			
 			if(pmAddress.getAddress2() != null && !pmAddress.getAddress2().isEmpty()){
 			    if (!address.isEmpty()) address += COMMA_STRING;
 				address += pmAddress.getAddress2();
 			}
+			
 			if(pmAddress.getAddress3() != null && !pmAddress.getAddress3().isEmpty()){
 			    if (!address.isEmpty()) address += COMMA_STRING;
 				address += pmAddress.getAddress3();
 			}
 			
-
-			if (orgProfile.isBrandNew()) {
+			if (orgProfile.isBrandNew() || oldPmAddress.getPmCountry() == null) {//cater for data migration
 				actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 
 				detailObj(AuditConst.PM_AUD_OPM_COUNTRY_FIELDLABELCODE, EMPTY_STRING, pmAddress.getPmCountry().getCountryName());
@@ -198,7 +200,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				
 			} else {
 				actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-
+				
 				if(oldPmAddress.getAddress1() != null && !oldPmAddress.getAddress1().isEmpty()){
 					oldAddressAppend += oldPmAddress.getAddress1();
 				}
