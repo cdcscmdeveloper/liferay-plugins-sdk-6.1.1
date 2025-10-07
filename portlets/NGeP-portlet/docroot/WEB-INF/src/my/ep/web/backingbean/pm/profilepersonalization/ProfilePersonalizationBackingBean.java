@@ -1870,7 +1870,6 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		String currentUrl = PortalUtil.getCurrentURL(originalServletRequest);
 		if (null == currentUrl || !currentUrl.contains(SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL.split("\\?")[0])) {
 			return;
-
 		}
 		String qtIdParam = originalServletRequest.getParameter(PARAM_QT_ID);
 		Long qtId = id; // keep original value unless overridden
