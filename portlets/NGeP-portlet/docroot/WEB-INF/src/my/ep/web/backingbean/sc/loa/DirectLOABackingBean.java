@@ -13425,7 +13425,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param scLoa
 	 */
 	private void setDisciplinaryAction(ScLoa scLoa) {
-		if (scLoa.isBrandNew()) {
+		if (null == scLoa || null == scLoa.getScLoiLoa() || null == scLoa.getScLoiLoa().getSmSupplier()
+				|| null == scLoa.getScLoiLoa().getSmSupplier().getSupplierId()) {
 			return;
 		}
 		Long qtId = scLoa.getScLoiLoa().getDocId();
@@ -13437,6 +13438,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoa.getScLoiLoa().getSmSupplier(), qtId);
 		scLoa.getScLoiLoa().setSmSupplier(smSupplier);
 	}		
+	// 26247 - end
+
 	//#29661 start
 	/**
 	 * #29661 

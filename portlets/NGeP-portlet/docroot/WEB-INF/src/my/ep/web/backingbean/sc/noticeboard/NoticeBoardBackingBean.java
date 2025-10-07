@@ -919,7 +919,7 @@ public class NoticeBoardBackingBean extends
 		supplierReqDTO.setQtId(qtId);
 		NoticeBoardResDTO supplierResDTO = boardSO.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
 		ScQtSupplier scQtSupplier = supplierResDTO.getScQtSupplier();
-		if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+		if (scQtSupplier != null && scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
 			return true;
 		}
 		return false;
@@ -2584,18 +2584,14 @@ public class NoticeBoardBackingBean extends
 						//End Bug #26525
 						attendance.setIcPassPort(smPersonal.getIdentificationNo());
 						attendance.setEmail(smPersonal.getEmail());
-						attendance.setName(smPersonal.getName());
-						attendance.setBsvRegistration(bsvRegistration);
 						
 						// #30447 - Start
-						String newName = attendance.getName();
-						String salutation = supplierSalutation(smPersonal.getIdentificationNo());
-						newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
-						attendance.setName(newName);
+						attendance.setSalutation(setSalutationSupplierName(smPersonal.getIdentificationNo()));
 						// #30447 - End
 						
+						attendance.setName(smPersonal.getName());
+						attendance.setBsvRegistration(bsvRegistration);
 						setUserDetails(attendance);
-	
 						bsvAttandances.add(attendance);
 					}
 	
@@ -2609,10 +2605,7 @@ public class NoticeBoardBackingBean extends
 							bsvAttandances.remove(extAttandance);
 	
 							// #30447 - Start
-							String newName = extAttandance.getName();
-							String salutation = supplierSalutation(extAttandance.getIcPassPort());
-							newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
-							extAttandance.setName(newName);
+							extAttandance.setSalutation(setSalutationSupplierName(extAttandance.getIcPassPort()));
 							// #30447 - End
 						}
 						bsvAttandances.add(extAttandance);
@@ -3581,6 +3574,23 @@ public class NoticeBoardBackingBean extends
 					getUserIdSessionFromLoginId(), e);
 		}
 		return salutationName;
+	}
+
+	// #30447 - End
+	
+	// #30447 - Start
+	/**
+	 * To set salutation name for supplier
+	 * 
+	 * @param identificationNo
+	 * @return salutationName
+	 */
+	public String setSalutationSupplierName(String identificationNo) {
+		String salutation = supplierSalutation(identificationNo);
+		if (StringUtils.isNotBlank(salutation)) {
+			return salutation;
+		}
+		return StringUtils.EMPTY;
 	}
 
 	// #30447 - End
