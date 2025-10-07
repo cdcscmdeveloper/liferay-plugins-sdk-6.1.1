@@ -28,6 +28,7 @@ import javax.portlet.PortletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONException;
@@ -47,7 +48,6 @@ import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmFieldChangeUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -74,6 +74,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static String googleUrl = EpPropertiesUtils.getInstance().getProperty("google.doc.url");
 	private static double minConfidence = 0.95;
 	private static double minScoreFuzzyMatch = 0.8;
+	private static String typeEPF = "epf";
+	private static String typeTenancy = "tenancy";
 	
 	private static List<EPFEntity> epfs = null;
 	private static TenancyEntity tenancy = null;
@@ -102,32 +104,49 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	/**
 	 * Test
 	 * @param type
+	 * @param appl
 	 */
-	public static void processDoc(String type){
+	public static void processDoc(String type, SmAppl appl){
 		if (StringUtils.isEmpty(type) || EntityHelper.isCollectionEmpty(docs)){
 			return;
 		}
 		String docType = type.trim();
 		log.info("...wip\t"+docs.size() +"\t_" + docType);
-		log.info("tenancy".equals(docType));
 		
-		//process multiple docs
-		List<JsonWrapper> entities = new ArrayList<>();
+		List<JsonWrapper> jsonWrappers = new ArrayList<>();
 		for (SmApplDocFile doc : docs){
 			JsonWrapper result = sendDocumentOCR(docType, doc.getFilePath(), doc.getFileName());
-			if (result != null){
-				entities.add(result);
+			if (appl == null && result != null){	//temp
+				jsonWrappers.add(result);
+				
+			} else if (result != null){
+				long apiId = saveResponse(appl, result);
+				doc.setAiApiResponseId(apiId);
+				result.apiId = apiId;
+				jsonWrappers.add(result);
 			}
 		}
-		
-		if ("epf".equals(docType)){
-			processEPF(entities);
-			
-		} else if ("tenancy".equals(docType)){
-			processTenancyAgreement(entities);
-			
-		} else {
-			processBank(entities);
+		boolean hasError = showErrorMessage(docType, jsonWrappers);
+		try {
+			if (typeEPF.equals(docType)){
+				processEPF(jsonWrappers);
+				
+			} else if (typeTenancy.equals(docType)){
+				processTenancyAgreement(jsonWrappers);
+				
+			} else {
+				processBank(jsonWrappers);
+			}
+			RequestContext.getCurrentInstance().addCallbackParam("success", true);
+		} catch(NullPointerException e){
+			if (!hasError){
+				String err = "Please upload a valid EPF Contribution Statement for AI data extraction";
+				if (typeTenancy.equals(docType)){
+					err = "Please upload a valid Stamped Premise Rental Agreement for AI data extraction";
+				}
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, err);
+				FacesContext.getCurrentInstance().addMessage("ai", msg);
+			}
 		}
 	}
 	
@@ -197,10 +216,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
-		if ("epf".equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
+		if (typeEPF.equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
 			submitEPF(appl);
 			
-		} else if ("tenancy".equals(docType)){
+		} else if (typeTenancy.equals(docType)){
 			submitTenancy();
 		}
 		//save smAppl
@@ -300,7 +319,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		List<DocEntity> docEntities = processBank(jsonWrappers);
 		validateBankEntity(appl, suppDoc, docEntities);
-		showErrorMessage(docEntities);
+		showErrorMessageBank(docEntities);
 		
 		SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 				"SmAIDocbackingBean.sendDocumentOCR", "2", startTime);
@@ -400,7 +419,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 	}
 	
-	private static void showErrorMessage(List<DocEntity> docEntities){
+	private static void showErrorMessageBank(List<DocEntity> docEntities){
 		boolean hasWrongCompanyName = false;
 		StringBuilder sb = new StringBuilder();
 		
@@ -426,7 +445,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		if (hasWrongCompanyName){
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
-					"The company name in your bank statement(s) does not match the registered Business/Company Name" +
+					"The company name in your bank statement(s) does not match with the registered Business/Company Name" +
 					" in Company Information section. Feel free to proceed or update the Business/Company Name as needed.");
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
@@ -436,6 +455,31 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, sb.toString());
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
+	}
+	
+	private static boolean showErrorMessage(String docType, List<JsonWrapper> jsonWrappers){
+		if (EntityHelper.isCollectionEmpty(jsonWrappers)){
+			return false;
+		}
+		String err = null;
+		for (JsonWrapper json : jsonWrappers){
+			int statusCode = getErrorCode(json.rawContent);
+			if (statusCode == 415 || statusCode == 422){
+				if (typeEPF.equals(docType)){
+					err = "Please upload a valid EPF Contribution Statement for AI data extraction";
+					break;
+				} else if (typeTenancy.equals(docType)){
+					err = "Please upload a valid Stamped Premise Rental Agreement for AI data extraction";
+					break;
+				}
+			}
+		}
+		if (err != null){
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, err);
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
+			return true;
+		}
+		return false;
 	}
 		
 	/**
