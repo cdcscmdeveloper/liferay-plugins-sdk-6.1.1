@@ -28,6 +28,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -56,6 +57,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
@@ -125,6 +127,12 @@ import my.ep.web.type.sc.quationtender.CloneAll;
 
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
+
+//25791 -start-
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
+
+//25791 -end-
+
 
 /**
  * The Class QTDetailManagedBean.
@@ -1707,6 +1715,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long demoSampleChecklistStatusId;
 	// #28784 -end-
 
+	// 25791-start
+	private List<ScQt> qtTrackingDiaryView;
+	private String qtAuditMaintenanceView;
+	private ScQt viewTrackingDiaryQTDL;
+	private List<ScLoaForQt> loaContractTrackingDtls;
+	private ScLoaForQt loaContractTrackingDtl;
+	private List<VCtContract> loaContractListTracking;
+	private IPagingDataModel<ScLoa> viewQTDLLOAContractTrackingDtls;
+	private IPagingDataModel<VCtContract> viewLOAContractDataModel;
+	private Map<Long, VCtContract> checkLOAContract;
+	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
+
+	// 25791-End
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -10779,7 +10800,165 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.firstViewPageCAUsers = firstViewPageCAUsers;
 	}
 	// #25426 - End
+	
+	// 25791-start
+	/**
+	 * @return the qtTrackingDiaryView
+	 */
+	public List<ScQt> getQtTrackingDiaryView() {
+		return qtTrackingDiaryView;
+	}
 
+	/**
+	 * @param qtTrackingDiaryView
+	 *            the qtTrackingDiaryView to set
+	 */
+	public void setQtTrackingDiaryView(List<ScQt> qtTrackingDiaryView) {
+		this.qtTrackingDiaryView = qtTrackingDiaryView;
+	}
+
+	/**
+	 * @return the qtAuditMaintenanceView
+	 */
+	public String getQtAuditMaintenanceView() {
+		return qtAuditMaintenanceView;
+	}
+
+	/**
+	 * @param qtAuditMaintenanceView
+	 *            the qtAuditMaintenanceView to set
+	 */
+	public void setQtAuditMaintenanceView(String qtAuditMaintenanceView) {
+		this.qtAuditMaintenanceView = qtAuditMaintenanceView;
+	}
+
+	/**
+	 * @return the viewTrackingDiaryQTDL
+	 */
+	public ScQt getViewTrackingDiaryQTDL() {
+		return viewTrackingDiaryQTDL;
+	}
+
+	/**
+	 * @param viewTrackingDiaryQTDL
+	 *            the viewTrackingDiaryQTDL to set
+	 */
+	public void setViewTrackingDiaryQTDL(ScQt viewTrackingDiaryQTDL) {
+		this.viewTrackingDiaryQTDL = viewTrackingDiaryQTDL;
+	}
+
+	/**
+	 * @return the loaContractTrackingDtls
+	 */
+	public List<ScLoaForQt> getLoaContractTrackingDtls() {
+		return loaContractTrackingDtls;
+	}
+
+	/**
+	 * @param loaContractTrackingDtls
+	 *            the loaContractTrackingDtls to set
+	 */
+	public void setLoaContractTrackingDtls(
+			List<ScLoaForQt> loaContractTrackingDtls) {
+		this.loaContractTrackingDtls = loaContractTrackingDtls;
+	}
+
+	/**
+	 * @return the loaContractTrackingDtl
+	 */
+	public ScLoaForQt getLoaContractTrackingDtl() {
+		return loaContractTrackingDtl;
+	}
+
+	/**
+	 * @param loaContractTrackingDtl
+	 *            the loaContractTrackingDtl to set
+	 */
+	public void setLoaContractTrackingDtl(ScLoaForQt loaContractTrackingDtl) {
+		this.loaContractTrackingDtl = loaContractTrackingDtl;
+	}
+
+	/**
+	 * @return the loaContractListTracking
+	 */
+	public List<VCtContract> getLoaContractListTracking() {
+		return loaContractListTracking;
+	}
+
+	/**
+	 * @param loaContractListTracking
+	 *            the loaContractListTracking to set
+	 */
+	public void setLoaContractListTracking(
+			List<VCtContract> loaContractListTracking) {
+		this.loaContractListTracking = loaContractListTracking;
+	}
+
+	/**
+	 * @return the viewQTDLLOAContractTrackingDtls
+	 */
+	public IPagingDataModel<ScLoa> getViewQTDLLOAContractTrackingDtls() {
+		return viewQTDLLOAContractTrackingDtls;
+	}
+
+	/**
+	 * @param viewQTDLLOAContractTrackingDtls
+	 *            the viewQTDLLOAContractTrackingDtls to set
+	 */
+	public void setViewQTDLLOAContractTrackingDtls(
+			IPagingDataModel<ScLoa> viewQTDLLOAContractTrackingDtls) {
+		this.viewQTDLLOAContractTrackingDtls = viewQTDLLOAContractTrackingDtls;
+	}
+
+	/**
+	 * @return the viewLOAContractDataModel
+	 */
+	public IPagingDataModel<VCtContract> getViewLOAContractDataModel() {
+		return viewLOAContractDataModel;
+	}
+
+	/**
+	 * @param viewLOAContractDataModel
+	 *            the viewLOAContractDataModel to set
+	 */
+	public void setViewLOAContractDataModel(
+			IPagingDataModel<VCtContract> viewLOAContractDataModel) {
+		this.viewLOAContractDataModel = viewLOAContractDataModel;
+	}
+
+	/**
+	 * @return the checkLOAContract
+	 */
+	public Map<Long, VCtContract> getCheckLOAContract() {
+		return checkLOAContract;
+	}
+
+	/**
+	 * @param checkLOAContract
+	 *            the checkLOAContract to set
+	 */
+	public void setCheckLOAContract(Map<Long, VCtContract> checkLOAContract) {
+		this.checkLOAContract = checkLOAContract;
+	}
+
+	/**
+	 * @return the searchBidScheduleDataModel
+	 */
+	public IPagingDataModel<ScBidScheduleForQT> getSearchBidScheduleDataModel() {
+		return searchBidScheduleDataModel;
+	}
+
+	/**
+	 * @param searchBidScheduleDataModel
+	 *            the searchBidScheduleDataModel to set
+	 */
+	public void setSearchBidScheduleDataModel(
+			IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel) {
+		this.searchBidScheduleDataModel = searchBidScheduleDataModel;
+	}
+
+	// 25791-End
+	
 	// 37813,35384 -start
 	/**
 	 * @return the techPoints

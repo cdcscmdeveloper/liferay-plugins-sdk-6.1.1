@@ -365,6 +365,26 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_CT_MAINTENANCE = "ctContractMaintenance_WAR_NGePportlet";
 	public static final String PORTLET_NAME_CT_SEARCH = "ctContractMaintenance_WAR_NGePportlet";
 	// #32199 - end
+	
+	// 25791 -start-
+	public static final String QT_MAINTENANCE_BIDDING_MANAGEMENT_VIEW = "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";
+	public static final String QT_CT_LOA_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewQTCTLOADetails.xhtml";
+	public static final String LOA_CT_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewLOAContractList.xhtml";
+	public static final int TAB_MAIN_INDEX = 0;
+	public static final String CONTRACT_PAGE_DETAILS_VIEW = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";
+	public static final String DATATABLE_QT_DL_LOA_CT_COMPONENT_ID = "ctLoaId";
+	public static final String DATATABLE_LOA_CT_COMPONENT_ID = "loaCTDetail";
+	public static final String CONTRACT_STATUS_EFFECTIVE = "lbl.ct.effective";
+	public static final String CONTRACT_STATUS_INACTIVE = "lbl.ct.inactive";
+	public static final String CONTRACT_STATUS_EXPIRED = "lbl.ct.expired";
+	public static final String CONTRACT_STATUS_TERMINATED = "lbl.ct.terminated";
+	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
+	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
+	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
+	public static final String QT_SEARCH_BID_SCHEDULE_ID = "searchQTBidSchedules";
+	public static final String QT_SEARCH_DETAILS_ID = "searchQTs";
+	public static final String QT_SEARCH_LOI_LOA_DETAILS_ID = "searchQTLoaLois";
+	// 25791-End
 
 	// #36757 Start Vinod
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";

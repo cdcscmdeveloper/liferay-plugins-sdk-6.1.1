@@ -16,13 +16,20 @@
 					<td width="8%"><h:outputLabel
 							value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td class="header-info-text">
-						<p:commandLink process="@this" partialSubmit="true" 
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,supplierProposalDetailBackingBean.managedBean.qt,false)}">
-				<h:outputText value="#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}" escape="false" />
-					</p:commandLink>
-						
-						</td>
-					
+						<ui:remove>bug #33090,#19287 -start-</ui:remove>
+						<ui:remove>#25791 start </ui:remove> 
+						<p:commandLink
+							process="@this" partialSubmit="true"
+							styleClass="commandLink_link"
+							action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,supplierProposalDetailBackingBean.managedBean.qt,false)}">
+							<ui:remove>#25791 end </ui:remove>
+							<h:outputText
+								value="#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}"
+								escape="false" />
+						</p:commandLink> 
+						<ui:remove>bug #33090,#19287 -end-</ui:remove>
+					</td>
+
 					<td width="8%"><h:outputLabel value="#{lbl['lbl.sc.proposal.no']}" /></td>
 					<td class="header-info-text">#{supplierProposalDetailBackingBean.managedBean.qtProposal.proposalNo}
 					</td>
