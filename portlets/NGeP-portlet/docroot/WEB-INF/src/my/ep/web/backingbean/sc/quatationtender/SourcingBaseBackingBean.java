@@ -6139,7 +6139,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 						if (tempRemark == null) {
 							tempRemark = getDefaultValue();
-						} else {
+						} //else { Bug #39043
 							if (tempSpecZoneQty > 0) {
 								if (tempRemarkIndex >= tempSpecZoneQty) {
 									if (indexRemarkStore == 0) {
@@ -6164,7 +6164,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 								tempRemarkIndex++;
 							}
-						}
+						//} Bug #39043
 
 					}
 
