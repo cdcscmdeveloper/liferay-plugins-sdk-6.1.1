@@ -69,7 +69,19 @@
 								rendered="#{cc.attrs.facilityType eq 'B'}" />
 						</td>
 					</tr>
-					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N' and cc.attrs.smAppl.applType ne 'B'}">
+					<!-- #37925 START -->
+					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'B'}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
+							<td>
+								<h:outputText rendered="#{cc.attrs.bean.displayLabelCountryOriginLocal}" value="#{lbl['lbl.sm.approver.country.of.origin.local']}" />
+								<h:outputText rendered="#{cc.attrs.bean.displayLabelCountryOriginForeign}" value="#{lbl['lbl.sm.approver.country.of.origin.foreign']}" />
+							</td>
+						</tr>
+					</p:outputPanel>
+					
+					<p:outputPanel rendered="#{cc.attrs.bean.displayCheckboxChangeCurrentStatus}">
+					<!-- #37925 END -->
 						<tr>
 							<td style="border-style: none !important;float: right !important;">
 								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" 
@@ -93,7 +105,8 @@
 							</td>
 			
 							<td>
-								<p:outputPanel rendered="#{!cc.attrs.poRecommend}">
+								<h:outputText value="#{cc.attrs.bean.currRegStatus}" rendered="#{cc.attrs.bean.displayLabelRegistrationStatus}" /><!-- #37925 -->
+								<p:outputPanel rendered="#{!cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
 										id="approveSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.approvedStatusId}"
@@ -105,7 +118,7 @@
 									<p:message id="approveSelBoxMsg" for="approveSelBox"
 										showSummary="true" showDetail="false" display="icon" />
 								</p:outputPanel>
-								<p:outputPanel rendered="#{cc.attrs.poRecommend}">
+								<p:outputPanel rendered="#{cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
 										id="poRecommendSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.poRecommendStatusId}"
