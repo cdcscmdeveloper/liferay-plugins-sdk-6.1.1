@@ -426,12 +426,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		if (hasWrongCompanyName){
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
-					SmCommonUtil.getMessage("lbl.sm.ai.bank.verify", new String[] { "" }));
+					"The company name in your bank statement(s) does not match the registered Business/Company Name" +
+					" in Company Information section. Feel free to proceed or update the Business/Company Name as needed.");
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 		if (!StringUtils.isEmpty(sb.toString())){
-			sb.insert(0, "The information in your bank statement(s) does not match with" +
-					" any existing Bank Account Details in Bank Information section:");
+			sb.insert(0, "Your bank statement(s) does not match with any newly added/updated bank in" +
+					" Bank Information section. Feel free to proceed or update the Bank Information section as needed:");
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, sb.toString());
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
