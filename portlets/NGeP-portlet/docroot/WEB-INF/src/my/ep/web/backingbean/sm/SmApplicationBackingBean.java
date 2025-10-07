@@ -1957,7 +1957,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
-		setPopupRecommendDisplay();
+		showRegisterationDecisionUI();
 //		37925 END
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setBusinessAndHadApprovedSpecialCatcode-23", 
@@ -18681,7 +18681,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//36504 - END
 //	#37925 START
-	private void setPopupRecommendDisplay() {
+	private void showRegisterationDecisionUI() {
 	    clearRegistrationStatusDisplay();
 	    
 	    SmAppl smAppl = getManagedBean().getSmAppl();
@@ -18694,8 +18694,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    
 	    boolean isForeignCompany = !SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA.equalsIgnoreCase(companyCountry);
 	    
-	    setCountryOriginDisplay(companyCountry, applType, businessType, isForeignCompany);
-	    setRegistrationStatusAndCheckboxDisplays(companyCountry, supplierType, applType, isForeignCompany);
+	    setCountryOriginUI(companyCountry, applType, businessType, isForeignCompany);
+	    setRegistrationStatusUI(companyCountry, supplierType, applType, isForeignCompany);
 	}
 
 	private String getCompanyCountry(SmAppl smAppl) {
@@ -18703,7 +18703,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    return (country != null && !country.isEmpty()) ? country : SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
 	}
 
-	private void setCountryOriginDisplay(String companyCountry, String applType, String businessType, boolean isForeignCompany) {
+	private void setCountryOriginUI(String companyCountry, String applType, String businessType, boolean isForeignCompany) {
 	    // Reset country origin displays for BUMI applications
 	    if (SupplierManagementConst.APPL_TYPE_BUMI.equalsIgnoreCase(applType)) {
 	        getManagedBean().setDisplayLabelCountryOriginLocal(false);
@@ -18724,16 +18724,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	            || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(businessType);
 	}
 
-	private void setRegistrationStatusAndCheckboxDisplays(String companyCountry, String supplierType, 
+	private void setRegistrationStatusUI(String companyCountry, String supplierType, 
 	        String applType, boolean isForeignCompany) {
 	    
 	    if (isForeignCompany) {
-	        foreignRegistrationStatusAndCheckboxDisplay(isForeignCompany);
+	        foreignRegistrationUI(isForeignCompany);
 	    } else {
 	        if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
-	            localConstructorRegistrationStatusAndCheckboxDisplays(applType);
+	            localConstructorRegistrationUI(applType);
 	        } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
-	            localConsultantRegistrationStatusAndCheckboxDisplays(isForeignCompany);
+	            localConsultantRegistrationUI(isForeignCompany);
 	        }
 	        // Default case - no action needed
 	    }
@@ -18747,7 +18747,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    getManagedBean().setDisplayDropdownRegStatus(false);
 	}
 
-	public void localConstructorRegistrationStatusAndCheckboxDisplays(String applType) {
+	public void localConstructorRegistrationUI(String applType) {
 	    PmStatusDesc currentStatusDesc = SmApplicationUtil.getCurrRegStatusDesc(getManagedBean().getSmAppl());
 	    
 	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType) || 
@@ -18787,13 +18787,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    }
 	}
 
-	public void localConsultantRegistrationStatusAndCheckboxDisplays(boolean isForeignCompany) {
+	public void localConsultantRegistrationUI(boolean isForeignCompany) {
 	    assignValReqdToFalse();
 	    setRegistrationStatusValue(isForeignCompany);
 	    getManagedBean().setDisplayLabelRegistrationStatus(true);
 	}
 
-	public void foreignRegistrationStatusAndCheckboxDisplay(boolean isForeignCompany) {
+	public void foreignRegistrationUI(boolean isForeignCompany) {
 	    assignValReqdToFalse();
 	    getManagedBean().setDisplayLabelCountryOriginForeign(true);
 	    
