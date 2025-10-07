@@ -1,0 +1,87 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<br/><ui:param name="template" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate}"/>
+	<table class="customTbl">
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.ownership']}" /></td>
+			<td>
+				<h:outputText value="#{lbl['lbl.sm.facility.own']}" 
+					rendered="#{template.smSvFacility.ownershipType eq 'O'}" />
+				<h:outputText value="#{lbl['lbl.sm.facility.rent']}" 
+					rendered="#{template.smSvFacility.ownershipType eq 'R'}" />
+				
+			</td>
+			
+			<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.purchase.monthly.price']}" /></td>
+			<td>
+				 <h:outputText value="#{template.smSvFacility.purchaseRentPrice}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</td>
+		</tr>
+		
+		<tr>
+		
+			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.overall.sqft']}" /></td>
+			<td><p:inputText value="#{template.smSvFacility.overallSqft}" maxlength="20" disabled="#{viewFlag}" /></td>
+			
+			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.enclsd.sqft']}" /></td>
+			<td><p:inputText value="#{template.smSvFacility.enclosedSqft}" maxlength="20" disabled="#{viewFlag}" /></td>
+		</tr>
+		
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.enclsd.cap.sqft']}" /></td>
+			<td><p:inputText value="#{template.smSvFacility.enclosedCapacitySqft}" maxlength="20" disabled="#{viewFlag}" /></td>
+		</tr>
+		
+		<tr>
+			<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.floor']}" /></td>
+			<td>
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{template.smSvFacility.cementFloor}" />
+				#{lbl['lbl.sm.sitevist.premiseloc.cement']}<br /> <!-- #38047 -->
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{template.smSvFacility.tarFloor}" />
+				#{lbl['lbl.sm.sitevist.premiseloc.tar']}<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{template.smSvFacility.otherFloor}">
+					<p:ajax event="change" update="otherFloorRemarkId" 
+					listener="#{svoSiteVisitBackingBean.preLocationFloorEnvOnChange}" />
+				</p:selectBooleanCheckbox>#{lbl['lbl.sm.sitevist.premiseloc.others']}<br />
+				<p:inputTextarea value="#{template.smSvFacility.otherFloorRemark}" 
+				requiredMessage="#{lbl['lbl.sm.sitevist.premiseloc.floor']} :  #{lbl['lbl.sm.sitevisit.if.others']}"
+				maxlength="50" id="otherFloorRemarkId" label="#{lbl['lbl.sm.sitevist.remarks']}"
+				disabled="#{!template.smSvFacility.otherFloor || viewFlag}"
+				required="#{template.smSvFacility.otherFloor and !viewFlag}">
+					<f:validateLength maximum="50"/>
+				</p:inputTextarea>
+			</td>
+			
+			<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.environment']}" /></td>
+			<td>
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{template.smSvFacility.envFence}" />
+				#{lbl['lbl.sm.sitevist.premiseloc.fenced']}<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{template.smSvFacility.envClean}" />
+				#{lbl['lbl.sm.sitevist.premiseloc.cleanliness']}<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{template.smSvFacility.envOrganize}" />
+				#{lbl['lbl.sm.sitevist.premiseloc.organized']}<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{template.smSvFacility.otherEnv}" update="otherEnvRemarkId">
+					<p:ajax event="change" update="otherEnvRemarkId" listener="#{svoSiteVisitBackingBean.preLocationFloorEnvOnChange}" />
+				</p:selectBooleanCheckbox>#{lbl['lbl.sm.sitevist.premiseloc.others']}
+				<br />
+				<p:inputTextarea value="#{template.smSvFacility.otherEnvRemark}" 
+				requiredMessage="#{lbl['lbl.sm.sitevist.premiseloc.environment']} : #{lbl['lbl.sm.sitevisit.if.others']}" 
+				maxlength="50" id="otherEnvRemarkId" label="#{lbl['lbl.sm.sitevist.remarks']}"
+				disabled="#{!template.smSvFacility.otherEnv || viewFlag}"
+				required="#{template.smSvFacility.otherEnv and !viewFlag}">
+					<f:validateLength maximum="50"/>
+				</p:inputTextarea>
+			</td>
+		</tr>
+		
+	</table>
+</ui:composition>

@@ -39,11 +39,13 @@
 		function disableOtpTimeout(){
 			disableBtn();
 			$("[id$='gpkiOtpNotes']").show();
+			/* UAT temp - remove timeout
 			otpTimeoutId = setTimeout(
 				function() {
 					$("[id$='gpkiOtpNotes']").hide();
 					enableBtn();
 				}, getTimeoutMillis());
+				*/
 		}
 		
 		function reset(){
