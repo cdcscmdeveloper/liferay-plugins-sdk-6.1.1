@@ -178,6 +178,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean preYear = true;
 	//#32730 - end
 	private Long auditReviseStatusID; //35502
+	private boolean justificationUsingDisable; //#35502, Fix as-is bug: #38652
 	
 	public ProcurementPlanManagedBean(){}
 
@@ -1510,4 +1511,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.auditReviseStatusID = auditReviseStatusID;
 	}
 	// 35502 - end
+	
+	// #35502, Fix as-is bug: #38652 - Start
+	public boolean isJustificationUsingDisable() {
+		return justificationUsingDisable;
+	}
+
+	public void setJustificationUsingDisable(boolean justificationUsingDisable) {
+		this.justificationUsingDisable = justificationUsingDisable;
+	}
+	// #35502, Fix as-is bug: #38652 - End
 }

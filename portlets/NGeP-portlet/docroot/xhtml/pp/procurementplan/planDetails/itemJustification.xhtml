@@ -32,21 +32,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<tr>
 						<td>
 						<!-- for phase 1 -->
-						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}"
-							disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+						<!--#35502 Fix as-is bug: #38652 - Start -->
+						<p:inputTextarea cols="40" maxlength="1000"
+							value="#{remarkVar.remark}"
+							disabled="#{!pPlanBackingBean.managedBean.modeEditable or pPlanBackingBean.managedBean.justificationUsingDisable}"
 							onkeyup="limitTextArea(this,1000);"
-							onkeydown="limitTextArea(this,1000);">							
-							</p:inputTextarea> 
-							
-						<!-- enable this for phase 2 and disable phase 1 section to test	 
-						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" 
-							disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
-							rendered="#{remarkVar.editable or remarkVar.brandNew}"/> 
-						<h:outputText value="#{remarkVar.remark}" rendered="#{!remarkVar.editable and !remarkVar.brandNew}" 
-							style="display: inline-block; width:220px;word-wrap: break-word;" />
-						
-						 -->
-					
+							onkeydown="limitTextArea(this,1000);">
+						</p:inputTextarea> 
+						<!--#35502 Fix as-is bug: #38652 - End -->
 						</td>
 					</tr>
 				</table>
