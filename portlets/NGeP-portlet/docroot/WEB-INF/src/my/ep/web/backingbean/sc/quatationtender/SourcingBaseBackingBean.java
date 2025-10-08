@@ -3873,7 +3873,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						boolean shouldBreak = false;
 						if (tempRemark == null) {
 							tempRemark = SSTConstant.TB;
-				        } else {
+				        } //else { Bug #39043
 				            if (tempSpecZoneQty > 0) {
 				            	if (tempRemarkIndex >= tempSpecZoneQty && (indexRemarkStore == 0 || tempRemarkIndex > indexRemarkStore)) {
 				            		 map.put(SSTConstant.Remark, tempRemark);
@@ -3888,7 +3888,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				                }
 				            }
 				            tempRemarkIndex++;
-				        }
+				          //} Bug #39043
 						
 						if (shouldBreak) {
 				            break;

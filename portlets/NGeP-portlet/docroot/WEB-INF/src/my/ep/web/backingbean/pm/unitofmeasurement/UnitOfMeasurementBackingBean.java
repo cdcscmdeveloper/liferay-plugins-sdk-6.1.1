@@ -71,6 +71,7 @@ public class UnitOfMeasurementBackingBean extends
 			.getLogger(UnitOfMeasurementManagedBean.class);
 	//Navigation Details
 	public static final String NAV_TO_SEARCH = "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml"; //#34445
 		
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	public static final boolean SEARCH_DEFAULT = false;
@@ -377,49 +378,30 @@ public class UnitOfMeasurementBackingBean extends
 		log.info("saveMeasurementDtls");
 
 		String messageId = null;
-
-		// PmUom oldPmUom=this.getManagedBean().getOldPmUom();
-		PmUom pmUom = this.getManagedBean().getPmUom();
-     	validationMessage(pmUom);
-
-		UomReqDTO reqDTO = new UomReqDTO();
-		reqDTO.setPmUom(pmUom);
-
-		String[] msgParam = new String[] { pmUom.getUomCode() };
-
+		
+		//#34445 - Start
 		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
-
-	
+		PmUom pmUom = this.getManagedBean().getPmUom();
 
 		try {
+			validationMessage(pmUom);
+
+			UomReqDTO reqDTO = new UomReqDTO();
+			reqDTO.setPmUom(pmUom);
+
+			String[] msgParam = new String[] { pmUom.getUomCode() };
+
 			if (pmUom.isBrandNew()) {
 				messageId = MessageConst.TD_80600;
 			} else {
 				messageId = MessageConst.TD_80601;
-
-				/*
-				 * if(oldPmUom!=null && pmUom!=null &&
-				 * !oldPmUom.getRecordStatusFlg
-				 * ().equals(pmUom.getRecordStatusFlg())){
-				 * if(pmUom.getRecordStatusFlg
-				 * ().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-				 * recordStatusMessageId = MessageConst.TD_80603; } else{
-				 * recordStatusMessageId = MessageConst.TD_80602; }
-				 * reqDTO.getTrackDairyVOs
-				 * ().add(PmCommonUtil.assignTrackingDairyForUOM
-				 * (pmUom.getUomId(),
-				 * pmUom.getUomCode(),getPmActionDesc(recordStatusMessageId
-				 * ,msgParam))); }
-				 */
 			}
 			reqDTO.setTrackingStatus(true);
 
 			reqDTO.getTrackDairyVOs().add(
-					PmCommonUtil.assignTrackingDairyForUOM(pmUom
-							.getUomId(), pmUom.getUomCode(), 
-							pmUom.getRecordStatusFlg().longValue(),
-							getPmActionDesc(messageId, msgParam)));
+					PmCommonUtil.assignTrackingDairyForUOM(pmUom.getUomId(), pmUom.getUomCode(), pmUom
+							.getRecordStatusFlg().longValue(), getPmActionDesc(messageId, msgParam)));
 
 			/************ START: AUDIT #28895_35509 *************/
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -433,7 +415,7 @@ public class UnitOfMeasurementBackingBean extends
 				getManagedBean().setAuditUomOldVal(resDTO.getPmUom());
 			}
 			/************ END: AUDIT #28895_35509 *************/
-			
+
 			UomResDTO resDTO = iUomSO.saveOrUpdateMeasurement(reqDTO);
 			reloadUOMData(resDTO.getPmUom());
 			PmUom oldPmUomData = (PmUom) BeanUtils.cloneBean(resDTO.getPmUom());
@@ -441,42 +423,20 @@ public class UnitOfMeasurementBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				if (pmUom.isBrandNew()) {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_780091,
-															new String[] { resDTO
-																	.getPmUom()
-																	.getUomCode() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_780091, new String[] { resDTO.getPmUom().getUomCode() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 				} else {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_780092,
-															new String[] { resDTO
-																	.getPmUom()
-																	.getUomCode() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_780092, new String[] { resDTO.getPmUom().getUomCode() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
-				
+
 				/************ START: AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_UOM)) {
 					uomReqDTO.setUomId(resDTO.getPmUom().getUomId());
@@ -484,9 +444,15 @@ public class UnitOfMeasurementBackingBean extends
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_UOM);
 				}
 				/************ END: AUDIT #28895_35509 *************/
-				
+
 			}
-		} catch (Exception e) {
+			
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
+		}
+		//#34445 End
+		catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			iUomSO = null;
