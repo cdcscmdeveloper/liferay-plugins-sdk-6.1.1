@@ -4534,18 +4534,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedJustifications(null);
 		this.getManagedBean().setSelectedJustificationDesc("");
 		boolean newRemark = false;
+		this.getManagedBean().setJustificationUsingDisable(false); //#35502, Fix as-is bug: #38652
 		
 		
 		if(epItem.getJustifications()==null){
 			epItem.setJustifications(new ArrayList<PpRemark>());
 		}
-		/* enable for phase 2
-		//if first remark is not new
-		if (!epItem.getJustifications().isEmpty()){
-			if(!epItem.getJustifications().get(0).isBrandNew()){
-				newRemark = true;
-			}
-		}*/
 
 		// if reason is empty
 		if (epItem.getJustifications().isEmpty() || epItem.getJustifications().size() == 0) {
@@ -4556,31 +4550,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(!this.getManagedBean().isModeEditable() || !epItem.isEditable()){
 			newRemark = false;
 		}
-	
-		
-		/* enable for phase 2
-		// for user to edit draft remark
-		if(newRemark){
-			if(!epItem.getJustifications().isEmpty() && compareUserNameInsensitive(epItem.getJustifications().get(0).getUserId())){
-				//if both statuses are null
-				if(epItem.getJustifications().get(0).getPpWorkflowStatus()==null 
-						&& this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()==null){
-					epItem.getJustifications().get(0).setEditable(true);
-					newRemark = false;
-				//if both plan status!=null && justification status == null
-				}else if(this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()!=null && 
-						(epItem.getJustifications().get(0).getPpWorkflowStatus()==null 
-							|| (epItem.getJustifications().get(0).getPpWorkflowStatus()!=null &&
-									epItem.getJustifications().get(0).getPpWorkflowStatus().getWorkflowStatusId()==null))){
-				// if remark status == plan status
-				}else if(epItem.getJustifications().get(0).getPpWorkflowStatus()!=null &&
-						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
-								epItem.getJustifications().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
-					epItem.getJustifications().get(0).setEditable(true);
-					newRemark = false;
-				}
-			}
-		} */
 		
 		if(newRemark){
 			log.info("new justification added");
@@ -4598,16 +4567,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			remark.setRoleCode(roleCode);
 			epItem.getJustifications().add(0, remark);
-
 		}
+		
+		//#35502, Fix as-is bug: #38652 Start
+		if(epItem.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+			this.getManagedBean().setJustificationUsingDisable(true);
+		}
+		//#35502, Fix as-is bug: #38652 End
 	
 		this.getManagedBean().setSelectedJustifications(epItem.getJustifications());
 		this.getManagedBean().setSelectedJustificationDesc(epItem.getJustifications().isEmpty() ? "": epItem.getJustifications().get(0).getRemark());
 		
-		
-		
 		log.info("loadJustification - End");
-		
 	}
 	
 	/**
