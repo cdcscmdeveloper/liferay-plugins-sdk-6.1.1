@@ -11,7 +11,7 @@
 		var="cmpExpStatusValue"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{cmpContractStatus}" rowKey="#{cmpExpStatusValue}"
-		style="width:1090px">
+		style="width:100%">
 		<ac:paginator for="#{cmpExpGovNGov}"></ac:paginator>
 		<p:column style="width:60%;white-space: normal;">
 
@@ -93,7 +93,7 @@
 	<p:dataTable id="#{cmpExpPrcNonPrc}" rowIndexVar="index" rows="10"
 		var="experience" value="#{cmpExpProcNonProcList}"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-		rowKey="#{experience}" style="width:1090px;">
+		rowKey="#{experience}" style="width:100%;">
 		<ac:paginator for="#{cmpExpPrcNonPrc}"></ac:paginator>
 		<p:column style="width:10%;white-space: normal;word-wrap: break-word;"
 			headerText="#{lbl['lbl.sm.projDtls.clientName']}">
