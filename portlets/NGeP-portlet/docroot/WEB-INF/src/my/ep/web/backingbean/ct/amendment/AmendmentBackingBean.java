@@ -12,7 +12,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
-import java.text.DateFormat; //#24333
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols; //24333
 import java.text.SimpleDateFormat;
@@ -9876,7 +9875,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 
 		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		if (amendment != null && amendment.getAmendmentLoa() != null) {
+		if (amendment != null && amendment.getAmendmentLoa() != null && amendment.getAmendmentLoa().isBondReq()) {
 			BigDecimal percentage = amendment.getAmendmentLoa().getBondPercentage();
 			return percentage != null ? percentage : BigDecimal.ZERO;
 		}
