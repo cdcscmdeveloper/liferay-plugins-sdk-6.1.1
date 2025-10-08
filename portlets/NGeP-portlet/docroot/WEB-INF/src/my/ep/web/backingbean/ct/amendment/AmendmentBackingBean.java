@@ -8698,5 +8698,39 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    }
 	    return !contractAmt.getEffDate().after(now) && !contractAmt.getExpDate().before(now);
 	}
+	
+	/**
+	 * Gets bond percentage from amendment LOA. Returns 0.0 if not available.
+	 */
+	public BigDecimal getBondPercentage() {
+		if (ctBackingBean.getManagedBean().getContractVer() == null) {
+			return BigDecimal.ZERO;
+		}
+
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if (amendment != null && amendment.getAmendmentLoa() != null && amendment.getAmendmentLoa().isBondReq()) {
+			BigDecimal percentage = amendment.getAmendmentLoa().getBondPercentage();
+			return percentage != null ? percentage : BigDecimal.ZERO;
+		}
+
+		return BigDecimal.ZERO;
+	}
+
+	/**
+	 * Bond amount from amendment LOA (BigDecimal.ZERO if null).
+	 */
+	public BigDecimal getBondAmount() {
+		if (ctBackingBean.getManagedBean().getContractVer() == null) {
+			return BigDecimal.ZERO;
+		}
+
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if (amendment != null && amendment.getAmendmentLoa() != null) {
+			BigDecimal amount = amendment.getAmendmentLoa().getBondAmt();
+			return amount != null ? amount : BigDecimal.ZERO;
+		}
+
+		return BigDecimal.ZERO;
+	}
 	//#24333 - End
 }
