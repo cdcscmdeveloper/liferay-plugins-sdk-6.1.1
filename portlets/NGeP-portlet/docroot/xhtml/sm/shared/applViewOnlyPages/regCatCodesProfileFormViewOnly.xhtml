@@ -10,6 +10,36 @@
 <!-- #28175 end -->
 
 	<p:panel header="#{lbl['lbl.sm.wizard.catCodeStepLbl']}" toggleable="true">
+		<!-- 36504 - START -->
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputPanel
+						align="left">
+						<h:outputText
+							value="#{lbl['lbl.sm.other.desc.history.click']}"
+							escape="false" />
+						<p:commandLink
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{backingBean.otherDescriptionHistory}"
+							process="@this"
+							partialSubmit="true"
+							update=":form">
+							<u><h:outputText
+									value="#{lbl['lbl.sm.other.desc.history.here']}"
+									style="color:blue;"
+									escape="false" /></u>
+						</p:commandLink>
+						<p:spacer width="2" />
+						<h:outputText
+							value="#{lbl['lbl.sm.other.desc.history.to.view.history.of.other.desc']}"
+							escape="false" />
+						<br />
+						<p:spacer height="2" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
+		<!-- 36504 - END -->
 		<!-- #14150 - added sortBy -->
 		<p:dataTable var="aprvdCatBean"
 			widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
@@ -26,6 +56,7 @@
 					<p:column style="width :350px;white-space : normal"
 						headerText="#{lbl['lbl.sm.catCodes.cate']}" />
 					<p:column style="width :100px;white-space : normal" headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+					<p:column style="width :200px;white-space : normal" headerText="#{lbl['lbl.sm.catCodes.othDesc']}" /> <!-- 36504 -->
 					<p:column style="width :200px;white-space : normal" headerText="#{lbl['lbl.sm.officer.decision']}" />
 					<p:column style="width :450px;white-space : normal" headerText="#{lbl['lbl.sm.remark']}" />
 					<p:column headerText="#{lbl['lbl.sm.status']}" />
@@ -142,6 +173,19 @@
 					rendered="#{aprvdCatBean.specialCategory}" />
 			</p:column>
 			<p:column>
+				<!-- 36504 - START -->
+				<p:outputPanel rendered="aprvdCatBean.smSuppCatOtherDescHistory.size() > 0">
+					<h:outputText
+						value="#{aprvdCatBean.otherDesc}"
+						rendered="#{not empty aprvdCatBean.otherDesc and
+						    (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
+						     aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING
+						    ) and (aprvdCatBean.smSuppCatOtherDescHistory.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP or  
+						    aprvdCatBean.smSuppCatOtherDescHistory.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO )}" />
+				</p:outputPanel>
+			</p:column>
+			<!-- 36504 - END -->
+			<p:column>
 				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
 					<tr>
 						<td style="border: none !important; white-space: normal; width:70px"><b><h:outputText value="#{lbl['lbl.sm.po']} :" /></b></td>
@@ -227,4 +271,9 @@
 	<p:outputPanel layout="block" rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCategoryOverlapDocs}">
 		<ui:include src="overlapCategorySuppDocViewOnly.xhtml"></ui:include>
 	</p:outputPanel>
+	
+	<!-- 36504 - START -->
+	<ac:otherDescriptionHistory categoryCodeList="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}" applNo="#{viewSmApplBackingBean.managedBean.smAppl.applNo}" />
+	<!-- 36504 - END -->
+    
 </ui:composition>
