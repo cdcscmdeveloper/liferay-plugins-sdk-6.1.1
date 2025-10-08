@@ -788,6 +788,15 @@ public class SupplierManagementConst {
 	//26238 - END
 	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
 	
+//	#37925 START
+	public static final String APPL_TYPE_UPDATE = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_UPDATE;
+	public static final String APPL_TYPE_MOF = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF;
+	public static final String APPL_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_BASIC;
+	public static final String APPL_TYPE_RENEWAL = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_RENEWAL;
+	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
+	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
+//	#37925 END
+	
 	public String getCOMPANY_TYPE_CLBG() {
 		return COMPANY_TYPE_CLBG;
 	}
@@ -1565,4 +1574,37 @@ public class SupplierManagementConst {
 	}
 	// 36504 - END
 
+//	#37925 START
+	public static String getApplTypeBumi() {
+		return APPL_TYPE_BUMI;
+	}
+
+	public static String getApplTypeCategory() {
+		return APPL_TYPE_CATEGORY;
+	}
+
+	public static String getApplTypeUpdate() {
+		return APPL_TYPE_UPDATE;
+	}
+
+	public static String getApplTypeMof() {
+		return APPL_TYPE_MOF;
+	}
+
+	public static String getApplTypeBasic() {
+		return APPL_TYPE_BASIC;
+	}
+
+	public static String getApplTypeRenewal() {
+		return APPL_TYPE_RENEWAL;
+	}
+
+	public static String getSsmCompanyCountryDefault() {
+		return SSM_COMPANY_COUNTRY_DEFAULT;
+	}
+
+	public static String getSsmCompanyCountryMalaysia() {
+		return SSM_COMPANY_COUNTRY_MALAYSIA;
+	}
+//	#37925 END
 }
