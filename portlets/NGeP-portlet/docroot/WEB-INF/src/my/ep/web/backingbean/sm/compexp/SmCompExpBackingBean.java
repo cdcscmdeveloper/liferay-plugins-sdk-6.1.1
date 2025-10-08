@@ -1009,6 +1009,31 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
 		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
 	}
+	
+	/**
+	 * Initialize Master view popup dialog
+	 * 
+	 * @param selectedMaster
+	 */
+	public void initViewPopupSuppProfile(SmCompExpMaster selectedMaster) {
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
+		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
+		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
+
+		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
+		SelectItem clientTypeFederalOrNonItem = new SelectItem();
+		
+		if (selectedMaster.getClientType().equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
+			clientTypeFederalOrNonItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
+			clientTypeFederalOrNonItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
+		} else if (selectedMaster.getClientType().equals(ParameterConst.CLIENT_TYPE_NON_FEDERAL)) {
+			clientTypeFederalOrNonItem.setLabel(SmCommonUtil.getMessage(lblClientTypeNonFed, null));
+			clientTypeFederalOrNonItem.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
+		}
+		
+		this.getManagedBean().getClientTypeItems().add(clientTypeFederalOrNonItem);
+	}
 
 	/**
 	 * Redirect to Sm Company Experience main screen
