@@ -48,13 +48,15 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 
 		docId = BigInteger.valueOf(managedBean.getSavedJobTypeRatio().getPoJobTypeRatioId());
 		
+		String doctype = jobRatio.getSupplierType() + jobRatio.getApplType() + jobRatio.getCategoryType();
+		
 		if (!managedBean.isBrandNew()) {
 			PmPoJobTypeRatio oldPoJobRatio = managedBean.getOriPoJobTypeRatio();
 
 			if (!jobRatio.getPoJobWeight().getPoJobWeightId().equals(oldPoJobRatio.getPoJobWeight().getPoJobWeightId())) {
 
 				dtlWeightCategory.setRoleCode(roleCode);
-				dtlWeightCategory.setDocType(AuditConst.PM_AUD_WORK_ALLOCATION);
+				dtlWeightCategory.setDocType(doctype);
 				dtlWeightCategory.setPmParameterLvlId(AuditConst.PM_AUD_WORK_ALLOCATION_PMPARAMETERLVLID);
 				dtlWeightCategory.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				dtlWeightCategory.setLvlCode2(AuditConst.PM_LVL_CODE_2_WAML);
@@ -71,7 +73,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 
 			if (!jobRatio.getRecordStatusFlg().equals(oldPoJobRatio.getRecordStatusFlg())) {
 				dtlStatus.setRoleCode(roleCode);
-				dtlStatus.setDocType(AuditConst.PM_AUD_WORK_ALLOCATION);
+				dtlStatus.setDocType(doctype);
 				dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_WORK_ALLOCATION_PMPARAMETERLVLID);
 				dtlStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				dtlStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_WAML);
@@ -87,7 +89,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 			}
 		} else {
 			dtlWeightCategory.setRoleCode(roleCode);
-			dtlWeightCategory.setDocType(AuditConst.PM_AUD_WORK_ALLOCATION);
+			dtlWeightCategory.setDocType(doctype);
 			dtlWeightCategory.setPmParameterLvlId(AuditConst.PM_AUD_WORK_ALLOCATION_PMPARAMETERLVLID);
 			dtlWeightCategory.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 			dtlWeightCategory.setLvlCode2(AuditConst.PM_LVL_CODE_2_WAML);
@@ -100,7 +102,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 			objList.add(dtlWeightCategory);
 
 			dtlStatus.setRoleCode(roleCode);
-			dtlStatus.setDocType(AuditConst.PM_AUD_WORK_ALLOCATION);
+			dtlStatus.setDocType(doctype);
 			dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_WORK_ALLOCATION_PMPARAMETERLVLID);
 			dtlStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 			dtlStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_WAML);
