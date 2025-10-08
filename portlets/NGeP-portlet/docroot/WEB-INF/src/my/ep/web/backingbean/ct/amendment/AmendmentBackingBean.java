@@ -12,7 +12,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
-import java.text.DateFormat; //#24333
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols; //24333
 import java.text.SimpleDateFormat;
@@ -2006,6 +2005,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setCtCommitteeMembers(getManagedBean().getUpdatedCommitteeMembers());
 			}
 			//26753 - end
+			
+			//#30014 - Start (Set Company Experience Date and Flag to 4 - App Realtime/Data Patching)
+			if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)
+					&& !CTProcessNameConst.VERIFY_FA_HT_NAME.equalsIgnoreCase(getManagedBean().getTaskName())) {
+				ctBackingBean.getManagedBean().getContractVer().getCtContract().setCompExprDate(new Date());
+				ctBackingBean.getManagedBean().getContractVer().getCtContract().setCompExprFlag(ContractConst.COMP_EXP_APP_RLTM);	
+			}
+			//#30014 - End
 
 			reqDTO.setCtContract(ctBackingBean.getManagedBean().getContractVer().getCtContract());
 			reqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
@@ -9857,6 +9864,40 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        return false;
 	    }
 	    return !contractAmt.getEffDate().after(now) && !contractAmt.getExpDate().before(now);
+	}
+	
+	/**
+	 * Gets bond percentage from amendment LOA. Returns 0.0 if not available.
+	 */
+	public BigDecimal getBondPercentage() {
+		if (ctBackingBean.getManagedBean().getContractVer() == null) {
+			return BigDecimal.ZERO;
+		}
+
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if (amendment != null && amendment.getAmendmentLoa() != null && amendment.getAmendmentLoa().isBondReq()) {
+			BigDecimal percentage = amendment.getAmendmentLoa().getBondPercentage();
+			return percentage != null ? percentage : BigDecimal.ZERO;
+		}
+
+		return BigDecimal.ZERO;
+	}
+
+	/**
+	 * Bond amount from amendment LOA (BigDecimal.ZERO if null).
+	 */
+	public BigDecimal getBondAmount() {
+		if (ctBackingBean.getManagedBean().getContractVer() == null) {
+			return BigDecimal.ZERO;
+		}
+
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if (amendment != null && amendment.getAmendmentLoa() != null) {
+			BigDecimal amount = amendment.getAmendmentLoa().getBondAmt();
+			return amount != null ? amount : BigDecimal.ZERO;
+		}
+
+		return BigDecimal.ZERO;
 	}
 	//#24333 - End
 	

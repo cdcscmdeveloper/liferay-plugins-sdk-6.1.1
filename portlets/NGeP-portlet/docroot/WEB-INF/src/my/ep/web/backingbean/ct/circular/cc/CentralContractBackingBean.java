@@ -774,6 +774,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					 }
 				 }
 			 }
+			 
+			// Validate For Extension date - #39213
+			 if(getManagedBean().isCircularExtension() && (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+					 && getManagedBean().getCircularVer().getExtendEndDate() == null) {
+				 getManagedBean().setSelectedTabIndex(0);
+				 throw new EpException(MessageConst.ERROR_100022,
+						 new String[]{ResourceBundleUtils.getMessage("lbl.ct.extension.end.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())}); 
+			 }
 
 			 // Validate duplicated contract
 			 if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
