@@ -222,11 +222,11 @@ public class PaymentUtil {
 		sb.append("{").append("\"orderId\":\"").append(orderId.toString())
 				.append("\",").append("\"billName\":\"").append(billName)
 				.append("\",").append("\"billDesc\":\"").append(billDesc)
-				.append("\"").append("\"billEmail\":\"").append(email)
+				.append("\",").append("\"billEmail\":\"").append(email)
 				.append("\",").append("\"billMobile\":\"").append(mobile)
-				.append("\"").append("\"cancelurl\":\"").append(cancelUrl)
+				.append("\",").append("\"cancelurl\":\"").append(cancelUrl)
 				.append("\",").append("\"merchantCode\":\"")
-				.append(merchantCode).append("\"");
+				.append(merchantCode).append("\",");
 		try {
 			DecimalFormat df = new DecimalFormat("0.00");
 			String amountStr = df.format(amount);
