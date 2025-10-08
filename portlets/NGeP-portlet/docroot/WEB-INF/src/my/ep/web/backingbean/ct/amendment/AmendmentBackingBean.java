@@ -9593,7 +9593,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 
 		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		if (amendment != null && amendment.getAmendmentLoa() != null) {
+		if (amendment != null && amendment.getAmendmentLoa() != null && amendment.getAmendmentLoa().isBondReq()) {
 			BigDecimal percentage = amendment.getAmendmentLoa().getBondPercentage();
 			return percentage != null ? percentage : BigDecimal.ZERO;
 		}
