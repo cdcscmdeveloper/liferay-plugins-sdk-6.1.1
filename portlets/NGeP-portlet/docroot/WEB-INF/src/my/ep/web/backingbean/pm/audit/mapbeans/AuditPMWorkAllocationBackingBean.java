@@ -24,10 +24,11 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final String COMMA_STRING = ",";
+	private static final String NULL_X = "X";
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO dtlWeightCategory = new AuditPMSPDTO();
 	AuditPMSPDTO dtlStatus = new AuditPMSPDTO();
-	BigInteger docId;
 
 	@Override
 	public String getRoleCode() {
@@ -46,10 +47,13 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 		PoJobTypeRatioManagedBean managedBean = (PoJobTypeRatioManagedBean) manageBean;
 		PmPoJobTypeRatio jobRatio = managedBean.getPoJobTypeRatio();
 
-		docId = BigInteger.valueOf(managedBean.getSavedJobTypeRatio().getPoJobTypeRatioId());
-		
-		String doctype = jobRatio.getSupplierType() + jobRatio.getApplType() + jobRatio.getCategoryType();
-		
+		BigInteger docId = BigInteger.valueOf(managedBean.getSavedJobTypeRatio().getPoJobTypeRatioId());
+
+		String categoryType = jobRatio.getCategoryType() == null ? NULL_X : jobRatio.getCategoryType();
+		String doctype = jobRatio.getSupplierType() + COMMA_STRING + jobRatio.getApplType() + COMMA_STRING
+				+ categoryType;  /*** ex: K,N,N     if category  null ex: K,N,X  */
+
+		System.out.println("  -----TEST---- doctype : " + doctype);
 		if (!managedBean.isBrandNew()) {
 			PmPoJobTypeRatio oldPoJobRatio = managedBean.getOriPoJobTypeRatio();
 
