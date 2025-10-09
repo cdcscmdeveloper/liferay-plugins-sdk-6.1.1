@@ -122,6 +122,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;	// Bug #39065@Syazani 08/10/2025
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.CustomUtils;	// Bug #36702@Syazani 28/11/2024
@@ -2229,6 +2230,9 @@ public class QTDocumentsBackingBean extends
 					if (question.getClReviewRemark() == null) {
 						question.setClReviewRemark("");
 					}
+					
+					trimSpecZoneDtlZoneName(question); // Bug #39065@Syazani 08/10/2025
+					
 					if (parentQuestion != null) {
 						int specCount = parentQuestion.getSpecCount();
 						if (specCount == 0) {
@@ -3316,4 +3320,20 @@ public class QTDocumentsBackingBean extends
 		return new ArrayList<>(map.values());
 	}
 	// Bug #38731@Syazani 20/08/2025 -- End
+	
+	// Bug #39065@Syazani 08/10/2025 -- Start
+	private void trimSpecZoneDtlZoneName(TplSpecQuestion question) {
+		if (!CollectionUtils.isEmpty(question.getTplSpecZoneQties())) {
+			for (TplSpecZoneQty tplSpecZoneQty : question.getTplSpecZoneQties()) {
+				TplSpecZoneDtl tplSpecZoneDtl = tplSpecZoneQty.getTplSpecZoneDtl();
+				String zoneName = VmUtil.getInstance().splitText(tplSpecZoneDtl.getZoneName(), 17);
+				zoneName = zoneName.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+				zoneName = zoneName.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+				zoneName = zoneName.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+				zoneName = zoneName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+				tplSpecZoneDtl.setZoneName(zoneName);
+			}
+		}
+	}
+	// Bug #39065@Syazani 08/10/2025 -- End
 }
