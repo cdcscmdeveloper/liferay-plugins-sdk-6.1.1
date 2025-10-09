@@ -16011,76 +16011,139 @@ public class SmApplicationUtil {
 	//36504 - END
 
 //	#37925 START
-	public List<PmStatusDesc> retrieveRegistrationStatusListBySupplierTypeApplType(String suppType,String applType) {
-		List<PmStatusDesc> descList = new ArrayList<PmStatusDesc>();
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		if (!StringUtils.isBlank(applType)
-				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-			descList = SmServiceLookup.getStatusSO()
-					.retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
-		} else {
-			List<String> consultantRegStatus = Arrays
-					.asList(new String[] {
-							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
-									+ "",
-							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN
-									+ "" });
-			
-			List<String> contractorRegStatus = Arrays
-					.asList(new String[] {
-							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
-									+ "",
-							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME
-									+ "",
-							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA
-									+ "" });
-			descList = SmServiceLookup.getStatusSO()
-					.retrieveRegStatusList(reqDTO).getStatusDescList();
-			if (!EntityHelper.isCollectionEmpty(descList)
-					&& !StringUtils.isBlank(suppType) && suppType.equals("J")) {
-				List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
-				for (PmStatusDesc statDesc : descList) {
-					if (statDesc.getPmStatus() != null
-							&& statDesc.getPmStatus().getStatusId() != null
-							&& (consultantRegStatus.contains(statDesc
-									.getPmStatus().getStatusId().toString()))) {
-						newList.add(statDesc);
-					}
-				}
-				descList = newList;
-			} else if (!EntityHelper.isCollectionEmpty(descList)
-					&& !StringUtils.isBlank(suppType) && suppType.equals("K")) {
-				List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
-				for (PmStatusDesc statDesc : descList) {
-					if (statDesc.getPmStatus() != null
-							&& statDesc.getPmStatus().getStatusId() != null
-							&& (contractorRegStatus.contains(statDesc
-									.getPmStatus().getStatusId().toString()))) {
-						if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_MOF)){
-							if(statDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED){
-								newList.add(statDesc);
-								continue;
-							}
-						} else if(applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_UPDATE)
-								|| applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY)
-								|| applType.equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_RENEWAL)){
-							if(statDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
-									|| statDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA
-									|| statDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME){
-								newList.add(statDesc);
-								continue;
-							}
-						} else {
-							newList.add(statDesc);
-						}
-					}
-				}
-				descList = newList;
-			}
-		}
-		return descList;
+	/**
+	 * Retrieves the registration status list based on supplier type and application type.
+	 *
+	 * @param suppType Supplier type (e.g., contractor, consultant)
+	 * @param applType Application type (e.g., new, update, renewal)
+	 * @return List of PmStatusDesc objects matching the criteria
+	 */
+	public List<PmStatusDesc> retrieveRegistrationStatusListBySupplierTypeApplType(String suppType, String applType) {
+	    StatusReqDTO reqDTO = new StatusReqDTO();
+	    reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+
+	    if (!StringUtils.isBlank(applType) && ParameterConst.NEW_SM_APPLN_FOR_BUMI.equals(applType)) {
+	        return SmServiceLookup.getStatusSO().retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
+	    }
+
+	    List<PmStatusDesc> descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
+	    if (EntityHelper.isCollectionEmpty(descList) || StringUtils.isBlank(suppType)) {
+	        return descList;
+	    }
+
+	    List<String> validStatusIds = getValidStatusIds(suppType, applType);
+	    return filterStatusDescList(descList, validStatusIds);
 	}
+
+	/**
+	 * Filters the status description list based on valid status IDs.
+	 *
+	 * @param descList       Original list of status descriptions
+	 * @param validStatusIds List of valid status ID strings
+	 * @return Filtered list of PmStatusDesc
+	 */
+	private List<PmStatusDesc> filterStatusDescList(List<PmStatusDesc> descList, List<String> validStatusIds) {
+	    List<PmStatusDesc> filteredList = new ArrayList<>();
+	    for (PmStatusDesc statDesc : descList) {
+	        if (statDesc != null && statDesc.getPmStatus() != null && statDesc.getPmStatus().getStatusId() != null) {
+	            String statusIdStr = statDesc.getPmStatus().getStatusId().toString();
+	            if (validStatusIds.contains(statusIdStr)) {
+	                filteredList.add(statDesc);
+	            }
+	        }
+	    }
+	    return filteredList;
+	}
+
+	/**
+	 * Determines valid status IDs based on supplier and application type.
+	 *
+	 * @param suppType Supplier type
+	 * @param applType Application type
+	 * @return List of valid status ID strings
+	 */
+	private List<String> getValidStatusIds(String suppType, String applType) {
+	    if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType)) {
+	        return getConsultantStatusIds();
+	    }
+
+	    if (!SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType)) {
+	        return new ArrayList<>();
+	    }
+
+	    if (SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(applType)) {
+	        return getContractorStatusIdsForMOF();
+	    }
+
+	    if (isUpdateCategoryOrRenewal(applType)) {
+	        return getContractorStatusIdsForUpdateCategoryRenewal();
+	    }
+
+	    return getDefaultContractorStatusIds();
+	}
+
+	/**
+	 * Checks if the application type is update, category, or renewal.
+	 *
+	 * @param applType Application type
+	 * @return true if it matches update, category, or renewal
+	 */
+	private boolean isUpdateCategoryOrRenewal(String applType) {
+	    return SupplierManagementConst.APPL_TYPE_UPDATE.equalsIgnoreCase(applType)
+	        || SupplierManagementConst.APPL_TYPE_CATEGORY.equalsIgnoreCase(applType)
+	        || SupplierManagementConst.APPL_TYPE_RENEWAL.equalsIgnoreCase(applType);
+	}
+
+	/**
+	 * Returns valid status IDs for consultant supplier type.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getConsultantStatusIds() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN)
+	    );
+	}
+
+	/**
+	 * Returns valid status IDs for contractor with MOF application type.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getContractorStatusIdsForMOF() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN)
+	    );
+	}
+
+	/**
+	 * Returns valid status IDs for contractor with update, category, or renewal application type.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getContractorStatusIdsForUpdateCategoryRenewal() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME)
+	    );
+	}
+
+	/**
+	 * Returns default valid status IDs for contractor.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getDefaultContractorStatusIds() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME)
+	    );
+	}
+
 //	#37925 END
 }
 
