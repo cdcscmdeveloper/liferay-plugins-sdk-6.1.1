@@ -35,7 +35,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<!--#35502 Fix as-is bug: #38652 - Start -->
 						<p:inputTextarea cols="40" maxlength="1000"
 							value="#{remarkVar.remark}"
-							disabled="#{!pPlanBackingBean.managedBean.modeEditable or pPlanBackingBean.managedBean.justificationUsingDisable}"
+							disabled="#{!pPlanBackingBean.managedBean.modeEditable or pPlanBackingBean.managedBean.dimmedJustification}"
 							onkeyup="limitTextArea(this,1000);"
 							onkeydown="limitTextArea(this,1000);">
 						</p:inputTextarea> 
