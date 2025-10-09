@@ -53,6 +53,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private PmOrgProfile orgProfileOfLoginUser;
 	private boolean cloneBtnRendered;
 	private SelectItem[] uomDropDownList;
+	private boolean secretaryValidate;//#21695 use in #28784
 	public TemplateSpecManagedBean() {
 	}
 
@@ -294,5 +295,16 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 		this.uomDropDownList = uomDropDownList;
 	}
 	
+	//#28784 - Start
+	public boolean isSecretaryValidate() {
+		return secretaryValidate;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setSecretaryValidate(boolean secretaryValidate) {
+		this.secretaryValidate = secretaryValidate;
+	}
+	//#28784 - End
 	
 }

@@ -62,12 +62,18 @@
 				<ui:remove> #11104 - start </ui:remove>
 				<h:outputText value="#{tech.qtScoreWeightage.score}"
 					style="text-align:right"
-						rendered="#{tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSystemDefined or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeWebForm or (tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and specificationBackingBean.managedBean.sampleShowHide)}" /><!--#11104Wip -->
+						rendered="#{(tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo and specificationBackingBean.managedBean.newVersion)
+						or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSystemDefined or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeWebForm
+						or (tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and specificationBackingBean.managedBean.sampleShowHide)}" /><!--#11104Wip, 28784 -->
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					id="techScoreWeight" required="true" maxlength="14"
 					label="#{lbl['lbl.sc.score']}" style="text-align:right"
-					rendered="#{((tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeNoAction or (tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and !specificationBackingBean.managedBean.sampleShowHide)) and tech.scoringReq)}"><!--#11104Wip -->
+					rendered="#{((tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload
+						or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeNoAction
+						or (tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo and !specificationBackingBean.managedBean.newVersion)
+						or (tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and !specificationBackingBean.managedBean.sampleShowHide))
+						and tech.scoringReq)}"><!--#11104Wip, 28784 -->
 					<ac:validateNumber integerOnly="
 					true" maxIntegerDigits="14">
 					</ac:validateNumber>
@@ -108,8 +114,8 @@
 		<h:panelGroup id="addpoints">
 			<table>
 				<tr>
-					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
+					<td style="width: 260px;"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.total.points']} " /></td><!-- 28784 -->
 
 					<td><p:inputText readonly="true" disabled="true"
 							style="text-align:right"
@@ -148,9 +154,9 @@
 			<ui:fragment
 				rendered="#{specificationBackingBean.managedBean.qt.demoRequired eq 'true'}">
 				<tr>
-					<td style="width: 200px;"><p:outputLabel
+					<td style="width: 260px;"><p:outputLabel
 							value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+							value="*" styleClass="mandatory" /></td><!-- 28784 -->
 					<td><p:inputText style="text-align:right" maxlength="3"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.demoScoreSetting.passingScore}">
@@ -164,9 +170,9 @@
 
 
 			<tr>
-				<td style="width: 200px;"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.technical']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+				<td style="width: 260px;"><p:outputLabel
+						value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td><!-- 28784 -->
 				<td><p:inputText style="text-align:right" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
