@@ -272,6 +272,22 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().getDeliveryAddress()
 				.setPmAddress(PmCommonUtil.getNewPmAddress());
 		getManagedBean().setNotFirstRun(true);
+
+		/************ AUDIT 35509 *************/
+		this.getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
+		this.getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
+		this.getManagedBean().setOldReceivingAddressList(new ArrayList<PmAddressType>());
+		this.getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
+		this.getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
+		this.getManagedBean().setAuditContactPerson(new PmContact());
+		this.getManagedBean().setAuditBillingAddress(new PmAddress());
+		this.getManagedBean().setAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		this.getManagedBean().setNewAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		this.getManagedBean().setAuditSmPersonnels(new ArrayList<SmPersonnel>());
+		this.getManagedBean().setNewAuditSmPersonnels(new ArrayList<SmPersonnel>());
+		this.getManagedBean().setAuditProfileGroup(new ArrayList<PmProfileGroup>());
+		this.getManagedBean().setNewAuditProfileGroup(new ArrayList<PmProfileGroup>());
+		/************ AUDIT 35509 *************/
 		if (id != null && id > 0) {
 			PmOrgProfile orgProfile = PmCommonUtil
 					.retrieveOrgProfileDtlById(id);
@@ -1474,13 +1490,8 @@ public class OrganisationBackingBean extends
 					if(this.getManagedBean().getNewReceivingAddressList().size() > 0){
 						for(PmAddressType addressType : this.getManagedBean().getAddressTypesList()){
 							for(PmAddressType newAddressType : this.getManagedBean().getNewReceivingAddressList()){
-								String address = addressType.getPmAddress().getAddress1() + 
-										(addressType.getPmAddress().getAddress2().isEmpty() ? StringUtils.EMPTY : addressType.getPmAddress().getAddress2()) + 
-										(addressType.getPmAddress().getAddress3().isEmpty() ? StringUtils.EMPTY : addressType.getPmAddress().getAddress3());
-								String addressNew = newAddressType.getPmAddress().getAddress1() + 
-										(newAddressType.getPmAddress().getAddress2().isEmpty() ? StringUtils.EMPTY : newAddressType.getPmAddress().getAddress2()) + 
-										(newAddressType.getPmAddress().getAddress3().isEmpty() ? StringUtils.EMPTY : newAddressType.getPmAddress().getAddress3());
-								if(address.equals(addressNew)){
+								if(newAddressType.getAddressTypeId() == null && 
+										addressType.getPmAddress().getAddressName().equals(newAddressType.getPmAddress().getAddressName())){
 									newAddressType.setAddressTypeId(addressType.getAddressTypeId());
 								}
 							}
@@ -1490,13 +1501,8 @@ public class OrganisationBackingBean extends
 					if(this.getManagedBean().getEditedReceivingAddressList().size() > 0){
 						for(PmAddressType addressType : this.getManagedBean().getAddressTypesList()){
 							for(PmAddressType editedAddressType : this.getManagedBean().getEditedReceivingAddressList()){
-								String address = addressType.getPmAddress().getAddress1() + 
-										(addressType.getPmAddress().getAddress2().isEmpty() ? StringUtils.EMPTY : addressType.getPmAddress().getAddress2()) + 
-										(addressType.getPmAddress().getAddress3().isEmpty() ? StringUtils.EMPTY : addressType.getPmAddress().getAddress3());
-								String addressEdited = editedAddressType.getPmAddress().getAddress1() + 
-										(editedAddressType.getPmAddress().getAddress2().isEmpty() ? StringUtils.EMPTY : editedAddressType.getPmAddress().getAddress2()) + 
-										(editedAddressType.getPmAddress().getAddress3().isEmpty() ? StringUtils.EMPTY : editedAddressType.getPmAddress().getAddress3());
-								if(address.equals(addressEdited)){
+								if(editedAddressType.getAddressTypeId() == null && 
+										addressType.getPmAddress().getAddressName().equals(editedAddressType.getPmAddress().getAddressName())){
 									editedAddressType.setAddressTypeId(addressType.getAddressTypeId());
 								}
 							}
@@ -1863,10 +1869,6 @@ public class OrganisationBackingBean extends
 		
 		manualPmAddressType.setAddressTypeId(pmAddressType.getAddressTypeId());
 		manualPmAddress.setAddressName(pmAddressType.getPmAddress().getAddressName());
-		manualPmAddress.setAddress1(pmAddressType.getPmAddress().getAddress1().isEmpty() ? StringUtils.EMPTY : pmAddressType.getPmAddress().getAddress1());
-		manualPmAddress.setAddress2(pmAddressType.getPmAddress().getAddress2().isEmpty() ? StringUtils.EMPTY : pmAddressType.getPmAddress().getAddress2());
-		manualPmAddress.setAddress3(pmAddressType.getPmAddress().getAddress3().isEmpty() ? StringUtils.EMPTY : pmAddressType.getPmAddress().getAddress3());
-		manualPmAddress.setRecordStatusFlg(pmAddressType.getRecordStatusFlg());
 		manualPmAddressType.setPmAddress(manualPmAddress);
 		
 		return manualPmAddressType;
