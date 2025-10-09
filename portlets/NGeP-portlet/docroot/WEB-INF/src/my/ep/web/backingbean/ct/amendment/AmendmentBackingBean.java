@@ -9840,4 +9840,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//#24333 - End
 	
+	//#24336 - Start
+	/**
+	 * 
+	 * @return
+	 */
+	public String selectedContractValue(){
+		
+		return getManagedBean().getSelectedCtValueOption().isEmpty()? "addition":getManagedBean().getSelectedCtValueOption() ; 
+	}
+	
+	//#24336 - End
+	
 	}

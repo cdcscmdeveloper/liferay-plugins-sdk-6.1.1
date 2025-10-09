@@ -7,11 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="contractValue" header="#{lbl['lbl.ct.menu.contract.value']}" toggleable="true" toggleSpeed="500">
 	
-	<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth190">
+	<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170">
 	<p:outputLabel value="#{lbl['lbl.ct.overall.contract.amount']}" />
 	<h:panelGrid columns="4" >
 	
-		<p:inputText id="overallAmount" styleClass="ppRightBtn" style="width:80px;"  
+		<p:inputText id="overallAmount" styleClass="ppRightBtn" style="width:90px;" disabled="true"  
 		   value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}" 
 		   disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
 			 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -26,7 +26,7 @@
 	<p:outputLabel value="#{lbl['lbl.ct.type.change.contract.value']}" />
 	<h:panelGrid columns="2" >
 	
-		<p:selectOneRadio id="typeContractValue" >  
+		<p:selectOneRadio id="typeContractValue" value="#{amendmentBackingBean.selectedContractValue()}"  layout="lineDirection">  <!-- later change to entitiy field -->
 			<f:selectItem itemLabel="Reduction of Contract Amount" itemValue="reduction" />
        		<f:selectItem itemLabel="Addition of Contract Amount" itemValue="addition" />
         </p:selectOneRadio>
@@ -161,7 +161,7 @@
 	</h:panelGrid>
 	
 	<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt.eff.date']}" />
-	<p:inputText id="newCtAmtEffDate" styleClass="ppRightBtn" style="width:80px;"  >
+	<p:inputText id="newCtAmtEffDate" styleClass="ppRightBtn" style="width:90px;"  >
 	</p:inputText>
 	
 	</h:panelGrid>

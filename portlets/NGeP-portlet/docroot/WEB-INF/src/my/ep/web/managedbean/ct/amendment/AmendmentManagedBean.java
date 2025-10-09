@@ -187,6 +187,10 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 //	private boolean isFromViewPage = false; // Fix - #34110
 	
+	//#24336 - Start
+	private String selectedCtValueOption;
+	//#24336 - END
+	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
@@ -1687,4 +1691,15 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.backToNtf = backToNtf;
 	}
 	//#25956 - End
+	
+	//#24336 - Start
+	public String getSelectedCtValueOption() {
+		return selectedCtValueOption;
+	}
+	public void setSelectedCtValueOption(String selectedCtValueOption) {
+		this.selectedCtValueOption = selectedCtValueOption;
+	}
+	
+	//#24336 - End
+	
 }
