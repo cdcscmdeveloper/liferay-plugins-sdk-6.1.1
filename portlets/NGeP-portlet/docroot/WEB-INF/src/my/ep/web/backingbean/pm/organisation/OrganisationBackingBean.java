@@ -272,6 +272,22 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().getDeliveryAddress()
 				.setPmAddress(PmCommonUtil.getNewPmAddress());
 		getManagedBean().setNotFirstRun(true);
+
+		/************ AUDIT 35509 *************/
+		this.getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
+		this.getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
+		this.getManagedBean().setOldReceivingAddressList(new ArrayList<PmAddressType>());
+		this.getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
+		this.getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
+		this.getManagedBean().setAuditContactPerson(new PmContact());
+		this.getManagedBean().setAuditBillingAddress(new PmAddress());
+		this.getManagedBean().setAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		this.getManagedBean().setNewAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		this.getManagedBean().setAuditSmPersonnels(new ArrayList<SmPersonnel>());
+		this.getManagedBean().setNewAuditSmPersonnels(new ArrayList<SmPersonnel>());
+		this.getManagedBean().setAuditProfileGroup(new ArrayList<PmProfileGroup>());
+		this.getManagedBean().setNewAuditProfileGroup(new ArrayList<PmProfileGroup>());
+		/************ AUDIT 35509 *************/
 		if (id != null && id > 0) {
 			PmOrgProfile orgProfile = PmCommonUtil
 					.retrieveOrgProfileDtlById(id);
@@ -1287,8 +1303,6 @@ public class OrganisationBackingBean extends
 			
 			getManagedBean().setAuditContactPerson(new PmContact());
 			getManagedBean().setAuditBillingAddress(new PmAddress());
-			getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
-			getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
 			getManagedBean().setAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
 			getManagedBean().setNewAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
 			getManagedBean().setAuditSmPersonnels(new ArrayList<SmPersonnel>());
@@ -1393,7 +1407,7 @@ public class OrganisationBackingBean extends
 				getManagedBean().setAuditOldPMOrgProfile(offResDTO.getPmOrgProfile() == null ? 
 						new PmOrgProfile() : offResDTO.getPmOrgProfile());
 				getManagedBean().setAuditBillingAddress(offAddressResDTO.getPmAddress() == null ? 
-						this.getManagedBean().getOfficeAddress() : offAddressResDTO.getPmAddress());
+						new PmAddress() : offAddressResDTO.getPmAddress());
 				getManagedBean().setOldReceivingAddressList(offRcvAddressResDTO.getAddressTypeList() == null ?
 						getManagedBean().getAddressTypesList() : offRcvAddressResDTO.getAddressTypeList());
 				getManagedBean().setAuditSmSupplierBanks(supplierResDTO.getSmSupplierBankList() == null ?
@@ -1438,8 +1452,8 @@ public class OrganisationBackingBean extends
 								message));
 				/************ AUDIT 35509 - shaqimi start*************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)) {
-					getManagedBean().setNewProfileId(resDTO.getPmOrgProfile().getOrgProfileId());getManagedBean().setNewPmOrgProfile(resDTO.getPmOrgProfile());
-
+					getManagedBean().setNewProfileId(resDTO.getPmOrgProfile().getOrgProfileId());
+					getManagedBean().setNewPmOrgProfile(resDTO.getPmOrgProfile());
 					
 					if(orgProfile.isBrandNew()){
 						for (PmAddressType pmAddressType : resDTO.getPmOrgProfile().getPmAddressTypes()) {
@@ -1469,6 +1483,28 @@ public class OrganisationBackingBean extends
 						for(SmPersonnel newPersonnel : this.getManagedBean().getNewAuditSmPersonnels()){
 							if(smPersonnel.getPmUser().getLoginId().equals(newPersonnel.getPmUser().getLoginId())){
 								newPersonnel.setPersonnelId(smPersonnel.getPersonnelId());
+							}
+						}
+					}
+					
+					if(this.getManagedBean().getNewReceivingAddressList().size() > 0){
+						for(PmAddressType addressType : this.getManagedBean().getAddressTypesList()){
+							for(PmAddressType newAddressType : this.getManagedBean().getNewReceivingAddressList()){
+								if(newAddressType.getAddressTypeId() == null && 
+										addressType.getPmAddress().getAddressName().equals(newAddressType.getPmAddress().getAddressName())){
+									newAddressType.setAddressTypeId(addressType.getAddressTypeId());
+								}
+							}
+						}
+					}
+					
+					if(this.getManagedBean().getEditedReceivingAddressList().size() > 0){
+						for(PmAddressType addressType : this.getManagedBean().getAddressTypesList()){
+							for(PmAddressType editedAddressType : this.getManagedBean().getEditedReceivingAddressList()){
+								if(editedAddressType.getAddressTypeId() == null && 
+										addressType.getPmAddress().getAddressName().equals(editedAddressType.getPmAddress().getAddressName())){
+									editedAddressType.setAddressTypeId(addressType.getAddressTypeId());
+								}
 							}
 						}
 					}
