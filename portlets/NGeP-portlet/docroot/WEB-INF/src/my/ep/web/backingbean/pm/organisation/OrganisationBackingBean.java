@@ -1287,8 +1287,6 @@ public class OrganisationBackingBean extends
 			
 			getManagedBean().setAuditContactPerson(new PmContact());
 			getManagedBean().setAuditBillingAddress(new PmAddress());
-			getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
-			getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
 			getManagedBean().setAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
 			getManagedBean().setNewAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
 			getManagedBean().setAuditSmPersonnels(new ArrayList<SmPersonnel>());
@@ -1469,6 +1467,38 @@ public class OrganisationBackingBean extends
 						for(SmPersonnel newPersonnel : this.getManagedBean().getNewAuditSmPersonnels()){
 							if(smPersonnel.getPmUser().getLoginId().equals(newPersonnel.getPmUser().getLoginId())){
 								newPersonnel.setPersonnelId(smPersonnel.getPersonnelId());
+							}
+						}
+					}
+					
+					if(this.getManagedBean().getNewReceivingAddressList().size() > 0){
+						for(PmAddressType addressType : this.getManagedBean().getAddressTypesList()){
+							for(PmAddressType newAddressType : this.getManagedBean().getNewReceivingAddressList()){
+								String address = addressType.getPmAddress().getAddress1() + 
+										(addressType.getPmAddress().getAddress2().isEmpty() ? StringUtils.EMPTY : addressType.getPmAddress().getAddress2()) + 
+										(addressType.getPmAddress().getAddress3().isEmpty() ? StringUtils.EMPTY : addressType.getPmAddress().getAddress3());
+								String addressNew = newAddressType.getPmAddress().getAddress1() + 
+										(newAddressType.getPmAddress().getAddress2().isEmpty() ? StringUtils.EMPTY : newAddressType.getPmAddress().getAddress2()) + 
+										(newAddressType.getPmAddress().getAddress3().isEmpty() ? StringUtils.EMPTY : newAddressType.getPmAddress().getAddress3());
+								if(address.equals(addressNew)){
+									newAddressType.setAddressTypeId(addressType.getAddressTypeId());
+								}
+							}
+						}
+					}
+					
+					if(this.getManagedBean().getEditedReceivingAddressList().size() > 0){
+						for(PmAddressType addressType : this.getManagedBean().getAddressTypesList()){
+							for(PmAddressType editedAddressType : this.getManagedBean().getEditedReceivingAddressList()){
+								String address = addressType.getPmAddress().getAddress1() + 
+										(addressType.getPmAddress().getAddress2().isEmpty() ? StringUtils.EMPTY : addressType.getPmAddress().getAddress2()) + 
+										(addressType.getPmAddress().getAddress3().isEmpty() ? StringUtils.EMPTY : addressType.getPmAddress().getAddress3());
+								String addressEdited = editedAddressType.getPmAddress().getAddress1() + 
+										(editedAddressType.getPmAddress().getAddress2().isEmpty() ? StringUtils.EMPTY : editedAddressType.getPmAddress().getAddress2()) + 
+										(editedAddressType.getPmAddress().getAddress3().isEmpty() ? StringUtils.EMPTY : editedAddressType.getPmAddress().getAddress3());
+								if(address.equals(addressEdited)){
+									editedAddressType.setAddressTypeId(addressType.getAddressTypeId());
+								}
 							}
 						}
 					}
@@ -1833,6 +1863,10 @@ public class OrganisationBackingBean extends
 		
 		manualPmAddressType.setAddressTypeId(pmAddressType.getAddressTypeId());
 		manualPmAddress.setAddressName(pmAddressType.getPmAddress().getAddressName());
+		manualPmAddress.setAddress1(pmAddressType.getPmAddress().getAddress1().isEmpty() ? StringUtils.EMPTY : pmAddressType.getPmAddress().getAddress1());
+		manualPmAddress.setAddress2(pmAddressType.getPmAddress().getAddress2().isEmpty() ? StringUtils.EMPTY : pmAddressType.getPmAddress().getAddress2());
+		manualPmAddress.setAddress3(pmAddressType.getPmAddress().getAddress3().isEmpty() ? StringUtils.EMPTY : pmAddressType.getPmAddress().getAddress3());
+		manualPmAddress.setRecordStatusFlg(pmAddressType.getRecordStatusFlg());
 		manualPmAddressType.setPmAddress(manualPmAddress);
 		
 		return manualPmAddressType;
