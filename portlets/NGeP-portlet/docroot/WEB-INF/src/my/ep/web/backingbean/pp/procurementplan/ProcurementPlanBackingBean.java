@@ -4535,8 +4535,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedJustificationDesc("");
 		boolean newRemark = false;
 		this.getManagedBean().setDimmedJustification(false); //#35502, Fix as-is bug: #38652
-		
-		
+
 		if(epItem.getJustifications()==null){
 			epItem.setJustifications(new ArrayList<PpRemark>());
 		}
