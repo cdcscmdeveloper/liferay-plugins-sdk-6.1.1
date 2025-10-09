@@ -4534,7 +4534,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedJustifications(null);
 		this.getManagedBean().setSelectedJustificationDesc("");
 		boolean newRemark = false;
-		this.getManagedBean().setJustificationUsingDisable(false); //#35502, Fix as-is bug: #38652
+		this.getManagedBean().setDimmedJustification(false); //#35502, Fix as-is bug: #38652
 		
 		
 		if(epItem.getJustifications()==null){
@@ -4571,7 +4571,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		//#35502, Fix as-is bug: #38652 Start
 		if(epItem.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
-			this.getManagedBean().setJustificationUsingDisable(true);
+			this.getManagedBean().setDimmedJustification(true);
 		}
 		//#35502, Fix as-is bug: #38652 End
 	
