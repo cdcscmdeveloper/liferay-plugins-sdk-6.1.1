@@ -121,6 +121,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;	// Bug #39065@Syazani 08/10/2025
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.CustomUtils;
@@ -2136,6 +2137,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 				TplSpecMaster master = null;
 				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+				PmParameter itemTypeCode = master.getItemTypeCode();	 //Bug #39065@Syazani 08/10/2025
 
 				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
 					TplSpecQuestion parentQuestion = question.getParentSpecQuestion();
@@ -2199,6 +2201,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					if (question.getClReviewRemark() == null) {
 						question.setClReviewRemark("");
 					}
+					
+					trimSpecZoneDtlZoneName(question, itemTypeCode); // Bug #39065@Syazani 08/10/2025
+					
 					if (parentQuestion != null) {
 						int specCount = parentQuestion.getSpecCount();
 						if (specCount == 0) {
@@ -3264,5 +3269,24 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		return new ArrayList<>(map.values());
 	}
 	// Bug #38731@Syazani 20/08/2025 -- End
+	
+	// Bug #39065@Syazani 08/10/2025 -- Start
+	private void trimSpecZoneDtlZoneName(TplSpecQuestion question, PmParameter itemTypeCode) {
+		String itemTypeCodeStr = null != itemTypeCode ? itemTypeCode.getParameterCode() : "";
+		int maxLength = itemTypeCodeStr.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) ? QTConstants.QT_VM_SPLIT_ZONENAME_SERVICE_MAXLENGTH
+				: QTConstants.QT_VM_SPLIT_ZONENAME_PRODUCT_MAXLENGTH;
+		if (!CollectionUtils.isEmpty(question.getTplSpecZoneQties())) {
+			for (TplSpecZoneQty tplSpecZoneQty : question.getTplSpecZoneQties()) {
+				TplSpecZoneDtl tplSpecZoneDtl = tplSpecZoneQty.getTplSpecZoneDtl();
+				String zoneName = VmUtil.getInstance().splitText(tplSpecZoneDtl.getZoneName(), maxLength);
+				zoneName = zoneName.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+				zoneName = zoneName.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+				zoneName = zoneName.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+				zoneName = zoneName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+				tplSpecZoneDtl.setZoneName(zoneName);
+			}
+		}
+	}
+	// Bug #39065@Syazani 08/10/2025 -- End
 
 }
