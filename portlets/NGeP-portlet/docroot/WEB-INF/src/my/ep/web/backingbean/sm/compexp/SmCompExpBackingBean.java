@@ -85,7 +85,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			SmCommonUtil.redirectToPage(smCompExpAlertXhtml, "", null, null);
 		}
 	}
-	
+
 	/**
 	 * Prerender for Sm Company Experience
 	 */
@@ -95,9 +95,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (PortalUtil.getCurrentCompleteURL(request).contains(alertFlag)) {
 			this.getManagedBean().setAlertFlag(true);
 		}
-		
+
 		this.getManagedBean().setSupplier(SmApplicationUtil.getCurrentSupplier());
-		
+
 		if (this.getManagedBean().isAlertFlag()) {
 			redirectToDraft();
 		} else {
@@ -107,11 +107,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	/**
 	 * Redirect to Sm Company Experience main screen
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public void proceedAfterTnC() throws IOException {
 		if (this.getManagedBean().isAlertFlag()) {
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();			
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 			externalContext.redirect("./");
 		} else {
 			this.getManagedBean().setDraftExist(checkSmCompExpDraftExist());
@@ -210,8 +211,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			sourceType = this.getManagedBean().getSelectedMaster().getSourceType().getParameterId();
 			recordStatusFlg = this.getManagedBean().getSelectedMaster().getRecordStatusFlg();
 		}
-		
-		if(null == effDate){
+
+		if (null == effDate) {
 			this.getManagedBean().setTempEffDate(true);
 		}
 
@@ -830,43 +831,55 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private boolean validateList(boolean err, Long sourceType, List<SmCompExpMasterDoc> smCompExpDocList) {
 		boolean error = err;
 		if (this.getManagedBean().isDraftUpdate()) {
-			if (!sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT) && (null == smCompExpDocList || smCompExpDocList.isEmpty())) {
-				error = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-			// Expected Max Size in loop (30) based on NGEP_PDS database
-			for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
-				if (null == cat.getCategoryL3().getCategoryL3Id()) {
-					error = true;
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775229,
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}
-			}
+			error = validateDraftUpdateList(sourceType, smCompExpDocList);
 		}
 		if (this.getManagedBean().isMasterUpdate()) {
-			if (!sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT)
-					&& (null == this.getManagedBean().getSelectedMaster().getCompExpMasterDocs() || this.getManagedBean().getSelectedMaster()
-							.getCompExpMasterDocs().isEmpty())) {
+			error = validateMasterUpdateList(sourceType);
+		}
+		return error;
+	}
+
+	private boolean validateDraftUpdateList(Long sourceType, List<SmCompExpMasterDoc> smCompExpDocList) {
+		boolean error = false;
+		if (!sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT) && (null == smCompExpDocList || smCompExpDocList.isEmpty())) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		// Expected Max Size in loop (30) based on NGEP_PDS database
+		for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
+			if (null == cat.getCategoryL3().getCategoryL3Id()) {
 				error = true;
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775229,
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
-			// Expected Max Size in loop (30) based on NGEP_PDS database
-			for (SmCompExpCatMaster cat : this.getManagedBean().getSelectedMaster().getCompExpMasterCats()) {
-				if (null == cat.getCategoryL3().getCategoryL3Id()) {
-					error = true;
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775229,
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}
+		}
+		return error;
+	}
+
+	private boolean validateMasterUpdateList(Long sourceType) {
+		boolean error = false;
+		if (!sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT)
+				&& (null == this.getManagedBean().getSelectedMaster().getCompExpMasterDocs() || this.getManagedBean().getSelectedMaster()
+						.getCompExpMasterDocs().isEmpty())) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		// Expected Max Size in loop (30) based on NGEP_PDS database
+		for (SmCompExpCatMaster cat : this.getManagedBean().getSelectedMaster().getCompExpMasterCats()) {
+			if (null == cat.getCategoryL3().getCategoryL3Id()) {
+				error = true;
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775229,
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		}
 		return error;
@@ -1012,7 +1025,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
 		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
 	}
-	
+
 	/**
 	 * Initialize Master view popup dialog
 	 * 
@@ -1026,7 +1039,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
 		SelectItem clientTypeFederalOrNonItem = new SelectItem();
-		
+
 		if (selectedMaster.getClientType().equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
 			clientTypeFederalOrNonItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
 			clientTypeFederalOrNonItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
@@ -1034,7 +1047,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			clientTypeFederalOrNonItem.setLabel(SmCommonUtil.getMessage(lblClientTypeNonFed, null));
 			clientTypeFederalOrNonItem.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
 		}
-		
+
 		this.getManagedBean().getClientTypeItems().add(clientTypeFederalOrNonItem);
 	}
 
@@ -1087,7 +1100,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Validate field before save update
 	 * 
 	 * @param update
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void onSaveMaster(boolean update) throws IOException {
 		boolean error = false;
@@ -1135,7 +1148,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		history.setContractStatus(master.getContractStatus());
 		history.setSourceType(SmApplicationUtil.retrievePmParameterById(master.getSourceType().getParameterId()));
 
-		List<SmCompExpMasterHistoryDoc> newDocList = new ArrayList<SmCompExpMasterHistoryDoc>();
+		List<SmCompExpMasterHistoryDoc> newDocList = new ArrayList<>();
 		for (SmCompExpMasterDoc doc : this.getManagedBean().getSmCompExpDocList()) {
 			SmCompExpMasterHistoryDoc newDoc = new SmCompExpMasterHistoryDoc();
 			newDoc.setFileName(doc.getFileName());
@@ -1221,7 +1234,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	/**
 	 * Delete selected Master
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public void delSmCompExpMaster() throws IOException {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
@@ -1235,6 +1249,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	/**
 	 * Check if history exist
+	 * 
+	 * @param masterId
+	 * @return boolean
 	 */
 	public boolean checkSmCompExpHistoryExist(Long masterId) {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
@@ -1245,7 +1262,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	/**
 	 * Initialize history view popup dialog
 	 * 
-	 * @param selectedMaster
+	 * @param masterId
 	 */
 	public void initHistPopup(Long masterId) {
 		this.getManagedBean().setHistMasterId(masterId);
@@ -1258,7 +1275,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void redirectToAddNew() {
 		this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.add.new", null));
 		this.getManagedBean().setNewMaster(new SmCompExpMaster());
-		
+
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
 		SelectItem clientTypeFederalItem = new SelectItem();
 		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeFed, null));
@@ -1268,7 +1285,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		clientTypeNonFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeNonFed, null));
 		clientTypeNonFederalItem.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
 		this.getManagedBean().getClientTypeItems().add(clientTypeNonFederalItem);
-		
+
 		SmCommonUtil.redirectToPage(smCompExpNewXhtml, "", null, null);
 	}
 }
