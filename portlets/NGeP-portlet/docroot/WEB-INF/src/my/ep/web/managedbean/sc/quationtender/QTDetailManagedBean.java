@@ -12439,6 +12439,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// #29732
 	
+	// #38679
+	public boolean isZoneQtyHasZeroVal() {
+		return zoneQtyHasZeroVal;
+	}
+
+	public void setZoneQtyHasZeroVal(boolean zoneQtyHasZeroVal) {
+		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
+	}
+	// #38679
+	
 	//#35320 - Start
 	public boolean isAfterSF() {
 		return afterSF;
