@@ -4812,6 +4812,7 @@ public class SimpleQuoteBackingBean extends
 		StringBuilder stateCriteria = new StringBuilder();
 		StringBuilder divCriteria = new StringBuilder();
 		StringBuilder distCriteria = new StringBuilder();
+		StringBuilder recordStatus = new StringBuilder();//#26284 - Start
 
 		// business nature criteria
 		if (getManagedBean().isByBusinessNature()) {
@@ -4947,7 +4948,15 @@ public class SimpleQuoteBackingBean extends
 		}
 		// #28536 - end
 
-		criteria.append("recordStatus^1");
+		// #26284 - Start
+		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_SUSPENDED);
+
+		criteria.append("recordStatus")
+		.append("^").append(recordStatus.toString())
+		.append("^").append(SearchOperator.OPERATOR_IN.value());
+
+		// #26284 - End
 		return criteria.toString();
 	}
 	
