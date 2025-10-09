@@ -3823,10 +3823,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-				
+				//Bug #39043 start
 				if (null != suppAns.getSupplierId()
-						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()   
-						&& null != tplSpecAnswer.getAnswerRemark()){					
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   
+						//&& null != tplSpecAnswer.getAnswerRemark()){ Bug #39043 end				
 					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
 					break;
 				}
