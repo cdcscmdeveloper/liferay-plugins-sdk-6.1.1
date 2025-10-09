@@ -1703,6 +1703,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean firstViewPageCAUsers = false;
 	// #25426 - End
 
+	// #28784 -start-
+	private boolean demoType;
+	private boolean demoAction;
+	private List<ScQtCheckList> demoSpecTemplateList;
+	private List<TplSpecQuestion> demoOriSpecQuestionTemplateList;
+	private boolean demoDisabled;
+	private boolean qtSpecMaintanance;
+	private boolean demoEvalDisabled;
+	private boolean demoSpecialCase;
+	private Long demoSampleChecklistStatusId;
+	// #28784 -end-
+
 	// 25791-start
 	private List<ScQt> qtTrackingDiaryView;
 	private String qtAuditMaintenanceView;
@@ -1716,7 +1728,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
 
 	// 25791-End
-	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -10964,4 +10975,112 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.techPoints = techPoints;
 	}
 	// 37813,35384 -end	
+
+	//#28784 - Start
+	public boolean isDemoType() {
+		return demoType;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoType(boolean demoType) {
+		this.demoType = demoType;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public boolean isDemoAction() {
+		return demoAction;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoAction(boolean demoAction) {
+		this.demoAction = demoAction;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public List<ScQtCheckList> getDemoSpecTemplateList() {
+		return demoSpecTemplateList;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoSpecTemplateList(List<ScQtCheckList> demoSpecTemplateList) {
+		this.demoSpecTemplateList = demoSpecTemplateList;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public List<TplSpecQuestion> getDemoOriSpecQuestionTemplateList() {
+		return demoOriSpecQuestionTemplateList;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoOriSpecQuestionTemplateList(List<TplSpecQuestion> demoOriSpecQuestionTemplateList) {
+		this.demoOriSpecQuestionTemplateList = demoOriSpecQuestionTemplateList;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public boolean isDemoDisabled() {
+		return demoDisabled;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoDisabled(boolean demoDisabled) {
+		this.demoDisabled = demoDisabled;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public boolean isQtSpecMaintanance() {
+		return qtSpecMaintanance;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setQtSpecMaintanance(boolean qtSpecMaintanance) {
+		this.qtSpecMaintanance = qtSpecMaintanance;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public boolean isDemoEvalDisabled() {
+		return demoEvalDisabled;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoEvalDisabled(boolean demoEvalDisabled) {
+		this.demoEvalDisabled = demoEvalDisabled;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public boolean isDemoSpecialCase() {
+		return demoSpecialCase;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoSpecialCase(boolean demoSpecialCase) {
+		this.demoSpecialCase = demoSpecialCase;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public Long getDemoSampleChecklistStatusId() {
+		return demoSampleChecklistStatusId;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoSampleChecklistStatusId(Long demoSampleChecklistStatusId) {
+		this.demoSampleChecklistStatusId = demoSampleChecklistStatusId;
+	}
+	//#28784 - End
 }

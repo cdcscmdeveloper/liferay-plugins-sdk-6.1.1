@@ -32,7 +32,24 @@
 		value="#{qTDetailBB.managedBean.maintanceFlow}" />
 	<!-- 25638 end -->
 
+	<!-- START #28784 -->
+	<ui:param name="isDemoType"  
+		value="#{qTDetailBB.managedBean.demoType ? qTDetailBB.managedBean.demoType : specMaintenanceBB.managedBean.demoType}" />
+	<ui:param name="isDemoDisabled"  
+		value="#{qTDetailBB.managedBean.demoDisabled ? qTDetailBB.managedBean.demoDisabled : specMaintenanceBB.managedBean.demoDisabled}" />
+	<ui:param name="isDemoReqDisabled"  
+		value="#{qTDetailBB.managedBean.qt.demoRequired ? qTDetailBB.managedBean.qt.demoRequired  : specMaintenanceBB.managedBean.qt.demoRequired}" />
+	<ui:param name="isDemoEvalDisabled"  
+		value="#{qTDetailBB.managedBean.demoEvalDisabled ? qTDetailBB.managedBean.demoEvalDisabled : specMaintenanceBB.managedBean.demoEvalDisabled}" />	
+	<ui:param name="isDemoSpecialCase"  
+		value="#{qTDetailBB.managedBean.demoSpecialCase ? qTDetailBB.managedBean.demoSpecialCase : specMaintenanceBB.managedBean.demoSpecialCase}" />
+	<!-- END #28784 -->
 	<ac:lovPopup />
+	<!-- START #28784 -->
+	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	<!-- END #28784 -->
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}" toggleable="true">
 		<!-- Enhancement #25659 -start- -->
@@ -448,14 +465,63 @@
 					</c:choose></td>
 			</tr>
 
+			<!-- START #28784 -->
+			<ui:fragment rendered="#{isDemoType and specificationBackingBean.evalTier1Or2}">
+				<tr>
+					<td colspan="2"></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.demo']}" /></td>
+					<td>
+						<table>
+							<tr>							
+								<td>																					
+								<c:choose>
+										<c:when	test="#{!isReadOnly and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)}">
+											<p:outputPanel id="demoPop">												
+												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
+													<f:selectItems
+														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"
+														listener="#{createQtBB.validateDemoTechList}">
+													</p:ajax>
+													<p:ajax render="confirmDialog" ></p:ajax>
+												</p:selectOneRadio>
+											</p:outputPanel>
+										</c:when>
+										<c:when	test="#{isDemoDisabled and !isReadOnly or isDemoDisabled and isMaintenanceFlow}">
+											<p:outputPanel id="demoPop">
+												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
+													<f:selectItems
+														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"
+														listener="#{createQtBB.validateDemoTechList}">
+													</p:ajax>
+													<p:ajax render="confirmDialog" ></p:ajax>
+												</p:selectOneRadio>
+											</p:outputPanel>
+										</c:when>
+										<c:otherwise>
+											<p:inputText id="demoTxt"
+												value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.demoRequired))}"
+												style="width:195px;" disabled="true" />
+										</c:otherwise>
+									</c:choose></td>
+								<td><ac:iconTooltip
+										value="#{lbl['lbl.sc.qt.demo.tooltip']}" /></td>							
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</ui:fragment>
+			<!-- END #28784 -->
+
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
-							<td><c:choose>
+							<td><c:choose><!-- #28784 Disable zonal for qt maintanance-->
 									<c:when
-										test="#{!zoneCoverageReadonly and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel and !isReadOnly}">
+										test="#{!isMaintenanceFlow and !zoneCoverageReadonly and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel and !isReadOnly}">
 										<p:selectOneRadio value="#{scQt.zonal}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -540,7 +606,8 @@
 				</td>
 				<td><c:choose>
 						<c:when
-							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) and !isReadOnly}">
+							test="#{(!isDemoEvalDisabled and !isMaintenanceFlow and !isDemoSpecialCase) and 
+							(!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) and !isReadOnly)}"><!-- #28784 -->
 							<table>
 								<tr>
 									<td><p:selectOneRadio id="evalType"
@@ -549,12 +616,42 @@
 											required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
+								<!-- #28784 Start -->
 											<p:ajax event="change" process="@this" partialSubmit="true"
-												update="@this"></p:ajax>
+												listener="#{createQtBB.renderDemoRadioButton}"
+												update="@form"></p:ajax>
 										</p:selectOneRadio></td>
 									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
-									<td style="margin-top: -3px"><ac:iconTooltip
-											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+									<td style="margin-top: -3px">
+									<p:graphicImage id="evalMsgP" value="/css/images/design/tooltips.png" />
+										<p:tooltip for="evalMsgP">
+											<p:outputLabel escape="false" value="#{lbl['lbl.sc.evaluation.type.tooltip']}"  />
+										</p:tooltip>
+									</td>
+								</tr>
+							</table>
+						</c:when>
+						<c:when	test="#{isDemoEvalDisabled}">
+							<table>
+								<tr>
+									<td><p:selectOneRadio id="evalType"
+											label=" #{lbl['lbl.sc.evaluation.type']}"
+											value="#{scQt.evaluationType}"
+											required="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+											<f:selectItems
+												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />	
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												listener="#{createQtBB.renderDemoRadioButton}"
+												update="@form"></p:ajax>
+										</p:selectOneRadio></td>
+									<td><p:message id="evalMsg" for="evalType" display="icon" /></td>
+									<td style="margin-top: -3px">
+										<p:graphicImage id="evalMsgT" value="/css/images/design/tooltips.png" />
+										<p:tooltip for="evalMsgT">
+											<p:outputLabel escape="false" value="#{lbl['lbl.sc.evaluation.type.tooltip']}"  />
+										</p:tooltip>
+									</td>
+								<!-- #28784 End -->
 								</tr>
 							</table>
 						</c:when>
@@ -1014,6 +1111,47 @@
 		</div>
 	</p:confirmDialog>
 	<!-- #25729 #174 END -->
+	
+	<!-- #28784 Start -->			
+	<p:confirmDialog id="demoDialogConfirm" widgetVar="demoDialogConfirm"
+ 		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{lbl['lbl.demo.validate.tech.spec']}"
+		resizable="false" closable="false">
+		<div align="right">
+			<p:commandButton id="demoYes" 
+				value="#{lbl['lbl.btn.yes']}" 
+				action="#{createQtBB.yesDeleteExistingDemoTechChecklist}"
+				oncomplete="demoDialogConfirm.hide()"
+				update="@form"
+				process="@this"/>
+			<p:commandButton id="demoNo" 
+				value="#{lbl['lbl.btn.no']}" 	
+				action="#{createQtBB.noDeleteExistingDemoTechChecklist}"			
+				oncomplete="demoDialogConfirm.hide()"
+				process="@this"
+				update="@form"/>
+		</div>
+	</p:confirmDialog> 
+	<p:confirmDialog id="demoEvalDialogConfirm" widgetVar="demoEvalDialogConfirm"
+ 		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{lbl['lbl.demo.validate.eval.tech.spec']}"
+		resizable="false" closable="false">
+		<div align="right">
+			<p:commandButton id="demoEvalYes" 
+				value="#{lbl['lbl.btn.yes']}" 
+				action="#{createQtBB.yesDeleteExistingDemoTechChecklist}"
+				oncomplete="demoEvalDialogConfirm.hide()"
+				update="@form"
+				process="@this"/>
+			<p:commandButton id="demoEvalNo" 
+				value="#{lbl['lbl.btn.no']}" 	
+				action="#{createQtBB.noDeleteExistingDemoTechChecklist}"			
+				oncomplete="demoEvalDialogConfirm.hide()"
+				update="@form"
+				process="@this"/>
+		</div>
+	</p:confirmDialog> 
+	<!-- #28784 End -->
 	
 <!-- 32929 -start- -->
 	<p:dialog id="scQtZoneChangeDlgs" widgetVar="scQtZoneChangeDlgs"

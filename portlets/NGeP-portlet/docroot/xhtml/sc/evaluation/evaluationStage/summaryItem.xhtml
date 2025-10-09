@@ -35,11 +35,25 @@
 	<h:panelGroup id="summaryItemQualified">
 
 		<p:panel toggleable="true">
-			<f:facet name="header">
-				<h:outputText value="#{qualifiedSupplierListHeader}" />
-				<ac:iconTooltip id="summIteQualify"
-					value="#{qualifiedSupplierListTooltip}" />
-			</f:facet>
+			<!-- #28784 Start -->
+			<c:choose>
+				<c:when
+					test="#{evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.demo.fc.summary.qualified']}" />
+						<ac:iconTooltip id="summDemoIteQualify"
+							value="#{qualifiedSupplierListTooltip}" />
+					</f:facet>
+				</c:when>
+				<c:otherwise>
+					<f:facet name="header">
+						<h:outputText value="#{qualifiedSupplierListHeader}" />
+						<ac:iconTooltip id="summIteQualify"
+							value="#{qualifiedSupplierListTooltip}" />
+					</f:facet>
+				</c:otherwise>
+			</c:choose>
+			<!-- #28784 End -->
 
 			<p:dataTable var="summaryqualSup"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -112,11 +126,25 @@
 
 	<h:panelGroup id="summaryItemDisQualified">
 		<p:panel toggleable="true">
-			<f:facet name="header">
-				<h:outputText value="#{disQualifiedSupplierListHeader}" />
-				<ac:iconTooltip id="summIteDisQualify"
-					value="#{disQualifiedSupplierListTooltip}" />
-			</f:facet>
+			<!-- #28784 Start -->
+			<c:choose>
+				<c:when
+					test="#{evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.demo.fc.summary.not.qualified']}" />
+						<ac:iconTooltip id="summDemoIteDisQualify"
+							value="#{disQualifiedSupplierListTooltip}" />
+					</f:facet>
+				</c:when>
+				<c:otherwise>
+					<f:facet name="header">
+						<h:outputText value="#{disQualifiedSupplierListHeader}" />
+						<ac:iconTooltip id="summIteDisQualify"
+							value="#{disQualifiedSupplierListTooltip}" />
+					</f:facet>
+				</c:otherwise>
+			</c:choose>
+			<!-- #28784 End -->
 
 			<p:dataTable var="disQualifiedSupplier"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
