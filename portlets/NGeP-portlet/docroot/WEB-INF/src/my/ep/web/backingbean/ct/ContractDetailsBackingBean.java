@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet; //#30014
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1244,9 +1245,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (ctBB.getManagedBean().getCtAddress() != null) {
 			ctContractVer.getCtContractValue().setSupplierAddress(ctBB.getManagedBean().getCtAddress());
 		}
-
+		//#24333 - Start
 		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() &&
-		        !ctBB.getManagedBean().isDirectPurchase() &&
+				(!ctBB.getManagedBean().isDirectPurchase() ||  ctBB.isPk7FromDp()) &&
 		        !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
 
 		        Date currentDate = new Date();
@@ -1297,6 +1298,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		//#13847 end
 		
+		//#30014 - Start (Set Company Experience Date and Flag to 4 - App Realtime/Data Patching)
+		if (isValidDocTypeForCallSp(ctBB.getManagedBean().getContractVer().getDocType())
+				&& (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) || (ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT.equals(ctBB
+						.getManagedBean().getContractVer().getDocType()) && BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)))) {
+			ctContractVer.getCtContract().setCompExprDate(new Date());
+			ctContractVer.getCtContract().setCompExprFlag(ContractConst.COMP_EXP_APP_RLTM);
+		}
+		//#30014 - End
+		
 		reqDTO.setCtContractVer(ctContractVer);
 		// Start - #28292/#26475
 		reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
@@ -1329,7 +1339,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			log.debug("Record saved successfully");
 			String messageId = MessageConst.INFO_700005;
 			String nextRole = null;
-		 
+					 
 			// Start Fix - #31740
 			if(ctBB.getManagedBean().getSelectedAgencyChanges() != null){
 			    if(ctBB.getManagedBean().getSelectedAgencyChanges().size()>0) {
@@ -1354,6 +1364,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				  // log.info(" getSelectedAgencyChanges after clear() ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
 
 			}
+			//#30014 - Start
+			sendToSmModuleForCompanyExp(resDTO, action, contractSO);
+			//#30014 - End
 			
 			// #35506 Start
 			AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
@@ -1901,9 +1914,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 		
-		//basri -  #29441 During Notification Setting, no need to validate 
+		//basri -  #29441 During Notification Setting, no need to validate
 		// Validation for performance bond
-		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()
+		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && (!ctBB.getManagedBean().isDirectPurchase() || ctBB.isPk7FromDp())
 				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()
 				&& (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
 				&& !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
@@ -1922,19 +1935,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							// Bug #25359 
 							// Fahmi alter condition with putra
 							//#24333 - Start
-			                if (previouslyHasBond) {
-			                    if (ctBB.isContractExtendOrIsBond()) {
-			                        if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() == null ||
-			                            ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().isEmpty()) {
-			                            blockSubmission("PB");
-			                        }
-			                    }
+							if (previouslyHasBond) {
+								List<CtPerformanceBond> bondsToCheck = ctBB.isContractExtendOrIsBond() ? ctBB.getManagedBean().getCtContractAmount()
+										.getCtPerformanceBondsNew() : ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal();
 
-			                    if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal() == null ||
-			                        ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().isEmpty()) {
-			                        blockSubmission("PB");
-			                    }
-			                }
+								if (bondsToCheck == null || bondsToCheck.isEmpty()) {
+									blockSubmission("PB");
+								}
+							}
 							//#24333 - End
 						}
 					} 
@@ -4758,9 +4766,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return True if the process should be skipped.
 	 */
 	private boolean shouldSkipBondProcessing(String docType, boolean isAmendment) {
-	    return !isAmendment && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+	    return !isAmendment || (!docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 	           && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-	           && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING);
+	           && !docType.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING));
 	}
 
 	/**
@@ -4786,4 +4794,64 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    return cal.getTime();
 	}
 	// #24333 - End
+	
+	// #30014 - Start
+	/**
+	 * Sends contract data to SM module for Company Experience if conditions are
+	 * met (specific doc types and APPROVE action).
+	 * 
+	 * @param resDTO
+	 *            the contract response data
+	 * @param action
+	 *            the BPM action process
+	 * @param contractSO
+	 *            the contract service object
+	 */
+	private void sendToSmModuleForCompanyExp(ContractResDTO resDTO, String action, IContractSO contractSO) {
+		// Validate input
+		if (resDTO.getContract() == null || resDTO.getCtContractVer() == null) {
+			return;
+		}
+
+		// Get docType safely
+		String docType = null;
+		if (ctBB.getManagedBean() != null && ctBB.getManagedBean().getContractVer() != null) {
+			docType = ctBB.getManagedBean().getContractVer().getDocType();
+		}
+		
+		// Validate docType early
+		if (!isValidDocTypeForCallSp(docType)) {
+			return;
+		}
+
+		// All conditions met send to SP
+	    if (shouldSendToSmModule(docType, action)) {
+	    	contractSO.insertCtToSmModule(resDTO.getContract().getContractId(), resDTO.getCtContractVer().getContractVerId());
+	    }
+	}
+	
+	/**
+	 * Small helper to decide if data should be sent to SM module.
+	 */
+	private boolean shouldSendToSmModule(String docType, String action) {
+	    // Condition 1: APPROVE + any valid docType
+	    if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+	        return true;
+	    }
+	    // Condition 2: SUBMIT + DOCTYPE_CONTRACT_OWNER_MANAGEMENT
+	    return ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT.equals(docType)
+	        && BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action);
+	}
+
+	/**
+	 * Checks if the given docType is eligible for process to call SP.
+	 */
+	private boolean isValidDocTypeForCallSp(String docType) {
+		HashSet<String> validDocTypes = new HashSet<>();
+		validDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+		validDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		validDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT);
+		return validDocTypes.contains(docType);
+	}
+	// #30014 - End
 }

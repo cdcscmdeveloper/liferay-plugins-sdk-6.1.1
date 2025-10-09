@@ -1003,6 +1003,23 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	// #30447 - End
+	
+	// #30447 - Start
+	/**
+	 * To set salutation name for supplier
+	 * 
+	 * @param identificationNo
+	 * @return salutationName
+	 */
+	public String setSalutationSupplierName(String identificationNo) {
+		String salutation = supplierSalutation(identificationNo);
+		if (StringUtils.isNotBlank(salutation)) {
+			return salutation;
+		}
+		return StringUtils.EMPTY;
+	}
+
+	// #30447 - End
 
 	private void getAttandanceDtlsBySelectedRegistartion(
 			ScQtBsvRegistration briefingRegistration) {
@@ -1048,14 +1065,7 @@ public class BSVAttendanceBackingBean extends
 
 			for (SmPersonnel personnel : personals) {
 				ScQtBsvAttendance briefingAttendance = new ScQtBsvAttendance();
-				
-				// #30447 - Start
-				String newName = personnel.getName();
-				String salutation = supplierSalutation(personnel.getIdentificationNo());
-				newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
-				// #30447 - End
-				
-				briefingAttendance.setName(newName);//#30447
+				briefingAttendance.setName(personnel.getName());
 				briefingAttendance.setIcPassPort(personnel
 						.getIdentificationNo());
 				//Start Bug #26525
@@ -1070,6 +1080,12 @@ public class BSVAttendanceBackingBean extends
 		}finally{
 			briefingSO=null;	
 		}
+		
+		// #30447 - Start
+		for (ScQtBsvAttendance attaned : attanedList) {
+			attaned.setSalutation(setSalutationSupplierName(attaned.getIcPassPort()));
+		}
+		// #30447 - End
 		
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(attanedList);
