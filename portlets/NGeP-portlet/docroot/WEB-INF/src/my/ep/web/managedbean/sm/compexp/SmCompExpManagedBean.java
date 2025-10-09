@@ -80,6 +80,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private Long histMasterId;
 	private transient IPagingDataModel<SmCompExpMasterHistory> historyDataModel = new HistoryPagingDataModel();
 	private SmCompExpMaster newMaster;
+	private boolean tempEffDate;
 	
 
 	public SmSupplier getSupplier() {
@@ -498,6 +499,14 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setNewMaster(SmCompExpMaster newMaster) {
 		this.newMaster = newMaster;
+	}
+
+	public boolean isTempEffDate() {
+		return tempEffDate;
+	}
+
+	public void setTempEffDate(boolean tempEffDate) {
+		this.tempEffDate = tempEffDate;
 	}
 
 }

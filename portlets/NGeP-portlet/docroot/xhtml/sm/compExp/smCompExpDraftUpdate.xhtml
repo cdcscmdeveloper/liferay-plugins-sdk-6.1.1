@@ -44,22 +44,18 @@
 							<f:selectItems value="#{smCompExpMB.clientTypeItems}"></f:selectItems>
 						</p:selectOneRadio></td>
 				</tr>
-				<p:outputPanel
-					rendered="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal
-					and smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}">
-					<tr>
-						<td style="width: 34%"><p:outputLabel
-								styleClass="outputLabel-view-label2 mandatory"
-								value="#{lbl['lbl.sm.comp.exp.update.ori.agency.name']}" /></td>
-						<td style="width: 66%"><p:outputLabel
-								styleClass="outputLabel-view mandatory"
-								value="#{smCompExpMB.selectedDraft.oriAgencyName}" /> <p:graphicImage
-								id="oriAgencyNameToolTipsId"
-								value="/css/images/design/tooltips.png" /> <p:tooltip
-								for="oriAgencyNameToolTipsId"
-								value="#{lbl['lbl.sm.comp.exp.update.ori.agency.name.tooltip']}" /></td>
-					</tr>
-				</p:outputPanel>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2 mandatory"
+							value="#{lbl['lbl.sm.comp.exp.update.ori.agency.name']}" /></td>
+					<td style="width: 66%"><p:outputLabel
+							styleClass="outputLabel-view mandatory"
+							value="#{smCompExpMB.selectedDraft.oriAgencyName}" /> <p:graphicImage
+							id="oriAgencyNameToolTipsId"
+							value="/css/images/design/tooltips.png" /> <p:tooltip
+							for="oriAgencyNameToolTipsId"
+							value="#{lbl['lbl.sm.comp.exp.update.ori.agency.name.tooltip']}" /></td>
+				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
@@ -77,6 +73,10 @@
 								onclick="blockWidget.show()" update=":form" process="@form">
 								<p:graphicImage value="/css/images/design/search.png" />
 							</p:commandLink>
+							<p:graphicImage id="agencyNameToolTipsId"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip for="agencyNameToolTipsId"
+								value="#{lbl['lbl.sm.comp.exp.update.agency.name.tooltip']}" />
 						</p:outputPanel></td>
 				</tr>
 				<tr>
@@ -127,8 +127,14 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /></td>
 					<td style="width: 66%"><p:outputLabel
+							rendered="#{smCompExpMB.selectedDraft.contractValue gt 0}"
 							styleClass="outputLabel-view"
-							value="#{smCompExpMB.selectedDraft.contractValue}" /></td>
+							value="#{smCompExpMB.selectedDraft.contractValue}">
+						</p:outputLabel> <p:inputText 
+							rendered="#{smCompExpMB.selectedDraft.contractValue eq 0 or smCompExpMB.selectedDraft.contractValue eq null}"
+							value="#{smCompExpMB.selectedDraft.contractValue}"><f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
@@ -150,10 +156,10 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /> <p:outputLabel
-							rendered="#{smCompExpMB.selectedDraft.contractEffDate eq null}"
+							rendered="#{smCompExpMB.tempEffDate}"
 							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><h:outputText
-							rendered="#{smCompExpMB.selectedDraft.contractEffDate ne null}"
+							rendered="#{smCompExpMB.tempEffDate}"
 							styleClass="outputLabel-view"
 							value="#{smCompExpMB.selectedDraft.contractEffDate}">
 							<f:convertDateTime
@@ -163,8 +169,8 @@
 							maxdate="#{smCompExpMB.maxEffDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							readonlyInput="true"
-							rendered="#{smCompExpMB.selectedDraft.contractEffDate eq null}"
-							showOn="button" value="#{smCompExpMB.contractEffDateTemp}">
+							rendered="#{smCompExpMB.tempEffDate}"
+							showOn="button" value="#{smCompExpMB.selectedDraft.contractEffDate}">
 							<p:ajax event="dateSelect" listener="#{smCompExpBB.dateChange}"
 								oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 								process="@form" update=":form" />

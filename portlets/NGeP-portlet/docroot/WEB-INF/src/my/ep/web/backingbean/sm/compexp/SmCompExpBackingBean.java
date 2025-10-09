@@ -65,7 +65,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	private static final long serialVersionUID = 1L;
 	private static String smCompExpTncXhtml = "smCompExpTnc.xhtml";
-	private static String alertFlag = "?alert";
+	private static String alertFlag = "?redirect";
 	private static String smCompExpAlertXhtml = "smCompExpAlert.xhtml";
 	private static String smCompExpMainXhtml = "smCompExpMain.xhtml";
 	private static String smCompExpDraftXhtml = "smCompExpDraft.xhtml";
@@ -82,8 +82,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void preRenderSmCompExpAlert() {
 		this.getManagedBean().setSupplier(SmApplicationUtil.getCurrentSupplier());
 		if (checkSmCompExpDraftExist()) {
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, smCompExpAlertXhtml);
+			SmCommonUtil.redirectToPage(smCompExpAlertXhtml, "", null, null);
 		}
 	}
 	
@@ -210,6 +209,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			effDate = this.getManagedBean().getSelectedMaster().getContractEffDate();
 			sourceType = this.getManagedBean().getSelectedMaster().getSourceType().getParameterId();
 			recordStatusFlg = this.getManagedBean().getSelectedMaster().getRecordStatusFlg();
+		}
+		
+		if(null == effDate){
+			this.getManagedBean().setTempEffDate(true);
 		}
 
 		setMaxEffDate(expDate);
@@ -410,8 +413,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private String cleanFileReferenceNo(String input) {
 		String fileNo = input;
 		fileNo = fileNo.replaceAll("\\s+", "");
-		fileNo = fileNo.replaceAll("^[^azAZ09]+", "");
-		fileNo = fileNo.replaceAll("[^azAZ09]+$", "");
+		fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");
+		fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");
 		return fileNo;
 	}
 
@@ -434,7 +437,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private String cleanFileExtensionNo(String input) {
 		String fileNo = input;
 		fileNo = fileNo.replaceAll("\\s+", "");
-		fileNo = fileNo.replaceAll("[^azAZ09]+", "");
+		fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+", "");
 		return fileNo;
 	}
 

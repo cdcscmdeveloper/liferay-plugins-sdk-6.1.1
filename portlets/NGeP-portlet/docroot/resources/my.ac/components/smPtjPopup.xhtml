@@ -76,15 +76,15 @@
 						selection="#{smPtjPopupMB.selectedPtj}" selectionMode="single">
 						<ac:paginator for="orgProfileDataTableId" />
 						<p:ajax event="rowUnselect"
-							update="orgProfileDataTableId,:#{p:component('searchBtn')}"
+							update="orgProfileDataTableId,:#{p:component('selectBtn')}"
 							listener="#{smPtjPopupBB.enableSelect}" process="@this"
 							partialSubmit="true" />
 						<p:ajax event="rowSelect"
-							update="orgProfileDataTableId,:#{p:component('searchBtn')}"
+							update="orgProfileDataTableId,:#{p:component('selectBtn')}"
 							listener="#{smPtjPopupBB.enableSelect}" process="@this"
 							partialSubmit="true" />
 						<p:ajax event="toggleSelect"
-							update="orgProfileDataTableId,:#{p:component('searchBtn')}"
+							update="orgProfileDataTableId,:#{p:component('selectBtn')}"
 							listener="#{smPtjPopupBB.enableSelect}" process="@this"
 							partialSubmit="true" />
 						<p:column headerText="#{lbl['lbl.sm.ptj.popup.org.code']}">
@@ -95,7 +95,7 @@
 						</p:column>
 					</p:dataTable>
 					<div class="ppRightBtn">
-						<p:commandButton id="searchBtn"
+						<p:commandButton id="selectBtn"
 							disabled="#{smPtjPopupMB.disabledSelect}"
 							value="#{lbl['lbl.sm.ptj.popup.select.btn']}"
 							action="#{smPtjPopupBB.okAction(cc.attrs.okAction)}"
