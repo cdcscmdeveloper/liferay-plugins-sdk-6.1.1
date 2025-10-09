@@ -1299,9 +1299,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#13847 end
 		
 		//#30014 - Start (Set Company Experience Date and Flag to 4 - App Realtime/Data Patching)
-		if (isValidDocTypeForCallSp(ctBB.getManagedBean().getContractVer().getDocType()) && action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+		if (isValidDocTypeForCallSp(ctBB.getManagedBean().getContractVer().getDocType())
+				&& (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) || (ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT.equals(ctBB
+						.getManagedBean().getContractVer().getDocType()) && BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)))) {
 			ctContractVer.getCtContract().setCompExprDate(new Date());
-			ctContractVer.getCtContract().setCompExprFlag(ContractConst.COMP_EXP_APP_RLTM);			
+			ctContractVer.getCtContract().setCompExprFlag(ContractConst.COMP_EXP_APP_RLTM);
 		}
 		//#30014 - End
 		
@@ -4816,18 +4818,29 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (ctBB.getManagedBean() != null && ctBB.getManagedBean().getContractVer() != null) {
 			docType = ctBB.getManagedBean().getContractVer().getDocType();
 		}
-
-		// Check conditions action process
-		if (!BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
-			return;
-		}
-
+		
+		// Validate docType early
 		if (!isValidDocTypeForCallSp(docType)) {
 			return;
 		}
 
 		// All conditions met send to SP
-		contractSO.insertCtToSmModule(resDTO.getContract().getContractId(), resDTO.getCtContractVer().getContractVerId());
+	    if (shouldSendToSmModule(docType, action)) {
+	    	contractSO.insertCtToSmModule(resDTO.getContract().getContractId(), resDTO.getCtContractVer().getContractVerId());
+	    }
+	}
+	
+	/**
+	 * Small helper to decide if data should be sent to SM module.
+	 */
+	private boolean shouldSendToSmModule(String docType, String action) {
+	    // Condition 1: APPROVE + any valid docType
+	    if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+	        return true;
+	    }
+	    // Condition 2: SUBMIT + DOCTYPE_CONTRACT_OWNER_MANAGEMENT
+	    return ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT.equals(docType)
+	        && BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action);
 	}
 
 	/**
