@@ -1057,14 +1057,6 @@ public class SupplierFinalizationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
 			reqDTO.setQtId(qtId);
-			
-			// #35320 - Set QCA, QCB to QQC - Start
-			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
-					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
-				committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
-			}
-			// #35320 - End
-						
 			reqDTO.setCommitteType(committeeType);
 
 			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
@@ -3512,45 +3504,8 @@ return	remarksNotFound;
 						throw new EpException(MessageConst.ERROR_700093);
 					}
 				}
-			} 	
-			
-			// #35320 - START
-			if (this.getManagedBean().isSubmit() && !getManagedBean().isInitialDecisionFwdToBPK()) {
-				boolean exceedAmount = checkAllSupplierOfferPriceIsExceedCommitteeAuthority();
-
-				if (exceedAmount && ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode)) {
-					PmReason reason = this.getManagedBean().getScQtFinalization().getReason();
-
-					if (reason == null) {
-						throw new EpException(MessageConst.ERROR_760710, new String[] {
-								this.getManagedBean().getScQt().getQtNo(),
-								getManagedBean().getScQt().getEstimatedAmount().toString() });
-					} else {
-						String reasonType = this.getManagedBean().getScQtFinalization().getReason().getReasonCode();
-
-						if (reasonType == null || reasonType == "") {
-							ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
-							reasonReqDTO.setReasonId(getManagedBean().getScQtFinalization().getReason().getReasonId());
-							reasonType = getReasonSO().retrieveReasonById(reasonReqDTO).getPmReason().getReasonCode();
-						}
-
-						if (!ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY
-								.equalsIgnoreCase(reasonType)) {
-							throw new EpException(MessageConst.ERROR_760710, new String[] {
-									this.getManagedBean().getScQt().getQtNo(),
-									getManagedBean().getScQt().getEstimatedAmount().toString() });
-						}
-
-					}
-				} else if (exceedAmount
-						&& !ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode)) {
-					throw new EpException(MessageConst.ERROR_760710, new String[] {
-							this.getManagedBean().getScQt().getQtNo(),
-							getManagedBean().getScQt().getEstimatedAmount().toString() });
-				}
-			}
-			// #35320 - END
-			
+			} 
+		}
 		// #28834 - End.
 		
 		if (!getManagedBean().isInitialDecisionFwdToBPK()) {
@@ -3706,8 +3661,6 @@ return	remarksNotFound;
 		
 		// #28834 - End.
 		
-			
-		}
 		
 		/*
 		 * Enhancement #21694
@@ -3912,7 +3865,7 @@ return	remarksNotFound;
 											.intValue()) });
 				}
 			}
-			//#26169 - START, #35320 - rules are not valid anymore 
+			//#26169 - START
 			if (getManagedBean().isSubmit() && 
 					!getManagedBean().isInitialDecisionFwdToBPK() &&
 						isRecommendByAward() && 					
@@ -11272,11 +11225,18 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
-		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+
+		if (isZonal && CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
 				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
+
+		if (!isZonal && sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// #28777 & #29729 - End
@@ -11293,11 +11253,18 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
-		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+
+		if (isZonal && CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
 				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
 			return true;
 		}
-		return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
+
+		if (!isZonal && sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// #28777 & #29729 - End
@@ -12147,109 +12114,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 	}
 	//#21692 - End
-	
-	/**
-	 * #35320 - Check All supplier Offered Price Exceeded Committee Authority
-	 * 
-	 */
-	private boolean checkAllSupplierOfferPriceIsExceedCommitteeAuthority() {
-		boolean suppOfferPriceIsExceed = false;
-		BigDecimal intendedPrice = null;
-		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
-		String committeeType = this.getManagedBean().getCommitteeType();
-
-		if (getManagedBean().isItemize()) {
-			for (ScQtRecommend item : scQtFinalization.getScQtRecommends()) {
-				if (!item.isCancelled()) {
-					Long specZoneId = null;
-					if (item.getTplSpecZoneDtl() != null) {
-						specZoneId = item.getTplSpecZoneDtl().getSpecZoneId();
-					} else {
-						specZoneId = DEFAULT_ITEM;
-					}
-					Long requestItemId = item.getRequestItem().getRequestNoteItemId();
-
-					List<QtEvaluationResultDtlBean> cachedSuppliersByItem = getCachedSuppliersFromMap(specZoneId,
-							requestItemId);
-					if (CollectionUtils.isNotEmpty(cachedSuppliersByItem)) {
-						for (QtEvaluationResultDtlBean cachedSupplier : cachedSuppliersByItem) {
-							if (cachedSupplier.isAwarded()) {
-								calculateOfferedPrice(cachedSupplier, item);
-
-								if (cachedSupplier.getBidRank() != null) {
-									intendedPrice = cachedSupplier.getBidPrice();
-								} else {
-									intendedPrice = cachedSupplier.getOfferedPrice();
-								}
-
-								if (intendedPrice != null
-										&& (committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD) || committeeType
-												.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE))) {
-									if (intendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) > 0) {
-										suppOfferPriceIsExceed = Boolean.TRUE;
-									}
-								} else if (intendedPrice != null
-										&& (committeeType
-												.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || committeeType
-												.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK))) {
-									if (intendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_30MILL)) > 0) {
-										suppOfferPriceIsExceed = Boolean.TRUE;
-									}
-								}
-								break;
-							}
-						}
-					}
-				}
-			}
-		} else {
-			if (MapUtils.isNotEmpty(getManagedBean().getQualifiedSuppliersCache())) {
-				for (MapKey mapKey : getManagedBean().getQualifiedSuppliersCache().keySet()) {
-					List<ScQtRecommend> items = null;
-					if (DEFAULT_ZONE.equals(mapKey.getZoneId())) {
-						items = scQtFinalization.getScQtRecommends();
-					} else {
-						items = scQtFinalization.getScQtRecommendsByZone().get(mapKey.getZoneId());
-					}
-					if (!items.get(0).isCancelled()) {
-						List<QtEvaluationResultDtlBean> cachedSuppliers = getManagedBean().getQualifiedSuppliersCache()
-								.get(mapKey);
-
-						if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
-							for (QtEvaluationResultDtlBean evalResultDtlBean : cachedSuppliers) {
-								if (evalResultDtlBean.isAwarded()) {
-									if (evalResultDtlBean.getBidRank() != null) {
-										calculateBidPrice(items, evalResultDtlBean);
-										intendedPrice = evalResultDtlBean.getBidPrice();
-									} else {
-										intendedPrice = evalResultDtlBean.getScQtProposalAmount().getProposalAmt();
-									}
-
-									if (intendedPrice != null
-											&& (committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD) || committeeType
-													.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE))) {
-										if (intendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) > 0) {
-											suppOfferPriceIsExceed = Boolean.TRUE;
-										}
-									} else if (intendedPrice != null
-											&& (committeeType
-													.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || committeeType
-													.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK))) {
-										if (intendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_30MILL)) > 0) {
-											suppOfferPriceIsExceed = Boolean.TRUE;
-										}
-									}
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return suppOfferPriceIsExceed;
-	}
 	
 }
 // ***19336
