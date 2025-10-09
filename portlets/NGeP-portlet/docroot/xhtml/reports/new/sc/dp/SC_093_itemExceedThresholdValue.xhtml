@@ -1,0 +1,268 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<h:outputText value="#{itemExceedThresholdRptBb.managedBean.reportUrl}" /><br/><br/>
+	<table id="itemExceedThresholdTbl" style="width: 100%;">
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.ministry']}" /></td>
+			<td colspan="3">
+				<ac:lov id="lovScMinistry"
+					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
+					disabled="#{itemExceedThresholdRptBb.managedBean.disableMinistryField}"
+					readonly="true" headerText="#{lbl['lbl.rpt.ministry']}"
+					value="#{itemExceedThresholdRptBb.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+					saveObject="itemExceedThresholdRptBb.managedBean.selectedMinistry"
+					postUpdateListener="itemExceedThresholdRptBb.onChangeMinistry"
+					conditionField="#{itemExceedThresholdRptBb.constructMinistryConditionFields()}" /></td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.kumpulan.ptj']}" /></td>
+			<td colspan="3">
+				<ac:lov id="lovScKumpulanPTJ"
+					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
+					headerText="#{lbl['lbl.rpt.jabatan']}" readonly="true"
+					disabled="#{itemExceedThresholdRptBb.managedBean.disableOrgField}"
+					value="#{itemExceedThresholdRptBb.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
+					saveObject="itemExceedThresholdRptBb.managedBean.selectedKumpulanPTJ"
+					conditionField="#{itemExceedThresholdRptBb.constructKumpulanPTJConditionFields()}"
+					postUpdateListener="itemExceedThresholdRptBb.onChangeKumpulanPTJ" /></td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.ptj']}" /></td>
+			<td colspan="3">
+				<ac:lov id="lovScPTJ"
+					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
+					headerText="#{lbl['lbl.rpt.ptj']}" update="@form"
+					disabled="#{itemExceedThresholdRptBb.managedBean.disablePTJ}"
+					value="#{itemExceedThresholdRptBb.managedBean.selectedPTJ.pmOrgValidity.orgName}"
+					saveObject="itemExceedThresholdRptBb.managedBean.selectedPTJ"
+					conditionField="#{itemExceedThresholdRptBb.constructPTJConditionFields()}" /></td>
+		</tr>
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.drpdown.panel']}" /><p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+			<td>
+				<p:selectOneMenu value="#{itemExceedThresholdRptBb.managedBean.centralPanelContract}" style="width:300px">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.pleaseSelect']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0"></f:selectItem>
+					<p:ajax event="change" listener="#{itemExceedThresholdRptBb.onCentralPanelChange}" update="@parent" partialSubmit="true" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		
+		<h:panelGroup id="centralPanel">
+			<h:panelGroup id="centralPanelYes" rendered="#{itemExceedThresholdRptBb.managedBean.centralPanelContractSelected}">
+				<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.ppNo']}" /></td>
+					<td colspan="1">
+						<p:inputText id="circularNoCc" value="#{itemExceedThresholdRptBb.managedBean.circularNo}"  maxlength="100" style="width:300px">
+							<p:ajax event="blur" partialSubmit="true" />
+						</p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.sc.rpt.ppTooltip']}" />
+					</td>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.status']}" /></td>
+					<td>
+						<p:selectOneMenu id="statusCc" value="#{itemExceedThresholdRptBb.managedBean.status}" style="width:300px">
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.all']}" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.rn.approve']}" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.pending.assign.item.code']}" itemValue="2"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.completed']}" itemValue="3"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.cancel.pid.expired']}" itemValue="4"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.cancel.sq.expired']}" itemValue="5"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.reject.pid.expired']}" itemValue="6"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.reject.sq.expired']}" itemValue="7"></f:selectItem>
+							<p:ajax event="change" partialSubmit="true" />
+						</p:selectOneMenu>		
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.itemCode']}" /></td>
+					<td>
+						<p:inputText id="itemCodeCc" value="#{itemExceedThresholdRptBb.managedBean.itemCode}"  maxlength="17" style="width:300px">
+							<p:ajax event="blur" partialSubmit="true" />
+						</p:inputText>
+					</td>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.group.proc.type']}" /></td>
+					<td>
+						<p:selectOneMenu id="procurementTypeCc" value="#{itemExceedThresholdRptBb.managedBean.procurementType}" style="width:300px">
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.all']}" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.procType.normal']}" itemValue="1011"></f:selectItem>
+						</p:selectOneMenu>	
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.itemName']}" /></td>
+					<td>
+						<p:inputText id="itemNameCc" value="#{itemExceedThresholdRptBb.managedBean.itemName}"  maxlength="17" style="width:300px">
+							<p:ajax event="blur" partialSubmit="true" />
+						</p:inputText>
+					</td>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.group']}" /></td>
+					<td>
+						<p:selectOneMenu id="groupByCc" value="#{itemExceedThresholdRptBb.managedBean.groupBy}" style="width:300px">
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.none']}" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.ppNo']}" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.doc.status']}" itemValue="2"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.proc.type']}" itemValue="3"></f:selectItem>
+							<p:ajax event="change" partialSubmit="true" />
+						</p:selectOneMenu>		
+						<ac:iconTooltip id="groupByTooltipCc" value="#{lbl['lbl.sc.rpt.group.tooltip']}" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.rn.no']}" /></td>
+					<td>
+						<p:inputText id="rnNoCc" value="#{itemExceedThresholdRptBb.managedBean.rnNo}"  maxlength="17" style="width:300px">
+							<p:ajax event="blur" partialSubmit="true" />
+						</p:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.financial.year']}" /><p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+					<td style="width: 39%"><p:selectOneMenu id="yearCc"
+							value="#{itemExceedThresholdRptBb.managedBean.financialYear}">
+							<f:selectItems id="financialYearCc" value="#{itemExceedThresholdRptBb.generateYearList()}" />
+							<p:ajax event="change"
+								listener="#{itemExceedThresholdRptBb.onChangeValues}" update="@form" />
+						</p:selectOneMenu>
+						<ac:iconTooltip id="financialYearTooltipCc" value="#{lbl['lbl.sc.rpt.financialYearTooltip']}" />
+						</td>
+						
+				</tr>
+			</h:panelGroup >
+			<h:panelGroup id="centralPanelNo" rendered="#{!itemExceedThresholdRptBb.managedBean.centralPanelContractSelected}">
+				<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.itemCode']}" /></td>
+					<td>
+						<p:inputText id="itemCode" value="#{itemExceedThresholdRptBb.managedBean.itemCode}"  maxlength="17" style="width:300px">
+							<p:ajax event="blur" partialSubmit="true" />
+						</p:inputText>
+					</td>				
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.status']}" /></td>
+					<td>
+						<p:selectOneMenu id="status" value="#{itemExceedThresholdRptBb.managedBean.status}" style="width:300px">
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.all']}" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.rn.approve']}" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.pending.assign.item.code']}" itemValue="2"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.completed']}" itemValue="3"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.cancel.pid.expired']}" itemValue="4"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.cancel.sq.expired']}" itemValue="5"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.reject.pid.expired']}" itemValue="6"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.reject.sq.expired']}" itemValue="7"></f:selectItem>
+							<p:ajax event="change" partialSubmit="true" />
+						</p:selectOneMenu>		
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.itemName']}" /></td>
+					<td>
+						<p:inputText id="itemName" value="#{itemExceedThresholdRptBb.managedBean.itemName}"  maxlength="17" style="width:300px">
+							<p:ajax event="blur" partialSubmit="true" />
+						</p:inputText>
+					</td>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.group.proc.type']}" /></td>
+					<td>
+						<p:selectOneMenu id="procurementType" value="#{itemExceedThresholdRptBb.managedBean.procurementType}" style="width:300px">
+							<f:selectItems value="#{itemExceedThresholdRptBb.getProcurementModeDropdownValues()}" />
+							<p:ajax event="change" listener="#{itemExceedThresholdRptBb.onChangeProcurementType}" update="@form" partialSubmit="true" />
+						</p:selectOneMenu>
+						
+					</td>
+				</tr>
+				<tr>
+					<td>
+					</td>
+				</tr>
+				<h:panelGroup id="panelReason">
+					<ui:fragment id="reasonYes" rendered="#{itemExceedThresholdRptBb.managedBean.disableReason}">
+					<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.rn.no']}" /></td>
+					<td>
+						<p:inputText id="rnNoReasonYes" value="#{itemExceedThresholdRptBb.managedBean.rnNo}"  maxlength="17" style="width:300px">
+							<p:ajax event="blur" partialSubmit="true" />
+						</p:inputText>
+					</td>
+					
+						<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.reason']}" /></td>
+						<td>
+							<p:selectOneMenu id="reason" value="#{itemExceedThresholdRptBb.managedBean.reason}" style="width:300px">
+								<f:selectItems value="#{itemExceedThresholdRptBb.getReasonDropDown()}" />
+								<p:ajax event="change"  partialSubmit="true" />
+							</p:selectOneMenu>	
+						</td>
+				</tr>
+				<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.financial.year']}" /><p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+					<td style="width: 39%"><p:selectOneMenu id="yearReasonYes"
+							value="#{itemExceedThresholdRptBb.managedBean.financialYear}">
+							<f:selectItems value="#{itemExceedThresholdRptBb.generateYearList()}" />
+							<p:ajax event="change"
+								listener="#{itemExceedThresholdRptBb.onChangeValues}" update="@form" />
+						</p:selectOneMenu>
+						<ac:iconTooltip id="financialYearTooltipReasonYes" value="#{lbl['lbl.sc.rpt.financialYearTooltip']}" />
+					</td>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.group']}" /></td>
+					<td>
+						<p:selectOneMenu id="groupByReasonYes" value="#{itemExceedThresholdRptBb.managedBean.groupBy}" style="width:300px">
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.none']}" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.doc.status']}" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.proc.type']}" itemValue="2"></f:selectItem>
+							<p:ajax event="change" partialSubmit="true" />
+						</p:selectOneMenu>		
+					<ac:iconTooltip id="groupByTooltipReasonYes" value="#{lbl['lbl.sc.rpt.group.tooltip']}" />
+					</td>
+				</tr>
+				</ui:fragment>
+				
+				<ui:fragment id="reasonNo" rendered="#{!itemExceedThresholdRptBb.managedBean.disableReason}">
+					<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.rn.no']}" /></td>
+					<td>
+						<p:inputText id="rnNoReasonNo" value="#{itemExceedThresholdRptBb.managedBean.rnNo}"  maxlength="17" style="width:300px">
+							<p:ajax event="blur" partialSubmit="true" />
+						</p:inputText>
+					</td>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.group']}" /></td>
+					<td>
+						<p:selectOneMenu id="groupByReasonNo" value="#{itemExceedThresholdRptBb.managedBean.groupBy}" style="width:300px">
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.none']}" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.doc.status']}" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.proc.type']}" itemValue="2"></f:selectItem>
+							<p:ajax event="change" partialSubmit="true" />
+						</p:selectOneMenu>		
+					<ac:iconTooltip id="groupByTooltipReasonNo" value="#{lbl['lbl.sc.rpt.group.tooltip']}" />
+					</td>
+				</tr>
+				<tr>
+					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.financial.year']}" /><p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+					<td style="width: 39%"><p:selectOneMenu id="yearReasonNo"
+							value="#{itemExceedThresholdRptBb.managedBean.financialYear}">
+							<f:selectItems value="#{itemExceedThresholdRptBb.generateYearList()}" />
+							<p:ajax event="change"
+								listener="#{itemExceedThresholdRptBb.onChangeValues}" update="@form" />
+						</p:selectOneMenu>
+						<ac:iconTooltip id="financialYearTooltipReasonNo" value="#{lbl['lbl.sc.rpt.financialYearTooltip']}" />
+						</td>
+						
+				</tr>
+				</ui:fragment>
+				</h:panelGroup>
+			</h:panelGroup>
+		</h:panelGroup>
+		
+		<!--End - #29416--> 		
+	</table>
+	<br/>
+	<ac:generateReport bBean="#{itemExceedThresholdRptBb}"
+		reportMainBean="#{dpReportBackingBean}">
+	</ac:generateReport>
+</ui:composition>

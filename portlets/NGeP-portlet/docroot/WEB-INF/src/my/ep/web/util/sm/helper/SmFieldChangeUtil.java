@@ -207,7 +207,9 @@ public class SmFieldChangeUtil {
 					setEquityCompanyFieldChangeStatus(latestAppl, currAppl);
 
 				} else if (currentPage
-						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)
+						|| currentPage
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) { //#38890
 					// smSupplierBanks
 					setBankFieldChangeStatus(latestAppl, currAppl);
 				}
@@ -217,6 +219,22 @@ public class SmFieldChangeUtil {
 
 			// smManufacturingDtls
 		}
+	}
+	
+	//#38890
+	public static void setBankFieldChangeStatus(SmAppl currAppl){
+		if (currAppl == null){
+			return;
+		}
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(currAppl.getSmSupplier().getSupplierId());
+		SmAppl latestAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveLatestSmApplWithChildBySupplierId(reqDTO)
+				.getSmAppl();
+		if (latestAppl == null){
+			return;
+		}
+		setBankFieldChangeStatus(latestAppl, currAppl);
 	}
 
 	/**
