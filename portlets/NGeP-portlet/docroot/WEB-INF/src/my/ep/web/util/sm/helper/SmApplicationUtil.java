@@ -53,6 +53,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -4007,7 +4008,7 @@ public class SmApplicationUtil {
 	}
 
 	private static List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList(
-			List<Object[]> resultList, String suppType) {
+			List<Object[]> resultList, String suppType, String lang) {
 		List<SmBulkApplOverlapCatVO> retVal = new ArrayList<SmBulkApplOverlapCatVO>();
 
 		if (!EntityHelper.isCollectionEmpty(resultList)) {
@@ -4083,7 +4084,7 @@ public class SmApplicationUtil {
 					voSubTmp.setIdentificationNo(arr[16] + "");
 					voSubTmp.setRole(getRoleName(arr[9] + "", arr[10] + "",
 							arr[11] + "", arr[15] + "", arr[12] + "", arr[13]
-									+ "", arr[14] + "", suppType));
+									+ "", arr[14] + "", suppType, lang));
 					voSubTmp.setCompanyName(arr[4] + "");
 					voSubTmp.setMofNo(arr[5] + "");
 					if (StringUtils.isBlank(voSubTmp.getMofNo())) {
@@ -4250,6 +4251,8 @@ public class SmApplicationUtil {
 									SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
 									null)).append(",");
 		}
+			}
+		
 		return sb.length() > 0 ? StringUtils.removeEnd(sb.toString(), ",")
 				: StringUtils.EMPTY;
 	}
