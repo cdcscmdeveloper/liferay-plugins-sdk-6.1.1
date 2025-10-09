@@ -6,20 +6,26 @@ package my.ep.web.backingbean.pm.race;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.race.IRaceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.race.RaceReqDTO;
 import my.ep.dto.pm.common.race.RaceResDTO;
@@ -33,15 +39,14 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMRaceBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.race.RaceManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  * Backing Bean Class for Race.
@@ -281,6 +286,17 @@ public class RaceBackingBean extends
 			 raceSO = EpEjbBusinessDelegate.getInstance().
 					 getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRaceSO.class);
 			 
+			/************ AUDIT #28895_35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMRaceBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_RACE) && race.getRaceId() != null) {
+				RaceResDTO oldResDTO = raceSO.retriveRaceById(reqDTO);
+				getManagedBean().setOldPmRace(oldResDTO.getRace());
+			}
+			/************ END AUDIT #28895_35509 *************/
+
 			 RaceResDTO resDTO= raceSO.saveOrUpdateRaceDtls(reqDTO);			 
 			 if(resDTO.isSuccessful()){
 				 this.getManagedBean().setPmRace(resDTO.getRace());
@@ -300,13 +316,25 @@ public class RaceBackingBean extends
 								 FacesMessage.SEVERITY_INFO, 
 								 MessageConst.INFO_779103,new String[]{});				
 					}
+				/************ AUDIT #28895_35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_RACE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_RACE);
 				}
-		 }catch(Exception e){
-			 throw e;
-		 }finally{
-			 raceSO = null;
-		 }
-		 return returnUrl;
+				/************ END AUDIT #28895_35509 *************/
+				}
+			 
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		}
+		//#34445 End
+		catch (Exception e) {
+			throw e;
+		} finally {
+			raceSO = null;
+		}
+		return returnUrl;
 	 }
 	 
 	 public String isExistRaceCode(PmRace race) {
@@ -319,11 +347,15 @@ public class RaceBackingBean extends
 								IRaceSO.class);
 				ISearchBean<PmRace> searchBean = new SearchBean<PmRace>();
 				
+				//#34445 Start
+				/*
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(), 
 								DbValueConst.RECORD_STATUS_ACTIVE
 				));
+				*/
+				//#34445 End
 				
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("raceCode",

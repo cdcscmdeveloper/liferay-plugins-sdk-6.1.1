@@ -27,13 +27,25 @@
 						oncomplete="blockWidget.hide();"
 						action="#{panelBackingBean.gpkiSignAction(action)}"/>
 				</ui:repeat></td>
+				<!--#35506 start-->
+				<td style="float: right;">
+				<c:if test="#{panelBackingBean.managedBean.action eq 'view' and circularBackingBean.isAuditRoleCheck()}">
+			<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
+						action="#{auditContractBackingBean.redirectToAudittrailView(
+                panelBackingBean.managedBean.circular.circularType,
+                panelBackingBean.managedBean.circular.circularId,
+                panelBackingBean.managedBean.circularVer.docType)}"
+						immediate="true" />
+			</c:if>
 			<c:if test="#{panelBackingBean.managedBean.action eq 'view' }">
-				<td style="text-align: right;">
+			&#160;&#160;
 					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
 						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiaryForCircularContract(panelBackingBean.managedBean.circularVer.docType,
 						panelBackingBean.managedBean.circular.circularId, panelBackingBean.managedBean.circular.circularNo)}"  /> <!-- #36608 -->
-				</td>
+
 			</c:if>
+			</td>
+			<!--#35506 end-->
 		</tr>
 	</table>
 </ui:composition>

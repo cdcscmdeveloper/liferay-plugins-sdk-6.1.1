@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
@@ -707,8 +709,9 @@ public class TemplateSpecBackingBean extends
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			//#25725 start
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);		
+			//new #25725
+//			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
+//			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);		
 		}
 		//#25725 end
 		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);		
@@ -1732,6 +1735,12 @@ public class TemplateSpecBackingBean extends
 		} else{
 			// update new zone qts when TplSpecAnswers exists
 			if(CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())){
+				// #39210 Start Vinod 3/10/2025
+				List<TplSpecAnswer> specAnswersNew = checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(templateSpecBean);
+				if (CollectionUtils.isNotEmpty(specAnswersNew)) {
+					specQuestion.setTplSpecAnswers(specAnswersNew);
+				}
+				// #39210 End Vinod 3/10/2025
 				for (int i = 0; i < specQuestion.getTplSpecZoneQties().size(); i++) {
 					for (TplSpecZoneQty tplSpecZoneQty : specQuestion.getTplSpecZoneQties()) {
 
@@ -3206,8 +3215,9 @@ public class TemplateSpecBackingBean extends
 			Boolean isItemTypeService, 
 			Boolean isFulfilmentTypeScheduled, 
 			long specZoneId,
-			BigDecimal questionId,
-			Boolean isFulfilmentTypeNonPeriodicScheduled) {
+			BigDecimal questionId){
+			//new #25726
+			//Boolean isFulfilmentTypeNonPeriodicScheduled) {
 
 			BigDecimal totalIndicativePrice = new BigDecimal(0);
 			BigDecimal zeroChangeTo1 = new BigDecimal(1);
@@ -3231,7 +3241,8 @@ public class TemplateSpecBackingBean extends
 						.multiply(RoundIndicativePrice.setScale(2, QTConstants.QT_ROUNDING_MODE)));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 			}
 			else {
-				if (isItemTypeService && !(isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
+				//new #25726
+				if (isItemTypeService && !isFulfilmentTypeScheduled )//#25726 Add condition for non periodic schedule //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
 				{		totalIndicativePrice = totalIndicativePrice.add(clQuantity
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
@@ -3239,7 +3250,8 @@ public class TemplateSpecBackingBean extends
 						.multiply(RoundIndicativePrice.setScale(2, QTConstants.QT_ROUNDING_MODE)));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 				}
 				else {
-					if (isItemTypeService && (isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
+					//new #25726
+					if (isItemTypeService && isFulfilmentTypeScheduled )//#25726 Add condition for non periodic schedule //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
 					{
 						totalIndicativePrice = totalIndicativePrice.add(clQuantity
 								.multiply(contractDuration)
@@ -5738,8 +5750,12 @@ public class TemplateSpecBackingBean extends
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 				&& null != this.getManagedBean().getScQt().getQtStatus().getStatusId() ? this.getManagedBean()
 				.getScQt().getQtStatus().getStatusId() : Long.MIN_VALUE;
-		if (statusId
-				.equals(QTStatusConst.QT_PROPOSAL_PREPARATION)) {
+				
+		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		orderedStatuses = orderedStatuses.subList(orderedStatuses.indexOf(QTStatusConst.QT_PROPOSAL_PREPARATION),
+				orderedStatuses.indexOf(QTStatusConst.QT_AWARDED) + 1);
+
+		if (orderedStatuses.contains(statusId)) {
 			List<TplSpecAnswer> answerList = templateSpecBean.getSpecAnswerList();
 			for (TplSpecAnswer tplSpecAnswer : answerList) {
 				String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
@@ -5785,15 +5801,37 @@ public class TemplateSpecBackingBean extends
 	public void onchangeCompliance(TplSpecAnswer ans) {
 		List<TplSpecAnswer> answerList = this.getManagedBean().getTemplateSpecBean().getSpecAnswerList();
 		for (TplSpecAnswer answer : answerList) {
-			if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() != null) {
-				if (ans.getCompliance() == Boolean.FALSE) {
-					answer.setUserScore(BigDecimal.ZERO);
-				} 
-			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() == null) {
+			if (ans.getSpecAnswerId().compareTo(answer.getSpecAnswerId()) == 0 && ans.getCompliance() != null
+					&& ans.getCompliance() == Boolean.FALSE) {
+				answer.setUserScore(BigDecimal.ZERO);
+			} else if (ans.getSpecAnswerId().compareTo(answer.getSpecAnswerId()) == 0
+					&& (!getManagedBean().isComplianceOldNull() 
+							&& (ans.getCompliance() != null && ans.getCompliance() == Boolean.TRUE))) {
+				// As per note #631 issue 1 & 4 system will reset score if user
+				// select yes but won't update if the old value is null.
 				answer.setUserScore(null);
 			}
 		}
 	}
+
+	// #29187 End Vinod
+	// #29187 Start Vinod
+	/**
+	 * This method is to check the old value from compliance dropdown and update
+	 * flag for not to update the score if the old value is null.
+	 * 
+	 * @param event
+	 * @return
+	 */
+	public void itemComplianceChangeControl(ValueChangeEvent event) {
+		log.info("New: " + event.getNewValue() + ", Old: " + event.getOldValue());
+		if (event.getOldValue() == null) {
+			getManagedBean().setComplianceOldNull(true);
+		} else {
+			getManagedBean().setComplianceOldNull(false);
+		}
+	}
+
 	// #29187 End Vinod
 	
 	/**
@@ -5812,6 +5850,46 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	
+	// #39210 Start Vinod 3/10/2025
+	/**
+	 * This method will check if the zone details are null and create new
+	 * answers if null.
+	 * 
+	 * @param templateSpecBean
+	 * @return List<TplSpecAnswer>
+	 */
+	private List<TplSpecAnswer> checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(TemplateSpecBean templateSpecBean) {
+		TplSpecQuestion specQuestion = templateSpecBean.getSelectedSpecQuestion();
+		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE.equals(specQuestion.getTplSpecMaster()
+				.getItemTypeCode().getParameterCode());
+		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+		List<TplSpecAnswer> specAnswersNew = new ArrayList<>();
+		String priceType = specQuestion.getClPriceTypeCode().getParameterCode();
+		boolean isPriceTypeZonalStandard = specHelper.isPriceTypeZonalStandard(priceType);
 
+		for (TplSpecAnswer tplSpecAnswer : specQuestion.getTplSpecAnswers()) {
+			if (null == tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() && isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion.getTplSpecMaster().getTplSpecZone().getTplSpecZoneDtls()) {
+					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(templateSpecBean, specQuestion,
+							specZoneDtl, null);
+
+					calcTotalAmount(templateSpecBean, specAnswer, isItemTypeService);
+					specAnswersNew.add(specAnswer);
+
+				}
+			} else if (null == tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() && !isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion.getTplSpecMaster().getTplSpecZone().getTplSpecZoneDtls()) {
+					populateTierSpecAnswers(templateSpecBean, specQuestion, specZoneDtl, specAnswersNew);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(specAnswersNew)) {
+				break;
+			}
+		}
+
+		return specAnswersNew;
+	}
+	// #39210 End Vinod 3/10/2025
 	
 }

@@ -62,6 +62,20 @@ public class SLALogConstant {
 	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
 	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
 	//#29187 End Vinod
+	//#10141 Start Vinod
+	public static final String QT_INITIATE_INACTIVE_CHECKLIST_PROCESS_FOR_DOC = "initiateInactiveChecklistProcessForDoc";
+	public static final String QT_SPEC_PRE_RENDER_VIEW = "preRenderView";
+	public static final String QT_DOWNLOAD_SCORE_REPORT = "downloadScoreReport";
+	public static final String QT_DOWNLOAD_REPORT_SPEC_PREPARE = "downloadReportSpecPrepare";
+	public static final String QT_PREVIEW_FILE = "previewFile";
+	public static final String QT_PREVIEW_FILE_BY_INPUT_STREAM = "previewFileByInputStream";
+	public static final String QT_DOWNLOAD_TECHNICAL_CHECKLIST_PRIVIEW = "downloadTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_FINANCIAL_CHECKLIST_PRIVIEW = "downloadFinancialChecklistPreview";
+	public static final String QT_DOWNLOAD_SELECTED_TECHNICAL_CHECKLIST_PRIVIEW = "downloadSelectedTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW = "downloadSelectedFinancialChecklistPreview";
+	public static final String QT_SPEC_SCORE_PREVIEW_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_GET_SCORE_REPORT = "getScoreReport";
+	//#10141 End Vinod
 	//#29468 Start Vinod
 	public static final String QT_CREATE_TEMPLATE_SPEC_PAGING_DATA_MODEL = "CreateTemplateSpecPagingDataModel";
 	public static final String QT_GET_CATEGORYCODES_FOR_CLONE = "getCategoryCodesForClone";
@@ -95,7 +109,24 @@ public class SLALogConstant {
 	public static final String VIEW_LOA_CONTRACT_DETAILS_PAGE = "viewLoaContractDetailsPage";
 	public static final String VIEW_DL_LOA_CONTRACT_TRACKING_DETAILS = "viewLoaContractTrackingDtls";
 	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQtLoaContractDtls";
+	public static final String VIEW_QT_BID_SCHEDULES_DATA_MODEL = "ScheduleBiddingPagingDataModel";
+	public static final String COMP_EXP_LOA_DETAILS_PAGE = "viewLOADetailsPage";
+	
+	
 	// 25791-end
+	
+	// 29661 -start-
+	public static final String FETCH_CHECKLIST_VALUE_SCORE = "fetchCheckListValueScore";
+	public static final String FETCH_COMPANY_EXP_PROPOSAL_CHECKLIST_SCORE = "fetchProposalAndCheckListScores";
+	public static final String RETRIEVE_COMPANY_EXP_EVALUATION_DETAILS = "retrieveCompanyExpDetails";
+	public static final String QT_SP_DETAIL_BACKINGBEAN = "SPDetailBackingBean";
+	public static final String RETRIEVE_PROPOSAL_COMPANY_EXP_DETAILS = "retrieveProposalCompanyExpdtls";
+	public static final String DOWNLOAD_SUPPLIER_LOA_DETAILS_REPORTS = "downloadCompExpLOAReports";
+	public static final String RETRIEVE_SUPP_MAP_REPORT = "retrieveSuppLoiLoaMapForReport";
+	public static final String COMP_EXP_SUPP_PAGING_DATA_MODEL = "ViewSupplierCompExpDtlsPagingDataModel";
+	public static final String RETRIEVE_CONTRACT_STATUS_COUNT = "retrieveContractStatusValueCount";
+
+	// 29661 -end-
 	
 	private SLALogConstant(){
 		

@@ -12,6 +12,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -21,9 +28,13 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.PasswordUtils;
+import my.ep.web.util.AESEncryptor;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.json.JSONObject;
 
 public class PaymentUtil {
 	public static Logger log = Logger.getLogger(PaymentUtil.class);
@@ -180,12 +191,13 @@ public class PaymentUtil {
 			String clientKey, Long orderId, BigDecimal amount, String billName,
 			String email, String mobile, String billDesc, String country,
 			String cancelUrl) {
+		DecimalFormat df = new DecimalFormat("0.00");
+		String amountStr = df.format(amount);
 		String payload = "";
 		StringBuilder sb = new StringBuilder();
 		sb.append("merchantCode#").append(merchantCode).append(";");
-		sb.append("clientSecret#").append(clientKey).append(";");
 		sb.append("orderId#").append(orderId).append(";");
-		sb.append("amount#").append(amount).append(";");
+		sb.append("amount#").append(amountStr).append(";");
 		sb.append("billName#").append(billName).append(";");
 		sb.append("email#").append(email).append(";");
 		sb.append("mobile#").append(mobile).append(";");
@@ -193,11 +205,114 @@ public class PaymentUtil {
 		sb.append("country#").append(country).append(";");
 		sb.append("cancelUrl#").append(cancelUrl);
 		try {
-			payload = encryptTextUsingAES(sb.toString(), clientKey);
+			payload = AESEncryptor.encrypt(sb.toString(), clientKey);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return payload;
+	}
+
+	public static String constructJsonPayload(String merchantCode,
+			String clientKey, Long orderId, BigDecimal amount, String billName,
+			String email, String mobile, String billDesc, String country,
+			String cancelUrl) {
+		String payload = null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("{").append("\"orderId\":\"").append(orderId.toString())
+				.append("\",").append("\"billName\":\"").append(billName)
+				.append("\",").append("\"billDesc\":\"").append(billDesc)
+				.append("\",").append("\"billEmail\":\"").append(email)
+				.append("\",").append("\"billMobile\":\"").append(mobile)
+				.append("\",").append("\"cancelurl\":\"").append(cancelUrl)
+				.append("\",").append("\"merchantCode\":\"")
+				.append(merchantCode).append("\",");
+		try {
+			DecimalFormat df = new DecimalFormat("0.00");
+			String amountStr = df.format(amount);
+			sb.append("\"billAmt\":\"").append(amountStr).append("\"")
+					.append("}");
+			payload = AESEncryptor.encrypt(sb.toString(),
+					PasswordUtils.decrypt(clientKey));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return payload;
+	}
+
+	public static Map<String, String> parseJson(String json) {
+		Map<String, String> map = new HashMap<String, String>();
+
+		// 1. Remove the outer curly braces
+		String content = json.trim();
+		if (content.startsWith("{") && content.endsWith("}")) {
+			content = content.substring(1, content.length() - 1);
+		}
+
+		// 2. Split the string into key-value pairs by comma
+		String[] pairs = content.split(",");
+
+		for (String pair : pairs) {
+			// 3. Split each pair into key and value by colon
+			String[] keyValue = pair.split(":", 2); // Split only on the first
+													// colon
+
+			if (keyValue.length == 2) {
+				// 4. Clean up key and value: remove whitespace and quotes
+				String key = keyValue[0].trim().replace("\"", "");
+				String value = keyValue[1].trim().replace("\"", "");
+
+				map.put(key, value);
+			}
+		}
+		return map;
+	}
+
+	public static Timestamp getFormattedTrxdate(String dateStr) {
+		String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		Timestamp sqlTimestamp = new Timestamp(System.currentTimeMillis());
+		try {
+			// 1. Parse the string into a java.util.Date object
+			Date parsedDate = sdf.parse(dateStr);
+			System.out.println("Successfully parsed to java.util.Date: "
+					+ parsedDate);
+
+			// 2. Get the timestamp as a long (milliseconds since epoch)
+			long millis = parsedDate.getTime();
+			System.out.println("Timestamp as long (milliseconds):   " + millis);
+
+			// 3. Convert to a java.sql.Timestamp object
+			sqlTimestamp = new Timestamp(millis);
+			System.out.println("Converted to java.sql.Timestamp:    "
+					+ sqlTimestamp);
+
+		} catch (ParseException e) {
+			System.err.println("Error: Failed to parse the date string.");
+			e.printStackTrace();
+		}
+		return sqlTimestamp;
+	}
+
+	public static JSONObject getPaymentGatewayJson(String payload) {
+		JSONObject jsonObject = null;
+		if (!StringUtils.isBlank(payload)) {
+			try {
+				log.info("encrypted payload:"+payload);
+				payload = AESEncryptor
+						.decrypt(
+								payload,
+								SmCommonUtil
+										.getInstance()
+										.getCDCPaymentGatewayVKeyByBillType(
+												my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE));
+				log.info("decrypted payload:"+payload);
+				jsonObject = new JSONObject(payload);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		return jsonObject;
 	}
 }

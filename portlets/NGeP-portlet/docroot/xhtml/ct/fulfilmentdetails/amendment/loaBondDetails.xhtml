@@ -20,33 +20,35 @@
 	   	<p:spacer width="2" />	
 	   	<h:panelGrid columns="2">
 	   		<p:outputLabel id="contractPeriodId" value="#{lbl['lbl.ct.bond.contractperiod']}" />
-	   		<h:panelGrid columns="6">
+	   		<h:panelGrid columns="6"> <!-- #32418 -->
 			<p:inputText for="contractPeriodId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.calculateBondPeriod()}"  disabled="true">
 		 	</p:inputText>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+			<!-- #32418 Start -->
 			<p:inputText id="contractPeriodBondDaysId" styleClass="ppRightBtn"  value="#{ctBackingBean.managedBean.contractVer.ctContractValue.contractDaysPeriod}" maxlength="3" disabled="true" >
 			</p:inputText>
 			<p:spacer width="2" />
 			<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+			<!-- #32418 End -->
 			</h:panelGrid>	
 		
 			<p:outputLabel id="overallContractAmountId" value="#{lbl['lbl.ct.bond.overallamount']}" />
 			<p:inputText for="overallContractAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.loaAmt}"  disabled="true">
+	  			value="#{ctBackingBean.managedBean.originalOverallAmount}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 	   	
 	   		<p:outputLabel id="bondPercentageId" value="#{lbl['lbl.ct.bond.bondpercentage']}" />
 			<p:inputText for="bondPercentageId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage}"  disabled="true">
+	  			value="#{ctBackingBean.managedBean.bondPercentage  == null ? 0.0 : ctBackingBean.managedBean.bondPercentage}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			
 			<p:outputLabel id="bondAmountId" value="#{lbl['lbl.ct.bond.bondamount']}" />
 			<p:inputText for="bondAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt}"  disabled="true">
+	  			value="#{ctBackingBean.managedBean.totalBondAmt == null ? 0.0: ctBackingBean.managedBean.totalBondAmt}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			<p:outputLabel />
@@ -57,7 +59,7 @@
 		
 		<p:spacer width="1" />		
 		<p:dataTable id="tableBondId" var="varBond" rowIndexVar="index" widgetVar="tableBondWidget"
-			value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBonds}"  rowKey="#{rowKeyObj}">
+			value="#{ctBackingBean.bondListForAmend}"  rowKey="#{rowKeyObj}">
 			<ac:paginator for="tableBondId" />
 			<p:column style="width:2%;"  rendered="#{(!ctBackingBean.managedBean.viewContract
 				and !ctBackingBean.managedBean.viewSCL)
@@ -209,7 +211,8 @@
 	
 	  
 	<p:panel id="bondDetails" toggleable="true" 
-				  rendered="#{ctBackingBean.isPendingSupplementalContractLetter() and ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq 
+				  rendered="#{ctBackingBean.isPendingSupplementalContractLetter() 
+				  and (ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq or ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq)
 				  and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted}" toggleSpeed="500">
 			<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.supplemental.bond']}"/>
@@ -244,23 +247,22 @@
 					</p:tooltip>
 			</h:panelGrid>
 			
-			<p:outputLabel value="#{lbl['lbl.ct.pb.percentage']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.bond.bondpercentage']}" />
 			<p:inputText style="width:200px;" disabled="true" styleClass="ppRightBtn"
-				value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage}">
+				value="#{amendmentBackingBean.getBondPercentage()}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-				</p:inputText>
-			<p:outputLabel value="#{lbl['lbl.ct.pb.amount']}" />
-			  
+			</p:inputText>
+				
+			<p:outputLabel value="#{lbl['lbl.ct.bond.bondamount']}" />			  
 			<p:inputText style="width:200px;" disabled="true"  styleClass="ppRightBtn"
-			  value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt}" >
+			  value="#{amendmentBackingBean.getBondAmount()}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />				
 			</p:inputText>
 			
 			<p:outputLabel />
 			<p:inputTextarea autoResize="false" disabled="true" rows="4" 
 				style="width:200px;margin-bottom:5px;"
-				rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt != null }"
-			   	value="#{ctBackingBean.getBondAmountInText()}" />
+			   	value="#{amendmentBackingBean.getBondAmountInText()}" />
 		<p:spacer width="2" />
 		<!--     	
 		<p:panel rendered="#{ctBackingBean.isContractExtendOrIsBond()}" width="700px" height="350px">
@@ -283,7 +285,7 @@
 	</p:panel>
 	
 	<!-- #13847 start -->
-	<p:panel id="performanceBondDefermentPanel" toggleable="true" toggleSpeed="500">	
+	<p:panel id="performanceBondDefermentPanel" toggleable="true" toggleSpeed="500" rendered="#{!ctBackingBean.isPendingSupplementalContractLetter()}">	
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.pb.waiver.table.title']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deferment.bond.dtls']}"/>
@@ -365,7 +367,7 @@
 	</p:panel>
 	
 	<br></br>
-	<p:panel id="defermentHistoryPanel" toggleable="true" toggleSpeed="500">	
+	<p:panel id="defermentHistoryPanel" toggleable="true" toggleSpeed="500" rendered="#{!ctBackingBean.isPendingSupplementalContractLetter()}">	
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.menu.performanceBond.history.header']}"/>
 	   	</f:facet>
@@ -426,11 +428,5 @@
 		</p:dataTable>
 	</p:panel>
 	<br/>
-	<!-- #13847 end -->
-	
+	<!-- #13847 end -->	
 </ui:composition>
-
-
-
-
-

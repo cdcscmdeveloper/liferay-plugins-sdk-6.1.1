@@ -149,12 +149,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean reviseInvoice = false;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVO;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	
 	//24956 start
-    private boolean CtTypeMinistry;
+    private boolean ctTypeMinistry;
     //24956 end
     
     //30911 start
@@ -1242,12 +1242,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVO() {
-		return disciplineVO;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVO(List<DisciplinaryActionVO> disciplineVO) {
-		this.disciplineVO = disciplineVO;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -1261,11 +1261,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
 
 	//24956 start
 	public boolean isCtTypeMinistry() {
-		return CtTypeMinistry;
+		return ctTypeMinistry;
 	}
 
 	public void setCtTypeMinistry(boolean ctTypeMinistry) {
-		CtTypeMinistry = ctTypeMinistry;
+		this.ctTypeMinistry = ctTypeMinistry;
 	}
 	//24956 end
 	

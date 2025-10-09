@@ -26,7 +26,7 @@
 				<ul>
 					<li><h:outputText class="ui-messages-info-detail" />
 						#{receivedNoteBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink
-							id="sharedcommand" onstart="blockWidget.show()"
+							id="sharedcommand" onstart="blockWidget.show()" style="text-decoration: underline; color: inherit;"
 							oncomplete="blockWidget.hide()"
 							action="#{receivedNoteBackingBean.viewDisciplinaryAction(receivedNoteBackingBean.managedBean.smDisciplinaryAction)}"
 							process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink>
@@ -184,7 +184,9 @@
 					onclick="cancelConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>	
-		<ac:disciplinaryActionHistory voList="#{receivedNoteBackingBean.managedBean.disciplineVO}" 
+		<!--#26279 Start-->
+		<ac:disciplinaryActionHistory voList="#{receivedNoteBackingBean.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />
+		<!--#26279 End-->
 	</ui:define>
 </ui:composition>

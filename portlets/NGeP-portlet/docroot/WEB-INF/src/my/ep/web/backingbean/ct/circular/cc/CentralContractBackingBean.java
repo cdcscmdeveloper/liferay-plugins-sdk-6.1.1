@@ -59,6 +59,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
+import my.ep.constant.ct.audit.AuditContractConst; //35506
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -66,6 +67,7 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -115,6 +117,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -577,6 +580,38 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
+				// #35506 Start
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				if (auditCtBean.getAuditCtConfigState()) {
+					CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+					
+					if (shouldProcessAudit(auditCtBean, ctCircularVer, action)) {
+					
+						AuditContractReqDTO auCtData = new AuditContractReqDTO();
+						auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
+						auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
+						if (ctCircularVer.getCtCircular().getLatestCircularVer() != null) {
+							auCtData.setPrevContractVerId(ctCircularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+						}
+						auCtData.setDocType(resDTO.getCircularVer().getDocType());
+						auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
+						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
+
+						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+								|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) || getFacesScopes()
+										.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())))) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+						} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						}
+
+						auditCtBean.saveAuditData(auCtData);
+					}	
+				}
+				// #35506 End
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 
@@ -607,6 +642,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean().getCircularVer().getDocType()), 
 									resDTO.getCircular().getCircularNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
+				
 				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -625,7 +661,47 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 		return null;
 	}
+	
+	//#35506 - Start
+	/**
+	 * Checks if audit processing should be executed based on config, status, and action.
+	 *
+	 * @param auditCtBean   the audit contract bean
+	 * @param ctCircularVer the circular version being processed
+	 * @param action        the user action
+	 * @return true if audit should be processed, false otherwise
+	 */
+	private boolean shouldProcessAudit(AuditContractBackingBean auditCtBean, CtCircularVer ctCircularVer, String action) {
+	    return auditCtBean.getAuditCtConfigState()
+	        && (getManagedBean().isUpdateAction() || isPendingUpdateStatus(ctCircularVer.getStatus().getStatusId()))
+	        && isAllowedAction(action);
+	}
 
+	/**
+	 * Checks if the status is a pending update status.
+	 *
+	 * @param statusId the status ID
+	 * @return true if pending update status, false otherwise
+	 */
+	private boolean isPendingUpdateStatus(Long statusId) {
+	    return ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL.equals(statusId)
+	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION_APPROVAL.equals(statusId)
+	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION.equals(statusId);
+	}
+
+	/**
+	 * Checks if the action is allowed for audit.
+	 *
+	 * @param action the user action
+	 * @return true if allowed for audit, false otherwise
+	 */
+	private boolean isAllowedAction(String action) {
+	    return BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)
+	        || BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
+	}
+	//#35506 - End
+	
 	/**
 	 * The method used for validating the central circular information.
 	 * A warning or error message will display on screen when the validation
@@ -697,6 +773,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 								 ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
 					 }
 				 }
+			 }
+			 
+			// Validate For Extension date - #39213
+			 if(getManagedBean().isCircularExtension() && (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+					 && getManagedBean().getCircularVer().getExtendEndDate() == null) {
+				 getManagedBean().setSelectedTabIndex(0);
+				 throw new EpException(MessageConst.ERROR_100022,
+						 new String[]{ResourceBundleUtils.getMessage("lbl.ct.extension.end.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())}); 
 			 }
 
 			 // Validate duplicated contract

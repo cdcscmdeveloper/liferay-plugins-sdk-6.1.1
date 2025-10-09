@@ -81,6 +81,8 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang3.StringUtils;
+//#34031
+import my.ep.persistence.entity.sm.SmRevisit;
 
 public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
@@ -358,6 +360,12 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	//#3460
 	private String sdoRemark;
 	
+	// 36504 - START
+	private boolean updateRecordTC;
+	private boolean otherDescChange;
+	private String otherDescEdited;
+	// 36504 - END
+		
 	public String getSupportingDocMode() {
 		return supportingDocMode;
 	}
@@ -388,6 +396,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		private List<SmApplSupportDoc> missinDocs;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean auditAccess;
+	// #34031 Start
+	private List<SmRevisit> smRevisitList;
+	private SmRevisit currentSmRevisit;
+	// #34031 End
+	// #38856 Start
+	private Long currRegStatusId;
+	// #38856 End
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2604,4 +2619,74 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.auditAccess = auditAccess;
 	}
 	// #28895_35501 End
+	// #34031 Start
+	public List<SmRevisit> getSmRevisitList() {
+		return smRevisitList;
+	}
+
+	public void setSmRevisitList(List<SmRevisit> smRevisitList) {
+		this.smRevisitList = smRevisitList;
+	}
+
+	public SmRevisit getCurrentSmRevisit() {
+		return currentSmRevisit;
+	}
+
+	public void setCurrentSmRevisit(SmRevisit currentSmRevisit) {
+		this.currentSmRevisit = currentSmRevisit;
+	}
+	// #34031 End
+	// #38856 Start
+	public Long getCurrRegStatusId() {
+		return currRegStatusId;
+	}
+
+	public void setCurrRegStatusId(Long currRegStatusId) {
+		this.currRegStatusId = currRegStatusId;
+	}
+	// #38856 End
+	
+	// 36504 - START
+	/**
+	 * @return the updateRecordTC
+	 */
+	public boolean isUpdateRecordTC() {
+		return updateRecordTC;
+	}
+
+	/**
+	 * @param updateRecordTC the updateRecordTC to set
+	 */
+	public void setUpdateRecordTC(boolean updateRecordTC) {
+		this.updateRecordTC = updateRecordTC;
+	}
+
+	/**
+	 * @return the otherDescChange
+	 */
+	public boolean isOtherDescChange() {
+		return otherDescChange;
+	}
+
+	/**
+	 * @param otherDescChange the otherDescChange to set
+	 */
+	public void setOtherDescChange(boolean otherDescChange) {
+		this.otherDescChange = otherDescChange;
+	}
+
+	/**
+	 * @return the otherDescEdited
+	 */
+	public String getOtherDescEdited() {
+		return otherDescEdited;
+	}
+
+	/**
+	 * @param otherDescEdited the otherDescEdited to set
+	 */
+	public void setOtherDescEdited(String otherDescEdited) {
+		this.otherDescEdited = otherDescEdited;
+	}
+	// 36504 - END
 }

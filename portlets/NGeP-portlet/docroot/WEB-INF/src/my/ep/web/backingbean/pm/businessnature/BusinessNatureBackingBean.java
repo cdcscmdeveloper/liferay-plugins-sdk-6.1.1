@@ -13,9 +13,11 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -29,6 +31,8 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMBusinessNatureBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.businessnature.BusinessNatureManagedBean;
@@ -59,6 +63,8 @@ public class BusinessNatureBackingBean extends
 			.getLogger(BusinessNatureManagedBean.class);
 
 	private IPagingDataModel<PmBusinessNature> businessNatureDataModel = new BusinessNaturePagingDataModel();
+	
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml"; //#34445
 
 	public BusinessNatureBackingBean() {
 		log.info("inside constructor");
@@ -1009,38 +1015,32 @@ public class BusinessNatureBackingBean extends
 			BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
 			reqDTO.setBusinessNature(businessnature);
 
+			/************ AUDIT START #28895-35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMBusinessNatureBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_BUSINESS_NATURE)
+					&& businessnature.getBusinessNatureId() != null) {
+				reqDTO.setBusinessNatureId(businessnature.getBusinessNatureId());
+				PmBusinessNature oldPmBusinessNature = businessNatureSO.retrieveBusinessNatureById(reqDTO)
+						.getBusinessNature();
+				getManagedBean().setOldPmBusinessNature(oldPmBusinessNature);
+			}
+			/************ AUDIT END #28895-35509 *************/
+			
 			BusinessNatureResDTO resDTO = businessNatureSO
 					.saveBusinessNatureDtls(reqDTO);
 			this.getManagedBean().setPmBusinessNature(
 					resDTO.getBusinessNature());
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT START #28895-35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_BUSINESS_NATURE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_BUSINESS_NATURE);
+				}
+				/************ AUDIT END #28895-35509 *************/
 				if (this.getManagedBean().isBrandNew()) {
 					returnUrl = "/xhtml/pm/businessnature/businessNatureMain.xhtml";
-					// if (Integer.valueOf(this.getManagedBean()
-					// .getPmBusinessNature().getBusinessLevel()) > 10) {
-					// BusinessNatureReqDTO businessNatureReqDTO = new
-					// BusinessNatureReqDTO();
-					// businessNatureReqDTO.setBusinessLevel(this
-					// .getManagedBean().getPmBusinessNature()
-					// .getParentBusinessNature().getBusinessLevel());
-					// businessNatureReqDTO.setBusinessNatureId(this
-					// .getManagedBean().getPmBusinessNature()
-					// .getParentBusinessNature()
-					// .getBusinessNatureId());
-					// BusinessNatureResDTO businessNatureResDTO =
-					// businessNatureSO
-					// .retrieveBusinessNatureFetchAll(businessNatureReqDTO);
-					//
-					// businessNatureResDTO
-					// .getBusinessNature()
-					// .getChildBusinessNatures()
-					// .add(this.getManagedBean()
-					// .getPmBusinessNature());
-					// reqDTO.setBusinessNature(businessNatureResDTO
-					// .getBusinessNature());
-					// businessNatureSO.saveBusinessNatureDtls(reqDTO);
-					// }
-
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -1084,6 +1084,11 @@ public class BusinessNatureBackingBean extends
 				}
 			}
 
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			throw (e);
 		} finally {

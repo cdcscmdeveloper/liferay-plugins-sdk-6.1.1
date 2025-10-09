@@ -30,6 +30,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -197,7 +198,15 @@ public abstract class BaseManagedBean implements Serializable {
 	//12471 End
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
-
+	
+//	37925 START
+	private boolean displayLabelCountryOriginLocal;
+	private boolean displayLabelCountryOriginForeign;
+	private boolean displayCheckboxChangeCurrentStatus;
+	private boolean displayLabelRegistrationStatus;
+	private boolean displayDropdownRegStatus;
+//	37925 END
+	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1227,4 +1236,54 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
+
+//	37925 START
+	public Boolean getIsDowngradeRole() {
+		return isDowngradeRole;
+	}
+
+	public void setIsDowngradeRole(Boolean isDowngradeRole) {
+		this.isDowngradeRole = isDowngradeRole;
+	}
+
+	public boolean isDisplayLabelCountryOriginLocal() {
+		return displayLabelCountryOriginLocal;
+	}
+
+	public void setDisplayLabelCountryOriginLocal(boolean displayLabelCountryOriginLocal) {
+		this.displayLabelCountryOriginLocal = displayLabelCountryOriginLocal;
+	}
+
+	public boolean isDisplayLabelCountryOriginForeign() {
+		return displayLabelCountryOriginForeign;
+	}
+
+	public void setDisplayLabelCountryOriginForeign(boolean displayLabelCountryOriginForeign) {
+		this.displayLabelCountryOriginForeign = displayLabelCountryOriginForeign;
+	}
+
+	public boolean isDisplayCheckboxChangeCurrentStatus() {
+		return displayCheckboxChangeCurrentStatus;
+	}
+
+	public void setDisplayCheckboxChangeCurrentStatus(boolean displayCheckboxChangeCurrentStatus) {
+		this.displayCheckboxChangeCurrentStatus = displayCheckboxChangeCurrentStatus;
+	}
+
+	public boolean isDisplayLabelRegistrationStatus() {
+		return displayLabelRegistrationStatus;
+	}
+
+	public void setDisplayLabelRegistrationStatus(boolean displayLabelRegistrationStatus) {
+		this.displayLabelRegistrationStatus = displayLabelRegistrationStatus;
+	}
+
+	public boolean isDisplayDropdownRegStatus() {
+		return displayDropdownRegStatus;
+	}
+
+	public void setDisplayDropdownRegStatus(boolean displayDropdownRegStatus) {
+		this.displayDropdownRegStatus = displayDropdownRegStatus;
+	}
+//	37925 END
 }

@@ -208,6 +208,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			//36754 -start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				validateOrderFulfiledAndDOFRNPendingCancellation();
+			}
+			//36754 -end
 			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
 				//32967-start
 				if(null != getManagedBean().getAccountNo()){
@@ -374,7 +379,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					messageId = MessageConst.INFO_700025;
 				} else if(resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
-					messageId = MessageConst.INFO_700004;
+					//28719-Start
+					if(!getManagedBean().isSupplementContractComplete()){
+						messageId = MessageConst.INFO_745026;
+					} else {
+						messageId = MessageConst.INFO_700004;
+					}
+					//28719-End
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_745018;
 					if(null != getManagedBean().getDanStatusId()){
@@ -425,15 +436,21 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					isPendingAP59Decision = true;
-					//28719-Start
-					if(!getManagedBean().isSupplementContractComplete()){
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.INFO_745027, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					}else{
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					// 28719-Start
+					if (!getManagedBean().isSupplementContractComplete()) {
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+										MessageConst.INFO_745027, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					} else {
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+										MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 					}
-					//28719-End
+					// 28719-End
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.isCan()) {
 					if(resDTO.getInvoice().getAp59Status()==null || 
@@ -1526,35 +1543,34 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			log.debug("pageChangeListener");
 		}
 		try {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("ap59Status.statusId",SearchOperator.OPERATOR_EQUALS.value(),FulfilmentStatusConst.AP59_PENDING_AP59_DECISION));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",SearchOperator.OPERATOR_EQUALS.value(),DbValueConst.RECORD_STATUS_ACTIVE));
-			
-			if(getManagedBean().getLoaNo()!=null && getManagedBean().getLoaNo().length() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.loa.loaNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getLoaNo()));
-			}
-			if(getManagedBean().getContractNo()!=null && getManagedBean().getContractNo().length() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.contractNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getContractNo()));
-			}
-			if(getManagedBean().getTitle()!=null && getManagedBean().getTitle().length() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.contractName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getTitle()));
-			}
-			if(getManagedBean().getPhysicalLoaNo()!=null && getManagedBean().getPhysicalLoaNo().length() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPhysicalLoaNo()));
-			}
-			if(getManagedBean().getPhysicalContractNo()!=null && getManagedBean().getPhysicalContractNo().length() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.latestContractVer.contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPhysicalContractNo()));
-			}
-			
+			//28719 -Start
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			searchBean.setUseEntityClass(true);
 			reqDTO.setSearchBean(searchBean);
 			
-			IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+			if(getManagedBean().getLoaNo()!=null && getManagedBean().getLoaNo().length() > 0) {
+				reqDTO.setLoaNo(getManagedBean().getLoaNo());
+			}
+			if(getManagedBean().getContractNo()!=null && getManagedBean().getContractNo().length() > 0) {
+				reqDTO.setContractNo(getManagedBean().getContractNo());
+			}
+			if(getManagedBean().getTitle()!=null && getManagedBean().getTitle().length() > 0) {
+				reqDTO.setContractName(getManagedBean().getTitle());
+			}
+			if(getManagedBean().getPhysicalLoaNo()!=null && getManagedBean().getPhysicalLoaNo().length() > 0) {
+				reqDTO.setLoaPhysicalNo(getManagedBean().getPhysicalLoaNo());
+			}
+			if(getManagedBean().getPhysicalContractNo()!=null && getManagedBean().getPhysicalContractNo().length() > 0) {
+				reqDTO.setContractPhysicalNo(getManagedBean().getPhysicalContractNo());
+			}
+			//28719 -End
+			IInvoiceSO invoiceSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);//28719
 			FulfilmentResDTO resDTO = invoiceSO.searchAP59(reqDTO);
 			if(resDTO.isSuccessful()) {
 				return resDTO.getResultBean();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error occurred in pageChangeListener method", e);//28719
 		}
 		return null;
 	}
@@ -1810,11 +1826,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
-		//36754 -start
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-			validateOrderFulfiledAndDOFRNPendingCancellation();
-		}
-		//36754 -end
+		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){			
 			if(null == getManagedBean().getInvoice().getAccountNo() || getManagedBean().getInvoice().getAccountNo().length()==0 || getManagedBean().getInvoice().getPaymentBank() == null ) {
 				getManagedBean().setSelectedTabIndex(0);
@@ -1921,7 +1933,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_745072);
 				}
-				IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);//28719
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.toString());
 				userReqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
@@ -2674,9 +2686,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			supplier.setFlagSupplier(true);
 			supplier.setFlagDASuppProfile(true);
 
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
 					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
 			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
 	}

@@ -16,28 +16,20 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
-
-import com.liferay.compat.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
-import my.ep.persistence.entity.ct.CtDisciplinaryAction;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -49,16 +41,13 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSupplierBank; // Fix - #33674
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
-import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.DisciplinaryActionVO;
 
@@ -145,21 +134,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private IPagingDataModel<CtContractItem> contractListingPagingDataModel = new ContractListingPagingDataModel();
 	private IPagingDataModel<CtContractItem> ServiceListingPagingDataModel =  new ServiceListingPagingDataModel();
 	
-	//Enhancement #26186 start
+	//Enhancement #26186/#34097 start
 	private boolean disciplinaryAction; 
 	private String disciplinaryActionMsg; 
 	private List<DisciplinaryActionVO> disciplineVOs; 
-	private Long disciplinaryActionId;
-	private boolean disciplinaryApproved;
-	private String disciplinaryApprovedFlag;
-	private String justification;
-	//Enhancement #26186 end
+	private boolean validationDA;
 	//#29793 start
 	private boolean disciplinaryActionNotification;
 	private boolean disciplinaryActionCancel;
 	private Date disciplinaryActionStartDate;
 	private Date disciplinaryActionEndDate;
 	//#29793 end
+	private String supplierMsg;
+	private boolean supplierBumiCancel;
+	private boolean oldBPMVersion;
+	private boolean wipButtonCancelReject;
+	//#26186/#34097 end
 	
 	private boolean itemProductNotExist;
 	private boolean itemServiceNotExist;
@@ -1399,11 +1389,13 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	
 	
-	//Enhancement #26186 start
+	//Enhancement #26186/#34097 start
+	@Override
 	public boolean isDisciplinaryAction() {
 		return disciplinaryAction;
 	}
-
+	
+	@Override
 	public void setDisciplinaryAction(boolean disciplinaryAction) {
 		this.disciplinaryAction = disciplinaryAction;
 	}
@@ -1423,39 +1415,19 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
 		this.disciplineVOs = disciplineVOs;
 	}
-
-	public Long getDisciplinaryActionId() {
-		return disciplinaryActionId;
-	}
-
-	public void setDisciplinaryActionId(Long disciplinaryActionId) {
-		this.disciplinaryActionId = disciplinaryActionId;
-	}
-
-	public boolean isDisciplinaryApproved() {
-		return disciplinaryApproved;
-	}
-
-	public void setDisciplinaryApproved(boolean disciplinaryApproved) {
-		this.disciplinaryApproved = disciplinaryApproved;
-	}
-
-	public String getDisciplinaryApprovedFlag() {
-		return disciplinaryApprovedFlag;
-	}
-
-	public void setDisciplinaryApprovedFlag(String disciplinaryApprovedFlag) {
-		this.disciplinaryApprovedFlag = disciplinaryApprovedFlag;
-	}
-
-	public String getJustification() {
-		return justification;
-	}
-
-	public void setJustification(String justification) {
-		this.justification = justification;
-	}
 	
+	/**
+	 * @return the validationDA
+	 */
+	public boolean isValidationDA() {
+		return validationDA;
+	}
+	/**
+	 * @param validationDA the validationDA to set
+	 */
+	public void setValidationDA(boolean validationDA) {
+		this.validationDA = validationDA;
+	}
 	//#29793 start
 	public boolean isDisciplinaryActionNotification() {
 		return disciplinaryActionNotification;
@@ -1489,8 +1461,56 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
 	}
 	//#29793 end
-
-	//Enhancement #26186 end
+	
+	/**
+	 * @return the supplierMsg
+	 */
+	public String getSupplierMsg() {
+		return supplierMsg;
+	}
+	/**
+	 * @param supplierMsg the supplierMsg to set
+	 */
+	public void setSupplierMsg(String supplierMsg) {
+		this.supplierMsg = supplierMsg;
+	}
+	/**
+	 * @return the supplierBumiCancel
+	 */
+	public boolean isSupplierBumiCancel() {
+		return supplierBumiCancel;
+	}
+	/**
+	 * @param supplierBumiCancel the supplierBumiCancel to set
+	 */
+	public void setSupplierBumiCancel(boolean supplierBumiCancel) {
+		this.supplierBumiCancel = supplierBumiCancel;
+	}
+	/**
+	 * @return the oldBPMVersion
+	 */
+	public boolean isOldBPMVersion() {
+		return oldBPMVersion;
+	}
+	/**
+	 * @param oldBPMVersion the oldBPMVersion to set
+	 */
+	public void setOldBPMVersion(boolean oldBPMVersion) {
+		this.oldBPMVersion = oldBPMVersion;
+	}
+	/**
+	 * @return the wipButtonCancelReject
+	 */
+	public boolean isWipButtonCancelReject() {
+		return wipButtonCancelReject;
+	}
+	/**
+	 * @param wipButtonCancelReject the wipButtonCancelReject to set
+	 */
+	public void setWipButtonCancelReject(boolean wipButtonCancelReject) {
+		this.wipButtonCancelReject = wipButtonCancelReject;
+	}
+	//Enhancement #26186/#34097 start
 	
 	//#25956 Start
 	public List<PmUser> getContractAdminlist() {
@@ -1501,8 +1521,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	//#25956 End
 
-
-	//Enhancement #26186 end
 	//26753 - start
 	/**
 	 * @return the updateCommittee
