@@ -12,7 +12,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
-import java.text.DateFormat; //#24333
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols; //24333
 import java.text.SimpleDateFormat;
@@ -2095,10 +2094,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				
 				// End Fix - #33256, #33287, #34110
-				
-				//#30014 - Start
-				sendToSmModuleForCompanyExp(resDTO, outcome);
-				//#30014 - End
 				
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
@@ -9866,53 +9861,40 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    }
 	    return !contractAmt.getEffDate().after(now) && !contractAmt.getExpDate().before(now);
 	}
+	
+	/**
+	 * Gets bond percentage from amendment LOA. Returns 0.0 if not available.
+	 */
+	public BigDecimal getBondPercentage() {
+		if (ctBackingBean.getManagedBean().getContractVer() == null) {
+			return BigDecimal.ZERO;
+		}
+
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if (amendment != null && amendment.getAmendmentLoa() != null && amendment.getAmendmentLoa().isBondReq()) {
+			BigDecimal percentage = amendment.getAmendmentLoa().getBondPercentage();
+			return percentage != null ? percentage : BigDecimal.ZERO;
+		}
+
+		return BigDecimal.ZERO;
+	}
+
+	/**
+	 * Bond amount from amendment LOA (BigDecimal.ZERO if null).
+	 */
+	public BigDecimal getBondAmount() {
+		if (ctBackingBean.getManagedBean().getContractVer() == null) {
+			return BigDecimal.ZERO;
+		}
+
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if (amendment != null && amendment.getAmendmentLoa() != null) {
+			BigDecimal amount = amendment.getAmendmentLoa().getBondAmt();
+			return amount != null ? amount : BigDecimal.ZERO;
+		}
+
+		return BigDecimal.ZERO;
+	}
 	//#24333 - End
 	
-	// #30014 - Start
-	/**
-	 * Sends contract data to SM module if outcome is ACKNOWLEDGE for Company
-	 * Experience.
-	 * 
-	 * @param resDTO
-	 *            the contract response data
-	 * @param outcome
-	 *            the BPM outcome
-	 */
-	private void sendToSmModuleForCompanyExp(ContractResDTO resDTO, String outcome) {
-		if (!shouldSendToSmModule(resDTO, outcome)) {
-			return;
-		}
-
-		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
-		Long contractVerId = resDTO.getCtContractVer().getContractVerId();
-
-		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-		contractSO.insertCtToSmModule(contractId, contractVerId);
-	}
-
-	/**
-	 * Checks whether the contract data should be sent to the SM module.
-	 */
-	private boolean shouldSendToSmModule(ContractResDTO resDTO, String outcome) {
-		CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
-		if (resDTO == null || resDTO.getCtContractVer() == null) {
-			return false;
-		}
-		// Check ID are not null
-		Long contractId = contractVer.getCtContract().getContractId();
-		Long contractVerId = resDTO.getCtContractVer().getContractVerId();
-		if (contractId == null || contractVerId == null) {
-			return false;
-		}
-
-		// Check business conditions
-		if (!BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)
-				|| !CTProcessNameConst.VERIFY_FA_HT_NAME.equalsIgnoreCase(getManagedBean().getTaskName())) {
-			return false;
-		}
-
-		return true;
-	}
-	// #30014 - End
-	
-	}
+}

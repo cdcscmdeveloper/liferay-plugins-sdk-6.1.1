@@ -654,22 +654,16 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			for (PmMachineCategory savedPmMachine : savedPmMachines) {
 				for (PmMachineCategory oldPmMachine : oldPmMachines) {
 					this.docId = BigInteger.valueOf(savedPmMachine.getMachineCategoryId());
-					// check site visit
-					String typeCode = pmCategoryL3.getCategoryTypeCode().getParameterCode();
-					updateSiteVisit(oldPmMachine, savedPmMachine, typeCode);
-					
-					if (!savedPmMachine.getDisplaySeq().equals(oldPmMachine.getDisplaySeq())) {
-						detailObj(AuditConst.PM_AUD_CCR_DISP_SEQ_FIELDLABELCODE,
-								String.valueOf(oldPmMachine.getDisplaySeq()),
-								String.valueOf(savedPmMachine.getDisplaySeq()), null, null);
-						
+					// check site visit && display sequence
+					if(savedPmMachine.getMachineCategoryId().equals(oldPmMachine.getMachineCategoryId())){
+						String typeCode = pmCategoryL3.getCategoryTypeCode().getParameterCode();
+						updateSiteVisit(oldPmMachine, savedPmMachine, typeCode);
 						
 						break;
 					}
 				}
 			}
 		}
-		
 	}
 	
 	private void updateSiteVisit(PmMachineCategory oldPmMachine, PmMachineCategory savedPmMachine, String categoryTypeCode) {
@@ -697,6 +691,12 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		        oldPmMachine.getPrintingSiteVisit(),
 		        AuditConst.PM_AUD_CCR_SITE_VISIT_ACCESSORIES_FIELDLABELCODE
 		    );
+		}
+		
+		if (!savedPmMachine.getDisplaySeq().equals(oldPmMachine.getDisplaySeq())) {
+			detailObj(AuditConst.PM_AUD_CCR_DISP_SEQ_FIELDLABELCODE,
+					String.valueOf(oldPmMachine.getDisplaySeq()),
+					String.valueOf(savedPmMachine.getDisplaySeq()), null, null);
 		}
 
 	}
