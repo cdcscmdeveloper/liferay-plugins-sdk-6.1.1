@@ -145,7 +145,7 @@
 						or table.pmDocument.documentId == 633 or table.pmDocument.documentId == 676}"
 					update="@([id$=#{cc.attrs.uploadDialogId}])"
 					action="#{backingBean.assignSelectedSupportDocIndex(table,index)}">
-					<p:graphicImage value="/css/images/design/upload_ai.png"
+					<p:graphicImage value="/css/images/ai/upload.png"
 						style="margin-right:2px;" />
 				</p:commandLink>
 			</p:column>
@@ -174,13 +174,13 @@
 			<p:column style="width : 10%; text-align:center;" rendered="#{cc.attrs.hasAI}">
 				<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 1}">
-						<p:graphicImage id="imgHasAI1" value="/css/images/design/ico-check.png" />
+						<p:graphicImage id="imgHasAI1" value="/css/images/ai/yes.png" />
 						<p:tooltip for="imgHasAI1">
 							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
 						</p:tooltip>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 2}">
-						<p:graphicImage id="imgHasAI2" value="/css/images/design/ico-reject.png" />
+						<p:graphicImage id="imgHasAI2" value="/css/images/ai/no.png" />
 						<p:tooltip for="imgHasAI2">
 							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
 						</p:tooltip>
@@ -217,8 +217,8 @@
 			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
 			onShow="singleUploadListener(uploadWV_AI);"
 			onHide="uploadWV_AI.buttonBar.find('input[type=file]').get(0).disabled=false;">
-			<p:outputLabel value="Uploaded files will be processed with AI"
-				style="float: left;"/>
+			
+			Uploaded files will be processed with AI
 			<p:spacer width="10" />
 			<p:fileUpload widgetVar="uploadWV_AI" 
 				allowTypes="/(\.|\/)(pdf|doc|docx|zip|json)$/"
@@ -239,7 +239,7 @@
 			<p:outputPanel style="display: flex; flex-direction: column;align-items: center;">
 				<p:outputLabel value="AI Processing In-Progress..."/>
 				<p:spacer width="10" />
-				<p:graphicImage value="/css/images/ajax-loader.gif"/>
+				<p:graphicImage value="/css/images/ai/load.gif"/>
 			</p:outputPanel>
 		</p:blockUI>
 		<!-- #38890 - end -->
