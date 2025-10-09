@@ -2095,10 +2095,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				// End Fix - #33256, #33287, #34110
 				
-				//#30014 - Start
-				sendToSmModuleForCompanyExp(resDTO, outcome);
-				//#30014 - End
-				
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
@@ -9901,51 +9897,4 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//#24333 - End
 	
-	// #30014 - Start
-	/**
-	 * Sends contract data to SM module if outcome is ACKNOWLEDGE for Company
-	 * Experience.
-	 * 
-	 * @param resDTO
-	 *            the contract response data
-	 * @param outcome
-	 *            the BPM outcome
-	 */
-	private void sendToSmModuleForCompanyExp(ContractResDTO resDTO, String outcome) {
-		if (!shouldSendToSmModule(resDTO, outcome)) {
-			return;
-		}
-
-		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
-		Long contractVerId = resDTO.getCtContractVer().getContractVerId();
-
-		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-		contractSO.insertCtToSmModule(contractId, contractVerId);
-	}
-
-	/**
-	 * Checks whether the contract data should be sent to the SM module.
-	 */
-	private boolean shouldSendToSmModule(ContractResDTO resDTO, String outcome) {
-		CtContractVer contractVer = ctBackingBean.getManagedBean().getContractVer();
-		if (resDTO == null || resDTO.getCtContractVer() == null) {
-			return false;
-		}
-		// Check ID are not null
-		Long contractId = contractVer.getCtContract().getContractId();
-		Long contractVerId = resDTO.getCtContractVer().getContractVerId();
-		if (contractId == null || contractVerId == null) {
-			return false;
-		}
-
-		// Check business conditions
-		if (!BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(outcome)
-				|| !CTProcessNameConst.VERIFY_FA_HT_NAME.equalsIgnoreCase(getManagedBean().getTaskName())) {
-			return false;
-		}
-
-		return true;
-	}
-	// #30014 - End
-	
-	}
+}
