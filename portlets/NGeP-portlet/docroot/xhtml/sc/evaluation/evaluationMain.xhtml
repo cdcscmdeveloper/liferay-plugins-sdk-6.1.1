@@ -42,6 +42,14 @@
 			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
 			content="#{lbl['lbl.sc.popup.updateasattended']}" />
 		<!-- 25638 -end- -->
+		
+		<ui:remove> 28784 - Start </ui:remove>
+		<ac:confirmationPopup id="confirmUpdatePresentationDemoId"
+			widget="confirmUpdatePresentationDemoPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.eva.technical.presentation.demo.submit.message1']}"
+			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
+			content="#{lbl['lbl.sc.eva.technical.presentation.demo.submit.message1']} #{evaluationBackingBean.managedBean.scQt.qtNo} #{lbl['lbl.sc.eva.technical.presentation.demo.submit.message2']} #{evaluationBackingBean.managedBean.passingScore}% #{lbl['lbl.sc.eva.technical.presentation.demo.submit.message3']}" />
+		<ui:remove> 28784 - End </ui:remove>
 
 		<ui:fragment
 			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
@@ -68,6 +76,28 @@
 				<ui:remove><!-- 6906 - end --></ui:remove>
 			</ui:repeat>
 		</ui:fragment>
+		<ui:remove> 28784 - Start </ui:remove>
+		<ui:fragment
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 and evaluationBackingBean.managedBean.committeeType eq 'TEC' 
+			and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and !evaluationBackingBean.managedBean.afterDemoInv}">
+			<ui:repeat var="bpmAction"
+				value="#{evaluationBackingBean.managedBean.outComes}">
+				<ui:param name="buttonLabel"
+					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<ui:param name="validityDaysExpiredQt"
+					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP'}" onstart="blockWidget.show();"
+					disabled="#{evaluationBackingBean.managedBean.isEvalStatusComp()}"
+					oncomplete="blockWidget.hide();" style="float:right;"
+					process="@all" partialSubmit="true" 
+					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
+					disabled="#{evaluationBackingBean.managedBean.isEvalStatusComp()}" action="#{evaluationBackingBean.checkingForBeforeDemoMeetingDetails()}"
+					style="float:right;"/>
+			</ui:repeat>
+		</ui:fragment>
+		<ui:remove> 28784 - End </ui:remove>
 		<ui:remove> 25037 -start- </ui:remove>
 		<ui:fragment
 			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex ne 5}">

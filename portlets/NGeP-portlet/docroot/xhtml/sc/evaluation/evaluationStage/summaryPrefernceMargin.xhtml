@@ -7,10 +7,24 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <p:panel toggleable="true">
-		<f:facet name="header">
-			<h:outputText value="#{qualifiedSupplierListHeader}" />
-			<ac:iconTooltip value="#{qualifiedSupplierListTooltip}" />
-		</f:facet>
+		<!-- #28784 Start -->
+		<c:choose>
+			<c:when
+				test="#{evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.demo.fc.summary.qualified']}" />
+					<ac:iconTooltip id="summDemoIteQualify"
+						value="#{qualifiedSupplierListTooltip}" />
+				</f:facet>
+			</c:when>
+			<c:otherwise>
+				<f:facet name="header">
+					<h:outputText value="#{qualifiedSupplierListHeader}" />
+					<ac:iconTooltip value="#{qualifiedSupplierListTooltip}" />
+				</f:facet>
+			</c:otherwise>
+		</c:choose>
+		<!-- #28784 End -->
 
 		<p:dataTable var="prefQualSupplier"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -138,10 +152,24 @@
 
 
 	<p:panel toggleable="true">
-		<f:facet name="header">
-			<h:outputText value="#{disQualifiedSupplierListHeader}" />
-			<ac:iconTooltip value="#{disQualifiedSupplierListTooltip}" />
-		</f:facet>
+		<!-- #28784 Start -->
+		<c:choose>
+			<c:when
+				test="#{evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.demo.fc.summary.not.qualified']}" />
+					<ac:iconTooltip id="summDemoIteDisQualify"
+						value="#{disQualifiedSupplierListTooltip}" />
+				</f:facet>
+			</c:when>
+			<c:otherwise>
+				<f:facet name="header">
+					<h:outputText value="#{disQualifiedSupplierListHeader}" />
+					<ac:iconTooltip value="#{disQualifiedSupplierListTooltip}" />
+				</f:facet>
+			</c:otherwise>
+		</c:choose>
+		<!-- #28784 End -->
 
 		<p:dataTable var="disQualifiedSupplier"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
