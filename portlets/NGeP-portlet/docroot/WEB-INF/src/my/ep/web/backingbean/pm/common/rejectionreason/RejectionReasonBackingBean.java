@@ -1,5 +1,5 @@
 /*
- * Copyright � 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.backingbean.pm.common.rejectionreason;
 
@@ -2093,7 +2093,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}
 
 		int index = this.getManagedBean().getSuppAccountTypeList().size();
-		log.info(".......index.......=" + index);
+		log.info(".......addSuppAccType index.......=" + index);
 		this.getManagedBean().getSuppAccountTypeList().add(index, suppAccType);
 	}
 
