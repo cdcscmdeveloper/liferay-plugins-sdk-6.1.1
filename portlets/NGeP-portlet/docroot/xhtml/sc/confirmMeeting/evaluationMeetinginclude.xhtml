@@ -243,7 +243,7 @@
 						<f:facet name="header">
 							<h:outputText value="*" styleClass="mandatory"></h:outputText>
 							<p:spacer width="5"></p:spacer>
-							<h:outputText value="#{lbl['lbl.sc.role']}"></h:outputText>
+							<h:outputText value="evaluationMeetingInclude"></h:outputText>
 						</f:facet>
 						<ui:fragment
 							rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
@@ -253,7 +253,7 @@
 						</ui:fragment>
 						<ui:fragment rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
 							<p:selectOneMenu id="meetingRoleId" required="true"
-								label="#{lbl['lbl.sc.role']}"
+								label="evaluationMeetingInclude"
 								value="#{committeeMember.memberRoleId}"
 								style="width: 110px;margin-bottom: 5px;">
 								<f:selectItems
