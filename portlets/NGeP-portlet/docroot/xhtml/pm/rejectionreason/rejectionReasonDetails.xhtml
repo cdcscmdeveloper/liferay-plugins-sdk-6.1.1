@@ -121,8 +121,8 @@
 
 				<!--28962- Start-->
 				<c:if
-					test="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.specialItemWithApproval 
-					|| rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.wipItemPK7}">
+					test="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.specialItemWithApproval
+	                || rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.wipItemPK7}">
 					<tr>
 						<th><p:outputLabel
 								value="#{lbl['lbl.pm.reason.direct.purchase.threshold']}" /></th>
@@ -135,13 +135,11 @@
 								<f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
 								<f:validator validatorId="quantityDoubleRangeValidator" />
 								<p:ajax partialSubmit="true" process="@this" update="@this" />
-							</p:inputText> <p:graphicImage id="toolTipDP"
-								value="/css/images/design/tooltips.png" /> <p:tooltip
-								for="toolTipDP"
-								value="#{lbl['lbl.pm.reason.threshold.tooltip']}"
-								showEffect="fade" hideEffect="fade" /> <p:message
-								id="directPurchaseThresholdMsg" for="directPurchaseThreshold"
-								display="icon" /></td>
+							</p:inputText> 
+							<p:graphicImage id="toolTipDP" value="/css/images/design/tooltips.png" /> 
+							<p:tooltip for="toolTipDP" value="#{lbl['lbl.pm.reason.threshold.tooltip']}" showEffect="fade" hideEffect="fade" /> 
+							<p:message id="directPurchaseThresholdMsg" for="directPurchaseThreshold" display="icon" />
+						</td>
 					</tr>
 					<tr>
 						<th><p:outputLabel
@@ -156,13 +154,11 @@
 								<f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
 								<f:validator validatorId="quantityDoubleRangeValidator" />
 								<p:ajax partialSubmit="true" process="@this" update="@this" />
-							</p:inputText> <p:graphicImage id="toolTipPR"
-								value="/css/images/design/tooltips.png" /> <p:tooltip
-								for="toolTipPR"
-								value="#{lbl['lbl.pm.reason.threshold.tooltip']}"
-								position="bottom" /> <p:message
-								id="purchaseRequestThresholdMsg" for="purchaseRequestThreshold"
-								display="icon" /></td>
+							</p:inputText> 
+							<p:graphicImage id="toolTipPR" value="/css/images/design/tooltips.png" /> 
+							<p:tooltip for="toolTipPR" value="#{lbl['lbl.pm.reason.threshold.tooltip']}" position="bottom" /> 
+							<p:message id="purchaseRequestThresholdMsg" for="purchaseRequestThreshold" display="icon" />
+						</td>
 					</tr>
 				</c:if>
 				<!--28962- End-->
