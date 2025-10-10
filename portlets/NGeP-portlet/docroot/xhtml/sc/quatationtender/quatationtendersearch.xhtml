@@ -155,16 +155,13 @@
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}"
 									partialSubmit="true" process="@this" />
-								<ui:remove> #25791 end </ui:remove>
-							<!-- 32050,32209 -start- -->
-								<ui:remove> #25791 start </ui:remove>
 								<p:menuitem id="mItmAwd" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[0] and QTStatusConst.QT_AWARDED eq scQt.qtStatus.statusId}"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewQTLOAContractDtls(scQt,view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<ui:remove> #25791 end </ui:remove>
+							<!-- 32050,32209 -start- -->
 							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and !qTDetailBB.isUpdatable(scQt.qtStatus.statusId,scQt.qtNo)}"
@@ -172,7 +169,6 @@
 								partialSubmit="true" process="@this"/>
 							<!-- 32050,32209 -end- -->
 							<!-- 37978 - Start -->
-								<ui:remove> #25791 start </ui:remove>
 								<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED ne scQt.qtStatus.statusId}"
@@ -185,7 +181,6 @@
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewQTLOAContractDtls(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<ui:remove> #25791 end </ui:remove>
 							<!-- 37978 - End -->
 							<p:menuitem id="menuItem4" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
@@ -212,6 +207,7 @@
 								rendered="#{scQt.actionRender[7]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewFinalizationSupplierDetails(scQt, view.viewId)}"
 								partialSubmit="true" process="@this"/>
+							<ui:remove>#25791 end</ui:remove>								
 							<p:menuitem id="menuItem9" value="#{lbl['lbl.btn.publish']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								rendered="#{scQt.actionRender[8]}"
