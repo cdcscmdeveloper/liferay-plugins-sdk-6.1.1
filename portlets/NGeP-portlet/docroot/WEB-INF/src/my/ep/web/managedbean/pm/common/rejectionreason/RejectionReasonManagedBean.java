@@ -86,7 +86,9 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private String ministryCodeName;
 	private String kumpPtjCodeName;
 	//#28962 - End
-	
+
+	public RejectionReasonManagedBean(){}
+
 	/**
 	 * @return the reasonSearchBean
 	 */
