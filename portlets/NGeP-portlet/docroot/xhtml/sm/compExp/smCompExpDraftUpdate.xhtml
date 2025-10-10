@@ -129,11 +129,12 @@
 					<td style="width: 66%"><p:outputLabel
 							rendered="#{smCompExpMB.selectedDraft.contractValue gt 0}"
 							styleClass="outputLabel-view"
-							value="#{smCompExpMB.selectedDraft.contractValue}">
-						</p:outputLabel> <p:inputText 
+							value="#{smCompExpMB.selectedDraft.contractValue}" /> <p:inputText
+							label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
 							rendered="#{smCompExpMB.selectedDraft.contractValue eq 0 or smCompExpMB.selectedDraft.contractValue eq null}"
-							value="#{smCompExpMB.selectedDraft.contractValue}"><f:convertNumber
-											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							value="#{smCompExpMB.selectedDraft.contractValue}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
 				</tr>
 				<tr>
@@ -156,10 +157,10 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /> <p:outputLabel
-							rendered="#{smCompExpMB.tempEffDate}"
-							value="*" styleClass="mandatory" /></td>
+							rendered="#{smCompExpMB.tempEffDate}" value="*"
+							styleClass="mandatory" /></td>
 					<td style="width: 66%"><h:outputText
-							rendered="#{smCompExpMB.tempEffDate}"
+							rendered="#{!smCompExpMB.tempEffDate}"
 							styleClass="outputLabel-view"
 							value="#{smCompExpMB.selectedDraft.contractEffDate}">
 							<f:convertDateTime
@@ -168,9 +169,9 @@
 							label="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
 							maxdate="#{smCompExpMB.maxEffDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							readonlyInput="true"
-							rendered="#{smCompExpMB.tempEffDate}"
-							showOn="button" value="#{smCompExpMB.selectedDraft.contractEffDate}">
+							readonlyInput="true" rendered="#{smCompExpMB.tempEffDate}"
+							showOn="button"
+							value="#{smCompExpMB.selectedDraft.contractEffDate}">
 							<p:ajax event="dateSelect" listener="#{smCompExpBB.dateChange}"
 								oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 								process="@form" update=":form" />
@@ -234,12 +235,42 @@
 								value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
 						</c:if></td>
 				</tr>
+				<p:outputPanel rendered="#{smCompExpMB.consultant}">
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /></td>
+						<td style="width: 66%"><p:outputLabel
+								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+								styleClass="outputLabel-view"
+								value="#{smCompExpMB.selectedDraft.projectLoc}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /></td>
+						<td style="width: 66%"><p:outputLabel
+								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+								styleClass="outputLabel-view"
+								value="#{smCompExpMB.selectedDraft.workServDesc}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /></td>
+						<td style="width: 66%"><p:outputLabel
+								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+								styleClass="outputLabel-view"
+								value="#{smCompExpMB.selectedDraft.consultanFee}" /></td>
+					</tr>
+				</p:outputPanel>
 				<p:outputPanel
 					rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}">
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.update.supp.doc']}" /></td>
+								value="#{lbl['lbl.sm.comp.exp.update.supp.doc']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:commandLink id="suppDoc" onclick="blockWidget.show()"
 								oncomplete="smCompExpSuppDocUploadDialogWV.show();return false;blockWidget.hide()"
 								process="@form" update=":form">

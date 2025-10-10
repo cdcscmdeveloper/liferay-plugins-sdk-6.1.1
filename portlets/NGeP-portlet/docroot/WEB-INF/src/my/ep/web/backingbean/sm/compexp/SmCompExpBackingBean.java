@@ -97,12 +97,22 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 
 		this.getManagedBean().setSupplier(SmApplicationUtil.getCurrentSupplier());
+		this.getManagedBean().setConsultant(checkSupplierType());
 
 		if (this.getManagedBean().isAlertFlag()) {
 			redirectToDraft();
 		} else {
 			SmCommonUtil.redirectToPage(smCompExpTncXhtml, "", null, null);
 		}
+	}
+
+	private boolean checkSupplierType() {
+		boolean consultant = false;
+		String supplierTypeCode = this.getManagedBean().getSupplier().getSmAppl().getSupplierType();
+		if (supplierTypeCode.equals(ParameterConst.SUPPLIER_TYPE_CONSULTANT)) {
+			consultant = true;
+		}
+		return consultant;
 	}
 
 	/**
@@ -233,6 +243,18 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	}
 
+	private void setMaxEffDate(Date expDate) {
+		if (null != expDate) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(expDate);
+			cal.add(Calendar.DATE, -1);
+			Date maxEffDate = cal.getTime();
+			this.getManagedBean().setMaxEffDate(maxEffDate);
+		} else {
+			this.getManagedBean().setMaxEffDate(null);
+		}
+	}
+
 	private void setMinExpDate(Date effDate) {
 		if (null != effDate) {
 			Calendar cal = Calendar.getInstance();
@@ -242,18 +264,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().setMinExpDate(minExpDate);
 		} else {
 			this.getManagedBean().setMinExpDate(null);
-		}
-	}
-
-	private void setMaxEffDate(Date expDate) {
-		if (null != expDate) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(expDate);
-			cal.add(Calendar.DATE, 1);
-			Date maxEffDate = cal.getTime();
-			this.getManagedBean().setMaxEffDate(maxEffDate);
-		} else {
-			this.getManagedBean().setMaxEffDate(null);
 		}
 	}
 

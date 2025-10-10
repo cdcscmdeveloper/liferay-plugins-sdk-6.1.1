@@ -81,7 +81,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private transient IPagingDataModel<SmCompExpMasterHistory> historyDataModel = new HistoryPagingDataModel();
 	private SmCompExpMaster newMaster;
 	private boolean tempEffDate;
-	
+	private boolean consultant;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -507,6 +507,14 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setTempEffDate(boolean tempEffDate) {
 		this.tempEffDate = tempEffDate;
+	}
+
+	public boolean isConsultant() {
+		return consultant;
+	}
+
+	public void setConsultant(boolean consultant) {
+		this.consultant = consultant;
 	}
 
 }
