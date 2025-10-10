@@ -9,15 +9,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<style>
-.ui-selectonemenu.agencyPopupSomWidth {
-	width: 400px !important;
-}
-
-.ui-selectonemenu.agencyPopupSomWidth label {
-	width: 400px !important;
-	max-width: 400% !important;
-}
-</style>
+		.ui-selectonemenu.agencyPopupSomWidth {
+			width: 400px !important;
+		}
+		
+		.ui-selectonemenu.agencyPopupSomWidth label {
+			width: 400px !important;
+			max-width: 400% !important;
+		}
+	</style>
 
 	<p:dialog id="agencyPopup"
 		header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.pm.reason.agency']}"
@@ -140,7 +140,8 @@
 								oncomplete="agencyPopup.hide();"
 								value="#{lbl['lbl.btn.cancel']}" update=":form:agencyPopup"
 								process="@this" partialSubmit="true">
-							</p:commandButton></td>
+							</p:commandButton>
+						</td>
 					</tr>
 				</table>
 			</p:panel>

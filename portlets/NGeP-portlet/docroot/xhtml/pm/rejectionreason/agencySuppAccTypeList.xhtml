@@ -19,8 +19,7 @@
 
 					<p:outputPanel>
 
-						<ui:include
-							src="/xhtml/pm/rejectionreason/agencySearch.xhtml" />
+						<ui:include src="/xhtml/pm/rejectionreason/agencySearch.xhtml" />
 
 						<p:dataTable id="dtAgencyResult"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -84,8 +83,7 @@
 				</p:tab>
 
 				<!-- Supplier Account Type -->
-				<p:tab id="tSuppAccType"
-					title="#{lbl['lbl.pm.supplier.account.type']}">
+				<p:tab id="tSuppAccType" title="#{lbl['lbl.pm.supplier.account.type']}">
 
 					<p:outputPanel>
 						<p:dataTable id="dtSuppAccType"
@@ -108,7 +106,6 @@
 								</h:panelGroup>
 							</p:column>
 
-
 							<p:column style="width:5%;text-align:center;"
 								headerText="#{lbl['lbl.pm.action']}">
 								<p:commandLink partialSubmit="true" process="@this"
@@ -130,7 +127,6 @@
 		</p:panel>
 
 		<ac:lovPopup />
-		<ui:include
-			src="/xhtml/pm/rejectionreason/agencyPopupForRejectReason.xhtml" />
+		<ui:include src="/xhtml/pm/rejectionreason/agencyPopupForRejectReason.xhtml" />
 	</p:outputPanel>
 </ui:composition>

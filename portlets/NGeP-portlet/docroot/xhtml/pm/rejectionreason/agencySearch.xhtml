@@ -12,39 +12,49 @@
 
 			<tr>
 				<th width="20%"><p:outputLabel
-						value="#{lbl['lbl.pm.reason.ministry']}" /></th>
-				<td><p:inputText id="ministryCodeName"
+						value="#{lbl['lbl.pm.reason.ministry']}" />
+				</th>
+				<td>
+					<p:inputText id="ministryCodeName"
 						styleClass="ppDisplayTextM" size="60" maxlength="276"
 						value="#{rejectionReasonBackingBean.managedBean.ministryCodeName}"
 						label="#{lbl['lbl.pm.reason.ministry']}">
-					</p:inputText> <p:message for="ministryCodeName" /></td>
+					</p:inputText>
+					<p:message for="ministryCodeName" />
+				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
-
 			</tr>
 			<tr>
-				<th width="20%"><p:outputLabel
-						value="#{lbl['lbl.pm.reason.kumpulan.ptj']}" /></th>
-				<td><p:inputText id="kumpPtjCodeName"
+				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.reason.kumpulan.ptj']}" />
+				</th>
+				<td>
+					<p:inputText id="kumpPtjCodeName"
 						styleClass="ppDisplayTextM" size="60" maxlength="276"
 						value="#{rejectionReasonBackingBean.managedBean.kumpPtjCodeName}"
 						label="#{lbl['lbl.pm.reason.kumpulan.ptj']}">
-					</p:inputText> <p:message for="kumpPtjCodeName" /></td>
+					</p:inputText>
+					<p:message for="kumpPtjCodeName" />
+				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
 
 			</tr>
 			<tr>
-				<th width="20%"><p:outputLabel
-						value="#{lbl['lbl.pm.reason.ptj']}" /></th>
-				<td><p:inputText id="ptjCodeName" 
+				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.reason.ptj']}" />
+				</th>
+				<td>
+				 	<p:inputText id="ptjCodeName" 
 				        styleClass="ppDisplayTextM" size="60" maxlength="276"
 						value="#{rejectionReasonBackingBean.managedBean.agencyCodeName}"
 						label="#{lbl['lbl.pm.reason.ptj']}">
-					</p:inputText> <p:message for="ptjCodeName" /></td>
+					</p:inputText>
+					<p:message for="ptjCodeName" />
+				</td>
 				<th>&#160;</th>
 				<td>&#160;</td>
-
 			</tr>
 
 			<tr>
@@ -60,10 +70,8 @@
 							update="orgSearchPanel,@([id$=dtAgencyResult])"
 							action="#{rejectionReasonBackingBean.resetOrganisationSearchBean}" />
 					</div>
-
 				</td>
 			</tr>
 		</table>
 	</p:panel>
-
 </ui:composition>
