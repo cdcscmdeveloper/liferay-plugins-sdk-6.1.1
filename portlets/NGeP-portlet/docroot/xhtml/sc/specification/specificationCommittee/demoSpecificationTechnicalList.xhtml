@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+
+		<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>
+		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
+		<p:messages id="committeeTechmessages" showDetail="true"
+			showSummary="false" autoUpdate="true" closable="true"
+			severity="error, info" />
+
+		<table width="100%" class="BtnSpacing">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true"
+						action="#{specificationBackingBean.committeeBackAction}" /></td>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.complete']}"
+						rendered="#{!specificationBackingBean.managedBean.readOnly and ((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  
+							specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and  
+							specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and 
+							specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}"
+						style="float:right;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.completeDemoAction}"
+						update="@all" /></td>
+			</tr>
+		</table>
+
+		<h:panelGroup id="specDetails">
+			<p:panel header="#{lbl['lbl.sc.demo.spec.tech.list']}"
+				text-transform="uppercase" toggleable="true">
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.eva.technical.presentation.demo.instruction']}"
+					escape="false"></h:outputText>
+				<p:dataTable id="demoSpecTempId" var="demoSpecTempList"
+					value="#{specificationBackingBean.managedBean.demoSpecTemplateList}"
+					rowIndexVar="index"
+					selection="#{specificationBackingBean.managedBean.s2TechSelect}"
+					first="#{specificationBackingBean.managedBean.technicalTableRow}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowKey="#{demoSpecTempList}">
+
+					<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
+						style="width:24%;white-space: normal;">
+						<h:outputText value="#{demoSpecTempList.title}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.txt.docStatus']}"
+						style="width:7%;white-space: normal;">
+						<h:panelGroup id="technicalSpecificationStatus">
+							<h:outputText
+								value="#{specificationBackingBean.getDemoStatusDescById(demoSpecTempList.pmDemoStatus.statusId)}"></h:outputText>
+						</h:panelGroup>
+					</p:column>
+
+					<p:column style="width:5%;text-align: center;">
+						<f:facet name="header">
+							<ui:fragment
+								rendered="#{!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoring()}">
+								<h:outputText value="* " styleClass="mandatory" />
+							</ui:fragment>
+							<h:outputText value="#{lbl['lbl.sc.action']}" />
+						</f:facet>
+						<h:panelGroup id="technicalChecklistEditActionView">
+							<ui:fragment
+								rendered="#{!specificationBackingBean.managedBean.readOnly and demoSpecTempList.pmDemoStatus.statusId eq QTStatusConst.TS_PENDING_SUBMISSION}">
+								<p:commandLink process="@this" styleClass="BtnSpacing"
+									action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,ParameterConst.specificationTypeTechnical)}"
+									update="@([id$=questionTbl])" partialSubmit="true">
+									<h:graphicImage value="/css/images/design/edit.png" />
+								</p:commandLink>
+							</ui:fragment>
+							<ui:fragment
+								rendered="#{specificationBackingBean.managedBean.readOnly or demoSpecTempList.pmDemoStatus.statusId eq QTStatusConst.TS_COMPLETED}">
+								<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this"
+									styleClass="BtnSpacing"
+									action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,ParameterConst.specificationTypeTechnical)}"
+									update="@([id$=questionTbl])" partialSubmit="true" />
+							</ui:fragment>
+
+						</h:panelGroup>
+					</p:column>
+
+				</p:dataTable>
+
+				<p:ajax event="close"
+					listener="#{specificationBackingBean.closeListener}" />
+			</p:panel>
+		</h:panelGroup>
+
+	</ui:define>
+</ui:composition>

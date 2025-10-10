@@ -183,6 +183,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean hasSupplierQualifiedForCurrentSelection;// 6906 note 202
 	// 6906 note 117 - end
 
+	private boolean isDemoReq; // #28784
+
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		/**
 		 * 
@@ -2278,4 +2280,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
 	}
 	// 6906 note 202 - end
+	//#28784 - Start
+	public boolean isDemoReq() {
+		return isDemoReq;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoReq(boolean isDemoReq) {
+		this.isDemoReq = isDemoReq;
+	}
+	//#28784 - End
 }

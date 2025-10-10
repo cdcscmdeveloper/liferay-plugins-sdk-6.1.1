@@ -10931,6 +10931,43 @@
 		</security-role-ref>
 	</portlet>
 	<!-- 25037 - end -->
+	
+	<!-- Enhancement 28784-start- -->
+	<portlet>
+		<portlet-name>demoInvitation</portlet-name>
+		<display-name>Presentation/Demo Invitation</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/demoInvitation/demoInvitationHeader.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Presentation/Demo Invitation</title>
+			<short-title>Presentation/Demo Invitation</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- Enhancement 28784-end- -->
+	
 	<portlet>
 		<portlet-name>CatalogueMaintenanceTemp</portlet-name>
 		<display-name>CatalogueMaintenanceTemp</display-name>
