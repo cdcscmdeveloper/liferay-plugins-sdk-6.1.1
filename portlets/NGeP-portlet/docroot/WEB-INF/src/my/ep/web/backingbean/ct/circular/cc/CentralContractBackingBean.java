@@ -248,15 +248,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 
 			if(getManagedBean().getCircularVer().getCtCircularContracts() != null && !getManagedBean().getCircularVer().getCtCircularContracts().isEmpty()) {
-				CustomUtils.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract()); //#36726
+				CustomUtils.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract()); //#36726 || #33287
 				for(CtCircularContract ctCircularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 
 					if(ctCircularContract.getCtCircularItems() != null && !ctCircularContract.getCtCircularItems().isEmpty())
-						CustomUtils.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem()); //#36726
+						CustomUtils.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem()); //#36726 || #33287
 
 					for(CtCircularItem circularItem : ctCircularContract.getCtCircularItems()){
-						if(circularItem.getCtContractItem() != null) 
-							CustomUtils.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPriceComparator()); //#36726
+						if(circularItem.getCtContractItem() != null)
+							CustomUtils.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPriceComparator()); //#36726 || #33287
 					}
 				}
 			}
