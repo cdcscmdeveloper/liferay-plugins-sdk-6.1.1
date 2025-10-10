@@ -5661,6 +5661,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(scLoa.getPmStatus().getStatusId())){
 						getManagedBean().setSelectedTabIndex(1);
 					}
+
+					setTabActiveIndex(); // 25791
+
 					return editLOAAction(resDTO.getScLoa());
 				} else if (resDTO.getScLoi() != null) {
 					return null;
@@ -11650,7 +11653,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqNoteBB.viewRequestNote(requestNoteId);
 	}
 	// #25790 - end
-	
+
+	// 25791 -start-
+	/**
+	 * set tab activeIndex.
+	 */
+	private void setTabActiveIndex() {
+		if (isQTMaintenanceScreen()) {
+			getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX);
+		}
+	}
+	// 25791 -end-
+
 	// #29007 Start vinod
 	private void checkAndInsertItemSpecOffer() {
 		ScLoa scLoa = this.getManagedBean().getScLoa();
