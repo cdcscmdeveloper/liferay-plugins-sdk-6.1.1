@@ -126,7 +126,7 @@
 						value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
 				<ac:disciplinaryActionYesNo
-					supplier="#{item.scBidSupplier.smSupplier}" index="#{index}"/>
+					supplier="#{item.scBidSupplier.smSupplier}" maxRow="5" index="#{index}"/>
 			</p:column>
 			<ui:remove>26247 - end</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
@@ -211,17 +211,6 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			
-			<p:column style="white-space:normal;width:18%;">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-					<ac:iconTooltip
-						value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
-				</f:facet>
-				<ac:disciplinaryActionYesNo
-					supplier="#{item.scBidSupplier.smSupplier}" index="#{index}"/>
-			</p:column>
-			
 			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}">
 				<h:outputText
 					rendered="#{item.scBidSupplier.packageStartPrice ne item.bidPriceTotal}"
