@@ -166,14 +166,14 @@
 									partialSubmit="true" process="@this" />
 								<ui:remove> #25791 end </ui:remove>
 							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and !qTDetailBB.isUpdatable(scQt.qtStatus.statusId,scQt.qtNo)}"
 								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
 								partialSubmit="true" process="@this"/>
 							<!-- 32050,32209 -end- -->
 							<!-- 37978 - Start -->
 								<ui:remove> #25791 start </ui:remove>
-								<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view'].concat(' lol A ')}"
+								<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED ne scQt.qtStatus.statusId}"
 									icon="ui-icon-view" styleClass="commandLink_link"
@@ -188,27 +188,27 @@
 								<ui:remove> #25791 end </ui:remove>
 							<!-- 37978 - End -->
 							<p:menuitem id="menuItem4" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[3]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
 								partialSubmit="true" process="@this"/>
 							<p:menuitem id="menuItem5" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[4]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
 								partialSubmit="true" process="@this"/>
 							<p:menuitem id="menuItem6" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[5]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(scQt, view.viewId)}"
 								partialSubmit="true" process="@this"/>
 							<p:menuitem id="menuItem7" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[6]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(scQt, view.viewId)}"
 								partialSubmit="true" process="@this"/>
 							<p:menuitem id="menuItem8" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[7]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewFinalizationSupplierDetails(scQt, view.viewId)}"
 								partialSubmit="true" process="@this"/>
