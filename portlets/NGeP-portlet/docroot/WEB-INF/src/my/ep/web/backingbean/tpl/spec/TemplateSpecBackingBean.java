@@ -1735,6 +1735,12 @@ public class TemplateSpecBackingBean extends
 		} else{
 			// update new zone qts when TplSpecAnswers exists
 			if(CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())){
+				// #39210 Start Vinod 3/10/2025
+				List<TplSpecAnswer> specAnswersNew = checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(templateSpecBean);
+				if (CollectionUtils.isNotEmpty(specAnswersNew)) {
+					specQuestion.setTplSpecAnswers(specAnswersNew);
+				}
+				// #39210 End Vinod 3/10/2025
 				for (int i = 0; i < specQuestion.getTplSpecZoneQties().size(); i++) {
 					for (TplSpecZoneQty tplSpecZoneQty : specQuestion.getTplSpecZoneQties()) {
 
@@ -5844,6 +5850,46 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	
+	// #39210 Start Vinod 3/10/2025
+	/**
+	 * This method will check if the zone details are null and create new
+	 * answers if null.
+	 * 
+	 * @param templateSpecBean
+	 * @return List<TplSpecAnswer>
+	 */
+	private List<TplSpecAnswer> checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(TemplateSpecBean templateSpecBean) {
+		TplSpecQuestion specQuestion = templateSpecBean.getSelectedSpecQuestion();
+		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE.equals(specQuestion.getTplSpecMaster()
+				.getItemTypeCode().getParameterCode());
+		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+		List<TplSpecAnswer> specAnswersNew = new ArrayList<>();
+		String priceType = specQuestion.getClPriceTypeCode().getParameterCode();
+		boolean isPriceTypeZonalStandard = specHelper.isPriceTypeZonalStandard(priceType);
 
+		for (TplSpecAnswer tplSpecAnswer : specQuestion.getTplSpecAnswers()) {
+			if (null == tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() && isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion.getTplSpecMaster().getTplSpecZone().getTplSpecZoneDtls()) {
+					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(templateSpecBean, specQuestion,
+							specZoneDtl, null);
+
+					calcTotalAmount(templateSpecBean, specAnswer, isItemTypeService);
+					specAnswersNew.add(specAnswer);
+
+				}
+			} else if (null == tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() && !isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion.getTplSpecMaster().getTplSpecZone().getTplSpecZoneDtls()) {
+					populateTierSpecAnswers(templateSpecBean, specQuestion, specZoneDtl, specAnswersNew);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(specAnswersNew)) {
+				break;
+			}
+		}
+
+		return specAnswersNew;
+	}
+	// #39210 End Vinod 3/10/2025
 	
 }
