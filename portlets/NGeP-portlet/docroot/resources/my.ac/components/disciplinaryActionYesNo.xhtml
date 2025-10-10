@@ -69,6 +69,11 @@
 		</ui:fragment>
 		<ui:param name="compositeIndex" value="#{(cc.attrs.index + cc.attrs.childIndex)}"/>
 		<ui:fragment rendered="#{compositeIndex == 0 or compositeIndex mod cc.attrs.maxRow == 0}">
+		 	<h:outputScript>
+        		$(function() {
+            		$('[id$="disciplinaryActionHistoryDlgId"]').appendTo('body');
+        		});
+    		</h:outputScript>
 			<style>
 				[id*="disciplinaryActionHistoryDlgId"].ui-dialog {
 					width: 1100px !important;
