@@ -23,52 +23,41 @@
 		header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.pm.reason.agency']}"
 		widgetVar="agencyPopup" modal="true" width="600" position="top">
 
-		<p:messages id="agencyPopupMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" />
+		<p:messages id="agencyPopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 
 		<h:panelGroup id="agencyPnlGrp">
-			<p:panel id="ptjRRPnlId"
-				header="#{lbl['lbl.pm.header.general.org.search']}"
-				toggleable="true">
+			<p:panel id="ptjRRPnlId" header="#{lbl['lbl.pm.header.general.org.search']}" toggleable="true">
 				<h:panelGrid columns="3" id="orgProfilePgRR">
-					<p:inputText id="itMinRR" readonly="true" style="width:170px"
-						value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
+					<p:inputText id="itMinRR" readonly="true" style="width:170px" value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
 					<p:spacer height="1" />
+					
 					<p:selectOneMenu id="somMinistryRR"
 						styleClass="agencyPopupSomWidth"
 						label="#{lbl['lbl.pm.org.ptj.search.ministry']}"
 						required="#{!empty param['ptjValueValidation']}"
 						value="#{rejectionReasonBackingBean.managedBean.ministryProfileId}">
-						<f:selectItems
-							value="#{ruleCatalogueBackingBean.getMinistryDropdown()}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update=":form:somJabatanRR,:form:searcbBtnIdRR" />
+						<f:selectItems value="#{ruleCatalogueBackingBean.getMinistryDropdown()}" />
+						<p:ajax event="change" process="@this" partialSubmit="true" update=":form:somJabatanRR,:form:searcbBtnIdRR" />
 					</p:selectOneMenu>
 
-					<p:inputText id="somJabRR" readonly="true" style="width:170px"
-						value="#{lbl['lbl.pm.org.ptj.search.jabatan']}" />
+					<p:inputText id="somJabRR" readonly="true" style="width:170px" value="#{lbl['lbl.pm.org.ptj.search.jabatan']}" />
 					<p:spacer height="1" />
-					<p:selectOneMenu id="somJabatanRR" styleClass="agencyPopupSomWidth"
-						value="#{rejectionReasonBackingBean.managedBean.jabatanProfileId}">
-						<f:selectItems
-							value="#{rejectionReasonBackingBean.getJabatanDropdown()}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="@this" />
+					
+					<p:selectOneMenu id="somJabatanRR" styleClass="agencyPopupSomWidth" value="#{rejectionReasonBackingBean.managedBean.jabatanProfileId}">
+						<f:selectItems value="#{rejectionReasonBackingBean.getJabatanDropdown()}" />
+						<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
 					</p:selectOneMenu>
 
-					<p:selectOneMenu for="somPtjCodeName" style="width:180px"
-						value="#{rejectionReasonBackingBean.managedBean.ptjCodeName}">
-						<f:selectItems
-							value="#{rejectionReasonBackingBean.getPtjOrKptjDropDown('FPJ')}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="@this" />
+					<p:selectOneMenu for="somPtjCodeName" style="width:180px" value="#{rejectionReasonBackingBean.managedBean.ptjCodeName}">
+						<f:selectItems value="#{rejectionReasonBackingBean.getPtjOrKptjDropDown('FPJ')}" />
+						<p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
 					</p:selectOneMenu>
+					
 					<p:spacer height="1" />
 					<p:inputText id="itPtjCodeValueRR" style="width:97%"
 						onkeypress="if (event.keyCode == 13) {ptjSearchBtnWV.jq.click(); return false;}"
 						value="#{rejectionReasonBackingBean.managedBean.ptjCodeNameSearchValues}">
-						<p:ajax event="blur" process="@this" partialSubmit="true"
-							update="@this" />
+						<p:ajax event="blur" process="@this" partialSubmit="true" update="@this" />
 					</p:inputText>
 				</h:panelGrid>
 				<div class="ppRightBtn">
@@ -87,8 +76,7 @@
 				</div>
 			</p:panel>
 
-			<p:panel id="ptjCRResultPnlId"
-				header="#{lbl['lbl.pm.organisation.result']}" toggleable="true">
+			<p:panel id="ptjCRResultPnlId" header="#{lbl['lbl.pm.organisation.result']}" toggleable="true">
 				<h:panelGroup id="resultPanelRR" style="width:100%;">
 					<p:dataTable id="dtOrgProfileRR"
 						value="#{rejectionReasonBackingBean.managedBean.ptjList}"
@@ -96,25 +84,18 @@
 						selection="#{rejectionReasonBackingBean.managedBean.selectedOrgsProfile}"
 						rowKey="#{orgProfile.orgProfileId}">
 
-						<ac:paginator for="dtOrgProfileRR"></ac:paginator>
+						<ac:paginator for="dtOrgProfileRR"/>
 
-						<p:ajax event="rowSelect" update="dtOrgProfileRR" process="@this"
-							partialSubmit="true" />
-						<p:ajax event="rowSelectCheckbox" update="dtOrgProfileRR"
-							process="@this" partialSubmit="true" />
-						<p:ajax event="rowUnselectCheckbox" update="dtOrgProfileRR"
-							process="@this" partialSubmit="true" />
-						<p:ajax event="toggleSelect" update="dtOrgProfileRR"
-							process="@this" partialSubmit="true" />
+						<p:ajax event="rowSelect" update="dtOrgProfileRR" process="@this" partialSubmit="true" />
+						<p:ajax event="rowSelectCheckbox" update="dtOrgProfileRR" process="@this" partialSubmit="true" />
+						<p:ajax event="rowUnselectCheckbox" update="dtOrgProfileRR" process="@this" partialSubmit="true" />
+						<p:ajax event="toggleSelect" update="dtOrgProfileRR" process="@this" partialSubmit="true" />
 
 						<p:column selectionMode="multiple" style="width:2%;" />
-						<p:column headerText="#{lbl['lbl.pm.organisation.orgCode']}"
-							style="width :15%">
-							<h:outputText maxlength="22"
-								value="#{orgProfile.pmOrgValidity.orgCode}" />
+						<p:column headerText="#{lbl['lbl.pm.organisation.orgCode']}" style="width :15%">
+							<h:outputText maxlength="22" value="#{orgProfile.pmOrgValidity.orgCode}" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.pm.organisation.orgName']}"
-							style="width :60%">
+						<p:column headerText="#{lbl['lbl.pm.organisation.orgName']}" style="width :60%">
 							<h:outputText maxlength="255"
 								style="white-space: normal; word-wrap: break-word;"
 								value="#{orgProfile.pmOrgValidity.orgName}" />
@@ -126,17 +107,20 @@
 
 				<table width="100%">
 					<tr>
-						<td style="text-align: right;" colspan="3"><p:commandButton
+						<td style="text-align: right;" colspan="3">
+							<p:commandButton
 								id="crOkbtn" value="#{lbl['lbl.btn.ok']}"
 								action="#{rejectionReasonBackingBean.addAgency(false)}"
 								update="@([id$=dtAgencyResult])"
 								process="@this,:form:agencyPopup" partialSubmit="true">
-							</p:commandButton> <p:commandButton id="crAllSelectBtn"
+							</p:commandButton>
+							<p:commandButton id="crAllSelectBtn"
 								value="#{lbl['lbl.pm.reason.agency.popup.selectall']}"
 								action="#{rejectionReasonBackingBean.addAgency(true)}"
 								update="@([id$=dtAgencyResult])"
 								process="@this,:form:agencyPopup" partialSubmit="true">
-							</p:commandButton> <p:commandButton id="crCancelbtn"
+							</p:commandButton>
+							<p:commandButton id="crCancelbtn"
 								oncomplete="agencyPopup.hide();"
 								value="#{lbl['lbl.btn.cancel']}" update=":form:agencyPopup"
 								process="@this" partialSubmit="true">

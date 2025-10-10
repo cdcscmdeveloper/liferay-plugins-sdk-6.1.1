@@ -124,9 +124,11 @@
 					test="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.specialItemWithApproval
 	                || rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.wipItemPK7}">
 					<tr>
-						<th><p:outputLabel
-								value="#{lbl['lbl.pm.reason.direct.purchase.threshold']}" /></th>
-						<td><p:inputText id="directPurchaseThreshold" size="20"
+						<th>
+							<p:outputLabel value="#{lbl['lbl.pm.reason.direct.purchase.threshold']}" />
+						</th>
+						<td>
+							<p:inputText id="directPurchaseThreshold" size="20"
 								maxlength="17" style="text-align:left"
 								label="#{lbl['lbl.pm.reason.direct.purchase.threshold']}"
 								value="#{rejectionReasonBackingBean.managedBean.selectedReason.dpThreshold}">
@@ -142,10 +144,11 @@
 						</td>
 					</tr>
 					<tr>
-						<th><p:outputLabel
-								value=" #{lbl['lbl.pm.reason.purchase.request.threshold']}" />
+						<th>
+							<p:outputLabel value=" #{lbl['lbl.pm.reason.purchase.request.threshold']}" />
 						</th>
-						<td><p:inputText id="purchaseRequestThreshold" size="20"
+						<td>
+							<p:inputText id="purchaseRequestThreshold" size="20"
 								maxlength="17" style="text-align:left"
 								label="#{lbl['lbl.pm.reason.purchase.request.threshold']}"
 								value="#{rejectionReasonBackingBean.managedBean.selectedReason.prThreshold}">
