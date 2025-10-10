@@ -10815,7 +10815,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the recommendation
 	 */
 	public void submitPOEscalationToApprover(String recommendation) {
-		assignValReqdToTrue();
+//		assignValReqdToTrue(); #37925
 		// validate equity owner
 		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
@@ -18701,8 +18701,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    
 	    boolean isForeignCompany = !SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA.equalsIgnoreCase(companyCountry);
 	    
-	    setCountryOriginUI(companyCountry, applType, businessType, isForeignCompany);
-	    setRegistrationStatusUI(companyCountry, supplierType, applType, isForeignCompany);
+	    setCountryOriginUI(applType, businessType, isForeignCompany);
+	    setRegistrationStatusUI(supplierType, applType, isForeignCompany);
 	}
 
 	private String getCompanyCountry(SmAppl smAppl) {
@@ -18710,7 +18710,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    return (country != null && !country.isEmpty()) ? country : SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
 	}
 
-	private void setCountryOriginUI(String companyCountry, String applType, String businessType, boolean isForeignCompany) {
+	private void setCountryOriginUI(String applType, String businessType, boolean isForeignCompany) {
 	    // Reset country origin displays for BUMI applications
 	    if (SupplierManagementConst.APPL_TYPE_BUMI.equalsIgnoreCase(applType)) {
 	        getManagedBean().setDisplayLabelCountryOriginLocal(false);
@@ -18731,14 +18731,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	            || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(businessType);
 	}
 
-	private void setRegistrationStatusUI(String companyCountry, String supplierType, 
+	private void setRegistrationStatusUI(String supplierType, 
 	        String applType, boolean isForeignCompany) {
 	    
 	    if (isForeignCompany) {
 	        foreignRegistrationUI(isForeignCompany);
 	    } else {
 	        if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
-	            localConstructorRegistrationUI(applType);
+	            localContractorRegistrationUI(applType, isForeignCompany);
 	        } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
 	            localConsultantRegistrationUI(isForeignCompany);
 	        }
@@ -18746,6 +18746,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    }
 	}
 
+	/**
+	 * Clears the display status for various registration-related UI elements.
+	 * Sets the visibility of the country origin, registration status, and related UI elements to false.
+	 */
 	public void clearRegistrationStatusDisplay() {
 	    getManagedBean().setDisplayLabelCountryOriginForeign(false);
 	    getManagedBean().setDisplayLabelCountryOriginLocal(false);
@@ -18754,13 +18758,22 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    getManagedBean().setDisplayDropdownRegStatus(false);
 	}
 
-	public void localConstructorRegistrationUI(String applType) {
+
+	/**
+	 * Configures the UI elements for local constructor registration based on the application type
+	* and whether the company is foreign.
+	*
+	* @param applType          the type of application (e.g., MOF, BUMI, UPDATE, CATEGORY, RENEWAL)
+	* @param isForeignCompany  true if the company is foreign; false otherwise
+	*/
+	public void localContractorRegistrationUI(String applType, boolean isForeignCompany) {
 	    PmStatusDesc currentStatusDesc = SmApplicationUtil.getCurrRegStatusDesc(getManagedBean().getSmAppl());
 	    
 	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType) || 
 	        SupplierManagementConst.APPL_TYPE_BUMI.equals(applType)) {
 	        assignValReqdToFalse();
 	        getManagedBean().setDisplayLabelRegistrationStatus(true);
+	        setRegistrationStatusValue(isForeignCompany);
 	    } else if (SupplierManagementConst.APPL_TYPE_UPDATE.equals(applType) || 
 	               SupplierManagementConst.APPL_TYPE_CATEGORY.equals(applType) || 
 	               SupplierManagementConst.APPL_TYPE_RENEWAL.equals(applType)) {
@@ -18784,7 +18797,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void updateRegistrationStatusList(PmStatusDesc currentStatusDesc) {
 	    List<PmStatusDesc> regStatusList = getManagedBean().getRegStatusDescList();
 	    if (!EntityHelper.isCollectionEmpty(regStatusList)) {
-	        List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
+	        List<PmStatusDesc> newList = new ArrayList<>();
 	        for (PmStatusDesc pmStatusDesc : regStatusList) {
 	            if (pmStatusDesc.getStatusDescId() != currentStatusDesc.getStatusDescId()) {
 	                newList.add(pmStatusDesc);
@@ -18793,19 +18806,28 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	        getManagedBean().setRegStatusDescList(newList);
 	    }
 	}
-
+	
+	/**
+	 * Configures the registration UI for a local consultant based on the company type.
+	 * 
+	 * @param isForeignCompany Indicates if the company is foreign. Affects the registration status.
+	 */
 	public void localConsultantRegistrationUI(boolean isForeignCompany) {
 	    assignValReqdToFalse();
 	    setRegistrationStatusValue(isForeignCompany);
 	    getManagedBean().setDisplayLabelRegistrationStatus(true);
 	}
 
+	/**
+	 * Configures the registration UI for a foreign company.
+	 * 
+	 * @param isForeignCompany Indicates if the company is foreign, affecting registration status.
+	 */
 	public void foreignRegistrationUI(boolean isForeignCompany) {
 	    assignValReqdToFalse();
 	    getManagedBean().setDisplayLabelCountryOriginForeign(true);
-	    
+	    getManagedBean().setDisplayLabelRegistrationStatus(isForeignCompany);
 	    setRegistrationStatusValue(isForeignCompany);
-	    getManagedBean().setDisplayLabelRegistrationStatus(true);
 	}
 
 	public void setRegistrationStatusValue(boolean isForeignCompany) {
