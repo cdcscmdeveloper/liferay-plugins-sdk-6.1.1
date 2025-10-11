@@ -2623,14 +2623,20 @@ public class QTCommitteBackingBean extends
 		setQtMaintencesChanges();
 	}
 	
+	/**
+	 * #35500 issue fix 4-9
+	 * Method to get the role name for audit trail
+	 * @param roleId
+	 * @return
+	 */
 	public String getRoleString(Long roleId){
 		String roleName = null;
 		if(roleId != null){
 			if(roleId == 380){
 				roleName = "Member";
-			}else if((roleId == 379)){
+			}else if(roleId == 379){
 				roleName = "Secretary";
-			}else if((roleId == 378)){
+			}else if(roleId == 378){
 				roleName = "Chairperson";
 			}
 		}
