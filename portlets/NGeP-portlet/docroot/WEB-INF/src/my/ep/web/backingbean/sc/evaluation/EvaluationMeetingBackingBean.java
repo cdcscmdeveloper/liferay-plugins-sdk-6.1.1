@@ -1930,6 +1930,7 @@ public class EvaluationMeetingBackingBean extends
 	 * 
 	 */
 	public void deleteCommitteemembersDtls() {
+		//#35500 issue fix start get deleted committee for audit trail 
 		List<ScCommitteeMember> allCommittee = this.getManagedBean().getCommitteeMemberActivity();
 		List<ScCommitteeMember> deletedCommitteeMember = this.getManagedBean().getDeletedCommitteeAuditTrailList() != null ?
 				this.getManagedBean().getDeletedCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
@@ -1945,6 +1946,7 @@ public class EvaluationMeetingBackingBean extends
 				}
 			}
 		}
+		//#35500 issue fix end
 		
 		this.getManagedBean().setDeletedCommitteeAuditTrailList(deletedCommitteeMember);
 		
