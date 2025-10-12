@@ -10481,19 +10481,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 		RequestContext.getCurrentInstance().update(updateIds);
-		// #28777 & #29727 - Start
+		//#28777 - START
 		/*
-		 * To check any pending QT transations if supplier doing any branch
-		 * deleted
+		 * CALLING FUNCTION QT
 		 */
-		if (decision.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
-			ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) BusinessDelegate.getInstance()
-					.getServiceObject("sc", ISourcingIntegrationSO.class);
-			sourcingIntegrationSO.checkQTSupplierBranchDeleted(getManagedBean().getSmAppl().getSmSupplier()
-					.getSupplierId(), getManagedBean().getSmAppl().getSmSupplierBranches(), getManagedBean()
-					.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0));
+		if(decision.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)){
+			ISourcingIntegrationSO sourcingIntegrationSO = BusinessDelegate .getInstance().getServiceObject("sc", ISourcingIntegrationSO.class);
+			sourcingIntegrationSO.checkQTSupplierBranchDeleted(getManagedBean().getSmAppl().getSmSupplier().getSupplierId(),  getManagedBean().getSmAppl().getSmSupplierBranches(), getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0));
 		}
-		// #28777 & #29727 - End
+		//#28777 - END
 		// #34400
 		return "";
 	}
