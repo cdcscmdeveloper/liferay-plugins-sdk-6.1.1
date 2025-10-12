@@ -826,7 +826,11 @@
 						and !(supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist)}">
 						</p:column>
 						<!-- 32279 - start-->
-						<p:column rendered="#{!supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}">
+						<!-- 39293 - START -->
+						<p:column rendered="#{!supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector or 
+						(supplierDataMaintenanceBackingBean.managedBean.cancelRegistration or 
+						supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector)}">
+						<!-- 39293 - END -->
 							<h:graphicImage value="/css/images/design/ico-disabled-chckbx.png" 
 								rendered="#{!supplierDataMaintenanceBackingBean.managedBean.suspendRegistration and
 								!supplierDataMaintenanceBackingBean.managedBean.cancelRegistration and
