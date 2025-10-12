@@ -2574,6 +2574,74 @@ public class QTCommitteBackingBean extends
 		setQtMaintencesChanges();
 	}
 	
+	/**
+	 * #35500 issue fix 4-9
+	 * Capture the modified role values
+	 * @param member
+	 */
+	public void onChangeRole(ScCommitteeMember member){
+		if (member.getMemberRoleId() == null){
+			this.roleChangedListener(member);
+			return;
+		}
+		
+		Long changedRoleId = member.getMemberRoleId();		
+		Long previousRoleId = member.getMemberRole().getParameterId() != null ? member.getMemberRole().getParameterId() : null;
+		String changedRole = getRoleString(changedRoleId);
+		String previousRole = getRoleString(previousRoleId);
+		
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
+				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
+				
+		if (!mapModifiedRole.isEmpty()) {
+			if (mapModifiedRole.containsKey(member.getPmUser())) {
+				userRoles = mapModifiedRole.get(member.getPmUser());
+				if (userRoles.get(1).equals(changedRole)){
+					mapModifiedRole.remove(member.getPmUser());
+				} else {
+					userRoles.add(0, changedRole);
+					mapModifiedRole.remove(member.getPmUser());
+					mapModifiedRole.put(member.getPmUser(),userRoles);					
+				}
+			} else {
+				userRoles.add(changedRole);
+				userRoles.add(previousRole);
+				userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+				mapModifiedRole.put(member.getPmUser(),userRoles);
+			}
+		} else {
+			userRoles.add(changedRole);
+			userRoles.add(previousRole);
+			userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+			mapModifiedRole.put(member.getPmUser(),userRoles);
+		}
+
+		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
+		
+		super.roleChangedListener(member);	
+		setQtMaintencesChanges();
+	}
+	
+	/**
+	 * #35500 issue fix 4-9
+	 * Method to get the role name for audit trail
+	 * @param roleId
+	 * @return
+	 */
+	public String getRoleString(Long roleId){
+		String roleName = null;
+		if(roleId != null){
+			if(roleId == 380){
+				roleName = "Member";
+			}else if(roleId == 379){
+				roleName = "Secretary";
+			}else if(roleId == 378){
+				roleName = "Chairperson";
+			}
+		}
+		return roleName;
+	}
 	
 	/**
 	 * Set member role for chair person
