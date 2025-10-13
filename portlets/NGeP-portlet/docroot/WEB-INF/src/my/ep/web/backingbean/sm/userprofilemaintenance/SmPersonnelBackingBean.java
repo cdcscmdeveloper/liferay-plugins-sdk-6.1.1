@@ -45,8 +45,6 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -927,6 +925,12 @@ public class SmPersonnelBackingBean extends
 				throw new EpException(MessageConst.ERROR_722656,
 						new String[] { addrType });
 			} else {
+				if (srcAddr.getPostcode() != null && StringUtils.isNotBlank(srcAddr.getPostcode())
+						&& (!StringUtils.isNumeric(srcAddr.getPostcode()) || srcAddr.getPostcode().length() != 5)) {
+					destAddr.setSameAsPerm(false);
+					String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
+					throw new EpException(errMsg, null);
+				}
 				destAddr.setSmAddress((SmAddress) srcAddr.deepCopy());
 				updateMailAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
 			}
@@ -4158,7 +4162,7 @@ public class SmPersonnelBackingBean extends
 	}
 	//32515 END
 	
-	//#26238
+	//#26238, 39217
 	/**
 	 * Display error if supplier has active DA 
 	 * (cancel registration / suspend registration / blacklist owner)
@@ -4166,21 +4170,13 @@ public class SmPersonnelBackingBean extends
 	 * @return
 	 */
 	private boolean hasValidDisciplinaryAction(SmSupplier supplier){
-		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-		reqDTO.setSupplier(supplier);
-		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
-				.retrieveActiveDisciplinaryActionBySupplier(reqDTO);
-		if(EntityHelper.isCollectionEmpty(resDTO.getSmDisciplinaryActions())){
-			return false;
-		}
-		for (SmDisciplinaryAction da : resDTO.getSmDisciplinaryActions()){
-			if(da.isCancelRegistration() || da.isSuspendRegistration() || da.isBlacklistOwner()){
-				FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", 
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-						SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-								new String[] { "" })));
-				return true;
-			}
+		List<SmDisciplinaryAction> activeDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		if (SmApplicationUtil.hasCannotLoginDA(activeDA)){
+			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", 
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+							new String[] { "" })));
+			return true;
 		}
 		return false;
 	}
@@ -4207,4 +4203,18 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setOldOrg(orgProfile);
 	}
 	// #28895_35501 End
+	
+	// #36718 - Start
+	/**
+	 * To check postcode by using listener
+	 * @param postcode
+	 */
+	public void checkPostcode(String postcode) {
+		if (postcode != null && StringUtils.isNotBlank(postcode)
+				&& (!StringUtils.isNumeric(postcode) || postcode.length() != 5)) {
+			String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
+			throw new EpException(errMsg, null);
+		}
+	}
+	// #36718 - End
 }

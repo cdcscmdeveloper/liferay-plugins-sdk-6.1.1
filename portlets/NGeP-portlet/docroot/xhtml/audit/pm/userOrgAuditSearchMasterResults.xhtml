@@ -9,7 +9,7 @@
 		trigger="panelSearchId">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
-	<p:panel header="#{lbl['lbl.pm.audit.result_']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.pm.audit.result']}" toggleable="true">
 		<p:dataTable id="searchMasters" var="master" rows="10"
 			value="#{searchPMUserOrgAuditBackingBean.searchMaster}"
 			rowIndexVar="index" lazy="true">
@@ -55,13 +55,10 @@
 			</c:if>
 
 			<c:if test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSRG'}">
-				<p:column headerText="#{lbl['lbl.pm.audit.grpRole']}" style="white-space: normal!important;" width="10%">
+				<p:column headerText="#{lbl['lbl.pm.audit.grpCode']}" style="white-space: normal!important;" width="9%">
 					<h:outputText value="#{master.masterLabel2}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.audit.grpCode']}" style="white-space: normal!important;" width="9%">
-					<h:outputText value="#{master.masterLabel4}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.pm.audit.grpName']}" style="white-space: normal!important;" width="15%">
+				<p:column headerText="#{lbl['lbl.pm.audit.grpName']}" style="white-space:pre-wrap!important;word-break: break-word;width: 15%;">
 					<h:outputText value="#{master.masterLabel3}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.audit.ptjCode']}" style="white-space: normal!important;" width="10%">
@@ -83,7 +80,7 @@
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
 					</f:facet>
 				<p:menuButton value="#{lbl['lbl.btn.option']}">
-						<p:menuitem id="panelSearchId" value="#{lbl['lbl.btn.view']}"
+						<p:menuitem id="panelSearchId" value="#{lbl['lbl.pm.view']}"
 							icon="ui-icon-view"
 							action="#{searchPMUserOrgAuditBackingBean.redirectToDetails(master.masterLabel3,master.pmParameterLvlId,master.createBy,master.roleCode,master.docGroupId,master.masterLabel6)}" />
 					</p:menuButton>

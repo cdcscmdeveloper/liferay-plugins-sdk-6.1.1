@@ -54,6 +54,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.bean.search.sc.QTSearchBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.ICtPanelCategorySO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -177,6 +178,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.VCtContract;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -1026,7 +1028,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveApprovalTabDtl();
 			}
 			//bug #30435 - end
-			
+			convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode());//#29661
 			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
@@ -2126,7 +2128,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		scQt.setScQtCommittees(qtCommitteList);
 		// Code for to update the supplier qualification criteria
 		/* List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>(); */
-		if (!this.getManagedBean().getQt().isPanel()) {
+		//if (!this.getManagedBean().getQt().isPanel()) {//#29661 commented panel checking for inserting ct panel category
 			if (this.getManagedBean().getQt().getQtType()
 					.equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
 				List<ScQtCategory> openList = this.getManagedBean()
@@ -2167,7 +2169,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 
 			}
-		}
+		//} #29661
 		
 		if (scQt.getScQtSupplierCriteria() != null
 				&& !scQt.getScQtSupplierCriteria().isAllState()) {
@@ -2614,6 +2616,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		// 28895 - 35500
 		quationTenderReqDTO.setDeletedCommitteMembersAuditTrailList(this.getManagedBean()
 				.getToBeDelCommitteMemebers());
+		quationTenderReqDTO.setCommitteeMemberModifiedRoleAuditTrail(this.getManagedBean().getMapModifiedRole());//#35500 issue fix 4-9
 		
 		//20210325@asyrafhaziq_30518 - Start
 	    List <ScQtCommittee> scQtCommittees = getQtCommiteDtlsByQtId(scQt.getQtId());
@@ -4394,6 +4397,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getToBeDelCommitteMemebers());
 				//#28895 - 35500 start
 				committeReqDTO.setNewScCommitteeMemberAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList()); 
+				committeReqDTO.setCommitteeMemberModifiedRoleAuditTrail(this.getManagedBean().getMapModifiedRole());//#35500 issue fix 4-9
 				committeReqDTO.setToBeRemovedCommitteeMemberAuditTrailList(this.getManagedBean()
 						.getDeletedScCommitteeMemberAuditTrailList());
 				//#28895 - 35500 end
@@ -7782,10 +7786,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getManagedBean().getFulfilmentType())
 						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
 								.equalsIgnoreCase(this.getManagedBean()
-										.getFulfilmentType())
-										|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
-										.equalsIgnoreCase(this.getManagedBean()
-												.getFulfilmentType())) {
+										.getFulfilmentType())) {
 					reqDTO.setQtdetail(fulfilMentDtls);
 					detailSO.validateSCFulfillmentSchedules(reqDTO);
 				}
@@ -8196,6 +8197,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//end #25037
 			//28895 - 35500 start
 			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmUserDeletedContactPersonList());
+			//#35500 fix issue 5 Start
+			quationTenderReqDTO.setModifiedDoaList(this.getManagedBean().getModifiedDoaList());
+			quationTenderReqDTO.setNewDoaList(this.getManagedBean().getNewDoaList());
+			//#35500 fix issue 5 End
 			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());			//28895 - 35500 end
 			// 25037 - end
 
@@ -13107,16 +13112,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 					ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 					docDefTypeReqDTO
 							.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-					//Reopen #25726 note 110
-					if(null != this.getManagedBean().getFulfilmentType()){
-						if(this.getManagedBean().getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
-							docDefTypeReqDTO
-							.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
-						}else{
-							docDefTypeReqDTO
-							.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
-						}
-					}
+					//new #25726
+					docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
 					//#25726 end
 					ParameterResDTO docDefTypeResDTO = parameterSo
 							.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
@@ -14477,9 +14474,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 			BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
 
 			constructBiddingSerachBean(qtnTenderSearchBean, searchBean);
-			// Order by created date
+			
+			// No Bidding group by QT No -38930 & 25791 -start
+			searchBean.getSortColumns()
+					.add(new SearchOrderBean(SourcingConstants.BIDDING_DOC_NO,
+							false));
 			searchBean.getSortColumns().add(
-					new SearchOrderBean(SourcingConstants.BIDDING_SCHEDULE_ID, false));
+					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_NUMBER,
+							false));
+			// No Bidding group by QT No -38930 & 25791 -end
+	
 			if(isDeskOfficer() || isApprover()){
 				biddingReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				if(isDeskOfficer()){
@@ -14928,7 +14932,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 	}
 	// 37892,25635 -end-
-	
 	//#21692 - Start
 	private void enableChangesToPBSecretary() {
 		if (this.getManagedBean().getQt() != null && this.getManagedBean().getQt().getQtId() != null) {
@@ -14959,4 +14962,64 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//#21692 - End
 
+	/**
+	 * #29661
+	 * Get category code list 
+	 */
+	public void getPanelCategory() {
+		List<ScQtCategory> listScQtCategories = getQtSpecSO().retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
+		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
+		if (CollectionUtils.isNotEmpty(listScQtCategories)){
+			this.getManagedBean().setQtCategoryList(listScQtCategories);
+			this.getManagedBean().setCtPanelCategory(false);
+		}else if (status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+			Long circularVerId = this.getManagedBean().getQt().getCircularVer().getCircularVerId();
+
+			ICtPanelCategorySO ctPanelCategorySO = (ICtPanelCategorySO) EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICtPanelCategorySO.class);
+
+			List<CtPanelCategory> ctPanelCategorycode = new ArrayList<>();
+			ctPanelCategorycode = ctPanelCategorySO.retrievePanelCategoryCodeByCircularVerId(circularVerId);
+			this.getManagedBean().setCtPanelCategoryCode(ctPanelCategorycode);
+			this.getManagedBean().setCtPanelCategory(true);
+		}
+	}
+
+	/**
+	 * #29661 start
+	 * get parameter description by sc_qt_category's category type
+	 * @param categoryType
+	 * @return
+	 */
+	public String getParameterDescByString(String categoryType){
+		PmParameter pmParameter = this.retrieveParameterById(Long.valueOf(categoryType));
+		return this.getParameterDesc(pmParameter);
+	}
+	
+	/**
+	 * #29661 start
+	 * Convert CT panel category code data to ScQt category code data 
+	 * @param panelCategoryCodeList
+	 */
+	private void convertPanelCategoryCodeToScQtCategory(List<CtPanelCategory> panelCategoryCodeList) {
+		
+		if (CollectionUtils.isNotEmpty(panelCategoryCodeList)) {
+
+			List<ScQtCategory> scQtCategoryListNew = new ArrayList<>();
+			for (CtPanelCategory panelCategoryCode : panelCategoryCodeList) {
+				ScQtCategory scQtCategory = new ScQtCategory();
+				scQtCategory.setCategoryType(String.valueOf(panelCategoryCode.getCategoryType().getParameterId()));
+				scQtCategory.setPmCategoryL1(panelCategoryCode.getPmCategoryL1());
+				scQtCategory.setPmCategoryL2(panelCategoryCode.getPmCategoryL2());
+				scQtCategory.setPmCategoryL3(panelCategoryCode.getPmCategoryL3());
+				scQtCategory.setPmCategoryL1Name(panelCategoryCode.getPmCategoryL1Name());
+				scQtCategory.setPmCategoryL2Name(panelCategoryCode.getPmCategoryL2Name());
+				scQtCategory.setPmCategoryL3Name(panelCategoryCode.getPmCategoryL3Name());
+				scQtCategory.setMandatory(false);
+				scQtCategory.setScQt(this.getManagedBean().getQt());
+				scQtCategoryListNew.add(scQtCategory);
+			}
+			this.getManagedBean().setQtCategoryList(scQtCategoryListNew);
+		} 
+	}
 }

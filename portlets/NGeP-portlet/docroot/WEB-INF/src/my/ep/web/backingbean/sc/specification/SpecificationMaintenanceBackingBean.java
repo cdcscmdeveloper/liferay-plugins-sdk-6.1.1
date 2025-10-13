@@ -450,7 +450,7 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 			this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
 			if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
 				SpecificationBackingBean specBB = new SpecificationBackingBean();
-				specBB.qtChecklistTabChange(10);
+				specBB.qtChecklistTabChange(11);//+1 from original no due to #29661
 				RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
 			}
 		}

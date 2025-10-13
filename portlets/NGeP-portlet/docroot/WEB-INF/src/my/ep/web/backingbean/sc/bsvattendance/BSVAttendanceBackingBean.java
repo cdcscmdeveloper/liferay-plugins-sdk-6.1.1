@@ -131,6 +131,7 @@ public class BSVAttendanceBackingBean extends
 			// getting Briefing Same As Site Visit value
 			ScQt scQt = resDTO.getScQt();
 			this.getManagedBean().setScQt(scQt);
+			this.getManagedBean().setDaImposedSupplierIds(new ArrayList<Long>());// 26247(39088)
 			if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
 				// Need to construct tab bean for zone
@@ -363,6 +364,7 @@ public class BSVAttendanceBackingBean extends
 				reqDTO.setZoneBsvList(zoneBsvList);
 			}
 			//Bug 31475 - shaqimi end
+			reqDTO.setDaImposedSupplierIds(this.getManagedBean().getDaImposedSupplierIds());// 26247(39088)
 			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
 			if (resDTO.isSuccessful()) {
 				/*Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());
@@ -906,6 +908,13 @@ public class BSVAttendanceBackingBean extends
 				SmSupplier smSupplier = getQtBriefingSO().evaluateDisciplinaryActions(registration.getSupplier(),
 						scQt.getQtId());
 				registration.setSupplier(smSupplier);
+				// 26247(39088) - start
+				List<Long> daImposedList = this.getManagedBean().getDaImposedSupplierIds();
+				if (daImposedList != null && this.disabledQTProcess(smSupplier)
+						&& !daImposedList.contains(smSupplier.getSupplierId())) {
+					daImposedList.add(smSupplier.getSupplierId());
+				}
+				// 26247(39088) - end
 			}	
 		}	
 		briefing.setToBeattand(count);
@@ -994,6 +1003,23 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	// #30447 - End
+	
+	// #30447 - Start
+	/**
+	 * To set salutation name for supplier
+	 * 
+	 * @param identificationNo
+	 * @return salutationName
+	 */
+	public String setSalutationSupplierName(String identificationNo) {
+		String salutation = supplierSalutation(identificationNo);
+		if (StringUtils.isNotBlank(salutation)) {
+			return salutation;
+		}
+		return StringUtils.EMPTY;
+	}
+
+	// #30447 - End
 
 	private void getAttandanceDtlsBySelectedRegistartion(
 			ScQtBsvRegistration briefingRegistration) {
@@ -1039,14 +1065,7 @@ public class BSVAttendanceBackingBean extends
 
 			for (SmPersonnel personnel : personals) {
 				ScQtBsvAttendance briefingAttendance = new ScQtBsvAttendance();
-				
-				// #30447 - Start
-				String newName = personnel.getName();
-				String salutation = supplierSalutation(personnel.getIdentificationNo());
-				newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
-				// #30447 - End
-				
-				briefingAttendance.setName(newName);//#30447
+				briefingAttendance.setName(personnel.getName());
 				briefingAttendance.setIcPassPort(personnel
 						.getIdentificationNo());
 				//Start Bug #26525
@@ -1061,6 +1080,12 @@ public class BSVAttendanceBackingBean extends
 		}finally{
 			briefingSO=null;	
 		}
+		
+		// #30447 - Start
+		for (ScQtBsvAttendance attaned : attanedList) {
+			attaned.setSalutation(setSalutationSupplierName(attaned.getIcPassPort()));
+		}
+		// #30447 - End
 		
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(attanedList);
