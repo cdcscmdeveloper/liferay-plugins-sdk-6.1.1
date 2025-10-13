@@ -93,9 +93,11 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 			detailObj(AuditConst.PM_AUD_SCP_EFF_DATE_FIELDLABELCODE, null,
 					simpleDateFormat.format(ruleValue.getEffDate()), AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_SCP_EXP_DATE_FIELDLABELCODE, null,
-					ruleValue.getExpDate() != null ? simpleDateFormat.format(ruleValue.getExpDate()) : null,
-					AuditConst.PM_AUD_ACTION_TYPE_INS);
+			if(ruleValue.getExpDate() != null){
+				detailObj(AuditConst.PM_AUD_SCP_EXP_DATE_FIELDLABELCODE, null,
+					simpleDateFormat.format(ruleValue.getExpDate()), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			}
+			
 		}
 	}
 	

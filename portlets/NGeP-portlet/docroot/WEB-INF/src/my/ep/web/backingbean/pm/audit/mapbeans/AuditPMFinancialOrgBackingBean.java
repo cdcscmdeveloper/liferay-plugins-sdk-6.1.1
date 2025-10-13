@@ -69,12 +69,12 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		managedBean = (FinancialOrgManagedBean) manageBean;
 		PmFinancialOrg financialOrg = managedBean.getFinancialOrg();
-		String serviceType = managedBean.getServiceTypes().get(0);
-		checkLevelCode3(serviceType);
 		this.roleCode = roleCode;
 		docNo = financialOrg.getBizRegNumber();
 		docType = financialOrg.getFinOrgName();
-		retrieveServiceTypeMap();
+		levelCode3 = AuditConst.PM_LVL_CODE_3_OFO_OFOFFC;
+		parameterLvlId = AuditConst.PM_AUD_OFOFFC_PMPARAMETERLVLID;
+		
 		PmFinancialOrg savedFinancialOrg = managedBean.getSavedFinancialOrg();
 		
 		if(financialOrg.isBrandNew()){
@@ -456,17 +456,6 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	}
 	
 	/**
-	 * retrieve service type into mapper
-	 */
-	private void retrieveServiceTypeMap(){
-		List<PmParameterDesc> parameterDescs = managedBean.getBankServicesList();
-		serviceTypeMapper = new HashMap<>();
-		for(PmParameterDesc pmDesc: parameterDescs){
-			serviceTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
-		}
-	}
-	
-	/**
 	 * retrieve service type into map
 	 */
 	private void retrieveServiceType(){
@@ -485,34 +474,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		}
 	}
 	
-	private void checkLevelCode3(String type){
-		
-		switch (type){
-		
-		case ParameterConst.BANK_SERVICES_FACTORING_COMPANY :
-			levelCode3 = AuditConst.PM_LVL_CODE_3_OFO_OFOFFC;
-			parameterLvlId = AuditConst.PM_AUD_OFOFFC_PMPARAMETERLVLID;
-			break;
-			
-		case ParameterConst.BANK_SERVICES_PAYMENT_BANK :
-			levelCode3 = AuditConst.PM_LVL_CODE_3_OFO_OFOPBANK;
-			parameterLvlId = AuditConst.PM_AUD_OFOPBANK_PMPARAMETERLVLID;
-			break;
-			
-		case ParameterConst.BANK_SERVICES_PERFORMANCE_BOND :
-			levelCode3 = AuditConst.PM_LVL_CODE_3_OFO_OFOPBOND;
-			parameterLvlId = AuditConst.PM_AUD_OFOPBOND_PMPARAMETERLVLID;
-			break;
-			
-		case ParameterConst.BANK_SERVICES_REGISTRATION :
-			levelCode3 = AuditConst.PM_LVL_CODE_3_OFO_OFOREGBANK;
-			parameterLvlId = AuditConst.PM_AUD_OFOREGBANK_PMPARAMETERLVLID;
-			break;
-			
-		default :
-			break;
-		}
-	}
+
 	private ArrayList<AuditPMSPDTO> detailObj(BigInteger fieldLabelId, String oldValue, String newValue) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
