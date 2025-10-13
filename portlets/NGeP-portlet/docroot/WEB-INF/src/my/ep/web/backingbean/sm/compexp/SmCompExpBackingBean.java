@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.compexp.ISmCompExpSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -23,6 +25,8 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.compexp.SmCompExpReqDTO;
 import my.ep.dto.sm.compexp.SmCompExpResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -37,6 +41,7 @@ import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.persistence.entity.sm.SmCompExpMasterHistory;
 import my.ep.persistence.entity.sm.SmCompExpMasterHistoryDoc;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -159,6 +164,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void redirectToDraftUpdate(SmCompExpDraft draft) {
 		this.getManagedBean().setDraftUpdate(true);
+		this.getManagedBean().setMasterUpdate(false);
 		initSelectedDraft(draft);
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
 		SelectItem clientTypeFederalItem = new SelectItem();
@@ -305,6 +311,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
 		smCompExpCatDraftList = getSmCompExpSo().retrieveSmCompExpCatDraftList(reqDTO).getSmCompExpCatDraftList();
+		smCompExpCatDraftList = filterCatCode(smCompExpCatDraftList, this.getManagedBean().getSupplier().getSmAppl().getApplId());
 
 		if (smCompExpCatDraftList.isEmpty()) {
 			addSmCompExpCatDraft();
@@ -314,6 +321,29 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().setSmCompExpCatDraftList(smCompExpCatDraftList);
 			this.getManagedBean().setSmCompExpCatDraftListEmpty(false);
 		}
+	}
+
+	private List<SmCompExpCatDraft> filterCatCode(List<SmCompExpCatDraft> catCodeList, Long applId) {
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		ISupplierSearchSO reqSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+				ISupplierSearchSO.class);
+		reqDTO.setApplId(applId);
+		SupplierSearchResDTO resDTO = reqSO.retrieveSupplierActiveCategoryCodeByApplId(reqDTO);
+		for (SmCompExpCatDraft draftCatCode : catCodeList) {
+			for (SmSupplierCategory activeCatCode : resDTO.getSmSupplierCategoryList()) {
+				if (activeCatCode.getPmCategoryL3().getCategoryL3Id().equals(draftCatCode.getCategoryL3().getCategoryL3Id())) {
+					draftCatCode.setActive(true);
+					break;
+				}
+			}
+		}
+		ListIterator<SmCompExpCatDraft> iter = catCodeList.listIterator();
+		while(iter.hasNext()){
+			if(!iter.next().isActive()){
+				iter.remove();
+			}
+		}
+		return catCodeList;
 	}
 
 	/**
