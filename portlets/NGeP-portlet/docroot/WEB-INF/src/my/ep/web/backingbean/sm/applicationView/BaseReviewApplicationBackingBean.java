@@ -1334,7 +1334,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
 								.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
 					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
-						if (manuFacDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+						if (manuFacDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
 							continue;
 						}
 						if(activeManufacturingDtls.size() == 0){
