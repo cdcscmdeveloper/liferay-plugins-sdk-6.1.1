@@ -185,6 +185,7 @@
 						</tr>
 					</table>
 				</td>
+				<!-- 4ser
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
 				<td>
 					<table>
@@ -209,6 +210,7 @@
 					</table>
 				</td>
 			</tr>
+				4ser -->
 			</tr>
 
 			<tr>
@@ -443,7 +445,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneRadio value="#{scQt.sampleReq}"
-								disabled="#{scQt.partial or isReadOnly}">
+								disabled="#{isReadOnly}">
 								<f:selectItems
 									value="#{demoInvBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax event="change" partialSubmit="true"
