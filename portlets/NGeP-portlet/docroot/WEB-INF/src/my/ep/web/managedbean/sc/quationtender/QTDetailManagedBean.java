@@ -54,6 +54,7 @@ import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -110,7 +111,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
-import my.ep.util.CustomUtils;	// Bug #35219@Syazani 07/11/2023
+import my.ep.util.CustomUtils;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -10800,7 +10801,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.firstViewPageCAUsers = firstViewPageCAUsers;
 	}
 	// #25426 - End
-	
+
 	// 25791-start
 	/**
 	 * @return the qtTrackingDiaryView
@@ -10858,8 +10859,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param loaContractTrackingDtls
 	 *            the loaContractTrackingDtls to set
 	 */
-	public void setLoaContractTrackingDtls(
-			List<ScLoaForQt> loaContractTrackingDtls) {
+	public void setLoaContractTrackingDtls(List<ScLoaForQt> loaContractTrackingDtls) {
 		this.loaContractTrackingDtls = loaContractTrackingDtls;
 	}
 
@@ -10889,8 +10889,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param loaContractListTracking
 	 *            the loaContractListTracking to set
 	 */
-	public void setLoaContractListTracking(
-			List<VCtContract> loaContractListTracking) {
+	public void setLoaContractListTracking(List<VCtContract> loaContractListTracking) {
 		this.loaContractListTracking = loaContractListTracking;
 	}
 
@@ -10905,8 +10904,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param viewQTDLLOAContractTrackingDtls
 	 *            the viewQTDLLOAContractTrackingDtls to set
 	 */
-	public void setViewQTDLLOAContractTrackingDtls(
-			IPagingDataModel<ScLoa> viewQTDLLOAContractTrackingDtls) {
+	public void setViewQTDLLOAContractTrackingDtls(IPagingDataModel<ScLoa> viewQTDLLOAContractTrackingDtls) {
 		this.viewQTDLLOAContractTrackingDtls = viewQTDLLOAContractTrackingDtls;
 	}
 
@@ -10921,8 +10919,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param viewLOAContractDataModel
 	 *            the viewLOAContractDataModel to set
 	 */
-	public void setViewLOAContractDataModel(
-			IPagingDataModel<VCtContract> viewLOAContractDataModel) {
+	public void setViewLOAContractDataModel(IPagingDataModel<VCtContract> viewLOAContractDataModel) {
 		this.viewLOAContractDataModel = viewLOAContractDataModel;
 	}
 
@@ -10952,13 +10949,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param searchBidScheduleDataModel
 	 *            the searchBidScheduleDataModel to set
 	 */
-	public void setSearchBidScheduleDataModel(
-			IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel) {
+	public void setSearchBidScheduleDataModel(IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel) {
 		this.searchBidScheduleDataModel = searchBidScheduleDataModel;
 	}
-
 	// 25791-End
-	
+
 	// 37813,35384 -start
 	/**
 	 * @return the techPoints
