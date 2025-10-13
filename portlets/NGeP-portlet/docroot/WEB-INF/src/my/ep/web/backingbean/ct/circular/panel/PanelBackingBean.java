@@ -991,7 +991,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		//#30014 - Start
 		if (getManagedBean().getCircularVer().getCtPanelCategoryList().size() == 0
 				|| getManagedBean().getCircularVer().getCtPanelCategoryList().isEmpty()) {
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				getManagedBean().setSelectedTabIndex(2);
 				throw new EpException(MessageConst.ERROR_750088, new String[] { ResourceBundleUtils.getMessage("lbl.ct.menu.category.code",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
