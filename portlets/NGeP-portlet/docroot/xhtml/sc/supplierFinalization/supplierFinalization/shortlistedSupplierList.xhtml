@@ -119,7 +119,8 @@
 		           		<p:column rowspan="2" colspan="#{canShowSupplierProposal?'2':'1'}" headerText="#{lbl['lbl.sc.supplier.code.info']}" style="width:5%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
+		           		<!-- #38151 update label-->
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.overall.score']}" style="width:5%; text-align:right;"/>
 		               	<p:column rowspan="2" style="width:5%; text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 		               		<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.rating']}" />
@@ -537,8 +538,8 @@
 						<p:commandLink
 							action="#{suppFinalizationBackingBean.qualifiedSupplierListPopupScore(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
 							process="@this" update="@([id$=SuppDetailatestPopupId])"
-							rendered="#{!suppFinalizationBackingBean.managedBean.weightage35384WIP}
-							styleClass="commandLink">
+							rendered="#{!suppFinalizationBackingBean.managedBean.weightage35384WIP}"
+							styleClass="commandLink" >
 
 							<h:outputText value="#{shortlistedSupp.totalScore}">
 								<f:convertNumber

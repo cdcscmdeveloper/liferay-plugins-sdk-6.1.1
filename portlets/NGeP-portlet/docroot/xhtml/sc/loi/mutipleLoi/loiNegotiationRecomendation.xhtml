@@ -360,7 +360,8 @@
 							</p:column>
 
 							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
-							<p:column headerText="#{lbl['lbl.sc.total.score']}"
+						    <!-- #38151 update label-->
+							<p:column headerText="#{lbl['lbl.sc.total.overall.score']}"
 								style="text-align: right;">
 							<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
 							rendered ="#{lOIDetailBackingBean.managedBean.weightageReq and !lOIDetailBackingBea.managedBean.weightage35384WIP}">
