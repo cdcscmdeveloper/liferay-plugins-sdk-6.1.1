@@ -445,7 +445,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneRadio value="#{scQt.sampleReq}"
-								disabled="#{isReadOnly}">
+								disabled="true">
 								<f:selectItems
 									value="#{demoInvBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax event="change" partialSubmit="true"
