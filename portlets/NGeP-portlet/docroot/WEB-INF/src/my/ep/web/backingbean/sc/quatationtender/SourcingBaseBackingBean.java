@@ -5026,76 +5026,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		// No need to explicitly close the stream; it's done automatically
 	}
-	// Bug #35485@Syazani 08/02/2024 -- End	
-
-	// 25791-start
-	/**
-	 * The method used to retrieve the contract status of the contract.
-	 * 
-	 * @param contractStatus
-	 * @return Effective, Terminated, Expired, Inactive
-	 */
-	public String getContractStatusDesc(int contractStatus) {
-		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
-			return ResourceBundleUtils.getMessage(
-					QTConstants.CONTRACT_STATUS_EFFECTIVE,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE) {
-			return ResourceBundleUtils.getMessage(
-					QTConstants.CONTRACT_STATUS_INACTIVE,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED) {
-			return ResourceBundleUtils.getMessage(
-					QTConstants.CONTRACT_STATUS_EXPIRED,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED) {
-			return ResourceBundleUtils.getMessage(
-					QTConstants.CONTRACT_STATUS_TERMINATED,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-		} else {
-			return "";
-		}
-	}
-
-	// 25791 -end-
-
-	// 25791 -start-
-	/**
-	 * The method used to retrieve the status completion of the contract.
-	 * 
-	 * @param contractNo
-	 * @param status
-	 * @return complete or incomplete
-	 */
-	public String chkContractStatusType(String contractNo, int status) {
-		if (StringUtils.isNotEmpty(contractNo)
-				&& StringUtils.isNotBlank(contractNo)) {
-			if (status == ContractConst.STATUS_COMPLETE) {
-				return ResourceBundleUtils.getMessage(
-						QTConstants.CONTRACT_STATUS_COMPLETE,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-			} else if (status == ContractConst.STATUS_INCOMPLETE) {
-				return ResourceBundleUtils.getMessage(
-						QTConstants.CONTRACT_STATUS_INCOMPLETE,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-			} else if (status == ContractConst.STATUS_NOT_APPLICABLE) {
-				return ResourceBundleUtils.getMessage(
-						QTConstants.CONTRACT_STATUS_NOT_APPLICABLE,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-			}
-		}
-
-		return "";
-	}
-
-	// 25791-End
+	// Bug #35485@Syazani 08/02/2024 -- End
 
 	// #26226 - Start
 	/**
@@ -7185,7 +7116,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportList;
 	}
 	// 37622 - end
-	
+
 	// #29007 Start vinod
 	/**
 	 * This method will check the BPM version and status to insert item spec
@@ -7199,9 +7130,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		Long workFlowStatus = scLoa.getPmStatus().getStatusId();
 		String docType = scLoa.getScLoiLoa().getDocType();
 
-		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICompositeValiditySO.class);
+		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
 
 		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
 
@@ -7211,31 +7141,77 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			cReqDTO.setCompositeValidityId(QTConstants.COMPOSITE_VALIDITY_ID_QT);
 		}
 
-		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO)
-				.getPmCompositeValidity().getMinCompositeVersion();
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
+				.getMinCompositeVersion();
 		String version = this.getManagedBean().getBpmVersionNo();
 
-		return isQualifiedToInsertItemSpecOffer(workFlowStatus, minVersion,
-				version);
+		return isQualifiedToInsertItemSpecOffer(workFlowStatus, minVersion, version);
 	}
-
 	// #29007 End vinod
+
 	// #29007 Start vinod
-	private boolean isQualifiedToInsertItemSpecOffer(Long workFlowStatus,
-			String minVersion, String version) {
-		boolean isOldVersion = StringUtils.isNotBlank(minVersion)
-				&& StringUtils.isNotBlank(version)
+	private boolean isQualifiedToInsertItemSpecOffer(Long workFlowStatus, String minVersion, String version) {
+		boolean isOldVersion = StringUtils.isNotBlank(minVersion) && StringUtils.isNotBlank(version)
 				&& CustomUtils.compositeVersionComparator(version, minVersion) < 0;
-		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-				.equals(workFlowStatus);
-		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION
-				.equals(workFlowStatus);
+		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(workFlowStatus);
+		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION.equals(workFlowStatus);
 
 		if ((isPendingAcknowledgement || isPendingVerify) && isOldVersion) {
 			return true;
 		}
 		return false;
 	}
-
 	// #29007 End vinod
+
+	// 25791-start
+	/**
+	 * The method used to retrieve the contract status of the contract.
+	 * 
+	 * @param contractStatus
+	 * @return Effective, Terminated, Expired, Inactive
+	 */
+	public String getContractStatusDesc(int contractStatus) {
+		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EFFECTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INACTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EXPIRED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_TERMINATED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			return "";
+		}
+	}
+	// 25791 -end-
+
+	// 25791 -start-
+	/**
+	 * The method used to retrieve the status completion of the contract.
+	 * 
+	 * @param contractNo
+	 * @param status
+	 * @return complete or incomplete
+	 */
+	public String chkContractStatusType(String contractNo, int status) {
+		if (StringUtils.isNotEmpty(contractNo) && StringUtils.isNotBlank(contractNo)) {
+			if (status == ContractConst.STATUS_COMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_COMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_INCOMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INCOMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_NOT_APPLICABLE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_NOT_APPLICABLE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			}
+		}
+
+		return "";
+	}
+	// 25791-End	
 }

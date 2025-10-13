@@ -79,6 +79,10 @@ import org.primefaces.model.chart.LineChartSeries;
 @RequestScoped
 public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(BiddingBackingBean.class);
 	private DateTimeInput dateTimeInputUIComponent;
 	private static final DecimalFormat nf = new DecimalFormat((new CommonUtils())			
@@ -1257,8 +1261,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * @param previousPageUrl
 	 * @return Bidding screen.
 	 */
-	public String bidManagementQuotationTenderAction(ScBidScheduleForQT bid,
-			String previousPageUrl) {// 25791
+	public String bidManagementQuotationTenderAction(ScBidScheduleForQT bid, String previousPageUrl) {
+		// 25791
 
 		IBiddingSO biddingSO = null;
 		IQTDetailSO qTDetailSO = null;
@@ -1326,15 +1330,14 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					getManagedBean().getScheduledBid().getScBidItems().get(0));
 			rowSelectListener();
 		}
+		
+        this.getManagedBean().setPreviousPageUrl(previousPageUrl);
+        
+		getManagedBean().setRendered(false);	
 
-		this.getManagedBean().setPreviousPageUrl(previousPageUrl);
-
-		getManagedBean().setRendered(false);
-
-		return QTConstants.QT_MAINTENANCE_BIDDING_MANAGEMENT_VIEW; // 25791
+		return QTConstants.QT_MAINTENANCE_BIDDING_MANAGEMENT_VIEW; // 25791 
 
 	}
-
 	// #17376-144 End
 
 	// #-17376-144 start
@@ -1344,14 +1347,11 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * @return boolean based on screen type.
 	 */
 	public boolean isQTMaintenanceScreen() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
-				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-				|| QTConstants.PORTLET_NAME_QT_SEARCH
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())// ***17376#55
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())// ***17376#55
 				// 25791 -start-
-				|| QTConstants.PORTLET_NAME_QT_TECHSUPP
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-		// 25791 -end-
+				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				// 25791 -end-
 		;
 	}
 	// #17376-144 End
