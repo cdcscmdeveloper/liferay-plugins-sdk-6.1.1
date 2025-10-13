@@ -78,12 +78,14 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 					.getChecklistActionCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
+			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
+					.isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, AuditConst.PM_AUD_ACTION_TYPE_INS);
+
 			detailObj(AuditConst.PM_AUD_QTCHECKLIST_STATUS_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
 					.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
-					.isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, AuditConst.PM_AUD_ACTION_TYPE_INS);
+
 
 			updateList(managedBeans);
 		}
@@ -108,6 +110,18 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			detailObj(AuditConst.PM_AUD_QTCHECKLIST_DISPLAY_PRIORITY_FIELDLABELID, managedBeans.getSelectedDocumentOld()
 					.getDisplaySeq(), managedBeans.getResDTO().getDocument().getDisplaySeq(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
+
+		/* detailObjScoringRequired */
+		if (managedBeans.getSelectedDocumentOld().isScoringReq() != managedBeans.getResDTO().getDocument().isScoringReq()) {
+			this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
+			this.docId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
+			this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
+
+			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID, managedBeans.getSelectedDocumentOld()
+					.isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, managedBeans.getResDTO().getDocument()
+					.isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, AuditConst.PM_AUD_ACTION_TYPE_UPD);
+		}
+
 		/* detailObjStatus */
 		if (managedBeans.getSelectedDocumentOld().getRecordStatusFlg() != managedBeans.getResDTO().getDocument()
 				.getRecordStatusFlg()) {
@@ -118,17 +132,6 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			detailObj(AuditConst.PM_AUD_QTCHECKLIST_STATUS_FIELDLABELID, managedBeans.getSelectedDocumentOld()
 					.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE, managedBeans.getResDTO()
 					.getDocument().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
-					AuditConst.PM_AUD_ACTION_TYPE_UPD);
-		}
-		/* detailObjScoringRequired */
-		if (managedBeans.getSelectedDocumentOld().isScoringReq() != managedBeans.getResDTO().getDocument().isScoringReq()) {
-			this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
-			this.docId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
-			this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
-
-			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID, managedBeans.getSelectedDocumentOld()
-					.isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, managedBeans.getResDTO()
-					.getDocument().isScoringReq() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO,
 					AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 

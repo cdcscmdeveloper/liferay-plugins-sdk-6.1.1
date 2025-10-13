@@ -3,14 +3,17 @@
  */
 package my.ep.web.managedbean.pm.common.rejectionreason;
 
+import java.math.BigDecimal; //#28962
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile; //#28962
 import my.ep.persistence.entity.pm.common.PmPIDReason;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonRestr; //#28962
 import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.web.bean.pm.ReasonSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -45,7 +48,7 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	
 	private List <PmSupplierReason> deleteRestrictions;
 	private int selectedTabIndex;
-	private List<PmPIDReason> pmPidListOrigin = new ArrayList<PmPIDReason>();
+	private List<PmPIDReason> pmPidListOrigin = new ArrayList<>(); //SonarLint Fixing.. //#28962
 	//#8411 - START
 	private Integer reasonCategory;
 	//#8411 - END
@@ -61,8 +64,31 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	
 	private List <PmSupplierReason> auditDeleteRestrictions;
 	/************ AUDIT END #28895-35509 *************/
-	public RejectionReasonManagedBean(){}
 	
+	//#28962 - Start
+	private String suppAccountType;
+	private String ptjCodeName;
+	private String ptjCodeNameSearchValues;
+	private Long ministryProfileId;
+	private Long jabatanProfileId;
+	private Long selectedMinistryId;
+	private BigDecimal dpThreshold;
+	private BigDecimal prThreshold;
+	private PmReason selectedSuppAccType;
+	private List<PmReasonRestr> suppAccountTypeList;
+	private List<PmReasonRestr> deleteSuppAccountTypeList;
+	private List<PmReasonRestr> agencyList;
+	private List<PmReasonRestr> deleteAgencyList;
+	private List<PmOrgProfile> selectedOrgsProfile;
+	private List<PmOrgProfile> selectedAllOrgsProfile;
+	private List<PmOrgProfile> ptjList;
+	private String agencyCodeName;
+	private String ministryCodeName;
+	private String kumpPtjCodeName;
+	//#28962 - End
+
+	public RejectionReasonManagedBean(){}
+
 	/**
 	 * @return the reasonSearchBean
 	 */
@@ -165,9 +191,6 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 		this.suppTypeRestrictions = suppTypeRestrictions;
 	}
 
-//	if(deleteTypeRestrictions==null){
-//		deleteTypeRestrictions = new ArrayList<PmSupplierReason>();
-//	}
 	/**
 	 * @return the deleteAppTypeRestrictions
 	 */
@@ -390,5 +413,300 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	}
 
 	/************ AUDIT END #28895-35509 *************/
+	
+	//#28962 - Start
+	/**
+	 * @return the suppAccountType
+	 */
+	public String getSuppAccountType() {
+		return suppAccountType;
+	}
+
+	/**
+	 * @param suppAccountType
+	 *            the suppAccountType to set
+	 */
+	public void setSuppAccountType(String suppAccountType) {
+		this.suppAccountType = suppAccountType;
+	}
+
+	/**
+	 * @return the ptjCodeName
+	 */
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+
+	/**
+	 * @param ptjCodeName
+	 *            the ptjCodeName to set
+	 */
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+
+	/**
+	 * @return the ptjCodeNameSearchValues
+	 */
+	public String getPtjCodeNameSearchValues() {
+		return ptjCodeNameSearchValues;
+	}
+
+	/**
+	 * @return the ministryProfileId
+	 */
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+
+	/**
+	 * @param ministryProfileId
+	 *            the ministryProfileId to set
+	 */
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+
+	/**
+	 * @return the jabatanProfileId
+	 */
+	public Long getJabatanProfileId() {
+		return jabatanProfileId;
+	}
+
+	/**
+	 * @param jabatanProfileId
+	 *            the jabatanProfileId to set
+	 */
+	public void setJabatanProfileId(Long jabatanProfileId) {
+		this.jabatanProfileId = jabatanProfileId;
+	}
+
+	/**
+	 * @return the selectedMinistryId
+	 */
+	public Long getSelectedMinistryId() {
+		return selectedMinistryId;
+	}
+
+	/**
+	 * @param selectedMinistryId
+	 *            the selectedMinistryId to set
+	 */
+	public void setSelectedMinistryId(Long selectedMinistryId) {
+		this.selectedMinistryId = selectedMinistryId;
+	}
+
+	/**
+	 * @param ptjCodeNameSearchValues
+	 *            the ptjCodeNameSearchValues to set
+	 */
+	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
+		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
+	}
+
+	/**
+	 * @return the dpThreshold
+	 */
+	public BigDecimal getDPThreshold() {
+		if (dpThreshold == null)
+			dpThreshold = new BigDecimal(0);
+		return dpThreshold;
+	}
+
+	/**
+	 * @param dpThreshold
+	 *            the dpThreshold to set
+	 */
+	public void setDPThreshold(BigDecimal dpThreshold) {
+		this.dpThreshold = dpThreshold;
+	}
+
+	/**
+	 * @return the prThreshold
+	 */
+	public BigDecimal getPRThreshold() {
+		if (prThreshold == null)
+			prThreshold = new BigDecimal(0);
+		return prThreshold;
+	}
+
+	/**
+	 * @param prThreshold
+	 *            the prThreshold to set
+	 */
+	public void setPRThreshold(BigDecimal prThreshold) {
+		this.prThreshold = prThreshold;
+	}
+
+	/**
+	 * @return the selectedSuppAccType
+	 */
+	public PmReason getSelectedSuppAccType() {
+		if (selectedSuppAccType == null)
+			selectedSuppAccType = new PmReason();
+		return selectedSuppAccType;
+	}
+
+	/**
+	 * @param selectedSuppAccType
+	 *            the selectedSuppAccType to set
+	 */
+	public void setSelectedSuppAccType(PmReason selectedSuppAccType) {
+		this.selectedSuppAccType = selectedSuppAccType;
+	}
+
+	/**
+	 * @return the agencyList
+	 */
+	public List<PmReasonRestr> getAgencyList() {
+		return agencyList;
+	}
+
+	/**
+	 * @param suppAccountTypeList
+	 *            the suppAccountTypeList to set
+	 */
+	public void setAgencyList(List<PmReasonRestr> agencyList) {
+		this.agencyList = agencyList;
+	}
+
+	/**
+	 * @return the deleteAgencyList
+	 */
+	public List<PmReasonRestr> getDeleteAgencyList() {
+		return deleteAgencyList;
+	}
+
+	/**
+	 * @param deleteAgencyList
+	 *            the deleteAgencyList to set
+	 */
+	public void setDeleteAgencyList(List<PmReasonRestr> deleteAgencyList) {
+		this.deleteAgencyList = deleteAgencyList;
+	}
+
+	/**
+	 * @return the suppAccountTypeList
+	 */
+	public List<PmReasonRestr> getSuppAccountTypeList() {
+		return suppAccountTypeList;
+	}
+
+	/**
+	 * @param suppAccountTypeList
+	 *            the suppAccountTypeList to set
+	 */
+	public void setSuppAccountTypeList(List<PmReasonRestr> suppAccountTypeList) {
+		this.suppAccountTypeList = suppAccountTypeList;
+	}
+
+	/**
+	 * @return the deleteSuppAccountTypeList
+	 */
+	public List<PmReasonRestr> getDeleteSuppAccountTypeList() {
+		return deleteSuppAccountTypeList;
+	}
+
+	/**
+	 * @param deleteSuppAccountTypeList
+	 *            the deleteSuppAccountTypeList to set
+	 */
+	public void setDeleteSuppAccountTypeList(List<PmReasonRestr> deleteSuppAccountTypeList) {
+		this.deleteSuppAccountTypeList = deleteSuppAccountTypeList;
+	}
+
+	/**
+	 * @return the selectedOrgsProfile
+	 */
+	public List<PmOrgProfile> getSelectedOrgsProfile() {
+		return selectedOrgsProfile;
+	}
+
+	/**
+	 * @param selectedOrgsProfile
+	 *            the selectedOrgsProfile to set
+	 */
+	public void setSelectedOrgsProfile(List<PmOrgProfile> selectedOrgsProfile) {
+		this.selectedOrgsProfile = selectedOrgsProfile;
+	}
+	
+	/**
+	 * @return the selectedAllOrgsProfile
+	 */
+	public List<PmOrgProfile> getSelectedAllOrgsProfile() {
+		return selectedAllOrgsProfile;
+	}
+
+	/**
+	 * @param selectedAllOrgsProfile
+	 *            the selectedAllOrgsProfile to set
+	 */
+	public void setSelectedAllOrgsProfile(List<PmOrgProfile> selectedAllOrgsProfile) {
+		this.selectedAllOrgsProfile = selectedAllOrgsProfile;
+	}
+	
+	/**
+	 * @return the ptjList
+	 */
+	public List<PmOrgProfile> getPtjList() {
+		if(ptjList == null){
+			ptjList = new ArrayList<PmOrgProfile>();
+		}
+		return ptjList;
+	}
+	/**
+	 * @param ptjList the ptjList to set
+	 */
+	public void setPtjList(List<PmOrgProfile> ptjList) {
+		this.ptjList = ptjList;
+	}
+	
+	/**
+	 * @return the ptjCodeName
+	 */
+	public String getAgencyCodeName() {
+		return agencyCodeName;
+	}
+
+	/**
+	 * @param agencyCodeName
+	 *            the agencyCodeName to set
+	 */
+	public void setAgencyCodeName(String agencyCodeName) {
+		this.agencyCodeName = agencyCodeName;
+	}
+	
+	/**
+	 * @return the ministryCodeName
+	 */
+	public String getMinistryCodeName() {
+		return ministryCodeName;
+	}
+
+	/**
+	 * @param ministryCodeName
+	 *            the ministryCodeName to set
+	 */
+	public void setMinistryCodeName(String ministryCodeName) {
+		this.ministryCodeName = ministryCodeName;
+	}
+	
+	
+	/**
+	 * @return the kumpPtjCodeName
+	 */
+	public String getKumpPtjCodeName() {
+		return kumpPtjCodeName;
+	}
+
+	/**
+	 * @param kumpPtjCodeName
+	 *            the kumpPtjCodeName to set
+	 */
+	public void setKumpPtjCodeName(String kumpPtjCodeName) {
+		this.kumpPtjCodeName = kumpPtjCodeName;
+	}
+	//#28962 - End
 	
 }

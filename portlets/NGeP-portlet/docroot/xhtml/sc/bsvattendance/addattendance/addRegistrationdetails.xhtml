@@ -37,7 +37,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
 				<ac:disciplinaryActionYesNo
-					supplier="#{scQtBriefReg.supplier}" index="#{index}"/>
+					supplier="#{scQtBriefReg.supplier}" maxRow="0" index="#{index}"/>
 			</p:column>
 			<ui:remove>26247 - end</ui:remove>
 		</p:dataTable>
@@ -147,10 +147,10 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column style="width:22%;white-space: normal;">
-				<h:outputText value="#{scQtBriefAttendace.name}"
-					rendered="#{scQtBriefAttendace.authorized}" />
-				<p:inputText value="#{scQtBriefAttendace.name}"
-					rendered="#{!scQtBriefAttendace.authorized}">
+				<h:outputText value="#{scQtBriefAttendace.salutation} #{scQtBriefAttendace.name}"
+					rendered="#{scQtBriefAttendace.authorized}" /> <ui:remove> #30447 </ui:remove>
+				<p:inputText value="#{scQtBriefAttendace.salutation} #{scQtBriefAttendace.name}"
+					rendered="#{!scQtBriefAttendace.authorized}"> <ui:remove> #30447 </ui:remove>
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						update="@this"></p:ajax>
 				</p:inputText>
