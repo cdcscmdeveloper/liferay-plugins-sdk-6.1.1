@@ -6110,7 +6110,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					memberRole = false;
 					if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
 							&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-							&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) {
+							&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) { //#35238
 						if (committeMember.getRepresentativeType() == null 
 								|| committeMember.getRepresentativeType().getParameterId() == null) {
 //							setTabValue("MET");
