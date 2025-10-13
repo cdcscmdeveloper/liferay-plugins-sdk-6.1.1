@@ -8550,83 +8550,63 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//#29403 end
 		}
 		
-		public void validateLatestCommitteeMembers() {
-			
-			List<CtCommitteeMember> outer = getManagedBean().getUpdatedCommitteeMembers();
-			List<CtCommitteeMember> inner = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
-			boolean isUpdateNeeded = false;
-			boolean isFound = false;
-			
-			for(CtCommitteeMember ctUpdatedMember: outer) {
-				//#29403 start
-				if(ctUpdatedMember.isSelectedCheckBox()){
-					ctUpdatedMember.setSelectedCheckBox(false);
-				}
-				//#29403 end
-				for(CtCommitteeMember originalCtMember: inner) {
-					if(ctUpdatedMember.getPmUser().getUserId().equals(originalCtMember.getPmUser().getUserId())) {
+	// #35238 start
+	/**
+	 * Validates the latest committee members to check if there are any
+	 * differences between the updated and original lists. Determines whether a
+	 * dialog should be shown for updating the committee or confirming
+	 * validation.
+	 */
+	public void validateLatestCommitteeMembers() {
 
-						//#29403 start
-						if(originalCtMember.isSelectedCheckBox()){
-							originalCtMember.setSelectedCheckBox(false);
-						}
-						//#29403 end
-						
-						if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
-							isFound = true;
-							
-							//#29403 start
-							if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
-									&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-									&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) { //#35238
-								if(ctUpdatedMember.getRepresentativeType()!=null && ctUpdatedMember.getRepresentativeType().getParameterId() != null) { //#29403
-									if(originalCtMember.getRepresentativeType()!=null && originalCtMember.getRepresentativeType().getParameterId() != null
-										&& !originalCtMember.getRepresentativeType().getParameterId().equals(ctUpdatedMember.getRepresentativeType().getParameterId())) { //#29549
-										isUpdateNeeded = true;
-									}
-								}
-							}
-							//#29403 end
-							
-							if(ctUpdatedMember.getMemberRole().getParameterId() != null) {
-								if(!originalCtMember.getMemberRole().getParameterId().equals 
-										(ctUpdatedMember.getMemberRole().getParameterId())) {
-									isUpdateNeeded = true;
-								}					
-							}
-							break;
-						} else {
-							isUpdateNeeded = true;
-							break;
-						}
-					} else {
-						if(ContractConst.ADD_NEW_MEMBER.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
-							isUpdateNeeded = true;
-							break;
-						}								
-					}
+		List<CtCommitteeMember> outer = getManagedBean().getUpdatedCommitteeMembers();
+		List<CtCommitteeMember> inner = ctBackingBean.getManagedBean().getContractVer().getCtAmendment()
+				.getCtCommitteeMembers();
+		boolean isUpdateNeeded = false;
+		boolean isFound = false;
+
+		for (CtCommitteeMember ctUpdatedMember : outer) {
+			// #29403 start
+			resetSelectedCheckbox(ctUpdatedMember);
+			// #29403 end
+			CtCommitteeMember matchingMember = findMatchingValidationCommittee(ctUpdatedMember, inner); // #35238
+
+			if (matchingMember != null) {
+				// #29403 start
+				resetSelectedCheckbox(matchingMember);
+				// #29403 end
+
+				if (!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
+					isFound = true;
+
+					// #29403 start
+					isUpdateNeeded = checkRoleAndRepresentativeCommitte(ctUpdatedMember, matchingMember);
+					// #29403 end
+
+				} else {
+					isUpdateNeeded = true;
 				}
-				if(isUpdateNeeded) {
-					break;
-				}
+			} else if (ContractConst.ADD_NEW_MEMBER.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
+				isUpdateNeeded = true;
 			}
-			
-			//#29403 start
-			validateCommiteeMemberDetails();
-//			setTabValue("DCN");
-			getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.decision", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			
-			//#29403 end
 
-			if(isUpdateNeeded || !isFound) {
-				RequestContext.getCurrentInstance().execute("updLatestCommitteeDlg.show()");
-			} else {
-				getManagedBean().setUpdateCommittee(Boolean.FALSE);
-				RequestContext.getCurrentInstance().execute("validateLatestCommitteeDlg.show()");
-			}		
-
+			if (isUpdateNeeded) {
+				break;
+			}
 		}
+
+		// #29403 start
+		validateCommiteeMemberDetails();
+		// #24333 start
+		getManagedBean().setSelectedTabIndex(
+				getManagedBean().getIndexing().get(
+						ResourceBundleUtils.getMessage("lbl.ct.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+		// #24333 end
+		// #29403 end
+		showDialogValidateCommittee(isUpdateNeeded, isFound);
+	}
+	// #35238 end
 		
 		public List<CtCommitteeMember> getFilteredCommitteeMembers() {
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
@@ -9925,4 +9905,135 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	// #30014 - End
 	
+	//#35238 start
+	/**
+	 * Resets the selected checkbox of a committee member if set.
+	 *
+	 * @param member the committee member whose checkbox should be reset
+	 */
+	private void resetSelectedCheckbox(CtCommitteeMember member) {
+	    if (member != null && member.isSelectedCheckBox()) {
+	        member.setSelectedCheckBox(false);
+	    }
 	}
+	
+	/**
+	 * Null checking for updated committe and find matching committee member
+	 *
+	 * @param updatedMember  the updated committee member
+	 * @param originalMembers the list of original members
+	 * @return matching member if found, otherwise null
+	 */
+	public CtCommitteeMember findMatchingValidationCommittee(CtCommitteeMember updatedMember, List<CtCommitteeMember> originalMembers) {
+		if (updatedMember == null || updatedMember.getPmUser() == null) {
+			return null;
+		}
+		Long updatedUserId = updatedMember.getPmUser().getUserId();
+		if (updatedUserId == null) {
+			return null;
+		}
+		return findMatchingCommitteeByUserId(updatedUserId, originalMembers);
+	}
+	
+	/**
+	 * Finds the matching committee member in the original list based on user ID.
+	 * 
+	 * @param updatedUserId user id for updated committee
+	 * @param originalMembers the list of original members
+	 * @return matching member if found, otherwise null
+	 */
+	public CtCommitteeMember findMatchingCommitteeByUserId(Long updatedUserId, List<CtCommitteeMember> originalMembers){
+		for (CtCommitteeMember originalMember : originalMembers) {
+			if (originalMember != null && originalMember.getPmUser() != null
+					&& updatedUserId.equals(originalMember.getPmUser().getUserId())) {
+				return originalMember;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Displays appropriate dialog based on update and validation status.
+	 *
+	 * @param isUpdateNeeded whether committee update is required
+	 * @param isFound whether at least one matching member was found
+	 */
+	private void showDialogValidateCommittee(boolean isUpdateNeeded, boolean isFound) {
+	    if (isUpdateNeeded || !isFound) {
+	        RequestContext.getCurrentInstance().execute("updLatestCommitteeDlg.show()");
+	    } else {
+	        getManagedBean().setUpdateCommittee(Boolean.FALSE);
+	        RequestContext.getCurrentInstance().execute("validateLatestCommitteeDlg.show()");
+	    }
+	}
+	/**
+	 * Check if the for representative type and member roles
+	 * 
+	 * @param updated the updated committee member 
+	 * @param original the original committee member 
+	 * @return true if condition are met
+	 */
+	private boolean checkRoleAndRepresentativeCommitte(CtCommitteeMember updated, CtCommitteeMember original){
+		if (hasRepresentativeTypeChanged(updated, original)
+				|| hasMemberRoleChanged(updated, original)){
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if the representative type of the member has changed.
+	 *
+	 * @param updated the updated committee member
+	 * @param original the original committee member
+	 * @return true if representative type differs, false otherwise
+	 */
+	private boolean hasRepresentativeTypeChanged(CtCommitteeMember updated, CtCommitteeMember original) {
+	    if (isQuotationCommitteeType(getManagedBean().getCommitteeType())) {
+	        return false;
+	    }
+
+	    Long updatedTypeId = getParameterId(updated.getRepresentativeType());
+	    Long originalTypeId = getParameterId(original.getRepresentativeType());
+
+	    return updatedTypeId != null && originalTypeId != null && !updatedTypeId.equals(originalTypeId);
+	}
+	
+	/**
+	 * Checks if the member role of the member has changed.
+	 *
+	 * @param updated the updated committee member
+	 * @param original the original committee member
+	 * @return true if member role differs, false otherwise
+	 */
+	private boolean hasMemberRoleChanged(CtCommitteeMember updated, CtCommitteeMember original) {
+	    Long updatedRole = getParameterId(updated.getMemberRole());
+	    Long originalRole = getParameterId(original.getMemberRole());
+
+	    return updatedRole != null && originalRole != null && !updatedRole.equals(originalRole);
+	}
+	
+	/**
+	 * Checks if the given committee type is a quotation committee type.
+	 *
+	 * @param committeeType the type of committee
+	 * @return true if it matches any quotation committee type, false otherwise
+	 */
+	private boolean isQuotationCommitteeType(String committeeType) {
+	    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
+	        || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)
+	        || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equalsIgnoreCase(committeeType);
+	}
+	
+	/**
+	 * Retrieves the parameter ID safely to avoid NullPointerException.
+	 *
+	 * @param pmParameter the ParameterConst object
+	 * @return parameter ID or null if unavailable
+	 */
+	private Long getParameterId(PmParameter pmParameter) {
+	    return pmParameter != null ? pmParameter.getParameterId() : null;
+	}
+	//#35238 end
+
+}
