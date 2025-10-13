@@ -180,17 +180,17 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		detailObj(AuditConst.PM_AUD_RC_PURCHASE_FROM_CONTRACT_FIELDLABELCODE, null,
 				reason.isContractPurchase() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 
-		if (reason.getConditionField().getParameterId() != null) {
+		if (reason.getConditionField() != null) {
 			detailObj(AuditConst.PM_AUD_RC_CONTRACT_CIRCULAR_FIELDLABELCODE, null,
 					checkPmParameterDesc(reason.getConditionField()));
 		}
 
-		if (reason.getSourceMethod().getParameterId() != null) {
+		if (reason.getSourceMethod() != null) {
 			detailObj(AuditConst.PM_AUD_RC_SOURCE_METHOD_FIELDLABELCODE, null,
 					checkPmParameterDesc(reason.getSourceMethod()));
 		}
 
-		addPIDReason(reason.getPmPIDReasonList());
+		createNewPIDReason(reason.getPmPIDReasonList());
 	}
 
 	private void updatePID(PmReason oldReason, PmReason existingReason) {
@@ -497,6 +497,28 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 					reasonApplicability.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 					objList.add(reasonApplicability);
 				}
+			}
+		}
+	}
+	
+	private void createNewPIDReason(List<PmPIDReason> pidReasonList) {
+		if (CollectionUtils.isNotEmpty(pidReasonList)) {
+			for (PmPIDReason pidReason : pidReasonList) {
+				AuditPMSPDTO reasonApplicability = new AuditPMSPDTO();
+				reasonApplicability.setRoleCode(roleCode);
+				reasonApplicability.setDocType(docType);
+				reasonApplicability.setDocNo(docNo);
+				reasonApplicability.setDocGroupId(docId);
+				reasonApplicability.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode)
+						.value()));
+				reasonApplicability.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+				reasonApplicability.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
+				reasonApplicability.setLvlCode3(parameterCode);
+				reasonApplicability.setDocId(BigInteger.valueOf(pidReason.getPidReasonId()));
+				reasonApplicability.setFieldLabelCode(AuditConst.PM_AUD_RC_REASON_APPLICABILITY_FIELDLABELCODE);
+				reasonApplicability.setNewValue(checkPIDReason(pidReason.getDocType()));
+				reasonApplicability.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+				objList.add(reasonApplicability);
 			}
 		}
 	}
