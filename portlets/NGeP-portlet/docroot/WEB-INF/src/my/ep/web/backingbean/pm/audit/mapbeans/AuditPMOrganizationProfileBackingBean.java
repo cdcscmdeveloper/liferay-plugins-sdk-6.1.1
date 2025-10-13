@@ -192,7 +192,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				detailObj(AuditConst.PM_AUD_OPM_TELNO_FIELDLABELCODE, EMPTY_STRING, 
 						pmAddress.getPhoneCountry() + pmAddress.getPhoneArea() + pmAddress.getPhoneNo());
 				
-				if(pmAddress.getFaxNo() != null){
+				if(pmAddress.getFaxNo() != null && !pmAddress.getFaxNo().isEmpty()){
 					detailObj(AuditConst.PM_AUD_OPM_FAXNO_FIELDLABELCODE, EMPTY_STRING, 
 							pmAddress.getFaxCountry() + pmAddress.getFaxArea() + pmAddress.getFaxNo());
 				}
