@@ -3964,7 +3964,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				if(reasonCategory.equals(ParameterConst.JUSTIFICATION)){// filter for Justification category
 					for (PmParameterDesc parameterDesc: parameterDescs) {
 						if (!parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SOFTCERT_REJECTION_REASON.value()) 
-				        		&& !parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())) {
+				        		&& !parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())
+				        				&& !parameterDesc.getPmParameter().getParameterCode().equals(ParameterConst.SPECIAL_ITEM_PK_7)) { //#28962
 							newParameterDescs.add(parameterDesc);
 				        }
 				    }

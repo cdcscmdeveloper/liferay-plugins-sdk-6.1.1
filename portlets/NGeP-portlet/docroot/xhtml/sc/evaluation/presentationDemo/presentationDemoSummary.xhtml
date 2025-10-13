@@ -66,7 +66,7 @@
 					</f:facet>
 				<h:outputText value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
-			<ui:remove>28784 - note 122 - add column rating - start</ui:remove>
+			<ui:remove>29021 - add column rating - start</ui:remove>
 			<p:column style="width:15%;white-space: normal;text-align:center;" rendered="#{!evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.rating']}" />
@@ -75,7 +75,7 @@
 				<h:outputText
 					value="#{empty finEvaluationqualifiedSupplier.totalRating? 0: finEvaluationqualifiedSupplier.totalRating}" />
 			</p:column>
-			<ui:remove>28784 - note 122 - add column rating - end</ui:remove>
+			<ui:remove>29021 - add column rating - end</ui:remove>
 			
 
 
@@ -158,7 +158,7 @@
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 			
-			<ui:remove>28784 - note 122 - add column rating - start</ui:remove>
+			<ui:remove>29021 - add column rating - start</ui:remove>
 			<p:column style="width:15%;white-space: normal;text-align:center;" rendered="#{!evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.rating']}" />
@@ -167,7 +167,7 @@
 				<h:outputText
 					value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}" />
 			</p:column>
-			<ui:remove>28784 - note 122 - add column rating - end</ui:remove>
+			<ui:remove>29021 - add column rating - end</ui:remove>
 
 
 		</p:dataTable>

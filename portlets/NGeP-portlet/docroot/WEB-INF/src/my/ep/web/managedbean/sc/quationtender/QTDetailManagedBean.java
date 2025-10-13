@@ -1941,6 +1941,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> newScCommitteeMemberAuditTrailList;
 	/** The deleted sc qt committee */
 	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
+	/** The modified role of sc qt committee */
+	private HashMap<PmUser,List<String>> mapModifiedRole;	
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
 	/** The pmuser contactperson list that had been modified with the original pm user's name */
@@ -12383,6 +12385,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setModifiedDoaList(HashMap<ScQtContactPerson, PmUser> modifiedDoaList) {
 		this.modifiedDoaList = modifiedDoaList;
+	}
+	
+	public HashMap<PmUser,List<String>> getMapModifiedRole() {
+		return mapModifiedRole;
+	}
+
+	public void setMapModifiedRole(HashMap<PmUser,List<String>> mapModifiedRole) {
+		this.mapModifiedRole = mapModifiedRole;
 	}
 	//#28895 - 35500 end
 	
