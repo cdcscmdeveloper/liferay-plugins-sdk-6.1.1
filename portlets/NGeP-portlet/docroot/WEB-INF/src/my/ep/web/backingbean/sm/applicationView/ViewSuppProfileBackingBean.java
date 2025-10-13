@@ -471,9 +471,7 @@ public class ViewSuppProfileBackingBean extends
 		List<String> cancelledCategoryCodes = new ArrayList<>();
 		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
 
-		boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes)
-				&& (!supplier.isDisciplinaryActions() || !evaluateCancelledCategories(supplier));
-		if (noCancelledCategory) {
+		if (CollectionUtils.isNotEmpty(cancelledCategoryCodes)) {
 			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760557,
 					new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
 					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
@@ -496,7 +494,8 @@ public class ViewSuppProfileBackingBean extends
 	 */
 	public void onViewQTAlertMessage(List<String> messages) {
 		this.getManagedBean().setDisciplinaryActionMsg(composeWarningMessages(messages));
-		RequestContext.getCurrentInstance().execute("suspendAlertWidget.show()");
+		RequestContext.getCurrentInstance().execute(
+				"$('[id$=\"suspendAlertWidgetId\"]').appendTo('body');suspendAlertWidget.show();");
 	}
 	// 26247 - end
 	
@@ -526,7 +525,9 @@ public class ViewSuppProfileBackingBean extends
 						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 			}
 
-			boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor()) && !supplier.isBumi();
+			boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
+					&& !supplier.isBumi()
+					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledBumiAccount(supplier));
 			if (noBumiAccount) {
 				messages.add(MessageUtils.getMessage(MessageConst.ERROR_760559, new String[] {},
 						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
@@ -553,18 +554,6 @@ public class ViewSuppProfileBackingBean extends
 		statusDescription = statusDescription.concat(" (" + status + ")");
 		return MessageUtils.getMessage(MessageConst.INFO_760553, new String[] { statusDescription },
 				MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
-	}
-	// 26247 - end
-	
-	// 26247 - start
-	private boolean evaluateCancelledCategories(SmSupplier supplier) {
-		boolean cancelledCategory = false;
-		if (null != supplier && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
-			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
-			cancelledCategory = supplier.isDisciplinaryActions()
-					&& (disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel());
-		}
-		return cancelledCategory;
 	}
 	// 26247 - end
 	
@@ -601,7 +590,7 @@ public class ViewSuppProfileBackingBean extends
 	 * @return
 	 */
 	public boolean evaluateCancellationBlacklist(SmSupplier supplier) {
-		if(null == supplier){
+		if (null == supplier) {
 			return false;
 		}
 		boolean suspendedBlacklisted = false;
@@ -613,9 +602,7 @@ public class ViewSuppProfileBackingBean extends
 			suspendedCancelled = disciplinaryAction.isCancelRegistration() && disciplinaryAction.isPendingCancel();
 		}
 		boolean blacklistedOrCancelled = suspendedBlacklisted || suspendedCancelled;
-		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
-		return ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus) && blacklistedOrCancelled
-				&& !supplier.isDisciplinaryActions();
+		return blacklistedOrCancelled && !supplier.isDisciplinaryActions();
 	}
 	// 26247 - end
 	

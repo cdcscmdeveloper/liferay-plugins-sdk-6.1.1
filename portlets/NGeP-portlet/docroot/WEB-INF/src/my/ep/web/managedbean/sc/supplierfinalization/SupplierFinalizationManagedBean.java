@@ -313,6 +313,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #28777 & #29729 - Start
 	private List<SmSupplierBranch> supplierBranchList;
 	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage;	
 	// #28777 & #29729 - End
 	
 	//29562 - START
@@ -322,6 +323,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQt checkCategoryCodeQt;//#29466
 	
 	private boolean allSupplierDisagreeEPV;//#21692
+	// 26247 - start
+	private List<String> disabledSupplierIds;
+
+	// 26247 - end
+
+	// 39077 -start-
+	private boolean isReviseBriefMsg = Boolean.FALSE;
+
+	// 39077 -end-
 	
 	/**
 	 * @return the activeIndex
@@ -2475,6 +2485,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disqualifiedSuppliersByRecommendType = disqualifiedSuppliersByRecommendType;
 	}
 
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByEvalStage() {
+		return disqualifiedSuppliersByEvalStage;
+	}
+
+	public void setDisqualifiedSuppliersByEvalStage(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage) {
+		this.disqualifiedSuppliersByEvalStage = disqualifiedSuppliersByEvalStage;
+	}
+	
 	// #28777 & #29729 - End
 
 	public boolean isDemoReq() {
@@ -2605,5 +2624,32 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 
+	// 26247 - start
+	public List<String> getDisabledSupplierIds() {
+		return disabledSupplierIds;
+	}
+
+	public void setDisabledSupplierIds(List<String> disabledSupplierIds) {
+		this.disabledSupplierIds = disabledSupplierIds;
+	}
+	// 26247 - end
+	
+    //39077 -start-
+	/**
+	 * @return the isReviseBriefMsg
+	 */
+	public boolean isReviseBriefMsg() {
+		return isReviseBriefMsg;
+	}
+
+	/**
+	 * @param isReviseBriefMsg the isReviseBriefMsg to set
+	 */
+	public void setReviseBriefMsg(boolean isReviseBriefMsg) {
+		this.isReviseBriefMsg = isReviseBriefMsg;
+	}
+	 //39077 -end-
+	
+	
 }
 // ***25201

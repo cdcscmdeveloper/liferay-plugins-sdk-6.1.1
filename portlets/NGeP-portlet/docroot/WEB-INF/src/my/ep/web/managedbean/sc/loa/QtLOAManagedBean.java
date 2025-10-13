@@ -78,6 +78,7 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	private boolean ableToCancelLOA;
 	private boolean ableToCancelLOAWithoutBPM;
 	private boolean ableToSubmitLOA;
+	private boolean ableToCancelWIP;
 	//#21692 - End
 
 
@@ -377,6 +378,18 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	//#21692 - Start
 	public void setAbleToCancelLOAWithoutBPM(boolean ableToCancelLOAWithoutBPM) {
 		this.ableToCancelLOAWithoutBPM = ableToCancelLOAWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelWIP() {
+		return ableToCancelWIP;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelWIP(boolean ableToCancelWIP) {
+		this.ableToCancelWIP = ableToCancelWIP;
 	}
 	//#21692 - End
 	

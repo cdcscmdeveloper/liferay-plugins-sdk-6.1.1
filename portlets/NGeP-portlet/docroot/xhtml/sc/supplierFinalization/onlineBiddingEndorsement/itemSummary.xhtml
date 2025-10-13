@@ -224,7 +224,8 @@
 				<h:outputText
 					value="#{(itemSupplierDis.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.starting.price']}"
+			
+		    <p:column headerText="#{lbl['lbl.sc.starting.price']}"
 				style="text-align: right;">
 				<h:outputText
 					value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplierDis.startingPrice)}">
@@ -232,7 +233,6 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-
 			<p:column headerText="#{lbl['lbl.sc.last.bid.price']}"
 				style="text-align: right;">
 				<h:outputText
@@ -266,11 +266,11 @@
 			<ui:remove>
 				31101 - Added Disciplinary Action validation
 			</ui:remove>
-			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
+		    <p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 				style="text-align:center;">
 				<h:outputText
 					value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}"
-					rendered="#{itemSupplierDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}" />
+					rendered="#{itemSupplierDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalBiddingBackingBean.managedBean.biddingZoneDetails.get(suppFinalBiddingBackingBean.managedBean.zoneActiveIndex).branchDeactivated or itemSupplierDis.supplierDeactivated}" />
 			</p:column>
 		</p:dataTable>
 		<ui:remove> #28777#29729 - End </ui:remove>

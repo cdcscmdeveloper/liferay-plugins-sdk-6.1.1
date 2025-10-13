@@ -367,7 +367,6 @@ public class SmApplicationNotificationUtil {
 							.append("<p style=\"margin: 0 0 0 5em;text-align:justify;\">")
 							.append(cat.getOtherDesc()).append("</p>");
 				}
-				approvedCatCodes.append("<br/>");
 				//#38217 - End
 
 			} else if (cat.getRecordStatusFlg().compareTo(
@@ -386,9 +385,9 @@ public class SmApplicationNotificationUtil {
 				
 				if (cat.getOtherDesc() != null && !cat.getOtherDesc().isEmpty()) {
 					rejectedCatCodes
-							.append("<p style=\" text-align: justify; margin: 0 0.5em 0 3em; display: inline-block;\">")
+							.append("<br/><p style=\" text-align: justify; margin: 0 0.5em 0 2.7em; display: inline-block;\">")
 							.append(cat.getOtherDesc())
-							.append("</p><br/>&nbsp;");
+							.append("</p>");
 				}
 				
 				rejectedCatCodes.append("</td>");
@@ -406,8 +405,9 @@ public class SmApplicationNotificationUtil {
 
 		}
 
-		rejectedCatCodes.append("</table>");
 		//#38217 - Start
+		approvedCatCodes.append("<br/>");
+		rejectedCatCodes.append("</table><br/>");
 		finalMsg.append(approvedCatCodes);
 		//#38217 - End
 		if (existsRejectedCodes) {

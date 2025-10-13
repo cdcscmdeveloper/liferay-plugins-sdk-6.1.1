@@ -299,9 +299,9 @@
 								</f:facet>
 								<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none">
 									<ui:param name="supplier" value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
-									<ui:param name="mofExpired"
-										value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
-										<h:panelGroup layout="block" style="padding: 0 10px 0 10px" styleClass="#{mofExpired ? 'red-background':''}">
+									<ui:param name="mofExpired" value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+										<h:panelGroup rendered="#{isPendingNegotiationStatus or (!isPendingNegotiationStatus and recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}"
+											layout="block" style="padding: 0 10px 0 10px" styleClass="#{mofExpired ? 'red-background':''}">
 											<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 											<h:outputText escape="false" value="&#60;br &#47;&#62;"/>
 										</h:panelGroup>
@@ -557,7 +557,7 @@
 							<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 								style="text-align:center;">
 								<h:outputText
-									rendered="#{supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}"
+									rendered="#{supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or lOIDetailBackingBean.managedBean.multiLOIZoneDetails.get(lOIDetailBackingBean.managedBean.zoneActiveIndex).branchDeactivated}"
 									value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
 							</p:column>
 
@@ -649,6 +649,7 @@
 
 								</ui:repeat>
 							</p:column>
+							
 							<p:column headerText="#{lbl['lbl.sc.price.type']}">
 								<h:outputText
 									value="#{lOIDetailBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
@@ -798,7 +799,7 @@
 							<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 								style="text-align:center;">
 								<h:outputText
-									rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}"
+									rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or lOIDetailBackingBean.managedBean.multiLOIZoneDetails.get(lOIDetailBackingBean.managedBean.zoneActiveIndex).branchDeactivated}"
 									value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
 							</p:column>
 						</p:dataTable> <ui:remove> #28777#29729 - End </ui:remove></td>

@@ -984,12 +984,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if (approvalRequest.getDecessionType() == null) {
 					approvalRequest.setDecessionType(pmParameter);
 				}
-
-				ScQt scQt = getManagedBean().getQt();
-				if (scQt.getMofDate() != null) {
-					if (approvalRequest.getDecisionCertPBM() == null) {
-						approvalRequest.setDecisionCertPBM(pmParameter);
-					}
+				if (approvalRequest.getDecisionCertPBM() == null) {
+					approvalRequest.setDecisionCertPBM(pmParameter);
 				}
 			}
 		}
@@ -1140,6 +1136,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().setQt(scQt);
 
 		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
+		Boolean supplierApprove = true;//#35500 fix issue 1
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 			PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
 					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecessionType().getParameterCode());
@@ -1148,6 +1145,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (!enableDateMOF) {
 				approvalRequest.setDecisionCertPBM(null);
 			}
+			
+			//#35500 fix issue 1 Start
+			if (!approvalRequest.getApproverAction().getParameterCode().equals(ParameterConst.FLAG_ACCEPT) && supplierApprove){
+				supplierApprove = false;
+			}
+			//#35500 fix issue 1 End
+
 
 			// add data for report/history usage - Start
 			approvalRequest.setProposalValidityEndDateOri(this.getManagedBean().getQt().getProposalValidityEndDate());
@@ -1178,6 +1182,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 
 			Long decessionType = approvalRequest.getDecessionType().getParameterId();
+
+			//35500 fix issue 1 Start
+			if (supplierApprove){
+				approveValidityPeriodAuditTrail(scQt);			
+			}
+			//#35500 fix issue 1 End
 
 			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decessionType.longValue()
 					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decessionType.longValue()) { // 1834L || 1854L
@@ -3077,13 +3087,22 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#28895-35500 start
 		reqDTO.setDeletedDoaaList(this.getManagedBean().getPmUserDeletedContactPersonList());
 		reqDTO.setDoaaList(this.getManagedBean().getNewDoaList());
+		reqDTO.setModifiedDoaList(this.getManagedBean().getModifiedDoaList());//35500 fix issue 5
 		//#28895-35500 end
 		ScQtAppRequestRemark remark = reqDTO.getRequestRemark();
 		String remarkStr = remark == null ? "" : remark.getRemark();
 
 		if (this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REVISE) && StringUtils.isEmpty(remarkStr)) {
-			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+			// #39113 Start Vinod 25/09/2025 - replaced EpException with FacesContext.
+			FacesContext.getCurrentInstance().addMessage(
+					QTConstants.REMARK_MESSAGE_ID,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+									QTConstants.LBL_SC_REMARK, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			return;
+			// #39113 End Vinod 25/09/2025
 		}
 		if (digiSign != null) {
 			updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_DOA_ASSIGNMENT, reqDTO.getQtdetail().getQtId(),
@@ -3779,6 +3798,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						: reqDTO.getDeletedDoaaList();
 				List<ScQtContactPerson> newDoaList = reqDTO.getDoaaList() == null ? new ArrayList<ScQtContactPerson>()
 						: reqDTO.getDoaaList();
+				HashMap<ScQtContactPerson, PmUser> modifiedDoaList = reqDTO.getModifiedDoaList() == null ? new HashMap<ScQtContactPerson, PmUser>()
+						: reqDTO.getModifiedDoaList();//#35500 fix issue 5
 
 				for (ScQtContactPerson add : newDoaList) {
 					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_CREATE);
@@ -3788,8 +3809,20 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 					auditReqList.add(auditReqDTO);
 				}
+				//#35500 fix issue 5
+				for (Map.Entry<ScQtContactPerson, PmUser> entry : modifiedDoaList.entrySet()) {
+					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+					auditResDTO.setNewValue(entry.getKey().getUser().getUserName());
+					auditResDTO.setNewValueId(entry.getKey().getUser().getUserId());
+					auditResDTO.setOldValueId(entry.getValue().getUserId());
+					auditResDTO.setOldValue(entry.getValue().getUserName());
+					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
+					auditReqList.add(auditReqDTO);
+				}
+				
 				for (ScQtContactPerson remove : removedList) {					
 					auditResDTO.setNewValue(null);
+					auditResDTO.setNewValueId(null); 
 					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_DELETE);
 					auditResDTO.setOldValue(remove.getUser().getUserName());
 					auditResDTO.setOldValueId(remove.getUser().getUserId());
@@ -3798,11 +3831,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					auditReqList.add(auditReqDTO);
 				}
 				qtAuditTrailSO.insertAuditTrail(auditReqList);
+				this.getManagedBean().setNewDoaList(null);
+				this.getManagedBean().setPmUserDeletedContactPersonList(null);
+				this.getManagedBean().setModifiedDoaList(null);
+
 			} else {
 				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_APPROVE)) {
 					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);
-				} else {
+				} else if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_REVISE)) {//#35500 fix issue 6
 					auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISION);
+				} else {
+					return;
 				}
 				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 				auditReqList.add(auditReqDTO);
@@ -3810,6 +3849,32 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 	}
+	
+	/**
+	 * #35500
+	 * Audit trail for approver validity period extension
+	 * @param scQt
+	 */
+	public void approveValidityPeriodAuditTrail(ScQt scQt){
+		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
+
+		AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
+		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
+		
+		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_GI);
+		auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+		auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
+		auditResDTO.setDocId(scQt.getQtId());
+		auditResDTO.setDocNo(scQt.getQtNo());
+		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+		auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);//check and/or change later
+		
+		AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
+		auditReqList.add(auditReqDTO);
+		qtAuditTrailSO.insertAuditTrail(auditReqList);
+	}
+
 	
 	//#21692 - Start
 	/**

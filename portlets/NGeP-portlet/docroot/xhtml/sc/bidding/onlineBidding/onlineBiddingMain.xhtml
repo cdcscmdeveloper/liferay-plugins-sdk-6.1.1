@@ -17,7 +17,7 @@
 
 		<ui:remove> #28777#29729 - Start </ui:remove>
 		<ui:param name="isDisqualified"
-			value="#{onlineBiddingBB.checkDisqualifiedSupplierBranchDeleted(onlineBiddingBB.scBidSchedule.scBid.docId, onlineBiddingBB.smSupplier.supplierId)}" />
+			value="#{onlineBiddingBB.scBidSchedule.tplSpecZoneDtl ne null ? onlineBiddingBB.checkZonesDisqualifiedSupplierBranchDeleted(onlineBiddingBB.scBidSchedule.scBid.docId, onlineBiddingBB.smSupplier.supplierId, onlineBiddingBB.scBidSchedule.tplSpecZoneDtl.specZoneId) : onlineBiddingBB.checkDisqualifiedSupplierBranchDeleted(onlineBiddingBB.scBidSchedule.scBid.docId, onlineBiddingBB.smSupplier.supplierId)}" />
 		<ui:remove> #28777#29729 - End </ui:remove>
 
 		<h:panelGroup id="pollPanelGroup"

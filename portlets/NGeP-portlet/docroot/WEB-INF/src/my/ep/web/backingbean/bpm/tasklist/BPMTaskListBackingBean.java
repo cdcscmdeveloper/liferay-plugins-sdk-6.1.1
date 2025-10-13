@@ -818,9 +818,16 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			#31422-basri 190821*/
 			
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			//#26186 start
+			if (taskName != null && taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				externalContext.redirect(commonUrl + "/" + url + "?taskId="
+						+ taskId +"&claim=" + claim+"&docNo="+docNo+"&taskName=" + taskName);
+			}else{
 			// 26238 - Disciplinary Action - 28111
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId=" + taskId + "&claim=" + claim + "&docNo=" + docNo);/* #31422-basri 190821 */
+			}
+			//#26186 end
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {
