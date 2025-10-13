@@ -151,14 +151,20 @@
 /* ===============================
    FIXED COLUMN WIDTHS
    =============================== */
-.audit-main-panel .col-action-date   { width: 110px !important; }
-.audit-main-panel .col-action-type   { width: 80px !important; }
-.audit-main-panel .col-action-by     { width: 110px !important; }
-.audit-main-panel .col-org-name      { width: 100px !important; }
-.audit-main-panel .col-role          { width: 100px !important; }
-.audit-main-panel .col-doc-type      { width: 80px  !important; }
-.audit-main-panel .col-doc-no        { width: 100px !important; }
-.audit-main-panel .col-doc-status    { width: 100px !important; }
-.audit-main-panel .col-field-name    { width: 100px !important; }
-.audit-main-panel .col-old-value     { width: 130px !important; }
-.audit-main-panel .col-new-value     { width: 130px !important; }
+.audit-main-panel .col-action-date   { width: 8.0% !important; }
+.audit-main-panel .col-action-type   { width: 6.0% !important; }
+.audit-main-panel .col-action-by     { width: 9.7% !important; }
+.audit-main-panel .col-org-name      { width: 10.4% !important; }
+.audit-main-panel .col-role          { width: 8.2% !important; }
+.audit-main-panel .col-doc-type      { width: 6.7% !important; }
+.audit-main-panel .col-doc-no {
+	width: 12.9% !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+.audit-main-panel .col-doc-status    { width: 9.7% !important; }
+.audit-main-panel .col-field-name    { width: 9.0% !important; }
+.audit-main-panel .col-old-value     { width: 9.7% !important; }
+.audit-main-panel .col-new-value     { width: 9.7% !important; }
