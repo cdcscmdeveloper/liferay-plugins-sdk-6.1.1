@@ -175,6 +175,11 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return new JsonWrapper(startTime, content, docType);
 		} catch (IOException e) {
 			log.error(" ", e);
+			
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+					"AI processing is temporarily unavailable. Your document has been uploaded successfully," +
+							" and you can still proceed with your application as usual.");
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 		
 		return null;
@@ -446,12 +451,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (hasWrongCompanyName){
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
 					"The company name in your bank statement(s) does not match with the registered Business/Company Name" +
-					" in Company Information section. Feel free to proceed or update the Business/Company Name as needed.");
+					" in Company Information section. Your application can still be submitted as-is, " +
+					"or you may update the Business/Company Name before proceeding.");
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 		if (!StringUtils.isEmpty(sb.toString())){
 			sb.insert(0, "Your bank statement(s) does not match with any newly added/updated bank in" +
-					" Bank Information section. Feel free to proceed or update the Bank Information section as needed:");
+					" Bank Information section. Your application can still be submitted as-is, " +
+					"or you may update the Bank Information section before proceeding:");
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, sb.toString());
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
@@ -462,6 +469,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return false;
 		}
 		String err = null;
+		boolean isAIOff = false;
 		for (JsonWrapper json : jsonWrappers){
 			int statusCode = getErrorCode(json.rawContent);
 			if (statusCode == 415 || statusCode == 422){
@@ -473,9 +481,19 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					break;
 				}
 			}
+			if (statusCode == 500){
+				isAIOff = true;
+			}
 		}
 		if (err != null){
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, err);
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
+			return true;
+			
+		} else if (isAIOff){
+			err = "AI processing is temporarily unavailable. Your document has been uploaded successfully, " +
+					"and you can still proceed with your application as usual.";
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, err);
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 			return true;
 		}
