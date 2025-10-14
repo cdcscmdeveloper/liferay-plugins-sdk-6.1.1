@@ -10923,7 +10923,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
 		String pendingSiteVisitReviewAfterApprovedStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
 		if (!getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
-//			assignValReqdToTrue(); #37925
+//			assignValReqdToTrue();  #37925
 		} else {
 			assignValReqdToFalse();
 		}
