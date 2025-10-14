@@ -6659,52 +6659,36 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
-					if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())
-							&& this.getManagedBean()
-									.getCurrentStatusId()
-									.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
-							&& !this.getManagedBean().isReadOnly()) {
-						if (currentTab == 2) {
+					//#28784, #34748 - Start
+					if (currentTab == 2) {
 
-							if (this.getManagedBean()
-									.getEvaluatioStageActiveIndex() < 1) {
-								retriveSummaryEvaluationStage();
-								// this.getManagedBean().setComplianceActiveIndex(2);
-								outputTab = 2;
+						if (this.getManagedBean()
+								.getEvaluatioStageActiveIndex() < 1) {
+							retriveSummaryEvaluationStage();
+							// this.getManagedBean().setComplianceActiveIndex(2);
+							outputTab = 2;
 
-							}
-							//#28784 - Start
-							else if( this.getManagedBean()
-									.getPresentationDemoActiveIndex() < 0
-									/**|| this.getManagedBean().getTabTechnicalIndex() == 3*/
-									&& this.getManagedBean().getScQt().isDemoRequired()){
-								if (this.getManagedBean().isDemoWip()) {
-									retrieveDemoDetails();									
-									outputTab = 3;
-								} else {
-									retrivePresentationOrDemoEvaluationStage();
-									outputTab = 2;
-								}
-
-							} else if (this.getManagedBean().getScQt().isDemoRequired()) {
-								retrieveDemoDetails();
+						}
+						else if(/**|| this.getManagedBean().getTabTechnicalIndex() == 3*/
+								this.getManagedBean().getEvaluatioStageActiveIndex() == 1
+								&& this.getManagedBean().getScQt().isDemoRequired()){
+							if (this.getManagedBean().isDemoWip()) {
+								retrieveDemoDetails();									
 								outputTab = 3;
+							} else {
+								retrivePresentationOrDemoEvaluationStage();
+								outputTab = 2;
 							}
-							//#28784 - End
-						}
-						//#28784 - Start
-						else if (this.getManagedBean().getScQt().isDemoRequired()) {
+
+						} else if (this.getManagedBean().getScQt().isDemoRequired()) {
 							retrieveDemoDetails();
+							outputTab = 3;
 						}
-						//#28784 - End
 					}
-					//#28784 - Start
 					else if (this.getManagedBean().getScQt().isDemoRequired()) {
 						retrieveDemoDetails();
 					}
-					//#28784 - End
+					//#28784, #34748 - End
 					/**retrivePresentationDemo();*/ //#28784 delete
 					if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
@@ -12815,7 +12799,7 @@ private void retriveCommitteeRemarksList(){
 				.getCommitteeType())
 				|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean()
 						.getCommitteeType())) {
-			this.getManagedBean().setEvaluatioStageActiveIndex(3);
+			this.getManagedBean().setEvaluatioStageActiveIndex(2);//4ser, change to 3 after 4ser
 			/** this.getManagedBean().setTabTechnicalIndex(4); */	// #34748
 		}
 		List<ScQtCheckList> localcheckList = new ArrayList<>();
