@@ -201,10 +201,9 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	}
 	
 	private void setNewMainAddress(PmAddress editedAddress, String address){
-		
-		detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, null, address);
 
 		detailObj(AuditConst.PM_AUD_OFO_COUNTRY_FIELDLABELID, null, editedAddress.getPmCountry().getCountryName());
+		detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, null, address);
 		detailObj(AuditConst.PM_AUD_OFO_STATE_FIELDLABELID, null, editedAddress.getPmState().getStateName());
 		if(editedAddress.getPmDivision() != null){
 			detailObj(AuditConst.PM_AUD_OFO_DIVISION_FIELDLABELID, null, editedAddress.getPmDivision().getDivisionName());
