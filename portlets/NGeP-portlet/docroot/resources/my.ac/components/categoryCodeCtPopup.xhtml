@@ -25,9 +25,8 @@
     
 	<p:dialog id="catCodeCtPopup"
 		header="#{lbl['lbl.sc.category.code.search']}"
-		widgetVar="catCodePopup" modal="true" width="680" position="top"
-		positionType="fixed"
-    	contentStyle="margin-top: 50px;">
+		widgetVar="catCodePopup" modal="true" width="720" position="top"
+		contentStyle="max-height: 50vh; overflow: auto; padding: 10px;">
 
 		<p:messages id="catCodeCtPopupMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
@@ -136,7 +135,7 @@
 						</f:facet>
 						#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{pmCategoryL3.pmCategoryL2.categoryL2Code}#{pmCategoryL3.categoryL3Code}
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.tbl.sub.category']}" style="min-width: 80px; white-space: normal;">
+					<p:column headerText="#{lbl['lbl.ct.tbl.category']}" style="min-width: 90px; white-space: normal;">
 					<h:outputText value="#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.sub.category']}" style="min-width: 120px; white-space: normal;">
@@ -145,7 +144,7 @@
 					<p:column headerText="#{lbl['lbl.ct.tbl.sub.category.div']}" style="min-width: 120px; white-space: normal;">
 					<h:outputText value="#{pmCategoryL3.categoryName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.tbl.category.type']}" style="min-width: 80px; white-space: normal;">
+					<p:column headerText="#{lbl['lbl.ct.tbl.category.type']}" style="min-width: 100px; white-space: normal;">
 					<h:outputText value="#{categoryCodeSearchBackingBean.getParameterDesc(pmCategoryL3.categoryTypeCode)}" />
 					</p:column>
 				</p:dataTable>
