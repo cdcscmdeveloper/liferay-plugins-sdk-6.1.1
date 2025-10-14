@@ -72,7 +72,7 @@
 				    	or amendmentBackingBean.isContractAmountAmend()}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}">
 					<!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="change" update=":form:amend" process="@form"
+					<p:ajax event="change" update=":form" process="@form"
 						listener="#{amendmentBackingBean.onChangeValueChecked}" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();" />
 				</p:selectBooleanCheckbox>
@@ -358,23 +358,22 @@
 		</h:panelGrid>
 		<!-- START 24336 -->
 	</p:panel>
-	
+
 	<ui:include src="contractValueDetails.xhtml" />
-	
-	<p:panel id="approvingAuthority" header="#{lbl['lbl.ct.menu.approving.authority']}" toggleable="true"
-		toggleSpeed="500" rendered="#{amendmentBackingBean.getAmendValue(3)}">
+		
+	<p:panel id="approvingAuthority" header="#{lbl['lbl.ct.menu.approving.authority']}" toggleable="true" toggleSpeed="500">
 		<!-- END 24336 -->
 		<h:panelGrid id="approvingAuthorityPanel" columns="2" style="width:100%" columnClasses="columnWidth170">
 			<p:outputLabel value="#{lbl['lbl.ct.approving.authority']}" styleClass="required" />
-			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
+			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}">
 				</p:selectBooleanCheckbox><!-- Enhancement 15851 - shaqimi -->
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.mof']}" style="text-align:left" />
 			</h:panelGrid>
-			<f:verbatim rendered="#{amendmentBackingBean.getAmendValue(3)}" />
-			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
+			<f:verbatim/>
+			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}">
 					<p:ajax event="change" update=":form:secretryDropDownPanel" process="@all"
@@ -383,8 +382,8 @@
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.pbqc']}" style="text-align:left" />
 			</h:panelGrid>
-			<f:verbatim rendered="#{amendmentBackingBean.getAmendValue(3)}" />
-			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
+			<f:verbatim/>
+			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox id="approverAuthorityReq"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
 					disabled="#{!amendmentBackingBean.isContractAmountAmend() or ctBackingBean.managedBean.viewSCL}" />
@@ -397,7 +396,7 @@
 		<h:panelGroup id="secretryDropDownPanel"
 			rendered="#{!ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
 			<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170"
-				rendered="#{amendmentBackingBean.getAmendValue(3) and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
+				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
 				<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
 				<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}"
 					label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;"
@@ -434,6 +433,7 @@
 			</h:panelGrid>
 		</h:panelGroup>
 	</p:panel> <!-- Enhancement 24336 -->
+
 	<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg"
 		message="#{lbl['lbl.msg.confirm.delete']}" severity="alert" closable="true" appendToBody="true"
 		header="#{lbl['lbl.msg.confirm.delete.header']}">
