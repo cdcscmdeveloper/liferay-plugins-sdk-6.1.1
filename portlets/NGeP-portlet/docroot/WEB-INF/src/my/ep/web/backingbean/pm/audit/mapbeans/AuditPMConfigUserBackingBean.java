@@ -229,7 +229,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			
 			if(!actionType.isEmpty()){
-				if(!oldValue.isEmpty() && !newValue.isEmpty()){
+				if(!oldValue.isEmpty() || !newValue.isEmpty()){
 					detailObj(obj, oldValue, newValue, actionType);
 				}
 			}
@@ -299,7 +299,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			
 			if(!actionType.isEmpty()){
-				if(!oldValue.isEmpty() && !newValue.isEmpty()){
+				if(!oldValue.isEmpty() || !newValue.isEmpty()){
 					detailObj(obj, oldValue, newValue, actionType);
 				}
 			}
@@ -363,7 +363,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			
 			if(!actionType.isEmpty()){
-				if(!oldValue.isEmpty() && !newValue.isEmpty()){
+				if(!oldValue.isEmpty() || !newValue.isEmpty()){
 					detailObj(obj, oldValue, newValue, actionType);
 				}
 			}
@@ -408,7 +408,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			
 			if(!actionType.isEmpty()){
-				if(!oldValue.isEmpty() && !newValue.isEmpty()){
+				if(!oldValue.isEmpty() || !newValue.isEmpty()){
 					detailObj(obj, oldValue, newValue, actionType);
 				}
 			}
