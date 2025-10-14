@@ -2475,6 +2475,7 @@ if (CollectionUtils.isNotEmpty(
 			mapModifiedRole.put(member.getPmUser(),userRoles);
 		}
 		
+		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
 	}
 	
 	/**
