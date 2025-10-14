@@ -16,6 +16,8 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
+		<p:messages autoUpdate="true" closable="true" id="messages"
+			showDetail="true" showSummary="false" />
 		<p:outputPanel rendered="#{smCompExpMB.draftExist}">
 			<p:graphicImage value="/css/images/priority.png" />
 			<p:spacer width="3" />
