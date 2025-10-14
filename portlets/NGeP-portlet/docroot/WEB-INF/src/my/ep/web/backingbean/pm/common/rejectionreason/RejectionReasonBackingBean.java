@@ -1578,10 +1578,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			supplierReason.setDeleted(true);
 			getManagedBean().getDeleteRestrictions().add(supplierReason);
 			
+			/** 35509 START*/
 			if(getManagedBean().getAuditDeleteRestrictions() == null){
 				getManagedBean().setAuditDeleteRestrictions(new ArrayList<PmSupplierReason>());
 			}
 			getManagedBean().getAuditDeleteRestrictions().add(supplierReason);
+			/** 35509 END*/
 		}
 	}
 	
@@ -1594,6 +1596,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			getManagedBean().setDeleteRestrictions(new ArrayList<PmSupplierReason>());
 		}
 		
+		/** 35509 START*/
+		if(getManagedBean().getAuditDeleteRestrictions() == null){
+			getManagedBean().setAuditDeleteRestrictions(new ArrayList<PmSupplierReason>());
+		}
+		/** 35509 END*/
+		
 		int tabIndex = index - 1;		
 		if(tabIndex == 0 && !getManagedBean().isSuppAppCheck()){
 			if(getManagedBean().getAppTypeRestrictions() !=null &&
@@ -1602,6 +1610,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					if(!supplierReason.isBrandNew()){
 						supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						getManagedBean().getDeleteRestrictions().add(supplierReason);
+						getManagedBean().getAuditDeleteRestrictions().add(supplierReason); // 35509
 					}
 				}
 				getManagedBean().getAppTypeRestrictions().clear();
@@ -1613,6 +1622,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					if(!supplierReason.isBrandNew()){
 						supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						getManagedBean().getDeleteRestrictions().add(supplierReason);
+						getManagedBean().getAuditDeleteRestrictions().add(supplierReason); // 35509
 					}
 				}
 				getManagedBean().getComTypeRestrictions().clear();
@@ -1624,6 +1634,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					if(!supplierReason.isBrandNew()){
 						supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						getManagedBean().getDeleteRestrictions().add(supplierReason);
+						getManagedBean().getAuditDeleteRestrictions().add(supplierReason); // 35509
 					}
 				}
 				getManagedBean().getSuppTypeRestrictions().clear();

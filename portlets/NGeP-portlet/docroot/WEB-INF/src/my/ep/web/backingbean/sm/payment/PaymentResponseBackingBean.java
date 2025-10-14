@@ -924,9 +924,8 @@ public class PaymentResponseBackingBean extends
 					PaymentResDTO pymtResDTO = null;
 
 					log.info(">>>>>counter equal to 1<<<<<<");
-					if(StringUtils.isBlank(payload)){
-						pymtResDTO = reqSO.updatePayment(pymtReqDTO);
-					}
+//					pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+					printPaymentRequesDTO(pymtReqDTO);
 
 					log.info("******ResponsePreRender - After Update******");
 					if (pymtResDTO != null && pymtResDTO.isSuccessful() && StringUtils.isBlank(payload)) {
@@ -1340,5 +1339,30 @@ public class PaymentResponseBackingBean extends
 		}
 	}
 	// #29481 - End
+	
+	private void printPaymentRequesDTO(PaymentReqDTO req) {
+		log.info("===================>req.getMethodName():"
+				+ req.getMethodName() + " ||req.getPaymentType():"
+				+ req.getPaymentType() + " ||req.getPortalBaseUrl():"
+				+ req.getPortalBaseUrl() + " ||req.getOutcome():"
+				+ req.getOutcome() + " ||req.isValidPayment():"
+				+ req.isValidPayment() + " ||req.getBankDate():"
+				+ req.getBankDate() + " ||req.getCardType():"
+				+ req.getCardType() + " ||req.getCardTypeS():"
+				+ req.getCardTypeS() + " ||req.getPyPayment().getPmStatus():"
+				+ req.getPyPayment() == null ? "null"
+				: (req.getPyPayment().getPmStatus() == null ? "null" : req
+						.getPyPayment().getPmStatus().getStatusId())
+						+ " ||req.getPyPayment().getPyBill():"
+						+ req.getPyPayment() == null ? "null"
+						: (req.getPyPayment().getPyBill() == null ? "null"
+								: req.getPyPayment().getPyBill().getBillType())
+								+ " ||req.getTaskId():"
+								+ req.getTaskId()
+								+ " ||req.getToken():"
+								+ req.getToken()
+								+ " ||req.getBpmPojo():" + req.getBpmPojo() == null ? "null"
+								: req.getBpmPojo().getClass().getName());
+	}
 
 }

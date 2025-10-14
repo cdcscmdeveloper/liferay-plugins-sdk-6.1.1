@@ -1246,12 +1246,6 @@ public class NoticeBoardBackingBean extends
 					}
 				}
 			}
-			
-			// 26247 - start
-			if (getManagedBean().isQualified()) {
-				getManagedBean().setQualified(!this.disabledQTProcess(supplier));
-			}
-			// 26247 - end
 
 			// construct the proposal/update url
 			if (QTStatusConst.QT_PROPOSAL_PREPARATION
