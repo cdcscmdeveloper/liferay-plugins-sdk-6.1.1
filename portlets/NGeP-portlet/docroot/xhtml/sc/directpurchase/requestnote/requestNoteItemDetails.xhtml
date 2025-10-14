@@ -328,7 +328,10 @@
 						label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
 						disabled="#{isViewOnly}"
 						value="#{requestNoteDtl.procurementTitle}" autoResize="false"
-						style="width:140px;">
+						style="width:140px;"
+						onkeyup="limitTextArea(this,100);" 
+						onkeydown="limitTextArea(this,100);" 
+						onmouseout="limitTextArea(this,100);"> <ui:remove>38910</ui:remove>
 						<p:ajax event="blur" partialSubmit="true" process="@this"
 							listener="#{requestNoteBackingBean.priceTypeChangeListener(requestNoteDtl.priceTypeId, requestNoteDtl)}" />
 					</p:inputTextarea>

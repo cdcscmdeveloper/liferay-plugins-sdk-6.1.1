@@ -131,19 +131,19 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	public void processQtyValuesUpdate(PmPtjSpecialApproval approval, PmPtjSpecialApproval updateVal) {
 		/* Update */
-		if ((updateVal.getExpDate() == null && approval.getExpDate() != null) || updateVal.getExpDate() != null
-				&& !approval.getExpDate().equals(updateVal.getExpDate())) {
-			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_EXPDATE_FIELDLABELID,
-					updateVal.getExpDate() != null ? simpleDateFormat.format(updateVal.getExpDate()) : null, simpleDateFormat.format(approval.getExpDate()),
-					AuditConst.PM_AUD_ACTION_TYPE_UPD);
+		if (updateVal.getProcureAmt() != null && !approval.getProcureAmt().equals(updateVal.getProcureAmt())) {
+			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_LIMIT_FIELDLABELID, updateVal
+					.getProcureAmt().toString(), approval.getProcureAmt().toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 		if (updateVal.getEffDate() != null && !approval.getEffDate().equals(updateVal.getEffDate())) {
 			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_EFFDATE_FIELDLABELID, 
 					simpleDateFormat.format(updateVal.getEffDate()), simpleDateFormat.format(approval.getEffDate()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
-		if (updateVal.getProcureAmt() != null && !approval.getProcureAmt().equals(updateVal.getProcureAmt())) {
-			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_LIMIT_FIELDLABELID, updateVal
-					.getProcureAmt().toString(), approval.getProcureAmt().toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+		if ((updateVal.getExpDate() == null && approval.getExpDate() != null) || updateVal.getExpDate() != null
+				&& !approval.getExpDate().equals(updateVal.getExpDate())) {
+			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_EXPDATE_FIELDLABELID,
+					updateVal.getExpDate() != null ? simpleDateFormat.format(updateVal.getExpDate()) : null, simpleDateFormat.format(approval.getExpDate()),
+					AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 	}
 
@@ -154,24 +154,24 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	public void processQtyValuesCreateDeleted(PmPtjSpecialApproval newCreatedItem, PmPtjSpecialApproval deletedItem) {
 		PmPtjSpecialApproval pmPtjSpecialApproval = newCreatedItem != null ? newCreatedItem : deletedItem;
+		handleFieldAudit(pmPtjSpecialApproval, AuditConst.PM_AUD_SYSPARAM_SPQTV_MINISTRY_FIELDLABELID,
+				retrieverCreateDeleteMinistryNameVal(newCreatedItem, null),
+				retrieverCreateDeleteMinistryNameVal(null, deletedItem));
+
+		handleFieldAudit(pmPtjSpecialApproval, AuditConst.PM_AUD_SYSPARAM_SPQTV_PTJCODE_FIELDLABELID,
+				retrieverCreateDeleteOrgCodeVal(newCreatedItem, null), retrieverCreateDeleteOrgCodeVal(null, deletedItem));
+
+		handleFieldAudit(pmPtjSpecialApproval, AuditConst.PM_AUD_SYSPARAM_SPQTV_PTJNAME_FIELDLABELID,
+				retrieverCreateDeleteOrgNameVal(newCreatedItem, null), retrieverCreateDeleteOrgNameVal(null, deletedItem));
+
+		handleFieldAudit(pmPtjSpecialApproval, AuditConst.PM_AUD_SYSPARAM_SPQTV_LIMIT_FIELDLABELID,
+				retrieverCreateDeleteAmtVal(newCreatedItem, null), retrieverCreateDeleteAmtVal(null, deletedItem));
+		
 		handleFieldAudit(pmPtjSpecialApproval, AuditConst.PM_AUD_SYSPARAM_SPQTV_EFFDATE_FIELDLABELID,
 				retrieverCreateDeleteEffDateVal(newCreatedItem, null), retrieverCreateDeleteEffDateVal(null, deletedItem));
 
 		handleFieldAudit(pmPtjSpecialApproval, AuditConst.PM_AUD_SYSPARAM_SPQTV_EXPDATE_FIELDLABELID,
 				retrieverCreateDeleteExpDateVal(newCreatedItem, null), retrieverCreateDeleteExpDateVal(null, deletedItem));
-
-		handleFieldAudit(pmPtjSpecialApproval, AuditConst.PM_AUD_SYSPARAM_SPQTV_LIMIT_FIELDLABELID,
-				retrieverCreateDeleteAmtVal(newCreatedItem, null), retrieverCreateDeleteAmtVal(null, deletedItem));
-
-		handleFieldAudit(pmPtjSpecialApproval, AuditConst.PM_AUD_SYSPARAM_SPQTV_PTJNAME_FIELDLABELID,
-				retrieverCreateDeleteOrgNameVal(newCreatedItem, null), retrieverCreateDeleteOrgNameVal(null, deletedItem));
-
-		handleFieldAudit(pmPtjSpecialApproval, AuditConst.PM_AUD_SYSPARAM_SPQTV_PTJCODE_FIELDLABELID,
-				retrieverCreateDeleteOrgCodeVal(newCreatedItem, null), retrieverCreateDeleteOrgCodeVal(null, deletedItem));
-
-		handleFieldAudit(pmPtjSpecialApproval, AuditConst.PM_AUD_SYSPARAM_SPQTV_MINISTRY_FIELDLABELID,
-				retrieverCreateDeleteMinistryNameVal(newCreatedItem, null),
-				retrieverCreateDeleteMinistryNameVal(null, deletedItem));
 	}
 
 	/**
