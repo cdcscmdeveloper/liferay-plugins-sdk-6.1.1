@@ -88,9 +88,13 @@
 					<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
 
 
-				</c:if> <c:if
-					test="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1') or (evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'))}">
-
+				</c:if>
+				<ui:remove>#28784 - Start</ui:remove>
+				<c:if
+					test="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1')
+						or (evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
+						and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1')) and evaluationBackingBean.managedBean.scQt.demoRequired eq 'false'}">
+				<ui:remove>#28784 - End</ui:remove>
 					<ui:param name="passingScore"
 						value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
 					<ui:include src="TECSummary.xhtml" />
@@ -99,7 +103,7 @@
 				<ui:remove>#28784 WIP @idham - Start</ui:remove>
 				<c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
-					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2' 
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' 
 					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and !evaluationBackingBean.managedBean.demoWip}">
 
 
@@ -108,7 +112,7 @@
 				</c:if>
 				<c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
-					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2' 
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' 
 					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and evaluationBackingBean.managedBean.demoWip}">
 
 					<ui:include src="TECSummary.xhtml" />
@@ -116,7 +120,7 @@
 				</c:if> 
 				<c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
-					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '3'
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'
 					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 
 					
@@ -144,7 +148,8 @@
 						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
 				</ui:fragment></td>
 			<td><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex ne '2'}"><ui:remove>28784 add index condition</ui:remove>
 
 
 
@@ -172,11 +177,12 @@
 				</ui:fragment>
 				<ui:remove>#28784 - Start</ui:remove>
 				<!-- #28784 after evaluationBackingBean.managedBean.tabTechnicalIndex - Start -->
-				<!-- 4ser
 				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
 					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '4'}">
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'}">
+				<!-- 4ser
+					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '4'}"> -->
 
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
@@ -186,7 +192,8 @@
 						disabled="#{!evaluationBackingBean.managedBean.afterDemoInv}"
 						update=":form" />
 
-				</ui:fragment> 
+				</ui:fragment>
+				<!-- 4ser
 				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
 					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
