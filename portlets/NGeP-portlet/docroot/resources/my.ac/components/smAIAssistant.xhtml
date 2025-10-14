@@ -116,10 +116,10 @@
 			
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="OK-1" onclick="ok#{cc.attrs.aiDlg}.hide();" 
+				<p:commandButton value="OK" onclick="ok#{cc.attrs.aiDlg}.hide();" 
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl, cc.attrs.postProcess)}"
 					rendered="#{empty cc.attrs.updateId}"/>
-				<p:commandButton value="OK-2" onclick="ok#{cc.attrs.aiDlg}.hide();" 
+				<p:commandButton value="OK" onclick="ok#{cc.attrs.aiDlg}.hide();" 
 					update=":#{p:component(cc.attrs.updateId)}"
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl, cc.attrs.postProcess)}"
 					rendered="#{not empty cc.attrs.updateId}"
