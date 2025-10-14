@@ -1927,9 +1927,13 @@ public class SupplierDataMaintenanceBackingBean extends
 	private boolean isDeletedStatus(SmSupplier supplier, String mofStatus) {
 		boolean hasPending = supplier.isPendingBlacklist()
 				|| supplier.isPendingCancel() || supplier.isPendingSuspend();
-
+		// 38609 - START
+		String supplierType = supplier.getSmAppl().getSupplierType();
+		
 		return !hasPending && StringUtils.isNotEmpty(mofStatus)
-				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED);
+				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)
+				&& !supplierType.equals(SupplierManagementConst.SUPP_TYPE_BASIC);
+		// 38609 - END
 	}
 
 	private boolean isCancelRegStatus(String mofStatus, SmSupplier supplier) {
