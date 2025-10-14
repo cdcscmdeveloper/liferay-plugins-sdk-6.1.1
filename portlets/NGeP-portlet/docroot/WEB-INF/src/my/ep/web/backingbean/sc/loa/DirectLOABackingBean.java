@@ -4826,7 +4826,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		}
 		// #32199 - end
-		
+
+		// 25791 -start-
+		if (isQTMaintenanceScreen() || isCTMaintenanceScreen()) {
+			this.getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX);
+		}
+		// 25791 -end-
+
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
 	
