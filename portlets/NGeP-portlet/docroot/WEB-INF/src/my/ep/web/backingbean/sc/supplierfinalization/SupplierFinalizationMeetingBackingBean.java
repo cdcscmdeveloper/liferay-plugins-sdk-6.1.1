@@ -2381,10 +2381,13 @@ if (CollectionUtils.isNotEmpty(
 			return;
 		}
 		
-		Long changedRoleId = member.getMemberRoleId();		
-		Long previousRoleId = member.getMemberRole().getParameterId() != null ? member.getMemberRole().getParameterId() : null;
-		String changedRole = getRoleString(changedRoleId);
-		String previousRole = getRoleString(previousRoleId);
+		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
+		String changedRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, changedRolePmParameter.getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		String previousRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
+				SourcingConstants.MY_LOCALE);
 		
 		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
 				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
@@ -2414,26 +2417,6 @@ if (CollectionUtils.isNotEmpty(
 		}
 		
 		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
-	}
-	
-	/**
-	 * #35500 issue fix 4-9
-	 * Method to get the role name for audit trail
-	 * @param roleId
-	 * @return
-	 */
-	public String getRoleString(Long roleId){
-		String roleName = null;
-		if(roleId != null){
-			if(roleId == 380){
-				roleName = "Member";
-			}else if(roleId == 379){
-				roleName = "Secretary";
-			}else if(roleId == 378){
-				roleName = "Chairperson";
-			}
-		}
-		return roleName;
 	}
 	
 	/**
