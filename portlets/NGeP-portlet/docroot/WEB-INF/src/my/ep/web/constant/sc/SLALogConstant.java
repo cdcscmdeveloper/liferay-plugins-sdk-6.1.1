@@ -68,6 +68,9 @@ public class SLALogConstant {
 	public static final String QT_PREPARE_QT_INFO = "prepareQTInfo";
 	public static final String QT_SLA_DOT_SEPARATOR = ".";
 	// 25037 - end
+	// 26247 - start
+	public static final String QT_NAVIGATE_TO_CHECK_QUALIFICATION = "navigateToCheckQualification";
+	// 26247 - end
 	
 	// 25791-start
 	public static final String QT_DETAIL_BACKING_BEAN = "QTDetailBackingBean";
@@ -82,6 +85,10 @@ public class SLALogConstant {
 	
 	// 25791-end
 	
+	// 26247 - start
+	public static final String QT_NOTICEBOARD_BACKING_BEAN = "NoticeBoardBackingBean";
+	// 26247 - end
+
 	private SLALogConstant(){
 		
 	}	
