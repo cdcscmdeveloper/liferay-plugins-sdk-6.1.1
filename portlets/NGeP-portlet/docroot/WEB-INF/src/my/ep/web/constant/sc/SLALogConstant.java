@@ -30,6 +30,10 @@ public class SLALogConstant {
 	public static final String QT_USER_QC_PAGING_DATA_MODEL = "UserQCPagingDataModel";
 	public static final String QT_SLA_DOT_SEPARATOR = ".";
 	//12471 - end
+	
+	// 26247 - start
+	public static final String QT_NAVIGATE_TO_CHECK_QUALIFICATION = "navigateToCheckQualification";
+	// 26247 - end
 
 	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
 	
@@ -115,6 +119,10 @@ public class SLALogConstant {
 	
 	// 25791-end
 	
+	// 26247 - start
+	public static final String QT_NOTICEBOARD_BACKING_BEAN = "NoticeBoardBackingBean";
+	// 26247 - end
+
 	// 29661 -start-
 	public static final String FETCH_CHECKLIST_VALUE_SCORE = "fetchCheckListValueScore";
 	public static final String FETCH_COMPANY_EXP_PROPOSAL_CHECKLIST_SCORE = "fetchProposalAndCheckListScores";
