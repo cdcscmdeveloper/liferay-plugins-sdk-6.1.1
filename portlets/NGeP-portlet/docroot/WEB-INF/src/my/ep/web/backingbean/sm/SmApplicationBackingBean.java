@@ -1008,6 +1008,7 @@ public class SmApplicationBackingBean extends
 		alreadyExecute = false;//avoid duplicate execute function setDefaultApproverReviewSection() && setDefaultPoReviewSection()
 		getManagedBean().setRedirectToPersonPage(false);
 		assignValReqdToFalse();
+		getManagedBean().setMofNumber(null); //#39076
 		if (!applicationType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 
@@ -1708,13 +1709,21 @@ public class SmApplicationBackingBean extends
 		}
 		List<SmMofAccount> accounts = getManagedBean().getSmSupplier()
 				.getSmMofAccounts();
+		//#39076
+		Collections.sort(accounts, new Comparator<SmMofAccount>() {
+			@Override
+			public int compare(SmMofAccount o1, SmMofAccount o2) {
+				if (o1.getCreatedDate() == null || o2.getCreatedDate() == null)
+					return 0;
+				return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+			}
+		});
 		if (!EntityHelper.isCollectionEmpty(accounts)) {
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
 						getManagedBean().getSmSupplier().getSmAppl()
 								.getSupplierType())
-						&& account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+						&& !account.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 					getManagedBean().setMofNumber(account.getMofNo());
 				}
 			}
