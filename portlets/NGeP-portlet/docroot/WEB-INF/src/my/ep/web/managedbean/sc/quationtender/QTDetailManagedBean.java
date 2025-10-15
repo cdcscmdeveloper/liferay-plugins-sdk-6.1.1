@@ -129,12 +129,6 @@ import my.ep.web.type.sc.quationtender.CloneAll;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
-//25791 -start-
-import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
-
-//25791 -end-
-
-
 /**
  * The Class QTDetailManagedBean.
  * 
@@ -1727,8 +1721,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> viewLOAContractDataModel;
 	private Map<Long, VCtContract> checkLOAContract;
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
-
 	// 25791-End
+
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
