@@ -17,7 +17,6 @@ import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.ProfileManagementConst; //#38016
 import my.ep.constants.CommonConstants; //#38016
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
@@ -404,13 +403,13 @@ public class ProfileManagementSearchBackingBean extends
 		FacesScopes face = new FacesScopes();
 		try {
 			items = new SelectItem[] {
-					new SelectItem(null, ResourceBundleUtils.getMessage(ProfileManagementConst.LBL_PM_ALL,
+					new SelectItem(null, ResourceBundleUtils.getMessage(CommonConstants.LBL_PM_ALL,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())),
 					new SelectItem(ParameterConst.RECORD_STATUS_ACTIVE, ResourceBundleUtils.getMessage(
-							ProfileManagementConst.LBL_PM_ACTIVE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							CommonConstants.LBL_PM_ACTIVE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							face.getUserLocale())),
 					new SelectItem(ParameterConst.RECORD_STATUS_INACTIVE, ResourceBundleUtils.getMessage(
-							ProfileManagementConst.LBL_PM_INACTIVE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							CommonConstants.LBL_PM_INACTIVE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							face.getUserLocale())) };
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
