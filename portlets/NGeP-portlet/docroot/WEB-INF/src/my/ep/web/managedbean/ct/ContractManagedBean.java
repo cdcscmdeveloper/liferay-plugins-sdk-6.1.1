@@ -216,6 +216,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	private BigDecimal bondPercentage;
 	private BigDecimal totalBondAmt;
 	//24333 - End
+	
+	//#24336 - Start
+	private boolean disableReductionContractAmount;
+	private boolean disableAdditionContractAmount;
+	//#24336 - End
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1695,4 +1701,24 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.totalBondAmt = totalBondAmt;
 	}
 	//#24333 - End
+
+	//#24336 - Start
+	public boolean isDisableReductionContractAmount() {
+		return disableReductionContractAmount;
+	}
+
+	public void setDisableReductionContractAmount(
+			boolean disableReductionContractAmount) {
+		this.disableReductionContractAmount = disableReductionContractAmount;
+	}
+
+	public boolean isDisableAdditionContractAmount() {
+		return disableAdditionContractAmount;
+	}
+
+	public void setDisableAdditionContractAmount(
+			boolean disableAdditionContractAmount) {
+		this.disableAdditionContractAmount = disableAdditionContractAmount;
+	}
+	//#24336 - End
 }

@@ -263,8 +263,7 @@
 			</h:panelGrid>			
 		 #24336 end -->
 			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.getAmendValue(2)}" style="float:right;">
-				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" />
+				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" styleClass="required" />
 			</h:panelGrid>
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(2)}">
 				<p:calendar style="width:80px;" id="edateCal1" showOn="button" readonlyInput="true" navigator="true"

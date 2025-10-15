@@ -12,15 +12,16 @@
 	</style>
 
 	<p:panel id="contractValuePanel" rendered="#{amendmentBackingBean.getAmendValue(1)}" header="#{lbl['lbl.ct.menu.contract.value']}" toggleable="true" toggleSpeed="500">
-		
+	
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth320">
 			
 			<p:outputLabel value="#{lbl['lbl.ct.overall.contract.amount']}" />
 			<h:panelGrid columns="4">
 
+				<!-- disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" -->
 				<p:inputText id="overallAmount" styleClass="ppRightBtn" style="width:90px;"
 					value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
+					disabled="true">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this"
@@ -32,11 +33,13 @@
 				<p:message for="overallAmount" display="icon" />
 			</h:panelGrid>
 
-			<p:outputLabel value="#{lbl['lbl.ct.type.change.contract.value']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.type.change.contract.value']}" styleClass="required" />
 			<h:panelGrid columns="4">
 				<p:selectOneRadio id="reduction" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reduction}" layout="pageDirection"> 
 					<f:selectItem itemLabel="#{lbl['lbl.ct.radio.reduction']}" itemValue="true" />
 					<f:selectItem itemLabel="#{lbl['lbl.ct.radio.addition']}" itemValue="false" />
+					<p:ajax update="contractValuePanel" event="change" process="@this" 
+						listener="#{amendmentBackingBean.handleContractValueTypeChange}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</p:selectOneRadio>
 			</h:panelGrid>
 
@@ -47,25 +50,26 @@
 			<p:spacer width="1" />
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.usage.with']}" />
-			<p:inputText id="usageWith" styleClass="ppRightBtn" style="width:90px;">
+			<p:inputText id="usageWith" styleClass="ppRightBtn" style="width:90px;" disabled="true">
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.usage.before']}" />
-			<p:inputText id="usageBefore" styleClass="ppRightBtn" style="width:90px;">
+			<p:inputText id="usageBefore" styleClass="ppRightBtn" style="width:90px;" disabled="true">
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.contract.reduced']}" />
-			<p:inputText id="contractReduced" styleClass="ppRightBtn" style="width:90px;">
+			<p:inputText id="contractReduced" styleClass="ppRightBtn" style="width:90px;" disabled="true">
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 
 			<p:outputLabel value="#{lbl['lbl.ct.maximum.additional']}" />
-			<p:inputText id="maxAdditional" styleClass="ppRightBtn" style="width:90px;">
+			<p:inputText id="maxAdditional" styleClass="ppRightBtn" style="width:90px;" disabled="true"
+				value="#{amendmentBackingBean.maxAdditionalValue()}">
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
@@ -77,20 +81,29 @@
 			<p:spacer width="1" />
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.reduction.contract.amt']}" />
-			<p:inputText id="reductionAmt" styleClass="ppRightBtn" style="width:90px;">
-				<f:convertNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			</p:inputText>
+			<h:panelGrid columns="4">
+				<p:inputText id="reductionAmt" styleClass="ppRightBtn" style="width:90px;"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reductionAmt}"
+					disabled="#{ctBackingBean.managedBean.disableReductionContractAmount}"
+					onblur="this.value = this.value.replace(/-/g, '');">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<p:ajax event="blur" update="reductionAmt, addValue, overallAmt" process="@this"
+						listener="#{amendmentBackingBean.changeReductionValue}" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" />
+				</p:inputText>
+			</h:panelGrid>
 
-			<p:outputLabel value="#{lbl['lbl.ct.total.additional.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}" />
-			<h:panelGrid columns="4" rendered="#{amendmentBackingBean.getAmendValue(1)}">
+			<p:outputLabel value="#{lbl['lbl.ct.total.additional.contract.amt']}" />
+			<h:panelGrid columns="4">
 				<p:inputText id="addValueTxt" styleClass="ppRightBtn" style="width:90px;"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableAdditionContractAmount}" 
+					onblur="this.value = this.value.replace(/-/g, '');">
 					<!-- Enhancement 15851 - shaqimi -->
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					<p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this"
+					<p:ajax event="blur" update="addValueTxt, addValue, overallAmt, addPercentage" process="@this"
 						listener="#{amendmentBackingBean.changeAdditionalValue}" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();" />
 				</p:inputText>
@@ -101,7 +114,8 @@
 			</h:panelGrid>
 
 			<p:outputLabel value="#{lbl['lbl.ct.additional.percentage']}" />
-			<p:inputText id="addPercentage" styleClass="ppRightBtn" style="width:90px;">
+			<p:inputText id="addPercentage" styleClass="ppRightBtn" style="width:90px;" disabled="true"
+				value="#{amendmentBackingBean.additionalPercentage()}">
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>

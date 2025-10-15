@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
@@ -222,6 +223,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private boolean isUntickOther = false;
 	private boolean spToCheck = false;
 	//End Fix - #33287
+	
+	//#24336 - Start
+	public static final boolean REDUCTION_OF_CONTRACT_VALUE = true;
+	//#24336 - End
+	
 	//#34097/#26186 start
 	private static final Set<Long> CANCEL_STATUS_CONST = new HashSet<>(Arrays.asList(
             ContractStatusConst.FA_PENDING_SUBMISSION,
@@ -4260,8 +4266,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(ctBackingBean.getManagedBean().isViewSCL()){
 			ctAmt = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
 		} else {
-			ctAmt = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
-					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
+			
+			//#24336 - Start
+			BigDecimal baseAmt = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+			BigDecimal addAmt = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount();
+			BigDecimal reduceAmt = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getReductionAmt();
+
+			if (addAmt != null) {
+				baseAmt = baseAmt.add(addAmt);
+			}
+			if (reduceAmt != null) {
+				baseAmt = baseAmt.subtract(reduceAmt);
+			}
+
+	        ctAmt = baseAmt;
+	        //#24336 - End
 		}
 		return ctAmt;
 		//Bug 33096 - shaqimi end
@@ -5510,8 +5529,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void onChangeValueChecked() {
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
 			spToCheck = false;
+			//#24336 - Start
+			handleContractValueTypeChange();
+			//#24336 - End
 		}
+		
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+		
+		//#24336 - Start
+		//Initialize value
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);
+		//#24336 - End
+		
 		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
 			Calendar c = Calendar.getInstance();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
@@ -9897,4 +9926,58 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//#24333 - End
 	
+	//#24336 - Start
+	/**
+	 * Handles changes to the contract value type input (reduction or addition).
+	 */
+	public void handleContractValueTypeChange() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+			ctBackingBean.getManagedBean().setDisableReductionContractAmount(false);
+			ctBackingBean.getManagedBean().setDisableAdditionContractAmount(true);
+		} else {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);
+			ctBackingBean.getManagedBean().setDisableReductionContractAmount(true);
+			ctBackingBean.getManagedBean().setDisableAdditionContractAmount(false);
+		}
+	}
+	
+	/**
+	 * Ensures the reduction amount is initialized.
+	 */
+	public void changeReductionValue() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getReductionAmt() == null) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);
+		}
+	}
+	
+	/**
+	 * Calculates the maximum additional value allowed for a contract.
+	 * @return maximum additional value allowed
+	 */
+	public BigDecimal maxAdditionalValue() {
+		BigDecimal maxAdditionalValue = BigDecimal.ZERO;
+		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+		if (ctAmount != null && ctAmount.compareTo(BigDecimal.ZERO) > 0) {
+			maxAdditionalValue = ctAmount.multiply(new BigDecimal("0.5"));
+		}
+		return maxAdditionalValue;
+	}
+	
+	/*
+	 * Calculates the percentage of the additional amount compared to the contract amount.
+	 * @return the additional amount as a percentage of the contract amount
+	 */
+	public BigDecimal additionalPercentage() {
+		BigDecimal additionalPercentage = BigDecimal.ZERO;
+		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+		BigDecimal addition = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount();
+		if (ctAmount != null && addition != null && ctAmount.compareTo(BigDecimal.ZERO) != 0) {
+	        additionalPercentage = addition
+	                .divide(ctAmount, 4, RoundingMode.HALF_UP)
+	                .multiply(new BigDecimal("100"));
+	    }
+		return additionalPercentage;
+	}
+	//#24336 - End
 }
