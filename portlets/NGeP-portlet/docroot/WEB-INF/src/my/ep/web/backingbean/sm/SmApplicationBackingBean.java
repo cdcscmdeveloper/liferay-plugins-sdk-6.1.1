@@ -11777,7 +11777,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			
 			//#9299 - Start
-			if(getAppVersionDetailsWithRedmineNo() && checkCompanyExperienceNewlyAdded(getManagedBean().getSmAppl().getSmCompanyExperiences())){
+			if(!getAppVersionDetailsWithRedmineNo() && checkCompanyExperienceNewlyAdded(getManagedBean().getSmAppl().getSmCompanyExperiences())){
 				SmApplicationUtil.setCompExpDraft(getManagedBean().getSmAppl());
 			}
 			//#9299 - End
