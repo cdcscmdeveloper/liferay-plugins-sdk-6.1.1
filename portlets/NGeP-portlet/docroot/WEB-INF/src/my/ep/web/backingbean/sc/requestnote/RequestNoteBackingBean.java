@@ -3139,8 +3139,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void deleteRequestNoteDtl() {
 		debugLogger("deleteRequestNoteDtl");
 		int counter = 0;
-		List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
-		List<ScRequestNoteDtl>	mainRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+		List<ScRequestNoteDtl> deleteRequestNoteDtls = new ArrayList<>(); //#39290
+		List<ScRequestNoteDtl> mainRequestNoteDtls = new ArrayList<>(); //#39290
 		List<ScRequestNoteDtl>	requestNoteDtls	=	getManagedBean().getRequestNoteDtls();
 		if (requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
@@ -3163,7 +3163,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		
-		getManagedBean().setDeleteRequestNoteDtls(deleteRequestNoteDtls);
+		//#39290 - start
+	    List<ScRequestNoteDtl> existingDeletes = getManagedBean().getDeleteRequestNoteDtls();
+	    if (existingDeletes == null) {
+	        existingDeletes = new ArrayList<>();
+	    }
+	    existingDeletes.addAll(deleteRequestNoteDtls);
+		getManagedBean().setDeleteRequestNoteDtls(existingDeletes);
+		//#39290 - end
 		getManagedBean().setRequestNoteDtls(mainRequestNoteDtls);
 		getManagedBean().getRequestNote().setRequestNoteDtls(mainRequestNoteDtls);
 		FacesContext fc = FacesContext.getCurrentInstance();
