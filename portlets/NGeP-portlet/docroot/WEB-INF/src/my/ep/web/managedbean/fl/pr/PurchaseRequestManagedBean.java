@@ -299,6 +299,10 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean triggerPRErrorMsg = false;
 	private boolean isGrouped;
 	//#28718 - end
+	
+	// 29555 start
+	private String preparedBy;
+	// 29555 end
 /**
  * Gets the charge line item root.
  *
@@ -3350,4 +3354,19 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	//#28718 - end
 	
+	// 29555 start
+	/**
+	 * @return the preparedBy
+	 */
+	public String getPreparedBy() {
+		return preparedBy;
+	}
+
+	/**
+	 * @param preparedBy the preparedBy to set
+	 */
+	public void setPreparedBy(String preparedBy) {
+		this.preparedBy = preparedBy;
+	}
+	// 29555 end
 }
