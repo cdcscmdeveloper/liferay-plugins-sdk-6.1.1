@@ -1464,9 +1464,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				reqDTO.setToBeRemovedProposalAttachmentsChecklists(toBeRemoveChecklist);
 			}
 			if (null != presentatiodemo && !presentatiodemo.isEmpty()) {
-				PmStatus Status = getPmStatusByStatusId(QTStatusConst.PR_COMPLETED);
 				for (ScQtProposalChecklist demoChecklist : presentatiodemo) {
-					demoChecklist.setEvaluationStatus(Status);
+					demoChecklist
+							.setEvaluationStatus(demoChecklist.getTotalUserScore() != null ? getPmStatusByStatusId(QTStatusConst.PR_COMPLETED)
+									: getPmStatusByStatusId(QTStatusConst.PR_PENDING));//#28784
 				}
 				reqDTO.setComplianceList(presentatiodemo);
 				evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
@@ -6898,9 +6899,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				// Bug #36747@Syazani 20/01/2025 -- Start
 				else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
 						.getManagedBean().getCommitteeType())
-						&& (this.getManagedBean().getCurrentStatusId()
-								.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL) || this.getManagedBean()
-								.getCurrentStatusId().equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION))
+						&& Arrays.asList(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL, QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION,
+								QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO, QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_DEMO_REVISION)
+								.contains(this.getManagedBean().getCurrentStatusId())
 						&& !this.getManagedBean().isReadOnly()) {
 					// Bug #36747@Syazani 20/01/2025 -- End
 
@@ -6926,8 +6927,12 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							}
 						}
 					}
-					checkMeetingDetailsAndStatus(this.getManagedBean()
-							.getScQtMeetings());
+					//#28784 - Start
+					if (checkDemoWIP()) {
+						checkMeetingDetailsAndStatus(this.getManagedBean()
+								.getScQtMeetings());
+					}
+					//#28784 - End
 					// Bug #36747@Syazani 20/01/2025 -- Start
 				} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
 						.getManagedBean().getCommitteeType())
@@ -9065,6 +9070,7 @@ private void retriveCommitteeRemarksList(){
 		demoProceses.add(SCProcessNameConst.FINALISE_TEC_EVALUATION);
 		demoProceses.add(SCProcessNameConst.UPDATE_TEC_EVALUATION);
 		demoProceses.add(SCProcessNameConst.VIEW_TEC_EVALUATION);
+		demoProceses.add(SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION);
 		demoProceses.add(SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION);
 		demoProceses.add(SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION);
 		//#28784 - End
@@ -13741,6 +13747,16 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setReadOnly(false);
 		}
 		retrivePresentationDemo();
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	public boolean isStatusAfterDemo() {
+		List<String> demoProcesses = new ArrayList<>();
+		demoProcesses.add(SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION);
+		demoProcesses.add(SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION);
+		demoProcesses.add(SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION);
+		return demoProcesses.contains(this.getManagedBean().getTaskName());
 	}
 	//#28784 - End
 }
