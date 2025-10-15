@@ -92,6 +92,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		log.info("preLoading User Org");
 		getManagedBean().setLazy(false);
 		this.resetOrganisationSearchBean();
+		getManagedBean().setResetMasterResult(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
@@ -112,6 +113,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 
 			searchMaster.reloadData();
 		}
+		getManagedBean().setResetMasterResult(false);
 	}
 
 	/**
@@ -255,11 +257,19 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 				auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
 
 				log.info("LEVEL2 MASTER ::::::: " + getManagedBean().getSearchBean().getMasterLabel2());
-				return auditPMSO.userOrgSearchPMMasterResultList(auditPMReqDTO, searchBean);
+
+				if (getManagedBean().isResetMasterResult()) {
+					getManagedBean().setResetMasterResult(false);
+					return null;
+				} else {
+					getManagedBean().setResetMasterResult(false);
+					return auditPMSO.userOrgSearchPMMasterResultList(auditPMReqDTO, searchBean);
+				}
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "SearchMasterPagingDataModel", "resDTO",
 						"searchResult", Long.parseLong(getManagedBean().getSearchBean().getCreatedBy()), e);
 			}
+			getManagedBean().setResetMasterResult(false);
 			return null;
 		}
 	}
@@ -637,7 +647,14 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		log.info("resetOrganisationSearchBean called");
 		log.info("Selected masterLabel2: " + getManagedBean().getSearchBean().getMasterLabel2());
 
+		getManagedBean().setResetMasterResult(true);
+
 		autoSelectOrgType();
+	}
+
+	public void onFromDateSelect() {
+		// Clear the toDate
+		getManagedBean().getSearchBean().setDateTo(null);
 	}
 
 	public IPagingDataModel<VAuditPMDTO> getSearchMaster() {
