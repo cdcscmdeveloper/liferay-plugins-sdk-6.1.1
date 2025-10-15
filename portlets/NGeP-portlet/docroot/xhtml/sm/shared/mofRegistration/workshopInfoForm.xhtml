@@ -175,7 +175,8 @@
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.workShopFacilityStates}"
 					divisionItems="#{backingBean.managedBean.workShopFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.workShopFacilityDistricts}" cityItems="#{backingBean.managedBean.workShopFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL}" panelId="workShopBlockPanel" disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+					facilityPanel="#{SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL}" panelId="workShopBlockPanel" disabled="#{backingBean.managedBean.upsCannotEdit}"
+					disableValidation="#{param['disableValidation']}"/>  <!-- #34159 -->
 					
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -298,11 +299,15 @@
 			<ui:include src="/xhtml/sm/shared/mofRegistration/employeeInfoForm.xhtml" />
 			<br />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
+				<!-- #34159 - START - add param disablevalidation -->
+				<p:commandButton value="#{lbl['lbl.sm.button.save1']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateWorkshopToSmAppl}"
 					partialSubmit="true" process="workShopDialog"
 					onclick="workShopBlockWidget.show();" oncomplete="workShopBlockWidget.hide();" 
-					update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])" />
+					update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelWorkShopSaveorUpdate}"
