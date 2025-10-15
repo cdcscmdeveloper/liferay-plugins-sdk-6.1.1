@@ -10922,11 +10922,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
 		String pendingSiteVisitReviewAfterApprovedStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
-		if (!getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
-			assignValReqdToTrue();
-		} else {
+//		#37925 START
+//		if (!getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
+//			assignValReqdToTrue();
+//		} else {
+//			assignValReqdToFalse();
+//		}
+		if (getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
 			assignValReqdToFalse();
 		}
+//		#37925 END
 		// 27877 - end
 		getManagedBean().getSmAppl().setBumi(
 				getManagedBean().getSmAppl().getSmSupplier().isBumi());

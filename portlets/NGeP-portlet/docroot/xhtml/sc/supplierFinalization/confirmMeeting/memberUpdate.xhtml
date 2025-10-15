@@ -158,7 +158,7 @@
 							style="width: 110px;margin-bottom: 5px;"
 							disabled="#{!isCommitteeUpdatable}">
 							<p:ajax event="change" partialSubmit="true" process="@this"
-								listener="#{meetingBB.onChangeRole(index,meetingBB.managedBean.committeeMemberActivity)}" /><!-- #35500 issue fix 4-9 -->
+								listener="#{meetingBB.onChangeRole(committeeMember)}" /><!-- #35500 issue fix 4-9 -->
 							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
 								value="#{meetingBB.getRoleTypeDropdownValuesBasedOnPTJ(committeeMember.PNP,meetingBB.managedBean.scQt,committeeMember.pmUser, filteredRoles)}"
 								itemLabel="#{role.codeName}"
