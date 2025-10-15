@@ -191,23 +191,27 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 						managedBeans.getNewAuditPmUserOrg().getEmail() != null ? managedBeans.getNewAuditPmUserOrg().getEmail() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_TEL_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
-						managedBeans.getOldAuditPmUserOrg().getPhoneNo() != null ? 
+						(managedBeans.getOldAuditPmUserOrg().getPhoneNo() != null && 
+							!managedBeans.getOldAuditPmUserOrg().getPhoneNo().isEmpty()) ?  
 								managedBeans.getOldAuditPmUserOrg().getPhoneCountry() + 
 								managedBeans.getOldAuditPmUserOrg().getPhoneArea() + 
 								managedBeans.getOldAuditPmUserOrg().getPhoneNo() : "";
 				newValue = managedBeans.getNewAuditPmUserOrg() != null &&
-						managedBeans.getNewAuditPmUserOrg().getPhoneNo() != null ? 
+						(managedBeans.getNewAuditPmUserOrg().getPhoneNo() != null && 
+							!managedBeans.getNewAuditPmUserOrg().getPhoneNo().isEmpty()) ?  
 								managedBeans.getNewAuditPmUserOrg().getPhoneCountry() +
 								managedBeans.getNewAuditPmUserOrg().getPhoneArea() +
 								managedBeans.getNewAuditPmUserOrg().getPhoneNo() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_MOBILE_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
-						managedBeans.getOldAuditPmUserOrg().getMobileNo() != null ? 
+						(managedBeans.getOldAuditPmUserOrg().getMobileNo() != null && 
+							!managedBeans.getOldAuditPmUserOrg().getMobileNo().isEmpty()) ?  
 								managedBeans.getOldAuditPmUserOrg().getMobileCountry() +
 								managedBeans.getOldAuditPmUserOrg().getMobileArea() +
 								managedBeans.getOldAuditPmUserOrg().getMobileNo() : "";
 				newValue = managedBeans.getNewAuditPmUserOrg() != null &&
-						managedBeans.getNewAuditPmUserOrg().getMobileNo() != null ? 
+						(managedBeans.getNewAuditPmUserOrg().getMobileNo() != null && 
+							!managedBeans.getNewAuditPmUserOrg().getMobileNo().isEmpty()) ?  
 								managedBeans.getNewAuditPmUserOrg().getMobileCountry() +
 								managedBeans.getNewAuditPmUserOrg().getMobileArea() +
 								managedBeans.getNewAuditPmUserOrg().getMobileNo() : "";
@@ -225,7 +229,9 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			
 			if(!actionType.isEmpty()){
-				detailObj(obj, oldValue, newValue, actionType);
+				if(!oldValue.isEmpty() || !newValue.isEmpty()){
+					detailObj(obj, oldValue, newValue, actionType);
+				}
 			}
 		}
 	}
@@ -269,7 +275,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_MOBILE_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
 						(managedBeans.getOldAuditPmUserOrg().getMobileNo() != null && 
-								!managedBeans.getOldAuditPmUserOrg().getMobileNo().isEmpty())? 
+								!managedBeans.getOldAuditPmUserOrg().getMobileNo().isEmpty()) ? 
 								managedBeans.getOldAuditPmUserOrg().getMobileCountry() +
 								managedBeans.getOldAuditPmUserOrg().getMobileArea() +
 								managedBeans.getOldAuditPmUserOrg().getMobileNo() : "";
@@ -293,7 +299,9 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			
 			if(!actionType.isEmpty()){
-				detailObj(obj, oldValue, newValue, actionType);
+				if(!oldValue.isEmpty() || !newValue.isEmpty()){
+					detailObj(obj, oldValue, newValue, actionType);
+				}
 			}
 		}
 	}
@@ -317,23 +325,27 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 						managedBeans.getNewAuditPmUserOrg().getEmail() != null ? managedBeans.getNewAuditPmUserOrg().getEmail() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_TEL_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
-						managedBeans.getOldAuditPmUserOrg().getPhoneNo() != null ? 
+						(managedBeans.getOldAuditPmUserOrg().getPhoneNo() != null && 
+							!managedBeans.getOldAuditPmUserOrg().getPhoneNo().isEmpty()) ?  
 								managedBeans.getOldAuditPmUserOrg().getPhoneCountry() + 
 								managedBeans.getOldAuditPmUserOrg().getPhoneArea() + 
 								managedBeans.getOldAuditPmUserOrg().getPhoneNo() : "";
 				newValue = managedBeans.getNewAuditPmUserOrg() != null &&
-						managedBeans.getNewAuditPmUserOrg().getPhoneNo() != null ? 
+						(managedBeans.getNewAuditPmUserOrg().getPhoneNo() != null && 
+							!managedBeans.getNewAuditPmUserOrg().getPhoneNo().isEmpty()) ?  
 								managedBeans.getNewAuditPmUserOrg().getPhoneCountry() +
 								managedBeans.getNewAuditPmUserOrg().getPhoneArea() +
 								managedBeans.getNewAuditPmUserOrg().getPhoneNo() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_MOBILE_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
-						managedBeans.getOldAuditPmUserOrg().getMobileNo() != null ? 
+						(managedBeans.getOldAuditPmUserOrg().getMobileNo() != null && 
+							!managedBeans.getOldAuditPmUserOrg().getMobileNo().isEmpty()) ?  
 								managedBeans.getOldAuditPmUserOrg().getMobileCountry() +
 								managedBeans.getOldAuditPmUserOrg().getMobileArea() +
 								managedBeans.getOldAuditPmUserOrg().getMobileNo() : "";
 				newValue = managedBeans.getNewAuditPmUserOrg() != null &&
-						managedBeans.getNewAuditPmUserOrg().getMobileNo() != null ? 
+						(managedBeans.getNewAuditPmUserOrg().getMobileNo() != null && 
+							!managedBeans.getNewAuditPmUserOrg().getMobileNo().isEmpty()) ?  
 								managedBeans.getNewAuditPmUserOrg().getMobileCountry() +
 								managedBeans.getNewAuditPmUserOrg().getMobileArea() +
 								managedBeans.getNewAuditPmUserOrg().getMobileNo() : "";
@@ -351,7 +363,9 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			
 			if(!actionType.isEmpty()){
-				detailObj(obj, oldValue, newValue, actionType);
+				if(!oldValue.isEmpty() || !newValue.isEmpty()){
+					detailObj(obj, oldValue, newValue, actionType);
+				}
 			}
 		}
 	}
@@ -372,12 +386,14 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 						managedBeans.getNewAuditPmUserOrg().getEmail() != null ? managedBeans.getNewAuditPmUserOrg().getEmail() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_MOBILE_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
-						managedBeans.getOldAuditPmUserOrg().getMobileNo() != null ? 
+						(managedBeans.getOldAuditPmUserOrg().getMobileNo() != null && 
+							!managedBeans.getOldAuditPmUserOrg().getMobileNo().isEmpty()) ?  
 								managedBeans.getOldAuditPmUserOrg().getMobileCountry() +
 								managedBeans.getOldAuditPmUserOrg().getMobileArea() +
 								managedBeans.getOldAuditPmUserOrg().getMobileNo() : "";
 				newValue = managedBeans.getNewAuditPmUserOrg() != null &&
-						managedBeans.getNewAuditPmUserOrg().getMobileNo() != null ? 
+						(managedBeans.getNewAuditPmUserOrg().getMobileNo() != null && 
+							!managedBeans.getNewAuditPmUserOrg().getMobileNo().isEmpty()) ?  
 								managedBeans.getNewAuditPmUserOrg().getMobileCountry() +
 								managedBeans.getNewAuditPmUserOrg().getMobileArea() +
 								managedBeans.getNewAuditPmUserOrg().getMobileNo() : "";
@@ -392,7 +408,9 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			
 			if(!actionType.isEmpty()){
-				detailObj(obj, oldValue, newValue, actionType);
+				if(!oldValue.isEmpty() || !newValue.isEmpty()){
+					detailObj(obj, oldValue, newValue, actionType);
+				}
 			}
 		}
 	}
