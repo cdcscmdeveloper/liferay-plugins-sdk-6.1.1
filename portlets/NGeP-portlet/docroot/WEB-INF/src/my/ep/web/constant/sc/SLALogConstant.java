@@ -82,6 +82,11 @@ public class SLALogConstant {
 	
 	// 25791-end
 	
+	// 26247 - start
+	public static final String QT_NOTICEBOARD_BACKING_BEAN = "NoticeBoardBackingBean";
+	public static final String QT_NAVIGATE_TO_CHECK_QUALIFICATION = "navigateToCheckQualification";
+	// 26247 - end
+
 	private SLALogConstant(){
 		
 	}	
