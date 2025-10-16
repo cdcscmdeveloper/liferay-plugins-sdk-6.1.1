@@ -348,10 +348,12 @@
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
 						<!-- #36718 - add more id id ajax process -->
+						<!-- #39097 - Start  -->
 						<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 								update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+						<!-- #39097 - End  -->
 					</p:selectOneMenu>
 					<!-- #35086 -->
 					<ac:smFieldChangeAlert 
@@ -390,10 +392,12 @@
 								<f:selectItems var="offDist"
 									value="#{backingBean.managedBean.basicOffFacDistricts}" />
 								<!-- #36718 - add more id id ajax process -->
+								<!-- #39097 - Start  -->
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeDistrict(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+								<!-- #39097 - End  -->
 							</p:selectOneMenu> 
 							<!-- #34159 - END -->
 							<ac:smFieldChangeAlert 
@@ -421,10 +425,12 @@
 								<f:selectItems var="offCity"
 									value="#{backingBean.managedBean.basicOffFacCities}" />
 								<!-- #36718 - add more id id ajax process -->
+								<!-- #39097 - Start  -->
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeCity(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+								<!-- #39097 - End  -->
 							</p:selectOneMenu> 
 							<!-- #34159 - END -->
 							<ac:smFieldChangeAlert 
@@ -515,13 +521,14 @@
 					      }
 						
 						</script>
-									 
+						<!-- #39097 - Start  -->		 
 						<ac:gmap id="acgmap2" 
 							address="getAddress2()"
 							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							latitude="#{backingBean.managedBean.basicCompanyFacility.smAddress.mapLatitude}"
 							longitude="#{backingBean.managedBean.basicCompanyFacility.smAddress.mapLongitude}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}" />
+						<!-- #39097 - End  -->
 							<!-- Disable for UPS 32008 - END -->
 					</p:outputPanel>
 					</td>

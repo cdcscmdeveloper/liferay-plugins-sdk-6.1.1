@@ -7,7 +7,7 @@
 	<table class="ppTwoTable">
 		<tr>
 			<th width="22%"><p:outputLabel
-					value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel value="*"
+					value="#{lbl['lbl.pm.audit.profileOrg.category']}" /> <p:outputLabel value="*"
 					styleClass="mandatory" /></th>
 			<td><h:panelGrid columns="2">
 					<p:selectOneRadio id="radioGroup"
@@ -20,21 +20,19 @@
 							listener="#{searchPMUserOrgAuditBackingBean.changeType()}"
 							update="orgTypeFederalListId,orgTypeOthersListId,userOrgAuditPMSearchPanel" />
 					</p:selectOneRadio>
-					<ac:iconTooltip value="#{lbl['lbl.pm.org.others.tooltip']}" />
 				</h:panelGrid></td>
-			<td><p:message for="radioGroup" id="radioGroupMsg"
-					display="icon" /></td>
+			<td>&#160;</td>
 			<td>&#160;</td>
 		</tr>
 		<tr>
 			<th width="22%"><p:outputLabel
-					value="#{lbl['lbl.pm.organisation.orgType']}" /> <h:outputLabel
+					value="#{lbl['lbl.pm.audit.profileOrg.orgCategory']}" /> <h:outputLabel
 					value="*" styleClass="mandatory" /></th>
 			<td><p:selectOneMenu id="orgTypeFederalListId"
 					rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory eq searchPMUserOrgAuditBackingBean.getFederalGovt()}"
 					styleClass="ppDropDownWidthM"
 					required="#{!empty param['disableValidation']}"
-					label="#{lbl['lbl.pm.organisation.orgType']}"
+					label="#{lbl['lbl.pm.audit.profileOrg.orgCategory']}"
 					style="width: 265px;margin-bottom: 5px;"
 					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
