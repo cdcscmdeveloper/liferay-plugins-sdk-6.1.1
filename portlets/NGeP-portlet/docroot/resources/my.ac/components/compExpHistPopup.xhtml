@@ -70,6 +70,13 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 					</h:outputText>
+					<p:spacer width="3px" />
+					<h:outputText styleClass="outputLabel-view"
+						rendered="#{history.actionType eq ParameterConst.actionTypeUpdate}"
+						value="#{lbl['lbl.sm.comp.exp.history.action.type.update']}" />
+					<h:outputText styleClass="outputLabel-view"
+						rendered="#{history.actionType eq ParameterConst.actionTypeDelete}"
+						value="#{lbl['lbl.sm.comp.exp.history.action.type.delete']}" />
 				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">

@@ -44,6 +44,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	private LogKey logKey = new LogKey();
+	private static final String RETRIEVE = "retrieve";
+	private static final String ISMCOMPEXPSO = "ISmCompExpSO";
 
 	private SmSupplier supplier;
 	private boolean agreeTnC;
@@ -69,7 +71,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private boolean agreeDeclare;
 	private SmCompExpMasterDoc smCompExpDoc;
 	private transient IPagingDataModel<SmCompExpDraft> draftCtDataModel = new DraftCtPagingDataModel();
-	private List<SelectItem> clientTypeItems = new ArrayList<SelectItem>();
+	private List<SelectItem> clientTypeItems = new ArrayList<>();
 	private transient IPagingDataModel<SmCompExpMaster> masterFedDataModel = new MasterFedPagingDataModel();
 	private transient IPagingDataModel<SmCompExpMaster> masterNonFedDataModel = new MasterNonFedPagingDataModel();
 	private SmCompExpMaster selectedMaster;
@@ -82,6 +84,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private SmCompExpMaster newMaster;
 	private boolean tempEffDate;
 	private boolean consultant;
+	private transient IPagingDataModel<SmCompExpDraft> draftQtDataModel = new DraftQtPagingDataModel();
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -134,8 +137,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
 				return smCompExpSo.retriveSmCompExpDraftList(reqDTO, searchBean).getDraftResultBean();
 			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
-						"ISmCompExpSO", logKey.getUserId(), e);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, RETRIEVE, supplier.getSupplierId().toString(),
+						ISMCOMPEXPSO, logKey.getUserId(), e);
 				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
@@ -313,8 +316,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
 				return smCompExpSo.retriveSmCompExpDraftList(reqDTO, searchBean).getDraftResultBean();
 			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
-						"ISmCompExpSO", logKey.getUserId(), e);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, RETRIEVE, supplier.getSupplierId().toString(),
+						ISMCOMPEXPSO, logKey.getUserId(), e);
 				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
@@ -356,8 +359,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
 				return smCompExpSo.retriveSmCompExpMasterList(reqDTO, searchBean).getMasterResultBean();
 			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
-						"ISmCompExpSO", logKey.getUserId(), e);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, RETRIEVE, supplier.getSupplierId().toString(),
+						ISMCOMPEXPSO, logKey.getUserId(), e);
 				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
@@ -391,8 +394,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
 				return smCompExpSo.retriveSmCompExpMasterList(reqDTO, searchBean).getMasterResultBean();
 			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
-						"ISmCompExpSO", logKey.getUserId(), e);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, RETRIEVE, supplier.getSupplierId().toString(),
+						ISMCOMPEXPSO, logKey.getUserId(), e);
 				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
@@ -477,8 +480,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
 				return smCompExpSo.retriveSmCompExpHistoryList(reqDTO, searchBean).getHistoryResultBean();
 			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
-						"ISmCompExpSO", logKey.getUserId(), e);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, RETRIEVE, supplier.getSupplierId().toString(),
+						ISMCOMPEXPSO, logKey.getUserId(), e);
 				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
@@ -515,6 +518,41 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setConsultant(boolean consultant) {
 		this.consultant = consultant;
+	}
+
+	public IPagingDataModel<SmCompExpDraft> getDraftQtDataModel() {
+		return draftQtDataModel;
+	}
+
+	public void setDraftQtDataModel(IPagingDataModel<SmCompExpDraft> draftQtDataModel) {
+		this.draftQtDataModel = draftQtDataModel;
+	}
+
+	private class DraftQtPagingDataModel extends PagingDataModel<SmCompExpDraft> {
+
+		private static final long serialVersionUID = 1L;
+
+		public DraftQtPagingDataModel() {
+			super("draftQtDataTable", true);
+		}
+
+		@Override
+		public ISearchResultBean<SmCompExpDraft> pageChangeListener(ISearchBean<SmCompExpDraft> searchBean) {
+
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			reqDTO.setSourceType(ParameterConst.SOURCE_TYPE_ID_QT);
+
+			try {
+				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+				return smCompExpSo.retriveSmCompExpDraftList(reqDTO, searchBean).getDraftResultBean();
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, RETRIEVE, supplier.getSupplierId().toString(),
+						ISMCOMPEXPSO, logKey.getUserId(), e);
+				throw new EpException(MessageConst.ERROR_000001);
+			}
+		}
+
 	}
 
 }

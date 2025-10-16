@@ -179,6 +179,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().getClientTypeItems().add(clientTypeNonFederalItem);
 		} else if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
 			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.header.ct", null));
+		} else if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_QT)) {
+			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.header.qt", null));
 		}
 
 		if (null == this.getManagedBean().getSelectedDraft().getClientType() || this.getManagedBean().getSelectedDraft().getClientType().isEmpty()) {
@@ -187,6 +189,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().setDisableClienType(true);
 		}
 
+		this.getManagedBean().setTempEffDate(false);
 		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 			dateChange();
 		}
@@ -215,17 +218,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		Date expDate = new Date();
 		Date effDate = new Date();
 		Long sourceType = null;
-		Integer recordStatusFlg = null;
 		if (this.getManagedBean().isDraftUpdate()) {
 			expDate = this.getManagedBean().getSelectedDraft().getContractExpDate();
 			effDate = this.getManagedBean().getSelectedDraft().getContractEffDate();
 			sourceType = this.getManagedBean().getSelectedDraft().getSourceType().getParameterId();
-			recordStatusFlg = this.getManagedBean().getSelectedDraft().getRecordStatusFlg();
 		} else if (this.getManagedBean().isMasterUpdate()) {
 			expDate = this.getManagedBean().getSelectedMaster().getContractExpDate();
 			effDate = this.getManagedBean().getSelectedMaster().getContractEffDate();
 			sourceType = this.getManagedBean().getSelectedMaster().getSourceType().getParameterId();
-			recordStatusFlg = this.getManagedBean().getSelectedMaster().getRecordStatusFlg();
 		}
 
 		if (null == effDate) {
@@ -236,15 +236,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		setMinExpDate(effDate);
 		Long contractStatus = null;
 
-		if (null != sourceType && sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT)
-				&& recordStatusFlg.toString().equals(ParameterConst.RECORD_STATUS_INACTIVE)) {
-			contractStatus = ParameterConst.CONTRACT_STATUS_TERMINATED;
-		}
-
-		if (this.getManagedBean().isDraftUpdate()) {
-			this.getManagedBean().getSelectedDraft().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
-		} else if (this.getManagedBean().isMasterUpdate()) {
-			this.getManagedBean().getSelectedMaster().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
+		if (null != sourceType && !sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
+			if (this.getManagedBean().isDraftUpdate()) {
+				this.getManagedBean().getSelectedDraft().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
+			} else if (this.getManagedBean().isMasterUpdate()) {
+				this.getManagedBean().getSelectedMaster().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
+			}
 		}
 
 	}
@@ -325,8 +322,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	private List<SmCompExpCatDraft> filterCatCode(List<SmCompExpCatDraft> catCodeList, Long applId) {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-		ISupplierSearchSO reqSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-				ISupplierSearchSO.class);
+		ISupplierSearchSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 		reqDTO.setApplId(applId);
 		SupplierSearchResDTO resDTO = reqSO.retrieveSupplierActiveCategoryCodeByApplId(reqDTO);
 		for (SmCompExpCatDraft draftCatCode : catCodeList) {
@@ -338,8 +334,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			}
 		}
 		ListIterator<SmCompExpCatDraft> iter = catCodeList.listIterator();
-		while(iter.hasNext()){
-			if(!iter.next().isActive()){
+		while (iter.hasNext()) {
+			if (!iter.next().isActive()) {
 				iter.remove();
 			}
 		}
@@ -881,7 +877,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	private boolean validateDraftUpdateList(Long sourceType, List<SmCompExpMasterDoc> smCompExpDocList) {
 		boolean error = false;
-		if (!sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT) && (null == smCompExpDocList || smCompExpDocList.isEmpty())) {
+		if (sourceType.equals(ParameterConst.SOURCE_TYPE_ID_SM) && (null == smCompExpDocList || smCompExpDocList.isEmpty())) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1158,11 +1154,17 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		error = validateList(error, sourceType, smCompExpDocList);
 
 		if (!error && update) {
-			updateSmComExpMaster();
+			updateSmComExpMaster(false);
 		}
 	}
 
-	private void updateSmComExpMaster() throws IOException {
+	/**
+	 * Add details to History Table
+	 * 
+	 * @param delete
+	 * @throws IOException
+	 */
+	public void updateSmComExpMaster(boolean delete) throws IOException {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(this.getManagedBean().getSelectedMaster().getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
@@ -1187,6 +1189,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		history.setContractExpDate(master.getContractExpDate());
 		history.setContractStatus(master.getContractStatus());
 		history.setSourceType(SmApplicationUtil.retrievePmParameterById(master.getSourceType().getParameterId()));
+		updateRecordStatus(history, delete);
 
 		List<SmCompExpMasterHistoryDoc> newDocList = new ArrayList<>();
 		for (SmCompExpMasterDoc doc : this.getManagedBean().getSmCompExpDocList()) {
@@ -1260,8 +1263,20 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			SmCompExpResDTO resDTO2;
 			resDTO2 = getSmCompExpSo().updateMaster(reqDTO4);
 			if (resDTO2.isSuccessful()) {
-				proceedAfterTnC();
+				if (delete) {
+					delSmCompExpMaster();
+				} else {
+					proceedAfterTnC();
+				}
 			}
+		}
+	}
+
+	private void updateRecordStatus(SmCompExpMasterHistory history, boolean delete) {
+		if (delete) {
+			history.setActionType(ParameterConst.ACTION_TYPE_DELETE);
+		} else {
+			history.setActionType(ParameterConst.ACTION_TYPE_UPDATE);
 		}
 	}
 

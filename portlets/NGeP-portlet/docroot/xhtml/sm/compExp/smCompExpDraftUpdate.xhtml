@@ -62,65 +62,95 @@
 					<td style="width: 34%"><p:outputLabel id="agencyNameLbl"
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
-							styleClass="mandatory" value="*"
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
-							(smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal or 
-							smCompExpMB.selectedDraft.oriAgencyName eq null)}" /></td>
+							rendered="#{smCompExpMB.selectedDraft.clientType ne null and 
+							smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and
+							(smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal or
+							(!smCompExpMB.disableClienType and smCompExpMB.selectedDraft.oriAgencyName eq null))}"
+							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><p:outputPanel
-							rendered="#{smCompExpMB.disableClienType}">
-							<h:outputText
-								rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm or
-								(smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeNonFederal and
-								smCompExpMB.selectedDraft.agencyName ne null)}"
-								value="#{smCompExpMB.selectedDraft.agencyName}" />
-						</p:outputPanel> <p:outputPanel rendered="#{!smCompExpMB.disableClienType}">
-							<h:outputText
-								rendered="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeNonFederal and
-								smCompExpMB.selectedDraft.oriAgencyName ne null}"
-								value="#{smCompExpMB.selectedDraft.agencyName}" />
-							<p:inputText
-								rendered="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal or
-							(smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeNonFederal and 
-							smCompExpMB.selectedDraft.oriAgencyName eq null)}"
-								readonly="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal}"
-								value="#{smCompExpMB.selectedDraft.agencyName}" />
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}">
+							<p:outputPanel
+								rendered="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal}">
+								<p:inputText readonly="true" size="60"
+									value="#{smCompExpMB.selectedDraft.agencyName}" />
+								<p:commandLink action="#{smPtjPopupBB.initPtjPopup}"
+									oncomplete="blockWidget.hide(),smPtjPopupWV.show()"
+									onclick="blockWidget.show()" update=":form" process="@form">
+									<p:graphicImage value="/css/images/design/search.png" />
+								</p:commandLink>
+								<p:graphicImage id="agencyNameToolTipsId"
+									value="/css/images/design/tooltips.png" />
+								<p:tooltip for="agencyNameToolTipsId"
+									value="#{lbl['lbl.sm.comp.exp.update.agency.name.tooltip']}" />
+							</p:outputPanel>
+							<p:outputPanel
+								rendered="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeNonFederal}">
+								<h:outputText
+									rendered="#{smCompExpMB.disableClienType or (!smCompExpMB.disableClienType and 
+								smCompExpMB.selectedDraft.oriAgencyName ne null)}"
+									value="#{smCompExpMB.selectedDraft.agencyName}" />
+								<p:inputText size="60"
+									rendered="#{!smCompExpMB.disableClienType and smCompExpMB.selectedDraft.oriAgencyName eq null}"
+									value="#{smCompExpMB.selectedDraft.agencyName}" />
+							</p:outputPanel>
+						</p:outputPanel> <p:outputPanel
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}">
+							<h:outputText value="#{smCompExpMB.selectedDraft.agencyName}" />
 						</p:outputPanel></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdQt}"
 							value="*" styleClass="mandatory" /></td>
-					<td style="width: 66%"><p:inputText id="fileReferenceNo"
-							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
-							value="#{smCompExpMB.selectedDraft.fileReferenceNo}">
-							<p:ajax event="blur"
-								listener="#{smCompExpBB.trimFileReferenceNo}"
-								update="fileReferenceNo" />
-						</p:inputText> <p:spacer width="3px" /> <p:inputText id="fileExtensionNo"
-							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
-							maxlength="3" size="3"
-							value="#{smCompExpMB.selectedDraft.fileExtensionNo}">
-							<p:ajax event="blur"
-								listener="#{smCompExpBB.trimFileExtensionNo}"
-								update="fileExtensionNo" />
-						</p:inputText> <p:graphicImage id="fileReferenceNoToolTipsId"
-							value="/css/images/design/tooltips.png" /> <p:tooltip
-							for="fileReferenceNoToolTipsId">
-							<img
-								src="/NGeP-portlet/images/suratSetujuTerima_fileReference_tooltip.jpeg" />
-						</p:tooltip></td>
+					<td style="width: 66%"><p:outputPanel
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdQt}">
+							<p:inputText id="fileReferenceNo"
+								label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
+								value="#{smCompExpMB.selectedDraft.fileReferenceNo}">
+								<p:ajax event="blur"
+									listener="#{smCompExpBB.trimFileReferenceNo}"
+									update="fileReferenceNo" />
+							</p:inputText>
+							<p:spacer width="3px" />
+							<p:inputText id="fileExtensionNo"
+								label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
+								maxlength="3" size="3"
+								value="#{smCompExpMB.selectedDraft.fileExtensionNo}">
+								<p:ajax event="blur"
+									listener="#{smCompExpBB.trimFileExtensionNo}"
+									update="fileExtensionNo" />
+							</p:inputText>
+							<p:graphicImage id="fileReferenceNoToolTipsId"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip for="fileReferenceNoToolTipsId">
+								<img
+									src="/NGeP-portlet/images/suratSetujuTerima_fileReference_tooltip.jpeg" />
+							</p:tooltip>
+						</p:outputPanel> <p:outputPanel
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdQt}">
+							<h:outputText
+								value="#{smCompExpMB.selectedDraft.fileReferenceNo}" />
+							<p:spacer width="3px" />
+							<h:outputText
+								value="#{smCompExpMB.selectedDraft.fileExtensionNo}" />
+						</p:outputPanel></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
-					<td style="width: 66%"><h:outputText
-							rendered="#{smCompExpMB.selectedDraft.loaNo ne null and smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}"
+					<td style="width: 66%"><p:inputText
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm or
+							(smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdCt and
+							smCompExpMB.selectedDraft.loaNo eq null)}"
+							value="#{smCompExpMB.selectedDraft.loaNo}" /> <h:outputText
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdQt or
+							(smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdCt and
+							smCompExpMB.selectedDraft.loaNo ne null)}"
 							style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 							styleClass="outputLabel-view"
-							value="#{smCompExpMB.selectedDraft.loaNo}" /> <p:inputText
-							rendered="#{smCompExpMB.selectedDraft.loaNo eq null or smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}"
 							value="#{smCompExpMB.selectedDraft.loaNo}" /></td>
 				</tr>
 				<tr>
@@ -137,13 +167,15 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /></td>
 					<td style="width: 66%"><h:outputText
-							rendered="#{smCompExpMB.selectedDraft.contractValue gt 0}"
-							styleClass="outputLabel-view"
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm or 
+							(smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
+						smCompExpMB.selectedDraft.contractValue gt 0)}"
 							value="#{smCompExpMB.selectedDraft.contractValue}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText> <p:inputText label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
-							rendered="#{smCompExpMB.selectedDraft.contractValue eq 0 or smCompExpMB.selectedDraft.contractValue eq null}"
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
+							(smCompExpMB.selectedDraft.contractValue eq 0 or smCompExpMB.selectedDraft.contractValue eq null)}"
 							value="#{smCompExpMB.selectedDraft.contractValue}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -154,8 +186,15 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
 					<td style="width: 66%"><h:outputText
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}"
 							styleClass="outputLabel-view"
-							value="#{smCompExpBB.getParameterDesc(smCompExpMB.selectedDraft.paymentMethod)}" /></td>
+							value="#{smCompExpBB.getParameterDesc(smCompExpMB.selectedDraft.paymentMethod)}" />
+						<p:selectOneMenu
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}"
+							value="#{smCompExpMB.selectedDraft.paymentMethod}">
+							<f:selectItems
+								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypePaymentMethod)}" />
+						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
@@ -168,21 +207,19 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /> <p:outputLabel
-							rendered="#{smCompExpMB.tempEffDate}" value="*"
-							styleClass="mandatory" /></td>
+							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /></td>
 					<td style="width: 66%"><h:outputText
 							rendered="#{!smCompExpMB.tempEffDate}"
 							styleClass="outputLabel-view"
 							value="#{smCompExpMB.selectedDraft.contractEffDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText> <p:calendar id="contractEffDate"
-							label="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
+						</h:outputText> <p:calendar
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
+							smCompExpMB.tempEffDate}"
 							maxdate="#{smCompExpMB.maxEffDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							readonlyInput="true" rendered="#{smCompExpMB.tempEffDate}"
-							showOn="button"
+							readonlyInput="true" showOn="button"
 							value="#{smCompExpMB.selectedDraft.contractEffDate}">
 							<p:ajax event="dateSelect" listener="#{smCompExpBB.dateChange}"
 								oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
@@ -194,20 +231,19 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}" /></td>
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}" /></td>
 					<td style="width: 66%"><h:outputText
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdCt}"
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}"
 							styleClass="outputLabel-view"
 							value="#{smCompExpMB.selectedDraft.contractExpDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText> <p:calendar id="contractExpDate"
-							label="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}"
+						</h:outputText> <p:calendar
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}"
 							mindate="#{smCompExpMB.minExpDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							readonlyInput="true" showOn="button"
-							value="#{smCompExpMB.selectedDraft.contractExpDate}"
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}">
+							value="#{smCompExpMB.selectedDraft.contractExpDate}">
 							<p:ajax event="dateSelect" listener="#{smCompExpBB.dateChange}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								process="@form" update=":form" />
@@ -247,40 +283,40 @@
 								value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
 						</c:if></td>
 				</tr>
-				<p:outputPanel rendered="#{smCompExpMB.consultant}">
-					<tr>
-						<td style="width: 34%"><p:outputLabel
-								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /></td>
-						<td style="width: 66%"><h:outputText
-								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
-								styleClass="outputLabel-view"
-								value="#{smCompExpMB.selectedDraft.projectLoc}" /></td>
-					</tr>
-					<tr>
-						<td style="width: 34%"><p:outputLabel
-								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /></td>
-						<td style="width: 66%"><h:outputText
-								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
-								styleClass="outputLabel-view"
-								value="#{smCompExpMB.selectedDraft.workServDesc}" /></td>
-					</tr>
-					<tr>
-						<td style="width: 34%"><p:outputLabel
-								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /></td>
-						<td style="width: 66%"><h:outputText
-								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
-								styleClass="outputLabel-view"
-								value="#{smCompExpMB.selectedDraft.consultanFee}">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</h:outputText></td>
-					</tr>
-				</p:outputPanel>
 				<p:outputPanel
-					rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}">
+					rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}">
+					<p:outputPanel rendered="#{smCompExpMB.consultant}">
+						<tr>
+							<td style="width: 34%"><p:outputLabel
+									styleClass="outputLabel-view-label2"
+									value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /></td>
+							<td style="width: 66%"><h:outputText
+									style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+									styleClass="outputLabel-view"
+									value="#{smCompExpMB.selectedDraft.projectLoc}" /></td>
+						</tr>
+						<tr>
+							<td style="width: 34%"><p:outputLabel
+									styleClass="outputLabel-view-label2"
+									value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /></td>
+							<td style="width: 66%"><h:outputText
+									style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+									styleClass="outputLabel-view"
+									value="#{smCompExpMB.selectedDraft.workServDesc}" /></td>
+						</tr>
+						<tr>
+							<td style="width: 34%"><p:outputLabel
+									styleClass="outputLabel-view-label2"
+									value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /></td>
+							<td style="width: 66%"><h:outputText
+									style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+									styleClass="outputLabel-view"
+									value="#{smCompExpMB.selectedDraft.consultanFee}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText></td>
+						</tr>
+					</p:outputPanel>
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
@@ -318,7 +354,6 @@
 					</tr>
 				</p:outputPanel>
 			</table>
-
 		</div>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 			toggleable="true">
@@ -326,8 +361,8 @@
 				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}"
 				value="#{lbl['lbl.sm.comp.exp.update.project.cat.code.instruction.sm']}" />
 			<h:outputText styleClass="instruction"
-				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdCt}"
-				value="#{lbl['lbl.sm.comp.exp.update.project.cat.code.instruction.ct']}" />
+				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}"
+				value="#{lbl['lbl.sm.comp.exp.update.project.cat.code.instruction.ct.qt']}" />
 			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
 				value="#{smCompExpMB.smCompExpCatDraftList}" var="smCompExpCatCode"
 				widgetVar="smCompExpCatCodesWV">
