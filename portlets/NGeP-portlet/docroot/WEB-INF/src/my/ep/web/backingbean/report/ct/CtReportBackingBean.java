@@ -14,15 +14,18 @@ import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.sm.SmSupplier; //#30918
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.report.ct.cc.ContractItemMonitoringCCRptBackingBean;
 import my.ep.web.backingbean.report.ct.cc.ContractItemUsageMonitoringDtlsBackingBean; //#34889
+import my.ep.web.backingbean.report.ct.cc.ContractManagementReportBackingBean; //#30918
 import my.ep.web.backingbean.report.ct.cc.ListOfCircularRptBackingBean;
 import my.ep.web.backingbean.report.ct.cc.StatementOfOrderRptBackingBean;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.managedbean.report.ct.CtReportManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.sm.helper.SmApplicationUtil;//#30918
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
