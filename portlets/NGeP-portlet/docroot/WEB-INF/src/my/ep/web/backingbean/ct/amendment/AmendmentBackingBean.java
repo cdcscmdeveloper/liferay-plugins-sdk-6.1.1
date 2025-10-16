@@ -241,6 +241,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL
     ));
 	//#34097/#26186 end
+	//#35238 start
+	private static final Set<String> COMMITTEE_TYPE_QUOTATION = new HashSet<>(Arrays.asList(
+			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A,
+			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B,
+			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE
+    ));
+	//#35238 end
 	
 	/**
 	 * The constructor used for initializing the variable.
@@ -9993,13 +10000,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return true if it matches any quotation committee type, false otherwise
 	 */
 	private boolean isQuotationCommitteeType() {
-		Set<String> quotationCommittees = new HashSet<>();
-		quotationCommittees.add(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A);
-		quotationCommittees.add(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B);
-		quotationCommittees.add(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE);
-
 		if (getManagedBean().getCommitteeType() != null
-				&& quotationCommittees.contains(getManagedBean().getCommitteeType())) {
+				&& COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType())) {
 			return true;
 		}
 		return false;
