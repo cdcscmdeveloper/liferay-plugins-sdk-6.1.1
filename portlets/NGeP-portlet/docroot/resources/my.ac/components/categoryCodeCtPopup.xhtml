@@ -23,11 +23,25 @@
         }
     </h:outputScript>
     
+        <h:outputStylesheet>
+        <style>
+			#catCodeCtPopup.ui-dialog {
+                max-height: 700px;
+                max-width: 70vw;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                margin-top: 0 !important;
+            }
+        </style>
+    </h:outputStylesheet>
+    
 	<p:dialog id="catCodeCtPopup"
 		header="#{lbl['lbl.sc.category.code.search']}"
-		widgetVar="catCodePopup" modal="true" width="680" position="top"
-		positionType="fixed"
-    	contentStyle="margin-top: 50px;">
+		widgetVar="catCodePopup" modal="true" width="720" 
+		position="top"
+        positionType="fixed"
+        contentStyle="margin-top: 0;">
 
 		<p:messages id="catCodeCtPopupMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
@@ -36,23 +50,36 @@
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="25%">
-					<p:outputLabel value="#{lbl['lbl.sc.category.code.search.by']}" />
+					<p:outputLabel value="#{lbl['lbl.ct.category.code.search.by']}" />
 				</td>
 				<td width="75%">
-					<p:selectOneRadio id="catCodeCtSearchBy" label="#{lbl['lbl.sc.category.code.search.by']}"
-						value="#{categoryCodeSearchBackingBean.managedBean.searchBy}" styleClass="commonLabel">
-						<f:selectItems value="#{categoryCodeSearchBackingBean.getRadioButtonCodeValues(ParameterTypeConst.categoryCodeSearchBy)}" />
-						<p:ajax event="change" update="catCodeCtPnl" />
-					</p:selectOneRadio>
+				<p:selectOneRadio id="catCodeCtSearchBy" label="#{lbl['lbl.ct.category.code.search.by']}"
+    				value="#{categoryCodeSearchBackingBean.managedBean.searchBy}"
+    				layout="custom"
+    				styleClass="commonLabel">
+    				<f:selectItems 
+        			value="#{categoryCodeSearchBackingBean.getRadioButtonCodeValues(ParameterTypeConst.categoryCodeSearchBy)}" />
+    				<p:ajax event="change" process="@this" update="catCodeCtPnl"/>
+				</p:selectOneRadio>
+				<!-- Layout manual, horizontal -->
+				<h:panelGrid columns="4" cellpadding="5" style="vertical-align: middle;">
+    				<!-- itemIndex 0 = By Category Code -->
+    			 <p:radioButton for="catCodeCtSearchBy" itemIndex="0" />
+   				 <h:outputLabel value="#{lbl['lbl.ct.menu.category.code']}" style="margin-right:25px;" />
+
+    				<!-- itemIndex 1 = By Category Description -->
+    			 <p:radioButton for="catCodeCtSearchBy" itemIndex="1" />
+    			 <h:outputLabel value="#{lbl['lbl.ct.category.description']}" />
+				</h:panelGrid>
 				</td>
 			</tr>
 			<c:if test="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByCode}">
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.main.category']}"/>
+					<p:outputLabel value="#{lbl['lbl.ct.tbl.category']}"/>
 				</td>
 				<td>
-					<h:selectOneMenu id="catCodeCtLvl1" label="#{lbl['lbl.sc.main.category']}"
+					<h:selectOneMenu id="catCodeCtLvl1" label="#{lbl['lbl.ct.tbl.category']}"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl1}"
 						style="width: 500px;">
 						<f:selectItems value="#{categoryCodeSearchBackingBean.level1CategoryCodes}" />
@@ -62,10 +89,10 @@
 			</tr>
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.sub.category']}" />
+					<p:outputLabel value="#{lbl['lbl.ct.tbl.sub.category']}" />
 				</td>
 				<td>
-					<h:selectOneMenu id="catCodeCtLvl2" label="#{lbl['lbl.sc.sub.category']}"
+					<h:selectOneMenu id="catCodeCtLvl2" label="#{lbl['lbl.ct.tbl.sub.category']}"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2}"
 						style="width: 500px;">
 						<f:selectItems value="#{categoryCodeSearchBackingBean.level2CategoryCodes}" />
@@ -75,10 +102,10 @@
 			</tr>
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.sub.category.division']}" />
+					<p:outputLabel value="#{lbl['lbl.ct.tbl.sub.category.div']}" />
 				</td>
 				<td>
-					<h:selectOneMenu id="catCodeCtLvl3" label="#{lbl['lbl.sc.sub.category.division']}"
+					<h:selectOneMenu id="catCodeCtLvl3" label="#{lbl['lbl.ct.tbl.sub.category.div']}"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl3}"
 						style="width: 500px;">
 						<f:selectItems value="#{categoryCodeSearchBackingBean.level3CategoryCodes}" />
@@ -90,16 +117,16 @@
 			</table>
 			
 			<c:if test="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByDescription}">
-			<p:panel header="#{lbl['lbl.pm.search.category']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.ct.search.category']}" toggleable="true">
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td width="25%">
-						<p:outputLabel value="#{lbl['lbl.sc.category.description']}" />
+						<p:outputLabel value="#{lbl['lbl.ct.category.description']}" />
 					</td>
 					<td width="75%">
 						<p:inputText id="catCodeCtDecsr" value="#{categoryCodeSearchBackingBean.managedBean.categoryDesciption}" 
 							onkeypress="if (event.keyCode == 13) { categoryCodeCtSearch.jq.click(); return false; }"
-							maxlength="100" label="#{lbl['lbl.sc.category.description']}"
+							maxlength="100" label="#{lbl['lbl.ct.category.description']}"
 							style="width:475px;" />
 						<p:message id="catCodeCtDecsrMsg" for="catCodeCtDecsr" display="icon" />
 					</td>
@@ -111,7 +138,7 @@
 							widgetVar="categoryCodeCtSearch"
 							action="#{categoryCodeSearchBackingBean.searchAction}" 
 							process="catCodeCtPnl" update="catCodeCtDescrTbl" />
-						<p:commandButton value="#{lbl['lbl.btn.reset']}"
+						<p:commandButton value="#{lbl['lbl.ct.btn.reset']}"
 							action="#{categoryCodeSearchBackingBean.resetAction}" 
 							resetValues="true" 
 							process="@this" update="catCodeCtPnl" />
@@ -120,12 +147,12 @@
 				</table>
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.pm.category.result']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.ct.category.result']}" toggleable="true">
 				<p:dataTable id="catCodeCtDescrTbl"
 					value="#{categoryCodeSearchBackingBean.categoryDescrDataModel}"
-					selectionMode="single"
+					selectionMode="single" style="max-height: 350px !important; overflow-y: auto;"
 					selection="#{categoryCodeSearchBackingBean.managedBean.selectedCategoryL3}"
-					rowKey="#{pmCategoryL3.categoryL3Id}"
+					rowKey="#{pmCategoryL3.categoryL3Id}" scrollable="true"
 					var="pmCategoryL3" lazy="true" rows="10">
 	
 					<ac:paginator for="catCodeCtDescrTbl" />
@@ -136,16 +163,16 @@
 						</f:facet>
 						#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{pmCategoryL3.pmCategoryL2.categoryL2Code}#{pmCategoryL3.categoryL3Code}
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.tbl.sub.category']}" style="min-width: 80px; white-space: normal;">
+					<p:column headerText="#{lbl['lbl.ct.tbl.category']}" style="min-width: 90px; white-space: normal;">
 					<h:outputText value="#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.sub.category']}" style="min-width: 120px; white-space: normal;">
+					<p:column headerText="#{lbl['lbl.sc.sub.category']}" style="min-width: 300px; white-space: normal;">
 					<h:outputText value="#{pmCategoryL3.pmCategoryL2.categoryName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.tbl.sub.category.div']}" style="min-width: 120px; white-space: normal;">
+					<p:column headerText="#{lbl['lbl.ct.tbl.sub.category.div']}" style="min-width: 300px; white-space: normal;">
 					<h:outputText value="#{pmCategoryL3.categoryName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.tbl.category.type']}" style="min-width: 80px; white-space: normal;">
+					<p:column headerText="#{lbl['lbl.ct.tbl.category.type']}" style="min-width: 100px; white-space: normal;">
 					<h:outputText value="#{categoryCodeSearchBackingBean.getParameterDesc(pmCategoryL3.categoryTypeCode)}" />
 					</p:column>
 				</p:dataTable>
