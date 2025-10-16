@@ -16180,6 +16180,7 @@ public class SmApplicationUtil {
 				smCompExpDraft.add(draft);
 			}
 		}
+		smAppl.setSmCompExpDraft(smCompExpDraft);
 	}
 	// #9299 - Start
 
