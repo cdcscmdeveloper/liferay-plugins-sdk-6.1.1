@@ -1,8 +1,9 @@
 /*
- * Copyright � 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.backingbean.pm.common.rejectionreason;
 
+import java.sql.Timestamp; //#28962
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
+import javax.faces.model.SelectItem; //#28962
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -23,6 +24,10 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
+//#28962 - Start
+import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+//#28962 - End
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.constant.MessageConst;
@@ -32,12 +37,17 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
+//#28962 - Start
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+//#28962 - End
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile; //#28962
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmPIDReason;
@@ -46,12 +56,14 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonCategory;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmReasonRestr; //#28962
 import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //#28962
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMReasonMaintenanceBackingBean;
@@ -65,8 +77,10 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.ReasonHelper;
 
+import org.apache.commons.collections.CollectionUtils; //#28962
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext; //#28962
 /**
  * Backing Bean for Rejection Reason
  * 
@@ -113,6 +127,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public static final int REJECTION_REASON = 2;
 	//#8411 - END
 	
+	private static final String AGENCY_POPUP_HIDE = "agencyPopup.hide();"; //#28962	
 	/**
 	 * Pre Loading
 	 */
@@ -295,17 +310,28 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setDeleteRestrictions(null);
 		this.reasonCategoryChange(false, null);
 		this.getManagedBean().setSelectedTabIndex(0);
+		
+		//#28962 - Start
+		this.getManagedBean().setSuppAccountTypeList(null);
+		this.getManagedBean().setDeleteSuppAccountTypeList(null);
+		this.getManagedBean().setAgencyList(null);
+		this.getManagedBean().setDeleteAgencyList(null);
+		this.getManagedBean().setMinistryCodeName(null);
+		this.getManagedBean().setKumpPtjCodeName(null);
+		this.getManagedBean().setAgencyCodeName(null);
+		//#28962 - End
 		log.info("initialRejectReason - End");
 	}
 	
 	/**
 	 * load rejection reason object by id
+	 * 
+	 * @param id
 	 */
 	public void loadRejectReason(Long id){
 		log.info("loadRejectReason - Start");
 		try{
-			
-//			initialRejectReason();
+
 			PmReason pmReason = retrieveReasonObjById(id);
 			if(pmReason.getConditionField() == null){
 			  pmReason.setConditionField(new PmParameter());
@@ -336,59 +362,29 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					}
 				}
 			}
-            /////////////////////////////////
-//			ReasonReqDTO reqDTO = new ReasonReqDTO();
-//			reqDTO.setReasonCode("3");
-//			reqDTO.setReasonCategoryId(94L);
-//			IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
-//			ReasonResDTO resDTO = reasonSO.retrieveReasonByReasonCode(reqDTO);
-//			
-//			PmReason reason = resDTO.getPmReason();
-//			
-//			System.out.println("reason: " + reason.getReasonCode());
-//			System.out.println("reason_id: " + reason.getReasonId());
-//			System.out.println("reason.getConditionField().getParameterId(): " + reason.getConditionField().getParameterId());
-//			System.out.println("reason.getSourceMethod().getParameterId(): " + reason.getSourceMethod().getParameterId());
-//			>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-//			log.info("./..start test for PID API");
-//			IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
-//					.getServiceObject("pm", IParameterSO.class);
-//			IReasonSO resReqSO = (IReasonSO) BusinessDelegate.getInstance()
-//					.getServiceObject("pm", IReasonSO.class);
-//
-//			ParameterReqDTO reqDTO = new ParameterReqDTO();
-//			reqDTO.setParameterCode(ParameterConst.PURCHASE_IN_DEFAULT);
-//			reqDTO.setParameterType(ParameterTypeConst.REASON_CATEGORY);
-//			ParameterResDTO resDTO = reqSO.retrieveParameterByTypeAndCode(reqDTO);
-//			if (resDTO != null && resDTO.getPmParameter() != null) {
-//				ReasonReqDTO resReqDTO = new ReasonReqDTO();
-//				resReqDTO.setReasonCategoryId(resDTO.getPmParameter()
-//						.getParameterId());
-//				resReqDTO.setLanguage(new FacesScopes().getUserLocale()
-//						.getLanguage());
-//				resReqDTO.setDocumentType("CQ");
-//				ReasonResDTO resResDTO = resReqSO
-//						.retrieveReasonByDocType(resReqDTO);
-//				log.info("./.......resResDTO.getPmReason()="+resResDTO.getPmReasonList());
-//				for(PmReason r : resResDTO.getPmReasonList()){
-//				 log.info("./.......r.getReasonId="+r.getReasonId());
-//				}
-//			}
-//				>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-			//////////////////////////////////
 			this.getManagedBean().getPmPidListOrigin().clear();
 			this.getManagedBean().setSelectedReason(pmReason);
 			this.getManagedBean().getPmPidListOrigin().addAll(pmReason.getPmPIDReasonList());//get backup to validation
-//			log.info("./.......pmReason.getPmPIDReasonList().size()="+pmReason.getPmPIDReasonList().size());
-//			log.info("./.......this.getPmPidListOrigin().size()="+this.getManagedBean().getPmPidListOrigin().size());
 			loadRestriction(pmReason);
+			//#28962 - Start
+			if (ParameterConst.WIP_ITEM_PK7.equalsIgnoreCase(getManagedBean().getSelectedReason()
+					.getReasonCategoryCode().getParameterCode())) {
+				loadSuppType(pmReason);
+			}
+			if (ParameterConst.SPECIAL_ITEM_WITH_APPROVAL.equalsIgnoreCase(getManagedBean().getSelectedReason()
+					.getReasonCategoryCode().getParameterCode())) {
+				loadAgency();
+				loadSuppType(pmReason);
+			}
+			//#28962 - end
 			this.getManagedBean().setDeleteAppTypeRestrictions(null);
 			this.getManagedBean().setDeleteComTypeRestrictions(null);
 			this.getManagedBean().setDeleteSuppTypeRestrictions(null);
 			this.getManagedBean().setDeleteRestrictions(null);
-//			this.getManagedBean().setAppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, id));
-//			this.getManagedBean().setComTypeRestrictions(loadRestriction(ParameterTypeConst.FINANCIAL_ORG_REG_TYPE, id));
-//			this.getManagedBean().setSuppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_TYPES, id));
+			//#28962 - Start
+			this.getManagedBean().setDeleteSuppAccountTypeList(null);
+			this.getManagedBean().setDeleteAgencyList(null);
+			//#28962 - end
 			if(pmReason.getSourceMethod() != null && pmReason.getSourceMethod().getParameterId() != null){
 					this.getManagedBean().setSelectedSourceMethodId(pmReason.getSourceMethod().getParameterId());
 			}
@@ -700,6 +696,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * save to Rejection Reason
 	 * @return xhtml
 	 */
+	/**
+	 * save to Rejection Reason
+	 * @return xhtml
+	 */
 	public String saveRejectReason(){
 		log.info("saveRejectReason - Start");
 		String returnPage = null;
@@ -734,6 +734,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					.intValue()) {
 				validateRejectionDesc();
 			}
+			
+			processRestrSuppAccTypeAgency(); //#28962
+			
 			/************ AUDIT #28895-35509 *************/
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMReasonMaintenanceBackingBean();
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -776,26 +779,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		IParameterSO parameterSO  = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		ParameterReqDTO paramReq = new ParameterReqDTO();
-//		String reasonCode = null;
 		paramReq.setParameterId(getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId());
 		ParameterResDTO paramRes = parameterSO.retrieveParameterById(paramReq);	
-		
-//		if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_PLAN_CANCELATION)){
-//			reasonCode = ProfileManagementConst.PROCUREMENT_PLAN_CANCELATION;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_PLAN_REJECTION)){
-//			reasonCode = ProfileManagementConst.PROCUREMENT_PLAN_REJECTION;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.REASON_CATEGORY_SUPPLIER)){
-//			reasonCode = ProfileManagementConst.REASON_CATEGORY_SUPPLIER;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.STOP_INSTRUCTION)){
-//			reasonCode = ProfileManagementConst.STOP_INSTRUCTION;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TERMINATION)){
-//			reasonCode = ProfileManagementConst.CONTRACT_TERMINATION;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.FWD_HIGHER_AUTH)){
-//			reasonCode = ProfileManagementConst.FWD_HIGHER_AUTH;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PURCHASE_IN_DEFAULT)){
-//			reasonCode = ProfileManagementConst.PURCHASE_IN_DEFAULT;
-//		}
-//		reqDTO.setReasonCode(reasonCode);
 		reqDTO.setReasonCode(paramRes.getPmParameter().getParameterCode());
 		
 		ReasonResDTO resDTO = reasonSO.generateReasonCode(reqDTO);
@@ -815,7 +800,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
 			ReasonResDTO resDTO = reqSO.createReason(reqDTO);
 			if(resDTO.isSuccessful()){
-//				loadRejectReason(resDTO.getPmReason().getReasonId());
 				log.info("createRejectReason - successful"); //TODO 770015
 				getManagedBean().setNewPmReason(resDTO.getPmReason()); // 35509 Audit PM
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
@@ -1159,7 +1143,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void deleteRestrictions(String restrictionType){
 		log.info("deleteRestrictions");
 
-//		List<PmSupplierReason> tempList = new ArrayList<PmSupplierReason>();
 		if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictionType)){
 			if(this.getManagedBean().getDeleteAppTypeRestrictions()!=null && !this.getManagedBean().getDeleteAppTypeRestrictions().isEmpty()){
 				if(this.getManagedBean().getAppTypeRestrictions()==null){
@@ -1173,14 +1156,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					this.getManagedBean().getAppTypeRestrictions().remove(suppReason);
 				}
 				this.getManagedBean().getDeleteAppTypeRestrictions().clear();
-	//			for(PmSupplierReason suppReason: this.getManagedBean().getAppTypeRestrictions()){
-	//				if(suppReason.isDeleted()){
-	//					tempList.add(suppReason);	
-	//				}
-	//			}
-	//			for(PmSupplierReason suppReason: tempList){
-	//				this.getManagedBean().getAppTypeRestrictions().remove(suppReason);
-	//			}
 			}else{
 				throw new EpException(MessageConst.ERROR_770014);
 			}
@@ -1198,14 +1173,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					this.getManagedBean().getComTypeRestrictions().remove(suppReason);
 				}
 				this.getManagedBean().getDeleteComTypeRestrictions().clear();
-	//			for(PmSupplierReason suppReason: this.getManagedBean().getComTypeRestrictions()){
-	//				if(suppReason.isDeleted()){
-	//					tempList.add(suppReason);	
-	//				}
-	//			}
-	//			for(PmSupplierReason suppReason: tempList){
-	//				this.getManagedBean().getComTypeRestrictions().remove(suppReason);
-	//			}
 			}else{
 				throw new EpException(MessageConst.ERROR_770014);
 			}
@@ -1222,15 +1189,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					this.getManagedBean().getSuppTypeRestrictions().remove(suppReason);
 				}
 				this.getManagedBean().getDeleteSuppTypeRestrictions().clear();
-	//			for(PmSupplierReason suppReason: this.getManagedBean().getSuppTypeRestrictions()){
-	//				if(suppReason.isDeleted()){
-	//					tempList.add(suppReason);	
-	//					this.getManagedBean().getSuppTypeRestrictions().remove(suppReason);
-	//				}
-	//			}
-	//			for(PmSupplierReason suppReason: tempList){
-	//				this.getManagedBean().getSuppTypeRestrictions().remove(suppReason);
-	//			}
 			}else{
 				throw new EpException(MessageConst.ERROR_770014);
 			}
@@ -1245,7 +1203,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	private void validateRestriction(List<PmSupplierReason> restrictList, String restrictType){
 		log.info("validateRestriction");
-//		if(restrictList!=null){
+
 			boolean isSelected = true;			
 			boolean isNotEmpty = true;
 			
@@ -1279,7 +1237,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					throw new EpException(MessageConst.ERROR_770074);
 				}
 			}
-//		}		
 	}
 
 	/**
@@ -1621,10 +1578,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			supplierReason.setDeleted(true);
 			getManagedBean().getDeleteRestrictions().add(supplierReason);
 			
+			/** 35509 START*/
 			if(getManagedBean().getAuditDeleteRestrictions() == null){
 				getManagedBean().setAuditDeleteRestrictions(new ArrayList<PmSupplierReason>());
 			}
 			getManagedBean().getAuditDeleteRestrictions().add(supplierReason);
+			/** 35509 END*/
 		}
 	}
 	
@@ -1637,6 +1596,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			getManagedBean().setDeleteRestrictions(new ArrayList<PmSupplierReason>());
 		}
 		
+		/** 35509 START*/
+		if(getManagedBean().getAuditDeleteRestrictions() == null){
+			getManagedBean().setAuditDeleteRestrictions(new ArrayList<PmSupplierReason>());
+		}
+		/** 35509 END*/
+		
 		int tabIndex = index - 1;		
 		if(tabIndex == 0 && !getManagedBean().isSuppAppCheck()){
 			if(getManagedBean().getAppTypeRestrictions() !=null &&
@@ -1645,6 +1610,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					if(!supplierReason.isBrandNew()){
 						supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						getManagedBean().getDeleteRestrictions().add(supplierReason);
+						getManagedBean().getAuditDeleteRestrictions().add(supplierReason); // 35509
 					}
 				}
 				getManagedBean().getAppTypeRestrictions().clear();
@@ -1656,6 +1622,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					if(!supplierReason.isBrandNew()){
 						supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						getManagedBean().getDeleteRestrictions().add(supplierReason);
+						getManagedBean().getAuditDeleteRestrictions().add(supplierReason); // 35509
 					}
 				}
 				getManagedBean().getComTypeRestrictions().clear();
@@ -1667,6 +1634,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					if(!supplierReason.isBrandNew()){
 						supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						getManagedBean().getDeleteRestrictions().add(supplierReason);
+						getManagedBean().getAuditDeleteRestrictions().add(supplierReason); // 35509
 					}
 				}
 				getManagedBean().getSuppTypeRestrictions().clear();
@@ -1882,4 +1850,533 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	
 	//35509 - END
 	
+	//#28962 - Start
+	/**
+	 * load reasonSuppAccTypeDropDown
+	 * 
+	 * @return getDropdownValuesBySearchBean
+	 */
+	public SelectItem[] reasonSuppAccTypeDropDown() {
+		return getDropdownValuesBySearchBean(ParameterTypeConst.REASON_SUPPLIER_ACCOUNT_TYPE, null);
+	}
+
+	/**
+	 * load the pm_reason_restr to tab view by supplier type
+	 * 
+	 * @param PmReasonRestr
+	 * @param pmReason
+	 */
+	public void loadSuppType(PmReason pmReason) {
+		log.info("loadSuppType - Start");
+		List<PmReasonRestr> suppAccType = new ArrayList<>();
+		if (pmReason != null) {
+		    for (PmReasonRestr pmSuppAppType : pmReason.getPmReasonRestr()) {
+		        if (pmSuppAppType.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+		                && pmSuppAppType.getSupplAcctTypeId() != null) {
+		            suppAccType.add(pmSuppAppType);
+		        }
+		    }
+		}
+		this.getManagedBean().setSuppAccountTypeList(suppAccType);
+
+		log.info("loadSuppType - End");
+	}
+	
+	/**
+	 * load the pm_reason_restr to tab view agency list
+	 * 
+	 */
+	public void loadAgency() {
+		log.info("loadAgency - Start");
+
+		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IReasonSO.class);
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		getManagedBean().setMinistryCodeName(null);
+		getManagedBean().setKumpPtjCodeName(null);
+		getManagedBean().setAgencyCodeName(null);
+		getManagedBean().setAgencyList(null);
+
+		reqDTO.setReasonId(getManagedBean().getSelectedReason().getReasonId());
+		if (getManagedBean().getMinistryCodeName() != null && !getManagedBean().getMinistryCodeName().isEmpty()) {
+			reqDTO.setMinistryCodeName(getManagedBean().getMinistryCodeName());
+		}
+		if (getManagedBean().getKumpPtjCodeName() != null && !getManagedBean().getKumpPtjCodeName().isEmpty()) {
+			reqDTO.setKumpPtjCodeName(getManagedBean().getKumpPtjCodeName());
+		}
+		if (getManagedBean().getAgencyCodeName() != null && !getManagedBean().getAgencyCodeName().isEmpty()) {
+			reqDTO.setAgencyCodeName(getManagedBean().getAgencyCodeName());
+		}
+		ReasonResDTO resDTO = reqSO.retrieveAgencyListByReasonId(reqDTO);
+		this.getManagedBean().setAgencyList(resDTO.getAgencyResultBeanList());
+
+		log.info("loadAgency - End");
+	}
+
+	/**
+	 * Initializes and resets the PTJ popup screen.
+	 */
+	public void initPtjPopup() {
+		this.getManagedBean().setMinistryProfileId(null);
+		this.getManagedBean().setJabatanProfileId(null);
+		this.getManagedBean().setPtjCodeName(ProfileManagementConst.PTJ_CODE);
+		this.getManagedBean().setPtjCodeNameSearchValues(null);
+		this.getManagedBean().setSelectedOrgsProfile(null);
+	}
+
+	/**
+	 * Triggers a search for organization profiles.
+     * This method refresh the data model to reload the organisation profile list
+	 */
+	public void searchOrgProfile() {
+		getManagedBean().setPtjList(null);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		if(getManagedBean().getMinistryProfileId() != null){
+			reqDTO.setMinistryId(getManagedBean().getMinistryProfileId());
+		}
+		if(getManagedBean().getJabatanProfileId() != null){
+			reqDTO.setJabatanId(getManagedBean().getJabatanProfileId());
+		}
+		
+		ISearchBean<PmOrgProfile> searchBeanData = getOrgProfileSearchBeanData();
+		
+		IOrgProfileSO orgProfileSO = BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		reqDTO.setOrgProfileSearchBean(searchBeanData);
+		OrgProfileResDTO resDTO;
+		resDTO = orgProfileSO.retrievePtjListByParents(reqDTO);
+		
+		if (resDTO != null && resDTO.isSuccessful() && resDTO.getOrgProfileResultBean() !=null) {
+			getManagedBean().setPtjList(resDTO.getOrgProfileResultBean().getResultList());
+		}
+	}
+	
+	private ISearchBean<PmOrgProfile> getOrgProfileSearchBeanData(){
+		ISearchBean<PmOrgProfile> searchBean = new SearchBean<>();
+		if (StringUtils.isNotBlank(getManagedBean().getPtjCodeName())
+				&& (StringUtils.isNotBlank(getManagedBean().getPtjCodeNameSearchValues()))) {
+			if (getManagedBean().getPtjCodeName().equalsIgnoreCase(
+					ProfileManagementConst.PTJ_CODE) || 
+					getManagedBean().getPtjCodeName().equalsIgnoreCase(
+							ProfileManagementConst.KPTJ_CODE )
+							|| getManagedBean().getPtjCodeName().equalsIgnoreCase(
+									ProfileManagementConst.PEGAWAI_CODE)) {
+				SearchFilterBean filterBean = new SearchFilterBean(
+						"pmOrgValidity.orgCode",
+						SearchOperator.OPERATOR_LIKE.value(),
+						getManagedBean().getPtjCodeNameSearchValues());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+
+			} else if (getManagedBean().getPtjCodeName()
+					.equalsIgnoreCase(ProfileManagementConst.PTJ_NAME) ||
+					 getManagedBean().getPtjCodeName().equalsIgnoreCase(
+							ProfileManagementConst.KPTJ_NAME)
+					|| getManagedBean().getPtjCodeName().equalsIgnoreCase(
+							ProfileManagementConst.PEGAWAI_NAME)) {
+				SearchFilterBean filterBean = new SearchFilterBean(
+						"pmOrgValidity.orgName",
+						SearchOperator.OPERATOR_LIKE.value(),
+						getManagedBean().getPtjCodeNameSearchValues());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+			}
+		}
+		searchBean.getSortColumns().add(new SearchOrderBean("pmOrgValidity.orgName"));
+		return searchBean;
+	}
+
+	/**
+	 * Resets the organisation profile search filters and reloads the data model.
+	 */
+	public void resetOrgProfile() {
+		this.getManagedBean().setMinistryProfileId(null);
+		this.getManagedBean().setJabatanProfileId(null);
+		this.getManagedBean().setPtjCodeNameSearchValues(null);
+		this.getManagedBean().setSelectedOrgsProfile(null);
+		this.getManagedBean().setPtjList(null);
+	}
+	
+	/**
+	 * search agency list by Ministry, Kumpulan Ptj and Ptj
+	 */
+	public void searchOrganisation() {
+		long start = System.currentTimeMillis();
+		loadAgency();
+		long end = System.currentTimeMillis();
+		log.info("Execution time for searchOrganisation : " + (end - start) + " ms");
+	}
+
+	/**
+	 * reset agency list
+	 */
+	public void resetOrganisationSearchBean() {
+		long start = System.currentTimeMillis();
+		loadAgency();
+		long end = System.currentTimeMillis();
+		log.info("Execution time for resetOrganisationSearchBean : " + (end - start) + " ms");
+	}
+	
+	public SelectItem[] getMinistryDropdown() {
+		return PmCommonUtil.getMinistryDropdown();
+	}
+
+	public SelectItem[] getJabatanDropdown() {
+		return PmCommonUtil.getJabatanDropdown(getManagedBean().getMinistryProfileId());
+	}
+
+	/**
+	 * Returns a list of {SelectItem} options for PTJ or KPTJ
+	 * dropdown based on the provided organization type.
+	 *
+	 * The method dynamically builds a dropdown list depending on the type of
+	 * organization:
+	 * 
+	 * @param orgType
+	 * @return items
+	 */
+	public SelectItem[] getPtjOrKptjDropDown(String orgType) {
+		SelectItem[] items = new SelectItem[2];
+		if (ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL.equals(orgType)) {
+			items[0] = new SelectItem(ProfileManagementConst.PEGAWAI_CODE,
+					ResourceBundleUtils.getMessage("lbl.pm.org.pegaiCode", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(ProfileManagementConst.PEGAWAI_NAME,
+					ResourceBundleUtils.getMessage("lbl.pm.org.pegaiName", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()));
+		}
+		if (ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)) {
+			items[0] = new SelectItem(ProfileManagementConst.KPTJ_CODE, ResourceBundleUtils.getMessage(
+					"lbl.pm.org.kptjCode", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(ProfileManagementConst.KPTJ_NAME, ResourceBundleUtils.getMessage(
+					"lbl.pm.org.kptjName", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		} else if (ParameterConst.ORG_TYPE_PTJ.equals(orgType)) {
+			items[0] = new SelectItem(ProfileManagementConst.PTJ_CODE, ResourceBundleUtils.getMessage(
+					"lbl.pm.org.ptjCode", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(ProfileManagementConst.PTJ_NAME, ResourceBundleUtils.getMessage(
+					"lbl.pm.org.ptjName", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		}
+
+		return items;
+	}
+	
+	/**
+	 * Checks if the supplier account type already exists in the list
+	 * 
+	 * @param rowIndex
+	 * @param newSuppAcountType
+	 */
+	public void checkExtSuppAccType(int rowIndex, Long newSuppAcountType) {
+
+		PmReasonRestr current = getManagedBean().getSuppAccountTypeList().get(rowIndex);
+
+		List<PmReasonRestr> extList = this.getManagedBean().getSuppAccountTypeList();
+		if (extList == null || extList.isEmpty() || newSuppAcountType == null) {
+			return;
+		}
+
+		for (PmReasonRestr ext : extList) {
+			Long suppAccTypeId = ext.getSupplAcctTypeId().getParameterId();
+			if (ext != current && newSuppAcountType.equals(suppAccTypeId)) {
+				current.setSupplAcctTypeId(new PmParameter());
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Add new supplier account type
+	 */
+	public void addSuppAccType() {
+		log.info("addSuppAccType");
+
+		PmReasonRestr suppAccType = new PmReasonRestr();
+		suppAccType.setRecordStatus(true);
+		suppAccType.setSupplAcctTypeId(new PmParameter());
+		suppAccType.setCreatedBy(getUserIdSessionFromLoginId());
+		suppAccType.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		suppAccType.setChangedBy(suppAccType.getCreatedBy());
+
+		if (this.getManagedBean().getSuppAccountTypeList() == null) {
+			this.getManagedBean().setSuppAccountTypeList(new ArrayList<PmReasonRestr>());
+		}
+
+		int index = this.getManagedBean().getSuppAccountTypeList().size();
+		log.info(".......addSuppAccType index.......=" + index);
+		this.getManagedBean().getSuppAccountTypeList().add(index, suppAccType);
+	}
+
+	/**
+	 * To delete supplier account type
+	 * 
+	 * @param rowIndex
+	 */
+	public void deleteSuppAccType(int rowIndex) {
+	    log.info("deleteSuppAccType" + rowIndex);
+
+	    PmReasonRestr suppAccType;
+	    suppAccType = getManagedBean().getSuppAccountTypeList().get(rowIndex);
+
+	    if (suppAccType != null
+	            && suppAccType.getReasonRestrId() != null
+	            && !suppAccType.isBrandNew()) {
+	        if (getManagedBean().getDeleteSuppAccountTypeList() == null) {
+	            getManagedBean().setDeleteSuppAccountTypeList(new ArrayList<PmReasonRestr>());
+	        }
+	        suppAccType.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+	        suppAccType.setDeleted(true);
+	        getManagedBean().getDeleteSuppAccountTypeList().add(suppAccType);
+	    }
+
+	    getManagedBean().getSuppAccountTypeList().remove(rowIndex);
+	}
+
+	/**
+	 * Add new agency values
+	 */
+	public void addAgency(boolean selectedAllAgency) {
+		log.info("addAgency ");
+		long start = System.currentTimeMillis();
+		
+		List<PmOrgProfile> selected = null;
+		
+		//add all agency..
+		if (selectedAllAgency && CollectionUtils.isNotEmpty(getManagedBean().getPtjList())) {
+			this.getManagedBean().setSelectedOrgsProfile(null);
+			selected = getManagedBean().getPtjList();
+		} else {
+		//add selected agency..
+			selected = getManagedBean().getSelectedOrgsProfile();
+		}
+		
+
+		if (selected == null || selected.isEmpty()) {
+			RequestContext.getCurrentInstance().execute(AGENCY_POPUP_HIDE);
+			return;
+		}
+
+		List<PmReasonRestr> agencyList = ensureAgencyList();
+		Set<Long> existingOrgProfileIds = extractExistingOrgProfileIds(agencyList);
+
+		Long userId = getUserIdSessionFromLoginId();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		PmOrgProfile ministry = retrieveMinistryOrgProfile(selected.get(0).getOrgProfileId());		
+
+		for (PmOrgProfile orgProfile : selected) {
+			addAgencyNew(agencyList, existingOrgProfileIds, orgProfile, userId, now, ministry);
+		}
+		
+		long end = System.currentTimeMillis();
+		log.info("Execution time for addAgency: " + (end - start) + " ms");
+
+		this.getManagedBean().setSelectedOrgsProfile(null);
+		this.getManagedBean().setPtjList(null);
+		RequestContext.getCurrentInstance().execute(AGENCY_POPUP_HIDE);
+	}
+
+	/* -------------------- helpers (small + focused) -------------------- */
+
+	private List<PmReasonRestr> ensureAgencyList() {
+		if (getManagedBean().getAgencyList() == null) {
+			getManagedBean().setAgencyList(new ArrayList<PmReasonRestr>());
+		}
+		return getManagedBean().getAgencyList();
+	}
+
+	private Set<Long> extractExistingOrgProfileIds(List<PmReasonRestr> agencyList) {
+		Set<Long> ids = new HashSet<>();
+		for (PmReasonRestr existingAgency : agencyList) {
+			ids.add(existingAgency.getAgencyId().getOrgProfileId());
+		}
+		return ids;
+	}
+
+	private void addAgencyNew(List<PmReasonRestr> agencyList, Set<Long> existingOrgProfileIds,
+			PmOrgProfile orgProfile, Long userId, Timestamp now, PmOrgProfile ministryId) {
+		if (orgProfile == null) {
+			return;
+		}
+
+		Long orgId = orgProfile.getOrgProfileId();
+		if (orgId == null) {
+			return;
+		}
+
+		if (existingOrgProfileIds.contains(orgId)) {
+			return;
+		}
+
+		PmReasonRestr agency = new PmReasonRestr();
+		agency.setRecordStatus(true);
+		agency.setAgencyId(orgProfile);
+		agency.setCreatedBy(userId);
+		agency.setCreatedDate(now);
+		agency.setChangedBy(userId);
+		agency.setMinistryId(ministryId);
+		agency.setKumpPtjId(retrieveJabatanOrgProfile(orgId));
+
+		agencyList.add(agency);
+		existingOrgProfileIds.add(orgId);
+
+		log.info(".......agencyList.size.......=" + agencyList.size());
+	}
+	
+	/**
+	 * To delete agency
+	 * 
+	 * @param rowIndex
+	 */
+	public void deleteAgency(int rowIndex) {
+		log.info("deleteAgencyValues" + rowIndex);
+
+		PmReasonRestr agency;
+		agency = getManagedBean().getAgencyList().get(rowIndex);
+
+		if (agency != null && agency.getReasonRestrId() != null && !agency.isBrandNew()) {
+			if (getManagedBean().getDeleteAgencyList() == null) {
+				getManagedBean().setDeleteAgencyList(new ArrayList<PmReasonRestr>());
+			}
+			agency.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+			agency.setDeleted(true);
+			getManagedBean().getDeleteAgencyList().add(agency);
+		}
+		getManagedBean().getAgencyList().remove(rowIndex);
+	}
+
+	/**
+	 * Prepares and updates the list of {PmReasonRestr} records for the selected reason.
+	 * 
+	 * This method consolidates supplier account types, agencies, and their
+	 * deleted records into the selected reason's {PmReasonRestr} list.
+	 */
+	public void processRestrSuppAccTypeAgency() {
+		long start = System.currentTimeMillis();
+		try {
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getSuppAccountTypeList())) {
+				saveSuppAccType(this.getManagedBean().getSuppAccountTypeList());
+			}
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getAgencyList())) {
+				saveAgency(this.getManagedBean().getAgencyList());
+			}
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteSuppAccountTypeList())) {
+				deletedSuppAccType(this.getManagedBean().getDeleteSuppAccountTypeList());
+			}
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getDeleteAgencyList())) {
+				deletedAgency(this.getManagedBean().getDeleteAgencyList());
+			}
+			
+			long end = System.currentTimeMillis();
+			log.info("Execution time for processRestrSuppAccTypeAgency : " + (end - start) + " ms");
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("PM", "processRestrSuppAccTypeAgency", null, "RejectionReasonBackingBean", null, e);
+		}
+	}
+
+	/* ======================== Extracted processors (logic preserved)========================*/
+
+	private void saveSuppAccType(List<PmReasonRestr> satList) {
+		for (PmReasonRestr tempReason : satList) {
+			if (tempReason.isBrandNew()) {
+				log.info("new supplier account type");
+				if (hasSuppAccTypeKey(tempReason)) {
+					// maintained: add new supplier item
+					ensureTargetListExists();
+					this.getManagedBean().getSelectedReason().addPmReasonRestr(tempReason);
+				}
+			} else {
+				if (hasSuppAccTypeKey(tempReason)) {
+					log.info("update supplier account type");
+					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
+					updateExtById(target, tempReason);
+				}
+			}
+		}
+	}
+
+	private void saveAgency(List<PmReasonRestr> agencyList) {
+		for (PmReasonRestr agency : agencyList) {
+			if (agency.isBrandNew()) {
+				log.info("new agency");
+				if (hasValidAgencyKey(agency)) {
+					ensureTargetListExists();
+					this.getManagedBean().getSelectedReason().addPmReasonRestr(agency);
+				}
+			}
+		}
+	}
+
+	private void deletedSuppAccType(List<PmReasonRestr> delSatList) {
+		for (PmReasonRestr tempReason : delSatList) {
+			if (tempReason.isBrandNew()) {
+				if (hasSuppAccTypeKey(tempReason)) {
+					ensureTargetListExists();
+					this.getManagedBean().getSelectedReason().addPmReasonRestr(tempReason);
+				}
+			} else {
+				if (hasSuppAccTypeKey(tempReason)) {
+					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
+					updateExtById(target, tempReason);
+				}
+			}
+		}
+	}
+
+	private void deletedAgency(List<PmReasonRestr> delAgencyList) {
+		for (PmReasonRestr delAgency : delAgencyList) {
+			if (delAgency.isBrandNew()) {
+				if (hasValidAgencyKey(delAgency)) {
+					ensureTargetListExists();
+					this.getManagedBean().getSelectedReason().addPmReasonRestr(delAgency);
+				}
+			} else {
+				if (hasValidAgencyKey(delAgency)) {
+					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
+					updateExtById(target, delAgency);
+				}
+			}
+		}
+	}
+
+	/* ======================== Helpers (no logic change) ========================*/
+
+	// EXACT original validation for supplier key (also used by agency update branch)
+	private boolean hasSuppAccTypeKey(PmReasonRestr r) {
+		return r.getSupplAcctTypeId() != null && r.getSupplAcctTypeId().getParameterId() != null;
+	}
+
+	private boolean hasValidAgencyKey(PmReasonRestr r) {
+		return r.getAgencyId() != null && r.getAgencyId().getOrgProfileId() != null;
+	}
+
+	private void ensureTargetListExists() {
+		if (this.getManagedBean().getSelectedReason().getPmReasonRestr() == null) {
+			this.getManagedBean().getSelectedReason().setPmReasonRestr(new ArrayList<PmReasonRestr>());
+		}
+	}
+
+	/**
+	 * Replace elements with the same reasonRestrId; if not found, do nothing
+	 * (matches original loop behavior that only sets matches). Note: original
+	 * loop never broke after a set; we keep that behavior.
+	 */
+	private void updateExtById(List<PmReasonRestr> target, PmReasonRestr pmReasonRestr) {
+		if (target == null) {
+			return;
+		}
+		Long id = pmReasonRestr.getReasonRestrId();
+		if (id == null) {
+			return;
+		}
+
+		for (int i = 0; i < target.size(); i++) {
+			PmReasonRestr existing = target.get(i);
+			if (existing != null && existing.getReasonRestrId() != null && id.equals(existing.getReasonRestrId())) {
+				target.set(i, pmReasonRestr);
+				// no break (maintain original)
+			}
+		}
+	}
+	//#28962 - End
 }

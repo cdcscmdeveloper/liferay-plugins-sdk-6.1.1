@@ -2463,6 +2463,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			CtBondWaiverDetail bondWaiver = SerializationUtils.clone(defermentLatest);
 			bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 			bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+			bondWaiver.setPrevId(null); //#35506
+			bondWaiver.setCreatedDate(new Timestamp(new Date().getTime())); //#35506
 
 			defermentHistory.add(bondWaiver);
 			Collections.reverse(defermentHistory);
@@ -4691,6 +4693,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    String docType = contractVer.getDocType();
 	    return docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)
 	            || getManagedBean().isViewContract();
 	}	
 	
@@ -5184,14 +5187,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return true;
 		}
 
-		// Specific document types
-		String docType = getManagedBean().getContractVer().getDocType();
-		if (ParameterConst.DOCTYPE_CONTRACT_UPDATE.equals(docType) || ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT.equals(docType)) {
-			return true;
-		}
-
-		// Notification setting enabled
-		return getManagedBean().isNotificationSetting();
+		// Check Specific by docType
+		return isContractUpdateOrView(getManagedBean().getContractVer());
 	}
 	// 24333 - End
 	

@@ -1270,10 +1270,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					pyBill.getBillType());
 			setPaymentHttpSession(this.getManagedBean().getTaskId(), this
 					.getManagedBean().getBpmPojo());
-			this.setvCode(PaymentUtil.encryptAESKey(vKey));
 			this.getManagedBean()
 					.setPayLoad(
-							PaymentUtil.constructPayload(this.getManagedBean()
+							PaymentUtil.constructJsonPayload(this.getManagedBean()
 									.getMerchantCode(), vKey, this
 									.getManagedBean().getOrderId(), this
 									.getManagedBean().getTotalAmount(), this

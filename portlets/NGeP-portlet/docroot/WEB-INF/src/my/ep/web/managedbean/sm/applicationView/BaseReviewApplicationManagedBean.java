@@ -360,6 +360,12 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	//#3460
 	private String sdoRemark;
 	
+	// 36504 - START
+	private boolean updateRecordTC;
+	private boolean otherDescChange;
+	private String otherDescEdited;
+	// 36504 - END
+		
 	public String getSupportingDocMode() {
 		return supportingDocMode;
 	}
@@ -2639,4 +2645,48 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.currRegStatusId = currRegStatusId;
 	}
 	// #38856 End
+	
+	// 36504 - START
+	/**
+	 * @return the updateRecordTC
+	 */
+	public boolean isUpdateRecordTC() {
+		return updateRecordTC;
+	}
+
+	/**
+	 * @param updateRecordTC the updateRecordTC to set
+	 */
+	public void setUpdateRecordTC(boolean updateRecordTC) {
+		this.updateRecordTC = updateRecordTC;
+	}
+
+	/**
+	 * @return the otherDescChange
+	 */
+	public boolean isOtherDescChange() {
+		return otherDescChange;
+	}
+
+	/**
+	 * @param otherDescChange the otherDescChange to set
+	 */
+	public void setOtherDescChange(boolean otherDescChange) {
+		this.otherDescChange = otherDescChange;
+	}
+
+	/**
+	 * @return the otherDescEdited
+	 */
+	public String getOtherDescEdited() {
+		return otherDescEdited;
+	}
+
+	/**
+	 * @param otherDescEdited the otherDescEdited to set
+	 */
+	public void setOtherDescEdited(String otherDescEdited) {
+		this.otherDescEdited = otherDescEdited;
+	}
+	// 36504 - END
 }
