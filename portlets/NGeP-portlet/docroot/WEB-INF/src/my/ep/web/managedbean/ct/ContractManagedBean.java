@@ -220,6 +220,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	//#24336 - Start
 	private boolean disableReductionContractAmount;
 	private boolean disableAdditionContractAmount;
+	private boolean disableNewCtAmountEffDate;
 	//#24336 - End
 	
 	/**
@@ -1719,6 +1720,14 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDisableAdditionContractAmount(
 			boolean disableAdditionContractAmount) {
 		this.disableAdditionContractAmount = disableAdditionContractAmount;
+	}
+
+	public boolean isDisableNewCtAmountEffDate() {
+		return disableNewCtAmountEffDate;
+	}
+
+	public void setDisableNewCtAmountEffDate(boolean disableNewCtAmountEffDate) {
+		this.disableNewCtAmountEffDate = disableNewCtAmountEffDate;
 	}
 	//#24336 - End
 }

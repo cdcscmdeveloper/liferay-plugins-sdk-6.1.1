@@ -4308,8 +4308,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
 			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
-		
 		}
+		
+		//#24336 - Start
+		updateNewAmtEffDate(contractAmount.setScale(2, RoundingMode.HALF_UP));
+		//#24336 - End
+		
 		return contractAmount;
 	}
 	// End - #29589
@@ -5529,15 +5533,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void onChangeValueChecked() {
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
 			spToCheck = false;
+			
 			//#24336 - Start
 			handleContractValueTypeChange();
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
 			//#24336 - End
 		}
 		
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 		
 		//#24336 - Start
-		//Initialize value
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);
 		//#24336 - End
 		
@@ -5545,6 +5551,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			Calendar c = Calendar.getInstance();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
 			spToCheck = true;
+			
+			//#24336 - Start
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewAmtEffDate(null);
+			//#24336 - End
 		}
 	}
 
@@ -5554,21 +5564,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onChangeValueByGstChecked() {
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
-		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);	
-		setGstAndStaxAmounts();	
-		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(true);
-		}
-		spToCheck = false;
+			
+			// #24336 - Start
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);	
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);	
+			handleContractValueTypeChange();
+			// #24336 - End
+			
+			setGstAndStaxAmounts();	
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(true);
+			}
+			spToCheck = false;
 		}else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-			
+
 			Calendar c = Calendar.getInstance();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
 			spToCheck = true;
@@ -5596,7 +5612,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 *to set the gstAmount and staxAmout
 	 */
 	private void setGstAndStaxAmounts() {
+		log.info("*** setGstAndStaxAmounts... ");
 		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
+			
+			log.info("*** gstAmount : "+ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount());
+			
 			ctBackingBean
 					.getManagedBean()
 					.getContractVer()
@@ -5604,10 +5624,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					.setNewGstAmount(
 							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount());
 		} else {
+			
+			log.info("*** else, new gst set to 0.00");
+			
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
 		}
 		
 		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() != null) {
+			
+			log.info("*** staxAmount : "+ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
+			
 			ctBackingBean
 					.getManagedBean()
 					.getContractVer()
@@ -5615,6 +5641,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					.setNewStaxAmount(
 							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
 		} else {
+			
+			log.info("*** else, new stax set to 0.00");
+			
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);	
 		}
 	}
@@ -9955,7 +9984,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * Calculates the maximum additional value allowed for a contract.
 	 * @return maximum additional value allowed
 	 */
-	public BigDecimal maxAdditionalValue() {
+	public BigDecimal getMaxAdditionalValue() {
 		BigDecimal maxAdditionalValue = BigDecimal.ZERO;
 		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
 		if (ctAmount != null && ctAmount.compareTo(BigDecimal.ZERO) > 0) {
@@ -9968,7 +9997,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * Calculates the percentage of the additional amount compared to the contract amount.
 	 * @return the additional amount as a percentage of the contract amount
 	 */
-	public BigDecimal additionalPercentage() {
+	public BigDecimal getAdditionalPercentage() {
 		BigDecimal additionalPercentage = BigDecimal.ZERO;
 		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
 		BigDecimal addition = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount();
@@ -9978,6 +10007,51 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	                .multiply(new BigDecimal("100"));
 	    }
 		return additionalPercentage;
+	}
+	
+	/*
+	 * Display new contract amount effective date by certain rules.
+	 * @return new contract amount effective date
+	 */
+	public void updateNewAmtEffDate(BigDecimal newCtAmount) {
+		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+		Date newAmtEffDate = null;
+		
+		if (ctAmount != null) {
+		    ctAmount = ctAmount.setScale(2, RoundingMode.HALF_UP);
+		}
+		
+		log.info("*****************************");
+		log.info("newCtAmount : "+newCtAmount);
+		log.info("ctAmount : "+ctAmount);
+		
+		// new overall contract amount is different from overall contact amount
+		if(newCtAmount != null && !newCtAmount.equals(ctAmount)){
+			
+			log.info("not same!");
+			
+			newAmtEffDate = new Date();
+			
+			// Enable date input
+			ctBackingBean.getManagedBean().setDisableNewCtAmountEffDate(false);
+		
+		// same as overall contract amount	
+		}else{
+			
+			log.info("same!");
+			log.info("ctContractAmount Id : "+ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmountId());
+			
+			//TODO check original contract effective date
+			newAmtEffDate = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getEffDate();
+			
+			log.info("newAmtEffDate : "+newAmtEffDate);
+			
+			// Disable date input
+			ctBackingBean.getManagedBean().setDisableNewCtAmountEffDate(true);
+		}
+		
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewAmtEffDate(newAmtEffDate);
+		
 	}
 	//#24336 - End
 }
