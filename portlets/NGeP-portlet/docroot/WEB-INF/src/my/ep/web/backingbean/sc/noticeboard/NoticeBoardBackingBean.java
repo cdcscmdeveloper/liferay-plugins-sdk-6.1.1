@@ -1,6 +1,7 @@
 /* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.backingbean.sc.noticeboard;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -17,6 +18,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -159,6 +161,10 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 // #29732 Start - fix ReOpen
 import java.sql.Timestamp;
@@ -766,6 +772,36 @@ public class NoticeBoardBackingBean extends
 		return CHECK_SUPPLIER_QUAL_PAGE;
 	}
 	
+	// 26247 - start
+	/** 
+	 * Navigate current page to check qualification
+	 * 
+	 * @param qtId
+	 */
+	public void navigateToCheckQualification(Long qtId) {
+		try {
+			FacesScopes facesScope = new FacesScopes();
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+
+			String currentURL = themeDisplay.getURLCurrent();
+			String friendlyURL = themeDisplay.getLayout().getGroup().getFriendlyURL();
+			String commonUrl = currentURL.substring(0, currentURL.indexOf(friendlyURL) + friendlyURL.length());
+			String screenUrl = SourcingConstants.NAV_PAGE_CHECK_SUPPLIER_QUALIFICATION;
+			StringBuilder navigationUrl = new StringBuilder();
+			navigationUrl.append(commonUrl).append("/").append(screenUrl).append(qtId).append("&origin=noticeboard");
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(navigationUrl.toString());
+		} catch (IOException | PortalException | SystemException e) {
+			SLAUtils.getInstance().logSLAError(
+					ModuleCodeConst.SUPPLIER_SELECTION,
+					ParameterConst.DOCTYPE_QUOTATION,
+					"",
+					SLALogConstant.QT_NOTICEBOARD_BACKING_BEAN + SLALogConstant.QT_SLA_DOT_SEPARATOR
+							+ SLALogConstant.QT_NAVIGATE_TO_CHECK_QUALIFICATION, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	// 26247 - end
+
 	/**
 	 * Pre-render view to navigate porlet to bsv supplier registration screen
 	 */
@@ -826,10 +862,15 @@ public class NoticeBoardBackingBean extends
 		String qtId = originalServletRequest
 				.getParameter(SourcingConstants.NAV_PARAM_QUOTATION_TENDER_ID);
 		
-		if (StringUtils.isNotBlank(qtId)) {
-			super.renewSesionObject();
+		// 26247 - start
+		String origin = originalServletRequest.getParameter("origin");
+		if (StringUtils.isNotBlank(qtId)) { 
+			if (null == origin) {
+				super.renewSesionObject();
+				getManagedBean().setNavigateFromNoticeBoard(false);
+			}
 			isUser();
-			getManagedBean().setNavigateFromNoticeBoard(false);
+		// 26247 - end
 			String redirectUrl = gotoSupplierQualificationCriteria(Long.valueOf(qtId));
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
