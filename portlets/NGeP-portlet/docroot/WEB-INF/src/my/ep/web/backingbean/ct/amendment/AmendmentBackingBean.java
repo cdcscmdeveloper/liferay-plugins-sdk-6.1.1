@@ -5963,9 +5963,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 
 			}
-			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) { //#35238
+			if (isQuotationCommitteeType()) { //#35238
 				if (memberRole) {
 //					setTabValue("DCN");
 					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.decision", 
@@ -6108,9 +6106,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					secretaryRole = false;
 				} else if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
 					memberRole = false;
-					if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
-							&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-							&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) { //#35238
+					if (!isQuotationCommitteeType()) { //#35238
 						if (committeMember.getRepresentativeType() == null 
 								|| committeMember.getRepresentativeType().getParameterId() == null) {
 //							setTabValue("MET");
@@ -6634,9 +6630,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
 
 			// QCA/QCB, need to be same PTJ
-			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) { //#35238
+			if (isQuotationCommitteeType()) { //#35238
 				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ownerOrgProfileId: "+ ctOwnerOrgProfileId);
 				
 				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
@@ -7454,9 +7448,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 				// #25956 - Start - Fixing for _Secretary Role
-				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) { //#35238
+				if (isQuotationCommitteeType()) { //#35238
 					if (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())) {
 						userRole = RoleCode.QCA_SECRETARY.value();
 					} else if (getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())) {
@@ -8564,7 +8556,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// #29403 start
 			resetSelectedCheckbox(ctUpdatedMember);
 			// #29403 end
-			CtCommitteeMember matchingMember = findMatchingValidationCommittee(ctUpdatedMember, inner); // #35238
+			CtCommitteeMember matchingMember = findMatchingValidationCommittee(ctUpdatedMember, inner);
 
 			if (matchingMember != null) {
 				// #29403 start
@@ -9971,7 +9963,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return true if representative type differs, false otherwise
 	 */
 	private boolean hasRepresentativeTypeChanged(CtCommitteeMember updated, CtCommitteeMember original) {
-	    if (isQuotationCommitteeType(getManagedBean().getCommitteeType())) {
+	    if (isQuotationCommitteeType()) {
 	        return false;
 	    }
 
@@ -9998,13 +9990,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	/**
 	 * Checks if the given committee type is a quotation committee type.
 	 *
-	 * @param committeeType the type of committee
 	 * @return true if it matches any quotation committee type, false otherwise
 	 */
-	private boolean isQuotationCommitteeType(String committeeType) {
-	    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
-	        || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)
-	        || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equalsIgnoreCase(committeeType);
+	private boolean isQuotationCommitteeType() {
+		Set<String> quotationCommittees = new HashSet<>();
+		quotationCommittees.add(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A);
+		quotationCommittees.add(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B);
+		quotationCommittees.add(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+
+		if (getManagedBean().getCommitteeType() != null
+				&& quotationCommittees.contains(getManagedBean().getCommitteeType())) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
