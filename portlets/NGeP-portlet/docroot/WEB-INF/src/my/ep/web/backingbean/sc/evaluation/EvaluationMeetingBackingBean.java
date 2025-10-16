@@ -343,12 +343,7 @@ public class EvaluationMeetingBackingBean extends
 				}
 				if (null != qtCommittee) {
 					this.getManagedBean().setScQtCommittee(qtCommittee);
-					// Bug #38975@Syazani 16/10/2025 -- Start
-					if (null != qtCommittee.getCurrentStatus() && null != qtCommittee.getCurrentStatus().getPmStatus()) {
-						this.getManagedBean().setCurrentStatusId(
-								qtCommittee.getCurrentStatus().getPmStatus().getStatusId());
-					}
-					// Bug #38975@Syazani 16/10/2025 -- End
+					qtCommitteeSetCurrentStatusID(qtCommittee); // Bug #38975@Syazani 16/10/2025
 
 					ScCommittee sccommittee = resDTO.getQtCommittee()
 							.getScCommittee();
@@ -2693,4 +2688,12 @@ public class EvaluationMeetingBackingBean extends
 	}
 	
 	// 25037 - end
+	
+	// Bug #38975@Syazani 16/10/2025 -- Start
+	private void qtCommitteeSetCurrentStatusID(ScQtCommittee qtCommittee) {
+		if (null != qtCommittee.getCurrentStatus() && null != qtCommittee.getCurrentStatus().getPmStatus()) {
+			this.getManagedBean().setCurrentStatusId(qtCommittee.getCurrentStatus().getPmStatus().getStatusId());
+		}
+	}
+	// Bug #38975@Syazani 16/10/2025 -- End
 }
