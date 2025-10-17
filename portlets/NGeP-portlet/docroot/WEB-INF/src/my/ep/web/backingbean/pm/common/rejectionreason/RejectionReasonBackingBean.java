@@ -373,6 +373,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 			if (ParameterConst.SPECIAL_ITEM_WITH_APPROVAL.equalsIgnoreCase(getManagedBean().getSelectedReason()
 					.getReasonCategoryCode().getParameterCode())) {
+				getManagedBean().setMinistryCodeName(null);
+				getManagedBean().setKumpPtjCodeName(null);
+				getManagedBean().setAgencyCodeName(null);
+				getManagedBean().setAgencyList(null);
 				loadAgency();
 				loadSuppType(pmReason);
 			}
@@ -1881,11 +1885,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IReasonSO.class);
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		getManagedBean().setMinistryCodeName(null);
-		getManagedBean().setKumpPtjCodeName(null);
-		getManagedBean().setAgencyCodeName(null);
-		getManagedBean().setAgencyList(null);
-
+		
 		reqDTO.setReasonId(getManagedBean().getSelectedReason().getReasonId());
 		if (getManagedBean().getMinistryCodeName() != null && !getManagedBean().getMinistryCodeName().isEmpty()) {
 			reqDTO.setMinistryCodeName(getManagedBean().getMinistryCodeName());
@@ -1911,6 +1911,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setPtjCodeName(ProfileManagementConst.PTJ_CODE);
 		this.getManagedBean().setPtjCodeNameSearchValues(null);
 		this.getManagedBean().setSelectedOrgsProfile(null);
+		this.getManagedBean().setPtjList(null);
 	}
 
 	/**
@@ -2003,6 +2004,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public void resetOrganisationSearchBean() {
 		long start = System.currentTimeMillis();
+		getManagedBean().setMinistryCodeName(null);
+		getManagedBean().setKumpPtjCodeName(null);
+		getManagedBean().setAgencyCodeName(null);
+		getManagedBean().setAgencyList(null);
 		loadAgency();
 		long end = System.currentTimeMillis();
 		log.info("Execution time for resetOrganisationSearchBean : " + (end - start) + " ms");
@@ -2139,12 +2144,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		//add selected agency..
 			selected = getManagedBean().getSelectedOrgsProfile();
 		}
-		
-
-		if (selected == null || selected.isEmpty()) {
-			RequestContext.getCurrentInstance().execute(AGENCY_POPUP_HIDE);
-			return;
-		}
 
 		List<PmReasonRestr> agencyList = ensureAgencyList();
 		Set<Long> existingOrgProfileIds = extractExistingOrgProfileIds(agencyList);
@@ -2162,7 +2161,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 		this.getManagedBean().setSelectedOrgsProfile(null);
 		this.getManagedBean().setPtjList(null);
-		RequestContext.getCurrentInstance().execute(AGENCY_POPUP_HIDE);
 	}
 
 	/* -------------------- helpers (small + focused) -------------------- */
