@@ -10003,8 +10003,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (getManagedBean().getCommitteeType() != null
 				&& COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType())) {
 			return true;
+		}else{
+			return false;
 		}
-		return false;
 	}
 	
 	/**
