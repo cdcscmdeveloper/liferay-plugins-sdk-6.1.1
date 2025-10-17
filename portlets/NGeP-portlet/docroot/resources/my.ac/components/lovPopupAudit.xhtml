@@ -13,13 +13,13 @@
 </cc:interface>
 
 <cc:implementation>
-	<p:remoteCommand name="updateSearchDialog" update="searchPanelAudit lovTitle resultPanelAudit" partialSubmit="true" process="@this resultPanelAudit" oncomplete="lovPopupAudit.show();" />
-	<p:remoteCommand name="resetAllData" update="searchPanelAudit lovTitle resultPanelAudit" partialSubmit="true" action="#{lovAuditBackingBean.resetAllSP}" process="@this" />
-	<p:remoteCommand name="lovPopsetAutoUpdateValue" partialSubmit="true" process="@this" update="@this" action="#{lovAuditBackingBean.setAutoUpdateValue()}" />
+	<p:remoteCommand name="updateSearchDialogUser" update="searchPanelAudit lovTitle resultPanelAudit" partialSubmit="true" process="@this resultPanelAudit" oncomplete="lovPopupAudit.show();" />
+	<p:remoteCommand name="resetAllData" update="searchPanelAudit lovTitle resultPanelAudit" partialSubmit="true" action="#{lovAuditBackingBean.resetAll}" process="@this" />
+	<p:remoteCommand name="lovPopsetAutoUpdateValueUser" partialSubmit="true" process="@this" update="@this" action="#{lovAuditBackingBean.setAutoUpdateValue()}" />
 	
 	<p:dialog id="lovPopupAudit" widgetVar="lovPopupAudit" modal="true" width="700" position="top" 
-		onShow="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:false}]);"
-		onHide="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:true}]); resetAllData();" 
+		onShow="lovPopsetAutoUpdateValueUser([{name:'enableAutoUpdate', value:false}]);"
+		onHide="lovPopsetAutoUpdateValueUser([{name:'enableAutoUpdate', value:true}]); resetAllData();" 
 		resizable="false">
 	
 		<f:facet name="header">

@@ -23,7 +23,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class AuditPMUserOrgManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	// Organization Search
 	private OrganisationSearchBean organisationSearchBean;
 	private AuditPMUserOrgSearchBean searchBean;
 	private Integer searchOrgCategory = 0;
@@ -39,14 +38,17 @@ public class AuditPMUserOrgManagedBean extends BaseManagedBean {
 	private PmOrgValidity pmOrgValidity;
 	private PmParameter selectedOrgType;
 	private boolean isDisabledOrgFields = false;
+	private boolean resetMasterResult = false;
 
 	private String selectedType;
-	
+
 	private boolean isLazy = false;
 
 	private String paramLevel3;
 
 	public AuditPMUserOrgManagedBean() {
+		this.setResetMasterResult(false);
+		/* Empty Constructor */
 	}
 
 	/**
@@ -253,6 +255,14 @@ public class AuditPMUserOrgManagedBean extends BaseManagedBean {
 	 */
 	public void setDisabledOrgFields(boolean isDisabledOrgFields) {
 		this.isDisabledOrgFields = isDisabledOrgFields;
+	}
+
+	public boolean isResetMasterResult() {
+		return resetMasterResult;
+	}
+
+	public void setResetMasterResult(boolean resetMasterResult) {
+		this.resetMasterResult = resetMasterResult;
 	}
 
 }

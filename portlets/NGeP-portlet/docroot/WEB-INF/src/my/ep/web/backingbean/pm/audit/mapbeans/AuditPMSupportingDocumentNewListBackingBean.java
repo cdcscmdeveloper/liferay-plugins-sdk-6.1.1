@@ -42,7 +42,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 		this.docType = managedBeans.getSelectedDocument().getDocName();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getAppTypeRestrictionsNew()) {
 			/*
-			 * Restriction Document - AppTypeList - Application Type
+			 * Restriction Document - AppTypeList - Application Type #14
 			 */
 			this.docId = BigInteger.valueOf(pmDocumentRestr.getAppTypeCode().getParameterId());
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
@@ -50,18 +50,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 					.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), actionType(updated));
 			/*
 			 * Restriction Document - AppTypeList - Section : TextList -
-			 * isAsscProjChanged()
-			 */
-			if (pmDocumentRestr.isAsscProjChanged()) {
-				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
-				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_ASSCPROJECT_FIELDLABELID, null,
-						yesNo(pmDocumentRestr.isAsscProjChanged()), actionType(updated));
-			}
-
-			/*
-			 * Restriction Document - AppTypeList - Section : TextList -
-			 * isCompanyInfoChanged
+			 * isCompanyInfoChanged #15
 			 */
 			if (pmDocumentRestr.isCompanyInfoChanged()) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
@@ -69,10 +58,19 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_COMPANYINFO_FIELDLABELID, null,
 						yesNo(pmDocumentRestr.isCompanyInfoChanged()), actionType(updated));
 			}
-
 			/*
 			 * Restriction Document - AppTypeList - Section : TextList -
-			 * isPersonnelBranchChanged()
+			 * isAsscProjChanged() #16
+			 */
+			if (pmDocumentRestr.isAsscProjChanged()) {
+				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
+				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_ASSCPROJECT_FIELDLABELID, null,
+						yesNo(pmDocumentRestr.isAsscProjChanged()), actionType(updated));
+			}
+			/*
+			 * Restriction Document - AppTypeList - Section : TextList -
+			 * isPersonnelBranchChanged() #17
 			 */
 			if (pmDocumentRestr.isPersonnelBranchChanged()) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
@@ -80,21 +78,9 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PERSONALBRANCH_FIELDLABELID, null,
 						yesNo(pmDocumentRestr.isPersonnelBranchChanged()), actionType(updated));
 			}
-
 			/*
 			 * Restriction Document - AppTypeList - Section : TextList -
-			 * isBankChanged()
-			 */
-			if (pmDocumentRestr.isBankChanged()) {
-				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
-				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_BANKINFO_FIELDLABELID, null,
-						yesNo(pmDocumentRestr.isBankChanged()), actionType(updated));
-			}
-
-			/*
-			 * Restriction Document - AppTypeList - Section : TextList -
-			 * isCapitalEquityChanged()
+			 * isCapitalEquityChanged() #18
 			 */
 			if (pmDocumentRestr.isCapitalEquityChanged()) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
@@ -102,14 +88,23 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CAPITALEQUITY_FIELDLABELID, null,
 						yesNo(pmDocumentRestr.isCapitalEquityChanged()), actionType(updated));
 			}
-
-			/* Facility Type : Home Office (Y/N) */
+			/*
+			 * Restriction Document - AppTypeList - Section : TextList -
+			 * isBankChanged() #19
+			 */
+			if (pmDocumentRestr.isBankChanged()) {
+				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
+				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_BANKINFO_FIELDLABELID, null,
+						yesNo(pmDocumentRestr.isBankChanged()), actionType(updated));
+			}
+			/* Facility Type : Home Office (Y/N) #20 */
 			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
 			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_FACILITYHOME_FIELDLABELID, null,
 					yesNo(pmDocumentRestr.isHomeOffice()), actionType(updated));
 
-			/* Facility Type : Business Office (Y/N) */
+			/* Facility Type : Business Office (Y/N) #21 */
 			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_FACILITYOFFICE_FIELDLABELID, null,
 					yesNo(pmDocumentRestr.isBusinessOffice()), actionType(updated));
 		}
@@ -123,7 +118,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	 * @param managedBeans
 	 * @param roleCode
 	 * @param updated
-	 * @return
+	 * @return #22
 	 */
 	public List<AuditPMSPDTO> updatedNewCreateRowComTypeTabList(SupportDocumentManagedBean managedBeans, String roleCode,
 			boolean updated) {
@@ -155,7 +150,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	 * @param managedBeans
 	 * @param roleCode
 	 * @param updated
-	 * @return
+	 * @return #23
 	 */
 	public List<AuditPMSPDTO> updatedNewCreateRowSuppTypeTabList(SupportDocumentManagedBean managedBeans, String roleCode,
 			boolean updated) {
@@ -190,19 +185,20 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 			if (pmDocumentRestr.isBrandNew() && pmDocumentRestr.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 				this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+				/* 24 */
 				detailObj(
 						AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYCODETYPE_FIELDLABELID,
 						null,
 						pmDocumentRestr.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 								.concat(pmDocumentRestr.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code())
 								.concat(pmDocumentRestr.getPmCategoryL3().getCategoryL3Code()), actionType(updated));
-
+				/* 25 */
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYMAINTYPE_FIELDLABELID, null, pmDocumentRestr
 						.getPmCategoryL3().getPmCategoryL2().getCategoryName(), actionType(updated));
-
+				/* 26 */
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYSUBTYPE_FIELDLABELID, null, pmDocumentRestr
 						.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryName(), actionType(updated));
-
+				/* 27 */
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYSUBDIVTYPE_FIELDLABELID, null, pmDocumentRestr
 						.getPmCategoryL3().getCategoryName(), actionType(updated));
 			}
@@ -217,7 +213,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	 * @param managedBeans
 	 * @param roleCode
 	 * @param updated
-	 * @return
+	 * @return #28
 	 */
 	public List<AuditPMSPDTO> updatedNewCreateRowCertBodyTypeTabList(SupportDocumentManagedBean managedBeans, String roleCode,
 			boolean updated) {

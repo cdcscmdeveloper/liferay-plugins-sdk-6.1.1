@@ -69,8 +69,8 @@
 							alertValue="#{backingBean.getOwnershipTypeLabel(backingBean.managedBean.latestAppl.hqFacility.ownershipType)}"/>
 						
 						<p:message for="ownTypeId" showDetail="false" showSummary="true"
-							display="icon" /></td>
-					<td colspan='2'>&#160;</td>
+							display="icon" />
+					</td>
 				</tr>
 				<!-- 29480 - Update: remove code for Re-endorsed CR -->
 				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O' or backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
@@ -115,6 +115,26 @@
 						</p:outputPanel>
 						<td colspan='2'>&#160;</td>
 					</tr>
+					<!-- #38890 - start -->
+					<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R' 
+									and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}">
+					<tr>
+						<td colspan="2">
+							<p:commandButton value="AI Assistant" onclick="tenancyAI.show()" immediate="true">
+									<p:ajax partialSubmit="true" process="@this" />
+							</p:commandButton>
+							<p:graphicImage id="tttenancyAI" value="/css/images/design/tooltips.png" />
+							<p:tooltip id="tt2tenancyAI" for="tttenancyAI">
+								<p:outputLabel value="For Rented Business Office, click the AI Assistant and upload the Stamped Premise Rental Agreement for data extraction" />
+							</p:tooltip>&#160;
+							<br/>
+							<h:outputText styleClass="instruction" 
+								value="Disclaimer: Please review and verify AI-generated data. The system is not responsible for data accuracy or integrity." />
+							
+						</td>
+					</tr>
+					</p:outputPanel>
+					<!-- #38890 - end -->
 					<tr>
 						<td><p:outputLabel value="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'?
 								lbl['lbl.sm.facility.landLordName']:lbl['lbl.sm.facility.ownerName']}" /> 
@@ -348,10 +368,12 @@
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
 						<!-- #36718 - add more id id ajax process -->
+						<!-- #39097 - Start  -->
 						<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 								update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+						<!-- #39097 - End  -->
 					</p:selectOneMenu>
 					<!-- #35086 -->
 					<ac:smFieldChangeAlert 
@@ -390,10 +412,12 @@
 								<f:selectItems var="offDist"
 									value="#{backingBean.managedBean.basicOffFacDistricts}" />
 								<!-- #36718 - add more id id ajax process -->
+								<!-- #39097 - Start  -->
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeDistrict(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+								<!-- #39097 - End  -->
 							</p:selectOneMenu> 
 							<!-- #34159 - END -->
 							<ac:smFieldChangeAlert 
@@ -421,10 +445,12 @@
 								<f:selectItems var="offCity"
 									value="#{backingBean.managedBean.basicOffFacCities}" />
 								<!-- #36718 - add more id id ajax process -->
+								<!-- #39097 - Start  -->
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeCity(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+								<!-- #39097 -->
 							</p:selectOneMenu> 
 							<!-- #34159 - END -->
 							<ac:smFieldChangeAlert 
@@ -517,7 +543,8 @@
 						
 						</script>
 						<!-- 37771 -->	
-						<!-- #36718 - change value coordinate -->		 
+						<!-- #36718 - change value coordinate -->
+						<!-- #39097 - Start --> 
 						<ac:gmap id="acgmap2" 
 							address="getAddress2()"
 							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
@@ -530,7 +557,8 @@
 							alertLatValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLatitude}"
 							oriLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}" 
 							currLongValue="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}" 
-							alertLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}"/>					
+							alertLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}"/>	
+							<!-- #39097 - End --> 				
 					</p:outputPanel>
 					</td>
 				</tr>
@@ -597,4 +625,6 @@
 		</p:confirmDialog>
 		<!-- 29480 - Update: remove code for Re-endorsed CR -->
 	</p:panel>
+	<!-- #38890 -->
+	<ac:smAIAssistant aiDlg="tenancyAI" smAppl="#{backingBean.managedBean.smAppl}" docType="tenancy"/>
 </ui:composition>

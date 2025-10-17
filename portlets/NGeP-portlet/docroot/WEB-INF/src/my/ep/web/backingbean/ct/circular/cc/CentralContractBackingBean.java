@@ -583,10 +583,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				// #35506 Start
 				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
 				if (auditCtBean.getAuditCtConfigState()) {
-					if (getManagedBean().isUpdateAction() && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))) {
-
-						CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+					CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+					
+					if (shouldProcessAudit(auditCtBean, ctCircularVer, action)) {
+					
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
 						auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
 						auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
@@ -661,7 +661,47 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 		return null;
 	}
+	
+	//#35506 - Start
+	/**
+	 * Checks if audit processing should be executed based on config, status, and action.
+	 *
+	 * @param auditCtBean   the audit contract bean
+	 * @param ctCircularVer the circular version being processed
+	 * @param action        the user action
+	 * @return true if audit should be processed, false otherwise
+	 */
+	private boolean shouldProcessAudit(AuditContractBackingBean auditCtBean, CtCircularVer ctCircularVer, String action) {
+	    return auditCtBean.getAuditCtConfigState()
+	        && (getManagedBean().isUpdateAction() || isPendingUpdateStatus(ctCircularVer.getStatus().getStatusId()))
+	        && isAllowedAction(action);
+	}
 
+	/**
+	 * Checks if the status is a pending update status.
+	 *
+	 * @param statusId the status ID
+	 * @return true if pending update status, false otherwise
+	 */
+	private boolean isPendingUpdateStatus(Long statusId) {
+	    return ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL.equals(statusId)
+	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION_APPROVAL.equals(statusId)
+	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION.equals(statusId);
+	}
+
+	/**
+	 * Checks if the action is allowed for audit.
+	 *
+	 * @param action the user action
+	 * @return true if allowed for audit, false otherwise
+	 */
+	private boolean isAllowedAction(String action) {
+	    return BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)
+	        || BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
+	}
+	//#35506 - End
+	
 	/**
 	 * The method used for validating the central circular information.
 	 * A warning or error message will display on screen when the validation
@@ -733,6 +773,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 								 ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
 					 }
 				 }
+			 }
+			 
+			// Validate For Extension date - #39213
+			 if(getManagedBean().isCircularExtension() && (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+					 && getManagedBean().getCircularVer().getExtendEndDate() == null) {
+				 getManagedBean().setSelectedTabIndex(0);
+				 throw new EpException(MessageConst.ERROR_100022,
+						 new String[]{ResourceBundleUtils.getMessage("lbl.ct.extension.end.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())}); 
 			 }
 
 			 // Validate duplicated contract

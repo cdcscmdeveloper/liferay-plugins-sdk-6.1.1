@@ -110,8 +110,28 @@ public class SLALogConstant {
 	public static final String VIEW_DL_LOA_CONTRACT_TRACKING_DETAILS = "viewLoaContractTrackingDtls";
 	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQtLoaContractDtls";
 	public static final String VIEW_QT_BID_SCHEDULES_DATA_MODEL = "ScheduleBiddingPagingDataModel";
+	public static final String COMP_EXP_LOA_DETAILS_PAGE = "viewLOADetailsPage";
+	
 	
 	// 25791-end
+	
+	// 29661 -start-
+	public static final String FETCH_CHECKLIST_VALUE_SCORE = "fetchCheckListValueScore";
+	public static final String FETCH_COMPANY_EXP_PROPOSAL_CHECKLIST_SCORE = "fetchProposalAndCheckListScores";
+	public static final String RETRIEVE_COMPANY_EXP_EVALUATION_DETAILS = "retrieveCompanyExpDetails";
+	public static final String QT_SP_DETAIL_BACKINGBEAN = "SPDetailBackingBean";
+	public static final String RETRIEVE_PROPOSAL_COMPANY_EXP_DETAILS = "retrieveProposalCompanyExpdtls";
+	public static final String DOWNLOAD_SUPPLIER_LOA_DETAILS_REPORTS = "downloadCompExpLOAReports";
+	public static final String RETRIEVE_SUPP_MAP_REPORT = "retrieveSuppLoiLoaMapForReport";
+	public static final String COMP_EXP_SUPP_PAGING_DATA_MODEL = "ViewSupplierCompExpDtlsPagingDataModel";
+	public static final String RETRIEVE_CONTRACT_STATUS_COUNT = "retrieveContractStatusValueCount";
+
+	// 29661 -end-
+	
+	// 26247 - start
+	public static final String QT_NOTICEBOARD_BACKING_BEAN = "NoticeBoardBackingBean";
+	public static final String QT_NAVIGATE_TO_CHECK_QUALIFICATION = "navigateToCheckQualification";
+	// 26247 - end
 	
 	private SLALogConstant(){
 		

@@ -570,10 +570,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				// #35506 Start
 				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
 				if (auditCtBean.getAuditCtConfigState()) {
-					if (getManagedBean().isUpdateAction() && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+					CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+					
+					if ((getManagedBean().isUpdateAction() || ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_APPROVAL)
+							|| ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_REVISION_APPROVAL)
+							|| ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_REVISION))
+							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))) {
-
-						CtCircularVer ctCircularVer = getManagedBean().getCircularVer();					
+											
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
 						auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
 						auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
@@ -987,7 +991,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		//#30014 - Start
 		if (getManagedBean().getCircularVer().getCtPanelCategoryList().size() == 0
 				|| getManagedBean().getCircularVer().getCtPanelCategoryList().isEmpty()) {
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				getManagedBean().setSelectedTabIndex(2);
 				throw new EpException(MessageConst.ERROR_750088, new String[] { ResourceBundleUtils.getMessage("lbl.ct.menu.category.code",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
@@ -3417,6 +3422,36 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			circularVer.setCtPanelCategoryList(ctCategoryList);
 		}
 
+		Long l1Id = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Id();
+		Long l2Id = pmCategoryL3.getPmCategoryL2().getCategoryL2Id();
+		Long l3Id = pmCategoryL3.getCategoryL3Id();
+		
+		String categoryCode = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+                + pmCategoryL3.getPmCategoryL2().getCategoryL2Code()
+                + pmCategoryL3.getCategoryL3Code();
+
+		String categoryName = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryName();
+
+		// Duplicate Check
+		for (CtPanelCategory existing : ctCategoryList) {
+			if (existing.getPmCategoryL1().getCategoryL1Id().equals(l1Id) &&
+				existing.getPmCategoryL2().getCategoryL2Id().equals(l2Id) &&
+				existing.getPmCategoryL3().getCategoryL3Id().equals(l3Id)) {
+				throw new EpException(MessageConst.ERROR_750090, new String[] {categoryCode, categoryName}); // Duplicate message Error
+			}
+		}
+		
+		ctCategoryList.add(createPanelCategory(pmCategoryL3, circularVer));
+	}
+	
+	/**
+	 * Creates a new CtPanelCategory based on the selected category L3 and circular version.
+	 *
+	 * @param pmCategoryL3 the selected category L3
+	 * @param circularVer the associated circular version
+	 * @return a new fully populated CtPanelCategory
+	 */
+	private CtPanelCategory createPanelCategory(PmCategoryL3 pmCategoryL3, CtCircularVer circularVer) {
 		PmCategoryL2 l2 = pmCategoryL3.getPmCategoryL2();
 		PmCategoryL1 l1 = l2.getPmCategoryL1();
 
@@ -3430,7 +3465,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		category.setPmCategoryL3Name(pmCategoryL3.getCategoryName());
 		category.setCategoryType(pmCategoryL3.getCategoryTypeCode());
 
-		ctCategoryList.add(category);
+		return category;
 	}
 
 	/**

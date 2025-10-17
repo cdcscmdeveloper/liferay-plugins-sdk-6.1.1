@@ -8,6 +8,12 @@
 	
 	
 	<p:panel header="#{lbl['lbl.sm.complaint.pnl.company.details']}" toggleable="true" id="complCompDtl">
+	
+		<!-- #38520 - START -->
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.complaint.pnl.company.details.companyname.note']} " escape="false"/>
+		<p:graphicImage value="/css/images/design/search.png" style="background:transparent;"></p:graphicImage>
+		<h:outputText styleClass="instruction" value=" #{lbl['lbl.sm.complaint.pnl.company.details.companyname.note2']}." escape="false"/>
+		<!-- #38520 - END -->
 		<table class="customTbl">
 			<tr>
 				<td class="tdTitle"><p:outputLabel

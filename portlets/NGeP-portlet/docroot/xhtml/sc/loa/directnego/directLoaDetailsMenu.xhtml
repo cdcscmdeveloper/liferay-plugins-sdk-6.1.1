@@ -20,11 +20,12 @@
 	<ui:param name="isPeriodic" value="#{(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen) or
 	(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled)}"></ui:param>
 	<ui:param name="isOneOff" value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff}"></ui:param>
-	<ui:param name="isNonPeriodic" value="#{(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen) or
-	(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"></ui:param>
-	<ui:param name="isPK7" value="#{(directLOABackingBean.managedBean.scLoa.qtType.parameterCode eq ParameterConst.quotationTenderTypeItemInPk7)}"></ui:param>	
+	<!-- new #25726 -->
+	<ui:param name="isPK7" value="#{directLOABackingBean.isPk7Periodic()}"></ui:param>	
 	<ui:param name="above500K" value="#{(directLOABackingBean.managedBean.above500K)}"/>
 	<ui:param name="StatusLOASubmission" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
+	<!-- new #25726 -->
+	<ui:param name="isContractPeriodAbove4" value="#{directLOABackingBean.isContractPeriodAbove4()}"/>
 	<!-- #25726 END -->
 	<ui:remove>Reopen #25726 note 110</ui:remove>
 	<ui:param name="StatusLOARevision" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION}"></ui:param>
@@ -408,7 +409,11 @@
 						required="true" id="fileNoId"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
 						label="#{lbl['lbl.sc.qt.fileno']}" size="28" >
-						<p:ajax event="blur" process="fileNoId" update="fileNoId"/>
+						<!-- #29661 start -->
+						<p:ajax event="blur" process="fileNoId" update="fileNoId"
+						partialSubmit="true" 
+						listener="#{createQtBB.setFileNo(directLOABackingBean.managedBean.scQt)}"/>
+						<!-- #29661 end -->
 						</p:inputText>
 						 <p:spacer width="1px" />
 						
@@ -417,7 +422,12 @@
 						value="#{directLOABackingBean.managedBean.scLoa.fileExtNo}"
 						size="1" label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
 						maxlength="3" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" >
-						<p:ajax event="blur" process="fileExtNo" update="fileExtNo"/>
+						<!-- 29661 start -->
+						<p:ajax event="blur"  process="@this" 
+						partialSubmit="true" update="@this"
+						listener="#{directLOABackingBea.setFileExtNo(directLOABackingBean.managedBean.scLoa)}">
+						</p:ajax>
+						<!-- 29661 end -->
 						</p:inputText>
 						 <p:message
 						id="fileExtNoMsg" for="fileExtNo" display="icon" />
@@ -978,6 +988,11 @@
 							process="@this"
 							partialSubmit="true"
 							listener="#{directLOABackingBean.resetContractDates()}"></p:ajax>
+						<!-- new #25726 - Start-->
+						<p:ajax event="change"
+							listener="#{directLOABackingBean.isAgreementDropDown}"
+							partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" />
+						<!-- new #25726 - End-->
 						<f:converter converterId="periodConverter"/>
 					</p:inputText>  <p:message id="contractDurationMsg" for="#{QTFieldConst.FIELD_LOA_CONTRACT_PERIOD_ID}" display="icon" /></td>
 			</tr>
@@ -1094,19 +1109,42 @@
 														size="28" disabled="true" />
 													</c:when>
 													<c:otherwise>
-													<p:selectOneMenu id="agreementValId" required="true"
-														style="margin-bottom:5px;width:246px;"
-														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
-														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.managedBean.disableFields || (!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval)}"><!-- Reopen #25726 note 220 - issue 1 -->	
-														<f:selectItems
-															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
-															<!-- #25726 START -->
-														 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
-														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
-														<!-- #25726 END -->
-													</p:selectOneMenu>
-													</c:otherwise>
+														<!-- new #25726 - Start-->
+														<c:choose>
+															<c:when test="#{directLOABackingBean.isPk7Periodic()}">
+																<p:selectOneMenu id="agreementValId" required="true"
+																	style="margin-bottom:5px;width:246px;"
+																	value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
+																	label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+																	disabled="#{directLOABackingBean.managedBean.disableFields || (!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval)}">
+																	<!-- Reopen #25726 note 220 - issue 1 -->
+																	<f:selectItems
+																		value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+																	<!-- #25726 START -->
+																	<p:ajax event="change" partialSubmit="true"
+																		update="agreementReqPG @([id$=uploadApprovalLetterPg])"
+																		listener="#{directLOABackingBean.onChangeAgreementReqType}" />
+																	<!-- #25726 END -->
+																</p:selectOneMenu>
+															</c:when>
+															<c:otherwise>
+																<p:selectOneRadio id="agreementReq"
+																	styleClass="commonLabel"
+																	value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
+																	label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+																	disabled="#{directLOABackingBean.managedBean.disableFields || (!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval)}">
+																	<f:selectItems
+																		value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+																	<p:ajax event="change" partialSubmit="true"
+																		update="agreementReqPG @([id$=uploadApprovalLetterPg])"
+																		listener="#{directLOABackingBean.onChangeAgreementReqType}" />
+																</p:selectOneRadio>
+																<p:message id="agreementReqMsg" for="agreementReq"
+																	display="icon" />
+															</c:otherwise>
+														  </c:choose>
+														</c:otherwise>
+														<!-- new #25726 - End-->
 													</c:choose>
 												</c:otherwise>
 											</c:choose>
@@ -1136,9 +1174,16 @@
 			<tr>				
 				<td colspan="3">
 					<p:outputPanel id="uploadApprovalLetterPg"> 
-						<!-- #25726 START -->													
-						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision || StatusLOAApproval) and ((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
+						<!-- #25726 START -->
+						<!-- new #25726 - Start-->													
+						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision || StatusLOAApproval) and 
+						(((((isPeriodic and !isContractPeriodAbove4) || isOneOff) and !isPK7) and 
+						!directLOABackingBean.managedBean.scLoa.agreementReq and above500K and 
+						!directLOABackingBean.managedBean.readOnly)||((((isPeriodic and !isContractPeriodAbove4) || isOneOff) and !isPK7) and 
+						!directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and 
+						above500K and directLOABackingBean.managedBean.readOnly))}" 
 						required="true">
+						<!-- new #25726 - End-->
 						<!-- #25726 END -->
 							<table>
 								<tr>
