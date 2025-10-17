@@ -10000,11 +10000,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return true if it matches any quotation committee type, false otherwise
 	 */
 	private boolean isQuotationCommitteeType() {
-		if (getManagedBean().getCommitteeType() != null
-				&& COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType())) {
-			return true;
-		}
-		return false;
+		return getManagedBean().getCommitteeType() != null
+				&& COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType());
 	}
 	
 	/**
