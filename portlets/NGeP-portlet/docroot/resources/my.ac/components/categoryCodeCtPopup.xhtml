@@ -22,22 +22,68 @@
             } catch (e) {}
         }
     </h:outputScript>
-    
-        <h:outputStylesheet>
-        <style>
-			#catCodeCtPopup.ui-dialog {
-                max-height: 700px;
-                max-width: 70vw;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                margin-top: 0 !important;
-            }
-        </style>
-    </h:outputStylesheet>
-    
-	<p:dialog id="catCodeCtPopup"
-		header="#{lbl['lbl.sc.category.code.search']}"
+
+	<h:outputStylesheet>
+	<style>
+		#catCodeCtPopup.ui-dialog {
+			max-height: 700px;
+			max-width: 70vw;
+			top: 50% !important;
+			left: 50% !important;
+			transform: translate(-50%, -50%) !important;
+			margin-top: 0 !important;
+			animation: fadeInPopup 0.4s ease-out;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+			border-radius: 10px;
+		}
+
+		/* Scroll hanya untuk isi tabel */
+		#catCodeCtDescrTbl .ui-datatable-scrollable-body {
+			overflow-y: auto !important;
+			max-height: 350px !important;
+		}
+
+		/* Header tetap di atas */
+		#catCodeCtDescrTbl .ui-datatable-scrollable-header-box {
+			position: sticky !important;
+			top: 0 !important;
+			z-index: 10 !important;
+			background-color: white;
+		}
+
+		/* Paginator tetap di bawah */
+		#catCodeCtDescrTbl+.ui-paginator {
+			position: relative;
+			z-index: 11;
+		}
+		/* Sembunyikan seluruh wrapper scroll saat data kosong */
+		.hide-scroll-wrapper .ui-datatable-scrollable-header,
+		.hide-scroll-wrapper .ui-datatable-scrollable-body,
+		.hide-scroll-wrapper .ui-datatable-scrollable-footer {
+			display: none !important;
+		}
+
+		/* Scroll aktif hanya kalau data ada */
+		.ui-datatable-scrollable-body {
+			overflow-y: auto !important;
+			max-height: 350px !important;
+		}
+		@keyframes fadeInPopup {
+			from {
+				opacity: 0;
+				transform: translate(-50%, -50%) scale(0.95);
+			}
+			to {
+				opacity: 1;
+				transform: translate(-50%, -50%) scale(1);
+			}
+		}
+	</style>
+	</h:outputStylesheet>
+
+
+		<p:dialog id="catCodeCtPopup"
+		header="#{lbl['lbl.ct.category.code.search']}"
 		widgetVar="catCodePopup" modal="true" width="720" 
 		position="top"
         positionType="fixed"
@@ -49,8 +95,8 @@
 		<h:panelGroup id="catCodeCtPnl">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="25%">
-					<p:outputLabel value="#{lbl['lbl.ct.category.code.search.by']}" />
+				<td width="25%" style="text-align: right; padding-right: 15px;">
+					<h:outputText value="#{lbl['lbl.ct.category.code.search.by']}"/>
 				</td>
 				<td width="75%">
 				<p:selectOneRadio id="catCodeCtSearchBy" label="#{lbl['lbl.ct.category.code.search.by']}"
@@ -65,18 +111,18 @@
 				<h:panelGrid columns="4" cellpadding="5" style="vertical-align: middle;">
     				<!-- itemIndex 0 = By Category Code -->
     			 <p:radioButton for="catCodeCtSearchBy" itemIndex="0" />
-   				 <h:outputLabel value="#{lbl['lbl.ct.menu.category.code']}" style="margin-right:25px;" />
+   				 <h:outputText value="#{lbl['lbl.ct.menu.category.code']}" style="margin-right:25px;" />
 
     				<!-- itemIndex 1 = By Category Description -->
     			 <p:radioButton for="catCodeCtSearchBy" itemIndex="1" />
-    			 <h:outputLabel value="#{lbl['lbl.ct.category.description']}" />
+    			 <h:outputText value="#{lbl['lbl.ct.category.description']}" />
 				</h:panelGrid>
 				</td>
 			</tr>
 			<c:if test="#{categoryCodeSearchBackingBean.managedBean.searchBy == ParameterConst.categoryCodeSearchByCode}">
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.ct.tbl.category']}"/>
+				<td style="text-align: right; padding-right: 15px;">
+					<h:outputText value="#{lbl['lbl.ct.tbl.category']}"/>
 				</td>
 				<td>
 					<h:selectOneMenu id="catCodeCtLvl1" label="#{lbl['lbl.ct.tbl.category']}"
@@ -88,8 +134,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.ct.tbl.sub.category']}" />
+				<td style="text-align: right; padding-right: 15px;">
+					<h:outputText value="#{lbl['lbl.ct.tbl.sub.category']}"/>
 				</td>
 				<td>
 					<h:selectOneMenu id="catCodeCtLvl2" label="#{lbl['lbl.ct.tbl.sub.category']}"
@@ -101,8 +147,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.ct.tbl.sub.category.div']}" />
+				<td style="text-align: right; padding-right: 15px;">
+					<h:outputText value="#{lbl['lbl.ct.tbl.sub.category.div']}"/>
 				</td>
 				<td>
 					<h:selectOneMenu id="catCodeCtLvl3" label="#{lbl['lbl.ct.tbl.sub.category.div']}"
@@ -120,8 +166,8 @@
 			<p:panel header="#{lbl['lbl.ct.search.category']}" toggleable="true">
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
-					<td width="25%">
-						<p:outputLabel value="#{lbl['lbl.ct.category.description']}" />
+					<td width="25%" style="text-align: right; padding-right: 15px;">
+						<h:outputText value="#{lbl['lbl.ct.category.description']}"/>
 					</td>
 					<td width="75%">
 						<p:inputText id="catCodeCtDecsr" value="#{categoryCodeSearchBackingBean.managedBean.categoryDesciption}" 
@@ -148,35 +194,41 @@
 			</p:panel>
 
 			<p:panel header="#{lbl['lbl.ct.category.result']}" toggleable="true">
-				<p:dataTable id="catCodeCtDescrTbl"
-					value="#{categoryCodeSearchBackingBean.categoryDescrDataModel}"
-					selectionMode="single" style="max-height: 350px !important; overflow-y: auto;"
-					selection="#{categoryCodeSearchBackingBean.managedBean.selectedCategoryL3}"
-					rowKey="#{pmCategoryL3.categoryL3Id}" scrollable="true"
-					var="pmCategoryL3" lazy="true" rows="10">
-	
-					<ac:paginator for="catCodeCtDescrTbl" />
-		
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.ct.menu.category.code']}" />
-						</f:facet>
+						<p:dataTable id="catCodeCtDescrTbl"
+							value="#{categoryCodeSearchBackingBean.categoryDescrDataModel}"
+							selection="#{categoryCodeSearchBackingBean.managedBean.selectedCategoryL3}"
+							selectionMode="single" rowKey="#{pmCategoryL3.categoryL3Id}" var="pmCategoryL3"							
+							lazy="true" rows="10" scrollable="true"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+
+							<ac:paginator for="catCodeCtDescrTbl" />
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.ct.menu.category.code']}" />
+								</f:facet>
 						#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{pmCategoryL3.pmCategoryL2.categoryL2Code}#{pmCategoryL3.categoryL3Code}
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.tbl.category']}" style="min-width: 90px; white-space: normal;">
-					<h:outputText value="#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.sub.category']}" style="min-width: 300px; white-space: normal;">
-					<h:outputText value="#{pmCategoryL3.pmCategoryL2.categoryName}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.tbl.sub.category.div']}" style="min-width: 300px; white-space: normal;">
-					<h:outputText value="#{pmCategoryL3.categoryName}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.tbl.category.type']}" style="min-width: 100px; white-space: normal;">
-					<h:outputText value="#{categoryCodeSearchBackingBean.getParameterDesc(pmCategoryL3.categoryTypeCode)}" />
-					</p:column>
-				</p:dataTable>
-			</p:panel>
+							<p:column headerText="#{lbl['lbl.ct.tbl.category']}"
+								style="min-width: 90px; white-space: normal;">
+								<h:outputText
+									value="#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" />
+							</p:column>
+							<p:column headerText="#{lbl['lbl.sc.sub.category']}"
+								style="min-width: 300px; white-space: normal;">
+								<h:outputText value="#{pmCategoryL3.pmCategoryL2.categoryName}" />
+							</p:column>
+							<p:column headerText="#{lbl['lbl.ct.tbl.sub.category.div']}"
+								style="min-width: 300px; white-space: normal;">
+								<h:outputText value="#{pmCategoryL3.categoryName}" />
+							</p:column>
+							<p:column headerText="#{lbl['lbl.ct.tbl.category.type']}"
+								style="min-width: 100px; white-space: normal;">
+								<h:outputText
+									value="#{categoryCodeSearchBackingBean.getParameterDesc(pmCategoryL3.categoryTypeCode)}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
 			</c:if>
 		</h:panelGroup>
 
