@@ -45,6 +45,18 @@
 							action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
 							update="@form" />
 					</c:if>
+					<ui:remove>#28784 - Start</ui:remove>
+					<c:if
+						test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
+						and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and evaluationBackingBean.managedBean.demoWip eq 'false'}">
+						<p:menuitem
+							value="#{lbl['lbl.sc.eva.technical.presentation.demo']}"
+							process="@this" partialSubmit="true"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							action="#{evaluationBackingBean.retrivePresentationOrDemoEvaluationStage}"
+							update="@form" />
+					</c:if>
+					<ui:remove>#28784 - End</ui:remove>
 
 				</p:tabMenu></td>
 			<td width="80%;" valign="top"><c:if
@@ -76,14 +88,47 @@
 					<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
 
 
-				</c:if> <c:if
-					test="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1') or (evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'))}">
-
+				</c:if>
+				<ui:remove>#28784 - Start</ui:remove>
+				<c:if
+					test="#{((evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1')
+						or (evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
+						and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1')) and evaluationBackingBean.managedBean.scQt.demoRequired eq 'false'}">
+				<ui:remove>#28784 - End</ui:remove>
 					<ui:param name="passingScore"
 						value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
 					<ui:include src="TECSummary.xhtml" />
 
-				</c:if></td>
+				</c:if>
+				<ui:remove>#28784 WIP @idham - Start</ui:remove>
+				<c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' 
+					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and !evaluationBackingBean.managedBean.demoWip}">
+
+
+					<ui:include src="TECSummaryPresentationDemo.xhtml" />
+
+				</c:if>
+				<c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' 
+					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and evaluationBackingBean.managedBean.demoWip}">
+
+					<ui:include src="TECSummary.xhtml" />
+
+				</c:if> 
+				<c:if
+					test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'
+					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+
+					
+					<ui:include src="presentationOrDemoTech.xhtml" />
+
+				</c:if>
+				<ui:remove>#28784 WIP @idham - End</ui:remove>
+				</td>
 		</tr>
 	</table>
 
@@ -103,7 +148,8 @@
 						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
 				</ui:fragment></td>
 			<td><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex ne '2'}"><ui:remove>28784 add index condition</ui:remove>
 
 
 
@@ -128,7 +174,44 @@
 						update=":form" />
 
 
-				</ui:fragment> <ui:fragment
+				</ui:fragment>
+				<ui:remove>#28784 - Start</ui:remove>
+				<!-- #28784 after evaluationBackingBean.managedBean.tabTechnicalIndex - Start -->
+				<ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
+					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
+					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'}">
+				<!-- 4ser
+					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '4'}"> -->
+
+					<p:commandButton value="#{lbl['lbl.btn.next']}"
+						style="float:right;" styleClass="BtnSpacing"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
+						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
+						disabled="#{!evaluationBackingBean.managedBean.afterDemoInv}"
+						update=":form" />
+
+				</ui:fragment>
+				<!-- 4ser
+				<ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
+					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
+					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '5'}">
+
+					<p:commandButton value="#{lbl['lbl.btn.next']}"
+						style="float:right;" styleClass="BtnSpacing"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
+						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
+						disabled="#{!evaluationBackingBean.managedBean.afterDemoInv}"
+						update=":form" />
+
+				</ui:fragment>
+				-->
+				<!-- #28784 after evaluationBackingBean.managedBean.tabTechnicalIndex - End -->
+				<ui:remove>#28784 - End</ui:remove>
+				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'}">
 
 

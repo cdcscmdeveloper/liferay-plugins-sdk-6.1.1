@@ -22,15 +22,13 @@
 					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId, true)}"
 					immediate="true"
 					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
-				<ui:remove>#25791 start </ui:remove></td>
+			<ui:remove>#25791 start </ui:remove>
+			</td>
 		</tr>
 	</table>
 	<div class="ppRightBtn">
 		<ui:remove>#25791 end </ui:remove>
-		<ui:remove>
-
-				 27412 note-75, 17376 -start- 
-	</ui:remove>
+		<!-- 27412 note-75, 17376 -start- -->
 		<c:if
 			test="#{!empty qTDetailBB.isMofSupplier() and qTDetailBB.isMofSupplier()}">
 			<p:commandButton value="#{lbl['lbl.sc.print.proposal']}"

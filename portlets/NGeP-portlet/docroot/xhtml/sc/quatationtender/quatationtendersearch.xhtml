@@ -7,54 +7,49 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+	
 	<ui:define name="contentSection">
 		<p:blockUI block="qtList" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
-
+		
 		<p:messages id="qtSearchMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
 		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
-			id="qtsearchid">
-			<ui:param name="screenName" value="QT"></ui:param>
-			<ui:include src="searchQuotationTenderDetails.xhtml"></ui:include>
+			id="qtsearchid">		
+		<ui:param name="screenName" value="QT"></ui:param>
+		<ui:include src="searchQuotationTenderDetails.xhtml"></ui:include>
 
-			<div class="ppRightBtn">
-				<!-- 17376,25201 -start- -->
+              <div class="ppRightBtn">
+              	<!-- 17376,25201 -start- -->
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{qTDetailBB.searchQTAction}" update="@all"
-					process="@this, qtsearchid" onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide()" />
+					process="@this, qtsearchid" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<!-- 17376,25201 -end- -->
 				<!-- 19287 -start- -->
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					action="#{qTDetailBB.reset}" update="@all" resetValues="true"
-					partialSubmit="true" process="@this" />
+					action="#{qTDetailBB.reset}" update="@all"
+					resetValues="true" partialSubmit="true"
+					process="@this" />
 				<!-- 19287 -end- -->
 			</div>
 		</p:panel>
 		<!-- 19336,25201,17376,19287 -start- -->
 		<c:choose>
 			<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOA}">
-				<c:set var="tableHeader" value="#{lbl['lbl.sc.loiloa.loalist']}"
-					scope="view" />
-				<c:set var="itemNoHeader" value="#{lbl['lbl.sc.loiloa.loa.no']}"
-					scope="view" />
+				<c:set var="tableHeader" value="#{lbl['lbl.sc.loiloa.loalist']}" scope="view" />
+				<c:set var="itemNoHeader" value="#{lbl['lbl.sc.loiloa.loa.no']}" scope="view" />
 				<c:set var="listType" value="loaList" scope="view" />
-				<c:set var="dataModelLoiLoa"
-					value="#{qTDetailBB.searchLoaForQtDataModel}" scope="view" />
+				<c:set var="dataModelLoiLoa" value="#{qTDetailBB.searchLoaForQtDataModel}" scope="view" />
 			</c:when>
 			<c:when test="#{qTDetailBB.managedSearchBeanDocumentTypeIsLOI}">
 				<ui:remove> #25791 start </ui:remove>
 				<c:set var="tableHeader"
 					value="#{lbl['lbl.sc.qt.loa.search.results']}" scope="view" />
 				<ui:remove> #25791 end </ui:remove>
-				<c:set var="itemNoHeader" value="#{lbl['lbl.sc.loiloa.loi.no']}"
-					scope="view" />
-				<c:set var="listType" value="loiList" scope="view" />
-				<c:set var="dataModelLoiLoa"
-					value="#{qTDetailBB.searchQtLoiDataModel}" scope="view" />
+				<c:set var="itemNoHeader" value="#{lbl['lbl.sc.loiloa.loi.no']}" scope="view" />
+				<c:set var="listType" value="loiList" scope="view" /> 
+				<c:set var="dataModelLoiLoa" value="#{qTDetailBB.searchQtLoiDataModel}" scope="view" />
 			</c:when>
 
 			<ui:remove> #25791 start </ui:remove>
@@ -69,94 +64,90 @@
 			<ui:remove> #25791 end </ui:remove>
 
 			<c:otherwise>
-				<c:set var="tableHeader" value="#{lbl['lbl.sc.qtn.list']}"
-					scope="view" />
+				<c:set var="tableHeader" value="#{lbl['lbl.sc.qtn.list']}" scope="view" />
 				<c:set var="listType" value="default" scope="view" />
-				<c:if test="#{qTDetailBB.managedSearchBeanDocumentTypeIsSuppFinal}">
+				<c:if test="#{qTDetailBB.managedSearchBeanDocumentTypeIsSuppFinal}" >
 					<ui:remove> #25791 start </ui:remove>
 					<c:set var="tableHeader"
 						value="#{lbl['lbl.sc.qt.loa.search.results']}" scope="view" />
 					<ui:remove> #25791 end </ui:remove>
 					<c:set var="listType" value="qtWithFinalizationList" scope="view" />
-				</c:if>
-				<c:set var="dataModel" value="#{qTDetailBB.searchQTDataModel}"
-					scope="view" />
+				</c:if> 
+				<c:set var="dataModel" value="#{qTDetailBB.searchQTDataModel}" scope="view" />
 			</c:otherwise>
-		</c:choose>
-
+		</c:choose>	
+		
 		<p:panel id="qtList" header="#{tableHeader}" toggleable="true">
-			<!-- 19336,25201,17376,19287 -end- -->
+		<!-- 19336,25201,17376,19287 -end- -->
 			<h:panelGroup id="table-wrapper" style="width:100%;">
-
+				
 				<!-- 19336,25201,17376,19287 -start- -->
 				<!-- QT Data Table -->
-				<div id="searchQTDiv" style="display: block">
-					<p:dataTable id="searchQTs" value="#{dataModel}" var="listItem"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						rowIndexVar="index" lazy="true" rows="10">
-						<!-- 19336,25201,17376,19287 -end- -->
+				<div id="searchQTDiv" style="display:block">
+				<p:dataTable id="searchQTs"
+					value="#{dataModel}" var="listItem"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowIndexVar="index" lazy="true" rows="10">
+				<!-- 19336,25201,17376,19287 -end- -->
 
-						<ac:paginator for="searchQTs" />
+					<ac:paginator for="searchQTs" />
 
-						<!-- 19336,25201,17376,19287 -start- -->
-						<ui:param name="scQt" value="#{listItem}" />
-						<!-- 19336,25201,17376,19287 -end- -->
+					<!-- 19336,25201,17376,19287 -start- -->
+					<ui:param name="scQt" value="#{listItem}" />
+					<!-- 19336,25201,17376,19287 -end- -->
 
-						<p:column headerText="#{lbl['lbl.sc.qtn.no']}"
-							style="width:100px;">
-							<h:outputText value="#{scQt.qtNo}" />
-						</p:column>
+					<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:100px;">
+						<h:outputText value="#{scQt.qtNo}" />
+					</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.title']}">
-							<h:outputText value="#{scQt.qtTitle}"
-								style="white-space: normal;word-wrap: break-word;" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
-							style="width:100px;">
-							<!-- 13749 for 19336,25201,17376,19287 -start- -->
-							<h:outputText value="#{qTDetailBB.getProcurementMode(scQt)}" />
-							<!-- 13749 for 19336,25201,17376,19287 -end- -->
-						</p:column>
+					<p:column headerText="#{lbl['lbl.sc.title']}">
+						<h:outputText value="#{scQt.qtTitle}" 
+							style="white-space: normal;word-wrap: break-word;"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
+						style="width:100px;">
+					<!-- 13749 for 19336,25201,17376,19287 -start- -->
+						<h:outputText
+							value="#{qTDetailBB.getProcurementMode(scQt)}" />
+					<!-- 13749 for 19336,25201,17376,19287 -end- -->
+					</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.created.date']}"
-							style="width:80px;">
-							<h:outputText value="#{scQt.createdDate}">
-								<f:convertDateTime
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</h:outputText>
-						</p:column>
+					<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.createdDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.published.date']}"
-							style="width:80px;">
-							<h:outputText value="#{scQt.publishDate}">
-								<f:convertDateTime
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</h:outputText>
-						</p:column>
+					<p:column headerText="#{lbl['lbl.sc.published.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.publishDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.closing.date']}"
-							style="width:80px;">
-							<h:outputText value="#{scQt.closingDate}">
-								<f:convertDateTime
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</h:outputText>
-						</p:column>
+					<p:column headerText="#{lbl['lbl.sc.closing.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.closingDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
 
-						<!-- Bug #27412,30451,17376 START -->
-						<p:column headerText="#{lbl['lbl.sc.status']}"
-							style="width:200px;" rendered="#{!qTDetailBB.isMofSupplier()}">
-							<h:outputText
-								value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"
-								rendered="#{ParameterConst.doctypeSupplierFinalization ne qTDetailBB.managedBean.qtnTenderSearchBean.docType and !qTDetailBB.managedBean.bdSfFlow}" />
-							<h:outputText value="#{scQt.statusDesc}"
-								rendered="#{ParameterConst.doctypeSupplierFinalization eq qTDetailBB.managedBean.qtnTenderSearchBean.docType || qTDetailBB.managedBean.bdSfFlow}" />
-							<!-- Bug #27412,30451,17376 END -->
-						</p:column>
+					<!-- Bug #27412,30451,17376 START -->
+					<p:column headerText="#{lbl['lbl.sc.status']}"
+						style="width:200px;" rendered="#{!qTDetailBB.isMofSupplier()}">
+						<h:outputText
+							value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"
+							rendered="#{ParameterConst.doctypeSupplierFinalization ne qTDetailBB.managedBean.qtnTenderSearchBean.docType and !qTDetailBB.managedBean.bdSfFlow}" />
+						<h:outputText value="#{scQt.statusDesc}"
+							rendered="#{ParameterConst.doctypeSupplierFinalization eq qTDetailBB.managedBean.qtnTenderSearchBean.docType || qTDetailBB.managedBean.bdSfFlow}" />
+					<!-- Bug #27412,30451,17376 END -->
+					</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.action']}"
-							style="width:6%;text-align: center;">
-							<!-- ***17376#55 - start -->
-							<p:menuButton value="#{lbl['lbl.btn.option']}">
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
+						<!-- ***17376#55 - start -->
+						<p:menuButton value="#{lbl['lbl.btn.option']}">
+
 								<ui:remove> #25791 start </ui:remove>
 								<p:menuitem id="menuItem1" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -164,85 +155,70 @@
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}"
 									partialSubmit="true" process="@this" />
-								<ui:remove> #25791 end </ui:remove>
-								<ui:remove>
-							 32050,32209 -start- 
-							 	</ui:remove>
-								<ui:remove> #25791 start </ui:remove>
 								<p:menuitem id="mItmAwd" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[0] and QTStatusConst.QT_AWARDED eq scQt.qtStatus.statusId}"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewQTLOAContractDtls(scQt,view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<ui:remove> #25791 end </ui:remove>
-								<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									styleClass="commandLink_link"
-									rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and !qTDetailBB.isUpdatable(scQt.qtStatus.statusId,scQt.qtNo)}"
-									icon="ui-icon-edit"
-									action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}"
-									partialSubmit="true" process="@this" />
-								<!-- 32050,32209 -end- -->
-								<!-- 37978 - Start -->
-								<ui:remove> #25791 start </ui:remove>
+							<!-- 32050,32209 -start- -->
+							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
+								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and !qTDetailBB.isUpdatable(scQt.qtStatus.statusId,scQt.qtNo)}"
+								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
+								partialSubmit="true" process="@this"/>
+							<!-- 32050,32209 -end- -->
+							<!-- 37978 - Start -->
 								<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED ne scQt.qtStatus.statusId}"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<!-- 37978 - End -->
 								<p:menuitem id="meI3Com" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED eq scQt.qtStatus.statusId}"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewQTLOAContractDtls(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<ui:remove> #25791 end </ui:remove>
-								<p:menuitem id="menuItem4" value="#{lbl['lbl.btn.view']}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									styleClass="commandLink_link"
-									rendered="#{scQt.actionRender[3]}" icon="ui-icon-view"
-									action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}"
-									partialSubmit="true" process="@this" />
-								<p:menuitem id="menuItem5" value="#{lbl['lbl.btn.view']}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									styleClass="commandLink_link"
-									rendered="#{scQt.actionRender[4]}" icon="ui-icon-view"
-									action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}"
-									partialSubmit="true" process="@this" />
-								<p:menuitem id="menuItem6" value="#{lbl['lbl.btn.view']}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									styleClass="commandLink_link"
-									rendered="#{scQt.actionRender[5]}" icon="ui-icon-view"
-									action="#{qTDetailBB.viewSupplierProposalDetailsGen(scQt, view.viewId)}"
-									partialSubmit="true" process="@this" />
-								<p:menuitem id="menuItem7" value="#{lbl['lbl.btn.view']}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									styleClass="commandLink_link"
-									rendered="#{scQt.actionRender[6]}" icon="ui-icon-view"
-									action="#{qTDetailBB.viewSupplierProposalDetailsGen(scQt, view.viewId)}"
-									partialSubmit="true" process="@this" />
-								<p:menuitem id="menuItem8" value="#{lbl['lbl.btn.view']}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									styleClass="commandLink_link"
-									rendered="#{scQt.actionRender[7]}" icon="ui-icon-view"
-									action="#{qTDetailBB.viewFinalizationSupplierDetails(scQt, view.viewId)}"
-									partialSubmit="true" process="@this" />
-								<p:menuitem id="menuItem9" value="#{lbl['lbl.btn.publish']}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									rendered="#{scQt.actionRender[8]}"
-									action="#{qTDetailBB.publishQT(scQt)}" partialSubmit="true"
-									process="@this" update="searchQTs" />
-								<p:menuitem id="menuItem10" value="#{lbl['lbl.btn.close']}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									rendered="#{scQt.actionRender[9]}"
-									action="#{qTDetailBB.closeProposal(scQt)}" partialSubmit="true"
-									process="@this" update="searchQTs" />
-								<ui:remove>
-						          Bug #27412 START 
-	                              </ui:remove>
+							<!-- 37978 - End -->
+							<p:menuitem id="menuItem4" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
+								rendered="#{scQt.actionRender[3]}"
+								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
+								partialSubmit="true" process="@this"/>
+							<p:menuitem id="menuItem5" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
+								rendered="#{scQt.actionRender[4]}"
+								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
+								partialSubmit="true" process="@this"/>
+							<p:menuitem id="menuItem6" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
+								rendered="#{scQt.actionRender[5]}"
+								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(scQt, view.viewId)}"
+								partialSubmit="true" process="@this"/>
+							<p:menuitem id="menuItem7" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
+								rendered="#{scQt.actionRender[6]}"
+								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(scQt, view.viewId)}"
+								partialSubmit="true" process="@this"/>
+							<p:menuitem id="menuItem8" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
+								rendered="#{scQt.actionRender[7]}"
+								icon="ui-icon-view" action="#{qTDetailBB.viewFinalizationSupplierDetails(scQt, view.viewId)}"
+								partialSubmit="true" process="@this"/>
+							<ui:remove>#25791 end</ui:remove>								
+							<p:menuitem id="menuItem9" value="#{lbl['lbl.btn.publish']}" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" 
+								rendered="#{scQt.actionRender[8]}"
+								action="#{qTDetailBB.publishQT(scQt)}"
+								partialSubmit="true" process="@this" update="searchQTs"/>
+							<p:menuitem id="menuItem10" value="#{lbl['lbl.btn.close']}" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();" 
+								rendered="#{scQt.actionRender[9]}"
+								action="#{qTDetailBB.closeProposal(scQt)}"
+								partialSubmit="true" process="@this" update="searchQTs"/>
+							<!-- Bug #27412 START -->
 								<ui:remove>#25791 start</ui:remove>
 								<p:menuitem id="menuItem12" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -250,117 +226,101 @@
 									rendered="#{scQt.actionRender[12]}" icon="ui-icon-view"
 									action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<ui:remove>
-						          Bug #27412 END 
-                                </ui:remove>
-								<ui:remove>#25791 end</ui:remove>
-							</p:menuButton>
-						</p:column>
-						<!-- ***17376#55 - end -->
-						<!-- 19336,25201,17376,19287 -start- -->
-					</p:dataTable>
+								<ui:remove>#25791 end</ui:remove>									
+							<!-- Bug #27412 END -->
+
+						</p:menuButton>
+					</p:column>
+					<!-- ***17376#55 - end -->
+				<!-- 19336,25201,17376,19287 -start- -->
+				</p:dataTable>
 				</div>
-
+	
 				<!-- Loa/Loi Data Table -->
-				<div id="searchQTLoaLoiDiv" style="display: none">
-					<p:dataTable id="searchQTLoaLois" value="#{dataModelLoiLoa}"
-						var="listItem"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						rowIndexVar="index" lazy="true" rows="10">
-
-						<ac:paginator for="searchQTLoaLois" />
-
-						<ui:param name="scQt" value="#{listItem.scLoiLoa.scQt}" />
-
-						<!-- 25201 -start- -->
-						<c:choose>
-							<c:when test="#{listType eq 'loiList'}">
-								<!-- 30418 -start- -->
-								<ui:param name="procurementMode" value="#{scQt.procurementMode}" />
-								<!-- 30418 -end- -->
-								<ui:param name="loiLoaStatus"
-									value="#{listItem.scLoiWorkflowStatusesSize gt 0?qTDetailBB.getStatusIdToDisplay(listItem.scLoiWorkFlowStatuses):''}" />
-							</c:when>
-							<c:when test="#{listType eq 'loaList'}">
-								<!-- 30418 -start- -->
-								<ui:param name="procurementMode"
-									value="#{listItem.procurementMode}" />
-								<!-- 30418 -end- -->
-								<ui:param name="loiLoaStatus"
-									value="#{listItem.scLoaWorkflowStatusesSize gt 0?qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses):''}" />
-							</c:when>
-						</c:choose>
-						<!-- 25201 -end- -->
-
-						<c:if test="#{listType eq 'loaList' or listType eq 'loiList'}">
-							<p:column headerText="#{itemNoHeader}" style="width:50px;">
-								<h:outputText value="#{listItem.docNo}" />
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sc.qtn.no']}"
-								style="width:50px;">
-								<h:outputText value="#{listItem.scLoiLoa.scQt.qtNo}" />
-							</p:column>
-						</c:if>
-
-						<p:column headerText="#{lbl['lbl.sc.title']}">
-							<h:outputText value="#{scQt.qtTitle}"
-								style="white-space: normal;word-wrap: break-word; min-width:200px" />
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
-							style="width:100px;">
+				<div id="searchQTLoaLoiDiv" style="display:none">
+				<p:dataTable id="searchQTLoaLois"
+					value="#{dataModelLoiLoa}" var="listItem"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowIndexVar="index" lazy="true" rows="10" >
+					
+					<ac:paginator for="searchQTLoaLois" />
+			
+					<ui:param name="scQt" value="#{listItem.scLoiLoa.scQt}" />
+					
+					<!-- 25201 -start- -->					
+					<c:choose>
+						<c:when test="#{listType eq 'loiList'}">
 							<!-- 30418 -start- -->
-							<h:outputText
-								value="#{qTDetailBB.getParameterDesc(procurementMode)}" />
+							<ui:param name="procurementMode" value="#{scQt.procurementMode}" />
 							<!-- 30418 -end- -->
+							<ui:param name="loiLoaStatus" value="#{listItem.scLoiWorkflowStatusesSize gt 0?qTDetailBB.getStatusIdToDisplay(listItem.scLoiWorkFlowStatuses):''}" />
+						</c:when>
+						<c:when test="#{listType eq 'loaList'}">
+							<!-- 30418 -start- -->						
+							<ui:param name="procurementMode" value="#{listItem.procurementMode}" />
+							<!-- 30418 -end- -->							
+							<ui:param name="loiLoaStatus" value="#{listItem.scLoaWorkflowStatusesSize gt 0?qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses):''}" />
+						</c:when>
+					</c:choose>
+					<!-- 25201 -end- -->					
+					
+					<c:if test="#{listType eq 'loaList' or listType eq 'loiList'}">
+						<p:column headerText="#{itemNoHeader}" style="width:50px;">
+							<h:outputText value="#{listItem.docNo}" />
 						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:50px;">
+							<h:outputText value="#{listItem.scLoiLoa.scQt.qtNo}" />
+						</p:column>
+					</c:if>
+					
+					<p:column headerText="#{lbl['lbl.sc.title']}">
+						<h:outputText value="#{scQt.qtTitle}" 
+							style="white-space: normal;word-wrap: break-word; min-width:200px"/>
+					</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.created.date']}"
-							style="width:80px;">
-							<h:outputText value="#{scQt.createdDate}">
-								<f:convertDateTime
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</h:outputText>
-						</p:column>
+					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
+						style="width:100px;">
+						<!-- 30418 -start- -->						
+						<h:outputText
+							value="#{qTDetailBB.getParameterDesc(procurementMode)}" />
+						<!-- 30418 -end- -->
+					</p:column>
+			
+					<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.createdDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+			
+					<p:column headerText="#{lbl['lbl.sc.published.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.publishDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+			
+					<p:column headerText="#{lbl['lbl.sc.closing.date']}" style="width:80px;">
+						<h:outputText value="#{scQt.closingDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.published.date']}"
-							style="width:80px;">
-							<h:outputText value="#{scQt.publishDate}">
-								<f:convertDateTime
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</h:outputText>
-						</p:column>
+					<!-- Bug #27412 START -->
+					<p:column headerText="#{lbl['lbl.sc.status']}" rendered="#{!qTDetailBB.isMofSupplier()}" style="white-space: normal;word-wrap: break-word; width:100px;">
+						<c:choose>
+						<c:when test="#{listType eq 'loiList'}">
+							<h:outputText value="#{listItem.scLoiWorkflowStatusesSize gt 0?qTDetailBB.getStatusDescById(qTDetailBB.getStatusIdToDisplay(listItem.scLoiWorkFlowStatuses)):''}"/>
+						</c:when>
+						<c:when test="#{listType eq 'loaList'}">
+							<h:outputText value="#{listItem.scLoaWorkflowStatusesSize gt 0?qTDetailBB.getStatusDescById(qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses)):''}"/>
+						</c:when>
+						</c:choose>
+					</p:column>
+					<!-- Bug #27412 END -->
 
-						<p:column headerText="#{lbl['lbl.sc.closing.date']}"
-							style="width:80px;">
-							<h:outputText value="#{scQt.closingDate}">
-								<f:convertDateTime
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</h:outputText>
-						</p:column>
-						<ui:remove>
-						Bug #27412 START
-					</ui:remove>
-						<p:column headerText="#{lbl['lbl.sc.status']}"
-							rendered="#{!qTDetailBB.isMofSupplier()}"
-							style="white-space: normal;word-wrap: break-word; width:100px;">
-							<c:choose>
-								<c:when test="#{listType eq 'loiList'}">
-									<h:outputText
-										value="#{listItem.scLoiWorkflowStatusesSize gt 0?qTDetailBB.getStatusDescById(qTDetailBB.getStatusIdToDisplay(listItem.scLoiWorkFlowStatuses)):''}" />
-								</c:when>
-								<c:when test="#{listType eq 'loaList'}">
-									<h:outputText
-										value="#{listItem.scLoaWorkflowStatusesSize gt 0?qTDetailBB.getStatusDescById(qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses)):''}" />
-								</c:when>
-							</c:choose>
-						</p:column>
-						<ui:remove>
-						Bug #27412 END
-					</ui:remove>
-
-						<p:column headerText="#{lbl['lbl.sc.action']}"
-							style="width:6%;text-align: center;">
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 							<p:menuButton value="#{lbl['lbl.btn.option']}">
 								<ui:remove>#25791 start </ui:remove>
 								<p:menuitem value="#{lbl['lbl.btn.view']}"
@@ -384,8 +344,8 @@
 								<ui:remove> #25791 end </ui:remove>
 							</p:menuButton>
 							<!-- 19336,25201,17376,19287 -end- -->
-						</p:column>
-					</p:dataTable>
+					</p:column>
+				</p:dataTable>
 				</div>
 				<ui:remove>#25791 -start-</ui:remove>
 				<div id="searchBidScheduleDiv" style="display: none">

@@ -550,7 +550,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 					return resDto.getUserResultBean();
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmUser>();
 				}
 			} finally {
 				userSO = null;
@@ -633,7 +633,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						return resDTO.getCategoryResultBean();
 					}
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<Object[]>();
 				}
 
 			} catch (Exception e) {
@@ -693,7 +693,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 							return resDto.getOrgProfileResultBean();
 						}
 					} else {
-						return new SearchResultBean();
+						return new SearchResultBean<PmOrgProfile>();
 					}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -768,7 +768,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					return iSearchResultBean;
 
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmUserGroup>();
 				}
 			} finally {
 				groupSO = null;
@@ -823,7 +823,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 					return resDto.getMeasurementSearchResultBean();
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmUom>();
 				}
 			} finally {
 				uomSO = null;
@@ -870,7 +870,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 					return resDto.getEducationSearchResultBean();
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmEduField>();
 				}
 			} finally {
 				eduSO = null;
@@ -917,7 +917,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 					return resDto.getCertBodyResultBean();
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmCertBody>();
 				}
 			} finally {
 				pcbSO = null;
@@ -1001,7 +1001,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						return resDto.getFinaceialOrgResultBean();
 					}
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmFinancialOrg>();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1117,8 +1117,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					// #25790 - End
 
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 				
 				return resDTO.getResultBean();

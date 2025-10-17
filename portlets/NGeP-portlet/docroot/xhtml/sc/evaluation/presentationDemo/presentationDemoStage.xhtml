@@ -29,11 +29,27 @@
 
 					<ui:include src="presentationdemo.xhtml"></ui:include>
 
-				</c:if> <c:if
+				</c:if>
+				<ui:remove>#28784 remove this if open below for 4 ser - Start</ui:remove>
+				<c:if
 					test="#{evaluationBackingBean.managedBean.presentationDemoActiveIndex eq '1'}">
 
 					<ui:include src="presentationDemoSummary.xhtml"></ui:include>
 				</c:if></td>
+				<ui:remove>#28784 remove this if open below for 4 ser - End</ui:remove>
+				<!--
+				<ui:remove>#28784 WIP @idham - Start</ui:remove>
+				<c:if
+					test="#{evaluationBackingBean.managedBean.presentationDemoActiveIndex eq '1' and evaluationBackingBean.managedBean.demoWip}">
+					<ui:include src="presentationDemoSummary.xhtml"></ui:include>
+				</c:if>
+				<c:if
+					test="#{evaluationBackingBean.managedBean.presentationDemoActiveIndex eq '1' and !evaluationBackingBean.managedBean.demoWip}">
+					<ui:include src="presentationDemoPackageSummary.xhtml">
+					</ui:include>
+				</c:if></td>
+				<ui:remove>#28784 WIP @idham - End</ui:remove>
+				-->
 		</tr>
 	</table>
 
