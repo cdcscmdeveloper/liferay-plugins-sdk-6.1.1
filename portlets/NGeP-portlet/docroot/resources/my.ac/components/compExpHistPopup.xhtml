@@ -57,6 +57,16 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.comp.exp.update.contract.status']}"
 							style="text-align: center !important;" />
+						<p:outputPanel rendered="#{cc.attrs.mBean.consultant}">
+							<p:column headerText="#{lbl['lbl.sm.comp.exp.update.proj.loc']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.update.serv.provide']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
+								style="text-align: center !important;" />
+						</p:outputPanel>
 						<p:column
 							headerText="#{lbl['lbl.sm.comp.exp.master.list.cat.code']}"
 							style="text-align: center !important;" />
@@ -97,8 +107,9 @@
 				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
-					<h:outputText
-						value="#{history.fileReferenceNo}#{history.fileExtensionNo}" />
+					<h:outputText value="#{history.fileReferenceNo}" />
+					<p:spacer width="3px" />
+					<h:outputText value="#{history.fileExtensionNo}" />
 				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
@@ -106,7 +117,10 @@
 				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
-					<h:outputText value="#{history.contractValue}" />
+					<h:outputText value="#{history.contractValue}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
@@ -147,6 +161,25 @@
 						rendered="#{history.contractStatus eq ParameterConst.contractStatusTerminated}"
 						value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
 				</p:column>
+				<p:outputPanel rendered="#{cc.attrs.mBean.consultant}">
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText value="#{history.projectLoc}" />
+					</p:column>
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText value="#{history.workServDesc}" />
+					</p:column>
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText
+							style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+							value="#{history.consultanFee}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+				</p:outputPanel>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 					<ui:repeat var="catCode" value="#{history.compExpCatMasterHists}">
@@ -158,8 +191,12 @@
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 					<ui:repeat value="#{history.compExpMasterHistDocs}" var="doc">
-						<h:commandLink id="file" ajax="false"
-							value="#{cc.attrs.bBean.getShortFileName(doc.fileName)}">
+						<h:outputText
+							value="#{cc.attrs.bBean.getShortFileName(doc.fileName)}" />
+						<p:spacer width="3px" />
+						<h:commandLink id="file" ajax="false">
+							<p:graphicImage value="/css/images/design/download.png"
+								style="margin-right:2px;" />
 							<p:fileDownload
 								value="#{cc.attrs.bBean.commonDownload(doc.filePath,doc.fileName)}" />
 							<f:ajax process="@form" update=":form"

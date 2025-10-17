@@ -32,6 +32,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmCompExpCatDraft;
 import my.ep.persistence.entity.sm.SmCompExpCatMaster;
 import my.ep.persistence.entity.sm.SmCompExpCatMasterHistory;
@@ -165,6 +166,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void redirectToDraftUpdate(SmCompExpDraft draft) {
 		this.getManagedBean().setDraftUpdate(true);
 		this.getManagedBean().setMasterUpdate(false);
+		this.getManagedBean().setMasterNew(false);
 		initSelectedDraft(draft);
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
 		SelectItem clientTypeFederalItem = new SelectItem();
@@ -226,6 +228,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			expDate = this.getManagedBean().getSelectedMaster().getContractExpDate();
 			effDate = this.getManagedBean().getSelectedMaster().getContractEffDate();
 			sourceType = this.getManagedBean().getSelectedMaster().getSourceType().getParameterId();
+		} else if (this.getManagedBean().isMasterNew()) {
+			expDate = this.getManagedBean().getNewMaster().getContractExpDate();
+			effDate = this.getManagedBean().getNewMaster().getContractEffDate();
+			sourceType = this.getManagedBean().getNewMaster().getSourceType().getParameterId();
 		}
 
 		if (null == effDate) {
@@ -241,6 +247,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				this.getManagedBean().getSelectedDraft().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
 			} else if (this.getManagedBean().isMasterUpdate()) {
 				this.getManagedBean().getSelectedMaster().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
+			} else if (this.getManagedBean().isMasterNew()) {
+				this.getManagedBean().getNewMaster().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
 			}
 		}
 
@@ -366,7 +374,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		smCompExpCatMaster.setCategoryL2(new PmCategoryL2());
 		smCompExpCatMaster.setCategoryL3(new PmCategoryL3());
 
-		this.getManagedBean().getSelectedMaster().getCompExpMasterCats().add(smCompExpCatMaster);
+		if (this.getManagedBean().isMasterUpdate()) {
+			this.getManagedBean().getSelectedMaster().getCompExpMasterCats().add(smCompExpCatMaster);
+		} else if (this.getManagedBean().isMasterNew()) {
+			this.getManagedBean().getNewMaster().getCompExpMasterCats().add(smCompExpCatMaster);
+		}
 		this.getManagedBean().setSmCompExpCatMasterNotComplete(true);
 	}
 
@@ -383,6 +395,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
 		} else if (this.getManagedBean().isMasterUpdate()) {
 			supplier = this.getManagedBean().getSelectedMaster().getSmSupplier();
+		} else if (this.getManagedBean().isMasterNew()) {
+			supplier = this.getManagedBean().getSupplier();
 		}
 		reqDTO.setSupplierTypeCode(supplier.getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(supplier.getBusinessType());
@@ -402,13 +416,17 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Listener for clienType
 	 */
 	public void clientTypeChange() {
-		String oriAgencyName = this.getManagedBean().getSelectedDraft().getOriAgencyName();
-		if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_NON_FEDERAL)) {
-			if (null != oriAgencyName && !oriAgencyName.isEmpty()) {
+		if (this.getManagedBean().isDraftUpdate()) {
+			String oriAgencyName = this.getManagedBean().getSelectedDraft().getOriAgencyName();
+			if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_NON_FEDERAL)) {
 				this.getManagedBean().getSelectedDraft().setAgencyName(oriAgencyName);
+			} else if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_FEDERAL)) {
+				this.getManagedBean().getSelectedDraft().setAgencyName(null);
 			}
-		} else if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_FEDERAL)) {
-			this.getManagedBean().getSelectedDraft().setAgencyName(null);
+			this.getManagedBean().getSelectedDraft().setOrgProfile(null);
+		} else if (this.getManagedBean().isMasterNew()) {
+			this.getManagedBean().getNewMaster().setAgencyName(null);
+			this.getManagedBean().getNewMaster().setOrgProfile(null);
 		}
 	}
 
@@ -445,6 +463,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			String fileNo = this.getManagedBean().getSelectedMaster().getFileReferenceNo();
 			this.getManagedBean().getSelectedMaster().setFileReferenceNo(cleanFileReferenceNo(fileNo));
 		}
+		if (this.getManagedBean().isMasterNew() && null != this.getManagedBean().getNewMaster().getFileReferenceNo()
+				&& !this.getManagedBean().getNewMaster().getFileReferenceNo().isEmpty()) {
+			String fileNo = this.getManagedBean().getNewMaster().getFileReferenceNo();
+			this.getManagedBean().getNewMaster().setFileReferenceNo(cleanFileReferenceNo(fileNo));
+		}
 	}
 
 	private String cleanFileReferenceNo(String input) {
@@ -468,6 +491,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				&& !this.getManagedBean().getSelectedMaster().getFileExtensionNo().isEmpty()) {
 			String fileNo = this.getManagedBean().getSelectedMaster().getFileExtensionNo();
 			this.getManagedBean().getSelectedMaster().setFileExtensionNo(cleanFileExtensionNo(fileNo));
+		}
+		if (this.getManagedBean().isMasterNew() && null != this.getManagedBean().getNewMaster().getFileExtensionNo()
+				&& !this.getManagedBean().getNewMaster().getFileExtensionNo().isEmpty()) {
+			String fileNo = this.getManagedBean().getNewMaster().getFileExtensionNo();
+			this.getManagedBean().getNewMaster().setFileExtensionNo(cleanFileExtensionNo(fileNo));
 		}
 	}
 
@@ -648,6 +676,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL2().setCategoryL2Id(null);
 			this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
 			supplier = this.getManagedBean().getSelectedMaster().getSmSupplier();
+		} else if (this.getManagedBean().isMasterNew()) {
+			this.getManagedBean().getNewMaster().getCompExpMasterCats().get(index).getCategoryL2().setCategoryL2Id(null);
+			this.getManagedBean().getNewMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+			supplier = this.getManagedBean().getSupplier();
 		}
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL1Id(categoryL1Id);
@@ -679,8 +711,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
 			supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
 		} else if (this.getManagedBean().isMasterUpdate()) {
-			supplier = this.getManagedBean().getSelectedMaster().getSmSupplier();
 			this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+			supplier = this.getManagedBean().getSelectedMaster().getSmSupplier();
+		} else if (this.getManagedBean().isMasterNew()) {
+			this.getManagedBean().getNewMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+			supplier = this.getManagedBean().getSupplier();
 		}
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
@@ -727,9 +762,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 *            int
 	 */
 	public void checkDuplicateMasterCatCode(Long categoryL3Id, int index) {
+		List<SmCompExpCatMaster> catList = new ArrayList<>();
+		if (this.getManagedBean().isMasterUpdate()) {
+			catList = this.getManagedBean().getSelectedMaster().getCompExpMasterCats();
+		} else if (this.getManagedBean().isMasterNew()) {
+			catList = this.getManagedBean().getNewMaster().getCompExpMasterCats();
+		}
+				
 		int i = 0;
 		// Expected Max Size in loop (30) based on NGEP_PDS database
-		for (SmCompExpCatMaster cat : this.getManagedBean().getSelectedMaster().getCompExpMasterCats()) {
+		for (SmCompExpCatMaster cat : catList) {
 			if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
 				this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
 				this.getManagedBean().setSmCompExpCatMasterNotComplete(true);
@@ -1093,8 +1135,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @param selectedMaster
 	 */
 	public void redirectToUpdateMaster(SmCompExpMaster selectedMaster) {
-		this.getManagedBean().setMasterUpdate(true);
 		this.getManagedBean().setDraftUpdate(false);
+		this.getManagedBean().setMasterUpdate(true);
+		this.getManagedBean().setMasterNew(false);
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
 		if (selectedMaster.getClientType().equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
 			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.master.update.fed.header.self.declared", null));
@@ -1328,6 +1371,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Redirect to Add New Company Experience
 	 */
 	public void redirectToAddNew() {
+		this.getManagedBean().setDraftUpdate(false);
+		this.getManagedBean().setMasterUpdate(false);
+		this.getManagedBean().setMasterNew(true);
+
 		this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.add.new", null));
 		this.getManagedBean().setNewMaster(new SmCompExpMaster());
 
@@ -1340,6 +1387,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		clientTypeNonFederalItem.setLabel(SmCommonUtil.getMessage(lblClientTypeNonFed, null));
 		clientTypeNonFederalItem.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
 		this.getManagedBean().getClientTypeItems().add(clientTypeNonFederalItem);
+
+		this.getManagedBean().getNewMaster().setPaymentMethod(new PmParameter());
+		this.getManagedBean().getNewMaster().setProcumentMode(new PmParameter());
+		this.getManagedBean().getNewMaster().setSourceType(new PmParameter());
+		this.getManagedBean().getNewMaster().getSourceType().setParameterId(ParameterConst.SOURCE_TYPE_ID_SM);
+
+		List<SmCompExpCatMaster> catList = new ArrayList<>();
+		this.getManagedBean().getNewMaster().setCompExpMasterCats(catList);
+		addSmCompExpCatMaster();
+		getSupplierMainCatList();
 
 		SmCommonUtil.redirectToPage(smCompExpNewXhtml, "", null, null);
 	}

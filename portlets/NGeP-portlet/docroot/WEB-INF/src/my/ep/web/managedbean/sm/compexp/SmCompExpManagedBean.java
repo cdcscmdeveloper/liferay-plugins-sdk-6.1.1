@@ -85,6 +85,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private boolean tempEffDate;
 	private boolean consultant;
 	private transient IPagingDataModel<SmCompExpDraft> draftQtDataModel = new DraftQtPagingDataModel();
+	private boolean masterNew;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -526,6 +527,14 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setDraftQtDataModel(IPagingDataModel<SmCompExpDraft> draftQtDataModel) {
 		this.draftQtDataModel = draftQtDataModel;
+	}
+
+	public boolean isMasterNew() {
+		return masterNew;
+	}
+
+	public void setMasterNew(boolean masterNew) {
+		this.masterNew = masterNew;
 	}
 
 	private class DraftQtPagingDataModel extends PagingDataModel<SmCompExpDraft> {

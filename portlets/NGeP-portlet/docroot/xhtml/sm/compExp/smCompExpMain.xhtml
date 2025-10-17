@@ -152,8 +152,6 @@
 					</p:column>
 				</p:dataTable>
 			</p:panel>
-
-
 			<p:panel header="#{lbl['lbl.sm.comp.exp.master.list.non.fed.panel']}"
 				toggleable="true">
 				<p:dataTable
@@ -223,12 +221,15 @@
 							action="#{smCompExpBB.redirectToUpdateMaster(masterNonFed)}"
 							oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 							partialSubmit="true" process="@this" update=":form"
-							rendered="#{masterNonFed.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and masterNonFed.recordStatusFlg eq ParameterConst.recordStatusActive}">
+							rendered="#{masterNonFed.recordStatusFlg eq ParameterConst.recordStatusActive}">
 							<p:graphicImage id="actionEditId"
 								value="/css/images/design/edit.png" />
 							<p:tooltip for="actionEditId"
 								value="#{lbl['lbl.sm.comp.exp.master.list.source.type']} #{smCompExpBB.getParameterDesc(ParameterTypeConst.compExpSourceType,masterNonFed.sourceType.parameterCode)}" />
 						</p:commandLink>
+						<p:graphicImage id="actionEditDeleteId"
+							rendered="#{masterNonFed.recordStatusFlg eq ParameterConst.recordStatusDeleted}"
+							value="/css/images/design/ico-view.png" />
 						<p:commandLink
 							action="#{smCompExpBB.initHistPopup(masterNonFed.compExpMasterId)}"
 							oncomplete="blockWidget.hide(),compExpHistPopupWV.show()"
