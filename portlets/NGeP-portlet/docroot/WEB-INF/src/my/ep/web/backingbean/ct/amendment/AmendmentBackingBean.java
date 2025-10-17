@@ -2818,7 +2818,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// End Fix - #33952, #25956
 			//32418 Start
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= 28){ 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= ContractConst.VALUE_OF_28){ 
 
 				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
@@ -2829,8 +2829,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Start Fix - #38613, #33287 - *apply for both contract expired and non-expired
 			// Validation for amendment when extension period - 0 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
-					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0 && ctBackingBean
-							.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)) { // 32418
+					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == ContractConst.VALUE_OF_0 && ctBackingBean
+							.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == ContractConst.VALUE_OF_0)) { // 32418
 
 				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
@@ -5403,7 +5403,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
 //			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(1); // default to 1 month
 			//#32418 - start
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0); // default to 0 month
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(ContractConst.VALUE_OF_0); // default to 0 month
 			//#32418 - end
 			Calendar c = Calendar.getInstance();
 			c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
@@ -5422,7 +5422,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		}
 		else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(ContractConst.VALUE_OF_0);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
@@ -5617,16 +5617,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void onExtensionPeriodChanged() {
 		Calendar c = Calendar.getInstance();
 		//32418 Start
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() <= 0) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() <= ContractConst.VALUE_OF_0) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
 		}
 		
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() <= 0) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() <= ContractConst.VALUE_OF_0) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendDaysPeriod(0);
 		}
 		
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= 28) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendDaysPeriod(27);
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= ContractConst.VALUE_OF_28) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendDaysPeriod(ContractConst.VALUE_OF_27);
 			throw new EpException(MessageConst.ERROR_750074);
 		}
 		
