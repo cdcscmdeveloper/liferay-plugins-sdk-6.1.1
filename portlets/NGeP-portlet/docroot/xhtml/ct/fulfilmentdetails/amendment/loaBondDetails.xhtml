@@ -221,13 +221,20 @@
 	   	</f:facet>	
 	<h:panelGrid columns="2" columnClasses="columnWidth225">		
 			<p:outputLabel value="#{lbl['lbl.ct.new.contract.period']}" />
-			<h:panelGrid columns="3">
-				<p:inputText style="width:120px;" disabled="true" styleClass="ppRightBtn"
+			<h:panelGrid columns="6"> <!-- #32418 -->
+				<p:inputText style="width:200px;" disabled="true" styleClass="ppRightBtn"
 					value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
-						? amendmentBackingBean.calculateNewContractPeriod(true) : ctBackingBean.calculateBondPeriod()}" />
+						? amendmentBackingBean.calculateNewContractPeriod(true) : ctBackingBean.calculateBondPeriod()}" >
+				</p:inputText>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+			<!-- #32418 Start -->
+			<p:inputText id="contractPeriodBondDaysIds" styleClass="ppRightBtn" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendDaysPeriod}" maxlength="3" disabled="true" >
+			</p:inputText>
+			<p:spacer width="2" />
+			<p:outputLabel value="#{lbl['lbl.ct.days']}" />
 			</h:panelGrid>
+			<!-- #32418 End -->
 			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" />
 			<h:panelGrid columns="4">
 			<p:inputText disabled="true" style="width:200px;" styleClass="ppRightBtn"
