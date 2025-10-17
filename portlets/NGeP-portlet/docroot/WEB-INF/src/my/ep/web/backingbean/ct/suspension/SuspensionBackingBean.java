@@ -195,7 +195,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	/**
 	 * This  method used to set retrieve value from BPM or contract maintenance
 	 */
-	@SuppressWarnings("unchecked") //#36726
+	@SuppressWarnings("unchecked") //#36726 || #33287
 	public void setSuspensionContractVer(ContractReqDTO reqDTO){
 		ctBB.renewSesionObject();
 		IContractSuspensionSO contractSuspensionSO= null;
@@ -232,8 +232,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 			/*If statement  for check contact item start*/
 			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
-				CustomUtils.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItemComparator()); //#36726
-
+				CustomUtils.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItemComparator()); //#36726 || #33287
 				for (CtContractItem contractItem : getManagedBean().getContractVer().getCtContractItems()) {
 					getManagedBean().getContractItemList().add(contractItem);
 					/*Get latest contract item and map with the sc request item*/

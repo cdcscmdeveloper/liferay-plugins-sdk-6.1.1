@@ -1,0 +1,32 @@
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.employee.employee') ($workshopName)</u>
+<br /><br />
+
+<table  class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%">No</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.employee.specialization')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.employee.name')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.employee.idtype')</th>
+			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.worker.icno')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.worker.experience')</th>
+		</tr>
+		
+		#set($workerLs = $workshop.smSvWorkers)
+		#if($review && $workerLs != $null && $workerLs.size() > 0)
+			#foreach($worker in $workerLs)
+			<tr>
+				<td>$velocityCount</td>
+				<td>$!worker.expertise</td>
+				<td>$!worker.name</td>
+				<td>$!workerIdMap.get($!worker.identificationType.parameterCode)</td>
+				<td>$!worker.identificationNo</td>
+				<td>$!worker.workExpYear</td>
+			</tr>
+			#set($rowCounter = $rowCounter + 1)
+			#end
+		#else
+			<tr>
+				<td colspan="6" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+			</tr>
+		#end
+</table>
