@@ -155,6 +155,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void redirectToDraft() {
 		this.getManagedBean().getDraftSmDataModel().reloadData();
 		this.getManagedBean().getDraftCtDataModel().reloadData();
+		this.getManagedBean().getDraftQtDataModel().reloadData();
 		SmCommonUtil.redirectToPage(smCompExpDraftXhtml, "", null, null);
 	}
 
@@ -999,12 +1000,23 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	/**
 	 * Delete selected Draft
 	 */
-	public void delSmCompExpDraft() {
+	public void delSmCompExpDraft(boolean duplicate) {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
+			if (duplicate) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775236,
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775237,
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
 			redirectToDraft();
 		}
 	}
@@ -1069,7 +1081,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		resDTO = getSmCompExpSo().declareDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
 			deactivateDraft();
-			redirectToDraft();
 		}
 	}
 
@@ -1089,6 +1100,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deactivateDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775236,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			redirectToDraft();
 		}
 	}
@@ -1227,31 +1242,61 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		String fileReferenceNo = master.getFileReferenceNo();
 		String fileExtensionNo = master.getFileExtensionNo();
 		error = validateDetail(error, clienType, agencyName, fileReferenceNo, fileExtensionNo);
-		
+
 		if (this.getManagedBean().isMasterNew()) {
 			String title = master.getTitle();
 			BigDecimal contractValue = master.getContractValue();
 			PmParameter procumentMode = master.getProcumentMode();
 			error = validateNewDetail(error, title, contractValue, procumentMode);
-			if(this.getManagedBean().isConsultant()){
+			if (this.getManagedBean().isConsultant()) {
 				String projectLoc = master.getProjectLoc();
 				String workServDesc = master.getWorkServDesc();
 				BigDecimal consultantFee = master.getConsultantFee();
 				error = validateNewConsultant(error, projectLoc, workServDesc, consultantFee);
 			}
-		}	
-		
+		}
+
 		Date contractEffDate = master.getContractExpDate();
 		Date contractExpDate = master.getContractExpDate();
 		error = validateDate(error, contractEffDate, contractExpDate);
-		
+
 		Long sourceType = master.getSourceType().getParameterId();
 		List<SmCompExpMasterDoc> smCompExpDocList = master.getCompExpMasterDocs();
 		error = validateList(error, sourceType, smCompExpDocList);
 
 		if (!error && update) {
 			updateSmComExpMaster(false);
+		} else if (!error) {
+			saveMaster(master, clienType);
 		}
+	}
+
+	private void saveMaster(SmCompExpMaster master, String clienType) throws IOException {
+		Long masterId = null;
+		if (clienType.equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setPtjId(master.getOrgProfile().getOrgProfileId());
+			reqDTO.setFileReferenceNo(master.getFileReferenceNo());
+			reqDTO.setFileExtensionNo(master.getFileExtensionNo());
+			masterId = getSmCompExpSo().checkDuplicate(reqDTO);
+		}
+		if (masterId != null) {
+			RequestContext.getCurrentInstance().execute("duplicateDialogWV.show();");
+		} else {
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setDeclareMaster(master);
+			SmCompExpResDTO resDTO;
+			resDTO = getSmCompExpSo().declareDraft(reqDTO);
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775236,
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				proceedAfterTnC();
+			}
+
+		}
+
 	}
 
 	private boolean validateNewConsultant(boolean err, String projectLoc, String workServDesc, BigDecimal consultantFee) {
@@ -1290,6 +1335,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		if (null == contractValue) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775232,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		if (null == procumentMode) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1407,6 +1459,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				if (delete) {
 					delSmCompExpMaster();
 				} else {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775238,
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					proceedAfterTnC();
 				}
 			}
@@ -1439,6 +1495,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteMaster(reqDTO);
 		if (resDTO.isSuccessful()) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775237,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			proceedAfterTnC();
 		}
 	}

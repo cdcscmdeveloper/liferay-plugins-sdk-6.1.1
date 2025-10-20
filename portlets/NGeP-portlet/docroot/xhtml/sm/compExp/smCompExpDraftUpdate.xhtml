@@ -534,7 +534,7 @@
 				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate']}"
 				escape="false" />
 			<div align="right">
-				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}"
+				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft(true)}"
 					onclick="delDuplicateDialogWV.hide();"
 					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 					process="@form" update=":form"
@@ -549,7 +549,7 @@
 			message="#{lbl['lbl.sm.comp.exp.draft.delete.msg']}" severity="alert"
 			widgetVar="confirmDelDraftDialogWV">
 			<div align="right">
-				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}"
+				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft(false)}"
 					onclick="confirmDelDraftDialogWV.hide();"
 					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 					process="@form" update=":form"

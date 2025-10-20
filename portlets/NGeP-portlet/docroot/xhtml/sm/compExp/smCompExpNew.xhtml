@@ -432,5 +432,16 @@
 					onclick="confirmDelSuppDocDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
+		<p:dialog dynamic="true" height="100" id="duplicate" modal="true"
+			resizable="false" widgetVar="duplicateDialogWV" width="350px"
+			styleClass="pop_up_top">
+			<h:outputText
+				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate.ref.no']}"
+				escape="false" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.comp.exp.master.popup.btn.ok']}"
+					onclick="delDuplicateDialogWV.hide();" />
+			</div>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
