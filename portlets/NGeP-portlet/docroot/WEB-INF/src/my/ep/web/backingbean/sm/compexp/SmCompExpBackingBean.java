@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.compexp;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -295,13 +296,17 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	private void initSuppDoc() {
 		List<SmCompExpMasterDoc> smCompExpDocList = new ArrayList<>();
-		this.getManagedBean().setSmCompExpDocList(smCompExpDocList);
 
 		String regNo = "";
 		if (this.getManagedBean().isDraftUpdate()) {
 			regNo = this.getManagedBean().getSelectedDraft().getSmSupplier().getRegNo();
+			this.getManagedBean().setSmCompExpDocList(smCompExpDocList);
 		} else if (this.getManagedBean().isMasterUpdate()) {
 			regNo = this.getManagedBean().getSelectedMaster().getSmSupplier().getRegNo();
+			this.getManagedBean().getSelectedMaster().setCompExpMasterDocs(smCompExpDocList);
+		} else if (this.getManagedBean().isMasterNew()) {
+			regNo = this.getManagedBean().getNewMaster().getSmSupplier().getRegNo();
+			this.getManagedBean().getNewMaster().setCompExpMasterDocs(smCompExpDocList);
 		}
 		String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_COMP_EXP_FILE_PATH) + regNo + "/"
 				+ DateUtils.dateToString(filePathDateFormat, Calendar.getInstance().getTime()) + "/";
@@ -523,6 +528,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				this.getManagedBean().getSmCompExpDocList().add(docFile);
 			} else if (this.getManagedBean().isMasterUpdate()) {
 				this.getManagedBean().getSelectedMaster().getCompExpMasterDocs().add(docFile);
+			} else if (this.getManagedBean().isMasterNew()) {
+				this.getManagedBean().getNewMaster().getCompExpMasterDocs().add(docFile);
 			}
 
 			commonUploadFile(event, filePath);
@@ -547,7 +554,13 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpMasterDoc suppDoc = this.getManagedBean().getSmCompExpDoc();
 
 		if (null != suppDoc) {
-			this.getManagedBean().getSmCompExpDocList().remove(suppDoc);
+			if (this.getManagedBean().isDraftUpdate()) {
+				this.getManagedBean().getSmCompExpDocList().remove(suppDoc);
+			} else if (this.getManagedBean().isMasterUpdate()) {
+				this.getManagedBean().getSelectedMaster().getCompExpMasterDocs().remove(suppDoc);
+			} else if (this.getManagedBean().isMasterNew()) {
+				this.getManagedBean().getNewMaster().getCompExpMasterDocs().remove(suppDoc);
+			}
 		}
 
 		this.getManagedBean().setSmCompExpDoc(null);
@@ -583,11 +596,17 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void selectAllMasterCatCodes() {
 		List<SmCompExpCatMaster> selectedList = new ArrayList<>();
+		List<SmCompExpCatMaster> catList = new ArrayList<>();
+		if (this.getManagedBean().isMasterUpdate()) {
+			catList = this.getManagedBean().getSelectedMaster().getCompExpMasterCats();
+		} else if (this.getManagedBean().isMasterNew()) {
+			catList = this.getManagedBean().getNewMaster().getCompExpMasterCats();
+		}
 
 		if (this.getManagedBean().isSelectedAll()) {
 			this.getManagedBean().setSelected(true);
 			// Expected Max Size in loop (30) based on NGEP_PDS database
-			for (SmCompExpCatMaster cat : this.getManagedBean().getSelectedMaster().getCompExpMasterCats()) {
+			for (SmCompExpCatMaster cat : catList) {
 				cat.setSelected(true);
 				selectedList.add(cat);
 			}
@@ -643,7 +662,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			selectedList = new ArrayList<>();
 		}
 
-		SmCompExpCatMaster selected = this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index);
+		SmCompExpCatMaster selected = new SmCompExpCatMaster();
+		if (this.getManagedBean().isMasterUpdate()) {
+			selected = this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index);
+		} else if (this.getManagedBean().isMasterNew()) {
+			selected = this.getManagedBean().getNewMaster().getCompExpMasterCats().get(index);
+		}
 
 		if (selected.isSelected()) {
 			selected.setSelected(true);
@@ -768,12 +792,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else if (this.getManagedBean().isMasterNew()) {
 			catList = this.getManagedBean().getNewMaster().getCompExpMasterCats();
 		}
-				
+
 		int i = 0;
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatMaster cat : catList) {
 			if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
-				this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+				if (this.getManagedBean().isMasterUpdate()) {
+					this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+				} else if (this.getManagedBean().isMasterNew()) {
+					this.getManagedBean().getNewMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+				}
 				this.getManagedBean().setSmCompExpCatMasterNotComplete(true);
 				throw new EpException(MessageConst.ERROR_775222);
 			}
@@ -810,7 +838,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Delete selected Master Code Category
 	 */
 	public void delSmCompExpCatMaster() {
-		List<SmCompExpCatMaster> catList = this.getManagedBean().getSelectedMaster().getCompExpMasterCats();
+		List<SmCompExpCatMaster> catList = new ArrayList<>();
+		if (this.getManagedBean().isMasterUpdate()) {
+			catList = this.getManagedBean().getSelectedMaster().getCompExpMasterCats();
+		} else if (this.getManagedBean().isMasterNew()) {
+			catList = this.getManagedBean().getNewMaster().getCompExpMasterCats();
+		}
 		List<SmCompExpCatMaster> selectedList = this.getManagedBean().getSelectedSmCompExpCatMaster();
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatMaster selected : selectedList) {
@@ -849,7 +882,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		error = validateList(error, sourceType, smCompExpDocList);
 
 		if (!error) {
-			if (null != this.getManagedBean().getSelectedDraft().getOrgProfile()) {
+			if (clienType.equals(ParameterConst.CLIENT_TYPE_FEDERAL)) {
 				SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 				reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
 				reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
@@ -1183,22 +1216,87 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void onSaveMaster(boolean update) throws IOException {
 		boolean error = false;
-		String clienType = this.getManagedBean().getSelectedMaster().getClientType();
-		String agencyName = this.getManagedBean().getSelectedMaster().getAgencyName();
-		String fileReferenceNo = this.getManagedBean().getSelectedMaster().getFileReferenceNo();
-		String fileExtensionNo = this.getManagedBean().getSelectedMaster().getFileExtensionNo();
-		Date contractEffDate = this.getManagedBean().getSelectedMaster().getContractExpDate();
-		Date contractExpDate = this.getManagedBean().getSelectedMaster().getContractExpDate();
-		Long sourceType = this.getManagedBean().getSelectedMaster().getSourceType().getParameterId();
-		List<SmCompExpMasterDoc> smCompExpDocList = this.getManagedBean().getSmCompExpDocList();
-
+		SmCompExpMaster master = new SmCompExpMaster();
+		if (this.getManagedBean().isMasterUpdate()) {
+			master = this.getManagedBean().getSelectedMaster();
+		} else if (this.getManagedBean().isMasterNew()) {
+			master = this.getManagedBean().getNewMaster();
+		}
+		String clienType = master.getClientType();
+		String agencyName = master.getAgencyName();
+		String fileReferenceNo = master.getFileReferenceNo();
+		String fileExtensionNo = master.getFileExtensionNo();
 		error = validateDetail(error, clienType, agencyName, fileReferenceNo, fileExtensionNo);
+		
+		if (this.getManagedBean().isMasterNew()) {
+			String title = master.getTitle();
+			BigDecimal contractValue = master.getContractValue();
+			PmParameter procumentMode = master.getProcumentMode();
+			error = validateNewDetail(error, title, contractValue, procumentMode);
+			if(this.getManagedBean().isConsultant()){
+				String projectLoc = master.getProjectLoc();
+				String workServDesc = master.getWorkServDesc();
+				BigDecimal consultantFee = master.getConsultantFee();
+				error = validateNewConsultant(error, projectLoc, workServDesc, consultantFee);
+			}
+		}	
+		
+		Date contractEffDate = master.getContractExpDate();
+		Date contractExpDate = master.getContractExpDate();
 		error = validateDate(error, contractEffDate, contractExpDate);
+		
+		Long sourceType = master.getSourceType().getParameterId();
+		List<SmCompExpMasterDoc> smCompExpDocList = master.getCompExpMasterDocs();
 		error = validateList(error, sourceType, smCompExpDocList);
 
 		if (!error && update) {
 			updateSmComExpMaster(false);
 		}
+	}
+
+	private boolean validateNewConsultant(boolean err, String projectLoc, String workServDesc, BigDecimal consultantFee) {
+		boolean error = err;
+		if (null == projectLoc || projectLoc.isEmpty()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775233,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		if (null == workServDesc || workServDesc.isEmpty()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775234,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		if (null == consultantFee) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775235,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		return error;
+	}
+
+	private boolean validateNewDetail(boolean err, String title, BigDecimal contractValue, PmParameter procumentMode) {
+		boolean error = err;
+		if (null == title || title.isEmpty()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775230,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		if (null == contractValue) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775231,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		return error;
 	}
 
 	/**
@@ -1232,19 +1330,19 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		history.setContractExpDate(master.getContractExpDate());
 		history.setContractStatus(master.getContractStatus());
 		history.setSourceType(SmApplicationUtil.retrievePmParameterById(master.getSourceType().getParameterId()));
-		updateRecordStatus(history, delete);
+		setActionType(history, delete);
 
-		List<SmCompExpMasterHistoryDoc> newDocList = new ArrayList<>();
-		for (SmCompExpMasterDoc doc : this.getManagedBean().getSmCompExpDocList()) {
+		List<SmCompExpMasterHistoryDoc> histDocList = new ArrayList<>();
+		for (SmCompExpMasterDoc doc : master.getCompExpMasterDocs()) {
 			SmCompExpMasterHistoryDoc newDoc = new SmCompExpMasterHistoryDoc();
 			newDoc.setFileName(doc.getFileName());
 			newDoc.setFilePath(doc.getFilePath());
 			newDoc.setCompExpMasterHist(history);
-			newDocList.add(newDoc);
+			histDocList.add(newDoc);
 		}
-		history.setCompExpMasterHistDocs(newDocList);
+		history.setCompExpMasterHistDocs(histDocList);
 
-		List<SmCompExpCatMasterHistory> newCatList = new ArrayList<>();
+		List<SmCompExpCatMasterHistory> histCatList = new ArrayList<>();
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatMaster oldCat : master.getCompExpMasterCats()) {
 			SmCompExpCatMasterHistory newCat = new SmCompExpCatMasterHistory();
@@ -1266,9 +1364,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			newCat.setCategoryL3Name(oldCat.getCategoryL3().getCategoryName());
 
 			newCat.setCompExpMasterHist(history);
-			newCatList.add(newCat);
+			histCatList.add(newCat);
 		}
-		history.setCompExpCatMasterHists(newCatList);
+		history.setCompExpCatMasterHists(histCatList);
 
 		SmCompExpReqDTO reqDTO3 = new SmCompExpReqDTO();
 		reqDTO3.setHistory(history);
@@ -1315,7 +1413,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 	}
 
-	private void updateRecordStatus(SmCompExpMasterHistory history, boolean delete) {
+	private void setActionType(SmCompExpMasterHistory history, boolean delete) {
 		if (delete) {
 			history.setActionType(ParameterConst.ACTION_TYPE_DELETE);
 		} else {
@@ -1374,6 +1472,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setDraftUpdate(false);
 		this.getManagedBean().setMasterUpdate(false);
 		this.getManagedBean().setMasterNew(true);
+		this.getManagedBean().setAgreeDeclare(false);
 
 		this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.add.new", null));
 		this.getManagedBean().setNewMaster(new SmCompExpMaster());
@@ -1397,6 +1496,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().getNewMaster().setCompExpMasterCats(catList);
 		addSmCompExpCatMaster();
 		getSupplierMainCatList();
+
+		this.getManagedBean().getNewMaster().setSmSupplier(this.getManagedBean().getSupplier());
+		initSuppDoc();
 
 		SmCommonUtil.redirectToPage(smCompExpNewXhtml, "", null, null);
 	}
