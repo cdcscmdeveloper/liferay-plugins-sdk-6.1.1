@@ -347,7 +347,10 @@
 											<!-- 31991@farhan - end -->
 											</c:when>
 											<!-- 29464 -start- -->
-											<c:when test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
+											<ui:remove>32577,32648 -start-</ui:remove>
+											<c:when
+												test="#{qTDetailBB.managedBean.activeIndex eq '5' and !isQTClosePermanently}">
+												<ui:remove>32577,32648 -end-</ui:remove>
 												<ui:include
 													src="/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml" />
 											</c:when>
@@ -397,4 +400,11 @@
 
 		</c:otherwise>
 	</c:choose>
+
+	<ui:remove> #29732 Start </ui:remove>
+	<ac:qtCategoryChangeAlertPopup
+		catCodeList="#{qTDetailBB.managedBean.catCodeList}"
+		widget="catCodeChangeAlert" />
+	<ui:remove> #29732 End </ui:remove>
+
 </ui:composition>

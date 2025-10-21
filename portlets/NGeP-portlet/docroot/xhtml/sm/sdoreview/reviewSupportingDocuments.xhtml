@@ -45,13 +45,6 @@
 			</p:commandButton>
 		</div>
 		
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.confirm.proceed']}
-   			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="blockWidget.show();submissionConfirmDlg.hide();" oncomplete="blockWidget.hide()" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
-			</div>
-		</p:dialog>
 
 		<p:outputPanel id="resOutPanelId">
 		<!-- #11641 - START -->
@@ -111,8 +104,9 @@
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 56%;" rendered="#{inquirytbl.pmDocument.mandatory}">
 									<h:outputText value="#{inquirytbl.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</p:column>
+								<!-- #34392 - START -->
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 12%;" rendered="#{inquirytbl.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-									<ui:repeat var="applDocsFile" value="#{inquirytbl.smApplInquiryDocFiles}">
+									<ui:repeat var="applDocsFile" value="#{sdoReviewBackingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"  ajax="false"
 						            			action="#{sdoReviewBackingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
@@ -125,6 +119,7 @@
 										<br />
 									</ui:repeat>
 								</p:column>
+								<!-- #34392 - END -->
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory}">
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
@@ -171,8 +166,9 @@
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 56%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
 									<h:outputText value="#{inquirytbl.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</p:column>
+								<!-- #34392 - START -->
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 12%;" rendered="#{!inquirytbl.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-									<ui:repeat var="applDocsFile" value="#{inquirytbl.smApplInquiryDocFiles}">
+									<ui:repeat var="applDocsFile" value="#{sdoReviewBackingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"  ajax="false"
 							            		action="#{sdoReviewBackingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
@@ -185,6 +181,7 @@
 										<br />
 									</ui:repeat>
 								</p:column>
+								<!-- #34392 - END -->
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
@@ -241,7 +238,9 @@
 		</p:outputPanel>
 
 		<!-- #11641 - START -->
-		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg" width="auto">
+		<!-- #34392 - START -->
+		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg" width="auto" style="max-height:80%; overflow-y: auto; top: 10%">
+		<!-- #34392 - End -->
 			
 			<p:scrollPanel mode="native" style="max-height:auto;auto;border:none">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
@@ -379,7 +378,8 @@
 			</table>
 			<br />
 			<div align="right">
-				<p:commandButton onclick="abcdeblockWidget.show();" oncomplete="abcdeblockWidget.hide();" value="#{lbl['lbl.btn.submit']}" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}">
+				<!-- #34400 -->
+				<p:commandButton oncomplete="if (!args.validationFailed) confirmEnquiryDlg.show();" value="#{lbl['lbl.btn.submit']}" >
 					<f:param name="disableMsgAutoUpdate" value="true" />
 				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="inquiryDlg.hide();"></p:commandButton>
@@ -410,23 +410,48 @@
 				</tr>
 
 				<ui:param name="gstSupplier" value="#{sdoReviewBackingBean.managedBean.smGstSupplier}" />
-			
-				<ui:remove>
-				<tr>
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
-					<td class="tdContent">
-						<p:inputText value="#{gstSupplier.gstEndDate}" disabled="true" size="40">
-							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText>
-					</td>
-				</tr>
-				</ui:remove>
-				
-
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.companyAdd.address1}" disabled="true" size="40" /></td>
+					<!-- #24819 - start -->
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+					<td class="tdContent">
+						<p:inputText value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"
+							disabled="true" size="40"
+							rendered="#{!empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" />
+						<p:inputText value="#{lbl['lbl.sm.no.available']}"
+							disabled="true" size="40"
+							rendered="#{empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" /> &#160;
+						<p:graphicImage id="newRegNoti"
+							value="/css/images/design/tooltips.png"
+							rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType 
+							and sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}" />
+						<ui:param name="lblnewRegNoTlTip"
+							value="tt.sm.business.type.#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}" />
+						<p:tooltip id="newRegNott" for="newRegNoti"
+							rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType 
+							and sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
+						</p:tooltip>&#160;</td>
+					<!-- #24819 - end -->
+				</tr>
+				
+				<tr>
+					<td class="tdTitle"><p:outputLabel value="&#160;" /></td>
+					<td class="tdContent"><p:inputText
+							value="#{sdoReviewBackingBean.managedBean.companyAdd.address2}" disabled="true" size="40" /></td>
+					<!-- #24819 - start -->		
+					<td class="tdTitle"></td>
+					<td class="tdContent">
+					<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" /></td>
+					<!-- #24819 - start -->
+				</tr>
+				
+				<tr>
+					<td class="tdTitle"><p:outputLabel value="&#160;" /></td>
+					<td class="tdContent"><p:inputText
+							value="#{sdoReviewBackingBean.managedBean.companyAdd.address3}" disabled="true" size="40" /></td>
 							
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
 					<td class="tdContent"><p:inputText
@@ -435,30 +460,7 @@
 							<f:convertDateTime
 								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 						</p:inputText></td>
-		
-				</tr>
-				
-				<tr>
-					<td class="tdTitle"><p:outputLabel value="&#160;" /></td>
-					<td class="tdContent"><p:inputText
-							value="#{sdoReviewBackingBean.managedBean.companyAdd.address2}" disabled="true" size="40" /></td>
-							
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
-					<td class="tdContent"><p:inputText
-							value="#{gstSupplier.gstRegNo}" disabled="true" size="40" /></td>
-				</tr>
-				
-				<tr>
-					<td class="tdTitle"><p:outputLabel value="&#160;" /></td>
-					<td class="tdContent"><p:inputText
-							value="#{sdoReviewBackingBean.managedBean.companyAdd.address3}" disabled="true" size="40" /></td>
-							
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" /></td>
-					<td class="tdContent">
-						<p:inputText value="#{gstSupplier.gstEffDate}" disabled="true" size="40">
-							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText>
-					</td>
+					
 							
 				</tr>
 				<!-- 13320 - re-order address field - start -->
@@ -468,18 +470,20 @@
 							value="#{sdoReviewBackingBean.managedBean.companyAdd.pmCountry.countryName}"
 							disabled="true" size="40" /></td>
 							
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.website']}" /></td>
-					<td class="tdContent"><p:inputText  disabled="true" size="40" value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.website}" /></td>
-				</tr>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
+					<td class="tdContent"><p:inputText
+							value="#{gstSupplier.gstRegNo}" disabled="true" size="40" /></td>	</tr>
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.companyAdd.pmState.stateName}"
 							disabled="true" size="40" /></td>
 					
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.incometaxno']}" /></td>
-					<td class="tdContent"><p:inputText
-							value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
-							disabled="true" size="40" /></td>				
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+					<td class="tdContent">
+						<p:inputText value="#{gstSupplier.gstEffDate}" disabled="true" size="40">
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText>
+					</td>	
 				</tr>
 				
 				<!-- 13320 -->
@@ -497,12 +501,21 @@
 					<td class="tdContent"><p:inputText disabled="true" size="40"
 							value="#{sdoReviewBackingBean.managedBean.companyAdd.pmDistrict.districtName}" />
 					</td>
+					
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.website']}" /></td>
+					<td class="tdContent"><p:inputText  disabled="true" size="40" value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.website}" /></td>
+				
 				</tr>
 				
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 					<td class="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.companyAdd.pmCity.cityName}"
 							disabled="true" size="40" /></td>
+
+							<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.incometaxno']}" /></td>
+					<td class="tdContent"><p:inputText
+							value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
+							disabled="true" size="40" /></td>	
 
 				</tr>
 				
@@ -627,5 +640,19 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
+		<!-- #34400 - start -->
+		<ac:confirmationPopupSM id="confirmEnquiryDlg" widget="confirmEnquiryDlg"
+			okParam="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}"
+			hasParam="true"
+			content="#{lbl['lbl.sm.confirm.enquiry']}" 
+			update="@all"
+			loadingWidget="abcdeblockWidget" />
+		<ac:confirmationPopupSM id="submissionConfirmDlg" widget="submissionConfirmDlg"
+			okParam="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"
+			hasParam="true"
+			content="#{lbl['lbl.sm.confirm.proceed']}" 
+			update="@all"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 	</ui:define>
 </ui:composition>

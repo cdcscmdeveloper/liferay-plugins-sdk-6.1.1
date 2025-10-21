@@ -32,6 +32,12 @@
 		<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.sf.finalization.supplier.selection.package.instruction']}"
 				escape="false" rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}" />
+				
+		<ui:remove>21692 - Start</ui:remove>
+		<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(suppFinalizationBackingBean.managedBean.scQt.qtId)}">
+			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']}" />
+		</c:if>
+		<ui:remove>21692 - End</ui:remove>
 
 		<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />

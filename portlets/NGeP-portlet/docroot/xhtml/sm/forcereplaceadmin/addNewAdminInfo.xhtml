@@ -18,7 +18,7 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		
+		<p:outputPanel id="verification2Panel">
 		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
 	
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -33,17 +33,18 @@
 				</td>
 				<td style="white-space: nowrap; float: right;">
 				<!-- #28765 -->
-					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="@this" 
+					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="verification2Panel" 
 					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
 					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
-					<ac:confirmationPopup id="declareDeletePopUpId"
-		widget="declareDeletePopUp"
-		okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
-		width="400" height="150"
-		title="#{lbl['lbl.msg.confirm.declare.header']}"
-		content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
-		update=":form"/>
+					<!-- #33129 - START --><!-- #34400 -->
+					<ac:confirmationPopupSM id="declareDeletePopUpId"
+						widget="declareDeletePopUp"
+						okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
+						width="400" height="auto"
+						content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
+						update=":form"/>
+					<!-- #33129 - END -->
 				 <p:confirmDialog id="declareAlertPopUpId" widgetVar="declareAlertPopUp" 
 			 closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFontBank" >
 			<div class="ppLeftBtn">
@@ -132,12 +133,34 @@
 					</td>
 
 					<td><p:outputLabel value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationType.parameterCode eq 
-							SupplierManagementConst.NEW_IC?lbl['lbl.sm.individual.newicno']:lbl['lbl.sm.userprofile.idno']}" /></td>
+							SupplierManagementConst.NEW_IC?lbl['lbl.sm.individual.newicno']:lbl['lbl.sm.userprofile.idno']}" /><p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 
 					<td>
-						<p:inputText label="#{lbl['lbl.sm.userprofile.idno']}" id="newAdminIdNo"
-							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}"
-							size="35" disabled="false" />
+						<p:inputText 
+							label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}" 
+							required="true" id="newAdminIcNo" 
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.NEW_IC}" 
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}" 
+							size="35" maxlength="12" 
+							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							<p:ajax event="blur" process="@this" partialSubmit="true"/>
+						</p:inputText>
+						<p:message id="newAdminIcNoMsg" for="newAdminIcNo" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.NEW_IC}"
+							showSummary="true" showDetail="false" display="icon" />
+							
+						<p:inputText 
+							label="#{lbl['lbl.sm.userprofile.idno']}" 
+							required="true" id="newAdminPasptNo" 
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT}" 
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}" 
+							size="35" maxlength="15">
+							<p:ajax event="blur" process="@this" partialSubmit="true"/>
+						</p:inputText>
+						<p:message id="newAdminPasptNoMsg" for="newAdminPasptNo" 
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT}"
+							showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
 				<tr>
@@ -218,70 +241,98 @@
 							telcoId="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileTelcoId}" />
 					</td>
 				</tr>
+				<h:panelGroup layout="block" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRolePanel}">
 				<tr>
-					<td class="tdTitle" ><p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}    " /> </td>
-					<td class="tdContent">
-						<p:outputPanel>
-							<table>
-								<tr>
-									<td>
-										<p:selectBooleanCheckbox id="chkOwner" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disableEquity}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.equityOwner}">
-										<p:ajax event="change" update="chkOwner,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerChangeRole}"
-										partialSubmit="true" 
-										process="@this" /></p:selectBooleanCheckbox>
-									</td>
-									<td>
-										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.equiOwner']}" />
-									</td>
-									<td>
-										<table>
-											<c:if test="#{forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG and forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG and forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK and forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH and forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK and forceReplaceSuppAdminBackingBean.managedBean.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH}">
-												<tr>
-													<td>
-														<p:selectBooleanCheckbox disabled="" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.director}"/>
-													</td>
-													<td>
-														<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" />
-													</td>
-													<td>
-														<p:selectBooleanCheckbox disabled="" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.higherManagement}"/>
-													</td>
-													<td>
-														<h:outputText style="float: left" value="#{lbl['lbl.sm.person.hghMngmt']}" />
-													</td>
-												</tr>
-											</c:if>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</p:outputPanel>
-					</td>
-					<td></td>
-					<td></td>
-				</tr>
-				
-				<tr>
-					<td></td>
+					<td><p:outputLabel style="float: right" value="#{lbl['lbl.sm.person.composition.role']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td>
 						<table>
 							<tr>
 								<td>
-									<p:selectBooleanCheckbox disabled="" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.management}"/>
+									<p:selectBooleanCheckbox id="chkOwner" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleEquity}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.equityOwner}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleEquity}">
+										<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}"
+									partialSubmit="true" 
+									process="@this" /></p:selectBooleanCheckbox>
 								</td>
 								<td>
-									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
+									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.equiOwner']}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleEquity}" />
 								</td>
 								<td>
-									<p:selectBooleanCheckbox id="chkStaff" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disableStaff}"  value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.clerical}">
-										<p:ajax event="change" update="chkOwner,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerChangeRole}"
+									<table>
+										<tr>
+											<td>
+												<p:selectBooleanCheckbox id="chkDirector" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleEquity}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.director}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleDirector}">
+													<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}" partialSubmit="true" process="@this" />
+												</p:selectBooleanCheckbox>
+											</td>
+											<td>
+												<h:outputText style="float: left" value="#{lbl['lbl.sm.person.dir']}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleDirector}" />
+											</td>
+											<td>
+												<p:selectBooleanCheckbox id="chkHighManagement" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleHighManagement}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.higherManagement}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleHighManagement}">
+													<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}" partialSubmit="true" process="@this" />
+												</p:selectBooleanCheckbox>
+											</td>
+											<td>
+												<h:outputText style="float: left" value="#{lbl['lbl.sm.person.hghMngmt']}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleHighManagement}" />
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td></td>
+					<td></td>
+				</tr>
+				</h:panelGroup>
+				<tr>
+					<td></td>
+					<td>
+						<table>
+							<ui:fragment rendered="#{forceReplaceSuppAdminBackingBean.managedBean.smSupplier.smAppl.supplierType == SupplierManagementConst.SUPP_TYPE_CONSULTANT}">
+								<tr>
+									<td>
+										<p:selectBooleanCheckbox id="chkProf" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleProfessional}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.prof}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleProfessional}">
+											<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}" partialSubmit="true" process="@this" />
+										</p:selectBooleanCheckbox>
+									</td>
+									<td>
+										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.pro']}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleProfessional}" />
+									</td>
+									<td>
+										<p:selectBooleanCheckbox id="chkSemiPro" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleSemiPro}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.semiProf}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleSemiPro}">
+											<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}" partialSubmit="true" process="@this" />
+										</p:selectBooleanCheckbox>
+									</td>
+									<td>
+										<h:outputText style="float: left"  value="#{lbl['lbl.sm.person.semipro']}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleSemiPro}" />
+									</td>
+									<td></td>
+									<td></td>
+								</tr>
+							</ui:fragment>
+							<tr>
+								<td>
+									<p:selectBooleanCheckbox id="chkManagement" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleManagement}" value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.management}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleManagement}">
+										<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}" partialSubmit="true" process="@this" />
+									</p:selectBooleanCheckbox>
+								</td>
+								<td>
+									<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleManagement}" />
+								</td>
+								<td>
+									<p:selectBooleanCheckbox id="chkStaff" disabled="#{forceReplaceSuppAdminBackingBean.managedBean.disabledRoleClericalStaff}"  value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.clerical}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleClericalStaff}" >
+										<p:ajax event="change" update="chkDirector,chkOwner,chkHighManagement,chkProf,chkSemiPro,chkManagement,chkStaff" listener="#{forceReplaceSuppAdminBackingBean.listenerClickStaffRole}"
 											partialSubmit="true" 
 											process="@this" />
 									</p:selectBooleanCheckbox>
 								</td>
 								<td>
-									<h:outputText style="float: left"  value="#{lbl['lbl.sm.person.stf']}" />
+									<h:outputText style="float: left"  value="#{lbl['lbl.sm.person.stf']}" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRoleClericalStaff}" />
 								</td>
+								<td></td>
+								<td></td>
 							</tr>
 						</table>
 					</td>
@@ -309,6 +360,6 @@
 					</tr>
 				</table>
 			<br />
-
+	</p:outputPanel>
 	</ui:define>
 </ui:composition>

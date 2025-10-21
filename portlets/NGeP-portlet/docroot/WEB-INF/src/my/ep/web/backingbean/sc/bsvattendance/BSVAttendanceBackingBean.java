@@ -369,6 +369,9 @@ public class BSVAttendanceBackingBean extends
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
+			// Bug 31475 - shaqimi start
+			List<String> zoneBsvList = new ArrayList<String>();
+			// Bug 31475 - shaqimi end
 			FacesScopes facesScopes = new FacesScopes();
 			ScQt scQt = this.getManagedBean().getScQt();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
@@ -379,6 +382,16 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setOutcome(outCome);
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setRoleCode(getUserRoleCode());
+			//Bug 31475 - shaqimi start
+			if(scQt.isZonal()){
+				for(BriefingZoneBean bzb : this.getManagedBean().getZoneBean()){
+					if(!bzb.getBriefingList().isEmpty()){
+						zoneBsvList.add(bzb.getTplSpecZoneDtl().getZoneName());
+					}
+				}
+				reqDTO.setZoneBsvList(zoneBsvList);
+			}
+			//Bug 31475 - shaqimi end
 			resDTO = qTBriefingSO.updateQtSuppliersNStatus(reqDTO);
 			if (resDTO.isSuccessful()) {
 				/*Date todayDate = DateUtils.setDefaultDateTime(DateUtils.getCurrentDateWithoutTime());

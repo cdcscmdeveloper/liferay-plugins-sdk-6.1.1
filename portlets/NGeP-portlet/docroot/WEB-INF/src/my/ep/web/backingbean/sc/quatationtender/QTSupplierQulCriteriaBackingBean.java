@@ -31,11 +31,13 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -46,6 +48,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -66,6 +70,8 @@ import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -73,6 +79,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -105,6 +112,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
@@ -281,7 +289,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		debugLogger("addNewCategoryAction");
 		List<ScQtCategory> qtCategoryList = this.getManagedBean()
 				.getQtCategoryList();	
-		if (qtCategoryList == null) {
+		if (qtCategoryList == null || qtCategoryList.isEmpty()) { //#29732 add is empty
 			qtCategoryList = new ArrayList<ScQtCategory>();
 			this.getManagedBean().setQtCategoryList(qtCategoryList);
 		}
@@ -316,6 +324,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 	    		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
 	    	}
 		}
+
+		checkCatCodeWIPIcon(); // #29732
 	}
 
 	
@@ -2109,4 +2119,146 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		
 	}
+
+	// #29732 Start
+	@SuppressWarnings("null")
+	public void onClickHistoryIcon(String catCode, String catCodeLevel, Long catCodeId, Long qtCateId) {
+		boolean processAfter = false;
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
+
+		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
+		if (null != findQtCatCode && !findQtCatCode.isEmpty()) {
+			for (ScQtCategory categoryCodeEdit : findQtCatCode) {
+				if (categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()) {
+					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+						reqDTO.setCategoryL1Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+						reqDTO.setCategoryL2Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+						reqDTO.setCategoryL3Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+					}
+					processAfter = true;
+				} else {
+					this.getManagedBean().setHistoryList(null);
+				}
+			}
+		} else {
+			this.getManagedBean().setHistoryList(null);
+		}
+
+		if (processAfter) {
+			getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+			getManagedBean().setHisCatCode(catCode);
+		}
+
+		RequestContext.getCurrentInstance().execute("hisPopup.show()");
+	}
+	// #29732 -end-
+
+	// #29732 Start - reOpen Fix
+	public String checkCatCodeWIPIcon() {
+
+		String catCodeList = "";
+		Integer recordstatusInactive = 0;
+
+		List<ScQtCategory> qtCatCodeList = retrieveCurrentScQtCategoryCode();
+
+		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
+			for (ScQtCategory catCode : qtCatCodeList) {
+				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+				PmCategoryL1 catCodeL1 = new PmCategoryL1();
+				CategoryCodeReqDTO reqDTO1 = new CategoryCodeReqDTO();
+				reqDTO1.setCategoryL1Id(catCode.getPmCategoryL1().getCategoryL1Id());
+				CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO1);
+				catCodeL1 = resDTO1.getCategoryL1();
+				PmCategoryL2 catCodeL2 = new PmCategoryL2();
+				CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
+				reqDTO2.setCategoryL2Id(catCode.getPmCategoryL2().getCategoryL2Id());
+				CategoryCodeResDTO resDTO2 = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO2);
+				catCodeL2 = resDTO2.getCategoryL2();
+				PmCategoryL3 catCodeL3 = new PmCategoryL3();
+				CategoryCodeReqDTO reqDTO3 = new CategoryCodeReqDTO();
+				reqDTO3.setCategoryL3Id(catCode.getPmCategoryL3().getCategoryL3Id());
+				CategoryCodeResDTO resDTO3 = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO3);
+				catCodeL3 = resDTO3.getCategoryL3();
+				// Diffrentiate result db between PM & QT
+				if (!catCodeL1.getCategoryName().equals(catCode.getPmCategoryL1Name())
+						|| !catCodeL2.getCategoryName().equals(catCode.getPmCategoryL2Name())
+						|| !catCodeL3.getCategoryName().equals(catCode.getPmCategoryL3Name())
+						|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+						|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+						|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+				) {
+					// Diffrentiate results between DB QT & QT Managebean
+					for (ScQtCategory catCodesPrev : this.getManagedBean().getQtCategoryList()) {
+						if (catCodesPrev.getPmCategoryL1().getCategoryL1Id()
+								.equals(catCode.getPmCategoryL1().getCategoryL1Id())
+								&& !catCodesPrev.getPmCategoryL1().getCategoryName()
+										.equalsIgnoreCase(catCode.getPmCategoryL1Name())
+								|| catCodesPrev.getPmCategoryL2().getCategoryL2Id()
+										.equals(catCode.getPmCategoryL2().getCategoryL2Id())
+								&& !catCodesPrev.getPmCategoryL2().getCategoryName()
+										.equalsIgnoreCase(catCode.getPmCategoryL2Name())
+								|| catCodesPrev.getPmCategoryL3().getCategoryL3Id()
+										.equals(catCode.getPmCategoryL3().getCategoryL3Id())
+								&& !catCodesPrev.getPmCategoryL3().getCategoryName()
+										.equalsIgnoreCase(catCode.getPmCategoryL3Name())) {
+							catCodesPrev.setUpdateCatDesc(true);
+							this.getManagedBean().setUpdateCatDesc(catCodesPrev.getUpdateCatDesc());
+						}
+					}
+				}
+			}
+		}
+		return catCodeList;
+	}
+	// #29732 -end-
+
+	// #29732 -start-
+	/**
+	 * Gets the spec so.
+	 * 
+	 * @return the spec so
+	 */
+	private IQTSpecSO getSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+	}
+	// #29732 -end-
+
+	// #29732 -start-
+	public List<ScQtCategory> retrieveCurrentScQtCategoryCode() {
+		List<ScQtCategory> listCategoryDB = new ArrayList();
+		IQTSpecSO specSO = getSpecSO();
+		listCategoryDB = specSO.retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
+
+		return listCategoryDB;
+	}
+	// #29732 -end-
+
+	// #29732 -start-
+	public List<ScQtCategory> retrieveScQtCategoryByQtCatID(Long qtCateId) {
+		List<ScQtCategory> listCategoryDB = new ArrayList();
+		IQTSpecSO specSO = getSpecSO();
+		listCategoryDB = specSO.retrieveScQtCategoryByQtCatID(getManagedBean().getQt().getQtId(), qtCateId);
+
+		return listCategoryDB;
+	}
+	// #29732 -end-
+
+	// #29732 -start-
+	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
+		for (PmRemarkCategory rc : remarkList) {
+			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
+			rc.setCreatedUsername(user.getUserName());
+		}
+		return remarkList;
+	}
+	// #29732 End
 }

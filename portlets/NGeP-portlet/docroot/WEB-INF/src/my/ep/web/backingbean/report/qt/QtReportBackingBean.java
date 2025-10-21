@@ -22,8 +22,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
@@ -34,6 +37,8 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
@@ -44,15 +49,22 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.qt.QtReportManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -70,6 +82,10 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = EpLogger
 			.getLogger(QtReportBackingBean.class);
+	//#21692 - Start
+	private static final String CARET_SYMBOL = "^";
+	private static final String PIPE_SYMBOL = "|";
+	//#21692 - End
  
 	private String strLanguage = ResourceBundleUtils.getMessage(
 			ReportConst.LABEL_LANG, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -95,7 +111,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
 			specialCharValidation();
 		} else {
-			this.getManagedBean().setQuotationId(null);
+			resetSearchBB();//#21692
 		}
 	}
 
@@ -168,6 +184,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IRPTRequestSO.class);
+		boolean isBuffMax = false;	//Bug #37911
 		log.info("generate reportCode" + getManagedBean().getReportCode());
 		log.info("generate reportName" + getManagedBean().getReportName());
 		
@@ -233,6 +250,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 					reportCode = ReportConst.SC_BRIEFING_PAPER_RPT_VAL;
 					reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
 				}
+				isBuffMax = true;	//Bug #37911
 			}
 			this.getManagedBean().setReportName(reportName);
 			this.getManagedBean().setReportCode(reportCode);
@@ -245,6 +263,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				.getReportCode());
 		params.put(QtReportConst.PARAM_USER_ID, getFacesScopes()
 				.getUserSessionBean().getUserId().toString());
+		// Bug #37911 -- Start
+		if (isBuffMax) {
+			params.put(ReportConst.PARAM_REPORT_BUFFERS, String.valueOf(ReportConst.MAX_BUFFER_SIZE));
+		}
+		// Bug #37911 -- End
 
 		//Bug #28440 start
 		String userRoleLogin = getUserRoleLogin();
@@ -782,4 +805,360 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		}
 		return approverNayakTarafList;
 	}
+
+	//#21692 - Start
+	protected void resetSearchBB() {
+		this.getManagedBean().setQuotationNumber(null);
+		this.getManagedBean().setQuotationId(null);
+		ScReportFieldsSearchBean reportFileSearchBean = this.getManagedBean().getScReportSearchBean();
+		String reportCode = this.getManagedBean().getReportCode();
+		if ((QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) 
+				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode)) && reportFileSearchBean != null) {
+			this.getManagedBean().setQuotationTitle(null);
+			reportFileSearchBean.setScPtj(null);
+			reportFileSearchBean.setScPtjName(null);
+			reportFileSearchBean.setScStatus(null);//reset status
+			if (!isDeskOfficer()) {
+				reportFileSearchBean.setScDeskOfficer(null);
+				reportFileSearchBean.setPtjProfile(null);
+				reportFileSearchBean.setDoSelectItem(null);
+			}
+			reportFileSearchBean = getDefaultValuesFromAndToDate(reportFileSearchBean);
+			this.getManagedBean().setScReportSearchBean(reportFileSearchBean);
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Retrieve the QT Agency by Quotation/Tender Number
+	 * 
+	 * @param scQt
+	 */
+	public void retrieveAgencyByQuotationNumber(ScQt scQt) {
+		String ptjName = "";
+		String ptjCode = "";
+		boolean deskOfficerRoles = retriveUserRoles();
+		String reportCode = this.getManagedBean().getReportCode();
+		if (deskOfficerRoles && (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)
+				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode))) {
+			if (scQt != null && scQt.getQtId() != null) {
+				Date date = retriveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
+
+				log.info("date" + date);
+				ptjCode = scQt.getOrgProfileId().toString();
+				ptjName = retrievePTJByOrgProfileId(scQt.getOrgProfileId(), date);
+			}
+			this.getManagedBean().getScReportSearchBean().setScPtj(ptjCode);
+			this.getManagedBean().getScReportSearchBean().setScPtjName(ptjName);
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Retrieve List of QT Desk Officer By Quotation/Tender Agency
+	 * 
+	 * @return
+	 */
+	public List<SelectItem> retrieveDescOfficerByAgency() {
+		List<SelectItem> scDescOfficerList = new ArrayList<>();
+		if (isDeskOfficer()) {
+			SelectItem selectItem = new SelectItem();
+			selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
+			selectItem.setValue(getUserIdSessionFromLoginId());
+			getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
+			scDescOfficerList.add(selectItem);
+		} else {
+			Long orgProfileId = getManagedBean().getScReportSearchBean().getPtjProfile() != null ?
+					getManagedBean().getScReportSearchBean().getPtjProfile().getOrgProfileId() : null;
+			
+			List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
+					new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+			if (CollectionUtils.isNotEmpty(reqLst)) {
+				for (Object[] object : reqLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					scDescOfficerList.add(selectItem);
+				}
+			}
+		}
+		return scDescOfficerList;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	private Date retriveDatesforOrgProfile(Date publishDate, Date createdDate) {
+		if (publishDate == null) {
+			log.info("===========createdDate=====" + createdDate);
+			return createdDate;
+		}
+		log.info("===========publishDate=====" + publishDate);
+		return publishDate;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	private ScQt findScQtByQuotationNumber() {
+		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
+			tenderReqDTO.setQtTndrNo(this.getManagedBean().getQuotationNumber().toUpperCase());
+
+			QuationTenderResDTO resDTO = getQTDetailSO().retriveQtByQtNumber(tenderReqDTO);
+			return resDTO.getQtDetail();
+		}
+		return null;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	private IQTDetailSO getQTDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	private IPMReportSO getPMReportSO() {
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * @return
+	 */
+	public boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		boolean procurementBoardSecUser = facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value()) && 
+				!(procurementBoardSecUser);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Generate approval status list.
+	 * 
+	 * @param language
+	 *            the language
+	 * @return the list
+	 */
+	public List<SelectItem> generateApprovalStatusList() {
+		List<SelectItem> statusList = new ArrayList<SelectItem>();
+		if ((strLanguage != null) && (strLanguage.equalsIgnoreCase("en"))) {
+
+			SelectItem selectItem = new SelectItem();
+			selectItem
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ENG_CODE);
+			selectItem.setValue(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ID);
+			statusList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ENG_CODE);
+			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
+			statusList.add(selectItem1);
+			//add for revise - Start
+			SelectItem selectItem2 = new SelectItem();
+			selectItem2
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ENG_CODE);
+			selectItem2.setValue(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ID);
+			statusList.add(selectItem2);
+			//add for revise - End
+
+		} else if ((strLanguage != null)
+				&& (strLanguage.equalsIgnoreCase("ms"))) {
+
+			SelectItem selectItem = new SelectItem();
+			selectItem
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_MY_CODE);
+			selectItem.setValue(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ID);
+			statusList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_MY_CODE);
+			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
+			statusList.add(selectItem1);
+			//add for revise - Start
+			SelectItem selectItem2 = new SelectItem();
+			selectItem2
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REVISE_MY_CODE);
+			selectItem2.setValue(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ID);
+			statusList.add(selectItem2);
+			//add for revise - End
+
+		}
+		return statusList;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/*
+	 * set to be a year before today
+	 */
+	public Date handleMinDateForEPV() {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1); // to get previous year
+		Date earlyDate = cal.getTime();
+		earlyDate = DateUtils.addDays(earlyDate, 1); // to get a day after
+		
+		return earlyDate;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/*
+	 * set to be today
+	 */
+	public Date handleMaxDateForEPV() {
+		
+		return new Date();
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Gets the PTJ values based on user role.
+	 */
+	public boolean getPtjValues() {
+
+		if (!getManagedBean().isPtjEnable()) {
+			if (isDeskOfficer()) {
+				PmOrgProfile ptjProfile = null;
+				try {
+					ptjProfile = getOrgProfileByLoginUser();
+				} catch (EpException e) {
+					String msgCode = MessageConst.ERROR_770224;
+					FacesContext.getCurrentInstance().addMessage(
+							null,new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(msgCode, null,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())
+											+ " (" + msgCode + ")"));
+				}
+				
+				getManagedBean().getScReportSearchBean().setPtjProfile(ptjProfile);
+				getManagedBean().setPtjEnable(true);
+				
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
+				selectItem.setValue(new FacesScopes().getUserSessionBean().getUserId());
+				getManagedBean().getScReportSearchBean().setScDeskOfficer(String.valueOf(new FacesScopes().getUserSessionBean().getUserId()));
+				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
+			} else if (this.getManagedBean().getScQt() == null){
+				PmOrgProfile orgProfile = getOrgProfileByLoginUser();
+				if(orgProfile != null){
+					if (!ParameterConst.ORG_TYPE_MINISTRY.equalsIgnoreCase(orgProfile
+							.getOrgTypeCode().getParameterCode())) {
+						orgProfile = getMinistryOrgProfile(orgProfile);
+					}
+					this.getManagedBean().setScQt(new ScQt());
+					
+					this.getManagedBean().getScQt().setMinistryOrgProfile(orgProfile);
+				}
+			}
+			
+		}
+		return getManagedBean().isPtjEnable();
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	
+	/**
+	 * @return
+	 */
+	private PmOrgProfile getOrgProfileByLoginUser() {
+		PmOrgProfile pmOrgProfile = null;
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
+		
+		if (userId != null) {
+			IUserSO userSO = null;
+			try {
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(userId);
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+				if (resDTO.getUserOrgList() != null
+						&& resDTO.getUserOrgList().size() > 0) {
+					for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
+						if (pmUserOrg.getPmOrgProfile() != null) {
+							pmOrgProfile = pmUserOrg.getPmOrgProfile();
+							break;
+						}
+					}
+				}
+			} finally {
+				userSO = null;
+			}	
+		}
+		
+		return pmOrgProfile;
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	
+	/**
+	 * Ptj dropdown list.
+	 * 
+	 * @return the list
+	 */
+	public PmOrgProfile getMinistryOrgProfile(PmOrgProfile orgProfile) {
+
+		if (null != orgProfile) {
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+
+			reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveMinistryByOrgProfileId(reqDTO);
+
+			return resDTO.getPmOrgProfile();
+		}
+		return null;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * construct the ConditionFields based on MinistryProfile
+	 * 
+	 * @return orgProfileId
+	 */
+	public String constuctConditionFields() {
+		StringBuilder conditionField = null;
+		if (null != this.getManagedBean().getScQt() && null == this.getManagedBean().getScQt()
+				.getMinistryOrgProfile()) {
+			PmOrgProfile ministryOrg = this.getManagedBean().getScQt()
+					.getMinistryOrgProfile();
+			if (null != ministryOrg) {
+				conditionField = new StringBuilder();
+				Long ministryOrgProfileId = ministryOrg.getOrgProfileId();
+				if (ParameterConst.ORG_TYPE_MINISTRY.equalsIgnoreCase(ministryOrg
+						.getOrgTypeCode().getParameterCode())) {
+					
+					conditionField.append(OrgProfileUtil
+							.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+							+ CARET_SYMBOL + ministryOrgProfileId);
+				} else {
+					conditionField.append("orgProfileId" + CARET_SYMBOL + ministryOrgProfileId);
+				}
+				conditionField.append(PIPE_SYMBOL + "recordStatus" + CARET_SYMBOL + 
+						DbValueConst.RECORD_STATUS_ACTIVE);
+			}
+			if (conditionField != null) {
+				return conditionField.toString();
+			}
+		}
+		
+		return null;
+	}
+	//#21692 - End
 }

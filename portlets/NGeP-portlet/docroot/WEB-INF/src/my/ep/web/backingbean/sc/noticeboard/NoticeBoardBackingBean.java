@@ -3,7 +3,9 @@ package my.ep.web.backingbean.sc.noticeboard;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -40,6 +42,7 @@ import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -85,6 +88,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -120,12 +124,14 @@ import my.ep.web.bean.sc.quatationtender.AwardedItemsBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
@@ -137,6 +143,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.autocomplete.AutoComplete;
 import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -1337,6 +1344,7 @@ public class NoticeBoardBackingBean extends
 							orderedStatuses.indexOf(QTStatusConst.QT_AWARDED));
 					
 					statusIds.addAll(orderedStatuses);
+					statusIds.add(QTStatusConst.QT_CLOSE_PERMANENTLY); //Bug #38702
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_AWARDED);
@@ -1376,6 +1384,7 @@ public class NoticeBoardBackingBean extends
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CANCELLED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_CANCELLED);
+					statusIds.add(QTStatusConst.QT_CANCELED_DUETO_PROPOSALVALIDITY_EXPIRED);//Bug #38702
 					
 				} else {
 					
@@ -3434,4 +3443,86 @@ public class NoticeBoardBackingBean extends
 		}
 		return isRenderRigisterBtn;
 	}
+
+	// #29732 Start
+	public void onClickHistoryIcon(String catCode, String catCodeLevel, Long catCodeId, Long qtCateId) {
+		boolean processAfter = false;
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
+
+		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
+		if (null != findQtCatCode && !findQtCatCode.isEmpty()) {
+			for (ScQtCategory categoryCodeEdit : findQtCatCode) {
+				if (categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()) {
+					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+						reqDTO.setCategoryL1Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+						reqDTO.setCategoryL2Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+						reqDTO.setCategoryL3Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+					}
+					processAfter = true;
+				} else {
+					this.getManagedBean().setHistoryList(null);
+				}
+			}
+		} else {
+			this.getManagedBean().setHistoryList(null);
+		}
+
+		if (processAfter) {
+			getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+			getManagedBean().setHisCatCode(catCode);
+		}
+
+		RequestContext.getCurrentInstance().execute("hisPopup.show()");
+	}
+	// #29732 -end-
+
+	// #29732 -start-
+	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
+		for (PmRemarkCategory rc : remarkList) {
+			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
+			rc.setCreatedUsername(user.getUserName());
+		}
+
+		return remarkList;
+	}
+	// #29732 End
+
+	// #29732 Start - fix ReOpen
+	/**
+	 * Gets the spec so.
+	 * 
+	 * @return the spec so
+	 */
+	private IQTSpecSO getSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+	}
+	// #29732 -end-
+
+	// #29732 -start-
+	public List<ScQtCategory> retrieveScQtCategoryByQtCatID(Long qtCateId) {
+		List<ScQtCategory> listCategoryDB = new ArrayList();
+		IQTSpecSO specSO = getSpecSO();
+		listCategoryDB = specSO.retrieveScQtCategoryByQtCatID(this.getManagedBean().getScQt().getQtId(), qtCateId);
+
+		return listCategoryDB;
+	}
+	// #29732 -end-
+
+	// #29732 Start - fix ReOpen
+	public String toDate(Timestamp changedDate) {
+		String pattern = CommonConstants.DEFAULT_12HR_DATETIME_FORMAT;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String newChangedDate = simpleDateFormat.format(changedDate.getTime());
+
+		return newChangedDate;
+	}
+	// #29732 -end-
 }

@@ -243,8 +243,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	private static final long serialVersionUID = 1L;
 
-	/*13984 Schedule/ Phase Information*/
-    private static List<ScheduleInfo> schInfo;
+	//38255 -remove private static List<ScheduleInfo> schInfo;
     private static String orgCode;
     private static String orgName;
     private static List<VCmSupplierItem> ctRequestListCR;
@@ -314,6 +313,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		List<ScheduleInfo> scheduleInfo = new ArrayList<>();// 38255
 
 		if (this.getManagedBean().getCtRequestList() != null && this.getManagedBean().getCtRequestList().size() > 0) {
 
@@ -325,83 +325,73 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setContractId(supplierItemView.getContractId());
 
 			ContractResDTO resDTO;
-			FulfilmentResDTO resfDTO;
-
+			//38255 remove -FulfilmentResDTO resfDTO;
+			
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			FacesScopes facesScopes = new FacesScopes();
 			if (facesScopes.getUserSessionBean().getUserId() == null) {
 				throw new IllegalArgumentException("userId cannot be null");
-			}
+			}	
 			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
 			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 			Long orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
-
+			
 			flReqDTO.setOrgProfileId(orgProfileId);
-			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
-
+			List<FulfilmentResDTO> scheduleDetails = requestSO.getFulfilmentScheduleDetails(flReqDTO);// 38255
+			
 			reqDTO.setOrgProfileId(orgProfileId);
 			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
-
+			
 			if (resDTO.getAvailableNoList() != null) {
 				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
 				setAvailableNoListCR(getManagedBean().getAvailableNoList());
 			}
-			schInfo = new ArrayList<ScheduleInfo>();
+			//38255-Start
+			for (FulfilmentResDTO detail : scheduleDetails) {
 
-			if (null != getManagedBean().getAvailableNoList()) {
-				for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
-					int j = i + 1;
-					if (j > resfDTO.getDocNos().size()) {
-						resfDTO.getDocNos().add("");
-					}
-					if (j > resfDTO.getFlOrderDocNos().size()) {
-						resfDTO.getFlOrderDocNos().add("");
-					}
-					if (j > resfDTO.getFlOrderDocNoStatus().size()) {
-						resfDTO.getFlOrderDocNoStatus().add("");
-					}
-					if (j > resfDTO.getDocNoStatus().size()) {
-						resfDTO.getDocNoStatus().add("");
-					}
-					if (j > resfDTO.getFlSchNos().size()) {
-						resfDTO.getFlSchNos().add("");
-					}
+				ScheduleInfo schInfo = new ScheduleInfo();
+				schInfo.setSchNo(detail.getFlSchNo() != null ? detail.getFlSchNo().toString() : " ");
+				schInfo.setCrNo(detail.getDocNo());
+				
+				String crStatus = getStatusDescById(detail.getDocStatus()) !=null ? getStatusDescById(detail.getDocStatus()) :"";
+				schInfo.setCrNoStatus("(" + crStatus + ")");
+				schInfo.setCoNo(detail.getFlOrderDocNo() != null ? detail.getFlOrderDocNo() : " ");
+				
+				String pocoStatus = getStatusDescById(detail.getFlOrderDocStatus()) !=null ? getStatusDescById(detail.getFlOrderDocStatus()) :"";
+				schInfo.setCoNoStatus("(" + pocoStatus + ")");
 
-					schInfo.add(new ScheduleInfo(resfDTO.getFlSchNos().get(i), resfDTO.getDocNos().get(i), resfDTO.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos()
-							.get(i), resfDTO.getFlOrderDocNoStatus().get(i)));
-				}
-				resfDTO.getFlFulfilmentRequest();
-
-				IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
-				orgReqDTO.setOrgProfileId(orgProfileId);
-				OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(orgReqDTO);
-
-				String orgCode = "";
-				String orgName = "";
-				if (orgResDTO != null && orgResDTO.getPmOrgProfile() != null) {
-					orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
-					orgName = orgResDTO.getPmOrgProfile().getOrgName();
-				}
-
-				setOrgCode(orgCode);
-				setOrgName(orgName);
-
-				getManagedBean().setFlRequest(resfDTO.getFlFulfilmentRequest());
+				scheduleInfo.add(schInfo);
 
 			}
+
+			IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
+			orgReqDTO.setOrgProfileId(orgProfileId);
+			OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(orgReqDTO);
+
+			String orgCode = "";
+			String orgName = "";
+			if (orgResDTO != null && orgResDTO.getPmOrgProfile() != null) {
+				orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
+				orgName = orgResDTO.getPmOrgProfile().getOrgName();
+			}
+
+			setOrgCode(orgCode);
+			setOrgName(orgName);
+
 		}
 
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-		
-		setSchInfo(schInfo);
-		return schInfo;
+
+		getManagedBean().setSchInfo(scheduleInfo);
+		return scheduleInfo;
+		//38255-End
 
 	}
-	
 
 	public String getOrgCode() {
 		return orgCode;
@@ -609,8 +599,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			item.setCmUnspsc(unspsc);
 
-			// ////////////////////////look up
-			// measurement////////////////////////////
+			//////////////////////////look up measurement////////////////////////////
 			SearchBean<CmMeasurement> meaSearchBean = new SearchBean<CmMeasurement>();
 
 			meaSearchBean.getDataFilterBeans().add(new SearchFilterBean("measurementCode", SearchOperator.OPERATOR_EQUALS.value(), meaCode));
@@ -623,7 +612,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			item.setCmMeasurement(codeResDTO.getMeasurementList().get(0));
 
-			// ///////////////////look up type/////////////////////
+			/////////////////////look up type/////////////////////
 			SearchBean<CmType> typeSearchBean = new SearchBean<CmType>();
 
 			typeSearchBean.getDataFilterBeans().add(new SearchFilterBean("typeCode", SearchOperator.OPERATOR_EQUALS.value(), typeCode));
@@ -636,7 +625,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.info("getTypeList:" + codeResDTO.getTypeList().size());
 
 			item.setCmType(codeResDTO.getTypeList().get(0));
-			// //////////////////look up brand/////////////
+			////////////////////look up brand/////////////
 			SearchBean<CmBrand> brandSearchBean = new SearchBean<CmBrand>();
 
 			brandSearchBean.getDataFilterBeans().add(new SearchFilterBean("brandCode", SearchOperator.OPERATOR_EQUALS.value(), brandCode));
@@ -648,7 +637,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.info("getBrandList:" + codeResDTO.getBrandList().size());
 
 			item.setCmBrand(codeResDTO.getBrandList().get(0));
-			// //////////////////look up color//////////////////////////
+			////////////////////look up color//////////////////////////
 			SearchBean<CmColor> colorSearchBean = new SearchBean<CmColor>();
 			colorSearchBean.getDataFilterBeans().add(new SearchFilterBean("colorCode", SearchOperator.OPERATOR_EQUALS.value(), colorCode));
 
@@ -678,7 +667,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		//CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
 		catalogueSO.saveSupplierItem(reqDTO);
 
-		// /////////////////End Bpm process/////////////////////////
+		///////////////////End Bpm process/////////////////////////
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 		codeReqDTO = new CodificationReqDTO();
@@ -733,7 +722,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
+		
 		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		supplierReqDTO.setUserId(pmUser.getUserId());
@@ -778,8 +767,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				item.setCmUnspsc(codeResDTO.getUnspscObj());
 
-				// ////////////////////////look up
-				// measurement////////////////////////////
+				//////////////////////////look up measurement////////////////////////////
 				SearchBean<CmMeasurement> meaSearchBean = new SearchBean<CmMeasurement>();
 
 				meaSearchBean.getDataFilterBeans().add(new SearchFilterBean("measurementId", SearchOperator.OPERATOR_EQUALS.value(), code.getMeasurementId()));
@@ -793,7 +781,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				item.setCmMeasurement(meaCcodeResDTO.getMeasurementList().get(0));
 
-				// ///////////////////look up type/////////////////////
+				/////////////////////look up type/////////////////////
 				SearchBean<CmType> typeSearchBean = new SearchBean<CmType>();
 
 				typeSearchBean.getDataFilterBeans().add(new SearchFilterBean("typeId", SearchOperator.OPERATOR_EQUALS.value(), code.getTypeId()));
@@ -807,7 +795,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				log.info("getTypeList:" + typeCodeResDTO.getTypeList().size());
 
 				item.setCmType(typeCodeResDTO.getTypeList().get(0));
-				// //////////////////look up brand/////////////
+				////////////////////look up brand/////////////
 				SearchBean<CmBrand> brandSearchBean = new SearchBean<CmBrand>();
 
 				brandSearchBean.getDataFilterBeans().add(new SearchFilterBean("brandId", SearchOperator.OPERATOR_EQUALS.value(), code.getBrandId()));
@@ -820,7 +808,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				log.info("getBrandList:" + brandCodeResDTO.getBrandList().size());
 
 				item.setCmBrand(brandCodeResDTO.getBrandList().get(0));
-				// //////////////////look up color//////////////////////////
+				////////////////////look up color//////////////////////////
 				SearchBean<CmColor> colorSearchBean = new SearchBean<CmColor>();
 				colorSearchBean.getDataFilterBeans().add(new SearchFilterBean("colorId", SearchOperator.OPERATOR_EQUALS.value(), code.getColorId()));
 
@@ -867,7 +855,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 
-		// /////////////////End Bpm process/////////////////////////
+
+		///////////////////End Bpm process/////////////////////////
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 		codeReqDTO = new CodificationReqDTO();
@@ -1397,15 +1386,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			
 			// #30457 - Start
-		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
-			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
-				@Override
-				public int compare(CmImage o1, CmImage o2) {
-					return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
-				}
-			});
-		}
-		// #30457 - End
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedMaintainItem().getCmImages())) {
+				Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmImages(), new Comparator<CmImage>() {
+					@Override
+					public int compare(CmImage o1, CmImage o2) {
+						return (o1.getImageName() + o1.getCreatedDate()).compareTo(o1.getImageName() + o2.getCreatedDate());
+					}
+				});
+			}
+			// #30457 - End
 
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing()
 			.setStandardDisabled(true);
@@ -1734,17 +1723,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			this.getManagedBean().setTabActiveIndex(1);
 			this.getManagedBean().setDisplayCatalogue(true);
-			//updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
-
-			/*} catch (Exception e) {
-			e.printStackTrace();*/
 		}finally {
 			userSO = null;
 			statusSO = null;
 			catalogueSO = null;
-		}	
-
-		//return "addCatalogItem";ddd
+		}
+		
 		return "editCatalogItem";
 	}
 
@@ -11376,20 +11360,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
-	/*13984 Schedule info instance variables*/	
-	public List<ScheduleInfo> getSchInfo() {
-		if (schInfo == null)
-			schInfo = new ArrayList<ScheduleInfo>();
-		
-        log.info("schInfo is : "+schInfo);
-		return schInfo;
-	}
-
-	public void setSchInfo(List<ScheduleInfo> schInfo) {
-		this.schInfo = schInfo;
-	}
-	
-	/*13984 Schedule No. instance variables for table*/
+	//38255-remove getSchInfo and setSchInfo
 	
 	//bazlin 13984 back catalogue
 	public List<VCmSupplierItem> getCtRequestListCR() {

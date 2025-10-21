@@ -49,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
@@ -108,6 +109,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		reqDTO.setDefaultOutputType(this.getManagedBean().getDefaultOutputType());
 		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
 		reqDTO.setParametersMap(params);
+		
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			log.info("Key : " + entry.getKey() + "=" + entry.getValue() + "&");
+		}
 				
 		try {
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
@@ -189,7 +194,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	
 	// #27397 - start
 	public void validateMofRegNo(String mofNo) {
-		if (StringUtils.isEmpty(mofNo)) {
+		if (mofNo == null && StringUtils.isEmpty(mofNo)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780029);
 		}
 	}
@@ -198,26 +203,32 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	// #21331 - start
 	public void validateParameterValue(String reportCode) {
 		log.info("************** SmReportBackingBean.validateParameterValue() | reportCode: " + reportCode);
-		// #29712 & #30824, #32564 - start
+		// #29712 & #30824 - start
 		// SM_001
 		if (StringUtils.isNotEmpty(reportCode) && (reportCode.trim().equalsIgnoreCase(ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL))) {
 			if (StringUtils.isEmpty(getManagedBean().getRegType())) {
 				throw new EpException(MessageConst.ERROR_REPORT_780062);
 			} else {
 				if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
-					validateMofRegNo(getManagedBean().getMofNo());
+					if(getManagedBean().getSelectedMofAccount() == null){
+						throw new EpException(MessageConst.ERROR_REPORT_780029);
+					}
+					validateMofRegNo(getManagedBean().getSelectedMofAccount().getMofNo()); //30824
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
-					if (getManagedBean().getSelectedSupplier() == null) {
+					System.out.println("getSelectedSupplier ==> " + getManagedBean().getSelectedBasicAccount());
+					if (getManagedBean().getSelectedBasicAccount() == null) {
 						throw new EpException(MessageConst.ERROR_REPORT_780044);
+					} else {
+						System.out.println("getCompanyName ==> " + getManagedBean().getSelectedBasicAccount().getCompanyName());
 					}
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_G2G)) {
 					if (getManagedBean().getSelectedOrgProfile() == null) {
-						throw new EpException(MessageConst.ERROR_REPORT_780044);
+						throw new EpException(MessageConst.ERROR_REPORT_780070);
 					}
 				}
 			}
 		}
-		// #29712 & #30824, #32564 - end
+		// #29712 & #30824 - end
 		
 		// SM_048
 		if (StringUtils.isNotEmpty(reportCode) && (reportCode.trim().equalsIgnoreCase(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))) {
@@ -344,6 +355,22 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		if (!StringUtils.isBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
 		}
+		
+		//#38227 - START
+		if(SmReportConst.SM_LIST_OF_APPLICATION_RPT_VAL.equals(getManagedBean().getReportCode())){
+			ListOfApplicationRptBackingBean listOfApplRpt = new ListOfApplicationRptBackingBean();
+			listOfApplRpt.resetSearch();
+		} else if(SmReportConst.SM_APPLICATION_APPROVED_RPT_VAL.equals(getManagedBean().getReportCode())){
+			ApplApprovedRptBackingBean applApprovedRpt = new ApplApprovedRptBackingBean();
+			applApprovedRpt.resetSearch();
+		} else if(SmReportConst.SM_APPLICATION_PROCESSED_RPT_VAL.equals(getManagedBean().getReportCode())){
+			ApplProcessedRptBackingBean applProcessedRpt = new ApplProcessedRptBackingBean();
+			applProcessedRpt.resetSearch();
+		} else if(SmReportConst.SM_CATEGORY_STATISTIC_RPT_VAL.equals(getManagedBean().getReportCode())){
+			CategoryStatRptBackingBean catStatRpt = new CategoryStatRptBackingBean();
+			catStatRpt.resetSearch();
+		}
+		//#38227 - END
 	}
 
 	public void addCompanyNameParam(LinkedHashMap<String, String> params) {
@@ -3383,5 +3410,102 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 	// #28115 - end
 	
+	//#32521 - START
+	public List<SelectItem> retrieveReportApplStatus() {
+		if (EntityHelper
+				.isCollectionEmpty(getManagedBean().getApplStatusList())
+				&& null != new FacesScopes().getUserSessionBean().getUserId()) {
+
+			getManagedBean().setApplStatusList(new ArrayList<SelectItem>());
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> applStatusList = reportSO
+					.retrieveApplicationProcessedStatusList(new FacesScopes()
+							.getUserLocale().getLanguage());
+
+			if (CollectionUtils.isNotEmpty(applStatusList)) {
+				for (Object[] object : applStatusList) {
+					if (object[0] != null && object[1] != null) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setValue(object[0].toString());
+						selectItem.setLabel(object[1].toString());
+						getManagedBean().getApplStatusList().add(selectItem);
+					}
+				}
+			}
+		}
+		return getManagedBean().getApplStatusList();
+	}
+	
+	public String getConditionFieldsCompany(){
+		String suppType = getManagedBean().getSupplierType();
+		if (StringUtils.isBlank(suppType)){
+			return "";
+		}
+		return "smSupplier.smAppl.supplierType^" + suppType;
+	}
+	
+	/**
+	 * Get condition fields for PO and/or Approver roles.
+	 * @param includeApprover
+	 * @return
+	 */
+	public String getConditionFieldsPO(boolean includeApprover){
+		StringBuilder sb = new StringBuilder();
+		String role = "pmUserOrgs.pmUserRoles.pmRole.roleCode^";
+		sb.append(role + SupplierManagementConst.PO_HQ);
+		if (includeApprover){
+			sb.append("*" + role + SupplierManagementConst.APPROVER_HQ);
+		}
+		
+		String suppType = getManagedBean().getSupplierType();
+		String searchZone = "|pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
+		String searchZones = "pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
+		String zone = getManagedBean().getZone();
+		
+		if(StringUtils.isBlank(suppType) && StringUtils.isBlank(zone)){
+			return sb.toString();
+		}
+			
+		if ((StringUtils.isBlank(suppType)) && !StringUtils.isBlank(zone)){
+			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
+				sb.append(searchZone + "1");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
+				sb.append(searchZone + "1");
+				sb.append("*" + searchZones + "2");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)){
+				sb.append(searchZone + "1");
+				sb.append("*" + searchZones + "3");
+			}
+		}else if(suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
+			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
+				sb.append(searchZone + "1");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
+				sb.append(searchZone + "2");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)){
+				sb.append(searchZone + "3");
+			}
+		}else if(suppType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
+			sb.append(searchZone + "1");
+		}
+			
+		return sb.toString();
+	}
+	//#32521 - END
+	// #7754_#35984 - Start
+	public String getZoneByUser() {
+		PmZone zone = SmCommonUtil.getInstance().getUserZone();
+
+		if (zone != null) {
+			getManagedBean().setZone(zone.getZoneName());
+		} else {
+			getManagedBean().setZone(null);
+		}
+
+		log.info("User Zone>>>>>" + getManagedBean().getZone());
+		return getManagedBean().getZone();
+	}
+	// #7754_#35984 - End
 	
 }

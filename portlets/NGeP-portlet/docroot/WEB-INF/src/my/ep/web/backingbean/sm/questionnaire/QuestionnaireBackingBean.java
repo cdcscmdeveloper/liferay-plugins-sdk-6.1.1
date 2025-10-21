@@ -10,10 +10,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAnswer;
 import my.ep.persistence.entity.sm.SmQuestion;
@@ -153,47 +155,61 @@ public class QuestionnaireBackingBean extends
 
 	
 	public void submitQuestionnaire() {
-		QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
-		reqDTO.setSmSupplier(this.getManagedBean().getSmSupp());
-		reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
-		reqDTO.setOriResubmitSmAppl(this.getManagedBean().getRejectedAppl());
+		//#35070 - Start
+		try{
+		//#35070 - End
+			QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
+			reqDTO.setSmSupplier(this.getManagedBean().getSmSupp());
+			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
+			reqDTO.setOriResubmitSmAppl(this.getManagedBean().getRejectedAppl());
 
-		for (SmSupplierAnswer suppAns : this.getManagedBean()
-				.getSmSuppAnswerLs()) {
+			for (SmSupplierAnswer suppAns : this.getManagedBean()
+					.getSmSuppAnswerLs()) {
 
-			log.info("Desc >>>>>"
-					+ suppAns.getSmQuestion().getSmAnswerCategory()
-							.getAnswerCategoryDesc());
-			log.info("Answer Id>>>>>" + suppAns.getSmAnswer().getAnswerId());
+				log.info("Desc >>>>>"
+						+ suppAns.getSmQuestion().getSmAnswerCategory()
+								.getAnswerCategoryDesc());
+				log.info("Answer Id>>>>>" + suppAns.getSmAnswer().getAnswerId());
+			}
+
+			FacesScopes fs = new FacesScopes();
+			List<String> useList = new ArrayList<String>();
+			PmUser loginUser = fs.getUserSessionBean();
+			useList.add(loginUser.getLoginId());
+			reqDTO.setAnswers(this.getManagedBean().getSmSuppAnswerLs());
+			reqDTO.setUserList(useList);
+			reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
+			// #12491
+			reqDTO.setPmUser(loginUser);
+			QuestionnaireResDTO resDTO = SmServiceLookup.getQuestionnaireSO()
+					.questionnaireSubmission(reqDTO);
+			// check if need to init task for resubmit application
+			if (resDTO.isInitTask()) {
+				SmApplicationUtil.initiateMofApplNewBpmTask(resDTO.getSmAppl());
+			}
+
+			// for resubmit application directly inject to task list
+			if (this.getManagedBean().getRejectedAppl() != null) {
+				SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
+						SmCommonUtil.getMessage("lbl.sm.submit.questionaire.msg",
+								null), null, null);
+			} else {
+				SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
+						null, null, null);
+			}
+
+			renewSesionObject();
+		
+		//#35070 - Start
+		} catch (Exception e) {
+			if (e.getMessage().toLowerCase().contains("arjuna")) {
+				log.info("Error Submit Question Arjuna: " + e.getMessage());
+				throw new EpException(MessageConst.ERROR_775198);
+			} else {
+				log.info("Error When Submit Question: " + e.getMessage());
+			}
 		}
-
-		FacesScopes fs = new FacesScopes();
-		List<String> useList = new ArrayList<String>();
-		PmUser loginUser = fs.getUserSessionBean();
-		useList.add(loginUser.getLoginId());
-		reqDTO.setAnswers(this.getManagedBean().getSmSuppAnswerLs());
-		reqDTO.setUserList(useList);
-		reqDTO.setToken(fs.getBPMAuthenticationCtxToken());
-		// #12491
-		reqDTO.setPmUser(loginUser);
-		QuestionnaireResDTO resDTO = SmServiceLookup.getQuestionnaireSO()
-				.questionnaireSubmission(reqDTO);
-		// check if need to init task for resubmit application
-		if (resDTO.isInitTask()) {
-			SmApplicationUtil.initiateMofApplNewBpmTask(resDTO.getSmAppl());
-		}
-
-		// for resubmit application directly inject to task list
-		if (this.getManagedBean().getRejectedAppl() != null) {
-			SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
-					SmCommonUtil.getMessage("lbl.sm.submit.questionaire.msg",
-							null), null, null);
-		} else {
-			SmCommonUtil.redirectToPage(this.getManagedBean().getTargetUrl(),
-					null, null, null);
-		}
-
-		renewSesionObject();
+		//#35070 - End
 	}
 
 	public String getsupplierApplTypeDesc(String applType) {

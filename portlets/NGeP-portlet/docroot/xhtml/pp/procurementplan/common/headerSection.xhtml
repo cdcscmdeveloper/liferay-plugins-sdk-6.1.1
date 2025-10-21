@@ -43,7 +43,12 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 				</ui:decorate>
 				<c:if
 					test='#{not empty pPlanBackingBean.managedBean.btnValue and ProcurementPlanConst.actionViewBtn eq pPlanBackingBean.managedBean.btnValue}'>
-						<td colspan="4" style="text-align: right">	
+						<td colspan="4" style="text-align: right">
+							<ui:remove>START : #35502</ui:remove>
+								<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
+								action="#{auditProcurementPlanReportBackingBean.redirectToAuditTrailView(pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode, pPlanBackingBean.managedBean.selectedPlan.planId)}"
+								rendered="#{auditProcurementPlanReportBackingBean.isAuditTrailView()}" />
+							<ui:remove>END : #35502</ui:remove>&#160;&#160;		
 							<p:commandLink rendered="#{pPlanBackingBean.managedBean.trackingDiary}"
 									value="#{lbl['lbl.td.doc.trackingDiary']}"
 									action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(pPlanBackingBean.retrievePlanDocType(pPlanBackingBean.managedBean.selectedPlan),pPlanBackingBean.managedBean.selectedPlan.planId)}"
@@ -61,21 +66,24 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 						</td>		
 				</c:if>
 	    	</div>
-	    	<!--28760 - start -->
+	    	<!--28760, #35310 //01042024 - start -->
 	    	<p:confirmDialog id="dlgProcurementCancel"
 				widgetVar="dlgProcurementCancel"
 				message="#{lbl['lbl.msg.confirm.cancel2']}" severity="alert"
 				header="#{lbl['lbl.msg.confirm.cancel2.header']}">
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
-						partialSubmit="true" immediate="true"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"
+						partialSubmit="true"
 						action="#{pPlanBackingBean.savePlan('CANCEL')}"
-						oncomplete="dlgProcurementCancel.hide();" />
+						onstart="dlgProcurementCancel.hide();blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						update="@form"/>
 					<p:commandButton value="#{lbl['lbl.btn.no']}"
-						oncomplete="dlgProcurementCancel.hide();" />
+						oncomplete="dlgProcurementCancel.hide();"
+						update="@form"/>
 				</div>
 			</p:confirmDialog>
-			<!--28760 - end -->
+			<!--28760, #35310 - end -->
 	  	</div>
 	</p:outputPanel>
 	<div class="clear"></div>

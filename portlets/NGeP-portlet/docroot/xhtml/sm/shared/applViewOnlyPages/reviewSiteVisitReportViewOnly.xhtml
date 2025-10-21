@@ -1,9 +1,12 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<!-- #28175 start -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<!-- #28175 end -->	
 
 	<p:panel header="#{lbl['lbl.sm.svo.sitevisit.report']}">
 
@@ -18,12 +21,26 @@
 					value="#{lbl['lbl.sm.sitevisit.category.categorycode_BP']}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
-				style="white-space: normal; width:30%;">
+			<!-- #28175 start, 28775 - Site Visit Grouping Enhancement - 28775 -->
+			<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space: normal; width:30%;">
 				<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-					value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
-			#{svTask.pmCategoryL3.categoryName}" />
+					value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(svTask.smSvTemplate)}" />
+				<h:outputText rendered="#{svTask.smSvTemplate.suppCategory.otherDesc != null}" 
+					value=" (#{svTask.smSvTemplate.suppCategory.otherDesc})"/>
+				
+				<h:panelGroup rendered="#{svTask.smSvTaskGroups.size() > 0}">
+					<ui:repeat var="svGroup" value="#{svTask.smSvTaskGroups}">
+						<h:panelGroup rendered="#{!svGroup.redundant}">
+					        <br/><br/>
+					        <h:outputText value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(svGroup.smSvTemplate)}"/>
+					        <h:outputText rendered="#{svGroup.smSvTemplate.suppCategory.otherDesc != null}"
+					            value=" (#{svGroup.smSvTemplate.suppCategory.otherDesc})"/>
+					    </h:panelGroup>
+					</ui:repeat>
+				</h:panelGroup>
 			</p:column>
+			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
+			<!-- #28175 end -->
 
 			<p:column headerText="#{lbl['lbl.sm.address']}"
 				style="white-space: pre;">
@@ -51,8 +68,14 @@
 			width="1000" id="poReportDlgId" resizable="false">
 			<p:outputPanel id="reportPanel"
 				rendered="#{!empty svoSiteVisitBackingBean.managedBean.smSvTask}">
-				<ui:include
-					src="/xhtml/sm/shared/sitevisit/siteVisitReportPOReview.xhtml"></ui:include>
+				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+				<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/group/siteVisitReportPOReview.xhtml" />
+				</c:if>
+				<c:if test="#{!svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
+					<ui:include src="/xhtml/sm/shared/sitevisit/siteVisitReportPOReview.xhtml" />
+				</c:if>
+				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 			</p:outputPanel>
 		</p:dialog>
 

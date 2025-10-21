@@ -59,6 +59,7 @@ public class TemplateSpecBean implements Serializable {
 	private ScQt qt;
 	private List<TplSpecAnswer> hideanswerList;
 	// 32453, #21695, #25138 -End
+	private boolean wordBreakForQT;//#29007 Added Vinod
 	
 	/**
 	 * Constructor for template specification bean
@@ -356,4 +357,14 @@ public class TemplateSpecBean implements Serializable {
 		this.hideanswerList = hideanswerList;
 	}
 	// 32453, #21695, #25138 -End
+
+	// #29007 Start Vinod
+	public boolean isWordBreakForQT() {
+		return wordBreakForQT;
+	}
+
+	public void setWordBreakForQT(boolean wordBreakForQT) {
+		this.wordBreakForQT = wordBreakForQT;
+	}
+	// #29007 End Vinod
 }

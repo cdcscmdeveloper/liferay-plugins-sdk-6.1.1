@@ -36,7 +36,6 @@
 				 <p:columnGroup type="header">  
 			        <p:row>  
 						<ui:remove><!-- 6906 - start --></ui:remove> 
-						<ui:param name="isRejected" value="#{not empty finSpec.scQtProposal.supplierRejectionRemark}"/>
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:10%; text-align:center;"/><ui:remove>6906</ui:remove>
 						<ui:remove><!-- 6906 - end --></ui:remove>		           	
 			           	<p:column rowspan="2" headerText="#{lbl['lbl.sc.eva.package.offered.price']}" style="width:15%;text-align:center;"/>    
@@ -93,9 +92,12 @@
 						ADDED : disabled="#{evaluationBackingBean.managedBean.readOnly}
 					</ui:remove>
 					<ui:remove><!-- 6906 - add disabled if isRejected --></ui:remove>
-			        <p:inputText partialSubmit="true" disabled="#{evaluationBackingBean.managedBean.readOnly or isRejected}" rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}" 
+			        <p:inputText partialSubmit="true" disabled="#{evaluationBackingBean.managedBean.readOnly or isRejected
+			        	or (finSpec.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+			        	or finSpec.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}" rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}" 
 			        	id="userScore" label="#{lbl['lbl.tpl.spec.content.user.score']}" style="text-align:right;" maxlength="16" size="2"
 			        	value="#{finSpec.totalScore}">
+			        	<ui:remove>21692</ui:remove>
 			        	<ui:remove><!-- #34835 remove required --></ui:remove>
 						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" /><!-- -#32458 - start -->
 						<f:attribute name="min" value="0" />

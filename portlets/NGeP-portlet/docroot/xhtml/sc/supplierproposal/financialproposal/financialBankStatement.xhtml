@@ -93,7 +93,7 @@
 						<p:inputText id="financialBankStatementsUserScoreId"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}"
 							value="#{noOfContracts.userScore}" maxlength="18" required="true"
-							disabled="#{pageDisable or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}"
+							disabled="#{pageDisable or rejectedSupplier or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}"
 							style="text-align:right" rendered="#{ checklistScoreType eq '2'}">
 							<!-- 21695, 25138 -end- -->
 							<ac:validateNumber

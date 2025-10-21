@@ -361,6 +361,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 	//28771- end
 	
+	//#30766 & #34209 - START, #32008
+	private boolean poApprUnClaimTask;
+	private List<SmMachineDtl> allMachineDtls;
+	//#30766 & #34209 - END
+	
 	//26238 -  Disciplonary action - 28146
 	private boolean flagBlacklistCancel;
 	
@@ -373,8 +378,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	// #28278
 	private boolean flagShowButtonSubmit;
-	//#34209, #32008
-	private boolean poApprUnClaimTask;
+
 	//#34099 - start
 	private SmApplInquiry selectedInquiryResponse;
 	private String tabActiveDlg = "0";
@@ -385,6 +389,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		private SmApplInquiry poToSupplierInquiry;
 		private List<SmApplInquiry> poSupplierInquiryHistory;
 		private List<SmApplSupportDoc> missinDocs;
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean auditAccess;
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2563,4 +2569,24 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.latestChequeSignPersonnelName = latestChequeSignPersonnelName;
 	}
 	//#35086 - end
+	
+	//#30766 & #34209 - START
+	public List<SmMachineDtl> getAllMachineDtls() {
+		return allMachineDtls;
+	}
+
+	public void setAllMachineDtls(List<SmMachineDtl> allMachineDtls) {
+		this.allMachineDtls = allMachineDtls;
+	}
+	//#30766 & #34209 - END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isAuditAccess() {
+		return auditAccess;
+	}
+
+	public void setAuditAccess(boolean auditAccess) {
+		this.auditAccess = auditAccess;
+	}
+	// #28895_35501 End
+		
 }

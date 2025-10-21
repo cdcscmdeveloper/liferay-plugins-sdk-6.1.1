@@ -21,7 +21,7 @@
 		
 		<div class="flow-chart-left flowActive">
 			<div class="bg"><div class="no">4</div></div><p></p>
-			<p style="top: 1px"><p:commandLink styleClass="current-link" 
+			<p style="top: 1px"><p:commandLink styleClass="current-link" onclick="blockWidget.show()" onerror="blockWidget.hide()"
 				value="#{lbl['lbl.sm.basic.resubmit.appl']}" 
 				action="#{postSupplierRegBB.pageNavigate}" update="@form" /></p>
 		</div>

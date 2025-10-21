@@ -26,8 +26,11 @@
 						immediate="true" action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-					<p:commandButton value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.save}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #34400 - START -->
+					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" >
+					</p:commandButton>
+				<!-- #34159 - END -->
 				</td>
 			</tr>
 		</table>
@@ -188,7 +191,7 @@
 					</td>
 				</tr>
 <!-- #13208 - END -->
-				
+				<!-- #35178 - Start : Remove disabled for email -->
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
@@ -197,7 +200,7 @@
 							label="#{lbl['lbl.sm.userprofile.email']}"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}" 
 							validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}"
-							size="40" required="true" disabled="#{smPersonnelBackingBean.managedBean.editMode}">
+							size="40" required="true">
 							<f:validateRegex
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							</p:inputText>
@@ -214,6 +217,7 @@
 							<p:message id="basicBUDesMsg" for="basicBUDes"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
+				<!-- #35178 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td>
@@ -741,6 +745,12 @@
 					oncomplete="confirmDialog.hide();" />
 			</div>
 		</p:confirmDialog>
+		<!-- #34400 -->
+		<ac:confirmationPopupSM id="confirmSaveDlg" widget="confirmSaveDlg"
+			okAction="smPersonnelBackingBean.save"
+			content="#{lbl['lbl.sm.confirm.user.profile']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
 		
 	</ui:define>
 </ui:composition>

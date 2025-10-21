@@ -1,0 +1,348 @@
+package my.ep.web.backingbean.report.fl.tf;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashMap;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.event.AjaxBehaviorEvent;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
+import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.SLALogFulfilmentConst;
+import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
+import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
+import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmAgOffice;
+import my.ep.util.SLAUtils;
+import my.ep.web.backingbean.report.fl.FlReportBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.pm.AccountingOfficeSearchBean;
+import my.ep.web.constant.report.FlReportConst;
+import my.ep.web.managedbean.report.fl.tf.TransactionFeeRptManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+
+/**
+ * Backing Bean for Transaction Fee Rpt.
+ *
+ * @author razin
+ * @since 08/06/2021
+ */
+@ManagedBean(name = "tfRptBB")
+@SessionScoped
+public class TransactionFeeRptBackingBean extends FlReportBackingBean<TransactionFeeRptManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** The search accounting office. */
+	private transient IPagingDataModel<PmAgOffice> searchAccountingOffice = new SearchOfficePagingDataModel();
+	
+	private PmAgOffice agOffice;
+
+	private static final Logger log = EpLogger
+			.getLogger(TransactionFeeRptBackingBean.class);
+
+	/**
+	 * Transaction fee rpt constructor
+	 */
+	public TransactionFeeRptBackingBean() {
+		setDefaultTransactionDate();
+	}
+
+	/**
+	 * reset button
+	 */
+	public void resetAction(){
+		getManagedBean().setPmAccountingOffice(null);
+		getManagedBean().setCheckSFOneOff(false);
+		getManagedBean().setCheckSFPeriodic(false);
+		getManagedBean().setDocumentType(null);
+		setDefaultTransactionDate();
+
+		resetSearchCriteriaValues();
+		
+		//reset AG acc
+		resetOfficeSearchBean();
+	}
+
+	/**
+	 * default value for transaction date
+	 */
+	public void setDefaultTransactionDate() {
+		Calendar fromDate = Calendar.getInstance();
+		fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
+		getManagedBean().setTransactionFromDate(fromDate.getTime());
+		getManagedBean().setTransactionToDate(new Date());
+	}
+	
+	/**
+	 * main method for report generation method
+	 */
+	public void generateReport(){
+		LinkedHashMap<String,String> params = new LinkedHashMap<>();
+		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+		if(getManagedBean().getPmAccountingOffice() == null){
+			throw new EpException(MessageConst.ERROR_REPORT_780065);
+		}
+		if (getManagedBean().getReportCode().equalsIgnoreCase(
+				FlReportConst.FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE)
+				&& !getManagedBean().isCheckSFOneOff() && !getManagedBean().isCheckSFPeriodic()) {
+			throw new EpException(MessageConst.ERROR_REPORT_780066);
+		}
+		if(getManagedBean().getDocumentType() == null){
+			throw new EpException(MessageConst.ERROR_REPORT_780067);
+		}
+
+		log.info("********Report Code*************" + getManagedBean().getReportCode());
+
+		retrieveReportValueFromDb();
+
+		//add ag office name
+		if (getManagedBean().getPmAccountingOffice().getOfficeCode() !=null ) {
+			params.put(FlReportConst.FL_RPT_AG_OFFICE, getManagedBean().getPmAccountingOffice().getOfficeCode());
+		}else{
+			params.put(FlReportConst.FL_RPT_AG_OFFICE, null);
+		}
+
+
+		//add PSF one off
+		if (getManagedBean().isCheckSFOneOff()) {
+			params.put(FlReportConst.FL_RPT_PSF_ONE_OFF, "Y");
+		}else{
+			params.put(FlReportConst.FL_RPT_PSF_ONE_OFF, "N");
+		}
+
+		//add PSF period
+		if (getManagedBean().isCheckSFPeriodic()) {
+			params.put(FlReportConst.FL_RPT_PSF_PERIOD, "Y");
+		}else{
+			params.put(FlReportConst.FL_RPT_PSF_PERIOD, "N");
+		}
+
+		params.put(FlReportConst.FL_RPT_TRANSACTION_FROM_DATE, df.format(getManagedBean().getTransactionFromDate()));
+		params.put(FlReportConst.FL_RPT_TRANSACTION_TO_DATE, df.format(getManagedBean().getTransactionToDate()));
+		
+		//check toDate is bigger than fromDate
+		if(getManagedBean().getTransactionToDate().compareTo(getManagedBean().getTransactionFromDate()) < 0){
+			throw new EpException(MessageConst.ERROR_REPORT_780088);
+		}
+		
+		checkOneYearDifferentForTransactionFeeRpt(getManagedBean().getTransactionFromDate(), getManagedBean().getTransactionToDate());
+		
+		//generate report for excel or pdf
+		if("PDF".equals(getManagedBean().getDocumentType())){
+			generateFlReport(params);
+		}else{
+			try{
+				generateFLExcelReport(getManagedBean().getReportCode(), params);
+			}catch(Exception e){
+				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE, SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB,
+						getManagedBean().getReportCode(), SLALogFulfilmentConst.FL_TRANSACTION_FEE_GENERATE_RPT,
+						getUserIdSessionFromLoginId(), e);
+			}
+		}
+	}
+
+	/**
+	 * disable AG picker when tick ALL
+	 */
+	public void selectedAgOff(){
+		if(agOffice == null){
+			PmAgOffice agoff = new PmAgOffice();
+			agoff.setOfficeName("All");
+			getManagedBean().setPmAccountingOffice(agoff);
+		}else{
+			agOffice.setOfficeName(agOffice.getPmAgValidity().getOfficeName());
+			getManagedBean().setPmAccountingOffice(agOffice);
+		}
+	}
+
+	public PmAgOffice getAgOffice() {
+		return agOffice;
+	}
+
+	public void setAgOffice(PmAgOffice agOffice) {
+		this.agOffice = agOffice;
+	}
+
+	/**
+	 * The Class SearchOfficePagingDataModel.
+	 */
+	private class SearchOfficePagingDataModel extends PagingDataModel<PmAgOffice> {
+
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Instantiates a new search office paging data model.
+		 */
+		public SearchOfficePagingDataModel() {
+			super("accountingSR",true);
+		}
+
+		@Override
+		public ISearchResultBean<PmAgOffice> pageChangeListener(ISearchBean<PmAgOffice> searchBean) {
+
+			IAgOfficeSO agOfficeSO;
+
+			try {
+				String inputAg = getManagedBean().getInputAgOff();
+				AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
+				if (StringUtils.isNotBlank(inputAg)){
+					if("officeName".equalsIgnoreCase(getManagedBean().getOffDropdown())){
+						reqDTO.setAgOfficeDesc(inputAg);
+						reqDTO.setAgOfficeCode(null);
+					}else if("officeCode".equalsIgnoreCase(getManagedBean().getOffDropdown())){
+						reqDTO.setAgOfficeDesc(null);
+						reqDTO.setAgOfficeCode(inputAg);
+					}else{
+						reqDTO.setAgOfficeDesc(null);
+						reqDTO.setAgOfficeCode(null);
+					}
+				}else{
+					reqDTO.setAgOfficeDesc(null);
+					reqDTO.setAgOfficeCode(null);
+				}
+				log.info("29554: setAgOfficeDesc: "+reqDTO.getAgOfficeDesc());
+				log.info("29554: setAgOfficeCode: "+reqDTO.getAgOfficeCode());
+
+				reqDTO.setOfficeSearchBean(searchBean);
+				agOfficeSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IAgOfficeSO.class);
+				AgOfficeResDTO resDTO= agOfficeSO.searchAgOfficeList(reqDTO);
+				getManagedBean().setLazy(true);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getOfficeResultBean();
+				}
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+						SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+						SLALogFulfilmentConst.FL_TRANSACTION_FEE_AG_OFFICE_LIST, getUserIdSessionFromLoginId(), e);
+
+				throw new EpException(MessageConst.ERROR_770005);
+			}
+
+			return null;
+		}
+
+
+	}
+	/**
+	 * reset search bean fields.
+	 */
+	public void resetOfficeSearchBean() {
+		this.agOffice = null;
+		this.getManagedBean().setIsAllAgOff("false");
+		
+		this.getManagedBean().setOffDropdown("officeCode");
+		this.getManagedBean().setAccountingOfficeSearchBean(new AccountingOfficeSearchBean());
+		
+		this.getManagedBean().setInputAgOff(null);
+		searchAccountingOffice();
+	}
+
+	/**
+	 * Search accounting office.
+	 */
+	public void searchAccountingOffice() {
+		searchAccountingOffice.reloadData();
+	}
+
+	/**
+	 * Gets the search accounting office.
+	 * 
+	 * @return the searchAccountingOffice
+	 */
+	public IPagingDataModel<PmAgOffice> getSearchAccountingOffice() {
+		return searchAccountingOffice;
+	}
+
+	/**
+	 * Sets the search accounting office.
+	 * 
+	 * @param searchAccountingOffice
+	 *            the searchAccountingOffice to set
+	 */
+	public void setSearchAccountingOffice(IPagingDataModel<PmAgOffice> searchAccountingOffice) {
+		this.searchAccountingOffice = searchAccountingOffice;
+	}
+
+	/**
+	 * set value for all AG office
+	 * 
+	 * @param e
+	 */
+	public void allAgOffChecked(AjaxBehaviorEvent e) {
+		String valCheck = (String) e.getComponent().getAttributes().get("value");
+		this.agOffice = null;
+		this.getManagedBean().setInputAgOff(null);
+		this.getManagedBean().setIsAllAgOff(valCheck);
+		searchAccountingOffice();
+	}
+	
+	/**
+	 * disable AG select button
+	 * 
+	 * @return
+	 */
+	public boolean isSelectButtonDisable() {
+		if (getManagedBean().getIsAllAgOff() != null && "true".equalsIgnoreCase(getManagedBean().getIsAllAgOff())) {
+			this.agOffice = null;
+			return false;
+		}
+		if (getAgOffice() != null) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * to ensure difference between from - to date no exceed 1 year
+	 * 
+	 * @param fromDate
+	 * @param toDate 
+	 */
+	public void checkOneYearDifferentForTransactionFeeRpt(Date fromDate, Date toDate) {
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		String yearFrom = outputDateFormat.format(fromDate).substring(6, 10);
+		String yearTo = outputDateFormat.format(toDate).substring(6, 10);
+		String monthFrom = outputDateFormat.format(fromDate).substring(3, 5);
+		String monthTo = outputDateFormat.format(toDate).substring(3, 5);
+		String dayFrom = outputDateFormat.format(fromDate).substring(0, 2);
+		String dayTo = outputDateFormat.format(toDate).substring(0, 2);
+		int yearFromInt = Integer.parseInt(yearFrom);
+		int yearToInt = Integer.parseInt(yearTo);
+		int monthFromInt = Integer.parseInt(monthFrom);
+		int monthToInt = Integer.parseInt(monthTo);
+		int dayFromInt = Integer.parseInt(dayFrom);
+		int dayToInt = Integer.parseInt(dayTo);
+		if (yearToInt == yearFromInt + 1) {
+			if (monthToInt == monthFromInt) {
+				if (dayToInt > dayFromInt) {
+					throw new EpException(MessageConst.ERROR_REPORT_780087);
+				}
+			} else if (monthToInt > monthFromInt) {
+				throw new EpException(MessageConst.ERROR_REPORT_780087);
+			}
+		} else if (yearToInt > yearFromInt + 1) {
+			throw new EpException(MessageConst.ERROR_REPORT_780087);
+		}
+	}
+
+}

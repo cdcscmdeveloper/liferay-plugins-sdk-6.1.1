@@ -16,6 +16,12 @@
 		value="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or qtStatusChecklistScoring}" />
 	<ui:param name="qtStatusScheduleDocAndAfter"
 		value="#{createQtBB.isQTStatusGreaterThanOrEquals(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+	<ui:remove>21692 - Start</ui:remove>
+	<ui:param name="qtStatusIsProposalValidPeriodExtApproval"
+		value="#{qTDetailBB.isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(scQt.qtStatus.statusId)}" />
+	<ui:param name="qtExtensionResponseDueDate"
+		value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod)}" />
+	<ui:remove>21692 - End</ui:remove>
 	<ui:param name="zoneCoverageReadonly"
 		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_ZONE_COVERAGE)}" />
 	<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
@@ -227,10 +233,11 @@
 						label="#{lbl['lbl.sc.title']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isProcurementTitleMandatory(scQt) or not empty param['skipmenuvalidation'] or not empty param['skipsaveclonevalidation']}"
 						value="#{scQt.qtTitle}" cols="110" rows="3"
 						valueChangeListener="#{createQtBB.qtTitleValueChanged}"
-						onkeyup="limitTextArea(this,500);"
-						onkeydown="limitTextArea(this,500);"
-						onmouseout="limitTextArea(this,500);"
-						style=" margin-bottom:5px; width: 714px;" maxlength="500">
+						onkeyup="limitTextArea(this,1000);"
+						onkeydown="limitTextArea(this,1000);"
+						onmouseout="limitTextArea(this,1000);"
+						style=" margin-bottom:5px; width: 714px;" maxlength="1000">
+						<!-- #34163  Changed maxlength to 1000 Vinod -->						
 					<ui:remove>9019 -end</ui:remove>
 						<f:ajax></f:ajax>
 					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
@@ -303,11 +310,13 @@
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
 											<ui:remove>9019 -end</ui:remove>
+											<ui:remove><!-- #35061_haziq - Start --></ui:remove>
 											<!-- 25729 -start- -->
-											<p:ajax event="blur" partialSubmit="true" update="@form"
+											<p:ajax event="change" partialSubmit="true" update="@form"
 												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											<!-- 25729 -end- -->
 											</p:ajax>
+											<ui:remove><!-- #35061_haziq - End --></ui:remove>
 
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -912,8 +921,8 @@
 										style="text-align:right; width:200px;">
 										<ui:remove>9019 -end</ui:remove>
 										<p:ajax event="blur" process="@this" partialSubmit="true"
-											update="@this, @(.amendButton)"
-											listener="#{createQtBB.handleProposalValidityDate}" />
+											update="@form, @(.amendButton)"
+											listener="#{createQtBB.handleProposalValidityDate}" /><ui:remove>21692 update field this to form</ui:remove>
 									</p:inputMask></td>
 								<td><p:message id="proposalvalidityMsg"
 										for="proposalvalidity" display="icon" /></td>
@@ -923,6 +932,53 @@
 						</table>
 					</td>
 				</tr>
+				<ui:remove>21692 - Start</ui:remove>
+				<ui:fragment id="responsePeriodId" rendered="#{qtStatusIsProposalValidPeriodExtApproval and (createQtBB.managedBean.isProposalValidityChangeValue()
+					or isReadOnly)}">
+				<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.accept.response.period']}" /> 
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</td>
+						<td>
+							<table>
+								<tr>
+									<td>
+									<p:inputMask id="responsePeriod" mask="9?9999"
+										maxlength="3" placeHolder=""
+										label="#{lbl['lbl.sc.qt.response.period']}" required="#{empty param['skipvalidation']}"
+										value="#{scQt.responsePeriod}"
+										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
+										style="text-align:right; width:200px;">
+<!-- 										<p:ajax event="blur" process="@this" partialSubmit="true" -->
+<!-- 											update="@this, @(.amendButton)" -->
+<!-- 											listener="#{createQtBB.handleProposalValidityDate}" /> -->
+									</p:inputMask></td>
+									<td><p:message id="responsePeriodMsg"
+										for="responsePeriod" display="icon" /></td>
+									<td colspan="2">
+										<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
+						</td>
+						<td>
+						<c:if test="#{qtExtensionResponseDueDate != null}">
+							<p:inputText value="#{qtExtensionResponseDueDate}" style="width:200px;" disabled="true" >
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+							</p:inputText>
+						</c:if>
+						<c:if test="#{qtExtensionResponseDueDate == null}">
+							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
+							</p:inputText>
+						</c:if>
+						</td>
+					</tr>
+				</ui:fragment>
+				<ui:remove>21692 - End</ui:remove>
 			</c:if>
 			<tr>
 				<td style="width: 100%;"><p:outputLabel
@@ -1002,36 +1058,33 @@
 				<!--#25729 #142 START -->
 				<c:if test="#{expectTotalIndPriceBelowThreshold}">
 
-					<td><c:choose>
-							<c:when
-								test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
-								<ui:remove>9019 note-289 -start</ui:remove>
-								<p:inputTextarea id="justificationProcValueId_1"
-									style="margin-bottom:5px; width: 250px;" maxlength="100"
-									value="#{scQt.justificationProcValue}" required="#{not empty param['skipsubmitvalidation']}"
-									label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
-									disabled="#{isReadOnly}" cols="110" rows="3"
-									onkeyup="limitTextArea(this,100);"
-									onkeydown="limitTextArea(this,100);"
-									onmouseout="limitTextArea(this,100);">
-									<ui:remove>9019 note-289 -end</ui:remove>
-									<f:ajax></f:ajax>
-								</p:inputTextarea>
-								<p:message id="title2Msg_1" for="justificationProcValueId_1"
-									display="icon" />
-							</c:when>
-							<c:otherwise>
-								<p:inputTextarea id="justificationProcValueId_2"
-									style="margin-bottom:5px; width: 250px;" maxlength="100"
-									value="#{scQt.justificationProcValue}"
-									label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
-									readonly="true" cols="110" rows="3" disabled="true">
-								</p:inputTextarea>
-								<p:message id="title2Msg_2" for="justificationProcValueId_2"
-									display="icon" />
-							</c:otherwise>
-						</c:choose></td>
-				</c:if>
+						<td>
+							<c:choose>
+								<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+									<ui:remove>9019 Reopen #note-289 - change required validation from required="true"</ui:remove>
+									<p:inputTextarea id="justificationProcValueId_1"
+										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="#{not empty param['skipsubmitvalidation']}"
+										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" disabled="#{isReadOnly}" 
+										cols="110" rows="3"
+										onkeyup="limitTextArea(this,100);"
+										onkeydown="limitTextArea(this,100);"
+										onmouseout="limitTextArea(this,100);">
+										<f:ajax></f:ajax>
+									</p:inputTextarea>
+									<p:message id="title2Msg_1" for="justificationProcValueId_1" display="icon" />
+								</c:when>
+								<c:otherwise>
+									<p:inputTextarea id="justificationProcValueId_2"
+										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
+										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
+										cols="110" rows="3"
+										disabled="true">
+									</p:inputTextarea>
+									<p:message id="title2Msg_2" for="justificationProcValueId_2" display="icon" />
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</c:if>
 				<c:if test="#{!expectTotalIndPriceBelowThreshold}">
 					<td><p:inputTextarea id="justificationProcValueId_2"
 							style="margin-bottom:5px; width: 250px;" maxlength="100"
@@ -1049,24 +1102,23 @@
 			<ui:remove> #11104 - start </ui:remove>
 			<tr>
 				<h:panelGroup id="QuotationtenderGeneralSample">
-					<ui:fragment rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td>
-							<p:selectOneRadio value="#{scQt.sampleReq}"
-								disabled="#{scQt.partial or isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
-								<f:selectItems
-									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-								<p:ajax event="change" partialSubmit="true"
-									listener="#{createQtBB.sampleChange}" update="@form"
-									process="@this"></p:ajax>
-							</p:selectOneRadio>
-						</td>
-						<td style="margin-top: -3px">
-							<ac:iconTooltip value="#{lbl['lbl.sc.qt.sampel.instructions']}" />
-						</td>
+					<ui:fragment
+						rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">
+						<ui:fragment
+							rendered="#{specificationBackingBean.managedBean.sampleShowHide}">
+							<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneRadio value="#{scQt.sampleReq}"
+									disabled="#{scQt.partial or isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
+									<f:selectItems
+										value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+									<p:ajax event="change" partialSubmit="true"
+										listener="#{createQtBB.sampleChange}" update="@form"
+										process="@this"></p:ajax>
+								</p:selectOneRadio></td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.sampel.instructions']}" /></td>
+						</ui:fragment>
 					</ui:fragment>
 				</h:panelGroup>
 			</tr>
@@ -1178,10 +1230,11 @@
  	</ui:remove>
 
 	<!-- #25729 #174 START -->
+	<!-- Bug#35061 - change message value -->
 	<p:confirmDialog id="proceedBelowQtValueId"
 		widgetVar="proceedBelowQtValueDlgs"
 		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+		message="#{qTDetailBB.managedBean.msgConfirmBelowIndi}"
 		resizable="false" closable="false">
 		<div align="right">
 			<p:commandButton id="conf20k" value="#{lbl['lbl.btn.yes']}"

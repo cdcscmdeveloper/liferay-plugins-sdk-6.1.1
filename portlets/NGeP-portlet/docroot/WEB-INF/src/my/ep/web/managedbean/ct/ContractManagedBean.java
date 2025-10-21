@@ -30,6 +30,7 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
+import my.ep.persistence.entity.sc.loaloi.ScLoa; //#24333
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -147,6 +148,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> agencySelected;
 	
 	private boolean contractExpired;
+	// #24333 - Start
+	private List<ScLoa> bondDetail;
+	private boolean extendContract = false;
+	private boolean disableOriginalBond = false;
+	private BigDecimal originalOverallAmount;
+	// #24333 - End
 	
 	// Start - 28479	
 	private boolean isErr100033 = false;
@@ -165,18 +172,18 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Long applID;
 	//End Fix - #33674
 	
-	private boolean hasAmendmentLoaNo = false; //15851
-	private boolean fromViewPage = false;//15851
-	private boolean amendFromViewPage = false;//15851
-	private boolean viewSCL = false;//15851
-
-	private boolean viewSCLFromContract = false;//34142
-	private String[] outcomesFromContract = null;//34142, 15851 04/12/2022
-	
 	//Bug 34142, 15851 - shaqimi start 04/12/2022
 	private boolean amendFromTaskList = false;
+	private boolean amendFromViewPage = false;
+	private boolean hasAmendmentLoaNo = false;
 	private boolean viewContractFromAgreement = false;
+	private boolean viewSCL = false;
+	private boolean viewSCLFromContract = false;
+	private boolean viewSclFromAgreement;
 	private boolean backFromSCL = false;
+	private boolean backFromContract = false;
+	private boolean inPage = false;
+	private boolean fromViewPage = false;
 	private String docTypeFromTaskList = null;
 	private Long contractIdFromTaskList = null;
 	private Long contractVerIdFromTaskList = null;
@@ -188,9 +195,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Long agreementIdFromAgreementTaskList = null;
 	private String taskIdFromAgreementTaskList = null;
 	private Long contractVerIdFromAgreementTaskList = null;
-	private boolean backFromContract = false;
 	private Long statusIdFromTaskList = null;
-	private boolean inPage = false;
+	private String[] outcomesFromContract = null;
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
 
 	//#28854 - start
@@ -198,7 +204,20 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String newOfferSpec;
 	private String supplierOffer;
 	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
-	//#28854 - end	
+	//#28854 - end
+
+	//#13847 - start
+	private boolean disableDeferment = false;
+	//13847 end
+	
+	//#29983 start
+	private String businessRegNoNew;
+	//#29983 end
+	
+	//24333 - Start
+	private BigDecimal bondPercentage;
+	private BigDecimal totalBondAmt;
+	//24333 - End
 
 	/**
 	 * @return the fileDirectory
@@ -1433,6 +1452,14 @@ public class ContractManagedBean extends BaseManagedBean {
 	//Bug 34142 - shaqimi end 16112022
 	
 	//Bug 34142, 15851 - shaqimi start 04/12/2022
+	public boolean isViewSclFromAgreement() {
+		return viewSclFromAgreement;
+	}
+	
+	public void setViewSclFromAgreement(boolean viewSclFromAgreement) {
+		this.viewSclFromAgreement = viewSclFromAgreement;
+	}
+	
 	public String[] getOutcomesFromContract() {
 		return outcomesFromContract;
 	}
@@ -1474,6 +1501,32 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
 	/* #28854 end*/
+	
+	//#13847 start
+	public boolean isDisableDeferment() {
+		return disableDeferment;
+	}
+
+	public void setDisableDeferment(boolean disableDeferment) {
+		this.disableDeferment = disableDeferment;
+	}
+	//#13847 end
+	
+	//#29983 start
+	/**
+	 * @return the businessRegNoNew
+	 */
+	public String getBusinessRegNoNew() {
+		return businessRegNoNew;
+	}
+
+	/**
+	 * @param businessRegNoNew the businessRegNoNew to set
+	 */
+	public void setBusinessRegNoNew(String businessRegNoNew) {
+		this.businessRegNoNew = businessRegNoNew;
+	}
+	//#29983 end
 	
 	//Bug 34142, 15851 - shaqimi start 04/12/2022
 	public boolean isAmendFromTaskList() {
@@ -1612,4 +1665,57 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.inPage = inPage;
 	}
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
+	
+	//#24333 - Start
+	public List<ScLoa> getBondDetail() {
+		if(bondDetail == null){
+			bondDetail = new ArrayList<ScLoa>();
+	}
+		return bondDetail;
+	}
+
+	public void setBondDetail(List<ScLoa> bondDetail) {
+		this.bondDetail = bondDetail;
+	}
+
+	public boolean isExtendContract() {
+		return extendContract;
+	}
+
+	public void setExtendContract(boolean extendContract) {
+		this.extendContract = extendContract;
+	}
+	
+	public boolean isDisableOriginalBond() {
+		return disableOriginalBond;
+	}
+
+	public void setDisableOriginalBond(boolean disableOriginalBond) {
+		this.disableOriginalBond = disableOriginalBond;
+	}
+	
+	public BigDecimal getOriginalOverallAmount() {
+		return originalOverallAmount;
+	}
+
+	public void setOriginalOverallAmount(BigDecimal originalOverallAmount) {
+		this.originalOverallAmount = originalOverallAmount;
+	}	
+
+	public BigDecimal getBondPercentage() {
+		return bondPercentage;
+	}
+
+	public void setBondPercentage(BigDecimal bondPercentage) {
+		this.bondPercentage = bondPercentage;
+	}	
+
+	public BigDecimal getTotalBondAmt() {
+		return totalBondAmt;
+	}
+
+	public void setTotalBondAmt(BigDecimal totalBondAmt) {
+		this.totalBondAmt = totalBondAmt;
+	}
+	//#24333 - End
 }

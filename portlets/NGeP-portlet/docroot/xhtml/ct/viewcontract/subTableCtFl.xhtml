@@ -1,0 +1,103 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<script> $('#portlet_ctContractMaintenance_WAR_NGePportlet').find('.portlet-title-text').html('#{contractDetailsBackingBean.getPortletTitle()}'); </script>
+		<style>
+.column-align-center {
+	text-align: center !important;
+}
+
+.ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow
+	{
+	width: 250px;
+}
+
+.left-align {
+	text-align: left;
+}
+
+.left-align a {
+	text-align: left;
+}
+</style>
+
+
+		<p:blockUI block=":form" widgetVar="blkContractSearchAuditTable">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+
+		<p:messages id="messages" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" severity="error, info, warning" />
+
+		<div style="overflow-x: auto">
+			<p:dataTable id="subTableFL"
+				value="#{contractDetailsBackingBean.managedBean.contractDataModelForCtAuditViewFl}"
+				var="metadata" lazy="true" rowIndexVar="index" rowKey="#{metadata}"
+				rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<ac:paginator for="subTableFL" />
+
+				<p:column headerText="#{lbl['lbl.ct.audit.fl.contractrequestno']}"
+					style="width:10%;" styleClass="column-align-center"
+					rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
+					<div class="left-align">
+						<p:commandLink value="#{metadata.docNoCr}" styleClass="blue_font"
+							style="color:#009ae5 !important;"
+							action="#{flOrderBB.goToCRPage(metadata.docTypeCr, metadata.flRequest.fulfilmentReqId)}"
+							onstart="blkContractSearchAuditTable.show()"
+							oncomplete="blkContractSearchAuditTable.hide()">
+						</p:commandLink>
+					</div>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ct.audit.fl.contractrequestno']}"
+					style="width:10%;" styleClass="column-align-center"
+					rendered="#{contractDetailsBackingBean.isSupplierRole()}">
+					<div class="left-align">
+						<h:outputText value="#{metadata.docNoCr}"/>
+					</div>
+
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ct.audit.fl.contractorderno']}"
+					style="width:10%;" styleClass="column-align-center">
+					<div class="left-align">
+						<p:commandLink value="#{metadata.docNoCo}" styleClass="blue_font"
+						    rendered="#{metadata.statusCO ne ParameterConst.statusZero}"
+							style="color:#009ae5 !important;"
+							action="#{flOrderBB.goToCOPage(metadata.docTypeCo, metadata.flOrder.fulfilmentOrderId)}"
+							onstart="blkContractSearchAuditTable.show()"
+							oncomplete="blkContractSearchAuditTable.hide()">
+						</p:commandLink>
+					</div>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ct.audit.fl.doctitle']}"
+					styleClass="column-align-center" style="width:15%; white-space:normal;">
+					<div class="left-align">
+						<h:outputText value="#{metadata.docTitle}"/>
+					</div>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ct.audit.fl.docstatus']}"
+					style="width:10%;" styleClass="column-align-center">
+					<div class="left-align">
+						<h:outputText
+							value="#{contractDetailsBackingBean.getStatusDescById(metadata.statusCR)}"
+							rendered="#{metadata.docNoCo == null or metadata.statusCO eq ParameterConst.statusZero}" />
+						<h:outputText
+							value="#{contractDetailsBackingBean.getStatusDescById(metadata.statusCO)}"
+							rendered="#{metadata.docNoCo != null and metadata.statusCO ne ParameterConst.statusZero}" />
+					</div>
+				</p:column>
+			</p:dataTable>
+		</div>
+
+	</ui:define>
+</ui:composition>

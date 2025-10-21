@@ -59,6 +59,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.BpmCommonUtils; // Fix - #31962
@@ -68,6 +69,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -105,7 +107,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	private ContractBackingBean ctBB = null;
 	SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);	
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
-	
+
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -290,6 +292,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			ContractReqDTO ctReqDTO = new ContractReqDTO();
 			ctReqDTO.setContractVerId(new Long(bankAccDataType.getDocId()));
 			ctReqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
+			
+			ctBB.getManagedBean().setContractVerIdFromTaskList(new Long(bankAccDataType.getDocId())); //#15851
+			
 			setChangeBankDetails(ctReqDTO);       
 
 		} else if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)
@@ -299,6 +304,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			reqDTO = new ContractSupplierReqDTO();
 			reqDTO.setFactoringId(new Long(dataType.getDocId()));
 			reqDTO.setDocType(dataType.getDocType().toString());
+
+			ctBB.getManagedBean().setContractVerIdFromTaskList(new Long(dataType.getDocId())); //#15851
 			
 			setFactoringDetails(reqDTO);	
 		}
@@ -323,6 +330,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			getManagedBean().setContractVer(resDTO.getCtContractVer());
 			getManagedBean().setCurentAccNoBankName(null);
+			getManagedBean().setDocType(reqDTO.getDocType()); //#15851
 			
 			//Start Fix - #33399
 			if(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getContractVer().getCtContractValue().getBankName() != null){
@@ -366,7 +374,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 * 
 	 * @param resDTO  the response data transfer object for factoring request
 	 */
-	private void setFactoringDetails(ContractSupplierReqDTO reqDTO) {
+	public void setFactoringDetails(ContractSupplierReqDTO reqDTO) { //15851
 		IContractSupplierSO contractSupplierSO = null;
 		ContractSupplierResDTO resDTO = null;
 		if(ctBB != null && ctBB.getManagedBean().getDeleteAttachmentList() != null){
@@ -937,7 +945,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						getManagedBean().setFullBankInfo(account); // Fix - #33856
 						changeAccountActionListener();
 					}
-					getManagedBean().setApplID(smSupplierBank.getSmAppl().getApplId()); // Fix - #33856
+					//Start Fix - #38748 
+					if (smSupplierBank.getSmAppl() != null) {
+						getManagedBean().setApplID(smSupplierBank.getSmAppl().getApplId()); // Fix - #33856
+					}
+					//End Fix - #38748 
 				}
 				//End Fix - #33399
 				getManagedBean().setPopulateBankAccountList(items);	
@@ -1532,7 +1544,6 @@ public void selectFinancialAcc(){
 	 * contract owner organization profile when the loa's administrator 
 	 * is invalid.
 	 */
-	@SuppressWarnings("unchecked")
 	private void getContractAdminlist() {
 		IUserSO userSO = null;
 		UserReqDTO userReqDTO = null;
@@ -1572,7 +1583,7 @@ public void selectFinancialAcc(){
 										reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 										userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
 										// Start Fix - #31962
-										List<PmUser> userList_1 = userSO.retrieveUserListByRole(reqDTO).getUserList();
+										List<PmUser> userList_1 = userSO.retrieveUserListByRoleWithLoginHistory(reqDTO).getUserList(); //Fix #36101
 										// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
 										userList_1 = (List<PmUser>) BpmCommonUtils.limitAssigneeSizeArrayList(userList_1); // Fix - #34213										
 										getManagedBean().setContractAdminlist(userList_1);
@@ -1587,7 +1598,7 @@ public void selectFinancialAcc(){
 									userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 									userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
 									//Start Fix - #31962
-									List<PmUser> userList_2 = userSO.retrieveUserListByRole(userReqDTO).getUserList();
+									List<PmUser> userList_2 = userSO.retrieveUserListByRoleWithLoginHistory(userReqDTO).getUserList(); //Fix #36101
 									// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
 									userList_2 = (List<PmUser>) BpmCommonUtils.limitAssigneeSizeArrayList(userList_2); // Fix - #34213
 									getManagedBean().setContractAdminlist(userList_2);
@@ -1715,5 +1726,53 @@ public void selectFinancialAcc(){
 		return bankDetailsSplitted;
 	}
 	//End Fix - #33399, #33856
+	
+	//#15851 start
+	/**
+	 * The method used to navigate to contract/loa details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
+	@Override
+	public void goToLoaView(ScLoa scLoa) {
+		String slLoaNo = this.getManagedBean().getContractVer()==null?
+				ctBB.getManagedBean().getContractVer().getCtContractValue().getLoaNo() : this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getCtContract().getContractId();
+		Long statusId = null;
+		
+		if(this.getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_FACTORING)
+				|| this.getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_UPDATE_FACTORING)
+				|| this.getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_REMOVE_FACTORING)){
+			statusId = getManagedBean().getFactoring().getStatus().getStatusId();
+		}else if(this.getManagedBean().getContractVer().getStatus()==null){
+			statusId = ContractStatusConst.getPendingSubmissionByDocType(this.getManagedBean().getDocType());
+		}else{
+			statusId =  this.getManagedBean().getContractVer().getStatus().getStatusId();
+		}
+				
+		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+			AmendmentBackingBean abb = new AmendmentBackingBean();
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
+			abb.getManagedBean().setTrackingDairyView(true);
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+			
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setDocTypeFromTaskList(this.getManagedBean().getDocType());
+			ctBB.getManagedBean().setStatusIdFromTaskList(statusId);
+			ctBB.getManagedBean().setContractIdFromTaskList(null);
+			ctBB.getManagedBean().setTaskNameFromTaskList(null);
+	
+			if(ctBB.getManagedBean().isViewContractFromAgreement()){
+				ctBB.getManagedBean().setViewSCLFromContract(true);
+			}
+			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
+		} else {
+			super.goToLoaView(scLoa);
+		}
+	}
+	//#15851 end	
 
 }

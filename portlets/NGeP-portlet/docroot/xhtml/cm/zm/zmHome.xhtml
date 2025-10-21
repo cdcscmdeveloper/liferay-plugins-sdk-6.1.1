@@ -136,20 +136,20 @@
 			</f:facet>
 			<h:panelGroup id="zonePopupPanel">
 				<table styleClass="noBorders tr,noBorders td">
-					<TR>
-						<TD width="25%" valign="top"><p:outputLabel
+					<tr>
+						<td width="25%" valign="top"><p:outputLabel
 								value="#{lbl['lbl.cm.zm.name']}"></p:outputLabel> <p:outputLabel
-								value="*" styleClass="mandatory" /></TD>
-						<TD width="75%"><p:inputText id="zoneNameId" maxlength="50"
+								value="*" styleClass="mandatory" /></td>
+						<td width="75%"><p:inputText id="zoneNameId" maxlength="50"
 								value="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName}">
 								<p:ajax event="keyup" update=":form:zoneAddButton"></p:ajax>
 								<p:ajax event="change" update=":form:zoneAddButton"></p:ajax>
-							</p:inputText></TD>
-					</TR>
-					<TR>
-						<TD width="20%" valign="top"><p:outputLabel
-								value="#{lbl['lbl.cm.zm.details']}"></p:outputLabel></TD>
-						<TD width="80%">
+							</p:inputText></td>
+					</tr>
+					<tr>
+						<td width="20%" valign="top"><p:outputLabel
+								value="#{lbl['lbl.cm.zm.details']}"></p:outputLabel></td>
+						<td width="80%">
 							<div style="height: 340px; overflow-y: scroll;">
 								<p:tree id="treeZoneLocationPopup"
 									value="#{zoneMaintenanceBackingBean.managedBean.rootZoneTree}"
@@ -182,8 +182,8 @@
 										</p:treeNode>
 								</p:tree>
 							</div>
-						</TD>
-					</TR>
+						</td>
+					</tr>
 				</table>
 			</h:panelGroup>
 

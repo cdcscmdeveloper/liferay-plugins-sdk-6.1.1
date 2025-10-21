@@ -24,12 +24,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
@@ -87,14 +89,17 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
@@ -112,14 +117,17 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -137,6 +145,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -147,8 +156,6 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
-
-import com.liferay.portal.kernel.util.StringUtil;
 
 /**
  * The Class QTDocumentsBackingBean.
@@ -728,7 +735,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
 			tplDocBB.getManagedBean().setExternalPageUrl(DOCUMENT_PAGE);
 
-			if (!scQtDocReport.isCloned()) { // 33954, #25635
+			// 33954, #25635 -start-
+			if (!scQtDocReport.isCloned()) {
 				ScQtDocReport qtDocReport = retriveRulesAndRegulationReport(scQtDocReport);
 				
 				if (qtDocReport != null) {
@@ -737,7 +745,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					// save list of documents if its not yet save
 					scQtDocReport = saveScQtReportList(scQtDocReport);
 				}
-				// 33954, #25635 -start-
 			} else {
 				throw new EpException("Template was Cloned Before Edit save All Template Details");
 			}
@@ -2120,103 +2127,58 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void generateSpesifikasiPdfFromVelocity(ScAttachment attachment,
-			ScQt qt) throws Exception {
+	private void generateSpesifikasiPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
-		log.debug("start generateSpesifikasiPdfFromVelocity" );
+		log.debug("start generateSpesifikasiPdfFromVelocity");
 		VelocityContext context = new VelocityContext();
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
 		IQTSpecSO specSO;
 		try {
-			specSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(qt.getQtId());
 			reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
 			reqDTO.setPrepareSpec(true);
 			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
-			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean()
-					.getResultList()) {
+			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean().getResultList()) {
 				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 				TplSpecMaster master = null;
 				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
-				
+
 				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-					TplSpecQuestion parentQuestion = question
-							.getParentSpecQuestion();
-                    if(null!=master.getSpecName()){
-                   String specTitle= master.getSpecName();
-                   specTitle=specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-                   specTitle=specTitle.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-                   specTitle=specTitle.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-                   specTitle=specTitle.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-                   master.setSpecName(specTitle);
-                    	
-                    }
+					TplSpecQuestion parentQuestion = question.getParentSpecQuestion();
+					if (null != master.getSpecName()) {
+						String specTitle = master.getSpecName();
+						specTitle = specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+						specTitle = specTitle.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+						specTitle = specTitle.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						specTitle = specTitle.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+						master.setSpecName(specTitle);
+
+					}
 					if (question.getClItem() == null) {
 						question.setClItem("");
-					}else{
-					    String clItem = question.getClItem();
-					  //20190513@asyrafhaziq - 25812 - Start
-						// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
-						    String[] words = clItem.split(" "); //get array of words
-						    StringBuilder sb = new StringBuilder(); 
-						    for(String word : words) //affect each word in string
-						    {
-						      int length = word.length();
-						      if ( length >= 20){
-						    	  StringBuilder subSb = new StringBuilder();//this is for perfomance
-								  String newWord = new String();	
-						    	  String subWord = new String();	
-						            for (int i = 0; i < length; i += 20) {
-						            	subWord = word.substring(i, Math.min(length, i + 20));
-						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-						            }
-						    		newWord = subSb.toString();	
-									sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
-						    	}else{
-									sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-								}
-						    }
-						    clItem =  sb.toString();
-						    //20190513@asyrafhaziq - 25812 - End
-						clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-						clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-						clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-						clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+					} else {
+						// Bug #36702@Syazani 28/11/2024 -- Start
+						String clItem = VmUtil.getInstance().splitText(question.getClItem(), QTConstants.QT_VM_SPLIT_MAXLENGTH);
+						// Bug #36702@Syazani 28/11/2024 -- End
+						clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+						clItem = clItem.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+						clItem = clItem.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						clItem = clItem.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
 						question.setClItem(clItem);
 					}
 					if (question.getClSpecDetail() == null) {
 						question.setClSpecDetail("");
-					} else{
-						//Start Bug #28274
-						 String clSpecDetail = question.getClSpecDetail();
-						 String[] words = clSpecDetail.split(" ");
-						 StringBuilder sb = new StringBuilder();
-						 for(String word : words){
-							 int length = word.length();
-							 if ( length >= 20){
-								 StringBuilder subSb = new StringBuilder();
-								  String newWord = new String();	
-						    	  String subWord = new String();
-						    	  // Bug #34894@Syazani 11/07/2023 -- Start
-						            for (int i = 0; i < length; i += 61) {
-						            	subWord = word.substring(i, Math.min(length, i + 61));
-						            	// Bug #34894@Syazani 11/07/2023 -- End
-						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-						            }
-						    		newWord = subSb.toString();	
-									sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
-						    	}else{
-									sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-							 }
-						 }
-						 clSpecDetail=sb.toString();
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-						 //end Bug #28274
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+					} else {
+						// Bug #36702@Syazani 28/11/2024 -- Start
+						String clSpecDetail = VmUtil.getInstance().splitText(question.getClSpecDetail(), QTConstants.QT_VM_SPLIT_MAXLENGTH);
+						// Bug #36702@Syazani 28/11/2024 -- End
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+						// end Bug #28274
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
 						question.setClSpecDetail(clSpecDetail);
 					}
 					if (question.getClUom() != null) {
@@ -2263,9 +2225,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		} finally {
 			specSO = null;
 		}
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_QT_SPECIFICATION, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_SPECIFICATION, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**
@@ -2442,9 +2402,16 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		VelocityContext context = new VelocityContext();
 
-		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() + ":"
-				+ fs.getRequest().getServerPort();
+		//#21692 - Start
+		String hostUrl = "";
+		if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
+			hostUrl = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl");
+		} else {
+			FacesScopes fs = new FacesScopes();
+			hostUrl = fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();
+		}
+		//#21692 - End
+		boolean isLocLevelDistrictContainsDivision = false;	// Bug #38731@Syazani 20/08/2025
 		context.put("hostUrl", hostUrl);
 
 		context.put("commonUtils", commonUtils);
@@ -2497,20 +2464,23 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 
 		List<ScQtCategory> categoryResults1 = new ArrayList<ScQtCategory>();
 		List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
+		List<TplSpecLoc> locationDetails;	// Bug #38731@Syazani 20/08/2025
 		IQTDetailSO QtDetailsSO;
+		QuationTenderResDTO tenderResDTO;	// Bug #38731@Syazani 20/08/2025
 		try {
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 			tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
-			QuationTenderResDTO tenderResDTO = QtDetailsSO
-					.retriveQTSuppQulCriDetails(tenderReqDTO);
-			categoryResults = tenderResDTO.getCategories()
-					;
-			if (null != tenderResDTO.getLocationDetails()) {
-				context.put("locality", tenderResDTO.getLocationDetails());
-			}
+			tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);	// Bug #38731@Syazani 20/08/2025
+			categoryResults = tenderResDTO.getCategories();
+			// Bug #38731@Syazani 20/08/2025 -- Start
+			locationDetails = CustomUtils.getInstance().deepCopyArrayList(tenderResDTO.getLocationDetails());
+			if (null != locationDetails) {
+				context.put("locality", locationDetails);
+			} 
+			// Bug #38731@Syazani 20/08/2025 -- End
 		} finally {
 			QtDetailsSO = null;
 		}
@@ -2541,6 +2511,12 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 		context.put("closingDate", closingDate);
 		context.put("validityPeriod", qt.getQtValidityPeriod());
+
+		// #37613 - Start
+		DecimalFormat dformat = new DecimalFormat(
+				commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		context.put("estimatedAmount", dformat.format(qt.getEstimatedAmount()));
+		// #37613 - End
 
 		String locationLevel = null;
 		boolean isLocLevel = false;
@@ -2574,6 +2550,12 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					isSubLocLevel = true;
 					locationLevel = "District";
 				}
+				// Bug #38731@Syazani 20/08/2025 -- Start 
+				else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(criteria.getLocationLevel().getParameterCode())) {
+					isSubLocLevel = true;
+					locationLevel = "Division";
+				}
+				// Bug #38731@Syazani 20/08/2025 -- End
 				context.put("subLocLevel", isSubLocLevel);
 			} else {
 				context.put("subLocLevel", isSubLocLevel);
@@ -2583,6 +2565,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		context.put("locationLevel", locationLevel);
 
 		IQTDetailSO qtDtlSO;
+		List<TplSpecZoneDtl> specZoneDtls = null;	// Bug #38731@Syazani 20/08/2025
 		try {
 			qtDtlSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -2595,13 +2578,20 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			if (this.getManagedBean().getQt().isZonal()) {
 				if (scQt.getScQtSupplierCriteria() != null &&
 						scQt.getScQtSupplierCriteria().getQtZoneCriterias() != null) {
-					List<TplSpecZoneDtl> specZoneDtls = scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls();
+					specZoneDtls = CustomUtils.getInstance().deepCopyArrayList(scQt.getScQtSupplierCriteria().getQtZoneCriterias().getTplSpecZoneDtls());	// Bug #38731@Syazani 20/08/2025
 					context.put("zoneLocality", specZoneDtls);
 				}
 			}
 		} finally {
 			QtDetailsSO = null;
 		}
+		
+		// Bug #38731@Syazani 20/08/2025 -- Start
+		if (!StringUtils.isBlank(locationLevel) && "District".equalsIgnoreCase(locationLevel)) {
+			isLocLevelDistrictContainsDivision = isLocationContainsDivision(specZoneDtls, locationDetails, context);
+		}
+		context.put("isLocLevelDistrictContainsDivision", isLocLevelDistrictContainsDivision);
+		// Bug #38731@Syazani 20/08/2025 -- End
 
 		context.put("bsvReq", qt.isBsvRequired());
 		boolean isZone = false;
@@ -2609,20 +2599,22 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		if (qt.isBsvRequired()) {
 			QTDetailBackingBean backingBean = new QTDetailBackingBean();
 			backingBean.retrieveBriefingSitevisitTabDtl();
-			List<BriefingZoneBean> briefingZoneBean = this.getManagedBean()
-					.getBriefingZoneBean();
-			if (briefingZoneBean != null && !briefingZoneBean.isEmpty()) {
+			// Bug #36702@Syazani 28/11/2024 -- Start
+			List<BriefingZoneBean> briefingZoneBean = CustomUtils.getInstance().deepCopyArrayList(
+					this.getManagedBean().getBriefingZoneBean());
+			if (!CollectionUtils.isEmpty(briefingZoneBean)) {
 				isZone = true;
-				for (BriefingZoneBean zoneBean : this.getManagedBean()
-						.getBriefingZoneBean()) {
+				for (BriefingZoneBean zoneBean : briefingZoneBean) {
+					splitBriefingZoneBeanText(zoneBean);
+					// Bug #36702@Syazani 28/11/2024 -- End
 					zoneBeans.add(zoneBean);
 				}
 			} else {
-				BriefingZoneBean bsvDtlBean = this.getManagedBean()
-						.getBsvDtlBean();
-				if (null == bsvDtlBean) {
-					bsvDtlBean = this.getManagedBean().getBsvDtlBean();
-				}
+				// Bug #36702@Syazani 28/11/2024 -- Start
+				BriefingZoneBean bsvDtlBean = new BriefingZoneBean(this.getManagedBean()
+						.getBsvDtlBean());
+				splitBriefingZoneBeanText(bsvDtlBean);
+				// Bug #36702@Syazani 28/11/2024 -- End
 				zoneBeans.add(bsvDtlBean);
 			}
 			context.put("isZone", isZone);
@@ -2778,7 +2770,14 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			quationTenderReqDTO.setScReports(reports);
 			qtDocumentSO.saveReportAndAttachment(quationTenderReqDTO);
 			
-		} finally {
+		}
+		//#21692 - Start 
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+		//#21692 - End
+		finally {
 			qtDocumentSO = null;
 		}
 		
@@ -2916,8 +2915,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			detailBean.retrieveDeductionPaymentTabDtl();
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtDeductionList())){
 				StringBuilder paymentDeductions=new StringBuilder();
-				paymentDeductions.append(TemplateDocConst.PARAM_PAYMENT_DEDUCTION__APPLIABLE)
-				.append(TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER)
+				//paymentDeductions.append(TemplateDocConst.PARAM_PAYMENT_DEDUCTION__APPLIABLE) //#34873
+				paymentDeductions.append(TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER) //#34873
 				.append("<table>");
 				for(int i=0;i<this.getManagedBean().getScQtDeductionList().size();i++){
 				ScQtDeduction deduction=this.getManagedBean().getScQtDeductionList().get(i);
@@ -3088,6 +3087,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				 */
 
 				tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
+				Map<TplDocSection, TplDocSection> originalToCloneMap = new HashMap<>(); //#34873
 				List<TplDocSection> docSectionCOllection = templateDocMaster
 						.getTplDocSectionCollection();
 				for (TplDocSection tplDocSection : docSectionCOllection) {
@@ -3099,13 +3099,25 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 						section.setSectionTitle(title);
 					}
 					section.setDocSectionId(null);
-					section.setParent(null); // Temporarily am setting null, need to
+					//#34873
+					//section.setParent(null); // Temporarily am setting null, need to
 												// confirm once
 					section.setTplDocMaster(tplDocMaster);
 
 					setUserDetails(section);
 					tplDocMaster.getTplDocSectionCollection().add(section);
+					originalToCloneMap.put(tplDocSection, section); //#34873
 				}
+				
+				//#34873 - start
+				for (TplDocSection section : tplDocMaster.getTplDocSectionCollection()) {
+			        TplDocSection originalParent = section.getParent();
+			        if (originalParent != null) {
+			            TplDocSection cloneParent = originalToCloneMap.get(originalParent);
+			            section.setParent(cloneParent);
+			        }
+			    }
+				//#34873 - end
 
 				// Procurement Category
 				PmParameter procurementCategory = scQtDocReport.getScQt()
@@ -3165,5 +3177,113 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				
 				return tplDocMaster;
 	}
+	
+	// Bug #36702@Syazani 28/11/2024 -- Start
+	private void splitBriefingZoneBeanText(BriefingZoneBean zoneBean) {
+		List<ScQtBsvDtl> briefingLst = zoneBean.getBriefingList();
+		ScAddress scAddress;
+		if (!CollectionUtils.isEmpty(briefingLst)) {
+			for (ScQtBsvDtl sqbd : briefingLst) {
+				sqbd.setBsvDesc(VmUtil.getInstance().splitText(sqbd.getBsvDesc(), QTConstants.QT_VM_SPLIT_MAXLENGTH));
+				if (null != sqbd.getAddress()) {
+					scAddress = sqbd.getAddress();
+					scAddress.setAddress1(VmUtil.getInstance().splitText(scAddress.getAddress1(), QTConstants.QT_VM_SPLIT_MAXLENGTH));
+					scAddress.setAddress2(VmUtil.getInstance().splitText(scAddress.getAddress2(), QTConstants.QT_VM_SPLIT_MAXLENGTH));
+					scAddress.setAddress3(VmUtil.getInstance().splitText(scAddress.getAddress3(), QTConstants.QT_VM_SPLIT_MAXLENGTH));
+				}
+			}
+		}
+	}
+	// Bug #36702@Syazani 28/11/2024 -- End
+	
+	// Bug #38731@Syazani 20/08/2025 -- Start
+	private boolean isLocationContainsDivision(List<TplSpecZoneDtl> specZoneDtls, List<TplSpecLoc> locationDetails,
+			VelocityContext context) {
+		boolean isLocationContainsDivision = false;
+		if (!CollectionUtils.isEmpty(specZoneDtls)) {
+			for (TplSpecZoneDtl tplSpecZoneDtl : specZoneDtls) {
+				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs()) && !isLocationContainsDivision) {
+					tplSpecZoneDtl.setTplSpecZoneLocs(removeDuplicatebyDivisionIDbyTplSpecZoneLoc(tplSpecZoneDtl
+							.getTplSpecZoneLocs()));
+					isLocationContainsDivision = loopFindisLocationContainsPmDivision(tplSpecZoneDtl);
+				} else if (isLocationContainsDivision) {
+					break;
+				}
+			}
+		}
+
+		if (!CollectionUtils.isEmpty(locationDetails)) {
+			List<TplSpecLoc> locationDetailsNew = removeDuplicatebyDivisionIDbyTplSpecLoc(locationDetails);
+			context.put("locality", locationDetailsNew);
+			for (TplSpecLoc tplSpecLoc : locationDetailsNew) {
+				if (null != tplSpecLoc.getPmDivision()) {
+					isLocationContainsDivision = true;
+					break;
+				}
+			}
+		}
+
+		return isLocationContainsDivision;
+	}
+
+	private boolean loopFindisLocationContainsPmDivision(TplSpecZoneDtl tplSpecZoneDtl) {
+		for (TplSpecZoneLoc tplSpecZoneLoc : tplSpecZoneDtl.getTplSpecZoneLocs()) {
+			if (null != tplSpecZoneLoc.getPmDivision()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private List<TplSpecZoneLoc> removeDuplicatebyDivisionIDbyTplSpecZoneLoc(List<TplSpecZoneLoc> tplSpecZoneLocLst) {
+		Map<String, TplSpecZoneLoc> map = new LinkedHashMap<>();
+		for (TplSpecZoneLoc tplSpecZoneLoc : tplSpecZoneLocLst) {
+			if (null != tplSpecZoneLoc.getPmDivision()) {
+				if (!map.containsKey("D" + tplSpecZoneLoc.getPmDivision().getDivisionId())) {
+					TplSpecZoneLoc tplSpecZoneLocNew = tplSpecZoneLoc;
+					List<PmDistrict> pmDistrictLst = new ArrayList<>();
+					pmDistrictLst.add(tplSpecZoneLoc.getPmDistrict());
+					tplSpecZoneLoc.getPmDivision().setPmDistricts(pmDistrictLst);
+					map.put("D" + tplSpecZoneLoc.getPmDivision().getDivisionId(), tplSpecZoneLocNew);
+				} else {
+					TplSpecZoneLoc tplSpecZoneLocNew = map.get("D" + tplSpecZoneLoc.getPmDivision().getDivisionId());
+					List<PmDistrict> pmDistrictLst = tplSpecZoneLocNew.getPmDivision().getPmDistricts();
+					pmDistrictLst.add(tplSpecZoneLoc.getPmDistrict());
+					tplSpecZoneLoc.getPmDivision().setPmDistricts(pmDistrictLst);
+					map.put("D" + tplSpecZoneLoc.getPmDivision().getDivisionId(), tplSpecZoneLocNew);
+				}
+			} else {
+				map.put("S" + tplSpecZoneLoc.getSpecLocId(), tplSpecZoneLoc);
+			}
+		}
+
+		return new ArrayList<>(map.values());
+	}
+
+	private List<TplSpecLoc> removeDuplicatebyDivisionIDbyTplSpecLoc(List<TplSpecLoc> tplSpecLocLst) {
+		Map<String, TplSpecLoc> map = new LinkedHashMap<>();
+		for (TplSpecLoc tplSpecLoc : tplSpecLocLst) {
+			if (null != tplSpecLoc.getPmDivision()) {
+				if (!map.containsKey("D" + tplSpecLoc.getPmDivision().getDivisionId())) {
+					TplSpecLoc tplSpecLocNew = tplSpecLoc;
+					List<PmDistrict> pmDistrictLst = new ArrayList<>();
+					pmDistrictLst.add(tplSpecLoc.getPmDistrict());
+					tplSpecLoc.getPmDivision().setPmDistricts(pmDistrictLst);
+					map.put("D" + tplSpecLoc.getPmDivision().getDivisionId(), tplSpecLocNew);
+				} else {
+					TplSpecLoc tplSpecLocNew = map.get("D" + tplSpecLoc.getPmDivision().getDivisionId());
+					List<PmDistrict> pmDistrictLst = tplSpecLocNew.getPmDivision().getPmDistricts();
+					pmDistrictLst.add(tplSpecLoc.getPmDistrict());
+					tplSpecLoc.getPmDivision().setPmDistricts(pmDistrictLst);
+					map.put("D" + tplSpecLoc.getPmDivision().getDivisionId(), tplSpecLocNew);
+				}
+			} else {
+				map.put("S" + tplSpecLoc.getSpecLocId(), tplSpecLoc);
+			}
+		}
+
+		return new ArrayList<>(map.values());
+	}
+	// Bug #38731@Syazani 20/08/2025 -- End
 
 }

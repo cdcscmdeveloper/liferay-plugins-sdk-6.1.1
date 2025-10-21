@@ -563,6 +563,21 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		} else {
 			getManagedBean().setValidBondAttachment(false);
 		}
+		
+		// #24333 - Start
+		if (getManagedBean().getCtAgreement().getCtAmendment() != null && getManagedBean().getCtAgreement().getCtAmendment().isContractExtend()
+				&& getManagedBean().getContractVer().getCtContractAmounts() != null) {
+			long expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime();
+			for (CtContractAmount contractAmt : resDTO.getCtContractVer().getCtContractAmounts()) {
+				if (contractAmt.getEffDate().getTime() <= expDate && contractAmt.getExpDate().getTime() >= expDate
+						&& (contractAmt.getIsBondAttachment() == null || contractAmt.getIsBondAttachment() == ContractConst.STATUS_COMPLETE)
+						&& contractAmt.isBondReq()) {
+					getManagedBean().setBondAttachmentCompleted(true);
+					break;
+				}
+			}
+		}
+		// #24333 - End
 
 		// Check for migrated contract
 		if (getManagedBean().getCtAgreement().getCtAmendment() == null
@@ -890,7 +905,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		//#28715
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)
-						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME))) {
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_DRAFT_AGREEMENT_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_AGREEMENT_HT_NAME))) { //#24333
 
 			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
@@ -907,7 +923,13 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				throw new EpException(MessageConst.ERROR_750043, 
 						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (isPerformanceBond() && getManagedBean().getCtAgreement().getCtAmendment() != null
+					&& getManagedBean().getCtAgreement().getCtAmendment().isContractExtend() && !getManagedBean().isBondAttachmentCompleted()) { // #24333,//#bug_38138																																																																										// Start
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_750043, new String[] { ResourceBundleUtils.getMessage(getManagedBean().getCtContract()
+						.getContractNo(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 			}
+			//#24333 - End
 		}
 
 		// Contract Approver cannot approve the final agreement if:-
@@ -1263,11 +1285,14 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		ctBB.getManagedBean().setViewContract(true);
 		ctBB.getManagedBean().setViewContractFromAgreement(true);//Bug 34142 - shaqimi 16112022
 		ctBB.getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
+		ctBB.getManagedBean().setContractVerIdFromAgreementTaskList(contractVerId); //15851
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
+		contractDetailsBB.getManagedBean().setLoaContractVerList(null); //#15851
+		contractDetailsBB.getManagedBean().setLoaContractVerId(null); //#15851
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
 		contractDetailsBB.setValidateContractField(ctReqDTO);
 		contractDetailsBB.getManagedBean().setSelectedTabIndex(0);
-		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId());
+		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId()+"?faces-redirect=true"); //15851
 		return CONTRACT_PAGE;
 	}
 
@@ -1296,10 +1321,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			
 			getManagedBean().setFromViewSCL(true);
 			
-			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true"); //15851
 			abb.getManagedBean().setTrackingDairyView(true);
 			ctBB.getManagedBean().setViewSCL(true);
-			abb.getManagedBean().setViewSclFromAgreement(true);
+			ctBB.getManagedBean().setViewSclFromAgreement(true); //#15851
 			//Bug 33096 - shaqimi start
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			//Bug 33096 - shaqimi end
@@ -2864,4 +2889,20 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}
 	}
 	//#26686 - end
+	
+	//#24333 - Start
+	/**
+	 * Function to check if bond required for contract
+	 * 
+	 * @return true, if performance bond is required
+	 *         false, if performance bond is not required
+	 * */
+	public boolean isPerformanceBond(){
+		if ((getManagedBean().isBondReq() || getManagedBean().getContractVer().getCtContractAmount().isBondReq())
+				&& !getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
+			return true;
+		}
+		return false;
+	}
+	//#24333 - End
 }

@@ -4,9 +4,17 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true">
+	<!-- #28175 --><!-- #30766 & #34209 - START -->
+		<ui:param name="isSuppProfile" 
+				  value="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}"/>
+		<c:if test="#{!isSuppProfile}" >
+			#{viewSmApplBackingBean.rePopulateMachine()}
+		</c:if>
+	<!-- #30766 & #34209 - END -->
 		<p:outputPanel id="machInfPan" layout="block">
 			<p:dataTable var="macBean" widgetVar="smMachDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smMachineDtls}"
@@ -19,11 +27,18 @@
 				
 				<p:column headerText="#{lbl['lbl.sm.category']}">
 					<ui:repeat var="catFac" value="#{macBean.smMachineCategories}">
+					<!-- #30766 & #34209 - START -->
+						<h:panelGroup id="machineCatPanelGroup" rendered="#{(isSuppProfile and catFac.recordStatusFlg ne 9) or (!isSuppProfile)}">
 						<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 									#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 									#{catFac.pmCategoryL3.categoryL3Code}
-								 	(#{catFac.pmCategoryL3.categoryName})" 
-							style="float: left;white-space: normal;" /><br />
+								 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile, true)})" 
+							style="float: left;white-space: normal;" /><br /> <!-- #28175 -->
+						<!-- 29380 - Site Visit Grouping Enhancement -28775 -->
+						<h:outputText value="#{viewSmApplBackingBean.getCategoryCodeOtherDesc(catFac.pmCategoryL3)}" 
+							style="float: left;white-space: normal;"/>
+						</h:panelGroup >
+					<!-- #30766 & #34209 - END -->
 					</ui:repeat>
 				</p:column>
 				
@@ -32,12 +47,14 @@
 					<h:outputText value="#{macBean.machine.machineDesc}" rendered="#{empty macBean.machineType}"/>
 				</p:column>
 
+				<!-- 14686 - Site Visit Grouping Enhancement -28775 - start -->
 				<p:column headerText="#{lbl['lbl.sm.machine.brand']}">
-					<h:outputText value="#{macBean.brandName}" />
+					<h:outputText value="#{macBean.brandName}" style="white-space: normal"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.machine.function']}">
-					<h:outputText value="#{macBean.machineFunction}" />
+					<h:outputText value="#{macBean.machineFunction}" style="white-space: normal"/>
 				</p:column>
+				<!-- 14686 - Site Visit Grouping Enhancement -28775 - end -->
 
 				<p:column headerText="#{lbl['lbl.sm.machine.quantity']}">
 					<h:outputText value="#{macBean.qty}" />
@@ -80,7 +97,8 @@
 								<p:outputLabel styleClass="outputLabel-view" value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 											#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 											#{catFac.pmCategoryL3.categoryL3Code}
-										 	(#{catFac.pmCategoryL3.categoryName})" /><br />
+										 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile, false)})" /><br /> <!-- #28175 -->
+								<!-- 29380 - Site Visit Grouping Enhancement -28775 -->
 							</ui:repeat>
 						</td>
 					</tr>

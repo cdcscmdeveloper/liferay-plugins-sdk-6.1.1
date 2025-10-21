@@ -45,6 +45,12 @@
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.viewSsm.regNo']} :"></h:outputLabel>
 				<h:outputText value="#{cc.attrs.bBean.managedBean.smSupplierSsm.regNo}"></h:outputText>
+				
+				<!-- #24819 -->
+				<h:outputLabel style="font-weight:bold"
+					value="#{lbl['lbl.sm.new.business.regNo']} :" />
+				<h:outputText value="#{cc.attrs.bBean.managedBean.smSupplier.ssmNewRegNo}" rendered="#{!empty cc.attrs.bBean.managedBean.smSupplier.ssmNewRegNo}" />
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty cc.attrs.bBean.managedBean.smSupplier.ssmNewRegNo}" />
 
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.estdate']} :"></h:outputLabel>

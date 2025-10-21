@@ -50,6 +50,84 @@
 
 				<ac:paginator for="TechnicalevaluationCommitteeSummaryItemQualifiedSuppliers"></ac:paginator>
 
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column rowspan="3" headerText="#{lbl['lbl.sc.ranking']}"
+							style="text-align:right" width="10%">
+						</p:column>
+
+						<p:column rowspan="3" headerText="#{lbl['lbl.sc.supplier.code']}"
+							style="text-align:center;" width="20%">
+						</p:column>
+
+						<p:column rowspan="2" colspan="2" width="22%"
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.header.technical']}"
+							style="text-align:center">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.eva.technical.presentation.demo.score.header.technical']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.demo.item.ts.score.tooltips']} #{evaluationBackingBean.managedBean.maxItemTsPercentage}" />
+							</f:facet>
+						</p:column>
+
+						<p:column rowspan="1" colspan="3"
+							style="text-align:center">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.eva.technical.presentation.demo.score.header.others']}" />
+								<br></br>
+								<h:outputText value="#{lbl['lbl.sc.eva.technical.presentation.demo.score.header.others2']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.demo.item.all.other.score.tooltips']} #{evaluationBackingBean.managedBean.maxItemAllOtherElementsPercentage}" />
+							</f:facet>
+						</p:column>
+
+
+						<p:column rowspan="3" style="text-align:right">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.demo.item.overall.score.tooltips']}" />
+							</f:facet>
+						</p:column>
+						<p:column rowspan="3"
+							style="white-space: normal;text-align:center;"
+							rendered="#{!evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.rating']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+							</f:facet>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="2"
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other.elements']} (#{evaluationBackingBean.otherChecklistOverallScore()})"
+							style="text-align:center">
+						</p:column>
+						<p:column rowspan="2"
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other.demo.percentage']} (#{evaluationBackingBean.managedBean.maxItemAllOtherElementsPercentage}%)"
+							style="text-align:center">
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical']} (#{evaluationBackingBean.maxTsItemScore()})"
+							style="text-align:center">
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical.percentage']} (#{evaluationBackingBean.managedBean.maxItemTsPercentage}%)"
+							style="text-align:center">
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other']} (#{evaluationBackingBean.managedBean.maxItemOtherElementsScore})"
+							style="text-align:center">
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.demo']} (#{evaluationBackingBean.managedBean.maxDemoScore})"
+							style="text-align:center">
+						</p:column>
+					</p:row>
+				</p:columnGroup>
+
 				<p:column headerText="#{lbl['lbl.sc.ranking']}"
 					style="text-align:right">
 
@@ -57,24 +135,48 @@
 				</p:column>
 
 
-				<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:20%; text-align:center;">
+				<ui:remove><!-- 6906 - start note 212 --></ui:remove>
+				<ui:param name="isRejected" value="#{not empty summaryqualSup.qtEvaluationResult.scQtProposal.supplierRejectionRemark}"/>
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="text-align:center;">
 					<table style="table-layout: fixed; margin:auto !important; max-width:90px !important">
 						<tr>
-							<td style="text-align:center;">
+							<td style="text-align:center; border: 0 !important"/>
+							<td style="text-align:center; border: 0 !important">
 								<h:outputText value="#{summaryqualSup.qtEvaluationResult.scQtProposal.supplierNo}" />
+							</td>
+							<td style="text-align:center; border: 0 !important">
+								<ac:iconRejectRemarkBox show="#{isRejected}" id="summaryRemarkId"
+								remark="#{summaryqualSup.qtEvaluationResult.scQtProposal.supplierRejectionRemark.remark}"
+								supplierCode="#{summaryqualSup.qtEvaluationResult.scQtProposal.supplierNo}" />
 							</td>
 						</tr>
 					</table>
 				</p:column> 
+				<ui:remove><!-- 6906 - end note 212 --></ui:remove>
 				
-				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical']}"
 				style="text-align:right">
 				<h:outputText value="#{evaluationBackingBean.retrieveTotalTechnicalItemScore(summaryqualSup)}"></h:outputText>
 				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical.percentage']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.managedBean.itemTsPercentage}"></h:outputText>
+				</p:column>
 			
-				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other']}"
+					style="text-align:right">
+					<h:outputText value="#{evaluationBackingBean.managedBean.otherchecklistScore}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.demo']}"
 					style="text-align:right">
 					<h:outputText value="#{evaluationBackingBean.managedBean.demoScore}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other.demo.percentage']}"
+					style="text-align:right">
+					<h:outputText value="#{evaluationBackingBean.managedBean.itemAllOtherElementsPercentage}"></h:outputText>
 				</p:column>
 
 
@@ -139,24 +241,121 @@
 
 				<ac:paginator for="TechnicalevaluationCommitteeSummaryItemDisQualifiedSuppliers"></ac:paginator>
 
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column rowspan="3" headerText="#{lbl['lbl.sc.supplier.code']}"
+							style="text-align:center;" width="20%">
+						</p:column>
+
+						<p:column rowspan="2" colspan="2" width="22%"
+							style="text-align:center">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.eva.technical.presentation.demo.score.header.technical']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.demo.item.ts.score.tooltips']} #{evaluationBackingBean.managedBean.maxItemTsPercentage}" />
+							</f:facet>
+						</p:column>
+
+						<p:column rowspan="1" colspan="3"
+							style="text-align:center">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.eva.technical.presentation.demo.score.header.others']}" />
+								<br></br>
+								<h:outputText value="#{lbl['lbl.sc.eva.technical.presentation.demo.score.header.others2']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.demo.item.all.other.score.tooltips']} #{evaluationBackingBean.managedBean.maxItemAllOtherElementsPercentage}" />
+							</f:facet>
+						</p:column>
+
+
+						<p:column rowspan="3" style="text-align:right">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.demo.item.overall.score.tooltips']}" />
+							</f:facet>
+						</p:column>
+						<p:column rowspan="3"
+							style="white-space: normal;text-align:center;"
+							rendered="#{!evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.rating']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+							</f:facet>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="2"
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other.elements']} (#{evaluationBackingBean.otherChecklistOverallScore()})"
+							style="text-align:center">
+						</p:column>
+						<p:column rowspan="2"
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other.demo.percentage']} (#{evaluationBackingBean.managedBean.maxItemAllOtherElementsPercentage}%)"
+							style="text-align:center">
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical']} (#{evaluationBackingBean.maxTsItemScore()})"
+							style="text-align:center">
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical.percentage']} (#{evaluationBackingBean.managedBean.maxItemTsPercentage}%)"
+							style="text-align:center">
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other']} (#{evaluationBackingBean.managedBean.maxItemOtherElementsScore})"
+							style="text-align:center">
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.demo']} (#{evaluationBackingBean.managedBean.maxDemoScore})"
+							style="text-align:center">
+						</p:column>
+					</p:row>
+				</p:columnGroup>
+
+				<ui:remove><!-- 6906 - start note 233 --></ui:remove>
+				<ui:param name="isRejectedDisqualified" value="#{not empty disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierRejectionRemark}"/>
 				<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:20%; text-align:center;">
 					<table style="table-layout: fixed; margin:auto !important; max-width:90px !important">
 						<tr>
-							<td style="text-align:center;">
+							<td style="text-align:center; border: 0 !important"/>
+							<td style="text-align:center; border: 0 !important">
 								<h:outputText value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}" />
+							</td>
+							<td style="text-align:center; border: 0 !important">
+								<ac:iconRejectRemarkBox show="#{isRejectedDisqualified}" id="summaryRemarkId"
+								remark="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierRejectionRemark.remark}"
+								supplierCode="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}" />
 							</td>
 						</tr>
 					</table>
 				</p:column> 
+				<ui:remove><!-- 6906 - end note 233 --></ui:remove>
 				
-				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical']}"
 				style="text-align:right">
 				<h:outputText value="#{evaluationBackingBean.retrieveTotalTechnicalItemScore(disQualifiedSupplier)}"></h:outputText>
 				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical.percentage']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.managedBean.itemTsPercentage}"></h:outputText>
+				</p:column>
 			
-				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other']}"
+					style="text-align:right">
+					<h:outputText value="#{evaluationBackingBean.managedBean.otherchecklistScore}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.demo']}"
 					style="text-align:right">
 					<h:outputText value="#{evaluationBackingBean.managedBean.demoScore}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other.demo.percentage']}"
+					style="text-align:right">
+					<h:outputText value="#{evaluationBackingBean.managedBean.itemAllOtherElementsPercentage}"></h:outputText>
 				</p:column>
 
 				<p:column style="width:25%;text-align:right">

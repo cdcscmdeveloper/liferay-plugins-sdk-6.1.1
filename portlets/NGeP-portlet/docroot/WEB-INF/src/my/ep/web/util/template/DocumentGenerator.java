@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -68,6 +69,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont; //#25025 & #26770 
 
+import my.ep.constant.EpPropertiesConst;
 import my.ep.factory.EpLogger;
 
 /**
@@ -196,8 +198,15 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 					
 			//#25142 - end
 				// #26130 - start
+				//#21692 - Start
 				String fontPath = "";
-				String getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
+				String getPortalBaseURL = "";
+				if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
+					getPortalBaseURL = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_BASE_URL);
+				} else {
+					getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
+				}
+				//#21692 - End
 
 				fontPath = getPortalBaseURL + "/NGeP-portlet/resources/fonts/Arial.ttf";
 
@@ -394,7 +403,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		t3.setValue("\r\n  Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak");
 		// 25025 - End.
 		Text t4 = factory.createText();
-		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini.");
+		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini");
 		run.getContent().add(t1);
 		//run.getContent().add(br);
 		run.getContent().add(br);
@@ -594,6 +603,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		html = doc.body().html();		
 		
 	}
+	
 
 	// #26130 - start
 	private String getServerUrl() {
@@ -608,14 +618,13 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	}
 	// #26130-end
 
-	// #25025 -start
-	public static void setMarginSpace(WordprocessingMLPackage wordPackage) {
-		ObjectFactory factory = Context.getWmlObjectFactory();
-		PgMar pg = factory.createSectPrPgMar();
-		pg.setLeft(BigInteger.valueOf(1000));
-		pg.setRight(BigInteger.valueOf(1000));
-
+	//#25025 -start
+	public static void setMarginSpace (WordprocessingMLPackage wordPackage) {
+		ObjectFactory factory = Context.getWmlObjectFactory ();
+		PgMar pg = factory.createSectPrPgMar ();
+		pg.setLeft (BigInteger.valueOf(1000));
+		pg.setRight (BigInteger.valueOf(1000));
 		wordPackage.getDocumentModel().getSections().get(0).getSectPr().setPgMar(pg);
 	}
-	// #25025 - end
+	//#25025 - end
 }

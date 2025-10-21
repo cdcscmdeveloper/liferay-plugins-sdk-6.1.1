@@ -17,15 +17,18 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.SPKIConst;
+import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DigiCertHelper;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.TrustGateHelper;
@@ -33,6 +36,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -51,7 +55,7 @@ import com.sun.faces.facelets.el.ContextualCompositeMethodExpression;
  */
 @ManagedBean(name = "spkiBackingBean")
 @SessionScoped
-public class SpkiBackingBean extends BaseBackingBean implements Serializable {
+public class SpkiBackingBean extends BaseBackingBean<BaseManagedBean> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties";
@@ -97,92 +101,119 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private SmSupplier supplier;
 	private PmUser loginUser;
 	private String certIssuer;
+	//#36605
+	private static String digicertEnabled = EpPropertiesUtils.getInstance().getProperty("spki.digicert.enabled");
+	private static String trustgateEnabled = EpPropertiesUtils.getInstance().getProperty("spki.trustgate.enabled");
 	private static final Logger logger = EpLogger.getLogger(SpkiBackingBean.class);
-	//test #30425
+	//#30425 - Start
 	public static Logger log = Logger.getLogger(SpkiBackingBean.class);
+
+	//#30425 - End
 
 	public SpkiBackingBean() {
 	}
 
 	public String getSpkiEnabledProperty() {
+		//#30425 - Start
+		log.info(">>>>>>>>>>>> Trying to call EP properties for SPKI <<<<<<<<<<<");
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-		System.out.println("getSpkiEnabledProperty :"
-				+ prop.getProperty("spki.enabled"));
+		log.info("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled"));
+		log.info("Try calling gpki property :" + prop.getProperty("gpki.enabled"));
+		log.info("Try calling ssm property :" + prop.getProperty("ssm.checking.onoff"));
+		log.info("Try calling myIdentity :" + prop.getProperty("myidentity.checking.onoff"));
+		System.out.println("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled"));
+		log.info(">>>>>>>>>>>> Calling EP Properties for SPKI Done <<<<<<<<<<<<<< ");
+		//#30425 - End
 		return prop.getProperty("spki.enabled").trim();
 	}
 
 	public void getChallengeQuestions() {
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+		// #30425 - Start
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
+		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
+			// start checking for validation
+			validateInternalSPKI(getSupplier().getEpNo());
+			// end checking for validation
+		}
+		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
+		// #30425 - End, #36605
+		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(null)) {
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
-				challs = TrustGateHelper.getInstance().getChallengeQuestion(
-						getLoginUser().getIdentificationNo(),
-						getSupplier().getEpNo(), challengeQues1);
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> into trustgate <<<<<<<<<<<<<");
+				// #30425 - End
+				challs = TrustGateHelper.getInstance().getChallengeQuestion(getLoginUser().getIdentificationNo(), getSupplier().getEpNo(), challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
-				challs = DigiCertHelper.getInstance().getChallengeQuestion(
-						getLoginUser().getIdentificationNo());
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> Into Digicert <<<<<<<<<");
+				// #30425 - End
+				challs = DigiCertHelper.getInstance().getChallengeQuestion(getLoginUser().getIdentificationNo());
 			}
 			setChallengeQues1(challs.get(0));
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
 
-	//test #30425
 	public void getChallengeQuestions(String identificationNo) {
+		// #30425 - Start
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
+		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
+			// start checking for validation (for checking cert expiration)
+			validateInternalSPKI(getSupplier().getEpNo());
+			// end checking for validation
+		}
+		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
+		// #30425 - End
+
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+			// #30425 - Start
+			if (getTypeOfCert(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+				// #30425 - End
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
-				log.info(">>>>>>>>>>>>>>> masuk dalam trust gate <<<<<<<<<<<<<");
-				challs = TrustGateHelper.getInstance().getChallengeQuestion(
-						identificationNo, getSupplier().getEpNo(),
-						challengeQues1);
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> into trustgate param <<<<<<<<<<<<<");
+				// #30425 - End
+				challs = TrustGateHelper.getInstance().getChallengeQuestion(identificationNo, getSupplier().getEpNo(), challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
-				log.info(">>>>>>>>>>>>>>> masuk dalam certIssuer gate <<<<<<<<<");
-				challs = DigiCertHelper.getInstance().getChallengeQuestion(
-						identificationNo);
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> Into Digicert param <<<<<<<<<");
+				// #30425 - End
+				challs = DigiCertHelper.getInstance().getChallengeQuestion(identificationNo);
 			}
+			// #30425 - Start
 			log.info("The properties of challs >>>>>>>>>>" + challs);
 			log.info("challs size >>>>>>>>>>>>>>>>>>>>>>>" + challs.size());
+			// #30425 - End
 			setChallengeQues1(challs.get(0));
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
 
-	public byte[] spkiEnabledSignTransaction(String originalText,
-			String identificationNo) {
+	public byte[] spkiEnabledSignTransaction(String originalText, String identificationNo) {
 		SpkiVO vo = null;
 		String pin = getPassword();
 		if (getSupplier() == null) {
 			throw new EpException(MessageConst.ERROR_721018);
 		}
-		if (getLoginUser() == null
-				|| (getLoginUser() != null && getLoginUser().getUserId() == null)) {
+		if (getLoginUser() == null || (getLoginUser() != null && getLoginUser().getUserId() == null)) {
 			throw new EpException(MessageConst.ERROR_721017);
 		}
 		if (StringUtils.isBlank(pin) && StringUtils.isBlank(challengeAns1)) {
-			throw new EpException(SmCommonUtil.getMessage("lbl.cc.spki.title",
-					null));
+			throw new EpException(SmCommonUtil.getMessage("lbl.cc.spki.title", null));
 		}
 		if (StringUtils.isBlank(pin)) {
-			throw new EpException(MessageUtils.getMessage(
-					MessageConst.ERROR_721110, new String[] { SmCommonUtil
-							.getMessage("lbl.cc.spki.pin", null) },
-					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
-							.getUserLocale()));
+			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_721110, new String[] { SmCommonUtil.getMessage("lbl.cc.spki.pin", null) },
+					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
 		}
 		if (StringUtils.isBlank(challengeAns1)) {
-			throw new EpException(MessageUtils.getMessage(
-					MessageConst.ERROR_721110,
-					new String[] { SmCommonUtil.getMessage(
-							"lbl.cc.spki.challresp.answer", null) },
-					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
-							.getUserLocale()));
+			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_721110, new String[] { SmCommonUtil.getMessage("lbl.cc.spki.challresp.answer", null) },
+					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
 		}
 
-		identificationNo = StringUtils.isBlank(identificationNo) ? getLoginUser()
-				.getIdentificationNo() : identificationNo;
+		identificationNo = StringUtils.isBlank(identificationNo) ? getLoginUser().getIdentificationNo() : identificationNo;
 
 		Map<Object, Object> challenges = new HashMap<Object, Object>();
 		challenges.put(challengeQues1, challengeAns1);
@@ -190,11 +221,9 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		String dataForSigning = originalText;
 
 		if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-			vo = TrustGateHelper.getInstance().getSignedData(identificationNo,
-					getSupplier().getEpNo(), pin, challenges, dataForSigning);
+			vo = TrustGateHelper.getInstance().getSignedData(identificationNo, getSupplier().getEpNo(), pin, challenges, dataForSigning);
 		} else {
-			vo = DigiCertHelper.getInstance().getSignedData(identificationNo,
-					getSupplier().getEpNo(), pin, challenges, dataForSigning);
+			vo = DigiCertHelper.getInstance().getSignedData(identificationNo, getSupplier().getEpNo(), pin, challenges, dataForSigning);
 		}
 		if (StringUtils.isBlank(vo.getErrMsg())) {
 			signedData = vo.getSignedData();
@@ -203,25 +232,39 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		}
 		return signedData;
 	}
-
+	
+	//#36605 - start
+	/**
+	 * SPKI Sign Transaction
+	 * @param originalText
+	 * @return
+	 */
 	public byte[] spkiSignTransaction(String originalText) {
-
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			return spkiEnabledSignTransaction(originalText, null);
-		} else {
-			return null;
-		}
+		return spkiSignTransaction(originalText, null);
 	}
-
-	public byte[] spkiSignTransaction(String originalText,
-			String identificationNo) {
-
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+	
+	/**
+	 * SPKI Sign Transaction
+	 * @param originalText
+	 * @param identificationNo
+	 * @return
+	 */
+	public byte[] spkiSignTransaction(String originalText, String identificationNo) {
+		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(identificationNo)) {
 			return spkiEnabledSignTransaction(originalText, identificationNo);
 		} else {
 			return null;
 		}
 	}
+	
+	private boolean isCertEnabled(String identificationNo){
+		String cert = StringUtils.isBlank(identificationNo) ? getCertIssuer() : getCertIssuer(identificationNo);
+		boolean isTrustgate = cert.equals(SupplierManagementConst.CERT_TRUSTGATE) && "true".equals(trustgateEnabled);
+		boolean isDigicert = cert.equals(SupplierManagementConst.CERT_DIGICERT) && "true".equals(digicertEnabled);
+		logger.info("isCertEnabled-"+cert+"\t"+isTrustgate+"\t"+isDigicert);
+		return isTrustgate || isDigicert;
+	}
+	//#36605 - end
 
 	public void setChallengeQues1(String challengeQues1) {
 		this.challengeQues1 = challengeQues1;
@@ -237,39 +280,39 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		return new FacesScopes().getUserSessionBean().getEmail();
 	}
 
-	/**
-	 * To perform SPKI Signing Action
-	 * 
-	 * @param postSignActionMtdExpr
-	 *            the postSignAction method expression to invoke
-	 * @param enableAutoUpdateMtdExpr
-	 *            the enableAutoUpdate method expression to invoke
-	 * @return
-	 */
-	public String spkiSignAction(
-			ContextualCompositeMethodExpression postSignActionMtdExpr,
-			ContextualCompositeMethodExpression enableAutoUpdateMtdExpr) {
+	/** To perform SPKI Signing Action
+	 * @param postSignActionMtdExpr the postSignAction method expression to invoke
+	 * @param enableAutoUpdateMtdExpr the enableAutoUpdate method expression to invoke
+	 * @return */
+	public String spkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, ContextualCompositeMethodExpression enableAutoUpdateMtdExpr) {
 		logger.info("spkiSignAction");
 
 		Object returnObj = null;
+		//#36605
+		//PIN must be 8 chars long, contain only letters, numbers, and at least 1 alphabet and 1 number
+		if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z0-9]{8}$")){
+			String cert = getCertIssuer();
+			boolean checkTG = cert.equals(SupplierManagementConst.CERT_TRUSTGATE) && !"true".equals(trustgateEnabled);
+			boolean checkDG = cert.equals(SupplierManagementConst.CERT_DIGICERT) && !"true".equals(digicertEnabled);
+			if (checkTG || checkDG || !"true".equalsIgnoreCase(getSpkiEnabledProperty())){
+				//disable for environment other than PRD
+				//throw new EpException(MessageConst.ERROR_776060, null);
+			}
+		}
 
 		try {
 
 			if (postSignActionMtdExpr != null) {
-				returnObj = postSignActionMtdExpr.invoke(FacesContext
-						.getCurrentInstance().getELContext(),
-						new Object[] { pmDigiSign });
+				returnObj = postSignActionMtdExpr.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[] { pmDigiSign });
 			}
 
 			if (enableAutoUpdateMtdExpr != null) {
-				enableAutoUpdateMtdExpr.invoke(FacesContext
-						.getCurrentInstance().getELContext(), new Object[] {});
+				enableAutoUpdateMtdExpr.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[] {});
 			}
 
 			RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 		} catch (Exception e) {
-			RequestContext.getCurrentInstance().execute(
-					"setRunEnableAutoUpdate(true);");
+			RequestContext.getCurrentInstance().execute("setRunEnableAutoUpdate(true);");
 			throw e;
 		}
 
@@ -316,8 +359,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			// Create property file
 			String challengeQues1 = new String("In what city you were born?");
 			String challengeAns1 = new String("welcome1");
-			File f = new File(
-					"C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
+			File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
 			// Create KMCClient with the property file
 
 			KMCClient client = KMCClientFactory.getInstance(f);
@@ -335,41 +377,30 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			// getPassword());
 			// Request service to signData based on the answered challenges and
 			// data
-			IKMCAPIResponse res = client
-					.requestService(KMCRequestBuilder.signData("890823102233",
-							"STRONG HABIS", pin.toCharArray(), challenges,
-							new ByteArrayInputStream(dataForSigning.getBytes())));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("890823102233", "STRONG HABIS", pin.toCharArray(), challenges, new ByteArrayInputStream(
+					dataForSigning.getBytes())));
 
 			System.out.println("res.getStatusCode()" + res.getStatusCode());
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
 				// RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 
-				signedData = (byte[]) res
-						.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
+				signedData = (byte[]) res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
 
-				IKMCAPIResponse res1 = client.requestService(KMCRequestBuilder
-						.verifyData(
-								new ByteArrayInputStream(dataForSigning
-										.getBytes()), signedData));
+				IKMCAPIResponse res1 = client.requestService(KMCRequestBuilder.verifyData(new ByteArrayInputStream(dataForSigning.getBytes()), signedData));
 				switch (res.getStatusCode()) {
 				case IKMCAPIResponse.OPERATION_SUCCESSFUL:
 					System.out.println("Data signature is a valid signature");
 					break;
 				default:
-					System.err.println("API return error. Code was "
-							+ res1.getStatusCode() + " Message was : "
-							+ res1.getStatusMessage());
-
+					System.err.println("API return error. Code was " + res1.getStatusCode() + " Message was : " + res1.getStatusMessage());
 				}
 
 				break;
 
 			default:
 
-				System.err.println("API return error. Code was "
-						+ res.getStatusCode() + " Message was : "
-						+ res.getStatusMessage());
+				System.err.println("API return error. Code was " + res.getStatusCode() + " Message was : " + res.getStatusMessage());
 				// throw new EpException(MessageConst.ERROR_776052);
 				// signedData = "DEFAULT SIGNED TEXT";
 			}
@@ -388,13 +419,14 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public void changeChallengeQuestions() {
+		//#36605
+		if (!isCertEnabled(null)){
+			return;
+		}
 		if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-			challs = TrustGateHelper.getInstance().getChallengeQuestion(
-					getLoginUser().getIdentificationNo(),
-					getSupplier().getEpNo(), challengeQues1);
+			challs = TrustGateHelper.getInstance().getChallengeQuestion(getLoginUser().getIdentificationNo(), getSupplier().getEpNo(), challengeQues1);
 		} else {
-			challs = DigiCertHelper.getInstance().getChallengeQuestion(
-					getLoginUser().getIdentificationNo());
+			challs = DigiCertHelper.getInstance().getChallengeQuestion(getLoginUser().getIdentificationNo());
 		}
 		setChallengeQues1(challs.get(0));
 	}
@@ -408,9 +440,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public PmUser getLoginUser() {
 		if (loginUser == null || loginUser.getLoginId() == null) {
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IUserSO.class);
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setLoginId(new FacesScopes().getUserScreenName());
 			UserResDTO resDTO = userSO.retrieveUserByLoginId(userReqDTO);
@@ -430,8 +460,108 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	private String getCertIssuer(String identificationNo) {
-		return PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
-				identificationNo, getSupplier().getEpNo());
+		return PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(identificationNo, getSupplier().getEpNo());
 	}
+
+	//#30425 - Start
+	private String getTypeOfCert(String identificationNo) {
+		return PmCommonUtil.getTypeOfCertIssuer(identificationNo, getSupplier().getEpNo());
+	}
+
+	private void validateInternalSPKI(String epNo) {
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		reqDTO.setEpNo(epNo);
+		reqDTO.setIdentificationNo(pmUser.getIdentificationNo());
+		// check digicert date, still valid or not
+		PersonnelResDTO validateDigiCertDate = SmServiceLookup.getPersonnelSO().checkValidateSoftcert(reqDTO);
+		reqDTO.setUserId(pmUser.getUserId());
+		// retrive personnel
+		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
+		log.info("getPersonnelId >>>>>>>> " + resDTO.getSmPersonnel().getPersonnelId());
+		log.info("getSoftcertFlg >>>>>>>> " + resDTO.getSmPersonnel().getSoftcertFlg());
+		log.info("getSmAppl.getSmSupplier.getSupplierId >>>>>> " + resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+
+		// if process checking validation is successful
+		if (validateDigiCertDate.isSuccessful()) {
+			// if return with results, then personnel have record in pmDigiCert
+			if (validateDigiCertDate.isHasRecord()) {
+				// if the validation from pmDigiCert status = 1, then it will proceed check the date is expired or not
+				if (!validateDigiCertDate.isStatusNotValid()) {
+					// if the pmDigicert date is expired
+					if (validateDigiCertDate.isExpired()) {
+						if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+								|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+								|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+							log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+							throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+							// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
+						} else {
+							StringBuilder sb = new StringBuilder();
+							sb.append(roleDesc());
+							throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] { sb.toString() });
+							// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
+					} else {
+						//if it is not expired, but it is revoked, it will going into this block
+						if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REVOKED) {
+							StringBuilder sb = new StringBuilder();
+							sb.append(roleDesc());
+							throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] { sb.toString() });
+							// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
+					}
+				} else {
+					// if softcert in pmDigiCert status = 0, then the softcert might be not useful anymore even the date is not expired
+					StringBuilder sb = new StringBuilder();
+					sb.append(roleDesc());
+					throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] { sb.toString() });
+					// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
+				}
+			} else {
+				// if return with 0 results, then personnel didn't have record in Pm Digi Cert
+				if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
+					if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+						log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
+					} else {
+						StringBuilder sb = new StringBuilder();
+						sb.append(roleDesc());
+						throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] { sb.toString() });
+						// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
+					}
+				}
+			}
+		}
+	}
+
+	public String roleDesc() {
+		String roleCode = null;
+		FacesScopes fs = new FacesScopes();
+		if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			roleCode = RoleCode.G2G_SUPPLIER_ADMIN.value();
+		} else if (fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			roleCode = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		} else if (fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			roleCode = RoleCode.MOF_SUPPLIER_ADMIN.value();
+		} else if (fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+			roleCode = RoleCode.G2G_SUPPLIER_USER.value();
+		} else if (fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			roleCode = RoleCode.BASIC_SUPPLIER_USER.value();
+		} else if (fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			roleCode = RoleCode.MOF_SUPPLIER_USER.value();
+		} else if (fs.hasRoleUser(RoleCode.FL_USER.value())) {
+			roleCode = RoleCode.FL_USER.value();
+		} else if (fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+			roleCode = RoleCode.SUPPLIER_TEMP.value();
+		}
+		log.info("The Role Code that will be display >>>>> " + roleCode);
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
+	}
+	//#30425 - End
 
 }

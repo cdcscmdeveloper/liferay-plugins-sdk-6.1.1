@@ -42,26 +42,22 @@ import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.requestctadmin.CTContractReqadminDataType;
 import my.ep.persistence.entity.ct.CtActor;
-import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;//#15851, 34142
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
-import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;//#5851, 34142
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.requestCtAdmin.RequestCtAdminManagedBean;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.RoleHelper;
 
 
 
@@ -550,8 +546,10 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 
 		// 20997 - end
 		/*Return when not call from tasklist*/
-		if(taskId==null) 
+		if(taskId==null)
 			return;
+
+			
 
 		getManagedBean().setViewOnly(false);
 		CTContractReqadminDataType dataType =  super.getBpmTaskDetails(CTContractReqadminDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});		
@@ -578,6 +576,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		ctReqDTO.setContractId(new Long(dataType.getContractId()));
 		ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 		ctReqDTO.setDocType(dataType.getDocType());
+		ctBB.getManagedBean().setContractVerIdFromTaskList(new Long(dataType.getDocId())); //#15851
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 		PortletRequest request = (PortletRequest)context.getExternalContext().getRequest();
@@ -678,6 +677,12 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	}
 
 	//Enhancement 15851, 34142 - shaqimi start 02/12/2022
+	/**
+	 * The method used to navigate to contract/loa details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
 	@Override
 	public void goToLoaView(ScLoa scLoa) {
 		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
@@ -692,15 +697,12 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			FacesContext fc = FacesContext.getCurrentInstance();
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
-			ctBB.getManagedBean().setViewSCL(true);
-			ctBB.getManagedBean().setAmendFromTaskList(true);
-
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			
-			//To reset status from FU, NT, FW
-			ctBB.getManagedBean().setDocTypeFromTaskList(null);
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setDocTypeFromTaskList(docType);
+			ctBB.getManagedBean().setStatusIdFromTaskList(statusId);
 			ctBB.getManagedBean().setContractIdFromTaskList(null);
-			ctBB.getManagedBean().setContractVerIdFromTaskList(null);
 			ctBB.getManagedBean().setTaskNameFromTaskList(null);
 
 			if(ctBB.getManagedBean().isViewContractFromAgreement()){

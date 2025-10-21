@@ -22,6 +22,12 @@
 				<td class="header-info-text">
 					#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}
 				</td>
+				<!-- 29555 start -->
+				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.by']} " /></td>
+				<td class="header-info-text">
+					#{contractRequestBackingBean.managedBean.getPreparedBy()}
+				</td>
+				<!-- 29555 end -->
 				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " /></td>
 				<td class="header-info-text">
 					#{contractRequestBackingBean.getStatusDescById(contractRequestBackingBean.managedBean.flRequest.status.statusId)}

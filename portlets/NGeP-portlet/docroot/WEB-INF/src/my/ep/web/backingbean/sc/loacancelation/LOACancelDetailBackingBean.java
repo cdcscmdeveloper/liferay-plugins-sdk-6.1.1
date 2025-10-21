@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,7 +16,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import javax.faces.application.FacesMessage;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -46,7 +45,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -79,8 +77,8 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoaCancelAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
+import my.ep.persistence.entity.sc.loaloi.ScLoaCancelAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
@@ -88,7 +86,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
-import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -101,26 +98,23 @@ import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.sc.loa.*;
-import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.backingbean.sc.loa.LOABaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -131,7 +125,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
 
 // Auto-generated Javadoc
 /**
@@ -157,11 +150,11 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 
 	/** The flag. */
 	private boolean flag;
-	private boolean sqExpiredMessageFlag = false;
+	//private boolean sqExpiredMessageFlag = false;
 
 	private static final String  BRANCH_INFO_TITLE = "Branch Information";
 
-	private static final String MALAY_NA = "T/B";
+	//private static final String MALAY_NA = "T/B";
 
 	/**
 	 * Instantiates a new LOA detail backing bean.
@@ -411,12 +404,14 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 	 * @ param Date date
 	 * @return days of month
 	 */
+	/*
 	private	static	String	getDays(Date date){
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(date);
 		String	days	=	String.valueOf(c1.get(Calendar.DAY_OF_MONTH));
 		return days;
 	}
+	*/
 
 	/**
 	 * Populate loa details.
@@ -597,9 +592,8 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				}
 				this.sortFrequentScheduleList(scLoa.getScQtSchedules());
 
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
 			}
 		} else{
 			this.getManagedBean().setTotalFrequency(0);
@@ -756,6 +750,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		getManagedBean().getSelectedScQtDeduction().setScQtDeductionClauses(result);
 	}
 
+	/*
 	private static String splitLongLengthString(String text, int split){
 		StringBuilder sb = new StringBuilder();
 		String[] array = text.split("(?<=\\G.{" + split + "})");
@@ -769,6 +764,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		}
 		return sb.toString();
 	}
+	*/
 
 	/**
 	 * submit LOA details.
@@ -781,26 +777,24 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		debugLogger("submitAction");
 
 		try {
-			
+
 			PmParameter contractType = getManagedBean().getScLoa().getContractType();
-			if(this.getManagedBean().getFlowamt()==null && null != contractType 
+			if (this.getManagedBean().getFlowamt() == null && null != contractType 
 					&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
-					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode()))
-			{
-				throw new EpException(MessageConst.ERROR_760485);	
-			}else{
-				
+					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode())) {
+				throw new EpException(MessageConst.ERROR_760485);
+			} else {
+
 				String outcome = BpmOutcomeConst.BPM_SUBMIT;
 				ScLoa scLoa = this.getManagedBean().getScLoa();
-				if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
-				{
+				if ((scLoa != null) && (this.getManagedBean().getFlowamt() != null)) {
 					scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
 				}
 				parseLOADetails(scLoa, outcome);
 				validateLOADetails(scLoa, outcome);
 				updateContractDetails(scLoa);
 				validateContractDetails(scLoa);
-	
+
 				scLoa.setScLoaWorkFlowStatuses(null);
 				// To avoid insert workflow status when direct submit without save.
 				if (scLoa.isBrandNew()) {
@@ -809,9 +803,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 						for (ScLoaRemark remark : remarks) {
 							remark.setScWorkFlowStatus(null);
 						}
-					}	
+					}
 				}
-	
+
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setScLoa(scLoa);
 				reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -824,7 +818,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 				reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 				AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
-	
+
 				if (resDTO.isSuccessful()) {
 					scLoa = resDTO.getScLoa();
 					RenameTempLoaNoRepoDirByLoaNo(scLoa);
@@ -832,7 +826,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 					successMessage(MessageConst.INFO_700033, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 							scLoa.getLoaNo(), Boolean.TRUE);
 				}
-			}		
+			}
 
 		} finally {
 			//qtAwardSO = null;
@@ -879,6 +873,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+			//#38093 - Start
+			reqDTO.setCancelPrepareLoaActionMethod(true);
+			//#38093 - End
 			getQtAwardSO().validateCancelLoaRequiredRemark(reqDTO);	
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 			
@@ -933,7 +930,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		try {
 
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+			//Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 		
 			//parseLOADetails(scLoa, outcome);
 			parseApprovalDetails(scLoa, outcome);
@@ -941,21 +938,17 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			// if reject, remove the new witness
 			if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
 				ScLoaWitness scLoaWitness = null;
-				Iterator<ScLoaWitness> it = scLoa.getScLoaWitnesses()
-						.iterator();
+				Iterator<ScLoaWitness> it = scLoa.getScLoaWitnesses().iterator();
 				while (it.hasNext()) {
 					scLoaWitness = it.next();
-					if (scLoaWitness.isBrandNew()
-							&& null == scLoaWitness.getWitnessName()) {
+					if (scLoaWitness.isBrandNew() && null == scLoaWitness.getWitnessName()) {
 						it.remove();
 					}
 				}
 				//Bug #24713
-				if(this.getManagedBean().getLoaSupplierWitness() != null 
-						&& getManagedBean().getScLoa().getScLoaWitnesses() != null) {
+				if (this.getManagedBean().getLoaSupplierWitness() != null && getManagedBean().getScLoa().getScLoaWitnesses() != null) {
 
-					getManagedBean().getScLoa().getScLoaWitnesses().remove(
-							this.getManagedBean().getLoaSupplierWitness());					
+					getManagedBean().getScLoa().getScLoaWitnesses().remove(this.getManagedBean().getLoaSupplierWitness());
 					this.getManagedBean().setLoaSupplierWitness(null);
 				}
 			}
@@ -1023,7 +1016,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setDigiSignData(digiSign);
-			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+			//#38093 - Start
+			reqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
+			//#38093 - End
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
@@ -1046,29 +1041,25 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				
-				try
-				{
-				    Thread.sleep(5000);
-				}
-				catch(InterruptedException ex)
-				{
-				    Thread.currentThread().interrupt();
+
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException ex) {
+					Thread.currentThread().interrupt();
 				}
 				long previousStatusId = Long.parseLong(((SCAwardSupplierDataType) reqDTO.getPayLoad()).getBidNumber());
-				updateCancelLoaCurrentWorkflowStatus(scLoa,outcome,previousStatusId);
-				
+				updateCancelLoaCurrentWorkflowStatus(scLoa, outcome, previousStatusId);
+
 				String RequestNoteNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
-				scLoa = resDTO.getScLoa();								
+				scLoa = resDTO.getScLoa();
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
 				renewSesionObject();
-				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+				if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700038, scLoa.getLoaNo(), RequestNoteNo, Boolean.TRUE);
-				}
-				else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+				} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 					successMessage(MessageConst.INFO_700039, scLoa.getLoaNo(), RequestNoteNo, Boolean.TRUE);
 				}
-				
+
 			}
 
 		} finally {
@@ -1651,18 +1642,14 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 	 * Save schedule list.
 	 */
 	private void saveScheduleList() {
-		List<ScQtSchedule> freqschedule = this.getManagedBean().getScLoa()
-				.getScQtSchedules();
+		List<ScQtSchedule> freqschedule = this.getManagedBean().getScLoa().getScQtSchedules();
 		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
 		if (freqschedule != null && !freqschedule.isEmpty()) {
 			for (ScQtSchedule schedule : freqschedule) {
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				//SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				String fromdate = 01 + "/"
-						+ getMonth(schedule.getStartMonth()) + "/"
-						+ schedule.getStartYear();
-				String toDate = 01 + "/" + getMonth(schedule.getEndMonth())
-						+ "/" + schedule.getEndYear();
+				String fromdate = 01 + "/" + getMonth(schedule.getStartMonth()) + "/" + schedule.getStartYear();
+				String toDate = 01 + "/" + getMonth(schedule.getEndMonth()) + "/" + schedule.getEndYear();
 				try {
 					if (df.parse(fromdate).after(df.parse(toDate))) {
 						throw new EpException(MessageConst.ERROR_715011);
@@ -2282,10 +2269,12 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 
+	/*
 	private ITemplateSpecSO getTemplateSpecSO(){
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 	}
+	*/
 
 	/**
 	 * Back to previous.
@@ -2798,11 +2787,12 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		return roleCode;
 	}
 	
-	
+	/*
 	private FacesScopes getFacesScopes(){
 		FacesScopes fs = new FacesScopes();
 		return fs;
 	}
+	*/
 	
 	/**
 	 * @param e
@@ -2981,7 +2971,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
 				if(currentDate.compareTo(cal.getTime()) >= 0){
 					validDate = false;
-					sqExpiredMessageFlag = true;
+					//sqExpiredMessageFlag = true;
 				}
 			}	
 		}			
