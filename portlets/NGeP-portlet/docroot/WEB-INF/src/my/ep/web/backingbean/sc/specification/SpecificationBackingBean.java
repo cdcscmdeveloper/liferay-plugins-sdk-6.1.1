@@ -24002,7 +24002,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @throws IOException
 	 */
 	public void downloadFinancialChecklistSummaryReport() throws IOException {
-		List<ScQtCheckList> scQtChecklistFin = this.getManagedBean().getTechChecklistPreview();
+		List<ScQtCheckList> scQtChecklistFin = this.getManagedBean().getFinChecklistPreview();
 		validatePrepareQtChecklist();
 
 		this.getManagedBean().setFinChecklistPreview(scQtChecklistFin);
