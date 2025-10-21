@@ -191,10 +191,15 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().setDisableClienType(false);
 		} else {
 			this.getManagedBean().setDisableClienType(true);
+			clientTypeChange();
+		}
+
+		if (!this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
+			this.getManagedBean().getSelectedDraft().setPaymentMethod(new PmParameter());
 		}
 
 		this.getManagedBean().setTempEffDate(false);
-		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
+		if (!this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
 			dateChange();
 		}
 
@@ -424,12 +429,15 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void clientTypeChange() {
 		if (this.getManagedBean().isDraftUpdate()) {
 			String oriAgencyName = this.getManagedBean().getSelectedDraft().getOriAgencyName();
-			if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_NON_FEDERAL)) {
-				this.getManagedBean().getSelectedDraft().setAgencyName(oriAgencyName);
-			} else if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_FEDERAL)) {
-				this.getManagedBean().getSelectedDraft().setAgencyName(null);
+			if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
+				if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_FEDERAL)) {
+					this.getManagedBean().getSelectedDraft().setAgencyName(null);
+					this.getManagedBean().getSelectedDraft().setOrgProfile(null);
+				} else {
+					this.getManagedBean().getSelectedDraft().setAgencyName(oriAgencyName);
+					this.getManagedBean().getSelectedDraft().setOrgProfile(null);
+				}
 			}
-			this.getManagedBean().getSelectedDraft().setOrgProfile(null);
 		} else if (this.getManagedBean().isMasterNew()) {
 			this.getManagedBean().getNewMaster().setAgencyName(null);
 			this.getManagedBean().getNewMaster().setOrgProfile(null);
@@ -878,8 +886,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		Long sourceType = this.getManagedBean().getSelectedDraft().getSourceType().getParameterId();
 		List<SmCompExpMasterDoc> smCompExpDocList = this.getManagedBean().getSmCompExpDocList();
 
-		error = validateDetail(error, clienType, agencyName, fileReferenceNo, fileExtensionNo);
-		error = validateDate(error, contractEffDate, contractExpDate);
+		if (!sourceType.equals(ParameterConst.SOURCE_TYPE_ID_QT)) {
+			error = validateDetail(error, clienType, agencyName, fileReferenceNo, fileExtensionNo);
+		}
+		if (sourceType.equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
+			error = validateDate(error, contractEffDate, contractExpDate);
+		}
 		error = validateList(error, sourceType, smCompExpDocList);
 
 		if (!error) {
@@ -943,16 +955,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private boolean validateList(boolean err, Long sourceType, List<SmCompExpMasterDoc> smCompExpDocList) {
 		boolean error = err;
 		if (this.getManagedBean().isDraftUpdate()) {
-			error = validateDraftUpdateList(sourceType, smCompExpDocList);
+			error = validateDraftUpdateList(error, sourceType, smCompExpDocList);
 		}
 		if (this.getManagedBean().isMasterUpdate()) {
-			error = validateMasterUpdateList(sourceType);
+			error = validateMasterUpdateList(error, sourceType);
 		}
 		return error;
 	}
 
-	private boolean validateDraftUpdateList(Long sourceType, List<SmCompExpMasterDoc> smCompExpDocList) {
-		boolean error = false;
+	private boolean validateDraftUpdateList(boolean err, Long sourceType, List<SmCompExpMasterDoc> smCompExpDocList) {
+		boolean error = err;
 		if (sourceType.equals(ParameterConst.SOURCE_TYPE_ID_SM) && (null == smCompExpDocList || smCompExpDocList.isEmpty())) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
@@ -973,8 +985,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		return error;
 	}
 
-	private boolean validateMasterUpdateList(Long sourceType) {
-		boolean error = false;
+	private boolean validateMasterUpdateList(boolean err, Long sourceType) {
+		boolean error = err;
 		if (!sourceType.equals(ParameterConst.SOURCE_TYPE_ID_CT)
 				&& (null == this.getManagedBean().getSelectedMaster().getCompExpMasterDocs() || this.getManagedBean().getSelectedMaster()
 						.getCompExpMasterDocs().isEmpty())) {
@@ -1000,23 +1012,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	/**
 	 * Delete selected Draft
 	 */
-	public void delSmCompExpDraft(boolean duplicate) {
+	public void delSmCompExpDraft() {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
-			if (duplicate) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775236,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775237,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERROR_775237,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			redirectToDraft();
 		}
 	}
@@ -1110,11 +1115,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	private void checkDuplicate(Long masterId) {
 		if (null != masterId) {
-			if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
+			if (!this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 				SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 				reqDTO.setMasterId(masterId);
 				SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
-				if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
+				if (!resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 					RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
 				} else {
 					deactivateMaster(resDTO.getMaster().getCompExpMasterId());
@@ -1205,6 +1210,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
 		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
+		this.getManagedBean().getSelectedMaster().getProcumentMode().getParameterId();
 
 		dateChange();
 
@@ -1243,17 +1249,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		String fileExtensionNo = master.getFileExtensionNo();
 		error = validateDetail(error, clienType, agencyName, fileReferenceNo, fileExtensionNo);
 
-		if (this.getManagedBean().isMasterNew()) {
-			String title = master.getTitle();
-			BigDecimal contractValue = master.getContractValue();
-			PmParameter procumentMode = master.getProcumentMode();
-			error = validateNewDetail(error, title, contractValue, procumentMode);
-			if (this.getManagedBean().isConsultant()) {
-				String projectLoc = master.getProjectLoc();
-				String workServDesc = master.getWorkServDesc();
-				BigDecimal consultantFee = master.getConsultantFee();
-				error = validateNewConsultant(error, projectLoc, workServDesc, consultantFee);
-			}
+		String title = master.getTitle();
+		BigDecimal contractValue = master.getContractValue();
+		PmParameter procumentMode = master.getProcumentMode();
+		error = validateNewDetail(error, title, contractValue, procumentMode);
+
+		if (this.getManagedBean().isConsultant()) {
+			String projectLoc = master.getProjectLoc();
+			String workServDesc = master.getWorkServDesc();
+			BigDecimal consultantFee = master.getConsultantFee();
+			error = validateNewConsultant(error, projectLoc, workServDesc, consultantFee);
 		}
 
 		Date contractEffDate = master.getContractExpDate();
@@ -1267,6 +1272,27 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (!error && update) {
 			updateSmComExpMaster(false);
 		} else if (!error) {
+			master.setSmAppl(this.getManagedBean().getSupplier().getSmAppl());			
+			for (SmCompExpMasterDoc doc : master.getCompExpMasterDocs()) {
+				doc.setCompExpMaster(master);
+			}
+			for (SmCompExpCatMaster cat : master.getCompExpMasterCats()) {
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+
+				reqDTO.setCategoryL1Id(cat.getCategoryL1().getCategoryL1Id());
+				cat.setCategoryL1(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL1DtlById(reqDTO).getCategoryL1());
+				cat.setCategoryL1Name(cat.getCategoryL1().getCategoryName());
+
+				reqDTO.setCategoryL2Id(cat.getCategoryL2().getCategoryL2Id());
+				cat.setCategoryL2(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL2DtlById(reqDTO).getCategoryL2());
+				cat.setCategoryL2Name(cat.getCategoryL2().getCategoryName());
+
+				reqDTO.setCategoryL3Id(cat.getCategoryL3().getCategoryL3Id());
+				cat.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO).getCategoryL3());
+				cat.setCategoryL3Name(cat.getCategoryL3().getCategoryName());
+				
+				cat.setCompExpMaster(master);
+			}
 			saveMaster(master, clienType);
 		}
 	}
@@ -1296,7 +1322,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			}
 
 		}
-
 	}
 
 	private boolean validateNewConsultant(boolean err, String projectLoc, String workServDesc, BigDecimal consultantFee) {
@@ -1341,7 +1366,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775232,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
-		if (null == procumentMode) {
+		if (null == procumentMode.getParameterId()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1381,6 +1406,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		history.setContractEffDate(master.getContractEffDate());
 		history.setContractExpDate(master.getContractExpDate());
 		history.setContractStatus(master.getContractStatus());
+		if (this.getManagedBean().isConsultant()) {
+			history.setProjectLoc(master.getProjectLoc());
+			history.setWorkServDesc(master.getWorkServDesc());
+			history.setConsultantFee(master.getConsultantFee());
+		}
 		history.setSourceType(SmApplicationUtil.retrievePmParameterById(master.getSourceType().getParameterId()));
 		setActionType(history, delete);
 

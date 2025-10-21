@@ -57,16 +57,17 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.comp.exp.update.contract.status']}"
 							style="text-align: center !important;" />
-						<p:outputPanel rendered="#{cc.attrs.mBean.consultant}">
-							<p:column headerText="#{lbl['lbl.sm.comp.exp.update.proj.loc']}"
-								style="text-align: center !important;" />
-							<p:column
-								headerText="#{lbl['lbl.sm.comp.exp.update.serv.provide']}"
-								style="text-align: center !important;" />
-							<p:column
-								headerText="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
-								style="text-align: center !important;" />
-						</p:outputPanel>
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.update.proj.loc']}"
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.mBean.consultant}" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.serv.provide']}"
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.mBean.consultant}" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.mBean.consultant}" />
 						<p:column
 							headerText="#{lbl['lbl.sm.comp.exp.master.list.cat.code']}"
 							style="text-align: center !important;" />
@@ -161,25 +162,23 @@
 						rendered="#{history.contractStatus eq ParameterConst.contractStatusTerminated}"
 						value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
 				</p:column>
-				<p:outputPanel rendered="#{cc.attrs.mBean.consultant}">
-					<p:column
-						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
-						<h:outputText value="#{history.projectLoc}" />
-					</p:column>
-					<p:column
-						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
-						<h:outputText value="#{history.workServDesc}" />
-					</p:column>
-					<p:column
-						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
-						<h:outputText
-							style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
-							value="#{history.consultantFee}">
-							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</h:outputText>
-					</p:column>
-				</p:outputPanel>
+				<p:column rendered="#{cc.attrs.mBean.consultant}"
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.projectLoc}" />
+				</p:column>
+				<p:column rendered="#{cc.attrs.mBean.consultant}"
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.workServDesc}" />
+				</p:column>
+				<p:column rendered="#{cc.attrs.mBean.consultant}"
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+						value="#{history.consultantFee}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 					<ui:repeat var="catCode" value="#{history.compExpCatMasterHists}">

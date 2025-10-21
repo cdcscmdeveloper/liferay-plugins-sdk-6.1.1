@@ -46,12 +46,15 @@
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
 					<td style="width: 66%"><p:inputText id="agencyName" size="60"
-							value="#{smCompExpMB.selectedMaster.agencyName}" readonly="true" />
-						<p:commandLink action="#{smPtjPopupBB.initPtjPopup}"
-							oncomplete="blockWidget.hide(),smPtjPopupWV.show()"
-							onclick="blockWidget.show()" update=":form" process="@form">
-							<p:graphicImage value="/css/images/design/search.png" />
-						</p:commandLink></td>
+							readonly="#{smCompExpMB.selectedMaster.clientType eq null or smCompExpMB.selectedMaster.clientType eq ParameterConst.clientTypeFederal}"
+							value="#{smCompExpMB.selectedMaster.agencyName}" /> <p:outputPanel
+							rendered="#{smCompExpMB.selectedMaster.clientType eq ParameterConst.clientTypeFederal}">
+							<p:commandLink action="#{smPtjPopupBB.initPtjPopup}"
+								oncomplete="blockWidget.hide(),smPtjPopupWV.show()"
+								onclick="blockWidget.show()" update=":form" process="@form">
+								<p:graphicImage value="/css/images/design/search.png" />
+							</p:commandLink>
+						</p:outputPanel></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
@@ -83,15 +86,18 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
 					<td style="width: 66%"><p:inputTextarea cols="100"
 							value="#{smCompExpMB.selectedMaster.title}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /></td>
-					<td style="width: 66%"><p:inputText label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:inputText
+							label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
 							value="#{smCompExpMB.selectedMaster.contractValue}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -110,7 +116,8 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
 					<td style="width: 66%"><p:selectOneMenu
 							value="#{smCompExpMB.selectedMaster.procumentMode.parameterId}">
 							<f:selectItems
@@ -120,7 +127,8 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
 					<td style="width: 66%"><p:calendar id="contractEffDate"
 							label="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
 							maxdate="#{smCompExpMB.maxEffDate}"
@@ -135,7 +143,8 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
 					<td style="width: 66%"><p:calendar id="contractExpDate"
 							label="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}"
 							mindate="#{smCompExpMB.minExpDate}"
@@ -181,6 +190,38 @@
 								value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
 						</c:if></td>
 				</tr>
+				<p:outputPanel rendered="#{smCompExpMB.consultant}">
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /> <p:outputLabel
+								styleClass="mandatory" value="*" /></td>
+						<td style="width: 66%"><p:inputText
+								styleClass="outputLabel-view"
+								value="#{smCompExpMB.selectedMaster.projectLoc}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /> <p:outputLabel
+								styleClass="mandatory" value="*" /></td>
+						<td style="width: 66%"><p:inputText
+								styleClass="outputLabel-view"
+								value="#{smCompExpMB.selectedMaster.workServDesc}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel
+								styleClass="mandatory" value="*" /></td>
+						<td style="width: 66%"><p:inputText
+								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
+								value="#{smCompExpMB.selectedMaster.consultantFee}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>
+					</tr>
+				</p:outputPanel>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"

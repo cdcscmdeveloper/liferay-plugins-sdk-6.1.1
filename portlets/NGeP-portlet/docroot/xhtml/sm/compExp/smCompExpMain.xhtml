@@ -227,9 +227,6 @@
 							<p:tooltip for="actionEditId"
 								value="#{lbl['lbl.sm.comp.exp.master.list.source.type']} #{smCompExpBB.getParameterDesc(ParameterTypeConst.compExpSourceType,masterNonFed.sourceType.parameterCode)}" />
 						</p:commandLink>
-						<p:graphicImage id="actionEditDeleteId"
-							rendered="#{masterNonFed.recordStatusFlg eq ParameterConst.recordStatusDeleted}"
-							value="/css/images/design/ico-view.png" />
 						<p:commandLink
 							action="#{smCompExpBB.initHistPopup(masterNonFed.compExpMasterId)}"
 							oncomplete="blockWidget.hide(),compExpHistPopupWV.show()"
