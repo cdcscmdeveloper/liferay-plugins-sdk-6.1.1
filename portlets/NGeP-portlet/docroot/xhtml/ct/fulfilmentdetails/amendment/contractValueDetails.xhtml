@@ -50,29 +50,53 @@
 			<p:spacer width="1" />
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.usage.with']}" />
-			<p:inputText id="usageWith" styleClass="ppRightBtn" style="width:90px;" disabled="true">
-				<f:convertNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			</p:inputText>
+			<h:panelGrid columns="4">
+				<p:inputText id="usageWith" styleClass="ppRightBtn" style="width:90px;" disabled="true">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.utilization.pending.payment']}" />
+				<p:spacer width="1" />
+				<p:message for="usageWith" display="icon" />
+			</h:panelGrid>
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.usage.before']}" />
-			<p:inputText id="usageBefore" styleClass="ppRightBtn" style="width:90px;" disabled="true">
-				<f:convertNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			</p:inputText>
+			<h:panelGrid columns="4">
+				<p:inputText id="usageBefore" styleClass="ppRightBtn" style="width:90px;" disabled="true">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.utilization.before.pending.payment']}" />
+				<p:spacer width="1" />
+				<p:message for="usageBefore" display="icon" />
+			</h:panelGrid>
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.contract.reduced']}" />
-			<p:inputText id="contractReduced" styleClass="ppRightBtn" style="width:90px;" disabled="true">
-				<f:convertNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			</p:inputText>
+			<h:panelGrid columns="4">
+				<p:inputText id="contractReduced" styleClass="ppRightBtn" style="width:90px;" disabled="true">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.utilization.amount.reduced']}" />
+				<p:spacer width="1" />
+				<p:message for="contractReduced" display="icon" />
+			</h:panelGrid>
 
 			<p:outputLabel value="#{lbl['lbl.ct.maximum.additional']}" />
-			<p:inputText id="maxAdditional" styleClass="ppRightBtn" style="width:90px;" disabled="true"
-				value="#{amendmentBackingBean.getMaxAdditionalValue()}">
-				<f:convertNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			</p:inputText>
+			<h:panelGrid columns="4">
+				<p:inputText id="maxAdditional" styleClass="ppRightBtn" style="width:90px;" disabled="true"
+					value="#{amendmentBackingBean.getMaxAdditionalValue()}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.utilization.maximum.additional']}" />
+				<p:spacer width="1" />
+				<p:message for="maxAdditional" display="icon" />
+			</h:panelGrid>
 
 			<br/>
 			<p:spacer height="1" />
@@ -92,6 +116,10 @@
 						listener="#{amendmentBackingBean.changeReductionValue}" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();" />
 				</p:inputText>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.reduction.contract.amount']}" />
+				<p:spacer width="1" />
+				<p:message for="reductionAmt" display="icon" />
 			</h:panelGrid>
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.additional.contract.amt']}" />
@@ -114,11 +142,17 @@
 			</h:panelGrid>
 
 			<p:outputLabel value="#{lbl['lbl.ct.additional.percentage']}" />
-			<p:inputText id="addPercentage" styleClass="ppRightBtn" style="width:90px;" disabled="true"
-				value="#{amendmentBackingBean.getAdditionalPercentage()}">
-				<f:convertNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			</p:inputText>
+			<h:panelGrid columns="4">
+				<p:inputText id="addPercentage" styleClass="ppRightBtn" style="width:90px;" disabled="true"
+					value="#{amendmentBackingBean.getAdditionalPercentage()}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.contract.percentage']}" />
+					<p:spacer width="1" />
+					<p:message for="addPercentage" display="icon" />
+			</h:panelGrid>	
 
 			<br/>
 			<p:spacer height="1" />
@@ -211,6 +245,9 @@
 					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}">
 				</p:calendar>
+				<p:spacer width="1" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
+				<p:spacer width="1" />
 				<p:message for="newAmtEffDate" display="icon"/>
 			</h:panelGrid>
 

@@ -262,6 +262,8 @@
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.contract.amount']}" />
 			</h:panelGrid>			
 		 #24336 end -->
+
+			<!-- rendered="#{amendmentBackingBean.getAmendValue(2) and !ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}" -->
 			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.getAmendValue(2)}" style="float:right;">
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" styleClass="required" />
 			</h:panelGrid>
@@ -286,7 +288,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 				<p:spacer width="1" />
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.effective.date']}" />
 				<p:spacer width="1" />
 				<p:message for="edateCal1" display="icon" />
 			</h:panelGrid>
