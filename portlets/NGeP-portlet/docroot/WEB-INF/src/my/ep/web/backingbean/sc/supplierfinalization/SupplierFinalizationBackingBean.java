@@ -3524,7 +3524,7 @@ return	remarksNotFound;
 					if (reason == null) {
 						throw new EpException(MessageConst.ERROR_760710, new String[] {
 								this.getManagedBean().getScQt().getQtNo(),
-								getManagedBean().getScQt().getEstimatedAmount().toString() });
+								getManagedBean().getSelectedSupplierOfferedPrice()});
 					} else {
 						String reasonType = this.getManagedBean().getScQtFinalization().getReason().getReasonCode();
 
@@ -3538,7 +3538,7 @@ return	remarksNotFound;
 								.equalsIgnoreCase(reasonType)) {
 							throw new EpException(MessageConst.ERROR_760710, new String[] {
 									this.getManagedBean().getScQt().getQtNo(),
-									getManagedBean().getScQt().getEstimatedAmount().toString() });
+									getManagedBean().getSelectedSupplierOfferedPrice()});
 						}
 
 					}
@@ -3546,7 +3546,7 @@ return	remarksNotFound;
 						&& !ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode)) {
 					throw new EpException(MessageConst.ERROR_760710, new String[] {
 							this.getManagedBean().getScQt().getQtNo(),
-							getManagedBean().getScQt().getEstimatedAmount().toString() });
+							getManagedBean().getSelectedSupplierOfferedPrice()});
 				}
 			}
 			// #35320 - END
@@ -12189,9 +12189,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 								calculateOfferedPrice(cachedSupplier, item);
 
 								if (cachedSupplier.getBidRank() != null) {
-									intendedPrice = cachedSupplier.getBidPrice();
+									intendedPrice = cachedSupplier.getBidPrice();									
 								} else {
-									intendedPrice = cachedSupplier.getOfferedPrice();
+									intendedPrice = cachedSupplier.getOfferedPrice();									
 								}
 
 								if (intendedPrice != null
@@ -12199,6 +12199,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 												.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE))) {
 									if (intendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) > 0) {
 										suppOfferPriceIsExceed = Boolean.TRUE;
+										this.getManagedBean().setSelectedSupplierOfferedPrice(intendedPrice.toString());
 									}
 								} else if (intendedPrice != null
 										&& (committeeType
@@ -12206,6 +12207,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 												.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK))) {
 									if (intendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_30MILL)) > 0) {
 										suppOfferPriceIsExceed = Boolean.TRUE;
+										this.getManagedBean().setSelectedSupplierOfferedPrice(intendedPrice.toString());
 									}
 								}
 								break;
@@ -12215,7 +12217,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				}
 			}
 		} else {
-			if (MapUtils.isNotEmpty(getManagedBean().getQualifiedSuppliersCache())) {
+			if (MapUtils.isNotEmpty(this.getManagedBean().getQualifiedSuppliersCache())) {
 				for (MapKey mapKey : getManagedBean().getQualifiedSuppliersCache().keySet()) {
 					List<ScQtRecommend> items = null;
 					if (DEFAULT_ZONE.equals(mapKey.getZoneId())) {
@@ -12232,9 +12234,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 								if (evalResultDtlBean.isAwarded()) {
 									if (evalResultDtlBean.getBidRank() != null) {
 										calculateBidPrice(items, evalResultDtlBean);
-										intendedPrice = evalResultDtlBean.getBidPrice();
+										intendedPrice = evalResultDtlBean.getBidPrice();										
 									} else {
-										intendedPrice = evalResultDtlBean.getScQtProposalAmount().getProposalAmt();
+										intendedPrice = evalResultDtlBean.getScQtProposalAmount().getProposalAmt();										
 									}
 
 									if (intendedPrice != null
@@ -12242,6 +12244,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 													.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE))) {
 										if (intendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) > 0) {
 											suppOfferPriceIsExceed = Boolean.TRUE;
+											this.getManagedBean().setSelectedSupplierOfferedPrice(intendedPrice.toString());
 										}
 									} else if (intendedPrice != null
 											&& (committeeType
@@ -12249,6 +12252,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 													.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK))) {
 										if (intendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_30MILL)) > 0) {
 											suppOfferPriceIsExceed = Boolean.TRUE;
+											this.getManagedBean().setSelectedSupplierOfferedPrice(intendedPrice.toString());
 										}
 									}
 									break;
