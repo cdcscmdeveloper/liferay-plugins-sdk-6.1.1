@@ -23987,6 +23987,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getTechChecklistPreview(), false);
+		validatePrepareQtChecklist();
+		technicalCheckListPreview();
 	}
 
 	// #10141 End Vinod
@@ -24051,6 +24053,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getFinChecklistPreview(), false);
+		validatePrepareQtChecklist();
+		financialCheckListPreview();
 	}
 
 	// #10141 End Vinod
