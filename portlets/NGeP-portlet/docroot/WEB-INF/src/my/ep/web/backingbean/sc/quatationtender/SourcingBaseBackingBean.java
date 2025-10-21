@@ -3308,12 +3308,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public SelectItem[] getRepresentativeTypeDropdownValues(String committeeType){
 		SelectItem[] items = null;
 		
-		// #35320 - Start
-		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
-				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)
-				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
-		}// #35320 - End		
+		}
 		  else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PPR);
 		}
@@ -3329,8 +3327,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK);
-		}		
-		
+		}
 		return items;
 	}
 	
