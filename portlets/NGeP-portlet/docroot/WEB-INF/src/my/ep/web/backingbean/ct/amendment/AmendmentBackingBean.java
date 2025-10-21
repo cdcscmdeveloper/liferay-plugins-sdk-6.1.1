@@ -5616,8 +5616,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user extended the contract period.
 	 */
 	public void onExtensionPeriodChanged() {
-		//32418 Start
 		
+		//32418 Start		
 	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 	    CtContractValue contractValue = ctBackingBean.getManagedBean().getContractVer().getCtContractValue();
 	    
@@ -5637,7 +5637,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		
 		Date expDate = contractValue.getExpDate();
-		if(extendPeriod > 0 || extendDaysPeriod >0){
+		if (extendPeriod > 0 || extendDaysPeriod >0){
 			Calendar c = Calendar.getInstance();
 			c.setTime(expDate);
 			c.add(Calendar.DATE, 1);
