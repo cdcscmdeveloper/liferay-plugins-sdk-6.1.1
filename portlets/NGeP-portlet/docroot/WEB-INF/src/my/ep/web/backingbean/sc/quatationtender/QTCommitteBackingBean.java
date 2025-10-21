@@ -2274,7 +2274,7 @@ public class QTCommitteBackingBean extends
 						// #35320 - Set QCA, QCB to QQC - Start						
 						if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
 								|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
-							committeeType = "QQC";
+							committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
 						}						
 						// #35320 - End	
 						
