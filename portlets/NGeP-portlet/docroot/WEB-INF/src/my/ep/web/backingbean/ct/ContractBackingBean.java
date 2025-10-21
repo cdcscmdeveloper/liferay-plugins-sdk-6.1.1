@@ -4650,6 +4650,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
+		
+		//resets the contract days period to 0 because days are not applicable in the LOA process
+		getManagedBean().setContractDaysPeriod(ContractConst.VALUE_OF_0);
 		return String.valueOf(getManagedBean().getCtContractAmount().getContractPeriodBond());
 	}
 	
