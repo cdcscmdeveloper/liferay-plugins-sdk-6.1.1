@@ -611,7 +611,9 @@ public class SupplierDataMaintenanceBackingBean extends
 
 			// set registration status and expiry date
 			reqDTO.setOldRegStatus(getManagedBean().getExistingRegStatus());
-			reqDTO.setOldRegStatusId(getManagedBean().getOldRegStatusId());
+			//#38856 - START
+			reqDTO.setOldRegStatusId(getManagedBean().getCurrRegStatusId());
+			//#38856 - END
 			reqDTO.setOldMofExpiryDate(getManagedBean().getExistingMofExpiryDate());
 			
 			// set active status for newly added category
@@ -1875,24 +1877,59 @@ public class SupplierDataMaintenanceBackingBean extends
 								.getPmZone());
 
 	}*/
-
+	
+	//#26238 ,  #38417 , #38609 , #38962 - START
 	/**
 	 * Set whether the login user is allowed to do data maintenance
 	 */
 	private void setLoginUserAllowedToDoMaintenance(String mofStatus) {
-		getManagedBean().setAllowedToDoMaintenance(false);
-		if (isLoginUserAllowedToEdit()) {
-			getManagedBean().setAllowedToDoMaintenance(true);
-		}
-		//#26238 - 38417
 		SmSupplier supplier = getManagedBean().getSmSupplier();
-		boolean hasPending = supplier.isPendingBlacklist() || supplier.isPendingCancel()
-				|| supplier.isPendingSuspend();
-		if (!hasPending && StringUtils.isNotEmpty(mofStatus) 
-				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)){
+
+		// If user cannot edit at all, deny immediately
+		if (!isLoginUserAllowedToEdit()) {
 			getManagedBean().setAllowedToDoMaintenance(false);
+			return;
 		}
+
+		// If supplier status blocks maintenance, deny
+		if (shouldDisableMaintenance(supplier, mofStatus)) {
+			getManagedBean().setAllowedToDoMaintenance(false);
+			return;
+		}
+
+		// Otherwise, allow
+		getManagedBean().setAllowedToDoMaintenance(true);
 	}
+
+	private boolean shouldDisableMaintenance(SmSupplier supplier, String mofStatus) {
+		return isDeletedStatus(supplier, mofStatus) || isCancelRegStatus(mofStatus, supplier)
+				|| isActiveWithPendingDA(supplier, mofStatus);
+	}
+
+	private boolean isDeletedStatus(SmSupplier supplier, String mofStatus) {
+		boolean hasPending = supplier.isPendingBlacklist() || supplier.isPendingCancel() || supplier.isPendingSuspend();
+
+		// 38609 - START
+		String supplierType = supplier.getSmAppl().getSupplierType();
+		
+		return !hasPending && StringUtils.isNotEmpty(mofStatus)
+				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)
+				&& !supplierType.equals(SupplierManagementConst.SUPP_TYPE_BASIC);
+		// 38609 - END
+	}
+	//#39079 - START
+	private boolean isCancelRegStatus(String mofStatus, SmSupplier supplier) {
+		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector()
+				|| StringUtils.isNotEmpty(checkNonActiveDAWithPending(supplier));
+
+		return mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA;
+	}
+	//#39079 - END
+	private boolean isActiveWithPendingDA(SmSupplier supplier, String mofStatus) {
+	    return mofStatus.equals(SupplierManagementConst.MOF_STATUS_ACTIVE)
+	        && StringUtils.isNotEmpty(checkNonActiveDAWithPending(supplier));
+	}
+	//#26238 ,  #38417 , #38609 , #38962 - END
 
 	/**
 	 * To check whether selected supplier has active transaction
@@ -1984,10 +2021,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		//27857: Disciplinary Action - end - 26238
 				
 		//28198: Disciplinary Action - start - 26238
-		List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disc);
-		String remark = EntityHelper.isCollectionEmpty(remarksList) ? disc.getRemark()
-				: remarksList.get(0).getRemark();
-		discipline.getSmDiscplinaryAction().setRemark(remark);
+		discipline.getSmDiscplinaryAction().setRemark(disc.getRemark()); // 39115
 		//28198: Disciplinary Action - end - 26238
 		discipline.getSmDiscplinaryAction().setStartDate(disc.getStartDate());
 		discipline.getSmDiscplinaryAction().setEndDate(disc.getEndDate());
@@ -2932,14 +2966,19 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void unSelectCancelBumiCategories() {
 		unSelectSuspendCategories();
-		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
-				|| !getManagedBean().isEditDisciplinaryActionCheckBox()){
+		boolean multipleCategory = getManagedBean().isBumiputeraStatusCancel()
+				&& (getManagedBean().isCancelCategoryCode() || getManagedBean()
+						.isManufacturerStatusCancel());
+		if (!getManagedBean().getSmSupplier().isBumi()
+				|| !getManagedBean().isBumiputeraStatusCancel()
+				|| multipleCategory
+				|| !getManagedBean().isEditDisciplinaryActionCheckBox()) {
 			return;
 		}
 		List<SmSupplierCategory> selectList = new ArrayList<>();
 		List<SmSupplierCategory> prevSelect = getManagedBean().getSelectedApprovedCategories();
 		if (prevSelect == null){
-			prevSelect = new ArrayList<SmSupplierCategory>();
+			prevSelect = new ArrayList<>();
 		}
 		Iterator<SmSupplierCategory> it = getManagedBean().getApprovedCategoryList().iterator();
 		while (it.hasNext()) {
@@ -3145,6 +3184,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		for (SmRvSuppDoc suppDoc : this.getManagedBean().getSmRevisit().getSmRvSuppDocs()) {
 			validateRvSuppDoc(suppDoc);
+		}
+		if (null == this.getManagedBean().getSmRevisit().getRevisitRemark() || this.getManagedBean().getSmRevisit().getRevisitRemark().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_723104);
 		}
 	}
 

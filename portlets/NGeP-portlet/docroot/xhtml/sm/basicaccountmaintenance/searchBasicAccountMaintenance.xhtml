@@ -100,9 +100,11 @@
 						<h:outputText value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST 
 						and smSupplier.pendingBlacklist ne true and smSupplier.suspendRegistrationStats ne true and smSupplier.futureImposed eq false}" />
 						
-						<h:outputText value="#{lbl['lbl.sm.status.inactive']}" rendered="#{smSupplier.recordStatusFlg eq 9 and empty smSupplier.typeDisciplinaryAction}" />
-						
-								 
+						<!-- 39291 - START -->
+						<h:outputText value="#{lbl['lbl.sm.account.status.deleted']}" rendered="#{smSupplier.recordStatusFlg eq 9 and empty smSupplier.typeDisciplinaryAction}" />
+						<h:outputText value="#{lbl['lbl.sm.status.inactive']}" rendered="#{smSupplier.recordStatusFlg eq 0 and empty smSupplier.typeDisciplinaryAction}" />
+						<!-- 39291 - END -->
+							 
 						 <h:outputText 
 							value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.status.suspend']}, #{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})"
 							rendered="#{smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST
@@ -834,6 +836,16 @@
 								supplierDataMaintenanceBackingBean.managedBean.cancelRegistration or 
 								supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}"/>
 						</p:column>
+						<!-- 39293 - START -->
+						<p:column
+						rendered="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector
+						and supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist}">
+						<h:graphicImage value="/css/images/design/ico-disabled-chckbx.png"
+							rendered="#{!person.blacklisted}" />
+						<h:graphicImage value="/css/images/design/ico-tick-checkbox.png"
+							rendered="#{person.blacklisted}" />
+						</p:column>
+						<!-- 39293 - END -->
 						<!-- 28494, 32279 - end-->
 						<!-- 29659 START -->
 						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">

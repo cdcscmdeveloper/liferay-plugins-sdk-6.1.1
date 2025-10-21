@@ -709,8 +709,9 @@ public class TemplateSpecBackingBean extends
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			//#25725 start
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);		
+			//new #25725
+//			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
+//			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);		
 		}
 		//#25725 end
 		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);		
@@ -1734,6 +1735,12 @@ public class TemplateSpecBackingBean extends
 		} else{
 			// update new zone qts when TplSpecAnswers exists
 			if(CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())){
+				// #39210 Start Vinod 3/10/2025
+				List<TplSpecAnswer> specAnswersNew = checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(templateSpecBean);
+				if (CollectionUtils.isNotEmpty(specAnswersNew)) {
+					specQuestion.setTplSpecAnswers(specAnswersNew);
+				}
+				// #39210 End Vinod 3/10/2025
 				for (int i = 0; i < specQuestion.getTplSpecZoneQties().size(); i++) {
 					for (TplSpecZoneQty tplSpecZoneQty : specQuestion.getTplSpecZoneQties()) {
 
@@ -3208,8 +3215,9 @@ public class TemplateSpecBackingBean extends
 			Boolean isItemTypeService, 
 			Boolean isFulfilmentTypeScheduled, 
 			long specZoneId,
-			BigDecimal questionId,
-			Boolean isFulfilmentTypeNonPeriodicScheduled) {
+			BigDecimal questionId){
+			//new #25726
+			//Boolean isFulfilmentTypeNonPeriodicScheduled) {
 
 			BigDecimal totalIndicativePrice = new BigDecimal(0);
 			BigDecimal zeroChangeTo1 = new BigDecimal(1);
@@ -3233,7 +3241,8 @@ public class TemplateSpecBackingBean extends
 						.multiply(RoundIndicativePrice.setScale(2, QTConstants.QT_ROUNDING_MODE)));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 			}
 			else {
-				if (isItemTypeService && !(isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
+				//new #25726
+				if (isItemTypeService && !isFulfilmentTypeScheduled )//#25726 Add condition for non periodic schedule //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
 				{		totalIndicativePrice = totalIndicativePrice.add(clQuantity
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
@@ -3241,7 +3250,8 @@ public class TemplateSpecBackingBean extends
 						.multiply(RoundIndicativePrice.setScale(2, QTConstants.QT_ROUNDING_MODE)));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 				}
 				else {
-					if (isItemTypeService && (isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
+					//new #25726
+					if (isItemTypeService && isFulfilmentTypeScheduled )//#25726 Add condition for non periodic schedule //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
 					{
 						totalIndicativePrice = totalIndicativePrice.add(clQuantity
 								.multiply(contractDuration)
@@ -5840,6 +5850,46 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	
+	// #39210 Start Vinod 3/10/2025
+	/**
+	 * This method will check if the zone details are null and create new
+	 * answers if null.
+	 * 
+	 * @param templateSpecBean
+	 * @return List<TplSpecAnswer>
+	 */
+	private List<TplSpecAnswer> checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(TemplateSpecBean templateSpecBean) {
+		TplSpecQuestion specQuestion = templateSpecBean.getSelectedSpecQuestion();
+		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE.equals(specQuestion.getTplSpecMaster()
+				.getItemTypeCode().getParameterCode());
+		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+		List<TplSpecAnswer> specAnswersNew = new ArrayList<>();
+		String priceType = specQuestion.getClPriceTypeCode().getParameterCode();
+		boolean isPriceTypeZonalStandard = specHelper.isPriceTypeZonalStandard(priceType);
 
+		for (TplSpecAnswer tplSpecAnswer : specQuestion.getTplSpecAnswers()) {
+			if (null == tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() && isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion.getTplSpecMaster().getTplSpecZone().getTplSpecZoneDtls()) {
+					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(templateSpecBean, specQuestion,
+							specZoneDtl, null);
+
+					calcTotalAmount(templateSpecBean, specAnswer, isItemTypeService);
+					specAnswersNew.add(specAnswer);
+
+				}
+			} else if (null == tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() && !isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion.getTplSpecMaster().getTplSpecZone().getTplSpecZoneDtls()) {
+					populateTierSpecAnswers(templateSpecBean, specQuestion, specZoneDtl, specAnswersNew);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(specAnswersNew)) {
+				break;
+			}
+		}
+
+		return specAnswersNew;
+	}
+	// #39210 End Vinod 3/10/2025
 	
 }

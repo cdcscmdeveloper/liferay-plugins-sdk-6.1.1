@@ -3,8 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<table class="ppTwoTable">
 		<tr>
 			<th width="22%"><p:outputLabel
@@ -29,16 +28,19 @@
 		<tr>
 			<th width="22%"><p:outputLabel
 					value="#{lbl['lbl.pm.audit.actionBy']}" /></th>
-			<td><ac:lovAudit isStoreProc="true" id="searchActionBylist"
-					lovId="PM_USER" size="36" readonly="true"
-					roleCode="searchPMUserOrgAuditBackingBean.getRoleCode()"
-					headerText="#{lbl['lbl.pm.audit.actionBy']}" process="@this"
-					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser.userName}"					
-					postUpdateListener="searchPMUserOrgAuditBackingBean.resetGetActionBy()"
-					update="@form"
-					saveObject="searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser"
-					tooltip="#{lbl['lbl.pm.audit.tooltip.actionby']}">
-				</ac:lovAudit></td>
+			<td><p:outputPanel id="actionByPanel">
+					<ac:lovAudit isStoreProc="true" id="searchActionBylist"
+						disabled="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode eq null}"
+						lovId="PM_USER" size="36" readonly="true"
+						roleCode="searchPMUserOrgAuditBackingBean.getRoleCode()"
+						headerText="#{lbl['lbl.pm.audit.actionBy']}" process="@this"
+						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser.userName}"
+						postUpdateListener="searchPMUserOrgAuditBackingBean.resetGetActionBy()"
+						update="@form"
+						saveObject="searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser"
+						tooltip="#{lbl['lbl.pm.audit.tooltip.actionby']}">
+					</ac:lovAudit>
+				</p:outputPanel></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateFrom']}" /></td>
@@ -46,7 +48,8 @@
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom}"
 					readonlyInput="true">
-					<p:ajax event="dateSelect" update="toDate" />
+					<p:ajax event="dateSelect" process="@this" listener="#{searchPMUserOrgAuditBackingBean.onFromDateSelect}" 
+					update="toDate"/>
 				</p:calendar></td>
 			<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
 			<td><p:calendar showOn="button" size="32"
@@ -64,9 +67,10 @@
 					<p:commandButton id="panelSearchId"
 						value="#{lbl['lbl.btn.search']}"
 						onstart="blkPanelSearchTable.show();"
-						oncomplete="blkPanelSearchTable.hide();" update="searchMasters"
-						process="userOrgAuditPMSearchPanel"
+						oncomplete="blkPanelSearchTable.hide();" update="userOrgAuditPMSearchPanel,:form:searchMasters"
+						process="userOrgAuditPMSearchPanel,@this"
 						action="#{searchPMUserOrgAuditBackingBean.searchMaster}">
+						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
@@ -77,9 +81,9 @@
 			</td>
 		</tr>
 	</table>
-	<c:if
-		test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode ne null}">
+	<h:panelGroup
+		rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode ne null}">
 		<ac:lovPopupAudit id="actionByPopupId"
 			update=":form:userOrgAuditPMSearchPanel" />
-	</c:if>
+	</h:panelGroup>
 </ui:composition>

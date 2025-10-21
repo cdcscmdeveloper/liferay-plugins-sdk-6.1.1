@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.ct.circular;
 
 import java.util.ArrayList;
+import java.util.Collections; //#30014
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -286,21 +287,35 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		try {
 			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 			String languageCode = new FacesScopes().getUserLocale().getLanguage();
-
+			
 			int i = 1;
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setModuleCode(ModuleCodeConst.CONTRACT_MANAGEMENT);
 			reqDTO.setDocType(getManagedBean().getSearchCircularDocType());
 			reqDTO.setLanguageCode(languageCode);
-			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+			//#30014 - Start
+			StatusResDTO resDTO = (reqDTO.getDocType() != null)
+			        ? statusSO.retrieveStatusDescList(reqDTO)
+			        : new StatusResDTO();			
 
 			List<PmStatusDesc> list =  resDTO.getStatusDescList();
-			items = new SelectItem[list.size()+1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-
+			if (list == null) {
+	            list = Collections.emptyList();
+	        }
+			items = new SelectItem[list.size() + 1];
+	        items[0] = new SelectItem(
+	                null,
+	                ResourceBundleUtils.getMessage(
+	                        "lbl.txt.select",
+	                        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+	                        new FacesScopes().getUserLocale()
+	                )
+	        );
+	        //#340014 - End
 			for(PmStatusDesc statusDesc : list) {
 				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
-			}
+			}			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -707,4 +722,19 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		return searchDefault;
 	}
 	// End - #30866
+	
+	//#35506 - Start
+	/**
+	 * Determines if the user has a specific role for audit CT Trail access.
+	 * Only users with designated roles (Auditor General, Auditor Internal, BPK Auditor, or System Admin) are allowed.
+	 *
+	 * @return true if the user has one of the specified roles, false otherwise
+	 */
+	public boolean isAuditRoleCheck() {
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+	//#35506 - End
 }
