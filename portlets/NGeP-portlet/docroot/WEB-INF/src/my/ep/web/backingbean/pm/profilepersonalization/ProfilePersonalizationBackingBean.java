@@ -1868,16 +1868,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 */
 	private void handleQtMsg(HttpServletRequest originalServletRequest, SmSupplier smSupplier, Long id) {
 		String currentUrl = PortalUtil.getCurrentURL(originalServletRequest);
-		currentUrl = currentUrl == null ? "" : currentUrl;		
-		boolean checkQualificationPage = currentUrl.contains(SourcingConstants.NAV_PAGE_CHECK_SUPPLIER_QUALIFICATION.split("\\?")[0]);
-		boolean noticeBoardPage = currentUrl.contains(SourcingConstants.NAV_PAGE_NOTICE_BOARD);
-		boolean supplierProposalPage = currentUrl.contains(SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL.split("\\?")[0]);
-		if (!supplierProposalPage && !checkQualificationPage && !noticeBoardPage) 
-		{
+		if (null == currentUrl || !currentUrl.contains(SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL.split("\\?")[0])) {
 			return;
 		}
 		String qtIdParam = originalServletRequest.getParameter(PARAM_QT_ID);
-		Long qtId = supplierProposalPage ? id: null;
+		Long qtId = id; // keep original value unless overridden
 		SmSupplier supplier = smSupplier;
 		this.getManagedBean().setQtId(qtId);
 		if (qtIdParam != null) {
