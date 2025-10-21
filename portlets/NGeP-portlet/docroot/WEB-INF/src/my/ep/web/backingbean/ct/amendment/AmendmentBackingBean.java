@@ -9939,6 +9939,137 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//#24333 - End
 	
+	//#35238 start
+	/**
+	 * Resets the selected checkbox of a committee member if set.
+	 *
+	 * @param member the committee member whose checkbox should be reset
+	 */
+	private void resetSelectedCheckbox(CtCommitteeMember member) {
+	    if (member != null && member.isSelectedCheckBox()) {
+	        member.setSelectedCheckBox(false);
+	    }
+	}
+	
+	/**
+	 * Null checking for updated committe and find matching committee member
+	 *
+	 * @param updatedMember  the updated committee member
+	 * @param originalMembers the list of original members
+	 * @return matching member if found, otherwise null
+	 */
+	public CtCommitteeMember findMatchingValidationCommittee(CtCommitteeMember updatedMember, List<CtCommitteeMember> originalMembers) {
+		if (updatedMember == null || updatedMember.getPmUser() == null) {
+			return null;
+		}
+		Long updatedUserId = updatedMember.getPmUser().getUserId();
+		if (updatedUserId == null) {
+			return null;
+		}
+		return findMatchingCommitteeByUserId(updatedUserId, originalMembers);
+	}
+	
+	/**
+	 * Finds the matching committee member in the original list based on user ID.
+	 * 
+	 * @param updatedUserId user id for updated committee
+	 * @param originalMembers the list of original members
+	 * @return matching member if found, otherwise null
+	 */
+	public CtCommitteeMember findMatchingCommitteeByUserId(Long updatedUserId, List<CtCommitteeMember> originalMembers){
+		for (CtCommitteeMember originalMember : originalMembers) {
+			if (originalMember != null && originalMember.getPmUser() != null
+					&& updatedUserId.equals(originalMember.getPmUser().getUserId())) {
+				return originalMember;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Displays appropriate dialog based on update and validation status.
+	 *
+	 * @param isUpdateNeeded whether committee update is required
+	 * @param isFound whether at least one matching member was found
+	 */
+	private void showDialogValidateCommittee(boolean isUpdateNeeded, boolean isFound) {
+	    if (isUpdateNeeded || !isFound) {
+	        RequestContext.getCurrentInstance().execute("updLatestCommitteeDlg.show()");
+	    } else {
+	        getManagedBean().setUpdateCommittee(Boolean.FALSE);
+	        RequestContext.getCurrentInstance().execute("validateLatestCommitteeDlg.show()");
+	    }
+	}
+	/**
+	 * Check if the for representative type and member roles
+	 * 
+	 * @param updated the updated committee member 
+	 * @param original the original committee member 
+	 * @return true if condition are met
+	 */
+	private boolean checkRoleAndRepresentativeCommitte(CtCommitteeMember updated, CtCommitteeMember original){
+		if (hasRepresentativeTypeChanged(updated, original)
+				|| hasMemberRoleChanged(updated, original)){
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if the representative type of the member has changed.
+	 *
+	 * @param updated the updated committee member
+	 * @param original the original committee member
+	 * @return true if representative type differs, false otherwise
+	 */
+	private boolean hasRepresentativeTypeChanged(CtCommitteeMember updated, CtCommitteeMember original) {
+	    if (isQuotationCommitteeType()) {
+	        return false;
+	    }
+
+	    Long updatedTypeId = getParameterId(updated.getRepresentativeType());
+	    Long originalTypeId = getParameterId(original.getRepresentativeType());
+
+	    return updatedTypeId != null && originalTypeId != null && !updatedTypeId.equals(originalTypeId);
+	}
+	
+	/**
+	 * Checks if the member role of the member has changed.
+	 *
+	 * @param updated the updated committee member
+	 * @param original the original committee member
+	 * @return true if member role differs, false otherwise
+	 */
+	private boolean hasMemberRoleChanged(CtCommitteeMember updated, CtCommitteeMember original) {
+	    Long updatedRole = getParameterId(updated.getMemberRole());
+	    Long originalRole = getParameterId(original.getMemberRole());
+
+	    return updatedRole != null && originalRole != null && !updatedRole.equals(originalRole);
+	}
+	
+	/**
+	 * Checks if the given committee type is a quotation committee type.
+	 *
+	 * @return true if it matches any quotation committee type, false otherwise
+	 */
+	public boolean isQuotationCommitteeType() {
+		return getManagedBean().getCommitteeType() != null
+				&& COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType());
+	}
+	
+	/**
+	 * Retrieves the parameter ID safely to avoid NullPointerException.
+	 *
+	 * @param pmParameter the ParameterConst object
+	 * @return parameter ID or null if unavailable
+	 */
+	private Long getParameterId(PmParameter pmParameter) {
+	    return pmParameter != null ? pmParameter.getParameterId() : null;
+	}
+	
+	
+	
+	
 	//#24336 - Start
 	/**
 	 * Handles changes to the contract value type input (reduction or addition).
@@ -9992,57 +10123,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    }
 		return additionalPercentage;
 	}
-	
-	/**
-	 * Checks if the representative type of the member has changed.
-	 *
-	 * @param updated the updated committee member
-	 * @param original the original committee member
-	 * @return true if representative type differs, false otherwise
-	 */
-	private boolean hasRepresentativeTypeChanged(CtCommitteeMember updated, CtCommitteeMember original) {
-	    if (isQuotationCommitteeType()) {
-	        return false;
-	    }
 
-	    Long updatedTypeId = getParameterId(updated.getRepresentativeType());
-	    Long originalTypeId = getParameterId(original.getRepresentativeType());
-
-	    return updatedTypeId != null && originalTypeId != null && !updatedTypeId.equals(originalTypeId);
-	}
-	
-	/**
-	 * Checks if the member role of the member has changed.
-	 *
-	 * @param updated the updated committee member
-	 * @param original the original committee member
-	 * @return true if member role differs, false otherwise
-	 */
-	private boolean hasMemberRoleChanged(CtCommitteeMember updated, CtCommitteeMember original) {
-	    Long updatedRole = getParameterId(updated.getMemberRole());
-	    Long originalRole = getParameterId(original.getMemberRole());
-
-	    return updatedRole != null && originalRole != null && !updatedRole.equals(originalRole);
-	}
-	
-	/**
-	 * Checks if the given committee type is a quotation committee type.
-	 *
-	 * @return true if it matches any quotation committee type, false otherwise
-	 */
-	public boolean isQuotationCommitteeType() {
-		return getManagedBean().getCommitteeType() != null
-				&& COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType());
-	}
-	
-	/**
-	 * Retrieves the parameter ID safely to avoid NullPointerException.
-	 *
-	 * @param pmParameter the ParameterConst object
-	 * @return parameter ID or null if unavailable
-	 */
-	private Long getParameterId(PmParameter pmParameter) {
-	    return pmParameter != null ? pmParameter.getParameterId() : null;
 	/*
 	 * Display new contract amount effective date by certain rules.
 	 * @return new contract amount effective date
@@ -10088,4 +10169,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 	}
 	//#24336 - End
+	
+	
 }
