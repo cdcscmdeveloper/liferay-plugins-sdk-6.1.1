@@ -48,7 +48,8 @@
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom}"
 					readonlyInput="true">
-					<p:ajax event="dateSelect" update="toDate" />
+					<p:ajax event="dateSelect" process="@this" listener="#{searchPMUserOrgAuditBackingBean.onFromDateSelect}" 
+					update="toDate"/>
 				</p:calendar></td>
 			<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
 			<td><p:calendar showOn="button" size="32"

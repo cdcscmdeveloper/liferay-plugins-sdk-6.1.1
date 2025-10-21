@@ -19,10 +19,20 @@
 	   	<p:spacer width="2" />	
 	   	<h:panelGrid columns="2">
 	   		<p:outputLabel id="contractPeriod" value="#{lbl['lbl.ct.bond.contractperiod']}" />
+	   		<!-- #32418 - Start -->
+	   		<h:panelGrid columns="6">
 			<p:inputText for="contractPeriod" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.calculateBondPeriod()}"  disabled="true">
 			</p:inputText>
-			
+			<p:spacer width="2" />
+			<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+
+			<p:inputText id="contractPeriodBondDaysId" styleClass="ppRightBtn"  value="#{ctBackingBean.managedBean.contractVer.ctContractValue.contractDaysPeriod}" maxlength="3" disabled="true" >
+			</p:inputText>
+			<p:spacer width="2" />
+			<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+			</h:panelGrid>
+			<!-- #32418 - End -->
 			<p:outputLabel id="overallContractAmount" value="#{lbl['lbl.ct.bond.overallamount']}" />
 			<p:inputText for="overallContractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.calculateOriginalOverallAmount()}"  disabled="true">
