@@ -72,7 +72,9 @@
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<c:if
-									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S' }">
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S' 
+											or backingBean.managedBean.specialCategoryRechecked}">
+											<!-- #26671 - Site Visit Grouping Enhancement -28775 -->
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
@@ -167,7 +169,9 @@
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 							<!-- #32008 - END -->
 								<c:if
-									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'
+											or backingBean.managedBean.specialCategoryRechecked}">
+											<!-- #26671 - Site Visit Grouping Enhancement -28775 -->
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
@@ -266,12 +270,13 @@
 															styleClass="splNotesFonts" escape="false" /></td>
 												</tr>
 												<tr>
-													<td>
-														<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-															<c:if test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
-																<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
-																	<h:outputText value="#{lbl['lbl.sm.po.splNotes1.siteVisit']}" styleClass="splNotesFonts" />
-																</c:if>
+													<td><!-- #26671 - Site Visit Grouping Enhancement -28775 -->
+														<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C' 
+																	and !backingBean.managedBean.reviewSiteVisit}">
+															<c:if test="#{backingBean.managedBean.smAppl.applType eq 'B' 
+																or backingBean.managedBean.smAppl.applCategoryType eq 'S'
+																or backingBean.managedBean.specialCategoryRechecked}">
+															<h:outputText value="#{lbl['lbl.sm.po.splNotes1.siteVisit']}" styleClass="splNotesFonts" />
 															</c:if>
 														</c:if>
 													</td>
