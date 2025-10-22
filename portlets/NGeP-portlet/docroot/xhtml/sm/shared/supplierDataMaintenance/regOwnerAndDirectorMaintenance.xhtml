@@ -34,10 +34,9 @@
 					<p:column
 						rendered="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector
 						and supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist}">
-						<h:graphicImage value="/css/images/design/ico-disabled-chckbx.png"
-							rendered="#{!person.blacklisted}" />
-						<h:graphicImage value="/css/images/design/ico-tick-checkbox.png"
-							rendered="#{person.blacklisted}" />
+						<!-- 39293 - START -->
+						<h:graphicImage value="/css/images/design/ico-tick-checkbox.png" />
+						<!-- 39293 - END -->
 					</p:column>
 					
 					<p:columnGroup type="header"
