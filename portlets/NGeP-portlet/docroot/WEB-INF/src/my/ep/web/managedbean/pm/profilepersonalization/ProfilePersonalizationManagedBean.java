@@ -64,7 +64,11 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	//26238
 	private boolean disciplinaryAction; 
 	private String disciplinaryActionMsg; 
-	
+	//26247 - start
+	private String qtDisciplinaryActionMsg; 
+	private Long qtId; 
+	//26247 - end
+
 	//26238 -  START Disciplinary Action - 28111
 	private SmSupplier smSupplier;
 	// #28895_35501 - AUDIT TRAIL SM
@@ -403,6 +407,24 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMsg = disciplinaryActionMsg;
 	}
 
+	//26247 - start
+	public String getQtDisciplinaryActionMsg() {
+		return qtDisciplinaryActionMsg;
+	}
+
+	public void setQtDisciplinaryActionMsg(String qtDisciplinaryActionMsg) {
+		this.qtDisciplinaryActionMsg = qtDisciplinaryActionMsg;
+	}
+	
+	public Long getQtId() {
+		return qtId;
+	}
+
+	public void setQtId(Long qtId) {
+		this.qtId = qtId;
+	}
+	//26247 - end
+	
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
 	}

@@ -37,16 +37,21 @@
 				<ui:remove>
 					Bug #27412 #75 : END
 				</ui:remove>				
-				<ui:remove> #26247 - add disable </ui:remove>	
+				<ui:remove>26247 - start</ui:remove>
+				<ui:param name="supplier" value="#{supplierProposalDetailBackingBean.managedBean.qtProposal.scQtSupplier.smSupplier}" />				
+				<ui:param name="isDisciplinaryAction"
+					value="#{supplierProposalDetailBackingBean.disabledQTProcess(supplier)}" />
+	
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
 					update="spkiOutputPanel" process="@form"
-					disabled="#{supplierProposalDetailBackingBean.checkDisciplinaryActionForQTCat()}" />
-					
-				<p:commandButton value="#{lbl['lbl.btn.update']}"
+					disabled="#{isDisciplinaryAction}" />
+				<ui:remove>26247 - end - added isDisciplinaryAction</ui:remove>	
+				
+
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
 					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed}"
 					update="@this" process="@this" partialSubmit="true"/>
