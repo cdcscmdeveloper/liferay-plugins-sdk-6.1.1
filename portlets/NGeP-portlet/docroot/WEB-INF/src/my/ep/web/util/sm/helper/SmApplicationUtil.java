@@ -1778,6 +1778,7 @@ public class SmApplicationUtil {
 			}*/
 			validateMaxNewCategoryAdded(managedBean);
 		}
+
 		//31043 start
 		if (!managedBean.isSupplierUser()) {
 			if (!SmCommonUtil.isCollectionEmpty(managedBean
@@ -1960,7 +1961,9 @@ public class SmApplicationUtil {
 					}
 				}
 			}
+			//31043 end
 			
+			//31043 start
 			if (!SmCommonUtil.isCollectionEmpty(managedBean
 					.getActiveCategoryList())) {
 				for (SmSupplierCategory cat : managedBean
@@ -13209,6 +13212,18 @@ public class SmApplicationUtil {
 					   bean.getSelectedShareHolder().setDisableEquityOwner(false);
 					   bean.getSelectedShareHolder().setDisableStaff(false);
 				   }
+				// #38610-start
+				if (bean.getSelectedShareHolder().isClerical()) {
+					bean.getSelectedShareHolder().setProf(false);
+					bean.getSelectedShareHolder().setManagement(false);
+					bean.getSelectedShareHolder().setEquityOwner(false);
+					bean.getSelectedShareHolder().setSemiProf(false);
+					bean.getSelectedShareHolder().setHigherManagement(false);
+					bean.getSelectedShareHolder().setDisableProf(true);
+					bean.getSelectedShareHolder().setDisableManagement(true);
+					bean.getSelectedShareHolder().setDisableEquityOwner(true);
+					bean.getSelectedShareHolder().setDisableSemiProf(true);
+				}// #38610-end
 				 if(bean.getSelectedShareHolder().isEquityOwner()
 							|| bean.getSelectedShareHolder().isManagement()
 							|| bean.getSelectedShareHolder().isDirector()
@@ -13439,14 +13454,11 @@ public class SmApplicationUtil {
 	 * the selected SmPersonnel.
 	 */
 	public static void addOrUpdateRelatedCompanies(SmApplicationManagedBean bean) {
-		if (bean.getSelectedShareHolder().getSmRelatedCompanies()
-				.contains(bean.getSelectedRelatedCompany())) {
+		if (bean.getSelectedShareHolder().getSmRelatedCompanies().contains(bean.getSelectedRelatedCompany())) {
 
 		} else {
-			bean.getSelectedShareHolder().getSmRelatedCompanies()
-					.add(bean.getSelectedRelatedCompany());
-			RequestContext.getCurrentInstance().execute(
-					"suppPrsnRelComDtWidVar.paginator.endLink.click()");
+			bean.getSelectedShareHolder().getSmRelatedCompanies().add(bean.getSelectedRelatedCompany());
+			RequestContext.getCurrentInstance().execute("suppPrsnRelComDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse(bean);
 		RequestContext.getCurrentInstance().execute("equiRelCompInfo.hide()");
@@ -13512,8 +13524,7 @@ public class SmApplicationUtil {
 	 * selected SmPersonnel.
 	 */
 	public static void addOrUpdateShrHldrProfBody(SmApplicationManagedBean bean) {
-		if (bean.getSelectedShareHolder().getSmAssociationBodies()
-				.contains(bean.getSelectedStfPrfBdy())) {
+		if (bean.getSelectedShareHolder().getSmAssociationBodies().contains(bean.getSelectedStfPrfBdy())) {
 
 		} else {
 			bean.getSelectedShareHolder().getSmAssociationBodies()
@@ -13660,11 +13671,11 @@ public class SmApplicationUtil {
 			RequestContext.getCurrentInstance().execute(
 					addPopupName + ".show()");
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -13694,11 +13705,11 @@ public class SmApplicationUtil {
 
 			}
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 
