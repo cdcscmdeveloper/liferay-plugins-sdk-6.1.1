@@ -3427,6 +3427,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 			}
 		}
 		for (ScQtRecommend scQtRecommend : getManagedBean().getScQtFinalization().getScQtRecommends()) {
+			// #39330 Start Vinod 21/10/2025
+			if (scQtRecommend.isCancelled()) {
+				continue;
+			}
+			// #39330 End Vinod 21/10/2025
 			for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
 				if (!endorseOrSignOff && recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod() != null
 						&& (recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod()
@@ -3443,6 +3448,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 	//#21692 - Start
 	private void checkSupplierAwardedRejectValidityExtension() {
 		for (ScQtRecommend scQtRecommend : getManagedBean().getScQtFinalization().getScQtRecommends()) {
+			// #39330 Start Vinod 21/10/2025
+			if (scQtRecommend.isCancelled()) {
+				continue;
+			}
+			// #39330 End Vinod 21/10/2025
 			for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
 				if (!recommendDtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_REJECTED)
 						&& recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod() != null
