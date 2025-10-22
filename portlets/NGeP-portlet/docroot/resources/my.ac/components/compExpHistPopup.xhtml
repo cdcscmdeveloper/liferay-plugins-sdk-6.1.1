@@ -1,0 +1,211 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<cc:interface>
+		<cc:attribute name="mBean" required="true" />
+		<cc:attribute name="bBean" required="true" />
+	</cc:interface>
+	<cc:implementation>
+		<p:dialog id="compExpHistPopup"
+			header="#{lbl['lbl.sm.comp.exp.hist.header']}"
+			widgetVar="compExpHistPopupWV" modal="true" styleClass="pop_up_top"
+			position="top" width="700px">
+			<p:dataTable
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				id="historyDataTable" lazy="true" rowIndexVar="index" rows="10"
+				value="#{cc.attrs.mBean.historyDataModel}" var="history">
+				<ac:paginator for="historyDataTable" />
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.hist.action.date.time']}"
+							style="text-align: center !important;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.project.for']}"
+							style="text-align: center !important;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.agency.name']}"
+							style="text-align: center !important;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
+							style="text-align: center !important;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
+							style="text-align: center !important;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.update.loa.no']}"
+							style="text-align: center !important;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+							style="text-align: center !important;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.payment.method']}"
+							style="text-align: center !important;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.procument.method']}"
+							style="text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
+							style="text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}"
+							style="text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.contract.status']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.update.proj.loc']}"
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.mBean.consultant}" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.serv.provide']}"
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.mBean.consultant}" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.mBean.consultant}" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.master.list.cat.code']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.update.supp.doc']}"
+							style="text-align: center !important;" />
+					</p:row>
+				</p:columnGroup>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+					</h:outputText>
+					<p:spacer width="3px" />
+					<h:outputText styleClass="outputLabel-view"
+						rendered="#{history.actionType eq ParameterConst.actionTypeUpdate}"
+						value="#{lbl['lbl.sm.comp.exp.history.action.type.update']}" />
+					<h:outputText styleClass="outputLabel-view"
+						rendered="#{history.actionType eq ParameterConst.actionTypeDelete}"
+						value="#{lbl['lbl.sm.comp.exp.history.action.type.delete']}" />
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText styleClass="outputLabel-view"
+						rendered="#{history.clientType eq ParameterConst.clientTypeFederal}"
+						value="#{lbl['lbl.sm.comp.exp.update.client.type.federal']}" />
+					<h:outputText styleClass="outputLabel-view"
+						rendered="#{history.clientType eq ParameterConst.clientTypeNonFederal}"
+						value="#{lbl['lbl.sm.comp.exp.update.client.type.other']}" />
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.agencyName}" />
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.title}" />
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.fileReferenceNo}" />
+					<p:spacer width="3px" />
+					<h:outputText value="#{history.fileExtensionNo}" />
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.loaNo}" />
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.contractValue}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText
+						value="#{cc.attrs.bBean.getParameterDesc(history.paymentMethod)}" />
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText
+						value="#{cc.attrs.bBean.getParameterDesc(history.procumentMode)}" />
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.contractEffDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.contractExpDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText styleClass="outputLabel-view"
+						rendered="#{history.contractStatus eq ParameterConst.contractStatusInactive}"
+						value="#{lbl['lbl.sm.comp.exp.update.contract.status.inactive']}" />
+					<h:outputText styleClass="outputLabel-view"
+						rendered="#{history.contractStatus eq ParameterConst.contractStatusEffective}"
+						value="#{lbl['lbl.sm.comp.exp.update.contract.status.effective']}" />
+					<h:outputText styleClass="outputLabel-view"
+						rendered="#{history.contractStatus eq ParameterConst.contractStatusExpired}"
+						value="#{lbl['lbl.sm.comp.exp.update.contract.status.expired']}" />
+					<h:outputText styleClass="outputLabel-view"
+						rendered="#{history.contractStatus eq ParameterConst.contractStatusTerminated}"
+						value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
+				</p:column>
+				<p:column rendered="#{cc.attrs.mBean.consultant}"
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.projectLoc}" />
+				</p:column>
+				<p:column rendered="#{cc.attrs.mBean.consultant}"
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText value="#{history.workServDesc}" />
+				</p:column>
+				<p:column rendered="#{cc.attrs.mBean.consultant}"
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<h:outputText
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+						value="#{history.consultantFee}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<ui:repeat var="catCode" value="#{history.compExpCatMasterHists}">
+						<h:outputText
+							value="#{catCode.categoryL1.categoryL1Code}#{catCode.categoryL2.categoryL2Code}#{catCode.categoryL3.categoryL3Code}" />
+						<br />
+					</ui:repeat>
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<ui:repeat value="#{history.compExpMasterHistDocs}" var="doc">
+						<h:outputText
+							value="#{cc.attrs.bBean.getShortFileName(doc.fileName)}" />
+						<p:spacer width="3px" />
+						<h:commandLink id="file" ajax="false">
+							<p:graphicImage value="/css/images/design/download.png"
+								style="margin-right:2px;" />
+							<p:fileDownload
+								value="#{cc.attrs.bBean.commonDownload(doc.filePath,doc.fileName)}" />
+							<f:ajax process="@form" update=":form"
+								onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
+						</h:commandLink>
+						<p:tooltip for="file" value="#{doc.fileName}" position="top" />
+						<br />
+					</ui:repeat>
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+	</cc:implementation>
+</ui:composition>
