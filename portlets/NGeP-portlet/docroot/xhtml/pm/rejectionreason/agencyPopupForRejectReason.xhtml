@@ -21,16 +21,20 @@
 
 	<p:dialog id="agencyPopup"
 		header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.pm.reason.agency']}"
-		widgetVar="agencyPopup" modal="true" width="600" position="top">
+		widgetVar="agencyPopup" modal="true" width="1000" position="top">
 
 		<p:messages id="agencyPopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 
 		<h:panelGroup id="agencyPnlGrp">
 			<p:panel id="ptjRRPnlId" header="#{lbl['lbl.pm.header.general.org.search']}" toggleable="true">
 				<h:panelGrid columns="3" id="orgProfilePgRR">
-					<p:inputText id="itMinRR" readonly="true" style="width:170px" value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
+				    <p:outputPanel>
+						<h:outputText value="*" styleClass="mandatory" style="width:5px" />
+						<p:inputText id="itMinRR" readonly="true" style="width:165px"
+							value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
+					</p:outputPanel>
 					<p:spacer height="1" />
-					
+
 					<p:selectOneMenu id="somMinistryRR"
 						styleClass="agencyPopupSomWidth"
 						label="#{lbl['lbl.pm.org.ptj.search.ministry']}"
@@ -62,7 +66,7 @@
 				</h:panelGrid>
 				<div class="ppRightBtn">
 					<p:commandButton id="searcbBtnIdRR" widgetVar="ptjSearchBtnWV"
-						value="#{lbl['lbl.btn.search']}" update=":form:dtOrgProfileRR"
+						value="#{lbl['lbl.btn.search']}" update=":form:dtOrgProfileRR,@([id$=crAllSelectBtn])"
 						action="#{rejectionReasonBackingBean.searchOrgProfile('FPJ')}"
 						process="ptjRRPnlId">
 						<f:param name="ptjValueValidation" value="true" />
@@ -86,10 +90,10 @@
 
 						<ac:paginator for="dtOrgProfileRR"/>
 
-						<p:ajax event="rowSelect" update="dtOrgProfileRR" process="@this" partialSubmit="true" />
-						<p:ajax event="rowSelectCheckbox" update="dtOrgProfileRR" process="@this" partialSubmit="true" />
-						<p:ajax event="rowUnselectCheckbox" update="dtOrgProfileRR" process="@this" partialSubmit="true" />
-						<p:ajax event="toggleSelect" update="dtOrgProfileRR" process="@this" partialSubmit="true" />
+						<p:ajax event="rowSelect" update="dtOrgProfileRR,@([id$=crOkbtn])" process="@this" partialSubmit="true" />
+						<p:ajax event="rowSelectCheckbox" update="dtOrgProfileRR,@([id$=crOkbtn])" process="@this" partialSubmit="true" />
+						<p:ajax event="rowUnselectCheckbox" update="dtOrgProfileRR,@([id$=crOkbtn])" process="@this" partialSubmit="true" />
+						<p:ajax event="toggleSelect" update="dtOrgProfileRR,@([id$=crOkbtn])" process="@this" partialSubmit="true" />
 
 						<p:column selectionMode="multiple" style="width:2%;" />
 						<p:column headerText="#{lbl['lbl.pm.organisation.orgCode']}" style="width :15%">
@@ -110,12 +114,18 @@
 						<td style="text-align: right;" colspan="3">
 							<p:commandButton
 								id="crOkbtn" value="#{lbl['lbl.btn.ok']}"
+								onstart="blockWidget.show();agencyPopup.hide()"
+							    oncomplete="blockWidget.hide()"
+								disabled="#{fn:length(rejectionReasonBackingBean.managedBean.selectedOrgsProfile) == 0}"
 								action="#{rejectionReasonBackingBean.addAgency(false)}"
 								update="@([id$=dtAgencyResult])"
 								process="@this,:form:agencyPopup" partialSubmit="true">
 							</p:commandButton>
 							<p:commandButton id="crAllSelectBtn"
 								value="#{lbl['lbl.pm.reason.agency.popup.selectall']}"
+								onstart="blockWidget.show();agencyPopup.hide()"
+							    oncomplete="blockWidget.hide()"
+								disabled="#{fn:length(rejectionReasonBackingBean.managedBean.ptjList) == 0}"
 								action="#{rejectionReasonBackingBean.addAgency(true)}"
 								update="@([id$=dtAgencyResult])"
 								process="@this,:form:agencyPopup" partialSubmit="true">

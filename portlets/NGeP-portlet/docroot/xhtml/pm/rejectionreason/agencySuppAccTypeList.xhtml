@@ -78,7 +78,7 @@
 
 							<p:column style="text-align:center;" headerText="#{lbl['lbl.pm.supplier.account.type']}">
 								<h:panelGroup style="display:block; text-align:left;">
-									<p:selectOneMenu styleClass="ppDropDownWidthM" id="acctype" value="#{suppAccType.supplAcctTypeId.parameterId}">
+									<p:selectOneMenu id="acctype" value="#{suppAccType.supplAcctTypeId.parameterId}" style="width:250px;">
 										<f:selectItems value="#{rejectionReasonBackingBean.reasonSuppAccTypeDropDown()}" />
 										<p:ajax event="change" update="dtSuppAccType"
 											listener="#{rejectionReasonBackingBean.checkExtSuppAccType(rowIndex, suppAccType.supplAcctTypeId.parameterId)}"
