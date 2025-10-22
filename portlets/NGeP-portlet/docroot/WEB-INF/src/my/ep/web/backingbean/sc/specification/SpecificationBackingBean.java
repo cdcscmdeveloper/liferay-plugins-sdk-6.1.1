@@ -23845,9 +23845,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			TplSpecZoneDtl activeZone = zones.get(activeZoneIndex);
 			
 			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, activeZone.getSpecZoneId().toString());
-		} else {
-			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, null);
-		}
+		} 
 
 		String scoreType = getManagedBean().getOfferPricePackage().getScoreType().toString();
 
