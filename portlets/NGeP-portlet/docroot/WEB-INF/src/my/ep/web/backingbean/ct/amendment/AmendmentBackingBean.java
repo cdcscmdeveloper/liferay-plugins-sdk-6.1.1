@@ -108,6 +108,7 @@ import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
+import my.ep.persistence.entity.ct.dtl.CtContractValue; //#32418
 import my.ep.persistence.entity.ct.dtl.CtMeeting;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtPidReason;
@@ -241,6 +242,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL
     ));
 	//#34097/#26186 end
+	//#35238 start
+	private static final Set<String> COMMITTEE_TYPE_QUOTATION = new HashSet<>(Arrays.asList(
+			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A,
+			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B,
+			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE
+    ));
+	//#35238 end
 	
 	/**
 	 * The constructor used for initializing the variable.
@@ -2811,7 +2819,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// End Fix - #33952, #25956
 			//32418 Start
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= 28){ 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= ContractConst.VALUE_OF_28){ 
 
 				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
@@ -2822,8 +2830,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Start Fix - #38613, #33287 - *apply for both contract expired and non-expired
 			// Validation for amendment when extension period - 0 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
-					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0 && ctBackingBean
-							.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)) { // 32418
+					&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == ContractConst.VALUE_OF_0 && ctBackingBean
+							.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == ContractConst.VALUE_OF_0)) { // 32418
 
 				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
@@ -5396,7 +5404,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
 //			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(1); // default to 1 month
 			//#32418 - start
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0); // default to 0 month
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(ContractConst.VALUE_OF_0); // default to 0 month
 			//#32418 - end
 			Calendar c = Calendar.getInstance();
 			c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
@@ -5415,7 +5423,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		}
 		else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(ContractConst.VALUE_OF_0);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
@@ -5608,41 +5616,45 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user extended the contract period.
 	 */
 	public void onExtensionPeriodChanged() {
-		Calendar c = Calendar.getInstance();
-		//32418 Start
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() <= 0) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
+		
+		//32418 Start		
+	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+	    CtContractValue contractValue = ctBackingBean.getManagedBean().getContractVer().getCtContractValue();
+	    
+	    Integer extendPeriod = amendment.getExtendPeriod();
+		if (extendPeriod <= ContractConst.VALUE_OF_0) {
+			amendment.setExtendPeriod(ContractConst.VALUE_OF_0);
 		}
 		
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() <= 0) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendDaysPeriod(0);
+		Integer extendDaysPeriod = amendment.getExtendDaysPeriod();
+		if (extendDaysPeriod <= ContractConst.VALUE_OF_0) {
+			amendment.setExtendDaysPeriod(ContractConst.VALUE_OF_0);
 		}
-		
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= 28) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendDaysPeriod(27);
+		// Validate max days (must be < 28)
+		if (extendDaysPeriod >= ContractConst.VALUE_OF_28) {
+			amendment.setExtendDaysPeriod(ContractConst.VALUE_OF_27);
 			throw new EpException(MessageConst.ERROR_750074);
 		}
 		
-		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() > 0
-				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >0){
-
-			c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		Date expDate = contractValue.getExpDate();
+		if (extendPeriod > 0 || extendDaysPeriod >0){
+			Calendar c = Calendar.getInstance();
+			c.setTime(expDate);
 			c.add(Calendar.DATE, 1);
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
+			amendment.setExtendStartDate(c.getTime());
 			
 			//#26076 - start
-			//c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			c.add(Calendar.MONTH, ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
+			c.add(Calendar.MONTH, extendPeriod);
 			//#32418 - start
-			c.add(Calendar.DAY_OF_MONTH, ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod());
+			c.add(Calendar.DAY_OF_MONTH, extendDaysPeriod);
 			//#32418 - end
 			c.add(Calendar.DATE, -1);
 			//#26076 - end
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+			amendment.setExtendEndDate(c.getTime());
+			amendment.setAmendmentEffDate(amendment.getExtendStartDate());
 		}else{
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			amendment.setExtendStartDate(expDate);
+			amendment.setExtendEndDate(expDate);
 		}
 		//32418 End		
 
@@ -5963,9 +5975,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 
 			}
-			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) { //#35238
+			if (isQuotationCommitteeType()) { //#35238
 				if (memberRole) {
 //					setTabValue("DCN");
 					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.decision", 
@@ -6108,9 +6118,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					secretaryRole = false;
 				} else if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
 					memberRole = false;
-					if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
-							&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-							&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) { //#35238
+					if (!isQuotationCommitteeType()) { //#35238
 						if (committeMember.getRepresentativeType() == null 
 								|| committeMember.getRepresentativeType().getParameterId() == null) {
 //							setTabValue("MET");
@@ -6634,9 +6642,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
 
 			// QCA/QCB, need to be same PTJ
-			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) { //#35238
+			if (isQuotationCommitteeType()) { //#35238
 				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ownerOrgProfileId: "+ ctOwnerOrgProfileId);
 				
 				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
@@ -7454,9 +7460,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 				// #25956 - Start - Fixing for _Secretary Role
-				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE)) { //#35238
+				if (isQuotationCommitteeType()) { //#35238
 					if (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())) {
 						userRole = RoleCode.QCA_SECRETARY.value();
 					} else if (getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())) {
@@ -8564,7 +8568,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// #29403 start
 			resetSelectedCheckbox(ctUpdatedMember);
 			// #29403 end
-			CtCommitteeMember matchingMember = findMatchingValidationCommittee(ctUpdatedMember, inner); // #35238
+			CtCommitteeMember matchingMember = findMatchingValidationCommittee(ctUpdatedMember, inner);
 
 			if (matchingMember != null) {
 				// #29403 start
@@ -9971,7 +9975,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return true if representative type differs, false otherwise
 	 */
 	private boolean hasRepresentativeTypeChanged(CtCommitteeMember updated, CtCommitteeMember original) {
-	    if (isQuotationCommitteeType(getManagedBean().getCommitteeType())) {
+	    if (isQuotationCommitteeType()) {
 	        return false;
 	    }
 
@@ -9998,13 +10002,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	/**
 	 * Checks if the given committee type is a quotation committee type.
 	 *
-	 * @param committeeType the type of committee
 	 * @return true if it matches any quotation committee type, false otherwise
 	 */
-	private boolean isQuotationCommitteeType(String committeeType) {
-	    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
-	        || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)
-	        || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equalsIgnoreCase(committeeType);
+	public boolean isQuotationCommitteeType() {
+		return getManagedBean().getCommitteeType() != null
+				&& COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType());
 	}
 	
 	/**
