@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.managedbean.ct;
 
@@ -216,6 +216,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	private BigDecimal bondPercentage;
 	private BigDecimal totalBondAmt;
 	//24333 - End
+	
+	//32418 - Start
+	private int contractDaysPeriod;
+	//32418 - End
+	
 	
 	//#24336 - Start
 	private boolean disableReductionContractAmount;
@@ -1702,6 +1707,16 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.totalBondAmt = totalBondAmt;
 	}
 	//#24333 - End
+	
+	//32418 - Start
+	public int getContractDaysPeriod() {
+		return contractDaysPeriod;
+	}
+
+	public void setContractDaysPeriod(int contractDaysPeriod) {
+		this.contractDaysPeriod = contractDaysPeriod;
+	}
+	//32418 - End
 
 	//#24336 - Start
 	public boolean isDisableReductionContractAmount() {
