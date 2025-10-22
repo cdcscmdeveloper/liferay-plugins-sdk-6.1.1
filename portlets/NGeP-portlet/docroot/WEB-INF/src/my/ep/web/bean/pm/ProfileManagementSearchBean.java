@@ -30,6 +30,11 @@ public class ProfileManagementSearchBean implements Serializable {
 	private PmOrgProfile kptj;
 	//shafie - #28833 -start
 	
+	//#38016 - start
+	private Long userStatusId;
+	private Long roleStatusId;
+	//#38016 - end
+	
 	public ProfileManagementSearchBean(){}
 
 	/**
@@ -183,4 +188,34 @@ public class ProfileManagementSearchBean implements Serializable {
 	}
 	
 	//shafie - #28833- end
+	
+	//#38016 - start
+	/**
+	 * @return the userStatusId
+	 */
+	public Long getUserStatusId() {
+		return userStatusId;
+	}
+
+	/**
+	 * @param userStatusId the userStatusId to set
+	 */
+	public void setUserStatusId(Long userStatusId) {
+		this.userStatusId = userStatusId;
+	}
+
+	/**
+	 * @return the roleStatusId
+	 */
+	public Long getRoleStatusId() {
+		return roleStatusId;
+	}
+
+	/**
+	 * @param roleStatusId the roleStatusId to set
+	 */
+	public void setRoleStatusId(Long roleStatusId) {
+		this.roleStatusId = roleStatusId;
+	}
+	//#38016 - end
 }
