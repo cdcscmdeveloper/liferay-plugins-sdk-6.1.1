@@ -2807,20 +2807,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 					
 							throw new EpException(MessageConst.ERROR_750079, new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()});
-				} else {
-			// Validation for amendment extension period for expired contract
-			//28848
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0){
-
-				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			   throw new EpException(MessageConst.ERROR_750048);
-			  }
+				} 
 			}
-		  }
-			// End Fix - #33952
-			
+		
 			//32418 Start
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() >= ContractConst.VALUE_OF_28){ 
@@ -2840,7 +2829,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			   throw new EpException(MessageConst.ERROR_750048);
+			   throw new EpException(MessageConst.ERROR_750073); // 32418
 			  }
 			//End Fix - #38613, #33287
 
