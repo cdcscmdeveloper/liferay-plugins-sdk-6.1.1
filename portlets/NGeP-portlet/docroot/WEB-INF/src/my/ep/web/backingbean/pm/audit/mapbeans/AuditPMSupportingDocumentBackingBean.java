@@ -147,9 +147,9 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 
 		updatedAddCompTypeChkbox(managedBeans, updated); // 6
 
-		updatedAddSupplierTypeChkbox(managedBeans, updated); // 8
+		updatedAddSupplierTypeChkbox(managedBeans, updated); // 7
 		
-		updatedAddCategoryChkbox(managedBeans, updated); // 7
+		updatedAddCategoryChkbox(managedBeans, updated); // 8
 
 		updatedAddCertBodyChkbox(managedBeans, updated); // 9
 
