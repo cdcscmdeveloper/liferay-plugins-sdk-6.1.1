@@ -5468,7 +5468,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			} else {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
+				
+				// #24336 - Start
+				onChangeValueChecked();
+				// #24336 - End
 			}
 			spToCheck = false;
 			isUntickItemPrice = false;
@@ -5511,7 +5515,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			} else {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);	
+				
+				// #24336 - Start
+				onChangeValueChecked();
+				// #24336 - End
 			}
 			spToCheck = false;
 			isUntickItemMaxQty = false;
@@ -5544,8 +5552,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//#24336 - Start
 			handleContractValueTypeChange();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+			//ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+			//ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
 			//#24336 - End
 		}
 		
@@ -10113,7 +10121,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return maxAdditionalValue;
 	}
 	
-	/*
+	/**
 	 * Calculates the percentage of the additional amount compared to the contract amount.
 	 * @return the additional amount as a percentage of the contract amount
 	 */
@@ -10129,13 +10137,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return additionalPercentage;
 	}
 
-	/*
-	 * Display new contract amount effective date by certain rules.
+	/**
+	 * Updates the new contract amount effective date based on certain business rules.
 	 * @return new contract amount effective date
+	 * @param newCtAmount
 	 */
 	public void updateNewAmtEffDate(BigDecimal newCtAmount) {
 		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
-		Date newAmtEffDate = null;
+		Date newAmtEffDate;
 		
 		if (ctAmount != null) {
 		    ctAmount = ctAmount.setScale(2, RoundingMode.HALF_UP);
@@ -10160,8 +10169,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			log.info("same!");
 			log.info("ctContractAmount Id : "+ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmountId());
-			
-			//TODO check original contract effective date
+
 			newAmtEffDate = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getEffDate();
 			
 			log.info("newAmtEffDate : "+newAmtEffDate);
@@ -10172,6 +10180,34 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewAmtEffDate(newAmtEffDate);
 		
+	}
+	
+	/**
+	 * Determines whether the Effective Date input should be displayed
+	 * based on amendment and contract change conditions.
+	 */
+	public boolean isShowEffectiveDateInput() {
+	    boolean amendValue = getAmendValue(2);
+	    boolean valueChange = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange();
+	    boolean itemPriceChange = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange();
+	    boolean quantityChange = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange();
+
+	    boolean hasPriceOrQtyChange = itemPriceChange || quantityChange;
+	    boolean shouldShow = !valueChange || hasPriceOrQtyChange;
+
+	    return amendValue && shouldShow;
+	}
+
+	public BigDecimal getTransactionsWithPendingPayment(){
+		BigDecimal total = new BigDecimal("888.88");
+		
+		return total;
+	}
+	
+	public BigDecimal getTransactionsBeforePendingPayment(){
+		BigDecimal total = new BigDecimal("999.99");
+		
+		return total;
 	}
 	//#24336 - End
 	

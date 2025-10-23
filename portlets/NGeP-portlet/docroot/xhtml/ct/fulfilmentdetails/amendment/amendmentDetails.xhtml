@@ -257,11 +257,10 @@
 			</h:panelGrid>			
 		 #24336 end -->
 
-			<!-- rendered="#{amendmentBackingBean.getAmendValue(2) and !ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}" -->
-			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.getAmendValue(2)}" style="float:right;">
+			<h:panelGrid columns="2" style="float:right;" rendered="#{amendmentBackingBean.showEffectiveDateInput}">
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" styleClass="required" />
 			</h:panelGrid>
-			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(2)}">
+			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.showEffectiveDateInput}">
 				<p:calendar style="width:80px;" id="edateCal1" showOn="button" readonlyInput="true" navigator="true"
 					required="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
