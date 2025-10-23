@@ -302,6 +302,12 @@
 					<ui:include src="/xhtml/reports/fl/po/Fl084_supplierTransaction.xhtml"></ui:include>
 				</c:when>
 				<!-- 29550 - end -->
+				<!-- 31344 - start -->
+				<c:when
+					test="#{FlReportConst.fl085ItemThreshold == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/po/Fl085_itemThreshold.xhtml"></ui:include>
+				</c:when>
+				<!-- 31344 - end -->
 				
 				<!-- Panel -->
 				
@@ -309,6 +315,12 @@
 					test="#{FlReportConst.fl033Summary == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/pa/Fl033_summary.xhtml"></ui:include>
 				</c:when>
+				<!-- 31344 - start -->
+				<c:when
+					test="#{FlReportConst.fl086ItemPanelThreshold == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/pa/Fl086_itemPanelThreshold.xhtml"></ui:include>
+				</c:when>
+				<!-- 31344 - end -->
 				
 				<!-- Year End Report -->
 				<c:when

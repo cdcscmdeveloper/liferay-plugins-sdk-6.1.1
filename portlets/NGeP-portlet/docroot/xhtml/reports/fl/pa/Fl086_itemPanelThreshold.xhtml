@@ -1,0 +1,160 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<table style="width: 100%;">
+		<tr>
+			<td colspan="4">
+				<h:outputText value="#{itemPanelThrRptBB.managedBean.reportUrl}" /><br/><br/>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.ministry']}" />
+			</td>
+			<td colspan="3">
+				<ac:lov id="searchMinistry"
+					lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.ministry']}"
+					disabled="#{itemPanelThrRptBB.disableMinistryLov()}"
+					value="#{itemPanelThrRptBB.managedBean.ministry.orgName}"
+					postUpdateListener="itemPanelThrRptBB.resetPtjGroupProfile()"
+					update=":form:searchPtj,:form"
+					saveObject="itemPanelThrRptBB.managedBean.ministry"
+					conditionField="#{itemPanelThrRptBB.getMinistryCondition()}">
+				</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.jabatan']}"></p:outputLabel>
+			</td>
+			<td colspan="3">
+				<ac:lov id="searchJabatan"
+					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.jabatan']}"
+					disabled="#{itemPanelThrRptBB.disablePtjGroupLov()}"
+					value="#{itemPanelThrRptBB.managedBean.ptjGroup.orgName}"
+					postUpdateListener="itemPanelThrRptBB.resetPtjProfile()"
+					update=":form:searchPtj,:form"
+					saveObject="itemPanelThrRptBB.managedBean.ptjGroup"
+					conditionField="#{itemPanelThrRptBB.constuctConditionFieldsForPTJGroup()}">
+				</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
+			</td>
+			<td colspan="3">
+				<ac:lov id="searchPtj"
+					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
+					headerText="#{lbl['lbl.fl.ptj']}"
+					disabled="#{itemPanelThrRptBB.disablePtjLov()}"
+					value="#{itemPanelThrRptBB.managedBean.ptj.orgName}"
+					update=":form"
+					saveObject="itemPanelThrRptBB.managedBean.ptj"
+					conditionField="#{itemPanelThrRptBB.getPTJCondition()}">
+				</ac:lov>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+			</td>
+			<td>
+				<p:inputText maxlength="30" id="panelNameId"
+					label="#{lbl['lbl.fl.sistem.panel.name']}"
+					value="#{itemPanelThrRptBB.managedBean.panelName}"
+					style="margin-top:5px;width:268px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforpoandpacontract']}" />
+				<p:message id="panelNameMsg" for="panelNameId" display="icon" />
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}" />
+			</td>
+			<td>
+				<p:inputText value="#{itemPanelThrRptBB.managedBean.purchaseOrderNo}">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText> 
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.no']}"/>
+			</td>
+			<td>
+				<p:inputText maxlength="20" id="pkpNoId"
+					label="#{lbl['lbl.fl.doc.maintain.circular.no']}"
+					value="#{itemPanelThrRptBB.managedBean.pkpNo}"
+					style="margin-top:5px;width:268px;">
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforpoandpa']}"/>
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
+			</td>
+			<td>
+				<p:selectOneMenu value="#{itemPanelThrRptBB.managedBean.statusDescId}" >
+					<f:selectItems value="#{itemPanelThrRptBB.getStatusDropdownValuesForItemThreshold('PO')}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="0" />
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
+			</td>
+			<td>
+				<p:selectOneMenu value="#{itemPanelThrRptBB.managedBean.group}">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.circular.no']}" itemValue="#{lbl['lbl.fl.doc.maintain.circular.no']}" />
+					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}" itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
+					<f:selectItem itemLabel="#{lbl['lbl.fl.fulfilment.type']}" itemValue="#{lbl['lbl.fl.fulfilment.type']}" />
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" />
+			</td>
+			<td>
+				<p:selectOneMenu value="#{itemPanelThrRptBB.managedBean.procurementTypeCode}">
+                    <f:selectItems value="#{itemPanelThrRptBB.getDropdownValuesProcurementType()}" />
+
+                    <p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+                </p:selectOneMenu>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.fl.financial.year']}" />
+			</td>
+			<td>
+				<p:selectOneMenu value="#{itemPanelThrRptBB.managedBean.financialYear}" style="width: 100px;">
+					<f:selectItems value="#{itemPanelThrRptBB.getFinancialYearOpt()}" />
+					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltips.financial.year']}"/>
+			</td>
+		</tr>
+	</table>
+	<div style="text-align: right;">
+		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
+			process="@form" update="@form"
+			action="#{itemPanelThrRptBB.generateReport()}">
+			<f:setPropertyActionListener target="#{itemPanelThrRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
+		</p:commandButton>
+		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+			process="@this" update="@form" action="#{itemPanelThrRptBB.resetAction()}">
+		</p:commandButton>
+	</div>
+	
+</ui:composition>
