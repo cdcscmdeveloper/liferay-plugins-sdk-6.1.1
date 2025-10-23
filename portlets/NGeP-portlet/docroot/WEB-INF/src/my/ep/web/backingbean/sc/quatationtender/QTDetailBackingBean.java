@@ -3927,7 +3927,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						retrieveCommitteeAppointmentTabDtl(formCommitteeFlag, 
 								reformCommitteeFlag);
-						removeCommitteeActivityDetails(scQt);
+						removeCommitteeActivityDetails(scQt, scQtFinalization); // Bug #38975@Syazani 16/10/2025
 
 					} finally {
 						qtSuppFinalizationSO = null;
@@ -10340,7 +10340,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	
-	private void removeCommitteeActivityDetails(ScQt scQt){
+	private void removeCommitteeActivityDetails(ScQt scQt, ScQtFinalization scQtFinalization){ // Bug #38975@Syazani 16/10/2025
 		IQTMeetingSO meetingso=null;
 		try{
 		 meetingso = BusinessDelegate.getInstance()
@@ -10350,9 +10350,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 if(ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(scQt.getEvaluationType())){
 			 committeeType.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
 		 }else{
-			 committeeType.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE); 
-			 committeeType.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE); 
-			 committeeType.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE); 
+			// Bug #38975@Syazani 16/10/2025 -- Start
+			 if (scQtFinalization.isReEvaluateCompReq()) {
+				 committeeType.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+			 }
+			 if (scQtFinalization.isReEvaluateTechReq()) {
+				 committeeType.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE); 
+			 }
+			 if (scQtFinalization.isReEvaluateFinReq()) {
+				 committeeType.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE); 
+			 }
+			// Bug #38975@Syazani 16/10/2025 -- End
 		 }
 		 for(String type:committeeType){
 		MeetingReqDTO activityReqDTo = new MeetingReqDTO();

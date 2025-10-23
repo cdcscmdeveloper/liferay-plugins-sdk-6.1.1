@@ -157,8 +157,9 @@ public class MolPayServlet extends HttpServlet {
 		log.info("extraP:" + extraP);
 		
 		if (!StringUtils.isBlank(payload) && jsonObject == null) {
-			log.info("No SmPayment Object is found");
+			log.info("Failed to extract payload parameter!!");
 		}else{
+			log.info("inside process payment1..");
 			String date1 = null;
 			String molpayTransId = null;
 			if (extraP != null) {
@@ -200,10 +201,12 @@ public class MolPayServlet extends HttpServlet {
 			if (!StringUtils.isBlank(payload) && !StringUtils.isBlank(paydate)) {
 				date1 = paydate;
 				molpayTransId = tranID;
+				log.info("date1:"+date1);
+				log.info("molpayTransId:"+molpayTransId);
 			}
 			//#33137 - END
 			// #32422 END
-			
+			log.info("inside process payment2..");
 			Long ordId = Long.valueOf(orderId);
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
