@@ -177,12 +177,6 @@ public class AuditPMSysParamConstantRulesBackingBean {
 	public void processSPRulesValueTypeCreateDeleted(PmConfigRuleValue newCreatedItem, PmConfigRuleValue deletedItem) {
 		PmConfigRuleValue ruleValueType = ruleTypeNewOrDeleted(newCreatedItem, deletedItem);
 
-		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_EFFDATE_FIELDLABELID,
-				getEffectiveDate(newCreatedItem, null), getEffectiveDate(null, deletedItem));
-
-		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_EXPDATE_FIELDLABELID,
-				getExpiryDate(newCreatedItem, null), getExpiryDate(null, deletedItem));
-
 		if ((ruleValueType.getRuleDataTypeCode().matches("A|N|M|P") && ruleValueType.getRuleRangeType() != BigInteger.valueOf(2))
 				|| ruleValueType.getRuleDataTypeCode().matches("PC")) {
 			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_VALUE_FIELDLABELID,
@@ -216,6 +210,12 @@ public class AuditPMSysParamConstantRulesBackingBean {
 			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_ZONE_FIELDLABELID,
 					zoneNewCreated(newCreatedItem), zoneDeleted(deletedItem));
 		}
+		// EffectiveDate
+		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_EFFDATE_FIELDLABELID,
+				getEffectiveDate(newCreatedItem, null), getEffectiveDate(null, deletedItem));
+		// ExpiryDate
+		handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_EXPDATE_FIELDLABELID,
+				getExpiryDate(newCreatedItem, null), getExpiryDate(null, deletedItem));
 
 	}
 
