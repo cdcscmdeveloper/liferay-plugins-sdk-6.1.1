@@ -6,42 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-	<!-- #36738 Start -->
-	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
-		id="qtValueSearch" collapsed="true">
-		<h:panelGrid columns="2" cellpadding="5">
-			<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
-			<p:selectOneMenu id="somMinistryForQtVal"
-				styleClass="ptjPopupSomWidth"
-				disabled="#{ruleCatalogueBackingBean.managedBean.disabledSelectedMinistryId}"
-				value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
-				<f:selectItems
-					value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />
-			</p:selectOneMenu>
-			<p:outputLabel value="#{lbl['lbl.pm.org.ptjCode']}" />
-			<p:inputText
-				value="#{ruleCatalogueBackingBean.managedBean.searchedPtjCode}" />
-			<p:outputLabel value="#{lbl['lbl.pm.org.ptjName']}" />
-			<p:inputText
-				value="#{ruleCatalogueBackingBean.managedBean.searchedPtjName}" />
-			<p:outputLabel value="#{lbl['lbl.pm.settings.qt.limit']}" />
-			<p:inputText
-				value="#{ruleCatalogueBackingBean.managedBean.searchedQtValueLimit}" />		
-		</h:panelGrid>
-		
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.search']}"
-				action="#{ruleCatalogueBackingBean.searchQtValues}"
-				update=":form:settingTabId:qtValueTableId" />
-			&#160;
-			<p:commandButton value="#{lbl['lbl.btn.reset']}"
-				action="#{ruleCatalogueBackingBean.resetQtValues}" process="@this"
-				update=":form:settingTabId:qtValueTableId :form:settingTabId:qtValueSearch" />
-		</div>
-	</p:panel>
-	<!-- #36738 End -->
-
 	<p:panel id="qtValuePnlId">
 		<table style="width: 100%; margin-bottom: 5px;">
 			<tr>
@@ -57,6 +21,44 @@
 				</td>
 			</tr>
 		</table>
+
+		<!-- #36738 Start -->
+		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
+			id="qtValueSearch" collapsed="true">
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
+				<p:selectOneMenu id="somMinistryForQtVal"
+					styleClass="ptjPopupSomWidth" style="width:250px;"
+					disabled="#{ruleCatalogueBackingBean.managedBean.disabledSelectedMinistryId}"
+					value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
+					<f:selectItems
+						value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />
+				</p:selectOneMenu>
+				<p:outputLabel value="#{lbl['lbl.pm.org.ptjCode']}" />
+				<p:inputText
+					value="#{ruleCatalogueBackingBean.managedBean.searchedPtjCode}"
+					maxlength="20" style="width:250px;" />
+				<p:outputLabel value=" #{lbl['lbl.pm.org.ptjName']}" />
+				<p:inputText
+					value="#{ruleCatalogueBackingBean.managedBean.searchedPtjName}"
+					maxlength="255" style="width:250px;" />
+				<p:outputLabel value=" #{lbl['lbl.pm.settings.qt.limit']}" />
+				<p:inputText
+					value="#{ruleCatalogueBackingBean.managedBean.searchedQtValueLimit}"
+					maxlength="18" style="width:250px;" />
+			</h:panelGrid>
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{ruleCatalogueBackingBean.searchQtValues}"
+					update=":form:settingTabId:qtValueTableId" />
+				&#160;
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{ruleCatalogueBackingBean.resetQtValues}" process="@this"
+					update=":form:settingTabId:qtValueTableId :form:settingTabId:qtValueSearch" />
+			</div>
+		</p:panel>
+		<!-- #36738 End -->
 
 		<p:dataTable id="qtValueTableId" widgetVar="qtValueTableWidget"
 			var="ptjSpecialApproval" rows="10"
