@@ -7,6 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel id="orgSearchPanel" header="#{lbl['lbl.pm.search.rejection.reason']}" toggleable="true">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<table class="ppTwoTable">
 			<tr>
 				<th width="20%">
@@ -58,13 +61,18 @@
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							action="#{rejectionReasonBackingBean.searchOrganisation}"
-							update="@([id$=dtAgencyResult])" process="orgSearchPanel">
+							update="@([id$=dtAgencyResult])" process="orgSearchPanel"
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()">
 						</p:commandButton>
 
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
-							partialSubmit="true" process="@this"
-							update="orgSearchPanel,@([id$=dtAgencyResult])"
-							action="#{rejectionReasonBackingBean.resetOrganisationSearchBean}" />
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							partialSubmit="true"
+							update="@form"
+							action="#{rejectionReasonBackingBean.resetOrganisationSearchBean}" >
+						</p:commandButton>
 					</div>
 				</td>
 			</tr>
