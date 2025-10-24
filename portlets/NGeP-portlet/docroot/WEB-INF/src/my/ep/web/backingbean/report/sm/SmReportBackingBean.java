@@ -529,7 +529,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
 			List<Object[]> applStatusList = reportSO
-					.retrieveApplicationStatusList(new FacesScopes()
+					.retrieveStatusListOfApplication(new FacesScopes()		//#32521
 							.getUserLocale().getLanguage());
 
 			if (CollectionUtils.isNotEmpty(applStatusList)) {
