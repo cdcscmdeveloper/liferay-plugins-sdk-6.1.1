@@ -67,7 +67,7 @@
 			</ui:fragment>
 		</ui:fragment>
 		<ui:param name="compositeIndex" value="#{(cc.attrs.index + cc.attrs.childIndex)}"/>
-		<ui:fragment rendered="#{compositeIndex == 0 or compositeIndex mod (cc.attrs.maxRow == 0 ? 1 : cc.attrs.maxRow) == 0}">
+			<ui:fragment rendered="#{compositeIndex == 0 or (cc.attrs.maxRow ne 0 and (compositeIndex mod cc.attrs.maxRow) == 0)}">
 			<style>
 				[id*="disciplinaryActionHistoryDlgId"].ui-dialog {
 					width: 1100px !important;
