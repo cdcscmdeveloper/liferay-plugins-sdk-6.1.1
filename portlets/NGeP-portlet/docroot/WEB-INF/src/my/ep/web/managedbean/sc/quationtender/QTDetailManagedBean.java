@@ -1951,6 +1951,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean auditViewRole;
 	//#28895 - 35500 end
 	private boolean updateCatDesc; //#29732
+	private boolean updateCatInPm; //#29732
 
 	private boolean zoneQtyHasZeroVal;//#38679
 	
@@ -12443,6 +12444,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setUpdateCatDesc(boolean updateCatDesc) {
 		this.updateCatDesc = updateCatDesc;
+	}
+	//#29732
+	
+	//#29732
+	public boolean getUpdateCatInPm() {
+		return updateCatInPm;
+	}
+
+	public void setUpdateCatInPm(boolean updateCatInPm) {
+		this.updateCatInPm = updateCatInPm;
 	}
 	//#29732
 	
