@@ -74,8 +74,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static String googleUrl = EpPropertiesUtils.getInstance().getProperty("google.doc.url");
 	private static double minConfidence = 0.95;
 	private static double minScoreFuzzyMatch = 0.8;
-	private static String typeEPF = "epf";
-	private static String typeTenancy = "tenancy";
+	private static final String TYPE_EPF = "epf";
+	private static final String TYPE_TENANCY = "tenancy";
+	private static final String TYPE_BANK = "bank";
 	
 	private static List<EPFEntity> epfs = null;
 	private static TenancyEntity tenancy = null;
@@ -128,10 +129,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		boolean hasError = showErrorMessage(docType, jsonWrappers);
 		try {
-			if (typeEPF.equals(docType)){
+			if (TYPE_EPF.equals(docType)){
 				processEPF(jsonWrappers);
 				
-			} else if (typeTenancy.equals(docType)){
+			} else if (TYPE_TENANCY.equals(docType)){
 				processTenancyAgreement(jsonWrappers);
 				
 			} else {
@@ -141,7 +142,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		} catch(NullPointerException e){
 			if (!hasError){
 				String err = "Please upload a valid EPF Contribution Statement for AI data extraction";
-				if (typeTenancy.equals(docType)){
+				if (TYPE_TENANCY.equals(docType)){
 					err = "Please upload a valid Stamped Premise Rental Agreement for AI data extraction";
 				}
 				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, err);
@@ -175,6 +176,11 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return new JsonWrapper(startTime, content, docType);
 		} catch (IOException e) {
 			log.error(" ", e);
+			
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+					"AI processing is temporarily unavailable. Your document has been uploaded successfully," +
+							" and you can still proceed with your application as usual.");
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 		
 		return null;
@@ -216,10 +222,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
-		if (typeEPF.equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
+		if (TYPE_EPF.equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
 			submitEPF(appl);
 			
-		} else if (typeTenancy.equals(docType)){
+		} else if (TYPE_TENANCY.equals(docType)){
 			submitTenancy();
 		}
 		//save smAppl
@@ -305,7 +311,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (doc.getAiApiResponseId() != null){
 				continue;
 			}
-			JsonWrapper result = sendDocumentOCR("bank", doc.getFilePath(), doc.getFileName());
+			JsonWrapper result = sendDocumentOCR(TYPE_BANK, doc.getFilePath(), doc.getFileName());
 			if (result != null){
 				long apiId = saveResponse(appl, result);
 				doc.setAiApiResponseId(apiId);
@@ -316,10 +322,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
 				.getExternalContext().getRequest()).getRequestedSessionId(); 
 		long startTime = System.currentTimeMillis();
+		boolean hasError = showErrorMessage(TYPE_BANK, jsonWrappers);
 		
-		List<DocEntity> docEntities = processBank(jsonWrappers);
-		validateBankEntity(appl, suppDoc, docEntities);
-		showErrorMessageBank(docEntities);
+		if (!hasError){
+			List<DocEntity> docEntities = processBank(jsonWrappers);
+			validateBankEntity(appl, suppDoc, docEntities);
+			showErrorMessageBank(docEntities);
+		}
 		
 		SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 				"SmAIDocbackingBean.sendDocumentOCR", "2", startTime);
@@ -446,13 +455,15 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (hasWrongCompanyName){
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
 					"The company name in your bank statement(s) does not match with the registered Business/Company Name" +
-					" in Company Information section. Feel free to proceed or update the Business/Company Name as needed.");
+					" in Company Information section. Your application can still be submitted as-is, " +
+					"or you may update the Business/Company Name before proceeding.");
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 		if (!StringUtils.isEmpty(sb.toString())){
 			sb.insert(0, "Your bank statement(s) does not match with any newly added/updated bank in" +
-					" Bank Information section. Feel free to proceed or update the Bank Information section as needed:");
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, sb.toString());
+					" Bank Information section. Your application can still be submitted as-is, " +
+					"or you may update the Bank Information section before proceeding:");
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, sb.toString().replace("\n", "<br/>"));
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 	}
@@ -465,19 +476,32 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		for (JsonWrapper json : jsonWrappers){
 			int statusCode = getErrorCode(json.rawContent);
 			if (statusCode == 415 || statusCode == 422){
-				if (typeEPF.equals(docType)){
+				switch(docType){
+				case TYPE_EPF:
 					err = "Please upload a valid EPF Contribution Statement for AI data extraction";
 					break;
-				} else if (typeTenancy.equals(docType)){
+				case TYPE_TENANCY:
 					err = "Please upload a valid Stamped Premise Rental Agreement for AI data extraction";
 					break;
+				case TYPE_BANK:
+				default:
+					err = "Please upload a valid Bank Statement for AI data extraction";
+					break;
 				}
+			}
+			if (statusCode == 500){
+				err = "AI processing is temporarily unavailable. Your document has been uploaded successfully, " +
+						"and you can still proceed with your application as usual.";
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, err);
+				FacesContext.getCurrentInstance().addMessage("ai", msg);
+				return true;
 			}
 		}
 		if (err != null){
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, err);
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 			return true;
+			
 		}
 		return false;
 	}
@@ -528,6 +552,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			EPFEntity ee = new EPFEntity(entityWrapper.entities);
 			epfs.add(ee);
 		}
+		// wip: need to save the doc to SmApplDocFile with PmDocument ID: 768, 864
+		//PENYATA CARUMAN KWSP (BORANG A) IAITU SENARAI NAMA PEKERJA YANG DICARUM SERTA RESIT
 	}
 	
 	/**

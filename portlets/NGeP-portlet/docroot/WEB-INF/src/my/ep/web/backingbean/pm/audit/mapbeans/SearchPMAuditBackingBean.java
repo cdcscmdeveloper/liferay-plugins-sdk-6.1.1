@@ -409,6 +409,11 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 
 	}
 
+	public void onFromDateSelect() {
+		// Clear the toDate
+		getManagedBean().getSearchBean().setDateTo(null);
+	}
+
 	public IPagingDataModel<VAuditPMDTO> getSearchMaster() {
 		return searchMaster;
 	}

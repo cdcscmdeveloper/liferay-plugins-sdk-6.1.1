@@ -133,7 +133,8 @@
 				<td><p:calendar id="fromDate" showOn="button" size="36"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom}" readonlyInput="true">
-						<p:ajax event="dateSelect" update="toDate" />
+						<p:ajax event="dateSelect" process="@this" listener="#{searchPMAuditBackingBean.onFromDateSelect}" 
+					update="toDate"/>
 					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
 				<td><p:calendar showOn="button" size="30"
