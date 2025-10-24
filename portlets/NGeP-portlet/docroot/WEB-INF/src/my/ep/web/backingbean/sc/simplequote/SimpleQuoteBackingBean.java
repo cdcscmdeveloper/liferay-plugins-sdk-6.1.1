@@ -5776,6 +5776,10 @@ public class SimpleQuoteBackingBean extends
 			FacesScopes facesScopes = new FacesScopes();
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
+			
+			//#38916
+			recalculationSpecAnswer();
+			//#38916
 
 			// tpl spec - product
 			List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
@@ -5893,6 +5897,10 @@ public class SimpleQuoteBackingBean extends
 		if (!isServiceContainPrice && !isProdContainPrice) {
 			throw new EpException(MessageConst.ERROR_700105);
 		}
+		
+		//#38916
+		recalculationSpecAnswer();
+		//#38916
 		
 		//gpki for only govt seller
 		if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
@@ -8180,4 +8188,27 @@ public class SimpleQuoteBackingBean extends
 		}
 	}
 	// 36301 - end
+	
+	// #38916 - Start
+	/**
+	 * To recalculate spec answer before submission.
+	 */
+	private void recalculationSpecAnswer() {
+		// Calculate for Product
+		List<TplSpecAnswer> calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
+		if (calcSpecAnswersProduct != null) {
+			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(
+					getManagedBean().getProductTemplateSpecBean());
+			calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();		
+		}
+
+		// Calculate for Service
+		List<TplSpecAnswer> calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+		if (calcSpecAnswersService != null) {			
+			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(
+					getManagedBean().getServiceTemplateSpecBean());
+			calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+		}
+	}
+	// #38916 - End
 }
