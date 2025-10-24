@@ -2307,44 +2307,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 					}
 				}
 			}
-		}
-		
-		/**
-		 * Gets the spec so.
-		 * 
-		 * @return the spec so
-		 */
-		private IQTSpecSO getSpecSO() {
-			return BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-		}
-
-		public List<ScQtCategory> retrieveCurrentScQtCategoryCode(){
-			List<ScQtCategory> listCategoryDB = new ArrayList();
-			IQTSpecSO specSO = getSpecSO();
-			listCategoryDB = specSO.retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
-			
-			return listCategoryDB;
-		}
-		
-		public List<ScQtCategory> retrieveScQtCategoryByQtCatID(Long qtCateId){
-			List<ScQtCategory> listCategoryDB = new ArrayList();
-			IQTSpecSO specSO = getSpecSO();
-			listCategoryDB = specSO.retrieveScQtCategoryByQtCatID(getManagedBean().getQt().getQtId(),qtCateId);
-			
-			return listCategoryDB;
-		}
-		
-		private List<PmRemarkCategory> updateCreatedUserName(
-				List<PmRemarkCategory> remarkList) {
-			for (PmRemarkCategory rc : remarkList) {
-				PmUser user = PmCommonUtil
-						.retrieveUserById(rc.getCreatedBy(), true);
-				rc.setCreatedUsername(user.getUserName());
-			}
-			return remarkList;
-		}
-		// #29732 End
+		}	
 		
 		/**
 		 * Gets the spec so.
