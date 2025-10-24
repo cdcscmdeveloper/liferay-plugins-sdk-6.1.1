@@ -176,11 +176,12 @@ public class AuditPMSysParamConstantRulesBackingBean {
 	 */
 	public void processSPRulesValueTypeCreateDeleted(PmConfigRuleValue newCreatedItem, PmConfigRuleValue deletedItem) {
 		PmConfigRuleValue ruleValueType = ruleTypeNewOrDeleted(newCreatedItem, deletedItem);
-
-		if ((ruleValueType.getRuleDataTypeCode().matches("A|N|M|P") && ruleValueType.getRuleRangeType() != BigInteger.valueOf(2))
-				|| ruleValueType.getRuleDataTypeCode().matches("PC")) {
-			handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_VALUE_FIELDLABELID,
-					ruleNumberValueNewCreated(newCreatedItem), ruleNumberValueDeleted(deletedItem));
+		if (ruleValueType.getRuleDataTypeCode() != null) {
+			if ((ruleValueType.getRuleDataTypeCode().matches("A|N|M|P") && ruleValueType.getRuleRangeType() != BigInteger
+					.valueOf(2)) || ruleValueType.getRuleDataTypeCode().matches("PC")) {
+				handleFieldAuditSPRulesValueType(ruleValueType, AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_VALUE_FIELDLABELID,
+						ruleNumberValueNewCreated(newCreatedItem), ruleNumberValueDeleted(deletedItem));
+			}
 		}
 		// categoryL3Id
 		if (ruleValueType.getCategoryL3Id() != null && "C".equals(ruleValueType.getRuleDataTypeCode())) {
