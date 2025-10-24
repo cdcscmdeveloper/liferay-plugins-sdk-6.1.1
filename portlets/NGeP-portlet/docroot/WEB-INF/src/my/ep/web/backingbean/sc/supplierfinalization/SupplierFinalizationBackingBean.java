@@ -3,7 +3,7 @@
  */
 package my.ep.web.backingbean.sc.supplierfinalization;
 
-import java.io.File;	// Bug #35485@Syazani 08/02/2024
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -54,6 +54,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.comparator.WorklistItemVOComparator;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -98,8 +99,8 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;	// Bug #37829@Syazani 13/03/2024
-import my.ep.persistence.entity.sc.common.ScActor; //Bug #32682
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -139,7 +140,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.CustomUtils;	// Bug #35485@Syazani 08/02/2024
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -148,7 +149,6 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean.FinalizationEndorsementReportDTO;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -182,6 +182,10 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
+// Bug #35485@Syazani 08/02/2024
+// Bug #37829@Syazani 13/03/2024
+//Bug #32682
+// Bug #35485@Syazani 08/02/2024
 
 /**
  * Implementation for supplier finalization
@@ -1277,11 +1281,39 @@ public class SupplierFinalizationBackingBean extends
 		
 		switch (evaluationStageId) {
 			case 1 : if (getManagedBean().getScQt().isDemoRequired()) {
-						 evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
-						 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.presentation.demo.stage";
+						//#28784 - Start
+						boolean isQtNewVersion = validateSupportedTask(getManagedBean().getScQt().getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						boolean isItemize = getManagedBean().isItemize();
+						boolean isItemRowSelected = getManagedBean().isItemRowSelect();
+						ScQtRecommend selectedItem = getManagedBean().getSelectedItem();
+						/** Use in 4ser
+						if (!isItemize || !isQtNewVersion) {*/
+				    		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+				    	/** Use in 4ser
+				    	}
+						else {
+							
+				    		int wipStatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		
+				    		if (wipStatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				        		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+				    		} else {
+				        		evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
+		
+				        		if (isItemRowSelected && selectedItem != null) {
+				            		selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
+				        		} else {
+				            		getManagedBean().setQualifiedSuppliersByEvalStage(null);
+				            		return;
+				        		}
+				    		}
+						}*/
+						// Set evaluation header (always the same regardless of itemize/WIP status)
+						evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_DEMO_EVAL_STAGE;
+						//#28784 - End
 					 } else {
-						 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-						 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+						evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
+						evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
 					 }
 					 break;
 					 
@@ -3127,6 +3159,12 @@ public class SupplierFinalizationBackingBean extends
 				}
 				// #18685 - End.
 			}
+
+			// #28784 -start-
+			if(getManagedBean().getScQt().isDemoRequired()) {
+				this.getManagedBean().setDemoReq(true);
+			}
+			// #28784 -end-
 			
 		} finally {
 			qtSuppFinalizationSO = null;
@@ -3261,10 +3299,14 @@ public class SupplierFinalizationBackingBean extends
 		
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		long downFilesSize = reportAttachment.getFileSize() != null ? reportAttachment.getFileSize() : 0;
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
-		if (downFilesSize <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
-			regenEvaluationDownload(reportAttachment, true);
+		//#28784 - Start
+		if (scQtFinalizationReport.getPmDocument() != null) {
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+			if (downFilesSize <= SourcingConstants.FILE_SIZE && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+				regenEvaluationDownload(reportAttachment, true);
+			}
 		}
+		//#28784 - End
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	
@@ -3584,8 +3626,8 @@ public class SupplierFinalizationBackingBean extends
 		return reportAttachment;
 	}
 	
-	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) 
-										   throws Exception {
+	/*
+	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) throws Exception {
 		populateAttachmentDetails(attachment);
 
 		FacesScopes facesScopes = new FacesScopes();
@@ -3626,6 +3668,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}*/
+		/*
 		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
 				StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
@@ -3636,6 +3679,7 @@ public class SupplierFinalizationBackingBean extends
 		// #18685 - End
 		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
 	}
+	*/
 	
 	// 36715 START
 	private void generateKertasTaklimatRtf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) throws Exception {
@@ -4218,7 +4262,7 @@ public class SupplierFinalizationBackingBean extends
 				if (isQTRefinalized()) {
 					disableAwardedItems(scQtFinalization.getScQtRecommends());
 					
-					// Check if the any of the suppliers has awarded LOA's 
+					// Check if the any of the suppliers has awarded LOA's To be removed [Not in use]
 					/******Start******/
 					reqDTO = new SuppFinalizationReqDTO();
 					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
@@ -7844,8 +7888,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean isZonal = scQt.isZonal(); 
 		boolean isItemized = true;
 		List<TplSpecZoneDtl> zoneDtls = getManagedBean().getZoneDetails();
-		String recommendTypeCode = getManagedBean().getScQtFinalization()
-									.getRecommendedTypeId().getParameterCode();
+		String recommendTypeCode = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
 		if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 						  .equals(recommendTypeCode)) {
 			isItemized = false;
@@ -8054,7 +8097,7 @@ public class SupplierFinalizationBackingBean extends
 		reqDTO.setDocNumber(scQt.getQtNo());
 		
 		SuppFinalizationReqDTO sfReqDTO = new SuppFinalizationReqDTO();
-		Set<String> fetchSet = new HashSet();
+		Set<String> fetchSet = new HashSet<String>();
 		fetchSet.add("finalizationCommittee");
 		sfReqDTO.setFetchSet(fetchSet);
 		sfReqDTO.setQtId(scQt.getQtId());
@@ -8688,7 +8731,7 @@ public class SupplierFinalizationBackingBean extends
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
 				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
-				;
+				||QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());//25791
 	}
 	// ***25201 -end-
 	
@@ -10458,7 +10501,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	// #28834 - End.
-
+	
 	// Bug #35379 = #34720@Syazani 07/06/2022 -- Start
 	/**
 	 * Check for duplicate report related to UUM Definiation Key Report This

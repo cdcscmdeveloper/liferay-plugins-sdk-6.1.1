@@ -23,6 +23,7 @@ public class ItemBean {
 	private String clDurationMonth;
 	private String clDeliveryTerm;
 	// 26226 - end
+	private boolean itemReqDemo; // #28784
 
 	/**
 	 * @return the item
@@ -148,5 +149,17 @@ public class ItemBean {
 		this.clDeliveryTerm = clDeliveryTerm;
 	}
 	//26226 - end 
+
+	// #28784 -start-
+	public boolean isItemReqDemo() {
+		return itemReqDemo;
+	}
+	// #28784 -end-
+
+	// #28784 -start-
+	public void setItemReqDemo(boolean itemReqDemo) {
+		this.itemReqDemo = itemReqDemo;
+	}
+	// #28784 -end-
 
 }
