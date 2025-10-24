@@ -82,7 +82,7 @@
 					<td></td>
 					<td>
 						<div align="right" style="width: 99%" class="button-wrapper">
-						<!-- #34159 - START - add param disablevalidation -->
+						<!-- #39097 & #34159 - Start - add param disablevalidation -->
 							<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 								actionListener="#{backingBean.setTabValue(0,1)}"
@@ -90,7 +90,7 @@
 								update=":form" >
 								<f:param name="disableValidation" value="true" />
 							</p:commandButton>
-						<!-- #34159 - END -->
+						<!-- #39097 & #34159 - End -->
 						</div>
 					</td>
 				</tr>

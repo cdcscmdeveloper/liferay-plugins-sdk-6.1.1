@@ -1912,8 +1912,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> newScCommitteeMemberAuditTrailList;
 	/** The deleted sc qt committee */
 	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
-	/** The modified role of sc qt committee */
-	private HashMap<PmUser,List<String>> mapModifiedRole;	
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
 	/** The pmuser contactperson list that had been modified with the original pm user's name */
