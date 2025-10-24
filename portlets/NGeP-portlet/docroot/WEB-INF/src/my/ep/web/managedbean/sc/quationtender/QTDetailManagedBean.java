@@ -1951,11 +1951,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean auditViewRole;
 	//#28895 - 35500 end
 	private boolean updateCatDesc; //#29732
+	private boolean updateCatInPm; //#29732
 
 	private boolean zoneQtyHasZeroVal;//#38679
 	
-	//#35320
+	//#35320 - Start
 	private boolean afterSF;
+	//#35320 - End
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12438,7 +12440,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
 	}
 	//#21692 - End
-	
+
 	//#29732
 	public boolean getUpdateCatDesc() {
 		return updateCatDesc;
@@ -12447,24 +12449,34 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setUpdateCatDesc(boolean updateCatDesc) {
 		this.updateCatDesc = updateCatDesc;
 	}
-	// #29732
+	//#29732
 	
-	// #38679
+	//#29732
+	public boolean getUpdateCatInPm() {
+		return updateCatInPm;
+	}
+
+	public void setUpdateCatInPm(boolean updateCatInPm) {
+		this.updateCatInPm = updateCatInPm;
+	}
+	//#29732
+	
+	//#38679
 	public boolean isZoneQtyHasZeroVal() {
 		return zoneQtyHasZeroVal;
 	}
-
+	
 	public void setZoneQtyHasZeroVal(boolean zoneQtyHasZeroVal) {
 		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
 	}
-	// #38679
+	//#38679
 	
-	//#35320 - Start
+	// #35320 - Start
 	public boolean isAfterSF() {
 		return afterSF;
 	}
 
 	public void setAfterSF(boolean afterSF) {
 		this.afterSF = afterSF;
-	}//#35320 - End
+	}// #35320 - End
 }

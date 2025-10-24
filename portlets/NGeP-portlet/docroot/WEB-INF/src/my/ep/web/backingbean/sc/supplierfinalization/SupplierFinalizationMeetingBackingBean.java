@@ -115,6 +115,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.log4j.Logger;
@@ -2030,6 +2031,8 @@ if (CollectionUtils.isNotEmpty(
 			//28895 - 35500 start
 			List<ScCommitteeMember> newCommitteeMembers = this.getManagedBean().getNewCommitteeAuditTrailList() != null
 					? this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
+			HashMap<PmUser,List<String>> mapModifiedRoleCommitteeAudit = this.getManagedBean().getMapModifiedRole() != null
+					? this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser,List<String>>();
 			List<ScCommitteeMember> deletedCommitteeMembers = this.getManagedBean().getRemoveCommitteeAuditTrailList() != null
 					? this.getManagedBean().getRemoveCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
 			//28895 - 35500 end
@@ -2043,6 +2046,7 @@ if (CollectionUtils.isNotEmpty(
 			}
 
 			prepareCommitteeAuditTrail(newCommitteeMembers,deletedCommitteeMembers);//28895 - 35500
+			prepareCommitteeRoleModified(mapModifiedRoleCommitteeAudit);
 		}
 	}
 
@@ -2390,8 +2394,99 @@ if (CollectionUtils.isNotEmpty(
 				auditReqList.addAll(deleteCommitteeList);
 			}
 
+			qtAuditTrailSO.insertAuditTrail(auditReqList);			
+		}
+	}
+	
+	/**
+	 * #35500 issue fix 4-9
+	 * Method to prepare audit trail for committee's role change
+	 * @param reqDTO
+	 */
+	public void prepareCommitteeRoleModified(HashMap<PmUser, List<String>> committeeModifiedRole) {
+
+		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
+		IAuditTrailSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.AUDIT, IAuditTrailSO.class);		
+
+		if (auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID) && MapUtils.isNotEmpty(committeeModifiedRole)){
+			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
+			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
+			
+			auditResDTO.setDocTypeId(this.getManagedBean().getScQt().getProcurementMode().getParameterId());
+			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
+			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
+			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			auditResDTO.setRoleCode(checkRolesForAuditTrail());
+			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+			
+			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
+				auditResDTO.setNewValue(entry.getValue().get(0));
+				auditResDTO.setOldValue(entry.getValue().get(1));
+				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_ROLE);
+
+				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
+				auditReqList.add(auditReqDTO);
+			}
+
 			qtAuditTrailSO.insertAuditTrail(auditReqList);
 		}
+			
+	}
+
+	
+	/**
+	 * #35500 issue fix 4-9
+	 * Capture the modified role values
+	 * @param member
+	 */
+	public void onChangeRole(ScCommitteeMember member){
+		if (member.getMemberRoleId() == null){
+			this.roleChangedListener(member);
+			return;
+		}
+	
+		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
+		String changedRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, changedRolePmParameter.getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		String previousRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		
+		
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
+				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
+				
+		if (!mapModifiedRole.isEmpty()) {
+			if (mapModifiedRole.containsKey(member.getPmUser())) {
+				userRoles = mapModifiedRole.get(member.getPmUser());
+				if (userRoles.get(1).equals(changedRole)){
+					mapModifiedRole.remove(member.getPmUser());
+				} else {
+					userRoles.add(0, changedRole);
+					mapModifiedRole.remove(member.getPmUser());
+					mapModifiedRole.put(member.getPmUser(),userRoles);					
+				}
+			} else {
+				userRoles.add(changedRole);
+				userRoles.add(previousRole);
+				userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+				mapModifiedRole.put(member.getPmUser(),userRoles);
+			}
+		} else {
+			userRoles.add(changedRole);
+			userRoles.add(previousRole);
+			userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+			mapModifiedRole.put(member.getPmUser(),userRoles);
+		}
+		
+		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
 	}
 	
 	/**
