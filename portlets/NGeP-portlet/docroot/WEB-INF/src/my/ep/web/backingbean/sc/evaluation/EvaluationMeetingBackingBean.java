@@ -1810,11 +1810,11 @@ public class EvaluationMeetingBackingBean extends
 		
 		// Bug #38975@Syazani 16/10/2025 -- Start
 		// 25037 - start
-				retriveMeetingDetails(qtId, committeeType);
+		retriveMeetingDetails(qtId, committeeType);
 				
 		if (null != activityResDTo
 				&& !activityResDTo.getCommitteMembers().isEmpty()
-				&& !Arrays.asList(QTStatusConst.EVALUATION_MEETING_ACTIVITY_PROHIBITED_DELETE).contains(
+				&& !Arrays.asList(QTStatusConst.getEvaluationMeetingActivityProhibitedDelete()).contains(
 						this.getManagedBean().getCurrentStatusId())) {
 			// Bug #38975@Syazani 16/10/2025 -- End
 			MeetingReqDTO deleteActivityDao = new MeetingReqDTO();
