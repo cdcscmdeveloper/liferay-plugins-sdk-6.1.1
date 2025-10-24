@@ -148,7 +148,8 @@
 	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
 		widgetVar="consDialog" id="consDialog" resizable="false"
 		closable="true" showEffect="fade" hideEffect="fade" modal="true"
-		width="850px" height="500px" onShow="setTimeout(() => document.activeElement.blur(), 10)">
+		width="850px" height="500px" onShow="setTimeout(() => document.activeElement.blur(), 10)"> <!-- #38991 -->
+		<p:ajax event="close" listener="#{backingBean.cancelCompExpFunctions}" resetValues="true"/> <!-- #38991 -->
 		
 		<p:outputPanel layout="block" id="consExpBlockPanel">
 			<p:messages id="consultPrjMsg" showSummary="false" showDetail="true"
@@ -163,7 +164,8 @@
 								<td><p:outputLabel
 										value=" #{lbl['lbl.sm.projDtls.doneFor']}" /><p:outputLabel
 							value="*" styleClass="mandatory" /></td> <!-- #38991 -->
-								<td><p:selectOneRadio
+								<td><div style="display:inline-flex;align-items:center;gap:6px;vertical-align:middle;"> <!-- #38991 -->
+								<p:selectOneRadio
 										value="#{backingBean.managedBean.selectedCompanyExperience.clientType}"
 										disabled="#{backingBean.managedBean.upsCannotEdit}"
 										required="#{backingBean.managedBean.valueReqd}"
@@ -183,7 +185,15 @@
 										? lbl['lbl.sm.busNtw.fdrGov'] : lbl['lbl.sm.busNtw.nonfdrGov'])}"/>
 										<p:message id="supCntrPrjDneFrMsg" for="supCntrPrjDneFr"
 							             showSummary="true" showDetail="false" display="icon" /> <!-- #38991 -->
-								</td>
+							       <!-- #38991 -start-->      
+							       <p:graphicImage id="tooltip" style="padding-bottom : 7px;" 
+							         value="/css/images/design/tooltips.png" /> 
+						           <p:tooltip id="toolinfo" for="tooltip">
+							           <p:outputLabel escape="false"
+								           value="#{lbl['tt.sm.mof.registration.project.done.for']}" />
+						           </p:tooltip>
+                               </div> <!-- #38991 -end--> 
+							</td>
 							</tr>
 							<tr>
 								<td><p:outputLabel

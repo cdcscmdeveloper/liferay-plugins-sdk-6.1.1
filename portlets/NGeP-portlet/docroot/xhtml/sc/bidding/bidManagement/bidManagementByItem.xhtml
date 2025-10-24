@@ -186,7 +186,7 @@
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{biddingBB.managedBean.bidPriceItemsDisqualified}"
 					var="bidPriceItem" rendered="#{isDisqualified}">
-					<ac:paginator for="rankingList"></ac:paginator>
+					<ac:paginator for="rankingListDisqualified"></ac:paginator>
 					<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 						style="align : center; width : 14%">
 						<h:outputText id="supplierCodeVBI"
@@ -196,16 +196,6 @@
 						headerText="#{lbl['lbl.sc.bumiputra.status']}">
 						<h:outputText id="isBumiVBI"
 							value="#{(bidPriceItem.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
-					</p:column>
-					
-					<p:column style="white-space:normal;width:18%;">
-						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-							<ac:iconTooltip
-								value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
-						</f:facet>
-						<ac:disciplinaryActionYesNo
-							supplier="#{bidPriceItem.supplier}" index="#{index}"/>
 					</p:column>
 					
 					<p:column style="align : center; width : 14%"

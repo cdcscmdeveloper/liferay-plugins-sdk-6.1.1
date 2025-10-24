@@ -914,7 +914,7 @@ public class NoticeBoardBackingBean extends
 		supplierReqDTO.setQtId(qtId);
 		NoticeBoardResDTO supplierResDTO = boardSO.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
 		ScQtSupplier scQtSupplier = supplierResDTO.getScQtSupplier();
-		if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+		if (scQtSupplier != null && scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
@@ -1240,13 +1240,6 @@ public class NoticeBoardBackingBean extends
 					}
 				}
 			}
-			
-			// 26247 - start
-			if (getManagedBean().isQualified()) {
-				getManagedBean().setQualified(!this.disabledQTProcess(supplier));
-			}
-			// 26247 - end
-			
 			// construct the proposal/update url
 			if (QTStatusConst.QT_PROPOSAL_PREPARATION
 					.equals(currentStatus) && isValidSupplier ) {

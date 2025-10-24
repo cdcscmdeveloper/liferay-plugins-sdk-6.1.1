@@ -95,6 +95,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -4812,6 +4813,7 @@ public class SimpleQuoteBackingBean extends
 		StringBuilder stateCriteria = new StringBuilder();
 		StringBuilder divCriteria = new StringBuilder();
 		StringBuilder distCriteria = new StringBuilder();
+		StringBuilder recordStatus = new StringBuilder();//#26284 - Start
 
 		// business nature criteria
 		if (getManagedBean().isByBusinessNature()) {
@@ -4947,7 +4949,15 @@ public class SimpleQuoteBackingBean extends
 		}
 		// #28536 - end
 
-		criteria.append("recordStatus^1");
+		// #26284 - Start
+		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_SUSPENDED);
+
+		criteria.append("recordStatus")
+		.append("^").append(recordStatus.toString())
+		.append("^").append(SearchOperator.OPERATOR_IN.value());
+
+		// #26284 - End
 		return criteria.toString();
 	}
 	
@@ -5659,6 +5669,11 @@ public class SimpleQuoteBackingBean extends
 			FacesScopes facesScopes = new FacesScopes();
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
+			
+			//#38916
+			log.info("Recalculation SAVE action");
+			recalculationSpecAnswer();
+			//#38916
 
 			// tpl spec - product
 			List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
@@ -5800,6 +5815,11 @@ public class SimpleQuoteBackingBean extends
 		if (!isServiceContainPrice && !isProdContainPrice) {
 			throw new EpException(MessageConst.ERROR_700105);
 		}
+		
+		//#38916
+		log.info("Recalculation SUBMIT action");
+		recalculationSpecAnswer();
+		//#38916
 		
 		//gpki for only govt seller
 		if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
@@ -8310,4 +8330,56 @@ public class SimpleQuoteBackingBean extends
 
 	}
 	// 36301 - end
+	
+	// #38916 - Start
+	/**
+	 * To recalculate spec answer before submission.
+	 */
+	private void recalculationSpecAnswer() {
+		// Calculate for Product
+		List<TplSpecAnswer> calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
+		if (calcSpecAnswersProduct != null) {
+			log.info("==============================================================");
+			log.info("Bug 38916 Product (set all to null)");
+			for (TplSpecAnswer specAnswerProduct : calcSpecAnswersProduct) {
+				specAnswerProduct.setAnswerNumeric(null);
+				log.info("SpecAnswerId : " + specAnswerProduct.getSpecAnswerId() + " - AnswerNumeric : "
+						+ specAnswerProduct.getAnswerNumeric());
+			}
+
+			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(
+					getManagedBean().getProductTemplateSpecBean());
+			calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
+
+			log.info("Bug 38916 Product (After calculation)");
+			for (TplSpecAnswer specAnswerProduct : calcSpecAnswersProduct) {
+				log.info("SpecAnswerId : " + specAnswerProduct.getSpecAnswerId() + " - AnswerNumeric : "
+						+ specAnswerProduct.getAnswerNumeric());
+			}
+		}
+
+		// Calculate for Service
+		List<TplSpecAnswer> calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+		if (calcSpecAnswersService != null) {
+			log.info("==============================================================");
+			log.info("Bug 38916 Service (set all to null)");
+			for (TplSpecAnswer specAnswerService : calcSpecAnswersService) {
+				specAnswerService.setAnswerNumeric(null);
+				log.info("SpecAnswerId : " + specAnswerService.getSpecAnswerId() + " - AnswerNumeric : "
+						+ specAnswerService.getAnswerNumeric());
+			}
+
+			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(
+					getManagedBean().getServiceTemplateSpecBean());
+			calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+
+			log.info("Bug 38916 Service (After calculation)");
+			for (TplSpecAnswer specAnswerService : calcSpecAnswersService) {
+				log.info("SpecAnswerId : " + specAnswerService.getSpecAnswerId() + " - AnswerNumeric : "
+						+ specAnswerService.getAnswerNumeric());
+			}
+			log.info("==============================================================");
+		}
+	}
+	// #38916 - End
 }
