@@ -43,9 +43,13 @@
 					value="#{ruleCatalogueBackingBean.managedBean.searchedPtjName}"
 					maxlength="255" style="width:250px;" />
 				<p:outputLabel value=" #{lbl['lbl.pm.settings.qt.limit']}" />
-				<p:inputText
+				<p:inputText id="qtLimit"
 					value="#{ruleCatalogueBackingBean.managedBean.searchedQtValueLimit}"
-					maxlength="18" style="width:250px;" />
+					maxlength="18" style="width:250px;" validatorMessage="Value is not a number format. Example: 999">
+					<p:ajax event="blur" process="@this" update="qtLimitMsg" />
+					<f:validateRegex pattern="\d+" />
+				</p:inputText>
+				<p:message id="qtLimitMsg" for="qtLimit" display="tooltip" />
 			</h:panelGrid>
 
 			<div class="ppRightBtn">

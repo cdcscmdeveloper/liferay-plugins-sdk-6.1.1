@@ -5787,7 +5787,7 @@ public class RuleCatalogueBackingBean extends
 			return searchedExpiryDate.equals(value.getExpDate());
 		}
 
-		return !value.getEffDate().before(searchedEffectiveDate) || !value.getExpDate().after(searchedExpiryDate);
+		return !value.getExpDate().before(searchedEffectiveDate) && !value.getEffDate().after(searchedExpiryDate);
 	}
 	
 	/**
