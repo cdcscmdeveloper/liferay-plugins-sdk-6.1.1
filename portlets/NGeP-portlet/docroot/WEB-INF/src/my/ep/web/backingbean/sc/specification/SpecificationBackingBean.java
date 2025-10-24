@@ -213,6 +213,7 @@ import my.ep.web.bean.sc.quatationtender.SampleQuestionBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -12088,6 +12089,18 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster().getSpecName());
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			Integer index = null; //1873 - note 97
+			
+			// #29187 Start Vinod
+			List<TplSpecQuestion> questionsList = scQtCheckList.getScQtDoc()
+					.getTplSpecMaster().getTplSpecQuestions();
+			for (TplSpecQuestion question : questionsList) {
+				String questionType = question.getQuestionType();
+				if (questionType
+						.equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					question.setMandatorySpec(false);
+				}
+			}
+			// #29187 End Vinod
 
 			// Bug #33661@Syazani 12/04/2023 -- Start
 			qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(), ParameterConst.DOCTYPE_QUOTATION);
@@ -12823,6 +12836,18 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 			List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 	
+			// #29187 Start Vinod
+			List<TplSpecQuestion> questionsList = scQtCheckList.getScQtDoc()
+					.getTplSpecMaster().getTplSpecQuestions();
+			for (TplSpecQuestion question : questionsList) {
+				String questionType = question.getQuestionType();
+				if (questionType
+						.equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					question.setMandatorySpec(false);
+				}
+			}
+			// #29187 End Vinod
+						
 			Integer index = null; //1873 - note 97
 
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
@@ -17245,6 +17270,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 
 		scoringPopUpAction(null);
+		// #29187 Start Vinod
+		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);
+		// #29187 End Vinod
 
 		return TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW;
 	}
@@ -17302,6 +17330,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 
 		this.getManagedBean().setExistingSampleSpecQuestions(existingSampleSpecQuestion);// 11104-ReEndorseEnd
+		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 
 	}
 	// 11104 -end-
@@ -17339,11 +17368,17 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			scoreType.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
 			ParameterResDTO scoreTyperesDTO = parameterSo.retrieveParameterByTypeAndCode(scoreType);
 			specQuestion.setSampleScoreTypeCode(scoreTyperesDTO.getPmParameter());
+			// #29187 Start Vinod
+			specQuestion.setMandatorySpec(true);
+			// #29187 End Vinod
 		} else {
 			specQuestion.setSampleQuantity(null);
 			specQuestion.setSampleScoreTypeCode(null);
 			specQuestion.setSampleScore(null);
 			scoringPopUpAction(null);
+			// #29187 Start Vinod
+			specQuestion.setMandatorySpec(false);
+			// #29187 End Vinod
 		}
 
 	}
@@ -19365,4 +19400,87 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	}
 	//#28784 - End
+	
+	/* #29187 Start Vinod */
+	/**
+	 * This method is to get dropdown values for mandatory spec.
+	 * 
+	 * @param
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> getMandatorySpecDropdownValues() {
+		List<SelectItem> selectItems = new ArrayList<>();
+
+		try {
+			selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_SELECT,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt().getQtNo();
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
+					qtNo, SLALogConstant.QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES, getUserIdSessionFromLoginId(), e);
+		}
+
+		return selectItems;
+	}
+
+	/* #29187 End Vinod */
+	/* #29187 Start Vinod */
+	/**
+	 * This method is to render mandatory spec.
+	 * 
+	 * @param tplSpecQuestions
+	 * @return boolean
+	 */
+	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
+
+		for (TplSpecQuestion question : tplSpecQuestions) {
+			boolean isMandatorySpecForSample = question.isMandatorySpecForSample();
+			if (isMandatorySpecForSample) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/* #29187 End Vinod */
+	/* #29187 Start Vinod */
+	/**
+	 * retrives the specification details to check mandatory specification.
+	 * 
+	 * @param templateChecklist
+	 *            .
+	 * @return
+	 */
+	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		List<TplSpecQuestion> tplSpecQuestions = templateChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
+
+		for (TplSpecQuestion itemQuestion : tplSpecQuestions) {
+			specReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			specReqDTO.setItemName(itemQuestion.getClItem());
+			TemplateSpecResDTO resDTO = templateSpecSO.retrieveTechSpecByItemNames(specReqDTO);
+
+			checkMandatorySpecForSample(itemQuestion, resDTO);
+		}
+	}
+
+	/* #29187 End Vinod */
+	/* #29187 Start Vinod */
+	private void checkMandatorySpecForSample(TplSpecQuestion itemQuestion, TemplateSpecResDTO resDTO) {
+		if (resDTO != null && CollectionUtils.isNotEmpty(resDTO.getSpecQuestionList())) {
+			List<TplSpecQuestion> tplSpecQuestions = resDTO.getSpecQuestionList();
+			for (TplSpecQuestion question : tplSpecQuestions) {
+				if (question.isMandatorySpec()) {
+					itemQuestion.setMandatorySpecForSample(true);
+				}
+			}
+		}
+	}
+
+	/* #29187 End Vinod */
 }
