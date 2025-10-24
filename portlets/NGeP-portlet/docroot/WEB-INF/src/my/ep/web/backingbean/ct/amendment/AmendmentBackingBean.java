@@ -227,6 +227,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	//#24336 - Start
 	public static final boolean REDUCTION_OF_CONTRACT_VALUE = true;
+	
+	private IContractAmendmentSO getIContractAmendmentSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
+	}
 	//#24336 - End
 	
 	//#34097/#26186 start
@@ -2893,7 +2897,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
+			
+			// #24336 - Start
+			// Validation for Reduction of Contract Amount (submit)
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
+				validateReductionAmount();
+			}
+			// #24336 - End
+			
 		}
+		
+		// #24336 - Start
+		// Validation for Reduction of Contract Amount (save)
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)  && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
+			validateReductionAmount();
+		}
+		// #24336 - End
 
 		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			if (getManagedBean().getTaskName() != null
@@ -5552,8 +5571,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//#24336 - Start
 			handleContractValueTypeChange();
-			//ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
-			//ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
 			//#24336 - End
 		}
 		
@@ -10150,14 +10167,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    ctAmount = ctAmount.setScale(2, RoundingMode.HALF_UP);
 		}
 		
-		log.info("*****************************");
-		log.info("newCtAmount : "+newCtAmount);
-		log.info("ctAmount : "+ctAmount);
-		
 		// new overall contract amount is different from overall contact amount
 		if(newCtAmount != null && !newCtAmount.equals(ctAmount)){
-			
-			log.info("not same!");
 			
 			newAmtEffDate = new Date();
 			
@@ -10167,19 +10178,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// same as overall contract amount	
 		}else{
 			
-			log.info("same!");
-			log.info("ctContractAmount Id : "+ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmountId());
-
 			newAmtEffDate = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getEffDate();
-			
-			log.info("newAmtEffDate : "+newAmtEffDate);
 			
 			// Disable date input
 			ctBackingBean.getManagedBean().setDisableNewCtAmountEffDate(true);
 		}
-		
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewAmtEffDate(newAmtEffDate);
-		
 	}
 	
 	/**
@@ -10198,16 +10202,56 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    return amendValue && shouldShow;
 	}
 
-	public BigDecimal getTransactionsWithPendingPayment(){
-		BigDecimal total = new BigDecimal("888.88");
-		
-		return total;
+	/**
+	 * Retrieves the total amount for transactions that are pending payment for the current contract.
+	 * @return total pending payment amount (BigDecimal). Returns zero if none found.
+	 */
+	public BigDecimal getPendingTransactionAmount(){
+		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
+		IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
+		return iContractAmendmentSO.getTransactionWithPendingPayment(contractId);
 	}
 	
-	public BigDecimal getTransactionsBeforePendingPayment(){
-		BigDecimal total = new BigDecimal("999.99");
-		
-		return total;
+	/**
+	 * Get total amount of payment before pending payment for a contract.
+	 * @return total before pending payment amount (BigDecimal)
+	 */
+	public BigDecimal getAmountBeforePendingPayment(){
+		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
+		IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
+		return iContractAmendmentSO.getTotalUsageBeforePendingPayment(contractId);
+	}
+	
+	/**
+	 * Get total contract amount that can be reduced
+	 * @return total reducible amount
+	 */
+	public BigDecimal getReducibleContractAmount() {
+		BigDecimal amount;
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
+			BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+		    BigDecimal pendingAmount = getPendingTransactionAmount();
+		    BigDecimal prePaymentAmount = getAmountBeforePendingPayment();
+
+		    BigDecimal totalAmount = pendingAmount.add(prePaymentAmount);
+		    amount = ctAmount.subtract(totalAmount);
+		}else{
+			amount = BigDecimal.ZERO;
+		}
+	    return amount;
+	}
+	
+	private void validateReductionAmount(){
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
+			BigDecimal reducibleCtAmount = getReducibleContractAmount();
+			BigDecimal reductionAmount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getReductionAmt();
+			
+			if (reductionAmount.compareTo(reducibleCtAmount) > 0) {
+				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				throw new EpException(MessageConst.ERROR_750092);
+			}
+		}
 	}
 	//#24336 - End
 	
