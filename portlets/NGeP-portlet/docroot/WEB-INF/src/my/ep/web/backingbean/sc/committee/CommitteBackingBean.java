@@ -2760,7 +2760,7 @@ public class CommitteBackingBean extends
 	}
 	// 25037 - end
 	
-	//35320 - committee maintenance - START
+	//35320 - START
 	/**
 	 * Evaluate active flag for scCommittee
 	 * 
@@ -2779,7 +2779,9 @@ public class CommitteBackingBean extends
 		}
 		return committee.isRecordStatus();
 	}
+	// #35320 - END
 
+	//35320 - START
 	/**
 	 * Method to retrieve Committee Type detail based on the tab id
 	 */
@@ -2862,7 +2864,9 @@ public class CommitteBackingBean extends
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, NAV_TO_COMMITTEE_MAINTENANCE + "?faces-redirect=true");
 	}
+	// #35320 - END
 
+	//35320 - START
 	/**
 	 * Retrieves the committee based on the tab clicked by the user.
 	 * 
@@ -2881,7 +2885,9 @@ public class CommitteBackingBean extends
 		}
 		return displayCommittee;
 	}
+	// #35320 - END
 
+	//35320 - START
 	/**
 	 * Retrieves the secretary of the committee.
 	 * 
@@ -2902,7 +2908,9 @@ public class CommitteBackingBean extends
 		}
 		return loggedInMember;
 	}
+	// #35320 - END
 
+	//35320 - START
 	/**
 	 * Retrieves the committee history
 	 * 
@@ -2923,7 +2931,9 @@ public class CommitteBackingBean extends
 		}
 		return selectedHistory;
 	}
+	// #35320 - END
 
+	//35320 - START
 	/**
 	 * Handles the tab change event and retrieves the committee type detail
 	 * based on the selected tab.
@@ -2936,7 +2946,9 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setSelectedTab(tabId.toUpperCase());
 		getTabInfo();
 	}
+	// #35320 - END
 
+	//35320 - START
 	/**
 	 * Gets the role list excluding the secretary role.
 	 * 
@@ -2957,7 +2969,9 @@ public class CommitteBackingBean extends
 		}
 		return tempList.toArray(new SelectItem[0]);
 	}
+	// #35320 - END
 
+	//35320 - START
 	/**
 	 * Handles the role change event for a committee member.
 	 * 
@@ -2978,7 +2992,9 @@ public class CommitteBackingBean extends
 			committeemember.setRepresentativeTypeId(null);
 		}
 	}
+	// #35320 - END
 
+	//35320 - START
 	/**
 	 * Set the QtId and Committe Type
 	 * 
@@ -2996,7 +3012,9 @@ public class CommitteBackingBean extends
 
 		return committeReqDTO;
 	}
+	// #35320 - END
 
+	//35320 - START
 	/**
 	 * Finalizes the committee setup by adding selected users as committee
 	 * members.
@@ -3071,7 +3089,9 @@ public class CommitteBackingBean extends
 
 		RequestContext.getCurrentInstance().execute("committeeScreen3.hide()");
 	}
+	// #35320 - END
 
+	//35320 - START
 	private void setMemberValue(PmParameter userMemberRole, ScCommitteeMember committeeMember) {
 		if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(userMemberRole.getParameterCode())) {
 			committeeMember.setRepresentativeType(new PmParameter());
@@ -3079,7 +3099,9 @@ public class CommitteBackingBean extends
 			committeeMember.setRepresentativeType(null);
 		}
 	}
+	// #35320 - END
 
+	//35320 - START
 	/**
 	 * Validate username field is not blank
 	 */
@@ -3098,5 +3120,5 @@ public class CommitteBackingBean extends
 			searchUserAction();
 		}
 	}
-	// 35320 - committee maintenance - END
+	// #35320 - END
 }
