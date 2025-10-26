@@ -15957,4 +15957,21 @@ public class SmApplicationUtil {
 		return validSave;
 	}
      //#38991 -END
+	
+	// 39392 - START
+	/**
+	 * Display error if supplier has active DA 
+	 * (cancel registration / suspend registration / blacklist owner)
+	 * @param supplier
+	 * @return
+	 */
+	public static void hasValidDisciplinaryAction(SmSupplier supplier){
+		List<SmDisciplinaryAction> activeDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		if (SmApplicationUtil.hasCannotLoginDA(activeDA)){
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action", null));
+		}
+	}
+	// 39392 - END
+
 }
