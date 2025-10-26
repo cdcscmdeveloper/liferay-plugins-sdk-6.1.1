@@ -340,9 +340,11 @@ public class ViewApplHistoryBackingBean extends
 				//END 27951
 			}
 		} else {
+			
 			// 39392 - START
-			SmApplicationUtil.hasValidDisciplinaryAction(getManagedBean().getSmAppl().getSmSupplier());
+			SmApplicationUtil.checkOwnersDisciplinaryAction(getManagedBean().getSmAppl());
 			// 39392 - END
+			
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
 							.getSmAppl())) {

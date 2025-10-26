@@ -197,6 +197,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
+import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.AddressUtils;
@@ -15960,17 +15961,16 @@ public class SmApplicationUtil {
 	
 	// 39392 - START
 	/**
-	 * Display error if supplier has active DA 
-	 * (cancel registration / suspend registration / blacklist owner)
-	 * @param supplier
-	 * @return
+	 * Check Disciplinary Action for suspend reg, blacklisted owners/directors,
+	 * and cancel reg.
+	 * @param smAppl
 	 */
-	public static void hasValidDisciplinaryAction(SmSupplier supplier){
-		List<SmDisciplinaryAction> activeDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-		if (SmApplicationUtil.hasCannotLoginDA(activeDA)){
-			throw new EpException(SmCommonUtil.getMessage(
-					"lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action", null));
+	public static void checkOwnersDisciplinaryAction(SmAppl smAppl){
+		if (smAppl == null){
+			return;
 		}
+		
+		RegistrationBackingBean.checkBannedOwners(smAppl.getSmSupplier().getSmSupplierOwners());
 	}
 	// 39392 - END
 
