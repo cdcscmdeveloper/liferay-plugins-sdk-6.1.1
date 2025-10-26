@@ -235,7 +235,8 @@
 									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 									display="inline" disabled="true" readonlyInput="true" size="30"
 									showOn="button" yearRange="-99:+0"
-									maxdate="#{CommonConstants.CURRENT_DATE}" /></td>
+									maxdate="#{CommonConstants.CURRENT_DATE}" 
+									disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}"/></td>
 					 </tr>
 					 <tr>
 							<td class="tdTitle"><p:outputLabel
