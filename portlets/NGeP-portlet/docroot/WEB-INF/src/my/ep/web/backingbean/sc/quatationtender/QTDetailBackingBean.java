@@ -8306,6 +8306,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public String cancelQtDetails() {
 		debugLogger("cancelQtDetails");
 		IQTDetailSO detailSO;
+		
+		// #35320 - Start
+		this.getManagedBean().setAfterSF(false);
+		// #35320 - End				
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -8333,6 +8337,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				TabBean tabBean = new TabBean(null, null, qtApproval,
 						retrieveFinalizationCommitteeType());
 				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
+				
+				// #35320 - Start
+				if (isQTStatusGreaterThanOrEquals(scQt.getQtStatus().getStatusId(),
+						QTStatusConst.QT_SUPPLIER_FINALIZATION)) {
+					this.getManagedBean().setAfterSF(true);
+
+					ScQtApproval approval = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval();
+					List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
+					approverSettings.get(0).setCommitteeType(scQt.getFinalizationCommitte());
+					approverSettings.get(0).setPmUser(scQt.getFinalizationSecratery());
+				}// #35320 - End
 			} else {
              //9019 null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
                 List<ScQtRemark> remarks = null;
