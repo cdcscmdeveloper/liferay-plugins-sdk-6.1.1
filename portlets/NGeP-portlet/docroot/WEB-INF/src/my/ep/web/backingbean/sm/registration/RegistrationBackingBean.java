@@ -1315,7 +1315,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		 * null,this.getManagedBean().isCompanyValidWithSSM()); } } } }
 		 */
 		validateNewIC(smPersonnel, false);
-		checkBlacklistedOwners(smPersonnel.getIdentificationNo(), true); //#26238 - 39069, #39355
+		checkBlacklistedOwners(smPersonnel.getIdentificationNo(), false); //#26238 - 39069, #39355
 		RequestContext.getCurrentInstance()
 				.execute("firstUserTncDialog.show()");
 	}
@@ -6168,4 +6168,25 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	//#36718 END
+	
+	// 39392 - START
+	/**
+	 * Check Disciplinary Action for blacklisted owners/directors
+	 * @param suplierOwner
+	 */
+	public static void checkBannedOwners(List<SmSupplierOwner> suplierOwner){
+		
+		SmPersonBlacklist ban = new SmPersonBlacklist();
+
+		for(SmSupplierOwner owner : suplierOwner){
+			ban = SmServiceLookup.getBlacklistDirectorSO()
+					.retrieveValidBlacklist(owner.getIdentificationNo(), false)
+					.getPersonBlacklist();
+		}
+		
+		if(ban != null){
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
+		}
+	}
+	// 39392 - END
 }
