@@ -20,7 +20,8 @@ import my.ep.web.managedbean.report.sm.SmRevisitRptManagedBean;
 @ManagedBean(name = "smRevisitRptBB")
 @ViewScoped
 public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptManagedBean> {
-	private static final long serialVersionUID = 1L;
+	// 34031#note-71 : Issue 4
+	private static final long serialVersionUID = 5315921064723862293L;
 
 	/**
 	 * Constructor for the SmRevisitRptBackingBean class.
