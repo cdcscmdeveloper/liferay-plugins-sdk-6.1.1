@@ -235,8 +235,7 @@
 									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 									display="inline" disabled="true" readonlyInput="true" size="30"
 									showOn="button" yearRange="-99:+0"
-									maxdate="#{CommonConstants.CURRENT_DATE}" 
-									disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}"/></td>
+									maxdate="#{CommonConstants.CURRENT_DATE}" /></td>
 						</tr>
 						<tr>
 							<td class="tdTitle"><p:outputLabel
@@ -607,7 +606,8 @@
 								navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.estdate']}"
 								value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}"
 								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-								readonlyInput="true" size="30" showOn="button" yearRange="#{lbl['lbl.calendar.year.range']}" maxdate="#{CommonConstants.CURRENT_DATE}" />
+								readonlyInput="true" size="30" showOn="button" yearRange="#{lbl['lbl.calendar.year.range']}" maxdate="#{CommonConstants.CURRENT_DATE}" 
+								disabled="#{supplierDataMaintenanceBackingBean.managedBean.viewMode}"/>
 							<p:message id="estDateCalIdMsg" for="estDateCalId" display="icon" /></td>
 					</tr>
 		
