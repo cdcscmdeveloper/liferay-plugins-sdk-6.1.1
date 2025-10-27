@@ -38,7 +38,7 @@
 				value="#{tplSpecAnswer.userScore}"
 				required="false" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
-				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification}"
+				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null}"
 				disabled="#{evaluationBackingBean.isStatusAfterDemo()}">
 			<ui:remove><!-- 28784 - End --></ui:remove>
 				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
@@ -52,9 +52,9 @@
 			</p:inputText>
 			<ui:remove><!-- 28784 - Start --></ui:remove>
 			<h:outputText value="/"
-				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification}"></h:outputText>
+				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null}"></h:outputText>
 			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
-				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification}">
+				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null}">
 			<ui:remove><!-- 28784 - End --></ui:remove>
 				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
 				<f:convertNumber
