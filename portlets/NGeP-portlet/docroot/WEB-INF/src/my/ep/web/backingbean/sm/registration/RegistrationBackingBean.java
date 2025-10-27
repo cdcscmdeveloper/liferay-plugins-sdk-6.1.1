@@ -1315,7 +1315,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		 * null,this.getManagedBean().isCompanyValidWithSSM()); } } } }
 		 */
 		validateNewIC(smPersonnel, false);
-		checkBlacklistedOwners(smPersonnel.getIdentificationNo(), true); //#26238 - 39069, #39355
+		checkBlacklistedOwners(smPersonnel.getIdentificationNo(), false); //#26238 - 39069, #39355
 		RequestContext.getCurrentInstance()
 				.execute("firstUserTncDialog.show()");
 	}
