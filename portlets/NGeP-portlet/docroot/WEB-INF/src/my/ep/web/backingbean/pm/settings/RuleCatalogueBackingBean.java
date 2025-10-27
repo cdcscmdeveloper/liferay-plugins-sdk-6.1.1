@@ -966,11 +966,6 @@ public class RuleCatalogueBackingBean extends
 		} else {
 			configRuleType.getConfigRuleValues().remove(rowIndex.intValue());
 		}
-		/* START #35509 PM AUDIT */
-		if (Long.valueOf(selectedValueToDel.getRuleValueId()) != null && Long.valueOf(selectedValueToDel.getRuleValueId()) > 0) {
-			this.getManagedBean().getAuditDeletedSelectedRuleValueList().add(selectedValueToDel);
-		}
-		/* END #35509 AUDIT PM */
 	}
 
 	public void addMoreOrgAndItemFee() {
