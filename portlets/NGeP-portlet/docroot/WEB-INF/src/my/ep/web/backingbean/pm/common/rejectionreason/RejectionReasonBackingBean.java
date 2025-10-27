@@ -746,7 +746,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			processRestrSuppAccTypeAgency(); //#28962
 			
 			/************ AUDIT #28895-35509 *************/
-			/*AuditPMBackingBeanTemplate auTemplate = new AuditPMReasonMaintenanceBackingBean();
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMReasonMaintenanceBackingBean();
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 			PmReason selectedPmReason = this.getManagedBean().getSelectedReason();
@@ -754,7 +754,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON) && selectedPmReason.getReasonId() != null) {
 				PmReason oldPmReason = retrieveReasonObjById(selectedPmReason.getReasonId());
 				getManagedBean().setOldPmReason(oldPmReason);
-			}*/
+			}
 			/************ AUDIT #28895-35509 END *************/
 			if (this.getManagedBean().getSelectedReason().isBrandNew()) {
 				returnPage = createRejectReason(this.getManagedBean().getSelectedReason());
@@ -764,10 +764,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			log.info("saveRejectReason - End");
 
 			/************ AUDIT *************/
-			/*if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON)) {
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON)) {
 
 				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_REASON);
-			}*/
+			}
 			/************ AUDIT *************/
 
 		} catch (EpException e) {
