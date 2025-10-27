@@ -20,16 +20,14 @@ import my.ep.web.managedbean.report.sm.SmRevisitRptManagedBean;
 @ManagedBean(name = "smRevisitRptBB")
 @ViewScoped
 public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptManagedBean> {
-	// 34031#note-71 : Issue 4
-	private static final long serialVersionUID = 5315921064723862293L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor for the SmRevisitRptBackingBean class.
 	 */
 	public SmRevisitRptBackingBean() {
-		// 34031#note-71 : Issue 4
-		resetSearch(); 
 		this.getManagedBean().setSvoRoleCode(RoleCode.UPS_SVO.value());
+		resetSearch();
 	}
 
 	/**
@@ -55,12 +53,14 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	 * Resets the search parameters to their default values.
 	 */
 	public void resetSearch() {
-		this.getManagedBean().setZone(null);
-		this.getManagedBean().setRevisitOfficer(null);
-		this.getManagedBean().setSelectedOrgProfile(null);
-		Calendar fromVisitDate = Calendar.getInstance();
-		fromVisitDate.set(fromVisitDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
-		this.getManagedBean().setVisitDateFrom(fromVisitDate.getTime());
-		this.getManagedBean().setVisitDateTo(new Date());
+		// 34031#note-71 : Issue 4 - Start
+		getManagedBean().setZone(null);
+		getManagedBean().setRevisitOfficer(null);
+		getManagedBean().setSelectedOrgProfile(null);
+		Calendar fromVisitDate = Calendar.getInstance(); 
+		fromVisitDate.set(fromVisitDate.get(Calendar.YEAR), 00, 01, 0, 00, 0); 
+		getManagedBean().setVisitDateFrom(fromVisitDate.getTime());
+		getManagedBean().setVisitDateTo(new Date());
+		// 34031#note-71 : Issue 4 - End
 	}
 }

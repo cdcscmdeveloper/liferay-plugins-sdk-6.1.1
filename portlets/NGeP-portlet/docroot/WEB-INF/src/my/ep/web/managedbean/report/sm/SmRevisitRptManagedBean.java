@@ -10,8 +10,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 @ManagedBean(name = "smRevisitRptMB")
 @SessionScoped
 public class SmRevisitRptManagedBean extends SmReportManagedBean {
-	// 34031#note-71 : Issue 4
-	private static final long serialVersionUID = 8521515309229588396L;
+	private static final long serialVersionUID = 1L;
 
 	private String svoRoleCode;
 	private PmUser revisitOfficer;
