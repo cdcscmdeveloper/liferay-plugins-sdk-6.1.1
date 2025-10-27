@@ -3152,4 +3152,61 @@ public class TemplateSpecBackingBean extends
 		RequestContext.getCurrentInstance().execute("zoneQtyPopup.show()");
 	}
 	// #28784 -end-
+	
+	/**
+	 * Calculate the total amount and amount per year for all spec answer for each item.
+	 * 
+	 * @param templateSpecBean
+	 *            the TemplateSpecBean instance
+	 * @param isItemTypeService
+	 *            the item type service flag
+	 */
+	// FARID #21695 START (merge to prd by 38916)	
+	public void calcAllSpecAnswerTotalAmount(TemplateSpecBean templateSpecBean) {
+		
+		List<TplSpecAnswer> specAnswerList = templateSpecBean.getSpecAnswerList();
+			
+		if (specAnswerList != null) {
+			for (TplSpecAnswer specAnswer : specAnswerList) {
+				if (null != specAnswer) {
+					TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+					BigDecimal quantity = null;
+					
+					if (specAnswer.getTplSpecZoneQty() != null) {
+						quantity = specAnswer.getTplSpecZoneQty().getQty();
+					} else {
+						quantity = specQuestion.getClQuantity();
+					}
+					
+					BigDecimal totalPrice = TemplateSpecHelper.getInstance()
+							.calcTotalAmount(specQuestion, specAnswer.getRatePerUom(),
+									quantity);
+
+					if (totalPrice != null && templateSpecBean.getSpecMaster().getItemTypeCode().getParameterCode() == ParameterConst.ITEM_TYPE_SERVICE) {
+						TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+						BigDecimal amountPerYear = BigDecimal.valueOf(totalPrice
+								.doubleValue());
+						BigDecimal itemDurationMonth = specQuestion
+								.getClDurationMonth();
+
+						if (itemDurationMonth != null) {
+							amountPerYear = amountPerYear.divide(itemDurationMonth, 2, RoundingMode.HALF_UP);
+						} else {
+							BigDecimal durationMonth = specMaster.getDurationMonth();
+
+							if (durationMonth != null) {
+								amountPerYear = amountPerYear.divide(durationMonth, 2, RoundingMode.HALF_UP);
+							}
+						}
+
+						specAnswer.setAmountPerYear(amountPerYear.multiply(BigDecimal
+								.valueOf(12)));
+					}
+					specAnswer.setAnswerNumeric(totalPrice);
+				}
+			}
+		}
+		
+	}
+	// FARID #21695 END
 }
