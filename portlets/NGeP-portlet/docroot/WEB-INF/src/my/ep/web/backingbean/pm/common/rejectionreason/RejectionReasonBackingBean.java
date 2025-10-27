@@ -140,6 +140,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setSelectedTabIndex(0);
 		this.resetReasonSearchBean();
 		this.reasonCategoryChange(true, null);
+		this.resetAuditBean(); // 35509
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
@@ -320,6 +322,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setKumpPtjCodeName(null);
 		this.getManagedBean().setAgencyCodeName(null);
 		//#28962 - End
+		
+		this.resetAuditBean(); // 35509
+		
 		log.info("initialRejectReason - End");
 	}
 	
@@ -437,16 +442,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setAppTypeRestrictions(appTypeRestrictions);
 			this.getManagedBean().setComTypeRestrictions(comTypeRestrictions);
 			this.getManagedBean().setSuppTypeRestrictions(suppTypeRestrictions);
-			//#35509 - Start
-			this.getManagedBean().setAuditAddAppTypeRestrictions(null);
-			this.getManagedBean().setAuditAddComTypeRestrictions(null);
-			this.getManagedBean().setAuditAddSuppTypeRestrictions(null);
-			this.getManagedBean().setAuditAddPIDReasonList(null);
-			this.getManagedBean().setDeletePIDReasonList(null);
-			this.getManagedBean().setAuditDeleteAppRestrictions(null);
-			this.getManagedBean().setAuditDeleteComRestrictions(null);
-			this.getManagedBean().setAuditDeleteSuppRestrictions(null);
-			//#35509 - End
+			
 			
 			defaultTab();
 		}
@@ -1916,6 +1912,17 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				}
 			}
 		}
+	}
+	
+	private void resetAuditBean(){
+		this.getManagedBean().setAuditAddAppTypeRestrictions(null);
+		this.getManagedBean().setAuditAddComTypeRestrictions(null);
+		this.getManagedBean().setAuditAddSuppTypeRestrictions(null);
+		this.getManagedBean().setAuditAddPIDReasonList(null);
+		this.getManagedBean().setDeletePIDReasonList(null);
+		this.getManagedBean().setAuditDeleteAppRestrictions(null);
+		this.getManagedBean().setAuditDeleteComRestrictions(null);
+		this.getManagedBean().setAuditDeleteSuppRestrictions(null);
 	}
 	//35509 - END
 	

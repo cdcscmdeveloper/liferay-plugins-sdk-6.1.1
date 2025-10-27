@@ -1955,6 +1955,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private boolean zoneQtyHasZeroVal;//#38679
 	
+	//#35320 - Start
+	private boolean afterSF;
+	//#35320 - End
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12466,4 +12470,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
 	}
 	//#38679
+	
+	// #35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}// #35320 - End
 }
