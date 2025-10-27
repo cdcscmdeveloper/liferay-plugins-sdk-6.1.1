@@ -32,61 +32,92 @@
 
 	<p:panel id="fcappoint" header="#{lbl['lbl.sc.qt.approver.selection']}"
 		toggleable="true">
-		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.qt.approval.menu.instruction']}" escape="false" /><ui:remove>#21692</ui:remove>
-		<p:dataTable id="finalizationsecretaryid"
-			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			var="approverSettings">
-			<p:column headerText="#{lbl['lbl.sc.finalization.committee']}" width="30%">
-				<c:choose>
-					<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate and 
-							qTDetailBB.managedBean.selectedApprovalTabBean.tabType != ParameterConst.approvalCategoryProcurementBoard}">
-						<p:selectOneMenu id="fcApprovalId"
-							value="#{approverSettings.committeeType.parameterId}"
-							style="width:75%;margin-bottom: 5px;" disabled="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls.get(0).approvalType.parameterCode eq ParameterConst.approvalRequestExtendProposalValidityPeriod
-																				and qTDetailBB.managedBean.qt.contractType.parameterCode ne ParameterConst.contractTypeCentral}"><ui:remove>#21692</ui:remove>
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
-							<f:selectItems var="secretary"
-								value="#{fcaApprovalTab.fcTypes}"/>
-								
-							<p:ajax event="change" update="commTypes" process="@this"
-								listener="#{qTDetailBB.changePbSecretaryCommType(approverSettings)}"
-								partialSubmit="true" />
-						</p:selectOneMenu>
-					</c:when>
-					<c:otherwise>
+		<ui:remove>21692 - Start</ui:remove>
+		<c:if test="#{qTDetailBB.showEPVInstruction()}" >
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.menu.instruction']}" escape="false"/>
+		</c:if>
+		<ui:remove>21692 - End</ui:remove>
+
+		<ui:remove>#35320 - Start</ui:remove>
+		<c:choose>
+			<c:when test="#{qTDetailBB.managedBean.afterSF}">
+				<p:dataTable id="finalizationsecretaryid"
+					value="#{qTDetailBB.managedBean.qt}" var="scQt"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowIndexVar="index" editable="true" rowKey="#{scQt}">
+					<p:column headerText="#{lbl['lbl.sc.finalization.committee']}">						
+						#{qTDetailBB.getParameterDesc(scQt.finalizationCommitte,null)}					
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.secretary.name']}">
+						<h:panelGroup id="commType">							
+							#{scQt.finalizationSecratery.userName}						
+						</h:panelGroup>
+					</p:column>
+				</p:dataTable>
+			</c:when>
+			<c:otherwise>
+				<p:dataTable id="finalizationsecretaryid"
+					value="#{fcaApprovalTab.scQtApproval.approverSettings}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					var="approverSettings">
+					<p:column headerText="#{lbl['lbl.sc.finalization.committee']}"
+						width="30%">
+						<c:choose>
+							<c:when
+								test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate and 
+ 							qTDetailBB.managedBean.selectedApprovalTabBean.tabType != ParameterConst.approvalCategoryProcurementBoard}">
+								<p:selectOneMenu id="fcApprovalId"
+									value="#{approverSettings.committeeType.parameterId}"
+									style="width:75%;margin-bottom: 5px;"
+									disabled="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls.get(0).approvalType.parameterCode eq ParameterConst.approvalRequestExtendProposalValidityPeriod
+																				and qTDetailBB.managedBean.qt.contractType.parameterCode ne ParameterConst.contractTypeCentral}">
+									<ui:remove>#21692</ui:remove>
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+										itemValue="#{null}" />
+									<f:selectItems var="secretary"
+										value="#{fcaApprovalTab.fcTypes}" />
+
+									<p:ajax event="change" update="commTypes" process="@this"
+										listener="#{qTDetailBB.changePbSecretaryCommType(approverSettings)}"
+										partialSubmit="true" />
+								</p:selectOneMenu>
+							</c:when>
+							<c:otherwise>
 						#{qTDetailBB.getParameterDesc(approverSettings.committeeType,null)}
 					</c:otherwise>
-				</c:choose>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.secretary.name']}" width="70%">
-				<h:panelGroup id="commTypes">
-					<c:choose>
-						<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate}">
-							<p:selectOneMenu id="usersSecretaryId"
-								value="#{approverSettings.pmUser.userId}" disabled="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls.get(0).approvalType.parameterCode eq ParameterConst.approvalRequestExtendProposalValidityPeriod
-																						and qTDetailBB.managedBean.qt.contractType.parameterCode ne ParameterConst.contractTypeCentral}"
+						</c:choose>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.secretary.name']}" width="70%">
+						<h:panelGroup id="commTypes">
+							<c:choose>
+								<c:when
+									test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate}">
+									<p:selectOneMenu id="usersSecretaryId"
+										value="#{approverSettings.pmUser.userId}"
+										disabled="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls.get(0).approvalType.parameterCode eq ParameterConst.approvalRequestExtendProposalValidityPeriod
+ 																						and qTDetailBB.managedBean.qt.contractType.parameterCode ne ParameterConst.contractTypeCentral}">
 								style="width:90%;margin-bottom: 5px;"><ui:remove>#21692</ui:remove>
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-									itemValue="#{null}" />
-								<f:selectItems var="usersSecretary"
-									value="#{qTDetailBB.retrievePmUserSecratryDtl(approverSettings.committeeType.parameterCode)}"
-									itemLabel="#{usersSecretary.userName}"
-									itemValue="#{usersSecretary.userId}" />
-								<p:ajax event="change"
-									listener="#{qTDetailBB.updateUserIdToSettings}" process="@this"
-									partialSubmit="true" update="@this" />
-							</p:selectOneMenu>
-						</c:when>
-						<c:otherwise>
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+											itemValue="#{null}" />
+										<f:selectItems var="usersSecretary"
+											value="#{qTDetailBB.retrievePmUserSecratryDtl(approverSettings.committeeType.parameterCode)}"
+											itemLabel="#{usersSecretary.userName}"
+											itemValue="#{usersSecretary.userId}" />
+										<p:ajax event="change"
+											listener="#{qTDetailBB.updateUserIdToSettings}"
+											process="@this" partialSubmit="true" update="@this" />
+									</p:selectOneMenu>
+								</c:when>
+								<c:otherwise>
 							#{approverSettings.pmUser.userName}
 						</c:otherwise>
-					</c:choose>
-				</h:panelGroup>
-			</p:column>
-		</p:dataTable>
+							</c:choose>
+						</h:panelGroup>
+					</p:column>
+				</p:dataTable>
+			</c:otherwise>
+		</c:choose>
+		<ui:remove>#35320 - End</ui:remove>
 	</p:panel>
 
 	<ac:scRemarkAndAttachment

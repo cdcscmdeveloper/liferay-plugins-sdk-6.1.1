@@ -191,7 +191,7 @@
 							value="#{registrationBackingBean.managedBean.residentialCityLs}"
 							itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
 						<!-- #36718 - add ajax -->
-						<p:ajax event="change" update="conPostCodeMy" 
+						<p:ajax event="change" update="conPostCodeMy" process="pnlContactInfo" 
 							listener="#{registrationBackingBean.onSelectCity('residential')}" />
 					</p:selectOneMenu> <p:message id="cmbResCityMsg" for="cmbResCity" display="icon" /></td>
 			</tr>

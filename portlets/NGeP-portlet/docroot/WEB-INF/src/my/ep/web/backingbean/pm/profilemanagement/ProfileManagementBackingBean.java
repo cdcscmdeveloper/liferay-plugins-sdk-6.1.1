@@ -3258,10 +3258,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				/************START AUDIT #28895_35509 shaqimi 24072025*************/
 				if(getManagedBean().getSelectedUser().isBrandNew()){
 					user.setUserId(resDTO.getPmUser().getUserId());
+					getManagedBean().setPmUserOriginal(resDTO.getPmUser());
 				}
 				
 				if(getManagedBean().getSelectedUserOrg().isBrandNew()){
+					this.getManagedBean().setBrandNewUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
+					getManagedBean().setPmUserOrgOriginal(resDTO.getPmUser().getPmUserOrgs().get(0));
 				}
 				
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
@@ -3325,11 +3328,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					userRole.setUserRoleId(currentUserRole.getUserRoleId());
 				}
 				
-				for(PmAddressType addressType : this.getManagedBean().getNewAuditPmAddressTypes()){
-					String address = addressType.getPmAddress().getAddress1() + addressType.getPmAddress().getAddress2() + 
-							addressType.getPmAddress().getAddress3(); 
-					PmAddressType currentAddressType = pmAddressTypes.get(address);
-					addressType.setAddressTypeId(currentAddressType.getAddressTypeId());
+				if(this.getManagedBean().getNewAuditPmAddressTypes() != null){
+					for(PmAddressType addressType : this.getManagedBean().getNewAuditPmAddressTypes()){
+						String address = addressType.getPmAddress().getAddress1() + addressType.getPmAddress().getAddress2() + 
+								addressType.getPmAddress().getAddress3(); 
+						PmAddressType currentAddressType = pmAddressTypes.get(address);
+						addressType.setAddressTypeId(currentAddressType.getAddressTypeId());
+					}
 				}
 				
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
@@ -3349,6 +3354,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 
 			}
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

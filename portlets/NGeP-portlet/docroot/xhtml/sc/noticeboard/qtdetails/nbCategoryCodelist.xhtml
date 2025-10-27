@@ -30,7 +30,8 @@
 					<h:outputText value="#{scQtCategory.pmCategoryL1.categoryName}" />
 					<!-- #29732 Start -->
 					<p:spacer width="5" /> 
-					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL1.categoryL1Code,ParameterConst.categoryL1Code,scQtCategory.pmCategoryL1.categoryL1Id)}"
+					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL1.categoryL1Code,scQtCategory.pmCategoryL2.categoryL2Code,scQtCategory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL1Code,scQtCategory.pmCategoryL1.categoryL1Id,cateGory.qtCategoryId,
+					scQtCategory.pmCategoryL1.categoryName,scQtCategory.pmCategoryL1.categoryL1Code)}"
 						update="@form">
 						<p:graphicImage id="mainHisIcon"
 							value="/css/images/design/ico-view.png" />
@@ -44,9 +45,9 @@
 						style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
-							escape="false" />
+							escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}"/>
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL1.changedDate)}&#41;">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL1.changedDate)}&#41;" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
@@ -58,7 +59,8 @@
 					<h:outputText value="#{scQtCategory.pmCategoryL2.categoryName}" />
 					<!-- #29732 Start -->
 					<p:spacer width="5" /> 
-					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL2.categoryL2Code,ParameterConst.categoryL2Code,scQtCategory.pmCategoryL2.categoryL2Id)}"
+					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL1.categoryL1Code,scQtCategory.pmCategoryL2.categoryL2Code,scQtCategory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL2Code,scQtCategory.pmCategoryL2.categoryL2Id,cateGory.qtCategoryId,
+					scQtCategory.pmCategoryL2.categoryName,scQtCategory.pmCategoryL2.categoryL2Code)}"
 						update="@form">
 						<p:graphicImage id="subHisIcon"
 							value="/css/images/design/ico-view.png" />
@@ -72,9 +74,9 @@
 						style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
-							escape="false" />
+							escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}" />
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL2.changedDate)}&#41;">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL2.changedDate)}&#41;" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
@@ -86,7 +88,8 @@
 					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}" />
 					<!-- #29732 Start -->
 					<p:spacer width="5" />
-					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL3Code,scQtCategory.pmCategoryL3.categoryL3Id)}"
+					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL1.categoryL1Code,scQtCategory.pmCategoryL2.categoryL2Code,scQtCategory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL3Code,scQtCategory.pmCategoryL3.categoryL3Id,cateGory.qtCategoryId,
+					scQtCategory.pmCategoryL3.categoryName,scQtCategory.pmCategoryL3.categoryL3Code)}"
 						update="@form">
 						<p:graphicImage id="subDivHisIcon"
 							value="/css/images/design/ico-view.png" />
@@ -100,9 +103,9 @@
 						style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
-							escape="false" />
+							escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}"/>
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL3.changedDate)}&#41;">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL3.changedDate)}&#41;" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->

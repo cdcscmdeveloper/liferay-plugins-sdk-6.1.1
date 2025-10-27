@@ -232,11 +232,7 @@
 				</p:columnGroup>
 
 				<p:column style="width:25%;white-space: normal;">
-					<!-- #30447 start -->
-					<h:outputText value="#{noticeBoardBackingBean.supplierSalutation(bsvAttandance.icPassPort)}" />
-					<h:outputText value="&#160;" />
-					<!-- #30447 end -->
-					<h:outputText value="#{bsvAttandance.name}" />
+					<h:outputText value="#{bsvAttandance.salutation} #{bsvAttandance.name}" /> <ui:remove> #30447 </ui:remove>
 				</p:column>
 
 				<p:column style="width:20%;white-space: normal;">
