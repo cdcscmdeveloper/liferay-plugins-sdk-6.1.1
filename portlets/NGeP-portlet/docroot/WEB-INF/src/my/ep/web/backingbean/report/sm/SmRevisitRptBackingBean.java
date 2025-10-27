@@ -27,8 +27,8 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	 * Constructor for the SmRevisitRptBackingBean class.
 	 */
 	public SmRevisitRptBackingBean() {
-		resetSearch();
 		this.getManagedBean().setSvoRoleCode(RoleCode.UPS_SVO.value());
+		resetSearch();
 	}
 
 	/**
