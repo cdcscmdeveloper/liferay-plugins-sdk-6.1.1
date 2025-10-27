@@ -80,7 +80,6 @@ import my.ep.web.util.pm.helper.ReasonHelper;
 import org.apache.commons.collections.CollectionUtils; //#28962
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext; //#28962
 /**
  * Backing Bean for Rejection Reason
  * 
@@ -126,8 +125,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public static final int JUSTIFICATION = 1;
 	public static final int REJECTION_REASON = 2;
 	//#8411 - END
-	
-	private static final String AGENCY_POPUP_HIDE = "agencyPopup.hide();"; //#28962	
+
 	/**
 	 * Pre Loading
 	 */
@@ -2076,6 +2074,30 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * search agency list by Ministry, Kumpulan Ptj and Ptj
 	 */
 	public void searchOrganisation() {
+		
+		String ministry = getManagedBean().getMinistryCodeName();
+		String kumpPtj = getManagedBean().getKumpPtjCodeName();
+		String ptj = getManagedBean().getAgencyCodeName();
+		List<String> paramList = new ArrayList<>();
+		if (ministry != null && !ministry.trim().isEmpty() && ministry.trim().length() < 3) {
+			paramList.add(ResourceBundleUtils.getMessage("lbl.pm.reason.ministry",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		}
+
+		if (kumpPtj != null && !kumpPtj.trim().isEmpty() && kumpPtj.trim().length() < 3) {
+			paramList.add(ResourceBundleUtils.getMessage("lbl.pm.reason.kumpulan.ptj",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		}
+
+		if (ptj != null && !ptj.trim().isEmpty() && ptj.trim().length() < 3) {
+			paramList.add(ResourceBundleUtils.getMessage("lbl.pm.reason.ptj", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+		}
+		if (paramList != null && !paramList.isEmpty()) {
+			String joined = joinList(paramList, ", ");
+			throw new EpException(MessageConst.ERROR_770304, new String[] { joined });
+		}
+		
 		long start = System.currentTimeMillis();
 		loadAgency();
 		long end = System.currentTimeMillis();
@@ -2447,6 +2469,17 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				// no break (maintain original)
 			}
 		}
+	}
+	
+	private static String joinList(List<String> list, String delimiter) {
+	    StringBuilder sb = new StringBuilder();
+	    for (int i = 0; i < list.size(); i++) {
+	        sb.append(list.get(i));
+	        if (i < list.size() - 1) {
+	            sb.append(delimiter);
+	        }
+	    }
+	    return sb.toString();
 	}
 	//#28962 - End
 }
