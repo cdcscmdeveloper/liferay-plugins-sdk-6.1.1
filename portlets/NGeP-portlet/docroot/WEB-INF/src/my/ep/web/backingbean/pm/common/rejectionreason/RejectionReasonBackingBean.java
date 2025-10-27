@@ -2074,7 +2074,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * search agency list by Ministry, Kumpulan Ptj and Ptj
 	 */
 	public void searchOrganisation() {
-		
 		String ministry = getManagedBean().getMinistryCodeName();
 		String kumpPtj = getManagedBean().getKumpPtjCodeName();
 		String ptj = getManagedBean().getAgencyCodeName();
