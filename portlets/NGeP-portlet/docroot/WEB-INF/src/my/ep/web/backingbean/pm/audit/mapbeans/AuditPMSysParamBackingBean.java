@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -328,8 +329,8 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	 * @param roleCode
 	 */
 	public void yepProcessIfChanged(PmFeeExemption exemption, PmFeeExemption exemptionOld) {
-		boolean isEffDateChanged = !exemption.getEffDate().equals(exemptionOld.getEffDate());
-		boolean isExpDateChanged = !exemption.getExpDate().equals(exemptionOld.getExpDate());
+		boolean isEffDateChanged = !Objects.equals(exemption.getEffDate(), exemptionOld.getEffDate());
+		boolean isExpDateChanged = !Objects.equals(exemption.getExpDate(), exemptionOld.getExpDate());
 
 		if (isEffDateChanged || isExpDateChanged) {
 			yepProcessBasedOnParamCode(exemption, exemptionOld);
@@ -373,13 +374,15 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	 * @param lvlId
 	 */
 	public void yepProcessFeeExemption(PmFeeExemption exemption, PmFeeExemption exemptionOld, String lvlCode, BigInteger lvlId) {
-		if (exemption.getEffDate() != null && !exemption.getEffDate().equals(exemptionOld.getEffDate())) {
+		if (exemption.getEffDate() != null && !Objects.equals(exemption.getEffDate(), exemptionOld.getEffDate())) {
 			yepAddAuditDetail(exemption, lvlCode, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, 
-					simpleDateFormat.format(exemptionOld.getEffDate()), simpleDateFormat.format(exemption.getEffDate()), lvlId);
+					exemptionOld.getEffDate() != null ? simpleDateFormat.format(exemptionOld.getEffDate()) : "", 
+					simpleDateFormat.format(exemption.getEffDate()), lvlId);
 		}
-		if (exemption.getExpDate() != null && !exemption.getExpDate().equals(exemptionOld.getExpDate())) {
+		if (exemption.getExpDate() != null && !Objects.equals(exemption.getExpDate(), exemptionOld.getExpDate())) {
 			yepAddAuditDetail(exemption, lvlCode, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID, 
-					simpleDateFormat.format(exemptionOld.getExpDate()), simpleDateFormat.format(exemption.getExpDate()), lvlId);
+					exemptionOld.getExpDate() != null ? simpleDateFormat.format(exemptionOld.getExpDate()) : "", 
+					simpleDateFormat.format(exemption.getExpDate()), lvlId);
 		}
 	}
 
