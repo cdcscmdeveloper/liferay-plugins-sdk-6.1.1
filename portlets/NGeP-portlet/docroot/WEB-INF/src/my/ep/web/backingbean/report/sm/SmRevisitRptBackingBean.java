@@ -28,7 +28,7 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	 */
 	public SmRevisitRptBackingBean() {
 		// 34031#note-71 : Issue 4
-		resetSearch();
+		resetSearch(); 
 		this.getManagedBean().setSvoRoleCode(RoleCode.UPS_SVO.value());
 	}
 
