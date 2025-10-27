@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean.pm.taskassign;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,11 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -53,8 +52,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.pm.ProfileManagementStatusConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.sc.QTStatusConst; //#38680
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.SCProcessNameConst; //#38680
@@ -1459,12 +1458,7 @@ public class TaskReassignmentBackingBean extends
 											.getWorklistItem().size());
 							log.info("BPM total******"
 									+ responseDTO.getWorklistVO().getTotal());
-							/*
-							 * if(responseDTO.getWorklistVO().getWorklistItem()!=
-							 * null) { // markup data
-							 * markupWorklistItem(responseDTO
-							 * .getWorklistVO().getWorklistItem()); }
-							 */
+
 							resultBean.setTotalRecord(responseDTO
 									.getWorklistVO().getTotal());
 							resultBean.setResultList(responseDTO
@@ -2830,8 +2824,8 @@ public class TaskReassignmentBackingBean extends
 							SearchOperator.OPERATOR_NOT_IN.value(),
 								new ArrayList<Long>(Arrays.asList(userId,
 									getFacesScopes().getUserSessionBean()
-										.getUserId()))));			
-									
+										.getUserId()))));
+			
 			//#38680- Start
 			String role = roleList.toString().replace("[", "").replace("]", "")
 					.split(",")[0].trim();
@@ -2853,7 +2847,7 @@ public class TaskReassignmentBackingBean extends
 								DbValueConst.RECORD_STATUS_ACTIVE));
 			}
 			//#38680- End
-
+			
 			// Order by user name
 			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
 			
@@ -4700,7 +4694,7 @@ public class TaskReassignmentBackingBean extends
 		}
 	}
 	//7465, 29822 - end
-	
+
 	//#38680- Start
 	/**
 	 * Check Activity Name

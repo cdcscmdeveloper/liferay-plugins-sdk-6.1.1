@@ -175,7 +175,7 @@
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<p:menuitem id="meI3Com" value="#{lbl['lbl.btn.view']}"
+	                        	<p:menuitem id="meI3Com" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED eq scQt.qtStatus.statusId}"
 									icon="ui-icon-view" styleClass="commandLink_link"
