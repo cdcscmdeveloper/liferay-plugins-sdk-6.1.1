@@ -23846,7 +23846,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			
 			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, activeZone.getSpecZoneId().toString());
 		} else {
-			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, null);
+			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, "");
 		}
 
 		String scoreType = getManagedBean().getOfferPricePackage().getScoreType().toString();
@@ -23987,6 +23987,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getTechChecklistPreview(), false);
+		validatePrepareQtChecklist();
+		technicalCheckListPreview();
 	}
 
 	// #10141 End Vinod
@@ -24002,7 +24004,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @throws IOException
 	 */
 	public void downloadFinancialChecklistSummaryReport() throws IOException {
-		List<ScQtCheckList> scQtChecklistFin = this.getManagedBean().getTechChecklistPreview();
+		List<ScQtCheckList> scQtChecklistFin = this.getManagedBean().getFinChecklistPreview();
 		validatePrepareQtChecklist();
 
 		this.getManagedBean().setFinChecklistPreview(scQtChecklistFin);
@@ -24051,6 +24053,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getFinChecklistPreview(), false);
+		validatePrepareQtChecklist();
+		financialCheckListPreview();
 	}
 
 	// #10141 End Vinod
