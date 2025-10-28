@@ -1706,10 +1706,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setHasChanges(Boolean.FALSE);
 				getManagedBean().setFilteredUpdatedCommitteeMembers(new ArrayList<CtCommitteeMember>());
 				for(CtCommitteeMember newMember: getManagedBean().getUpdatedCommitteeMembers()) {
-					if(newMember.getUpdateType() != null) {
-						getManagedBean().setHasChanges(Boolean.TRUE);		
-						break;
+					//#35238 start
+					if (newMember.getMemberRole() != null
+							&& newMember.getMemberRole().getParameterCode() != null
+							&& newMember.getMemberRole().getParameterCode()
+									.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+						newMember.setAttended(true);
 					}
+					if(newMember.getUpdateType() != null) {
+						getManagedBean().setHasChanges(Boolean.TRUE);
+					}
+					//#35238 end
 				}
 				//#29549 start
 				sortCTCommitteeMemberRole(getManagedBean().getUpdatedCommitteeMembers());
@@ -8369,46 +8376,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//#29549 end
 		}
 		//29403 end
-		
-		//#29403 start
-		/**
-		 * The method used to get the parameter description by parameter.
-		 * with additional setting for secretary role.
-		 * Attendance is compulsory for secretary.
-		 * 
-		 * @param   index      the current record index (only used for secretary role)
-		 * @param   curCommitteeMember  the current committee member
-		 * @return  parameter description
-		 */
-		public String getParameterDescCommitteeByMember(CtCommitteeMember curCommitteeMember, int index) {
-			String strDescription = null;
-			PmParameter curParameter = null;
-			
-			if (curCommitteeMember.getMemberRoleId() != null){
-				curParameter = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId());
-			}else{
-				curParameter = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRole().getParameterId());
-			}
-			
-			if (curParameter != null 
-					&& curParameter.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-				curCommitteeMember.setAttended(true);
-				if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()) 
-					|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) { //#26688
-					getManagedBean().getUpdatedCommitteeMembers().remove(index);
-					getManagedBean().getUpdatedCommitteeMembers().add(index, curCommitteeMember);
-				}else {	
-					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().remove(index);
-					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(index, curCommitteeMember);
-				}
-				strDescription = ResourceBundleUtils.getMessage("lbl.ct.secretary", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-			} else {
-				strDescription = getParameterDesc(curParameter);
-			}
-			return strDescription;
-		}
-		//#29403 end
 		
 		/**
 		 * The method used to delete the selected meeting committee(s).
