@@ -2487,11 +2487,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	
 	private void validatePtjInput() {
 		String ptjCodeName = getManagedBean().getPtjCodeNameSearchValues();
-
 		boolean isInvalidCodeName = ptjCodeName != null && !ptjCodeName.isEmpty() && ptjCodeName.length() < 3;
 
 		if (isInvalidCodeName) {
-			log.info("isInvalidCode");
 			throw new EpException(MessageConst.ERROR_770304,  new String[]{ResourceBundleUtils.getMessage(
 					"lbl.pm.reason.ptj", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale())});
