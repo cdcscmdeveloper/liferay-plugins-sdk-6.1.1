@@ -3578,11 +3578,9 @@ public class NoticeBoardBackingBean extends
 	public String supplierSalutation(String identificationNo) {
 		String salutationName = StringUtils.EMPTY;
 		try {
-
 			IQTNoticeBoardSO noticeBoardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 			PmSalutation salutation = noticeBoardSO.retrieveSalutationByIdentificationNo(identificationNo);
-			
 			if (salutation != null) {
 				salutationName = salutation.getSalutationName();
 			}
