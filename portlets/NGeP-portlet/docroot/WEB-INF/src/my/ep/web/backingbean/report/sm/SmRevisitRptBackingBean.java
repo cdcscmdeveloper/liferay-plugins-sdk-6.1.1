@@ -12,6 +12,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SmRevisitRptManagedBean;
+//34031#note-71 : Issue 4
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author firdaus.omar 
@@ -53,14 +55,13 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	 * Resets the search parameters to their default values.
 	 */
 	public void resetSearch() {
-		// 34031#note-71 : Issue 4 - Start
-		getManagedBean().setZone(null);
-		getManagedBean().setRevisitOfficer(null);
-		getManagedBean().setSelectedOrgProfile(null);
-		Calendar fromVisitDate = Calendar.getInstance(); 
-		fromVisitDate.set(fromVisitDate.get(Calendar.YEAR), 00, 01, 0, 00, 0); 
-		getManagedBean().setVisitDateFrom(fromVisitDate.getTime());
-		getManagedBean().setVisitDateTo(new Date());
-		// 34031#note-71 : Issue 4 - End
+		// 34031#note-71 : Issue 4
+		this.getManagedBean().setZone(StringUtils.EMPTY);
+		this.getManagedBean().setRevisitOfficer(null);
+		this.getManagedBean().setSelectedOrgProfile(null);
+		Calendar fromVisitDate = Calendar.getInstance();
+		fromVisitDate.set(fromVisitDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
+		this.getManagedBean().setVisitDateFrom(fromVisitDate.getTime());
+		this.getManagedBean().setVisitDateTo(new Date());
 	}
 }
