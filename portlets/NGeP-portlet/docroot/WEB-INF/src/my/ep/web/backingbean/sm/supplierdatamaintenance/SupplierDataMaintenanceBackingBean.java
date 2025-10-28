@@ -400,6 +400,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		initSmRvHistory();
 		// #34031 End
+		getManagedBean().setViewMode(true); //#39231
 	}
 	
 	private void setFlagShowButtonSubmit(SmSupplier supplier, String mofStatus){
