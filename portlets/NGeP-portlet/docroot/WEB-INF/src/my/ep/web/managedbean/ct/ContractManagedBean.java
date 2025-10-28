@@ -145,8 +145,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> agencySelected;
 	
 	private boolean contractExpired;
-	private List<ScLoa> bondDetail;
 	// #24333 - Start
+	private List<ScLoa> bondDetail;
 	private boolean extendContract = false;
 	private boolean disableOriginalBond = false;
 	private BigDecimal originalOverallAmount;
@@ -211,6 +211,16 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankName;
 	private Long applID;
 	//End Fix - #33674
+	
+	//24333 - Start
+	private BigDecimal bondPercentage;
+	private BigDecimal totalBondAmt;
+	//24333 - End
+	
+	//32418 - Start
+	private int contractDaysPeriod;
+	//32418 - End
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1666,6 +1676,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
 
+	//#24333 - Start
 	public BigDecimal getOriginalOverallAmount() {
 		return originalOverallAmount;
 	}
@@ -1673,4 +1684,31 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setOriginalOverallAmount(BigDecimal originalOverallAmount) {
 		this.originalOverallAmount = originalOverallAmount;
 	}
+	
+	public BigDecimal getBondPercentage() {
+		return bondPercentage;
+	}
+
+	public void setBondPercentage(BigDecimal bondPercentage) {
+		this.bondPercentage = bondPercentage;
+	}
+	
+	public BigDecimal getTotalBondAmt() {
+		return totalBondAmt;
+	}
+
+	public void setTotalBondAmt(BigDecimal totalBondAmt) {
+		this.totalBondAmt = totalBondAmt;
+	}
+	//#24333 - End
+	
+	//32418 - Start
+	public int getContractDaysPeriod() {
+		return contractDaysPeriod;
+	}
+
+	public void setContractDaysPeriod(int contractDaysPeriod) {
+		this.contractDaysPeriod = contractDaysPeriod;
+	}
+	//32418 - End
 }

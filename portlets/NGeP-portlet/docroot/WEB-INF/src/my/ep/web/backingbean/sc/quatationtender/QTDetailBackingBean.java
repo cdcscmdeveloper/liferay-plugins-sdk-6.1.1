@@ -2542,6 +2542,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		// 28895 - 35500
 		quationTenderReqDTO.setDeletedCommitteeMembersAuditTrailList(this.getManagedBean()
 				.getToBeDelCommitteMemebers());
+		quationTenderReqDTO.setCommitteeMemberModifiedRoleAuditTrail(this.getManagedBean().getMapModifiedRole());//#35500 issue fix 4-9
 		
 		//20210325@asyrafhaziq_30518 - Start
 	    List <ScQtCommittee> scQtCommittees = getQtCommiteDtlsByQtId(scQt.getQtId());
@@ -3852,7 +3853,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						retrieveCommitteeAppointmentTabDtl(formCommitteeFlag, 
 								reformCommitteeFlag);
-						removeCommitteeActivityDetails(scQt);
+						removeCommitteeActivityDetails(scQt, scQtFinalization); // Bug #38975@Syazani 16/10/2025
 
 					} finally {
 						qtSuppFinalizationSO = null;
@@ -4316,6 +4317,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getToBeDelCommitteMemebers());
 				//#28895 - 35500 start
 				committeReqDTO.setNewScCommitteeMemberAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList()); 
+				committeReqDTO.setCommitteeMemberModifiedRoleAuditTrail(this.getManagedBean().getMapModifiedRole());//#35500 issue fix 4-9
 				committeReqDTO.setToBeRemovedCommitteeMemberAuditTrailList(this.getManagedBean()
 						.getDeletedScCommitteeMemberAuditTrailList());
 				//#28895 - 35500 end
@@ -8053,6 +8055,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// 25037 - end
 			//28895 - 35500 start
 			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmUserDeletedContactPersonList());
+			//#35500 fix issue 5 Start
+			quationTenderReqDTO.setModifiedDoaList(this.getManagedBean().getModifiedDoaList());
+			quationTenderReqDTO.setNewDoaList(this.getManagedBean().getNewDoaList());
+			//#35500 fix issue 5 End
 			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());
 			//28895 - 35500 end
 
@@ -10077,7 +10083,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_QUOTATION);
 			
-			if (isDeskOfficer() || isAuditor()) {
+			if (isDeskOfficer() || isAuditor() || isAdmin() || isApprover()) {//25791
 				qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
 			}	
 		}
@@ -10191,45 +10197,48 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	
-	private void removeCommitteeActivityDetails(ScQt scQt){
-		IQTMeetingSO meetingso=null;
-		try{
-		 meetingso = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTMeetingSO.class);
-		 List<String> committeeType=new ArrayList<String>();
-		 if(ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(scQt.getEvaluationType())){
-			 committeeType.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
-		 }else{
-			 committeeType.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE); 
-			 committeeType.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE); 
-			 committeeType.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE); 
-		 }
-		 for(String type:committeeType){
-		MeetingReqDTO activityReqDTo = new MeetingReqDTO();
-		activityReqDTo.setQtId(scQt.getQtId().longValue());
-		activityReqDTo.setCommitteType(type);
-		MeetingResDTO activityResDTo = meetingso
-				.retriveCommitteActivityDtls(activityReqDTo);
-		if (null != activityResDTo
-				&& !activityResDTo.getCommitteMembers().isEmpty()) {
-			MeetingReqDTO deleteActivityDao = new MeetingReqDTO();
-			List<ScQtCommitteeActivity> deleteActivityList = new ArrayList<ScQtCommitteeActivity>();
-			for (ScQtCommitteeActivity activity : activityResDTo
-					.getCommitteMembers()) {
-				if (!activity.isBrandNew()) {
-					// activity.setScCommitteeMember(null);
-					activity.setDeleted(true);
-					deleteActivityList.add(activity);
+	private void removeCommitteeActivityDetails(ScQt scQt, ScQtFinalization scQtFinalization) { // Bug #38975@Syazani 16/10/2025
+		IQTMeetingSO meetingso = null;
+		try {
+			meetingso = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTMeetingSO.class);
+			List<String> committeeType = new ArrayList<String>();
+			if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(scQt.getEvaluationType())) {
+				committeeType.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
+			} else {
+				// Bug #38975@Syazani 16/10/2025 -- Start
+				if (scQtFinalization.isReEvaluateCompReq()) {
+					committeeType.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+				}
+				if (scQtFinalization.isReEvaluateTechReq()) {
+					committeeType.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+				}
+				if (scQtFinalization.isReEvaluateFinReq()) {
+					committeeType.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
+				}
+				// Bug #38975@Syazani 16/10/2025 -- End
+			}
+			for (String type : committeeType) {
+				MeetingReqDTO activityReqDTo = new MeetingReqDTO();
+				activityReqDTo.setQtId(scQt.getQtId().longValue());
+				activityReqDTo.setCommitteType(type);
+				MeetingResDTO activityResDTo = meetingso.retriveCommitteActivityDtls(activityReqDTo);
+				if (null != activityResDTo && !activityResDTo.getCommitteMembers().isEmpty()) {
+					MeetingReqDTO deleteActivityDao = new MeetingReqDTO();
+					List<ScQtCommitteeActivity> deleteActivityList = new ArrayList<ScQtCommitteeActivity>();
+					for (ScQtCommitteeActivity activity : activityResDTo.getCommitteMembers()) {
+						if (!activity.isBrandNew()) {
+							// activity.setScCommitteeMember(null);
+							activity.setDeleted(true);
+							deleteActivityList.add(activity);
+						}
+					}
+					deleteActivityDao.setDeletedCommitteeActivityMembersList(deleteActivityList);
+					meetingso.deleteCommitteeActivityDtls(deleteActivityDao);
 				}
 			}
-			deleteActivityDao
-					.setDeletedCommitteeActivityMembersList(deleteActivityList);
-			meetingso.deleteCommitteeActivityDtls(deleteActivityDao);
-		}
-		}
-		}finally{
-			meetingso=null;
+		} finally {
+			meetingso = null;
 		}
 	}
 	
@@ -10500,7 +10509,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
 		if (scQt != null && scQt.getQtStatus() != null && scQt.getQtStatus().getStatusId() != null &&
 				ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION.equals(docType) &&
-				(isQTMaintenanceScreen() || isQTSearchScreen())) {
+				(isQTMaintenanceScreen() || isQTSearchScreen() || isQtTechSupportSearchScreen())) {//25791
 			isAllowQTViewSupplierFinalization = true;
 		}		
 		
@@ -10895,8 +10904,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		debugLogger("backToPrevious");
 		
 		// 25791-start
-		if (ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean()
-				.getResultDocType())) {
+		if (getManagedSearchBeanDocumentTypeIsBidding()) {
 			getManagedBean().setViewOriginalUrl(QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW);
 		}
 		// 25791-end
@@ -13545,7 +13553,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION,
 				QTStatusConst.QT_PENDING_LOI, QTStatusConst.QT_PENDING_LOA, QTStatusConst.QT_AWARDED,
 				QTStatusConst.QT_CLOSED, QTStatusConst.QT_CONSOLIDATION_REPORT,
-				QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER, QTStatusConst.QT_RE_FINALIZATION);
+				QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER,
+				QTStatusConst.QT_RE_EVALUATION, QTStatusConst.QT_RE_FINALIZATION);
 
 		for (int i = 0; i < validPeriodExts.size(); i++) {
 			if (validPeriodExts.get(i).longValue() == currentStatusId)
@@ -14160,9 +14169,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 			BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
 
 			constructBiddingSearchBean(qtnTenderSearchBean, searchBean);
-			// Order by created date
+			
+			// No Bidding group by QT No -38930 & 25791 -start
+			searchBean.getSortColumns()
+					.add(new SearchOrderBean(SourcingConstants.BIDDING_DOC_NO,
+							false));
 			searchBean.getSortColumns().add(
-					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_START_DATE, false));
+					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_NUMBER,
+							false));
+			// No Bidding group by QT No -38930 & 25791 -end
+	
 			if(isDeskOfficer() || isApprover()){
 				biddingReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				if(isDeskOfficer()){
@@ -14611,6 +14627,20 @@ public void retrieveDemoQtDetails(Long qtId) {
 	
   	}
   	//#29472 - end
+	
+	//#21692 - Start
+	/**
+	 * Cannot directly use in html due to unknown issue,
+	 * so done it through backing bean
+	 * 
+	 * @return TRUE if status LESS than Pending Recommendation
+	 */
+	public boolean showEPVInstruction() {
+		boolean isShow = isQTStatusGreaterThan(this.getManagedBean().getQt().getQtStatus().getStatusId(),
+				QTStatusConst.QT_CONSOLIDATION_REPORT);
+		return !isShow;
+	}
+	//#21692 - End
 
 
 }

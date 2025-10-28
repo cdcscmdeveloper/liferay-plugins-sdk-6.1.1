@@ -1378,6 +1378,9 @@ public class SpecificationBackingBean extends
 		case 0:
 
 			retriveSpecdetails(this.getManagedBean().getQt().getQtId());
+			// #39062 Start Vinod 23/09/2025
+			updateEstimatedAmount();
+			// #39062 End Vinod 23/09/2025
 			break;
 		case 1:
 			retriveSupplierQualificationCriteria("SC");
@@ -1877,30 +1880,9 @@ public class SpecificationBackingBean extends
 				templateSpecBackingbean
 						.updateItemWeightageReq(templateSpecBean);
 
-			} else {
-				//#21695 fix panel disable weightage 27/1/2022 start
-				if (this.getManagedBean().getQt().isPartial() == true){
-					this.getManagedBean().setSpecItemWeightageRequired(true);
-					if(this.getManagedBean().getTemplateSpecBean() != null){
-						if(this.getManagedBean().getTemplateSpecBean().getSpecMaster() != null){
-							this.getManagedBean().getTemplateSpecBean().getSpecMaster().setWeightageReq(false);
-							this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
-							if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null){
-								for(TplSpecQuestion specQuestWeightage : this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
-									if(specQuestWeightage!=null){
-										specQuestWeightage.setWeightageReq(false);
-										this.getManagedBean().setSpecItemWeightageRequired(true);
-									}
-								}
-							}
-							
-						}
-					}
-				}else{
-				this.getManagedBean().setSpecItemWeightageRequired(false);
-				}
-				//#21695 fix panel disable weightage 27/1/2022 end
-			}
+			} 
+			// #38679 remove (no longer needed because requirement has changed)
+
 			templateSpecBean.setSpecMaster(specMaster);
 			if (this.getManagedBean().getQt().isZonal()
 					&& this.getManagedBean().getQt().getQtType()
@@ -2400,6 +2382,7 @@ public class SpecificationBackingBean extends
 				// 37813,35384 remove coding.
 				techWeightageSum();
 				techScoreSum();
+				checkhaszeroquantity(); //#38679
 				
 //#28948 Start - remove this (fixed in #21695)			
 				//#25635 danial 11/3/2020
@@ -12579,6 +12562,11 @@ public class SpecificationBackingBean extends
 	 * @return navigate to acknowledgement page.
 	 */
 	public void specCommitteBpmTask(String action) {
+		// #39062 Start Vinod 23/09/2025
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			updateEstimatedAmount();
+		}
+		// #39062 End Vinod 23/09/2025
 // #29732 Start - reOpen Fix
 		if (!this.getManagedBean().getQt().isPanel() && (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
@@ -12604,16 +12592,7 @@ public class SpecificationBackingBean extends
 			}
 		}
 // #29732 End - reOpen Fix
-		
-//		#36678 related to #35061 start
-		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
-		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
 
-		if (!this.getManagedBean().getQt().isPanel() && null != intendedPrice && intendedPrice.compareTo(indPriceThreshold) <= 0 
-				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt().getJustificationProcValue().isEmpty())) {
-				throw new EpException(MessageConst.ERROR_760560);
-		}
-//		#36678 related to #35061 end
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -13981,6 +13960,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 
 			//1873 - start - note 97
 			SpecificationResDTO resDTO  = new SpecificationResDTO(); 
@@ -14857,6 +14837,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			// code if alredy checklist exist need to remove existing finalcialspec
+			reqDTO.setDocCategory(specType);	// Bug #38548@Syazani 08/08/2025
 	
 			/*
 			 * IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
@@ -15019,25 +15000,8 @@ public class SpecificationBackingBean extends
 	            if(issample && SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)){// 11104-Reendose794
 				sampleDetailsPendingTemplateSpec();
 			   }// 11104-Reendose794
-	          //#36678 start
-				boolean isPanel = scQt.isPanel();
-	    		BigDecimal currentIndPrice = this.getManagedBean().getQt().getEstimatedAmount();
-	    		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
-				if ((!isPanel) && currentIndPrice != null && indPriceThreshold != null
-						&& (currentIndPrice.compareTo(indPriceThreshold) <= 0)) {
-					// BugBug #35061 - asyrafhaziq
-					// set message
-					String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE, new String[] { String
-							.valueOf(indPriceThreshold).trim() });
-					// SONARQUBE QT 2023 - haziq
-					this.getManagedBean().setMsgConfirmBelowIndi(msg.trim());
 
-					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
-
-				} else {
-					return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
-				}
-				//#36678 end
+				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 			return null;
 		// Bug #33661@Syazani 12/04/2023 -- Start
@@ -15270,25 +15234,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setIndex(-1);
 			this.getManagedBean().setAutoUpdate(true);
 			
-			// #21695 farid, if partial set weightage to false and disable, always set to direct scoring		
-						if (this.getManagedBean().getQt().isPartial() == true){
-							this.getManagedBean().setSpecItemWeightageRequired(true);
-							if(this.getManagedBean().getTemplateSpecBean() != null){
-								if(this.getManagedBean().getTemplateSpecBean().getSpecMaster() != null){
-									this.getManagedBean().getTemplateSpecBean().getSpecMaster().setWeightageReq(false);
-									this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
-									if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null){
-										for(TplSpecQuestion specQuestWeightage : this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
-											if(specQuestWeightage!=null){
-												specQuestWeightage.setWeightageReq(false);
-											}
-										}
-									}
-									
-								}
-							}
-						}
-			//END #21695	
+			// #38679 remove (no longer needed coz requirement has changed)
 			
 			templateSpecSO = null;
 			RequestContext.getCurrentInstance().execute(
@@ -17504,7 +17450,9 @@ public class SpecificationBackingBean extends
 		// code change
 		IQTSpecSO specSo = getSpecSO();
 		SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
+
 		specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
+		specReqDTOCatChange.getScQt().setScQtCategorys(this.getManagedBean().getQtCategoryList());
 		specSo.validateSupplierQulificationInfoCatChange(specReqDTOCatChange);
 		String changedCatCodeList = checkCatCodeChange();
 		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
@@ -17613,7 +17561,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
 		// 29732 -end-
-		
+		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);//#29732 added spec maintenance status pending approval having issue data has already been removed
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
@@ -23060,18 +23008,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 	// 11104 -end-
-	
-	public String redirectSpecComMainYes() {
-		this.getManagedBean().setFieldProcurementJustification(true);
-		return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
-	}
 
-	public String redirectSpecComMainNo() {
-		this.getManagedBean().setFieldProcurementJustification(false);
-		return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
-	}
-	//#36678 related to #35061 end
-	
 	// 11104 -start-
 	/**
 	 * set Sample details index to list after save.
@@ -23134,4 +23071,34 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	}
 	
+	// #39062 Start Vinod 23/09/2025
+	/**
+	 * This method is to update Estimated Amount when the amount is updated.
+	 * 
+	 * @param
+	 * 
+	 */
+	private void updateEstimatedAmount() {
+		ScQt scQt = this.getManagedBean().getQt();
+		SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+		estimatedReqDTo.setQtId(scQt.getQtId());
+
+		IQTSpecSO specSO = getSpecSO();
+		SpecificationResDTO resTO = specSO.calCulateTemplateSpecEstimations(estimatedReqDTo);
+
+		if (null != resTO && null != resTO.getTotalSpecEstimatedAmount()) {
+			scQt.setEstimatedAmount(resTO.getTotalSpecEstimatedAmount().setScale(2, QTConstants.QT_ROUNDING_MODE));
+		}
+	}
+	// #39062 End Vinod 23/09/2025
+	
+	// #38679
+	public void checkhaszeroquantity() {
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		this.getManagedBean().setZoneQtyHasZeroVal(templateSpecSO.validateQuantityItem(this.getManagedBean().getQt().getQtId()));	
+	}
+	// #38679
 }

@@ -5841,9 +5841,21 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear().intValue());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setApplId(scQtProposalChecklist.getScQtProposal().getSupplierApplId()); //Bug #30980
+			reqDTO.setComExpClientType("F"); //Bug #38267 
 
 			ProposalResDTO sdto = proposalSO.getCompanyExperience(reqDTO);
 			List<SmCompanyExperience> suppExpList = sdto.getCompExperienceList();
+			//Bug #38267 start
+			if (null != scQtProposalChecklist.getProposalScore() && !scQtProposalChecklist.getProposalScore().isEmpty()){
+				ScQtProposalScore propScore = scQtProposalChecklist.getProposalScore().get(0);
+				if (propScore.getCriteriaValue().compareTo(BigDecimal.valueOf(suppExpList.size())) != 0) {
+					//Query without F filter
+					reqDTO.setComExpClientType(null);
+					sdto = proposalSO.getCompanyExperience(reqDTO);
+					suppExpList = sdto.getCompExperienceList();
+				}
+			}
+			//Bug #38267 end
 			this.getManagedBean().setSupplierExperienceList(suppExpList);
 			this.getManagedBean().setSuppExpSize(suppExpList.size());
 			
@@ -5917,22 +5929,44 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		
 	}
 	
-	//#25089@hatta - start
-		public void onTabChange(TabChangeEvent event){
-			if(event.getTab().getId().equals("tab1")){
-				try {
-					Thread.sleep(500);
-					RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+	// #25089@hatta - start
+	public void onTabChange(TabChangeEvent event) {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (qtStatus != null
+				&& !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus
+						.getStatusId())) {
+			return;
+		}
+		// #38852 End 12/08/2025 Vinod
+		if (event.getTab().getId().equals("tab1")) {
+			try {
+				Thread.sleep(500);
+				RequestContext.getCurrentInstance().execute(
+						"popUpInfoDlg.show()");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
-		
-		public void dafaultPopUpSupplierInfo(){
-		   RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+	}
+
+	public void dafaultPopUpSupplierInfo() {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (qtStatus != null
+				&& !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus
+						.getStatusId())) {
+			return;
 		}
-	//#25089@hatta - end
+		// #38852 End 12/08/2025 Vinod
+		RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+	}
+
+	// #25089@hatta - end
 		
 
 		//#21695 farid	start display tree node

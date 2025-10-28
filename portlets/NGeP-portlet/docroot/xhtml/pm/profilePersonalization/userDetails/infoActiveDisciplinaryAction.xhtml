@@ -36,7 +36,17 @@
 			word-wrap: break-word;
 		}
 	</style>
-	
+	<!-- #26186 start -->
+	<script> 
+	    Liferay.on('amendmentAckSupplierFA', function(event) {
+			const ctAcknowledge = event.ackSupplierFA;
+			if(ctAcknowledge){
+		        const messageInput = document.getElementById('ctMessage');
+		    	messageInput.remove();
+			}
+	    });
+	</script>
+	<!-- #26186 end -->
 		<p:blockUI block=":form" widgetVar="blockWidgetDA">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -72,6 +82,15 @@
 					</td>
 				</tr>
 		</table>
+		<!-- 26186 start -->
+		<div id="ctMessage">
+			<ui:fragment rendered="#{not empty profilePersonalizationBackingBean.managedBean.ctSupplierMsgNonDA}">
+				<ui:include src="infoActiveCt.xhtml" />
+			</ui:fragment>
+		</div>
+		<!-- 26186 end -->
+ 
+ 
 		<!-- 30842 -->
 		<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" smSupplier="#{profilePersonalizationBackingBean.managedBean.smSupplier}" mofView="#{viewSuppProfileBackingBean.managedBean.mofSupplier}"
 		btnView="#{viewSuppProfileBackingBean.managedBean.disableDownloadButtonDAHistory}" smAppl="#{profilePersonalizationBackingBean.managedBean.smAppl}" />

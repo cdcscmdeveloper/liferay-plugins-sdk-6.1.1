@@ -50,26 +50,37 @@ public class DisciplinaryActionRest {
 			//replace recalling or retrieve data that cause other data include in next retrieve data
 			//that occur error data has been update from last read.
 			//27426 : Disciplinary Action - start 
+			SupplierDataMaintenanceResDTO resDTO = null;
 			
-			//NO 1 : find data with end date less than current date to release DA
-			SupplierDataMaintenanceResDTO resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction(false);
-			releaseDA(resDTO.getSmDisciplinaryActions());
-			
-			//NO 2: find data pending DA, (data with active txn will update DA after complete all txn)
-			resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction();
-			updatePendingDA(resDTO.getSmDisciplinaryActions());
-			
+			// 39302 - START
+			// START : Update flag pending Disciplinary Action for start and end date today.
+			SupplierDataMaintenanceResDTO resDTOPending = SmServiceLookup.getSupplierDataMaintenanceSO().retrievePendingTodayStartEndDisciplinaryAction();
+			updatePendingFlag(resDTOPending.getSmDisciplinaryActions());
+			// 39302 - END
+						
+			//change to no 1
 			//28798: Disciplinary Action - start - 26238 - reopen
 			//NO 3 : find data pending Cancel Registration or Blacklist Owner / Director of Company 
 			//and get all active for cancel registration and blacklist
 			resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveBlacklistCancelDisciplinaryAction();
 			updatePendingBlacklistAndCancel(resDTO.getSmDisciplinaryActions());
 			
+			//change to no 2
 			//31100 start - find data pending suspend register
 			//NO 4 : find data pending suspend register , update pending txn for DA suspend and release if DA suspend expired
 			resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction(true);
 			//26238 : Disciplinary Action -32710- end -
 			updatePendingSuspend(resDTO.getSmDisciplinaryActions());
+			
+			//NO 1 : find data with end date less than current date to release DA
+			resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction(false);
+			releaseDA(resDTO.getSmDisciplinaryActions());
+			
+			//NO 2: find data pending DA, (data with active txn will update DA after complete all txn)
+			resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction();
+			updatePendingDA(resDTO.getSmDisciplinaryActions());
+			
+			
 			
 			log.info("UpdateDisciplinaryActionJob New Function After For");
 			return Response.status(200).entity("success calling process disciplinary action !!").build();
@@ -80,6 +91,20 @@ public class DisciplinaryActionRest {
 			log.info("after close ejb for UpdateDisciplinaryActionJob");
 		}
 	}
+	
+	// 39302 - START
+	private void updatePendingFlag(List<SmDisciplinaryAction> daList) {
+		if (EntityHelper.isCollectionEmpty(daList)){
+			return;
+		}
+		
+		for (SmDisciplinaryAction disc : daList) {
+			if(disc != null){
+				 SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingTodayStartEndDisciplinaryAction(disc);
+			}										
+		}
+	}
+	// 39302 - END
 	
 	private void releaseDA(List<SmDisciplinaryAction> daList){
 		if (EntityHelper.isCollectionEmpty(daList)){
@@ -138,50 +163,64 @@ public class DisciplinaryActionRest {
 		if (EntityHelper.isCollectionEmpty(daList)){
 			return;
 		}
-		Date today = new Date(); 
-		for(SmDisciplinaryAction da: daList){
-			log.info("updateBCDAList. supplier id=============="+da.getSmSupplier().getSupplierId()); 
-			if(da.getSmSupplier() == null){
-				continue;
-			}
+		
+		try {
+			DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date today = new Date();
+			Date todayWithZeroTime = formatter.parse(formatter.format(today));
 
-			if(da.getStartDate().compareTo(today) <= 0){
-				if(da.isPendingBlacklist() || da.isPendingCancel()){
-					da.getSmSupplier();
-					da.getSmSupplier().getSmAppl();
-							
-					UserReqDTO reqDTO2 = new UserReqDTO();
-					reqDTO2.setUserId(da.getChangedBy());
-					UserResDTO resDTO1 = SmServiceLookup.getUserSO().retrieveUserByUserId(reqDTO2);
-					PmUser user =  resDTO1.getPmUser();
-							
-					UserReqDTO reqDTO3 = new UserReqDTO();
-					reqDTO3.setUserIds(new ArrayList<Long>());
-					reqDTO3.getUserIds().add(user.getUserId());
-					List<PmUserRole> userRoles = SmServiceLookup.getUserSO().retrieveUserRoleListByUserIds(reqDTO3).getUserRoleList();
-							
-					 SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(da, user, userRoles);
-					
-					//31100,30878 start
-					Long disciplinaryActionId = da.getDisciplinaryActionId();
-				
-					if(disciplinaryActionId != null){
-						SmDisciplinaryAction smDA =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
-						if( (smDA.isBlacklistOwner() || smDA.isCancelRegistration()) 
-								&& (!smDA.isPendingCancel() && !smDA.isPendingBlacklist() )){
-							smDA.getSmSupplier();
-							 SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(smDA);	
-						}
-					}
-					//31100,30878 end
+			for(SmDisciplinaryAction da: daList){
+				log.info("updateBCDAList. supplier id=============="+da.getSmSupplier().getSupplierId()); 
+				if(da.getSmSupplier() == null){
+					continue;
 				}
-				//29597 : Disciplinary Action - 26238
-				if( (da.isBlacklistOwner() || da.isCancelRegistration()) && 
-						(!da.isPendingCancel() && !da.isPendingBlacklist() )){
-					da.getSmSupplier();
-					 SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(da);	
-				}	
+	
+				if(da.getStartDate().compareTo(todayWithZeroTime) <= 0){
+					if(da.isPendingBlacklist() || da.isPendingCancel()){
+						da.getSmSupplier();
+						da.getSmSupplier().getSmAppl();
+								
+						UserReqDTO reqDTO2 = new UserReqDTO();
+						reqDTO2.setUserId(da.getChangedBy());
+						UserResDTO resDTO1 = SmServiceLookup.getUserSO().retrieveUserByUserId(reqDTO2);
+						PmUser user =  resDTO1.getPmUser();
+								
+						UserReqDTO reqDTO3 = new UserReqDTO();
+						reqDTO3.setUserIds(new ArrayList<Long>());
+						reqDTO3.getUserIds().add(user.getUserId());
+						List<PmUserRole> userRoles = SmServiceLookup.getUserSO().retrieveUserRoleListByUserIds(reqDTO3).getUserRoleList();
+								
+						 SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(da, user, userRoles);
+						
+						//31100,30878 start
+						Long disciplinaryActionId = da.getDisciplinaryActionId();
+					
+						if(disciplinaryActionId != null){
+							SmDisciplinaryAction smDA =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryActionId);
+							if( (smDA.isBlacklistOwner() || smDA.isCancelRegistration()) 
+									&& (!smDA.isPendingCancel() && !smDA.isPendingBlacklist() )){
+								smDA.getSmSupplier();
+								 SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(smDA);	
+							}
+						}
+						//31100,30878 end
+					}
+					//29597 : Disciplinary Action - 26238
+					if( (da.isBlacklistOwner() || da.isCancelRegistration()) && 
+							(!da.isPendingCancel() && !da.isPendingBlacklist() )){
+						da.getSmSupplier();
+						
+						// 39104 - START
+						if (da.getStartDate().compareTo(todayWithZeroTime) == 0 && da.isBlacklistOwner()){
+							da.setFutureImposed(true);
+						}
+						// 39104 - END
+						 SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(da);	
+					}	
+				}
 			}
+		} catch (Exception ex) {
+			log.error("UpdateDisciplinaryActionJob Error="+ex);
 		}
 	}
 	
@@ -251,7 +290,7 @@ public class DisciplinaryActionRest {
 
 							//26238 - 32558 - 32710 -  rollback code is for imposed suspen when supplier finish pending txn
 							if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
-								if(completedPendingSmDa.getStartDate().compareTo(today) == 0){
+								if(formatter.format(completedPendingSmDa.getStartDate()).compareTo(formatter.format(today)) == 0){
 									completedPendingSmDa.setFutureImposed(true);
 								} else {
 									completedPendingSmDa.setFutureImposed(false);
@@ -271,5 +310,5 @@ public class DisciplinaryActionRest {
 			}
 			//26238
 		}
-	}
-}
+	} 
+} 
