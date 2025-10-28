@@ -154,6 +154,7 @@ import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -15398,4 +15399,45 @@ public class SmApplicationUtil {
 		}
 	}
 	// #37784- END
+	//#38991 -START
+	/**
+	* Validate sm company experience info before saving the application.
+	* 
+	* @param validSave
+	*            - boolean
+	* @param managedBean
+	*            - SmApplicationManagedBean object
+	* @param currentTab
+	*            - int current tab
+	* @return true, if successful
+	*/			
+	public static boolean validateComExpProjectBeforeSave(boolean validSave,
+			SmApplicationManagedBean managedBean, int currentTab){
+		boolean validCompExperience = true;
+		StringBuilder sbCompExperience = new StringBuilder();
+		sbCompExperience.append("<br/>");
+		int x = 0;
+		SmAppl appl = managedBean.getSmAppl();
+		
+		for (SmCompanyExperience compExperience : appl.getSmCompanyExperiences()){
+			if (compExperience.getClientType() == null) {
+				validCompExperience = false;
+				sbCompExperience.append(++x + ". ");
+				sbCompExperience.append(compExperience.getTitle());
+				sbCompExperience.append("<br/>");
+				}
+			}
+		if (!validCompExperience){
+			if(managedBean.isSupplierUser()){
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+					}
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.project.done.for.not.completed",
+						new String[] { sbCompExperience.toString() }));
+				}		
+			}
+		appl = null;
+		return validSave;
+		}
+	//#38991 -END	
 }

@@ -143,6 +143,7 @@
 		header="#{lbl['lbl.sm.assocCmpny.assocDiaHdr']}" id="asDisp"
 		widgetVar="assocDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
+		<p:ajax event="close" listener="#{backingBean.cancelAssocCompanyFuntion}" resetValues="true"/> <!-- #38991 -->
 		
 		<p:outputPanel layout="block" id="assocBlockPanel">
 			<p:messages id="suppAssocCompMessage" showSummary="false"
