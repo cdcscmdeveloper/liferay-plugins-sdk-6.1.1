@@ -12,8 +12,6 @@ import my.ep.constants.CommonConstants;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SmRevisitRptManagedBean;
-//34031#note-71 : Issue 4
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author firdaus.omar 
@@ -29,7 +27,6 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	 */
 	public SmRevisitRptBackingBean() {
 		this.getManagedBean().setSvoRoleCode(RoleCode.UPS_SVO.value());
-		resetSearch();
 	}
 
 	/**
@@ -55,8 +52,7 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	 * Resets the search parameters to their default values.
 	 */
 	public void resetSearch() {
-		// 34031#note-71 : Issue 4
-		this.getManagedBean().setZone(StringUtils.EMPTY);
+		this.getManagedBean().setZone(null);
 		this.getManagedBean().setRevisitOfficer(null);
 		this.getManagedBean().setSelectedOrgProfile(null);
 		Calendar fromVisitDate = Calendar.getInstance();
