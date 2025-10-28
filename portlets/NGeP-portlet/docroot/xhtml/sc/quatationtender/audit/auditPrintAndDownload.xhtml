@@ -5,8 +5,10 @@
     xmlns:p="http://primefaces.org/ui"
     xmlns:ac="http://ac.my/jsf/composite/cc"
 	>
-
-	 <p:panel id="auditPanel" header="#{lbl['lbl.audit.panel.view']}" toggleable="true" >
+	 
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+	 <p:panel header="Audit Panel" toggleable="true" toggleSpeed="500" widgetVar="auditPanel"
+         style="margin-bottom:10px;" >
 	 	<!-- Print & Download buttons -->
             <div style="text-align: right; margin-bottom: 10px;">
                 <p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
