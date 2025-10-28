@@ -2186,8 +2186,15 @@ if (CollectionUtils.isNotEmpty(
 		}
 		// 25037 - end - note 284
 
-		this.getManagedBean().setCurrentCommitteeType(
-				this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
+		// #35320 - Set QCA, QCB to QQC - Start
+		PmParameter committeeType = qtCommittee.getScCommittee().getCommitteeType();
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType.getParameterCode())
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType.getParameterCode())) {
+			committeeType.setParameterCode(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+		}
+		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(committeeType));
+		// #35320 - End
+				
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 		boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
 				QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
@@ -2442,11 +2449,15 @@ if (CollectionUtils.isNotEmpty(
 			this.roleChangedListener(member);
 			return;
 		}
+	
+		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
+		String changedRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, changedRolePmParameter.getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		String previousRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
+				SourcingConstants.MY_LOCALE);
 		
-		Long changedRoleId = member.getMemberRoleId();		
-		Long previousRoleId = member.getMemberRole().getParameterId() != null ? member.getMemberRole().getParameterId() : null;
-		String changedRole = getRoleString(changedRoleId);
-		String previousRole = getRoleString(previousRoleId);
 		
 		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
 				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
@@ -2476,26 +2487,6 @@ if (CollectionUtils.isNotEmpty(
 		}
 		
 		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
-	}
-	
-	/**
-	 * #35500 issue fix 4-9
-	 * Method to get the role name for audit trail
-	 * @param roleId
-	 * @return
-	 */
-	public String getRoleString(Long roleId){
-		String roleName = null;
-		if(roleId != null){
-			if(roleId == 380){
-				roleName = "Member";
-			}else if(roleId == 379){
-				roleName = "Secretary";
-			}else if(roleId == 378){
-				roleName = "Chairperson";
-			}
-		}
-		return roleName;
 	}
 	
 	/**
