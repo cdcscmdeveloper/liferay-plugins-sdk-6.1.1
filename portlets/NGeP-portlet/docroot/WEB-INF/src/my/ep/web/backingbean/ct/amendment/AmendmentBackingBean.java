@@ -699,6 +699,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			if (taskId == null) {
 				ConstructTabSideMenu();
+				
+				// #24336 - Start
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+					handleContractValueTypeChange();
+					handleNewAmtEffDate();
+				}
+				// #24336 - End
 
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 						&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
@@ -2899,18 +2906,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			// #24336 - Start
-			// Validation for Reduction of Contract Amount (submit)
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
+				// Validation for Reduction of Contract Amount (submit)
 				validateReductionAmount();
+				
+				// Empty@Null validation for new amount effective date (submit)
+				validateNewAmtEffDate();
 			}
 			// #24336 - End
 			
 		}
 		
 		// #24336 - Start
-		// Validation for Reduction of Contract Amount (save)
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)  && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
+			// Validation for Reduction of Contract Amount (save)
 			validateReductionAmount();
+			
+			// Empty@Null validation for new amount effective date (save)
+			validateNewAmtEffDate();
 		}
 		// #24336 - End
 
@@ -4337,10 +4350,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
 		}
 		
-		//#24336 - Start
-		updateNewAmtEffDate(contractAmount.setScale(2, RoundingMode.HALF_UP));
-		//#24336 - End
-		
 		return contractAmount;
 	}
 	// End - #29589
@@ -5752,6 +5761,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount() == null) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 		}
+		handleNewAmtEffDate();
 	}
 
 	/**
@@ -10123,6 +10133,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getReductionAmt() == null) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);
 		}
+		handleNewAmtEffDate();
 	}
 	
 	/**
@@ -10159,18 +10170,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return new contract amount effective date
 	 * @param newCtAmount
 	 */
-	public void updateNewAmtEffDate(BigDecimal newCtAmount) {
-		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
-		Date newAmtEffDate;
+	public void handleNewAmtEffDate() {
 		
-		if (ctAmount != null) {
-		    ctAmount = ctAmount.setScale(2, RoundingMode.HALF_UP);
-		}
+		BigDecimal newOverallCtAmount = newOverallContractAmount().setScale(2, RoundingMode.HALF_UP);
+		Date newAmtEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewAmtEffDate();
 		
 		// new overall contract amount is different from overall contact amount
-		if(newCtAmount != null && !newCtAmount.equals(ctAmount)){
+		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
 			
-			newAmtEffDate = new Date();
+			if(newAmtEffDate == null){
+				newAmtEffDate = new Date();
+			}
 			
 			// Enable date input
 			ctBackingBean.getManagedBean().setDisableNewCtAmountEffDate(false);
@@ -10184,6 +10194,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().setDisableNewCtAmountEffDate(true);
 		}
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewAmtEffDate(newAmtEffDate);
+	}
+	
+	private boolean isNewOverallCtAmountDifferent(BigDecimal newOverallCtAmount) {
+		BigDecimal currentCtAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+		if (currentCtAmount != null) {
+			currentCtAmount = currentCtAmount.setScale(2, RoundingMode.HALF_UP);
+		}
+	    return newOverallCtAmount != null && !newOverallCtAmount.equals(currentCtAmount);
 	}
 	
 	/**
@@ -10252,6 +10270,41 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				throw new EpException(MessageConst.ERROR_750092);
 			}
 		}
+	}
+	
+	private void validateNewAmtEffDate(){
+		boolean isDisableNewCtAmountEffDate = ctBackingBean.getManagedBean().isDisableNewCtAmountEffDate();
+		if (!isDisableNewCtAmountEffDate && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewAmtEffDate() == null) {
+
+			getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			
+			throw new EpException(MessageConst.ERROR_100061, 
+					new String[]{ResourceBundleUtils.getMessage(ContractConst.NEW_AMOUNT_EFFECTIVE_DATE_MENU_LABEL, 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+	}
+	
+	/**
+	 * The method used to set default value of New Sales Tax/Service Tax Amount
+	 * when is input is null
+	 */
+	public void changeStaxValue() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() == null) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+		}
+		handleNewAmtEffDate();
+	}
+	
+	/**
+	 * The method used to set default value of New GST Amount
+	 * when is input is null
+	 */
+	public void changeGstValue() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() == null) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+		}
+		handleNewAmtEffDate();
 	}
 	//#24336 - End
 	
