@@ -96,10 +96,10 @@
 						<p:ajax event="toggleSelect" update="dtOrgProfileRR,@([id$=crOkbtn])" process="@this" partialSubmit="true" />
 
 						<p:column selectionMode="multiple" style="width:2%;" />
-						<p:column headerText="#{lbl['lbl.pm.organisation.orgCode']}" style="width :15%">
+						<p:column headerText="#{lbl['lbl.pm.org.ptjCode']}" style="width :15%">
 							<h:outputText maxlength="22" value="#{orgProfile.pmOrgValidity.orgCode}" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.pm.organisation.orgName']}" style="width :60%">
+						<p:column headerText="#{lbl['lbl.pm.org.ptjName']}" style="width :60%">
 							<h:outputText maxlength="255"
 								style="white-space: normal; word-wrap: break-word;"
 								value="#{orgProfile.pmOrgValidity.orgName}" />
