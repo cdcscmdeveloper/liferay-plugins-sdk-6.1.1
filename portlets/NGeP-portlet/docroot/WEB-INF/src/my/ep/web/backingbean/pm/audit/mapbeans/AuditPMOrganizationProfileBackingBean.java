@@ -8,6 +8,8 @@ import java.util.Map;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -22,6 +24,7 @@ import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
@@ -189,7 +192,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				detailObj(AuditConst.PM_AUD_OPM_TELNO_FIELDLABELCODE, EMPTY_STRING, 
 						pmAddress.getPhoneCountry() + pmAddress.getPhoneArea() + pmAddress.getPhoneNo());
 				
-				if(pmAddress.getFaxNo() != null){
+				if(pmAddress.getFaxNo() != null && !pmAddress.getFaxNo().isEmpty()){
 					detailObj(AuditConst.PM_AUD_OPM_FAXNO_FIELDLABELCODE, EMPTY_STRING, 
 							pmAddress.getFaxCountry() + pmAddress.getFaxArea() + pmAddress.getFaxNo());
 				}
@@ -576,16 +579,21 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	private void setGroupOrgType() {
 		docId = managedBean.getNewProfileId() != null ? managedBean.getNewProfileId() : orgProfile.getOrgProfileId();
 		
+		String oldAuthType = ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.ORG_AUTH_TYPE, oldOrgProfile.getGroupOrgType(), 
+				SourcingConstants.MY_LOCALE);
+		String authType = ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.ORG_AUTH_TYPE, orgProfile.getGroupOrgType(), 
+				SourcingConstants.MY_LOCALE);
+		
 		if (orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() == null) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, null, orgProfile.getGroupOrgType());
+			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, null, authType);
 		} else if (orgProfile.getGroupOrgType() == null && oldOrgProfile.getGroupOrgType() != null) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldOrgProfile.getGroupOrgType(), null);
+			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldAuthType, null);
 		} else if ((orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() != null) &&
 				!orgProfile.getGroupOrgType().equals(oldOrgProfile.getGroupOrgType())) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldOrgProfile.getGroupOrgType(), orgProfile.getGroupOrgType());
+			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldAuthType, authType);
 		}
 	}
 
