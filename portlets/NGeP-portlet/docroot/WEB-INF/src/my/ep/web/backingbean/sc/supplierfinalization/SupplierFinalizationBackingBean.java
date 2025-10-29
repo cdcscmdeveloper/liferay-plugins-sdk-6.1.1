@@ -7059,10 +7059,12 @@ public class SupplierFinalizationBackingBean extends
 							SmSupplier supplier = recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier();
 							boolean isAwardedOrShortlisted = (isAward && recommendedBean.isAwarded())
 									|| (!isAward && recommendedBean.isShortlisted());
-							if (isAwardedOrShortlisted && !this.disabledQTProcess(supplier)) {
+							boolean disabledQtProcess = this.disabledQTProcess(supplier)
+									&& !this.isCurrentlyAwarded(supplier.getSupplierId(), itemId, specZoneId);
+							if (isAwardedOrShortlisted && !disabledQtProcess) {
 								item.getSelectedSuppliers().put(recommendedBean.getScQtProposal().getSupplierNo(),
 										supplier);
-							} 
+							}
 							// 26247 - end
 						}
 					}
@@ -8877,7 +8879,7 @@ public class SupplierFinalizationBackingBean extends
 							// 26247, 31128, #32699 - Start.
 							SmSupplier supplier = recommendationBean.getScQtProposal().getScQtSupplier()
 									.getSmSupplier();
-							boolean disabledSupplier = disabledQTProcess(supplier);
+							boolean disabledSupplier = disabledQTProcess(supplier) && !isCurrentlyAwarded(supplier.getSupplierId(), selectedItemId, zoneId);
 							if (!disabledSupplier) {
 								if (recommendationBean.isAwarded()) {
 									getManagedBean().setRecommendedSupplier(qualSupplier);
@@ -8940,6 +8942,38 @@ public class SupplierFinalizationBackingBean extends
 			return resultBean;
 		}
 	}
+	
+	// 26247 - start
+	private boolean isCurrentlyAwarded(Long supplierId, Long requestItemId, Long specZoneId) {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+
+		if (scQtFinalization != null && CollectionUtils.isEmpty(scQtFinalization.getScQtRecommends())) {
+			return false;
+		}
+		for (ScQtRecommend qtRecommend : scQtFinalization.getScQtRecommends()) {
+			Long recommendSpecZoneId = qtRecommend.getTplSpecZoneDtl() != null ? qtRecommend.getTplSpecZoneDtl()
+					.getSpecZoneId() : 0L;
+			Long recommendRequestItemId = qtRecommend.getRequestItem() != null ? qtRecommend.getRequestItem()
+					.getRequestNoteItemId() : 0L;
+			boolean isValidZone = specZoneId == 0L || specZoneId.equals(recommendSpecZoneId);
+			boolean isValidItem = requestItemId == 0L || requestItemId.equals(recommendRequestItemId);
+
+			if (isValidZone && isValidItem && CollectionUtils.isNotEmpty(qtRecommend.getRecommendDtls())) {
+				for (ScQtRecommendDtl recommendDtl : qtRecommend.getRecommendDtls()) {
+					if (supplierId.equals(recommendDtl.getSupplier().getSupplierId())) {
+						boolean loiAwarded = BooleanUtils.isTrue(recommendDtl.getLoiAwarded())
+								&& null == recommendDtl.getLoaAwarded();
+						boolean loaAwarded = BooleanUtils.isTrue(recommendDtl.getLoaAwarded());
+						return loiAwarded || loaAwarded;
+					}
+
+				}
+			}
+		}
+		return false;
+	}
+
+	// 26247 - end
 	
 	private List<QtEvaluationResultDtlBean> getCachedSuppliersFromMap(Long zoneId, Long itemId) {
 		log.info("getCachedSuppliersFromMap");
@@ -9030,8 +9064,11 @@ public class SupplierFinalizationBackingBean extends
 
 			for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
 				SmSupplier supplier = recommendDtl.getSupplier();
+				boolean loiAwarded = BooleanUtils.isTrue(recommendDtl.getLoiAwarded()) && null == recommendDtl.getLoaAwarded();
+				boolean loaAwarded = BooleanUtils.isTrue(recommendDtl.getLoaAwarded());
+
 				if (recommendDtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)
-						&& this.disabledQTProcess(supplier)) {
+						&& this.disabledQTProcess(supplier) && !(loiAwarded || loaAwarded)) {
 					recommendDtl.setRecordStatus(false);
 					recommendDtl.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 				}
