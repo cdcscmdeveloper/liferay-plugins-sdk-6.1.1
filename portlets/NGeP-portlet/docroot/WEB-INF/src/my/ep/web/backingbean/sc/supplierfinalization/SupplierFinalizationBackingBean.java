@@ -9188,32 +9188,37 @@ return	remarksNotFound;
 	private boolean isCurrentlyAwarded(Long supplierId, Long requestItemId, Long specZoneId) {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 
-		if (scQtFinalization != null && CollectionUtils.isEmpty(scQtFinalization.getScQtRecommends())) {
+		if (scQtFinalization == null || CollectionUtils.isEmpty(scQtFinalization.getScQtRecommends())) {
 			return false;
 		}
 		for (ScQtRecommend qtRecommend : scQtFinalization.getScQtRecommends()) {
-			Long recommendSpecZoneId = qtRecommend.getTplSpecZoneDtl() != null ? qtRecommend.getTplSpecZoneDtl()
-					.getSpecZoneId() : 0L;
-			Long recommendRequestItemId = qtRecommend.getRequestItem() != null ? qtRecommend.getRequestItem()
-					.getRequestNoteItemId() : 0L;
-			boolean isValidZone = specZoneId == 0L || specZoneId.equals(recommendSpecZoneId);
-			boolean isValidItem = requestItemId == 0L || requestItemId.equals(recommendRequestItemId);
-
-			if (isValidZone && isValidItem && CollectionUtils.isNotEmpty(qtRecommend.getRecommendDtls())) {
-				for (ScQtRecommendDtl recommendDtl : qtRecommend.getRecommendDtls()) {
-					if (supplierId.equals(recommendDtl.getSupplier().getSupplierId())) {
-						boolean loiAwarded = BooleanUtils.isTrue(recommendDtl.getLoiAwarded())
-								&& null == recommendDtl.getLoaAwarded();
-						boolean loaAwarded = BooleanUtils.isTrue(recommendDtl.getLoaAwarded());
-						return loiAwarded || loaAwarded;
-					}
-
+			if (!isValidItem(qtRecommend, specZoneId, requestItemId)) {
+				break;
+			}
+			for (ScQtRecommendDtl recommendDtl : qtRecommend.getRecommendDtls()) {
+				if (supplierId.equals(recommendDtl.getSupplier().getSupplierId())) {
+					boolean loiAwarded = BooleanUtils.isTrue(recommendDtl.getLoiAwarded())
+							&& null == recommendDtl.getLoaAwarded();
+					boolean loaAwarded = BooleanUtils.isTrue(recommendDtl.getLoaAwarded());
+					return loiAwarded || loaAwarded;
 				}
+
 			}
 		}
 		return false;
 	}
+	// 26247 - end
 
+	// 26247 - start
+	private boolean isValidItem(ScQtRecommend qtRecommend, Long specZoneId, Long requestItemId) {
+		Long recommendSpecZoneId = qtRecommend.getTplSpecZoneDtl() != null ? qtRecommend.getTplSpecZoneDtl()
+				.getSpecZoneId() : 0L;
+		Long recommendRequestItemId = qtRecommend.getRequestItem() != null ? qtRecommend.getRequestItem()
+				.getRequestNoteItemId() : 0L;
+		boolean isValidZone = specZoneId == 0L || specZoneId.equals(recommendSpecZoneId);
+		boolean isValidItem = requestItemId == 0L || requestItemId.equals(recommendRequestItemId);
+		return isValidZone && isValidItem && CollectionUtils.isNotEmpty(qtRecommend.getRecommendDtls());
+	}
 	// 26247 - end
 	
 	private List<QtEvaluationResultDtlBean> getCachedSuppliersFromMap(Long zoneId, Long itemId) {
