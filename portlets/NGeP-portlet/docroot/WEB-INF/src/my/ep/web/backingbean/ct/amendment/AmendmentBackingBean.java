@@ -5497,7 +5497,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		// Validate max days (must be < 28)
 		if (extendDaysPeriod >= ContractConst.VALUE_OF_28) {
-			amendment.setExtendDaysPeriod(ContractConst.VALUE_OF_27);
+			amendment.setExtendDaysPeriod(ContractConst.VALUE_OF_0);
 			throw new EpException(MessageConst.ERROR_750074);
 		}
 		
