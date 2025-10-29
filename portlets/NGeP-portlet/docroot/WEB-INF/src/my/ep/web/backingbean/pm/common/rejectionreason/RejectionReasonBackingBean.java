@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale; //#28962
 import java.util.Map;
 import java.util.Set;
 
@@ -80,7 +81,6 @@ import my.ep.web.util.pm.helper.ReasonHelper;
 import org.apache.commons.collections.CollectionUtils; //#28962
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext; //#28962
 /**
  * Backing Bean for Rejection Reason
  * 
@@ -126,8 +126,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public static final int JUSTIFICATION = 1;
 	public static final int REJECTION_REASON = 2;
 	//#8411 - END
-	
-	private static final String AGENCY_POPUP_HIDE = "agencyPopup.hide();"; //#28962	
+
 	/**
 	 * Pre Loading
 	 */
@@ -140,6 +139,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setSelectedTabIndex(0);
 		this.resetReasonSearchBean();
 		this.reasonCategoryChange(true, null);
+		this.resetAuditBean(); // 35509
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
@@ -320,6 +321,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setKumpPtjCodeName(null);
 		this.getManagedBean().setAgencyCodeName(null);
 		//#28962 - End
+		
+		this.resetAuditBean(); // 35509
+		
 		log.info("initialRejectReason - End");
 	}
 	
@@ -437,16 +441,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setAppTypeRestrictions(appTypeRestrictions);
 			this.getManagedBean().setComTypeRestrictions(comTypeRestrictions);
 			this.getManagedBean().setSuppTypeRestrictions(suppTypeRestrictions);
-			//#35509 - Start
-			this.getManagedBean().setAuditAddAppTypeRestrictions(null);
-			this.getManagedBean().setAuditAddComTypeRestrictions(null);
-			this.getManagedBean().setAuditAddSuppTypeRestrictions(null);
-			this.getManagedBean().setAuditAddPIDReasonList(null);
-			this.getManagedBean().setDeletePIDReasonList(null);
-			this.getManagedBean().setAuditDeleteAppRestrictions(null);
-			this.getManagedBean().setAuditDeleteComRestrictions(null);
-			this.getManagedBean().setAuditDeleteSuppRestrictions(null);
-			//#35509 - End
+			
 			
 			defaultTab();
 		}
@@ -1917,6 +1912,17 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 		}
 	}
+	
+	private void resetAuditBean(){
+		this.getManagedBean().setAuditAddAppTypeRestrictions(null);
+		this.getManagedBean().setAuditAddComTypeRestrictions(null);
+		this.getManagedBean().setAuditAddSuppTypeRestrictions(null);
+		this.getManagedBean().setAuditAddPIDReasonList(null);
+		this.getManagedBean().setDeletePIDReasonList(null);
+		this.getManagedBean().setAuditDeleteAppRestrictions(null);
+		this.getManagedBean().setAuditDeleteComRestrictions(null);
+		this.getManagedBean().setAuditDeleteSuppRestrictions(null);
+	}
 	//35509 - END
 	
 	//#28962 - Start
@@ -2004,6 +2010,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			reqDTO.setJabatanId(getManagedBean().getJabatanProfileId());
 		}
 		
+		validatePtjInput();	
 		ISearchBean<PmOrgProfile> searchBeanData = getOrgProfileSearchBeanData();
 		
 		IOrgProfileSO orgProfileSO = BusinessDelegate
@@ -2069,6 +2076,19 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * search agency list by Ministry, Kumpulan Ptj and Ptj
 	 */
 	public void searchOrganisation() {
+		List<String> paramList = new ArrayList<>();
+		FacesScopes scopes = new FacesScopes();
+		Locale locale = scopes.getUserLocale();
+
+		validateMinLength(getManagedBean().getMinistryCodeName(), "lbl.pm.reason.ministry", paramList, locale);
+		validateMinLength(getManagedBean().getKumpPtjCodeName(), "lbl.pm.reason.kumpulan.ptj", paramList, locale);
+		validateMinLength(getManagedBean().getAgencyCodeName(), "lbl.pm.reason.ptj", paramList, locale);
+
+		if (!paramList.isEmpty()) {
+			String org = joinList(paramList, ", ");
+			throw new EpException(MessageConst.ERROR_770304, new String[] { org });
+		}
+		
 		long start = System.currentTimeMillis();
 		loadAgency();
 		long end = System.currentTimeMillis();
@@ -2205,12 +2225,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 	/**
 	 * Add new agency values
+	 * @param selectedAllAgency
 	 */
 	public void addAgency(boolean selectedAllAgency) {
 		log.info("addAgency ");
 		long start = System.currentTimeMillis();
 		
-		List<PmOrgProfile> selected = null;
+		List<PmOrgProfile> selected;
 		
 		//add all agency..
 		if (selectedAllAgency && CollectionUtils.isNotEmpty(getManagedBean().getPtjList())) {
@@ -2441,5 +2462,39 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 		}
 	}
+	
+	private static String joinList(List<String> list, String delimiter) {
+	    StringBuilder sb = new StringBuilder();
+	    for (int i = 0; i < list.size(); i++) {
+	        sb.append(list.get(i));
+	        if (i < list.size() - 1) {
+	            sb.append(delimiter);
+	        }
+	    }
+	    return sb.toString();
+	}
+	
+	private void validateMinLength(String value, String labelKey, List<String> paramList, Locale locale) {
+		if (value == null)
+			return;
+
+		String trimmed = value.trim();
+		if (!trimmed.isEmpty() && trimmed.length() < 3) {
+			String msg = ResourceBundleUtils.getMessage(labelKey, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+			paramList.add(msg);
+		}
+	}
+	
+	private void validatePtjInput() {
+		String ptjCodeName = getManagedBean().getPtjCodeNameSearchValues();
+		boolean isInvalidCodeName = ptjCodeName != null && !ptjCodeName.isEmpty() && ptjCodeName.length() < 3;
+
+		if (isInvalidCodeName) {
+			throw new EpException(MessageConst.ERROR_770304,  new String[]{ResourceBundleUtils.getMessage(
+					"lbl.pm.reason.ptj", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+		}
+	}
+
 	//#28962 - End
 }
