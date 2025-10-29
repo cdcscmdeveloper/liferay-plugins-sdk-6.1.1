@@ -2308,7 +2308,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			this.getManagedBean().setUpdateCatInPm(true);
 
 		}else{
-			if(null == categoryList){
+			if(null == categoryList){ //list from qt
 				for(ScQtCategory currentCategoryList : categoryListQt){
 					
 					if(null != catCodeL1OldDesc && !catCodeL1OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL1Name())||
@@ -2319,7 +2319,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 					
 				}
 			}else{
-				for(PmRemarkCategory currentCategoryList : categoryList){
+				for(PmRemarkCategory currentCategoryList : categoryList){ //list from pm, at qt screen, list PM only available when adding category code
 					
 					if(null != catCodeL1OldDesc && catCodeL1OldDesc.equalsIgnoreCase(currentCategoryList.getOldDescription())||
 							null != catCodeL2OldDesc && catCodeL2OldDesc.equalsIgnoreCase(currentCategoryList.getOldDescription()) ||
