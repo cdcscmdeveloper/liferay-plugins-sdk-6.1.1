@@ -908,29 +908,25 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
     private void populateItemDescPopup(CmItem item) {
         CommonUtils common = new CommonUtils();
         CodificationBackingBean cdbb = new CodificationBackingBean();
-
-        String familyTitle = item.getCmUnspsc().getUnspscTitle() + " " +
-                             item.getCmType().getTypeName() + " " +
-                             item.getCmBrand().getBrandName() + " " +
-                             item.getCmMeasurement().getMeasurementName() + " " +
-                             item.getCmColor().getColorName();
-
-        String segmentTitle = item.getCmType().getTypeName() + " " +
-                              item.getCmBrand().getBrandName() + " " +
-                              item.getCmMeasurement().getMeasurementName() + " " +
-                              item.getCmColor().getColorName();
+        
+        String segmentTitle = common.removeItemNameNA(item.getCmType().getTypeName()) + " " +
+        		common.removeItemNameNA(item.getCmBrand().getBrandName()) + " " +
+        		common.removeItemNameNA(item.getCmMeasurement().getMeasurementName()) + " " +
+        		common.removeItemNameNA(item.getCmColor().getColorName());
 
         String segmentCode = item.getCmType().getTypeCode() +
                              item.getCmBrand().getBrandCode() +
                              item.getCmMeasurement().getMeasurementCode() +
                              item.getCmColor().getColorCode();
+        
+        String familyTitle = item.getCmUnspsc().getUnspscTitle() + " " + segmentTitle;
 
         cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
-        cdbb.getManagedBean().setFamilyTitle(common.removeItemNameNA(familyTitle));
         cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
         cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
+        cdbb.getManagedBean().setSegmentTitle(segmentTitle);
         cdbb.getManagedBean().setSegmentCode(segmentCode);
-        cdbb.getManagedBean().setSegmentTitle(common.removeItemNameNA(segmentTitle));
+        cdbb.getManagedBean().setFamilyTitle(familyTitle);
     }
 		
 	// #31344 -end-
