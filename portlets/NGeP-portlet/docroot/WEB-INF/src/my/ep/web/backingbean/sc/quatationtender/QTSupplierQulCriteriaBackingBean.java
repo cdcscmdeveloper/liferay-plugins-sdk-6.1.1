@@ -2311,7 +2311,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 				this.getManagedBean().setUpdateCatInPm(true);
 
 			}else{
-				if(null == categoryList){ //list from qt availabe after save
+				if(null == categoryList){ //list from qt
 					for(ScQtCategory currentCategoryList : categoryListQt){
 						
 						if(null != catCodeL1OldDesc && !catCodeL1OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL1Name())||
