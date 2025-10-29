@@ -2135,10 +2135,12 @@ public class QTSupplierQulCriteriaBackingBean extends
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
 		
+		checkHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3,catCodeLevel);
+
 		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
 		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
 			for(ScQtCategory categoryCodeEdit : findQtCatCode){
-				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()){
+				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc() || this.getManagedBean().getUpdateCatInPm()){
 					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
 						reqDTO.setCategoryL1Id(catCodeId);
 						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
@@ -2168,7 +2170,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 			processAfter = true;
 			
-			checkHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3,catCodeLevel);
 			if(!this.getManagedBean().getUpdateCatInPm()){
 				this.getManagedBean().setHistoryList(null);
 				processAfter = false;
