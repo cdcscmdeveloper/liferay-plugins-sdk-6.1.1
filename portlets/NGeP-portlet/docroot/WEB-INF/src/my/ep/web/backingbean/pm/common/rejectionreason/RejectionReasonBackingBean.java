@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale; //#28962
 import java.util.Map;
 import java.util.Set;
 
@@ -2009,6 +2010,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			reqDTO.setJabatanId(getManagedBean().getJabatanProfileId());
 		}
 		
+		validatePtjInput();	
 		ISearchBean<PmOrgProfile> searchBeanData = getOrgProfileSearchBeanData();
 		
 		IOrgProfileSO orgProfileSO = BusinessDelegate
@@ -2074,27 +2076,17 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * search agency list by Ministry, Kumpulan Ptj and Ptj
 	 */
 	public void searchOrganisation() {
-		String ministry = getManagedBean().getMinistryCodeName();
-		String kumpPtj = getManagedBean().getKumpPtjCodeName();
-		String ptj = getManagedBean().getAgencyCodeName();
 		List<String> paramList = new ArrayList<>();
-		if (ministry != null && !ministry.trim().isEmpty() && ministry.trim().length() < 3) {
-			paramList.add(ResourceBundleUtils.getMessage("lbl.pm.reason.ministry",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		}
+		FacesScopes scopes = new FacesScopes();
+		Locale locale = scopes.getUserLocale();
 
-		if (kumpPtj != null && !kumpPtj.trim().isEmpty() && kumpPtj.trim().length() < 3) {
-			paramList.add(ResourceBundleUtils.getMessage("lbl.pm.reason.kumpulan.ptj",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		}
+		validateMinLength(getManagedBean().getMinistryCodeName(), "lbl.pm.reason.ministry", paramList, locale);
+		validateMinLength(getManagedBean().getKumpPtjCodeName(), "lbl.pm.reason.kumpulan.ptj", paramList, locale);
+		validateMinLength(getManagedBean().getAgencyCodeName(), "lbl.pm.reason.ptj", paramList, locale);
 
-		if (ptj != null && !ptj.trim().isEmpty() && ptj.trim().length() < 3) {
-			paramList.add(ResourceBundleUtils.getMessage("lbl.pm.reason.ptj", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()));
-		}
-		if (paramList != null && !paramList.isEmpty()) {
-			String joined = joinList(paramList, ", ");
-			throw new EpException(MessageConst.ERROR_770304, new String[] { joined });
+		if (!paramList.isEmpty()) {
+			String org = joinList(paramList, ", ");
+			throw new EpException(MessageConst.ERROR_770304, new String[] { org });
 		}
 		
 		long start = System.currentTimeMillis();
@@ -2233,12 +2225,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 	/**
 	 * Add new agency values
+	 * @param selectedAllAgency
 	 */
 	public void addAgency(boolean selectedAllAgency) {
 		log.info("addAgency ");
 		long start = System.currentTimeMillis();
 		
-		List<PmOrgProfile> selected = null;
+		List<PmOrgProfile> selected;
 		
 		//add all agency..
 		if (selectedAllAgency && CollectionUtils.isNotEmpty(getManagedBean().getPtjList())) {
@@ -2480,5 +2473,28 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	    }
 	    return sb.toString();
 	}
+	
+	private void validateMinLength(String value, String labelKey, List<String> paramList, Locale locale) {
+		if (value == null)
+			return;
+
+		String trimmed = value.trim();
+		if (!trimmed.isEmpty() && trimmed.length() < 3) {
+			String msg = ResourceBundleUtils.getMessage(labelKey, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+			paramList.add(msg);
+		}
+	}
+	
+	private void validatePtjInput() {
+		String ptjCodeName = getManagedBean().getPtjCodeNameSearchValues();
+		boolean isInvalidCodeName = ptjCodeName != null && !ptjCodeName.isEmpty() && ptjCodeName.length() < 3;
+
+		if (isInvalidCodeName) {
+			throw new EpException(MessageConst.ERROR_770304,  new String[]{ResourceBundleUtils.getMessage(
+					"lbl.pm.reason.ptj", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+		}
+	}
+
 	//#28962 - End
 }
