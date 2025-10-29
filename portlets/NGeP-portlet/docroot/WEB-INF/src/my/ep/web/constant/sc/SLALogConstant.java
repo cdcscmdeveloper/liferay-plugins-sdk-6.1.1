@@ -125,6 +125,7 @@ public class SLALogConstant {
 	public static final String RETRIEVE_SUPP_MAP_REPORT = "retrieveSuppLoiLoaMapForReport";
 	public static final String COMP_EXP_SUPP_PAGING_DATA_MODEL = "ViewSupplierCompExpDtlsPagingDataModel";
 	public static final String RETRIEVE_CONTRACT_STATUS_COUNT = "retrieveContractStatusValueCount";
+	public static final String COMP_EXP_ERROR = "COMP_EXP";
 
 	// 29661 -end-
 	
