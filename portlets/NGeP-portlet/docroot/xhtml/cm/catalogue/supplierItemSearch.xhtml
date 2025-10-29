@@ -393,6 +393,10 @@
 							style="white-space: normal">
 							<h:outputText value="#{supplierItem.companyName}" />
 							<!-- [#26282] - start -->
+							<!-- #38972 - Start -->
+							<br/>
+							<h:outputText value="#{supplierItem.mofNo}" />
+							<!-- #38972 - End -->
 							<p:spacer width="5" />
 							<p:commandLink id="daSupplierAlertCL"
 								action="#{catalogueBackingBean.onViewDisciplinaryAction(supplierItem.supplierId, supplierItem.mofNo)}"
