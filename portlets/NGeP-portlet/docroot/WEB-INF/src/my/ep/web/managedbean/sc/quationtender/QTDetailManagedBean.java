@@ -1831,6 +1831,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean currentInSpecMaint;//#29732 first time spec maint
 	private boolean categoryDescriptionChange;//#29732 flag to check category has change
 	private boolean updateCatDesc; //#29732
+	private boolean updateCatInPm; //#29732
 
 	// #29732 End
 	
@@ -12222,6 +12223,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#29732
 	
+	//#29732
+	public boolean getUpdateCatInPm() {
+		return updateCatInPm;
+	}
+
+	public void setUpdateCatInPm(boolean updateCatInPm) {
+		this.updateCatInPm = updateCatInPm;
+	}
+	//#29732
+	
 	//#38679
 	public boolean isZoneQtyHasZeroVal() {
 		return zoneQtyHasZeroVal;
@@ -12231,6 +12242,4 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
 	}
 	//#38679
-
-	
 }
