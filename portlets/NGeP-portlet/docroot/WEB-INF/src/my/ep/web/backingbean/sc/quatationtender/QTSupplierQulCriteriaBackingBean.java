@@ -2135,12 +2135,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
 		
-		checkHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3,catCodeLevel);
-
 		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
 		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
 			for(ScQtCategory categoryCodeEdit : findQtCatCode){
-				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc() || this.getManagedBean().getUpdateCatInPm()){
+				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()){
 					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
 						reqDTO.setCategoryL1Id(catCodeId);
 						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
@@ -2153,7 +2151,24 @@ public class QTSupplierQulCriteriaBackingBean extends
 					}
 						processAfter = true;
 				}else{
-					this.getManagedBean().setHistoryList(null);
+					
+					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+						reqDTO.setCategoryL1Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+						reqDTO.setCategoryL2Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+						reqDTO.setCategoryL3Id(catCodeId);
+						resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+					}
+					processAfter = true;
+					
+					checkHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3,catCodeLevel,catCode);
+					if(!this.getManagedBean().getUpdateCatInPm()){
+						this.getManagedBean().setHistoryList(null);
+						processAfter = false;
+					}
 				}
 			}
 		}else{
@@ -2170,6 +2185,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 			processAfter = true;
 			
+			checkHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3,catCodeLevel,catCode);
 			if(!this.getManagedBean().getUpdateCatInPm()){
 				this.getManagedBean().setHistoryList(null);
 				processAfter = false;
@@ -2308,7 +2324,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			this.getManagedBean().setUpdateCatInPm(true);
 
 		}else{
-			if(null == categoryList){ //list from qt
+			if(null == categoryList){
 				for(ScQtCategory currentCategoryList : categoryListQt){
 					
 					if(null != catCodeL1OldDesc && !catCodeL1OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL1Name())||
@@ -2319,7 +2335,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 					
 				}
 			}else{
-				for(PmRemarkCategory currentCategoryList : categoryList){ //list from pm, at qt screen, list PM only available when adding category code
+				for(PmRemarkCategory currentCategoryList : categoryList){
 					
 					if(null != catCodeL1OldDesc && catCodeL1OldDesc.equalsIgnoreCase(currentCategoryList.getOldDescription())||
 							null != catCodeL2OldDesc && catCodeL2OldDesc.equalsIgnoreCase(currentCategoryList.getOldDescription()) ||
