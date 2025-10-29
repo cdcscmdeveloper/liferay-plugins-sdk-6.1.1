@@ -5320,7 +5320,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			} else if(isPanelOrNonPanel(procurementType)){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740074, 
-									new String[]{new CommonUtils().filterItemNameNA(flItemAddr.getScRequestItem().getItemName()), 
+									new String[]{new CommonUtils().removeItemNameNA(flItemAddr.getScRequestItem().getItemName()), 
 									getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(), 
 									thresholdAmount.setScale(2, RoundingMode.HALF_UP).toString()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
@@ -5469,7 +5469,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
             itemList.append("<br>")
                    .append(i + 1)
                    .append(". ")
-                   .append(new CommonUtils().filterItemNameNA(items.get(i)));
+                   .append(new CommonUtils().removeItemNameNA(items.get(i)));
         }
         return itemList.toString();
     }
