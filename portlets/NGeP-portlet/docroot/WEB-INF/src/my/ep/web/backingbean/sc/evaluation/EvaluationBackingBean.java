@@ -6868,14 +6868,20 @@ public void saveComplianceSample() {
 							reqDTO);
 					retrieveFinGovNonGovCompanyExpDetails(proposalCheckList,SourcingConstants.CLIENT_TYPE_FINANCIAL,QTConstants.EVALUATION__GOV_PROC_RELATED,QTConstants.EVALUATION__GOV__NONPROC_RELATED);
 					evaluationPage = QTConstants.EVALUATION_FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE;
+					this.getManagedBean().setProposalPage(proposalPage);
+					this.getManagedBean().setEvaluationPage(evaluationPage);
+					return QTConstants.EVALUATION_FINANCIAL_OTHER_CHECKLIST;
 				} else if (SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE
 						.equalsIgnoreCase(docDefinationKey)) {
 					fetchProposalAndCheckListScores(
 							proposalCheckList,
 							QTConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV,
 							reqDTO);
-					retrieveFinGovNonGovCompanyExpDetails(proposalCheckList,SourcingConstants.CLIENT_TYPE_OTHER,QTConstants.EVALUATION__NONGOV_PROC_RELATED,QTConstants.EVALUATION__NONGOV_PROC_RELATED);
+					retrieveFinGovNonGovCompanyExpDetails(proposalCheckList,SourcingConstants.CLIENT_TYPE_OTHER,QTConstants.EVALUATION__NONGOV_PROC_RELATED,QTConstants.EVALUATION__NONGOV__NONPROC_RELATED);
 					evaluationPage = QTConstants.EVALUATION_FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE;
+					this.getManagedBean().setProposalPage(proposalPage);
+					this.getManagedBean().setEvaluationPage(evaluationPage);
+					return QTConstants.EVALUATION_FINANCIAL_OTHER_CHECKLIST;
 				}
 				// 29661-end-
 			}
@@ -19836,10 +19842,12 @@ private void retriveCommitteeRemarksList(){
 		} catch (Exception e) {
 			Long qtProposalCheckListId = scQtProposalChecklist
 					.getQtProposalChecklistId();
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_EVALUATION_BACKINGBEAN,
 					String.valueOf(qtProposalCheckListId),
-					SLALogConstant.FETCH_COMPANY_EXP_PROPOSAL_CHECKLIST_SCORE,
+					SLALogConstant.FETCH_COMPANY_EXP_PROPOSAL_CHECKLIST_SCORE
+							.concat(SLALogConstant.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
