@@ -6,7 +6,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
+	<!-- #35320 start -->
+	<p:panel header="#{lbl['lbl.sc.committee.qt.detail']}" toggleable="true">
+	<!-- #35320 end -->
+	
 		<p:dataTable id="qtDetailsId"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{committeBackingBean.managedBean.committeeQTDataModel}"
@@ -41,14 +44,21 @@
 
 		</p:dataTable>
 		<br />
-		<table style="width: 100%">
-			<tr>
-				<td style="width: 2px"><p:outputLabel
-						value="#{lbl['lbl.sc.total']}" /></td>
-				<td colspan="3"><p:inputText
-						value="#{committeBackingBean.managedBean.committeeQTDataModel.rowCount}"
-						readonly="true" style="text-align: right;" /></td>
-			</tr>
-		</table>
+		
+		<!-- #35320 start -->
+		<c:if test="#{!committeBackingBean.managedBean.viewCommitteePage}">
+			<br />
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 2px"><p:outputLabel
+							value="#{lbl['lbl.sc.total']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{committeBackingBean.managedBean.committeeQTDataModel.rowCount}"
+							readonly="true" style="text-align: right;" /></td>
+				</tr>
+			</table>
+		</c:if>
+		<!-- #35320 end -->
+
 	</p:panel>
 </ui:composition>
