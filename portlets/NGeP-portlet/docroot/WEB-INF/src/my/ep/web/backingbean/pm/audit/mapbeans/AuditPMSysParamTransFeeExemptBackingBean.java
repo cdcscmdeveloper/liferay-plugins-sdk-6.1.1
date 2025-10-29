@@ -213,6 +213,9 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		int pmfeeMainInt = pmfeeMain.getExpDate() == null ? 0 : 1;
 		int updateValInt = updateVal.getExpDate() == null ? 0 : 1;
 		boolean expDatebool = false;
+		if (updateVal.getEffDate() != null) {
+			getEffDate(pmfeeMain, updateVal);
+		}
 		if ((pmfeeMainInt == 1 && updateValInt == 1) && !pmfeeMain.getExpDate().equals(updateVal.getExpDate())) {
 			expDatebool = true;
 		}
@@ -222,8 +225,14 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		if (Boolean.valueOf(expDatebool)) {
 			getExpDate(pmfeeMain, updateVal, pmfeeMainInt);
 		}
-		if (updateVal.getEffDate() != null) {
-			getEffDate(pmfeeMain, updateVal);
+
+	}
+
+	private void getEffDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
+		if (updateVal.getEffDate() != null && !pmfeeMain.getEffDate().equals(updateVal.getEffDate())) {
+			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAM_SPFEE_EFFDATE_FIELDLABELID,
+					simpleDateFormat.format(pmfeeMain.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()),
+					AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 	}
 
@@ -232,13 +241,6 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 				pmfeeMainInt == 0 ? null : simpleDateFormat.format(pmfeeMain.getExpDate()), 
 						updateVal.getExpDate() != null ? simpleDateFormat.format(updateVal.getExpDate()) : null,
 				AuditConst.PM_AUD_ACTION_TYPE_UPD);
-	}
-
-	private void getEffDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
-		if (updateVal.getEffDate() != null && !pmfeeMain.getEffDate().equals(updateVal.getEffDate())) {
-			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAM_SPFEE_EFFDATE_FIELDLABELID, 
-					simpleDateFormat.format(pmfeeMain.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
-		}
 	}
 
 	// *******QT CHECKLIST TAB FOR UPDATED VALUE PEOCESS END *******//
