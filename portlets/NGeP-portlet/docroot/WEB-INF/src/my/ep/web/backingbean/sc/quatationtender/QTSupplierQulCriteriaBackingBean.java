@@ -323,9 +323,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	    	}else{
 	    		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
 	    	}
-		}
-		
-		checkCatCodeWIPIcon();
+		}		
 	}
 
 	
@@ -2124,16 +2122,12 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	// #29732 Start
-	@SuppressWarnings("null")
-	public void onClickHistoryIcon(String catCodeL1, String catCodeL2, String catCodeL3,String catCodeLevel,
-			Long catCodeId,Long qtCateId, String categoryName, String catCode) {
-		boolean processAfter = false;
-		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICategoryCodeSO.class);
+	public void onClickHistoryIcon(String catCode, String catCodeLevel, Long catCodeID) {
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
+<<<<<<< HEAD
 		
 		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
 		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
@@ -2190,17 +2184,25 @@ public class QTSupplierQulCriteriaBackingBean extends
 				this.getManagedBean().setHistoryList(null);
 				processAfter = false;
 			}
-		}
-		
-		if(processAfter){
-			getManagedBean().setHistoryList(
-					updateCreatedUserName(resDTO.getRemarkList()));
-			getManagedBean().setHisCatCode(catCode);
-		}
+=======
 
+		if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+			reqDTO.setCategoryL1Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+			reqDTO.setCategoryL2Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+			reqDTO.setCategoryL3Id(catCodeID);
+			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+>>>>>>> refs/remotes/origin/release-sit
+		}
+		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+		getManagedBean().setHisCatCode(catCode);
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
 
+<<<<<<< HEAD
 	// #29732 Start - reOpen Fix
 	public String checkCatCodeWIPIcon() {
 
@@ -2373,7 +2375,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		
 		return listCategoryDB;
 	}
-	
+
 	private List<PmRemarkCategory> updateCreatedUserName(
 			List<PmRemarkCategory> remarkList) {
 		for (PmRemarkCategory rc : remarkList) {
