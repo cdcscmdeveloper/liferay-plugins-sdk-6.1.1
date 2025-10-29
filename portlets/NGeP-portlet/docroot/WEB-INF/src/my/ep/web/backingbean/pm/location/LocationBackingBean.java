@@ -252,6 +252,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		String message = null;
 		String[] messageParam = null;
 		Long locationId = null;
+		Long locationMsgId = null; //#34445
+		
+		try { //#34445
+		
 		if (ParameterConst.LOCATION_LEVEL_STATE.equals(getManagedBean().getSelectedType())){
 			StateReqDTO reqDTO = new StateReqDTO();
 			IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
@@ -271,6 +275,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			//#32753 - END
 			
 			reqDTO.setPmState(state);
+			locationMsgId = getManagedBean().getState().getStateId(); // #34445
 			StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
         
 			if (resDTO.isSuccessful()) {
@@ -306,6 +311,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			
 			reqDTO.setPmDivision(division);
 			reqDTO.setStateId(division.getPmState().getStateId());
+			locationMsgId = getManagedBean().getDivision().getDivisionId(); //#34445
 			DivisionResDTO resDTO = divisionSO.saveOrUpdateDivision(reqDTO);			
 			if (resDTO.isSuccessful()) {
 				message = getManagedBean().getDivision().isBrandNew() 
@@ -347,6 +353,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				reqDTO.setPmDistrict(district);
 				reqDTO.setStateId(district.getPmState().getStateId());
 				reqDTO.setDivisionId(null != district.getPmDivision() ? district.getPmDivision().getDivisionId() : null);
+				locationMsgId = getManagedBean().getDistrict().getDistrictId(); //#34445
 				DistrictResDTO resDTO  = districtSO.saveOrUpdateDistrict(reqDTO);
 				if (resDTO.isSuccessful()) {
 					message = getManagedBean().getDistrict().isBrandNew() 
@@ -378,6 +385,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
     			
 				reqDTO.setPmCity(city);
 				reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());
+				locationMsgId = getManagedBean().getCity().getCityId(); //#34445
 				CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
 				if (resDTO.isSuccessful()) {
 					message = getManagedBean().getCity().isBrandNew() 
@@ -411,7 +419,21 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			this.getManagedBean().setSelectedType(null);
 			return NAV_TO_SEARCH;
 		}
+		
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			if (locationMsgId != null && getManagedBean().getSelectedType() != null) {
+				maintainLocation(getManagedBean().getSelectedType(), locationMsgId);
+			}
+			return NAV_TO_MAINTAIN;
 
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Unexpected error: " + e.getMessage()));
+			return null;
+		}
+		//#34445 End
 	}
 
 	/**
