@@ -367,6 +367,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			catStatRpt.resetSearch();
 		}
 		//#38227 - END
+		//34031#note-71 : Issue 4 - Start
+		else if(SmReportConst.SM_REVISIT_RPT_VAL.equals(getManagedBean().getReportCode())){
+			SmRevisitRptBackingBean revisitRpt = new SmRevisitRptBackingBean();
+			revisitRpt.resetSearch();
+		}
+		//34031#note-71 : Issue 4 - End
 	}
 
 	public void addCompanyNameParam(LinkedHashMap<String, String> params) {
