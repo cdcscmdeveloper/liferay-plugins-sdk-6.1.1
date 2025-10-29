@@ -39,6 +39,7 @@
 						<p:commandLink onstart="blockWidget.show()"
 							action="#{viewSuppProfileBackingBean.onViewQTAlertMessage(warnings)}"
 							oncomplete="blockWidget.hide();"
+							style="pointer-events: auto;"
 							update="@([id$=suspendAlertWidgetId])" process="@this">
 							<p:graphicImage id="imageId"
 								value="/css/images/design/icon_error.png"
