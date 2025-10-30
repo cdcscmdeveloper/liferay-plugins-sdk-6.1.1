@@ -579,6 +579,7 @@ public interface QTConstants {
 	public static final String COMP_EXP_SUPPORTING_DOCUMENTS = "NGeP-LOA-Report";
 	public static final String PROPOSAL_EVALUATION_PORTLET = "ProposalEvaluation_WAR_NGePportlet";
 	public static final int TAB_LOA_INDEX = 1;
+	public static final String EVALUATION_FINANCIAL_OTHER_CHECKLIST = "/xhtml/sc/evaluation/evaluationStage/financial/financialotherchecklists.xhtml?faces-redirect=true";
 
 	// 29661- end-
 

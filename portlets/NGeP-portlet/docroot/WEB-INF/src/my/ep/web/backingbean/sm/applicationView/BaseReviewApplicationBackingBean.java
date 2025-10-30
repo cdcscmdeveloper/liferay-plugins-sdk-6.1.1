@@ -2467,12 +2467,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						
 			if (getManagedBean().isViewApplicationHistory()) {
 				// for history load all category
-				//32815 - start
-				if(cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED){
+				//32815 - start, 26238 (38984)
+				if(cat.getDisciplinaryActionId() != null){
 					SmDisciplinaryAction da = SmApplicationUtil
 							.retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
 					if(da != null && da.isManufacturerCancel()){
-						cat.setTypeDisciplinaryAction("M");
+						cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE);
+					} else {
+						cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
 					}
 				}
 				//32815 - end
