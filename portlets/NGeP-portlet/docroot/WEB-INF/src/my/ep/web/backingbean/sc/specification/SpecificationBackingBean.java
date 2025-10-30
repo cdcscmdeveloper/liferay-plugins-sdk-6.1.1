@@ -24882,10 +24882,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		} catch (Exception e) {
 			Long qtId = this.getManagedBean().getQt().getQtId();
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
 					String.valueOf(qtId),
-					SLALogConstant.FETCH_CHECKLIST_VALUE_SCORE,
+					SLALogConstant.FETCH_CHECKLIST_VALUE_SCORE
+							.concat(SLALogConstant.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 		return checkList;
