@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -4509,5 +4510,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	} 
 	//26238 - END
+	
+	//#35238 start
+	/**
+	 * Common utility method to check if user has any role from the given set.
+	 * 
+	 * @return true if user has any role in the given set.
+	 */
+	public boolean hasAnyRoleUser(Set<String> roles) {
+		FacesScopes facesScopes = new FacesScopes();
+	    if (roles == null || roles.isEmpty()) {
+	        return false;
+	    }
+	    for (String role : roles) {
+	        if (facesScopes.hasRoleUser(role)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	//#35238 end
 }
 
