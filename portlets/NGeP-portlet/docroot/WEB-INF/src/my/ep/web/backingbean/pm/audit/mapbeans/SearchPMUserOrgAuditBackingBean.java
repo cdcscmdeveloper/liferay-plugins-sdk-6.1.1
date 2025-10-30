@@ -91,7 +91,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		this.getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
 		log.info("preLoading User Org");
 		getManagedBean().setLazy(false);
-		this.resetOrganisationSearchBean();
+		//this.resetOrganisationSearchBean();
 		getManagedBean().setResetMasterResult(false);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -650,6 +650,8 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().setResetMasterResult(true);
 
 		autoSelectOrgType();
+		
+		preLoading();
 	}
 
 	public void onFromDateSelect() {
