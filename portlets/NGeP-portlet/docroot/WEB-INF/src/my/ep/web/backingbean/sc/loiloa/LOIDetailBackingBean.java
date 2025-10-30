@@ -3428,39 +3428,39 @@ public class LOIDetailBackingBean extends
 	private AwardSupplierReqDTO parseMultipleLoiDtls(boolean isSubmit) {
 		Long statusId  = getManagedBean().getCurrentStatusId();
 		// 26247 - start
-		List<TplSpecZoneDtl> zoneDeDtls = getManagedBean().getMultiLOIZoneDetails();
-		if (getManagedBean().isItemized()) {
-			if (getManagedBean().getScQt().isZonal() && 
-					CollectionUtils.isNotEmpty(zoneDeDtls)) {
-				Map<Long,List<ScQtRecommend>> scQtRecommendsByZone 
-									= getManagedBean().getScQtRecommendsByZone();
-				for (TplSpecZoneDtl zone : zoneDeDtls) {
-					validateAwardOfSuppliersByItem(isSubmit, zone,
-							scQtRecommendsByZone.get(zone.getSpecZoneId()));
-				}
-			} else {
-				validateAwardOfSuppliersByItem(isSubmit, null,
-						getManagedBean().getRecommendList());
-			}
-		} else {
-			if (getManagedBean().getScQt().isZonal() && 
-						CollectionUtils.isNotEmpty(zoneDeDtls)) {
-				Map<Long,List<ScQtRecommend>> scQtRecommendsByZone 
-									= getManagedBean().getScQtRecommendsByZone();
-				for (TplSpecZoneDtl zone : zoneDeDtls) {
-					validateAwardOfSuppliersByPKG(isSubmit, zone,
-							scQtRecommendsByZone.get(zone.getSpecZoneId())
-							.get(0));
-				}
-			} else {
-				if (this.getManagedBean().getSelectedSupplier() == null) {
-					throw new EpException(MessageConst.ERROR_760293);
-				}
-				awardSelectedSupplierAction();//34905
-			}				
-		}
-		
 		if (isSubmit) {
+			List<TplSpecZoneDtl> zoneDeDtls = getManagedBean().getMultiLOIZoneDetails();
+			if (getManagedBean().isItemized()) {
+				if (getManagedBean().getScQt().isZonal() && 
+						CollectionUtils.isNotEmpty(zoneDeDtls)) {
+					Map<Long,List<ScQtRecommend>> scQtRecommendsByZone 
+										= getManagedBean().getScQtRecommendsByZone();
+					for (TplSpecZoneDtl zone : zoneDeDtls) {
+						validateAwardOfSuppliersByItem(isSubmit, zone,
+								scQtRecommendsByZone.get(zone.getSpecZoneId()));
+					}
+				} else {
+					validateAwardOfSuppliersByItem(isSubmit, null,
+							getManagedBean().getRecommendList());
+				}
+			} else {
+				if (getManagedBean().getScQt().isZonal() && 
+							CollectionUtils.isNotEmpty(zoneDeDtls)) {
+					Map<Long,List<ScQtRecommend>> scQtRecommendsByZone 
+										= getManagedBean().getScQtRecommendsByZone();
+					for (TplSpecZoneDtl zone : zoneDeDtls) {
+						validateAwardOfSuppliersByPKG(isSubmit, zone,
+								scQtRecommendsByZone.get(zone.getSpecZoneId())
+								.get(0));
+					}
+				} else {
+					if (this.getManagedBean().getSelectedSupplier() == null) {
+						throw new EpException(MessageConst.ERROR_760293);
+					}
+					awardSelectedSupplierAction();//34905
+				}				
+			}
+			
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			if (CollectionUtils.isNotEmpty(
 						scLoi.getScLoiReports())) {
