@@ -87,7 +87,8 @@ public class OrgProfileSearchBackingBean extends
 				|| getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
+				|| getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QQC_SECRETARY.value())) {
 			getManagedBean().setMinistryProfileId(orgProfileId);
 			getManagedBean().setDisabledMinistry(true);
 		}
