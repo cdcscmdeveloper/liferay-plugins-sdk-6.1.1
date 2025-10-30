@@ -110,8 +110,11 @@
 				<ui:remove><!-- 6906 End --></ui:remove>
 				
 				<ui:remove>#29661 -start-</ui:remove>
+				<h:outputText
+					value="ProposalPage_#{evaluationBackingBean.managedBean.proposalPage}"></h:outputText>
 				<ui:fragment
 					rendered="#{SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE ne docDefinationKey  and  SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE ne docDefinationKey}">
+					<h:outputText value="ProposalPage_InsideCodes"></h:outputText>
 					<ui:include src="#{evaluationBackingBean.managedBean.proposalPage}"></ui:include>
 				</ui:fragment>
 				<ui:remove>#29661 -end-</ui:remove>
