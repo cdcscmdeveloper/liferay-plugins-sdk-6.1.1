@@ -4926,7 +4926,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		pbqcRole.add(RoleCode.QCB_SECRETARY.value());
 		pbqcRole.add(RoleCode.QQC_CHAIRPERSON.value());
 		pbqcRole.add(RoleCode.QQC_MEMBER.value());
-		pbqcRole.add(RoleCode.QQC_CHAIRPERSON.value());
+		pbqcRole.add(RoleCode.QQC_SECRETARY.value());
 		pbqcRole.add(RoleCode.PBA_CHAIRPERSON.value());
 		pbqcRole.add(RoleCode.PBA_MEMBER.value());
 		pbqcRole.add(RoleCode.PBA_SECRETARY.value());
