@@ -9193,7 +9193,7 @@ return	remarksNotFound;
 		}
 		for (ScQtRecommend qtRecommend : scQtFinalization.getScQtRecommends()) {
 			if (!isValidItem(qtRecommend, specZoneId, requestItemId)) {
-				break;
+				continue;
 			}
 			for (ScQtRecommendDtl recommendDtl : qtRecommend.getRecommendDtls()) {
 				if (supplierId.equals(recommendDtl.getSupplier().getSupplierId())) {
