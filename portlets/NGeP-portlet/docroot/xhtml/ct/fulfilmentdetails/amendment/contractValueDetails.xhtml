@@ -18,7 +18,6 @@
 			<p:outputLabel value="#{lbl['lbl.ct.overall.contract.amount']}" />
 			<h:panelGrid columns="4">
 
-				<!-- disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}" -->
 				<p:inputText id="overallAmount" styleClass="ppRightBtn" style="width:110px;"
 					value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"
 					disabled="true">
@@ -35,7 +34,8 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.type.change.contract.value']}" styleClass="required" />
 			<h:panelGrid columns="4">
-				<p:selectOneRadio id="reduction" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reduction}" layout="pageDirection"> 
+				<p:selectOneRadio id="reduction" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reduction}" layout="pageDirection"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"> 
 					<f:selectItem itemLabel="#{lbl['lbl.ct.radio.reduction']}" itemValue="true" />
 					<f:selectItem itemLabel="#{lbl['lbl.ct.radio.addition']}" itemValue="false" />
 					<p:ajax update="contractValuePanel" event="change" process="@this" 
@@ -108,7 +108,7 @@
 			<h:panelGrid columns="4">
 				<p:inputText id="reductionAmt" styleClass="ppRightBtn" style="width:110px;"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reductionAmt}"
-					disabled="#{ctBackingBean.managedBean.disableReductionContractAmount}"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableReductionContractAmount}"
 					onblur="this.value = this.value.replace(/-/g, '');">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -236,8 +236,8 @@
 			
 			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt.eff.date']}" />
 			<h:panelGrid columns="4">
-				<p:calendar style="width:90px;" id="newAmtEffDate" showOn="button"  readonlyInput="true" navigator="true"
-					disabled="#{ctBackingBean.managedBean.disableNewCtAmountEffDate}"
+				<p:calendar style="width:80px;" id="newAmtEffDate" showOn="button" readonlyInput="true" navigator="true"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableNewCtAmountEffDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 					label="#{lbl['lbl.ct.new.contract.amt.eff.date']}" 
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newAmtEffDate}"

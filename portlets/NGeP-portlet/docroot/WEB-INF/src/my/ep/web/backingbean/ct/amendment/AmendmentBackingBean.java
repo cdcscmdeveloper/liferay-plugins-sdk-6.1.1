@@ -10180,9 +10180,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    boolean valueChange = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange();
 	    boolean itemPriceChange = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange();
 	    boolean quantityChange = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange();
-
-	    boolean hasPriceOrQtyChange = itemPriceChange || quantityChange;
-	    boolean shouldShow = !valueChange || hasPriceOrQtyChange;
+	    boolean clauseChange = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange();
+	    boolean othersChange = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange();
+	    
+	    boolean hasSelectedChange = itemPriceChange || quantityChange || clauseChange || othersChange;
+	    boolean shouldShow = !valueChange || hasSelectedChange;
 
 	    return amendValue && shouldShow;
 	}
