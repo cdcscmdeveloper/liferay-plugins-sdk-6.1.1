@@ -37,8 +37,9 @@
 				<h:outputText value="#{cateGory.pmCategoryL1Name}" />
 				<!-- #29732 Start -->
 				<p:spacer width="5" /> 
-				<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL1.categoryL1Code,ParameterConst.categoryL1Code,cateGory.pmCategoryL1.categoryL1Id,cateGory.qtCategoryId)}"
-								update="@form">
+					<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL1.categoryL1Code,cateGory.pmCategoryL2.categoryL2Code,cateGory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL1Code,cateGory.pmCategoryL1.categoryL1Id,cateGory.qtCategoryId,
+					cateGory.pmCategoryL1.categoryName,cateGory.pmCategoryL1.categoryL1Code)}"
+										update="@form">
 					<p:graphicImage id="mainHisIcon"
 						value="/css/images/design/ico-view.png" />
 					<p:tooltip for="mainHisIcon">
@@ -54,8 +55,9 @@
 				<h:outputText value="#{cateGory.pmCategoryL2Name}" />
 				<!-- #29732 Start -->
 				<p:spacer width="5" /> 
-				<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL2.categoryL2Code,ParameterConst.categoryL2Code,cateGory.pmCategoryL2.categoryL2Id,cateGory.qtCategoryId)}"
-								update="@form">
+					<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL1.categoryL1Code,cateGory.pmCategoryL2.categoryL2Code,cateGory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL2Code,cateGory.pmCategoryL2.categoryL2Id,cateGory.qtCategoryId,
+					cateGory.pmCategoryL2.categoryName,cateGory.pmCategoryL2.categoryL2Code)}"
+										update="@form">
 					<p:graphicImage id="subHisIcon"
 						value="/css/images/design/ico-view.png" />
 					<p:tooltip for="subHisIcon">
@@ -71,8 +73,9 @@
 				<h:outputText value="#{cateGory.pmCategoryL3Name}" />
 				<!-- #29732 Start -->
 				<p:spacer width="5" /> 
-				<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL3Code,cateGory.pmCategoryL3.categoryL3Id,cateGory.qtCategoryId)}"
-					update="@form">
+					<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL1.categoryL1Code,cateGory.pmCategoryL2.categoryL2Code,cateGory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL3Code,cateGory.pmCategoryL3.categoryL3Id,cateGory.qtCategoryId,
+					cateGory.pmCategoryL3.categoryName,cateGory.pmCategoryL3.categoryL3Code)}"
+										update="@form">
 					<p:graphicImage id="subDivHisIcon"
 						value="/css/images/design/ico-view.png" />
 					<p:tooltip for="subDivHisIcon">
