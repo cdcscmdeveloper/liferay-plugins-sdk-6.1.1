@@ -1929,11 +1929,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		boolean hasPending = supplier.isPendingBlacklist()
 				|| supplier.isPendingCancel() || supplier.isPendingSuspend();
 		// 38609 - START
-		String supplierType = supplier.getSmAppl().getSupplierType();
-		
 		return !hasPending && StringUtils.isNotEmpty(mofStatus)
-				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)
-				&& !supplierType.equals(SupplierManagementConst.SUPP_TYPE_BASIC);
+				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED); //#39424
 		// 38609 - END
 	}
 
