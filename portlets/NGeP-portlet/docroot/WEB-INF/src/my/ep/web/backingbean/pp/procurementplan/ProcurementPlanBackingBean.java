@@ -3163,8 +3163,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	
 	//#34156 - Start
-	public void onSelectCategoryTypeNewLabel(Long id, int index, boolean NewLabcatMethodType){		
-		//log.info("The category type id " + id);
+	public void onSelectCategoryTypeNewLabel(Long id, int index, boolean NewLabcatMethodType){
+		//#35502, Fix as-is bug: #38696 Start
+		//#34422 09/11/2023 - Start
+		this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).setProcurementType(new PmParameter());
+		//#34422 09/11/2023 - End
+		//#35502, Fix as-is bug: #38696 End
 		Long procurementCatId = this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getProcurementCat().getParameterId();
 		List<PmProcurementCatType> pmProcCats= 	PpCommonUtil.retrieveProcurementTypeListByCatIdNewLabel(getFacesScopes().getUserLocale().getLanguage(), procurementCatId, NewLabcatMethodType);
 		for(PmProcurementCatType pmProcCat : pmProcCats ){
@@ -4480,18 +4484,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedJustifications(null);
 		this.getManagedBean().setSelectedJustificationDesc("");
 		boolean newRemark = false;
-		
-		
+		this.getManagedBean().setDimmedJustification(false); //#35502, Fix as-is bug: #38652
+
 		if(epItem.getJustifications()==null){
 			epItem.setJustifications(new ArrayList<PpRemark>());
 		}
-		/* enable for phase 2
-		//if first remark is not new
-		if (!epItem.getJustifications().isEmpty()){
-			if(!epItem.getJustifications().get(0).isBrandNew()){
-				newRemark = true;
-			}
-		}*/
 
 		// if reason is empty
 		if (epItem.getJustifications().isEmpty() || epItem.getJustifications().size() == 0) {
@@ -4521,14 +4518,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			epItem.getJustifications().add(0, remark);
 
 		}
-	
+
+		//#35502, Fix as-is bug: #38652 Start
+		if (epItem.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+			this.getManagedBean().setDimmedJustification(true);
+		}
+		//#35502, Fix as-is bug: #38652 End
+
 		this.getManagedBean().setSelectedJustifications(epItem.getJustifications());
 		this.getManagedBean().setSelectedJustificationDesc(epItem.getJustifications().isEmpty() ? "": epItem.getJustifications().get(0).getRemark());
-		
-		
-		
+
 		log.info("loadJustification - End");
-		
 	}
 	
 	/**

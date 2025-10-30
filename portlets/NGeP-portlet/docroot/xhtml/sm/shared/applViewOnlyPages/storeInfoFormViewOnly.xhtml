@@ -19,10 +19,11 @@
 		<ui:repeat var="storeCatVar" value="#{viewSmApplBackingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
-					<td style="white-space: nowrap; float: left;">
-					    <!-- #28175 -->
+					<td>
+						<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 					    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} 
-					    	(#{viewSmApplBackingBean.getSupplierCategoryName(storeCatVar, isSuppProfile)})" />
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(storeCatVar, isSuppProfile, true)})" 
+					    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 					</td>
 				</tr>
 			</table>
@@ -76,12 +77,13 @@
 				<tr>
 					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.category']}" /></td>
 					<td>
-						<ui:repeat var="catFac" value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smSupplierCategoryFacilities}">
+						<!-- 28775 - Site Visit Grouping Enhancement -28775 -->
+						<ui:repeat var="catFac" value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smSupplierCategoryFacilities}">
 							<p:outputLabel value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 										#{catFac.pmCategoryL3.categoryL3Code}
-									 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile)})" 
-								styleClass="outputLabel-view" /><br /> <!-- #28175 -->
+									 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile, false)})" 
+								styleClass="outputLabel-view" /><br /> <!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 						</ui:repeat>
 					</td>
 				</tr>
