@@ -79,6 +79,7 @@ public class OrgProfileSearchBackingBean extends
 		
 		//#26475 - add Approver value
 		//#26474 - add Publication Approver & all FC Secretaries value	
+		//#35322 - Add QQC_SECRETARY
 		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.APPROVER.value())	
 				|| getFacesScopes().hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
