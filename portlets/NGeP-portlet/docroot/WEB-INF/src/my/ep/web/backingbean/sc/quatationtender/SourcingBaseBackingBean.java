@@ -8115,7 +8115,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SOURCING_BACKINGBEAN,
 					String.valueOf(qtPrpExpId),
-					SLALogConstant.COMP_EXP_LOA_DETAILS_PAGE,
+					SLALogConstant.COMP_EXP_LOA_DETAILS_PAGE.concat(SLALogConstant.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 
