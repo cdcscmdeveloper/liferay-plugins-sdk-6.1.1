@@ -4926,7 +4926,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		pbqcRole.add(RoleCode.QCB_SECRETARY.value());
 		pbqcRole.add(RoleCode.QQC_CHAIRPERSON.value());
 		pbqcRole.add(RoleCode.QQC_MEMBER.value());
-		pbqcRole.add(RoleCode.QQC_CHAIRPERSON.value());
+		pbqcRole.add(RoleCode.QQC_SECRETARY.value());
 		pbqcRole.add(RoleCode.PBA_CHAIRPERSON.value());
 		pbqcRole.add(RoleCode.PBA_MEMBER.value());
 		pbqcRole.add(RoleCode.PBA_SECRETARY.value());
@@ -4938,23 +4938,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		pbqcRole.add(RoleCode.PPB_SECRETARY.value());
 		
 		return hasAnyRoleUser(pbqcRole);
-	}
-	
-	/**
-	 * Common utility method to check if user has any role from the given set.
-	 * 
-	 * @return true if user has any role in the given set.
-	 */
-	private boolean hasAnyRoleUser(Set<String> roles) {
-	    if (roles == null || roles.isEmpty()) {
-	        return false;
-	    }
-	    for (String role : roles) {
-	        if (getFacesScopes().hasRoleUser(role)) {
-	            return true;
-	        }
-	    }
-	    return false;
 	}
 	//#35238 end
 }
