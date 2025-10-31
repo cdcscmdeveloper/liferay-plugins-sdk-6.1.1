@@ -105,7 +105,7 @@
 					styleClass="itemsSelectedPanel show-column-names">
 					<p:column headerText="#{lbl['lbl.fl.item']}"   style="white-space:normal">
 					<!--#31344 filter item name-->
-						<h:outputText value="#{CommonUtils.filterItemNameNA(doItems.scRequestItem.itemName)}" id="itemDesc"
+						<h:outputText value="#{CommonUtils.removeItemNameNA(doItems.scRequestItem.itemName)}" id="itemDesc"
 						 title="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"/>
 							<p:commandLink oncomplete="doItemInfo.show();" process="@this"
 							rendered="#{createDOBackingBean.managedBean.contractFlag}"  
@@ -345,7 +345,7 @@
 				<td width="100px"><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
 				<!--#31344 filter item name-->
 				<td width="300px"><p:inputText disabled="true" style="width: 400px;"
-						value="#{CommonUtils.filterItemNameNA(createDOBackingBean.managedBean.selectedItemRow.scRequestItem.itemName)}" />
+						value="#{CommonUtils.removeItemNameNA(createDOBackingBean.managedBean.selectedItemRow.scRequestItem.itemName)}" />
 				</td>
 			</tr>
 		</table>

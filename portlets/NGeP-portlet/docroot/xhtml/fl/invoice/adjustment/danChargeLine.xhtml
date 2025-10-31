@@ -67,7 +67,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:35%;">
 			<!--#31344 filter item name-->
-				<h:outputText rendered="#{danItem.level == 1}" value="#{CommonUtils.filterItemNameNA(danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName)}" id="itemDesc" style="text-align:left; float:left;" title="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc}"/>
+				<h:outputText rendered="#{danItem.level == 1}" value="#{CommonUtils.removeItemNameNA(danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName)}" id="itemDesc" style="text-align:left; float:left;" title="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemDesc}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;text-align:center;width:20%;">
 				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" style="float:left;"/>

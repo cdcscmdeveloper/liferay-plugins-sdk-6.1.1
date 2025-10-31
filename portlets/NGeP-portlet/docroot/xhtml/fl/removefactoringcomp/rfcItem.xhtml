@@ -80,7 +80,7 @@
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;" >
 						<!--#31344 filter item name-->
 						<h:outputText
-							value="#{CommonUtils.filterItemNameNA(newItems.scRequestItem.itemName)}"
+							value="#{CommonUtils.removeItemNameNA(newItems.scRequestItem.itemName)}"
 							id="itemDesc"
 							title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}" />
 					</p:column>

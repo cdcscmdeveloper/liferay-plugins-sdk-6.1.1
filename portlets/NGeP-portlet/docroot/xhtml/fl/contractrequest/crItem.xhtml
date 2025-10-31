@@ -300,7 +300,7 @@
 					</span>
 					<br />
 					<!--#31344 filter item name-->
-					<h:outputText value="#{CommonUtils.filterItemNameNA(item.scRequestItem.itemName)}" />
+					<h:outputText value="#{CommonUtils.removeItemNameNA(item.scRequestItem.itemName)}" />
 					<br />
 					<h:outputText value="#{item.skuNumber}" /> <!-- #16344 Farid updates-->
 <!-- #16344 END-->
@@ -1043,7 +1043,7 @@
 					</span>
 					<br />
 					<!--#31344 filter item name-->
-					<h:outputText value="#{CommonUtils.filterItemNameNA(item.scRequestItem.itemName)}" id="itemDesc"
+					<h:outputText value="#{CommonUtils.removeItemNameNA(item.scRequestItem.itemName)}" id="itemDesc"
 						title="#{item.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.scRequestItem.itemDesc}" />
 					<br />
 					<h:outputText value="#{item.sku}" />

@@ -54,7 +54,7 @@
         	</p:column>
         	<p:column style="white-space:normal;">
         	<!--#31344 filter item name-->
-				<h:outputText value="#{CommonUtils.filterItemNameNA(item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName)}" 
+				<h:outputText value="#{CommonUtils.removeItemNameNA(item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName)}" 
 				id="itemDesc" title="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}"/>
 				<p:commandLink oncomplete="frnItemInfo.show();" process="@this"  
 					rendered="#{receivedNoteBackingBean.managedBean.contractFlag}"
@@ -230,7 +230,7 @@
 					<td><p:inputText value="#{receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.itemCode}" disabled="true"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.itemname']}" /></td>
 					<!--#31344 filter item name-->
-					<td><p:inputText value="#{CommonUtils.filterItemNameNA(receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName)}" size="51" disabled="true"/></td>
+					<td><p:inputText value="#{CommonUtils.removeItemNameNA(receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName)}" size="51" disabled="true"/></td>
 				</tr>
 			</table>
 			<p:dataTable id="rejectionRemarks" value="#{receivedNoteBackingBean.managedBean.rejectionRemarkHistory}" var="remarks"

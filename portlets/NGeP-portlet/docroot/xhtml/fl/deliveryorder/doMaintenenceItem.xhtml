@@ -24,7 +24,7 @@
 			<ac:paginator for="doItems" />
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal">
 			<!--#31344 filter item name-->
-				<h:outputText value="#{CommonUtils.filterItemNameNA(doItems.scRequestItem.itemName)}" id="itemDesc" 
+				<h:outputText value="#{CommonUtils.removeItemNameNA(doItems.scRequestItem.itemName)}" id="itemDesc" 
 				 title="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"/>
 				<p:commandLink oncomplete="doItemInfo.show();" process="@this"
 					rendered="#{createDOBackingBean.managedBean.contractFlag}"  

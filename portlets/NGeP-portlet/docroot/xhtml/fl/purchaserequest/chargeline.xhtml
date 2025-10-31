@@ -88,7 +88,7 @@
 					<h:outputText value=")" rendered="#{chargeLineNode.parent == 'true'}" />		
 				<br />
 				<!--#31344 filter item name-->
-				<h:outputText value="#{CommonUtils.filterItemNameNA(chargeLineNode.scRequestItem.itemName)}" id="itemDesc" style="white-space:pre-wrap; text-align:left; float:left;"
+				<h:outputText value="#{CommonUtils.removeItemNameNA(chargeLineNode.scRequestItem.itemName)}" id="itemDesc" style="white-space:pre-wrap; text-align:left; float:left;"
 					title="#{chargeLineNode.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.scRequestItem.itemDesc}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 				</h:panelGroup>
@@ -117,7 +117,7 @@
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
 				<!--#31344 filter item name-->
-				<h:outputText value="#{CommonUtils.filterItemNameNA(chargeLineNode.scRequestItem.itemName)}" id="itemDesc" style="text-align:left; float:left;"
+				<h:outputText value="#{CommonUtils.removeItemNameNA(chargeLineNode.scRequestItem.itemName)}" id="itemDesc" style="text-align:left; float:left;"
 					title="#{chargeLineNode.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.scRequestItem.itemDesc}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
