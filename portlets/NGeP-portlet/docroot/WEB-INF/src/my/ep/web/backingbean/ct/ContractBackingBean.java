@@ -54,7 +54,6 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
