@@ -4342,10 +4342,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	// Start - #29589
 	public BigDecimal newOverallContractAmt() {
 		BigDecimal contractAmt = newContractAmt();
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null )  {
-			contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
 		
+		// #24336 - Start
+		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null )  {
+				contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
+			}
 		}
+		// #24336 - End
+		
 		return contractAmt;
 	}
 	
@@ -4353,9 +4358,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public BigDecimal newOverallContractAmount() {
 		BigDecimal contractAmount = newOverallContractAmt();
 	
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
-			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
+		// #24336 - Start
+		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
+				contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
+			}
 		}
+		// #24336 - End
 		
 		return contractAmount;
 	}
@@ -10133,7 +10142,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	
 	
-	
 	//#24336 - Start
 	/**
 	 * Handles changes to the contract value type input (reduction or addition).
@@ -10333,6 +10341,5 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		handleNewAmtEffDate();
 	}
 	//#24336 - End
-	
 	
 }
