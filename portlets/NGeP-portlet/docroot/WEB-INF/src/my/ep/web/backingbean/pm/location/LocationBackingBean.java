@@ -255,170 +255,169 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		Long locationMsgId = null; //#34445
 		
 		try { //#34445
-		
-		if (ParameterConst.LOCATION_LEVEL_STATE.equals(getManagedBean().getSelectedType())){
-			StateReqDTO reqDTO = new StateReqDTO();
-			IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IStateSO.class);
-			PmState state = this.getManagedBean().getState();
-			state.setStateCode(state.getStateCode().toUpperCase());
-			state.setStateName(state.getStateName().trim());
 
-			//#32753 - START
-			if (!state.isBrandNew()) {
-				state.setChangedBy(loginSessionUserId);
-			} else {
-				state.setChangedBy(loginSessionUserId);
-				state.setCreatedBy(loginSessionUserId);
-			}
-			//#32753 - END
-			
-			reqDTO.setPmState(state);
-			locationMsgId = getManagedBean().getState().getStateId(); // #34445
-			StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
-        
-			if (resDTO.isSuccessful()) {
-				message = getManagedBean().getState().isBrandNew() 
-						? MessageConst.ERR_900016 : MessageConst.ERR_900017;
-				messageParam = new String[] {ResourceBundleUtils.getMessage(
-						"lbl.pm.state", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()),
-						this.getManagedBean().getState()
-						.getStateName()};
-				locationId = getManagedBean().getState().getStateId();
-				
-			}
-		} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(getManagedBean().getSelectedType())) {
-			DivisionReqDTO reqDTO = new DivisionReqDTO();
-			IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
-							IDivisionSO.class);
+			IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 
-			PmDivision division = this.getManagedBean().getDivision();
-			division.setDivisionCode(division.getDivisionCode().toUpperCase());
-			division.setDivisionName(division.getDivisionName().trim());
-
-			//#32753 - START
-			if (!division.isBrandNew()) {
-				division.setChangedBy(loginSessionUserId);
-			} else {
-				division.setChangedBy(loginSessionUserId);
-				division.setCreatedBy(loginSessionUserId);
-			}
-			//#32753 - END
-			
-			reqDTO.setPmDivision(division);
-			reqDTO.setStateId(division.getPmState().getStateId());
-			locationMsgId = getManagedBean().getDivision().getDivisionId(); //#34445
-			DivisionResDTO resDTO = divisionSO.saveOrUpdateDivision(reqDTO);			
-			if (resDTO.isSuccessful()) {
-				message = getManagedBean().getDivision().isBrandNew() 
-						? MessageConst.ERR_900016 : MessageConst.ERR_900017;
-				messageParam = new String[] {ResourceBundleUtils.getMessage(
-							"lbl.pm.division", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()),
-								this.getManagedBean().getDivision().getDivisionName()};	
-				locationId = getManagedBean().getDivision().getDivisionId();
-			}
-		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(getManagedBean().getSelectedType())) {
-				DistrictReqDTO reqDTO = new DistrictReqDTO();
-				IDistrictSO districtSO = (IDistrictSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								IDistrictSO.class);
-
-				PmDistrict district = this.getManagedBean().getDistrict();
-				district.setDistrictCode(district.getDistrictCode().toUpperCase());
-				district.setDistrictName(district.getDistrictName().trim());
-				if(!this.getManagedBean().getDivisionBox()){
-					if(null!=district.getPmDivision()){
-						if(district.getPmDivision().getDivisionId()== null){
-							throw new EpException(MessageConst.ERR_900014);
-						}
-					}
-				}else{
-					district.setPmDivision(null);
-				}
+			if (ParameterConst.LOCATION_LEVEL_STATE.equals(getManagedBean().getSelectedType())){
+				StateReqDTO reqDTO = new StateReqDTO();
+				PmState state = this.getManagedBean().getState();
+				state.setStateCode(state.getStateCode().toUpperCase());
+				state.setStateName(state.getStateName().trim());
+	
 				//#32753 - START
-				if (!district.isBrandNew()) {
-					district.setChangedBy(loginSessionUserId);
+				if (!state.isBrandNew()) {
+					state.setChangedBy(loginSessionUserId);
 				} else {
-					district.setChangedBy(loginSessionUserId);
-					district.setCreatedBy(loginSessionUserId);
+					state.setChangedBy(loginSessionUserId);
+					state.setCreatedBy(loginSessionUserId);
 				}
 				//#32753 - END
 				
-				reqDTO.setPmDistrict(district);
-				reqDTO.setStateId(district.getPmState().getStateId());
-				reqDTO.setDivisionId(null != district.getPmDivision() ? district.getPmDivision().getDivisionId() : null);
-				locationMsgId = getManagedBean().getDistrict().getDistrictId(); //#34445
-				DistrictResDTO resDTO  = districtSO.saveOrUpdateDistrict(reqDTO);
+				reqDTO.setPmState(state);
+				locationMsgId = getManagedBean().getState().getStateId(); // #34445
+				StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
+	        
 				if (resDTO.isSuccessful()) {
-					message = getManagedBean().getDistrict().isBrandNew() 
+					message = getManagedBean().getState().isBrandNew() 
 							? MessageConst.ERR_900016 : MessageConst.ERR_900017;
 					messageParam = new String[] {ResourceBundleUtils.getMessage(
-							"lbl.pm.district", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							"lbl.pm.state", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()),
-							this.getManagedBean().getDistrict().getDistrictName()};
-					locationId = getManagedBean().getDistrict().getDistrictId();
+							this.getManagedBean().getState()
+							.getStateName()};
+					locationId = getManagedBean().getState().getStateId();
+					
 				}
-		} else if (ParameterConst.LOCATION_LEVEL_CITY.equals(getManagedBean().getSelectedType())) {
-				CityReqDTO reqDTO = new CityReqDTO();
-				ICitySO citySO = (ICitySO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								ICitySO.class);
-
-				PmCity city = this.getManagedBean().getCity();
-                city.setCityCode(city.getCityCode().toUpperCase());
-                city.setCityName(city.getCityName().trim());
-
-    			//#32753 - START
-    			if (!city.isBrandNew()) {
-    				city.setChangedBy(loginSessionUserId);
-    			} else {
-    				city.setChangedBy(loginSessionUserId);
-    				city.setCreatedBy(loginSessionUserId);
-    			}
-    			//#32753 - END
-    			
-				reqDTO.setPmCity(city);
-				reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());
-				locationMsgId = getManagedBean().getCity().getCityId(); //#34445
-				CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
+			} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(getManagedBean().getSelectedType())) {
+				DivisionReqDTO reqDTO = new DivisionReqDTO();
+				IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IDivisionSO.class);
+	
+				PmDivision division = this.getManagedBean().getDivision();
+				division.setDivisionCode(division.getDivisionCode().toUpperCase());
+				division.setDivisionName(division.getDivisionName().trim());
+	
+				//#32753 - START
+				if (!division.isBrandNew()) {
+					division.setChangedBy(loginSessionUserId);
+				} else {
+					division.setChangedBy(loginSessionUserId);
+					division.setCreatedBy(loginSessionUserId);
+				}
+				//#32753 - END
+				
+				reqDTO.setPmDivision(division);
+				reqDTO.setStateId(division.getPmState().getStateId());
+				locationMsgId = getManagedBean().getDivision().getDivisionId(); //#34445
+				DivisionResDTO resDTO = divisionSO.saveOrUpdateDivision(reqDTO);			
 				if (resDTO.isSuccessful()) {
-					message = getManagedBean().getCity().isBrandNew() 
+					message = getManagedBean().getDivision().isBrandNew() 
 							? MessageConst.ERR_900016 : MessageConst.ERR_900017;
 					messageParam = new String[] {ResourceBundleUtils.getMessage(
-							"lbl.pm.city", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()),
-							this.getManagedBean().getCity().getCityName()};
-					locationId = getManagedBean().getCity().getCityId();
+								"lbl.pm.division", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()),
+									this.getManagedBean().getDivision().getDivisionName()};	
+					locationId = getManagedBean().getDivision().getDivisionId();
 				}
-
-		}
-		if(message != null && messageParam != null) {	
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(
-									message, messageParam,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-		}
-
-		
-		if(getManagedBean().isDisabledVal()){
-			if(locationId != null && getManagedBean().getSelectedType() != null){
-				maintainLocation(getManagedBean().getSelectedType(), locationId);
+			} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(getManagedBean().getSelectedType())) {
+					DistrictReqDTO reqDTO = new DistrictReqDTO();
+					IDistrictSO districtSO = (IDistrictSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IDistrictSO.class);
+	
+					PmDistrict district = this.getManagedBean().getDistrict();
+					district.setDistrictCode(district.getDistrictCode().toUpperCase());
+					district.setDistrictName(district.getDistrictName().trim());
+					if(!this.getManagedBean().getDivisionBox()){
+						if(null!=district.getPmDivision()){
+							if(district.getPmDivision().getDivisionId()== null){
+								throw new EpException(MessageConst.ERR_900014);
+							}
+						}
+					}else{
+						district.setPmDivision(null);
+					}
+					//#32753 - START
+					if (!district.isBrandNew()) {
+						district.setChangedBy(loginSessionUserId);
+					} else {
+						district.setChangedBy(loginSessionUserId);
+						district.setCreatedBy(loginSessionUserId);
+					}
+					//#32753 - END
+					
+					reqDTO.setPmDistrict(district);
+					reqDTO.setStateId(district.getPmState().getStateId());
+					reqDTO.setDivisionId(null != district.getPmDivision() ? district.getPmDivision().getDivisionId() : null);
+					locationMsgId = getManagedBean().getDistrict().getDistrictId(); //#34445
+					DistrictResDTO resDTO  = districtSO.saveOrUpdateDistrict(reqDTO);
+					if (resDTO.isSuccessful()) {
+						message = getManagedBean().getDistrict().isBrandNew() 
+								? MessageConst.ERR_900016 : MessageConst.ERR_900017;
+						messageParam = new String[] {ResourceBundleUtils.getMessage(
+								"lbl.pm.district", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()),
+								this.getManagedBean().getDistrict().getDistrictName()};
+						locationId = getManagedBean().getDistrict().getDistrictId();
+					}
+			} else if (ParameterConst.LOCATION_LEVEL_CITY.equals(getManagedBean().getSelectedType())) {
+					CityReqDTO reqDTO = new CityReqDTO();
+					ICitySO citySO = (ICitySO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									ICitySO.class);
+	
+					PmCity city = this.getManagedBean().getCity();
+	                city.setCityCode(city.getCityCode().toUpperCase());
+	                city.setCityName(city.getCityName().trim());
+	
+	    			//#32753 - START
+	    			if (!city.isBrandNew()) {
+	    				city.setChangedBy(loginSessionUserId);
+	    			} else {
+	    				city.setChangedBy(loginSessionUserId);
+	    				city.setCreatedBy(loginSessionUserId);
+	    			}
+	    			//#32753 - END
+	    			
+					reqDTO.setPmCity(city);
+					reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());
+					locationMsgId = getManagedBean().getCity().getCityId(); //#34445
+					CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
+					if (resDTO.isSuccessful()) {
+						message = getManagedBean().getCity().isBrandNew() 
+								? MessageConst.ERR_900016 : MessageConst.ERR_900017;
+						messageParam = new String[] {ResourceBundleUtils.getMessage(
+								"lbl.pm.city", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()),
+								this.getManagedBean().getCity().getCityName()};
+						locationId = getManagedBean().getCity().getCityId();
+					}
 			}
-			return NAV_TO_MAINTAIN;
-		}
-		else{
-			this.getManagedBean().setSelectedType(null);
-			return NAV_TO_SEARCH;
-		}
+			if(message != null && messageParam != null) {	
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										message, messageParam,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+	
+			
+			if(getManagedBean().isDisabledVal()){
+				if(locationId != null && getManagedBean().getSelectedType() != null){
+					maintainLocation(getManagedBean().getSelectedType(), locationId);
+				}
+				return NAV_TO_MAINTAIN;
+			}
+			else{
+				this.getManagedBean().setSelectedType(null);
+				return NAV_TO_SEARCH;
+			}
 		
 		//#34445 Start
 		} catch (EpException e) {
