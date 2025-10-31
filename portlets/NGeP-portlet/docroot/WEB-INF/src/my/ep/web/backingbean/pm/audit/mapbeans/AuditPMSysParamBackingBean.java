@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -29,6 +30,7 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 	String roleCode = null;
 	String lvlCode2 = null;
+	String docNo = null;
 	BigInteger docId;
 	String pattern = "dd/MM/yyyy";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -286,6 +288,7 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	public void qtValuesAddUpdateDeleteAuditDetail(PmPtjSpecialApproval approval, BigInteger fieldLabelCode, String oldValue,
 			String newValue, String actionType) {
 		docId = BigInteger.valueOf(approval.getPtjSpecialApprovalId());
+		docNo = approval.getPmOrgProfile().getPmOrgValidity().getOrgCode();
 		addAuditDetail(AuditConst.PM_AUD_SPQTV_PARAM_CODE, AuditConst.PM_AUD_SPQTV_PMPARAMETERLVLID,
 				AuditConst.PM_LVL_CODE_3_SPQTV, fieldLabelCode, oldValue, newValue, actionType);
 	}
@@ -326,8 +329,8 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	 * @param roleCode
 	 */
 	public void yepProcessIfChanged(PmFeeExemption exemption, PmFeeExemption exemptionOld) {
-		boolean isEffDateChanged = !exemption.getEffDate().equals(exemptionOld.getEffDate());
-		boolean isExpDateChanged = !exemption.getExpDate().equals(exemptionOld.getExpDate());
+		boolean isEffDateChanged = !Objects.equals(exemption.getEffDate(), exemptionOld.getEffDate());
+		boolean isExpDateChanged = !Objects.equals(exemption.getExpDate(), exemptionOld.getExpDate());
 
 		if (isEffDateChanged || isExpDateChanged) {
 			yepProcessBasedOnParamCode(exemption, exemptionOld);
@@ -371,13 +374,15 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	 * @param lvlId
 	 */
 	public void yepProcessFeeExemption(PmFeeExemption exemption, PmFeeExemption exemptionOld, String lvlCode, BigInteger lvlId) {
-		if (exemption.getEffDate() != null && !exemption.getEffDate().equals(exemptionOld.getEffDate())) {
+		if (exemption.getEffDate() != null && !Objects.equals(exemption.getEffDate(), exemptionOld.getEffDate())) {
 			yepAddAuditDetail(exemption, lvlCode, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, 
-					simpleDateFormat.format(exemptionOld.getEffDate()), simpleDateFormat.format(exemption.getEffDate()), lvlId);
+					exemptionOld.getEffDate() != null ? simpleDateFormat.format(exemptionOld.getEffDate()) : "", 
+					simpleDateFormat.format(exemption.getEffDate()), lvlId);
 		}
-		if (exemption.getExpDate() != null && !exemption.getExpDate().equals(exemptionOld.getExpDate())) {
+		if (exemption.getExpDate() != null && !Objects.equals(exemption.getExpDate(), exemptionOld.getExpDate())) {
 			yepAddAuditDetail(exemption, lvlCode, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID, 
-					simpleDateFormat.format(exemptionOld.getExpDate()), simpleDateFormat.format(exemption.getExpDate()), lvlId);
+					exemptionOld.getExpDate() != null ? simpleDateFormat.format(exemptionOld.getExpDate()) : "", 
+					simpleDateFormat.format(exemption.getExpDate()), lvlId);
 		}
 	}
 
@@ -394,6 +399,7 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	public void yepAddAuditDetail(PmFeeExemption exemption, String lvlCode, BigInteger fieldLabelCode, String oldValue,
 			String newValue, BigInteger lvlId) {
 		docId = BigInteger.valueOf(exemption.getFeeExemptionId());
+		docNo = "";
 		addAuditDetail(exemption.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeName(), lvlId, lvlCode,
 				fieldLabelCode, oldValue, newValue, AuditConst.PM_AUD_ACTION_TYPE_UPD);
 	}
@@ -421,6 +427,7 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 		detailObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		detailObj.setLvlCode2(lvlCode2);
 		detailObj.setDocId(docId);
+		detailObj.setDocNo(docNo);
 		detailObj.setActionType(actionType);
 		detailObj.setLvlCode3(lvlCode);
 		detailObj.setFieldLabelCode(fieldLabelCode);

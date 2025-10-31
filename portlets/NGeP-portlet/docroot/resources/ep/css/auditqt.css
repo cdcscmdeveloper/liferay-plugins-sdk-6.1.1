@@ -1,0 +1,170 @@
+/* ===============================
+   MAIN PANEL WRAPPER
+   =============================== */
+.audit-main-panel {
+	max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    width: 100%;
+}
+
+/* ===============================
+   DATATABLE STYLING
+   =============================== */
+.audit-main-panel .audit-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+}
+
+.audit-main-panel .audit-table .ui-datatable-data td {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+}
+
+/* Atur tinggi baris header datatable */
+.audit-table thead th {
+    height: 60px;              /* tinggi header */
+    vertical-align: middle;    /* teks ditengah */
+    padding: 8px !important;   /* spasi dalam */
+    font-size: 14px;           /* optional: ubah ukuran font */
+}
+
+.audit-main-panel .audit-table .ui-datatable-header {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+}
+
+/* ===============================
+   TAB MENU STYLING
+   =============================== */
+.equal-width-tabs .ui-tabmenu-nav {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+    gap: 1px !important; /* jarak antar tab */
+    padding: 0 !important;
+    margin: 0 !important;
+    align-items: stretch !important;
+}
+
+.equal-width-tabs .ui-tabmenuitem {
+    text-align: center !important;
+    white-space: normal !important;      
+    overflow-wrap: break-word !important;
+    word-break: keep-all !important;
+    padding: 0 !important;
+    height: 40px !important;         /* Reduced height */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box; /* Pastikan padding tidak menambah ukuran */
+}
+
+.equal-width-tabs .ui-tabmenuitem > a {
+    display: flex !important;            /* flex untuk center */
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 4px 8px !important;        /* Adjusted padding */
+    color: inherit !important;
+    text-decoration: none !important;
+    box-sizing: border-box; /* Pastikan padding tidak overflow */
+    background-clip: padding-box; /* Batasi background dalam padding */
+}
+
+.equal-width-tabs .ui-tabmenuitem > a .ui-menuitem-text {
+    display: -webkit-box !important;     /* untuk clamp */
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;    /* maksimal 2 baris */
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;        /* Adjusted line height */
+    font-size: 12px !important;
+    text-align: center !important;
+}
+
+/* Kontrak: tab ke-13+ beda aturan */
+.equal-width-tabs .ui-tabmenuitem:nth-child(n+13) {
+    min-width: 260px !important; 
+    max-width: none !important;
+    align-self: stretch !important; /* Ubah ke stretch untuk konsistensi */
+    height: 40px !important; /* Consistent reduced height */
+}
+
+.equal-width-tabs .ui-tabmenuitem:nth-child(n+13) > a .ui-menuitem-text {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;
+    font-size: 12px !important;
+    text-align: center !important;
+}
+
+/* Circular: tab ke-5+ beda aturan */
+.equal-width-tabs .ui-tabmenuitem:nth-child(n+5) {
+    min-width: 260px !important; 
+    max-width: none !important;
+    align-self: stretch !important; /* Ubah ke stretch untuk konsistensi */
+    height: 40px !important; /* Consistent reduced height */
+}
+
+.equal-width-tabs .ui-tabmenuitem:nth-child(n+5) > a .ui-menuitem-text {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;
+    font-size: 12px !important;
+    text-align: center !important;
+}
+
+/* ===============================
+   RESPONSIVE TWEAKS
+   =============================== */
+@media (max-width: 768px) {
+    .equal-width-tabs .ui-tabmenuitem {
+        min-width: 120px !important;
+        font-size: 0.8em !important;
+        height: 40px !important;  /* Reduced height for mobile */
+    }
+
+    .equal-width-tabs .ui-tabmenuitem > a {
+        padding: 4px 6px !important;
+        line-height: 1.2 !important;
+    }
+
+    .equal-width-tabs .ui-tabmenuitem > a .ui-menuitem-text {
+        font-size: 11px !important;
+        line-height: 1.2 !important;
+    }
+}
+
+/* ===============================
+   FIXED COLUMN WIDTHS
+   =============================== */
+.audit-main-panel .col-action-date   { width: 8.0% !important; }
+.audit-main-panel .col-action-type   { width: 6.0% !important; }
+.audit-main-panel .col-action-by     { width: 9.7% !important; }
+.audit-main-panel .col-org-name      { width: 10.4% !important; }
+.audit-main-panel .col-role          { width: 8.2% !important; }
+.audit-main-panel .col-doc-type      { width: 6.7% !important; }
+.audit-main-panel .col-doc-no {
+	width: 12.9% !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+.audit-main-panel .col-doc-status    { width: 9.7% !important; }
+.audit-main-panel .col-field-name    { width: 9.0% !important; }
+.audit-main-panel .col-old-value     { width: 9.7% !important; }
+.audit-main-panel .col-new-value     { width: 9.7% !important; }
