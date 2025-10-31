@@ -12,13 +12,27 @@
 			<tr>
 				<td>
 					<div align="right" style="width: 100%">
+						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="budgetThreSaveBtn"
-							action="#{ruleCatalogueBackingBean.saveThresholds(2)}"
-							process="budgetThresholdPanel" update="@form"></p:commandButton>
+							partialSubmit="true" oncomplete="if (!args.validationFailed) saveBudgetThreInfoDlg.show();"/>
+						<!-- 34445 end -->
 					</div>
 				</td>
 			</tr>
 		</table>
+		
+		<!-- 34445 start -->
+		<ac:confirmationPopupSM id="saveBudgetThreInfoDlg" widget="saveBudgetThreInfoDlg"
+			okParam="#{ruleCatalogueBackingBean.saveThresholds(2)}"
+			hasParam="true"
+			okProcess="@([id$=budgetThresholdPanel])"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.save.msg']}" 
+			update="@form"
+			loadingWidget="blockWidget" />
+		<!-- 34445 end -->
+		
 		<table width="80%">
 			<tr style="height: 30px;">
 				<td style="width: 10%"><p:outputLabel
