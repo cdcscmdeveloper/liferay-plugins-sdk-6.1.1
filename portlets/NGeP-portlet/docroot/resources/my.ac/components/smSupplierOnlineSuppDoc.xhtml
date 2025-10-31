@@ -218,7 +218,6 @@
 			onShow="singleUploadListener(uploadWV_AI);"
 			onHide="uploadWV_AI.buttonBar.find('input[type=file]').get(0).disabled=false;">
 			
-			Uploaded files will be processed with AI
 			<p:spacer width="10" />
 			<p:fileUpload widgetVar="uploadWV_AI" 
 				allowTypes="/(\.|\/)(pdf|doc|docx|zip|json)$/"
@@ -232,6 +231,8 @@
 				cancelLabel="#{lbl['lbl.btn.cancel']}"
 				multiple="true"
 				showButtons="false"/>
+			<p:spacer width="10" />
+			<p:graphicImage value="/css/images/ai/icon.png"/> Uploaded document(s) will be processed by AI for data extraction and validation.
 			<p:ajax event="close" listener="#{backingBean.processAI()}" update="#{cc.attrs.tableId}" 
 				onstart="blockAI.show()" oncomplete="blockAI.hide()"/>
 		</p:dialog>

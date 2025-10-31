@@ -474,7 +474,7 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		map.put(QTAuditConstant.AU_SECTION_SL, new TabHeaderPair(ReportExcelAuditConstant.TAB_SUPPLIER_LIST,
 				ReportExcelAuditConstant.TAB_SUPPLIER_LIST));
 		map.put(QTAuditConstant.AU_SECTION_DOA, new TabHeaderPair(ReportExcelAuditConstant.TAB_DESK_OFFICER_ASSISTANT,
-				ReportExcelAuditConstant.TAB_SUPPLIER_LIST));
+				ReportExcelAuditConstant.TAB_DESK_OFFICER_ASSISTANT));
 		map.put(QTAuditConstant.AU_SECTION_DO, new TabHeaderPair(ReportExcelAuditConstant.TAB_DESK_OFFICER,
 				ReportExcelAuditConstant.TAB_DESK_OFFICER));
 		map.put(QTAuditConstant.AU_SECTION_SC, new TabHeaderPair(
