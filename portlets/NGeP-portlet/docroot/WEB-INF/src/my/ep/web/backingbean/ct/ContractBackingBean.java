@@ -54,6 +54,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -1255,11 +1256,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to validate deduction type.
 	 * User can not selected same type of deduction again.
 	 */	
-	public void validateDeductionType(CtDeduction deduction)  {
+	public void validateDeductionType(CtDeduction deduction, String action)  {
 
 		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
 			int count = 0;
-			String parameterCode;
 			for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
 				PmParameter deductionTypeById = deId.getDeductionType();
 				PmParameter deductionType = deduction.getDeductionType();
@@ -1268,16 +1268,49 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if (deductionTypeById.getParameterId() != null && deductionType.getParameterId() != null
 						&& deductionType.getParameterId().intValue() == deductionTypeById.getParameterId().intValue()) {
 					count++;
-					parameterCode =  getParameterCode(deductionTypeById);
-					if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && 
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
-						throw new EpException(MessageConst.ERROR_100046,
-								new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionType().getParameterId()))});
+					resetAndValidateDeduction(deId, deduction, deductionTypeById, count, action); //#35506
 				}
 			}
 		}
 	}
+	
+	// #35506 (Resetting and validation) - Start
+	/**
+	 * Overloaded method used for Ajax listener calls.
+	 * Delegates to the main method with action = null.
+	 */
+	public void validateDeductionType(CtDeduction deduction) {
+	    validateDeductionType(deduction, null);
+	}
+	
+	/**
+	 * Processes validation and reset rules for deduction types. Combines
+	 * comparison, resetting, and duplicate validation logic.
+	 */
+	private void resetAndValidateDeduction(CtDeduction deId, CtDeduction deduction, PmParameter deductionTypeById, int count, String action) {
+
+		String parameterCode = getParameterCode(deductionTypeById);
+		if (parameterCode == null) {
+			return;
+		}
+
+		// --- Reset section ---
+		if (action == null) {
+			final double zeroAmount = BigDecimal.ZERO.doubleValue();
+			deId.setAmount(zeroAmount);
+			deId.setDeductionDesc(null);
+		}
+		
+		// --- Duplicate validation section ---
+		if (!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
+				&& !parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
+				&& !parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2) {
+
+			throw new EpException(MessageConst.ERROR_100046, new String[] { getParameterDesc(ParameterHelper.getInstance().getPmParameterById(
+					deduction.getDeductionType().getParameterId())) });
+		}
+	}
+	// #35506 (Resetting and validation) - End
 
 	/**
 	 * The method used to add new deduction.
@@ -4634,7 +4667,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
-
+		
+		//resets the contract days period to 0 because days are not applicable in the LOA process
+		getManagedBean().setContractDaysPeriod(ContractConst.VALUE_OF_0);
 		return String.valueOf(getManagedBean().getCtContractAmount().getContractPeriodBond());
 	}
 	

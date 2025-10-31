@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:outputPanel id="opAgencySuppAccType">
+		<p:panel id="pAgencySuppAccType" header="#{lbl['lbl.pm.reason.conditions']}" toggleable="true">
+			<p:tabView widgetVar="tvAgencySuppAccType" id="tvAgencySuppAccType" dynamic="false" cache="false" orientation="top">
+
+				<!-- Agency -->
+				<p:tab id="tAgency" title="#{lbl['lbl.pm.reason.agency']}"
+					rendered="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.specialItemWithApproval}"
+					activeIndex="0">
+					<p:outputPanel>
+						<ui:include src="/xhtml/pm/rejectionreason/agencySearch.xhtml" />
+
+						<p:dataTable id="dtAgencyResult"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							var="agency"
+							value="#{rejectionReasonBackingBean.managedBean.agencyList}"
+							rowIndexVar="rowIndex" rowKey="#{agency}" rows="10"
+							paginator="true" paginatorPosition="bottom"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
+							lazy="true">
+
+							<p:column style="text-align:center;" headerText="#{lbl['lbl.pm.reason.ministry']}">
+								<h:panelGroup maxlength="277" style="display:block; text-align:left; white-space: normal; word-wrap: break-word; word-break: break-word;">
+									<h:outputText value="#{empty agency.ministryId.pmOrgValidity.orgCode and empty agency.ministryId.pmOrgValidity.orgName? ''
+									   	: agency.ministryId.pmOrgValidity.orgCode.concat(' - ').concat(agency.ministryId.pmOrgValidity.orgName)}" />
+								</h:panelGroup>
+							</p:column>
+
+							<p:column style="text-align:center;" headerText="#{lbl['lbl.pm.reason.kumpulan.ptj']}">
+								<h:panelGroup maxlength="277" style="display:block; text-align:left; white-space: normal; word-wrap: break-word; word-break: break-word;">
+									<h:outputText value="#{empty agency.kumpPtjId.pmOrgValidity.orgCode and empty agency.kumpPtjId.pmOrgValidity.orgName? ''
+									   	: agency.kumpPtjId.pmOrgValidity.orgCode.concat(' - ').concat(agency.kumpPtjId.pmOrgValidity.orgName)}" />
+								</h:panelGroup>
+							</p:column>
+
+							<p:column style="text-align:center;" headerText="#{lbl['lbl.pm.reason.ptj']}">
+								<h:panelGroup maxlength="277" style="display:block; text-align:left; white-space: normal; word-wrap: break-word; word-break: break-word;">
+									<h:outputText value="#{empty agency.agencyId.pmOrgValidity.orgCode and empty agency.agencyId.pmOrgValidity.orgName? ''
+									   	: agency.agencyId.pmOrgValidity.orgCode.concat(' - ').concat(agency.agencyId.pmOrgValidity.orgName)}" />
+								</h:panelGroup>
+							</p:column>
+
+							<p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
+								<p:commandLink partialSubmit="true" process="@this"
+									update="dtAgencyResult"
+									action="#{rejectionReasonBackingBean.deleteAgency(rowIndex)}">
+									<p:graphicImage value="/css/images/design/trash.png"/>
+									<f:param name="index" value="#{rowIndex}"/>
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+
+						<p:commandButton value="#{lbl['lbl.btn.add']}"
+							id="agencyValuesAddBtn" process="@this" partialSubmit="true"
+							update="@([id$=agencyPopup])" style="float:right;"
+							oncomplete="agencyPopup.show();"
+							action="#{rejectionReasonBackingBean.initPtjPopup}">
+						</p:commandButton>
+					</p:outputPanel>
+				</p:tab>
+
+				<!-- Supplier Account Type -->
+				<p:tab id="tSuppAccType" title="#{lbl['lbl.pm.supplier.account.type']}">
+					<p:outputPanel>
+						<p:dataTable id="dtSuppAccType"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							var="suppAccType"
+							value="#{rejectionReasonBackingBean.managedBean.suppAccountTypeList}"
+							rowIndexVar="rowIndex" rowKey="#{suppAccType}" rows="10">
+
+							<p:column style="text-align:center;" headerText="#{lbl['lbl.pm.supplier.account.type']}">
+								<h:panelGroup style="display:block; text-align:left;">
+									<p:selectOneMenu id="acctype" value="#{suppAccType.supplAcctTypeId.parameterId}" style="width:250px;">
+										<f:selectItems value="#{rejectionReasonBackingBean.reasonSuppAccTypeDropDown()}" />
+										<p:ajax event="change" update="dtSuppAccType"
+											listener="#{rejectionReasonBackingBean.checkExtSuppAccType(rowIndex, suppAccType.supplAcctTypeId.parameterId)}"
+											partialSubmit="true" />
+									</p:selectOneMenu>
+								</h:panelGroup>
+							</p:column>
+
+							<p:column style="width:5%;text-align:center;" headerText="#{lbl['lbl.pm.action']}">
+								<p:commandLink partialSubmit="true" process="@this"
+									update="dtSuppAccType"
+									action="#{rejectionReasonBackingBean.deleteSuppAccType(rowIndex)}">
+									<p:graphicImage value="/css/images/design/trash.png"/>
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								partialSubmit="true" process="@this" update="dtSuppAccType"
+								action="#{rejectionReasonBackingBean.addSuppAccType()}" />
+						</div>
+					</p:outputPanel>
+				</p:tab>
+			</p:tabView>
+		</p:panel>
+		<ac:lovPopup />
+		<ui:include src="/xhtml/pm/rejectionreason/agencyPopupForRejectReason.xhtml" />
+	</p:outputPanel>
+</ui:composition>

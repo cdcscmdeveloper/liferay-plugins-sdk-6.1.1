@@ -1941,6 +1941,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> newScCommitteeMemberAuditTrailList;
 	/** The deleted sc qt committee */
 	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
+	/** The modified role of sc qt committee */
+	private HashMap<PmUser,List<String>> mapModifiedRole;	
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
 	/** The pmuser contactperson list that had been modified with the original pm user's name */
@@ -1949,8 +1951,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean auditViewRole;
 	//#28895 - 35500 end
 	private boolean updateCatDesc; //#29732
+	private boolean updateCatInPm; //#29732
 
 	private boolean zoneQtyHasZeroVal;//#38679
+	
+	//#35320 - Start
+	private boolean afterSF;
+	//#35320 - End
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12381,6 +12388,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setModifiedDoaList(HashMap<ScQtContactPerson, PmUser> modifiedDoaList) {
 		this.modifiedDoaList = modifiedDoaList;
 	}
+	
+	public HashMap<PmUser,List<String>> getMapModifiedRole() {
+		return mapModifiedRole;
+	}
+
+	public void setMapModifiedRole(HashMap<PmUser,List<String>> mapModifiedRole) {
+		this.mapModifiedRole = mapModifiedRole;
+	}
 	//#28895 - 35500 end
 	
 	//37813,35384 -start
@@ -12436,6 +12451,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#29732
 	
+	//#29732
+	public boolean getUpdateCatInPm() {
+		return updateCatInPm;
+	}
+
+	public void setUpdateCatInPm(boolean updateCatInPm) {
+		this.updateCatInPm = updateCatInPm;
+	}
+	//#29732
+	
 	//#38679
 	public boolean isZoneQtyHasZeroVal() {
 		return zoneQtyHasZeroVal;
@@ -12445,4 +12470,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
 	}
 	//#38679
+	
+	// #35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}// #35320 - End
 }
