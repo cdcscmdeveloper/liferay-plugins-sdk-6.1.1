@@ -16,11 +16,16 @@
 	    <cc:attribute name="immediate" default="false" />
 	</cc:interface>
 	<cc:implementation>
+		<script>
+      		function moveDialogToBody() {
+  				$("[id$='disciplinaryActionHistoryDlgId']").appendTo('body');
+	  		}
+		</script>	
 		<ui:fragment rendered="#{not cc.attrs.showTooltip}">
 			<div style="position: relative; width: 100% !important; pointer-events: none;">
 				<div style="margin: auto !important; width: 70px !important;">
 					<div style="display: inline-block; width: 50% !important; text-align: center;">
-						<p:commandLink onstart="blockWidget.show()"
+						<p:commandLink onstart="blockWidget.show(); moveDialogToBody();"
 							oncomplete="blockWidget.hide()"
 							style="color:red; font-weight:bold; pointer-events: auto;"
 							rendered="#{cc.attrs.supplier.disciplinaryActions}"
