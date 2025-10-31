@@ -7209,11 +7209,11 @@ return	remarksNotFound;
 			
 			createShortlistedSuppliersDataModel();
 		}
+		//#35320 - Rules are not valid for QQC - Start 
 		//#26169 #38 #25729#142 - Start 
 		//checkSupplierOfferPriceByItemIsExceedCommitteeAuthority();
-		//#26169 #38 #25729#142 - End
+		//#26169 #38 #25729#142 - End		
 		
-		//#35320 - Start 
 		checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
 		//#35320 - End 
 	}
