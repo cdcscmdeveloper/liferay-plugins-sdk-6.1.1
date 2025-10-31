@@ -55,8 +55,12 @@
 				<p:dataTable id="fcMembersId" rowKey="#{committeemember}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{committeBackingBean.managedBean.latestMembers}"
-					var="committeemember" rowIndexVar="index" editable="true" rows="10">
-
+					var="committeemember" rowIndexVar="rowIndex" rows="10" 
+					paginator="true" paginatorPosition="bottom"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
+					lazy="true">
+ 
 					<p:column style="width:2%"
 						rendered="#{isCommitteeRecordStatusActive}">
 						<f:facet name="header">
@@ -76,8 +80,6 @@
 								update="@([id$=finalCommitteeMaintenancePanel])" />
 						</p:selectBooleanCheckbox>
 					</p:column>
-
-					<ac:paginator for="fcMembersId" />
 
 					<p:column headerText="#{lbl['lbl.sc.name']}">
 						<h:outputText value="#{committeemember.memberName}"
