@@ -4939,22 +4939,5 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		return hasAnyRoleUser(pbqcRole);
 	}
-	
-	/**
-	 * Common utility method to check if user has any role from the given set.
-	 * 
-	 * @return true if user has any role in the given set.
-	 */
-	private boolean hasAnyRoleUser(Set<String> roles) {
-	    if (roles == null || roles.isEmpty()) {
-	        return false;
-	    }
-	    for (String role : roles) {
-	        if (getFacesScopes().hasRoleUser(role)) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
 	//#35238 end
 }

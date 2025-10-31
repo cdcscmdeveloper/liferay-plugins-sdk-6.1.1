@@ -380,7 +380,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				getManagedBean().setMinistryCodeName(null);
 				getManagedBean().setKumpPtjCodeName(null);
 				getManagedBean().setAgencyCodeName(null);
-				getManagedBean().setAgencyList(null);
 				loadAgency();
 				loadSuppType(pmReason);
 			}
@@ -744,7 +743,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				validateRejectionDesc();
 			}
 			
-			processRestrSuppAccTypeAgency(); //#28962
+			//#28962 - Start
+			if (ParameterConst.WIP_ITEM_PK7.equalsIgnoreCase(getManagedBean().getSelectedReason()
+					.getReasonCategoryCode().getParameterCode())
+					|| ParameterConst.SPECIAL_ITEM_WITH_APPROVAL.equalsIgnoreCase(getManagedBean().getSelectedReason()
+							.getReasonCategoryCode().getParameterCode())) {
+				processRestrSuppAccTypeAgency();
+			}
+			//#28962 - End
 			
 			/************ AUDIT #28895-35509 *************/
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMReasonMaintenanceBackingBean();
@@ -1963,6 +1969,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public void loadAgency() {
 		log.info("loadAgency - Start");
+		
+		this.getManagedBean().setAgencyList(new ArrayList<PmReasonRestr>());
 
 		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IReasonSO.class);
