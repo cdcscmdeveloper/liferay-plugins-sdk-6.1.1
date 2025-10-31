@@ -7714,10 +7714,10 @@ public class LOIDetailBackingBean extends
 				totalScoreFinEval.doubleValue(), recommendationTechnicalScore.doubleValue(),
 				recommendationFinancialScore.doubleValue(), recommendationTotalScore.doubleValue());
 
-		List<WeightageScoreBean> listlist = new ArrayList<>();
-		listlist.add(bean);
+		List<WeightageScoreBean> listList = new ArrayList<>();
+		listList.add(bean);
 
-		this.getManagedBean().setWeightageScoreBeans(listlist);
+		this.getManagedBean().setWeightageScoreBeans(listList);
 
 		RequestContext.getCurrentInstance().execute("SuppScoreDetailsPopup.show()");
 
