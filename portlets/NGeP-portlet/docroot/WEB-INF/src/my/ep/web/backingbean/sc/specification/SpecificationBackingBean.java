@@ -23852,6 +23852,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String scoreType = getManagedBean().getOfferPricePackage().getScoreType().toString();
 
 		paramMap.put(QtReportConst.PARAM_MAP_P_SCORE_TYPE, scoreType);
+		
+		String docId = String.valueOf(finScoreSetting.getSettingType());
+
+		paramMap.put(QtReportConst.PARAM_MAP_P_DOCID, docId);
 	}
 
 	// #10141 End Vinod

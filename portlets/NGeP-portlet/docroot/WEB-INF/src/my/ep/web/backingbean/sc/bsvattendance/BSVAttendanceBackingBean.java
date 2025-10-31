@@ -1788,6 +1788,8 @@ public class BSVAttendanceBackingBean extends
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_SL);		
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#355500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 
 			if(!(newBriefingRegistrationList == null||newBriefingRegistrationList.isEmpty())){	
 				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_SL_COMPANY_NAME);	
