@@ -628,6 +628,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal maxItemTsScore;
 	//#28784 - end
 	private boolean fecIndexPreRender;//#10542
+	private boolean allSupplierRejectEpv;//#21692
 
 	/** The total technical package max score. */
 	private String totalMaxScore;
@@ -685,6 +686,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//Bug #33178
 	/*#29187 Start Vinod*/
 	private TplSpecZoneDtl tplSpecZoneDtl;
+	private boolean isComplianceCnfrm;
+	private boolean isComplianceOldNull;
+	private boolean isComplianceOldNo;
 	/*#29187 End Vinod*/
 	
 	//34528-uat 4serangkai 
@@ -4367,14 +4371,40 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.demoTechnicalCommitteeRemark = demoTechnicalCommitteeRemark;
 	}
 	//#28784 add remarks - end
-	/*#29187 Start Vinod*/
+	/* #29187 Start Vinod */
 	public TplSpecZoneDtl getTplSpecZoneDtl() {
 		return tplSpecZoneDtl;
 	}
+
 	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 	}
-	/*#29187 End Vinod*/
+
+	public boolean isComplianceCnfrm() {
+		return isComplianceCnfrm;
+	}
+
+	public void setComplianceCnfrm(boolean isComplianceCnfrm) {
+		this.isComplianceCnfrm = isComplianceCnfrm;
+	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
+
+	public boolean isComplianceOldNo() {
+		return isComplianceOldNo;
+	}
+
+	public void setComplianceOldNo(boolean isComplianceOldNo) {
+		this.isComplianceOldNo = isComplianceOldNo;
+	}
+	
+	/* #29187 End Vinod */
 	
 	//34528-uat 4serangkai - start
 	public Paginator getFinancialPackagePaginator() {
@@ -4515,4 +4545,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.maxItemTsScore = maxItemTsScore;
 	}
 	//#28784 Demo Summary GAP - End
+
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
+	}
+
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
 }

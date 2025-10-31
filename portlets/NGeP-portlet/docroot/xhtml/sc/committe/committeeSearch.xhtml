@@ -104,9 +104,11 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.recordstatus']}"
-					style="width:10%"> 
-   	    		#{(scqtcommittee.scCommittee.recordStatusFlg==1)? lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}              
-      		</p:column>
+					style="width:10%">
+				<!-- 25037 start --> 
+   	    		#{committeBackingBean.isCommitteeRecordStatusActive(scqtcommittee.scCommittee) ? lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}
+   	    		<!-- 25037 end -->
+				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:6%;text-align: center;">

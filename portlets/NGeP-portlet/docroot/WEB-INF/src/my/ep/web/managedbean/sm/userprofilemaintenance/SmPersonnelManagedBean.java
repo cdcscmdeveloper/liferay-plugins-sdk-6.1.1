@@ -29,6 +29,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+//#28895_35501 - AUDIT TRAIL SM
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 
 @ManagedBean(name = "smPersonnelMB")
 @SessionScoped
@@ -76,6 +78,12 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	
 	private SmPersonnelAddress updateSmPersonnelOffAddress;
 	private SmPersonnelAddress updateSmPersonnelResAddress;
+	
+	//#36718 - START
+	private SmPersonnelAddress latestBasicSmPersonnelMailingAddress;
+	private SmPersonnelAddress latestBasicSmPersonnelResidentialAddress;
+	private SmPersonnelAddress latestBasicSmPersonnelOfficeAddress;
+	//#36718 - END
 	
 	private Long resDivisionId;
 	private boolean resDivisionBox=true;
@@ -163,6 +171,12 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	// #34810 - Start
 	private boolean checkingAfterSave;
 	// #34810 - End
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private SmSupplier oldSmSupplier;
+	private String oldRole;
+	private String newRole;
+	private PmOrgProfile oldOrg;
+	// #28895_35501 End
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -1135,5 +1149,63 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.checkingAfterSave = checkingAfterSave;
 	}
 	// #34810 - End
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public SmSupplier getOldSmSupplier() {
+		return oldSmSupplier;
+	}
+
+	public void setOldSmSupplier(SmSupplier oldSmSupplier) {
+		this.oldSmSupplier = oldSmSupplier;
+	}
+
+	public String getOldRole() {
+		return oldRole;
+	}
+
+	public void setOldRole(String oldRole) {
+		this.oldRole = oldRole;
+	}
+
+	public String getNewRole() {
+		return newRole;
+	}
+
+	public void setNewRole(String newRole) {
+		this.newRole = newRole;
+	}
+
+	public PmOrgProfile getOldOrg() {
+		return oldOrg;
+	}
+
+	public void setOldOrg(PmOrgProfile oldOrg) {
+		this.oldOrg = oldOrg;
+	}
+	// #28895_35501 End
 	
+	//#36718 - START
+	public SmPersonnelAddress getLatestBasicSmPersonnelMailingAddress() {
+		return latestBasicSmPersonnelMailingAddress;
+	}
+
+	public void setLatestBasicSmPersonnelMailingAddress(SmPersonnelAddress latestBasicSmPersonnelMailingAddress) {
+		this.latestBasicSmPersonnelMailingAddress = latestBasicSmPersonnelMailingAddress;
+	}
+
+	public SmPersonnelAddress getLatestBasicSmPersonnelResidentialAddress() {
+		return latestBasicSmPersonnelResidentialAddress;
+	}
+
+	public void setLatestBasicSmPersonnelResidentialAddress(SmPersonnelAddress latestBasicSmPersonnelResidentialAddress) {
+		this.latestBasicSmPersonnelResidentialAddress = latestBasicSmPersonnelResidentialAddress;
+	}
+
+	public SmPersonnelAddress getLatestBasicSmPersonnelOfficeAddress() {
+		return latestBasicSmPersonnelOfficeAddress;
+	}
+
+	public void setLatestBasicSmPersonnelOfficeAddress(SmPersonnelAddress latestBasicSmPersonnelOfficeAddress) {
+		this.latestBasicSmPersonnelOfficeAddress = latestBasicSmPersonnelOfficeAddress;
+	}
+	//#36718 - END
 }

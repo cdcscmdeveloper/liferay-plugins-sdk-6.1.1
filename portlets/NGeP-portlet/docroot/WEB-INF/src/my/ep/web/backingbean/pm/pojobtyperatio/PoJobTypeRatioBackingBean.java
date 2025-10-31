@@ -21,9 +21,11 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.pojobtyperatio.IPoJobTypeRatioSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioReqDTO;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioResDTO;
@@ -36,9 +38,12 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMWorkAllocationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.pojobtyperatio.PoJobTypeRatioManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -234,16 +239,32 @@ public class PoJobTypeRatioBackingBean extends BaseBackingBean<PoJobTypeRatioMan
 
 	public String savePoJobRatio() {
 		IPoJobTypeRatioSO jobRatioSO = null;
-		poJobRatioTypeValidation();
+		
+		//#34445 Start
 		try {
+			poJobRatioTypeValidation();
+
 			jobRatioSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IPoJobTypeRatioSO.class);
 			boolean isBrandNew = getManagedBean().getPoJobTypeRatio().isBrandNew();
 			PoJobTypeRatioReqDTO reqDTO = new PoJobTypeRatioReqDTO();
 			reqDTO.setJobTypeRatio(getManagedBean().getPoJobTypeRatio());
 			setupTrackingDiaryVal(reqDTO);
+			
+			/************ AUDIT START #28895-35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMWorkAllocationBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			getManagedBean().setBrandNew(isBrandNew); // set if brand new
+			/************ AUDIT END #28895-35509 *************/
 			PoJobTypeRatioResDTO resDTO = jobRatioSO.saveJobTypeRatio(reqDTO);
 			if (resDTO.isSuccessful() && resDTO.getPoJobTypeRatio() != null) {
+				/************ AUDIT START #28895-35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_WORK_ALLOCATION)) {
+					getManagedBean().setSavedJobTypeRatio(resDTO.getPoJobTypeRatio());
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_WORK_ALLOCATION);
+				}
+				/************ AUDIT END #28895-35509 *************/
 				if (isBrandNew) {
 					PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
 							MessageConst.INFO_779300, new String[] {});
@@ -262,6 +283,10 @@ public class PoJobTypeRatioBackingBean extends BaseBackingBean<PoJobTypeRatioMan
 					return NAV_TO_DETAILS;
 				}
 			}
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_DETAILS;
+		//#34445 End
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		} finally {

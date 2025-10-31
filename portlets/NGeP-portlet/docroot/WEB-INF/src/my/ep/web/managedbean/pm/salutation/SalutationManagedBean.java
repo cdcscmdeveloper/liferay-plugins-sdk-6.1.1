@@ -31,6 +31,10 @@ public class SalutationManagedBean extends BaseManagedBean {
 
 	private boolean isLazy;
 	
+	/************ START: AUDIT #28895_35509 *************/
+	private PmSalutation oldPmSalutation;
+	/************ END: AUDIT #28895_35509 *************/
+	
 	public SalutationManagedBean(){}
 
 	/**
@@ -101,4 +105,13 @@ public class SalutationManagedBean extends BaseManagedBean {
 		this.isLazy = isLazy;
 	}
 
+	/************ START: AUDIT #28895_35509 *************/
+	public PmSalutation getOldPmSalutation() {
+		return oldPmSalutation;
+	}
+
+	public void setOldPmSalutation(PmSalutation oldPmSalutation) {
+		this.oldPmSalutation = oldPmSalutation;
+	}
+	/************ END: AUDIT #28895_35509 *************/
 }

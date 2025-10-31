@@ -2,7 +2,9 @@ package my.ep.web.backingbean.pm.location;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -15,6 +17,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -23,6 +26,7 @@ import my.ep.biz.service.pm.common.location.ILocationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -53,6 +57,8 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMLocationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.LocationSearchBean;
@@ -284,171 +290,253 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		new LogKey(loginSessionUserId);
 		log.info("32753 UserId: " + loginSessionUserId);
 		//#32753 - END
-		
+		/** AUDIT 28895_35509 START **/
+		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IAuditPMSO.class);
+		AuditPMBackingBeanTemplate auTemplate = new AuditPMLocationBackingBean();
+		/** AUDIT 28895_35509 START END **/
 		String message = null;
 		String[] messageParam = null;
 		Long locationId = null;
-		if (ParameterConst.LOCATION_LEVEL_STATE.equals(getManagedBean().getSelectedType())){
-			StateReqDTO reqDTO = new StateReqDTO();
-			IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IStateSO.class);
-			PmState state = this.getManagedBean().getState();
-			state.setStateCode(state.getStateCode().toUpperCase());
-			state.setStateName(state.getStateName().trim());
+		Long locationMsgId = null; //#34445
+		
+		try { //#34445
 
-			//#32753 - START
-			if (!state.isBrandNew()) {
-				state.setChangedBy(loginSessionUserId);
-			} else {
-				state.setChangedBy(loginSessionUserId);
-				state.setCreatedBy(loginSessionUserId);
-			}
-			//#32753 - END
-			
-			reqDTO.setPmState(state);
-			StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
-        
-			if (resDTO.isSuccessful()) {
-				message = getManagedBean().getState().isBrandNew() 
-						? MessageConst.ERR_900016 : MessageConst.ERR_900017;
-				messageParam = new String[] {ResourceBundleUtils.getMessage(
-						"lbl.pm.state", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()),
-						this.getManagedBean().getState()
-						.getStateName()};
-				locationId = getManagedBean().getState().getStateId();
-				
-			}
-		} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(getManagedBean().getSelectedType())) {
-			DivisionReqDTO reqDTO = new DivisionReqDTO();
-			IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
-							IDivisionSO.class);
+			IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 
-			PmDivision division = this.getManagedBean().getDivision();
-			division.setDivisionCode(division.getDivisionCode().toUpperCase());
-			division.setDivisionName(division.getDivisionName().trim());
+			if (ParameterConst.LOCATION_LEVEL_STATE.equals(getManagedBean().getSelectedType())) {
+				StateReqDTO reqDTO = new StateReqDTO();
+				PmState state = this.getManagedBean().getState();
+				state.setStateCode(state.getStateCode().toUpperCase());
+				state.setStateName(state.getStateName().trim());
 
-			//#32753 - START
-			if (!division.isBrandNew()) {
-				division.setChangedBy(loginSessionUserId);
-			} else {
-				division.setChangedBy(loginSessionUserId);
-				division.setCreatedBy(loginSessionUserId);
-			}
-			//#32753 - END
-			
-			reqDTO.setPmDivision(division);
-			reqDTO.setStateId(division.getPmState().getStateId());
-			DivisionResDTO resDTO = divisionSO.saveOrUpdateDivision(reqDTO);			
-			if (resDTO.isSuccessful()) {
-				message = getManagedBean().getDivision().isBrandNew() 
-						? MessageConst.ERR_900016 : MessageConst.ERR_900017;
-				messageParam = new String[] {ResourceBundleUtils.getMessage(
-							"lbl.pm.division", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()),
-								this.getManagedBean().getDivision().getDivisionName()};	
-				locationId = getManagedBean().getDivision().getDivisionId();
-			}
-		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(getManagedBean().getSelectedType())) {
+				// #32753 - START
+				if (!state.isBrandNew()) {
+					state.setChangedBy(loginSessionUserId);
+				} else {
+					state.setChangedBy(loginSessionUserId);
+					state.setCreatedBy(loginSessionUserId);
+				}
+				// #32753 - END
+
+				reqDTO.setPmState(state);
+				locationMsgId = getManagedBean().getState().getStateId(); // #34445
+				/************ AUDIT #28895_35509 START *************/
+				reqDTO.setStateId(getManagedBean().getState().getStateId());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getState().getStateId() != null) {
+					getManagedBean().setStateOldVal(stateSO.retriveStateDetailsByID(reqDTO));
+				}
+				/************ END AUDIT #28895_35509 END *************/
+				StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					message = getManagedBean().getState().isBrandNew() ? MessageConst.ERR_900016
+							: MessageConst.ERR_900017;
+					messageParam = new String[] {
+							ResourceBundleUtils.getMessage("lbl.pm.state", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()), this.getManagedBean().getState().getStateName() };
+					locationId = getManagedBean().getState().getStateId();
+					/************ AUDIT #28895_35509 START *************/
+
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+						getManagedBean().setResState(resDTO.getPmState());
+						auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
+					}
+					/************ END AUDIT #28895_35509 END *************/
+				}
+			} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(getManagedBean().getSelectedType())) {
+				DivisionReqDTO reqDTO = new DivisionReqDTO();
+				IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
+
+				PmDivision division = this.getManagedBean().getDivision();
+				division.setDivisionCode(division.getDivisionCode().toUpperCase());
+				division.setDivisionName(division.getDivisionName().trim());
+
+				// #32753 - START
+				if (!division.isBrandNew()) {
+					division.setChangedBy(loginSessionUserId);
+				} else {
+					division.setChangedBy(loginSessionUserId);
+					division.setCreatedBy(loginSessionUserId);
+				}
+				// #32753 - END
+
+				reqDTO.setPmDivision(division);
+				reqDTO.setStateId(division.getPmState().getStateId());
+				locationMsgId = getManagedBean().getDivision().getDivisionId(); //#34445
+				/************ AUDIT #28895_35509 START *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)
+						&& getManagedBean().getDivision().getDivisionId() != null) {
+					reqDTO.setDivisionId(getManagedBean().getDivision().getDivisionId());
+					getManagedBean().setDivisionOldVal(divisionSO.retrieveDivisionById(reqDTO));
+				}
+				/************ END AUDIT #28895_35509 END *************/
+				DivisionResDTO resDTO = divisionSO.saveOrUpdateDivision(reqDTO);
+				if (resDTO.isSuccessful()) {
+					message = getManagedBean().getDivision().isBrandNew() ? MessageConst.ERR_900016
+							: MessageConst.ERR_900017;
+					messageParam = new String[] {
+							ResourceBundleUtils.getMessage("lbl.pm.division", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()),
+							this.getManagedBean().getDivision().getDivisionName() };
+					locationId = getManagedBean().getDivision().getDivisionId();
+					/************ AUDIT #28895_35509 START *************/
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+						StateResDTO stateResDTO = stateSO.retrieveStateByStateId(reqDTO.getStateId());
+						getManagedBean().setState(stateResDTO.getPmState());
+						getManagedBean().setResDivision(resDTO.getPmDivision());
+						auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
+					}
+					/************ END AUDIT #28895_35509 END *************/
+				}
+			} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(getManagedBean().getSelectedType())) {
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
-				IDistrictSO districtSO = (IDistrictSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								IDistrictSO.class);
+				IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 
 				PmDistrict district = this.getManagedBean().getDistrict();
 				district.setDistrictCode(district.getDistrictCode().toUpperCase());
 				district.setDistrictName(district.getDistrictName().trim());
-				if(!this.getManagedBean().getDivisionBox()){
-					if(null!=district.getPmDivision()){
-						if(district.getPmDivision().getDivisionId()== null){
+				if (!this.getManagedBean().getDivisionBox()) {
+					if (null != district.getPmDivision()) {
+						if (district.getPmDivision().getDivisionId() == null) {
 							throw new EpException(MessageConst.ERR_900014);
 						}
 					}
-				}else{
+				} else {
 					district.setPmDivision(null);
 				}
-				//#32753 - START
+				// #32753 - START
 				if (!district.isBrandNew()) {
 					district.setChangedBy(loginSessionUserId);
 				} else {
 					district.setChangedBy(loginSessionUserId);
 					district.setCreatedBy(loginSessionUserId);
 				}
-				//#32753 - END
-				
+				// #32753 - END
+
 				reqDTO.setPmDistrict(district);
 				reqDTO.setStateId(district.getPmState().getStateId());
 				reqDTO.setDivisionId(null != district.getPmDivision() ? district.getPmDivision().getDivisionId() : null);
-				DistrictResDTO resDTO  = districtSO.saveOrUpdateDistrict(reqDTO);
-				if (resDTO.isSuccessful()) {
-					message = getManagedBean().getDistrict().isBrandNew() 
-							? MessageConst.ERR_900016 : MessageConst.ERR_900017;
-					messageParam = new String[] {ResourceBundleUtils.getMessage(
-							"lbl.pm.district", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()),
-							this.getManagedBean().getDistrict().getDistrictName()};
-					locationId = getManagedBean().getDistrict().getDistrictId();
+				locationMsgId = getManagedBean().getDistrict().getDistrictId(); //#34445
+				/************ AUDIT #28895_35509 *************/
+				reqDTO.setDistrictId(getManagedBean().getDistrict().getDistrictId());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)
+						&& getManagedBean().getDistrict().getDistrictId() != null) {
+					getManagedBean().setDistrictOldVal(districtSO.retriveDistrictByID(reqDTO));
 				}
-		} else if (ParameterConst.LOCATION_LEVEL_CITY.equals(getManagedBean().getSelectedType())) {
+				/************ END AUDIT #28895_35509 *************/
+				DistrictResDTO resDTO = districtSO.saveOrUpdateDistrict(reqDTO);
+				if (resDTO.isSuccessful()) {
+					message = getManagedBean().getDistrict().isBrandNew() ? MessageConst.ERR_900016
+							: MessageConst.ERR_900017;
+					messageParam = new String[] {
+							ResourceBundleUtils.getMessage("lbl.pm.district", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()),
+							this.getManagedBean().getDistrict().getDistrictName() };
+					locationId = getManagedBean().getDistrict().getDistrictId();
+					/************ AUDIT #28895_35509 *************/
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+						getManagedBean().setResDistrict(resDTO.getPmDistrict());
+						auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
+					}
+					/************ END AUDIT #28895_35509 *************/
+				}
+			} else if (ParameterConst.LOCATION_LEVEL_CITY.equals(getManagedBean().getSelectedType())) {
 				CityReqDTO reqDTO = new CityReqDTO();
-				ICitySO citySO = (ICitySO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								ICitySO.class);
+				ICitySO citySO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
 
 				PmCity city = this.getManagedBean().getCity();
-                city.setCityCode(city.getCityCode().toUpperCase());
-                city.setCityName(city.getCityName().trim());
+				city.setCityCode(city.getCityCode().toUpperCase());
+				city.setCityName(city.getCityName().trim());
 
-    			//#32753 - START
-    			if (!city.isBrandNew()) {
-    				city.setChangedBy(loginSessionUserId);
-    			} else {
-    				city.setChangedBy(loginSessionUserId);
-    				city.setCreatedBy(loginSessionUserId);
-    			}
-    			//#32753 - END
-    			
+				// #32753 - START
+				if (!city.isBrandNew()) {
+					city.setChangedBy(loginSessionUserId);
+				} else {
+					city.setChangedBy(loginSessionUserId);
+					city.setCreatedBy(loginSessionUserId);
+				}
+				// #32753 - END
+
 				reqDTO.setPmCity(city);
 				reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());
+				locationMsgId = getManagedBean().getCity().getCityId(); //#34445
+				/************ AUDIT #28895_35509 *************/
+				reqDTO.setCityId(getManagedBean().getCity().getCityId());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getCity().getCityId() != null) {
+					getManagedBean().setCityOldVal(citySO.retriveCityById(reqDTO));
+				}
+				/************ END AUDIT #28895_35509 *************/
 				CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
 				if (resDTO.isSuccessful()) {
-					message = getManagedBean().getCity().isBrandNew() 
-							? MessageConst.ERR_900016 : MessageConst.ERR_900017;
-					messageParam = new String[] {ResourceBundleUtils.getMessage(
-							"lbl.pm.city", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()),
-							this.getManagedBean().getCity().getCityName()};
+					message = getManagedBean().getCity().isBrandNew() ? MessageConst.ERR_900016
+							: MessageConst.ERR_900017;
+					messageParam = new String[] {
+							ResourceBundleUtils.getMessage("lbl.pm.city", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()), this.getManagedBean().getCity().getCityName() };
 					locationId = getManagedBean().getCity().getCityId();
+					/************ AUDIT #28895_35509 *************/
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+						getManagedBean().setResCity(resDTO.getPmCity());
+						auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
+					}
+					/************ END AUDIT #28895_35509 *************/
 				}
 
-		}
-		if(message != null && messageParam != null) {	
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(
-									message, messageParam,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-		}
+			}
+			if (message != null && messageParam != null) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(message,
+								messageParam, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
 
-		
-		if(getManagedBean().isDisabledVal()){
-			if(locationId != null && getManagedBean().getSelectedType() != null){
-				maintainLocation(getManagedBean().getSelectedType(), locationId);
+			if (getManagedBean().isDisabledVal()) {
+				if (locationId != null && getManagedBean().getSelectedType() != null) {
+					maintainLocation(getManagedBean().getSelectedType(), locationId);
+				}
+				return NAV_TO_MAINTAIN;
+			} else {
+				this.getManagedBean().setSelectedType(null);
+				return NAV_TO_SEARCH;
+			}
+
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			if (locationMsgId != null && getManagedBean().getSelectedType() != null) {
+				maintainLocation(getManagedBean().getSelectedType(), locationMsgId);
 			}
 			return NAV_TO_MAINTAIN;
+
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Unexpected error: " + e.getMessage()));
+			return null;
 		}
-		else{
-			this.getManagedBean().setSelectedType(null);
-			return NAV_TO_SEARCH;
+		//#34445 End
+	}
+	
+	/** #35509 getCountryAuditVal() START **/
+	private void getCountryAuditVal(Long selectedCountryId) {
+		retrieveCountryList();
+		
+		Map<Long, PmCountry> countryMap = new HashMap<>();
+		for (PmCountry country : getManagedBean().getCountries()) {
+			countryMap.put(country.getCountryId(), country);
 		}
 
+		PmCountry selectedCountry = countryMap.get(selectedCountryId);
+		if (selectedCountry != null) {
+			getManagedBean().setResCountry(selectedCountry);
+		}
 	}
+
+	/** #35509 getCountryAuditVal() END **/
 
 	/**
 	 * Maintain Location details
@@ -630,6 +718,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		getManagedBean().setStates(resDTO.getStateList());
+		
+		/* #35509 PM Start */
+		getCountryAuditVal(countryId);
+		/* #35509 PM End */
 	}
 
 	public void retrieveDivisionList(AjaxBehaviorEvent e) {
@@ -677,6 +769,18 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		DistrictResDTO districtResDTO = districtSO
 				.retriveDistrictListByStateID(districtReqDTO);
 		getManagedBean().setDistricts(districtResDTO.getDistrictList());
+		
+		/* #35509 PM Start */
+		Map<Long, PmState> stateMap = new HashMap<>();
+		for (PmState state : getManagedBean().getStates()) {
+			stateMap.put(state.getStateId(), state);
+		}
+
+		PmState selectedSate = stateMap.get(stateId);
+		if (selectedSate != null) {
+			getManagedBean().setResState(selectedSate);
+		}
+		/* #35509 PM End */
 
 	}
 

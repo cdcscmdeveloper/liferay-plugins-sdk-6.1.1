@@ -14,11 +14,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Transient;
+
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.util.CustomUtils;	// Bug #36702@Syazani 28/11/2024
 
 /**
  * The Class BriefingZoneBean.
@@ -72,7 +75,11 @@ public class BriefingZoneBean implements Serializable {
 	private Long divisionId;
 	private Long cityId;//11104-End
 	
-	
+	// #28777 & #29729 - Start
+	@Transient
+	private boolean branchDeactivated;
+
+	// #28777 & #29729 - End
 
 	/**
 	 * Instantiates a new briefing zone bean.
@@ -135,6 +142,32 @@ public class BriefingZoneBean implements Serializable {
 	public BriefingZoneBean(ScQtBsv scQtBsv) {
 		this.scQtBsv = scQtBsv;
 	}
+	
+	// Bug #36702@Syazani 28/11/2024 -- Start
+	/**
+	 * Instantiates a new Copy of briefing zone bean.
+	 * 
+	 * @param source
+	 *            the original BriefingZoneBean object
+	 */
+	public BriefingZoneBean(BriefingZoneBean source) {
+		if (source == null) {
+			throw new IllegalArgumentException("Source object cannot be null");
+		}
+		this.briefingList = CustomUtils.getInstance().deepCopyArrayList(source.briefingList);
+		this.sitevisitList = CustomUtils.getInstance().deepCopyArrayList(source.sitevisitList);
+		this.deliveryLocList = CustomUtils.getInstance().deepCopyArrayList(source.deliveryLocList);
+		this.selectDeliveryList = CustomUtils.getInstance().deepCopyArrayList(source.selectDeliveryList);
+		this.selectedBriefingDtls = CustomUtils.getInstance().deepCopyArrayList(source.selectedBriefingDtls);
+		this.selectedSiteVisitDtls = CustomUtils.getInstance().deepCopyArrayList(source.selectedSiteVisitDtls);
+
+		this.tplSpecZoneDtl = (TplSpecZoneDtl) (source.tplSpecZoneDtl != null ? source.tplSpecZoneDtl.cloneEntity()
+				: null);
+		this.scQtBsv = (ScQtBsv) (source.scQtBsv != null ? source.scQtBsv.cloneEntity() : null);
+		this.sampleAddress = (ScQtSampleSubmission) (source.sampleAddress != null ? source.sampleAddress.cloneEntity()
+				: null);
+	}
+	// Bug #36702@Syazani 28/11/2024 -- End
 
 	/**
 	 * Gets the zone name.
@@ -411,5 +444,15 @@ public class BriefingZoneBean implements Serializable {
 		this.cityId = cityId;
 	}
 	//11104-End
+	
+	// #28777 & #29729 - Start
+	public boolean isBranchDeactivated() {
+		return branchDeactivated;
+	}
+
+	public void setBranchDeactivated(boolean branchDeactivated) {
+		this.branchDeactivated = branchDeactivated;
+	}
+	// #28777 & #29729 - End
 	
 }

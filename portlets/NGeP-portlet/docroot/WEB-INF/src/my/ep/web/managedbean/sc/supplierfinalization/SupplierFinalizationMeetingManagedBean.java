@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.sc.supplierfinalization;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -50,6 +51,11 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	
 	private ScCommitteeMember committeMember;
 	private List<ScCommitteeMember> deletedCommitteeMembers;
+	//28895-35500 Start
+	private List<ScCommitteeMember> removeCommitteeAuditTrailList;
+	private HashMap<PmUser, List<String>> mapModifiedRole;
+	private List<ScCommitteeMember> newCommitteeAuditTrailList;
+	//28895 - 35500 END
 	private List<SelectItem> selections;
 	private String tabTitle;
 	private String name = null;
@@ -648,4 +654,30 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		this.cmtAppointmentApprovalRemarks = cmtAppointmentApprovalRemarks;
 	}
 	//25037 note 284 - end
+
+	//#28895 - 35500 start
+	public List<ScCommitteeMember> getRemoveCommitteeAuditTrailList() {
+		return removeCommitteeAuditTrailList;
+	}
+
+	public void setRemoveCommitteeAuditTrailList(List<ScCommitteeMember> removeCommitteeAuditTrailList) {
+		this.removeCommitteeAuditTrailList = removeCommitteeAuditTrailList;
+	}
+
+	public List<ScCommitteeMember> getNewCommitteeAuditTrailList() {
+		return newCommitteeAuditTrailList;
+	}
+
+	public void setNewCommitteeAuditTrailList(List<ScCommitteeMember> newCommitteeAuditTrailList) {
+		this.newCommitteeAuditTrailList = newCommitteeAuditTrailList;
+	}
+	
+	public HashMap<PmUser, List<String>> getMapModifiedRole() {
+		return mapModifiedRole;
+	}
+
+	public void setMapModifiedRole(HashMap<PmUser, List<String>> mapModifiedRole) {
+		this.mapModifiedRole = mapModifiedRole;
+	}
+	//#28895 - 35500 end
 }

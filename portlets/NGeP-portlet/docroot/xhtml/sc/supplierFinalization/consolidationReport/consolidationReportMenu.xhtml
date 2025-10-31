@@ -13,6 +13,19 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
+		<ui:remove>21692 - Start</ui:remove>
+		<c:if test="#{!consolidationReportBackingBean.checkProposalValidityDateReach(
+		     				consolidationReportBackingBean.managedBean.scQt.proposalValidityEndDate) and consolidationReportBackingBean.managedBean.allSupplierDisagreeEPV}">
+			<div class="ui-messages ui-widget">
+				<div class="ui-messages-warn ui-corner-all">
+					<span class="ui-messages-warn-icon"></span>
+					<ul>
+						<li><span class="ui-messages-warn-detail">#{consolidationReportBackingBean.getNoSupplierWarningMessage()}</span></li>
+					</ul>
+				</div>
+			</div>
+		</c:if>
+		<ui:remove>21692 - End</ui:remove>
 
 		<ui:param name="consolidationReportFolderPath"
 			value="/xhtml/sc/supplierFinalization/consolidationReport" />
@@ -148,9 +161,9 @@
 					oncomplete="submissionPopup.hide();" update="@form">
 				</p:commandButton>
 
-				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
-					oncomplete="submissionPopup.hide();" />
-
+				<ui:remove>26247 start</ui:remove>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" oncomplete="submissionPopup.hide();" />
+				<ui:remove>26247 end</ui:remove>
 			</div>
 		</p:dialog>
 		<!-- 32044  start -->

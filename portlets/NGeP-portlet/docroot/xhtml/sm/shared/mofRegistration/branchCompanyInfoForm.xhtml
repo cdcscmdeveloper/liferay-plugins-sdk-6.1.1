@@ -202,6 +202,7 @@
 	<p:dialog width="550px" height="500px" style="z-index:-1;"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
 		id="banchDialog" resizable="false" modal="true" closable="true">
+		<p:ajax event="close" listener="#{backingBean.assignCancelBranchBean}" resetValues="true"/> <!-- #38991 -->
 		
 		<p:outputPanel layout="block" id="branchBlockPanel">
 			<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
@@ -218,12 +219,16 @@
 	
 			<br />
 			<div align="right">
+			<!-- #34159 - START - add param disableValidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					id="branchPopUpSaveBtn"
 					action="#{backingBean.addOrUpdateBranchToSmAppl}"
 					partialSubmit="true" process="banchDialog"
 					onclick="branchBlockWidget.show();" oncomplete="branchBlockWidget.hide();"
-					update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" />
+					update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+			<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.assignCancelBranchBean}" />

@@ -383,7 +383,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			//END - 22211
 			
 			//#25037-START
-			temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME + SCProcessNameConst.REVISE_EVALUATION_MEETING, SourcingConstants.NAV_PAGE_REVISE_EVAL_MEETING);
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.GENERIC_APPROVAL_APPROVE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.GENERIC_APPROVAL_REVISE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
 			//#25037-END
@@ -688,7 +687,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			//END - 22211
 			
 			// #25037-START
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME) + SCProcessNameConst.REVISE_EVALUATION_MEETING, SourcingConstants.NAV_PAGE_REVISE_EVAL_MEETING);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME) + SCProcessNameConst.GENERIC_APPROVAL_APPROVE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME) + SCProcessNameConst.GENERIC_APPROVAL_REVISE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
 			// #25037-END
@@ -820,9 +818,16 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			#31422-basri 190821*/
 			
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			//#26186 start
+			if (taskName != null && taskName.equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				externalContext.redirect(commonUrl + "/" + url + "?taskId="
+						+ taskId +"&claim=" + claim+"&docNo="+docNo+"&taskName=" + taskName);
+			}else{
 			// 26238 - Disciplinary Action - 28111
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId=" + taskId + "&claim=" + claim + "&docNo=" + docNo);/* #31422-basri 190821 */
+			}
+			//#26186 end
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {
@@ -1117,7 +1122,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	    	bpmSO.claimTask(reqDTO);
 		}
 		*/
-
+        
+	   //#37924 - Start
+	   if(this.getManagedBean().getCurrentTaskDocType()!= null){
 		// #21387 - Start
 		if (this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)) {
 
@@ -1131,6 +1138,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					}
 				}
 			}// #21387 - End
+		  }//#37924 - End
 		} else {
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setCtxToken(token);

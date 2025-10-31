@@ -40,7 +40,7 @@
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.completeTemplateSpecDetails('SC',2)}" />
-					
+
 					<ui:remove><!-- 1873 note 74 update rendered condition--></ui:remove>
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)}"

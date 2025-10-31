@@ -192,11 +192,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	// #29732 Start
 	private String hisCatCode;
 	private List<PmRemarkCategory> historyList;
+	private boolean updateCatInPm; //#29732
+	private boolean flagUpdateCatInPmDisplay; //#29732
+
 	// #29732 End
 	
 	// #29624 - start
 	private List<ScLoa> scLoaList = new ArrayList<>();
 	// #29624 - end
+	
+	// #28777 & #29729 - Start
+	private boolean hideBSVRegisterBtn;
+	private boolean hideZoneBSVRegisterBtn;
+
+	// #28777 & #29729 - End
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1323,6 +1332,24 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.historyList = historyList;
 	} 
 	// #29732 End
+	
+	//#29732
+	public boolean getUpdateCatInPm() {
+		return updateCatInPm;
+	}
+
+	public void setUpdateCatInPm(boolean updateCatInPm) {
+		this.updateCatInPm = updateCatInPm;
+	}
+	
+	public boolean getFlagUpdateCatInPmDisplay() {
+		return flagUpdateCatInPmDisplay;
+	}
+
+	public void setFlagUpdateCatInPmDisplay(boolean flagUpdateCatInPmDisplay) {
+		this.flagUpdateCatInPmDisplay = flagUpdateCatInPmDisplay;
+	}
+	//#29732
 
 	//#29560 - start
 	/**
@@ -1349,5 +1376,23 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.scLoaList = scLoaList;
 	}
 	// #29624 - end
+	
+	// #28777 & #29729 - Start
+	public boolean isHideBSVRegisterBtn() {
+		return hideBSVRegisterBtn;
+	}
+
+	public void setHideBSVRegisterBtn(boolean hideBSVRegisterBtn) {
+		this.hideBSVRegisterBtn = hideBSVRegisterBtn;
+	}
+
+	public boolean isHideZoneBSVRegisterBtn() {
+		return hideZoneBSVRegisterBtn;
+	}
+
+	public void setHideZoneBSVRegisterBtn(boolean hideZoneBSVRegisterBtn) {
+		this.hideZoneBSVRegisterBtn = hideZoneBSVRegisterBtn;
+	}
+	// #28777 & #29729 - End
 	
 }

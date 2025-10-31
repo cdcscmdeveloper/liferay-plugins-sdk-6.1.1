@@ -18,8 +18,17 @@
 		<c:if test="#{!consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.package']} " escape="false" />
 			<ui:remove> #28777#29729 - Start </ui:remove>
-			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pr']}" /> 
+			<c:if
+				test="#{consolidationReportBackingBean.checkInstructionSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+				<h:outputText styleClass="instruction" escape="false"
+					value="#{lbl['lbl.sc.branch.related.deleted.instruction.four']}" />
+			</c:if>
 			<ui:remove> #28777#29729 - End </ui:remove>
+			<ui:remove>#21692 - start</ui:remove>
+			<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+				<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />
+			</c:forEach>
+			<ui:remove>#21692 - end</ui:remove>
 		</c:if>
 		<c:if test="#{consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />
@@ -27,14 +36,20 @@
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 			</h:outputText>
 		</c:if>
-		<ui:remove>#21692 - start</ui:remove>
-		<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
-			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.pending.rec.instruction']}" />
-		</c:if>
-		<ui:remove>#21692 - end</ui:remove>
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 		<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{consolidationReportBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
+
+			<ui:remove> #28777#29729 - Start </ui:remove>
+		<p:remoteCommand name="fetchDisqualifiedSuppliers" actionListener="#{consolidationReportBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
+				 process="@this" update="@([id$=disqualSuppDetailsPopupId])" oncomplete="disqualSuppDetailsPopup.show(); return false;"/>
+							 
+			<h:outputText escape="false"
+				value="#{lbl['lbl.sc.list.qualified.supplier']}"
+				style="font-weight:bold; font-size: 15px;"
+				rendered="#{isDisqualified}" />
+			<ui:remove> #28777#29729 - End </ui:remove>
+			
 			<p:dataTable id="qualifiedSuppliers"
 				var="qualifiedSupp" widgetVar="shortlistedSuppDtls" 
 				value="#{consolidationReportBackingBean.managedBean.qualifiedSuppliersDataModel}"
@@ -56,21 +71,33 @@
 							</f:facet>
 		               	</p:column>
 		               	<p:column rowspan="2" style="width:5%; text-align:center;white-space:normal;">
-		               	<f:facet name="header">
-								<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
-								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
-									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
-								</p:commandLink><br/>		               		
-			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+							<f:facet name="header">
+								<ui:remove> #34840 </ui:remove>
+								<h:outputText value="#{lbl['lbl.sc.eval.ranking']}" />
+								<br />
+								<p:commandLink
+									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
+									rendered="#{isOneTierWithTechnical or isTwoTier}"
+									process="@this">
+									<ui:remove> #34840 </ui:remove>
+									<h:outputText value="#{lbl['lbl.sc.technical']}"
+										styleClass="commandLink" />
+								</p:commandLink>
+								<br />
+								<p:commandLink
+									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
+									process="@this">
+									<ui:remove> #34840 </ui:remove>
+									<h:outputText value="#{lbl['lbl.sc.financial']}"
+										styleClass="commandLink" />
 									<!--  #29466 - START -->
-									<f:setPropertyActionListener value="#{consolidationReportBackingBean.managedBean.scQt}"
-												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
-									<!--  #29466 - END -->					   	 	
-								</p:commandLink>								
-		               		</f:facet>
-		               	</p:column>
+									<f:setPropertyActionListener
+										value="#{consolidationReportBackingBean.managedBean.scQt}"
+										target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
+									<!--  #29466 - END -->
+								</p:commandLink>
+							</f:facet>
+						</p:column>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
  	               		<ui:remove>
  	               		<p:column colspan="2" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
@@ -102,13 +129,17 @@
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
-					<!-- #29729 Start -->
-					<p:spacer width="15" height="15"/>
-						<p:commandLink action="#{consolidationReportBackingBean.showSupplierBranchList(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"  
-			         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
-							<h:graphicImage value="/css/images/exclam-info.png" />
-		         		</p:commandLink> 
-		         	<!-- #29729 End -->
+
+					<ui:remove> #28777#29729 - Start </ui:remove>
+					<p:spacer width="15" height="15" />
+					<p:commandLink
+						action="#{consolidationReportBackingBean.showSupplierBranchList(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+						update="@([id$=suppBranchListPopupId])"
+						oncomplete="suppBranchListPopup.show();">
+						<h:graphicImage value="/css/images/exclam-info.png" />
+					</p:commandLink>
+					<ui:remove> #28777#29729 - End </ui:remove>
+
 				</p:column>
 	
 				<p:column>
@@ -157,30 +188,19 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
 				</p:column>
-				
-				<p:column rendered="#{!empty qualifiedSupp.smMofAccount and qualifiedSupp.smMofAccount.recordStatusFlg
-								  	 								eq DbValueConst.recordStatusActive}">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
+				<ui:remove>26247 - start</ui:remove>
+				<ui:param name="supplier"
+					value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
+					<h:outputText
+						value="#{consolidationReportBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty qualifiedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
-				</p:column>
-						
 				<p:column>
-				<!-- #31033 start -->
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<!-- #31033 End -->
-					
-					<h:outputText rendered="#{!qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
+				<ui:remove>26247 - end</ui:remove>
 				
 				<p:column rendered="#{false}" >
 					<h:outputText value="" />
@@ -205,7 +225,7 @@
 					<p:inputText id="deskOfficerRankInput" value="#{qualifiedSupp.deskOfficerRank}" 
 								 size="5" maxlength="3" required="false" autocomplete="false" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
-								 disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove> #28777#29729 </ui:remove>
+								 disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or consolidationReportBackingBean.disabledQTProcess(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier) or (qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"><ui:remove> #28777#29729 </ui:remove>
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="4" integerOnly="true"  />
@@ -218,13 +238,13 @@
 				</p:column>
 				
 				<p:column style="text-align:left;">
-					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected}" 
+					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected and qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified}" 
 								 id="deskOfficerRemarks" value="#{qualifiedSupp.deskOfficerRemark}" 
 								 required="false" size="20" autocomplete="false">
 						<p:ajax partialSubmit="true" process="@this" update="@this" 
 								listener="#{consolidationReportBackingBean.updateCachedData(qualifiedSupp)}" />
 					</p:inputText>
-					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" 
+					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified}" 
 								 id="deskOfficerRemarks2" value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}"  
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 								 size="20" autocomplete="false" disabled="true">
@@ -234,12 +254,230 @@
 				</p:column>
 																
 			</p:dataTable>
+
+			<ui:remove> #28777#29729 - Start </ui:remove>
+			<h:outputText escape="false"
+				value="#{lbl['lbl.sc.list.disqualified.supplier']}"
+				style="font-weight:bold; font-size: 15px;"
+				rendered="#{isDisqualified}" />
+			<p:dataTable id="disqualifiedSuppliers" var="disqualifiedSupp"
+				widgetVar="shortlistedSuppDtls"
+				value="#{consolidationReportBackingBean.managedBean.disQualifiedSuppliersDataModel}"
+				emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
+				editable="true" lazy="true" rowIndexVar="index" rows="10"
+				style="width:100%;" rowKey="#{disqualifiedSupp}"
+				rendered="#{isDisqualified}">
+				<ac:paginator for="disqualifiedSuppliers" />
+
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column rowspan="2"
+							headerText="#{lbl['lbl.sc.supplier.code.info']}"
+							style="width:5%; white-space:normal; text-align:center;" />
+						<p:column rowspan="2"
+							headerText="#{lbl['lbl.sc.bumiputra.status']}"
+							style="width:5%; white-space:normal;" />
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}"
+							style="width:10%; text-align:right;" />
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}"
+							style="width:5%; text-align:right;" />
+						<p:column rowspan="2" style="width:5%; text-align:center;"
+							rendered="#{!consolidationReportBackingBean.evaluateWIP(consolidationReportBackingBean.managedBean.scQt)}">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.rating']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+							</f:facet>
+						</p:column>
+						<p:column rowspan="2"
+							style="width:5%; text-align:center;white-space:normal;">
+							<f:facet name="header">
+								<ui:remove> #34840 </ui:remove>
+								<h:outputText value="#{lbl['lbl.sc.eval.ranking']}" />
+								<br />
+								<p:commandLink
+									oncomplete="fetchDisqualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{SourcingConstants.recordStatusDisqualified}'}]);"
+									rendered="#{isOneTierWithTechnical or isTwoTier}"
+									process="@this">
+									<ui:remove> #34840 </ui:remove>
+									<h:outputText value="#{lbl['lbl.sc.technical']}"
+										styleClass="commandLink" />
+								</p:commandLink>
+								<br />
+								<p:commandLink
+									oncomplete="fetchDisqualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{SourcingConstants.recordStatusDisqualified}'}]);"
+									process="@this">
+									<ui:remove> #34840 </ui:remove>
+									<h:outputText value="#{lbl['lbl.sc.financial']}"
+										styleClass="commandLink" />
+									<!--  #29466 - START -->
+									<f:setPropertyActionListener
+										value="#{consolidationReportBackingBean.managedBean.scQt}"
+										target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
+									<!--  #29466 - END -->
+								</p:commandLink>
+							</f:facet>
+						</p:column>
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.performance']}"
+							rendered="#{false}" style="width:7%; white-space:normal;" />
+						<ui:remove>
+							<p:column rowspan="2" headerText="#{lbl['lbl.sc.bod']}"
+								style="width:7%; white-space:normal;" />
+						</ui:remove>
+						<p:column colspan="2"
+							headerText="#{lbl['lbl.sc.recommendation.desk.officer']}"
+							style="width:15%; text-align:center;" />
+						<p:column rowspan="2"
+							headerText="#{lbl['lbl.sc.disqualified.reason']}"
+							style="width:5%; text-align:center;" />
+					</p:row>
+					<p:row>
+						<p:column colspan="1" headerText="#{lbl['lbl.sc.ranking']}"
+							style="width:5%; text-align:center;" />
+						<p:column colspan="1" headerText="#{lbl['lbl.sc.remarks']}"
+							style="width:10%;" />
+					</p:row>
+				</p:columnGroup>
+
+				<p:column style="text-align:center;">
+					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
+						process="@this" update="@([id$=suppDetailsPopupId])">
+						<f:setPropertyActionListener value="#{true}"
+							target="#{supplierDetailBackingBean.hasBod}" />
+						<f:setPropertyActionListener
+							value="#{disqualifiedSupp.qtEvaluationResult.scQtProposal}"
+							target="#{supplierDetailBackingBean.scQtProposal}" />
+						<h:outputText
+							value="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
+					</p:commandLink>
+
+					<p:spacer width="15" height="15" />
+					<p:commandLink
+						action="#{consolidationReportBackingBean.showSupplierBranchList(disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+						update="@([id$=suppBranchListPopupId])"
+						oncomplete="suppBranchListPopup.show();">
+						<h:graphicImage value="/css/images/exclam-info.png" />
+					</p:commandLink>
+
+				</p:column>
+
+				<p:column>
+					<h:outputText
+						value="#{consolidationReportBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(disqualifiedSupp.qtEvaluationResult.scQtProposal.bumi))}" />
+				</p:column>
+
+				<p:column style="text-align:right;">
+					<p:commandLink
+						oncomplete="preferenceMarginSuppDetailsPopup.show(); return false;"
+						rendered="#{!consolidationReportBackingBean.managedBean.itemized and disqualifiedSupp.proposalAmount ne null}"
+						process="@this"
+						update="@([id$=preferenceMarginSuppDetailsPopupId])">
+						<f:setPropertyActionListener value="#{disqualifiedSupp}"
+							target="#{suppFinalizationBackingBean.managedBean.preferenceMarginDtls}" />
+						<!--  #29466 - START -->
+						<f:setPropertyActionListener
+							value="#{consolidationReportBackingBean.managedBean.scQt}"
+							target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
+						<!--  #29466 - END -->
+						<h:outputText
+							value="#{disqualifiedSupp.proposalAmount.proposalAmt}"
+							rendered="#{!consolidationReportBackingBean.managedBean.itemized  
+								  					and disqualifiedSupp.proposalAmount ne null}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:commandLink>
+					<h:outputText
+						value="#{disqualifiedSupp.qtEvaluationResult.offeredPrice}"
+						rendered="#{consolidationReportBackingBean.managedBean.itemized}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+
+				</p:column>
+
+				<p:column style="text-align:right;">
+					<h:outputText value="0"
+						rendered="#{disqualifiedSupp.qtEvaluationResult.offeredPrice eq 0}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+					</h:outputText>
+					<h:outputText value="#{disqualifiedSupp.totalScore}"
+						rendered="#{disqualifiedSupp.qtEvaluationResult.offeredPrice ne 0}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="text-align:center;"
+					rendered="#{!consolidationReportBackingBean.evaluateWIP(consolidationReportBackingBean.managedBean.scQt)}">
+					<h:outputText
+						value="#{empty disqualifiedSupp.totalRating? 0: disqualifiedSupp.totalRating}" />
+				</p:column>
+				<p:column style="text-align:center;">
+					<h:outputText value="#{disqualifiedSupp.evalRank}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>
+				</p:column>
+				<p:column rendered="#{false}">
+					<h:outputText value="" />
+				</p:column>
+
+				<ui:remove> #11134
+					<p:column style="text-align:center;">
+						<p:commandLink
+							action="#{consolidationReportBackingBean.showBoardofDirectors(
+	 											 disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"
+							update="@([id$=bodDetails])"
+							oncomplete="bodDetailsDialog.show();">
+							<p:graphicImage
+								value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
+						</p:commandLink>
+					</p:column>
+				</ui:remove>
+
+				<p:column style="text-align:center;">
+					<ui:remove>
+						 #21695 Farid 
+						ADDED : disabled="#{disqualifiedSupp.qtEvaluationResult.offeredPrice eq 0}
+					</ui:remove>
+					<ui:remove>#21692 - start</ui:remove>
+					<h:outputText value="#{disqualifiedSupp.deskOfficerRank}" size="5"
+						maxlength="3" required="false" autocomplete="false"
+						label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
+						disabled="#{disqualifiedSupp.qtEvaluationResult.offeredPrice eq 0 
+								 or (disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified) or isDisqualified}">
+					</h:outputText>
+				</p:column>
+
+				<p:column style="text-align:left;">
+					<h:outputText
+						rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected and disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified}"
+						value="#{disqualifiedSupp.deskOfficerRemark}"
+						label="#{lbl['lbl.sc.consolidation.report.do.remarks']}"
+						required="false" size="20" autocomplete="false">
+					</h:outputText>
+					<h:outputText
+						rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified}"
+						value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}"
+						label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" size="20"
+						autocomplete="false" disabled="true">
+					</h:outputText>
+					<ui:remove>#21692 - end</ui:remove>
+				</p:column>
+
+			    <p:column style="text-align:center;">
+					<h:outputText
+						rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or consolidationReportBackingBean.managedBean.zoneDetails.get(consolidationReportBackingBean.managedBean.zoneActiveIndex).branchDeactivated}"
+						value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />
+				</p:column>
+
+			</p:dataTable>
+			<ui:remove> #28777#29729 - End </ui:remove>
+
 		</p:outputPanel>
 	</p:panel>
-	<!--  #31033 #32560 Start -->
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<!--  #31033 #32560 End -->
 </ui:composition>

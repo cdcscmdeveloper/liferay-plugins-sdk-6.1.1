@@ -124,6 +124,16 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 //#24975
 
+//#35502 - Start
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.pp.AuditPPConst;
+import my.ep.web.backingbean.pp.audit.AuditProcurementPlanBackingBeanTemplate;
+import my.ep.biz.service.pp.audit.IAuditProcurementPlanSO;
+import my.ep.dto.pp.audit.AuditProcurementPlanReqDTO;
+import my.ep.dto.pp.audit.AuditProcurementPlanResDTO;
+import my.ep.dto.pp.audit.AuditProcurementPlanSPDTO;
+//#35502 - End
+
 /**
  * Backing Bean for Procurement Plan 
  * 
@@ -1336,6 +1346,195 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("loadEpItems - End");
 	}
 	
+	// #35502 Start - For Audit Trail required
+	/**
+	 * To check button type for doing audit for plan expenditure
+	 * 
+	 * @param action
+	 */
+	private boolean isPEAudit(String action) {
+		return BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)
+				|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
+	}
+
+	/**
+	 * To check button type for doing audit for plan procurement
+	 * 
+	 * @param action
+	 */
+	private boolean isPPAudit(String action) {
+		return BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)
+				|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)
+				|| BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(action);
+	}
+
+	/**
+	 * To obtain data from PE if there is an approved status and pass the data
+	 * to the next step auditSaveData process
+	 * 
+	 * @param action
+	 * @param reqSPDTO
+	 */
+	private void processAudit(String action, AuditProcurementPlanSPDTO reqSPDTO) {
+		IAuditTrailSO auditProcurementPlanSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+				IAuditTrailSO.class);
+		try {
+			PortletRequest pr = (javax.portlet.PortletRequest) FacesContext.getCurrentInstance().getExternalContext()
+					.getRequestMap().get(AuditPPConst.JAVAX_PORTLET_REQ);
+			Method method = pr.getClass().getMethod(AuditPPConst.GET_ORIGINAL_HTTP_SERVLET_REQ);
+			HttpServletRequest httpServletRequest = (HttpServletRequest) method.invoke(pr, new Object[] {});
+			String plid = httpServletRequest.getParameter(AuditPPConst.P_L_ID);
+			ThemeDisplay theme = (ThemeDisplay) pr.getAttribute(WebKeys.THEME_DISPLAY);
+			Layout selectedLayout = LayoutLocalServiceUtil.getLayout(Long.valueOf(plid));
+			String urlliferay = PortalUtil.getLayoutFriendlyURL(selectedLayout, theme);
+
+			if (urlliferay.contains(AuditPPConst.PLAN_MAINTENANCE) && isAuditFlagPlan(auditProcurementPlanSo)) {
+				saveAuditData(action, Long.valueOf(1));
+			}
+
+			if (urlliferay.contains(AuditPPConst.PLAN_DETAIL) && isAuditFlagPlan(auditProcurementPlanSo)) {
+				IAuditProcurementPlanSO reqSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROCUREMENT_PLAN, IAuditProcurementPlanSO.class);
+				AuditProcurementPlanReqDTO reqDTO = new AuditProcurementPlanReqDTO();
+
+				reqDTO.setApproveCode(getPendingApprovalCode());
+				reqDTO.setPlanId(this.getManagedBean().getPlanId());
+
+				AuditProcurementPlanResDTO resDTO = reqSO.retrieveFirstTimeApprove(reqDTO);
+
+				handleAuditParameterToSP(resDTO, action, reqSPDTO);
+			}
+
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "processAudit", null,
+					"ProcurementPlanBackingBean", null, ex);
+		}
+	}
+
+	/**
+	 * To check whether that plan having created code or not
+	 * 
+	 * @param resDTO
+	 * @param action
+	 * @param reqSPDTO
+	 */
+	private void handleAuditParameterToSP(AuditProcurementPlanResDTO resDTO, String action,
+			AuditProcurementPlanSPDTO reqSPDTO) {
+
+		if (!resDTO.isSuccessful()) { // success means ada 1 je create code
+			recordAudit(action, reqSPDTO);
+			return;
+		}
+
+		if (isFirstTimeApprove(action)) {
+			saveAuditData(action, Long.valueOf(0));
+			return;
+		}
+
+		if (isSubmitButton(action)) {
+			IAuditProcurementPlanSO reqSubmitSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROCUREMENT_PLAN, IAuditProcurementPlanSO.class);
+			AuditProcurementPlanReqDTO reqSubmitDTO = new AuditProcurementPlanReqDTO();
+
+			reqSubmitDTO.setApproveCode(getApprovalCode());
+			reqSubmitDTO.setPlanId(this.getManagedBean().getPlanId());
+
+			AuditProcurementPlanResDTO resSubmitDTO = reqSubmitSO.retrieveApproveStatus(reqSubmitDTO);
+
+			if (resSubmitDTO.isSuccessful()) {
+				saveAuditData(action, Long.valueOf(1));
+			}
+		}
+	}
+
+	/**
+	 * To doing audit record
+	 * 
+	 * @param action
+	 * @param reqSPDTO
+	 */
+	private void recordAudit(String action, AuditProcurementPlanSPDTO reqSPDTO) {
+		IAuditProcurementPlanSO reqSubmitSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROCUREMENT_PLAN, IAuditProcurementPlanSO.class);
+		AuditProcurementPlanReqDTO reqSubmitDTO = new AuditProcurementPlanReqDTO();
+
+		reqSubmitDTO.setApproveCode(getApprovalCode());
+		reqSubmitDTO.setPlanId(this.getManagedBean().getPlanId());
+
+		AuditProcurementPlanResDTO resApproveDTO = reqSubmitSO.retrieveApproveStatus(reqSubmitDTO);
+		
+		if (reqSPDTO.getCurrentStatusID() != null || resApproveDTO.isSuccessful()) {
+			saveAuditData(action, Long.valueOf(1));
+		}
+	}
+
+	/**
+	 * To get only created code
+	 */
+	private Long getPendingApprovalCode() {
+		return ParameterConst.PLAN_TYPE_EXPENDITURE.equals(this.getManagedBean().getSelectedPlan().getPlanType()
+				.getParameterCode()) ? AuditPPConst.PE_PENDING_APPROVAL : AuditPPConst.PP_PENDING_VERIFICATION;
+	}
+
+	/**
+	 * To get only save code
+	 */
+	private Long getPendingSubmissionCode() {
+		return ParameterConst.PLAN_TYPE_EXPENDITURE.equals(this.getManagedBean().getSelectedPlan().getPlanType()
+				.getParameterCode()) ? AuditPPConst.PE_PENDING_SUBMISSION : AuditPPConst.PP_PENDING_SUBMISSION;
+	}
+
+	/**
+	 * To get only approve code
+	 */
+	private Long getApprovalCode() {
+		return ParameterConst.PLAN_TYPE_EXPENDITURE.equals(this.getManagedBean().getSelectedPlan().getPlanType()
+				.getParameterCode()) ? AuditPPConst.PE_APPROVAL : AuditPPConst.PP_APPROVAL;
+	}
+
+	/**
+	 * To check is approve button
+	 * 
+	 * @param action
+	 */
+	private boolean isFirstTimeApprove(String action) {
+		return BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
+	}
+
+	/**
+	 * To check is submit maintenance button
+	 * 
+	 * @param action
+	 */
+	private boolean isSubmitButton(String action) {
+		return BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action);
+	}
+
+	/**
+	 * To check whether the audit configuration is ON and has an approved status
+	 * for both plan
+	 * 
+	 * @param ppWorkflowStatuses
+	 * @param auditProcurementPlanSo
+	 */
+	private boolean isAuditFlagPlan(IAuditTrailSO auditProcurementPlanSo) {
+		return auditProcurementPlanSo.isAuditConfig(AuditPPConst.PP_AU_CONF);
+	}
+
+	/**
+	 * For audit trail save process
+	 * 
+	 * @param resDTO
+	 * @param action
+	 */
+	private void saveAuditData(String action, Long isNeedAudit) {
+		AuditProcurementPlanBackingBeanTemplate auTemplate = new AuditProcurementPlanBackingBeanTemplate();
+		auTemplate.saveAuditData(action, isNeedAudit);
+	}
+
+	// #35502 End - For Audit Trail required
 
 	/**
 	 * retrieve pp approved status
@@ -2976,6 +3175,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		boolean brandNew = false;
 		//#24975
 		List <PpUpdateReason> updateReasons = null;
+		AuditProcurementPlanSPDTO reqSPDTO = new AuditProcurementPlanSPDTO(); //#35502
 		
 		try{
 			reqDTO = new ProcurementPlanReqDTO();
@@ -3066,6 +3266,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 			log.info("Before save, getDeletePpItems= "+this.getManagedBean().getDeletePpItems().size()); 
 			reqDTO.setDeletedPpItemList(this.getManagedBean().getDeletePpItems());
+			
+			//#35502 Start
+			AuditProcurementPlanReqDTO reqAuDTO = new AuditProcurementPlanReqDTO();
+			reqAuDTO.setApproveCode(getPendingSubmissionCode());
+			reqAuDTO.setPlanId(this.getManagedBean().getPlanId());
+			
+			IAuditProcurementPlanSO reqAuSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROCUREMENT_PLAN, IAuditProcurementPlanSO.class);
+			AuditProcurementPlanResDTO resAuDTO = reqAuSO.retrieveFirstTimeApprove(reqAuDTO); //sebab untuk selepas save
+
+			if (!brandNew) {
+				Long statusId = ppPlan.getStatus().getStatusId();
+				boolean isPendingSubmission = statusId.equals(AuditPPConst.PE_PENDING_SUBMISSION)
+						|| statusId.equals(AuditPPConst.PP_PENDING_SUBMISSION);
+				this.getManagedBean().setAuditReviseStatusID(statusId);
+				
+				if (!isPendingSubmission || resAuDTO == null) {
+			        reqSPDTO.setCurrentStatusID(statusId);
+			    }
+			}
+			//#35502 End
 				
 			//SAVE Plan to DB
 			resDTO = reqSO.savePlan(reqDTO);
@@ -3080,6 +3301,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				SLAUtils.getInstance().logSLAInfo("PM","PS",
 						"ProcurementPlanBackingBean.savePlan", startTime);
 				log.info("Record saved successfully");
+				
+				//#35502 Start - For Audit Trail to SP
+				/**
+				 * For Audit Trail Procurement Plan process
+				 */
+				boolean isPE = ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode());
+				boolean isPEAudit = isPEAudit(action);
+				boolean isPP = ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode());
+				boolean isPPAudit = isPPAudit(action);
+
+				if ((isPE && isPEAudit) || (isPP && isPPAudit)) {
+					processAudit(action, reqSPDTO);
+				}
+				//#35502 End - For Audit Trail to SP
+				
 				//210111@akmal - Enhancement27624 - Start
 				boolean proceed = true;
 				if(this.getManagedBean().isPlanDetailReset()) proceed=false;
@@ -4264,18 +4500,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedJustifications(null);
 		this.getManagedBean().setSelectedJustificationDesc("");
 		boolean newRemark = false;
-		
-		
+	    this.getManagedBean().setDimmedJustification(false); //#35502, Fix as-is bug: #38652
+
 		if(epItem.getJustifications()==null){
 			epItem.setJustifications(new ArrayList<PpRemark>());
 		}
-		/* enable for phase 2
-		//if first remark is not new
-		if (!epItem.getJustifications().isEmpty()){
-			if(!epItem.getJustifications().get(0).isBrandNew()){
-				newRemark = true;
-			}
-		}*/
 
 		// if reason is empty
 		if (epItem.getJustifications().isEmpty() || epItem.getJustifications().size() == 0) {
@@ -4286,31 +4515,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(!this.getManagedBean().isModeEditable() || !epItem.isEditable()){
 			newRemark = false;
 		}
-	
-		
-		/* enable for phase 2
-		// for user to edit draft remark
-		if(newRemark){
-			if(!epItem.getJustifications().isEmpty() && compareUserNameInsensitive(epItem.getJustifications().get(0).getUserId())){
-				//if both statuses are null
-				if(epItem.getJustifications().get(0).getPpWorkflowStatus()==null 
-						&& this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()==null){
-					epItem.getJustifications().get(0).setEditable(true);
-					newRemark = false;
-				//if both plan status!=null && justification status == null
-				}else if(this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()!=null && 
-						(epItem.getJustifications().get(0).getPpWorkflowStatus()==null 
-							|| (epItem.getJustifications().get(0).getPpWorkflowStatus()!=null &&
-									epItem.getJustifications().get(0).getPpWorkflowStatus().getWorkflowStatusId()==null))){
-				// if remark status == plan status
-				}else if(epItem.getJustifications().get(0).getPpWorkflowStatus()!=null &&
-						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
-								epItem.getJustifications().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
-					epItem.getJustifications().get(0).setEditable(true);
-					newRemark = false;
-				}
-			}
-		} */
 		
 		if(newRemark){
 			log.info("new justification added");
@@ -4330,14 +4534,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			epItem.getJustifications().add(0, remark);
 
 		}
-	
+
+		//#35502, Fix as-is bug: #38652 Start
+		if (epItem.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+			this.getManagedBean().setDimmedJustification(true);
+		}
+		//#35502, Fix as-is bug: #38652 End
+
 		this.getManagedBean().setSelectedJustifications(epItem.getJustifications());
 		this.getManagedBean().setSelectedJustificationDesc(epItem.getJustifications().isEmpty() ? "": epItem.getJustifications().get(0).getRemark());
-		
-		
-		
+
 		log.info("loadJustification - End");
-		
 	}
 	
 	/**
@@ -4626,11 +4833,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(this.getManagedBean().getSelectedPlan().getPpProcurementItems()==null){
 			this.getManagedBean().getSelectedPlan().setPpProcurementItems(new ArrayList<PpProcurementItem>());
 		}
-		if(this.getManagedBean().getDeletePpItems()==null){
+
+		// #35502 Fix as-is bug Start
+		if (this.getManagedBean().getDeletePpItems() == null) {
 			this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
-		} else {
-			this.getManagedBean().getDeletePpItems().clear();
 		}
+		// #35502 Fix as-is bug End
+
 		//add deleted item to list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
 			//log.info("[SIR#12802] - Procurement item delete status:" + procurementItem.isDeleted());
@@ -8344,6 +8553,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				copyJustifications.setRoleCode(oldJustifications.getRoleCode());
 				copyJustifications.setRemarkType(oldJustifications.getRemarkType());
 				copyJustifications.setRemark(oldJustifications.getRemark());
+				//#35502, Fix as-is bug: #38802 Start
+		    	copyJustifications.setCreatedBy(getUserIdSessionFromLoginId());
+		    	copyJustifications.setCreatedUsername(getFacesScopes().getUserSessionBean().getUserName());
+		    	copyJustifications.setChangedDate(new Timestamp(System.currentTimeMillis()));
+		    	//#35502, Fix as-is bug: #38802 End
 
 				newJustifications.add(copyJustifications);
 			}

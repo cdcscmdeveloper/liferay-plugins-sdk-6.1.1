@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+	<table class="customTbl">
+		<tr>
+			<td class="tdTitle"><p:outputLabel
+					value="#{lbl['lbl.rpt.zone']}" /> <p:outputLabel value="*"
+					styleClass="mandatory" /></td>
+			<td class="tdContent"><ac:smReportZoneList
+					bBean="#{smRevisitRptBB}" showItemAll="true" required="true" /></td>
+			<td class="tdTitle"><p:outputLabel
+					value="#{lbl['lbl.rpt.cmpName']}" /></td>
+			<td class="tdContent"><ac:lov id="lovSupOrg"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REVISIT" readonly="true"
+					headerText="#{lbl['lbl.rpt.cmpName']}"
+					value="#{smRevisitRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
+					saveObject="smRevisitRptBB.managedBean.selectedOrgProfile"
+					displayResultWhenFirstLoad="true" displayResultWhenReset="true" /></td>
+		</tr>
+		<tr>
+			<td class="tdTitle"><p:outputLabel
+					value="#{lbl['lbl.sm.rv.rpt.site.visit.officer.name']}" /></td>
+			<td class="tdContent"><ac:lov id="lovUser" lovId="PM_USER_ID"
+					readonly="true" headerText="#{lbl['lbl.sm.rv.sv.officer']}"
+					conditionField="pmUserOrgs.pmUserRoles.pmRole.roleCode^#{smRevisitRptBB.managedBean.svoRoleCode}"
+					value="#{smRevisitRptBB.managedBean.revisitOfficer.userName}"
+					saveObject="smRevisitRptBB.managedBean.revisitOfficer" /></td>
+			<td class="tdTitle"><p:outputLabel
+					value="#{lbl['lbl.sm.rv.rpt.visit.date.from']}" /></td>
+			<td><table style="width: 100%;">
+					<tr>
+						<td class="columnDateFromClass"><p:calendar
+								label="#{lbl['lbl.sm.rv.rpt.visit.date.from']}"
+								id="calVisitDtFrm" showOn="button" navigator="true"
+								display="inline" readonlyInput="true" size="9"
+								update="calVisitDtTo"
+								value="#{smRevisitRptBB.managedBean.visitDateFrom}"
+								maxdate="#{CommonConstants.CURRENT_DATE}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+								<p:ajax event="dateSelect" update="calVisitDtTo" process="@this" />
+								<p:message id="calVisitDtFrmMsg" for="calVisitDtFrm"
+									display="icon" showDetail="false" />
+							</p:calendar></td>
+						<td class="columnDateToClass"><p:outputLabel
+								value="#{lbl['lbl.sm.rv.rpt.visit.date.to']}" /></td>
+						<td><p:calendar label="#{lbl['lbl.sm.rv.rpt.visit.date.to']}"
+								id="calVisitDtTo" showOn="button" navigator="true"
+								display="inline" readonlyInput="true" size="9"
+								mindate="#{smRevisitRptBB.managedBean.visitDateFrom}"
+								value="#{smRevisitRptBB.managedBean.visitDateTo}"
+								maxdate="#{CommonConstants.CURRENT_DATE}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+								<p:message id="calVisitDtToMsg" for="calVisitDtTo"
+									display="icon" showDetail="false" />
+							</p:calendar></td>
+					</tr>
+				</table></td>
+		</tr>
+	</table>
+	<ac:lovPopup />
+	<ac:smGenerateReport bBean="#{smRevisitRptBB}"
+		reportCode="#{smReportBB.managedBean.reportCode}"
+		generateMethod="generateReport" resetMethod="resetSearch">
+	</ac:smGenerateReport>
+</ui:composition>
