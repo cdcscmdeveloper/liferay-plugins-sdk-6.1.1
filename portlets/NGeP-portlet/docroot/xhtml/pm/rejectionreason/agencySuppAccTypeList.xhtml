@@ -57,13 +57,14 @@
 								</p:commandLink>
 							</p:column>
 						</p:dataTable>
-
-						<p:commandButton value="#{lbl['lbl.btn.add']}"
-							id="agencyValuesAddBtn" process="@this" partialSubmit="true"
-							update="@([id$=agencyPopup])" style="float:right;"
-							oncomplete="agencyPopup.show();"
-							action="#{rejectionReasonBackingBean.initPtjPopup}">
-						</p:commandButton>
+                        
+                        <div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								id="agencyValuesAddBtn" process="@this" partialSubmit="true"
+								update="@([id$=agencyPopup])" style="float:right;"
+								oncomplete="agencyPopup.show();"
+								action="#{rejectionReasonBackingBean.initPtjPopup}"/>
+						</div>
 					</p:outputPanel>
 				</p:tab>
 
@@ -78,7 +79,7 @@
 
 							<p:column style="text-align:center;" headerText="#{lbl['lbl.pm.supplier.account.type']}">
 								<h:panelGroup style="display:block; text-align:left;">
-									<p:selectOneMenu styleClass="ppDropDownWidthM" id="acctype" value="#{suppAccType.supplAcctTypeId.parameterId}">
+									<p:selectOneMenu id="acctype" value="#{suppAccType.supplAcctTypeId.parameterId}" style="width:250px;">
 										<f:selectItems value="#{rejectionReasonBackingBean.reasonSuppAccTypeDropDown()}" />
 										<p:ajax event="change" update="dtSuppAccType"
 											listener="#{rejectionReasonBackingBean.checkExtSuppAccType(rowIndex, suppAccType.supplAcctTypeId.parameterId)}"

@@ -1810,11 +1810,11 @@ public class EvaluationMeetingBackingBean extends
 		
 		// Bug #38975@Syazani 16/10/2025 -- Start
 		// 25037 - start
-				retriveMeetingDetails(qtId, committeeType);
+		retriveMeetingDetails(qtId, committeeType);
 				
 		if (null != activityResDTo
 				&& !activityResDTo.getCommitteMembers().isEmpty()
-				&& !Arrays.asList(QTStatusConst.EVALUATION_MEETING_ACTIVITY_PROHIBITED_DELETE).contains(
+				&& !Arrays.asList(QTStatusConst.getEvaluationMeetingActivityProhibitedDelete()).contains(
 						this.getManagedBean().getCurrentStatusId())) {
 			// Bug #38975@Syazani 16/10/2025 -- End
 			MeetingReqDTO deleteActivityDao = new MeetingReqDTO();
@@ -2528,6 +2528,8 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
 			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(newCommitteeMembers)) {
@@ -2658,6 +2660,7 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+			
 			
 			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
 				auditResDTO.setNewValue(entry.getValue().get(0));

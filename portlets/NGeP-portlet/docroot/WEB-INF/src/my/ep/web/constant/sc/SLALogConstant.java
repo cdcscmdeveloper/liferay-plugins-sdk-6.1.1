@@ -125,13 +125,9 @@ public class SLALogConstant {
 	public static final String RETRIEVE_SUPP_MAP_REPORT = "retrieveSuppLoiLoaMapForReport";
 	public static final String COMP_EXP_SUPP_PAGING_DATA_MODEL = "ViewSupplierCompExpDtlsPagingDataModel";
 	public static final String RETRIEVE_CONTRACT_STATUS_COUNT = "retrieveContractStatusValueCount";
+	public static final String COMP_EXP_ERROR = "COMP_EXP";
 
 	// 29661 -end-
-	
-	// 26247 - start
-	public static final String QT_NOTICEBOARD_BACKING_BEAN = "NoticeBoardBackingBean";
-	public static final String QT_NAVIGATE_TO_CHECK_QUALIFICATION = "navigateToCheckQualification";
-	// 26247 - end
 	
 	private SLALogConstant(){
 		
