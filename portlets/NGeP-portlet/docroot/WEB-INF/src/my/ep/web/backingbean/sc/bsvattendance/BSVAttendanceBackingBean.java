@@ -1789,13 +1789,14 @@ public class BSVAttendanceBackingBean extends
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#355500 Flag changes
-			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
+			
 
 			if(!(newBriefingRegistrationList == null||newBriefingRegistrationList.isEmpty())){	
 				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_SL_COMPANY_NAME);	
 				auditResDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 				auditResDTO.setActionType(QTAuditConstant.AU_TYPE_CREATE);				
 				auditResDTO.setStatusId(QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_PENDING_APPROVAL);
+				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 				for(ScQtBsvRegistration newBriefingRegistration : newBriefingRegistrationList){
 					auditResDTO.setNewValue(newBriefingRegistration.getSupplier().getCompanyName());
 					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
@@ -1804,6 +1805,7 @@ public class BSVAttendanceBackingBean extends
 			}else{
 				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 				auditResDTO.setStatusId(QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_APPROVED);
+				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 				
 				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 				auditReqList.add(auditReqDTO);
