@@ -115,6 +115,8 @@
 					and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' 
 					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and evaluationBackingBean.managedBean.demoWip}">
 
+					<ui:param name="passingScore"
+						value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
 					<ui:include src="TECSummary.xhtml" />
 
 				</c:if> 
