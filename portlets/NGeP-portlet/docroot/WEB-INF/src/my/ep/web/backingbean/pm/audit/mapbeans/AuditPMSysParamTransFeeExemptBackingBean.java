@@ -3,6 +3,8 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -229,7 +231,8 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	}
 
 	private void getEffDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
-		if (updateVal.getEffDate() != null && !pmfeeMain.getEffDate().equals(updateVal.getEffDate())) {
+		if (updateVal.getEffDate() != null && 
+				!isSameDayLegacy(pmfeeMain.getEffDate(), updateVal.getEffDate())) {
 			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAM_SPFEE_EFFDATE_FIELDLABELID,
 					simpleDateFormat.format(pmfeeMain.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()),
 					AuditConst.PM_AUD_ACTION_TYPE_UPD);
@@ -241,6 +244,21 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 				pmfeeMainInt == 0 ? null : simpleDateFormat.format(pmfeeMain.getExpDate()), 
 						updateVal.getExpDate() != null ? simpleDateFormat.format(updateVal.getExpDate()) : null,
 				AuditConst.PM_AUD_ACTION_TYPE_UPD);
+	}
+
+	private Date truncateToDay(Date d) {
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(d);
+	    cal.set(Calendar.HOUR_OF_DAY, 0);
+	    cal.set(Calendar.MINUTE, 0);
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+	    return cal.getTime();
+	}
+
+	private boolean isSameDayLegacy(Date d1, Date d2) {
+	    if (d1 == null || d2 == null) return d1 == d2;
+	    return truncateToDay(d1).equals(truncateToDay(d2));
 	}
 
 	// *******QT CHECKLIST TAB FOR UPDATED VALUE PEOCESS END *******//
