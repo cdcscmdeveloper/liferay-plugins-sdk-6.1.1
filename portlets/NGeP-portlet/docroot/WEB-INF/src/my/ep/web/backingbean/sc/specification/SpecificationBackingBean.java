@@ -23852,6 +23852,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String scoreType = getManagedBean().getOfferPricePackage().getScoreType().toString();
 
 		paramMap.put(QtReportConst.PARAM_MAP_P_SCORE_TYPE, scoreType);
+		
+		String docId = String.valueOf(finScoreSetting.getSettingType());
+
+		paramMap.put(QtReportConst.PARAM_MAP_P_DOCID, docId);
 	}
 
 	// #10141 End Vinod
@@ -24882,10 +24886,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		} catch (Exception e) {
 			Long qtId = this.getManagedBean().getQt().getQtId();
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
 					String.valueOf(qtId),
-					SLALogConstant.FETCH_CHECKLIST_VALUE_SCORE,
+					SLALogConstant.FETCH_CHECKLIST_VALUE_SCORE
+							.concat(SLALogConstant.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 		return checkList;
