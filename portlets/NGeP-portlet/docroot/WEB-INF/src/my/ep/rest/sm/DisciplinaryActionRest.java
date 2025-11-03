@@ -51,6 +51,13 @@ public class DisciplinaryActionRest {
 			//that occur error data has been update from last read.
 			//27426 : Disciplinary Action - start 
 			SupplierDataMaintenanceResDTO resDTO = null;
+			
+			// 39302 - START
+			// START : Update flag pending Disciplinary Action for start and end date today.
+			SupplierDataMaintenanceResDTO resDTOPending = SmServiceLookup.getSupplierDataMaintenanceSO().retrievePendingTodayStartEndDisciplinaryAction();
+			updatePendingFlag(resDTOPending.getSmDisciplinaryActions());
+			// 39302 - END
+						
 			//change to no 1
 			//28798: Disciplinary Action - start - 26238 - reopen
 			//NO 3 : find data pending Cancel Registration or Blacklist Owner / Director of Company 
@@ -84,6 +91,20 @@ public class DisciplinaryActionRest {
 			log.info("after close ejb for UpdateDisciplinaryActionJob");
 		}
 	}
+	
+	// 39302 - START
+	private void updatePendingFlag(List<SmDisciplinaryAction> daList) {
+		if (EntityHelper.isCollectionEmpty(daList)){
+			return;
+		}
+		
+		for (SmDisciplinaryAction disc : daList) {
+			if(disc != null){
+				 SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingTodayStartEndDisciplinaryAction(disc);
+			}										
+		}
+	}
+	// 39302 - END
 	
 	private void releaseDA(List<SmDisciplinaryAction> daList){
 		if (EntityHelper.isCollectionEmpty(daList)){
@@ -289,5 +310,5 @@ public class DisciplinaryActionRest {
 			}
 			//26238
 		}
-	}
+	} 
 } 

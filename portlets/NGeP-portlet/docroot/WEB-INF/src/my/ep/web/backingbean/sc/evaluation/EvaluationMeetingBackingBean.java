@@ -346,6 +346,7 @@ public class EvaluationMeetingBackingBean extends
 				}
 				if (null != qtCommittee) {
 					this.getManagedBean().setScQtCommittee(qtCommittee);
+					qtCommitteeSetCurrentStatusID(qtCommittee); // Bug #38975@Syazani 16/10/2025
 
 					ScCommittee sccommittee = resDTO.getQtCommittee()
 							.getScCommittee();
@@ -1691,8 +1692,16 @@ public class EvaluationMeetingBackingBean extends
 		// 25037 - end
 		MeetingResDTO activityResDTo = meetingso
 				.retriveCommitteActivityDtls(activityReqDTo);
+		
+		// Bug #38975@Syazani 16/10/2025 -- Start
+		// 25037 - start
+		retriveMeetingDetails(qtId, committeeType);
+		
 		if (null != activityResDTo
-				&& !activityResDTo.getCommitteMembers().isEmpty()) {
+				&& !activityResDTo.getCommitteMembers().isEmpty()
+				&& !Arrays.asList(QTStatusConst.getEvaluationMeetingActivityProhibitedDelete()).contains(
+						this.getManagedBean().getCurrentStatusId())) {
+			// Bug #38975@Syazani 16/10/2025 -- End
 			MeetingReqDTO deleteActivityDao = new MeetingReqDTO();
 			List<ScQtCommitteeActivity> deleteActivityList = new ArrayList<ScQtCommitteeActivity>();
 			for (ScQtCommitteeActivity activity : activityResDTo
@@ -1707,8 +1716,8 @@ public class EvaluationMeetingBackingBean extends
 					.setDeletedCommitteeActivityMembersList(deleteActivityList);
 			meetingso.deleteCommitteeActivityDtls(deleteActivityDao);
 		}
-		// 25037 - start
-		retriveMeetingDetails(qtId, committeeType);
+		
+		// Bug #38975@Syazani 16/10/2025
 
 		if (Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP).contains(taskName)
 				|| Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP).contains(taskName)) {
@@ -2542,6 +2551,105 @@ public class EvaluationMeetingBackingBean extends
 		this.chnageMemberRole(index,committeeActivity);
 	}
 	
+	// #35500 issue fix 4-9
+	public ArrayList<AuditTrailReqDTO> prepareCommitteeRoleModified(IQTAuditTrailSO qtAuditTrailSO,
+			IAuditTrailSO auditTrailSO, ArrayList<AuditTrailReqDTO> auditReqList) {
+		if (auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
+			HashMap<PmUser, List<String>> committeeModifiedRole = this.getManagedBean().getMapModifiedRole() != null 
+					? this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+
+			auditResDTO.setDocTypeId(this.getManagedBean().getQt().getProcurementMode().getParameterId());
+			auditResDTO.setDocId(this.getManagedBean().getQt().getQtId());
+			auditResDTO.setDocNo(this.getManagedBean().getQt().getQtNo());
+			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
+			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
+			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+
+			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
+				auditResDTO.setNewValue(entry.getValue().get(0));
+				auditResDTO.setOldValue(entry.getValue().get(1));
+
+				if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
+					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_SC);
+					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_SC_ROLE);
+				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
+					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_EC);
+					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_EC_ROLE);
+				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
+					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
+					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_TEC_ROLE);
+				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
+					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
+					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_FEC_ROLE);
+				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {
+					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_OC);
+					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_OC_ROLE);
+				}
+
+				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
+				auditReqList.add(auditReqDTO);
+			}
+		}
+		return auditReqList;
+	}
+
+	
+	/**
+	 * #35500 issue fix 4-9
+	 * Capture the modified role values
+	 * @param member
+	 */
+	public void onChangeRole(int index,
+			List<ScCommitteeMember> committeeActivity){
+		ScCommitteeMember member = committeeActivity.get(index);
+		if (member.getMemberRoleId() == null){
+			this.roleChangedListener(member);
+			return;
+		}
+		
+		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
+		String changedRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, changedRolePmParameter.getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		String previousRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
+				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
+				
+		if (!mapModifiedRole.isEmpty()) {
+			if (mapModifiedRole.containsKey(member.getPmUser())) {
+				userRoles = mapModifiedRole.get(member.getPmUser());
+				if (userRoles.get(1).equals(changedRole)){
+					mapModifiedRole.remove(member.getPmUser());
+				} else {
+					userRoles.add(0, changedRole);
+					mapModifiedRole.remove(member.getPmUser());
+					mapModifiedRole.put(member.getPmUser(),userRoles);					
+				}
+			} else {
+				userRoles.add(changedRole);
+				userRoles.add(previousRole);
+				userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+				mapModifiedRole.put(member.getPmUser(),userRoles);
+			}
+		} else {
+			userRoles.add(changedRole);
+			userRoles.add(previousRole);
+			userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+			mapModifiedRole.put(member.getPmUser(),userRoles);
+		}
+
+		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
+		
+		this.chnageMemberRole(index,committeeActivity);
+	}
+	
 	/** 28895 - 35500
 	 * Method to insert  audit trails list for New/Delete Committee Members
 	 * @param auditResDTO
@@ -2639,5 +2747,13 @@ public class EvaluationMeetingBackingBean extends
 		return auditReqList;
 	}	
 	// 25037 - end
+	
+	// Bug #38975@Syazani 16/10/2025 -- Start
+	private void qtCommitteeSetCurrentStatusID(ScQtCommittee qtCommittee) {
+		if (null != qtCommittee.getCurrentStatus() && null != qtCommittee.getCurrentStatus().getPmStatus()) {
+			this.getManagedBean().setCurrentStatusId(qtCommittee.getCurrentStatus().getPmStatus().getStatusId());
+		}
+	}
+	// Bug #38975@Syazani 16/10/2025 -- End
 
 }
