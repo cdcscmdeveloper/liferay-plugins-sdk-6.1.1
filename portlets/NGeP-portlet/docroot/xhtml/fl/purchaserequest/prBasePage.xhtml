@@ -86,7 +86,7 @@
 			<c:when test="#{purchaseRequestBackingBean.managedBean.isPidValidityExpired()}">
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						<ui:fragment rendered="#{(bpmAction eq 'REJECT')or(bpmAction eq 'CANCEL')}">
-						<ui:param name="buttonLabel" value="#{purchaseRequestBackingBean.toLowerCase(bpmAction)}" /> <ui:remove>#39192</ui:remove>
+						<ui:param name="buttonLabel" value="#{purchaseRequestBackingBean.buttonLabelKey(bpmAction)}" /> <ui:remove>#39192</ui:remove>
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								process="@form"
@@ -99,7 +99,7 @@
 			<c:otherwise>
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						
-						<ui:param name="buttonLabel" value="#{purchaseRequestBackingBean.toLowerCase(bpmAction)}" /> <ui:remove>#39192</ui:remove>
+						<ui:param name="buttonLabel" value="#{purchaseRequestBackingBean.buttonLabelKey(bpmAction)}" /> <ui:remove>#39192</ui:remove>
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								process="@form"

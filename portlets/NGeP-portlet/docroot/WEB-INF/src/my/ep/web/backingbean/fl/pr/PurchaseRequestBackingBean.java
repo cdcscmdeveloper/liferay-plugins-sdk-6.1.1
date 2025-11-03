@@ -5282,8 +5282,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		 * @return String
 		 * 			String that has been convert to lower case
 		 */
-		public String toLowerCase(String bpmAction) {
+		public String buttonLabelKey(String bpmAction) {
 		    return "lbl.btn." + bpmAction.toLowerCase();
 		}
 		//#39192 - End
+		
 }

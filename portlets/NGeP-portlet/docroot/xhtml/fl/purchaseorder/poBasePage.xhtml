@@ -94,7 +94,7 @@
 						<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 							<ui:define name="outComeSection">
 								<ui:repeat var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
-									<ui:param name="buttonLabel" value="#{flOrderBB.toLowerCase(bpmAction)}" /> <ui:remove>#39192</ui:remove>
+									<ui:param name="buttonLabel" value="#{flOrderBB.buttonLabelKey(bpmAction)}" /> <ui:remove>#39192</ui:remove>
 									<p:commandButton value="#{lbl[buttonLabel]}"
 										styleClass="ui-button" onstart="blockWidget.show();"
 										oncomplete="blockWidget.hide();" update="@form"
