@@ -2867,6 +2867,27 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtCategorySearchBean(searchBean);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
+				
+				String catCodeL1 = "";
+				String catCodeL2 = "";
+				String catCodeL3 = "";
+				String catCodeLevel = null;
+				String catCode = null;
+				
+				for(ScQtCategory checkCategoryUpdated : resDTO.getCategoryResultBean().getResultList()){
+					if(null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()){
+						 catCodeL1 = checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code();
+					} 
+					if (null != checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code()){
+						 catCodeL2 = checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code();
+					}
+					if (null != checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code()){
+						 catCodeL3 = checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code();
+					}
+				}
+				
+				flagHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel, catCode);
+				
 				return resDTO.getCategoryResultBean();
 			} finally{
 				qtNoticeBoardSO = null;
@@ -3638,7 +3659,7 @@ public class NoticeBoardBackingBean extends
 		boolean oldDescEmpty = false;
 
 		List<ScQtCategory> categoryList = this.getCategoryCodesDataModel().getList(); // or getAll()
-
+		
 		if (null != catCodeL1) {
 			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL1Nb(catCodeL1, catCodeLevel);
 			if (null != resDTO1.getCatCodeRemark()) {
