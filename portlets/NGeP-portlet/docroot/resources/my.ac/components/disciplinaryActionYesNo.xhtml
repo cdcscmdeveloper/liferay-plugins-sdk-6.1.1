@@ -16,13 +16,18 @@
 	    <cc:attribute name="immediate" default="false" />
 	</cc:interface>
 	<cc:implementation>
+		<script>
+      		function moveDialogToBody() {
+  				$("[id$='disciplinaryActionHistoryDlgId']").appendTo('body');
+	  		}
+		</script>
 		<ui:fragment rendered="#{not cc.attrs.showTooltip}">
-			<div style="position: relative; width: 100% !important;">
+			<div style="position: relative; width: 100% !important; pointer-events: none;">
 				<div style="margin: auto !important; width: 70px !important;">
 					<div style="display: inline-block; width: 50% !important; text-align: center;">
-						<p:commandLink onstart="blockWidget.show()"
+						<p:commandLink onstart="blockWidget.show(); moveDialogToBody();"
 							oncomplete="blockWidget.hide()"
-							style="color:red; font-weight:bold;"
+							style="color:red; font-weight:bold; pointer-events: auto;"
 							rendered="#{cc.attrs.supplier.disciplinaryActions}"
 							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(cc.attrs.supplier)}"
 							update="@([id$=disciplinaryActionHistoryDlgId])" immediate="#{cc.attrs.immediate}" process="@this">
@@ -39,6 +44,7 @@
 						<p:commandLink onstart="blockWidget.show()"
 							action="#{viewSuppProfileBackingBean.onViewQTAlertMessage(warnings)}"
 							oncomplete="blockWidget.hide();"
+							style="pointer-events: auto;"
 							update="@([id$=suspendAlertWidgetId])" process="@this">
 							<p:graphicImage id="imageId"
 								value="/css/images/design/icon_error.png"
