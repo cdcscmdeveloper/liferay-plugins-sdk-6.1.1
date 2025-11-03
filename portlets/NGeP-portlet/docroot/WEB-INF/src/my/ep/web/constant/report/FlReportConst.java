@@ -169,6 +169,10 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_PURCHASE_GROUP_STATUS = "PGSTATUS";
 	//29550 - End
 	
+	//#27476 start
+	public static final String FL_RPT_PROCUMENT_TYPE_CODE = "PPROCTYPECODE";
+	//#27476 end
+	
 	public FlReportConst(){}
 
 	public String getFl001ContractRequest() {

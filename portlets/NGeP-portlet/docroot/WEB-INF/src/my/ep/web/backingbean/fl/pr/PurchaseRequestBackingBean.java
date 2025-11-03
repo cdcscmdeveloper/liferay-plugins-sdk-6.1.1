@@ -537,6 +537,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setEspkb(true);
 		}
 		getPreparedByName(); //29555
+		
+		//#27476 start
+	    setPK7Info();
+	    //#27476 end
 	}
 
 	/**
@@ -3395,6 +3399,27 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			isTriggerNewPRNeeded = checkTriggeredNewPR();
 		}
 		//#28718 - End
+		
+		//#27476 start
+		if (getManagedBean().getReason() != null) {
+			Set<String> outcomeCheckReason = new HashSet<>();
+
+			outcomeCheckReason.add(BpmOutcomeConst.BPM_SUBMIT);
+			outcomeCheckReason.add(BpmOutcomeConst.BPM_APPROVE);
+			outcomeCheckReason.add(BpmOutcomeConst.BPM_REVISE);
+
+			if (outcomeCheckReason.contains(outcome)
+					&& getManagedBean().getRequestNoteWithDtlsList() != null
+					&& getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+				String msgId = isFlFulfilmentRequisitioner() ? MessageConst.ERROR_740073 : MessageConst.ERROR_740074;
+
+				throw new EpException(msgId, new String[] { getManagedBean().getReason(),
+						getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()) });
+			}
+
+		}
+		// #27476 end
+		
 		//29728 - start
 		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_SAVE.equals(outcome) 
 				|| BpmOutcomeConst.BPM_APPROVE.equals(outcome)){			
@@ -3994,6 +4019,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 		}
 		double thresoldAmt = 0;
+		// #27476 start
+		boolean isExceedThreshold = false;
+		// #27476 end
 		for(Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet() ){
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
 			summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
@@ -4038,15 +4066,56 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				log.info("SumAmt: " + sumAmt);
 				log.info("ThresholdAmt: " + thresoldAmt);
 				if(sumAmt.doubleValue() > thresoldAmt){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.ERROR_740004, 
-									new String[]{CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc.getUnspscTitleEng() : cmUnspsc.getUnspscTitle() , StringUtils.EMPTY, //#27377
-											amountDF.format(thresoldAmt)}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-									//#26047 -- end
+					// #27476 start
+					if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {//need to add special item
+						isExceedThreshold = true;
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+										MessageConst.ERROR_740076,
+										new String[] {
+												CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc
+														.getUnspscTitleEng() : cmUnspsc.getUnspscTitle(),
+												StringUtils.EMPTY,
+												String.valueOf(getThresholdForPK7()),
+												getParameterDesc(getManagedBean().getFulfilmentRequest()
+														.getProcurementType()), getManagedBean().getReason() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 
+
+					} else {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.ERROR_740004, 
+										new String[]{CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc.getUnspscTitleEng() : cmUnspsc.getUnspscTitle() , StringUtils.EMPTY, //#27377
+												amountDF.format(thresoldAmt)}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+										//#26047 -- end
+					}
+					// #27476 end
 				}
 			}
 		}
+		
+		// #27476 start
+		// message for PK7 and special item if not exceed
+		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {//need to add special item
+			if (!isExceedThreshold) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.ERROR_740075,
+								new String[] {
+										getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()
+												.getParameterType(), ParameterConst.PROC_TYPE_PK7),
+										getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()
+												.getParameterType(), ParameterConst.PROC_TYPE_PK7),//change to special item - PK7 for dummy
+										getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+										getManagedBean().getReason() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+		}
+		// #27476 end
 	}
 	
 	/**
@@ -5272,19 +5341,66 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 			}
 		}
-		//34555-End		
+		//34555-End
 		
-		//#39192 - Start
-		/**
-		 * This method convert string to lower case.
-		 * @param bpmAction 
-		 * 			String of bpm action 
-		 * @return String
-		 * 			String that has been convert to lower case
-		 */
-		public String buttonLabelKey(String bpmAction) {
-		    return "lbl.btn." + bpmAction.toLowerCase();
+	// #27476 start
+	/**
+	 * set reason and justification info for PK7/Special Item
+	 * 
+	 */
+	private void setPK7Info() {
+		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {//need to add special item
+			for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
+				getManagedBean().setReason(
+						getReasonDescByReasonId(purchaseItem.getJustificationType().getReasonId()).getReasonDesc());
+				getManagedBean().setJustification(purchaseItem.getJustification());
+			}
 		}
-		//#39192 - End
-		
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @return thresholdAmount
+	 */
+	private Double getThresholdForPK7() {
+		Double thresholdAmount = null;
+
+		if (!getManagedBean().getRequestNoteWithDtlsList().isEmpty()) {
+			for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
+				// thresholdAmount = purchaseItem.getJustificationType(). get dp threshold
+			}
+		}
+
+		return thresholdAmount;
+	}
+	
+	private void checkingPK7AndSpecialItem() {
+		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {//need to add special item
+			if(getThresholdForPK7() != null){
+				//checking Threshold Per Item/ Per PTJ/ Per Year Validation
+				checkPRThresholdPerItem();
+				//checking Threshold Per PR Validation
+				
+			}else{
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.ERROR_740077,
+								new String[] {
+										getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()
+												.getParameterType(), ParameterConst.PROC_TYPE_PK7),
+										getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()
+												.getParameterType(), ParameterConst.PROC_TYPE_PK7),//change to special item - PK7 for dummy
+										getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+										getManagedBean().getReason() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+		}
+	}
+	// #27476 end
 }

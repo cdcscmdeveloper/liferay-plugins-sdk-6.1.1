@@ -183,11 +183,29 @@
 								itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
 								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+								
+							<ui:remove>#27476 start</ui:remove>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.procurement.type']}"
+								itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
+							<ui:remove>#27476 end</ui:remove>
+							
 						</c:otherwise>
 					</c:choose>
 					<!-- 29550 - end -->
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+				
+			<ui:remove>#27476 start</ui:remove>
+			<td width="15%"><p:outputLabel
+					value="#{lbl['lbl.fl.procurement.type']}" /></td>
+			<td width="35%"><p:selectOneMenu
+					value="#{poPurRptBB.managedBean.procumentType}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="#{null}" />
+					<f:selectItems
+						value="#{poPurRptBB.getRadioButtonCodeValues(ParameterTypeConst.procurementTypeTemp)}" />
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu></td>
+			<ui:remove>#27476 end</ui:remove>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>

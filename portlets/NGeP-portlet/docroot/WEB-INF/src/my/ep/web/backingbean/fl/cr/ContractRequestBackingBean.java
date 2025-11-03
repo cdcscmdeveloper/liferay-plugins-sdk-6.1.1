@@ -61,6 +61,7 @@ import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
@@ -120,6 +121,8 @@ import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -133,6 +136,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.common.user.FLUserDataType;
 import my.ep.jaxb.fl.phis.codata.FLPHISContractOrderDataType;
@@ -178,6 +182,8 @@ import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
+import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonRestr;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -5083,6 +5089,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 		//29728 - end
+		
+		// #27476 start
+		List<String> outcomeListForAgencyValidatation = new ArrayList<>();
+		outcomeListForAgencyValidatation.add(BpmOutcomeConst.BPM_SAVE);
+		outcomeListForAgencyValidatation.add(BpmOutcomeConst.BPM_SUBMIT);
+		outcomeListForAgencyValidatation.add(BpmOutcomeConst.BPM_REVISE);
+		outcomeListForAgencyValidatation.add(BpmOutcomeConst.BPM_APPROVE);
+
+		if (outcomeListForAgencyValidatation.contains(outcome)) {
+			validateCRThreshold();
+		}
+		// #27476 end
+		
 		if (!isFlFulfilmentRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
 				|| (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
 			validateContractRequest(outcome);
@@ -7525,6 +7544,145 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	// 36468 end
 	
+	// #27476 start
+	/**
+	 * validate CR for agency validation
+	 */
+	public void validateCRThreshold() {
+		if (validateCRProcumentTypeForThresholdValidation()
+				&& getManagedBean().getFlRequest().getCtContract().getLoa().getJustificationType() != null) {
+			IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IReasonSO.class);
+
+			PmReason pmReasonCR = retrievePmReasonForThresholdValidation();
+
+			if (pmReasonCR != null) {
+				ReasonReqDTO reqDTO = new ReasonReqDTO();
+				reqDTO.setReasonId(pmReasonCR.getReasonId());
+
+				ReasonResDTO resDTO = reasonSO.retrieveReasonRestrList(reqDTO);
+
+				List<PmReasonRestr> reasonRestrList = resDTO.getPmReasonRestrList();
+
+				if (!reasonRestrList.isEmpty()) {
+
+					validateAgencyRestr(reasonRestrList);
+
+				}
+			}
+		}
+	}
+
+	/**
+	 * validation procument type for threshold validation
+	 * 
+	 * @return boolean is CR validated for threshold checking
+	 */
+	public boolean validateCRProcumentTypeForThresholdValidation() {
+
+		PmParameter procumentType = null;
+
+		if (getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)
+				&& getManagedBean().getFlRequest().getCtContract().getLoa().getScLoiLoa().getDocType()
+						.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			procumentType = (PmParameter) EntityHelper
+					.getNestedProperty(getManagedBean(),
+							"flRequest.ctContract.contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType");
+		}
+
+		if (procumentType != null
+				&& procumentType.getParameterCode().equals(ParameterConst.PROC_TEMP_FL_TYPE_SPECIAL_ITEM)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * retrieve PmReason for CR
+	 * 
+	 * @return reason PmReason
+	 */
+	public PmReason retrievePmReasonForThresholdValidation() {
+		PmReason reason = null;
+		reason = (PmReason) EntityHelper
+				.getNestedProperty(getManagedBean(),
+						"flRequest.ctContract.contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");
+
+		return reason;
+	}
+
+	/**
+	 * agency restriction validation
+	 * 
+	 * @param reasonRestrList
+	 *            reason restr list
+	 */
+	public void validateAgencyRestr(List<PmReasonRestr> reasonRestrList) {
+		List<Long> agencyIdRestList = new ArrayList<>();
+
+		for (PmReasonRestr agencyRest : reasonRestrList) {
+			if (agencyRest.getAgencyId() != null) {
+				agencyIdRestList.add(agencyRest.getAgencyId().getOrgProfileId());
+			}
+		}
+
+		if (!agencyIdRestList.isEmpty()) {
+			boolean isAgencyValidated = false;
+
+			long agencyId = getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId();
+
+			for (Long reasonAgencyId : agencyIdRestList) {
+				if (reasonAgencyId.equals(agencyId)) {
+					isAgencyValidated = true;
+					break;
+				}
+			}
+
+			if (!isAgencyValidated) {
+				agencyValidationErrorMessage();
+			}
+		}
+	}
+
+	/**
+	 * build error message for agency validation
+	 */
+	public void agencyValidationErrorMessage() {
+		if (isFlFulfilmentRequisitioner()) {
+			if (getManagedBean().getFlRequest().getStatus().getStatusId()
+					.equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION)) {
+				throw new EpException(MessageConst.ERROR_740079, new String[] {
+						getManagedBean().getFlRequest().getDocNo(),
+						getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR,
+								ParameterConst.PROC_TEMP_FL_TYPE_SPECIAL_ITEM),
+						getManagedBean().getFlRequest().getPreparedOrgProfile().getPmOrgValidity().getOrgCode(),
+						getManagedBean().getFlRequest().getPreparedOrgProfile().getPmOrgValidity().getOrgName() });
+			} else {
+				throw new EpException(MessageConst.ERROR_740080, new String[] {
+						getManagedBean().getFlRequest().getPreparedOrgProfile().getPmOrgValidity().getOrgCode(),
+						getManagedBean().getFlRequest().getPreparedOrgProfile().getPmOrgValidity().getOrgName(),
+						getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR,
+								ParameterConst.PROC_TEMP_FL_TYPE_SPECIAL_ITEM),
+						getReasonDescByReasonId(
+								getManagedBean().getFlRequest().getCtContract().getLoa().getJustificationType()
+										.getReasonId()).getReasonDesc() });
+			}
+		}
+		if (isApprover()) {
+			throw new EpException(MessageConst.ERROR_740081, new String[] {
+					getManagedBean().getFlRequest().getPreparedOrgProfile().getPmOrgValidity().getOrgCode(),
+					getManagedBean().getFlRequest().getPreparedOrgProfile().getPmOrgValidity().getOrgName(),
+					getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR, ParameterConst.PROC_TEMP_FL_TYPE_SPECIAL_ITEM),
+					getReasonDescByReasonId(
+							getManagedBean().getFlRequest().getCtContract().getLoa().getJustificationType()
+									.getReasonId()).getReasonDesc() });
+		}
+
+	}
+
+	// #27476 end
+		
 	//25296 - Start
 	/**
 	 * Bond Waiver Checking upon Contract Request Submission and/or Approval
