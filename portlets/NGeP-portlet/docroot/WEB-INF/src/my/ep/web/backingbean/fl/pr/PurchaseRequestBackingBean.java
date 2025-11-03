@@ -55,6 +55,7 @@ import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -104,6 +105,7 @@ import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
@@ -160,6 +162,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -5367,6 +5370,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				//checking Threshold Per Item/ Per PTJ/ Per Year Validation
 				checkPRThresholdPerItemForPK7();
 				
+				//checking Threshold Supplier Account Type Validation
+				
 			}else{
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -5515,6 +5520,61 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action
 				.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) && getManagedBean().isPRExceedThreshold()) {
 			buildErrorMessageForExceedThreshold(true);
+		}
+		
+		// supplier acc type validation
+		validatePRSupplierAccType();
+	}
+
+	private void validatePRSupplierAccType() {
+
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IReasonSO.class);
+
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getReasonId());
+
+		// check if supplier mof set in pm
+		reqDTO.setSuppTypeId(1008L); // replace with sm mof acc type id
+		boolean isSuppAccTypeRestrMof = reasonSO.isSuppAccTypeRestricted(reqDTO);
+
+		// check if supplier basic set in pm
+		reqDTO.setSuppTypeId(1009L); // replace with sm basic acc type id
+		boolean isSuppAccTypeRestrBasic = reasonSO.isSuppAccTypeRestricted(reqDTO);
+
+		SmMofAccount mofAcc = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
+				getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+		String suppAccType = FulfilmentConst.SM_SUPP_ACC_CODE_BASIC;
+
+		if (mofAcc != null && mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			suppAccType = FulfilmentConst.SM_SUPP_ACC_CODE_MOF;
+		}
+
+		boolean isErrorMsgThrowForSuppAccTypeValidation = false;
+
+		if (isSuppAccTypeRestrMof && !isSuppAccTypeRestrBasic) {// pm set supplier mof only
+
+			if (mofAcc == null || mofAcc.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+				isErrorMsgThrowForSuppAccTypeValidation = true;
+			}
+
+		} else if (!isSuppAccTypeRestrMof && isSuppAccTypeRestrBasic) {// pm set supplier basic only
+			if (mofAcc != null
+					|| getManagedBean().getFulfilmentRequest().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+				isErrorMsgThrowForSuppAccTypeValidation = true;
+			}
+
+		} else {// pm set both basic and mof or not defined
+			if (getManagedBean().getFulfilmentRequest().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+				isErrorMsgThrowForSuppAccTypeValidation = true;
+			}
+		}
+
+		if (isErrorMsgThrowForSuppAccTypeValidation) {
+			throw new EpException(MessageConst.ERROR_740082, new String[] { getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE,suppAccType),
+					getManagedBean().getFulfilmentRequest().getSmSupplier().getCompanyName(),
+					getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+					getManagedBean().getReason() });
 		}
 	}
 	// #27476 end
