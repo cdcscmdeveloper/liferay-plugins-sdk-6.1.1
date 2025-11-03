@@ -38,7 +38,8 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="text-align:right;">
+			<ui:remove><!-- #38151 (headertext) --></ui:remove>
+				<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}" style="text-align:right;">
 				<h:outputLabel value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputLabel>
 			</p:column>
 
@@ -94,7 +95,8 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="text-align:right;">
+			<ui:remove><!-- #38151 (headertext) --></ui:remove>
+				<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}" style="text-align:right;">
 				<h:outputLabel value="#{disQualifiedSupplier.totalScore}"></h:outputLabel>
 			</p:column>
 
