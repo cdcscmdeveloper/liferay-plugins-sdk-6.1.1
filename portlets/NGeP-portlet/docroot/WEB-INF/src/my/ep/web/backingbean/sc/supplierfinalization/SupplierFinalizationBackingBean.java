@@ -12609,7 +12609,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSuppFinalizationSO.class);
-		retrieveQualifiedSuppliersInfoByEvalStage("1");
+		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.TECHNICAL_DOCTYPE);
 		log.info("===========================================" + supplierId);
 		this.getManagedBean().getShortlistedSuppliersByRecommendType().getList();
 		BigDecimal totalScoreTecEval = null;
@@ -12700,7 +12700,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		// }
 		// }
 
-		retrieveQualifiedSuppliersInfoByEvalStage("2");
+		retrieveQualifiedSuppliersInfoByEvalStage(SourcingConstants.FINANCIAL_DOCTYPE);
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
 				selectedZoneId);
 
