@@ -8869,7 +8869,8 @@ public class SupplierFinalizationBackingBean extends
 							boolean isOnlineBidding = ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 									.equals(getManagedBean().getFinalizationMethod()) && !isQTRefinalized();
 							boolean isSupplierEnabled = !qualSupplier.isSuppSelectionDisabled()
-									&& !disagreeProposalValidityExtension(qualSupplier) && !isDisabledDueToDA;
+									&& !disagreeProposalValidityExtension(qualSupplier) //#21692 rejecting Validity Extension will be excluded
+									&& !isDisabledDueToDA;
 							if (isOnlineBidding && isSupplierEnabled) {
 								qualSupplier.setShortListed(true);
 							} 
@@ -8882,7 +8883,8 @@ public class SupplierFinalizationBackingBean extends
 							recommendationBean = updateCachedData(qualSupplier, 
 									zoneId, selectedItemId, null);
 							// 26247, 31128, #32699 - Start.
-							boolean disabledSupplier = isDisabledDueToDA && !isCurrentlyAwarded(supplier.getSupplierId(), selectedItemId, zoneId);
+							boolean disabledSupplier = isDisabledDueToDA
+									&& !isCurrentlyAwarded(supplier.getSupplierId(), selectedItemId, zoneId);
 							if (!disabledSupplier) {
 								if (recommendationBean.isAwarded()) {
 									getManagedBean().setRecommendedSupplier(qualSupplier);
