@@ -12344,17 +12344,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * @return corresponding price threshold or {@code null} if unknown
 	 */
 	public static BigDecimal getThresholdFor(String committeeType) {
-		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equals(committeeType)) {
 			return new BigDecimal(SourcingConstants.QT_BELOW_500K);
 		}
 
 		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
 			return new BigDecimal(SourcingConstants.QT_BELOW_30MILL);
-		}
-
-		if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equals(committeeType)) {
-			return new BigDecimal(SourcingConstants.QT_BELOW_50MILL);
 		}
 
 		return null;
@@ -12370,15 +12369,24 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 */
 	public void checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority() {
 
-	    final boolean isItemize = getManagedBean().isItemize();
-	    final String committeeType = getManagedBean().getCommitteeType();
-	    final BigDecimal committeeThreshold = getThresholdFor(committeeType);
+		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
+		ScQt scQt = qtBackingBean.getManagedBean().getQt();
+		boolean isBpkCentralContract = false;
+		isBpkCentralContract = isBpkCentralContract(scQt);
 
-	    boolean exceed = isItemize
-	            ? checkItemizedOffersExceedThreshold(committeeThreshold)
-	            : checkPackageOffersExceedThreshold(committeeThreshold);
+		if (isBpkCentralContract) {
+			return;
+		}
 
-	    getManagedBean().setSuppOfferPriceExceedCommunityAuthority(exceed);
+		final boolean isItemize = getManagedBean().isItemize();
+		final String committeeType = getManagedBean().getCommitteeType();
+		final BigDecimal committeeThreshold = getThresholdFor(committeeType);
+
+		boolean exceed = isItemize ? checkItemizedOffersExceedThreshold(committeeThreshold)
+				: checkPackageOffersExceedThreshold(committeeThreshold);
+
+		getManagedBean().setSuppOfferPriceExceedCommunityAuthority(exceed);
 	}
 
 	/**
@@ -12588,19 +12596,21 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * specified committee type.
 	 */
 	private void throwCommitteeException(final String committeeType, final String committeeName) {
-	    final String qtNo = getManagedBean().getScQt().getQtNo();
-	    final String offeredPrice = getManagedBean().getSelectedSupplierOfferedPrice();
+		final String qtNo = getManagedBean().getScQt().getQtNo();
+		final String offeredPrice = getManagedBean().getSelectedSupplierOfferedPrice();
 
-	    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
-	        throw new EpException(MessageConst.ERROR_760710, new String[] { qtNo, offeredPrice });
-	    }
-	    if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
-	            || ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
-	        throw new EpException(MessageConst.ERROR_760711, new String[] { committeeName, qtNo, offeredPrice });
-	    }
-	    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equals(committeeType)) {
-	        throw new EpException(MessageConst.ERROR_760712, new String[] { qtNo, offeredPrice });
-	    }
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
+			throw new EpException(MessageConst.ERROR_760710, new String[] { qtNo, offeredPrice });
+		}
+		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
+			throw new EpException(MessageConst.ERROR_760711, new String[] { committeeName, qtNo, offeredPrice });
+		}
+		if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equals(committeeType)) {
+			throw new EpException(MessageConst.ERROR_760712, new String[] { qtNo, offeredPrice });
+		}
 	}
 	
 	// #38151 - Start
