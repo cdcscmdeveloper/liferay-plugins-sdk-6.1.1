@@ -7843,10 +7843,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		} catch (Exception e) {
 			Long qtPrpExpId = scQtPRPExperience.getQtPrpExperienceId();
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SOURCING_BACKINGBEAN,
 					String.valueOf(qtPrpExpId),
-					SLALogConstant.DOWNLOAD_SUPPLIER_LOA_DETAILS_REPORTS,
+					SLALogConstant.DOWNLOAD_SUPPLIER_LOA_DETAILS_REPORTS
+							.concat(SLALogConstant.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
@@ -7951,10 +7953,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return resDTO.getLoiLoaSupplierMap();
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SOURCING_BACKINGBEAN,
 					String.valueOf(qtId),
-					SLALogConstant.RETRIEVE_SUPP_MAP_REPORT,
+					SLALogConstant.RETRIEVE_SUPP_MAP_REPORT
+							.concat(SLALogConstant.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 		return null;
@@ -7987,10 +7991,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} catch (Exception e) {
 			Long qtProposalCheckListId = scQtProposalChecklist
 					.getQtProposalChecklistId();
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SOURCING_BACKINGBEAN,
 					String.valueOf(qtProposalCheckListId),
-					SLALogConstant.RETRIEVE_CONTRACT_STATUS_COUNT,
+					SLALogConstant.RETRIEVE_CONTRACT_STATUS_COUNT
+							.concat(SLALogConstant.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 
@@ -8032,10 +8038,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			} catch (Exception e) {
 				Long qtId = evaluationReqDTO.getQtId();
 
-				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+				SLAUtils.getInstance().logSLAError(
+						SLALogConstant.QT_MODULE,
 						SLALogConstant.QT_SOURCING_BACKINGBEAN,
 						String.valueOf(qtId),
-						SLALogConstant.COMP_EXP_SUPP_PAGING_DATA_MODEL,
+						SLALogConstant.COMP_EXP_SUPP_PAGING_DATA_MODEL
+								.concat(SLALogConstant.COMP_EXP_ERROR),
 						getUserIdSessionFromLoginId(), e);
 
 			}
@@ -8104,10 +8112,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} catch (Exception e) {
 			Long qtPrpExpId = scQtPRPExperience.getQtPrpExperienceId();
 
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SOURCING_BACKINGBEAN,
 					String.valueOf(qtPrpExpId),
-					SLALogConstant.COMP_EXP_LOA_DETAILS_PAGE,
+					SLALogConstant.COMP_EXP_LOA_DETAILS_PAGE
+							.concat(SLALogConstant.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 

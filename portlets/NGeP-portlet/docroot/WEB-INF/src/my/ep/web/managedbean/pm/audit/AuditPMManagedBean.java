@@ -91,6 +91,8 @@ public class AuditPMManagedBean extends BaseManagedBean {
 
 	private String locationDetailType;
 
+	private String paramLevelCode3;
+
 	private List<VAuditPMDTO> vpmAuditLocationDTOList;
 
 	/**
@@ -389,5 +391,13 @@ public class AuditPMManagedBean extends BaseManagedBean {
 
 	public void setSearchBean(AuditPMSearchBean searchBean) {
 		this.searchBean = searchBean;
+	}
+
+	public String getParamLevelCode3() {
+		return paramLevelCode3;
+	}
+
+	public void setParamLevelCode3(String paramLevelCode3) {
+		this.paramLevelCode3 = paramLevelCode3;
 	}
 }

@@ -7,30 +7,36 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<style>
-		.center-header th,
-		.center-header .ui-dt-c {
-			text-align: center !important;
-		}
-		       .center-checkbox-column {
-            text-align: center !important;
-            vertical-align: middle !important;
-            width: 3% !important;
-        }
+	.center-header th,.center-header .ui-dt-c {
+		text-align: center !important;
+	}
 
-        .center-checkbox-column .ui-chkbox {
-            display: inline-block;
-            margin: 0 auto;
-            width: 16px;
-            height: 16px;
-            vertical-align: middle;
-        }
+	.center-checkbox-column {
+		text-align: center !important;
+		vertical-align: middle !important;
+		width: 3% !important;
+		padding: 4px !important; /* opsional: pastikan ada ruang */
+	}
 
-        /* Optional: agar header juga center */
-        .center-checkbox-column .ui-column-header-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+	.center-checkbox-column .ui-chkbox {
+		display: inline-block !important;
+		margin: 0 auto !important;
+		width: 16px !important;
+		height: 16px !important;
+		vertical-align: middle !important;
+	}
+
+	.center-checkbox-column .ui-chkbox-box {
+		margin: 0 auto !important;
+		width: 16px !important;
+		height: 16px !important;
+	}
+
+	.center-checkbox-column .ui-column-header-content {
+		display: flex !important;
+		justify-content: center !important;
+		align-items: center !important;
+	}
 	</style>
 
 	<p:panel id="categoriCodeId"
@@ -58,7 +64,7 @@
 				<ac:paginator for="panelCategoryCodeDt" />
 
 				<p:column selectionMode="multiple" style="width:3%" rendered="#{!panelBackingBean.managedBean.viewContract}"
-				styleClass="center-checkbox-column" headerStyle="text-align: center;"/>
+				styleClass="center-checkbox-column" headerStyleClass="center-checkbox-column" />
 				<!-- Ajax untuk update button delete -->
 			 	<p:ajax event="toggleSelect"
 					listener="#{panelBackingBean.onCategorySelectionChange}"
