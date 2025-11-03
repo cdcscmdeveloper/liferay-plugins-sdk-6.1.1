@@ -67,8 +67,8 @@
 					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
 											(scQtCategory.pmCategoryL2.changedDate ne scQtCategory.pmCategoryL2.createdDate)}"
 											style="color: red;font-weight:bold">
-							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
-							escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}" />
+						<h:outputText value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
+									  escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}" />
 						<!-- #29732 - fix Reopen -->	
 						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL2.changedDate)}&#41;" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}">
 						</h:outputText>
