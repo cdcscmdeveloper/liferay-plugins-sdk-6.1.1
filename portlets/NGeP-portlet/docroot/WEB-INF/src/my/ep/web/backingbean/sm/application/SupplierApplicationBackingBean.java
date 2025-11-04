@@ -11781,6 +11781,7 @@ public class SupplierApplicationBackingBean extends
 							.append(cat.getPmCategoryL1().getCategoryL1Code())
 							.append(cat.getPmCategoryL2().getCategoryL2Code())
 							.append(cat.getPmCategoryL3().getCategoryL3Code());
+					/*here is missing tagging second commit*/
 
 					throw new EpException(MessageConst.ERROR_722514,
 							new String[] { sb.toString() });
