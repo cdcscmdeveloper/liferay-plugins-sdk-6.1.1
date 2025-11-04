@@ -12207,7 +12207,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * @return list of offered prices; may be empty but never null
 	 */
 	private List<BigDecimal> getOfferedPrices(ScQtFinalization scQtFinalization) {
-		List<BigDecimal> prices = new ArrayList<BigDecimal>();
+		List<BigDecimal> prices = new ArrayList<>();
 
 		if (getManagedBean().isItemize()) {
 			for (ScQtRecommend item : scQtFinalization.getScQtRecommends()) {
@@ -12423,13 +12423,20 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	    req.setRequestItemId(item.getRequestItem().getRequestNoteItemId());
 	    req.setSearchBean(searchBean);
 
-	    final SuppFinalizationResDTO res = service.retrieveQualifiedSuppliersInfoByEvalStage(req);
-	    if (res == null || !res.isSuccessful()) {
-	        return Collections.emptyList();
-	    }
+	    try {
+			final SuppFinalizationResDTO res = service.retrieveQualifiedSuppliersInfoByEvalStage(req);
+			if (res == null || !res.isSuccessful()) {
+				return Collections.emptyList();
+			}
 
-	    final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
-	    return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl>emptyList();
+			final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
+
+			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			return Collections.emptyList();
+		}
 	}
 
 	/**
@@ -12452,13 +12459,20 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	    req.setRequestItemId(null);
 	    req.setSearchBean(searchBean);
 
-	    final SuppFinalizationResDTO res = service.retrieveQualifiedSuppliersInfoByEvalStage(req);
-	    if (res == null || !res.isSuccessful()) {
-	        return Collections.emptyList();
-	    }
+	    try {
+			final SuppFinalizationResDTO res = service.retrieveQualifiedSuppliersInfoByEvalStage(req);
+			if (res == null || !res.isSuccessful()) {
+				return Collections.emptyList();
+			}
 
-	    final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
-	    return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl>emptyList();
+			final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
+
+			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			return Collections.emptyList();
+		}
 	}
 
 	/**
