@@ -2433,6 +2433,8 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
 			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(newCommitteeMembers)) {
@@ -2450,105 +2452,6 @@ public class EvaluationMeetingBackingBean extends
 
 			qtAuditTrailSO.insertAuditTrail(auditReqList);
 		}
-	}
-	
-	// #35500 issue fix 4-9
-	public ArrayList<AuditTrailReqDTO> prepareCommitteeRoleModified(IQTAuditTrailSO qtAuditTrailSO,
-			IAuditTrailSO auditTrailSO, ArrayList<AuditTrailReqDTO> auditReqList) {
-		if (auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
-			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
-			HashMap<PmUser, List<String>> committeeModifiedRole = this.getManagedBean().getMapModifiedRole() != null 
-					? this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
-
-			auditResDTO.setDocTypeId(this.getManagedBean().getQt().getProcurementMode().getParameterId());
-			auditResDTO.setDocId(this.getManagedBean().getQt().getQtId());
-			auditResDTO.setDocNo(this.getManagedBean().getQt().getQtNo());
-			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
-			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
-			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
-
-			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
-				auditResDTO.setNewValue(entry.getValue().get(0));
-				auditResDTO.setOldValue(entry.getValue().get(1));
-
-				if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
-					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_SC);
-					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_SC_ROLE);
-				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
-					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_EC);
-					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_EC_ROLE);
-				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
-					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
-					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_TEC_ROLE);
-				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
-					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
-					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_FEC_ROLE);
-				} else if (entry.getValue().get(2).equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {
-					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_OC);
-					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_OC_ROLE);
-				}
-
-				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
-				auditReqList.add(auditReqDTO);
-			}
-		}
-		return auditReqList;
-	}
-
-	
-	/**
-	 * #35500 issue fix 4-9
-	 * Capture the modified role values
-	 * @param member
-	 */
-	public void onChangeRole(int index,
-			List<ScCommitteeMember> committeeActivity){
-		ScCommitteeMember member = committeeActivity.get(index);
-		if (member.getMemberRoleId() == null){
-			this.roleChangedListener(member);
-			return;
-		}
-		
-		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
-		String changedRole = ParameterHelper.getInstance().getParameterDesc(
-				ParameterTypeConst.COMMITTEE_ROLE, changedRolePmParameter.getParameterCode(),
-				SourcingConstants.MY_LOCALE);
-		String previousRole = ParameterHelper.getInstance().getParameterDesc(
-				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
-				SourcingConstants.MY_LOCALE);
-		
-		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
-				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
-		List<String> userRoles = new ArrayList<>();
-				
-		if (!mapModifiedRole.isEmpty()) {
-			if (mapModifiedRole.containsKey(member.getPmUser())) {
-				userRoles = mapModifiedRole.get(member.getPmUser());
-				if (userRoles.get(1).equals(changedRole)){
-					mapModifiedRole.remove(member.getPmUser());
-				} else {
-					userRoles.add(0, changedRole);
-					mapModifiedRole.remove(member.getPmUser());
-					mapModifiedRole.put(member.getPmUser(),userRoles);					
-				}
-			} else {
-				userRoles.add(changedRole);
-				userRoles.add(previousRole);
-				userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
-				mapModifiedRole.put(member.getPmUser(),userRoles);
-			}
-		} else {
-			userRoles.add(changedRole);
-			userRoles.add(previousRole);
-			userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
-			mapModifiedRole.put(member.getPmUser(),userRoles);
-		}
-
-		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
-		
-		this.chnageMemberRole(index,committeeActivity);
 	}
 	
 	// #35500 issue fix 4-9
