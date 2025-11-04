@@ -41,8 +41,7 @@
 						</p:tooltip>
 					</p:commandLink>
 					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-										(scQtCategory.pmCategoryL1.changedDate ne scQtCategory.pmCategoryL1.createdDate)}"
-						style="color: red;font-weight:bold">
+										(scQtCategory.flagDisplayNb)}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
 							escape="false"/>
@@ -70,8 +69,7 @@
 						</p:tooltip>
 					</p:commandLink>
 					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-										(scQtCategory.pmCategoryL2.changedDate ne scQtCategory.pmCategoryL2.createdDate)}"
-						style="color: red;font-weight:bold">
+										(scQtCategory.flagDisplayNb)}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
 							escape="false" />
@@ -99,8 +97,7 @@
 						</p:tooltip>
 					</p:commandLink>
 					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-										(scQtCategory.pmCategoryL3.changedDate ne scQtCategory.pmCategoryL3.createdDate)}"
-						style="color: red;font-weight:bold">
+										(scQtCategory.flagDisplayNb)}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
 							escape="false"/>
