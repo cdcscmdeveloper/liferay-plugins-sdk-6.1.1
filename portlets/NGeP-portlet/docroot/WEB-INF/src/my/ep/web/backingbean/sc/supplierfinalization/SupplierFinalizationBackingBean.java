@@ -1866,15 +1866,7 @@ public class SupplierFinalizationBackingBean extends
 					}
 					
 					processSuppliersBeforeSaving();
-					// 25037 - start
-					if (!skipValidation) {
-						if (!getManagedBean().isItemize()) {
-							validateByPackage();
-						} else {
-							validateByItem();
-						}
-					}
-					// 25037 - end
+					validateSupplierByPackageAndItem(skipValidation);// 26247
 						
 						List<QtEvaluationResultDtlBean> cachedSupplierBeans = null;
 						Map<MapKey,List<QtEvaluationResultDtlBean>> cachedSuppliersMap = 
@@ -1940,6 +1932,28 @@ public class SupplierFinalizationBackingBean extends
 
 		}
 	}
+	
+	// 26247 - start
+	private void validateSupplierByPackageAndItem(boolean skipValidation) {
+		if (skipValidation) {
+			return;
+		}
+		try {
+			if (!getManagedBean().isItemize()) {
+				validateByPackage();
+			} else {
+				validateByItem();
+			}
+		} catch (EpException e) {
+			String taskName = this.getManagedBean().getTaskName();
+			if (Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION, SCProcessNameConst.SIGNOFF_FC_SELECTION)
+					.contains(taskName)) {
+				throw new EpException(MessageConst.ERROR_760601); 
+			}
+			throw e;
+		}
+	}
+	// 26247 - end
 
 	private void renewSessionAndRetrieve(int activeIndex,
 										 SuppFinalizationResDTO resDTO) {

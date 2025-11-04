@@ -2944,27 +2944,6 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtCategorySearchBean(searchBean);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
-				
-				String catCodeL1 = "";
-				String catCodeL2 = "";
-				String catCodeL3 = "";
-				String catCodeLevel = null;
-				String catCode = null;
-				
-				for(ScQtCategory checkCategoryUpdated : resDTO.getCategoryResultBean().getResultList()){
-					if(null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()){
-						 catCodeL1 = checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code();
-					} 
-					if (null != checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code()){
-						 catCodeL2 = checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code();
-					}
-					if (null != checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code()){
-						 catCodeL3 = checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code();
-					}
-				}
-				
-				flagHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel, catCode);
-				
 				return resDTO.getCategoryResultBean();
 			} finally{
 				qtNoticeBoardSO = null;
@@ -3542,77 +3521,23 @@ public class NoticeBoardBackingBean extends
 	// #29732 Start
 	public void onClickHistoryIcon(String catCodeL1, String catCodeL2, String catCodeL3,String catCodeLevel,
 			Long catCodeId,Long qtCateId, String categoryName, String catCode) {
-		boolean processAfter = false;
-		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICategoryCodeSO.class);
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
-		
-		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
-		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
-			for(ScQtCategory categoryCodeEdit : findQtCatCode){
-				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()){
-					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
-						reqDTO.setCategoryL1Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
-						reqDTO.setCategoryL2Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
-						reqDTO.setCategoryL3Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
-					}
-						processAfter = true;
-				}else{
-					
-					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
-						reqDTO.setCategoryL1Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
-						reqDTO.setCategoryL2Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
-						reqDTO.setCategoryL3Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
-					}
-					processAfter = true;
-					
-					checkHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3,catCodeLevel,catCode);
-					if(!this.getManagedBean().getUpdateCatInPm()){
-						this.getManagedBean().setHistoryList(null);
-						processAfter = false;
-					}
-				}
-			}
-		}else{
-			
-			if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
-				reqDTO.setCategoryL1Id(catCodeId);
-				resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-			} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
-				reqDTO.setCategoryL2Id(catCodeId);
-				resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-			} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
-				reqDTO.setCategoryL3Id(catCodeId);
-				resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
-			}
-			processAfter = true;
-			
-			checkHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3,catCodeLevel,catCode);
-			if(!this.getManagedBean().getUpdateCatInPm()){
-				this.getManagedBean().setHistoryList(null);
-				processAfter = false;
-			}
-		}
-		
-		if(processAfter){
-			getManagedBean().setHistoryList(
-					updateCreatedUserName(resDTO.getRemarkList()));
-			getManagedBean().setHisCatCode(catCode);
-		}
 
+		if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+			reqDTO.setCategoryL1Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+			reqDTO.setCategoryL2Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+			reqDTO.setCategoryL3Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+		}
+		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+		getManagedBean().setHisCatCode(catCode);
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
 
@@ -3652,130 +3577,4 @@ public class NoticeBoardBackingBean extends
 		return newChangedDate;
 	}
 	// #29732 Start - fix ReOpen
-	
-	// #29732 Start
-	public void checkHistoryPmCatCode(String catCodeL1,String catCodeL2,String catCodeL3,String catCodeLevel, String catCode) {
-
-		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
-		
-		String catCodeL1OldDesc = "";
-		String catCodeL2OldDesc = "";
-		String catCodeL3OldDesc = "";
-		boolean oldDescEmpty = false;
-				
-		List<ScQtCategory> categoryList = this.getCategoryCodesDataModel().getList(); // or getAll()
-
-		if(null != catCodeL1){
-
-			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL1Nb(catCodeL1,catCodeLevel);
-			if(null != resDTO1.getCatCodeRemark()){
-				catCodeL1OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
-				if(null != resDTO1.getCatCodeRemark() && null == catCodeL1OldDesc){
-					oldDescEmpty = true;
-				}
-			}
-		}
-		if(null != catCodeL2){
-
-			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL2Nb(catCodeL2,catCodeLevel);
-			if(null != resDTO1.getCatCodeRemark()){
-				catCodeL2OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
-				if(null != resDTO1.getCatCodeRemark() && null == catCodeL2OldDesc){
-					oldDescEmpty = true;
-				}
-			}
-		}
-		if(null != catCodeL3){
-
-			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL3Nb(catCodeL3,catCodeLevel);
-			if(null != resDTO1.getCatCodeRemark()){
-				catCodeL3OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
-				if(null != resDTO1.getCatCodeRemark() && null == catCodeL3OldDesc){
-					oldDescEmpty = true;
-				}
-			}
-		}
-		
-		if (oldDescEmpty) {
-			this.getManagedBean().setUpdateCatInPm(true);
-		} else {
-			for (ScQtCategory currentCategoryList : categoryList) {
-
-				if (null != catCodeL1OldDesc
-						&& catCodeL1OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL1Name())
-						|| null != catCodeL2OldDesc
-						&& catCodeL2OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL2Name())
-						|| null != catCodeL3OldDesc
-						&& catCodeL3OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL3Name()) || oldDescEmpty) {
-					this.getManagedBean().setUpdateCatInPm(true);
-				}
-			}
-		}
-	}
-	//// #29732 end
-	
-	// #29732 Start
-	public void flagHistoryPmCatCode(String catCodeL1, String catCodeL2, String catCodeL3, String catCodeLevel,
-			String catCode) {
-
-		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
-
-		String catCodeL1OldDesc = "";
-		String catCodeL2OldDesc = "";
-		String catCodeL3OldDesc = "";
-		boolean oldDescEmpty = false;
-
-		List<ScQtCategory> categoryList = this.getCategoryCodesDataModel().getList(); // or
-																						// getAll()
-
-		if (null != catCodeL1) {
-
-			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL1Nb(catCodeL1, catCodeLevel);
-			if (null != resDTO1.getCatCodeRemark()) {
-				catCodeL1OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
-				if (null != resDTO1.getCatCodeRemark() && null == catCodeL1OldDesc) {
-					oldDescEmpty = true;
-				}
-			}
-		}
-		if (null != catCodeL2) {
-
-			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL2Nb(catCodeL2, catCodeLevel);
-			if (null != resDTO1.getCatCodeRemark()) {
-				catCodeL2OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
-				if (null != resDTO1.getCatCodeRemark() && null == catCodeL2OldDesc) {
-					oldDescEmpty = true;
-				}
-			}
-		}
-		if (null != catCodeL3) {
-
-			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL3Nb(catCodeL3, catCodeLevel);
-			if (null != resDTO1.getCatCodeRemark()) {
-				catCodeL3OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
-				if (null != resDTO1.getCatCodeRemark() && null == catCodeL3OldDesc) {
-					oldDescEmpty = true;
-				}
-			}
-		}
-
-		if (oldDescEmpty) {
-			this.getManagedBean().setFlagUpdateCatInPmDisplay(true);
-		} else {
-			for (ScQtCategory currentCategoryList : categoryList) {
-
-				if (null != catCodeL1OldDesc
-						&& catCodeL1OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL1Name())
-						|| null != catCodeL2OldDesc
-						&& catCodeL2OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL2Name())
-						|| null != catCodeL3OldDesc
-						&& catCodeL3OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL3Name()) || oldDescEmpty) {
-					this.getManagedBean().setFlagUpdateCatInPmDisplay(true);
-				}
-			}
-		}
-	}
-		//// #29732 end
 }
