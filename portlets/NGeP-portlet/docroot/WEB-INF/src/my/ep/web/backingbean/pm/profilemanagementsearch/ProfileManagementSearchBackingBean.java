@@ -17,6 +17,7 @@ import my.ep.biz.service.pm.access.application.IAccessApplSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants; //#38016
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
 import my.ep.persistence.entity.BaseEntity;
@@ -26,6 +27,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //#38016
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -60,6 +62,7 @@ public class ProfileManagementSearchBackingBean extends
 			.getLogger(ProfileManagementSearchBackingBean.class);
 	private ISearchBean<PmParameterDesc> appTypeSearchBean;
 	private SelectItem[] applicationStatus;
+	private SelectItem[] status; //#38016
 	
 	// Paging for listing
 		private IPagingDataModel<Object[]> accessAPPLDataModel = new AccessAPPLPagingDataModel();
@@ -85,39 +88,36 @@ public class ProfileManagementSearchBackingBean extends
 			@Override
 			protected ISearchResultBean<Object[]> pageChangeListener(
 					ISearchBean<Object[]> searchBean) {
-				log.info("....pageChangeListener");
 				IAccessApplSO accessApplSO = null;
 				if (getManagedBean().getSelectedAppTypeParamCode() != null) {
 					try {
-//						ISearchBean<Object[]> searchBeanData = getSearchBeanData(searchBean);
-						log.info("....after getsearchbean");
-						log.info("....getProfileManagSearchBean().getAppStatusId()="+getManagedBean().getProfileManagSearchBean().getAppStatusId());
 						AccessApplReqDTO applReqDTO = new AccessApplReqDTO();
 						getManagedBean().fillRequestDTO(applReqDTO);
 						applReqDTO.setAccessApplSearch(searchBean);
 						applReqDTO.setAppStatusId(getManagedBean().getProfileManagSearchBean()
 								.getAppStatusId());
+						//Start - #38016
+						applReqDTO.setUserStatusId(getManagedBean().getProfileManagSearchBean()
+								.getUserStatusId());
+						applReqDTO.setRoleStatusId(getManagedBean().getProfileManagSearchBean()
+								.getRoleStatusId());
+						//End - #38016
 						applReqDTO.setDocType(getManagedBean().getSelectedAppTypeParamCode());
 						accessApplSO = BusinessDelegate.getInstance()
 								.getServiceObject(
 										ModuleCodeConst.PROFILE_MANAGEMENT,
 										IAccessApplSO.class);
-						log.info("....efor call  getAccessApplListBySearchBean");
 						AccessApplResDTO resDto = accessApplSO
 								.getAccessApplListBySearchBean(applReqDTO);
-						log.info("....after call  getAccessApplListBySearchBean");
 						if (resDto != null && resDto.isSuccessful()) {
-							log.info("....pageChangeListener..resultt.end");
 							return resDto.getAppLResultBean();
 						}
 					} finally {
 						accessApplSO = null;
 					}
 				}
-				log.info("....pageChangeListener...end");
 				return null;
 			}
-
 		}
 
 
@@ -302,12 +302,10 @@ public class ProfileManagementSearchBackingBean extends
 	if(paramCode != null){
 	    if(paramCode.equals(ParameterConst.DOCTYPE_MARKET_RESEARCH)){
 		  this.getManagedBean().getProfileManagSearchBean().setMarketResearch(true);
-//		  this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(false);
 		  this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(null);
 		  statusIds = mrStatusIds;
 	    }else if(paramCode.equals(ParameterConst.DOCTYPE_COMPANY_PROFILE)){
 	    	this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(true);
-//	    	this.getManagedBean().getProfileManagSearchBean().setMarketResearch(false);
 	    	this.getManagedBean().getProfileManagSearchBean().setMarketResearch(null);
 	    	 statusIds = cpStatusIds;
 	    }
@@ -316,10 +314,10 @@ public class ProfileManagementSearchBackingBean extends
 		  FacesScopes face = new FacesScopes();
 			try {
 				List<PmStatusDesc> statusDescList = new ArrayList<PmStatusDesc>();
-				for(Long statusId:cpStatusIds){
+				//#38016 - harun disabled as old code always get CP status id 
+				for(Long statusId:statusIds){	
 					PmStatusDesc pmStatusDesc = StatusHelper.getInstance().getStatusDescById(statusId);
 					if(pmStatusDesc != null){
-					
 						statusDescList.add(pmStatusDesc);
 					}
 				}
@@ -339,11 +337,7 @@ public class ProfileManagementSearchBackingBean extends
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 								e.getMessage()));
 			}
-		  
-	
-		  setApplicationStatus(items);
-
-		  //////////////
+		    setApplicationStatus(items);
 	}
 }
  
@@ -359,4 +353,94 @@ public class ProfileManagementSearchBackingBean extends
 		}
 
 	}
+	
+	//Start - #38016
+	/**
+	 * Get status SelectItem by statusChange() method
+	 * 
+	 * Set SelectItem status
+	 * @return status
+	 */
+	public SelectItem[] getStatus() {
+		if(status == null){
+			statusChange();
+		}
+		return status;
+	}
+	//End - #38016
+	
+	//Start - #38016
+	/**
+	 * Set Role Status.
+	 * 
+	 * Set SelectItem Role Status
+	 * @return void
+	 */
+	public void setStatus(SelectItem[] status) {
+		this.status = status;
+	}
+	//End - #38016
+	
+	//Start - #38016
+	/**
+	 * Get status SelectItem dropdown.
+	 * 
+	 * Set SelectItem status
+	 * @return void
+	 */
+	public void statusChange() {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			items = new SelectItem[] {
+					new SelectItem(null, ResourceBundleUtils.getMessage(CommonConstants.LBL_PM_ALL,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())),
+					new SelectItem(ParameterConst.RECORD_STATUS_ACTIVE, ResourceBundleUtils.getMessage(
+							CommonConstants.LBL_PM_ACTIVE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							face.getUserLocale())),
+					new SelectItem(ParameterConst.RECORD_STATUS_INACTIVE, ResourceBundleUtils.getMessage(
+							CommonConstants.LBL_PM_INACTIVE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							face.getUserLocale())) };
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+						"ProfileManagementSearchBackingBean.statusChange", null, e);		
+		}
+		setStatus(items);
+	}
+	//End - #38016
+	
+	//Start - #38016
+	/**
+	 * Get Role Status description by status id.
+	 * 
+	 * @param statusId
+	 *            the status id.
+	 * @return status description
+	 */
+	public String getRoleStatusDescByStatusId(String statusId) {
+		String statusDesc = null;
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+
+		if (statusId != null && !statusId.isEmpty()) {
+			try {
+				Long id = Long.parseLong(statusId);
+
+				PmStatusDesc pmStatusDesc = StatusHelper.getInstance().getStatusDescById(id);
+
+				if (pmStatusDesc != null) {
+					statusDesc = pmStatusDesc.getStatusName();
+				}
+			} catch (NumberFormatException e) {
+				statusDesc = statusId;
+			}
+		} else {
+			if (languageCode.equalsIgnoreCase(CommonConstants.DEFAULT_LANGUAGE_CODE)) {
+				statusDesc = CommonConstants.ROLE_STATUS_NA;
+			} else {
+				statusDesc = CommonConstants.ROLE_STATUS_TB;
+			}
+		}
+		return statusDesc;
+	}
+	//End - #38016
 }
