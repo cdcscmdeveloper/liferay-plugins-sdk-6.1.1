@@ -130,24 +130,23 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	}
 
 	/**
-	 * @param locationType
+	 * @param paramLevel3
 	 * @param pmParameterLvlId
 	 * @param createBy
 	 * @param roleCode
 	 * @return
 	 * @throws Exception
 	 */
-	public String redirectToDetails(String locationType, BigDecimal pmParameterLvlId, BigDecimal createBy, String roleCode,
+	public String redirectToDetails(String paramLevel3, BigDecimal pmParameterLvlId, BigDecimal createBy, String roleCode,
 			String paramLevelCode3, VAuditPMDTO dto)
 			throws AuditPMException {
-		if (locationType == null || pmParameterLvlId == null || roleCode == null) {
+		if (paramLevel3 == null || pmParameterLvlId == null || roleCode == null) {
 			throw new AuditPMException("Missing required parameters for redirectToDetails FirstUI PM Audit. "
-					+ " <locationType>:" + locationType + " <pmParameterLvlId>:" + pmParameterLvlId + "<roleCode>:" + roleCode);
+ + " <paramLevel3>:"
+					+ paramLevel3 + " <pmParameterLvlId>:" + pmParameterLvlId + "<roleCode>:" + roleCode);
 		}
 
 		AuditPMSearchBean lSearchBean = getManagedBean().getSearchBean();
-
-		getManagedBean().setLocationDetailType(locationType);
 		getManagedBean().getSearchBean().setPmParameterLvlId(pmParameterLvlId);
 		log.info("pmParameterLvlId.intValue() :::::  " + pmParameterLvlId.intValue());
 		getManagedBean().getSearchBean().setCreatedBy(createBy.toString());
