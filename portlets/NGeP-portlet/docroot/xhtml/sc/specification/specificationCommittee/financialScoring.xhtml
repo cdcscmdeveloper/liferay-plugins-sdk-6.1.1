@@ -26,8 +26,9 @@
 
 				<td>
 				<!-- #21695 FARID START RENDER SCQT PARTIAL-->
+				<ui:remove><!-- #38151 add condition disable --></ui:remove>
 				<p:selectOneRadio id="finScoreWeight"
-						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.qt.partial}"
+						disabled="#{specificationBackingBean.managedBean.readOnly or !specificationBackingBean.managedBean.weightage35384WIP}"
 						label="#{lbl['lbl.sc.spec.weightage']}" required="true"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq}">
 						<f:selectItems

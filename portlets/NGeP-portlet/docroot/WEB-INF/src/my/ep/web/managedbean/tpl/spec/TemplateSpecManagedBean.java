@@ -154,6 +154,11 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	/** The qt. */
 	private ScQt qt;
+	
+	// #38151 Start 
+	private boolean weightage35384WIP;
+	// #38151 End 
+	
 	/**
 	 * @return the beans
 	 */
@@ -1025,4 +1030,14 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	}
 	
 	//#29187 End Vinod
+	
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
 }

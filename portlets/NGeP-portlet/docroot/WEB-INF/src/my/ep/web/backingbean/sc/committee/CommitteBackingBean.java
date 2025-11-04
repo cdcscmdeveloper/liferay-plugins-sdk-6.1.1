@@ -794,6 +794,8 @@ public class CommitteBackingBean extends
 				
 				//#35320 - START
 				if (null == scQtCommittee) {
+					getManagedBean().setRefreshFCMaintenancePage(Boolean.TRUE);
+					getTabInfo();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
@@ -2637,6 +2639,9 @@ public class CommitteBackingBean extends
 		List<QtCommitteeMemberBean> list = (List<QtCommitteeMemberBean>) (Object) history.deserializeList(history
 				.getCommitteeMembers());
 		CustomUtils.sortQtCommitteeMemberRole(list);
+		//#35320 - START
+		list = sortMemberByAlphabetOrder(list);
+		//35320 - END
 		this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setScCommitteeId(history.getScCommittee().getCommitteeId());
@@ -2852,7 +2857,6 @@ public class CommitteBackingBean extends
 			this.getManagedBean().setHeaderTitle(
 					ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
 							scCommittee.getCommitteeType().getParameterCode()));
-			this.getManagedBean().setMemberPaginator(new Paginator(latestCommittee, 10));
 
 			onSelectHistory();
 		} catch (Exception ex) {
@@ -2861,8 +2865,10 @@ public class CommitteBackingBean extends
 		}
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_COMMITTEE_MAINTENANCE + "?faces-redirect=true");
+		if(!getManagedBean().isRefreshFCMaintenancePage()){
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, NAV_TO_COMMITTEE_MAINTENANCE + "?faces-redirect=true");
+		}
 	}
 	// #35320 - END
 
@@ -3119,6 +3125,39 @@ public class CommitteBackingBean extends
 		} else {
 			searchUserAction();
 		}
+	}
+	// #35320 - END
+	
+	//35320 - START
+	private List<QtCommitteeMemberBean> sortMemberByAlphabetOrder(List<QtCommitteeMemberBean> committeeMember){
+
+		List<QtCommitteeMemberBean> newCommittee = new ArrayList<>();
+		List<QtCommitteeMemberBean> memberList = new ArrayList<>();
+		
+		if(CollectionUtils.isNotEmpty(committeeMember)){
+			for(QtCommitteeMemberBean bean : committeeMember){
+				if(bean.getMemberRole().equals(ParameterConst.COMMITTEE_ROLE_MEMBER)){
+					memberList.add(bean);
+				} else {
+					newCommittee.add(bean);
+				}
+			}
+		}
+
+		// Sort using Comparator
+        Collections.sort(memberList, new Comparator<QtCommitteeMemberBean>() {
+            @Override
+            public int compare(QtCommitteeMemberBean u1, QtCommitteeMemberBean u2) {
+                return u1.getMemberName().compareToIgnoreCase(u2.getMemberName());
+            }
+        });
+        
+        if(CollectionUtils.isNotEmpty(memberList)){
+        	for(QtCommitteeMemberBean bean2 : memberList){
+            	newCommittee.add(bean2);
+            }
+        }
+		return newCommittee;
 	}
 	// #35320 - END
 }
