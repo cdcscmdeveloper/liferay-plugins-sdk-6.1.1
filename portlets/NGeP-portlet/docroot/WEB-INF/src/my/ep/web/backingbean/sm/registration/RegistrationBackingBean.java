@@ -1261,7 +1261,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}*/
 		validateNewIC(smPersonnel,false);
-		checkBlacklistedOwners(smPersonnel.getIdentificationNo(), true); //#26238 - 39069, #39355
+		checkBlacklistedOwners(smPersonnel.getIdentificationNo(), false); //#26238 - 39069, #39355
 		RequestContext.getCurrentInstance().execute("firstUserTncDialog.show()");
 	}
 
@@ -5532,13 +5532,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		//39068 - START
 		supplier.setEndDate(true);
+		//39153 - start
+		List<SmDisciplinaryAction> allDAs = SmApplicationUtil
+				.retrieveSmDisciplinaryActionBySupplier(supplier);
 		getManagedBean().setDisciplinaryAction(
-				!EntityHelper.isCollectionEmpty(SmApplicationUtil
-						.retrieveSmDisciplinaryActionBySupplier(supplier)));
+				!EntityHelper.isCollectionEmpty(allDAs));
 		//39068 - END
 		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
 		if(EntityHelper.isCollectionEmpty(discList)){
 			getManagedBean().setNoDisciplinary(DbValueConst.FLAG_YES);
+			boolean hasCannotLoginDA = checkPendingDisciplinaryAction(allDAs);
+			getManagedBean().setActiveDisicplinaryAction(hasCannotLoginDA);
+			//39153 - end
 			return;
 		}
 		getManagedBean().setNoDisciplinary(DbValueConst.FLAG_NO);
@@ -5563,6 +5568,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().setActiveDisicplinaryAction(
 				getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration() 
 				|| getManagedBean().isBlacklistowner());
+	}
+	
+	//39153
+	private boolean checkPendingDisciplinaryAction(List<SmDisciplinaryAction> discList){
+		if (EntityHelper.isCollectionEmpty(discList)){
+			return false;
+		}
+		for (SmDisciplinaryAction da : discList){
+			if(da.isCancelRegistration() || da.isBlacklistOwner()){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	//26238 - end
@@ -6074,4 +6092,25 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	//#36718 END
+	
+	// 39392 - START
+	/**
+	 * Check Disciplinary Action for blacklisted owners/directors
+	 * @param suplierOwner
+	 */
+	public static void checkBannedOwners(List<SmSupplierOwner> suplierOwner){
+		
+		SmPersonBlacklist ban = new SmPersonBlacklist();
+
+		for(SmSupplierOwner owner : suplierOwner){
+			ban = SmServiceLookup.getBlacklistDirectorSO()
+					.retrieveValidBlacklist(owner.getIdentificationNo(), false)
+					.getPersonBlacklist();
+		}
+		
+		if(ban != null){
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
+		}
+	}
+	// 39392 - END
 }

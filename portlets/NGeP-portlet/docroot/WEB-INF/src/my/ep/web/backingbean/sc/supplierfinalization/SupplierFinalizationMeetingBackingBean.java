@@ -2186,8 +2186,15 @@ if (CollectionUtils.isNotEmpty(
 		}
 		// 25037 - end - note 284
 
-		this.getManagedBean().setCurrentCommitteeType(
-				this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
+		// #35320 - Set QCA, QCB to QQC - Start
+		PmParameter committeeType = qtCommittee.getScCommittee().getCommitteeType();
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType.getParameterCode())
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType.getParameterCode())) {
+			committeeType.setParameterCode(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+		}
+		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(committeeType));
+		// #35320 - End
+				
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 		boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
 				QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
@@ -2370,6 +2377,8 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
 					||auditResDTO.getRoleCode().equals(RoleCode.PPB_SECRETARY.value())){
 				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_PB);
@@ -2415,6 +2424,8 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 			
 			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
 				auditResDTO.setNewValue(entry.getValue().get(0));

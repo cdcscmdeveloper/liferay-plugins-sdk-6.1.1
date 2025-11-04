@@ -1715,6 +1715,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean userAbleToChangePBSecretary;
 	//#21692 - End
 	
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
+	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	private IPagingDataModel<ScLoi> searchLoiDataModel;
@@ -1954,6 +1957,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean updateCatInPm; //#29732
 
 	private boolean zoneQtyHasZeroVal;//#38679
+	
+	//#35320 - Start
+	private boolean afterSF;
+	//#35320 - End
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12466,4 +12473,24 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
 	}
 	//#38679
+
+	// #35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}// #35320 - End
+
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
+
 }
