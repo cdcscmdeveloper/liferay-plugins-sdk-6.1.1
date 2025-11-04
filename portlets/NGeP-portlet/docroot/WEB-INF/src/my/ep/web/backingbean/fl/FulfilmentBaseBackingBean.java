@@ -905,7 +905,13 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
         populateItemDescPopup(item);
     }
 
-    private void populateItemDescPopup(CmItem item) {
+    /**
+     * Populate the item description for pop up
+     * 
+     * @param item
+     * @return void
+     */
+	private void populateItemDescPopup(CmItem item) {
         CommonUtils common = new CommonUtils();
         CodificationBackingBean cdbb = new CodificationBackingBean();
         
