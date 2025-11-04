@@ -2424,6 +2424,41 @@ public class SupplierApplicationBackingBean extends
 
 			// init GST information
 			initGst();
+			
+			List<SmPersonnel> listPersonnel = getManagedBean().getSmAppl().getSmPersonnels();
+			log.info("============== checking .ser file value AFTER TWO ================");
+			for (SmPersonnel personnel : listPersonnel) {
+				log.info("======= NAME = "+personnel.getName());
+				log.info("======= isAttachHq = "+personnel.isAttachHq());
+				log.info("======= isAuthorized = "+personnel.isAuthorized());
+				log.info("======= isBlacklisted = "+personnel.isBlacklisted());
+				log.info("======= isBumi = "+personnel.isBumi());
+				log.info("======= isClerical = "+personnel.isClerical());
+				log.info("======= isSuspendRegistration = "+personnel.isSuspendRegistration());
+				log.info("======= isCancelRegistration = "+personnel.isCancelRegistration());
+				log.info("======= isContactPerson = "+personnel.isContactPerson());
+				log.info("======= isContractSigner = "+personnel.isContractSigner());
+				log.info("======= isDirector = "+personnel.isDirector());
+				log.info("======= isEquityOwner = "+personnel.isEquityOwner());
+				log.info("======= isHigherManagement = "+personnel.isHigherManagement());
+				log.info("======= isManagement = "+personnel.isManagement());
+				log.info("======= isMuslim = "+personnel.isMuslim());
+				log.info("======= isProf = "+personnel.isProf());
+				log.info("======= isSemiProf = "+personnel.isSemiProf());
+				log.info("======= isSoftcert = "+personnel.isSoftcert());
+				log.info("======= getMobileNo = "+personnel.getMobileNo());
+				log.info("======= getMobileArea = "+personnel.getMobileArea());
+				log.info("======= getMobileCountry = "+personnel.getMobileCountry());
+				log.info("======= getMobileTelcoId = "+personnel.getMobileTelcoId());
+				log.info("======= getRevNo = "+personnel.getRevNo());
+				log.info("======= getShareAmt = "+personnel.getShareAmt());
+				log.info("======= getSharePercentage = "+personnel.getSharePercentage());
+				log.info("======= isJustificationReqd = "+personnel.isJustificationReqd());
+				log.info("======= getAddnlPersonnelJustification = "+personnel.getAddnlPersonnelJustification());
+				log.info("======= getIdentityResponseCode = "+personnel.getIdentityResponseCode());
+				log.info("======= getTerminationReason = "+personnel.getTerminationReason());
+				log.info("======= getIdentityResidentStatus = "+personnel.getIdentityResidentStatus());
+			}
 		}
 
 	}
@@ -7078,6 +7113,42 @@ public class SupplierApplicationBackingBean extends
 		SmOutputMsgBackingBean backingBean = new SmOutputMsgBackingBean();
 		backingBean.getManagedBean().setSmAppl(getManagedBean().getSmAppl());
 		renewSesionObject();
+		
+		List<SmPersonnel> listPersonnel = getManagedBean().getSmAppl().getSmPersonnels();
+		log.info("============== checking .ser file value AFTER THREE ================");
+		for (SmPersonnel personnel : listPersonnel) {
+			log.info("======= NAME = "+personnel.getName());
+			log.info("======= isAttachHq = "+personnel.isAttachHq());
+			log.info("======= isAuthorized = "+personnel.isAuthorized());
+			log.info("======= isBlacklisted = "+personnel.isBlacklisted());
+			log.info("======= isBumi = "+personnel.isBumi());
+			log.info("======= isClerical = "+personnel.isClerical());
+			log.info("======= isSuspendRegistration = "+personnel.isSuspendRegistration());
+			log.info("======= isCancelRegistration = "+personnel.isCancelRegistration());
+			log.info("======= isContactPerson = "+personnel.isContactPerson());
+			log.info("======= isContractSigner = "+personnel.isContractSigner());
+			log.info("======= isDirector = "+personnel.isDirector());
+			log.info("======= isEquityOwner = "+personnel.isEquityOwner());
+			log.info("======= isHigherManagement = "+personnel.isHigherManagement());
+			log.info("======= isManagement = "+personnel.isManagement());
+			log.info("======= isMuslim = "+personnel.isMuslim());
+			log.info("======= isProf = "+personnel.isProf());
+			log.info("======= isSemiProf = "+personnel.isSemiProf());
+			log.info("======= isSoftcert = "+personnel.isSoftcert());
+			log.info("======= getMobileNo = "+personnel.getMobileNo());
+			log.info("======= getMobileArea = "+personnel.getMobileArea());
+			log.info("======= getMobileCountry = "+personnel.getMobileCountry());
+			log.info("======= getMobileTelcoId = "+personnel.getMobileTelcoId());
+			log.info("======= getRevNo = "+personnel.getRevNo());
+			log.info("======= getShareAmt = "+personnel.getShareAmt());
+			log.info("======= getSharePercentage = "+personnel.getSharePercentage());
+			log.info("======= isJustificationReqd = "+personnel.isJustificationReqd());
+			log.info("======= getAddnlPersonnelJustification = "+personnel.getAddnlPersonnelJustification());
+			log.info("======= getIdentityResponseCode = "+personnel.getIdentityResponseCode());
+			log.info("======= getTerminationReason = "+personnel.getTerminationReason());
+			log.info("======= getIdentityResidentStatus = "+personnel.getIdentityResidentStatus());
+		}
+		
 		return "/xhtml/sm/shared/mofRegistration/mofApplicationOutputMsg.xhtml";
 	}
 
@@ -11640,6 +11711,7 @@ public class SupplierApplicationBackingBean extends
 							.getSmAppl().getSmFacilities())) {
 				for (SmFacility fac : l3.getFacilityList()) {
 					if (fac.isSelected()) {
+						/*Here is the missing tagging*/
 						facMain = (SmFacility) EntityHelper
 								.getEntityBySinglePropertyFromList(fac
 										.getFacilityId(), getManagedBean()
@@ -11709,6 +11781,7 @@ public class SupplierApplicationBackingBean extends
 							.append(cat.getPmCategoryL1().getCategoryL1Code())
 							.append(cat.getPmCategoryL2().getCategoryL2Code())
 							.append(cat.getPmCategoryL3().getCategoryL3Code());
+					/*here is missing tagging second commit*/
 
 					throw new EpException(MessageConst.ERROR_722514,
 							new String[] { sb.toString() });
@@ -11734,7 +11807,11 @@ public class SupplierApplicationBackingBean extends
 						&& (suppCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || suppCategory
 								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
 					suppCategory.setApprvrDecFlg(suppCategory.getPoDecFlg());
-				}
+				} else if (suppCategory.getPoDecFlg() != null
+						&& (suppCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || suppCategory
+								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
+					suppCategory.setApprvrDecFlg(suppCategory.getPoDecFlg());
+				}//this if is for the missing tagging
 			}
 		}
 	}
@@ -11835,6 +11912,7 @@ public class SupplierApplicationBackingBean extends
 					.getSelectedRecommendReasonDescs()) {
 				reasonIdList.add(reason.getPmReason().getReasonId());
 			}
+			/*Here is the missing tagging*/
 			getManagedBean().setRecommendReasonId(
 					reasonIdList.toArray(new Long[reasonIdList.size()]));
 		}else{
