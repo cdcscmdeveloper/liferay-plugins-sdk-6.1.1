@@ -1365,7 +1365,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
 				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TEMP_FL_TYPE_SPECIAL_ITEM)) {
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
 			validateThresholdPK7AndSpecialItem();
 		} else {
 			checkPRThresholdPerItem();
@@ -5330,20 +5330,20 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)
 				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TEMP_FL_TYPE_SPECIAL_ITEM)) {
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
 			for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
 				getManagedBean().setReason(
 						getReasonDescByReasonId(purchaseItem.getJustificationType().getReasonId()).getReasonDesc());
 				getManagedBean().setJustification(purchaseItem.getJustification());
 			}
-		}else{
+		} else {
 			getManagedBean().setReason(null);
 			getManagedBean().setJustification(null);
 		}
 	}
-	
+
 	/**
-	 * 
+	 * get threshold amount (DP Threshold) for PK7
 	 * 
 	 * @return thresholdAmount
 	 */
@@ -5352,7 +5352,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 		if (!getManagedBean().getRequestNoteWithDtlsList().isEmpty()) {
 			for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
-				if(purchaseItem.getJustificationType().getDpThreshold() != null){
+				if (purchaseItem.getJustificationType().getDpThreshold() != null) {
 					thresholdAmount = purchaseItem.getJustificationType().getDpThreshold();
 				}
 			}
@@ -5360,33 +5360,39 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 		return thresholdAmount;
 	}
-	
+
+	/**
+	 * validation threshold for PK7 and Special Item
+	 */
 	private void validateThresholdPK7AndSpecialItem() {
 		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
 				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TEMP_FL_TYPE_SPECIAL_ITEM)) {
-			if(getThresholdForPK7() != null){
-				//checking Threshold Per Item/ Per PTJ/ Per Year Validation
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			if (getThresholdForPK7() != null) {
+				// checking Threshold Per Item/ Per PTJ/ Per Year Validation
 				checkPRThresholdPerItemForPK7();
-				
-				//checking Threshold Supplier Account Type Validation
-				
-			}else{
+
+			} else {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 								MessageConst.ERROR_740077,
 								new String[] {
-										getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR, ParameterConst.PROC_TYPE_PK7),
-										getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR, ParameterConst.PROC_TEMP_FL_TYPE_SPECIAL_ITEM),
+										getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR,
+												ParameterConst.PROC_TYPE_PK7),
+										getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR,
+												ParameterConst.PROC_TYPE_SPECIAL_ITEM),
 										getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 										getManagedBean().getReason() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 			}
 		}
 	}
-	
+
+	/**
+	 * checking Threshold Per Item/ Per PTJ/ Per Year Validation process
+	 */
 	private void checkPRThresholdPerItemForPK7() {
 		IFlItemSummarySO itemSummSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
@@ -5411,10 +5417,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
-		double thresoldAmt = 0;
+		double thresoldAmt;
 		boolean isExceedThreshold = false;
 		List<String> itemNameList = new ArrayList<>();
-		getManagedBean().setItemNameExceedThresholdList(new ArrayList<String>()); //re-initialize item name list for exceed threshold
+		getManagedBean().setItemNameExceedThresholdList(new ArrayList<String>()); // re-initialize item name list for exceed threshold
 
 		for (Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet()) {
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
@@ -5443,12 +5449,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 				if (sumAmt.doubleValue() > thresoldAmt) {
 					isExceedThreshold = true;
-					
-					itemNameList.add(CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc.getUnspscTitleEng() : cmUnspsc.getUnspscTitle());
+
+					itemNameList.add(CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc
+							.getUnspscTitleEng() : cmUnspsc.getUnspscTitle());
 				}
 			}
 		}
-		
+
 		getManagedBean().setPRExceedThreshold(isExceedThreshold);
 
 		if (!isExceedThreshold) {
@@ -5458,19 +5465,25 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							MessageConst.ERROR_740075,
 							new String[] {
 									getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR, ParameterConst.PROC_TYPE_PK7),
-									getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR, ParameterConst.PROC_TEMP_FL_TYPE_SPECIAL_ITEM),
-									getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),//change to special item - PK7 for dummy
+									getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR,
+											ParameterConst.PROC_TYPE_SPECIAL_ITEM),
+									getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 									getManagedBean().getReason() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
-		}else{
+		} else {
 			getManagedBean().setItemNameExceedThresholdList(itemNameList);
 			buildErrorMessageForExceedThreshold(false);
 		}
 	}
-	
+
+	/**
+	 * Error message if PK7/Special Item threshold exceed
+	 * 
+	 * @param isShowErrorMsgForPRThreshold
+	 */
 	private void buildErrorMessageForExceedThreshold(boolean isShowErrorMsgForPRThreshold) {
 		StringBuilder numberedList = new StringBuilder();
-		
+
 		if (!getManagedBean().getItemNameExceedThresholdList().isEmpty()) {
 			List<String> itemNameList = getManagedBean().getItemNameExceedThresholdList();
 			numberedList.append("<br>");
@@ -5495,9 +5508,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 
 	}
-	
+
+	/**
+	 * PK7 Threshold validation during PR action
+	 * 
+	 * @param action
+	 */
 	private void validatePK7forPRAction(String action) {
-		//check for reason(pm_reason) active
+		// check for reason(pm_reason) active
 		if (getManagedBean().getReason() != null) {
 			Set<String> outcomeCheckReason = new HashSet<>();
 
@@ -5515,17 +5533,21 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 
 		}
-		
-		//check for exceed threshold
+
+		// check for exceed threshold
 		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action
 				.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) && getManagedBean().isPRExceedThreshold()) {
 			buildErrorMessageForExceedThreshold(true);
 		}
-		
+
 		// supplier acc type validation
 		validatePRSupplierAccType();
 	}
 
+	/**
+	 * Threshold Supplier Account Type Validation process by reason
+	 * 
+	 */
 	private void validatePRSupplierAccType() {
 
 		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -5533,6 +5555,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonId(getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getReasonId());
+
+		SmMofAccount mofAcc = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
+				getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 
 		// check if supplier mof set in pm
 		reqDTO.setSuppTypeId(1008L); // replace with sm mof acc type id
@@ -5542,13 +5567,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		reqDTO.setSuppTypeId(1009L); // replace with sm basic acc type id
 		boolean isSuppAccTypeRestrBasic = reasonSO.isSuppAccTypeRestricted(reqDTO);
 
-		SmMofAccount mofAcc = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
-				getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-		String suppAccType = FulfilmentConst.SM_SUPP_ACC_CODE_BASIC;
-
-		if (mofAcc != null && mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-			suppAccType = FulfilmentConst.SM_SUPP_ACC_CODE_MOF;
-		}
+		String suppAccType = getSuppAccType();
 
 		boolean isErrorMsgThrowForSuppAccTypeValidation = false;
 
@@ -5570,8 +5589,39 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 		}
 
+		buildErrorMessageForPK7SupplierAccountTypeExceed(isErrorMsgThrowForSuppAccTypeValidation,
+				suppAccType);
+	}
+
+	/**
+	 * get supplier account type
+	 * 
+	 * @return suppAccType supplier account type
+	 */
+	private String getSuppAccType() {
+
+		SmMofAccount mofAcc = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
+				getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+		String suppAccType = FulfilmentConst.SM_SUPP_ACC_CODE_BASIC;
+
+		if (mofAcc != null && mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			suppAccType = FulfilmentConst.SM_SUPP_ACC_CODE_MOF;
+		}
+
+		return suppAccType;
+	}
+
+	/**
+	 * Error message if PK7/Special Item threshold exceed for supplier account
+	 * type
+	 * 
+	 * @param isShowErrorMsgForPRThreshold
+	 */
+	private void buildErrorMessageForPK7SupplierAccountTypeExceed(
+			boolean isErrorMsgThrowForSuppAccTypeValidation, String suppAccType) {
 		if (isErrorMsgThrowForSuppAccTypeValidation) {
-			throw new EpException(MessageConst.ERROR_740082, new String[] { getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE,suppAccType),
+			throw new EpException(MessageConst.ERROR_740082, new String[] {
+					getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, suppAccType),
 					getManagedBean().getFulfilmentRequest().getSmSupplier().getCompanyName(),
 					getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 					getManagedBean().getReason() });
