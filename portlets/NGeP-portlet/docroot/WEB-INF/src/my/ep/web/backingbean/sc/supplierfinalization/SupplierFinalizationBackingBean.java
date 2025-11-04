@@ -1866,15 +1866,7 @@ public class SupplierFinalizationBackingBean extends
 					}
 					
 					processSuppliersBeforeSaving();
-					// 25037 - start
-					if (!skipValidation) {
-						if (!getManagedBean().isItemize()) {
-							validateByPackage();
-						} else {
-							validateByItem();
-						}
-					}
-					// 25037 - end
+					validateSupplierByPackageAndItem(skipValidation);// 26247
 						
 						List<QtEvaluationResultDtlBean> cachedSupplierBeans = null;
 						Map<MapKey,List<QtEvaluationResultDtlBean>> cachedSuppliersMap = 
@@ -1940,6 +1932,28 @@ public class SupplierFinalizationBackingBean extends
 
 		}
 	}
+	
+	// 26247 - start
+	private void validateSupplierByPackageAndItem(boolean skipValidation) {
+		if (skipValidation) {
+			return;
+		}
+		try {
+			if (!getManagedBean().isItemize()) {
+				validateByPackage();
+			} else {
+				validateByItem();
+			}
+		} catch (EpException e) {
+			String taskName = this.getManagedBean().getTaskName();
+			if (Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION, SCProcessNameConst.SIGNOFF_FC_SELECTION)
+					.contains(taskName)) {
+				throw new EpException(MessageConst.ERROR_760601); 
+			}
+			throw e;
+		}
+	}
+	// 26247 - end
 
 	private void renewSessionAndRetrieve(int activeIndex,
 										 SuppFinalizationResDTO resDTO) {
@@ -12194,28 +12208,34 @@ public class SupplierFinalizationBackingBean extends
 	 * Retrieves qualified suppliers for an item evaluation stage.
 	 */
 	private List<ScQtEvaluationResultDtl> retrieveQualifiedSuppliersByItem(final ScQtRecommend item) {
-	    final IQTSuppFinalizationSO service = BusinessDelegate.getInstance()
-	            .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		final IQTSuppFinalizationSO service = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 
-	    final ISearchBean<ScQtEvaluationResultDtl> searchBean = new SearchBean<ScQtEvaluationResultDtl>();
-	    searchBean.getDataFilterBeans().add(
-	            new SearchFilterBean("qtEvaluationResult.evaluationStage",
-	                    SearchOperator.OPERATOR_EQUALS.value(),
-	                    SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM));
+		final ISearchBean<ScQtEvaluationResultDtl> searchBean = new SearchBean<ScQtEvaluationResultDtl>();
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("qtEvaluationResult.evaluationStage", SearchOperator.OPERATOR_EQUALS.value(),
+						SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM));
 
-	    final SuppFinalizationReqDTO req = new SuppFinalizationReqDTO();
-	    req.setQtId(getManagedBean().getScQt().getQtId());
-	    req.setEvaluationStage(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM);
-	    req.setRequestItemId(item.getRequestItem().getRequestNoteItemId());
-	    req.setSearchBean(searchBean);
+		final SuppFinalizationReqDTO req = new SuppFinalizationReqDTO();
+		req.setQtId(getManagedBean().getScQt().getQtId());
+		req.setEvaluationStage(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM);
+		req.setRequestItemId(item.getRequestItem().getRequestNoteItemId());
+		req.setSearchBean(searchBean);
 
-	    final SuppFinalizationResDTO res = service.retrieveQualifiedSuppliersInfoByEvalStage(req);
-	    if (res == null || !res.isSuccessful()) {
-	        return Collections.emptyList();
-	    }
+		try {
+			final SuppFinalizationResDTO res = service.retrieveQualifiedSuppliersInfoByEvalStage(req);
+			if (res == null || !res.isSuccessful()) {
+				return Collections.emptyList();
+			}
 
-	    final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
-	    return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl>emptyList();
+			final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
+
+			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			return Collections.emptyList();
+		}
 	}
 
 	/**
@@ -12223,29 +12243,36 @@ public class SupplierFinalizationBackingBean extends
 	 * Retrieves qualified suppliers for a package evaluation stage.
 	 */
 	private List<ScQtEvaluationResultDtl> retrieveQualifiedSuppliersByPackage() {
-	    final IQTSuppFinalizationSO service = BusinessDelegate.getInstance()
-	            .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		final IQTSuppFinalizationSO service = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 
-	    final ISearchBean<ScQtEvaluationResultDtl> searchBean = new SearchBean<ScQtEvaluationResultDtl>();
-	    searchBean.getDataFilterBeans().add(
-	            new SearchFilterBean("qtEvaluationResult.evaluationStage",
-	                    SearchOperator.OPERATOR_EQUALS.value(),
-	                    SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG));
+		final ISearchBean<ScQtEvaluationResultDtl> searchBean = new SearchBean<ScQtEvaluationResultDtl>();
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("qtEvaluationResult.evaluationStage", SearchOperator.OPERATOR_EQUALS.value(),
+						SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG));
 
-	    final SuppFinalizationReqDTO req = new SuppFinalizationReqDTO();
-	    req.setQtId(getManagedBean().getScQt().getQtId());
-	    req.setEvaluationStage(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG);
-	    req.setRequestItemId(null);
-	    req.setSearchBean(searchBean);
+		final SuppFinalizationReqDTO req = new SuppFinalizationReqDTO();
+		req.setQtId(getManagedBean().getScQt().getQtId());
+		req.setEvaluationStage(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG);
+		req.setRequestItemId(null);
+		req.setSearchBean(searchBean);
 
-	    final SuppFinalizationResDTO res = service.retrieveQualifiedSuppliersInfoByEvalStage(req);
-	    if (res == null || !res.isSuccessful()) {
-	        return Collections.emptyList();
-	    }
+		try {
+			final SuppFinalizationResDTO res = service.retrieveQualifiedSuppliersInfoByEvalStage(req);
+			if (res == null || !res.isSuccessful()) {
+				return Collections.emptyList();
+			}
 
-	    final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
-	    return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl>emptyList();
-	}
+			final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
+
+			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			return Collections.emptyList();
+		}
+
+	}	
 
 	/**
 	 * #35320
