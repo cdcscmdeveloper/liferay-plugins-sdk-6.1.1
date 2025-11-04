@@ -191,6 +191,7 @@
 			<portlet id="maintenanceRequestRevision"/>
 			<portlet id="demoInvitation"/><!-- #28784 -->
 			<portlet id="disciplinaryActionDp"/><!-- #26284 -->
+			<portlet id="finalizationCommitteeMaintenance"/><!-- #35320 -->
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
