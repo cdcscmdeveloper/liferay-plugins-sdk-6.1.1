@@ -11,19 +11,22 @@
 		style="font-weight:bold;text-align: left;font-size: 14px;" />
 	<p:spacer height="30px" />
 
-			<p:dataTable style="width:100%" value="#{noticeBoardBackingBean.categoryCodesDataModel}"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						var="scQtCategory" id="restrcatcode" lazy="true" rows="5">
+			<p:dataTable style="width:100%"
+				value="#{noticeBoardBackingBean.categoryCodesDataModel}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				var="scQtCategory" id="restrcatcode" lazy="true" rows="5">
 				 <ac:paginator for="restrcatcode" />
 
-				<p:column headerText="#{lbl['lbl.sc.category.code']}" style="width:10%;white-space: normal;">
+				<p:column headerText="#{lbl['lbl.sc.category.code']}"
+					style="width:10%;white-space: normal;">
 					<h:outputText value="#{scQtCategory.pmCategoryL1.categoryL1Code}" />
 					<h:outputText value="#{scQtCategory.pmCategoryL2.categoryL2Code}" />
 					<h:outputText value="#{ scQtCategory.pmCategoryL3.categoryL3Code}" />
 				</p:column>
-	
-				<p:column headerText="#{lbl['lbl.sc.main.category']}" style="width:30%;white-space: normal;">
-					<!-- #29732 - fix Reopen -->
+
+				<p:column headerText="#{lbl['lbl.sc.main.category']}"
+					style="width:30%;white-space: normal;">
+					<!-- #29732 - fix Reopen -->	
 					<h:outputText value="#{scQtCategory.pmCategoryL1.categoryName}" />
 					<!-- #29732 Start -->
 					<p:spacer width="5" /> 
@@ -38,39 +41,42 @@
 						</p:tooltip>
 					</p:commandLink>
 					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-											(scQtCategory.pmCategoryL1.changedDate ne scQtCategory.pmCategoryL1.createdDate)}"
-											style="color: red;font-weight:bold">
+										(scQtCategory.pmCategoryL1.changedDate ne scQtCategory.pmCategoryL1.createdDate)}"
+						style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
-							escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}"/>
+							escape="false"/>
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL1.changedDate)}&#41;" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL1.changedDate)}&#41;">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
 				</p:column>
-		
+
 				<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 					style="width:30%;white-space: normal;">
-					<!-- #29732 - fix Reopen -->
+					<!-- #29732 - fix Reopen -->	
 					<h:outputText value="#{scQtCategory.pmCategoryL2.categoryName}" />
 					<!-- #29732 Start -->
-					<p:spacer width="5" />
+					<p:spacer width="5" /> 
 					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL1.categoryL1Code,scQtCategory.pmCategoryL2.categoryL2Code,scQtCategory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL2Code,scQtCategory.pmCategoryL2.categoryL2Id,cateGory.qtCategoryId,
 					scQtCategory.pmCategoryL2.categoryName,scQtCategory.pmCategoryL2.categoryL2Code)}"
 						update="@form">
-						<p:graphicImage id="subHisIcon" value="/css/images/design/ico-view.png" />
+						<p:graphicImage id="subHisIcon"
+							value="/css/images/design/ico-view.png" />
 						<p:tooltip for="subHisIcon">
-							<p:outputLabel escape="false" value="#{lbl['lbl.sc.sub.category.icon.tooltip']}" />
+							<p:outputLabel escape="false"
+								value="#{lbl['lbl.sc.sub.category.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
 					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-											(scQtCategory.pmCategoryL2.changedDate ne scQtCategory.pmCategoryL2.createdDate)}"
-											style="color: red;font-weight:bold">
+										(scQtCategory.pmCategoryL2.changedDate ne scQtCategory.pmCategoryL2.createdDate)}"
+						style="color: red;font-weight:bold">
+						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
-							escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}" />
+							escape="false" />
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL2.changedDate)}&#41;" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL2.changedDate)}&#41;">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
@@ -78,26 +84,28 @@
 
 				<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 					style="width:25%;white-space: normal;">
-					<!-- #29732 - fix Reopen -->
+					<!-- #29732 - fix Reopen -->	
 					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}" />
 					<!-- #29732 Start -->
 					<p:spacer width="5" />
 					<p:commandLink actionListener="#{noticeBoardBackingBean.onClickHistoryIcon(scQtCategory.pmCategoryL1.categoryL1Code,scQtCategory.pmCategoryL2.categoryL2Code,scQtCategory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL3Code,scQtCategory.pmCategoryL3.categoryL3Id,cateGory.qtCategoryId,
 					scQtCategory.pmCategoryL3.categoryName,scQtCategory.pmCategoryL3.categoryL3Code)}"
 						update="@form">
-						<p:graphicImage id="subDivHisIcon" value="/css/images/design/ico-view.png" />
+						<p:graphicImage id="subDivHisIcon"
+							value="/css/images/design/ico-view.png" />
 						<p:tooltip for="subDivHisIcon">
-							<p:outputLabel escape="false" value="#{lbl['lbl.sc.sub.category.division.icon.tooltip']}" />
+							<p:outputLabel escape="false"
+								value="#{lbl['lbl.sc.sub.category.division.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
-						rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-									(scQtCategory.pmCategoryL3.changedDate ne scQtCategory.pmCategoryL3.createdDate)}"
-									style="color: red;font-weight:bold">
+					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
+										(scQtCategory.pmCategoryL3.changedDate ne scQtCategory.pmCategoryL3.createdDate)}"
+						style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
-							escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}"/>
+							escape="false"/>
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL3.changedDate)}&#41;" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL3.changedDate)}&#41;">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
@@ -109,5 +117,5 @@
 				catCode="#{noticeBoardBackingBean.managedBean.hisCatCode}"
 				historyList="#{noticeBoardBackingBean.managedBean.historyList}"
 				widget="hisPopup" />
-			<!-- #29732 End -->	
+	<!-- #29732 End -->
 </ui:composition>
