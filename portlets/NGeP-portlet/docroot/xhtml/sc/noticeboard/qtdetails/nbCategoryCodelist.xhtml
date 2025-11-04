@@ -40,8 +40,7 @@
 								value="#{lbl['lbl.sc.main.category.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
-					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-										(scQtCategory.flagDisplayNb)}" style="color: red;font-weight:bold">
+					<p:outputPanel rendered="#{scQtCategory.flagDisplayNb}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
 							escape="false"/>
@@ -68,8 +67,7 @@
 								value="#{lbl['lbl.sc.sub.category.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
-					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-										(scQtCategory.flagDisplayNb)}" style="color: red;font-weight:bold">
+					<p:outputPanel rendered="#{scQtCategory.flagDisplayNb}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
 							escape="false" />
@@ -96,8 +94,7 @@
 								value="#{lbl['lbl.sc.sub.category.division.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
-					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-										(scQtCategory.flagDisplayNb)}" style="color: red;font-weight:bold">
+					<p:outputPanel rendered="#{scQtCategory.flagDisplayNb}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
 							escape="false"/>
