@@ -185,15 +185,15 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmConfigRuleDesc> originalConfigRuleDescList;
 	private List<PmConfigRuleValue> originalConfigRuleValueList;
 	private List<PmPtjSpecialApproval> originalPtjSpecialApprovalList;
-	private String searchedRuleType;
-	private String searchedRuleDataTypeValues;
-	private String searchedRuleDataTypeDesc;
-	private Date searchedRuleDataTypeEffectiveDate;
-	private Date searchedRuleDataTypeExpiryDate;
-	private Long searchedRuleDataTypeZone;
-	private String searchedPtjCode;
-	private String searchedPtjName;
-	private String searchedQtValueLimit;
+	private String searchRuleType;
+	private String searchRuleDataTypeValues;
+	private String searchRuleDataTypeDesc;
+	private Date searchRuleDataTypeEffectiveDate;
+	private Date searchRuleDataTypeExpiryDate;
+	private Long searchRuleDataTypeZone;
+	private String searchPtjCode;
+	private String searchPtjName;
+	private String searchQtValueLimit;
 	//#36738 End
 
 	/************ AUDIT #28895_35509 *************/
@@ -1871,52 +1871,52 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	/************ AUDIT #28895_35509 *************/
 	
 	//#36738 Start	
-	public String getSearchedRuleType() {
-		return searchedRuleType;
+	public String getSearchRuleType() {
+		return searchRuleType;
 	}
 	
-	public void setSearchedRuleType(String searchedRuleType) {
-		this.searchedRuleType = searchedRuleType;
+	public void setSearchRuleType(String searchRuleType) {
+		this.searchRuleType = searchRuleType;
 	}
 	
-	public String getSearchedRuleDataTypeValues() {
-		return searchedRuleDataTypeValues;
+	public String getSearchRuleDataTypeValues() {
+		return searchRuleDataTypeValues;
 	}
 	
-	public void setSearchedRuleDataTypeValues(String searchedRuleDataTypeValues) {
-		this.searchedRuleDataTypeValues = searchedRuleDataTypeValues;
+	public void setSearchRuleDataTypeValues(String searchRuleDataTypeValues) {
+		this.searchRuleDataTypeValues = searchRuleDataTypeValues;
 	}
 	
-	public String getSearchedRuleDataTypeDesc() {
-		return searchedRuleDataTypeDesc;
+	public String getSearchRuleDataTypeDesc() {
+		return searchRuleDataTypeDesc;
 	}
 	
-	public void setSearchedRuleDataTypeDesc(String searchedRuleDataTypeDesc) {
-		this.searchedRuleDataTypeDesc = searchedRuleDataTypeDesc;
+	public void setSearchRuleDataTypeDesc(String searchRuleDataTypeDesc) {
+		this.searchRuleDataTypeDesc = searchRuleDataTypeDesc;
 	}
 	
-	public Date getSearchedRuleDataTypeEffectiveDate() {
-		return searchedRuleDataTypeEffectiveDate;
+	public Date getSearchRuleDataTypeEffectiveDate() {
+		return searchRuleDataTypeEffectiveDate;
 	}
 	
-	public void setSearchedRuleDataTypeEffectiveDate(Date searchedRuleDataTypeEffectiveDate) {
-		this.searchedRuleDataTypeEffectiveDate = searchedRuleDataTypeEffectiveDate;
+	public void setSearchRuleDataTypeEffectiveDate(Date searchRuleDataTypeEffectiveDate) {
+		this.searchRuleDataTypeEffectiveDate = searchRuleDataTypeEffectiveDate;
 	}
 	
-	public Date getSearchedRuleDataTypeExpiryDate() {
-		return searchedRuleDataTypeExpiryDate;
+	public Date getSearchRuleDataTypeExpiryDate() {
+		return searchRuleDataTypeExpiryDate;
 	}
 	
-	public void setSearchedRuleDataTypeExpiryDate(Date searchedRuleDataTypeExpiryDate) {
-		this.searchedRuleDataTypeExpiryDate = searchedRuleDataTypeExpiryDate;
+	public void setSearchRuleDataTypeExpiryDate(Date searchRuleDataTypeExpiryDate) {
+		this.searchRuleDataTypeExpiryDate = searchRuleDataTypeExpiryDate;
 	}
 	
-	public Long getSearchedRuleDataTypeZone() {
-		return searchedRuleDataTypeZone;
+	public Long getSearchRuleDataTypeZone() {
+		return searchRuleDataTypeZone;
 	}
 	
-	public void setSearchedRuleDataTypeZone(Long searchedRuleDataTypeZone) {
-		this.searchedRuleDataTypeZone = searchedRuleDataTypeZone;
+	public void setSearchRuleDataTypeZone(Long searchRuleDataTypeZone) {
+		this.searchRuleDataTypeZone = searchRuleDataTypeZone;
 	}
 	
 	public List<PmConfigRuleDesc> getOriginalConfigRuleDescList() {
@@ -1935,28 +1935,28 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.originalConfigRuleValueList = originalConfigRuleValueList;
 	}
 	
-	public String getSearchedPtjCode() {
-		return searchedPtjCode;
+	public String getSearchPtjCode() {
+		return searchPtjCode;
 	}
 	
-	public void setSearchedPtjCode(String searchedPtjCode) {
-		this.searchedPtjCode = searchedPtjCode;
+	public void setSearchPtjCode(String searchPtjCode) {
+		this.searchPtjCode = searchPtjCode;
 	}
 	
-	public String getSearchedPtjName() {
-		return searchedPtjName;
+	public String getSearchPtjName() {
+		return searchPtjName;
 	}
 	
-	public void setSearchedPtjName(String searchedPtjName) {
-		this.searchedPtjName = searchedPtjName;
+	public void setSearchPtjName(String searchPtjName) {
+		this.searchPtjName = searchPtjName;
 	}
 	
-	public String getSearchedQtValueLimit() {
-		return searchedQtValueLimit;
+	public String getSearchQtValueLimit() {
+		return searchQtValueLimit;
 	}
 	
-	public void setSearchedQtValueLimit(String searchedQtValueLimit) {
-		this.searchedQtValueLimit = searchedQtValueLimit;
+	public void setSearchQtValueLimit(String searchQtValueLimit) {
+		this.searchQtValueLimit = searchQtValueLimit;
 	}
 	public List<PmPtjSpecialApproval> getOriginalPtjSpecialApprovalList() {
 		return originalPtjSpecialApprovalList;
