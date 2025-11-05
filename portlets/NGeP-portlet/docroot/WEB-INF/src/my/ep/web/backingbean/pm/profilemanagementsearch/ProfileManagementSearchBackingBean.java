@@ -126,6 +126,7 @@ public class ProfileManagementSearchBackingBean extends
 				log.info("....pageChangeListener...end");
 				return null;
 			}
+			
 		}
 
 
@@ -326,6 +327,7 @@ public class ProfileManagementSearchBackingBean extends
 				for(Long statusId:statusIds){	
 					PmStatusDesc pmStatusDesc = StatusHelper.getInstance().getStatusDescById(statusId);
 					if(pmStatusDesc != null){
+						
 						statusDescList.add(pmStatusDesc);
 					}
 				}
