@@ -130,26 +130,32 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	}
 
 	/**
-	 * @param locationType
+	 * @param paramLevel3
 	 * @param pmParameterLvlId
 	 * @param createBy
 	 * @param roleCode
 	 * @return
 	 * @throws Exception
 	 */
-	public String redirectToDetails(String locationType, BigDecimal pmParameterLvlId, BigDecimal createBy, String roleCode,
-			String paramLevelCode3)
+	public String redirectToDetails(String paramLevel3, BigDecimal pmParameterLvlId, BigDecimal createBy, String roleCode,
+			String paramLevelCode3, VAuditPMDTO dto)
 			throws AuditPMException {
-		if (locationType == null || pmParameterLvlId == null || roleCode == null) {
+		if (paramLevel3 == null || pmParameterLvlId == null || roleCode == null) {
 			throw new AuditPMException("Missing required parameters for redirectToDetails FirstUI PM Audit. "
-					+ " <locationType>:" + locationType + " <pmParameterLvlId>:" + pmParameterLvlId + "<roleCode>:" + roleCode);
+ + " <paramLevel3>:"
+					+ paramLevel3 + " <pmParameterLvlId>:" + pmParameterLvlId + "<roleCode>:" + roleCode);
 		}
 
-		getManagedBean().setLocationDetailType(locationType);
+		AuditPMSearchBean lSearchBean = getManagedBean().getSearchBean();
 		getManagedBean().getSearchBean().setPmParameterLvlId(pmParameterLvlId);
 		log.info("pmParameterLvlId.intValue() :::::  " + pmParameterLvlId.intValue());
 		getManagedBean().getSearchBean().setCreatedBy(createBy.toString());
-		getManagedBean().setParamLevelCode3(paramLevelCode3);
+
+		getManagedBean().getSearchBean().setPmParameterLvlId(dto.getPmParameterLvlId());
+		getManagedBean().getSearchBean().setItemConfigParamLevel3(dto.getParamLevelCode3());
+		getManagedBean().getSearchBean().setRoleCode(dto.getRoleCode());
+		getManagedBean().getSearchBean().setCreatedBy(createBy.toString());
+
 		return NAV_TO_MAINTAIN;
 	}
 
@@ -225,7 +231,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 					auditPMReqDTO.setCreatedBy(lSearchBean.getUserId().toString());
 					lSearchBean.setUserIdOldVal(lSearchBean.getUserId());
 				} else if (lSearchBean.getUserId() != null && !lSearchBean.isSearching()) {
-					auditPMReqDTO.setCreatedBy(lSearchBean.getUserIdOldVal().toString());
+					auditPMReqDTO.setCreatedBy(lSearchBean.getCreatedByOldVal());
 				}
 
 				auditPMReqDTO.setCategoryConfigParamLevel2(getManagedBean().getSearchBean().getCategoryConfigParamLevel2());
@@ -269,9 +275,9 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 					auditPMReqDTO.setPmParameterLvlId(lSearchBean.getPmParameterLvlId());
 					lSearchBean.setPmParameterLvlIdOldval(lSearchBean.getPmParameterLvlId());
 				}
-				if (getManagedBean().getParamLevelCode3() != null) {
-					auditPMReqDTO.setpLvl3Code(getManagedBean().getParamLevelCode3());
-					lSearchBean.setpLvl3CodeOld(getManagedBean().getParamLevelCode3());
+				if (lSearchBean.getItemConfigParamLevel3() != null) {
+					auditPMReqDTO.setpLvl3Code(lSearchBean.getItemConfigParamLevel3());
+					lSearchBean.setpLvl3CodeOld(lSearchBean.getItemConfigParamLevel3());
 				}
 				if (lSearchBean.getRoleCode() != null) {
 					auditPMReqDTO.setpRoleCode(lSearchBean.getRoleCode());
