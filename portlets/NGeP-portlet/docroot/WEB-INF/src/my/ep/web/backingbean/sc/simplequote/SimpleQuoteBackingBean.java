@@ -95,6 +95,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -4812,6 +4813,7 @@ public class SimpleQuoteBackingBean extends
 		StringBuilder stateCriteria = new StringBuilder();
 		StringBuilder divCriteria = new StringBuilder();
 		StringBuilder distCriteria = new StringBuilder();
+		StringBuilder recordStatus = new StringBuilder();//#26284 - Start
 
 		// business nature criteria
 		if (getManagedBean().isByBusinessNature()) {
@@ -4947,7 +4949,16 @@ public class SimpleQuoteBackingBean extends
 		}
 		// #28536 - end
 
-		criteria.append("recordStatus^1");
+		// #26284 - Start
+		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_DELETED);
+
+		criteria.append("recordStatus")
+		.append("^").append(recordStatus.toString())
+		.append("^").append(SearchOperator.OPERATOR_IN.value());
+
+		// #26284 - End
 		return criteria.toString();
 	}
 	

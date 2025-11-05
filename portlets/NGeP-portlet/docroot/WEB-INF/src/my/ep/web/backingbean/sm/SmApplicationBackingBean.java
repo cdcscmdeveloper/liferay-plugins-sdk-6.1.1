@@ -4510,6 +4510,18 @@ public class SmApplicationBackingBean extends
 					}
 			}
 			break;
+		//#38991 -START
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH:
+				if (!getManagedBean().getSmAppl().getApplType()
+						.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+					if (getManagedBean().isSupplierUser()){
+					validSave = SmApplicationUtil.validateComExpProjectBeforeSave(
+							validSave, getManagedBean(), currentTab);
+					}
+				}
+				break;
+				
+		//#38991 -END	
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
 			if (getManagedBean().getSmAppl().getSupplierType()
@@ -4642,7 +4654,13 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-
+		
+		//#38991 -START
+		// validate company experience 
+		SmApplicationUtil.validateComExpProjectBeforeSave(true, 
+		    		getManagedBean(), -1);
+		//#38991 -END
+		    
 		// validate personnel
 		SmApplicationUtil.validatePersonnelBeforeSave(true, -1,
 				getManagedBean());
@@ -6705,14 +6723,31 @@ public class SmApplicationBackingBean extends
 						validCat = true;
 					}
 				} else {
-					// 29952 - Start
-					if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACTIVATION_RECORD_STATUS) != 0 && (cat.isCancelCategory() || cat.getRecordStatusFlg() == 2) && 
-							currentDate.after(getManagedBean().getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
-						validCat = true;
+					// 29952, 39421 - START
+					int status = cat.getRecordStatusFlg();
+
+					SmSupplier supplier = getManagedBean().getSmAppl().getSmSupplier();
+					List<SmDisciplinaryAction> disciplinaryActions = supplier.getSmDisciplinaryActions();
+
+					Date endDate = (disciplinaryActions != null && !disciplinaryActions.isEmpty())
+					        ? disciplinaryActions.get(0).getEndDate()
+					        : null;
+
+					boolean isNotPending = !(SupplierManagementConst.PENDING_ACTIVATION_RECORD_STATUS == status);
+
+					boolean isCancelledOrSuspended = cat.isCancelCategory()
+					        || (SupplierManagementConst.CANCEL_RECORD_STATUS == status)
+					        || ((SupplierManagementConst.RECORD_STATUS_SUSPENDED == status)
+					            && cat.getDisciplinaryActionId() != null);
+
+					boolean isAfterEndDate = (endDate != null && currentDate.after(endDate));
+
+					if (isNotPending && isCancelledOrSuspended && isAfterEndDate) {
+					    validCat = true;
 					} else {
-						throw new EpException(MessageConst.ERROR_722533);
+					    throw new EpException(MessageConst.ERROR_722533);
 					}
-					// 29952 - End
+					// 29952, 39421 - END
 				}
 			}
 		}
@@ -11233,15 +11268,19 @@ public class SmApplicationBackingBean extends
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 		RequestContext.getCurrentInstance().update(updateIds);
-		//#28777 - START
+		// #28777 & #29727 - Start
 		/*
-		 * CALLING FUNCTION QT
+		 * To check any pending QT transations if supplier had doing deleted branches
+		 * deleted
 		 */
-		if(decision.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)){
-			ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) BusinessDelegate .getInstance().getServiceObject("sc", ISourcingIntegrationSO.class);
-			sourcingIntegrationSO.checkQTSupplierBranchDeleted(getManagedBean().getSmAppl().getSmSupplier().getSupplierId(),  getManagedBean().getSmAppl().getSmSupplierBranches(), getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0));
+		if (decision.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+			ISourcingIntegrationSO sourcingIntegrationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+			sourcingIntegrationSO.checkQTSupplierBranchDeleted(getManagedBean().getSmAppl().getSmSupplier()
+					.getSupplierId(), getManagedBean().getSmAppl().getSmSupplierBranches(), getManagedBean()
+					.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0));
 		}
-		//#28777 - END
+		// #28777 & #29727 - End
 		//#34400
 		return "";
 	}

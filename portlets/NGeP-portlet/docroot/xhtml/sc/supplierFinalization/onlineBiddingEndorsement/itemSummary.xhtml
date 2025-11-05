@@ -225,7 +225,7 @@
 					value="#{(itemSupplierDis.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			
-			<ui:param name="supplier" value="#{itemSupplierDis.supplier}" />
+		    <ui:param name="supplier" value="#{itemSupplierDis.supplier}" />
 			<ui:param name="mofExpired"
 				value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
 			<p:column styleClass="#{mofExpired ? 'red-background':''}">
@@ -243,8 +243,8 @@
 				</f:facet>
 				<ac:disciplinaryActionYesNo
 					supplier="#{supplier}" index="#{rowIndex}"/>
-			</p:column>
-
+			</p:column>		
+			
 		    <p:column headerText="#{lbl['lbl.sc.starting.price']}"
 				style="text-align: right;">
 				<h:outputText

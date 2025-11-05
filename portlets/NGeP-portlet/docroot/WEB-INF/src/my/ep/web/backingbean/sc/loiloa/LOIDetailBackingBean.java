@@ -1062,9 +1062,12 @@ public class LOIDetailBackingBean extends
 	// 26247 - 31061 - end
 	
 	private void processRecommendedSuppliersByPKG(List<ScQtRecommend> scQtRecommendList) {
+		// 26247 - start
+		for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+			setRecommendedSupplierList(scQtRecommend);
+		}
+		// 26247 - end
 		ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
-		setRecommendedSupplierList(scQtRecommend);
-		
 		List<ScQtEvaluationResultDtl> recommendedSuppplierList 
 								= scQtRecommend.getAwardSupplierList();
 		if (CollectionUtils.isNotEmpty(recommendedSuppplierList)) {			
@@ -3029,6 +3032,7 @@ public class LOIDetailBackingBean extends
 			checkSupplierAwardedRejectValidityExtension();
 		}
 		//#21692 - End
+		checkNeedSupplierIfHaveBranchDeleted(outcome);// #28777&#29729
 				
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
@@ -3079,8 +3083,10 @@ public class LOIDetailBackingBean extends
 					.getScQtFinalization();
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) getManagedBean()
 					.getPayLoad();
-
-			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls(true);
+			// 26247 - start
+			boolean isSubmit = !BpmOutcomeConst.BPM_REVISE.equals(outcome);
+			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls(isSubmit);
+			// 26247 - end
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setOutcome(outcome);
 			if (null != digiSign) {
@@ -3158,9 +3164,7 @@ public class LOIDetailBackingBean extends
 	private AwardSupplierReqDTO parseMultipleLoiDtls(boolean isSubmit) {
 		Long statusId  = getManagedBean().getCurrentStatusId();
 		// 26247 - start
-		if (Arrays.asList(QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION,
-				QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION).contains(statusId)) {
-		// 26247 - end
+		if (isSubmit) {
 			List<TplSpecZoneDtl> zoneDeDtls = getManagedBean().getMultiLOIZoneDetails();
 			if (getManagedBean().isItemized()) {
 				if (getManagedBean().getScQt().isZonal() && 
@@ -3192,24 +3196,23 @@ public class LOIDetailBackingBean extends
 					awardSelectedSupplierAction();//34905
 				}				
 			}
-			
-			if (isSubmit) {
-				ScLoi scLoi = this.getManagedBean().getScLoi();
-				if (CollectionUtils.isNotEmpty(
-							scLoi.getScLoiReports())) {
-					for (ScLoiReport report 
-								: scLoi.getScLoiReports()) {
-						if (report.getScLoiReportAttachment() == null && 
-								ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-									.equals(report.getDefinationType().getParameterCode())) {
-							tabMenuListener(3);
-							throw new EpException(MessageConst.ERROR_760415, 
-												  new String[] { report.getTitle() });
-						}
+		
+			ScLoi scLoi = this.getManagedBean().getScLoi();
+			if (CollectionUtils.isNotEmpty(
+						scLoi.getScLoiReports())) {
+				for (ScLoiReport report 
+							: scLoi.getScLoiReports()) {
+					if (report.getScLoiReportAttachment() == null && 
+							ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+								.equals(report.getDefinationType().getParameterCode())) {
+						tabMenuListener(3);
+						throw new EpException(MessageConst.ERROR_760415, 
+											  new String[] { report.getTitle() });
 					}
 				}
 			}
 		}
+		// 26247 - end
 		
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
@@ -6978,6 +6981,55 @@ public class LOIDetailBackingBean extends
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		return sourcingIntegrationSO.checkListZonesDisqualifiedSupplierBranchDeleted(qtId, specZoneId);
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check outcome endorse/sign off and get recommend details
+	 * 
+	 * @param outcome
+	 * 
+	 **/
+	private void checkNeedSupplierIfHaveBranchDeleted(String outcome) {
+		if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
+			List<ScQtRecommend> recommendList = getManagedBean().getRecommendList();
+			for (ScQtRecommend scQtRecommend : recommendList) {
+				String itemName = scQtRecommend.getRequestItem().getItemName();
+				List<ScQtEvaluationResultDtl> recommendedSuppplierList = scQtRecommend.getAwardSupplierList();
+				validationNeedSupplierIfHaveBranchDeleted(itemName, recommendedSuppplierList);
+			}
+		}
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to throw validation if no selected any suppliers
+	 * 
+	 * @param itemName
+	 * @param recommendedSuppplierList
+	 * 
+	 **/
+	private void validationNeedSupplierIfHaveBranchDeleted(String itemName,
+			List<ScQtEvaluationResultDtl> recommendedSuppplierList) {
+
+		int countNotSelectedSupplier = 0;
+		if (CollectionUtils.isNotEmpty(recommendedSuppplierList)) {
+			for (ScQtEvaluationResultDtl recommendedSupplier : recommendedSuppplierList) {
+				if (recommendedSupplier.getScQtRecommendDtl().get(0).getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+					countNotSelectedSupplier++;
+				}
+			}
+		}
+
+		Long qtId = getManagedBean().getScQt().getQtId();
+		if (recommendedSuppplierList.size() == countNotSelectedSupplier
+				&& checkListDisqualifiedSupplierBranchDeleted(qtId)) {
+			throw new EpException(MessageConst.ERROR_760622, new String[] { itemName });
+		}
 	}
 
 	// #28777 & #29729 - End

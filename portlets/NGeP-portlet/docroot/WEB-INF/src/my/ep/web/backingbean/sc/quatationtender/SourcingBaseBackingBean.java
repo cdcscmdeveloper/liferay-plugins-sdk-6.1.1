@@ -3209,10 +3209,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public SelectItem[] getRepresentativeTypeDropdownValues(String committeeType){
 		SelectItem[] items = null;
 		
-		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
-				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
+		// #35320 - Start
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
-		}
+		}// #35320 - End
 		  else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PPR);
 		}
@@ -3716,10 +3718,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-				
+				//Bug #39043 start
 				if (null != suppAns.getSupplierId()
-						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()   
-						&& null != tplSpecAnswer.getAnswerRemark()){					
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   
+						//&& null != tplSpecAnswer.getAnswerRemark()){	Bug #39043 end				
 					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
 					break;
 				}
@@ -3873,7 +3875,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						boolean shouldBreak = false;
 						if (tempRemark == null) {
 							tempRemark = SSTConstant.TB;
-				        } else {
+				        } //else { Bug #39043
 				            if (tempSpecZoneQty > 0) {
 				            	if (tempRemarkIndex >= tempSpecZoneQty && (indexRemarkStore == 0 || tempRemarkIndex > indexRemarkStore)) {
 				            		 map.put(SSTConstant.Remark, tempRemark);
@@ -3888,7 +3890,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				                }
 				            }
 				            tempRemarkIndex++;
-				        }
+				          //} Bug #39043
 						
 						if (shouldBreak) {
 				            break;

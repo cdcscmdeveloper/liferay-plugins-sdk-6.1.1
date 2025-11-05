@@ -940,6 +940,14 @@ public class SupplierFinalizationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
 			reqDTO.setQtId(qtId);
+			
+			// #35320 - Set QCA, QCB to QQC - Start
+			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
+				committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+			}
+			// #35320 - End
+						
 			reqDTO.setCommitteType(committeeType);
 
 			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
@@ -1858,15 +1866,7 @@ public class SupplierFinalizationBackingBean extends
 					}
 					
 					processSuppliersBeforeSaving();
-					// 25037 - start
-					if (!skipValidation) {
-						if (!getManagedBean().isItemize()) {
-							validateByPackage();
-						} else {
-							validateByItem();
-						}
-					}
-					// 25037 - end
+					validateSupplierByPackageAndItem(skipValidation);// 26247
 						
 						List<QtEvaluationResultDtlBean> cachedSupplierBeans = null;
 						Map<MapKey,List<QtEvaluationResultDtlBean>> cachedSuppliersMap = 
@@ -1932,6 +1932,28 @@ public class SupplierFinalizationBackingBean extends
 
 		}
 	}
+	
+	// 26247 - start
+	private void validateSupplierByPackageAndItem(boolean skipValidation) {
+		if (skipValidation) {
+			return;
+		}
+		try {
+			if (!getManagedBean().isItemize()) {
+				validateByPackage();
+			} else {
+				validateByItem();
+			}
+		} catch (EpException e) {
+			String taskName = this.getManagedBean().getTaskName();
+			if (Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION, SCProcessNameConst.SIGNOFF_FC_SELECTION)
+					.contains(taskName)) {
+				throw new EpException(MessageConst.ERROR_760601); 
+			}
+			throw e;
+		}
+	}
+	// 26247 - end
 
 	private void renewSessionAndRetrieve(int activeIndex,
 										 SuppFinalizationResDTO resDTO) {
@@ -3376,6 +3398,10 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 			} 
+			
+			// #35320 - START
+			validateCommitteeDecision(decisionTypeCode);
+			// #35320 - END
 		}
 		// #28834 - End.
 		
@@ -7027,9 +7053,14 @@ public class SupplierFinalizationBackingBean extends
 			
 			createShortlistedSuppliersDataModel();
 		}
+		
+		//#35320 - Rules are not valid for QQC - Start 
 		//#26169 #38 #25729#142 - Start 
-		checkSupplierOfferPriceByItemIsExceedCommitteeAuthority();
+		//checkSupplierOfferPriceByItemIsExceedCommitteeAuthority();
 		//#26169 #38 #25729#142 - End
+		
+		checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
+		//#35320 - End
 	}
 
 	private void setSelectedSupplierCodesByItem() {
@@ -7059,10 +7090,12 @@ public class SupplierFinalizationBackingBean extends
 							SmSupplier supplier = recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier();
 							boolean isAwardedOrShortlisted = (isAward && recommendedBean.isAwarded())
 									|| (!isAward && recommendedBean.isShortlisted());
-							if (isAwardedOrShortlisted && !this.disabledQTProcess(supplier)) {
+							boolean disabledQtProcess = this.disabledQTProcess(supplier)
+									&& !this.isCurrentlyAwarded(supplier.getSupplierId(), itemId, specZoneId);
+							if (isAwardedOrShortlisted && !disabledQtProcess) {
 								item.getSelectedSuppliers().put(recommendedBean.getScQtProposal().getSupplierNo(),
 										supplier);
-							} 
+							}
 							// 26247 - end
 						}
 					}
@@ -8860,14 +8893,20 @@ public class SupplierFinalizationBackingBean extends
 										recommendationBean.isShortlisted());
 							}
 							
-							//  Set shortlisted as true by defaultly for qualified suppliers in Bidding  
-							if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
-									.equals(getManagedBean().getFinalizationMethod())
-									&& !qualSupplier.isSuppSelectionDisabled()&& !isQTRefinalized()
-									&& !disagreeProposalValidityExtension(qualSupplier)) {//#21692 rejecting Validity Extension will be excluded
-								qualSupplier.setShortListed(true);		
-							}
-							
+							// 26247 - start
+							SmSupplier supplier = qualSupplier.getQtEvaluationResult().getScQtProposal()
+									.getScQtSupplier().getSmSupplier();
+							boolean isDisabledDueToDA = disabledQTProcess(supplier);
+							boolean isOnlineBidding = ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+									.equals(getManagedBean().getFinalizationMethod()) && !isQTRefinalized();
+							boolean isSupplierEnabled = !qualSupplier.isSuppSelectionDisabled()
+									&& !disagreeProposalValidityExtension(qualSupplier) //#21692 rejecting Validity Extension will be excluded
+									&& !isDisabledDueToDA;
+							if (isOnlineBidding && isSupplierEnabled) {
+								qualSupplier.setShortListed(true);
+							} 
+							// 26247 - end
+
 							//#21692 - Start
 							resetQualifiedSupplierForMLOIAndBidding(qualSupplier);
 							//#21692 - End
@@ -8875,9 +8914,8 @@ public class SupplierFinalizationBackingBean extends
 							recommendationBean = updateCachedData(qualSupplier, 
 									zoneId, selectedItemId, null);
 							// 26247, 31128, #32699 - Start.
-							SmSupplier supplier = recommendationBean.getScQtProposal().getScQtSupplier()
-									.getSmSupplier();
-							boolean disabledSupplier = disabledQTProcess(supplier);
+							boolean disabledSupplier = isDisabledDueToDA
+									&& !isCurrentlyAwarded(supplier.getSupplierId(), selectedItemId, zoneId);
 							if (!disabledSupplier) {
 								if (recommendationBean.isAwarded()) {
 									getManagedBean().setRecommendedSupplier(qualSupplier);
@@ -8940,6 +8978,43 @@ public class SupplierFinalizationBackingBean extends
 			return resultBean;
 		}
 	}
+	
+	// 26247 - start
+	private boolean isCurrentlyAwarded(Long supplierId, Long requestItemId, Long specZoneId) {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+
+		if (scQtFinalization == null || CollectionUtils.isEmpty(scQtFinalization.getScQtRecommends())) {
+			return false;
+		}
+		for (ScQtRecommend qtRecommend : scQtFinalization.getScQtRecommends()) {
+			if (!isValidItem(qtRecommend, specZoneId, requestItemId)) {
+				continue;
+			}
+			for (ScQtRecommendDtl recommendDtl : qtRecommend.getRecommendDtls()) {
+				if (supplierId.equals(recommendDtl.getSupplier().getSupplierId())) {
+					boolean loiAwarded = BooleanUtils.isTrue(recommendDtl.getLoiAwarded())
+							&& null == recommendDtl.getLoaAwarded();
+					boolean loaAwarded = BooleanUtils.isTrue(recommendDtl.getLoaAwarded());
+					return loiAwarded || loaAwarded;
+				}
+
+			}
+		}
+		return false;
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	private boolean isValidItem(ScQtRecommend qtRecommend, Long specZoneId, Long requestItemId) {
+		Long recommendSpecZoneId = qtRecommend.getTplSpecZoneDtl() != null ? qtRecommend.getTplSpecZoneDtl()
+				.getSpecZoneId() : 0L;
+		Long recommendRequestItemId = qtRecommend.getRequestItem() != null ? qtRecommend.getRequestItem()
+				.getRequestNoteItemId() : 0L;
+		boolean isValidZone = specZoneId == 0L || specZoneId.equals(recommendSpecZoneId);
+		boolean isValidItem = requestItemId == 0L || requestItemId.equals(recommendRequestItemId);
+		return isValidZone && isValidItem && CollectionUtils.isNotEmpty(qtRecommend.getRecommendDtls());
+	}
+	// 26247 - end
 	
 	private List<QtEvaluationResultDtlBean> getCachedSuppliersFromMap(Long zoneId, Long itemId) {
 		log.info("getCachedSuppliersFromMap");
@@ -9030,8 +9105,11 @@ public class SupplierFinalizationBackingBean extends
 
 			for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
 				SmSupplier supplier = recommendDtl.getSupplier();
+				boolean loiAwarded = BooleanUtils.isTrue(recommendDtl.getLoiAwarded()) && null == recommendDtl.getLoaAwarded();
+				boolean loaAwarded = BooleanUtils.isTrue(recommendDtl.getLoaAwarded());
+
 				if (recommendDtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)
-						&& this.disabledQTProcess(supplier)) {
+						&& this.disabledQTProcess(supplier) && !(loiAwarded || loaAwarded)) {
 					recommendDtl.setRecordStatus(false);
 					recommendDtl.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 				}
@@ -11894,4 +11972,426 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	//#21692 - End
+	
+	/**
+	 * #35320 - Check All supplier Offered Price Exceeded Committee Authority
+	 * 
+	 */
+	private boolean checkAllSupplierOfferPriceIsExceedCommitteeAuthority() {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		String committeeType = getManagedBean().getCommitteeType();
+
+		BigDecimal committeeThreshold = getThresholdFor(committeeType);
+		if (committeeThreshold == null) {
+			return false;
+		}
+
+		List<BigDecimal> offeredPrices = getOfferedPrices(scQtFinalization);
+		for (BigDecimal price : offeredPrices) {
+			if (price != null && price.compareTo(committeeThreshold) > 0) {
+				getManagedBean().setSelectedSupplierOfferedPrice(price.toString());
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * #35320
+	 * Extracts all intended supplier offered prices from the given finalization
+	 * context.
+	 * 
+	 * @param scQtFinalization
+	 *            the finalization context containing supplier recommendations
+	 * @return list of offered prices; may be empty but never null
+	 */
+	private List<BigDecimal> getOfferedPrices(ScQtFinalization scQtFinalization) {
+		List<BigDecimal> prices = new ArrayList<BigDecimal>();
+
+		if (getManagedBean().isItemize()) {
+			for (ScQtRecommend item : scQtFinalization.getScQtRecommends()) {
+				if (!item.isCancelled()) {
+					BigDecimal price = extractPriceFromItem(item);
+					if (price != null) {
+						prices.add(price);
+					}
+				}
+			}
+		} else {
+			Map<MapKey, List<QtEvaluationResultDtlBean>> cache = getManagedBean().getQualifiedSuppliersCache();
+			if (MapUtils.isNotEmpty(cache)) {
+				for (Map.Entry<MapKey, List<QtEvaluationResultDtlBean>> entry : cache.entrySet()) {
+					BigDecimal price = extractPriceFromCache(entry);
+					if (price != null) {
+						prices.add(price);
+					}
+				}
+			}
+		}
+
+		return prices;
+	}
+
+	/**
+	 * #35320
+	 * Extracts the offered price for an itemized recommendation, if available.
+	 * 
+	 * @param item
+	 *            the recommendation item to process
+	 * @return the offered price or {@code null} if not found
+	 */
+	private BigDecimal extractPriceFromItem(ScQtRecommend item) {
+		Long specZoneId = item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getSpecZoneId() : DEFAULT_ITEM;
+
+		Long requestItemId = item.getRequestItem().getRequestNoteItemId();
+		List<QtEvaluationResultDtlBean> suppliers = getCachedSuppliersFromMap(specZoneId, requestItemId);
+
+		if (CollectionUtils.isEmpty(suppliers)) {
+			return null;
+		}
+
+		for (QtEvaluationResultDtlBean supplier : suppliers) {
+			if (supplier.isAwarded()) {
+				calculateOfferedPrice(supplier, item);
+				return supplier.getBidRank() != null ? supplier.getBidPrice() : supplier.getOfferedPrice();
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * #35320
+	 * Extracts the offered price for a supplier in the non-itemized scenario.
+	 * 
+	 * @param entry
+	 *            a cache entry containing the zone and its suppliers
+	 * @return the offered price or {@code null} if not found
+	 */
+	private BigDecimal extractPriceFromCache(Map.Entry<MapKey, List<QtEvaluationResultDtlBean>> entry) {
+		List<QtEvaluationResultDtlBean> cachedSuppliers = entry.getValue();
+		if (CollectionUtils.isEmpty(cachedSuppliers)) {
+			return null;
+		}
+
+		for (QtEvaluationResultDtlBean supplier : cachedSuppliers) {
+			if (supplier.isAwarded()) {
+				List<ScQtRecommend> items = getItemsForZone(entry.getKey().getZoneId());
+				if (supplier.getBidRank() != null) {
+					calculateBidPrice(items, supplier);
+					return supplier.getBidPrice();
+				} else {
+					return supplier.getScQtProposalAmount().getProposalAmt();
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * #35320
+	 * Returns items associated with a specific zone.
+	 * 
+	 * @param zoneId
+	 *            the zone identifier
+	 * @return list of recommendations belonging to the zone
+	 */
+	private List<ScQtRecommend> getItemsForZone(Long zoneId) {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		if (DEFAULT_ZONE.equals(zoneId)) {
+			return scQtFinalization.getScQtRecommends();
+		}
+		return scQtFinalization.getScQtRecommendsByZone().get(zoneId);
+	}
+
+	/**
+	 * #35320
+	 * Returns the threshold limit for the given committee type.
+	 * 
+	 * @param committeeType
+	 *            committee type identifier
+	 * @return corresponding price threshold or {@code null} if unknown
+	 */
+	public static BigDecimal getThresholdFor(String committeeType) {
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equals(committeeType)) {
+			return new BigDecimal(SourcingConstants.QT_BELOW_500K);
+		}
+
+
+		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
+			return new BigDecimal(SourcingConstants.QT_BELOW_30MILL);
+		}
+
+		return null;
+	}
+	
+	/**
+	 * #35320
+	 * Checks whether any supplier's offered price exceeds the committee authority
+	 * threshold. Updates the managed bean flag accordingly.
+	 *
+	 * <p>This refactor removes procedural duplication and isolates data retrieval
+	 * and comparison logic for clarity and testability.</p>
+	 */
+	public void checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority() {
+
+		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());		 
+		boolean isBpkCentralContract = isBpkCentralContract(qtBackingBean.getManagedBean().getQt());
+
+		if (isBpkCentralContract) {
+			return;
+		}
+
+		final boolean isItemize = getManagedBean().isItemize();
+		final String committeeType = getManagedBean().getCommitteeType();
+		final BigDecimal committeeThreshold = getThresholdFor(committeeType);
+
+		boolean exceed = isItemize ? checkItemizedOffersExceedThreshold(committeeThreshold)
+				: checkPackageOffersExceedThreshold(committeeThreshold);
+
+		getManagedBean().setSuppOfferPriceExceedCommunityAuthority(exceed);
+	}
+
+	/**
+	 * #35320
+	 * Checks all itemized supplier offers against the committee threshold.
+	 *
+	 * @param committeeThreshold threshold for comparison
+	 * @return true if any offered price exceeds the threshold
+	 */
+	private boolean checkItemizedOffersExceedThreshold(final BigDecimal committeeThreshold) {
+
+	    final List<ScQtRecommend> items = getManagedBean().getItemList();
+	    if (CollectionUtils.isEmpty(items)) {
+	        return false;
+	    }
+
+	    for (ScQtRecommend item : items) {
+	        List<ScQtEvaluationResultDtl> qualifiedSuppliers = retrieveQualifiedSuppliersByItem(item);
+	        for (ScQtEvaluationResultDtl supplier : qualifiedSuppliers) {
+	            updateSupplierRegistrationLabel(supplier);
+	            if (isOfferExceedingThreshold(item, supplier, committeeThreshold)) {
+	                return true; // early exit – one exceed is enough
+	            }
+	        }
+	    }
+	    return false;
+	}
+
+	/**
+	 * #35320
+	 * Checks all package supplier offers against the committee threshold.
+	 *
+	 * @param committeeThreshold threshold for comparison
+	 * @return true if any offered price exceeds the threshold
+	 */
+	private boolean checkPackageOffersExceedThreshold(final BigDecimal committeeThreshold) {
+
+	    final List<ScQtEvaluationResultDtl> suppliers = retrieveQualifiedSuppliersByPackage();
+	    for (ScQtEvaluationResultDtl supplier : suppliers) {
+	        final BigDecimal offerPrice = supplier.getProposalAmount().getProposalAmt();
+	        if (offerPrice != null && offerPrice.compareTo(committeeThreshold) > 0) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
+	/**
+	 * #35320
+	 * Retrieves qualified suppliers for an item evaluation stage.
+	 */
+	private List<ScQtEvaluationResultDtl> retrieveQualifiedSuppliersByItem(final ScQtRecommend item) {
+		final IQTSuppFinalizationSO service = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
+		final ISearchBean<ScQtEvaluationResultDtl> searchBean = new SearchBean<ScQtEvaluationResultDtl>();
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("qtEvaluationResult.evaluationStage", SearchOperator.OPERATOR_EQUALS.value(),
+						SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM));
+
+		final SuppFinalizationReqDTO req = new SuppFinalizationReqDTO();
+		req.setQtId(getManagedBean().getScQt().getQtId());
+		req.setEvaluationStage(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM);
+		req.setRequestItemId(item.getRequestItem().getRequestNoteItemId());
+		req.setSearchBean(searchBean);
+
+		try {
+			final SuppFinalizationResDTO res = service.retrieveQualifiedSuppliersInfoByEvalStage(req);
+			if (res == null || !res.isSuccessful()) {
+				return Collections.emptyList();
+			}
+
+			final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
+
+			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			return Collections.emptyList();
+		}
+	}
+
+	/**
+	 * #35320
+	 * Retrieves qualified suppliers for a package evaluation stage.
+	 */
+	private List<ScQtEvaluationResultDtl> retrieveQualifiedSuppliersByPackage() {
+		final IQTSuppFinalizationSO service = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
+		final ISearchBean<ScQtEvaluationResultDtl> searchBean = new SearchBean<ScQtEvaluationResultDtl>();
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("qtEvaluationResult.evaluationStage", SearchOperator.OPERATOR_EQUALS.value(),
+						SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG));
+
+		final SuppFinalizationReqDTO req = new SuppFinalizationReqDTO();
+		req.setQtId(getManagedBean().getScQt().getQtId());
+		req.setEvaluationStage(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG);
+		req.setRequestItemId(null);
+		req.setSearchBean(searchBean);
+
+		try {
+			final SuppFinalizationResDTO res = service.retrieveQualifiedSuppliersInfoByEvalStage(req);
+			if (res == null || !res.isSuccessful()) {
+				return Collections.emptyList();
+			}
+
+			final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
+
+			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			return Collections.emptyList();
+		}
+
+	}	
+
+	/**
+	 * #35320
+	 * Updates supplier registration status for display purposes.
+	 */
+	private void updateSupplierRegistrationLabel(final ScQtEvaluationResultDtl supplier) {
+	    if (supplier.getSmMofAccount() != null
+	            && StringUtils.isNotEmpty(supplier.getSmMofAccount().getMofRegStatus())) {
+	        supplier.getSmMofAccount().setMofRegStatus(
+	                ResourceBundleUtils.getMessage(
+	                        supplier.getSmMofAccount().getMofRegStatus(),
+	                        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+	                        new FacesScopes().getUserLocale()));
+	    }
+	}
+
+	/**
+	 * #35320
+	 * Determines whether a given supplier's offer exceeds the committee threshold.
+	 */
+	private boolean isOfferExceedingThreshold(final ScQtRecommend item,
+	                                          final ScQtEvaluationResultDtl supplier,
+	                                          final BigDecimal committeeThreshold) {
+
+	    final ScRequestItem requestItem = item.getRequestItem();
+	    final ScQtProposalItem proposalItem =
+	            getQtProposalItem(item, supplier.getProposalAmount());
+
+	    if (proposalItem == null) {
+	        return false;
+	    }
+
+	    final BigDecimal offeredPrice = TemplateSpecHelper.getInstance()
+	            .calculateTotalAmount(requestItem.getTplSpecQuestion(),
+	                    proposalItem.getOfferPrice(),
+	                    item.getOrderQty());
+
+	    return offeredPrice != null && offeredPrice.compareTo(committeeThreshold) > 0;
+	}
+
+	
+	/**
+	 * #35320
+	 * Validates the committee decision logic for submission and throws appropriate
+	 * exceptions if committee authority or reason conditions are violated.		 
+	 *
+	 * @throws EpException if any validation fails based on committee type or decision rules.
+	 */
+	private void validateCommitteeDecision(final String decisionTypeCode) {
+
+	    if (!getManagedBean().isSubmit() || getManagedBean().isInitialDecisionFwdToBPK()) {
+	        return; // nothing to do
+	    }
+
+	    final String committeeType = getManagedBean().getCommitteeType();
+	    final String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+	    final boolean exceedAmount = checkAllSupplierOfferPriceIsExceedCommitteeAuthority();
+
+	    if (!exceedAmount) {
+	        return; // skip if no exceed condition
+	    }
+
+	    final boolean isForwardToHigherAuthority =
+	            ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode);
+
+	    if (isForwardToHigherAuthority) {
+	        validateExceedWithForward(committeeType, committeeName);
+	    } else {
+	        throwCommitteeException(committeeType, committeeName);
+	    }
+	}
+
+	/**
+	 * #35320
+	 * Handles the case when the amount exceeds committee authority and
+	 * the decision is forwarded to a higher authority.
+	 */
+	private void validateExceedWithForward(final String committeeType, final String committeeName) {
+
+	    final PmReason reason = getManagedBean().getScQtFinalization().getReason();
+
+	    if (reason == null) {
+	        throwCommitteeException(committeeType, committeeName);
+	        return;
+	    }
+
+	    String reasonType = reason.getReasonCode();
+	    if (reasonType == null || reasonType.isEmpty()) {
+	        final ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
+	        reasonReqDTO.setReasonId(reason.getReasonId());
+	        reasonType = getReasonSO().retrieveReasonById(reasonReqDTO).getPmReason().getReasonCode();
+	    }
+
+	    if (!ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY
+	            .equalsIgnoreCase(reasonType)) {
+	        throwCommitteeException(committeeType, committeeName);
+	    }
+	}
+
+	/**
+	 * #35320
+	 * Throws an {@link EpException} with the appropriate message based on the
+	 * specified committee type.
+	 */
+	private void throwCommitteeException(final String committeeType, final String committeeName) {
+		final String qtNo = getManagedBean().getScQt().getQtNo();
+		final String offeredPrice = getManagedBean().getSelectedSupplierOfferedPrice();
+
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
+			throw new EpException(MessageConst.ERROR_760710, new String[] { qtNo, offeredPrice });
+		}
+		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
+			throw new EpException(MessageConst.ERROR_760711, new String[] { committeeName, qtNo, offeredPrice });
+		}
+		if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equals(committeeType)) {
+			throw new EpException(MessageConst.ERROR_760712, new String[] { qtNo, offeredPrice });
+		}
+	}
 }
