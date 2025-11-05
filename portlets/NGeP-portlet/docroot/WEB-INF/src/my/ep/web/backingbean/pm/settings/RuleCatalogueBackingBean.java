@@ -4863,7 +4863,7 @@ public class RuleCatalogueBackingBean extends
 			getManagedBean().setPtjSpecialApprovalList(new ArrayList<PmPtjSpecialApproval>());
 			for(PmPtjSpecialApproval approval : getManagedBean().getMainPtjSpecialApprovalList()){
 				// #36738
-				if(approval.getMinistry() != null && 
+				if(approval.getMinistry() != null &&
 						approval.getMinistry().getOrgProfileId().equals(getManagedBean().getSelectedMinistryId())){
 					getManagedBean().getPtjSpecialApprovalList().add(approval);
 				}
@@ -5553,12 +5553,12 @@ public class RuleCatalogueBackingBean extends
 	}
 	/* END #35509 AUDIT PM */
 	
-	//#36738 Start	
+	//#36738 Start
 	/**
 	 * #36738
 	 * Search rule type
 	 */
-	public void searchRuleType(){	
+	public void searchRuleType(){
 		String searchRuleType = this.getManagedBean().getSearchRuleType();
 		List<PmConfigRuleDesc> configRuleDescList = this.getManagedBean().getOriginalConfigRuleDescList();
 		List<PmConfigRuleDesc> searchRuleDescList = new ArrayList<>();
@@ -5575,7 +5575,7 @@ public class RuleCatalogueBackingBean extends
 					searchRuleDescList.add(configRuleDesc);
 				}
 			}
-		}		
+		}
 		
 		if (CollectionUtils.isNotEmpty(searchRuleDescList)) {
 			this.getManagedBean().setConfigRuleDescList(searchRuleDescList);
@@ -5709,7 +5709,6 @@ public class RuleCatalogueBackingBean extends
 				searchRuleTypeValueList.add(configRuleValue);
 			}
 		}
-				
 		return searchRuleTypeValueList;
 	}
 	
@@ -5742,7 +5741,6 @@ public class RuleCatalogueBackingBean extends
 		}else {
 			return configRuleValuesList;
 		}
-		
 	}
 	
 	/**
@@ -5781,7 +5779,6 @@ public class RuleCatalogueBackingBean extends
 	 */
 	private List<PmConfigRuleValue>searchByDate(List<PmConfigRuleValue> configRuleValuesList, Date searchEffDate,
 			Date searchExpDate, Boolean multipleSearchFlag) {
-
 		List<PmConfigRuleValue> result = new ArrayList<>();
 
 		for (PmConfigRuleValue value : configRuleValuesList) {
@@ -5789,7 +5786,6 @@ public class RuleCatalogueBackingBean extends
 				result.add(value);
 			}
 		}
-
 		return CollectionUtils.isNotEmpty(result) || !multipleSearchFlag ? result : configRuleValuesList;
 	}
 	
@@ -5808,7 +5804,6 @@ public class RuleCatalogueBackingBean extends
 		if (searchExpDate != null && searchEffDate == null) {
 			return searchExpDate.equals(value.getExpDate());
 		}
-
 		return !value.getExpDate().before(searchEffDate) && !value.getEffDate().after(searchExpDate);
 	}
 	
@@ -5830,7 +5825,6 @@ public class RuleCatalogueBackingBean extends
 	 * search quotation tender values
 	 */
 	public void searchQtValues() {
-
 	    Long searchMinistry = this.getManagedBean().getSelectedMinistryId();
 	    String searchPtjName = this.getManagedBean().getSearchPtjName();
 	    String searchPtjCode = this.getManagedBean().getSearchPtjCode();

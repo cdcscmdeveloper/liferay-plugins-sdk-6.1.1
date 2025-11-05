@@ -100,19 +100,16 @@
 
 			<h:panelGrid columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.value']}" />
-				<p:inputText
-					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeValues}" maxlength="20" style="width:250px;"/>
+				<p:inputText value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeValues}" maxlength="20" style="width:250px;"/>
 
 				<p:outputLabel value="#{lbl['lbl.pm.desc']}" />
-				<p:inputText
-					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeDesc}" maxlength="255" style="width:250px;"/>
+				<p:inputText value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeDesc}" maxlength="255" style="width:250px;"/>
 
 				<p:outputLabel value="#{lbl['lbl.pm.zone']}"
 					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC'}" />
 				<p:selectOneMenu
 					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeZone}" style="width:250px;"
 					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC'}">
-
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.zone.semenanjung']}" itemValue="1" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.zone.sabah']}" itemValue="2" />
@@ -126,14 +123,14 @@
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" update="pbdateTo" />
 				</p:calendar>
+				
 				<h:outputLabel value="#{lbl['lbl.pm.as.expdate']}" />
 				<p:calendar id="pbdateTo" showOn="button" style="width:250px;"
 					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeExpiryDate}"
 					mindate="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeEffectiveDate}"
 					readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-					<f:attribute name="startDate"
-						value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeEffectiveDate}" />
+					<f:attribute name="startDate" value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeEffectiveDate}" />
 					<f:validator validatorId="dateRangeValidator" />
 				</p:calendar>
 			</h:panelGrid>

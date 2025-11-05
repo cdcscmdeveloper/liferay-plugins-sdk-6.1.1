@@ -1964,6 +1964,5 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setOriginalPtjSpecialApprovalList(List<PmPtjSpecialApproval> originalPtjSpecialApprovalList) {
 		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
 	}
-	
 	//#36738 End
 }
