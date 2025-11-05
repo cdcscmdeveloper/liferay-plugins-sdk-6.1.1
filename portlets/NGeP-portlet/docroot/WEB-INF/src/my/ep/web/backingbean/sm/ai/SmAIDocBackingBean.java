@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.el.MethodExpression;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -35,19 +34,20 @@ import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 
 import my.ep.constant.EpPropertiesConst;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ai.AIApiResponse;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
-import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmFieldChangeUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -64,7 +64,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	public static final Logger log = Logger.getLogger(SmAIDocBackingBean.class);
 
 	private static List<SmApplDocFile> docs = new ArrayList<>();
-	private static String folderAI = Calendar.getInstance().get(Calendar.YEAR) + "/SM/APPLICATION/AI/";
 	private static String valueStr = "value";
 	private static String confidence = "confidence";
 	private static String fieldsStr = "fields";
@@ -74,32 +73,95 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static String googleUrl = EpPropertiesUtils.getInstance().getProperty("google.doc.url");
 	private static double minConfidence = 0.95;
 	private static double minScoreFuzzyMatch = 0.8;
-	private static String typeEPF = "epf";
-	private static String typeTenancy = "tenancy";
+	private static final String TYPE_EPF = "epf";
+	private static final String TYPE_TENANCY = "tenancy";
+	private static final String TYPE_BANK = "bank";
 	
 	private static List<EPFEntity> epfs = null;
 	private static TenancyEntity tenancy = null;
-	private List<EPFEntity.EmployeeInfo> selectedEmployees;
+	private static List<EPFEntity.EmployeeInfo> selectedEmployees;
+	private boolean postAI = false;
+	private String docType;
+	private SmAppl smAppl;
 	
 	private static String tempGoogleUrl = "http://192.168.62.17:5000/process";
 	//172.23.114.72, 192.168.62.17 (dev)"
 	
-	
+	private SmAppl testAppl;
 	/**
+	 * temp test
+	 * @return
+	 */
+	public SmAppl test(){
+		if (testAppl == null){
+			MofRegistrationReqDTO dto = new MofRegistrationReqDTO();
+			dto.setPoSdoUser(false);
+			dto.setApplId(1895956l); //KU-12092025-0001
+			dto.setCurrentPage("");
+			testAppl = SmServiceLookup.getMofRegistrationSO().retrieveCurrentDraftApplication(dto).getSmAppl();
+		}
+		return testAppl;
+	}
+
+
+	/**
+	 * Set context for auto-processing
+	 * @param docType
+	 * @param smAppl
+	 */
+	public void initContext(String docType, SmAppl smAppl) {
+		this.docType = docType;
+		this.smAppl = smAppl;
+	}
+
+	/**
+	 * Based on SmApplicationBackingBean
 	 * @param event
 	 */
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() == null) {
 			return;
 		}
+		
+		String filePath = Calendar.getInstance().get(Calendar.YEAR)
+				+ "/SM/APPLICATION/" + smAppl.getApplNo() + "/SD/";
+		
 		SmApplDocFile doc = new SmApplDocFile();
 		doc.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
-		doc.setFilePath(folderAI);
-		log.info("...file:\t"+doc.getFilePath()+doc.getFileName());
+		doc.setFilePath(filePath);
+		
+		SmApplSupportDoc suppDoc = getSmApplSupportDoc(docType, smAppl);
+		if (suppDoc.getSmApplDocFiles() == null){
+			suppDoc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+		}
+		
 		docs.add(doc);
 		commonUploadFile(event, doc.getFilePath());
+		
+		if (docType != null) {
+			processDoc(docType, smAppl);
+			postAI = true;
+		}
 	}
-
+	
+	private static SmApplSupportDoc getSmApplSupportDoc(String docType, SmAppl appl){
+		SmApplSupportDoc newDoc = new SmApplSupportDoc();
+		newDoc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+		if(appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
+			return newDoc;
+		}
+		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
+			Long docId = suppDoc.getPmDocument().getDocumentId();
+			if (TYPE_EPF.equals(docType) && docId == 768l){
+				return suppDoc;
+			}
+			boolean isTenancyDoc = docId == 679l || docId == 662l || docId == 654l;
+			if (TYPE_TENANCY.equals(docType) && isTenancyDoc){
+				return suppDoc;
+			}
+		}
+		return newDoc;
+	}
 
 	/**
 	 * Test
@@ -115,6 +177,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		List<JsonWrapper> jsonWrappers = new ArrayList<>();
 		for (SmApplDocFile doc : docs){
+			// Skip already processed files
+			if (doc.getAiApiResponseId() != null) {
+				AIApiResponse res = SmServiceLookup.getAIApiProcessSO()
+						.getAIApiResponse(doc.getAiApiResponseId());
+				jsonWrappers.add(new JsonWrapper(res));
+				continue;
+			}
+			
 			JsonWrapper result = sendDocumentOCR(docType, doc.getFilePath(), doc.getFileName());
 			if (appl == null && result != null){	//temp
 				jsonWrappers.add(result);
@@ -128,10 +198,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		boolean hasError = showErrorMessage(docType, jsonWrappers);
 		try {
-			if (typeEPF.equals(docType)){
+			if (TYPE_EPF.equals(docType)){
 				processEPF(jsonWrappers);
 				
-			} else if (typeTenancy.equals(docType)){
+			} else if (TYPE_TENANCY.equals(docType)){
 				processTenancyAgreement(jsonWrappers);
 				
 			} else {
@@ -141,7 +211,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		} catch(NullPointerException e){
 			if (!hasError){
 				String err = "Please upload a valid EPF Contribution Statement for AI data extraction";
-				if (typeTenancy.equals(docType)){
+				if (TYPE_TENANCY.equals(docType)){
 					err = "Please upload a valid Stamped Premise Rental Agreement for AI data extraction";
 				}
 				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, null, err);
@@ -211,27 +281,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 	
 	/**
-	 * 
+	 * Submit
 	 * @param docType
 	 * @param appl
-	 * @param methodActionStr
 	 */
-	public void submit(String docType, SmAppl appl, String methodActionStr){
+	public void submit(String docType, SmAppl appl){
 		if (StringUtils.isEmpty(docType) || appl == null){
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
-		if (typeEPF.equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
+		if (TYPE_EPF.equals(docType) && !EntityHelper.isCollectionEmpty(selectedEmployees)){
 			submitEPF(appl);
 			
-		} else if (typeTenancy.equals(docType)){
+		} else if (TYPE_TENANCY.equals(docType)){
 			submitTenancy();
-		}
-		//save smAppl
-		if (StringUtils.isNotBlank(methodActionStr)) {
-			MethodExpression methodExp = FacesScopes.createMethodExpression(
-					FacesContext.getCurrentInstance(), methodActionStr, null, new Class[] {});
-			methodExp.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[] {});
 		}
 	}
 	
@@ -269,21 +332,23 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			
 			appl.getSmPersonnels().add(per);
 		}
+		
+		//save smAppl
+		FacesContext fc = FacesContext.getCurrentInstance();
+		SmApplicationBackingBean bb = fc.getApplication().evaluateExpressionGet(fc, 
+				"#{backingBean}", SmApplicationBackingBean.class);
+		if (bb != null){
+			bb.saveOrUpdateAppl();
+		}
 	}
 	
-	//wip
+	
 	private void submitTenancy(){
-		SmFacility basicCompany = new SmFacility();
-		if (!StringUtils.isEmpty(tenancy.getLandlordsName())){
-			basicCompany.setOwnerName(tenancy.getLandlordsName());
-		}
-		if (!StringUtils.isEmpty(tenancy.getMonthlyRental())){
-			try {
-				BigDecimal rent = new BigDecimal(tenancy.getMonthlyRental());
-				basicCompany.setRentalRate(rent);
-			} catch (NumberFormatException e) {
-				log.error("Invalid Rent", e);
-			}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		SmApplicationBackingBean bb = fc.getApplication().evaluateExpressionGet(fc, 
+				"#{backingBean}", SmApplicationBackingBean.class);
+		if (bb != null){
+			bb.updateTenancyAI(tenancy);
 		}
 	}
 	
@@ -310,7 +375,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (doc.getAiApiResponseId() != null){
 				continue;
 			}
-			JsonWrapper result = sendDocumentOCR("bank", doc.getFilePath(), doc.getFileName());
+			JsonWrapper result = sendDocumentOCR(TYPE_BANK, doc.getFilePath(), doc.getFileName());
 			if (result != null){
 				long apiId = saveResponse(appl, result);
 				doc.setAiApiResponseId(apiId);
@@ -321,10 +386,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
 				.getExternalContext().getRequest()).getRequestedSessionId(); 
 		long startTime = System.currentTimeMillis();
+		boolean hasError = showErrorMessage(TYPE_BANK, jsonWrappers);
 		
-		List<DocEntity> docEntities = processBank(jsonWrappers);
-		validateBankEntity(appl, suppDoc, docEntities);
-		showErrorMessageBank(docEntities);
+		if (!hasError){
+			List<DocEntity> docEntities = processBank(jsonWrappers);
+			validateBankEntity(appl, suppDoc, docEntities);
+			showErrorMessageBank(docEntities);
+		}
 		
 		SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 				"SmAIDocbackingBean.sendDocumentOCR", "2", startTime);
@@ -459,7 +527,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			sb.insert(0, "Your bank statement(s) does not match with any newly added/updated bank in" +
 					" Bank Information section. Your application can still be submitted as-is, " +
 					"or you may update the Bank Information section before proceeding:");
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, sb.toString());
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, sb.toString().replace("\n", "<br/>"));
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 	}
@@ -469,20 +537,28 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return false;
 		}
 		String err = null;
-		boolean isAIOff = false;
 		for (JsonWrapper json : jsonWrappers){
 			int statusCode = getErrorCode(json.rawContent);
 			if (statusCode == 415 || statusCode == 422){
-				if (typeEPF.equals(docType)){
+				switch(docType){
+				case TYPE_EPF:
 					err = "Please upload a valid EPF Contribution Statement for AI data extraction";
 					break;
-				} else if (typeTenancy.equals(docType)){
+				case TYPE_TENANCY:
 					err = "Please upload a valid Stamped Premise Rental Agreement for AI data extraction";
+					break;
+				case TYPE_BANK:
+				default:
+					err = "Please upload a valid Bank Statement for AI data extraction";
 					break;
 				}
 			}
 			if (statusCode == 500){
-				isAIOff = true;
+				err = "AI processing is temporarily unavailable. Your document has been uploaded successfully, " +
+						"and you can still proceed with your application as usual.";
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, err);
+				FacesContext.getCurrentInstance().addMessage("ai", msg);
+				return true;
 			}
 		}
 		if (err != null){
@@ -490,12 +566,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 			return true;
 			
-		} else if (isAIOff){
-			err = "AI processing is temporarily unavailable. Your document has been uploaded successfully, " +
-					"and you can still proceed with your application as usual.";
-			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, err);
-			FacesContext.getCurrentInstance().addMessage("ai", msg);
-			return true;
 		}
 		return false;
 	}
@@ -546,13 +616,19 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			EPFEntity ee = new EPFEntity(entityWrapper.entities);
 			epfs.add(ee);
 		}
+		// wip: need to save the doc to SmApplDocFile with PmDocument ID: 768, 864
+		//PENYATA CARUMAN KWSP (BORANG A) IAITU SENARAI NAMA PEKERJA YANG DICARUM SERTA RESIT
 	}
 	
 	/**
 	 * Clear uploaded documents
 	 */
-	public void clearDocs() {
+	public void resetDoc() {
 		docs.clear();
+		epfs = null;
+		tenancy = null;
+		selectedEmployees = null;
+		postAI = false;
 	}
 	
 	public List<SmApplDocFile> getDocs() {
@@ -579,7 +655,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		return employees;
 	}
-
+	
+	public TenancyEntity getTenancy() {
+		return tenancy;
+	}
 
 	private static String getFakeData(String filepath, String filename) {
 		if (!filename.endsWith(".json")){
@@ -657,6 +736,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	public void setSelectedEmployees(List<EPFEntity.EmployeeInfo> selectedEmployees) {
 		this.selectedEmployees = selectedEmployees;
+	}
+
+	public boolean isPostAI() {
+		return postAI;
+	}
+
+	public void setPostAI(boolean postAI) {
+		this.postAI = postAI;
 	}
 
 
@@ -854,6 +941,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			this.timeTakenMs = System.currentTimeMillis() - startTime;
 			this.rawContent = rawContent;
 			this.ocrType = ocrType;
+		}
+		
+		private JsonWrapper(AIApiResponse res){
+			this(res.getTimeTakenMs(), res.getJsonResponse(), res.getOcrType());
 		}
 	}
 	
@@ -1121,21 +1212,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)) {
 						continue;
 					}
+					value = value.trim();
 					switch (type) {
 					case "KWSP_number":
-						this.kwspNumber = value.trim();
+						this.kwspNumber = value;
 						break;
 					case "NRIC_number":
-						this.nricNumber = value.trim();
+						this.nricNumber = value;
 						break;
 					case "employee_name":
-						this.employeeName = value.trim();
+						this.employeeName = value;
 						break;
 					case "employee_contribution":
-						this.employeeContribution = value.trim();
+						this.employeeContribution = value;
 						break;
 					case "employer_contribution":
-						this.employerContribution = value.trim();
+						this.employerContribution = value;
 						break;
 					default:
 					}
@@ -1181,20 +1273,25 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 	}
 
-	private static class TenancyEntity {
-		private String agreementDate;
-		private String landlordsName;
-		private String monthlyRental;
-		private String premisesAddress;
-		private String rentalDuration;
-		private String tenantsName;
-		private String propertyType;
-		private String postcode;
-		private String country;
-		private String state;
-		private String district;
-		private String city;
-		private String normalizedAddress;
+	public static class TenancyEntity {
+		public String agreementDate;
+		public String landlordsName;
+		public BigDecimal monthlyRental;
+		public String premisesAddress;
+		public String rentalDuration;
+		public String tenantsName;
+		public String propertyType;
+		public String postcode;
+		public String country;
+		public String state;
+		public String district;
+		public String city;
+		public String normalizedAddress;
+		
+		public String codeState;
+		public String codeDistrict;
+		public String codeCity;
+		public PmCity pmCity;
 
 		public TenancyEntity(JSONArray entities) {
 			try {
@@ -1211,54 +1308,85 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
 						continue;
 					}
+					value = value.trim();
 					switch (type) {
 					case "agreement_date":
-						this.agreementDate = value.trim();
+						this.agreementDate = value;
 						break;
 					case "landlords_name":
-						this.landlordsName = value.trim();
+						this.landlordsName = value;
 						break;
 					case "monthly_rental":
-						this.monthlyRental = value.trim();
+						this.monthlyRental = new BigDecimal(value);
 						break;
 					case "premises_address":
-						this.premisesAddress = value.trim();
+						this.premisesAddress = value;
 						setAddress(entity.optJSONObject("addressComponents"));
 						break;
 					case "rental_duration":
-						this.rentalDuration = value.trim();
+						this.rentalDuration = value;
 						break;
 					case "tenants_name":
-						this.tenantsName = value.trim();
+						this.tenantsName = value;
 						break;
 					case "property_type":
-						this.propertyType = value.trim();
+						this.propertyType = value;
 						break;
 					default:
 					}
 				}
-			} catch (JSONException e) {
+			} catch (JSONException | NumberFormatException e) {
 				log.error("Error TenancyEntity", e);
 			}
 		}
 		
-		public void setAddress(JSONObject addressComponents){
-			if (addressComponents != null) {
-				this.postcode = addressComponents.optString("postcode", "").trim();
-				this.country = addressComponents.optString("country", "").trim();
-				this.state = addressComponents.optString("state", "").trim();
-				this.district = addressComponents.optString("district", "").trim();
-				this.city = addressComponents.optString("city", "").trim();
-				this.normalizedAddress = addressComponents.optString("normalized_Address", "").trim();
+		public void setAddress(JSONObject addr){
+			if (addr != null) {
+				this.postcode = addr.optString("postcode", "").trim();
+				this.country = addr.optString("country", "").trim();
+				this.state = addr.optString("state", "").trim();
+				this.district = addr.optString("district", "").trim();
+				this.city = addr.optString("city", "").trim();
+				String fullAddr = addr.optString("normalized_Address", "").trim();
+				this.normalizedAddress = truncateAddressAtPostcode(fullAddr, this.postcode);
+				this.codeState = addr.optString("state_code", "").trim();
+				this.codeDistrict = addr.optString("district_code", "").trim();
+				this.codeCity = addr.optString("city_code", "").trim();
 			}
+			if (!StringUtils.isEmpty(codeCity)){
+				this.pmCity = SmServiceLookup.getCitySO().getCityByCode(codeCity).getPmCity();
+			}
+			
 		}
+		
+        /**
+         * Truncates the address string at the first occurrence of the postcode.
+         * @param normalizedAddress
+         * @param postcode the postcode
+         * @return the truncated address
+         */
+		private String truncateAddressAtPostcode(String normalizedAddress, String postcode) {
+			if (StringUtils.isEmpty(normalizedAddress) || StringUtils.isEmpty(postcode)) {
+				return normalizedAddress;
+    		}
+			int postcodeIndex = normalizedAddress.indexOf(postcode);
+			if (postcodeIndex == -1) {
+				return normalizedAddress;
+			}
+			String truncated = normalizedAddress.substring(0, postcodeIndex).trim();
+			return truncated.replaceAll(",\\s*$", "").trim();
+        }
 
-		public String getLandlordsName() {
-			return landlordsName;
+		public String getLandlordsName(){
+			return this.landlordsName;
 		}
-
-		public String getMonthlyRental() {
-			return monthlyRental;
+		
+		public BigDecimal getMonthlyRental(){
+			return this.monthlyRental;
+		}
+		
+		public String getPremisesAddress(){
+			return this.premisesAddress;
 		}
 	}
 }

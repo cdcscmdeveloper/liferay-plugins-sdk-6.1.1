@@ -14,118 +14,126 @@
 		<cc:attribute name="showBtn" default="true" />
 		<cc:attribute name="smAppl" type="my.ep.persistence.entity.sm.SmAppl" default="#{null}"/>
 		<cc:attribute name="updateId" default=""/>
-		<cc:attribute name="postProcess" default=""/>
 	</cc:interface>
 
 	<cc:implementation>
 		<ui:param name="ai" value="#{smAIDocBackingBean}" />
-		<p:remoteCommand name="resetDoc" action="#{ai.clearDocs()}" update="docs#{cc.attrs.aiDlg}"/>
+		<p:remoteCommand name="resetDoc" action="#{ai.resetDoc()}" update="#{cc.attrs.aiDlg}"/>
 		
-		<p:blockUI block=":form" widgetVar="block#{cc.attrs.aiDlg}">
+		<p:blockUI block="#{cc.attrs.aiDlg}" widgetVar="block#{cc.attrs.aiDlg}">
 			<p:outputPanel style="display: flex; flex-direction: column;align-items: center;">
-				<p:outputLabel value="AI Processing In-Progress..."/>
+				<p:outputLabel value="#{lbl['lbl.sm.ai.load']}..."/>
 				<p:spacer width="10" />
 				<p:graphicImage value="/css/images/ai/load.gif"/>
 			</p:outputPanel>
 		</p:blockUI>
 	
 		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
-			dynamic="true" resizable="false" width="500px" 
-			styleClass="pop_up_top" header="#{lbl['lbl.sm.sme.action.choose']}"
-			onShow="resetDoc(); singleUploadListener(uploadWV);"
-			onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;">
-			
+			dynamic="true" resizable="false" width="700px"
+			styleClass="pop_up_top" header="#{lbl['lbl.btn.upload.doc']}">
+			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
+
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
 			
 			<h:outputText value="#{lbl['lbl.sm.instruction.attachment']}" styleClass="instruction" escape="false" />
-			<h:outputText value="#{lbl['lbl.sm.suppDoc.online.multipleDoc']}" styleClass="instruction" />
-			<br/>
+
+			<h:outputText value="#{lbl['lbl.sm.ai.epf.instruction']}" rendered="#{cc.attrs.docType eq 'epf'}" />
+			<br/><br/>
 			<p:dataTable id="docs#{cc.attrs.aiDlg}" var="doc" value="#{ai.getDocs()}" emptyMessage="">
-				<p:column headerText="Uploaded Files">
+				<p:column headerText="#{lbl['lbl.sm.sme.supp.doc.name']}">
 					<h:commandLink id="file" value="#{doc.fileName}" >
             			<p:fileDownload value="#{ai.commonDownload(doc.filePath, doc.fileName)}" />
         			</h:commandLink>
 				</p:column>
-				<p:column>
+				<p:column style="width:5%;text-align:center;">
 					<p:commandLink action="#{ai.deleteDoc(doc)}" update="docs#{cc.attrs.aiDlg}">
 						<p:graphicImage value="/css/images/design/trash.png" />
-					</p:commandLink> 
+					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 			<br/>
 			
-			<!-- allowTypes="/(\.|\/)(pdf|doc|docx)$/" -->
-			<p:fileUpload widgetVar="uploadWV" 
+			<!-- temp, allowTypes buang json -->
+			<p:fileUpload mode="advanced"
 				allowTypes="/(\.|\/)(pdf|doc|docx|json)$/"
 				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
 				invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 				fileUploadListener="#{ai.handleSupDocFileAttachment}"
-				update="docs#{cc.attrs.aiDlg}"
-				uploadLabel="#{lbl['lbl.btn.upload']}"  
-				label="#{lbl['lbl.btn.addfile']}" 
-				cancelLabel="#{lbl['lbl.btn.cancel']}"
-				multiple="true"
-				showButtons="false"/>
-			
-			<p:spacer height="1" />
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.bpm.process']}" 
-					action="#{ai.processDoc(cc.attrs.docType, cc.attrs.smAppl)}"
-					onstart="#{cc.attrs.aiDlg}.hide(); block#{cc.attrs.aiDlg}.show()" 
-					oncomplete="block#{cc.attrs.aiDlg}.hide();if (args.success) ok#{cc.attrs.aiDlg}.show();"
-					update="ok#{cc.attrs.aiDlg}"/>
-				<p:commandButton value="#{lbl['lbl.btn.close']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
-			</div>
-		</p:dialog>
-		
-		<p:dialog id="ok#{cc.attrs.aiDlg}" widgetVar="ok#{cc.attrs.aiDlg}" modal="true" styleClass="confirm-ui-dialog"
-			resizable="false" closable="false"
-			width="#{cc.attrs.docType eq 'epf' ? 700 : 400}" 
-			height="#{cc.attrs.docType eq 'epf' ? 600 : 100}" 
-			header="#{lbl['lbl.sm.projDtls.success']}">
-			<table width="100%">
-				<tr>
-					<td align="left" style="white-space: normal; word-wrap: break-word !important;">
-					<p:outputLabel value="AI has successfully extracted the data. Click 'OK' to accept and populate into the fields, or click 'No' to cancel." 
-						escape="false" style="padding-left:0px"
-						rendered="#{cc.attrs.docType != 'epf'}"/>
-					<p:outputLabel value="AI has successfully extracted the data. Please select the personnel and click 'OK' to accept and populate into the fields, or click 'No' to cancel." 
-						escape="false" style="padding-left:0px"
-						rendered="#{cc.attrs.docType eq 'epf'}"/>
-					</td>
-				</tr>
-			</table>
-			<p:outputPanel rendered="#{cc.attrs.docType eq 'epf'}" style="width:100%;height:300px;overflow:auto;" >
-				<p:spacer height="1" />
-				<p:dataTable id="dt#{cc.attrs.aiDlg}" var="emp" value="#{ai.getEmployees()}" rowKey="#{emp}"
-					selection="#{ai.selectedEmployees}" >
-					<ac:paginator for="dt#{cc.attrs.aiDlg}" />
-					<p:column selectionMode="multiple" style="width:2%" />
-					<p:column headerText="#{lbl['lbl.sm.person.name']}">
-						<h:outputText value="#{emp.employeeName}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.person.icNo']}">
-						<h:outputText value="#{emp.nricNumber}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.person.epfNo']}">
-						<h:outputText value="#{emp.kwspNumber}" />
-					</p:column>
-				</p:dataTable>
+				update="docs#{cc.attrs.aiDlg} result#{cc.attrs.aiDlg}"
+				auto="true"
+				label="#{lbl['lbl.txt.upload']}"
+				dragDropSupport="false"
+				multiple="false"
+				showButtons="false"
+				onstart="block#{cc.attrs.aiDlg}.show()"
+				oncomplete="block#{cc.attrs.aiDlg}.hide();"/>
+
+			<p:spacer height="10" />
+			<hr style="border: 0; border-top: 1px solid #ddd;" />
+			<p:spacer height="10" />
+
+			<p:outputPanel id="result#{cc.attrs.aiDlg}">
+				
+				<p:outputPanel rendered="#{ai.postAI and cc.attrs.docType eq 'epf'}">
+					<h:outputText value="Extracted Employees" styleClass="instruction" />
+					<br/>
+					<h:outputText value="#{lbl['lbl.sm.ai.epf.select']}" />
+					<p:spacer height="5" />
+
+					<p:dataTable id="dt#{cc.attrs.aiDlg}" var="emp" value="#{ai.getEmployees()}" rowKey="#{emp}"
+						selection="#{ai.selectedEmployees}"
+						style="width:100%">
+						<p:column selectionMode="multiple" style="width:5%" />
+						<p:column headerText="#{lbl['lbl.sm.person.name']}">
+							<h:outputText value="#{emp.employeeName}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.icNo']}">
+							<h:outputText value="#{emp.nricNumber}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.epfNo']}">
+							<h:outputText value="#{emp.kwspNumber}" />
+						</p:column>
+					</p:dataTable>
+				</p:outputPanel>
+
+                <!-- tenancy -->
+				<p:outputPanel rendered="#{ai.postAI and cc.attrs.docType eq 'tenancy'}">
+					<h:outputText value="Extracted Tenancy Details" styleClass="instruction" />
+					<br/><br/>
+					<h:outputText value="#{lbl['lbl.sm.facility.landLordName']}: " style="font-weight:bold;" />
+					<h:outputText value="#{ai.tenancy.landlordsName}" />
+					<br/>
+					<h:outputText value="#{lbl['lbl.sm.facility.monthRent']}: " style="font-weight:bold;" />
+					<h:outputText value="#{ai.tenancy.monthlyRental}" />
+					<br/>
+					<h:outputText value="#{lbl['lbl.sm.facility.company.address']}: " style="font-weight:bold;" />
+					<h:outputText value="#{ai.tenancy.premisesAddress}" />
+				</p:outputPanel>
+
+                <!-- others -->
+                <p:outputPanel rendered="#{ai.postAI and cc.attrs.docType != 'epf' and cc.attrs.docType != 'tenancy'}">
+					<p:spacer height="10" />
+					<h:outputText value="lbl.sm.ai.success" />
+				</p:outputPanel>
 			</p:outputPanel>
-			
-			<p:spacer height="1" />
+
+			<p:spacer height="10" />
 			<div class="ppRightBtn">
-				<p:commandButton value="OK-1" onclick="ok#{cc.attrs.aiDlg}.hide();" 
-					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl, cc.attrs.postProcess)}"
-					rendered="#{empty cc.attrs.updateId}"/>
-				<p:commandButton value="OK-2" onclick="ok#{cc.attrs.aiDlg}.hide();" 
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
+					rendered="#{empty cc.attrs.updateId}"
+					onclick="#{cc.attrs.aiDlg}.hide();"/>
+					
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
 					update=":#{p:component(cc.attrs.updateId)}"
-					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl, cc.attrs.postProcess)}"
 					rendered="#{not empty cc.attrs.updateId}"
-					onstart="block#{cc.attrs.aiDlg}.show()" 
+					onclick="#{cc.attrs.aiDlg}.hide();"
+					onstart="block#{cc.attrs.aiDlg}.show()"
 					oncomplete="block#{cc.attrs.aiDlg}.hide();"/>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="ok#{cc.attrs.aiDlg}.hide();"/>
+					
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
 			</div>
 		</p:dialog>
 	</cc:implementation>

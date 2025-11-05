@@ -6882,10 +6882,12 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 
 		} catch (Exception e) {
 			Long qtId = this.getManagedBean().getQt().getQtId();
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SP_DETAIL_BACKINGBEAN,
 					String.valueOf(qtId),
-					SLALogConstant.RETRIEVE_PROPOSAL_COMPANY_EXP_DETAILS,
+					SLALogConstant.RETRIEVE_PROPOSAL_COMPANY_EXP_DETAILS
+							.concat(SLALogConstant.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 		return null;

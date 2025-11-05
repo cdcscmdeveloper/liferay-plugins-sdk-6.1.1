@@ -2270,6 +2270,14 @@ public class QTCommitteBackingBean extends
 							.getScCommitteeMembers())) {
 					
 						String committeeType = committee.getCommitteeType().getParameterCode();
+						
+						// #35320 - Set QCA, QCB to QQC - Start						
+						if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+								|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
+							committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+						}						
+						// #35320 - End	
+						
 						committeeType=retrieveCommitteeDescription(committeeType,new FacesScopes().getUserLocale());
 						isChairpersonRequired(committee.getScCommitteeMembers(),committeeType);
 						isSecretaryRequired(committee.getScCommitteeMembers(),committeeType);
@@ -2585,10 +2593,13 @@ public class QTCommitteBackingBean extends
 			return;
 		}
 		
-		Long changedRoleId = member.getMemberRoleId();		
-		Long previousRoleId = member.getMemberRole().getParameterId() != null ? member.getMemberRole().getParameterId() : null;
-		String changedRole = getRoleString(changedRoleId);
-		String previousRole = getRoleString(previousRoleId);
+		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
+		String changedRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, changedRolePmParameter.getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		String previousRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
+				SourcingConstants.MY_LOCALE);
 		
 		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
 				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
@@ -2621,26 +2632,6 @@ public class QTCommitteBackingBean extends
 		
 		super.roleChangedListener(member);	
 		setQtMaintencesChanges();
-	}
-	
-	/**
-	 * #35500 issue fix 4-9
-	 * Method to get the role name for audit trail
-	 * @param roleId
-	 * @return
-	 */
-	public String getRoleString(Long roleId){
-		String roleName = null;
-		if(roleId != null){
-			if(roleId == 380){
-				roleName = "Member";
-			}else if(roleId == 379){
-				roleName = "Secretary";
-			}else if(roleId == 378){
-				roleName = "Chairperson";
-			}
-		}
-		return roleName;
 	}
 	
 	/**
