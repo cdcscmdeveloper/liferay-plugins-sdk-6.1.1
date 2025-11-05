@@ -19977,7 +19977,7 @@ private void retriveCommitteeRemarksList(){
 	}
 
 	// 29661 -end-
-
+	
 	//#38151 Start
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -19990,6 +19990,7 @@ private void retriveCommitteeRemarksList(){
 			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
 			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
 			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
 
 			Date effDate = appVerDtls.getEffDate();
