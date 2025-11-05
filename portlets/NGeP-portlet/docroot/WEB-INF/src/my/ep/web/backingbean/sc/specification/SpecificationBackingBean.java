@@ -11774,9 +11774,9 @@ if (null != checklist && !checklist.isEmpty()) {
 			scoreSetting.add(technicalScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 // #21695 farid, if partial set weightage to false		
-			if (this.getManagedBean().getQt().isPartial() == true){
-				this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
-			}
+//			if (this.getManagedBean().getQt().isPartial() == true){
+//				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
+//			} // #38679 remove,based on new requirement. Financial are only using weightage.
 		}
 		ScQtScoreSetting financialScoreSetting = this.getManagedBean()
 				.getFinancialScoreSetting();
@@ -24961,7 +24961,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
 					String.valueOf(qtId),
 					SLALogConstant.FETCH_CHECKLIST_VALUE_SCORE
-							.concat(SLALogConstant.COMP_EXP_ERROR),
+							.concat(SourcingConstants.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 		return checkList;
