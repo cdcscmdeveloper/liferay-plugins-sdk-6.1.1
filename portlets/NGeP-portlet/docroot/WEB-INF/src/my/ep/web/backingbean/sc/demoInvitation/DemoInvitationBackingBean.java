@@ -1103,6 +1103,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 		if (resDto.isSuccessful()) {
 			resDto = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
+			validateDemoDuplicate(reqDto, resDto.getScQtDemo(), qtDemoSO);
 			this.getManagedBean().setScQtDemo(resDto.getScQtDemo());
 			this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
 			
