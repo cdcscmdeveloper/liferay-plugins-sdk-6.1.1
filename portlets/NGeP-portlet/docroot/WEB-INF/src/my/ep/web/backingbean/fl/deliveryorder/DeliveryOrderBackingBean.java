@@ -53,6 +53,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.AuditFLConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -1283,7 +1284,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			//#26191-end
 			// 36361-Start
 			if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				validateDelQtySaved();
+			    validateDelQtySaved();
+			    
+			    validateDeliveryAgainstLimit();//30753
 			}
 			// 36361-End
 		}
@@ -1946,4 +1949,181 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 	}
 	//38009-End
+	
+	// 30753-Start
+	/**
+	 * Check if total delivery amount exceeds the allowed limit
+	 * 
+	 */
+	private void validateDeliveryAgainstLimit() {
+		if (getManagedBean().getFulfilmentOrder() != null
+				&& getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest() != null) {
+			FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
+			if (order.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+				validateContractOrderLimit();
+			} else {
+				validatePurchaseOrderLimit();
+			}
+		}
+
+	}
+
+	/**
+	 * Validates that total delivery does not exceed the contract order limit.
+	 * Shows a warning message if the threshold is exceeded.
+	 */
+	private void validateContractOrderLimit() {
+		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
+		FulfilmentResDTO resDTOLimit = retrieveCOLimitAmount(order.getFlFulfilmentRequest().getFulfilmentReqId());
+
+		if (resDTOLimit == null) {
+			return;
+		}
+
+		BigDecimal limitAmount = resDTOLimit.getLimitAmount() != null ? resDTOLimit.getLimitAmount() : BigDecimal.ZERO;
+
+		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
+				.getFulfilmentRequest().getCtContract().getContractId() : null;
+
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setContractId(contractId);
+		BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTO);
+
+		if (resDTOLimit.isContractSharing() && limitAmount.compareTo(BigDecimal.ZERO) > 0
+				&& totalDeliveryAmount.compareTo(limitAmount) > 0) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_745095, new String[] { order.getFlFulfilmentRequest()
+									.getPreparedOrgProfile().getOrgName() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							getFacesScopes().getUserLocale())));
+		} else if (limitAmount.compareTo(BigDecimal.ZERO) > 0 && totalDeliveryAmount.compareTo(limitAmount) > 0) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_745094, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
+									.getUserLocale())));
+		}
+
+	}
+
+	/**
+	 * Validates total delivery amount exceeds its allowed limit. Shows a
+	 * warning message if the threshold is exceeded.
+	 */
+	private void validatePurchaseOrderLimit() {
+		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
+		Long fulfilmentReqId = order.getFlFulfilmentRequest().getFulfilmentReqId();
+
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(fulfilmentReqId);
+		BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTO);
+
+		FulfilmentResDTO resDTOPO = validatePOThresholdAmount(fulfilmentReqId, totalDeliveryAmount);
+		BigDecimal limitAmount = resDTOPO.getLimitAmount();
+		String procurementType = resDTOPO.getProcurementType();
+		Long supplierTypeId = resDTOPO.getSupplierTypeId();
+		boolean isPanel = resDTOPO.isPanel();
+		boolean isExceedLimit = resDTOPO.isExceedLimit();
+
+		if (!isPanel && supplierTypeId != null) {// for non-panel
+			String suppAccCode = (supplierTypeId == FulfilmentConst.ACC_TYPE_ID_BASIC) ? FulfilmentConst.SM_SUPP_ACC_CODE_BASIC
+					: FulfilmentConst.SM_SUPP_ACC_CODE_MOF;
+
+			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, suppAccCode);
+
+			if (isExceedLimit) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_745093, new String[] { limitAmount.toString(), procurementType,
+										suppAccTypeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+		} else {// for panel and special item/pk7
+			if (isExceedLimit) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_745092, new String[] { limitAmount.toString(), procurementType },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+		}
+	}
+	
+	/**
+	 * Calculates total delivery amount (accumulated + current)
+	 * 
+	 * @param reqDTO
+	 * @return accumulatedDelivery.add(currentDelivery)
+	 */
+	private BigDecimal calculateTotalDeliveryAmount(FulfilmentReqDTO reqDTO) {
+
+		FlFulfilmentRequest flRequest = getManagedBean().getFulfilmentRequest();
+		BigDecimal accumulatedDelivery = BigDecimal.ZERO;
+
+		// Accumulated amount
+		IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+
+		FulfilmentResDTO resDTODelAmt = deliveryOrderSO.retrieveTotalAccumulatedDelAmount(reqDTO);
+		if (resDTODelAmt != null && resDTODelAmt.getTotalAccumulatedDelOrderAmount() != null) {
+			accumulatedDelivery = resDTODelAmt.getTotalAccumulatedDelOrderAmount();
+		}
+
+		// current transaction
+		BigDecimal currentDelivery = calculateCurrentDelivery(flRequest);
+
+		return accumulatedDelivery.add(currentDelivery);
+
+	}
+	
+	/**
+	 * Calculates the current transaction delivery amount based on selected
+	 * delivery addresses.
+	 * 
+	 * @param flRequest
+	 * @return currentDelivery
+	 */
+	private BigDecimal calculateCurrentDelivery(FlFulfilmentRequest flRequest) {
+		BigDecimal currentDelivery = BigDecimal.ZERO;
+
+		List<FlDeliveryAddress> deliveryAddresses = flRequest.getFlDeliveryAddresses();
+		if (deliveryAddresses != null && !deliveryAddresses.isEmpty()) {
+			for (FlDeliveryAddress flDeliveryAddress : deliveryAddresses) {
+				if (flDeliveryAddress.getFlTempDoAddr() != null && flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+					currentDelivery = currentDelivery.add(calDelAmtForSelectedAddr(flDeliveryAddress));
+				}
+			}
+		}
+
+		return currentDelivery;
+	}
+	
+	/**
+	 * Calculates delivery amount for selected delivery address.
+	 * 
+	 * @param address
+	 * @return total
+	 */
+	private BigDecimal calDelAmtForSelectedAddr(FlDeliveryAddress address) {
+		BigDecimal total = BigDecimal.ZERO;
+
+		List<FlFulfilmentItemAddr> itemAddresses = address.getFlFulfilmentItemAddr();
+		if (itemAddresses == null || itemAddresses.isEmpty()) {
+			return total;
+		}
+
+		for (FlFulfilmentItemAddr item : itemAddresses) {
+			BigDecimal deliveredAmt = item.getDeliveredAmt();
+			if (deliveredAmt != null && deliveredAmt.compareTo(BigDecimal.ZERO) > 0) {
+				total = total.add(deliveredAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,
+						RoundingMode.HALF_UP));
+			}
+		}
+
+		return total;
+	}
+	
+	// 30753-End
 }

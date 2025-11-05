@@ -179,6 +179,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
+			//30753-Start
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)||action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {	
+				validateReceivedNoteAgainstLimit();
+			}
+			//30753-End
 			if(!getManagedBean().isValidated()){
 				validateFulfilmentNote(action);
 			}
@@ -1990,4 +1995,158 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	// 36247-end
+	
+	// 30753-Start
+	/**
+	 * Check if total delivery amount exceeds the allowed limit for Contract
+	 * Order or Purchase Order, and show info message if exceeded.
+	 */
+	private void validateReceivedNoteAgainstLimit() {
+		FlFulfilmentOrder order = null;
+
+		if (getManagedBean().getFulfilmentNote() != null && getManagedBean().getFulfilmentNote().getFlRequest() != null) {
+			order = getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder();
+		}
+
+		if (order != null && order.getDocType() != null
+				&& order.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+			validateContractOrderLimit();
+		} else {
+			validatePurchaseOrderLimit();
+		}
+	}
+	
+	/**
+	 * Checks if a Contract Order delivery amount exceeds its limit and shows a
+	 * warning message if the threshold is breached.
+	 */
+	private void validateContractOrderLimit() {
+		FlFulfilmentNote flNote = getManagedBean().getFulfilmentNote();
+		FulfilmentResDTO resDTOLimit = retrieveCOLimitAmount(flNote.getFlRequest().getFulfilmentReqId());
+
+		if (resDTOLimit != null && resDTOLimit.getLimitAmount() != null) {
+			BigDecimal limitAmount = resDTOLimit.getLimitAmount();
+			boolean isContractSharing = resDTOLimit.isContractSharing();
+
+			Long contractId = flNote.getFlRequest().getCtContract() != null ? flNote.getFlRequest().getCtContract()
+					.getContractId() : null;
+
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setContractId(contractId);
+
+			if (getManagedBean().getFulfilmentNote() != null
+					&& getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
+				reqDTO.setRequestNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
+			} else {
+				reqDTO.setRequestNoteId(null);
+			}
+
+			BigDecimal totalReceivedAmount = getTotalReceivedAmount(reqDTO);
+
+			checkLimitExceeded(isContractSharing, flNote, limitAmount, totalReceivedAmount);
+		}
+
+	}
+	
+	/**
+	 * Validates whether the total delivery amount exceeds the defined contract
+	 * limit.
+	 * 
+	 * @param isContractSharing
+	 * @param flNote
+	 * @param limitAmount
+	 * @param totalReceivedAmount
+	 * @throws EpException
+	 *             if the total delivery exceeds the allowed limit
+	 */
+	private void checkLimitExceeded(Boolean isContractSharing, FlFulfilmentNote flNote, BigDecimal limitAmount,
+			BigDecimal totalReceivedAmount) {
+
+		if (isContractSharing && limitAmount.compareTo(BigDecimal.ZERO) > 0
+				&& totalReceivedAmount.compareTo(limitAmount) > 0) {
+			throw new EpException(MessageConst.ERROR_745099, new String[] { flNote.getFlRequest()
+					.getPreparedOrgProfile().getOrgName() });
+		} else if (limitAmount.compareTo(BigDecimal.ZERO) > 0 && totalReceivedAmount.compareTo(limitAmount) > 0) {
+			throw new EpException(MessageConst.ERROR_745098);
+		}
+	}
+
+	/**
+	 * Checks if a Purchase Order delivery amount exceeds its limit and shows a
+	 * warning message if the threshold is breached.
+	 */
+	private void validatePurchaseOrderLimit() {
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+
+		if (getManagedBean().getFulfilmentNote() != null
+				&& getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
+			reqDTO.setRequestNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
+		} else {
+			reqDTO.setRequestNoteId(null);
+		}
+
+		BigDecimal totalDeliveryAmount = getTotalReceivedAmount(reqDTO);
+
+		FulfilmentResDTO resDTO = validatePOThresholdAmount(getManagedBean().getFulfilmentNote().getFlRequest()
+				.getFulfilmentReqId(), totalDeliveryAmount);
+		BigDecimal limitAmount = resDTO.getLimitAmount();
+		String procurementType = resDTO.getProcurementType();
+		Long supplierTypeId = resDTO.getSupplierTypeId();
+		boolean isPanel = resDTO.isPanel();
+		boolean isExceedLimit = resDTO.isExceedLimit();
+
+		if (!isPanel && supplierTypeId != null) {
+			String suppAccCode = (supplierTypeId == FulfilmentConst.ACC_TYPE_ID_BASIC) ? FulfilmentConst.SM_SUPP_ACC_CODE_BASIC
+					: FulfilmentConst.SM_SUPP_ACC_CODE_MOF;
+
+			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, suppAccCode);
+
+			if (isExceedLimit) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_745097, new String[] { limitAmount.toString(), procurementType,
+										suppAccTypeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+		} else {
+			if (isExceedLimit) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_745096, new String[] { limitAmount.toString(), procurementType },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+		}
+	}
+	
+	
+	/**
+	 * Retrieves the total Received amount
+	 * 
+	 * @param reqDTO
+	 * @return sumReceivedAmt
+	 */
+	private BigDecimal getTotalReceivedAmount(FulfilmentReqDTO reqDTO){
+		IReceivedNoteSO receivedNoteSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+
+		BigDecimal sumReceivedAmt = BigDecimal.ZERO;
+		BigDecimal frnReceivedAmt = BigDecimal.ZERO;
+
+		// get accumulative FRN exclude this FRn amount (to avoid duplicate if frn newBrand)
+		FulfilmentResDTO resDTOsum = receivedNoteSO.retriveAccumulatedReceivedAmt(reqDTO);
+		sumReceivedAmt = resDTOsum.getAccumulativeProcuValue();
+
+		// get this FRN amount
+		for (FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
+			frnReceivedAmt = frnReceivedAmt.add(noteItem.getReceivedAmt());
+		}
+		sumReceivedAmt = sumReceivedAmt.add(frnReceivedAmt);
+
+		return sumReceivedAmt;
+
+	}
+	//30753-End
 }
