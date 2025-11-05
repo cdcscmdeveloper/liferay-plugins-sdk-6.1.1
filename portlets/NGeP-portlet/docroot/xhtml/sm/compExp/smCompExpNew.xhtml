@@ -33,7 +33,8 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:selectOneRadio id="clientType"
+					<td style="width: 66%; display: flex; align-items: center;"><p:selectOneRadio
+							id="clientType"
 							label="#{lbl['lbl.sm.comp.exp.update.project.for']}"
 							value="#{smCompExpMB.newMaster.clientType}">
 							<p:ajax event="change" oncomplete="blockWidget.hide()"
@@ -60,6 +61,7 @@
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
 					<td style="width: 66%"><p:inputText id="agencyName" size="60"
+							style="width: auto !important;"
 							readonly="#{smCompExpMB.newMaster.clientType eq null or smCompExpMB.newMaster.clientType eq ParameterConst.clientTypeFederal}"
 							value="#{smCompExpMB.newMaster.agencyName}" /> <p:outputPanel
 							rendered="#{smCompExpMB.newMaster.clientType eq ParameterConst.clientTypeFederal}">
@@ -95,7 +97,7 @@
 								update="fileReferenceNo" />
 						</p:inputText> <p:spacer width="3px" /> <p:inputText id="fileExtensionNo"
 							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
-							maxlength="3" size="3"
+							maxlength="3" size="3" style="width: auto !important;"
 							value="#{smCompExpMB.newMaster.fileExtensionNo}">
 							<p:ajax event="blur"
 								listener="#{smCompExpBB.trimFileExtensionNo}"
@@ -120,14 +122,17 @@
 							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
 					<td style="width: 66%"><p:inputTextarea cols="100"
-							maxlength="1000" value="#{smCompExpMB.newMaster.title}" /></td>
+							style="width: auto !important;" maxlength="1000"
+							value="#{smCompExpMB.newMaster.title}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputText label="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
+					<td style="width: 66%"><p:inputText
+							style="width: auto !important;"
+							label="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
 							value="#{smCompExpMB.newMaster.contractValue}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -240,7 +245,8 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
+						<td style="width: 66%"><p:inputText
+								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
 								value="#{smCompExpMB.newMaster.consultantFee}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -268,9 +274,10 @@
 							update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}" />
 					</p:selectBooleanCheckbox>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+				<p:column style="width:34% !important;"
+					headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 					<h:outputText styleClass="mandatory" value="*" />
-					<p:selectOneMenu id="mainDDId"
+					<p:selectOneMenu id="mainDDId" style="width:95% !important;"
 						label="#{lbl['lbl.sm.projDtls.mainCat']}"
 						value="#{smCompExpCatCode.categoryL1.categoryL1Id}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -282,9 +289,10 @@
 							listener="#{smCompExpBB.getSupplierSubCatList(smCompExpCatCode.categoryL1.categoryL1Id, index)}" />
 					</p:selectOneMenu>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+				<p:column style="width:32% !important;"
+					headerText="#{lbl['lbl.sm.projDtls.subCat']}">
 					<h:outputText styleClass="mandatory" value="*" />
-					<p:selectOneMenu id="subDDId"
+					<p:selectOneMenu id="subDDId" style="width:95% !important;"
 						label="#{lbl['lbl.sm.projDtls.subCat']}"
 						value="#{smCompExpCatCode.categoryL2.categoryL2Id}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -296,9 +304,10 @@
 							listener="#{smCompExpBB.getSupplierSubDivCatList(smCompExpCatCode.categoryL2.categoryL2Id, index)}" />
 					</p:selectOneMenu>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+				<p:column style="width:32% !important;"
+					headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 					<h:outputText styleClass="mandatory" value="*" />
-					<p:selectOneMenu id="subDivDDId"
+					<p:selectOneMenu id="subDivDDId" style="width:95% !important;"
 						label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 						value="#{smCompExpCatCode.categoryL3.categoryL3Id}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -439,7 +448,8 @@
 				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate.ref.no']}"
 				escape="false" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.comp.exp.master.popup.btn.ok']}"
+				<p:commandButton
+					value="#{lbl['lbl.sm.comp.exp.master.popup.btn.ok']}"
 					onclick="delDuplicateDialogWV.hide();" />
 			</div>
 		</p:dialog>
