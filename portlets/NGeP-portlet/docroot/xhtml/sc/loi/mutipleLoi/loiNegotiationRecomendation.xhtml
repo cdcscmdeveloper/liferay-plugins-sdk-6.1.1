@@ -734,8 +734,7 @@
 								<p:dataList var="recommendedSupplDis"
 									value="#{item.notAwardSupplierList}" type="none"
 									rendered="#{!isPendingNegotiationStatus}" rowIndexVar="index">
-									<p:column
-										rendered="#{recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
+									<p:column>
 										<ac:disciplinaryActionYesNo
 											supplier="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
 											index="#{rowIndex}" childIndex="#{index}"/>
