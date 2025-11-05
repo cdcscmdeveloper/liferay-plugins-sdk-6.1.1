@@ -215,8 +215,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("paymentBpmPojo>>>>>" + paymentBpmPojo);
 		log.info("appl>>>>>>>>>>>" + appl);
 		
-		printResponseData(httpServletRequest);
-		
 		if(paymentTaskId != null && paymentBpmPojo != null &&  appl != null){
 			responsePreRender(paymentTaskId, paymentBpmPojo, appl);
 			responseRedirect();
@@ -1140,9 +1138,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		// #32422 END
 
 		Map<String, String> reqMap = new HashMap<>();
-		reqMap.put("nbcb", nbcb);
-		reqMap.put("amount", amount);
-		reqMap.put("orderId", orderId);
 
 		return reqMap;
 	}

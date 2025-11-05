@@ -24961,7 +24961,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
 					String.valueOf(qtId),
 					SLALogConstant.FETCH_CHECKLIST_VALUE_SCORE
-							.concat(SLALogConstant.COMP_EXP_ERROR),
+							.concat(SourcingConstants.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 		return checkList;
