@@ -554,6 +554,27 @@
 																				CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 								</h:outputText>
 							</p:column>
+							
+							<ui:param name="supplier"
+								value="#{supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+							<ui:param name="mofExpired"
+								value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+							<p:column styleClass="#{mofExpired ? 'red-background':''}">
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
+								</f:facet>
+								<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+							</p:column>
+						
+							<p:column style="white-space:normal;width:18%;">
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+								</f:facet>
+								<ac:disciplinaryActionYesNo
+									supplier="#{supplier}" index="#{rowIndex}"/>
+							</p:column>
+							
 							<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}"
 								style="text-align:center;">
 								<h:outputText
@@ -611,8 +632,7 @@
 								<p:dataList var="recommendedSupplDis"
 									value="#{item.notAwardSupplierList}" type="none"
 									rendered="#{!isPendingNegotiationStatus}">
-									<p:column
-										rendered="#{recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}">
+									<p:column>
 										<p:commandLink
 											oncomplete="suppDetailsPopup.show(); return false;"
 											disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
@@ -648,6 +668,50 @@
 										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}" />
 
 								</ui:repeat>
+							</p:column>
+							
+							<p:column styleClass="pl-0 pr-0">
+								<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
+								</f:facet>
+								<p:dataList var="recommendedSupplDis" value="#{item.notAwardSupplierList}" type="none">
+									<ui:param name="supplier" value="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+									<ui:param name="mofExpired"
+										value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+										<h:panelGroup rendered="#{isPendingNegotiationStatus or recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}"
+											layout="block" style="padding: 0 10px 0 10px" styleClass="#{mofExpired ? 'red-background':''}">
+											<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+											<h:outputText escape="false" value="&#60;br &#47;&#62;"/>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}"
+											layout="block" style="padding: 0 10px 0 10px" styleClass="#{mofExpired ? 'red-background':''}">
+											<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+											<h:outputText escape="false" value="&#60;br &#47;&#62;"/>
+										</h:panelGroup>
+								</p:dataList>
+							</p:column>
+							
+							<p:column style="white-space:normal;width:18%;">
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+								</f:facet>
+								<p:dataList var="recommendedSupplDis"
+									value="#{item.notAwardSupplierList}" type="none"
+									rendered="#{isPendingNegotiationStatus}" rowIndexVar="index">
+									<ac:disciplinaryActionYesNo
+										supplier="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{rowIndex}" childIndex="#{index}"/>
+								</p:dataList>
+								<p:dataList var="recommendedSupplDis"
+									value="#{item.notAwardSupplierList}" type="none"
+									rendered="#{!isPendingNegotiationStatus}" rowIndexVar="index">
+									<p:column
+										rendered="#{recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
+										<ac:disciplinaryActionYesNo
+											supplier="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+											index="#{rowIndex}" childIndex="#{index}"/>
+									</p:column>
+								</p:dataList>  
 							</p:column>
 							
 							<p:column headerText="#{lbl['lbl.sc.price.type']}">
