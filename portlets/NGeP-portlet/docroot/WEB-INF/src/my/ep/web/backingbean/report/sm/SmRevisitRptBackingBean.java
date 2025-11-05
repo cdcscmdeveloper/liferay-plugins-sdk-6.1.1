@@ -12,6 +12,11 @@ import my.ep.constants.CommonConstants;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SmRevisitRptManagedBean;
+//#39435 Start
+import my.ep.web.constant.sm.SupplierManagementConst;
+import org.apache.commons.lang.StringUtils;
+import org.primefaces.context.RequestContext;
+//#39435 End
 
 /**
  * @author firdaus.omar 
@@ -60,4 +65,41 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 		this.getManagedBean().setVisitDateFrom(fromVisitDate.getTime());
 		this.getManagedBean().setVisitDateTo(new Date());
 	}
+	// #39435 Start
+	/**
+	 * Construct Site Visit Officer search condition.
+	 */
+	public String getConditionFieldsSVO() {
+		StringBuilder sb = new StringBuilder();
+
+		String role = "pmUserOrgs.pmUserRoles.pmRole.roleCode^";
+		sb.append(role + this.getManagedBean().getSvoRoleCode());
+
+		String searchZone = "|pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
+		String zone = getManagedBean().getZone();
+
+		if (StringUtils.isBlank(zone)) {
+			return sb.toString();
+		}
+
+		if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)) {
+			sb.append(searchZone + "1");
+		} else if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)) {
+			sb.append(searchZone + "2");
+		} else if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)) {
+			sb.append(searchZone + "3");
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * Zone change listener.
+	 */
+	public void onChangeZone() {
+		this.getManagedBean().setRevisitOfficer(null);
+		getConditionFieldsSVO();
+		RequestContext.getCurrentInstance().update(":form");
+	}
+	// #39435 End
 }
