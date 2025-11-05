@@ -25,7 +25,7 @@
 		</table>
 
 		<!-- 36738 Start -->
-		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
+		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
 			id="ruleTypeSearch" collapsed="true">
 			<h:panelGrid columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.rule.type']}" />
@@ -96,7 +96,7 @@
 					value="#{lbl['lbl.pm.ruleconfig.tooltip']}" />
 
 		<!-- 36738 Start -->
-		<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
+		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
 			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'C') or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC')}"
 			id="ruleTypeValueSearch" collapsed="true">
 
@@ -115,10 +115,10 @@
 					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeZone}" style="width:250px;"
 					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC'}">
 
-					<f:selectItem itemLabel="#{lbl['lbl.cm.selectOne']}" itemValue="" noSelectionOption="true" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}" itemValue="1" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sabah']}" itemValue="2" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}" itemValue="3" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" />
+					<f:selectItem itemLabel="#{lbl['lbl.pm.zone.semenanjung']}" itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.pm.zone.sabah']}" itemValue="2" />
+					<f:selectItem itemLabel="#{lbl['lbl.pm.zone.sarawak']}" itemValue="3" />
 				</p:selectOneMenu>
 
 				<h:outputLabel value="#{lbl['lbl.pm.as.effdate']}" />
