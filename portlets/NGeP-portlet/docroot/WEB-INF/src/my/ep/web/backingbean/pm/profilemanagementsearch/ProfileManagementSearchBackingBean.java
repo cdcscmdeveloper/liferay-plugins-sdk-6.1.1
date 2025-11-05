@@ -88,9 +88,13 @@ public class ProfileManagementSearchBackingBean extends
 			@Override
 			protected ISearchResultBean<Object[]> pageChangeListener(
 					ISearchBean<Object[]> searchBean) {
+				log.info("....pageChangeListener");
 				IAccessApplSO accessApplSO = null;
 				if (getManagedBean().getSelectedAppTypeParamCode() != null) {
 					try {
+//						ISearchBean<Object[]> searchBeanData = getSearchBeanData(searchBean);
+						log.info("....after getsearchbean");
+						log.info("....getProfileManagSearchBean().getAppStatusId()="+getManagedBean().getProfileManagSearchBean().getAppStatusId());
 						AccessApplReqDTO applReqDTO = new AccessApplReqDTO();
 						getManagedBean().fillRequestDTO(applReqDTO);
 						applReqDTO.setAccessApplSearch(searchBean);
@@ -107,15 +111,19 @@ public class ProfileManagementSearchBackingBean extends
 								.getServiceObject(
 										ModuleCodeConst.PROFILE_MANAGEMENT,
 										IAccessApplSO.class);
+						log.info("....efor call  getAccessApplListBySearchBean");
 						AccessApplResDTO resDto = accessApplSO
 								.getAccessApplListBySearchBean(applReqDTO);
+						log.info("....after call  getAccessApplListBySearchBean");
 						if (resDto != null && resDto.isSuccessful()) {
+							log.info("....pageChangeListener..resultt.end");
 							return resDto.getAppLResultBean();
 						}
 					} finally {
 						accessApplSO = null;
 					}
 				}
+				log.info("....pageChangeListener...end");
 				return null;
 			}
 		}
