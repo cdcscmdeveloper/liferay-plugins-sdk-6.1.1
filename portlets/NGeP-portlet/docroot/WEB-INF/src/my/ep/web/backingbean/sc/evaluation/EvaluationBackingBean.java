@@ -19718,7 +19718,7 @@ private void retriveCommitteeRemarksList(){
 					SLALogConstant.QT_EVALUATION_BACKINGBEAN,
 					String.valueOf(qtProposalCheckListId),
 					SLALogConstant.FETCH_COMPANY_EXP_PROPOSAL_CHECKLIST_SCORE
-							.concat(SLALogConstant.COMP_EXP_ERROR),
+							.concat(SourcingConstants.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
