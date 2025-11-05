@@ -78,6 +78,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	public static Logger log = Logger.getLogger(PaymentResponseBackingBean.class);
 	private final String molIpnUrl = EpPropertiesUtils.getInstance()
 			.getProperty("molpay.ipnurl");
+	private HttpServletRequest httpReq;
 
 	public PaymentResponseBackingBean(){
 		
@@ -1071,77 +1072,79 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		System.out.println("skey >>>>" + sKey);
 		System.out.println("key1>>>>>" + key1);
 	}*/
-	private void printResponseData(HttpServletRequest httpServletRequest){
-		String orderId = httpServletRequest.getParameter("orderid");
-		String tranID = httpServletRequest.getParameter("tranID");
-		String status = httpServletRequest.getParameter("status");
-		String domain = httpServletRequest.getParameter("domain");
-		String amount = httpServletRequest.getParameter("amount");
-		String currency = httpServletRequest.getParameter("currency");
-		String appcode = httpServletRequest.getParameter("appcode");
-		String paydate = httpServletRequest.getParameter("paydate");
-		String skey = httpServletRequest.getParameter("skey");
-		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
-		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
-		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
-		
-		//#Start 33137
+	private Map<String, String> getHttpReqMap() {
+		String orderId = httpReq.getParameter("orderid");
+		String tranID = httpReq.getParameter("tranID");
+		String status = httpReq.getParameter("status");
+		String domain = httpReq.getParameter("domain");
+		String amount = httpReq.getParameter("amount");
+		String currency = httpReq.getParameter("currency");
+		String appcode = httpReq.getParameter("appcode");
+		String paydate = httpReq.getParameter("paydate");
+		String skey = httpReq.getParameter("skey");
+		String channel = httpReq.getParameter("channel") != null ? httpReq
+				.getParameter("channel") : null;
+		String errorCode = httpReq.getParameter("error_code") != null ? httpReq
+				.getParameter("error_code") : null;
+		String errorDesc = httpReq.getParameter("error_desc") != null ? httpReq
+				.getParameter("error_desc") : null;
+
+		// #Start 33137
 		String fpxTranId = null;
 		String molpayTranId = null;
-		//#End 33137
+		// #End 33137
 		// #26307 start
-		String cardType = null; 
-		String extraP = httpServletRequest.getParameter("extraP");
-		
-		log.info("######38377#####orderId: " + orderId); 
-		log.info("######38377#####tranID: " + tranID); 
-		log.info("######38377#####status:" + status); 
-		log.info("######38377#####domain:" + domain); 
-		log.info("######38377#####amount :" + amount); 
-		log.info("######38377#####currency:" + currency); 
-		log.info("######38377#####appcode: " + appcode); 
-		log.info("######38377#####paydate:" + paydate); 
-		log.info("######38377#####skey:" + skey); 
-		log.info("######38377#####error_code:" + errorCode); 
-		log.info("######38377#####error_desc:" + errorDesc); 
-		log.info("######38377#####channel:" + channel); 
-		log.info("######38377#####extraP:" + extraP); 
-		if(extraP!=null){
-			JSONObject obj; 
-			try { 
-				obj = new JSONObject(extraP); 
-				cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null; 
-			} catch (JSONException e) { 
-				e.printStackTrace(); 
-			} 
-		}
-		
-		// #26307 end
-		// #32422 START 
-		//#33137 - start
-		String date1 = null;
-		String molpayTransId = null;
-		String extraP1 = httpServletRequest.getParameter("extraP");
-		log.info("######38377#####extraP1 before:" + extraP1);
-		if(extraP1 != null){
-			JSONObject obj1;
-			try { 
-				log.info("######38377#####extraP1 after:" + extraP1);
-				obj1 = new JSONObject(extraP1); 
-				
-				if(obj1.has("bank_datetime")){
-					log.info("----- bank date time before set -----");
-					date1 = obj1.getString("bank_datetime") != null ? obj1.getString("bank_datetime") : null;
-				}
-				
-				if(obj1.has("MOLPay_tranID")){
-					molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1.getString("MOLPay_tranID") : null;
-					log.info("######38377#####molpay id after : "+ molpayTransId);	
-				}
-			} catch (JSONException e) { 
-				e.printStackTrace(); 
+		String cardType = null;
+		String extraP = httpReq.getParameter("extraP");
+
+		if (extraP != null) {
+			JSONObject obj;
+			try {
+				obj = new JSONObject(extraP);
+				cardType = obj.getString("cctype") != null ? obj
+						.getString("cctype") : null;
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 		}
+
+		// #26307 end
+		// #32422 START
+		// #33137 - start
+		String date1 = null;
+		String molpayTransId = null;
+		String extraP1 = httpReq.getParameter("extraP");
+		log.info("extraP1 before:" + extraP1);
+		if (extraP1 != null) {
+			JSONObject obj1;
+			try {
+				log.info("extraP1 after:" + extraP1);
+				obj1 = new JSONObject(extraP1);
+
+				if (obj1.has("bank_datetime")) {
+					log.info("----- bank date time before set -----");
+					date1 = obj1.getString("bank_datetime") != null ? obj1
+							.getString("bank_datetime") : null;
+				}
+
+				if (obj1.has("MOLPay_tranID")) {
+					molpayTransId = obj1.getString("MOLPay_tranID") != null ? obj1
+							.getString("MOLPay_tranID") : null;
+					log.info("molpay id after : " + molpayTransId);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		// #33137 - end
+		// #32422 END
+
+		Map<String, String> reqMap = new HashMap<>();
+		reqMap.put("nbcb", nbcb);
+		reqMap.put("amount", amount);
+		reqMap.put("orderId", orderId);
+
+		return reqMap;
 	}
 	
 }
