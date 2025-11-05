@@ -137,9 +137,8 @@
 						value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeEffectiveDate}" />
 					<f:validator validatorId="dateRangeValidator" />
 				</p:calendar>
-
 			</h:panelGrid>
-
+			
 			<div style="text-align: left; margin-top: 10px;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{ruleCatalogueBackingBean.searchRuleValue}"
@@ -150,7 +149,6 @@
 					update="ruleTypeValueTableID ruleTypeValueSearch" />
 			</div>
 		</p:panel>
-
 		<!-- 36738 End -->
 		
 		<p:dataTable id="ruleTypeValueTableID" widgetVar="ruleValueTblWidget"

@@ -5558,7 +5558,7 @@ public class RuleCatalogueBackingBean extends
 	 * #36738
 	 * Search rule type
 	 */
-	public void searchRuleType(){		
+	public void searchRuleType(){	
 		String searchRuleType = this.getManagedBean().getSearchRuleType();
 		List<PmConfigRuleDesc> configRuleDescList = this.getManagedBean().getOriginalConfigRuleDescList();
 		List<PmConfigRuleDesc> searchRuleDescList = new ArrayList<>();
@@ -5566,15 +5566,15 @@ public class RuleCatalogueBackingBean extends
 		for (PmConfigRuleDesc configRuleDesc : configRuleDescList) {
 			if (searchRuleType != null && !searchRuleType.isEmpty()) {
 				String searchRegex = searchRuleType
-				        .replace("%", ".*?")  
-				        .replace("_", ".")   
-				        .replace("?", ".")    
-				        .replace("*", ".*?"); 
+				        .replace("%", ".*?")
+				        .replace("_", ".")
+				        .replace("?", ".")
+				        .replace("*", ".*?");
 				if (configRuleDesc.getRuleDesc().toLowerCase().contains(searchRuleType.toLowerCase())
 						|| configRuleDesc.getRuleDesc().toLowerCase().matches(searchRegex.toLowerCase())) {
 					searchRuleDescList.add(configRuleDesc);
 				}
-			}		
+			}
 		}		
 		
 		if (CollectionUtils.isNotEmpty(searchRuleDescList)) {
@@ -5590,7 +5590,7 @@ public class RuleCatalogueBackingBean extends
 	
 	/**
 	 * #36738
-	 * Reset searched rule type
+	 * Reset search rule type
 	 */
 	public void resetRuleType(){
 		this.getManagedBean().setSearchRuleType(new String());
@@ -5749,7 +5749,8 @@ public class RuleCatalogueBackingBean extends
 	 * #36738
 	 * filter rule values by zone
 	 * @param configRuleValuesList
-	 * @param searchedRuleDesc
+	 * @param searchRuleZone
+	 * @param multipleSearchFlag
 	 * @return
 	 */
 	private List<PmConfigRuleValue> searchByZone(List<PmConfigRuleValue> configRuleValuesList,Long searchRuleZone, Boolean multipleSearchFlag){		
@@ -5813,7 +5814,7 @@ public class RuleCatalogueBackingBean extends
 	
 	/**
 	 * #36738
-	 * Reset searched rule value
+	 * Reset search rule value
 	 */
 	public void resetRuleValue(){
 		this.getManagedBean().setSearchRuleDataTypeValues(new String());
@@ -5890,10 +5891,10 @@ public class RuleCatalogueBackingBean extends
 	
 	/**
 	 * #36738
-	 * filter qt values by ptj name or ptj code
-	 * @param searchedPtjApprovalList
-	 * @param searchedPtjApproval
-	 * @param searchedValue
+	 * filter QT values by PTJ name or PTJ code
+	 * @param searchPtjApprovalList
+	 * @param searchPtjApproval
+	 * @param searchValue
 	 * @param ptjValue
 	 * @return
 	 */
@@ -5905,10 +5906,10 @@ public class RuleCatalogueBackingBean extends
 	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();
 	            
 	            String searchRegex = search
-				        .replace("%", ".*?")  
-				        .replace("_", ".")   
-				        .replace("?", ".")    
-				        .replace("*", ".*?");    
+				        .replace("%", ".*?")
+				        .replace("_", ".")
+				        .replace("?", ".")
+				        .replace("*", ".*?");
 	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
 	        		|| value.toLowerCase().matches(searchRegex)) {
 	            result.add(ptjApproval);
