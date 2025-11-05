@@ -126,7 +126,7 @@ public class ProfileManagementSearchBackingBean extends
 				log.info("....pageChangeListener...end");
 				return null;
 			}
-			
+
 		}
 
 
@@ -324,10 +324,10 @@ public class ProfileManagementSearchBackingBean extends
 			try {
 				List<PmStatusDesc> statusDescList = new ArrayList<PmStatusDesc>();
 				//#38016 - harun disabled as old code always get CP status id 
-				for(Long statusId:statusIds){	
+				for(Long statusId:statusIds){
 					PmStatusDesc pmStatusDesc = StatusHelper.getInstance().getStatusDescById(statusId);
 					if(pmStatusDesc != null){
-						
+					
 						statusDescList.add(pmStatusDesc);
 					}
 				}
