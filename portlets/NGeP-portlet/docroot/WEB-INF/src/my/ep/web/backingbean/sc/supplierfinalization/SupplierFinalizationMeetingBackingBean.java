@@ -2378,7 +2378,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
-			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
 					||auditResDTO.getRoleCode().equals(RoleCode.PPB_SECRETARY.value())){
 				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_PB);
@@ -2425,7 +2425,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
-			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 			
 			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
 				auditResDTO.setNewValue(entry.getValue().get(0));
