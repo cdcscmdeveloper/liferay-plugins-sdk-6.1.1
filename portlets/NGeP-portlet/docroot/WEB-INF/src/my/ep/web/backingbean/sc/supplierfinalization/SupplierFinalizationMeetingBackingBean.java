@@ -2553,7 +2553,7 @@ if (CollectionUtils.isNotEmpty(
 	 */
 	public String checkRolesForAuditTrail() {
 		FacesScopes facesScopes = new FacesScopes();
-		String role = RoleCode.QCA_SECRETARY.value();
+		String role = RoleCode.QQC_SECRETARY.value();
 
 		try {
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2567,10 +2567,13 @@ if (CollectionUtils.isNotEmpty(
 			String currentCommitteeType = this.getManagedBean().getCommitteeType();
 			if (currentCommitteeType.equals("FSB") || currentCommitteeType.equals("FSW")) {
 				currentCommitteeType = "FPB";
+			}else if (currentCommitteeType.equals("QCA") || currentCommitteeType.equals("QCB")){
+				currentCommitteeType = "QQC";
 			}
+			
 			for (String userRole : pmRoles) {
 				String trimmedRole = userRole.substring(0, 3);
-				if (trimmedRole.equals(currentCommitteeType)) {
+				if (trimmedRole.equals(currentCommitteeType) && userRole.toLowerCase().contains("secretary")) {
 					return userRole;
 				}
 			}
