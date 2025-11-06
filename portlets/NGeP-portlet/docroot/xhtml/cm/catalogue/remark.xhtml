@@ -78,7 +78,7 @@
 				</c:forEach>				
 			</c:forEach>
 		</p:panelGrid>
-	<ac:detachablePaginator loopId="panelGridId" paginatorObject="#{catalogueBackingBean.managedBean.getDetachedPaginator()}"/>
+	<ac:detachablePaginator loopId="@([id$=panelGridId])" paginatorObject="#{catalogueBackingBean.managedBean.getDetachedPaginator()}"/><!-- #26282 -->
 	</p:panel>
 
 
