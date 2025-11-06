@@ -1074,7 +1074,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return resDTO;
 	}
 
-
 	/**
 	 * Retrieves the threshold amount for PK7 and Special Item.
 	 * 
@@ -1122,30 +1121,32 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @param fulfilmentReq
 	 * @param totalDeliveryAmount
 	 * @return resDTO
-	 */
+	 */	
 	private FulfilmentResDTO getPOThresholdAmountForForNormal(FulfilmentResDTO resDTO,
 			FlFulfilmentRequest fulfilmentReq, BigDecimal totalDeliveryAmount) {
 		resDTO.setSupplierId(fulfilmentReq.getSmSupplier().getSupplierId());
-		resDTO = getThresholdForNormal(resDTO, totalDeliveryAmount);
-		boolean isPanel = resDTO.isPanel();
+		FulfilmentResDTO resDTO2 = getThresholdForNormal(resDTO, totalDeliveryAmount);
+
+		boolean isPanel = resDTO2.isPanel();
 		PmParameter procType = fulfilmentReq.getProcurementType();
 
-		BigDecimal thresoldAmt = resDTO.getLimitAmount();
+		BigDecimal thresholdAmt = resDTO2.getLimitAmount();
 
 		if (procType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
 			if (isPanel) {
-				resDTO.setLimitAmount(thresoldAmt);
-				resDTO.setProcurementType(this.getParameterDesc(procType) + " (" + ParameterConst.PANEL + ")");
+				resDTO2.setLimitAmount(thresholdAmt);
+				resDTO2.setProcurementType(this.getParameterDesc(procType) + " (" + ParameterConst.PANEL + ")");
 			} else {
-				resDTO.setProcurementType(this.getParameterDesc(procType) + " (" + ParameterConst.NON_PANEL + ")");
-				resDTO.setSupplierTypeId(resDTO.getSupplierTypeId());
+				resDTO2.setProcurementType(this.getParameterDesc(procType) + " (" + ParameterConst.NON_PANEL + ")");
+				resDTO2.setSupplierTypeId(resDTO2.getSupplierTypeId());
 			}
-
 		} else {
-			resDTO.setProcurementType(this.getParameterDesc(procType));
+			resDTO2.setProcurementType(this.getParameterDesc(procType));
 		}
-		return resDTO;
+
+		return resDTO2;
 	}
+
 		
 	/**
 	 * Validates delivery amount vs threshold based on panel or non-panel.
@@ -1263,7 +1264,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		BigDecimal validationAmt = reqDTO.getValidationAmt();
 
 		if (roleResDTO.isSuccessful() && !EntityHelper.isCollectionEmpty(roleResDTO.getRuleValueList())) {
-			return computeThresholdForSupplierType(resDTO, roleResDTO.getRuleValueList(), reqDTO.getSupplierTypeId(),
+			return checkThresholdForSupplierType(resDTO, roleResDTO.getRuleValueList(), reqDTO.getSupplierTypeId(),
 					validationAmt, ruleReqDTO.getRuleType());
 
 		} else {
@@ -1272,11 +1273,8 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	}
 	
 	/**
-	 * Computes the threshold limit for a given supplier type based on
+	 * Check the threshold limit for a given supplier type based on
 	 * configured rule values.
-	 * <p>
-	 * Determines if the validation amount falls within any defined threshold
-	 * range, exceeds the maximum allowed range, or has missing configuration.
 	 * 
 	 * @param resDTO
 	 * @param ruleValueList
@@ -1287,15 +1285,46 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @throws EpException
 	 *             if no configuration exists for the supplier type
 	 */
-	private FulfilmentResDTO computeThresholdForSupplierType(FulfilmentResDTO resDTO,
+	private FulfilmentResDTO checkThresholdForSupplierType(FulfilmentResDTO resDTO,
 			List<PmConfigRuleValue> ruleValueList, Long supplierTypeId, BigDecimal validationAmt, String ruleType) {
+
+		// Find threshold configuration for the given supplier type and validation amount
+		ThresholdResult thresholdResult = findThresholdForSupplierType(ruleValueList, supplierTypeId, validationAmt);
+		BigDecimal limitAmount = thresholdResult.limitAmount;
+		boolean foundRange = thresholdResult.foundRange;
+		boolean hasSupplierTypeConfig = thresholdResult.hasSupplierTypeConfig;
+
+		// Supplier type has threshold config but validation amount is outside all defined ranges
+		if (hasSupplierTypeConfig && !foundRange) {
+			limitAmount = determineMaxThresholdLimit(resDTO, ruleValueList, supplierTypeId, validationAmt);
+		}
+
+		// No threshold configuration found for this supplier type
+		if (!hasSupplierTypeConfig) {
+			throw new EpException(MessageConst.ERROR_770222, new String[] { getRuleTypeDesc(ruleType) });
+		}
+
+		resDTO.setLimitAmount(limitAmount);
+		return resDTO;
+	}
+
+	/**
+	 * Finds the threshold for a given supplier type and validation amount.
+	 *
+	 * @param ruleValueList 
+	 * @param supplierTypeId
+	 * @param validationAmt
+	 * @return ThresholdResult
+	 */
+	private ThresholdResult findThresholdForSupplierType(List<PmConfigRuleValue> ruleValueList, Long supplierTypeId,
+			BigDecimal validationAmt) {
 		BigDecimal limitAmount = BigDecimal.ZERO;
 		boolean foundRange = false;
 		boolean hasSupplierTypeConfig = false;
 		for (PmConfigRuleValue rule : ruleValueList) {
 			if (supplierTypeId.equals(rule.getAccTypeId())) {
-				limitAmount = BigDecimal.ZERO;
 				hasSupplierTypeConfig = true;
+
 				BigDecimal fromVal = rule.getFromValue() != null ? rule.getFromValue() : BigDecimal.ZERO;
 				BigDecimal toVal = rule.getToValue() != null ? rule.getToValue() : BigDecimal.ZERO;
 
@@ -1309,37 +1338,75 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			}
 		}
 
-		if (hasSupplierTypeConfig && !foundRange) {
-			BigDecimal maxToValue = BigDecimal.ZERO;
-			for (PmConfigRuleValue rule : ruleValueList) {
-				if (supplierTypeId.equals(rule.getAccTypeId())) {
-					if (rule.getToValue().compareTo(maxToValue) > 0) {
-						maxToValue = rule.getToValue();
-					}
-				}
-			}
-			limitAmount = maxToValue;
+		return new ThresholdResult(limitAmount, foundRange, hasSupplierTypeConfig);
+	}
 
-			if (validationAmt.compareTo(limitAmount) > 0) {
-				// Exceed max range
-				resDTO.setExceedLimit(true);
-				resDTO.setLimitAmount(limitAmount);
-			} else {
-				// Not exceed but not in any configured threshold range
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.INFO_745100, new String[] { validationAmt.toPlainString() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+	/**
+	 * Determines the maximum threshold limit for a supplier type and updates the response DTO if exceeded.
+	 *
+	 * @param resDTO 
+	 * @param ruleValueList 
+	 * @param supplierTypeId 
+	 * @param validationAmt 
+	 * @return maxToValue
+	 */
+	private BigDecimal determineMaxThresholdLimit(FulfilmentResDTO resDTO, List<PmConfigRuleValue> ruleValueList,
+			Long supplierTypeId, BigDecimal validationAmt) {
+		BigDecimal maxToValue = getMaxConfiguredThreshold(ruleValueList, supplierTypeId);
+
+		if (validationAmt.compareTo(maxToValue) > 0) {
+			// Exceed max range
+			resDTO.setExceedLimit(true);
+			resDTO.setLimitAmount(maxToValue);
+		} else {
+			// Not exceed but not in any configured threshold range
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_745100, new String[] { validationAmt.toPlainString() },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		return maxToValue;
+	}
+
+	/**
+	 * Returns the maximum configured 'toValue' for the given supplier type.
+	 *
+	 * @param ruleValueList 
+	 * @param supplierTypeId 
+	 * @return the maximum toValue among all rules for the supplier type, or 0 if none
+	 */
+	private BigDecimal getMaxConfiguredThreshold(List<PmConfigRuleValue> ruleValueList, Long supplierTypeId) {
+		BigDecimal maxToValue = BigDecimal.ZERO;
+
+		for (PmConfigRuleValue rule : ruleValueList) {
+			if (supplierTypeId.equals(rule.getAccTypeId()) && rule.getToValue() != null
+					&& rule.getToValue().compareTo(maxToValue) > 0) {
+				maxToValue = rule.getToValue();
 			}
 		}
 
-		if (!hasSupplierTypeConfig) {
-			throw new EpException(MessageConst.ERROR_770222, new String[] { getRuleTypeDesc(ruleType) });
-		}
+		return maxToValue;
+	}
 
-		resDTO.setLimitAmount(limitAmount);
-		return resDTO;
+	/**
+	 * Inner static class ThresholdResult represents the result of threshold
+	 * validation for a specific supplier type.
+	 * 
+	 * This class holds information about the applicable limit amount, whether
+	 * the validation amount falls within a defined range, and whether any
+	 * configuration exists for the supplier type.
+	 */
+	private static class ThresholdResult {
+		final BigDecimal limitAmount;
+		final boolean foundRange;
+		final boolean hasSupplierTypeConfig;
+
+		ThresholdResult(BigDecimal limitAmount, boolean foundRange, boolean hasSupplierTypeConfig) {
+			this.limitAmount = limitAmount;
+			this.foundRange = foundRange;
+			this.hasSupplierTypeConfig = hasSupplierTypeConfig;
+		}
 	}
 	// 30753-End
 

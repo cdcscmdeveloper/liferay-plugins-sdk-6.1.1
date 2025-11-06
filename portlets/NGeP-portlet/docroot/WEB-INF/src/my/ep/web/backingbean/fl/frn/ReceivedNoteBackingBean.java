@@ -2128,14 +2128,14 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * @param reqDTO
 	 * @return sumReceivedAmt
 	 */
-	private BigDecimal getTotalReceivedAmount(FulfilmentReqDTO reqDTO){
+	private BigDecimal getTotalReceivedAmount(FulfilmentReqDTO reqDTO) {
 		IReceivedNoteSO receivedNoteSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
 
 		BigDecimal sumReceivedAmt = BigDecimal.ZERO;
 		BigDecimal frnReceivedAmt = BigDecimal.ZERO;
 
-		// get accumulative FRN exclude this FRn amount (to avoid duplicate if frn newBrand)
+		// get accumulative FRN exclude this FRN amount (to avoid duplicate if frn newBrand)
 		FulfilmentResDTO resDTOsum = receivedNoteSO.retriveAccumulatedReceivedAmt(reqDTO);
 		sumReceivedAmt = resDTOsum.getAccumulativeProcuValue();
 
