@@ -168,6 +168,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst; //24333
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
+import my.ep.web.managedbean.ct.ContractManagedBean;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -175,6 +176,8 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil; //24333
 import my.ep.web.util.NumberWordUtilEn; //24333
+import my.ep.web.util.NumberWordUtil;
+import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
@@ -2919,6 +2922,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				// Empty@Null validation for new amount effective date (submit)
 				validateNewAmtEffDate();
+				
+				// Validation for amendment checklist (submit)
+				validateAmendmentCheclist();
 			}
 			// #24336 - End
 			
@@ -10317,6 +10323,47 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					new String[]{ResourceBundleUtils.getMessage(ContractConst.NEW_AMOUNT_EFFECTIVE_DATE_MENU_LABEL, 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
+	}
+	
+	private void validateAmendmentCheclist(){
+		
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		ContractManagedBean bean = ctBackingBean.getManagedBean();
+		
+		boolean[] amendmentFlags = new boolean[]{
+		        amendment.isContractExtend(),
+		        amendment.isItemPriceChange(),
+		        amendment.isQuantityChange(),
+		        amendment.isValueChange(),
+		        amendment.isClauseChange(),
+		        amendment.isValueChangeByGst(),
+		        amendment.isOtherChange()
+		    };
+
+	    boolean[] checklistFlags = new boolean[]{
+	        bean.isContractExtendChecklist(),
+	        bean.isItemPriceChangeChecklist(),
+	        bean.isQuantityChangeChecklist(),
+	        bean.isValueChangeChecklist(),
+	        bean.isClauseChangeChecklist(),
+	        bean.isValueChangeByGstChecklist(),
+	        bean.isOtherChangeChecklist()
+	    };
+	    
+	    boolean isError = false;
+	    for (int i = 0; i < amendmentFlags.length; i++) {
+	        if (amendmentFlags[i] && !checklistFlags[i]) {
+	            isError = true;
+	            break;
+	        }
+	    }
+	    
+		if(isError){
+			getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.APPROVER_SETTING_AMENDMENT_CHECKLIST_MENU_LABEL, 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			throw new EpException(MessageConst.ERROR_750093);
+		}
+		
 	}
 	
 	/**

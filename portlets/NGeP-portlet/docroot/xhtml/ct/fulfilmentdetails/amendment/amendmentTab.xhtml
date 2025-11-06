@@ -185,11 +185,13 @@
 			or amendmentBackingBean.managedBean.decisionPbQcLOA or (amendmentBackingBean.managedBean.disableMeetingDetails and amendmentBackingBean.managedBean.disableDecisionDetails)}"
 			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.decision']))}" update=":form" />
 	
-	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
+			<!-- #24336 rename menu value - Start -->
+	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting.amendment.checklist']}" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
-			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.approver.setting']))}" update=":form" />
-	
+			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.approver.setting.amendment.checklist']))}" update=":form" />
+			<!-- #24336 rename menu value - End -->
+
 		</p:tabMenu>
 		 </td>
 		 <td width="80%">
@@ -286,7 +288,11 @@
 					<ui:include src="pbqcc/signOffMember.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.approver.setting'] }">
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.approver.setting.amendment.checklist'] }">
+					<!-- #24336 start -->
+					<ui:include	src="amendmentChecklist.xhtml" />
+					<!-- #24336 end -->
+					 
 					<ui:include	src="approverSetting.xhtml" />
 					<ui:include src="/xhtml/ct/shared/remarkAppSetting.xhtml" />
 					<!-- <ui:include	src="/xhtml/ct/common/fulfilmentSetting.xhtml" /> -->

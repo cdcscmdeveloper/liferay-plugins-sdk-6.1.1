@@ -226,6 +226,14 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean disableReductionContractAmount;
 	private boolean disableAdditionContractAmount;
 	private boolean disableNewCtAmountEffDate;
+	
+	private boolean contractExtendChecklist;
+	private boolean itemPriceChangeChecklist;
+	private boolean quantityChangeChecklist;
+	private boolean valueChangeChecklist;
+	private boolean clauseChangeChecklist;
+	private boolean valueChangeByGstChecklist;
+	private boolean otherChangeChecklist;
 	//#24336 - End
 	
 	/**
@@ -1743,6 +1751,62 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setDisableNewCtAmountEffDate(boolean disableNewCtAmountEffDate) {
 		this.disableNewCtAmountEffDate = disableNewCtAmountEffDate;
+	}
+
+	public boolean isContractExtendChecklist() {
+		return contractExtendChecklist;
+	}
+
+	public void setContractExtendChecklist(boolean contractExtendChecklist) {
+		this.contractExtendChecklist = contractExtendChecklist;
+	}
+
+	public boolean isItemPriceChangeChecklist() {
+		return itemPriceChangeChecklist;
+	}
+
+	public void setItemPriceChangeChecklist(boolean itemPriceChangeChecklist) {
+		this.itemPriceChangeChecklist = itemPriceChangeChecklist;
+	}
+
+	public boolean isQuantityChangeChecklist() {
+		return quantityChangeChecklist;
+	}
+
+	public void setQuantityChangeChecklist(boolean quantityChangeChecklist) {
+		this.quantityChangeChecklist = quantityChangeChecklist;
+	}
+
+	public boolean isValueChangeChecklist() {
+		return valueChangeChecklist;
+	}
+
+	public void setValueChangeChecklist(boolean valueChangeChecklist) {
+		this.valueChangeChecklist = valueChangeChecklist;
+	}
+
+	public boolean isClauseChangeChecklist() {
+		return clauseChangeChecklist;
+	}
+
+	public void setClauseChangeChecklist(boolean clauseChangeChecklist) {
+		this.clauseChangeChecklist = clauseChangeChecklist;
+	}
+
+	public boolean isValueChangeByGstChecklist() {
+		return valueChangeByGstChecklist;
+	}
+
+	public void setValueChangeByGstChecklist(boolean valueChangeByGstChecklist) {
+		this.valueChangeByGstChecklist = valueChangeByGstChecklist;
+	}
+
+	public boolean isOtherChangeChecklist() {
+		return otherChangeChecklist;
+	}
+
+	public void setOtherChangeChecklist(boolean otherChangeChecklist) {
+		this.otherChangeChecklist = otherChangeChecklist;
 	}
 	//#24336 - End
 }

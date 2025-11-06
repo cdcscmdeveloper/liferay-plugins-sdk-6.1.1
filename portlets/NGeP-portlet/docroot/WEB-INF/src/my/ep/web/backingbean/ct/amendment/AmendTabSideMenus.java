@@ -119,7 +119,9 @@ public class AmendTabSideMenus {
 		//#35132
 		if (menuApprover == null) {
 			menuApprover =  new ArrayList<String>(Arrays.asList(
-					ResourceBundleUtils.getMessage("lbl.ct.menu.approver.setting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+					// #24336 - Start
+					ResourceBundleUtils.getMessage("lbl.ct.menu.approver.setting.amendment.checklist", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+					// #24336 - End
 		}
 	}
 }
