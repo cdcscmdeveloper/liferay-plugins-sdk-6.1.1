@@ -11266,7 +11266,7 @@ public class SmApplicationBackingBean extends
 		updateIds.add(":form");
 		//log.info("*** Submit Approve *** " + decision);
 		assignValReqdToFalse();
-		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		//#34400
 		RequestContext.getCurrentInstance().update(updateIds);
 		// #28777 & #29727 - Start
 		/*
