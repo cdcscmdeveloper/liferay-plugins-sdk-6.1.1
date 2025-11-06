@@ -65,7 +65,7 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 		this.getManagedBean().setVisitDateFrom(fromVisitDate.getTime());
 		this.getManagedBean().setVisitDateTo(new Date());
 	}
-	// #39435 Start
+
 	/**
 	 * Construct Site Visit Officer search condition.
 	 */
@@ -101,5 +101,4 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 		getConditionFieldsSVO();
 		RequestContext.getCurrentInstance().update(":form");
 	}
-	// #39435 End
 }

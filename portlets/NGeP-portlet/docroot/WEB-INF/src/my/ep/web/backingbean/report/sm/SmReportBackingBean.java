@@ -375,7 +375,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		else if(SmReportConst.SM_REVISIT_RPT_VAL.equals(getManagedBean().getReportCode())){
 			SmRevisitRptBackingBean revisitRpt = new SmRevisitRptBackingBean();
 			revisitRpt.resetSearch();
-			// #39435
 			revisitRpt.getConditionFieldsSVO();
 		}
 		//34031#note-71 : Issue 4 - Start
