@@ -15111,8 +15111,10 @@ if (null != checklist && !checklist.isEmpty()) {
 			String technicalDoccategory = checklist.getDocCategory();// 11104-778&25726
 			if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())
 					&& checklist.getScQtDoc() != null) {
+				// #39464 Start Vinod 06/11/2025. removed sample condition.
 				boolean isDatafetch = SourcingConstants.TECHNICAL_DOCTYPE.equals(technicalDoccategory)
-						&& SourcingConstants.FINANCIAL_DOCTYPE.equals(financialDocCategory) && isSample;// 11104-778&25726
+						&& SourcingConstants.FINANCIAL_DOCTYPE.equals(financialDocCategory);// 11104-778&25726
+				// #39464 End Vinod 06/11/2025.
 				if (isDatafetch) {
 					this.setTemplateSpecMaster(checklist);
 				}// 11104-778&25726
