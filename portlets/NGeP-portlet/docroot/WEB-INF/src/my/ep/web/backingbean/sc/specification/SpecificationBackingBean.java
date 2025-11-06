@@ -11995,7 +11995,10 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(checklist.getDefinationType()
 								.getParameterCode()) &&
 								checklist.getScQtDoc() != null) {
-					boolean isDatafetch=SourcingConstants.TECHNICAL_DOCTYPE.equals(technicalDoccategory) &&  SourcingConstants.FINANCIAL_DOCTYPE.equals(financialDoccategory) && isSample;//11104-778&25726
+					// #39464 Start Vinod 06/11/2025. removed sample condition.
+					boolean isDatafetch = SourcingConstants.TECHNICAL_DOCTYPE.equals(technicalDoccategory)
+							&& SourcingConstants.FINANCIAL_DOCTYPE.equals(financialDoccategory);// 11104-778&25726
+					// #39464 End Vinod 06/11/2025.
 					log.info("===subChecklistisDatafetch========="+isDatafetch);
 					if(isDatafetch){
 						log.info("===subChecklistBeforeFetchQuestionSize========="+checklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions().size());
