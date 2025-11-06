@@ -1095,6 +1095,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		scQtDemo.setScQtDemoItemList(getManagedBean().getByItemList());
 		scQtDemo.setScQtDemoSupplierList(getManagedBean().getAllItemList());
 		scQtDemo.setScQtDemoContactList(getManagedBean().getScQtDemoContactList());
+		resetDemoSchedule(scQtDemo);
 
 		reqDto.setScQtDemo(scQtDemo);
 		reqDto.setScQt(this.getManagedBean().getQt());
@@ -1140,6 +1141,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 		if (resDto.isSuccessful()) {
 			resDto = qtDemoSO.retrieveScQtDemoByQtNo(reqDto);
+			validateDemoDuplicate(reqDto, resDto.getScQtDemo(), qtDemoSO);
 
 			this.getManagedBean().setScQtDemo(resDto.getScQtDemo());
 			this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
@@ -1647,5 +1649,28 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			}
 		}
 		this.getManagedBean().setSelectedContactList(selectedDemoContact);
+	}
+	
+	private void validateDemoDuplicate(DemoReqDTO reqDTO, ScQtDemo qtDemo, IQTDemoSO qtDemoSO) {
+		/**
+		 * Retrieve all existing ScQtDemo and check if got duplicate.
+		 * If got duplicate, delete it and only retaining qtDemo.
+		 */
+		qtDemoSO.validateDemoListByQtId(reqDTO, qtDemo);
+	}
+	
+	private ScQtDemo resetDemoSchedule(ScQtDemo scQtDemo) {
+		if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM) && scQtDemo.getScQtDemoItemList() != null) {
+			for (ScQtDemoItem item : scQtDemo.getScQtDemoItemList()) {
+				for (ScQtDemoByItemScore score : item.getScQtDemoByItemScoreList()) {
+					score.setScQtDemoSchedule(null);
+				}
+			}
+		} else if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.BY_ITEM) && scQtDemo.getScQtDemoSupplierList() != null) {
+			for (ScQtDemoSupplier supplier : scQtDemo.getScQtDemoSupplierList()) {
+				supplier.setScQtDemoSchedule(null);
+			}
+		}
+		return scQtDemo;
 	}
 }

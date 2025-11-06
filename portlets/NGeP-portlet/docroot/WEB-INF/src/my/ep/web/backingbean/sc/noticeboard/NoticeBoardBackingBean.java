@@ -2867,6 +2867,26 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtCategorySearchBean(searchBean);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
+				
+				String catCodeL1 = "";
+				String catCodeL2 = "";
+				String catCodeL3 = "";
+				String catCodeLevel = null;
+				String catCode = null;
+				
+				for(ScQtCategory checkCategoryUpdated : resDTO.getCategoryResultBean().getResultList()){
+					if(null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()){
+						 catCodeL1 = checkCategoryUpdated.getPmCategoryL1().getCategoryL1Id().toString();
+					} 
+					if (null != checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code()){
+						 catCodeL2 = checkCategoryUpdated.getPmCategoryL2().getCategoryL2Id().toString();
+					}
+					if (null != checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code()){
+						 catCodeL3 = checkCategoryUpdated.getPmCategoryL3().getCategoryL3Id().toString();
+					}
+					flagHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel, catCode,resDTO);
+					checkCategoryUpdated.setFlagDisplayNb(getManagedBean().getFlagUpdateCatInPmDisplay());
+				}
 				return resDTO.getCategoryResultBean();
 			} finally{
 				qtNoticeBoardSO = null;
@@ -3445,41 +3465,25 @@ public class NoticeBoardBackingBean extends
 	}
 
 	// #29732 Start
-	public void onClickHistoryIcon(String catCode, String catCodeLevel, Long catCodeId, Long qtCateId) {
-		boolean processAfter = false;
+	public void onClickHistoryIcon(String catCodeL1, String catCodeL2, String catCodeL3,String catCodeLevel,
+			Long catCodeId,Long qtCateId, String categoryName, String catCode) {
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
 
-		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
-		if (null != findQtCatCode && !findQtCatCode.isEmpty()) {
-			for (ScQtCategory categoryCodeEdit : findQtCatCode) {
-				if (categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()) {
-					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
-						reqDTO.setCategoryL1Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
-						reqDTO.setCategoryL2Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
-						reqDTO.setCategoryL3Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
-					}
-					processAfter = true;
-				} else {
-					this.getManagedBean().setHistoryList(null);
-				}
-			}
-		} else {
-			this.getManagedBean().setHistoryList(null);
+		if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+			reqDTO.setCategoryL1Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+			reqDTO.setCategoryL2Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+			reqDTO.setCategoryL3Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 		}
-
-		if (processAfter) {
-			getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
-			getManagedBean().setHisCatCode(catCode);
-		}
-
+		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+		getManagedBean().setHisCatCode(catCode);
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
 	// #29732 -end-
@@ -3525,4 +3529,54 @@ public class NoticeBoardBackingBean extends
 		return newChangedDate;
 	}
 	// #29732 -end-
+
+	// #29732 Start
+	public void flagHistoryPmCatCode(String catCodeL1, String catCodeL2, String catCodeL3, String catCodeLevel,
+			String catCode, NoticeBoardResDTO resDto) {
+
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+
+		String catCodeL1OldDesc = "";
+		String catCodeL2OldDesc = "";
+		String catCodeL3OldDesc = "";
+		boolean oldDescEmpty = false;
+		this.getManagedBean().setFlagUpdateCatInPmDisplay(false);
+		
+		if (null != catCodeL1) {
+			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL1Nb(catCodeL1, catCodeLevel);
+			if (null != resDTO1.getCatCodeRemark()) {
+				catCodeL1OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL1OldDesc //this is to cater inserted null in DB, found some data were inserted null
+						|| null != resDTO1.getCatCodeRemark() && null != catCodeL1OldDesc) {
+					oldDescEmpty = true;
+				}
+			}
+		}
+		if (null != catCodeL2) {
+			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL2Nb(catCodeL2, catCodeLevel);
+			if (null != resDTO1.getCatCodeRemark()) {
+				catCodeL2OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL2OldDesc//this is to cater inserted null in DB, found some data were inserted null
+						|| null != resDTO1.getCatCodeRemark() && null != catCodeL2OldDesc) {
+					oldDescEmpty = true;
+				}
+			}
+		}
+		if (null != catCodeL3) {
+			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL3Nb(catCodeL3, catCodeLevel);
+			if (null != resDTO1.getCatCodeRemark()) {
+				catCodeL3OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL3OldDesc //this is to cater inserted null in DB, found some data were inserted null
+						|| null != resDTO1.getCatCodeRemark() && null != catCodeL3OldDesc) {
+					oldDescEmpty = true;
+				}
+			}
+		}
+
+		if (oldDescEmpty) {
+			this.getManagedBean().setFlagUpdateCatInPmDisplay(true);
+		}
+	}
+	// #29732 end
 }

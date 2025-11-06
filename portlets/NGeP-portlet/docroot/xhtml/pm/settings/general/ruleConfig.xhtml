@@ -13,14 +13,27 @@
 			<tr>
 				<td>
 					<div align="right" style="width: 100%">
+						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="ruleCatalogSaveBtn"
 							partialSubmit="true" process=":form:settingTabId:ruleConfigId"
-							update=":form:settingTabId:ruleConfigId"
-							action="#{ruleCatalogueBackingBean.saveRuleCatalog}"></p:commandButton>
+							oncomplete="if (!args.validationFailed) saveInfoDlg.show();">
+						</p:commandButton>
+						<!-- 34445 end -->
 					</div>
 				</td>
 			</tr>
 		</table>
+		
+		<!-- 34445 start -->
+		<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
+			okAction="ruleCatalogueBackingBean.saveRuleCatalog"
+			okProcess=":form:settingTabId:ruleConfigId"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.save.msg']}"
+			update=":form:settingTabId:ruleConfigId"
+			loadingWidget="blockWidget" />
+		<!-- 34445 end -->
 
 		<p:dataTable id="ruleTypeTableID" widgetVar="ruleTypeDbWidget"			
 			var="ruleTypeDescObj" rows="10"
