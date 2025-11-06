@@ -1307,6 +1307,12 @@ public class SupplierManagementConst {
 	//25792 - end
 	
 	// 25792 - end
+	
+	// #30747 - Start
+	public long getPM_STATUS_PO_ESCALTED_TO_APPROVER() {
+		return PM_STATUS_PO_ESCALTED_TO_APPROVER;
+	}
+	// #30747 - End
 
 	// 28278 -START
 	public String getMOF_STATUS_DELETED() {
