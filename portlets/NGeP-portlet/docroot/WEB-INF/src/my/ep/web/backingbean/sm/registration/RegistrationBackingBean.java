@@ -6202,7 +6202,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		for(SmSupplierOwner owner : suplierOwner){
 			ban = SmServiceLookup.getBlacklistDirectorSO()
-					.retrieveValidBlacklist(owner.getIdentificationNo(), false)
+					.retrieveValidBlacklist(owner.getIdentificationNo(), true)
 					.getPersonBlacklist();
 		}
 		
