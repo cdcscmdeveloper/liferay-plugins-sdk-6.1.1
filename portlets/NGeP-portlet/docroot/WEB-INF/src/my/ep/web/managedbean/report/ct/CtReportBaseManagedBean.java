@@ -36,6 +36,10 @@ public abstract class CtReportBaseManagedBean extends ReportBaseManagedBean {
 	private Date fromDate;
 	private Date toDate;
 	private PmOrgProfile selectedSupplier;
+	//#30918 -start
+	private Long fulfilmentType;
+	private boolean supplierVisible;
+	//#30918 - end
 	// Start - #29416
 	private CtContractItem selectedItem;
 	private List<CtContractItem> lovSelectedItemList;
@@ -222,8 +226,33 @@ public abstract class CtReportBaseManagedBean extends ReportBaseManagedBean {
 	 */
 	public void setSelectedSupplier(PmOrgProfile selectedSupplier) {
 		this.selectedSupplier = selectedSupplier;
-	}	
-	
+	}
+	//#30918 -start
+	/**
+	 * @return the fulfilmentType
+	 */
+	public Long getFulfilmentType() {
+		return fulfilmentType;
+	}
+	/**
+	 * @param fulfilmentType the fulfilmentType to set
+	 */
+	public void setFulfilmentType(Long fulfilmentType) {
+		this.fulfilmentType = fulfilmentType;
+	}
+	/**
+	 * @return the isSupplierVisible
+	 */
+	public boolean isSupplierVisible() {
+		return supplierVisible;
+	}
+	/**
+	 * @param isSupplierVisible the isSupplierVisible to set
+	 */
+	public void setSupplierVisible(boolean isSupplierVisible) {
+		this.supplierVisible = isSupplierVisible;
+	}
+	//#30918 -end
 	// Start - #29416
 	public CtContractItem getSelectedItem() {
 		if (selectedItem == null) {
