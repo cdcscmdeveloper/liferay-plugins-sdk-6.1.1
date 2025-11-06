@@ -11,12 +11,11 @@ import javax.faces.bean.ViewScoped;
 import my.ep.constants.CommonConstants;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.report.SmReportConst;
-import my.ep.web.managedbean.report.sm.SmRevisitRptManagedBean;
-//#39435 Start
 import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.managedbean.report.sm.SmRevisitRptManagedBean;
+
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
-//#39435 End
 
 /**
  * @author firdaus.omar 
