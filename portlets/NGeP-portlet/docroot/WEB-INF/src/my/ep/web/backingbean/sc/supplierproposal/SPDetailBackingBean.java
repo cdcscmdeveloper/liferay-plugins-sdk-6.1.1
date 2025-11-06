@@ -6887,7 +6887,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 					SLALogConstant.QT_SP_DETAIL_BACKINGBEAN,
 					String.valueOf(qtId),
 					SLALogConstant.RETRIEVE_PROPOSAL_COMPANY_EXP_DETAILS
-							.concat(SLALogConstant.COMP_EXP_ERROR),
+							.concat(SourcingConstants.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 		return null;

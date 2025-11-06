@@ -597,9 +597,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		for (JsonWrapper entityWrapper : entities){
 			TenancyEntity te = new TenancyEntity(entityWrapper.entities);
 			tes.add(te);
-			if (tenancy == null){
-				tenancy = te;
-			}
+			tenancy = te;
 		}
 		log.info(tenancy);
 	}
