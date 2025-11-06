@@ -128,7 +128,21 @@ public class CtReportConst implements Serializable {
 	public String getCtContractItemUsageMonitoringRptMcVal() {
 		return CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_MC_VAL;
 	}
-	
+	// #30918 - Start
+	/**
+	 * @return the ctContractManagementRptCcVal
+	 */
+	public String getCtContractManagementRptCcVal() {
+		return CT_CONTRACT_MANAGEMENT_RPT_CC_VAL;
+	}
+
+	/**
+	 * @return the ctContractManagementRptMcVal
+	 */
+	public String getCtContractManagementRptMcVal() {
+		return CT_CONTRACT_MANAGEMENT_RPT_MC_VAL;
+	}
+	// #30918 - End
 	// #34889 - Start
 	public String getParamKeyAllministryFlag() {
 		return PARAM_KEY_ALLMINISTRY_FLAG;
