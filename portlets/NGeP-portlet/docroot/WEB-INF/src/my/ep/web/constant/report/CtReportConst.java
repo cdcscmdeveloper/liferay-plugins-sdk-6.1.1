@@ -20,6 +20,11 @@ public class CtReportConst implements Serializable {
 	public static final String CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_CC_VAL = "CT_027";
 	public static final String CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_MC_VAL = "CT_028";
 	
+	// #30918 - start
+	public static final String CT_CONTRACT_MANAGEMENT_RPT_CC_VAL = "CT_036";
+	public static final String CT_CONTRACT_MANAGEMENT_RPT_MC_VAL = "CT_037";
+	// #30918 - end
+	
 	// #34889 - Start
 	public static final String CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_CC_VAL = "CT_038";
 	public static final String CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_MC_VAL = "CT_039";
@@ -49,6 +54,9 @@ public class CtReportConst implements Serializable {
 	public static final String PARAM_KEY_CIRCULAR_TO_DATE = "PCIRCEFFTODATE";
 	public static final String PARAM_KEY_ITEM_NAME = "PITEMNAME";
 	public static final String PARAM_KEY_ALLMINISTRY_FLAG = "PALLMINISTRY"; //#34899
+	// #30918 -start
+	public static final String PARAM_KEY_FULFILMENT_TYPE = "PFULFILMENTTYPE";
+	// #30918 - end
 	
 	public static final String enableAllMinistrySelection = "1";//#34899
 
