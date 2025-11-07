@@ -323,7 +323,11 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 				this.getManagedBean().setPmMachineSection(null);
 				return TRAVELLING_TICKET_MAIN;
 			}
-			
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			return VIEW_MAINTENANCE_RESULT_PAGE;
+		//#34445 End
 		} catch(Exception e){
 			throw e;
 		}

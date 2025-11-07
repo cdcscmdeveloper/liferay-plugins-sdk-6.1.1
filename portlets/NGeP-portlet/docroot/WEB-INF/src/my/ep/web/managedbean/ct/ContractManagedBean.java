@@ -213,6 +213,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	//#29983 start
 	private String businessRegNoNew;
 	//#29983 end
+	
+	//24333 - Start
+	private BigDecimal bondPercentage;
+	private BigDecimal totalBondAmt;
+	//24333 - End
 
 	/**
 	 * @return the fileDirectory
@@ -1695,6 +1700,22 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setOriginalOverallAmount(BigDecimal originalOverallAmount) {
 		this.originalOverallAmount = originalOverallAmount;
+	}	
+
+	public BigDecimal getBondPercentage() {
+		return bondPercentage;
+	}
+
+	public void setBondPercentage(BigDecimal bondPercentage) {
+		this.bondPercentage = bondPercentage;
+	}	
+
+	public BigDecimal getTotalBondAmt() {
+		return totalBondAmt;
+	}
+
+	public void setTotalBondAmt(BigDecimal totalBondAmt) {
+		this.totalBondAmt = totalBondAmt;
 	}
 	//#24333 - End
 }

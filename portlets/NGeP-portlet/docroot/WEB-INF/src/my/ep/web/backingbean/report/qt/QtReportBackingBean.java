@@ -111,7 +111,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
 			specialCharValidation();
 		} else {
-			this.getManagedBean().setQuotationId(null);
+			resetSearchBB();//#21692
 		}
 	}
 

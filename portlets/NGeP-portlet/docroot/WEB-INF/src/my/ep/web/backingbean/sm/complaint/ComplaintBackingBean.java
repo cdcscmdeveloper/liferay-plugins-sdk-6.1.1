@@ -17,16 +17,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.primefaces.event.FileUploadEvent;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-
 import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -66,7 +56,6 @@ import my.ep.persistence.entity.sm.SmComplaintOffense;
 import my.ep.persistence.entity.sm.SmComplaintResponse;
 import my.ep.persistence.entity.sm.SmComplaintReview;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
@@ -84,6 +73,16 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmComplaintSummaryVO;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.primefaces.event.FileUploadEvent;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "complaintBackingBean")
 @RequestScoped
@@ -109,6 +108,16 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	 */
 	public String lodgeComplaint() {
 		//String complNo = String.valueOf((new Date()).getTime());
+		
+		// START 38520
+		if (getManagedBean().getSmComplaint() == null 
+				|| getManagedBean().getSmComplaint().getSmSupplier() == null 
+				|| getManagedBean().getSmComplaint().getSmSupplier().getSupplierId() == null) {
+			String supplier = SmCommonUtil.getMessage("lbl.sm.complaint.against.supplier", new String[]{});
+			throw new EpException(MessageConst.ERROR_723103, new String[] { supplier });
+		}
+		// END 38520
+		
 		Date date = new Date();
 		Timestamp currDate = new Timestamp(date.getTime());
 		
@@ -443,8 +452,8 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			reqDTO.setAttachmentLs(attachmentLs);
 		}
 		
-		ComplaintResDTO resDTO = reqSO.updateComplaint(reqDTO);
-
+		//ComplaintResDTO resDTO = reqSO.updateComplaint(reqDTO);
+		reqSO.updateComplaint(reqDTO);
 		
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 				MessageUtils.getMessage(MessageConst.INFO_723001 , new String[]{getManagedBean().getSmComplaint().getComplaintNo(),complaintProcessUrl}, 

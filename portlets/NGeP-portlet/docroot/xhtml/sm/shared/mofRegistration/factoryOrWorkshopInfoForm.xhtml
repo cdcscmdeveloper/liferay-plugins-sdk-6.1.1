@@ -16,23 +16,33 @@
 		id="smFacilityFactoryDtPanel" rendered="#{backingBean.managedBean.showFactoryPanel}">
 		<p:outputPanel id="factoryPan" rendered="#{backingBean.managedBean.showFactoryPanel}">
 			<br />
-			<ui:repeat var="factoryCatVar" value="#{backingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
+			<!-- #28775 - 38500 -->
+			<c:forEach var="factoryCatVar" items="#{backingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
 				<table style="width: 100%;">
+					<!-- 29380 - Site Visit Grouping Enhancement -28775 - start -->
 					<tr>
-						<td style="white-space: nowrap; float: left;">
-						    <!-- #28175 -->
+						<td>
+							<!-- #28175 -->
 						    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(factoryCatVar)})" />
+						    	(#{backingBean.getSupplierCategoryName(factoryCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
+					<tr>
+						<td style="white-space: nowrap; float: left;">
+							<p:outputLabel value="#{backingBean.getCategoryCodeOtherDesc(factoryCatVar)}" 
+								style="text-indent: 10px;"/>
+						</td>
+					</tr>
+					<!-- 29380 - Site Visit Grouping Enhancement -28775 - end -->
 				</table>
 				<br />
 				
 				<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
 					value="#{factoryCatVar.facilityList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rowKey="#{fac}" rowIndexVar="index" id="facDt">
-					<ac:paginator for="facDt" />
+					rowKey="#{fac}" rowIndexVar="index" id="facDt_#{factoryCatVarStatus.index}">
+					<ac:paginator for="facDt_#{factoryCatVarStatus.index}" /><!-- #28775 - 38498 -->
 					
 					<!-- Disable for UPS 32008 - START -->
 					<p:column style="width: 5% !important;" rendered="#{not empty factoryCatVar.facilityList and !backingBean.managedBean.upsCannotEdit}">
@@ -99,7 +109,7 @@
 	
 				</p:dataTable><br />
 				
-			</ui:repeat>
+			</c:forEach><!-- #28775 - 38500 -->
 			
 			<p:spacer height="2px;" />
 			<div align="right">
@@ -109,10 +119,11 @@
 					action="#{backingBean.assignNewFactoryBean}"
 					update=":form:tt:factoryDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #28775 - 38498 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="factoryPan"
-					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtn(factoryCatVar.facilityList)}"
+					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.factoryFacilitiesVOList)}"
 					update=":#{p:component('smFacilityFactoryDtPanel')},@this" 
 					oncomplete="factoryDeletePopUp.show()" />
 			</div>
@@ -132,8 +143,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.factory.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50" id="smFacFactorName"
-							required="#{backingBean.managedBean.valueReqd}" label="Name"
+							required="#{backingBean.managedBean.valueReqd}" 
+							label="#{lbl['lbl.sm.facility.factory.name']}"
 							value="#{backingBean.managedBean.selectedFactoryFacility.facilityName}" disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
 						</p:inputText>
@@ -161,7 +174,8 @@
 							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedFactoryFacility.smSupplierCategoryFacilities}">
 								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code}
-									(#{backingBean.getSupplierCategoryName(cat.pmCategoryL3)})" style="float:left"/><br/> <!-- #28175 -->
+									(#{backingBean.getSupplierCategoryName(cat.pmCategoryL3, false, false)})" style="float:left"/><br/> 
+							<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 							</ui:repeat>
 						</p:outputPanel>
 						<p:message id="factoryCategoryIdMsg" for="factoryCategoryId"
@@ -265,7 +279,7 @@
 							<ui:fragment
 								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
 								<p:inputText id="smFacFactoryRent"
-									disabled="#{!backingBean.managedBean.valueReqd}"
+									disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.upsCannotEdit}"
 									label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
 									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"

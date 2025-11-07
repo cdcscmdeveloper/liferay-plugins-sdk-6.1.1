@@ -27,12 +27,13 @@
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rows="10" lazy="true"
 			value="#{evaluationBackingBean.managedBean.presentationDemoSupplierListDM}"
-			rowIndexVar="index" rowKey="#{demoSupplier}">
+			rowIndexVar="index" rowKey="#{demoSupplier}"
+			first="#{evaluationBackingBean.managedBean.retainPageNumber}">
 			<ac:paginator for="demoSupplierId" />
 
 			<p:ajax event="page"
-				listener="#{evaluationBackingBean.savePresentationDemoDtls}"
-				update="demoSupplierId" />
+				listener="#{evaluationBackingBean.validateBeforeSave()}"
+				update="demoSupplierId" /><ui:remove>#28784 uncommented, used for WIP</ui:remove>
 			<ui:remove> <!-- 6906 - start --> </ui:remove>
 			<ui:param name="isRejected" value="#{not empty demoSupplier.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:20%; text-align:center;">
@@ -50,7 +51,7 @@
 				</table>
 				<ui:remove>#28784 WIP @idham -start-</ui:remove>
 				<h:outputText
-					value="#{evaluationBackingBean.retrieveDemoSupplierNo(demoSupplier.scQtProposal.supplierNo)}"
+					value="#{demoSupplier.scQtProposal.scQtDemoSupplier.demoNo}"
 					rendered="#{!evaluationBackingBean.managedBean.demoWip}"></h:outputText>
 				<ui:remove>#28784 WIP @idham -end-</ui:remove>
 			</p:column> 
@@ -119,11 +120,11 @@
 				<h:panelGroup id="demoSupplierAttach">
 					<ac:scSingleFileUploadButton id="attachedIdsDemoDtl"
 						popupWidgetVar="demoSupplierAttachDlg"
-						attachment="#{evaluationBackingBean.retrieveDemoSupplierAttachment(demoSupplier.scQtProposal.supplierNo)}"
+						attachment="#{demoSupplier.scQtProposal.scQtDemoSupplier.scQtDemoSupplierAttachment}"
 						deleteFileUploadListener="evaluationBackingBean.deleteProposalDemoUploadFile"
 						readonly="#{evaluationBackingBean.managedBean.readOnly}">
 						<f:setPropertyActionListener for="actionEvent"
-							value="#{evaluationBackingBean.retrieveDemoSupplier(demoSupplier.scQtProposal.supplierNo)}"
+							value="#{demoSupplier.scQtProposal.scQtDemoSupplier}"
 							target="#{evaluationBackingBean.managedBean.scQtDemoSupplier}" />
 					</ac:scSingleFileUploadButton>
 				</h:panelGroup>
@@ -149,6 +150,7 @@
 				<ui:remove>6906, add disabled</ui:remove>
 			</p:column>
 			<!-- #28784 -end- -->
+			<p:ajax event="page" listener="#{evaluationBackingBean.retainDemoPage()}" process="@this" update="@this" /><ui:remove>#28784</ui:remove>
 		</p:dataTable>
 	</p:panel>
 

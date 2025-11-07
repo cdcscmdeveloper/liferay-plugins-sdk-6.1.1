@@ -404,6 +404,11 @@ public class TemplateSpecBackingBean extends
 					questionToDelete.setClPriceTypeCode(null);
 				}	
 			}
+			//34617 - start
+			if (questionToDelete.getClPriceTypeCode() != null && questionToDelete.getClPriceTypeCode().getParameterType() == null){
+				questionToDelete.setClPriceTypeCode(null);
+			}
+			//34617 - end
 			
 			techicalDeleteQuestionList.add(questionToDelete);
 		}
@@ -2863,9 +2868,9 @@ public class TemplateSpecBackingBean extends
 	
 	public String replaceWithBR(String specDetails) {
 		// 35521 @zaim - start
-		String spec = specDetails.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY); //36103 @zaim
+		String spec = specDetails.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY); // 36103 @zaim
 		spec = spec.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-		spec = spec.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //36103 @zaim
+		spec = spec.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER); // 36103 @zaim
 		return spec;
 		// 35521 @zaim - end
 	}
@@ -3641,36 +3646,12 @@ public class TemplateSpecBackingBean extends
 	}
 	// #31134 Farid end 25/6/2021
 
-	// #28784 - Start
-	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
-		ITemplateSpecSO templateSpecSO = null;
-
-		try {
-			TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
-			List<TplSpecScoring> specScorings = selectedSpecQuestion.getTplSpecScorings();
-			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-					ITemplateSpecSO.class);
-			BigDecimal demoScore = templateSpecSO.validateScoring(selectedSpecQuestion, specScorings,
-					new FacesScopes().getUserLocale());
-			
-			if (demoScore != null && demoScore.equals(new BigDecimal(0))) {
-				throw new EpException(MessageConst.ERROR_760476);
-			}
-			
-			if (demoScore != null) {
-				selectedSpecQuestion.setDemoScore(demoScore);
-			}
-		} finally {
-			templateSpecSO = null;
-		}
-		
-		templateSpecBean.setSelectedSpecQuestion(null);
-		
-		getManagedBean().setTemplateSpecBean(templateSpecBean);
-	}
-	// #28784 -end-
-
 	// #28784 -start-
+	/**
+	 * #28784 - Demo scoring cancle
+	 * 
+	 * @param templateSpecBean
+	 */
 	public void scoringCancelActionDemo(TemplateSpecBean templateSpecBean) {
 		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
 		TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
