@@ -148,6 +148,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
+import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -497,6 +498,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setEspkb(true);
 		}
 		getEspkbCommitmentNo();
+		
+		getPreparedByName(); // 29555
 	}
 	
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
@@ -1664,6 +1667,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				//#14650 - End
 			}
 			//35024-end
+			
+			getPreparedByName(); // 29555
 		}
 			
 		//Default procurement type category to Supply of Goods in case of null
@@ -1896,6 +1901,47 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setPmUserOrg(userOrg);
 
 	}
+	
+	// 29555 start
+	/*
+	 * set preparedby for managedbean by retrieving requistioner and docid
+	 */
+	public void getPreparedByName() {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		FlActor actor = null;
+
+		if (getManagedBean().getFlRequest() != null && getManagedBean().getFlRequest().getDocType() != null
+				&& getManagedBean().getFlRequest().getFulfilmentReqId() != null) {
+			actor = fulfilmentSO.retrieveFlActors(getManagedBean().getFlRequest().getDocType(), getManagedBean()
+					.getFlRequest().getFulfilmentReqId(), FulfilmentConst.ROLE_CODE_REQUISITIONER);
+
+			if (actor != null) {
+				Long userId = actor.getUser().getUserId();
+				if (CommonConstants.TRACKING_DIARY_SYSTEM_USER_ID.equals(userId)
+						|| CommonConstants.SYSTEM_USER_ID.equals(userId)) {
+					getManagedBean().setPreparedBy(
+							ResourceBundleUtils.getMessage("lbl.pm.system", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									getFacesScopes().getUserLocale()));
+				} else {
+					getManagedBean().setPreparedBy(actor.getUserName());
+				}
+				return;
+			}
+		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getUserIdSessionFromLoginId());
+		UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+
+		if (userResDTO.getPmUser().getUserName() != null) {
+			getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+		}
+	}
+
+	// 29555 end
 	
 	/**
 	 * check role user is fl_approver

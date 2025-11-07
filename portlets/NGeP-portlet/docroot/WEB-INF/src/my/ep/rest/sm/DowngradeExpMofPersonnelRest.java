@@ -50,6 +50,9 @@ public class DowngradeExpMofPersonnelRest {
 		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
 				if (mofAccount.getSmSupplier().getSmAppl() != null) {
+					log.info("BEFORE UPDATE************");
+					log.info("38201 Company Name==" + mofAccount.getSmSupplier().getCompanyName());
+					log.info("38201 eP No==" + mofAccount.getSmSupplier().getEpNo());
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_EXPIRED);
 					mofAccount.setLastCheckDate(new Date());
@@ -83,6 +86,9 @@ public class DowngradeExpMofPersonnelRest {
 		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
 				if(mofAccount.getSmSupplier().getSmAppl() != null){
+					log.info("BEFORE UPDATE************");
+					log.info("38201 Company Name==" + mofAccount.getSmSupplier().getCompanyName());
+					log.info("38201 eP No==" + mofAccount.getSmSupplier().getEpNo());
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
@@ -123,6 +129,9 @@ public class DowngradeExpMofPersonnelRest {
 		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
 				if (mofAccount.getSmSupplier().getSmAppl() != null) {
+					log.info("BEFORE UPDATE************");
+					log.info("38201 Company Name==" + mofAccount.getSmSupplier().getCompanyName());
+					log.info("38201 eP No==" + mofAccount.getSmSupplier().getEpNo());
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
@@ -154,6 +163,9 @@ public class DowngradeExpMofPersonnelRest {
 		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
 				if (mofAccount.getSmSupplier().getSmAppl() != null) {
+					log.info("BEFORE UPDATE************");
+					log.info("38201 Company Name==" + mofAccount.getSmSupplier().getCompanyName());
+					log.info("38201 eP No==" + mofAccount.getSmSupplier().getEpNo());
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());

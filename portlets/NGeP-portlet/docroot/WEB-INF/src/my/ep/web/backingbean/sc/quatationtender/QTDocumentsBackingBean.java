@@ -93,12 +93,12 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
-import my.ep.persistence.entity.sc.common.ScAddress;	// Bug #36702@Syazani 28/11/2024
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;	// Bug #36702@Syazani 28/11/2024
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
@@ -121,9 +121,10 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;	// Bug #39065@Syazani 08/10/2025
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
-import my.ep.util.CustomUtils;	// Bug #36702@Syazani 28/11/2024
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.ResourceBundleUtils;
@@ -144,7 +145,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.VmUtil;	// Bug #36702@Syazani 28/11/2024
+import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -193,10 +194,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		} 
-		/*else {
-			log.info(message);
-		}*/
-		
 	}
 
 	/** The select all. */
@@ -230,8 +227,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		 * @param cloneDocumentSearchBean
 		 *            the clone document search bean
 		 */
-		public DocumentPagingDataModel(String componentId,
-				QtnTenderSearchBean cloneDocumentSearchBean) {
+		public DocumentPagingDataModel(String componentId, QtnTenderSearchBean cloneDocumentSearchBean) {
 			super(componentId, false);
 			this.cloneDocumentSearchBean = cloneDocumentSearchBean;
 		}
@@ -244,18 +240,15 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
-		public ISearchResultBean<ScQt> pageChangeListener(
-				ISearchBean<ScQt> searchBean) {
+		public ISearchResultBean<ScQt> pageChangeListener(ISearchBean<ScQt> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 			IQTDetailSO detailSO;
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				populateCloneQTSearchCriteria(cloneDocumentSearchBean,
-						searchBean);
+				populateCloneQTSearchCriteria(cloneDocumentSearchBean, searchBean);
 				reqDTO.setQtSearchBean(searchBean);
 				QuationTenderResDTO resDTO = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				return resDTO.getQtResultBean();
@@ -273,18 +266,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @param qtSearchBean
 	 *            the qt search bean
 	 */
-	private void populateCloneQTSearchCriteria(
-			QtnTenderSearchBean cloneDocumentSearchBean,
-			ISearchBean<ScQt> qtSearchBean) {
+	private void populateCloneQTSearchCriteria(QtnTenderSearchBean cloneDocumentSearchBean, ISearchBean<ScQt> qtSearchBean) {
 		if (cloneDocumentSearchBean != null) {
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 
 			String qtTitle = cloneDocumentSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.QT_TITILE,
-								SearchOperator.OPERATOR_LIKE.value(), qtTitle,
-								true));
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE.value(), qtTitle, true));
 			}
 
 			String qtNumber = cloneDocumentSearchBean.getQtNo();
@@ -296,13 +284,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				searchFilterBean.add(bean);
 			}
 
-			String procurementMode = cloneDocumentSearchBean
-					.getProcurementMode();
+			String procurementMode = cloneDocumentSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean("procurementMode.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								procurementMode));
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("procurementMode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), procurementMode));
 			} else {
 				// Filter By - procurementMode
 				List<String> procurementModes = new ArrayList<String>();
@@ -2153,6 +2137,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 				TplSpecMaster master = null;
 				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+				PmParameter itemTypeCode = master.getItemTypeCode();	 //Bug #39065@Syazani 08/10/2025
 
 				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
 					TplSpecQuestion parentQuestion = question.getParentSpecQuestion();
@@ -2216,6 +2201,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					if (question.getClReviewRemark() == null) {
 						question.setClReviewRemark("");
 					}
+					
+					trimSpecZoneDtlZoneName(question, itemTypeCode); // Bug #39065@Syazani 08/10/2025
+					
 					if (parentQuestion != null) {
 						int specCount = parentQuestion.getSpecCount();
 						if (specCount == 0) {
@@ -2412,8 +2400,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		VelocityContext context = new VelocityContext();
 
 		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() + ":"
-				+ fs.getRequest().getServerPort();
+		String hostUrl = fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();
 		boolean isLocLevelDistrictContainsDivision = false;	// Bug #38731@Syazani 20/08/2025
 		context.put("hostUrl", hostUrl);
 
@@ -2482,8 +2469,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			locationDetails = CustomUtils.getInstance().deepCopyArrayList(tenderResDTO.getLocationDetails());
 			if (null != locationDetails) {
 				context.put("locality", locationDetails);
-				// Bug #38731@Syazani 20/08/2025 -- End
-			}
+			} 
+			// Bug #38731@Syazani 20/08/2025 -- End
 		} finally {
 			QtDetailsSO = null;
 		}
@@ -2552,13 +2539,15 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 						.equals(criteria.getLocationLevel().getParameterCode())) {
 					isSubLocLevel = true;
 					locationLevel = "District";
-					// Bug #38731@Syazani 20/08/2025 -- Start
-				} else if (ParameterConst.LOCATION_LEVEL_DIVISION
-						.equals(criteria.getLocationLevel().getParameterCode())) {
+				}
+				
+				// Bug #38731@Syazani 20/08/2025 -- Start 
+				else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(criteria.getLocationLevel().getParameterCode())) {
 					isSubLocLevel = true;
 					locationLevel = "Division";
 				}
 				// Bug #38731@Syazani 20/08/2025 -- End
+				
 				context.put("subLocLevel", isSubLocLevel);
 			} else {
 				context.put("subLocLevel", isSubLocLevel);
@@ -2595,7 +2584,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 		context.put("isLocLevelDistrictContainsDivision", isLocLevelDistrictContainsDivision);
 		// Bug #38731@Syazani 20/08/2025 -- End
-		
 
 		context.put("bsvReq", qt.isBsvRequired());
 		boolean isZone = false;
@@ -3184,20 +3172,35 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				sqbd.setBsvDesc(VmUtil.getInstance().splitText(sqbd.getBsvDesc(), QTConstants.QT_VM_SPLIT_MAXLENGTH));
 				if (null != sqbd.getAddress()) {
 					scAddress = sqbd.getAddress();
-					scAddress.setAddress1(VmUtil.getInstance().splitText(scAddress.getAddress1(),
-							QTConstants.QT_VM_SPLIT_MAXLENGTH));
-					scAddress.setAddress2(VmUtil.getInstance().splitText(scAddress.getAddress2(),
-							QTConstants.QT_VM_SPLIT_MAXLENGTH));
-					scAddress.setAddress3(VmUtil.getInstance().splitText(scAddress.getAddress3(),
-							QTConstants.QT_VM_SPLIT_MAXLENGTH));
+					scAddress.setAddress1(VmUtil.getInstance().splitText(scAddress.getAddress1(), QTConstants.QT_VM_SPLIT_MAXLENGTH));
+					scAddress.setAddress2(VmUtil.getInstance().splitText(scAddress.getAddress2(), QTConstants.QT_VM_SPLIT_MAXLENGTH));
+					scAddress.setAddress3(VmUtil.getInstance().splitText(scAddress.getAddress3(), QTConstants.QT_VM_SPLIT_MAXLENGTH));
 				}
 			}
 		}
 	}
 	// Bug #36702@Syazani 28/11/2024 -- End
 	
-	// Bug #38731@Syazani 20/08/2025 -- Start
-	private boolean isLocationContainsDivision(List<TplSpecZoneDtl> specZoneDtls, List<TplSpecLoc> locationDetails, VelocityContext context) {
+	// Bug #39065@Syazani 08/10/2025 -- Start
+	private void trimSpecZoneDtlZoneName(TplSpecQuestion question, PmParameter itemTypeCode) {
+		String itemTypeCodeStr = null != itemTypeCode ? itemTypeCode.getParameterCode() : "";
+		int maxLength = itemTypeCodeStr.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) ? QTConstants.QT_VM_SPLIT_ZONENAME_SERVICE_MAXLENGTH
+				: QTConstants.QT_VM_SPLIT_ZONENAME_PRODUCT_MAXLENGTH;
+		if (!CollectionUtils.isEmpty(question.getTplSpecZoneQties())) {
+			for (TplSpecZoneQty tplSpecZoneQty : question.getTplSpecZoneQties()) {
+				TplSpecZoneDtl tplSpecZoneDtl = tplSpecZoneQty.getTplSpecZoneDtl();
+				String zoneName = VmUtil.getInstance().splitText(tplSpecZoneDtl.getZoneName(), maxLength);
+				zoneName = zoneName.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+				zoneName = zoneName.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+				zoneName = zoneName.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+				zoneName = zoneName.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+				tplSpecZoneDtl.setZoneName(zoneName);
+			}
+		}
+	}
+	
+	private boolean isLocationContainsDivision(List<TplSpecZoneDtl> specZoneDtls, List<TplSpecLoc> locationDetails,
+			VelocityContext context) {
 		boolean isLocationContainsDivision = false;
 		if (!CollectionUtils.isEmpty(specZoneDtls)) {
 			for (TplSpecZoneDtl tplSpecZoneDtl : specZoneDtls) {
@@ -3284,5 +3287,4 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		return new ArrayList<>(map.values());
 	}
 	// Bug #38731@Syazani 20/08/2025 -- End
-
 }
