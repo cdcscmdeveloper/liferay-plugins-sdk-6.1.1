@@ -5548,8 +5548,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Threshold Supplier Account Type Validation process by reason
 	 * 
 	 */
-	private void validatePRSupplierAccType() {
+	public void validatePRSupplierAccType() {
 
+		log.info("27476: start validatePRSupplierAccType");
 		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IReasonSO.class);
 
@@ -5591,6 +5592,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 		buildErrorMessageForPK7SupplierAccountTypeExceed(isErrorMsgThrowForSuppAccTypeValidation,
 				suppAccType);
+		
+		log.info("27476: end validatePRSupplierAccType");
 	}
 
 	/**
@@ -5604,7 +5607,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 		String suppAccType = FulfilmentConst.SM_SUPP_ACC_CODE_BASIC;
 
-		if (mofAcc != null && mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+		if (mofAcc != null) {
 			suppAccType = FulfilmentConst.SM_SUPP_ACC_CODE_MOF;
 		}
 
