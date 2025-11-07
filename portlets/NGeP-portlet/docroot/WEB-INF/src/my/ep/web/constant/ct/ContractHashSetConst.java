@@ -13,8 +13,36 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.type.pm.RoleCode;
 
 /**
+ * =============================================================================
+ *  File Name   : ContractHashSetConst.java
+ *  Description : Centralized constants class for predefined immutable HashSet 
+ *                collections used across contract-related modules.
+ * 
+ *  This class defines reusable and unmodifiable sets of role codes and other 
+ *  constants to improve performance, maintainability, and consistency across 
+ *  the application. 
+ *  
+ *  Instead of recreating HashSet instances repeatedly within business logic 
+ *  (which can lead to unnecessary object creation and garbage collection 
+ *  overhead), all frequently used role-based sets are defined here as 
+ *  static final members.
+ * 
+ *  Example usage:
+ *      if (hasAnyRoleUser(ContractHashSetConst.PBQC_ROLES)) {
+ *          // perform PBQC-related logic
+ *      }
+ * 
+ *  Key Design Principles:
+ *  - Performance: Avoids redundant Set instantiation at runtime.
+ *  - Immutability: All collections are wrapped with Collections.unmodifiableSet().
+ *  - Reusability: Exposed as public/protected static final constants for 
+ *                 cross-class accessibility.
+ *  - Readability: Centralized location for managing role-related sets.
+ * 
  * @author hafizuddin
+ * @since 7/11/2025
  *
+ * =============================================================================
  */
 public final class ContractHashSetConst {
 	
@@ -31,6 +59,7 @@ public final class ContractHashSetConst {
             ContractStatusConst.FA_PENDING_LOA_SUBMISSION,
             ContractStatusConst.FA_PENDING_LOA_REVISION
     )));
+	
 	public static final Set<Long> REJECT_STATUS_CONST = 
 		Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
 			ContractStatusConst.FA_PENDING_APPROVAL,
