@@ -2807,16 +2807,18 @@ public class CommitteBackingBean extends
 
 				Collections.sort(committeeList, new CommitteeTypeComparator());
 
-				List<String> commList = new ArrayList<>();
-				Map<String, ScCommittee> committeeMap = new LinkedHashMap<>();
-				for (ScCommittee committee : committeeList) {
-					String paramCode = committee.getCommitteeType().getParameterCode();
+				List<String> commList = getCommitteeList(committeeList);
+				Map<String, ScCommittee> committeeMap = getCommitteeMap(committeeList);
 
-					committeeMap.put(paramCode, committee);
-					commList.add(paramCode);
+				ScCommittee newCommittee = getDisplayCommittee(committeeMap);
+	
+				boolean isScQtCommitteeExist = isScQtCommiteeExist(newCommittee);
+
+				if(isScQtCommitteeExist){
+					displayCommittee = createNewCommittee(newCommittee);
+				} else {
+					displayCommittee = newCommittee;
 				}
-
-				displayCommittee = getDisplayCommittee(committeeMap);
 
 				this.getManagedBean().setCommitteMap(committeeMap);
 				int activeIndex;
@@ -2868,6 +2870,8 @@ public class CommitteBackingBean extends
 		if(!getManagedBean().isRefreshFCMaintenancePage()){
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, NAV_TO_COMMITTEE_MAINTENANCE + "?faces-redirect=true");
+		} else {
+			getManagedBean().setRefreshFCMaintenancePage(Boolean.FALSE);
 		}
 	}
 	// #35320 - END
@@ -3158,6 +3162,74 @@ public class CommitteBackingBean extends
             }
         }
 		return newCommittee;
+	}
+	// #35320 - END
+
+	// #35320 - START
+	private boolean isScQtCommiteeExist(ScCommittee displayCommittee) {
+		debugLogger("isScQtCommiteeExist");
+
+		boolean isExist = Boolean.FALSE;
+
+		try {
+			ICommitteSO committeeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+
+			isExist = committeeSO.isScQtCommitteeExist(displayCommittee.getCommitteeId());
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, null, null,
+					"CommitteBackingBean.createNewCommittee", null, ex);
+		}
+		return isExist;
+	}
+	
+	private ScCommittee createNewCommittee(ScCommittee newCommittee) {
+		debugLogger("createNewCommittee");
+
+		CommitteResDTO resDTO = new CommitteResDTO();
+		try {
+			ICommitteSO committeeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+
+			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+			committeReqDTO.setScCommittee(newCommittee);
+			committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			committeReqDTO.setCommitteeType(newCommittee.getCommitteeType().getParameterCode());
+
+			resDTO = committeeSO.saveCommitteeMaintenanceAndAssignRole(committeReqDTO);
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, null, null,
+					"CommitteBackingBean.createNewCommittee", null, ex);
+		}
+		return resDTO.getCommittee();
+	}
+	// #35320 - END
+	
+	// #35320 - START
+	private Map<String, ScCommittee> getCommitteeMap(List<ScCommittee> committeeList){
+		Map<String, ScCommittee> committeeMap = new LinkedHashMap<>();
+		for (ScCommittee committee : committeeList) {
+			String paramCode = committee.getCommitteeType().getParameterCode();
+
+			if(CollectionUtils.isNotEmpty(committee.getScCommitteeMemberHistories())){
+				committeeMap.put(paramCode, committee);
+			}
+		}
+		return committeeMap;
+	}
+	// #35320 - END
+	
+	// #35320 - START
+	private List<String> getCommitteeList(List<ScCommittee> committeeList){
+		List<String> commList = new ArrayList<>();
+		for (ScCommittee committee : committeeList) {
+			String paramCode = committee.getCommitteeType().getParameterCode();
+
+			if(CollectionUtils.isNotEmpty(committee.getScCommitteeMemberHistories())){
+				commList.add(paramCode);
+			}
+		}
+		return commList;
 	}
 	// #35320 - END
 }
