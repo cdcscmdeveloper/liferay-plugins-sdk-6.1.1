@@ -1284,9 +1284,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			//#26191-end
 			// 36361-Start
 			if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			    validateDelQtySaved();
-			    
-			    validateDeliveryAgainstLimit();//30753
+				validateDelQtySaved();
+
+				validateDeliveryAgainstLimit();// 30753
 			}
 			// 36361-End
 		}
