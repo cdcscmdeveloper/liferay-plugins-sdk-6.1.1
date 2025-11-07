@@ -212,6 +212,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 					auditPMReqDTO.setpLvl5(lSearchBean.getMasterLabel5());
 					auditPMReqDTO.setpLvl6(lSearchBean.getMasterLabel6());
 					auditPMReqDTO.setpLvl7(lSearchBean.getMasterLabel7());
+					auditPMReqDTO.setpLvl8(lSearchBean.getMasterLabel8());
 					auditPMReqDTO.setpRoleCode(lSearchBean.getRoleCode());
 					auditPMReqDTO.setPdateFrom(lSearchBean.getDateFrom());
 					auditPMReqDTO.setPdateTo(lSearchBean.getDateTo());
@@ -226,6 +227,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 					lSearchBean.setpLvl5OldVal(lSearchBean.getMasterLabel5());
 					lSearchBean.setpLvl6OldVal(lSearchBean.getMasterLabel6());
 					lSearchBean.setpLvl7OldVal(lSearchBean.getMasterLabel7());
+					lSearchBean.setpLvl8OldVal(lSearchBean.getMasterLabel8());
 
 					lSearchBean.setRoleCodeOldVal(lSearchBean.getRoleCode());
 					lSearchBean.setDateFromOldVal(lSearchBean.getDateFrom());
@@ -244,6 +246,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 					auditPMReqDTO.setpLvl5(lSearchBean.getpLvl5OldVal());
 					auditPMReqDTO.setpLvl6(lSearchBean.getpLvl6OldVal());
 					auditPMReqDTO.setpLvl7(lSearchBean.getpLvl7OldVal());
+					auditPMReqDTO.setpLvl8(lSearchBean.getpLvl8OldVal());
 
 					auditPMReqDTO.setPdateFrom(lSearchBean.getDateFromOldVal());
 					auditPMReqDTO.setPdateTo(lSearchBean.getDateToOldVal());
@@ -489,6 +492,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setMasterLabel5(null);
 		getManagedBean().getSearchBean().setMasterLabel6(null);
 		getManagedBean().getSearchBean().setMasterLabel7(null);
+		getManagedBean().getSearchBean().setMasterLabel8(null);
 		getManagedBean().getSearchBean().setOrgTypeParamId(null);
 		getManagedBean().getSearchBean().setPmUser(null);
 	}
