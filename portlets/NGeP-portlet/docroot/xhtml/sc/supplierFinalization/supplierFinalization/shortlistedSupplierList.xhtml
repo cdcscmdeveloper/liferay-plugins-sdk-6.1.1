@@ -805,6 +805,20 @@
 						</c:otherwise>
 					</c:choose>
 				</p:column>
+				
+				<ui:param name="supplier"
+					value="#{shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column
+					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+					<h:outputText
+						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+				</p:column>
+
+				<p:column>
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
+				</p:column>
 
 				<p:column rendered="#{false}}">
 					<h:outputText value="" />
