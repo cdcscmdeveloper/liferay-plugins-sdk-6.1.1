@@ -147,8 +147,7 @@
 					<td><p:selectOneMenu
 							value="#{evaluationBackingBean.managedBean.companyExpNonProcRelated}"
 							style="width: 180px;margin-bottom: 5px;">
-							<f:selectItems
-								value="#{evaluationBackingBean.contractStatusDesc}"></f:selectItems>
+							<f:selectItems value="#{evaluationBackingBean.contractStatusDesc}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{evaluationBackingBean.changeContractStatusNonProcRelated(evaluationBackingBean.managedBean.companyExpNonProcRelated)}"
 								update="@([id$=cmpExpGovNonPrcRelated]) "></p:ajax>
