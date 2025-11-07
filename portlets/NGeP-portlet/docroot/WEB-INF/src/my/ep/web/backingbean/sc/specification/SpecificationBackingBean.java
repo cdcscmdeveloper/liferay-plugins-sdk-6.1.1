@@ -5407,7 +5407,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							panelItem = true;
 						}
 						
-						if (panelItem) {
+						if (!panelItem) {
 							// #25635 -end-
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
 						} else {
