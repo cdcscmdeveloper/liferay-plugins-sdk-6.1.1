@@ -704,6 +704,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ConstructTabSideMenu();
 				
 				// #24336 - Start
+				// Handle amendment checklist value
+				handleSelectedAmendmentChecklistValue();
+				
+				// Handle amendment type valuechange
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
 					handleContractValueTypeChange();
 					handleNewAmtEffDate();
@@ -1474,7 +1478,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				initializeApproverList();
 			}
 			// Retrieve approver list
-			if (isApproverSetting()) {
+			if (isApproverSetting() 
+					|| isCtApproverSetting()) { // #24336
 				getManagedBean().getApproverModel().setSource(
 						getAvailableApproverList(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode(),
 								getManagedBean().getUserMap()));
@@ -2917,15 +2922,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			// #24336 - Start
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
-				// Validation for Reduction of Contract Amount (submit)
+				// Validation for Reduction of Contract Amount
 				validateReductionAmount();
 				
-				// Empty@Null validation for new amount effective date (submit)
+				// Empty@Null validation for new amount effective date
 				validateNewAmtEffDate();
-				
-				// Validation for amendment checklist (submit)
-				validateAmendmentCheclist();
 			}
+			
+			// Validation for amendment checklist
+			if(isApproverSetting() || isCtApproverSetting()){
+				validateAmendmentChecklist();
+			}
+			
 			// #24336 - End
 			
 		}
@@ -3546,9 +3554,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#29549 end
 			
-			if (isApproverSetting() && !getManagedBean().isPrepareLOA()) {
+			//#24336 (add isCtApproverSetting())  - Start
+			if ((isApproverSetting() || isCtApproverSetting()) && !getManagedBean().isPrepareLOA()) {
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuApprover);
 			}
+			//#24336 - End
 
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) { //24333
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
@@ -7703,7 +7713,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
-
+	
 	/**
 	 * The method used to check the accessibility of factoring tab menu.
 	 * 
@@ -10325,7 +10335,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	
-	private void validateAmendmentCheclist(){
+	private void validateAmendmentChecklist(){
 		
 		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 		ContractManagedBean bean = ctBackingBean.getManagedBean();
@@ -10364,6 +10374,64 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			throw new EpException(MessageConst.ERROR_750093);
 		}
 		
+	}
+	
+	private void handleSelectedAmendmentChecklistValue(){
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		ContractManagedBean bean = ctBackingBean.getManagedBean();
+		
+		boolean isContractExtend = amendment.isContractExtend();
+		boolean isItemPriceChange = amendment.isItemPriceChange();
+		boolean isQuantityChange = amendment.isQuantityChange();
+		boolean isValueChange = amendment.isValueChange();
+		boolean isClauseChange = amendment.isClauseChange();
+		boolean isValueChangeByGst = amendment.isValueChangeByGst();
+		boolean isOtherChange = amendment.isOtherChange();
+		
+		if(isCtApproverSetting()){
+			bean.setContractExtendChecklist(isContractExtend ? true : false);			
+			bean.setItemPriceChangeChecklist(isItemPriceChange ? true : false);
+			bean.setQuantityChangeChecklist(isQuantityChange ? true : false);
+			bean.setValueChangeChecklist(isValueChange ? true : false);
+			bean.setClauseChangeChecklist(isClauseChange ? true : false);
+			bean.setValueChangeByGstChecklist(isValueChangeByGst ? true : false);
+			bean.setOtherChangeChecklist(isOtherChange ? true : false);
+		}else{
+			if(!isContractExtend){
+				bean.setContractExtendChecklist(false);
+			}
+			if(!isItemPriceChange){
+				bean.setItemPriceChangeChecklist(false);
+			}
+			if(!isQuantityChange){
+				bean.setQuantityChangeChecklist(false);
+			}
+			if(!isValueChange){
+				bean.setValueChangeChecklist(false);
+			}
+			if(!isClauseChange){
+				bean.setClauseChangeChecklist(false);
+			}
+			if(!isValueChangeByGst){
+				bean.setValueChangeByGstChecklist(false);
+			}
+			if(!isOtherChange){
+				bean.setOtherChangeChecklist(false);
+			}
+		}
+		
+	}
+	
+	public boolean isCtApproverSetting() {
+		if (isCtApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean isCtApprover() {
+		return getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value());
 	}
 	
 	/**

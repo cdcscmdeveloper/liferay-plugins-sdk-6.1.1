@@ -185,12 +185,12 @@
 			or amendmentBackingBean.managedBean.decisionPbQcLOA or (amendmentBackingBean.managedBean.disableMeetingDetails and amendmentBackingBean.managedBean.disableDecisionDetails)}"
 			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.decision']))}" update=":form" />
 	
-			<!-- #24336 rename menu value - Start -->
+			<!-- #24336 change menuitem value - Start -->
 	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting.amendment.checklist']}" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
+			rendered="#{(amendmentBackingBean.isCtApproverSetting() or amendmentBackingBean.isApproverSetting()) and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
 			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.approver.setting.amendment.checklist']))}" update=":form" />
-			<!-- #24336 rename menu value - End -->
+			<!-- #24336 - End -->
 
 		</p:tabMenu>
 		 </td>
