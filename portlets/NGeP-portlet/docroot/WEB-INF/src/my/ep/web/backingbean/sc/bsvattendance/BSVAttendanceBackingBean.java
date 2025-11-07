@@ -1790,7 +1790,6 @@ public class BSVAttendanceBackingBean extends
 			auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#355500 Flag changes
 			
-
 			if(!(newBriefingRegistrationList == null||newBriefingRegistrationList.isEmpty())){	
 				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_SL_COMPANY_NAME);	
 				auditResDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
