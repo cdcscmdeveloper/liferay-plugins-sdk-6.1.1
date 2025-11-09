@@ -89,6 +89,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -1973,9 +1974,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * Shows a warning message if the threshold is exceeded.
 	 */
 	private void validateContractOrderLimit() {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		
 		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
-		FulfilmentResDTO resDTOLimit = retrieveCOLimitAmount(order.getFlFulfilmentRequest().getFulfilmentReqId());
-
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(order.getFlFulfilmentRequest().getFulfilmentReqId());
+		FulfilmentResDTO resDTOLimit = fulfilmentSO.retrieveCOLimitAmount(reqDTO);
+		
 		if (resDTOLimit == null) {
 			return;
 		}
@@ -1985,9 +1990,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
 				.getFulfilmentRequest().getCtContract().getContractId() : null;
 
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setContractId(contractId);
-		BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTO);
+		FulfilmentReqDTO reqDTODel = new FulfilmentReqDTO();
+		reqDTODel.setContractId(contractId);
+		BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTODel);
 
 		if (resDTOLimit.isContractSharing() && limitAmount.compareTo(BigDecimal.ZERO) > 0
 				&& totalDeliveryAmount.compareTo(limitAmount) > 0) {
@@ -2012,6 +2017,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * warning message if the threshold is exceeded.
 	 */
 	private void validatePurchaseOrderLimit() {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
 		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
 		Long fulfilmentReqId = order.getFlFulfilmentRequest().getFulfilmentReqId();
 
@@ -2019,34 +2026,61 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		reqDTO.setFlRequestId(fulfilmentReqId);
 		BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTO);
 
-		FulfilmentResDTO resDTOPO = validatePOThresholdAmount(fulfilmentReqId, totalDeliveryAmount);
-		BigDecimal limitAmount = resDTOPO.getLimitAmount();
-		String procurementType = resDTOPO.getProcurementType();
-		Long supplierTypeId = resDTOPO.getSupplierTypeId();
-		boolean isPanel = resDTOPO.isPanel();
-		boolean isExceedLimit = resDTOPO.isExceedLimit();
+		reqDTO.setValidationAmt(totalDeliveryAmount);
+		FulfilmentResDTO resDTO = fulfilmentSO.validatePOThresholdAmount(reqDTO);
 
-		if (!isPanel && supplierTypeId != null) {// for non-panel
-			String suppAccCode = (supplierTypeId == FulfilmentConst.ACC_TYPE_ID_BASIC) ? FulfilmentConst.SM_SUPP_ACC_CODE_BASIC
-					: FulfilmentConst.SM_SUPP_ACC_CODE_MOF;
+		BigDecimal limitAmount = resDTO.getLimitAmount();
+		PmParameter procurementType = resDTO.getProcurementType();
+		Long supplierTypeId = resDTO.getSupplierTypeId();
+		boolean isPanel = resDTO.isPanel();
+		boolean isExceedLimit = resDTO.isExceedLimit();
+		boolean isHasThreshold = resDTO.isHasThreshold();
 
-			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, suppAccCode);
-
+		if (!isHasThreshold) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_745100, new String[] { totalDeliveryAmount.toPlainString() },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		} else {
 			if (isExceedLimit) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.INFO_745093, new String[] { limitAmount.toString(), procurementType,
-										suppAccTypeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-			}
-		} else {// for panel and special item/pk7
-			if (isExceedLimit) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.INFO_745092, new String[] { limitAmount.toString(), procurementType },
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				if (!isPanel && supplierTypeId != null) {
+					String suppAccCode = (supplierTypeId == FulfilmentConst.ACC_TYPE_ID_BASIC) ? FulfilmentConst.SM_SUPP_ACC_CODE_BASIC
+							: FulfilmentConst.SM_SUPP_ACC_CODE_MOF;
+
+					String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, suppAccCode);
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_745093,
+									new String[] {
+											limitAmount.toString(),
+											this.getParameterDesc(procurementType) + " (" + ParameterConst.NON_PANEL
+													+ ")", suppAccTypeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
+				} else if (isPanel) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(
+											MessageConst.INFO_745092,
+											new String[] {
+													limitAmount.toString(),
+													this.getParameterDesc(procurementType) + " ("
+															+ ParameterConst.PANEL + ")" },
+											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+				} else {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_745092,
+									new String[] { limitAmount.toString(), this.getParameterDesc(procurementType) },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+				}
 			}
 		}
 	}
