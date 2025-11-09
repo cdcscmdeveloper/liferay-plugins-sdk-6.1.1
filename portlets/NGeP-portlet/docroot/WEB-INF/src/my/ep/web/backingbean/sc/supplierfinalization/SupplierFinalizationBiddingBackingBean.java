@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -2637,19 +2638,29 @@ public class SupplierFinalizationBiddingBackingBean extends
 				}
 			}
 		}
-		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
-			if (!entry.getValue()) {
-				ScQtRecommend recommend = recommendMap.get(entry.getKey());
-				if (getManagedBean().isZonal()) {
-					setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
+		
+		try {
+			for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
+				if (!entry.getValue()) {
+					ScQtRecommend recommend = recommendMap.get(entry.getKey());
+					if (getManagedBean().isZonal()) {
+						setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
+					}
+					if (getManagedBean().isItemized()) {
+						throw new EpException(MessageConst.ERROR_760377, new String[] { recommend.getRequestItem()
+								.getItemName() });
+					}
+					throw new EpException(MessageConst.ERROR_760376);
 				}
-				if (getManagedBean().isItemized()) {
-					throw new EpException(MessageConst.ERROR_760377, new String[] { recommend.getRequestItem()
-							.getItemName() });
-				}
-				throw new EpException(MessageConst.ERROR_760376);
+			}  
+		} catch (EpException e) {
+			String taskName = this.getManagedBean().getTaskName();
+			if (Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION, SCProcessNameConst.SIGNOFF_FC_SELECTION)
+					.contains(taskName)) {
+				throw new EpException(MessageConst.ERROR_760601);
 			} 
-		} 
+			throw e;
+		}
 		// 26247, 38591 - end
 	}
 

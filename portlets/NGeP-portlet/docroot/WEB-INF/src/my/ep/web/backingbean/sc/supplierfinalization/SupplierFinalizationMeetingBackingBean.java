@@ -2378,7 +2378,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
-			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
 					||auditResDTO.getRoleCode().equals(RoleCode.PPB_SECRETARY.value())){
 				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_PB);
@@ -2425,7 +2425,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
-			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 			
 			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
 				auditResDTO.setNewValue(entry.getValue().get(0));
@@ -2553,7 +2553,7 @@ if (CollectionUtils.isNotEmpty(
 	 */
 	public String checkRolesForAuditTrail() {
 		FacesScopes facesScopes = new FacesScopes();
-		String role = RoleCode.QCA_SECRETARY.value();
+		String role = RoleCode.QQC_SECRETARY.value();
 
 		try {
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2567,10 +2567,13 @@ if (CollectionUtils.isNotEmpty(
 			String currentCommitteeType = this.getManagedBean().getCommitteeType();
 			if (currentCommitteeType.equals("FSB") || currentCommitteeType.equals("FSW")) {
 				currentCommitteeType = "FPB";
+			}else if (currentCommitteeType.equals("QCA") || currentCommitteeType.equals("QCB")){
+				currentCommitteeType = "QQC";
 			}
+			
 			for (String userRole : pmRoles) {
 				String trimmedRole = userRole.substring(0, 3);
-				if (trimmedRole.equals(currentCommitteeType)) {
+				if (trimmedRole.equals(currentCommitteeType) && userRole.toLowerCase().contains("secretary")) {
 					return userRole;
 				}
 			}
