@@ -7393,7 +7393,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (getFacesScopes().hasRoleUser(RoleCode.FPB_CHAIRPERSON.value())) {
 						userRole = RoleCode.FPB_CHAIRPERSON.value();
 					}
-				} else {
+				}
+				//#35238 start
+				else if (isQuotationCommitteeType() && hasQuotationChairperson()){
+					userRole = RoleCode.QQC_CHAIRPERSON.value();
+				}
+				//#35238 end
+				else {
 					String roleCode = getManagedBean().getCommitteeType() + "_CHAIRPERSON";
 					if (getFacesScopes().hasRoleUser(roleCode)) {
 						userRole = roleCode;
@@ -7405,7 +7411,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (getFacesScopes().hasRoleUser(RoleCode.FPB_MEMBER.value())) {
 						userRole = RoleCode.FPB_MEMBER.value();
 					}
-				} else {
+				}
+				//#35238 start
+				else if (isQuotationCommitteeType() && hasQuotationMember()){
+					userRole = RoleCode.QQC_MEMBER.value();
+				}
+				//#35238 end
+				else {
 					String roleCode = getManagedBean().getCommitteeType() + "_MEMBER";
 					if (getFacesScopes().hasRoleUser(roleCode)) {
 						userRole = roleCode;
@@ -9788,7 +9800,35 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		qqcSecretary.add(RoleCode.QQC_SECRETARY.value());
 		
 		return hasAnyRoleUser(qqcSecretary);
-	}	
+	}
+	
+	/**
+	 * Checks if the user has any quotation chairperson roles.
+	 * 
+	 * @return true if has any role related.
+	 */
+	private boolean hasQuotationChairperson() {
+		Set<String> qqcChairperson = new HashSet<>();
+		qqcChairperson.add(RoleCode.QCA_CHAIRPERSON.value());
+		qqcChairperson.add(RoleCode.QCB_CHAIRPERSON.value());
+		qqcChairperson.add(RoleCode.QQC_CHAIRPERSON.value());
+		
+		return hasAnyRoleUser(qqcChairperson);
+	}
+	
+	/**
+	 * Checks if the user has any quotation member roles.
+	 * 
+	 * @return true if has any role related.
+	 */
+	private boolean hasQuotationMember() {
+		Set<String> qqcChairperson = new HashSet<>();
+		qqcChairperson.add(RoleCode.QCA_MEMBER.value());
+		qqcChairperson.add(RoleCode.QCB_MEMBER.value());
+		qqcChairperson.add(RoleCode.QQC_MEMBER.value());
+		
+		return hasAnyRoleUser(qqcChairperson);
+	}
 	//#35238 end
 
 }
