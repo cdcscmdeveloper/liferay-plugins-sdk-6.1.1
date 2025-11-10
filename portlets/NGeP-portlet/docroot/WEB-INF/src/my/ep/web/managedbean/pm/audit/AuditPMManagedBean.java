@@ -95,6 +95,8 @@ public class AuditPMManagedBean extends BaseManagedBean {
 
 	private List<VAuditPMDTO> vpmAuditLocationDTOList;
 
+	private VAuditPMDTO vAuditPMDTO;
+
 	/**
 	 * Constructor
 	 */
@@ -399,5 +401,13 @@ public class AuditPMManagedBean extends BaseManagedBean {
 
 	public void setParamLevelCode3(String paramLevelCode3) {
 		this.paramLevelCode3 = paramLevelCode3;
+	}
+
+	public VAuditPMDTO getvAuditPMDTO() {
+		return vAuditPMDTO;
+	}
+
+	public void setvAuditPMDTO(VAuditPMDTO vAuditPMDTO) {
+		this.vAuditPMDTO = vAuditPMDTO;
 	}
 }

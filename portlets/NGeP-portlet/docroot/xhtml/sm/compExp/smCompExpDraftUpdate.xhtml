@@ -89,7 +89,7 @@
 									rendered="#{smCompExpMB.disableClienType or (!smCompExpMB.disableClienType and 
 								smCompExpMB.selectedDraft.oriAgencyName ne null)}"
 									value="#{smCompExpMB.selectedDraft.agencyName}" />
-								<p:inputText size="60"
+								<p:inputText size="60" style="width: auto !important;"
 									rendered="#{!smCompExpMB.disableClienType and smCompExpMB.selectedDraft.oriAgencyName eq null}"
 									value="#{smCompExpMB.selectedDraft.agencyName}" />
 							</p:outputPanel>
@@ -116,7 +116,7 @@
 							<p:spacer width="3px" />
 							<p:inputText id="fileExtensionNo"
 								label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
-								maxlength="3" size="3"
+								maxlength="3" size="3" style="width: auto !important;"
 								value="#{smCompExpMB.selectedDraft.fileExtensionNo}">
 								<p:ajax event="blur"
 									listener="#{smCompExpBB.trimFileExtensionNo}"
@@ -371,7 +371,7 @@
 				widgetVar="smCompExpCatCodesWV">
 				<ac:paginator for="smCompExpCatCodes" />
 				<c:if test="#{smCompExpMB.smCompExpCatDraftListEmpty}">
-					<p:column style="width:2%">
+					<p:column style="width:2% !important;">
 						<f:facet name="header">
 							<p:selectBooleanCheckbox value="#{smCompExpMB.selectedAll}">
 								<p:ajax listener="#{smCompExpBB.selectAllDraftCatCodes}"
@@ -383,9 +383,10 @@
 								update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}" />
 						</p:selectBooleanCheckbox>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+					<p:column style="width:34% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 						<h:outputText styleClass="mandatory" value="*" />
-						<p:selectOneMenu id="mainDDId"
+						<p:selectOneMenu id="mainDDId" style="width:95% !important;"
 							label="#{lbl['lbl.sm.projDtls.mainCat']}"
 							value="#{smCompExpCatCode.categoryL1.categoryL1Id}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -397,9 +398,10 @@
 								listener="#{smCompExpBB.getSupplierSubCatList(smCompExpCatCode.categoryL1.categoryL1Id, index)}" />
 						</p:selectOneMenu>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+					<p:column style="width:32% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.subCat']}">
 						<h:outputText styleClass="mandatory" value="*" />
-						<p:selectOneMenu id="subDDId"
+						<p:selectOneMenu id="subDDId" style="width:95% !important;"
 							label="#{lbl['lbl.sm.projDtls.subCat']}"
 							value="#{smCompExpCatCode.categoryL2.categoryL2Id}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -411,9 +413,10 @@
 								listener="#{smCompExpBB.getSupplierSubDivCatList(smCompExpCatCode.categoryL2.categoryL2Id, index)}" />
 						</p:selectOneMenu>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+					<p:column style="width:32% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 						<h:outputText styleClass="mandatory" value="*" />
-						<p:selectOneMenu id="subDivDDId"
+						<p:selectOneMenu id="subDivDDId" style="width:95% !important;"
 							label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 							value="#{smCompExpCatCode.categoryL3.categoryL3Id}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -428,13 +431,16 @@
 					</p:column>
 				</c:if>
 				<c:if test="#{!smCompExpMB.smCompExpCatDraftListEmpty}">
-					<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+					<p:column style="width:34% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 						<h:outputText value="#{smCompExpCatCode.categoryL1Name}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+					<p:column style="width:33% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.subCat']}">
 						<h:outputText value="#{smCompExpCatCode.categoryL2Name}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+					<p:column style="width:33% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 						<h:outputText value="#{smCompExpCatCode.categoryL3Name}" />
 					</p:column>
 				</c:if>
