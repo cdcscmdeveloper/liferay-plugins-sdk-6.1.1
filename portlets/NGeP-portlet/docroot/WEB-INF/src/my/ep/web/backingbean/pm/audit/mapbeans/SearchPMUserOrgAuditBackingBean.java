@@ -145,7 +145,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	 * @throws AuditPMException
 	 */
 	public String redirectToDetails(String paramLevel3, BigDecimal pmParameterLvlId, BigDecimal createBy, String roleCode,
-			BigDecimal docGroupId, String paramLevel6) throws AuditPMException {
+			BigDecimal docGroupId, String paramLevel6, VAuditPMDTO dto) throws AuditPMException {
 		if (paramLevel3 == null || pmParameterLvlId == null || roleCode == null) {
 			throw new AuditPMException("Missing required parameters for redirectToDetails SecondUI Audit PM. : "
 					+ " <paramLevel3>:" + paramLevel3 + " <pmParameterLvlId>:" + pmParameterLvlId + "<roleCode>:" + roleCode);
@@ -165,6 +165,9 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 				getManagedBean().getSearchBean().setpUserOrgProfileId(new BigDecimal(paramLevel6));
 			}
 		}
+
+		getManagedBean().getSearchBean().setRoleCode(dto.getRoleCode());
+		getManagedBean().getSearchBean().setCreatedBy(dto.getCreateBy().toString());
 
 		return NAV_TO_MAINTAIN;
 	}
@@ -252,7 +255,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 					auditPMReqDTO.setCreatedBy(lSearchBean.getUserId().toString());
 					lSearchBean.setUserIdOldVal(lSearchBean.getUserId());
 				} else if (lSearchBean.getUserId() != null && !lSearchBean.isSearching()) {
-					auditPMReqDTO.setCreatedBy(lSearchBean.getUserIdOldVal().toString());
+					auditPMReqDTO.setCreatedBy(lSearchBean.getCreatedByOldVal());
 				}
 
 				auditPMReqDTO.setCategoryConfigParamLevel2(getManagedBean().getSearchBean().getMasterLabel2());

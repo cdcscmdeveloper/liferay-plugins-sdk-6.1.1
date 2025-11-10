@@ -12,6 +12,9 @@
 			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
 					.html("#{lbl['lbl.sm.comp.exp.screen.name']}");
 		</script>
+		<style>
+			.text{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:blue;}
+		</style>
 	</ui:define>
 	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -21,18 +24,19 @@
 			showDetail="true" showSummary="false" />
 		<p:outputPanel rendered="#{smCompExpMB.draftExist}">
 			<p:graphicImage value="/css/images/priority.png" />
-			<p:spacer width="3" />
-			<h:outputText style="color:blue;"
+			<p:spacer width="5" />
+			<h:outputText class="text"
 				value="#{lbl['lbl.sm.comp.exp.draft.link.one']}" />
+			<p:spacer width="3" />
 			<p:commandLink action="#{smCompExpBB.redirectToDraft}"
 				oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 				partialSubmit="true" process="@this" update=":form">
-				<u><h:outputText style="color:blue;text-decoration: underline"
-						value="#{lbl['lbl.sm.comp.exp.draft.link.two']}" /></u>
+				<h:outputText class="text"
+					value="#{lbl['lbl.sm.comp.exp.draft.link.two']}" />
 			</p:commandLink>
 			<p:spacer width="3" />
 			<h:outputText value="#{lbl['lbl.sm.comp.exp.draft.link.three']}"
-				style="color:blue;" />
+				class="text" />
 		</p:outputPanel>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.master.list.panel']}"
 			toggleable="false" id="compExpList">
@@ -48,31 +52,31 @@
 					<p:columnGroup type="header">
 						<p:row>
 							<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
-								style="text-align: center !important;" />
+								style="width:2% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
-								style="text-align: center !important;" />
+								style="width:40% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
-								style="text-align: center !important;" />
+								style="width:10% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
-								style="text-align: center !important;" />
+								style="width:10% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
-								style="text-align: center !important;" />
+								style="width:10% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.master.list.cat.code']}"
-								style="text-align: center !important;" />
+								style="width:10% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.master.record.status']}"
-								style="text-align: center !important;" />
+								style="width:10% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
-								style="text-align: center !important;" />
+								style="width:8% !important; text-align: center !important;" />
 						</p:row>
 					</p:columnGroup>
-					<p:column>
+					<p:column style="text-align: center !important;">
 						<h:outputText value="#{index+1}" />
 					</p:column>
 					<p:column
@@ -85,26 +89,26 @@
 						<p:spacer width="3px" />
 						<h:outputText value="#{masterFed.fileExtensionNo}" />
 					</p:column>
-					<p:column>
+					<p:column style="text-align: center !important;">
 						<h:outputText value="#{masterFed.contractEffDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column>
+					<p:column style="text-align: center !important;">
 						<h:outputText value="#{masterFed.contractValue}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column>
+					<p:column style="text-align: center !important;">
 						<ui:repeat var="catCode" value="#{masterFed.compExpMasterCats}">
 							<h:outputText
 								value="#{catCode.categoryL1.categoryL1Code}#{catCode.categoryL2.categoryL2Code}#{catCode.categoryL3.categoryL3Code}" />
 							<br />
 						</ui:repeat>
 					</p:column>
-					<p:column>
+					<p:column style="text-align: center !important;">
 						<h:outputText styleClass="outputLabel-view"
 							rendered="#{masterFed.recordStatusFlg eq ParameterConst.recordStatusActive}"
 							value="#{lbl['lbl.sm.comp.exp.master.record.status.active']}" />
@@ -112,7 +116,7 @@
 							rendered="#{masterFed.recordStatusFlg eq ParameterConst.recordStatusDeleted}"
 							value="#{lbl['lbl.sm.comp.exp.master.record.status.delete']}" />
 					</p:column>
-					<p:column>
+					<p:column style="text-align: center !important;">
 						<p:commandLink action="#{smCompExpBB.initViewPopup(masterFed)}"
 							oncomplete="blockWidget.hide(),compExpViewPopupWV.show()"
 							onstart="blockWidget.show()" partialSubmit="true" process="@this"
@@ -163,25 +167,28 @@
 					<p:columnGroup type="header">
 						<p:row>
 							<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
-								style="text-align: center !important;" />
+								style="width:2% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
-								style="text-align: center !important;" />
+								style="width:40% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
-								style="text-align: center !important;" />
+								style="width:10% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
-								style="text-align: center !important;" />
+								style="width:10% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
-								style="text-align: center !important;" />
+								style="width:10% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.master.list.cat.code']}"
-								style="text-align: center !important;" />
+								style="width:10% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.record.status']}"
+								style="width:10% !important; text-align: center !important;" />
 							<p:column
 								headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
-								style="text-align: center !important;" />
+								style="width:8% !important; text-align: center !important;" />
 						</p:row>
 					</p:columnGroup>
 					<p:column>
