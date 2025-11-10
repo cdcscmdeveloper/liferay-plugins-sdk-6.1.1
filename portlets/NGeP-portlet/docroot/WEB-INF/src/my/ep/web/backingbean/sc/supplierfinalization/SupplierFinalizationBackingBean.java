@@ -2873,11 +2873,12 @@ public class SupplierFinalizationBackingBean extends
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 		scQt = qtBackingBean.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();//#39344
 		boolean isBpkCentralContract = false;
 		isBpkCentralContract = isBpkCentralContract(scQt);
 		boolean hidden = false;
 
-		if (!isBpkCentralContract) {
+		if (!isBpkCentralContract && !statusId.equals(QTStatusConst.QT_RE_FINALIZATION)){//#39344
 			List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
 			if (CollectionUtils.isNotEmpty(meetingListList) && meetingListList.size() > 0) {
 				for (ScQtMeeting meeting : meetingListList) {
