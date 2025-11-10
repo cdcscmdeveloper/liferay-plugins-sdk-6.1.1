@@ -323,7 +323,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 	    	}else{
 	    		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
 	    	}
-		}		
+		}
+
+		checkCatCodeWIPIcon(); // #29732
 	}
 
 	
@@ -2172,9 +2174,13 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		
 		if(processAfter){
-			getManagedBean().setHistoryList(
-					updateCreatedUserName(resDTO.getRemarkList()));
-			getManagedBean().setHisCatCode(catCode);
+			if(this.getManagedBean().getResetHistoryCatCode()){
+				this.getManagedBean().setHistoryList(null);
+			}else{
+				getManagedBean().setHistoryList(
+						updateCreatedUserName(resDTO.getRemarkList()));
+				getManagedBean().setHisCatCode(catCode);
+			}
 		}
 
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
