@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -165,6 +164,7 @@ import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.ct.ContractHashSetConst; //#35238 / #26186
 import my.ep.web.constant.report.ReportConst; //24333
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -236,32 +236,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//#24336 - End
 	
-	//#34097/#26186 start
-	private static final Set<Long> CANCEL_STATUS_CONST = new HashSet<>(Arrays.asList(
-            ContractStatusConst.FA_PENDING_SUBMISSION,
-            ContractStatusConst.FA_PENDING_REVISION,
-            ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION,
-            ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION_REVISION,
-            ContractStatusConst.FA_PENDING_MEETING_DECISION,
-            ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION,
-            ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION,
-            ContractStatusConst.FA_PENDING_LOA_SUBMISSION,
-            ContractStatusConst.FA_PENDING_LOA_REVISION
-    ));
-	private static final Set<Long> REJECT_STATUS_CONST = new HashSet<>(Arrays.asList(
-			ContractStatusConst.FA_PENDING_APPROVAL,
-			ContractStatusConst.FA_PENDING_REVISION_APPROVAL,
-			ContractStatusConst.FA_PENDING_LOA_APPROVAL,
-			ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL
-    ));
-	//#34097/#26186 end
-	//#35238 start
-	private static final Set<String> COMMITTEE_TYPE_QUOTATION = new HashSet<>(Arrays.asList(
-			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A,
-			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B,
-			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE
-    ));
-	//#35238 end
 	
 	/**
 	 * The constructor used for initializing the variable.
@@ -7612,7 +7586,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				// #25956 - Start - Fixing for _Secretary Role
 				//#35238 start
-				if (isQuotationCommitteeType() && hasQuotationSecretary()) { 
+				if (isQuotationCommitteeType() && hasAnyRoleUser(ContractHashSetConst.QUOTATION_SECRETARY_ROLES)) { 
 					userRole = RoleCode.QQC_SECRETARY.value();					
 				} 
 				//#35238 end
@@ -7658,7 +7632,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (getFacesScopes().hasRoleUser(RoleCode.FPB_CHAIRPERSON.value())) {
 						userRole = RoleCode.FPB_CHAIRPERSON.value();
 					}
-				} else {
+				}
+				//#35238 start
+				else if (isQuotationCommitteeType() && hasAnyRoleUser(ContractHashSetConst.QUOTATION_CHAIRPERSON_ROLES)){
+					userRole = RoleCode.QQC_CHAIRPERSON.value();
+				}
+				//#35238 end
+				else {
 					String roleCode = getManagedBean().getCommitteeType() + "_CHAIRPERSON";
 					if (getFacesScopes().hasRoleUser(roleCode)) {
 						userRole = roleCode;
@@ -7670,7 +7650,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (getFacesScopes().hasRoleUser(RoleCode.FPB_MEMBER.value())) {
 						userRole = RoleCode.FPB_MEMBER.value();
 					}
-				} else {
+				}
+				//#35238 start
+				else if (isQuotationCommitteeType() && hasAnyRoleUser(ContractHashSetConst.QUOTATION_MEMBER_ROLES)){
+					userRole = RoleCode.QQC_MEMBER.value();
+				}
+				//#35238 end
+				else {
 					String roleCode = getManagedBean().getCommitteeType() + "_MEMBER";
 					if (getFacesScopes().hasRoleUser(roleCode)) {
 						userRole = roleCode;
@@ -9781,10 +9767,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		List<String> listButton = new ArrayList<>(Arrays.asList(strButton));
 		boolean condition = false;
 
-		if (!listButton.contains(BpmOutcomeConst.BPM_CANCEL) && CANCEL_STATUS_CONST.contains(statusId)) {
+		if (!listButton.contains(BpmOutcomeConst.BPM_CANCEL) && ContractHashSetConst.CANCEL_STATUS_CONST.contains(statusId)) {
 			listButton.add(BpmOutcomeConst.BPM_CANCEL);
 			condition = true;
-		} else if (!listButton.contains(BpmOutcomeConst.BPM_REJECT) && REJECT_STATUS_CONST.contains(statusId)) {
+		} else if (!listButton.contains(BpmOutcomeConst.BPM_REJECT) && ContractHashSetConst.REJECT_STATUS_CONST.contains(statusId)) {
 			listButton.add(BpmOutcomeConst.BPM_REJECT);
 			condition = true;
 		} else if (!listButton.contains(BpmOutcomeConst.BPM_REVISE) &&
@@ -10129,7 +10115,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public boolean isQuotationCommitteeType() {
 		return getManagedBean().getCommitteeType() != null
-				&& COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType());
+				&& ContractHashSetConst.COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType());
 	}
 	
 	/**
@@ -10141,20 +10127,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private Long getParameterId(PmParameter pmParameter) {
 	    return pmParameter != null ? pmParameter.getParameterId() : null;
 	}
-	
-	/**
-	 * Checks if the user has any quotation secretary roles.
-	 * 
-	 * @return true if has any role related.
-	 */
-	private boolean hasQuotationSecretary() {
-		Set<String> qqcSecretary = new HashSet<>();
-		qqcSecretary.add(RoleCode.QCA_SECRETARY.value());
-		qqcSecretary.add(RoleCode.QCB_SECRETARY.value());
-		qqcSecretary.add(RoleCode.QQC_SECRETARY.value());
-		
-		return hasAnyRoleUser(qqcSecretary);
-	}	
 	
 	
 	
