@@ -3763,24 +3763,22 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			//#26169 - START
-			if (getManagedBean().isSubmit() && 
-					!getManagedBean().isInitialDecisionFwdToBPK() &&
-						isRecommendByAward() && 					
-							(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
-								.equals(decisionTypeCode))) {
+			if (getManagedBean().isSubmit() && !getManagedBean().isInitialDecisionFwdToBPK() && isRecommendByAward()
+					&& (ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode))) {
 				String reasonType = getManagedBean().getScQtFinalization().getReason().getReasonCode();
-				//#26169 - 21102020 , START
-				if(reasonType == null || reasonType == ""){
+				// #26169 - 21102020 , START
+				if (reasonType == null || reasonType == "") {
 					// 38523 - refactor codes - start
 					ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
 					reasonReqDTO.setReasonId(getManagedBean().getScQtFinalization().getReason().getReasonId());
 					reasonType = getReasonSO().retrieveReasonById(reasonReqDTO).getPmReason().getReasonCode();
 					// 38523 - refactor codes - end
 				}
-				//#26169 - 21102020 , END
-				if("2".equalsIgnoreCase(reasonType)){
-					boolean isOfferPriceExceed = checkSelectedSupplierOfferPriceIsExceedCommitteeAuthority(reqDTO.getScQtFinalization());
-					if(!isOfferPriceExceed){
+				// #26169 - 21102020 , END
+				if ("2".equalsIgnoreCase(reasonType)) {
+					boolean isOfferPriceExceed = checkSelectedSupplierOfferPriceIsExceedCommitteeAuthority(reqDTO
+							.getScQtFinalization());
+					if (!isOfferPriceExceed) {
 						throw new EpException(MessageConst.ERROR_760511);
 					}
 				}
@@ -7056,10 +7054,10 @@ public class SupplierFinalizationBackingBean extends
 		
 		//#35320 - Rules are not valid for QQC - Start 
 		//#26169 #38 #25729#142 - Start 
-		//checkSupplierOfferPriceByItemIsExceedCommitteeAuthority();
+		checkSupplierOfferPriceByItemIsExceedCommitteeAuthority();
 		//#26169 #38 #25729#142 - End
 		
-		checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
+		//checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
 		//#35320 - End
 	}
 
@@ -12116,16 +12114,9 @@ public class SupplierFinalizationBackingBean extends
 	public static BigDecimal getThresholdFor(String committeeType) {
 		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
-				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)
-				|| ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equals(committeeType)) {
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
 			return new BigDecimal(SourcingConstants.QT_BELOW_500K);
-		}
-
-
-		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
-				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
-			return new BigDecimal(SourcingConstants.QT_BELOW_30MILL);
-		}
+		}		
 
 		return null;
 	}
@@ -12232,8 +12223,7 @@ public class SupplierFinalizationBackingBean extends
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			log.debug(e.getMessage());
 			return Collections.emptyList();
 		}
 	}
@@ -12266,9 +12256,8 @@ public class SupplierFinalizationBackingBean extends
 			final ISearchResultBean<ScQtEvaluationResultDtl> resultBean = res.getQualifiedSuppliersByEvalStage();
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
-		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} catch (Exception e) {	
+			log.debug(e.getMessage());
 			return Collections.emptyList();
 		}
 
