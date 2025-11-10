@@ -29,15 +29,19 @@
 		</p:blockUI>
 	
 		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
-			dynamic="true" resizable="false" width="700px"
-			styleClass="pop_up_top" header="#{lbl['lbl.btn.upload.doc']}">
+			dynamic="true" resizable="false" width="700px" 
+			header="#{lbl['lbl.btn.upload.doc']}">
 			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
 
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
 			
 			<h:outputText value="#{lbl['lbl.sm.instruction.attachment']}" styleClass="instruction" escape="false" />
 
-			<h:outputText value="#{lbl['lbl.sm.ai.epf.instruction']}" rendered="#{cc.attrs.docType eq 'epf'}" />
+			<h:outputText value="#{lbl['lbl.sm.ai.reminder']}" styleClass="instruction"/>
+			<h:outputText value="#{lbl['lbl.sm.ai.tnc.instruction']}" rendered="#{cc.attrs.docType eq 'tenancy'}" 
+				styleClass="instruction"/>
+			<h:outputText value="#{lbl['lbl.sm.ai.epf.instruction']}" rendered="#{cc.attrs.docType eq 'epf'}" 
+				styleClass="instruction"/>
 			<br/><br/>
 			<p:dataTable id="docs#{cc.attrs.aiDlg}" var="doc" value="#{ai.getDocs()}" emptyMessage="">
 				<p:column headerText="#{lbl['lbl.sm.sme.supp.doc.name']}">
