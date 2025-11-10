@@ -1476,13 +1476,16 @@ public class SupplierFinalizationMeetingBackingBean extends
 			renewSessionAndRetrieve();
 			
 			//#35320 - Start
-			String committeeType = this.getManagedBean().getCommitteeType();
-			String variable1 = getParameterDesc(null, getManagedBean().getScQt().getQtNo());
+			String committeeType = this.getManagedBean().getCommitteeType();			
 			String variable2 = getMessageCommon(getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
-			//#35320 - End
+//			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
+//								ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
+//			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
+			
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{variable1, variable2}, 
-						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{getManagedBean().getScQt().getQtNo(), variable2}, 
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 	
+			//#35320 - Start
 		} finally {
 			qtMeetingSO = null;
 		}

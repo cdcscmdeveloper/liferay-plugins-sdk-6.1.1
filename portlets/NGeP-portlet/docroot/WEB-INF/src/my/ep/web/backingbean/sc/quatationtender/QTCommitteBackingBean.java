@@ -2204,7 +2204,6 @@ public class QTCommitteBackingBean extends
 
 		if (count == 0) {
 			//#35320 - Start
-			//throw new EpException(MessageConst.ERROR_760047,new String[]{committeeType});
 			throw new EpException(MessageConst.ERROR_760711,new String[]{committeeType});
 			//#35320 - End
 			// At least one chairperson are required for appoint committee
