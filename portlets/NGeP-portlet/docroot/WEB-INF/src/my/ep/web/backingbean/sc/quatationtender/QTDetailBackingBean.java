@@ -1123,7 +1123,8 @@ public class QTDetailBackingBean extends
 			Long qtId = scQt.getQtId();
 
 			// #28784 - Demo WIP -start-
-			boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+			boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+					CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
 			this.getManagedBean().setNewVersion(isQtNewVersion);
 			// #28784 - Demo WIP -end-
 
@@ -5151,8 +5152,8 @@ public class QTDetailBackingBean extends
 						getManagedBean().setQt(scQt);
 
 						// #28784 - Demo WIP -start-
-						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(),
-								CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+								CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
 						this.getManagedBean().setNewVersion(isQtNewVersion);
 
 						if (demoRequired && this.getManagedBean().isNewVersion()) {

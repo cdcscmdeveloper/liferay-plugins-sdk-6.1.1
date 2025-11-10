@@ -11028,7 +11028,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			//#28784 update - Start
 			Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 			if (status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && this.getManagedBean().getQt().
-					getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
+					getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && this.getManagedBean().isNewVersion()) {
 				this.getManagedBean().setDemoType(true);
 			}
 			//#28784 update - End
@@ -19320,7 +19320,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * @return void
 	 */
 	private void checkDemoVersion(ScQt scQt) {
-		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
 		this.getManagedBean().setNewVersion(isQtNewVersion);
 	}
 	//#28784 - End

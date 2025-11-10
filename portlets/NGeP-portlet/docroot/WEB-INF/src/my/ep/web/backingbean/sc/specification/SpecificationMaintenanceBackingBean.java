@@ -486,7 +486,8 @@ public void specCommitteeMaintenancereset() {
 	/*** 25692#95 ** -end- */
 		//#28784 - Start
 		this.getManagedBean().setQtSpecMaintanance(true);
-		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
 		this.getManagedBean().setNewVersion(isQtNewVersion);
 		//#28784 - End
 	
