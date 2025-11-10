@@ -2033,15 +2033,11 @@ public class QTCommitteBackingBean extends
 			}
 
 			if (super.isQTStatusPublished(currentStatusId)) {
-				Long[] allowedStatusAfterPublish = new Long[] { QTStatusConst.QT_BRIEFING_SITE_VISIT,
-						QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE, QTStatusConst.QT_PROPOSAL_PREPARATION };
+				// Bug_39340 - Start - Maintenance: Remove code allow edit committee for status 60008, 60036, 60009
 				// 25037 - start - note 372
-				if ((!Arrays.asList(allowedStatusAfterPublish).contains(currentStatusId) && Arrays.asList(
-						ParameterConst.QT_COMMITTEES_ORDERED_LIST).contains(commType))
-						|| ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)) {
-					return false;
-				}
+				return false;
 				// 25037 - end - note 372
+				// Bug_39340 - End
 			} else if (!isEligibleStatusForBtns(currentStatusId, commType)) {
 				return false;
 			}
