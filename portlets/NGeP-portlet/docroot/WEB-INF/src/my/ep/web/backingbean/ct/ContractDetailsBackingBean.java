@@ -102,6 +102,7 @@ import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.ct.ContractHashSetConst; //#35238
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -3835,7 +3836,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * profile id and PTJ profile id
 	 */
 	private void defaultMinistryPtjSearchValue() {
-		if (hasRoleUserToResetSearch()) {
+		if (hasAnyRoleUser(ContractHashSetConst.ROLE_USER_TO_RESET_SEARCH)) {
 			this.getManagedBean().setSearchMinistryProfile(null);
 			this.getManagedBean().setSearchPtjGroupProfile(null);
 			this.getManagedBean().setSearchPtjProfile(null);
@@ -4707,7 +4708,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			this.getManagedBean().setSearchMinistryProfile(orgProfile);
 			this.getManagedBean().setSearchPtjGroupProfile(null);
 			this.getManagedBean().setSearchPtjProfile(null);
-		} else if (hasRoleUserToSearch() || hasPBQCRole()) {//Enhancement 29418 - shaqimi 21/10/2022
+		} else if (hasAnyRoleUser(ContractHashSetConst.ROLE_USER_TO_SEARCH) 
+				|| hasAnyRoleUser(ContractHashSetConst.PBQC_ROLES)) {//Enhancement 29418 - shaqimi 21/10/2022
 			this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 			this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
 			if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {
@@ -4715,68 +4717,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			this.getManagedBean().setSearchPtjProfile(orgProfile);
 		}
-	}
-	
-	/**
-	 * Checks if the user has roles related.
-	 * 
-	 * @return true if has any role related.
-	 */
-	private boolean hasRoleUserToResetSearch() {
-		Set<String> roleUserToResetSearch = new HashSet<>();
-		roleUserToResetSearch.add(RoleCode.AUDITOR_GENERAL.value());
-		roleUserToResetSearch.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
-		roleUserToResetSearch.add(RoleCode.BASIC_SUPPLIER_USER.value());
-		roleUserToResetSearch.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
-		roleUserToResetSearch.add(RoleCode.MOF_SUPPLIER_USER.value());
-		roleUserToResetSearch.add(RoleCode.BPK_AUDITOR.value());
-		roleUserToResetSearch.add(RoleCode.BPK_APPROVER.value());
-		
-		return hasAnyRoleUser(roleUserToResetSearch);
-	}
-	
-	/**
-	 * Checks if the user has roles related.
-	 * 
-	 * @return true if has any role related.
-	 */
-	private boolean hasRoleUserToSearch() {
-		Set<String> roleUserToSearch = new HashSet<>();
-		roleUserToSearch.add(RoleCode.MIN_CONTRACT_ADMIN.value());
-		roleUserToSearch.add(RoleCode.BPK_CCA.value());
-		roleUserToSearch.add(RoleCode.CT_APPROVER.value());
-		roleUserToSearch.add(RoleCode.BPK_CC_APPROVER.value());
-		
-		return hasAnyRoleUser(roleUserToSearch);
-	}
-	
-	/**
-	 * Checks if the user has any PBQC-related (committee) roles.
-	 * 
-	 * @return true if has any role related.
-	 */
-	private boolean hasPBQCRole() {
-		Set<String> pbqcRole = new HashSet<>();
-		pbqcRole.add(RoleCode.QCA_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.QCA_MEMBER.value());
-		pbqcRole.add(RoleCode.QCA_SECRETARY.value());
-		pbqcRole.add(RoleCode.QCB_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.QCB_MEMBER.value());
-		pbqcRole.add(RoleCode.QCB_SECRETARY.value());
-		pbqcRole.add(RoleCode.QQC_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.QQC_MEMBER.value());
-		pbqcRole.add(RoleCode.QQC_SECRETARY.value());
-		pbqcRole.add(RoleCode.PBA_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.PBA_MEMBER.value());
-		pbqcRole.add(RoleCode.PBA_SECRETARY.value());
-		pbqcRole.add(RoleCode.PBB_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.PBB_MEMBER.value());
-		pbqcRole.add(RoleCode.PBB_SECRETARY.value());
-		pbqcRole.add(RoleCode.PPB_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.PPB_MEMBER.value());
-		pbqcRole.add(RoleCode.PPB_SECRETARY.value());
-		
-		return hasAnyRoleUser(pbqcRole);
 	}
 	//#35238 end
 }
