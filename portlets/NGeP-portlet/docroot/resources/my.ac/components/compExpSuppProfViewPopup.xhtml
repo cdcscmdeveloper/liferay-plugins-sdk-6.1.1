@@ -132,6 +132,36 @@
 									value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
 							</c:if></td>
 					</tr>
+					<c:if
+						test="#{cc.attrs.mBean.selectedMaster.smAppl.supplierType eq 'J'}">
+						<tr>
+							<td style="width: 34%"><p:outputLabel
+									styleClass="outputLabel-view-label2"
+									value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /></td>
+							<td style="width: 66%"><h:outputText
+									styleClass="outputLabel-view"
+									value="#{cc.attrs.mBean.selectedMaster.projectLoc}">
+								</h:outputText></td>
+						</tr>
+						<tr>
+							<td style="width: 34%"><p:outputLabel
+									styleClass="outputLabel-view-label2"
+									value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /></td>
+							<td style="width: 66%"><h:outputText
+									styleClass="outputLabel-view"
+									value="#{cc.attrs.mBean.selectedMaster.workServDesc}">
+								</h:outputText></td>
+						</tr>
+						<tr>
+							<td style="width: 34%"><p:outputLabel
+									styleClass="outputLabel-view-label2"
+									value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /></td>
+							<td style="width: 66%"><h:outputText
+									styleClass="outputLabel-view"
+									value="#{cc.attrs.mBean.selectedMaster.consultantFee}">
+								</h:outputText></td>
+						</tr>
+					</c:if>
 				</table>
 				<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 					toggleable="true">

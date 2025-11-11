@@ -330,6 +330,18 @@
 								</p:commandLink>
 							</f:facet>
 						</p:column>
+						
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
+ 	               		<ui:remove>
+ 	               		<p:column colspan="2" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
+ 	               		</ui:remove>
+						<p:column rowspan="2" style="width:7%; white-space:normal;">
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+								</f:facet>
+						</p:column>
+						
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.performance']}"
 							rendered="#{false}" style="width:7%; white-space:normal;" />
 						<ui:remove>
@@ -433,6 +445,20 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
 				</p:column>
+				
+				<ui:param name="supplier"
+					value="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column
+					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+					<h:outputText
+						value="#{consolidationReportBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+				</p:column>
+				<p:column>
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
+				</p:column>
+				
 				<p:column rendered="#{false}">
 					<h:outputText value="" />
 				</p:column>

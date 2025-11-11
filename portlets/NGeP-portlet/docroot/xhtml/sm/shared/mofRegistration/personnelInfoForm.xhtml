@@ -517,8 +517,6 @@
 				<p:outputLabel value="Click the AI Assistant and upload the EPF Contribution Statement for data extraction" />
 			</p:tooltip>&#160;
 			<br/>
-			<h:outputText styleClass="instruction" 
-				value="Disclaimer: Please review and verify AI-generated data. The system is not responsible for data accuracy or integrity." />
 			<!-- #38890 - end -->
 			
 			<ui:param name="lblShareholderInstruction" value="lbl.sm.shareholder.composistion.#{backingBean.managedBean.smSupplier.businessType}" />
@@ -668,6 +666,6 @@
 		
 	</p:dialog>
 	<!-- #38890 -->
-	<ac:smAIAssistant aiDlg="epfAI" docType="epf" updateId="persInfoDtPanel"
-				smAppl="#{backingBean.managedBean.smAppl}" postProcess="backingBean.saveOrUpdateAppl" />
+	<ac:smAIAssistant aiDlg="epfAI" docType="epf" updateId="persInfoDtPanel" 
+		smAppl="#{backingBean.managedBean.smAppl}" />
 </ui:composition>

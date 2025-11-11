@@ -11258,7 +11258,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
 		assignValReqdToFalse();
-		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		//#34400
 		RequestContext.getCurrentInstance().update(updateIds);
 		// #28777 & #29727 - Start
 		/*
@@ -12156,16 +12156,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		} else {
 			retMsg = null;
 		}
-		//START 12483
-		if(res != null && res.equalsIgnoreCase("REVISE")) {
-			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
-		} else if (res != null && res.equalsIgnoreCase("INQUIRY")) {
-			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
-		} else {
-			// #26136
-			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
-		}
-		//END 12483
+		//#34400 - start
+		RequestContext.getCurrentInstance().execute(
+				"$('.ui-dialog:visible').hide();$('.ui-widget-overlay').remove();");
+		//#34400 - end
 		return retMsg;
 	}
 
@@ -19029,4 +19023,27 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return "";
 	}
 	// #9299 - End
+	//#38890
+	public void updateTenancyAI(SmAIDocBackingBean.TenancyEntity te){
+		if (te == null){
+			return;
+		}
+		SmFacility fac = getManagedBean().getBasicCompanyFacility();
+		fac.setRentalRate(te.monthlyRental);
+		fac.setOwnerName(te.landlordsName);
+		
+		SmAddress addr = fac.getSmAddress();
+		if (te.pmCity != null){
+			addr.setStateId(te.pmCity.getPmDistrict().getPmState().getStateId());
+			onChangeState(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+			addr.setDistrictId(te.pmCity.getPmDistrict().getDistrictId());
+			onChangeDistrict(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+			addr.setCityId(te.pmCity.getCityId());
+			onChangeCity(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+		}
+		addr.setPostcode(te.postcode);
+		addr.setAddress1(te.normalizedAddress);
+		addr.setAddress2("");
+		addr.setAddress3("");
+	}
 }
