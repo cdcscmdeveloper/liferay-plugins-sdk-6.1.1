@@ -176,9 +176,7 @@
 					<h:outputText value="0" rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
-					<ui:remove>
-						<!-- #38151 add action link popup & WIP-->
-					</ui:remove>
+					<!-- #38151 add action link popup & WIP-->
 					<p:commandLink action ="#{consolidationReportBackingBean.qualifiedSupplierListPopupScore(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 	 											  process="@this" update="@([id$=preferenceMarginSuppDetailstestPopupId])" styleClass="commandLink" rendered="#{!consolidationReportBackingBean.managedBean.weightage35384WIP}" >
 					<h:outputText value="#{qualifiedSupp.totalScore}" rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice ne 0}">
@@ -520,10 +518,7 @@
 		</p:outputPanel>
 	</p:panel>
 	
-	<ui:remove>
-		<!-- #38151 datatable value popup-->
-		<!-- start -->
-	</ui:remove>
+	<!-- #38151 datatable value popup - start -->
 	<p:dialog id="preferenceMarginSuppDetailstestPopupId"
 		widgetVar="preferenceMarginSuppDetailstestPopup" position="center"
 		modal="true" dynamic="true" styleClass="pop_up_top" width="950"
@@ -592,8 +587,5 @@
 
 		</p:dataTable>
 	</p:dialog>
-	<ui:remove>
-		<!-- #38151 datatable value popup-->
-		<!-- end -->
-	</ui:remove>	
+	<!-- #38151 datatable value popup - end -->
 </ui:composition>
