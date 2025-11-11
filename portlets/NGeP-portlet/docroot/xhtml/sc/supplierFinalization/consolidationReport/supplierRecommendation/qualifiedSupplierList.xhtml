@@ -503,13 +503,13 @@
 		modal="true" dynamic="true" styleClass="pop_up_top" width="950"
 		resizable="false"
 		header="#{lbl['lbl.sc.total.overall.score.percentage']}">
-		<p:dataTable id="qualifiedSuppliers" var="qualifiedSupp"
-			widgetVar="shortlistedSuppDtls"
+		<p:dataTable id="weightageScores" var="weightageScore"
+			widgetVar="shortlistedWeightageScore"
 			value="#{consolidationReportBackingBean.managedBean.weightageScoreBeans}"
 			emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
 			editable="true" lazy="true" rowIndexVar="index" rows="10"
-			style="width:100%;" rowKey="#{qualifiedSupp}">
-			<ac:paginator for="qualifiedSuppliers" />
+			style="width:100%;" rowKey="#{weightageScore}">
+			<ac:paginator for="weightageScores" />
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column colspan="2"
@@ -540,27 +540,27 @@
 			</p:columnGroup>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.technicalTotalScore}" />
+				<h:outputText value="#{weightageScore.technicalTotalScore}" />
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.financialTotalScore}" />
+				<h:outputText value="#{weightageScore.financialTotalScore}" />
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.recommendationTechnicalScore}" />
+				<h:outputText value="#{weightageScore.recommendationTechnicalScore}" />
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.recommendationFinancialScore}" />
+				<h:outputText value="#{weightageScore.recommendationFinancialScore}" />
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.recommendationTotalScore}" />
+				<h:outputText value="#{weightageScore.recommendationTotalScore}" />
 
 			</p:column>
 
