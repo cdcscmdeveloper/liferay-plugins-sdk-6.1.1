@@ -657,8 +657,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if(hasWrongCompanyName){
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
 					"The company name in your EPF(s) does not match with the registered Business/Company Name" +
-					" in Company Information section. Your application can still be submitted as-is, " +
-					"or you may update the Business/Company Name before proceeding.");
+					" in Company Information section.");
 			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 		// wip: need to save the doc to SmApplDocFile with PmDocument ID: 768, 864
