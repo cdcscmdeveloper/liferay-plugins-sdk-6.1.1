@@ -224,16 +224,8 @@
 				<h:outputText
 					value="#{(itemSupplierDis.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.starting.price']}"
-				style="text-align: right;">
-				<h:outputText
-					value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplierDis.startingPrice)}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-			</p:column>
 			
-			<ui:param name="supplier" value="#{itemSupplierDis.supplier}" />
+		    <ui:param name="supplier" value="#{itemSupplierDis.supplier}" />
 			<ui:param name="mofExpired"
 				value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
 			<p:column styleClass="#{mofExpired ? 'red-background':''}">
@@ -251,8 +243,16 @@
 				</f:facet>
 				<ac:disciplinaryActionYesNo
 					supplier="#{supplier}" index="#{rowIndex}"/>
+			</p:column>		
+			
+		    <p:column headerText="#{lbl['lbl.sc.starting.price']}"
+				style="text-align: right;">
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplierDis.startingPrice)}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
-
 			<p:column headerText="#{lbl['lbl.sc.last.bid.price']}"
 				style="text-align: right;">
 				<h:outputText
@@ -290,7 +290,7 @@
 				style="text-align:center;">
 				<h:outputText
 					value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}"
-					rendered="#{itemSupplierDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalBiddingBackingBean.managedBean.biddingZoneDetails.get(suppFinalBiddingBackingBean.managedBean.zoneActiveIndex).branchDeactivated}" />
+					rendered="#{itemSupplierDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified or suppFinalBiddingBackingBean.managedBean.biddingZoneDetails.get(suppFinalBiddingBackingBean.managedBean.zoneActiveIndex).branchDeactivated or itemSupplierDis.supplierDeactivated}" />
 			</p:column>
 		</p:dataTable>
 		<ui:remove> #28777#29729 - End </ui:remove>

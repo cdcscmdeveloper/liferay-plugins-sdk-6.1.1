@@ -2410,12 +2410,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 			if (getManagedBean().isViewApplicationHistory()) {
 				// for history load all category
-				//32815 - start
-				if(cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED){
+				//32815 - start, 26238 (38984)
+				if(cat.getDisciplinaryActionId() != null){
 					SmDisciplinaryAction da = SmApplicationUtil
 							.retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
 					if(da != null && da.isManufacturerCancel()){
-						cat.setTypeDisciplinaryAction("M");
+						cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE);
+					} else {
+						cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
 					}
 				}
 				//32815 - end
@@ -4705,12 +4707,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		List<DisciplinaryActionVO> voList = new ArrayList<>();
 		if(currSupp != null) {
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
-			voList = getDisciplinaryActionVOList(resultList, currSupp);
+			voList = getDisciplinaryActionVOList(resultList, currSupp, false);
 		}
 		return voList;
 	}
 	
-	private static List<DisciplinaryActionVO> getDisciplinaryActionVOList(List<SmDisciplinaryAction> daList, SmSupplier currSupp){
+	private static List<DisciplinaryActionVO> getDisciplinaryActionVOList(List<SmDisciplinaryAction> daList, SmSupplier currSupp, boolean active){
 		List<DisciplinaryActionVO> voList = new ArrayList<>();
 		Long supplierId = currSupp.getSupplierId();
 		if (EntityHelper.isCollectionEmpty(daList) || supplierId == null){
@@ -4741,7 +4743,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			retVal.setStartDate(DateUtils.dateToString(pattern, da.getStartDate()));
 			retVal.setEndDate(DateUtils.dateToString(pattern, da.getEndDate()));
 			
-			retVal.setRemarksList(getRemarksDA(da));
+			retVal.setRemarksList(getRemarksDA(da, active));
 
 			retVal.setWarning(da.isWarning());
 			retVal.setCancelCategory(da.isCancelCategory());
@@ -4796,13 +4798,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().setStartDate(DateUtils.dateToString(pattern, disc.getStartDate()));
 			getManagedBean().setEndDate(DateUtils.dateToString(pattern, disc.getEndDate()));
 			getManagedBean().setRemarks(disc.getRemark());
-			//28198: Disciplinary Action - start - 26238
-			List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disc);
-					
-			if(!EntityHelper.isCollectionEmpty(remarksList)){
-				getManagedBean().setRemarks(remarksList.get(0).getRemark());
-			}
-			//28198: Disciplinary Action - end - 26238
 		}
 	}
 	
@@ -5099,26 +5094,30 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<DisciplinaryActionVO> getActiveDisciplinaryActionVO(SmSupplier currSupp) {
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-		List<DisciplinaryActionVO> voList =  getDisciplinaryActionVOList(resultList, currSupp);
-		return voList;
+		return getDisciplinaryActionVOList(resultList, currSupp, true);
 	}
 	//31033 end
 	
-	private static List<DisciplinaryActionVO> getRemarksDA(SmDisciplinaryAction da){
+	private static List<DisciplinaryActionVO> getRemarksDA(SmDisciplinaryAction da, boolean active){
 		// 28198: Disciplinary Action - start - 26238
 		List<DisciplinaryActionVO> remList = new ArrayList<>();
-		List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
-					.retrieveActiveSmDisciplinaryActionRemarksByDA(da);
-		if (!EntityHelper.isCollectionEmpty(remarksList)) {
-			for (SmDisciplinaryActionRemarks remarks : remarksList) {
-				DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
-				rem1.setRemarks(remarks.getRemark());
-				remList.add(rem1);
-			}
-		}
+
+		// 39115 - START
 		DisciplinaryActionVO rem = new DisciplinaryActionVO();
 		rem.setRemarks(da.getRemark());
 		remList.add(rem);
+		if(!active){
+			List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
+					.retrieveActiveSmDisciplinaryActionRemarksByDA(da);
+			if (!EntityHelper.isCollectionEmpty(remarksList)) {
+				for (SmDisciplinaryActionRemarks remarks : remarksList) {
+					DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
+					rem1.setRemarks(remarks.getRemark());
+					remList.add(rem1);
+				}
+			}
+		}
+		// 39115 - END
 		// 28198: Disciplinary Action - end - 26238
 		return remList;
 	}
@@ -5384,6 +5383,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.regStatus.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())).append(" ")
 				.append(SmCommonUtil.getStatusDescByStatusId(revisit.getNewPmRegStatus().getPmStatus().getStatusId()).getStatusName());
+		// #34031#note-85 : Issue 1
+		extRemark.append(".");
 	}
 
 	private void getDeletedRvCatCodes(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, int index) {

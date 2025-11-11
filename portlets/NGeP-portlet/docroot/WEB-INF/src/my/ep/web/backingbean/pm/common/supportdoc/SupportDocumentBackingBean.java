@@ -2191,6 +2191,7 @@ public class SupportDocumentBackingBean extends
 				PmDocument pmDocumentOld = retrieveDocumentById(reqDTO.getPmDocument().getDocumentId());
 				getManagedBean().setSelectedDocumentOld(pmDocumentOld);
 			}
+			getManagedBean().setReqDTO(reqDTO);
 			/************ AUDIT #28895_35509 - END *************/
 
 			resDTO = reqSO.saveDocument(reqDTO);
@@ -2270,6 +2271,11 @@ public class SupportDocumentBackingBean extends
 					return null;
 				}
 			}
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

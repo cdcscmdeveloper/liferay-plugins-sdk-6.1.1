@@ -404,6 +404,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		initSmRvHistory();
 		// #34031 End
+		getManagedBean().setViewMode(true); //#39231
 	}
 	
 	private void setFlagShowButtonSubmit(SmSupplier supplier, String mofStatus){
@@ -1920,23 +1921,26 @@ public class SupplierDataMaintenanceBackingBean extends
 	private boolean shouldDisableMaintenance(SmSupplier supplier,
 			String mofStatus) {
 		return isDeletedStatus(supplier, mofStatus)
-				|| isCancelRegStatus(mofStatus)
+				|| isCancelRegStatus(mofStatus, supplier)
 				|| isActiveWithPendingDA(supplier, mofStatus);
 	}
 
 	private boolean isDeletedStatus(SmSupplier supplier, String mofStatus) {
 		boolean hasPending = supplier.isPendingBlacklist()
 				|| supplier.isPendingCancel() || supplier.isPendingSuspend();
-
+		// 38609 - START
 		return !hasPending && StringUtils.isNotEmpty(mofStatus)
-				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED);
+				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED); //#39424
+		// 38609 - END
 	}
 
-	private boolean isCancelRegStatus(String mofStatus) {
+	private boolean isCancelRegStatus(String mofStatus, SmSupplier supplier) {
+		//#39079 - START
 		boolean basicDA = getManagedBean().isCancelRegistration()
 				|| getManagedBean().isBlacklistOwnerOrDirector()
-				|| getManagedBean().isSuspendRegistration();
-
+				|| StringUtils
+						.isNotEmpty(checkNonActiveDAWithPending(supplier));
+		//#39079 - END
 		return mofStatus
 				.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG)
 				&& basicDA;
@@ -2044,10 +2048,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		//27857: Disciplinary Action - end - 26238
 				
 		//28198: Disciplinary Action - start - 26238
-		List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disc);
-		String remark = EntityHelper.isCollectionEmpty(remarksList) ? disc.getRemark()
-				: remarksList.get(0).getRemark();
-		discipline.getSmDiscplinaryAction().setRemark(remark);
+		discipline.getSmDiscplinaryAction().setRemark(disc.getRemark()); // 39115
 		//28198: Disciplinary Action - end - 26238
 		discipline.getSmDiscplinaryAction().setStartDate(disc.getStartDate());
 		discipline.getSmDiscplinaryAction().setEndDate(disc.getEndDate());
