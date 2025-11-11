@@ -11983,7 +11983,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private void addCategoryL3ForMap(PmCategoryL1 pmCategoryL1,
 			PmCategoryL2 pmCategoryL2, Map<Long, Map<Long, String>> l2Map,
 			Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode,
@@ -12026,7 +12028,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							+ pmCategoryL3.getCategoryL3Code(), l3Map);
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	/**
 	 * update the selection of Category Codes.
 	 * 
@@ -12054,7 +12058,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		this.getManagedBean().setSelectedCategories(selectedCatCodes);
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	/**
 	 * update the unSelection of Category Codes.
 	 * 
@@ -12078,7 +12084,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		this.getManagedBean().setSelectedCategories(selectedCatCodes);
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	/**
 	 * when change template this method invoke to display required fields for
 	 * particular tab.
@@ -12101,7 +12109,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					procCat.getParameterId());
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	/**
 	 * when user click on clone button in main menu specCategory will discribe
 	 * whether SERVICE or PRODUCT.
@@ -12145,7 +12155,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setSearchProcurementId(procCatId);
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	/**
 	 * when user click on clone button in popup this method invoke and create
 	 * all new items and specifications.
@@ -12198,7 +12210,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		return;
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private TemplateSpecBean updateSpecBeanForClone(String itemType) {
 		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 		if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
@@ -12209,7 +12223,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		return templateSpecBean;
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private TplSpecMaster updateSpecMasterForClone(String itemType) {
 		TplSpecMaster specMaster = new TplSpecMaster();
 		if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
@@ -12221,7 +12237,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		return specMaster;
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private void updateQuestionListAndSpecMaster(TplSpecMaster specMaster,
 			List<TplSpecQuestion> questionsListNew, TemplateSpecResDTO resDTO) {
 		if (null != specMaster && null != specMaster.getTplSpecQuestions()
@@ -12234,7 +12252,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.setSpecTypeCode(resDTO.getSpecMaster().getSpecTypeCode());
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private void checkQuestionsforCreateTemplateSpec(
 			List<TplSpecQuestion> questionsListNew, TplSpecMaster specMaster,
 			List<TplSpecQuestion> questionsListCreate) {
@@ -12247,7 +12267,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private void checkItemNameforCreateTemplateSpec(
 			List<TplSpecQuestion> questionsListNew,
 			TplSpecQuestion oldQuestion, TplSpecQuestion newQuestion,
@@ -12274,7 +12296,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					new String[] { oldQuestion.getClItem() });
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private void checkZonalandUpdateforCreateTemplateSpec(
 			TplSpecMaster tplSpecMaster, TplSpecMaster specMaster) {
 		specMaster.setProcessType(tplSpecMaster.getProcessType());
@@ -12294,7 +12318,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			TemplateSpecHelper.getInstance().updateZoneDtl(specMaster, null);
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private void setValuesToManagedBeanforCreateTemplateSpec(String itemType,
 			TemplateSpecBean templateSpecBean) {
 		if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
@@ -12315,7 +12341,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 									.getSpecMaster());
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private void addNewQuestionsForCreateTemplateSpec(
 			TemplateSpecBean templateSpecBean,
 			List<TplSpecQuestion> questionsListCreate,
@@ -12332,7 +12360,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		// Set the question order for all the new questions
 		setQuestionOrder(questionsListNew);
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	/**
 	 * This method will Reset the popup form for clone.
 	 * 
@@ -12350,7 +12380,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			childTree.setSelected(false);
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private class CreateTemplateSpecPagingDataModel extends
 			PagingDataModel<TplSpecMaster> implements
 			IPagingDataModel<TplSpecMaster> {
@@ -12699,7 +12731,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	/**
 	 * This method will redirect to Search for qt or loa details based on user
 	 * data.
@@ -12724,7 +12758,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		getManagedBean().getTemplateSpecCreate().reloadData();
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private void validateBeforeAndAfterDate(Date createdFromDate,
 			Date createdToDate) {
 
@@ -12741,7 +12777,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			throw new EpException(MessageConst.ERROR_775183);
 		}
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	/**
 	 * This method will call on page load.
 	 * 
@@ -12757,7 +12795,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		return pagingData;
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	/**
 	 * This method will return error message for procurement category.
 	 * 
@@ -12769,7 +12809,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				MessageUtils.BUNDLE_COMMON_MESSAGES,
 				new FacesScopes().getUserLocale());
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private TplSpecAnswer createSpecAnswerIfNeeded(
 			TemplateSpecBean templateSpecBean, TplSpecQuestion question) {
 		// Create spec answer only for questions of ITEM type
@@ -12781,7 +12823,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		return null;
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private void addAnswerAndZoneQtyToQuestion(TplSpecQuestion question,
 			TplSpecAnswer specAnswer) {
 		// Set the answer list for the question
@@ -12792,7 +12836,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		question.setTplSpecAnswers(specAnswers);
 		question.setTplSpecZoneQties(new ArrayList<TplSpecZoneQty>());
 	}
+	// #29468 Vinod End
 
+	// #29468 Vinod Start
 	private void setQuestionOrder(List<TplSpecQuestion> questionsListNew) {
 		int questionOrder = 0;
 		for (TplSpecQuestion question : questionsListNew) {
