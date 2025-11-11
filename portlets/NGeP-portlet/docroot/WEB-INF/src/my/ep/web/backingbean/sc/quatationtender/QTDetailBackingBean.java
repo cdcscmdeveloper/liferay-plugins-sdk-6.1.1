@@ -867,6 +867,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		debugLogger("start of saveQtDetailsAction");
 		this.getManagedBean().setSaveFlow(true);
+		//#10141 Start Vinod
+		boolean isSendNotificationButton = this.getManagedBean().isSaveForSendNotification();
+		boolean inactiveCLWarn = this.getManagedBean().isShowInactiveChecklistWarning();
+		String notifyText = this.getManagedBean().getInActiveChecklistNotificationText();
+		//#10141 End Vinod
 		try {
 			
 			Long currentStatus = this.getManagedBean().getCurrentStatusId();
@@ -894,6 +899,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#29521-end
 			//#28784
 			checkDemoPresentationByStatus();
+			//#10141 Start Vinod
+			if(isSendNotificationButton){
+				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
+				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
+				this.getManagedBean().setSaveForSendNotification(false);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED, new String[] { this
+										.getManagedBean().getInActiveChecklistNotificationText() },
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
+				return;
+			}
+			//#10141 End Vinod
 			
 			if(isFirstSave){								
 				 /* 
@@ -3996,6 +4016,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setSubStatusId(sts.getStatusId());
 			}
 			//#11299 vinod End
+			// #10141 Start Vinod
+			checkInactiveChecklistAndDisplayWarning(this.getManagedBean().getTaskName());
+			// #10141 End Vinod
 			//assertSpecificationUpdateInProgress(false);//25037 #568 - to tally with 15391			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
@@ -7155,7 +7178,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
-			detailSO.validateQTDetails(reqDTO);
+			// #10141 Start Vinod added condition to ignore validation for send
+			// notification button.
+			if (!this.getManagedBean().isSaveForSendNotification()) {
+				detailSO.validateQTDetails(reqDTO);
+			}
+			// #10141 End Vinod
 			
 			//9019 - start using new method
 			//9019 - Start (Harun) Reopen reset to null as remarks that initialize empty will cause error while save
@@ -7402,6 +7430,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				reqDTO.getQtdetail().setModified(true);
 				reqDTO.getQtdetail().setFCApproval(true);
+				// #10141 Start Vinod added condition to ignore validation for send
+				// notification button.
+				if (this.getManagedBean().isSaveForSendNotification()) {
+					List<ScQtApproval> approvers = new ArrayList<>();
+					approvers.add(this.getManagedBean().getScQtApproval());
+					reqDTO.getQtdetail().setScQtApprovals(approvers);
+				}
+				// #10141 End Vinod
 				detailSO.validateApprovalDetails(reqDTO);
 				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
@@ -13193,6 +13229,156 @@ public void retrieveDemoQtDetails(Long qtId) {
 			return false;
 	}
 	//#11299 End Vinod
+	// #10141 Start Vinod
+	/**
+	 * this method will check inactive checklist and display the warning to send
+	 * notification onload.
+	 * 
+	 * @param status
+	 *            .
+	 * @return
+	 */
+	public void checkInactiveChecklistAndDisplayWarning(String status) {
+		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
+		List<String> checkStatus = new ArrayList<>();
+		checkStatus.add(SCProcessNameConst.PREPARE_QT_SCHEDULE);
+		checkStatus.add(SCProcessNameConst.REVISE_QT_SCHEDULE);
+		checkStatus.add(SCProcessNameConst.APPROVE_PUBLICATION);
+		checkStatus.add(SCProcessNameConst.REVISE_BPK);
+		checkStatus.add(SCProcessNameConst.APPROVE_BPK);
+		
+		if (checkStatus.contains(status)) {
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
+			reqDTO.setScQt(this.getManagedBean().getQt());
+			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
+
+			for (ScQtCheckList tech : resDTO.getTechnicalCheckList()) {
+				if (null != tech.getPmDocument() && !tech.getPmDocument().isRecordStatus()) {
+					inActiveChecklist.add(tech);
+				}
+			}
+			for (ScQtCheckList fin : resDTO.getFinancialCheckLists()) {
+				if (null != fin.getPmDocument() && !fin.getPmDocument().isRecordStatus()) {
+					inActiveChecklist.add(fin);
+				}
+			}
+		}
+
+		showWarningMessageForInactiveChecklist(inActiveChecklist);
+	}
+
+	// #10141 End Vinod
+
+	// #10141 Start Vinod
+	private void showWarningMessageForInactiveChecklist(List<ScQtCheckList> inActiveChecklist) {
+
+		if (!inActiveChecklist.isEmpty()) {
+			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
+
+			String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
+
+			this.getManagedBean().setShowInactiveChecklistWarning(true);
+			this.getManagedBean().setInActiveChecklistNotificationText(confirmationMsg);
+
+			if (this.getManagedBean().getQt().isInactiveChecklistNotified()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED,
+								new String[] { confirmationMsg }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST,
+								new String[] { confirmationMsg }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+			}
+		}
+	}
+
+	// #10141 End Vinod
+	
+	// #10141 Start Vinod
+	private String inactiveChecklistChecking(List<ScQtCheckList> inActiveChecklist) {
+		StringBuilder confirmationMsg = new StringBuilder();
+		String lineBreak = QTConstants.HTML_NEW_LINE_CHARACTER;
+		String techCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_TECH_CHECKLIST);
+		String finCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_FIN_CHECKLIST);
+		int checkListcount = 0;
+		for (ScQtCheckList inactive : inActiveChecklist) {
+			checkListcount++;
+			if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
+				confirmationMsg
+						.append(checkListcount + ". " + 
+								techCheckList + " " + 
+								inactive.getTitle() + 
+								lineBreak);
+			} else {
+				confirmationMsg
+						.append(checkListcount + ". " + 
+								finCheckList + " " + 
+								inactive.getTitle() + 
+								lineBreak);
+			}
+		}
+
+		return confirmationMsg.toString();
+	}
+
+	// #10141 End Vinod
+
+	// #10141 Start Vinod
+	/**
+	 * this method will send notification to secratry to remove inactive
+	 * checklists.
+	 * 
+	 * @param status
+	 *            .
+	 * @return
+	 */
+	public void sendNotificationForInactiveChecklist() {
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		QuationTenderResDTO qtResDTO;
+
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		CommitteResDTO resDTO = null;
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					ICommitteSO.class);
+			resDTO = committeSO.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+			List<ScCommitteeMember> committeeMembersList = resDTO.getCommMemberResultBean().getResultList();
+			qtReqDTO.setScCommitteeMemberList(committeeMembersList);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKINGBEAN,
+					this.getManagedBean().getQt().getQtNo(),
+					SLALogConstant.QT_INITIATE_INACTIVE_CHECKLIST_PROCESS_FOR_DOC, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		qtReqDTO.setQtdetail(this.getManagedBean().getQt());
+		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
+		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
+		qtResDTO = detailSO.updateChecklistNotify(qtReqDTO);
+
+		if (qtResDTO.isSuccessful()) {
+			ScQt qt = this.getManagedBean().getQt();
+			qt.setInactiveChecklistNotified(true);
+			this.getManagedBean().setSaveForSendNotification(true);
+			saveQtDetailsAction();
+		}
+	}
+
+	// #10141 End Vinod
 	
 	//9019 - Start (Harun) WIP transaction Pending QT Submission
 	public void updateWIPTransaction() {

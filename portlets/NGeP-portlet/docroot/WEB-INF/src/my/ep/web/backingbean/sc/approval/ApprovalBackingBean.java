@@ -967,6 +967,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			boolean readOnlyOri = qtDetailBB.getManagedBean().isReadOnly();
 			this.getManagedBean().copyBPMTaskDetails(qtDetailBB.getManagedBean());
 			qtDetailBB.getManagedBean().setReadOnly(readOnlyOri);
+			// #10141 Start Vinod
+			qtDetailBB.checkInactiveChecklistAndDisplayWarning(this
+					.getManagedBean().getTaskName());
+			// #10141 End Vinod
 
 			if(page.equalsIgnoreCase(QTConstants.MAINTANANCE_PAGE)){
 				page = QTConstants.MAINTANANCE_PAGE_FULL;				
