@@ -19312,19 +19312,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 	//#28784 - End
-
-	//#28784 - Start
-	/**
-	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
-	 * @param
-	 * @return void
-	 */
-	private void checkDemoVersion(ScQt scQt) {
-		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
-				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
-		this.getManagedBean().setNewVersion(isQtNewVersion);
-	}
-	//#28784 - End
 	
 	//#28784 - Start
 	/**
