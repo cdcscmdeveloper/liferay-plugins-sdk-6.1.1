@@ -1123,9 +1123,7 @@ public class QTDetailBackingBean extends
 			Long qtId = scQt.getQtId();
 
 			// #28784 - Demo WIP -start-
-			boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
-					CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
-			this.getManagedBean().setNewVersion(isQtNewVersion);
+			checkDemoVersion(scQt);
 			// #28784 - Demo WIP -end-
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
@@ -5152,9 +5150,7 @@ public class QTDetailBackingBean extends
 						getManagedBean().setQt(scQt);
 
 						// #28784 - Demo WIP -start-
-						boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
-								CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
-						this.getManagedBean().setNewVersion(isQtNewVersion);
+						checkDemoVersion(scQt);
 
 						if (demoRequired && this.getManagedBean().isNewVersion()) {
 							getManagedBean().getQt().setDemoRequired(demoRequired);
@@ -5242,6 +5238,7 @@ public class QTDetailBackingBean extends
 					// this.getManagedBean().setContractType(scQt.getContractType());
 
 					// #28784 -start-
+					checkDemoVersion(scQt);
 					if (this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()) {
 						this.getManagedBean().setDemoAction(true);
 						this.getManagedBean().setDemoType(true);
@@ -12120,5 +12117,4 @@ public class QTDetailBackingBean extends
 		return searchFilterBean;
 	}
 	// 25791 -end-
-
 }
