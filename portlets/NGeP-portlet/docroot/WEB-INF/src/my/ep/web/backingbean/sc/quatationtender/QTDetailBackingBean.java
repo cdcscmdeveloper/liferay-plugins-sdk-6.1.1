@@ -6256,7 +6256,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					// this.getManagedBean().setContractType(scQt.getContractType());
 					
 					//#28784
-					if(this.getManagedBean().getQt().isDemoRequired()){
+					if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 						this.getManagedBean().setDemoAction(true);
 						this.getManagedBean().setDemoType(true);						
 					}
