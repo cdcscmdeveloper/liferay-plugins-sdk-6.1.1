@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -3379,7 +3380,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			if ((outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY) || outputPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION))
 					&& (getManagedBean().isSupplierUser())) {
+				validateCategory(); //#38927
 				SmApplicationUtil.getInstance().removeNotApplicableInformationBeforeSave(getManagedBean());
+			}else if(outputPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)){//38927
+				validateCategory();
 			}
 			// #34303 - End
 			setSupplierChangeValues(currentPageType);
@@ -4090,6 +4095,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					// #37779 - Start
 					SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
 					// #37779 - End
+					validateCategory(); //#38927
 					setDefaultPoReviewSection(); //#36622
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
@@ -4164,6 +4170,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					// #37779 - Start
 					SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
 					// #37779 - End
+					validateCategory(); //#38927
 					setDefaultApproverReviewSection(); //#36622
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
@@ -19046,4 +19053,151 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		addr.setAddress2("");
 		addr.setAddress3("");
 	}
+	//#38927 START
+	/**
+	 * Validate inactive category for supplier user and po/approver
+	 * 
+	 * @return void
+	 */
+	public void validateCategory() {
+       log.info("Entered validateCategory()");
+        SmAppl smAppl = getManagedBean().getSmAppl();
+        List<SmSupplierCategory> categories = smAppl.getSmSupplierCategories();
+
+        if (categories == null) {
+        	log.info("No categories to validate");
+            return;
+        }
+
+        String applType = smAppl.getApplType();
+        if (!isEligibleApplicationType(applType)) {
+        	log.info("Application type not eligible for validation");
+            return;
+        }
+
+        boolean validCat = false;
+        StringBuilder smSuppCat = new StringBuilder("<br/>");
+        boolean showMsg = true;
+        int count = 0;
+
+        for (Iterator<SmSupplierCategory> iterator = categories.iterator(); iterator.hasNext();) {
+            SmSupplierCategory category = iterator.next();
+
+            if (isSuspended(category)) {
+                if (getManagedBean().isSupplierUser()) {
+                    iterator.remove();
+                    removeFacilityAssociations(category, smAppl);
+                } else {
+                    showMsg = evaluateDecisionFlags(category);
+                }
+
+                validCat = true;
+                smSuppCat.append(++count).append(". ")
+                         .append(formatCategoryDetails(category))
+                         .append("<br/>");
+            }
+        }
+
+        if (validCat) {
+            logAndShowError(smSuppCat.toString(), showMsg);
+        }
+
+        log.info("Exiting validateCategory()");
+    }
+
+	/**
+	 * Check category when apply KA/KR/KN
+	 * 
+	 * @param String applType
+	 * @return boolean
+	 */
+    private boolean isEligibleApplicationType(String applType) {
+        return ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(applType)
+            || ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES.equals(applType)
+            || ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(applType);
+    }
+
+    /**
+	 * Check if having inactive category 
+	 * 
+	 * @param SmSupplierCategory
+	 * @return boolean
+	 */
+    private boolean isSuspended(SmSupplierCategory category) {
+        return category.getPmCategoryL3().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED;
+    }
+
+    /**
+	 * Evaluate Decision when PO/Approver reject the category
+	 * will not show the message
+	 * 
+	 * @param SmSupplierCategory
+	 * @return boolean
+	 */
+    private boolean evaluateDecisionFlags(SmSupplierCategory category) {
+        boolean showMsg = true;
+        if (Integer.valueOf(0).equals(category.getPoDecFlg())) {
+            showMsg = false;
+        }
+        if (category.getApprvrDecFlg() != null) {
+            showMsg = !Integer.valueOf(0).equals(category.getApprvrDecFlg());
+        }
+        return showMsg;
+    }
+
+    /**
+	 * Remove facility when the category is inactive at supplier side
+	 * 
+	 * @param SmSupplierCategory category, SmAppl smAppl
+	 * @return void
+	 */
+    private void removeFacilityAssociations(SmSupplierCategory category, SmAppl smAppl) {
+        for (Iterator<SmFacility> facilityIterator = smAppl.getSmFacilities().iterator(); facilityIterator.hasNext();) {
+            SmFacility facility = facilityIterator.next();
+            for (SmSupplierCategoryFacility scf : facility.getSmSupplierCategoryFacilities()) {
+                if (Objects.equals(scf.getPmCategoryL3().getCategoryL3Id(),
+                                   category.getPmCategoryL3().getCategoryL3Id())) {
+                    facilityIterator.remove();
+                    break;
+                }
+            }
+        }
+    }
+    
+    /**
+	 * Format of category to show in the message
+	 * 
+	 * @param SmSupplierCategory category
+	 * @return String
+	 */
+    private String formatCategoryDetails(SmSupplierCategory category) {
+        return category.getPmCategoryL1().getCategoryL1Code()
+            + category.getPmCategoryL2().getCategoryL2Code()
+            + category.getPmCategoryL3().getCategoryL3Code()
+            + " - " + category.getCategoryL1Name() + "/"
+            + category.getCategoryL2Name() + "/"
+            + category.getCategoryL3Name();
+    }
+
+    /**
+	 * Show error message 
+	 * 
+	 * @param String categoryDetails, boolean showMsg
+	 * @return void
+	 */
+    private void logAndShowError(String categoryDetails, boolean showMsg) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        if (getManagedBean().isSupplierUser()) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                SmCommonUtil.getMessage("lbl.sm.category.notValid.supp", new String[] { categoryDetails })));
+            log.info("Error message shown for supplier user");
+        } else if (showMsg) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                SmCommonUtil.getMessage("lbl.sm.category.notValid.poappr", new String[] { categoryDetails })));
+            log.info("Error message shown for PO/approver");
+        } else {
+        	log.info("No error message shown due to decision flags");
+        }
+    }
+	//#38927 END
 }
