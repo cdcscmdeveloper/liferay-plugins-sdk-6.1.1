@@ -176,9 +176,7 @@
 					<h:outputText value="0" rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
-					<ui:remove>
-						<!-- #38151 add action link popup & WIP-->
-					</ui:remove>
+					<!-- #38151 add action link popup & WIP-->
 					<p:commandLink action ="#{consolidationReportBackingBean.qualifiedSupplierListPopupScore(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 	 											  process="@this" update="@([id$=preferenceMarginSuppDetailstestPopupId])" styleClass="commandLink" rendered="#{!consolidationReportBackingBean.managedBean.weightage35384WIP}" >
 					<h:outputText value="#{qualifiedSupp.totalScore}" rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice ne 0}">
@@ -520,22 +518,19 @@
 		</p:outputPanel>
 	</p:panel>
 	
-	<ui:remove>
-		<!-- #38151 datatable value popup-->
-		<!-- start -->
-	</ui:remove>
+	<!-- #38151 datatable value popup - start -->
 	<p:dialog id="preferenceMarginSuppDetailstestPopupId"
 		widgetVar="preferenceMarginSuppDetailstestPopup" position="center"
 		modal="true" dynamic="true" styleClass="pop_up_top" width="950"
 		resizable="false"
 		header="#{lbl['lbl.sc.total.overall.score.percentage']}">
-		<p:dataTable id="qualifiedSuppliers" var="qualifiedSupp"
-			widgetVar="shortlistedSuppDtls"
+		<p:dataTable id="weightageScores" var="weightageScore"
+			widgetVar="shortlistedWeightageScore"
 			value="#{consolidationReportBackingBean.managedBean.weightageScoreBeans}"
 			emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
 			editable="true" lazy="true" rowIndexVar="index" rows="10"
-			style="width:100%;" rowKey="#{qualifiedSupp}">
-			<ac:paginator for="qualifiedSuppliers" />
+			style="width:100%;" rowKey="#{weightageScore}">
+			<ac:paginator for="weightageScores" />
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column colspan="2"
@@ -566,34 +561,31 @@
 			</p:columnGroup>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.technicalTotalScore}" />
+				<h:outputText value="#{weightageScore.technicalTotalScore}" />
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.financialTotalScore}" />
+				<h:outputText value="#{weightageScore.financialTotalScore}" />
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.recommendationTechnicalScore}" />
+				<h:outputText value="#{weightageScore.recommendationTechnicalScore}" />
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.recommendationFinancialScore}" />
+				<h:outputText value="#{weightageScore.recommendationFinancialScore}" />
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.recommendationTotalScore}" />
+				<h:outputText value="#{weightageScore.recommendationTotalScore}" />
 
 			</p:column>
 
 		</p:dataTable>
 	</p:dialog>
-	<ui:remove>
-		<!-- #38151 datatable value popup-->
-		<!-- end -->
-	</ui:remove>	
+	<!-- #38151 datatable value popup - end -->
 </ui:composition>
