@@ -2049,31 +2049,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	public ScLoa calcBondAmountWithSST(ScLoa scLoa, boolean isDirectLoa) {
 		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		
-		if(isDirectLoa && !scLoa.isBondReq()) {
+		if(isDirectLoa) {
 			//#24540 - start -
 			boolean setBondReq = true;
-			
+			//#25726 commit under #39080 - Start
+			//remove contract type condition.
 			if (null != scLoa.getQtType() 
 					&& null != scLoa.getQtType().getParameterId() 
 					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
 					&& null != scLoa.getScQt() 
 					&& null != scLoa.getScQt().getFulfilmentType()
 					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)  
-					&& null != scLoa.getContractType() 
-					&& null != scLoa.getContractType().getParameterId()
-					&& scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				setBondReq = false;
-			}
-			
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
+					||scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
+			//#25726 commit under #39080 - End
 				setBondReq = false;
 			}
 			
