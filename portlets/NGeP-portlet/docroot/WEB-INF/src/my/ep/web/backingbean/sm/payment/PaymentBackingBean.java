@@ -1282,7 +1282,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 									.getManagedBean().getBillDesc(), this
 									.getManagedBean().getCountry(), this
 									.getCancelUrl()));
-			log.info("***************new payment gateway payload:"
+			log.info("######38377#####new payment gateway payload:"
 					+ this.getManagedBean().getPayLoad());
 			log.info("***********vcode:"+this.getvCode());
 			return "paymentGatewayCDCRequestSubmission";

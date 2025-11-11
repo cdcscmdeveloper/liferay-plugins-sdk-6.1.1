@@ -168,7 +168,7 @@
 				</p:dataTable>
 
 				<div class="ppRightBtn">
-					<p:commandButton id="quotationcommitteeadd" styleClass="BtnSpacing"
+					<p:commandButton id="committeeAddButton" styleClass="BtnSpacing"
 						value="#{lbl['lbl.btn.add']}" process="@this"
 						action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
 						oncomplete="committeeScreen3.show();" update="@(.addQCMember)"

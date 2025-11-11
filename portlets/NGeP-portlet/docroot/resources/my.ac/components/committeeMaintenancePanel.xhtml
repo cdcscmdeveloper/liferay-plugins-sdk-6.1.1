@@ -60,7 +60,7 @@
 
 			<h:panelGrid columns="2" styleClass="gridContainer"
 				columnClasses="firstCol, secondCol">
-				<p:panel id="historyPanelId"
+				<p:panel id="maintenanceHistoryPanelId"
 					header="#{lbl['lbl.sc.committee.history']}">
 					<p:dataTable id="historyTableId" styleClass=""
 						value="#{historyPaginator.model}" var="history"
@@ -94,7 +94,7 @@
 						</p:column>
 					</p:dataTable>
 					<ac:detachablePaginator minimal="true"
-						loopId="@([id$=historyPanelId])"
+						loopId="@([id$=maintenanceHistoryPanelId])"
 						paginatorObject="#{historyPaginator}" />
 				</p:panel>
 

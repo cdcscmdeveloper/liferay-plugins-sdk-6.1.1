@@ -524,6 +524,10 @@ public interface QTConstants {
 			
 	// 25791-End
 	
+	//#38151
+	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
+	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
+	
 	// 36671 - start
 	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
 	// 36671 - end
@@ -579,7 +583,7 @@ public interface QTConstants {
 	public static final String COMP_EXP_SUPPORTING_DOCUMENTS = "NGeP-LOA-Report";
 	public static final String PROPOSAL_EVALUATION_PORTLET = "ProposalEvaluation_WAR_NGePportlet";
 	public static final int TAB_LOA_INDEX = 1;
-	public static final String EVALUATION_FINANCIAL_OTHER_CHECKLIST = "/xhtml/sc/evaluation/evaluationStage/financial/finNewCompExpChecklist.xhtml";
+	public static final String EVALUATION_FINANCIAL_OTHER_CHECKLIST = "/xhtml/sc/evaluation/evaluationStage/financial/financialotherchecklists.xhtml";
 
 	// 29661- end-
 
