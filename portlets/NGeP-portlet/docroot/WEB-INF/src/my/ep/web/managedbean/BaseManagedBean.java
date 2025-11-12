@@ -179,6 +179,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean newVersion;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
+	// #28895_35501_DA - Updated FRS - Start
+	private boolean blacklistOwner;
 
 
 	public boolean isShowDetailSSM() {
@@ -1109,4 +1111,13 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
+	// #28895_35501_DA - Updated FRS - Start
+	public boolean isBlacklistOwner() {
+		return blacklistOwner;
+	}
+
+	public void setBlacklistOwner(boolean blacklistOwner) {
+		this.blacklistOwner = blacklistOwner;
+	}
+	// #28895_35501_DA - Updated FRS - End
 }
