@@ -633,7 +633,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+				// new #25725 - Start
+				// check code name for convert to italic
+				String label = convertItalicCodeNameForMy(parameterDesc);
+
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), label);
+				// new #25725 - End
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -642,6 +647,33 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+
+	// new #25725 - Start
+	/**
+	 * Convert to italic if language code = "ms" and parameter code in the list
+	 * 
+	 * @param parameterDesc
+	 * @return
+	 */
+	public String convertItalicCodeNameForMy(PmParameterDesc parameterDesc) {
+		String label = parameterDesc.getCodeName();
+
+		FacesScopes face = new FacesScopes();
+		String language = face.getUserLocale().getLanguage();
+		String ParamCode = parameterDesc.getPmParameter().getParameterCode();
+
+		// Add parameter code for convert to Italic
+		List<String> listParamCode = new ArrayList<String>();
+		listParamCode.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParamCode.contains(ParamCode)) {
+			label = "<i>" + label + "</i>";
+		}
+
+		return label;
+	}
+
+	// new #25725 - End
 	
 	/** #21695 FARID START*/	
 	/**
