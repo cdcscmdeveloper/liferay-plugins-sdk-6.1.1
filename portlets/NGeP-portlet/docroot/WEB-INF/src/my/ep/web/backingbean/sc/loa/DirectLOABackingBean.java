@@ -12251,6 +12251,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			specMaster
 					.setSpecTypeCode(resDTO.getSpecMaster().getSpecTypeCode());
 		}
+		if (null != specMaster && null == specMaster.getItemTypeCode()
+				&& null != resDTO.getSpecMaster().getItemTypeCode()) {
+			specMaster
+					.setItemTypeCode(resDTO.getSpecMaster().getItemTypeCode());
+		}
 	}
 	// #29468 Vinod End
 
