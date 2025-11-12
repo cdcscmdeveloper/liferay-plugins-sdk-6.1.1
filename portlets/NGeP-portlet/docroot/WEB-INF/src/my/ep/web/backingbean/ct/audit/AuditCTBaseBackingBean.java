@@ -41,6 +41,8 @@ import com.liferay.portal.util.PortalUtil;
  */
 public abstract class AuditCTBaseBackingBean<T extends AuditContractManagedBean> extends BaseBackingBean<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final String FILE_NAME = "AuditCTBaseBackingBean";
+	private static final String METHOD_NAME = "exportExcelReportAudit";
 
 	/**
 	 * Export/Download Document in Excel Format
@@ -68,8 +70,8 @@ public abstract class AuditCTBaseBackingBean<T extends AuditContractManagedBean>
 			outStream.close();
 			wb.close();// Close Workbook
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "AU", "",
-					"AuditContractBackingBean.generateRptExcelForAuditTrailDetails", getUserId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, FILE_NAME, "",
+					METHOD_NAME, getUserId(), e);
 		}
 	}
 
