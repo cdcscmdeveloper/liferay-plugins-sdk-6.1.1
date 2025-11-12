@@ -12189,6 +12189,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				&& null != resDTO.getSpecMaster().getSpecTypeCode()) {
 			specMaster.setSpecTypeCode(resDTO.getSpecMaster().getSpecTypeCode());
 		}
+		if (null != specMaster && null == specMaster.getItemTypeCode()
+				&& null != resDTO.getSpecMaster().getItemTypeCode()) {
+			specMaster
+					.setItemTypeCode(resDTO.getSpecMaster().getItemTypeCode());
+		}
 	}
 
 	private void checkQuestionsforCreateTemplateSpec(List<TplSpecQuestion> questionsListNew, TplSpecMaster specMaster,
