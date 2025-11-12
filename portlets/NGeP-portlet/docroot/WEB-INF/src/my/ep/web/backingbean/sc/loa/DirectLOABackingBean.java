@@ -12129,13 +12129,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		this.getManagedBean().setTemplateSpecCreate(
 				new CreateTemplateSpecPagingDataModel());
 		this.resetTemplate();
-		specCategory = (specCategory.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)
+		String specCategoryLocal = (specCategory.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)
 				|| specCategory.equals(ParameterConst.ITEM_TYPE_PRODUK_STRING)) ? ParameterConst.ITEM_TYPE_PRODUCT_STRING
 				: ParameterConst.ITEM_TYPE_SERVICE_STRING;
 
-		if (specCategory.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
+		if (specCategoryLocal.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
 			pmReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_SERVICE);
-		} else if (specCategory.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
+		} else if (specCategoryLocal.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
 			pmReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT);
 		}
 		pmReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
