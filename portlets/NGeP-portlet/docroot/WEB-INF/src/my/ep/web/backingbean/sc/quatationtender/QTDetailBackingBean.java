@@ -1149,8 +1149,7 @@ public class QTDetailBackingBean extends
 			Long qtId = scQt.getQtId();
 
 			// #28784 - Demo WIP -start-
-			boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-			this.getManagedBean().setNewVersion(isQtNewVersion);
+			checkDemoVersion(scQt);
 			// #28784 - Demo WIP -end-
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
@@ -5473,9 +5472,7 @@ public class QTDetailBackingBean extends
 						getManagedBean().setQt(scQt);
 
 						// #28784 - Demo WIP -start-
-						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(),
-								CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-						this.getManagedBean().setNewVersion(isQtNewVersion);
+						checkDemoVersion(scQt);
 
 						if (demoRequired && this.getManagedBean().isNewVersion()) {
 							getManagedBean().getQt().setDemoRequired(demoRequired);
