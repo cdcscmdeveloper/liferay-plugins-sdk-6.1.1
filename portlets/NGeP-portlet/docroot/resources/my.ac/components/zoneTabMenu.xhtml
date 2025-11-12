@@ -1,4 +1,4 @@
-<ui:remove> #28777#29729 - Start </ui:remove>	
+<!-- #28777#29729, 35592 - Start -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:cc="http://java.sun.com/jsf/composite"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -10,60 +10,68 @@
 	<cc:interface>
 		<cc:attribute name="tabList" required="true" />
 		<cc:attribute name="activeIndex" required="true" />
-		<cc:attribute name="update" required="true" />	
-		<cc:attribute name="process" required="true" />		
-		<cc:attribute name="remoteCommand" required="true" />			
+		<cc:attribute name="update" required="true" />
+		<cc:attribute name="process" required="true" />
+		<cc:attribute name="remoteCommand" required="true" />
 	</cc:interface>
 	<cc:implementation>
 		<style>
-			.qt-zone-menu a , .qt-zone-menu .ui-state-active a {
-			    width: calc(100% - 20px) !important;
-			    margin: 0;
-			}
-			.qt-zone-menu li {
-			    width: 100%;
-			    min-width: 200px;
-			}
-			.qt-zone-menu a span:nth-child(1){
-			    white-space: normal !important;
-			    word-break: break-all;
-			    display: inline-flex;
-			    max-width: 85%;
-			}
-			.qt-zone-menu a span:nth-child(2){
-			    float: right;
-			    max-width: 10%;
-			}
-			.qt-zone-menu li.ui-tabmenuitem:hover{
-				background: #b4df7d !important;
-				cursor: pointer;
-			}
-		</style>
-		<div class="qt-zone-menu ui-tabmenu ui-widget ui-widget-content ui-corner-all sidemenu">
-			<ul class="ui-tabmenu-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" role="tablist">
+.qt-zone-menu a,.qt-zone-menu .ui-state-active a {
+	width: calc(100% -   20px) !important;
+	margin: 0;
+}
+
+.qt-zone-menu li {
+	width: 100%;
+	min-width: 200px;
+}
+
+.qt-zone-menu a span:nth-child(1) {
+	white-space: normal !important;
+	word-break: break-all;
+	display: inline-flex;
+	max-width: 85%;
+}
+
+.qt-zone-menu a span:nth-child(2) {
+	float: right;
+	max-width: 10%;
+}
+
+.qt-zone-menu li.ui-tabmenuitem:hover {
+	background: #b4df7d !important;
+	cursor: pointer;
+}
+</style>
+		<div
+			class="qt-zone-menu ui-tabmenu ui-widget ui-widget-content ui-corner-all sidemenu">
+			<ul
+				class="ui-tabmenu-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all"
+				role="tablist">
 				<ui:repeat varStatus="status" var="tab" value="#{cc.attrs.tabList}">
-				    <ui:param name="activeClass" value="#{status.index eq cc.attrs.activeIndex ? 'ui-state-active': ''}"/>
-					<li class="ui-tabmenuitem ui-state-default ui-corner-top #{activeClass}" role="tab" aria-expanded="true">
-						<p:commandLink styleClass="ui-menuitem-link ui-corner-all" transient="true" partialSubmit="true" onstart="blockWidget.show()" update="#{cc.attrs.update}" process="#{cc.attrs.process}" oncomplete="#{cc.attrs.remoteCommand}([ {name : 'selectedZoneTabIndex', value :#{status.index} }]); blockWidget.hide();">
-						    <span class="ui-menuitem-text">#{tab.zoneName}</span>
+					<ui:param name="activeClass"
+						value="#{status.index eq cc.attrs.activeIndex ? 'ui-state-active': ''}" />
+					<li
+						class="ui-tabmenuitem ui-state-default ui-corner-top #{activeClass}"
+						role="tab" aria-expanded="true"><p:commandLink
+							styleClass="ui-menuitem-link ui-corner-all" transient="true"
+							partialSubmit="true" onstart="blockWidget.show()"
+							update="#{cc.attrs.update}" process="#{cc.attrs.process}"
+							oncomplete="#{cc.attrs.remoteCommand}([ {name : 'selectedZoneTabIndex', value :#{status.index} }]); blockWidget.hide();">
+							<span class="ui-menuitem-text">#{tab.zoneName}</span>
 							<ui:fragment rendered="#{tab.branchDeactivated}">
-								<span class="disabled-zone-tooltip">
-							    	<p:graphicImage id="zoneTabImgId" value="/css/images/design/icon_error.png" />
+								<span class="disabled-zone-tooltip"> <p:graphicImage
+										id="zoneTabImgId" value="/css/images/design/icon_error.png" />
 									<p:tooltip id="disabledZoneTooltipId" for="zoneTabImgId">
-										<p:outputLabel escape="false" value="#{lbl['lbl.sc.branch.deactivated']}"/>
+										<p:outputLabel escape="false"
+											value="#{lbl['lbl.sc.branch.deactivated']}" />
 									</p:tooltip>
 								</span>
 							</ui:fragment>
-						</p:commandLink>
-					</li>
+						</p:commandLink></li>
 				</ui:repeat>
 			</ul>
 		</div>
 	</cc:implementation>
 </ui:composition>
-<ui:remove> #28777#29729 - End </ui:remove>	
-
-
-
-
-
+<!-- #28777#29729, 35592 - End -->

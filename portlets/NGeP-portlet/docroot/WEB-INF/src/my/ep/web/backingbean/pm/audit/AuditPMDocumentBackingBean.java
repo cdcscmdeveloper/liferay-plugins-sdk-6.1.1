@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.audit;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.AuditPMDaoConst;
 import my.ep.constant.rpt.ReportExcelAuditConstant;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
@@ -24,6 +26,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.constant.report.AuditReportConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.pm.audit.AuditPMManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.rpt.excel.ExcelCellStyleBuilder;
@@ -67,8 +70,23 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 			paramMap.put(AuditPMDaoConst.P_PMPARAMETERLVLID, reqDTO.getPmParameterLvlId().toString());
 			paramMap.put(AuditPMDaoConst.P_ITEMCODE, reqDTO.getpItemCode());
 			paramMap.put(AuditPMDaoConst.P_ITEMNAME, reqDTO.getpItemName());
-			paramMap.put(AuditReportConst.PARAM_USER_ID, reqDTO.getActionBy());
+			paramMap.put(AuditPMDaoConst.P_ACTION_BY, reqDTO.getCreatedBy());
+			paramMap.put(AuditReportConst.PARAM_USER_ID, String.valueOf(getUserIdSessionFromLoginId()));
+			paramMap.put(AuditPMDaoConst.P_ROLECODE, reqDTO.getpRoleCode());
 			
+			SimpleDateFormat sdf = new SimpleDateFormat(ReportConst.URL_RPT_DATE_ANOTHER_FORMAT);
+			if (reqDTO.getPdateFrom() != null) {
+				paramMap.put(AuditPMDaoConst.P_DATEFROM, sdf.format(reqDTO.getPdateFrom()));
+			}
+			if (reqDTO.getPdateTo() != null) {
+				paramMap.put(AuditPMDaoConst.P_DATETO, sdf.format(reqDTO.getPdateTo()));
+			}
+			if(reqDTO.getpDocGroupId() != null){
+				paramMap.put(AuditPMDaoConst.P_DOCGROUPID, reqDTO.getpDocGroupId().toString());
+			}
+			if(reqDTO.getpUserOrgProfileId() != null){
+				paramMap.put(AuditPMDaoConst.P_USERORGPROFILEID, reqDTO.getpUserOrgProfileId().toString());
+			}
 			paramMap.values().removeAll(Collections.singleton(null));
 			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_PM, paramMap);
 			
@@ -84,8 +102,10 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 	 * @param searchDetail
 	 */
 	public void generateRptExcel(AuditPMReqDTO reqDTO, IPagingDataModel<VAuditPMDTO> searchDetail) {
+		String oriLanguange = reqDTO.getpLanguage();
 		try {
 			reqDTO.setFetchAll(true);
+			reqDTO.setpLanguage(AuditConst.PM_LANGUAGECODE_MS);
 			ISearchResultBean<VAuditPMDTO> res = getAuditPMSO().searchDetailResultList(reqDTO, searchDetail.getSearchBean());
 			details = res.getResultList();
 			
@@ -96,6 +116,7 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 			log.error(e);
 		}
 		reqDTO.setFetchAll(false);
+		reqDTO.setpLanguage(oriLanguange);
 		wb = null;
 	}
 	
@@ -178,8 +199,25 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 	}
 	
 	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
+		
+		// Default width for specific column ranges
+				int defaultWidth = 19 * 256;
+
+		// Define a map for specific column widths
+		Map<Integer, Integer> columnWidths = new HashMap<>();
+		columnWidths.put(0, 23 * 256); // Col: Tarikh Tindakan
+		columnWidths.put(1, 15 * 256); // Col: Jenis Tindakan
+		columnWidths.put(2, 25 * 256); // Col: Tindakan Oleh
+		columnWidths.put(3, 31 * 256); // Col: Organisasi
+		columnWidths.put(4, defaultWidth); // Col: Peranan
+		columnWidths.put(5, defaultWidth); // Col: Jenis Dokumen
+		columnWidths.put(6, 22 * 256); // Col: No. Dokumen
+		columnWidths.put(7, defaultWidth); // Col: Nama Medan
+		columnWidths.put(8, defaultWidth); // Col: Data Asal
+		columnWidths.put(9, defaultWidth); // Col: Data Baru
+		
 		for (int i = 0; i < totalNoOfCell; i++) {
-			sheetName.autoSizeColumn(i + 1);
+			sheetName.setColumnWidth(i + 1, columnWidths.get(i));
 		}
 	}
 

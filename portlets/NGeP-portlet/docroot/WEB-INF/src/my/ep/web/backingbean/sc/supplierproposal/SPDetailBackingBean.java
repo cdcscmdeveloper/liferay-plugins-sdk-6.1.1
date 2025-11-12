@@ -82,12 +82,14 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
@@ -109,6 +111,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -174,6 +177,13 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
+
+//29661 -start-
+import my.ep.dto.sc.quationtender.EvaluationResDTO;
+import my.ep.web.constant.sc.SLALogConstant;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
+
+//29661 -end-
 
 /**
  * Supplier Proposal Backing Bean
@@ -278,12 +288,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				resDTO = proposalSO.retrieveProposalDtlBySupplierId(reqDTO);
 			} else {
 				resDTO = proposalSO.retrieveProposalDetail(reqDTO);
-			}
-			//32723
-			if (this.getManagedBean().getQt() != null) {
-				if (this.getManagedBean().getQt().getDisciplinaryActionPresent() != null) {
-					resDTO.getScQt().setDisciplinaryActionPresent(this.getManagedBean().getQt().getDisciplinaryActionPresent());
-				}
 			}
 			
 			ScQt scQt = resDTO.getScQt();
@@ -1079,7 +1083,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	 * @return navigation path
 	 */
 	public String saveTechnicalSpecificationActionNew(boolean isCompleted) {
-		//Bug #33141@Syazani -- End 01/07/2022
 		log.info("saveTechnicalSpecificationAction supplierId::::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
@@ -1097,29 +1100,21 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
-		//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+		
+		// #21695 - Start - fix completed financial proposal still ticked after technical proposal updated
 		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
 			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
 				if (finProposalChecklist.getScQtCheckList().getTitle()
 						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
 						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
-					//#34726 start - flag to define process from technical, 
-					//save technical spec proposal is sending financialproposalchecklist(preparefinancialaction)
 					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
-					//#34726 start
-					prepareFinancialAction(finProposalChecklist);
-					saveFinancialSpecificationAction(false, true);
-					//#34726 start
-					//need to setback to false, because at financial proposal prepare button is trigger prepare financialaction
-					// this flag is needed in prepareFinancialAction during save technical proposal spec or click prepare at financial proposal
-					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(false);
-					//#34726 end
+					finProposalChecklist.setSubmitted(false);
 					break;
 				}
 			}
 		}
-		//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
+
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
@@ -1260,15 +1255,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							getManagedBean().getTemplateSpecBean());
 				}
 				
-				//#28777 & #29729 - Start
+				// #28777 & #29729, 35592 - Start
 				List<Long> deactivatedZones = new ArrayList<>();
-				if(CollectionUtils.isNotEmpty(this.getManagedBean().getZones())){
-					for(TplSpecZoneDtl zoneDtl: this.getManagedBean().getZones()){
-						if(zoneDtl.isBranchDeactivated())
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+					for (TplSpecZoneDtl zoneDtl : this.getManagedBean().getZones()) {
+						if (zoneDtl.isBranchDeactivated())
 							deactivatedZones.add(zoneDtl.getSpecZoneId());
 					}
 				}
-				//#28777 & #29729 - End
+				// #28777 & #29729, 35592 - End
 
 				if (null != getManagedBean().getQt().getQtStatus() && null != getManagedBean().getQt().getQtStatus().getStatusId()
 						&& (getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
@@ -1290,14 +1285,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
 				List<TemplateSpecBean> activeTemplateSpecBeans = new ArrayList<>();//#34363 - note 50 - Added - Vinod
-				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {//#28777 & #29729 (35838) - fix sonarqube issue
+				// #28777 & #29729, 35592(35838) - Start
+				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {
+					// #28777 & #29729, 35592(35838) - End
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
-						//#28777 & #29729 - Start
-						if(deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
+						// #28777 & #29729, 35592 - Start
+						if (deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
 							continue;
-						//#28777 & #29729 - End
+						// #28777 & #29729, 35592 - End
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
@@ -1322,7 +1319,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 ) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
@@ -1336,8 +1333,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								}
 								//Bug_34259 - End
 								else{
-									specAnswer.setDeleted(true);
-									toDeleteZoneAnswers.add(specAnswer);
+									//#21695 as is error for tender , 2times deleted if user null the value of the rate per uom.
+									 if (!ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode())) {
+										specAnswer.setDeleted(true);
+										toDeleteZoneAnswers.add(specAnswer);
+									 }
 								}
 							}
 							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
@@ -1360,7 +1360,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						}
 						activeTemplateSpecBeans.add(templateSpecBean);//#34363 - note 50 - Added - Vinod
 					}
-				}//#28777 & #29729 (35838) - fix sonarqube issue
+				}// #28777 & #29729, 35592(35838)
 				//#34363 - note 50 - Start - Vinod
 				if (!activeTemplateSpecBeans.isEmpty() && isCompleted
 						&& null != getManagedBean().getQt()
@@ -1473,7 +1473,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				}
 			}
 			// Enhancement #3657@Syazani 12/10/2023 -- End
-			
+	      if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){ //#21695
 			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
 			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
 					.getTplSpecQuestion().getClPriceTypeCode()
@@ -1516,6 +1516,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					}
 				}
 			}
+	      }
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(getManagedBean().getQt());
@@ -3292,6 +3293,29 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 				pageUrl = retrievePaidUpCapitalNdDeclarationDtls();
 			}
+			
+			// 29661-start-
+			else if (SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE
+					.equalsIgnoreCase(docDefinitionKey)) {
+				this.getManagedBean().setCloseCompanyExpReminderPopUp(
+						SourcingConstants.OPEN_REMINDER_POPUP_VALUE);
+				retrieveFinGovNonGovCompanyExpDetails(scQtProposalChecklist,
+						SourcingConstants.CLIENT_TYPE_FINANCIAL,
+						QTConstants.PROPOSAL__GOV_PROC_RELATED,
+						QTConstants.PROPOSAL__GOV__NONPROC_RELATED);
+				pageUrl = QTConstants.PROPOSAL_FINANCIAL_GOVERNMENT_EXPERIENCE;
+			} else if (SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE
+					.equalsIgnoreCase(docDefinitionKey)) {
+				this.getManagedBean().setCloseCompanyExpReminderPopUp(
+						SourcingConstants.OPEN_REMINDER_POPUP_VALUE);
+				retrieveFinGovNonGovCompanyExpDetails(scQtProposalChecklist,
+						SourcingConstants.CLIENT_TYPE_OTHER,
+						QTConstants.PROPOSAL__NONGOV_PROC_RELATED,
+						QTConstants.PROPOSAL__NONGOV__NONPROC_RELATED);
+				pageUrl = QTConstants.PROPOSAL_NONFINANCIAL_GOVERNMENT_EXPERIENCE;
+			}
+			// 29661-end-
+			
 		}
 		this.getManagedBean().setPageUrl(pageUrl);
 		return NAV_TO_FINANCIAL_CHECKLIST_MAIN_PAGE + "?faces-redirect=true";
@@ -3843,6 +3867,32 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			proposalSO = null;
 		}
 	}
+	
+	// #30447 - Start
+	/**
+	 * Retrieve supplier Salutation by identification No
+	 * 
+	 * @param identificationNo
+	 * @return salutationName
+	 */
+	public String supplierSalutation(String identificationNo) {
+		String salutationName = StringUtils.EMPTY;
+		try {
+			IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			PmSalutation salutation = proposalSO.retrieveSalutationByIdentificationNo(identificationNo);
+			if (salutation != null) {
+				salutationName = salutation.getSalutationName();
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "supplierSalutation",
+					this.getManagedBean().getQt().getQtId().toString(), "supplierSalutation",
+					getUserIdSessionFromLoginId(), e);
+		}
+		return salutationName;
+	}
+
+	// #30447 - End
 
 	/**
 	 * Method to retrieve Supplier details
@@ -3876,6 +3926,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 			for (SmPersonnel personnel : resDTO.getSmAppl().getSmPersonnels()) {
 				if (personnel.isEquityOwner()) {
+
+					// #30447 - Start
+					String newName = personnel.getName();
+					String salutation = supplierSalutation(personnel.getIdentificationNo());
+					newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+					personnel.setName(newName);
+					// #30447 - End
+					
 					equityShareHolders.add(personnel);
 
 				}
@@ -4634,15 +4692,17 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
 			evaluateWIP(this.getManagedBean().getQt()); //#21695
-			//#28777 & #29729 - Start
+			// #28777 & #29729 - Start
 			boolean branchDeleted = checkValidationSupplierBranchDeleted();
-			if(branchDeleted){
+			if (branchDeleted) {
 				this.getManagedBean().setReadOnly(branchDeleted);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(MessageConst.INFO_760522, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 			}
-			//#28777 & #29729 - End
+			// #28777 & #29729 - End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -5876,9 +5936,23 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear().intValue());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setApplId(scQtProposalChecklist.getScQtProposal().getSupplierApplId()); //Bug #30980
+			reqDTO.setComExpClientType("F"); //Bug #38267 
 
 			ProposalResDTO sdto = proposalSO.getCompanyExperience(reqDTO);
 			List<SmCompanyExperience> suppExpList = sdto.getCompExperienceList();
+			
+			//Bug #38267 start
+			if (null != scQtProposalChecklist.getProposalScore() && !scQtProposalChecklist.getProposalScore().isEmpty()){
+				ScQtProposalScore propScore = scQtProposalChecklist.getProposalScore().get(0);
+				if (propScore.getCriteriaValue().compareTo(BigDecimal.valueOf(suppExpList.size())) != 0) {
+					//Query without F filter
+					reqDTO.setComExpClientType(null);
+					sdto = proposalSO.getCompanyExperience(reqDTO);
+					suppExpList = sdto.getCompExperienceList();
+				}
+			}
+			//Bug #38267 end
+			
 			this.getManagedBean().setSupplierExperienceList(suppExpList);
 			this.getManagedBean().setSuppExpSize(suppExpList.size());
 			
@@ -5952,131 +6026,39 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		
 	}
 	
-	/**
-	 * @return
-	 */
-	public boolean checkDisciplinaryActionForQTCat() {
-		//#27233#note-36 for #26247 -start-
-		log.debug("Entered inside " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
-		if (null != this.getManagedBean().getQt()) {
-			if (StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
-				log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : checking DA for QT No. : " + this.getManagedBean().getQt().getQtNo());
-				if (null != getManagedBean().getQtProposal() && null != getManagedBean().getQtProposal().getScQtSupplier()
-						&& null != getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier()) {
-					log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : checking DA for Supplier ID : " + getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier().getSupplierId());
-					// #28338 - Start.
-					List<SmDisciplinaryAction> resultList = null;
-					SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-					supReqDTO.setSupplier(getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier());
-					SupplierDataMaintenanceResDTO dataRes = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-					
-					if(null != dataRes && dataRes.getSmDisciplinaryActions() != null && dataRes.getSmDisciplinaryActions().size() > 0){
-						resultList = dataRes.getSmDisciplinaryActions();
-						List<String> catCodeList = null;
-						
-						// #30609 - Start.
-						for(SmDisciplinaryAction disciplinaryAction: resultList){
-							if(disciplinaryAction.isSuspendRegistration()) {
-								this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-								getManagedBean().setDisableUpdateProposal(true);
-								return true;
-							}
-						}
-						// #30609 - End.
-						
-						for(SmDisciplinaryAction disciplinaryAction: resultList){
-							if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
-									|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
-									|| disciplinaryAction.isBumiputeraCancel()){
-								this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-								log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-								return true;
-							} else if(disciplinaryAction.isCancelCategory()){
-								if (null == catCodeList) {
-									catCodeList = new ArrayList<>();
-								}
-								List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
-								
-								if(!EntityHelper.isCollectionEmpty(catList)
-										&& catList.size() > 0){
-									for(Object[] arr : catList){
-										String catCode = StringUtils.EMPTY;
-										catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-										catCodeList.add(catCode);
-									}						
-								}
-							}
-						}
-						
-						if (catCodeList != null && CollectionUtils.isNotEmpty(catCodeList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-							IQTDetailSO QtDetailsSO;
-							QuationTenderResDTO tenderResDTO;
-							
-							try {
-								QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-								QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-								// tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-								tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
-								
-								tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
-								
-								if (!this.getManagedBean().getQt().isPanel()) {
-									List<ScQtCategory> categoryResults = tenderResDTO
-											.getCategories();
-									if (CollectionUtils.isNotEmpty(categoryResults)) {
-										for (ScQtCategory category : categoryResults) {
-											String scQtCatCode = category.getPmCategoryL1().getCategoryL1Code().toString() 
-													+ category.getPmCategoryL2().getCategoryL2Code().toString() 
-													+ category.getPmCategoryL3().getCategoryL3Code().toString() ;
-											if (catCodeList.contains(scQtCatCode)) {
-												this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-												log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-												return true;
-											}
-										}
-										this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
-										log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA not found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-									}
-								}
-							} finally {
-								QtDetailsSO=null;
-							}
-						}
-					} else {
-						this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
-						log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA not found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-					}
-					// #28338 - End.
-				}
-			}
-			else if ("true".equals(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
-				log.debug("Exit " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA already present for QT No. : " + this.getManagedBean().getQt().getQtNo());
-				return true;
+	// #25089@hatta - start
+	public void onTabChange(TabChangeEvent event) {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId())) {
+			return;
+		}
+		// #38852 End 12/08/2025 Vinod
+		if (event.getTab().getId().equals("tab1")) {
+			try {
+				Thread.sleep(500);
+				RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
-		log.debug("Exit " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
-		//#27233#note-36 for #26247 -end-
-		
-		return false;
 	}
-	
-	//#25089@hatta - start
-		public void onTabChange(TabChangeEvent event){
-			if(event.getTab().getId().equals("tab1")){
-				try {
-					Thread.sleep(500);
-					RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+
+	public void dafaultPopUpSupplierInfo() {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId())) {
+			return;
 		}
-		
-		public void dafaultPopUpSupplierInfo(){
-		   RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
-		}
-	//#25089@hatta - end
+		// #38852 End 12/08/2025 Vinod
+		RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+	}
+
+	// #25089@hatta - end
 		
 
 		//#21695 farid	start display tree node
@@ -6327,22 +6309,25 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 }
 //#28785-End
 
-        //#28777 & #29729 - Start
-		/**
-		* Method to return true, if branch in supplier has been deleted
-		* @param supplier id 
-		* @return true or false
-		**/
-		public boolean checkValidationSupplierBranchDeleted(){
-			boolean isSupplierBranchDeleted = false;
-			ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
-			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED){
-					isSupplierBranchDeleted = true;
-					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
-			}
-		    return isSupplierBranchDeleted;
+	// #28777 & #29729 - Start
+	/**
+	 * Method to return true, if branch in supplier has been deleted
+	 * 
+	 * @param supplier
+	 *            id
+	 * @return true or false
+	 **/
+	public boolean checkValidationSupplierBranchDeleted() {
+		boolean isSupplierBranchDeleted = false;
+		ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
+		if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+			isSupplierBranchDeleted = true;
+			this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 		}
-		//#28777 & #29729 - End
+		return isSupplierBranchDeleted;
+	}
+
+	// #28777 & #29729 - End
 
 		//Bug #30073 Start
 		public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
@@ -6705,4 +6690,209 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		}
 	}
 	// #34363 - note 50 - End - Vinod
+	// #33787 Start Vinod
+	/**
+	 * This method is added to display value in new column CompanyLimited By
+	 * Guarantee if CompanyTypeSSM is G then only display "yes" else display
+	 * "no".
+	 * 
+	 * @param smCompanyBasic
+	 * 
+	 * @return String
+	 * 
+	 */
+	public String getCompanyLimitedByGuarantee(SmCompanyBasic smCompanyBasic) {
+		return smCompanyBasic != null && StringUtils.isNotEmpty(smCompanyBasic.getCompanyTypeSSM())
+				&& smCompanyBasic.getCompanyTypeSSM().equals(QTConstants.COMPANY_TYPE_SSM_G) ? getMessageCommon(QTConstants.LBL_TXT_YES)
+				: getMessageCommon(QTConstants.LBL_TXT_NO);
+
+	}
+	// #33787 End Vinod
+
+
+	// 29661 -start-
+	/**
+	 * set company experience reminder popup close value.
+	 */
+	public void closeCompanyExpReminderPopUp() {
+		this.getManagedBean().setCloseCompanyExpReminderPopUp(
+				SourcingConstants.CLOSE_REMINDER_POPUP_VALUE);
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * show company experience reminder popup.
+	 */
+	public void showCompanyExpPopUp() {
+		RequestContext.getCurrentInstance().execute(
+				QTConstants.COMPANY_EXPERIENCE_REMINDER_POPUP);
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * fetch supplier company experience details Related to procument and
+	 * Nonprocurement.
+	 * 
+	 * @param scQtProposalChecklist
+	 * @param clientType
+	 */
+	private void retrieveFinGovNonGovCompanyExpDetails(
+			ScQtProposalChecklist scQtProposalChecklist, String clientType,
+			String procRelated, String procNotRelated) {
+		BigDecimal year = scQtProposalChecklist.getScQtCheckList()
+				.getScQtCheckListValue().getYear();
+		getManagedBean().setYear(year);
+		ScQt scQt = this.getManagedBean().getQt();
+		this.getManagedBean().setCompanyExpProcRelatedList(null);
+		this.getManagedBean().setCompanyExpNonProcRelatedList(null);
+		this.getManagedBean().setContractStatusvalueProcRelated(null);
+		this.getManagedBean().setCompanyExpProcRelatedContracts(0);
+		this.getManagedBean().setCompanyExpNonProcRelatedContracts(0);
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (qtStatus != null
+				&& QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus
+						.getStatusId())) {
+			ProposalResDTO compExpProc = retrieveProposalCompanyExpdtls(
+					scQtProposalChecklist, clientType, year,
+					SourcingConstants.CATEGORY_CODE_IN);
+			if (CollectionUtils.isNotEmpty(compExpProc
+					.getCompanyExpProcNonProcList())) {
+				this.getManagedBean().setCompanyExpProcRelatedList(
+						compExpProc.getCompanyExpProcNonProcList());
+				this.getManagedBean().setCompanyExpProcRelatedContracts(
+						compExpProc.getCompanyExpProcNonProcList().size());
+
+			}
+			this.getManagedBean().setContractStatusvalueProcRelated(
+					compExpProc.getCompanyExpStatusBean());
+			BigDecimal procTotalAmount = calculateContractValueAmount(compExpProc
+					.getCompanyExpStatusBean().get(1));
+
+			this.getManagedBean()
+					.setCompanyExpProcRelatedValue(procTotalAmount);
+			ProposalResDTO compExpNonProc = retrieveProposalCompanyExpdtls(
+					scQtProposalChecklist, clientType, year,
+					SourcingConstants.CATEGORY_CODE_NOT_IN);
+			if (CollectionUtils.isNotEmpty(compExpNonProc
+					.getCompanyExpProcNonProcList())) {
+				this.getManagedBean().setCompanyExpNonProcRelatedList(
+						compExpNonProc.getCompanyExpProcNonProcList());
+				this.getManagedBean().setCompanyExpNonProcRelatedContracts(
+						compExpNonProc.getCompanyExpProcNonProcList().size());
+
+			}
+			this.getManagedBean().setContractStatusvalueNonProcRelated(
+					compExpNonProc.getCompanyExpStatusBean());
+			BigDecimal nonProcTotalAmount = calculateContractValueAmount(compExpNonProc
+					.getCompanyExpStatusBean().get(1));
+			this.getManagedBean().setCompanyExpNonProcRelatedValue(
+					nonProcTotalAmount);
+
+		} else {
+
+			EvaluationReqDTO evaluationProcReqDTO = setDetailsToReqDTO(
+					scQtProposalChecklist, scQt, clientType,
+					SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL,
+					Boolean.TRUE);
+			this.getManagedBean().setCompanyExpProcRelatedPagingModel(
+					new ViewSupplierCompExpDtlsPagingDataModel(procRelated,
+							evaluationProcReqDTO));
+
+			EvaluationResDTO cmpExpProcStatusValue = retrieveContractStatusValueCount(
+					scQtProposalChecklist, scQt, clientType,
+					SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL,
+					Boolean.TRUE);
+			this.getManagedBean().setContractStatusvalueProcRelated(
+					cmpExpProcStatusValue.getCompExpContractValueStatusBean());
+			this.getManagedBean()
+					.setCompanyExpProcRelatedContracts(
+							calculateContractValueAmount(
+									this.getManagedBean()
+											.getContractStatusvalueProcRelated()
+											.get(0)).intValue());
+
+			this.getManagedBean().setCompanyExpProcRelatedValue(
+					calculateContractValueAmount(this.getManagedBean()
+							.getContractStatusvalueProcRelated().get(1)));
+
+			EvaluationReqDTO evaluationNonProcReqDTO = setDetailsToReqDTO(
+					scQtProposalChecklist, scQt, clientType,
+					SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL,
+					Boolean.FALSE);
+			this.getManagedBean().setCompanyExpNonProcRelatedPagingModel(
+					new ViewSupplierCompExpDtlsPagingDataModel(procNotRelated,
+							evaluationNonProcReqDTO));
+
+			EvaluationResDTO cmpExpNonPrcCountValue = retrieveContractStatusValueCount(
+					scQtProposalChecklist, scQt, clientType,
+					SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL,
+					Boolean.FALSE);
+			this.getManagedBean().setContractStatusvalueNonProcRelated(
+					cmpExpNonPrcCountValue.getCompExpContractValueStatusBean());
+			this.getManagedBean().setCompanyExpNonProcRelatedContracts(
+					calculateContractValueAmount(
+							this.getManagedBean()
+									.getContractStatusvalueNonProcRelated()
+									.get(0)).intValue());
+			this.getManagedBean().setCompanyExpNonProcRelatedValue(
+					calculateContractValueAmount(this.getManagedBean()
+							.getContractStatusvalueNonProcRelated().get(1)));
+
+		}
+
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * 
+	 * @param proposalChekList
+	 * @param clinetType
+	 * @param year
+	 * @param categoryCodeCondition
+	 * @return ProposalResDTO
+	 */
+	public ProposalResDTO retrieveProposalCompanyExpdtls(
+			ScQtProposalChecklist proposalChekList, String clinetType,
+			BigDecimal year, int categoryCodeCondition) {
+		IQTProposalSO proposalSO = null;
+		try {
+
+			Long supplierId = getManagedBean().getSupplierId();
+			Long applId = proposalChekList.getScQtProposal()
+					.getSupplierApplId();
+			ScQt scQt = this.getManagedBean().getQt();
+			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			proposalReqDTO.setSupplierId(supplierId);
+			proposalReqDTO.setYear(year.intValue());
+			proposalReqDTO.setApplId(applId);
+			proposalReqDTO.setCategoryL3Codes(getCategoryL3Codes(scQt));
+			proposalReqDTO
+					.setCategoryCodeSearchCondition(categoryCodeCondition);
+			proposalReqDTO.setClientType(clinetType);
+			proposalReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			return proposalSO.retrieveCompanyExpDetails(proposalReqDTO);
+
+		} catch (Exception e) {
+			Long qtId = this.getManagedBean().getQt().getQtId();
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SP_DETAIL_BACKINGBEAN,
+					String.valueOf(qtId),
+					SLALogConstant.RETRIEVE_PROPOSAL_COMPANY_EXP_DETAILS
+							.concat(SourcingConstants.COMP_EXP_ERROR),
+					getUserIdSessionFromLoginId(), e);
+		}
+		return null;
+	}
+
+	// 29661 -end-
+	
 }

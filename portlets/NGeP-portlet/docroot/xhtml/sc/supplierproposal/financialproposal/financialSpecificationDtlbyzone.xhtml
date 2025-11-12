@@ -13,16 +13,18 @@
 				<!-- 20220907@syazani - Enhancement #3657 - specific error message - Start -->
 				<p:remoteCommand id="zoneRemote" name="zoneTabChange" update="@form" partialSubmit="true" process="@this" action="#{supplierProposalDetailBackingBean.zoneTabChange}" />
 				<!-- 20220907@syazani - Enhancement #3657 - specific error message - End -->
-				<ui:remove> #28777#29729 </ui:remove><ac:zoneTabMenu tabList="#{supplierProposalDetailBackingBean.managedBean.zones}" 
-							activeIndex="#{supplierProposalDetailBackingBean.managedBean.activeIndex}"
-							remoteCommand="zoneTabChange" update="@this"  process="@form"/>
+				<ui:remove> #28777#29729,35592 </ui:remove> <ac:zoneTabMenu
+					tabList="#{supplierProposalDetailBackingBean.managedBean.zones}"
+					activeIndex="#{supplierProposalDetailBackingBean.managedBean.activeIndex}"
+					remoteCommand="zoneTabChange" update="@this" process="@form" />
 			</td>
 			<td width="84%" valign="top"><p:outputPanel id="zoneSpecAnswers">
 					<ac:templateSpec processValidationId="zoneRemote"
 						templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
 						editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly 
 							and !supplierProposalDetailBackingBean.managedBean.zones.get(supplierProposalDetailBackingBean.managedBean.activeIndex).branchDeactivated}"
-						title="#{lbl['lbl.sc.spec.financial.title']}" /><ui:remove> #28777#29729 </ui:remove>	
+						title="#{lbl['lbl.sc.spec.financial.title']}" />
+					<ui:remove> #28777#29729,35592 </ui:remove>
 				</p:outputPanel></td>
 		</tr>
 	</table>

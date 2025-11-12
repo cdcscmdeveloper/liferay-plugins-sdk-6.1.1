@@ -1,0 +1,431 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{smCompExpMB.headerTitle}");
+		</script>
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<p:messages autoUpdate="true" closable="true" id="messages"
+			showDetail="true" showSummary="false" />
+		<div align="left">
+			<p:commandButton action="#{smCompExpBB.proceedAfterTnC}"
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				value="#{lbl['lbl.sm.comp.exp.draft.btn.back']}" />
+		</div>
+		<div align="center">
+			<table style="table-layout: fixed; width: 100%">
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:selectOneRadio id="clientType"
+							label="#{lbl['lbl.sm.comp.exp.update.project.for']}"
+							value="#{smCompExpMB.selectedMaster.clientType}">
+							<p:ajax event="change" listener="#{smCompExpBB.clientTypeChange}"
+								oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+								update=":form" process="@form" />
+							<f:selectItems value="#{smCompExpMB.clientTypeItems}"></f:selectItems>
+						</p:selectOneRadio></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:inputText id="agencyName" size="60"
+							style="width: auto !important;"
+							readonly="#{smCompExpMB.selectedMaster.clientType eq null or smCompExpMB.selectedMaster.clientType eq ParameterConst.clientTypeFederal}"
+							value="#{smCompExpMB.selectedMaster.agencyName}" /> <p:outputPanel
+							rendered="#{smCompExpMB.selectedMaster.clientType eq ParameterConst.clientTypeFederal}">
+							<p:commandLink action="#{smPtjPopupBB.initPtjPopup}"
+								oncomplete="blockWidget.hide(),smPtjPopupWV.show()"
+								onclick="blockWidget.show()" update=":form" process="@form">
+								<p:graphicImage value="/css/images/design/search.png" />
+							</p:commandLink>
+						</p:outputPanel></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td style="width: 66%"><p:inputText id="fileReferenceNo"
+							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
+							value="#{smCompExpMB.selectedMaster.fileReferenceNo}">
+							<p:ajax event="blur"
+								listener="#{smCompExpBB.trimFileReferenceNo}"
+								update="fileReferenceNo" />
+						</p:inputText> <p:spacer width="3px" /> <p:inputText id="fileExtensionNo"
+							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
+							maxlength="3" size="3" style="width: auto !important;"
+							value="#{smCompExpMB.selectedMaster.fileExtensionNo}">
+							<p:ajax event="blur"
+								listener="#{smCompExpBB.trimFileExtensionNo}"
+								update="fileExtensionNo" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
+					<td style="width: 66%"><p:inputText
+							value="#{smCompExpMB.selectedMaster.loaNo}" /></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:inputTextarea cols="100"
+							style="width: auto !important;"
+							value="#{smCompExpMB.selectedMaster.title}" /></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:inputText
+							label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+							value="#{smCompExpMB.selectedMaster.contractValue}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
+					<td style="width: 66%"><p:selectOneMenu
+							value="#{smCompExpMB.selectedMaster.paymentMethod.parameterId}">
+							<f:selectItems
+								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypePaymentMethod)}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:selectOneMenu
+							value="#{smCompExpMB.selectedMaster.procumentMode.parameterId}">
+							<f:selectItems
+								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypeProcurementMode)}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:calendar id="contractEffDate"
+							label="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
+							maxdate="#{smCompExpMB.maxEffDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							readonlyInput="true" showOn="button"
+							value="#{smCompExpMB.selectedMaster.contractEffDate}">
+							<p:ajax event="dateSelect" listener="#{smCompExpBB.dateChange}"
+								oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+								process="@form" update=":form" />
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td style="width: 66%"><p:calendar id="contractExpDate"
+							label="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}"
+							mindate="#{smCompExpMB.minExpDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							readonlyInput="true" showOn="button"
+							value="#{smCompExpMB.selectedMaster.contractExpDate}">
+							<p:ajax event="dateSelect" listener="#{smCompExpBB.dateChange}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								process="@form" update=":form" />
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.contract.status']}" /></td>
+					<td style="width: 66%"><c:if
+							test="#{smCompExpMB.selectedMaster.contractStatus eq ParameterConst.contractStatusInactive}">
+							<p:outputLabel styleClass="outputLabel-view"
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.inactive']}" />
+							<p:graphicImage id="contractStatusInactiveToolTipsId"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip for="contractStatusInactiveToolTipsId"
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.inactive.tooltip']}" />
+						</c:if> <c:if
+							test="#{smCompExpMB.selectedMaster.contractStatus eq ParameterConst.contractStatusEffective}">
+							<p:outputLabel styleClass="outputLabel-view"
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.effective']}" />
+							<p:graphicImage id="contractStatusEffectiveToolTipsId"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip for="contractStatusEffectiveToolTipsId"
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.effective.tooltip']}" />
+						</c:if> <c:if
+							test="#{smCompExpMB.selectedMaster.contractStatus eq ParameterConst.contractStatusExpired}">
+							<p:outputLabel styleClass="outputLabel-view"
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.expired']}" />
+							<p:graphicImage id="contractStatusExpiredToolTipsId"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip for="contractStatusExpiredToolTipsId"
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.expired.tooltip']}" />
+						</c:if> <c:if
+							test="#{smCompExpMB.selectedMaster.contractStatus eq ParameterConst.contractStatusTerminated}">
+							<p:outputLabel styleClass="outputLabel-view"
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
+						</c:if></td>
+				</tr>
+				<p:outputPanel rendered="#{smCompExpMB.consultant}">
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /> <p:outputLabel
+								styleClass="mandatory" value="*" /></td>
+						<td style="width: 66%"><p:inputText
+								styleClass="outputLabel-view"
+								value="#{smCompExpMB.selectedMaster.projectLoc}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /> <p:outputLabel
+								styleClass="mandatory" value="*" /></td>
+						<td style="width: 66%"><p:inputText
+								styleClass="outputLabel-view"
+								value="#{smCompExpMB.selectedMaster.workServDesc}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label2"
+								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel
+								styleClass="mandatory" value="*" /></td>
+						<td style="width: 66%"><p:inputText
+								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
+								value="#{smCompExpMB.selectedMaster.consultantFee}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>
+					</tr>
+				</p:outputPanel>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.supp.doc']}" /> <p:outputLabel
+							styleClass="mandatory" value="*" /></td>
+					<td><p:commandLink id="suppDoc" onclick="blockWidget.show()"
+							oncomplete="smCompExpSuppDocUploadDialogWV.show();return false;"
+							process="@form" update=":form">
+							<p:graphicImage value="/css/images/design/upload.png"
+								style="margin-right:2px;" />
+						</p:commandLink> <p:outputPanel id="smCompExpSuppDocListPanelId">
+							<ui:repeat
+								value="#{smCompExpMB.selectedMaster.compExpMasterDocs}"
+								var="doc">
+								<br />
+								<h:commandLink id="file" ajax="false"
+									value="#{smCompExpBB.getShortFileName(doc.fileName)}">
+									<p:fileDownload
+										value="#{smCompExpBB.downloadSelectedSuppDoc(doc.fileName, doc.filePath)}" />
+									<f:ajax process="@form" update=":form"
+										onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
+								</h:commandLink>
+								<p:tooltip for="file" value="#{doc.fileName}" position="top" />
+								<p:spacer width="10" />
+								<p:commandLink process="@form" update=":form"
+									action="#{smCompExpBB.onDeleteSupDocFileAttachment(doc)}"
+									onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
+									<p:graphicImage value="/css/images/design/trash.png" />
+								</p:commandLink>
+
+							</ui:repeat>
+						</p:outputPanel></td>
+				</tr>
+			</table>
+		</div>
+		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
+			toggleable="true">
+			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
+				value="#{smCompExpMB.selectedMaster.compExpMasterCats}"
+				var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
+				<p:column style="width:2%">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox value="#{smCompExpMB.selectedAll}">
+							<p:ajax listener="#{smCompExpBB.selectAllMasterCatCodes}"
+								update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{smCompExpCatCode.selected}">
+						<p:ajax listener="#{smCompExpBB.selectMasterCatCode(index)}"
+							update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}" />
+					</p:selectBooleanCheckbox>
+				</p:column>
+				<p:column style="width:34% !important;"
+					headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+					<h:outputText value="#{smCompExpCatCode.categoryL1Name}"
+						rendered="#{!smCompExpCatCode.brandNew}" />
+					<h:outputText styleClass="mandatory" value="*"
+						rendered="#{smCompExpCatCode.brandNew}" />
+					<p:selectOneMenu id="mainDDId" style="width:95% !important;"
+						label="#{lbl['lbl.sm.projDtls.mainCat']}"
+						value="#{smCompExpCatCode.categoryL1.categoryL1Id}"
+						rendered="#{smCompExpCatCode.brandNew}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems itemLabel="#{main.categoryName}"
+							itemValue="#{main.categoryL1Id}"
+							value="#{smCompExpMB.supplierMainCatList}" var="main" />
+						<p:ajax event="change" update="subDDId,subDivDDId"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							listener="#{smCompExpBB.getSupplierSubCatList(smCompExpCatCode.categoryL1.categoryL1Id, index)}" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column style="width:32% !important;"
+					headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+					<h:outputText value="#{smCompExpCatCode.categoryL2Name}"
+						rendered="#{!smCompExpCatCode.brandNew}" />
+					<h:outputText styleClass="mandatory" value="*"
+						rendered="#{smCompExpCatCode.brandNew}" />
+					<p:selectOneMenu id="subDDId" style="width:95% !important;"
+						label="#{lbl['lbl.sm.projDtls.subCat']}"
+						value="#{smCompExpCatCode.categoryL2.categoryL2Id}"
+						rendered="#{smCompExpCatCode.brandNew}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems itemLabel="#{sub.categoryName}"
+							itemValue="#{sub.categoryL2Id}"
+							value="#{smCompExpMB.supplierSubCatList}" var="sub" />
+						<p:ajax event="change" update="subDivDDId"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							listener="#{smCompExpBB.getSupplierSubDivCatList(smCompExpCatCode.categoryL2.categoryL2Id, index)}" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column style="width:32% !important;"
+					headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+					<h:outputText value="#{smCompExpCatCode.categoryL3Name}"
+						rendered="#{!smCompExpCatCode.brandNew}" />
+					<h:outputText styleClass="mandatory" value="*"
+						rendered="#{smCompExpCatCode.brandNew}" />
+					<p:selectOneMenu id="subDivDDId" style="width:95% !important;"
+						label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
+						value="#{smCompExpCatCode.categoryL3.categoryL3Id}"
+						rendered="#{smCompExpCatCode.brandNew}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems itemLabel="#{subDiv.categoryName}"
+							itemValue="#{subDiv.categoryL3Id}"
+							value="#{smCompExpMB.supplierSubDivCatList}" var="subDiv" />
+						<p:ajax event="change"
+							update=":#{p:component('smCompExpCatCodes')}, :#{p:component('addCatBtn')}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							listener="#{smCompExpBB.checkDuplicateMasterCatCode(smCompExpCatCode.categoryL3.categoryL3Id, index)}" />
+					</p:selectOneMenu>
+				</p:column>
+			</p:dataTable>
+			<div align="right">
+				<p:commandButton id="addCatBtn"
+					action="#{smCompExpBB.addSmCompExpCatMaster}"
+					disabled="#{smCompExpMB.smCompExpCatMasterNotComplete}"
+					onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+					update=":#{p:component('smCompExpCatCodes')}, @this"
+					value="#{lbl['lbl.sm.button.add']}">
+				</p:commandButton>
+				<p:commandButton id="delCatBtn"
+					disabled="#{empty smCompExpMB.selectedSmCompExpCatMaster}"
+					onclick="confirmDelSelectedCatDialogWV.show()" process="@this"
+					value="#{lbl['lbl.sm.button.delete']}">
+				</p:commandButton>
+			</div>
+		</p:panel>
+		<div align="right">
+			<p:commandButton id="btnDeclare"
+				value="#{lbl['lbl.sm.comp.exp.master.update.save']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				partialSubmit="true" update="@form"
+				action="#{smCompExpBB.onSaveMaster(true)}" />
+			<p:commandButton id="btnDelete"
+				value="#{lbl['lbl.sm.comp.exp.update.delete.btn']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{smCompExpBB.onDeleteMaster}" />
+		</div>
+		<ac:smPtjPopup okAction="smCompExpBB.selectAgencyAction" />
+		<p:dialog dynamic="true" header="#{lbl['lbl.bpm.choose.file']}"
+			height="200" id="smCompExpSuppDocUploadDialogId" modal="true"
+			onShow="singleUploadListener(uploadWV);"
+			onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;"
+			styleClass="pop_up_top" resizable="false"
+			widgetVar="smCompExpSuppDocUploadDialogWV" width="700px">
+			<p:fileUpload allowTypes="/(\.|\/)(pdf)$/"
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				fileUploadListener="#{smCompExpBB.handleSupDocFileAttachment}"
+				invalidFileMessage="#{lbl['lbl.sm.comp.exp.update.supp.doc.format.errmsg']}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
+				label="#{lbl['lbl.btn.addfile']}" multiple="true"
+				showButtons="false"
+				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
+				update=":#{p:component('smCompExpSuppDocListPanelId')}"
+				uploadLabel="#{lbl['lbl.btn.upload']}" widgetVar="uploadWV" />
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sm.comp.exp.update.supp.doc.instruction']}"
+				escape="false" />
+		</p:dialog>
+		<p:confirmDialog closable="true"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			id="confirmDelSuppDocDialogId"
+			message="#{lbl['lbl.sm.upload.delete.message']}" severity="alert"
+			widgetVar="confirmDelSuppDocDialogWV">
+			<div align="right">
+				<p:commandButton action="#{smCompExpBB.delSuppDocFileAttachment}"
+					onclick="confirmDelSuppDocDialogWV.hide();"
+					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+					update=":#{p:component('smCompExpSuppDocListPanelId')}"
+					value="#{lbl['lbl.sm.comp.exp.yes.btn']}" />
+				<p:commandButton value="#{lbl['lbl.sm.comp.exp.no.btn']}"
+					onclick="confirmDelSuppDocDialogWV.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog closable="true"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			id="confirmDelSelectedCatId"
+			message="#{lbl['lbl.sm.upload.delete.message']}" severity="alert"
+			widgetVar="confirmDelSelectedCatDialogWV">
+			<div align="right">
+				<p:commandButton action="#{smCompExpBB.delSmCompExpCatMaster}"
+					onclick="confirmDelSelectedCatDialogWV.hide();"
+					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+					update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}, :#{p:component('addCatBtn')}"
+					value="#{lbl['lbl.sm.comp.exp.yes.btn']}" />
+				<p:commandButton value="#{lbl['lbl.sm.comp.exp.no.btn']}"
+					onclick="confirmDelSelectedCatDialogWV.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog closable="true"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			id="confirmDelMasterDialogId"
+			message="#{lbl['lbl.sm.comp.exp.master.delete.msg']}"
+			severity="alert" widgetVar="confirmDelMasterDialogWV">
+			<div align="right">
+				<p:commandButton action="#{smCompExpBB.updateSmComExpMaster(true)}"
+					onclick="confirmDelMasterDialogWV.hide();"
+					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+					process="@form" update=":form"
+					value="#{lbl['lbl.sm.comp.exp.yes.btn']}" />
+				<p:commandButton value="#{lbl['lbl.sm.comp.exp.no.btn']}"
+					onclick="confirmDelMasterDialogWV.hide();" />
+			</div>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

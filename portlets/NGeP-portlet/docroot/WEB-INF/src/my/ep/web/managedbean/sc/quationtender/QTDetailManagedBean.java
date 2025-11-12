@@ -33,6 +33,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtContract;//25791
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -142,6 +143,12 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;//#25138 Reendorsed
 import org.primefaces.model.TreeNode;
 
+//25791 -start-
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQt;
+
+//25791 -end-
+
+
 /**
  * The Class QTDetailManagedBean.
  * 
@@ -215,6 +222,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The circular exp date. */
 	private Date circularExpDate;
+	
+	//#29661 start
+	/** The circular exp date. */
+	private List<CtPanelCategory> ctPanelCategoryCode;
+	
+	/** The boolean determine ct panel category */
+	private boolean ctPanelCategory;
+	//#29661 end
 	
 	// Drop down Listing for Approver
 	private List<PmUser> ministrySpecApprovers; 
@@ -1697,7 +1712,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> toBeRemoveEPVAttachments;
 	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
 	private boolean noSupplierExistForEPV;
+	private boolean userAbleToChangePBSecretary;
 	//#21692 - End
+	
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
 	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
@@ -1897,10 +1916,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<String, String> committeeMembersTypeMap; 
 	//12471 - end
 
-	//#29732
+	//#29732 start
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
-
+	private boolean updateCatDesc; 
+	private boolean updateCatInPm; 
+	private boolean resetHistoryCatCode;
+	//#29732 end
 	private boolean isSampleShowHide;// 11104wip
 
 	// 25791-start
@@ -1914,21 +1936,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScLoa> viewQtDlLoaContractTrackingDtls;
 	private IPagingDataModel<VCtContract> viewLoaContractDataModel;
 	private Map<Long, VCtContract> checkLoaContract;
+	private IPagingDataModel<ScBidScheduleForQt> searchBidScheduleDataModel;
 	// 25791-End
+	// #33787 Start Vinod
+	private boolean minPaidUpCapitalWIP;
+	// #33787 End Vinod
 
 	//28895 - 35500 start
 	/** The newly added sc qt committee */
 	private List<ScCommitteeMember> newScCommitteeMemberAuditTrailList;
 	/** The deleted sc qt committee */
 	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
+	/** The modified role of sc qt committee */
+	private HashMap<PmUser,List<String>> mapModifiedRole;	
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
+	/** The pmuser contactperson list that had been modified with the original pm user's name */
+	private HashMap<ScQtContactPerson, PmUser> modifiedDoaList;
 	
 	private boolean auditViewRole;
 	//#28895 - 35500 end
+	private boolean zoneQtyHasZeroVal;//#38679
 	
-	public boolean isFieldProcurementJustification = false; //#36678 related to #35061
-
+	//#35320 - Start
+	private boolean afterSF;
+	//#35320 - End
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12202,6 +12234,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.viewTrackingDiaryQTDL = viewTrackingDiaryQTDL;
 	}
 
+	// #33787 Start Vinod
+	public boolean isMinPaidUpCapitalWIP() {
+		return minPaidUpCapitalWIP;
+	}
+
+	public void setMinPaidUpCapitalWIP(boolean minPaidUpCapitalWIP) {
+		this.minPaidUpCapitalWIP = minPaidUpCapitalWIP;
+	}
+
+	// #33787 End Vinod
 	/**
 	 * @return the loaContractTrackingDtls
 	 */
@@ -12291,6 +12333,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCheckLoaContract(Map<Long, VCtContract> checkLoaContract) {
 		this.checkLoaContract = checkLoaContract;
 	}
+	
+	/**
+	 * @return the searchBidScheduleDataModel
+	 */
+	public IPagingDataModel<ScBidScheduleForQt> getSearchBidScheduleDataModel() {
+		return searchBidScheduleDataModel;
+	}
+
+	/**
+	 * @param searchBidScheduleDataModel the searchBidScheduleDataModel to set
+	 */
+	public void setSearchBidScheduleDataModel(
+			IPagingDataModel<ScBidScheduleForQt> searchBidScheduleDataModel) {
+		this.searchBidScheduleDataModel = searchBidScheduleDataModel;
+	}
+	
 	// 25791-End
 
 	//#28895 - 35500 start
@@ -12325,22 +12383,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setAuditViewRole(boolean auditViewRole) {
 		this.auditViewRole = auditViewRole;
 	}
-	//#28895 - 35500 end
 	
-	/** #36678 related to #35061
-	 * 
-	 * @return
-	 */
-	public boolean isFieldProcurementJustification() {
-		return isFieldProcurementJustification;
+	public HashMap<ScQtContactPerson, PmUser> getModifiedDoaList() {
+		return modifiedDoaList;
 	}
 
-	/** #36678 related to #35061
-	 * @param
-	 */
-	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
-		this.isFieldProcurementJustification = isFieldProcurementJustification;
+	public void setModifiedDoaList(HashMap<ScQtContactPerson, PmUser> modifiedDoaList) {
+		this.modifiedDoaList = modifiedDoaList;
 	}
+	
+	public HashMap<PmUser,List<String>> getMapModifiedRole() {
+		return mapModifiedRole;
+	}
+
+	public void setMapModifiedRole(HashMap<PmUser,List<String>> mapModifiedRole) {
+		this.mapModifiedRole = mapModifiedRole;
+	}
+	//#28895 - 35500 end
 	
 	//37813,35384 -start
 	/**
@@ -12357,4 +12416,89 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.techPoints = techPoints;
 	}
 	//37813,35384 -end
+
+	//#29661 start
+	public List<CtPanelCategory> getCtPanelCategoryCode() {
+		return ctPanelCategoryCode;
+	}
+
+	public void setCtPanelCategoryCode(List<CtPanelCategory> ctPanelCategoryCode) {
+		this.ctPanelCategoryCode = ctPanelCategoryCode;
+	}
+
+	public boolean isCtPanelCategory() {
+		return ctPanelCategory;
+	}
+
+	public void setCtPanelCategory(boolean ctPanelCategory) {
+		this.ctPanelCategory = ctPanelCategory;
+	}
+	//#29661 end
+	//#21692 - End
+	public boolean isUserAbleToChangePBSecretary() {
+		return userAbleToChangePBSecretary;
+	}
+
+	public void setUserAbleToChangePBSecretary(boolean userAbleToChangePBSecretary) {
+		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
+	}
+	//#21692 - End
+
+	//#29732
+	public boolean getUpdateCatDesc() {
+		return updateCatDesc;
+	}
+
+	public void setUpdateCatDesc(boolean updateCatDesc) {
+		this.updateCatDesc = updateCatDesc;
+	}
+	//#29732
+	
+	//#29732
+	public boolean getUpdateCatInPm() {
+		return updateCatInPm;
+	}
+
+	public void setUpdateCatInPm(boolean updateCatInPm) {
+		this.updateCatInPm = updateCatInPm;
+	}
+	
+	public boolean getResetHistoryCatCode() {
+		return resetHistoryCatCode;
+	}
+
+	public void setResetHistoryCatCode(boolean resetHistoryCatCode) {
+		this.resetHistoryCatCode = resetHistoryCatCode;
+	}
+	//#29732
+	
+	//#38679
+	public boolean isZoneQtyHasZeroVal() {
+		return zoneQtyHasZeroVal;
+	}
+	
+	public void setZoneQtyHasZeroVal(boolean zoneQtyHasZeroVal) {
+		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
+	}
+	//#38679
+
+	// #35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}// #35320 - End
+
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
+
 }

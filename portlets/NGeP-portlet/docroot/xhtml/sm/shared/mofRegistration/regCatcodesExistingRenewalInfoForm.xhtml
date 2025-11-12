@@ -19,6 +19,36 @@
 	
 		
 		<p:panel header="#{lbl['lbl.sm.catCodes.existing.panHdr']}" toggleable="true" >
+			<!-- 36504 - START -->
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputPanel
+							align="left">
+							<h:outputText
+								value="#{lbl['lbl.sm.other.desc.history.click']}"
+								escape="false" />
+							<p:commandLink
+								onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
+								action="#{backingBean.otherDescriptionHistory}"
+								process="@this"
+								partialSubmit="true"
+								update="@form">
+								<u><h:outputText
+										value="#{lbl['lbl.sm.other.desc.history.here']}"
+										style="color:blue;"
+										escape="false" /></u>
+							</p:commandLink>
+							<p:spacer width="2" />
+							<h:outputText
+								value="#{lbl['lbl.sm.other.desc.history.to.view.history.of.other.desc']}"
+								escape="false" />
+							<br />
+							<p:spacer height="2" />
+						</p:outputPanel></td>
+				</tr>
+			</table>
+			<!-- 36504 - END -->
 			<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
 				<div align="right" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.sm.approve.all']}"
@@ -56,9 +86,14 @@
 					<h:outputText 
 						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
 					<!-- #28175 Reopen End -->
-					<!-- 30865 Start -->
-					<p:outputLabel rendered="#{aprvdCatBean.cancelCategory}" styleClass="warning" style="color:red !important; text-align:left;">
+					<!-- 30865, 38896, 38984 Start -->
+					<p:outputLabel rendered="#{aprvdCatBean.typeDisciplinaryAction eq 'C'}" styleClass="warning" 
+						style="color:red !important; text-align:left; float:none">
 						<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
+					</p:outputLabel>
+					<p:outputLabel rendered="#{aprvdCatBean.typeDisciplinaryAction eq 'M'}" styleClass="warning" 
+						style="color:red !important; text-align:left; float:none">
+						<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"/>
 					</p:outputLabel>
 					<!-- 30865 End -->
 				</p:column>
@@ -67,22 +102,65 @@
 					<p:outputPanel rendered="#{aprvdCatBean.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty aprvdCatBean.otherDesc}" />
+						<!-- 36504 - START -->
 						<h:outputText value="#{aprvdCatBean.otherDesc}"
-							rendered="#{not empty aprvdCatBean.otherDesc}" />
-					</p:outputPanel>
-					<p:outputPanel rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
-						<p:inputTextarea id="otherDesc" maxlength="5000"
+								rendered="#{not empty aprvdCatBean.otherDesc and
+							not (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
+							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and
+							(backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}"  />
+						<p:inputTextarea id="otherDescTxt1" maxlength="5000"
 							style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 							rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}"
 							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20" 
-							autoResize="false" > <!-- #36289, #37605 -->
+							autoResize="false" readonly="true" > <!-- #36289, #37605 -->
 						</p:inputTextarea>
-						<h:outputText value="#{lbl['lbl.sm.no.available']}"
-							rendered="#{empty aprvdCatBean.otherDesc 
-							and aprvdCatBean.pmCategoryL3.otherDescReq ne 1}" />
-						<h:outputText value="#{aprvdCatBean.otherDesc}"
-							rendered="#{not empty aprvdCatBean.otherDesc 
-							and aprvdCatBean.pmCategoryL3.otherDescReq ne 1}" />
+						<br/>
+						<p:graphicImage
+								value="/css/images/design/icon_alert.png"
+								style="float:right;"
+								rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory}" />
+						<p:commandLink
+							partialSubmit="true"
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							update=":form" process="@this"
+							action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
+							rendered="#{(aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
+							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
+							<p:graphicImage
+								value="/css/images/design/edit.png"
+								title="#{lbl['lbl.sm.edit']}"
+								style="float:right;" />
+						</p:commandLink>
+						<!-- 36504 - END -->
+					</p:outputPanel>
+					<p:outputPanel rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
+						<!-- 36504 - START -->
+						<p:inputTextarea id="otherDescTxt2" maxlength="5000"
+							style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
+							rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}"
+							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20" 
+							autoResize="false" readonly="true" > <!-- #36289, #37605 -->
+						</p:inputTextarea>
+						<br/>
+						<p:graphicImage
+								value="/css/images/design/icon_alert.png"
+								style="float:right;"
+								rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory}" />
+						<p:commandLink
+							partialSubmit="true"
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							update=":form" process="@this"
+							action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
+							rendered="#{(aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
+							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
+							<p:graphicImage
+								value="/css/images/design/edit.png"
+								title="#{lbl['lbl.sm.edit']}"
+								style="float:right;" />
+						</p:commandLink>
+						<!-- 36504 - END -->
 					</p:outputPanel>
 				</p:column>
 				<!-- 32348 START - adjust width -->
@@ -107,6 +185,9 @@
 					</p:tooltip>
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+					<!-- #26238 - #38984 -->
+					<h:outputText value="#{lbl['lbl.sm.catCodes.cancel']}"
+						rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.CANCEL_RECORD_STATUS}" />
 				</p:column>
 				<!-- 30766 END - adjust width to be dynamic -->
 				<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}" rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" disabledSelection="#{aprvdCatBean.cancelCategory}"
@@ -445,5 +526,9 @@
 
 	</p:confirmDialog>
 	
-
+	<!-- 36504 - START -->
+	<ac:otherDescriptionHistory categoryCodeList="#{backingBean.managedBean.approvedCategoryList}" applNo="#{backingBean.managedBean.smAppl.applNo}" />
+	<ac:otherDescriptionEdit />
+    <!-- 36504 - END -->
+    
 </ui:composition>

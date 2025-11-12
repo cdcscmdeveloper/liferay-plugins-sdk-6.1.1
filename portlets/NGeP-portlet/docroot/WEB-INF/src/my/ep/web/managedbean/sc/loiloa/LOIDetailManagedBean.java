@@ -47,6 +47,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting; //#38151
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -56,6 +57,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
+import my.ep.web.bean.sc.quatationtender.WeightageScoreBean; //#38151
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -430,15 +432,25 @@ public class LOIDetailManagedBean extends BaseManagedBean {
     private PmOrgProfile ministryOrgProfile;
 	//#12487 end
     
-    //#28777 & #29729 - Start
-	private List<SmSupplierBranch> supplierBranchList; 
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
 	private List<ScQtEvaluationResultDtl> disqualifiedSupplierList;
 	private List<ScQtRecommend> disqualifiedRecommendList;
-	//#28777 & #29729 - End
+	// #28777 & #29729 - End
 
-	private boolean ableToCancelLOI;//#36339, #21692
+	//#21692 - Start
+	private boolean ableToCancelLOI;
+	private boolean ableToCancelLOIWithoutBPM;
+	private boolean ableToSubmitLOI;
+	private boolean ableToCancelWIP;
+	//#21692 - End
 
-	
+	private List<WeightageScoreBean> weightageScoreBeans;//#38151	
+	private Long overallTechnicalRecommendationPercent;//#38151
+	private Long overallFinancialRecommendationPercent;//#38151
+	private List<ScQtScoreSetting> scoreSettings;//#38151
+	private boolean WeightageReq; //#38151
+	private boolean weightage35384WIP; //#38151
 	
 	
     /**
@@ -2400,7 +2412,24 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
 	}
+
+	public List<ScQtEvaluationResultDtl> getDisqualifiedSupplierList() {
+		return disqualifiedSupplierList;
+	}
+
+	public void setDisqualifiedSupplierList(List<ScQtEvaluationResultDtl> disqualifiedSupplierList) {
+		this.disqualifiedSupplierList = disqualifiedSupplierList;
+	}
+	
+	public List<ScQtRecommend> getDisqualifiedRecommendList() {
+		return disqualifiedRecommendList;
+	}
+
+	public void setDisqualifiedRecommendList(List<ScQtRecommend> disqualifiedRecommendList) {
+		this.disqualifiedRecommendList = disqualifiedRecommendList;
+	}
 	//#28777 & #29729 - End
+	
 	//#30008 - Start
 	public String getJustification() {
 		return justification;
@@ -2482,22 +2511,89 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	//#36339, #21692 - End
 
-	//#28777 & #29729 - Start
-	public List<ScQtEvaluationResultDtl> getDisqualifiedSupplierList() {
-		return disqualifiedSupplierList;
+	//#21692 - Start
+	public boolean isAbleToCancelLOIWithoutBPM() {
+		return ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelLOIWithoutBPM(boolean ableToCancelLOIWithoutBPM) {
+		this.ableToCancelLOIWithoutBPM = ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToSubmitLOI() {
+		return ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToSubmitLOI(boolean ableToSubmitLOI) {
+		this.ableToSubmitLOI = ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelWIP() {
+		return ableToCancelWIP;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelWIP(boolean ableToCancelWIP) {
+		this.ableToCancelWIP = ableToCancelWIP;
+	}
+	//#21692 - End
+	
+	//#38151 - Start
+	public List<WeightageScoreBean> getWeightageScoreBeans() {
+		return weightageScoreBeans;
 	}
 
-	public void setDisqualifiedSupplierList(List<ScQtEvaluationResultDtl> disqualifiedSupplierList) {
-		this.disqualifiedSupplierList = disqualifiedSupplierList;
-	}
-	
-	public List<ScQtRecommend> getDisqualifiedRecommendList() {
-		return disqualifiedRecommendList;
+	public void setWeightageScoreBeans(List<WeightageScoreBean> weightageScoreBeans) {
+		this.weightageScoreBeans = weightageScoreBeans;
 	}
 
-	public void setDisqualifiedRecommendList(List<ScQtRecommend> disqualifiedRecommendList) {
-		this.disqualifiedRecommendList = disqualifiedRecommendList;
+	public Long getOverallTechnicalRecommendationPercent() {
+		return overallTechnicalRecommendationPercent;
 	}
-	//#28777 & #29729 - End
+
+	public void setOverallTechnicalRecommendationPercent(Long overallTechnicalRecommendationPercent) {
+		this.overallTechnicalRecommendationPercent = overallTechnicalRecommendationPercent;
+	}
+
+	public List<ScQtScoreSetting> getScoreSettings() {
+		return scoreSettings;
+	}
+
+	public void setScoreSettings(List<ScQtScoreSetting> scoreSettings) {
+		this.scoreSettings = scoreSettings;
+	}
+
+	public Long getOverallFinancialRecommendationPercent() {
+		return overallFinancialRecommendationPercent;
+	}
+
+	public void setOverallFinancialRecommendationPercent(Long overallFinancialRecommendationPercent) {
+		this.overallFinancialRecommendationPercent = overallFinancialRecommendationPercent;
+	}
+
+	public boolean isWeightageReq() {
+		return WeightageReq;
+	}
+
+	public void setWeightageReq(boolean weightageReq) {
+		WeightageReq = weightageReq;
+	}
 	
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151 - End
 }

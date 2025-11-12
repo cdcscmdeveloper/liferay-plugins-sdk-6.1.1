@@ -50,8 +50,9 @@
 				<h:outputText value="#{cateGory.pmCategoryL1Name}" />
 				<!-- #29732 Start -->
 				<p:spacer width="5" /> 
-				<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL1.categoryL1Code,ParameterConst.categoryL1Code,cateGory.pmCategoryL1.categoryL1Id)}"
-					update="@form">
+					<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL1.categoryL1Code,cateGory.pmCategoryL2.categoryL2Code,cateGory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL1Code,cateGory.pmCategoryL1.categoryL1Id,cateGory.qtCategoryId,
+					cateGory.pmCategoryL1.categoryName,cateGory.pmCategoryL1.categoryL1Code)}"
+										update="@form">
 					<p:graphicImage id="mainHisIcon"
 						value="/css/images/design/ico-view.png" />
 					<p:tooltip for="mainHisIcon">
@@ -67,8 +68,9 @@
 				<h:outputText value="#{cateGory.pmCategoryL2Name}" />
 				<!-- #29732 Start -->
 				<p:spacer width="5" /> 
-				<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL2.categoryL2Code,ParameterConst.categoryL2Code,cateGory.pmCategoryL2.categoryL2Id)}"
-					update="@form">
+					<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL1.categoryL1Code,cateGory.pmCategoryL2.categoryL2Code,cateGory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL2Code,cateGory.pmCategoryL2.categoryL2Id,cateGory.qtCategoryId,
+					cateGory.pmCategoryL2.categoryName,cateGory.pmCategoryL2.categoryL2Code)}"
+										update="@form">
 					<p:graphicImage id="subHisIcon"
 						value="/css/images/design/ico-view.png" />
 					<p:tooltip for="subHisIcon">
@@ -84,8 +86,9 @@
 				<h:outputText value="#{cateGory.pmCategoryL3Name}" />
 				<!-- #29732 Start -->
 				<p:spacer width="5" /> 
-				<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL3Code,cateGory.pmCategoryL3.categoryL3Id)}"
-					update="@form">
+					<p:commandLink actionListener="#{qTSupplierQulCriteriaBackingBean.onClickHistoryIcon(cateGory.pmCategoryL1.categoryL1Code,cateGory.pmCategoryL2.categoryL2Code,cateGory.pmCategoryL3.categoryL3Code,ParameterConst.categoryL3Code,cateGory.pmCategoryL3.categoryL3Id,cateGory.qtCategoryId,
+					cateGory.pmCategoryL3.categoryName,cateGory.pmCategoryL3.categoryL3Code)}"
+										update="@form">
 					<p:graphicImage id="subDivHisIcon"
 						value="/css/images/design/ico-view.png" />
 					<p:tooltip for="subDivHisIcon">
@@ -213,16 +216,30 @@
 		value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation}" />
 
 	<p:panel toggleable="true" id="supplierQualificationCriterialocationPaidUpcapitalPanel">
+		<ui:remove>#33787 Vinod Start</ui:remove>
+		<c:if test="#{qTDetailBB.managedBean.minPaidUpCapitalWIP}">
+		<ui:remove>#33787 Vinod End</ui:remove>
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
 			<ac:iconTooltip
 				value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
 		</f:facet>
+		<ui:remove>#33787 Vinod Start</ui:remove>
+		</c:if>
+		<c:if test="#{!qTDetailBB.managedBean.minPaidUpCapitalWIP}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital.new']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip.new']}" />
+		</f:facet>
+		</c:if>
+		<ui:remove>#33787 Vinod End</ui:remove>
 
 		<table style="width: 100%">
 			<c:if test="#{!isQuotationThresHold}">
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.all.states']}"/></td>
+					<ui:remove>#33787 Vinod Added Style</ui:remove>
+					<td style="width: 210px"><h:outputLabel value="#{lbl['lbl.sc.all.states']}"/></td>
 					<td><p:selectBooleanCheckbox
 							disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode.value() eq 'Peninsular' or qTDetailBB.managedBean.readOnly}"
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
@@ -233,6 +250,9 @@
 						</p:selectBooleanCheckbox></td>
 				</tr>
 			</c:if>
+			<ui:remove>#33787 Vinod Start remove "Minimum Paid Up Capital (RM)" as per 4.1 -> 1. -> 4. and display in manintance</ui:remove>
+			<c:if test="#{qTDetailBB.managedBean.minPaidUpCapitalWIP and qTDetailBB.managedBean.maintanceFlow}">
+			<ui:remove>#33787 Vinod End</ui:remove>
 			<tr>
 				<td style="width: 210px"><p:outputLabel
 						value="#{lbl['lbl.sc.paidup']}" /></td>
@@ -246,6 +266,9 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
 			</tr>
+			<ui:remove>#33787 Vinod Start</ui:remove>
+			</c:if>
+			<ui:remove>#33787 Vinod End</ui:remove>
 			<c:if
 				test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 				<tr>

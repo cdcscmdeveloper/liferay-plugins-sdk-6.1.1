@@ -96,7 +96,8 @@
 					<h:outputText value="#{index + 1}" />
 				</p:column>
 				<p:column style="overflow: hidden !important;">
-					<h:outputText value="#{suppDoc.pmDocument.docName}" />
+					<ui:remove>34031#note-71 : Issue 2</ui:remove>
+					<h:outputText value="#{lbl['lbl.sm.rv.supp.doc.name']}" />
 				</p:column>
 				<p:column>
 					<p:commandLink
@@ -128,7 +129,8 @@
 			<table style="width: 50%; table-layout: fixed">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.rv.visiting.remark']}" /></td>
+							value="#{lbl['lbl.sm.rv.visiting.remark']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputTextarea autoResize="false" cols="40"
 							id="revisitRemark" maxlength="3500"
 							label="#{lbl['lbl.sm.rv.visiting.remark']}"
@@ -152,9 +154,9 @@
 		onShow="singleUploadListener(uploadWV);"
 		onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;">
 		<p:fileUpload widgetVar="uploadWV"
-			allowTypes="/(\.|\/)(pdf|doc|docx|zip)$/"
+			allowTypes="/(\.|\/)(jpg|gif|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
 			sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
-			invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
+			invalidFileMessage="#{lbl['lbl.sm.rv.supp.doc.format.errmsg']}"
 			invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 			fileUploadListener="#{supplierDataMaintenanceBackingBean.handleSupDocFileAttachment}"
 			update=":#{p:component('revisitSuppDocId')}"
@@ -179,6 +181,5 @@
 		</div>
 	</p:confirmDialog>
 	<ac:smRevisitHistoryPopUp dialogName="revisitHistoryDialog"
-		smRevisitList="#{supplierDataMaintenanceBackingBean.managedBean.smRevisitList}"
-		backingBean="#{supplierDataMaintenanceBackingBean}" officerView="true"/>
+		backingBean="#{supplierDataMaintenanceBackingBean}" />
 </ui:composition>

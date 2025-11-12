@@ -32,6 +32,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting; //#38151
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -42,6 +43,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.bean.sc.quatationtender.WeightageScoreBean; //#38151
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -315,10 +317,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean haveSupplierRejection;
 	// #11134 - End
 	
-	//#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	private List<SmSupplierBranch> supplierBranchList;
-	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;	
-	//#28777 & #29729 - End
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage;	
+	// #28777 & #29729 - End
 	
 	//29562 - START
 	private String finalizationMethodBefore;
@@ -330,6 +333,32 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean notReachAgrm;
 	
 	private boolean allSupplierDisagreeEPV;//#21692
+	
+	private List<WeightageScoreBean> weightageScoreBeans;//#38151
+	
+	private Long overallTechnicalRecommendationPercent;//#38151
+	
+	private Long overallFinancialRecommendationPercent;//#38151
+	
+	private List<ScQtScoreSetting> scoreSettings;//#38151
+	
+	private boolean WeightageReq;//#38151
+	
+	private boolean weightage35384WIP; //#38151
+	
+	// 26247 - start
+	private List<String> disabledSupplierIds;
+
+	// 26247 - end
+
+	// 39077 -start-
+	private boolean isReviseBriefMsg = Boolean.FALSE;
+
+	// 39077 -end-
+	
+	//#35320 - Start
+	private String selectedSupplierOfferedPrice;
+	//#35320 - End
 	
 	/**
 	 * @return the activeIndex
@@ -2465,7 +2494,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	//28834 end
 
-	//#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;
 	}
@@ -2473,7 +2502,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
 	}
-	
+
 	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByRecommendType() {
 		return disqualifiedSuppliersByRecommendType;
 	}
@@ -2482,7 +2511,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType) {
 		this.disqualifiedSuppliersByRecommendType = disqualifiedSuppliersByRecommendType;
 	}
-	//#28777 & #29729 - End
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByEvalStage() {
+		return disqualifiedSuppliersByEvalStage;
+	}
+
+	public void setDisqualifiedSuppliersByEvalStage(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage) {
+		this.disqualifiedSuppliersByEvalStage = disqualifiedSuppliersByEvalStage;
+	}
+	// #28777 & #29729 - End
 
 	public boolean isDemoReq() {
 		return isDemoReq;
@@ -2619,6 +2657,92 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
 	}
 	//#21692 - End
+	//#38151 - Start
+	public List<WeightageScoreBean> getWeightageScoreBeans() {
+		return weightageScoreBeans;
+	}
 
+	public void setWeightageScoreBeans(List<WeightageScoreBean> weightageScoreBeans) {
+		this.weightageScoreBeans = weightageScoreBeans;
+	}
+
+	public Long getOverallTechnicalRecommendationPercent() {
+		return overallTechnicalRecommendationPercent;
+	}
+
+	public void setOverallTechnicalRecommendationPercent(Long overallTechnicalRecommendationPercent) {
+		this.overallTechnicalRecommendationPercent = overallTechnicalRecommendationPercent;
+	}
+
+	public List<ScQtScoreSetting> getScoreSettings() {
+		return scoreSettings;
+	}
+
+	public void setScoreSettings(List<ScQtScoreSetting> scoreSettings) {
+		this.scoreSettings = scoreSettings;
+	}
+
+	public Long getOverallFinancialRecommendationPercent() {
+		return overallFinancialRecommendationPercent;
+	}
+
+	public void setOverallFinancialRecommendationPercent(Long overallFinancialRecommendationPercent) {
+		this.overallFinancialRecommendationPercent = overallFinancialRecommendationPercent;
+	}
+
+	public boolean isWeightageReq() {
+		return WeightageReq;
+	}
+
+	public void setWeightageReq(boolean weightageReq) {
+		WeightageReq = weightageReq;
+	}
+
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151 - End
+	
+	// 26247 - start
+	public List<String> getDisabledSupplierIds() {
+		return disabledSupplierIds;
+	}
+
+	public void setDisabledSupplierIds(List<String> disabledSupplierIds) {
+		this.disabledSupplierIds = disabledSupplierIds;
+	}
+	// 26247 - end
+	
+	// 39077 -start-
+	/**
+	 * @return the isReviseBriefMsg
+	 */
+	public boolean isReviseBriefMsg() {
+		return isReviseBriefMsg;
+	}
+
+	/**
+	 * @param isReviseBriefMsg
+	 *            the isReviseBriefMsg to set
+	 */
+	public void setReviseBriefMsg(boolean isReviseBriefMsg) {
+		this.isReviseBriefMsg = isReviseBriefMsg;
+	}
+	// 39077 -end-
+
+	//#35320 - Start
+	public String getSelectedSupplierOfferedPrice() {
+		return selectedSupplierOfferedPrice;
+	}
+
+	public void setSelectedSupplierOfferedPrice(String selectedSupplierOfferedPrice) {
+		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
+	}//#35320 - End
+	
+	
 }
 // ***25201

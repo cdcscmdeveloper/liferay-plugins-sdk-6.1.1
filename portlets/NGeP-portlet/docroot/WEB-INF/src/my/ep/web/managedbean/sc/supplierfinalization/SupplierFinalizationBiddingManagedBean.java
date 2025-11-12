@@ -163,17 +163,18 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private List<ScQtFinalizationRemarks> finalizationRemarks;
 	//25638 - End.
 	
-	//#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	private List<SmSupplierBranch> supplierBranchList;
 	private List<BidItemBean> bidItemSuppliersDisqualified;
 	private List<BidPackageBean> biddingPackagePriceListDisqualified;
 	private List<ScQtEvaluationResultDtl> notShortlistedSuppliers;
-	private Map<Long,List<ScQtEvaluationResultDtl>> pkgNotShortlistedSuppliersByZone;
-	private Map<Long,List<ScQtEvaluationResultDtl>> itemNotShortlistedSuppliers;
-	private Map<Long,Map<Long,List<ScQtEvaluationResultDtl>>> itemNotShortlistedSuppliersByZone;
-	private Map<Long,List<ScBidSchedule>> bidDisSchedulesByZone;
-	private Map<Long,List<BidPackageBean>> bidDisPackageBeansByZone;
-	//#28777 & #29729 - End
+	private Map<Long, List<ScQtEvaluationResultDtl>> pkgNotShortlistedSuppliersByZone;
+	private Map<Long, List<ScQtEvaluationResultDtl>> itemNotShortlistedSuppliers;
+	private Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> itemNotShortlistedSuppliersByZone;
+	private Map<Long, List<ScBidSchedule>> bidDisSchedulesByZone;
+	private Map<Long, List<BidPackageBean>> bidDisPackageBeansByZone;
+
+	// #28777 & #29729 - End
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -1313,7 +1314,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	//25638 - End.
 		
-	//#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;
 	}
@@ -1329,7 +1330,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setBidItemSuppliersDisqualified(List<BidItemBean> bidItemSuppliersDisqualified) {
 		this.bidItemSuppliersDisqualified = bidItemSuppliersDisqualified;
 	}
-	
+
 	public List<BidPackageBean> getBiddingPackagePriceListDisqualified() {
 		return biddingPackagePriceListDisqualified;
 	}
@@ -1337,7 +1338,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setBiddingPackagePriceListDisqualified(List<BidPackageBean> biddingPackagePriceListDisqualified) {
 		this.biddingPackagePriceListDisqualified = biddingPackagePriceListDisqualified;
 	}
-	
+
 	public List<ScQtEvaluationResultDtl> getNotShortlistedSuppliers() {
 		return notShortlistedSuppliers;
 	}
@@ -1354,7 +1355,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 			Map<Long, List<ScQtEvaluationResultDtl>> pkgNotShortlistedSuppliersByZone) {
 		this.pkgNotShortlistedSuppliersByZone = pkgNotShortlistedSuppliersByZone;
 	}
-	
+
 	public Map<Long, List<ScQtEvaluationResultDtl>> getItemNotShortlistedSuppliers() {
 		return itemNotShortlistedSuppliers;
 	}
@@ -1371,7 +1372,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 			Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> itemNotShortlistedSuppliersByZone) {
 		this.itemNotShortlistedSuppliersByZone = itemNotShortlistedSuppliersByZone;
 	}
-	
+
 	public Map<Long, List<ScBidSchedule>> getBidDisSchedulesByZone() {
 		return bidDisSchedulesByZone;
 	}
@@ -1387,6 +1388,6 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setBidDisPackageBeansByZone(Map<Long, List<BidPackageBean>> bidDisPackageBeansByZone) {
 		this.bidDisPackageBeansByZone = bidDisPackageBeansByZone;
 	}
-	//#28777 & #29729 - End
+	// #28777 & #29729 - End
 
 }

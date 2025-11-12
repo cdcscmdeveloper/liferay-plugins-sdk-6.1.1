@@ -13,7 +13,7 @@
 		header="#{lbl['lbl.sc.spec.header.checklist.preview']}" width="650"
 		height="650">
 		<p:ajax event="close" oncomplete="blockWidget.hide()"
-			update="@([id$=stageTwotechProposal])"
+			update="@all"
 			actionListener="#{specificationBackingBean.closeTechChecklistPreview()}" />
 
 		<p:panel id="technicalChecklistPreviewPanel1Id"
@@ -71,10 +71,16 @@
 
 			</p:dataTable>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.download']}"
-					partialSubmit="true" ajax="false" styleClass="BtnSpacing"
-					action="#{specificationBackingBean.downloadTechnicalChecklistDetailedReport()}"
-					process="@this" />
+				<ui:remove> Hidden Download Button to call actual method to download </ui:remove>
+				<p:commandButton style="display:none;" id="techDownloadButton"
+					value="#{lbl['lbl.btn.download']}" ajax="false"
+					binding="#{tecButton}"
+					action="#{specificationBackingBean.downloadTechnicalChecklistDetailedReport(tecButton)}" />
+				<ui:remove> This method will check if atleast one checklist is selected </ui:remove>
+				<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="true"
+					styleClass="BtnSpacing"
+					action="#{specificationBackingBean.validateAtleastOneChecklistSelected(tecButton.clientId,true)}"
+					process="@this" update="@([id$=techDownloadButton])" />
 			</div>
 		</p:panel>
 		<div align="right">

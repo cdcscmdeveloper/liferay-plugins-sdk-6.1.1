@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
+import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -55,12 +56,22 @@ public abstract class AuditPMBackingBeanTemplate extends BaseBackingBean<BaseMan
 	 * @param auditPMReqDTO
 	 */
 	private void pmAuditSO(AuditPMReqDTO auditPMReqDTO, String modName) {
-		new LogKey(getUserIdSessionFromLoginId());
+		// new LogKey(getUserIdSessionFromLoginId());
 
 		IAuditPMSO auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
+
 		try {
-			auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
+			if (null != auditPMReqDTO.getObjList() && !auditPMReqDTO.getObjList().isEmpty()) {
+				
+				for (AuditPMSPDTO dto : auditPMReqDTO.getObjList()) {
+					dto.setChangedBy(getUserIdSessionFromLoginId());
+					dto.setCreatedBy(getUserIdSessionFromLoginId());
+				}
+				auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
+			} else {
+				log.info("ObjectList is Empty");
+			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "insert", modName, "auditPMSO",
 					new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);

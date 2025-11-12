@@ -16,7 +16,7 @@
 		</c:if>
 		<p:messages showDetail="true"
 			autoUpdate="#{requestNoteBackingBean.managedBean.autoUpdate}"
-			closable="true" severity="error, info" showSummary="false" />
+			closable="true" severity="error, info" showSummary="false"  escape="false"/><ui:remove>#26059</ui:remove>
 
 		<ui:param name="isPidExpired"
 			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.PID_EXPIRED}" />

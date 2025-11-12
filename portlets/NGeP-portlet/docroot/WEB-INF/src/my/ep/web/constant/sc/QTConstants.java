@@ -285,7 +285,8 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE="scSpecCommitteeMaintenance_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
-	
+	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
+	//#11104 -end-
 	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//29007-start
 	
 	public static final String FINANCIAL_ITEM_SPEC_ANSWER="FISA";//32453
@@ -299,6 +300,11 @@ public interface QTConstants {
 	
 	//21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
+
+	//#21692 - Start
+	public static final String PORTLET_NAME_QT_LOI_REVIEW = "scLoiReview_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_LOA_REVIEW = "scLoaReview_WAR_NGePportlet";
+	//#21692 - End
 	
 	//#29468 Start Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
@@ -335,6 +341,11 @@ public interface QTConstants {
 	public static final Long COMPOSITE_VALIDITY_ID_QT=29007L;
 	public static final Long COMPOSITE_VALIDITY_ID_DP=29006L;
 	//#29007 End Vinod
+	// #33787 Start Vinod
+	public static final Long APP_VERSION_REDMINE_NO_33787 = 33787L;
+	public static final String COMPANY_TYPE_SSM_G = "G";
+	public static final String LBL_SC_SPEC_PAID_UP_CAPITAL_INITIAL_FUND = "lbl.sc.spec.paid.up.capital.initial.fund";
+	//#33787 End Vinod
 	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
 	public static final String LBL_TXT_YES = "lbl.txt.yes";
@@ -345,6 +356,7 @@ public interface QTConstants {
 	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
 	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
 	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
+	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
 	// #29187 End Vinod
 	public static final String CONFIRM_BRIEF_POPUP = "confirmBriefPopup.show()";//sonarQube Issue 2 #91 # Vinod #Added
 	
@@ -462,10 +474,6 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
-	public static final String PARAM_MAP_QTID = "qtid";
-	public static final String PARAM_MAP_P_QTCHECKLISTIDS = "p_qtchecklistids";
-	public static final String PARAM_MAP_P_LANGUAGE = "p_language";
-	public static final String PARAM_MAP_PUSER = "puser";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -510,25 +518,77 @@ public interface QTConstants {
 	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
 	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
 	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
+	public static final String QT_SEARCH_BID_SCHEDULE_ID = "searchQTBidSchedules";
+	public static final String QT_SEARCH_DETAILS_ID = "searchQTs";
+	public static final String QT_SEARCH_LOI_LOA_DETAILS_ID = "searchQTLoaLois";
+			
 	// 25791-End
+	
+	//#38151
+	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
+	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
 	
 	// 36671 - start
 	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
 	// 36671 - end
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
-	
-	//36678
-	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+
 	// #36757 Start Vinod 04/12/2024
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 Start Vinod 04/12/2024
+	// #29766 Start Vinod
+	public static final String REVISE_FOR_PK7_POPUP = "reviseForPK7PopUp.show()";
+	public static final String UPDATE_REVISE_FOR_PK7_ID = "@([id$=reviseForPK7Id])";
+	// #29766 End Vinod
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";
 	// 6906 - end
 	
 	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
+	// Bug #39065@Syazani 08/10/2025 -- Start
+	public static final int QT_VM_SPLIT_ZONENAME_SERVICE_MAXLENGTH = 5;
+	public static final int QT_VM_SPLIT_ZONENAME_PRODUCT_MAXLENGTH = 17;
+	// Bug #39065@Syazani 08/10/2025 -- End
 	
 	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
+	
+	// 29661 -start-
+	public static final String SPECIFICATION_FINANCIAL_GOVERNMENT_EXPERIENCE = "/xhtml/sc/specification/specificationCommittee/specFinGovCompExp.xhtml?faces-redirect=true";
+	public static final String SPECIFICATION_NONFINANCIAL_GOVERNMENT_EXPERIENCE = "/xhtml/sc/specification/specificationCommittee/specFinNonGovCompExp.xhtml?faces-redirect=true";
+
+	public static final String PROPOSAL_FINANCIAL_GOVERNMENT_EXPERIENCE = "/xhtml/sc/supplierproposal/financialproposal/supFinGovCompExp.xhtml";
+	public static final String PROPOSAL_NONFINANCIAL_GOVERNMENT_EXPERIENCE = "/xhtml/sc/supplierproposal/financialproposal/supFinNonGovCompExp.xhtml";
+	public static final String COMPANY_EXPERIENCE_REMINDER_POPUP = "compExpRemPopUp.show()";
+	public static final String EVALUATION_FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE = "/xhtml/sc/evaluation/evaluationStage/financial/evaFinGovCompExp.xhtml";
+	public static final String EVALUATION_FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE = "/xhtml/sc/evaluation/evaluationStage/financial/evaFinNonGovCompExp.xhtml";
+	public static final String COMPANY_EXP_STATUS_ALL = "lbl.sc.comp.exp.all";
+	public static final String COMPANY_EXP_STATUS_INACTIVE = "lbl.sc.comp.exp.inactive";
+	public static final String COMPANY_EXP_STATUS_EFFECTIVE = "lbl.sc.comp.exp.effective";
+	public static final String COMPANY_EXP_STATUS_EXPIRED = "lbl.sc.comp.exp.expired";
+	public static final String COMPANY_EXP_STATUS_TERMINATED = "lbl.sc.comp.exp.terminated";
+	public static final String NUMBER_OF_CONTRACTS = "lbl.sc.supplier.proposal.comp.exp.no.of.contract";
+	public static final String VALUE_OF_CONTRACTS = "lbl.sc.supplier.proposal.comp.exp.val.contract";
+	public static final String EVALUATION_FINANCIAL_OTHER_LIST_SUPPLIER_MAIN = "/xhtml/sc/evaluation/evaluationStage/financial/financialOtherListSuppliersMain.xhtml";
+	public static final String LABEL_TEXT_NA = "lbl.txt.na";
+	public static final String EVALUATION__GOV_PROC_RELATED = "evaGovRelated";
+	public static final String EVALUATION__GOV__NONPROC_RELATED = "evaGovNotRelated";
+	public static final String EVALUATION__NONGOV_PROC_RELATED = "evaNonGovRelated";
+	public static final String EVALUATION__NONGOV__NONPROC_RELATED = "evaNonGovNotRelated";
+	public static final String PROPOSAL__GOV_PROC_RELATED = "proposalGovProcRelated";
+	public static final String PROPOSAL__GOV__NONPROC_RELATED = "proposalGovNonProcRelated";
+	public static final String PROPOSAL__NONGOV_PROC_RELATED = "proposalNonGovProcRelated";
+	public static final String PROPOSAL__NONGOV__NONPROC_RELATED = "proposalNonGovNonProcStatusRelated";
+	public static final String COMP_EXP_SUPPORTING_DOCUMENTS = "NGeP-LOA-Report";
+	public static final String PROPOSAL_EVALUATION_PORTLET = "ProposalEvaluation_WAR_NGePportlet";
+	public static final int TAB_LOA_INDEX = 1;
+	public static final String EVALUATION_FINANCIAL_OTHER_CHECKLIST = "/xhtml/sc/evaluation/evaluationStage/financial/financialotherchecklists.xhtml";
+
+	// 29661- end-
+
+	// #39113 Start Vinod 25/09/2025
+	public static final String LBL_SC_REMARK = "lbl.sc.remark";
+	public static final String REMARK_MESSAGE_ID = "remarkMsg";
+	// #39113 End Vinod 25/09/2025
 }

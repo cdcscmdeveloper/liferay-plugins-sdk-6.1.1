@@ -46,7 +46,7 @@
 					conditionField="#{ctReportBB.constructPTJConditionFields()}" /></td>
 			<!-- Enhancement 32675 - shaqimi end -->
 		</tr>
-		<!--Start - #29416-->
+		<!--Start - #29416, #34899-->
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
 			<td>
@@ -65,7 +65,8 @@
 				</p:inputText> 
 				<c:choose>
 					<c:when
-						test="#{ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptMcVal}">
+						test="#{ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptMcVal
+									or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringDtlsRptMcVal}">
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no.item.monitoring']}" />
 					</c:when>
 					<c:otherwise>
@@ -91,7 +92,8 @@
 				</p:inputText>
 				<c:choose>
 					<c:when
-						test="#{ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptMcVal}">
+						test="#{ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptMcVal 
+									or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringDtlsRptMcVal}">
 						     <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.reference.no.item.monitoring']}" />
 					</c:when>
 					<c:otherwise>
@@ -100,7 +102,7 @@
 				</c:choose>
 			</td>
 		</tr>
-		<!--End - #29416-->
+		<!--End - #29416, #34899-->
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.agreement']}" /></td>
 			<td>
@@ -158,8 +160,9 @@
 				</tr></table>
 			</td>
 		</tr>
-		<!--Start - #29416-->
-		<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal}">	
+		<!--Start - #29416, #34889-->
+		<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal
+							|| ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringDtlsRptMcVal}">	
 		<tr>	
 				<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.name.supplier']}" /></td>
 				<td><ac:lov id="ctSupplierName" readonly="true"
@@ -177,10 +180,12 @@
 						selectionMode="multiple"
 						postUpdateListener="ctReportBB.checkValue()"
 						update="@form"
-						flagBean="ctReportBB" /></td>
+						flagBean="ctReportBB" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.search.item.name']}" /></td>
+
 		 </tr> 		
 		 </c:if> 
-		 <!--End - #29416-->
+		 <!--End - #29416, #34889-->
 	</table>
 	<br/>
 	<ac:generateReport bBean="#{ctReportBB}"

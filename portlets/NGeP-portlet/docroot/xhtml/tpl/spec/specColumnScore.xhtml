@@ -5,9 +5,14 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
+<!-- #38151 --> 
+	<ui:param name="isWeightageNot35384WIP" 
+			  value="#{templateSpecBackingBean.hasWeightage(templateSpecBean) and !templateSpecBackingBean.managedBean.weightage35384WIP}"/>	
+	<ui:param name="isWeightage35384WIP" 
+			  value="#{templateSpecBackingBean.hasWeightage(templateSpecBean) and templateSpecBackingBean.managedBean.weightage35384WIP}"/>	
 	
 	<p:column style="width:60px; text-align:right;"  
-		rendered="#{templateSpecBackingBean.hasWeightage(templateSpecBean)}">
+		rendered="#{templateSpecBackingBean.hasWeightage(templateSpecBean) and templateSpecBackingBean.managedBean.weightage35384WIP}">
 		
 		<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.weightage}" rendered="#{tplSpecAnswer.tplSpecQuestion.weightageReq}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
@@ -25,14 +30,14 @@
 			style="width:calc(100% - 15px);" 
 			value="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 ? lbl['lbl.sc.no.available'] : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);">
 			</h:outputText>
-			
-			<h:outputText value="#{tplSpecAnswer.autoScore}" 
+			<!-- #38151 --> 
+			<h:outputText value="#{tplSpecAnswer.autoScore / (isWeightageNot35384WIP ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}" 
 			rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or 
 			isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 			</h:outputText>
 			
-			<h:outputText value="#{tplSpecAnswer.autoScore}" 
+			<h:outputText value="#{tplSpecAnswer.autoScore / (isWeightageNot35384WIP ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}" 
 			rendered="#{isSpecTypeTechnical and isZonal and !tplSpecAnswer.notOfferAll or 
 			isSpecTypeTechnical and !isZonal and !tplSpecAnswer.notOfferAll}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
@@ -46,13 +51,24 @@
 					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 			</h:outputText>
 		<!-- Bug #33991 related to #21695 End-->	
-			
+			<ui:remove>	<!-- #38151 --> </ui:remove>			
 			 <h:outputText value="/" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq 'S' or tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}"></h:outputText> 
+				<ui:remove><!-- #38151 Start command link--></ui:remove>
+				<p:commandLink process="@this" oncomplete="specScorePopup#{row}.show();" update="@([id$=specScorePopupId])" rendered="#{templateSpecBackingBean.hasWeightage(templateSpecBean) and isSpecTypeTechnical and !templateSpecBackingBean.managedBean.weightage35384WIP }">
+					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore}"
+						rendered="#{isSpecTypeTechnical and !templateSpecBackingBean.managedBean.weightage35384WIP and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical  and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S'}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(tCommonConstants.NUMBER_FORMAT_TYPE_AMOUNT )}" />
+					</h:outputText>
+				</p:commandLink>
+
+			 <h:outputText
+				value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+				rendered="#{!isWeightageNot35384WIP and isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S'}">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+			 </h:outputText>
+			<ui:remove>	<!-- #38151 --> </ui:remove>			
 			
-			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
-				rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S'}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
-			</h:outputText>
 			<c:if test="#{isZonal and isSpecTypeFinancial and evaluationBackingBean.managedBean.speczonedtlReq}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 								rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
@@ -105,27 +121,41 @@
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
 			<!--#29908 -start -->
 			<ui:remove><!-- #28784 - start --></ui:remove>
-			<ui:remove>#29187 Start Vinod Added Compliance checking</ui:remove>
+			<ui:remove>#29187 Start Vinod Added Compliance checking in disable and removed required</ui:remove>
 			<ui:remove>#35293 - Change the width size based on length maxvalue</ui:remove>
 			<p:inputText id="userScore" style="min-width:0px !important; text-align:right; width: #{empty tplSpecAnswer.tplSpecQuestion.maxScore ? 30 : ((tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString().length() * 8)}px;"
 				value="#{tplSpecAnswer.userScore}"
-				required="true" maxlength="14"
+				maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
 				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification)}"
 				disabled="#{(tplSpecAnswer.compliance ne null and !tplSpecAnswer.compliance) or evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll or (evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"><ui:remove>#21692</ui:remove>
 				<ui:remove>#29187 End Vinod</ui:remove>
 				<!--#29908-end -->
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" maxIntegerDigits="14"/>
-				<f:attribute name="min" value="0" />
-				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
+				<f:attribute name="min" value="0" />	
+				<!-- #38151 - update validate -->
+				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (isWeightage35384WIP ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg, @(.calcScore)" />
 			</p:inputText>
 			 <h:outputText value="/" rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification or tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0)}"></h:outputText> 
+			<ui:remove><!-- #38151 Start command link--></ui:remove> 
+			
 			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
-							rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification)}">
+							rendered="#{!isWeightageNot35384WIP and tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 			</h:outputText>
-			<ui:remove><!-- #28784 - end --></ui:remove>
+
+				<p:commandLink process="@this"
+					oncomplete="specScorePopup#{row}.show();"
+					update="@([id$=specScorePopupId])"
+					rendered="#{templateSpecBackingBean.hasWeightage(templateSpecBean) and isSpecTypeTechnical and !templateSpecBackingBean.managedBean.weightage35384WIP }">
+					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore}"
+						rendered="#{!templateSpecBackingBean.managedBean.weightage35384WIP and (tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification))}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT )}" />
+					</h:outputText>
+				</p:commandLink>
+				<ui:remove><!-- #28784 - end --></ui:remove>
 			<!-- #25138 - start -->
 			<c:if test="#{isZonal and isSpecTypeFinancial and evaluationBackingBean.managedBean.speczonedtlReq}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
@@ -141,7 +171,7 @@
 			</c:if>
 			<!-- #25138 - end -->
 			<c:if test="#{!isZonal and isSpecTypeFinancial}">
-				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore* (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
+				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 								rendered="#{tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 				</h:outputText>
@@ -154,6 +184,7 @@
 			<ui:remove><!--#29021-end--></ui:remove>
 		</h:panelGroup>
 		</c:otherwise>
+	 <ui:include src="specScorePopup.xhtml" rendered="#{isWeightageNot35384WIP}" />
 		
 	</p:column>
 	
@@ -174,7 +205,7 @@
 			and !tplSpecAnswer.notOfferAll 
 			and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
 			or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
-			<h:selectOneMenu id="specCompliance" required="true"
+			<h:selectOneMenu id="specCompliance"
 				label="#{lbl['lbl.sc.tec.compliance']}"
 				value="#{tplSpecAnswer.compliance}"
 				valueChangeListener="#{templateSpecBackingBean.itemComplianceChangeControl}"

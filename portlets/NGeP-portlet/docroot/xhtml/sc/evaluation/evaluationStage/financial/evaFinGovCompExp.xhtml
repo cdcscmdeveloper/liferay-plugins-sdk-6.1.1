@@ -1,0 +1,235 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="finGovEvaPnlCmpExpId">
+
+		<ui:param name="docDefinationKey"
+			value="#{evaluationBackingBean.managedBean.docDefinitionKey}"></ui:param>
+
+		<ui:param name="scQt"
+			value="#{evaluationBackingBean.managedBean.scQt}"></ui:param>
+		<ui:param name="isDisable"
+			value="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq SourcingConstants.FINANCIAL_TAB_ACTIVE_INDEX}"></ui:param>
+		<ui:param name="isTerminated" value="true"></ui:param>
+
+		<p:panel id="finGovCmpYear" style="width:100% !important;"
+			toggleable="true">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.federal.gov']}" />
+				<ac:iconTooltip
+					value="#{lbl['lbl.sc.spec.fin.comp.exp.fed.gov.tooltip']}" />
+			</f:facet>
+			<p:spacer height="20px;"></p:spacer>
+			<table>
+				<tr>
+					<td><h:outputText styleClass="instruction"
+							value="#{lbl['lbl.sc.eva.fin.gov.comp.exp.instructions']}"
+							escape="false" /></td>
+				</tr>
+				<p:spacer height="20px;"></p:spacer>
+
+				<tr>
+					<td style="float: left;"><p:outputLabel
+							style="font-weight: bold;"
+							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.year}" />
+						<p:outputLabel style="font-weight: bold;"
+							value="#{lbl['lbl.sc.spec.fin.comp.exp.since.year']} " /></td>
+				</tr>
+			</table>
+
+		</p:panel>
+
+		<p:spacer height="5px;"></p:spacer>
+		<p:panel id="cmpExpGovPrcRelated" toggleable="true"
+			style="width:100% !important;">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.proc.related']}" />
+			</f:facet>
+			<p:spacer height="3px;"></p:spacer>
+			<div align="left" class="header-info header-spacing">
+				<table border="0" cellspacing="0" cellpadding="0"
+					style="width: 100%">
+					<tr>
+
+						<td class="header-info-text" style="text-transform: uppercase;float:left;"><h:outputLabel
+								value="#{lbl['lbl.sc.fin.comp.exp.proc.related.table.header']}" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<p:spacer height="2px;"></p:spacer>
+			<ui:param name="cmpExpContSts" value="evaGovStatusRelated" />
+			<ui:param name="cmpContractStatus"
+				value="#{evaluationBackingBean.managedBean.contractStatusvalueProcRelated}" />
+			<ui:include
+				src="/xhtml/sc/evaluation/evaluationStage/financial/evaCompExpContractStatusValue.xhtml" />
+			 <p:spacer height="5px"></p:spacer>
+			<table>
+				<tr>
+					<td style="width: 150px;"><p:outputLabel
+							value="#{lbl['lbl.sc.fin.cont.status']}" /></td>
+					<td><p:selectOneMenu
+							value="#{evaluationBackingBean.managedBean.companyExpProcRelated}"
+							style="width: 180px;margin-bottom: 5px;">
+							<f:selectItems
+								value="#{evaluationBackingBean.contractStatusDesc}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{evaluationBackingBean.changeContractStatusProcRelated(evaluationBackingBean.managedBean.companyExpProcRelated)}"
+								update="@([id$=cmpExpGovPrcRelated])"></p:ajax>
+						</p:selectOneMenu> <ac:iconTooltip
+							value="#{lbl['lbl.sc.fin.eva.cont.status.drop.down.tooltip']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="5px"></p:spacer>
+			<ui:param name="cmpExpPrcNonPrc" value="evaGovRelated" />
+			<ui:param name="cmpExpProcNonProcList"
+				value="#{evaluationBackingBean.managedBean.companyExpProcRelatedPagingModel}" />
+			<ui:include
+				src="/xhtml/sc/evaluation/evaluationStage/financial/evaCompExpRelated.xhtml" />
+			<p:spacer height="10px"></p:spacer>
+			<table>
+				<tr>
+					<td style="width: 150px;"><p:outputLabel
+							value="#{lbl['lbl.sc.fin.comp.exp.tot.no.of.contracts']}" /></td>
+					<td><p:inputText disabled="true" style="width:auto;"
+							value="#{cmpExpProcNonProcList.rowCount}"></p:inputText></td>
+				</tr>
+				<tr>
+					<td style="width: 230px;"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.total.contract.amount']}" /></td>
+					<td><p:inputText disabled="true" style="width:auto;"
+							value="#{evaluationBackingBean.managedBean.companyExpProcRelatedValue}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+
+			</table> 
+
+		</p:panel>
+
+
+		<p:spacer height="10px;"></p:spacer>
+		<p:panel id="cmpExpGovNonPrcRelated" toggleable="true"
+			style="width:100% !important;">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.non.prc.related']}" />
+			</f:facet>
+			<p:spacer height="3px;"></p:spacer>
+			<div align="left" class="header-info header-spacing">
+				<table border="0" cellspacing="0" cellpadding="0"
+					style="width: 100%">
+					<tr>
+
+						<td class="header-info-text" style="text-transform: uppercase;float:left;"><h:outputLabel
+								value="#{lbl['lbl.sc.fin.comp.exp.proc.related.table.header']}" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<p:spacer height="2px;"></p:spacer>
+			<ui:param name="cmpExpContSts" value="evaGovStatusNonRelated" />
+			<ui:param name="cmpContractStatus"
+				value="#{evaluationBackingBean.managedBean.contractStatusvalueNonProcRelated}" />
+			<ui:include
+				src="/xhtml/sc/evaluation/evaluationStage/financial/evaCompExpContractStatusValue.xhtml" />
+			<p:spacer height="5px"></p:spacer>
+			<table>
+				<tr>
+					<td style="width: 150px;"><p:outputLabel
+							value="#{lbl['lbl.sc.fin.cont.status']}" /></td>
+					<td><p:selectOneMenu
+							value="#{evaluationBackingBean.managedBean.companyExpNonProcRelated}"
+							style="width: 180px;margin-bottom: 5px;">
+							<f:selectItems value="#{evaluationBackingBean.contractStatusDesc}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{evaluationBackingBean.changeContractStatusNonProcRelated(evaluationBackingBean.managedBean.companyExpNonProcRelated)}"
+								update="@([id$=cmpExpGovNonPrcRelated]) "></p:ajax>
+						</p:selectOneMenu> <ac:iconTooltip
+							value="#{lbl['lbl.sc.fin.eva.cont.status.drop.down.tooltip']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="5px"></p:spacer>
+			<ui:param name="cmpExpPrcNonPrc" value="evaGovNotRelated" />
+
+
+			<ui:param name="cmpExpProcNonProcList"
+				value="#{evaluationBackingBean.managedBean.companyExpNonProcRelatedPagingModel}" />
+			<ui:include
+				src="/xhtml/sc/evaluation/evaluationStage/financial/evaCompExpRelated.xhtml" />
+			<p:spacer height="10px"></p:spacer>
+			<table>
+				<tr>
+					<td style="width: 150px;"><p:outputLabel
+							value="#{lbl['lbl.sc.fin.comp.exp.tot.no.of.contracts']}" /></td>
+					<td><p:inputText disabled="true" style="width:auto;"
+							value="#{cmpExpProcNonProcList.rowCount}" /></td>
+				</tr>
+				<tr>
+					<td style="width: 230px;"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.total.contract.amount']}" /></td>
+					<td><p:inputText disabled="true" style="width:auto;"
+							value="#{evaluationBackingBean.managedBean.companyExpNonProcRelatedValue}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+			</table>
+
+			<ui:fragment
+				rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}">
+				<p:spacer height="10px"></p:spacer>
+				<table>
+
+					<tr>
+						<td style="width: 230px;"><p:outputLabel
+								value="#{lbl['lbl.tpl.spec.content.user.score']}"
+								rendered="#{checklistScoreType eq SourcingConstants.USER_SCORE}" />
+							<ui:fragment
+								rendered="#{checklistScoreType eq SourcingConstants.USER_SCORE and !pageDisable}">
+								<p:outputLabel value="* " styleClass="mandatory" />
+
+
+							</ui:fragment></td>
+						<td><p:inputText id="finGovScoreId"
+								label="#{lbl['lbl.tpl.spec.content.user.score']}"
+								value="#{noOfContracts.userScore}" maxlength="14"
+								disabled="#{pageDisable or rejectedSupplier or isDisable}"
+								style="text-align:right"
+								rendered="#{SourcingConstants.USER_SCORE  eq  checklistScoreType}">
+								<ac:validateNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+									maxIntegerDigits="14" integerOnly="true" />
+								<f:attribute name="min" value="0" />
+								<f:attribute name="max" value="#{contractUserScore}" />
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="@([id$=finGovScoreId],[id$=cmpExpGovNonPrcRelated])"></p:ajax>
+							</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+								value="/#{contractUserScore}"
+								rendered="#{ checklistScoreType eq SourcingConstants.USER_SCORE}" />
+							<p:message id="finGovScoreIdMsg" for="finGovScoreId"
+								display="icon">
+							</p:message></td>
+					</tr>
+				</table>
+
+			</ui:fragment>
+
+		</p:panel>
+
+		<p:spacer height="10px"></p:spacer>
+		<ui:param name="financialCheckListScoreType"
+			value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
+		<ui:param name="financialCheckListcompanyScore"
+			value="#{evaluationBackingBean.managedBean.companyScoreType}"></ui:param>
+		<ui:include src="financialUserScoringSchema.xhtml" />  
+
+	</h:panelGroup>
+</ui:composition>

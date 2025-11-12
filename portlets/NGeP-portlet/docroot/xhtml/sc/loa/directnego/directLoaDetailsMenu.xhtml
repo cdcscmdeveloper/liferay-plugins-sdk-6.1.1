@@ -20,11 +20,12 @@
 	<ui:param name="isPeriodic" value="#{(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen) or
 	(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled)}"></ui:param>
 	<ui:param name="isOneOff" value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff}"></ui:param>
-	<ui:param name="isNonPeriodic" value="#{(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen) or
-	(directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"></ui:param>
-	<ui:param name="isPK7" value="#{(directLOABackingBean.managedBean.scLoa.qtType.parameterCode eq ParameterConst.quotationTenderTypeItemInPk7)}"></ui:param>	
+	<!-- new #25726 -->
+	<ui:param name="isPK7" value="#{directLOABackingBean.isPk7Periodic()}"></ui:param>	
 	<ui:param name="above500K" value="#{(directLOABackingBean.managedBean.above500K)}"/>
 	<ui:param name="StatusLOASubmission" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
+	<!-- new #25726 -->
+	<ui:param name="isContractPeriodAbove4" value="#{directLOABackingBean.isContractPeriodAbove4()}"/>
 	<!-- #25726 END -->
 	<ui:remove>Reopen #25726 note 110</ui:remove>
 	<ui:param name="StatusLOARevision" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION}"></ui:param>
@@ -35,6 +36,9 @@
 	<!-- #12487 START -->
 	<ui:param name = "isLoaSubmissionOrApproval" value = "#{(directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION) || (directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION)}"></ui:param>
 	<!-- #12487 END -->
+	<ui:remove>#29766 Start Vinod</ui:remove>
+	<ui:param name = "isOldpK7selected" value = "#{directLOABackingBean.checkOldPK7PselectedToDisable()}"/>
+	<ui:remove>#29766 End Vinod</ui:remove>
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		
@@ -62,21 +66,13 @@
 						
 				<td width="160px"><p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
 				</td>
+				<ui:remove>26247 - start</ui:remove>
 				<td>
-				<!--  31033 start -->
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					
-					<h:outputText rendered="#{!directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-					 
-					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
-				<!--  31033 end -->
+					<ac:disciplinaryActionYesNo
+						supplier="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"
+						showTooltip="true" />
 				</td>
+				<ui:remove>26247 - end</ui:remove>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
@@ -260,7 +256,9 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
+						<c:when test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 End Vinod</ui:remove>	
 							<p:selectOneMenu id="procMode" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
 								style="margin-bottom:5px;width:246px;"
@@ -286,7 +284,9 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
+						<c:when test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 End Vinod</ui:remove>	
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
@@ -312,6 +312,11 @@
 									listener="#{directLOABackingBean.isPk7Periodic()}"
 									partialSubmit="true" 
 									update="bondReqPG, menuItems, agreementReqPG" />
+								<ui:remove>#29766 Start Vinod</ui:remove>
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.checkQTTypePk7WpItem()}"
+									update="bondReqPG, menuItems, agreementReqPG" />
+								<ui:remove>#29766 End Vinod</ui:remove>
 							</p:selectOneMenu>
 							<p:message id="qtTypeMsg" for="qtType" display="icon" />
 						</c:when>
@@ -367,7 +372,9 @@
 					<h:panelGroup id="reasonPG">
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 							<c:choose>
-							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
+							<ui:remove>#29766 Start Vinod added isOldpK7selected</ui:remove>
+							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly or isOldpK7selected}" ><!-- #35335_haziq -->
+							<ui:remove>#29766 End Vinod</ui:remove>
 							<p:inputText 
 								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
 								size="35" disabled="true" />
@@ -402,7 +409,11 @@
 						required="true" id="fileNoId"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
 						label="#{lbl['lbl.sc.qt.fileno']}" size="28" >
-						<p:ajax event="blur" process="fileNoId" update="fileNoId"/>
+						<!-- #29661 start -->
+						<p:ajax event="blur" process="fileNoId" update="fileNoId"
+						partialSubmit="true" 
+						listener="#{createQtBB.setFileNo(directLOABackingBean.managedBean.scQt)}"/>
+						<!-- #29661 end -->
 						</p:inputText>
 						 <p:spacer width="1px" />
 						
@@ -411,7 +422,12 @@
 						value="#{directLOABackingBean.managedBean.scLoa.fileExtNo}"
 						size="1" label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
 						maxlength="3" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" >
-						<p:ajax event="blur" process="fileExtNo" update="fileExtNo"/>
+						<!-- 29661 start -->
+						<p:ajax event="blur"  process="@this" 
+						partialSubmit="true" update="@this"
+						listener="#{directLOABackingBea.setFileExtNo(directLOABackingBean.managedBean.scLoa)}">
+						</p:ajax>
+						<!-- 29661 end -->
 						</p:inputText>
 						 <p:message
 						id="fileExtNoMsg" for="fileExtNo" display="icon" />
@@ -972,6 +988,11 @@
 							process="@this"
 							partialSubmit="true"
 							listener="#{directLOABackingBean.resetContractDates()}"></p:ajax>
+						<!-- new #25726 - Start-->
+						<p:ajax event="change"
+							listener="#{directLOABackingBean.isAgreementDropDown}"
+							partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" />
+						<!-- new #25726 - End-->
 						<f:converter converterId="periodConverter"/>
 					</p:inputText>  <p:message id="contractDurationMsg" for="#{QTFieldConst.FIELD_LOA_CONTRACT_PERIOD_ID}" display="icon" /></td>
 			</tr>
@@ -1088,19 +1109,42 @@
 														size="28" disabled="true" />
 													</c:when>
 													<c:otherwise>
-													<p:selectOneMenu id="agreementValId" required="true"
-														style="margin-bottom:5px;width:246px;"
-														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
-														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.managedBean.disableFields || (!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval)}"><!-- Reopen #25726 note 220 - issue 1 -->	
-														<f:selectItems
-															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
-															<!-- #25726 START -->
-														 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
-														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
-														<!-- #25726 END -->
-													</p:selectOneMenu>
-													</c:otherwise>
+														<!-- new #25726 - Start-->
+														<c:choose>
+															<c:when test="#{directLOABackingBean.isPk7Periodic()}">
+																<p:selectOneMenu id="agreementValId" required="true"
+																	style="margin-bottom:5px;width:246px;"
+																	value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
+																	label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+																	disabled="#{directLOABackingBean.managedBean.disableFields || (!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval)}">
+																	<!-- Reopen #25726 note 220 - issue 1 -->
+																	<f:selectItems
+																		value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
+																	<!-- #25726 START -->
+																	<p:ajax event="change" partialSubmit="true"
+																		update="agreementReqPG @([id$=uploadApprovalLetterPg])"
+																		listener="#{directLOABackingBean.onChangeAgreementReqType}" />
+																	<!-- #25726 END -->
+																</p:selectOneMenu>
+															</c:when>
+															<c:otherwise>
+																<p:selectOneRadio id="agreementReq"
+																	styleClass="commonLabel"
+																	value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
+																	label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+																	disabled="#{directLOABackingBean.managedBean.disableFields || (!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval)}">
+																	<f:selectItems
+																		value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+																	<p:ajax event="change" partialSubmit="true"
+																		update="agreementReqPG @([id$=uploadApprovalLetterPg])"
+																		listener="#{directLOABackingBean.onChangeAgreementReqType}" />
+																</p:selectOneRadio>
+																<p:message id="agreementReqMsg" for="agreementReq"
+																	display="icon" />
+															</c:otherwise>
+														  </c:choose>
+														</c:otherwise>
+														<!-- new #25726 - End-->
 													</c:choose>
 												</c:otherwise>
 											</c:choose>
@@ -1130,9 +1174,16 @@
 			<tr>				
 				<td colspan="3">
 					<p:outputPanel id="uploadApprovalLetterPg"> 
-						<!-- #25726 START -->													
-						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision || StatusLOAApproval) and ((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
+						<!-- #25726 START -->
+						<!-- new #25726 - Start-->													
+						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision || StatusLOAApproval) and 
+						(((((isPeriodic and !isContractPeriodAbove4) || isOneOff) and !isPK7) and 
+						!directLOABackingBean.managedBean.scLoa.agreementReq and above500K and 
+						!directLOABackingBean.managedBean.readOnly)||((((isPeriodic and !isContractPeriodAbove4) || isOneOff) and !isPK7) and 
+						!directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and 
+						above500K and directLOABackingBean.managedBean.readOnly))}" 
 						required="true">
+						<!-- new #25726 - End-->
 						<!-- #25726 END -->
 							<table>
 								<tr>
@@ -1201,16 +1252,7 @@
 			remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
 			showAttachment="false" 
 			readonly="true" />
-	</p:outputPanel>
-	<!-- #31033 #32560 starts -->
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}" 
-				rendered="#{isHiddenDownloadButtonDAHistory}"/>
-	    <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" rendered="#{!isHiddenDownloadButtonDAHistory}" />
-	      <!-- #31033 #32560 Ends -->
-	      
+	</p:outputPanel>    
 	<!-- #25726 START -->
 	<p:confirmDialog id="qtChangeAgreementReqDlg" widgetVar="qtChangeAgreementReqDlg"  appendToBody="true" 
 		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="false">

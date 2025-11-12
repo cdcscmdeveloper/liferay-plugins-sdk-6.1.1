@@ -23,6 +23,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	String roleCode;
 	String raceCode;
+	String docType;
 	BigInteger docId;
 
 	@Override
@@ -41,6 +42,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 		RaceManagedBean managedBeans = (RaceManagedBean) manageBean;
 		this.roleCode = roleCode;
 		this.raceCode = managedBeans.getPmRace().getRaceCode();
+		this.docType = managedBeans.getPmRace().getRaceName();
 		this.docId = BigInteger.valueOf(managedBeans.getPmRace().getRaceId());
 		if (managedBeans.getOldPmRace() != null && managedBeans.getOldPmRace().getRaceId() != null) {
 			if (managedBeans.getPmRace().getRaceName() != null
@@ -67,7 +69,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 					managedBeans.getPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 		}
-		managedBeans.setPmRace(null);
+
 		managedBeans.setOldPmRace(null);
 		auditPMReqDTO.setObjList(objList);
 		return auditPMReqDTO;
@@ -76,7 +78,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 	private ArrayList<AuditPMSPDTO> detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
-		dtlObj.setDocType(AuditConst.PM_AUD_RACE);
+		dtlObj.setDocType(this.docType);
 		dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_RACE_PMPARAMETERLVLID);
 		dtlObj.setDocNo(raceCode);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);

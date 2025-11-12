@@ -51,22 +51,14 @@
 						value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag,
 					fn:toUpperCase((suppInfo[2] eq 0)?'false':'true'))}" />
 				</p:column>
-
-				<p:column rendered="#{suppInfo[3] eq true}" style="text-align:center;">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}" />
+				<ui:remove>26247 - start</ui:remove>
+				<ui:param name="mofExpired"
+					value="#{suppInfo[3] == null or suppInfo[3].recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
+					<h:outputText
+						value="#{consolidationReportBackingBean.evaluateMOFStatus(suppInfo[3])}" />
 				</p:column>
-
-				<p:column
-					style="white-space:nowrap; text-align:center;background-color:red; color:white; font-weight:bold;"
-					rendered="#{suppInfo[3] eq false}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}" />
-				</p:column>
-				<!-- 34746 start -->
-				<p:column rendered="#{suppInfo[3] ne false and suppInfo[3] ne true}"> >
-					<h:outputText value="" />
-				</p:column>
-				<!-- 34746 end -->
-
+				<ui:remove>26247 - end</ui:remove>
 			</p:dataTable>
 
 			<div align="right">

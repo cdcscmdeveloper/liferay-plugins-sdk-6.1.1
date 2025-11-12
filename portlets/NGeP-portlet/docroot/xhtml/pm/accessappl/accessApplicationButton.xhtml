@@ -31,28 +31,37 @@
 			<c:otherwise>
 			<table style="width: 100%;">
 				<tr style="float:right">
-					<td><p:commandButton value="#{lbl['lbl.btn.submit']}" 
-							action="#{accessApplBackingBean.saveAccessApplication('SAVE')}" 
-							update="@([id$=Msg])"  onstart="blockWidget.show()" 
-							disabled="#{not accessApplBackingBean.managedBean.declarationChecked}" 
-							oncomplete="blockWidget.hide()"
+					<td>
+						<!-- 34445 start -->
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							update="@([id$=Msg])"
+							disabled="#{not accessApplBackingBean.managedBean.declarationChecked}"
+							oncomplete="if(!args.validationFailed) submitApplDlg.show();"
 							rendered="#{isBrandNew}">
-							 <f:param name="disableValidation" value="true" /> 
+							<f:param name="disableValidation" value="true" />
 						</p:commandButton>
+						<!-- 34445 end -->
 					</td>
 					<td colspan="4" style="text-align: right">
 					<ui:decorate template="/xhtml/pm/shared/claim_template.xhtml">
 						<ui:define name="outComeSection">
 							<ui:repeat var="action" value="#{accessApplBackingBean.managedBean.outComes}" 
 								rendered ="#{not isBrandNew}">
-								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />									
-										<p:commandButton value="#{lbl[buttonLabel]}" 
-											action="#{accessApplBackingBean.saveAccessApplication(action)}" 
-											onstart="blockWidget.show()" 
-											oncomplete="blockWidget.hide()">
-											<f:param name="disableValidation" value="true" /> 
-									</p:commandButton>									
-								</ui:repeat>
+								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
+								<!-- 34445 start -->
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									rendered="#{action=='APPROVE'}"
+									oncomplete="if(!args.validationFailed) approveApplDlg.show();">
+									<f:param name="disableValidation" value="true" />
+								</p:commandButton>
+								
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									rendered="#{action=='REJECT'}"
+									oncomplete="if(!args.validationFailed) rejectApplDlg.show();">
+									<f:param name="disableValidation" value="true" />
+								</p:commandButton>
+								<!-- 34445 end -->
+							</ui:repeat>
 						</ui:define>
 					</ui:decorate>
 					</td>
@@ -61,4 +70,29 @@
 			</c:otherwise>
 			</p:outputPanel>	
 		</div>
+		
+		<!-- 34445 start -->
+		<ac:confirmationPopupSM id="submitApplDlg" widget="submitApplDlg"
+			okParam="#{accessApplBackingBean.saveAccessApplication('SAVE')}"
+			width="400" height="100" hasParam="true"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.submit.msg']}" 
+			update="@([id$=Msg])"
+			loadingWidget="blockWidget" />
+			
+		<ac:confirmationPopupSM id="approveApplDlg" widget="approveApplDlg"
+			okParam="#{accessApplBackingBean.saveAccessApplication('APPROVE')}"
+			width="400" height="100" hasParam="true"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.approve.msg']}" 
+			update="@([id$=Msg])"
+			loadingWidget="blockWidget" />
+			
+		<ac:confirmationPopup id="rejectApplDlg" widget="rejectApplDlg"
+			okParam="#{accessApplBackingBean.saveAccessApplication('REJECT')}"
+			width="400" height="100" hasParam="true"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.reject.msg']}"
+			update="@([id$=Msg])"/>
+		<!-- 34445 end -->
 </ui:composition>

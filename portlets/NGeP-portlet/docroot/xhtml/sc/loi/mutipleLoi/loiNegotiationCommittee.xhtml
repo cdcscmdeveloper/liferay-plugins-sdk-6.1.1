@@ -196,16 +196,21 @@
 				<p:column selectionMode="multiple" style="width:2%"
 					rendered="#{isPendingNegotiationStatus}" />
 
+				<ui:remove>#35360 - Start </ui:remove>
 				<p:column headerText="#{lbl['lbl.sc.name']}">
 					<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"
-						rendered="#{isPendingNegotiationStatus}" />
+						style="color:black" rendered="#{isPendingNegotiationStatus}" />
+					<ui:remove>#35360 - End</ui:remove>
 					<h:outputText value="#{meetingAttDtl.name}"
 						rendered="#{!isPendingNegotiationStatus}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+					<ui:remove>#35360 - Start</ui:remove>
 					<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
-						size="15" rendered="#{isPendingNegotiationStatus}" />
+						size="15" style="color:black"
+						rendered="#{isPendingNegotiationStatus}" />
+					<ui:remove>#35360 - End</ui:remove>
 					<h:outputText value="#{meetingAttDtl.icPassport}"
 						rendered="#{!isPendingNegotiationStatus}"></h:outputText>
 				</p:column>

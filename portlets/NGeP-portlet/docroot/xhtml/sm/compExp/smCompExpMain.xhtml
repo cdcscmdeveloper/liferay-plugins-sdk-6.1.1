@@ -1,0 +1,259 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{lbl['lbl.sm.comp.exp.screen.name']}");
+		</script>
+		<style>
+			.text{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:blue;}
+		</style>
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<p:messages autoUpdate="true" closable="true" id="messages"
+			showDetail="true" showSummary="false" />
+		<p:outputPanel rendered="#{smCompExpMB.draftExist}">
+			<p:graphicImage value="/css/images/priority.png" />
+			<p:spacer width="5" />
+			<h:outputText class="text"
+				value="#{lbl['lbl.sm.comp.exp.draft.link.one']}" />
+			<p:spacer width="3" />
+			<p:commandLink action="#{smCompExpBB.redirectToDraft}"
+				oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+				partialSubmit="true" process="@this" update=":form">
+				<h:outputText class="text"
+					value="#{lbl['lbl.sm.comp.exp.draft.link.two']}" />
+			</p:commandLink>
+			<p:spacer width="3" />
+			<h:outputText value="#{lbl['lbl.sm.comp.exp.draft.link.three']}"
+				class="text" />
+		</p:outputPanel>
+		<p:panel header="#{lbl['lbl.sm.comp.exp.master.list.panel']}"
+			toggleable="false" id="compExpList">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sm.comp.exp.master.list.instruction']}" />
+			<p:panel header="#{lbl['lbl.sm.comp.exp.master.list.fed.panel']}"
+				toggleable="true">
+				<p:dataTable
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					id="masterFedDataTable" lazy="true" rowIndexVar="index" rows="10"
+					value="#{smCompExpMB.masterFedDataModel}" var="masterFed">
+					<ac:paginator for="masterFedDataTable" />
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
+								style="width:2% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
+								style="width:40% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
+								style="width:10% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
+								style="width:10% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+								style="width:10% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.cat.code']}"
+								style="width:10% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.record.status']}"
+								style="width:10% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
+								style="width:8% !important; text-align: center !important;" />
+						</p:row>
+					</p:columnGroup>
+					<p:column style="text-align: center !important;">
+						<h:outputText value="#{index+1}" />
+					</p:column>
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText value="#{masterFed.title}" />
+					</p:column>
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText value="#{masterFed.fileReferenceNo}" />
+						<p:spacer width="3px" />
+						<h:outputText value="#{masterFed.fileExtensionNo}" />
+					</p:column>
+					<p:column style="text-align: center !important;">
+						<h:outputText value="#{masterFed.contractEffDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style="text-align: center !important;">
+						<h:outputText value="#{masterFed.contractValue}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column style="text-align: center !important;">
+						<ui:repeat var="catCode" value="#{masterFed.compExpMasterCats}">
+							<h:outputText
+								value="#{catCode.categoryL1.categoryL1Code}#{catCode.categoryL2.categoryL2Code}#{catCode.categoryL3.categoryL3Code}" />
+							<br />
+						</ui:repeat>
+					</p:column>
+					<p:column style="text-align: center !important;">
+						<h:outputText styleClass="outputLabel-view"
+							rendered="#{masterFed.recordStatusFlg eq ParameterConst.recordStatusActive}"
+							value="#{lbl['lbl.sm.comp.exp.master.record.status.active']}" />
+						<h:outputText styleClass="outputLabel-view"
+							rendered="#{masterFed.recordStatusFlg eq ParameterConst.recordStatusDeleted}"
+							value="#{lbl['lbl.sm.comp.exp.master.record.status.delete']}" />
+					</p:column>
+					<p:column style="text-align: center !important;">
+						<p:commandLink action="#{smCompExpBB.initViewPopup(masterFed)}"
+							oncomplete="blockWidget.hide(),compExpViewPopupWV.show()"
+							onstart="blockWidget.show()" partialSubmit="true" process="@this"
+							update=":form"
+							rendered="#{masterFed.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}">
+							<p:graphicImage id="actionViewId"
+								value="/css/images/design/ico-view.png" />
+							<p:tooltip for="actionViewId"
+								value="#{lbl['lbl.sm.comp.exp.master.list.source.type']} #{smCompExpBB.getParameterDesc(ParameterTypeConst.compExpSourceType,masterFed.sourceType.parameterCode)}" />
+						</p:commandLink>
+						<p:commandLink
+							action="#{smCompExpBB.redirectToUpdateMaster(masterFed)}"
+							oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+							partialSubmit="true" process="@this" update=":form"
+							rendered="#{masterFed.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and masterFed.recordStatusFlg eq ParameterConst.recordStatusActive}">
+							<p:graphicImage id="actionEditActiveId"
+								value="/css/images/design/edit.png" />
+							<p:tooltip for="actionEditActiveId"
+								value="#{lbl['lbl.sm.comp.exp.master.list.source.type']} #{smCompExpBB.getParameterDesc(ParameterTypeConst.compExpSourceType,masterFed.sourceType.parameterCode)}" />
+						</p:commandLink>
+						<p:graphicImage id="actionEditDeleteId"
+							rendered="#{masterFed.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and masterFed.recordStatusFlg eq ParameterConst.recordStatusDeleted}"
+							value="/css/images/design/ico-view.png" />
+						<p:tooltip for="actionEditDeleteId"
+							value="#{lbl['lbl.sm.comp.exp.master.list.source.type']} #{smCompExpBB.getParameterDesc(ParameterTypeConst.compExpSourceType,masterFed.sourceType.parameterCode)}" />
+						<p:commandLink
+							action="#{smCompExpBB.initHistPopup(masterFed.compExpMasterId)}"
+							oncomplete="blockWidget.hide(),compExpHistPopupWV.show()"
+							onstart="blockWidget.show()" partialSubmit="true" process="@this"
+							update=":form"
+							rendered="#{smCompExpBB.checkSmCompExpHistoryExist(masterFed.compExpMasterId)}">
+							<p:graphicImage id="actionHistId"
+								value="/css/images/design/ico-hist.png" />
+							<p:tooltip for="actionHistId"
+								value="#{lbl['lbl.sm.comp.exp.hist.tooltip']}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:panel header="#{lbl['lbl.sm.comp.exp.master.list.non.fed.panel']}"
+				toggleable="true">
+				<p:dataTable
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					id="masterNonFedDataTable" lazy="true" rowIndexVar="index"
+					rows="10" value="#{smCompExpMB.masterNonFedDataModel}"
+					var="masterNonFed">
+					<ac:paginator for="masterNonFedDataTable" />
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
+								style="width:2% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
+								style="width:50% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
+								style="width:10% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
+								style="width:10% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+								style="width:10% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.cat.code']}"
+								style="width:10% !important; text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
+								style="width:8% !important; text-align: center !important;" />
+						</p:row>
+					</p:columnGroup>
+					<p:column>
+						<h:outputText value="#{index+1}" />
+					</p:column>
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText value="#{masterNonFed.title}" />
+					</p:column>
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText value="#{masterNonFed.fileReferenceNo}" />
+						<p:spacer width="3px" />
+						<h:outputText value="#{masterNonFed.fileExtensionNo}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{masterNonFed.contractEffDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<h:outputText value="#{masterNonFed.contractValue}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<ui:repeat var="catCode" value="#{masterNonFed.compExpMasterCats}">
+							<h:outputText
+								value="#{catCode.categoryL1.categoryL1Code}#{catCode.categoryL2.categoryL2Code}#{catCode.categoryL3.categoryL3Code}" />
+							<br />
+						</ui:repeat>
+					</p:column>
+					<p:column>
+						<p:commandLink
+							action="#{smCompExpBB.redirectToUpdateMaster(masterNonFed)}"
+							oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+							partialSubmit="true" process="@this" update=":form"
+							rendered="#{masterNonFed.recordStatusFlg eq ParameterConst.recordStatusActive}">
+							<p:graphicImage id="actionEditId"
+								value="/css/images/design/edit.png" />
+							<p:tooltip for="actionEditId"
+								value="#{lbl['lbl.sm.comp.exp.master.list.source.type']} #{smCompExpBB.getParameterDesc(ParameterTypeConst.compExpSourceType,masterNonFed.sourceType.parameterCode)}" />
+						</p:commandLink>
+						<p:commandLink
+							action="#{smCompExpBB.initHistPopup(masterNonFed.compExpMasterId)}"
+							oncomplete="blockWidget.hide(),compExpHistPopupWV.show()"
+							onstart="blockWidget.show()" partialSubmit="true" process="@this"
+							update=":form"
+							rendered="#{smCompExpBB.checkSmCompExpHistoryExist(masterNonFed.compExpMasterId)}">
+							<p:graphicImage id="actionHistId"
+								value="/css/images/design/ico-hist.png" />
+							<p:tooltip for="actionHistId"
+								value="#{lbl['lbl.sm.comp.exp.hist.tooltip']}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</p:panel>
+		<div align="right">
+			<p:commandButton id="addNewBtn"
+				action="#{smCompExpBB.redirectToAddNew}"
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				update=":form" value="#{lbl['lbl.sm.comp.exp.add.new']}">
+			</p:commandButton>
+		</div>
+		<ac:compExpViewPopup mBean="#{smCompExpMB}" bBean="#{smCompExpBB}" />
+		<ac:compExpHistPopup mBean="#{smCompExpMB}" bBean="#{smCompExpBB}" />
+	</ui:define>
+</ui:composition>

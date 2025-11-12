@@ -40,6 +40,7 @@ import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#29732
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -185,7 +186,9 @@ public class NoticeBoardBackingBean extends
 	private static final String CHECK_SUPPLIER_QUAL_PAGE = "/xhtml/sc/noticeboard/supplierqualification/nbSupplierQulificationCriteria.xhtml";
 	private static final String PRICE_SCHEDULE_PAGE ="/xhtml/sc/noticeboard/priceshedule/nbPriceSchedule.xhtml";
 	private static final String VIEW_AWARD_SUPP_PAGE = "/xhtml/sc/noticeboard/awardsupplier/nbAwardSupplierView.xhtml";
-	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml?faces-redirect=true";
+	// #28777 & #29729 - remove '?faces-redirect=true' - Start
+	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml";
+	// #28777 & #29729 - remove '?faces-redirect=true' - End
 	private static final String NB_MAIN_PAGE = "/xhtml/sc/noticeboard/resultview/nbMainPage.xhtml";
 	private static final String MOBILE_NB_MAIN_PAGE = "/xhtml/sc/noticeboard/mobileview/nbMainPage.xhtml";
 	
@@ -847,6 +850,23 @@ public class NoticeBoardBackingBean extends
 		managedBean.setPreviousPage(MAIN_PAGE);
 		this.getManagedBean().setSelectedZoneTabIndex(0);
 		retriveBsvDetails(qtId);
+		
+		// #28777 & #29729 - Start
+		if (managedBean.getScQt().isZonal()) {
+			BriefingZoneBean defaultBsvBean = this.getManagedBean().getZoneBean().get(0);
+			if (defaultBsvBean.isBranchDeactivated()) {
+				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			} else {
+				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+			}
+		}
+		// #28777 & #29729 - End
+		
 		SmSupplier smSupplier = managedBean.getSmSupplier();
 		managedBean.setMofNumber(managedBean.getSupplierMofNo());
 		if (smSupplier != null && null != managedBean.getMofNumber()) {
@@ -866,37 +886,46 @@ public class NoticeBoardBackingBean extends
 		//managedBean.setSelectedZoneTabIndex(0);
 		managedBean.setBriefingDtls(null);
 		
-		//#28777 & #29729 - Start
-		if(smSupplier != null && checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_760522, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		// #28777 & #29729 - Start
+		if (!managedBean.getScQt().isZonal() && smSupplier != null
+				&& checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())) {
+			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_YES);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		} else {
+			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_NO);
 		}
-		//#28777 & #29729 - End
+		// #28777 & #29729 - End
 		
 		return BSV_SUPP_REGISTRATION_PAGE;
 	}
 	
-    //#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	/**
-	* Method to return true, if branch in supplier has been deleted
-	* @param qtId
-	* @param supplierId
-	* @return true or false
-	**/
-	public Boolean checkValidationSupplierBranchDeleted(Long qtId, Long supplierId){
-		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTNoticeBoardSO.class);
+	 * Method to return true, if branch in supplier has been deleted
+	 * 
+	 * @param qtId
+	 * @param supplierId
+	 * @return true or false
+	 **/
+	public Boolean checkValidationSupplierBranchDeleted(Long qtId, Long supplierId) {
+		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 		NoticeBoardReqDTO supplierReqDTO = new NoticeBoardReqDTO();
 		supplierReqDTO.setSupplierId(supplierId);
 		supplierReqDTO.setQtId(qtId);
 		NoticeBoardResDTO supplierResDTO = boardSO.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
 		ScQtSupplier scQtSupplier = supplierResDTO.getScQtSupplier();
-		if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED){
-			return Boolean.TRUE;
-	    }
-		return Boolean.FALSE;
+		if (scQtSupplier != null && scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+			return true;
+		}
+		return false;
 	}
-	//#28777 & #29729 - End
+
+	// #28777 & #29729 - End
 
 	
 	/**
@@ -915,12 +944,37 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setBriefingDtls(null);
 		BriefingZoneBean selectedBsvBean = this.getManagedBean().getZoneBean()
 				.get(selectedZoneTabIndex);
-
+		
+		// #28777 & #29729 - Start
+		checkValidationForBranchDeactivated(selectedBsvBean);
+		// #28777 & #29729 - End
+		
 		this.getManagedBean().setNormalBsvBean(selectedBsvBean);
 		this.getManagedBean().setSelectedZoneTabIndex(selectedZoneTabIndex);
 		this.getManagedBean().setRenderRegisterBtn(this.getManagedBean().isDisableRegisterBtn());
 		setSlectedHeaderName(null);
 	}
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to appear validation, if tab zone has been selected
+	 * 
+	 * @param selectedBsvBean
+	 **/
+	private void checkValidationForBranchDeactivated(BriefingZoneBean selectedBsvBean) {
+		if (selectedBsvBean.isBranchDeactivated()) {
+			this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		} else {
+			this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+		}
+	}
+
+	// #28777 & #29729 - End
 
 	/**
 	 * hide or show date fields based on date types.
@@ -1192,11 +1246,7 @@ public class NoticeBoardBackingBean extends
 					}
 				}
 			}
-			
-			if (getManagedBean().isQualified()) {
-				checkDisciplinaryActionExists(supplier);
-			}
-			
+
 			// construct the proposal/update url
 			if (QTStatusConst.QT_PROPOSAL_PREPARATION
 					.equals(currentStatus) && isValidSupplier ) {
@@ -1214,73 +1264,73 @@ public class NoticeBoardBackingBean extends
 
 	}
 
-	/**
-	 * @param supplier 
-	 * 
-	 */
-	private void checkDisciplinaryActionExists(SmSupplier supplier) {
-		SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
-		FacesScopes facesScopes = new FacesScopes();
-		PmUser sUsers = facesScopes.getUserSessionBean();
-		IQTNoticeBoardSO qtNoticeBoardSO = null;
-		List<String> categoryCodes = null;
-		
-		if (sUsers != null && sUsers.getPreferredLanguage() != null){
-			supplierDataMaintenanceReqDTO.setLanguage(sUsers.getPreferredLanguage());
-		}
-		
-		supplierDataMaintenanceReqDTO.setSupplier(supplier);
-		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-		SupplierDataMaintenanceResDTO supplierDataMaintenanceResDTO = null;
-
-		ISearchBean<ScQtCategory> searchBean = new SearchBean<>();
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("scQt.qtId",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						getManagedBean().getQtId()));
-
-
-		searchBean.getSortColumns().add(
-				new SearchOrderBean("pmCategoryL1.categoryL1Code"));
-		searchBean.getSortColumns().add(
-				new SearchOrderBean("pmCategoryL2.categoryL2Code"));
-		searchBean.getSortColumns().add(
-				new SearchOrderBean("pmCategoryL3.categoryL3Code"));
-
-		try {
-			qtNoticeBoardSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTNoticeBoardSO.class);
-			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-			reqDTO.setQtCategorySearchBean(searchBean);
-			NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
-			if (null != resDTO && null != resDTO.getCategoryResultBean()) {
-				ISearchResultBean<ScQtCategory> resultBean = resDTO.getCategoryResultBean();
-				List<ScQtCategory> categories = resultBean.getResultList();
-				if (CollectionUtils.isNotEmpty(categories)) {
-					categoryCodes = new ArrayList<>();
-					for (ScQtCategory qtCategory : categories) {
-						categoryCodes.add(qtCategory.getPmCategoryL1().getCategoryL1Code()
-								+ qtCategory.getPmCategoryL2().getCategoryL2Code()
-								+ qtCategory.getPmCategoryL3().getCategoryL3Code());
-					}
-				}
-			}
-		} finally{
-			qtNoticeBoardSO = null;
-		}
-		
-		if (null != suppDataSO) {
-			log.info(this.getClass().getName() + ".checkDisciplinaryActionExists() :  Checking Active Disciplinary Action for supplier ID: " + supplier.getSupplierId());
-			supplierDataMaintenanceResDTO = suppDataSO.getDisciplinaryActionMsg(supplierDataMaintenanceReqDTO, categoryCodes);
-			if (null != supplierDataMaintenanceResDTO && StringUtils.isNotEmpty(supplierDataMaintenanceResDTO.getErrorMessage())
-					&& (supplierDataMaintenanceResDTO.getErrorMessage().contains("Disciplinary Action")
-							|| supplierDataMaintenanceResDTO.getErrorMessage().contains("Tindakan Tatatertib"))) {
-				log.info(this.getClass().getName() + ".checkDisciplinaryActionExists() :  Active Disciplinary Action exist for supplier ID: " + supplier.getSupplierId());
-				this.getManagedBean().setQualified(false);
-			}
-		}
-	}
+//	/**
+//	 * @param supplier 
+//	 * 
+//	 */
+//	private void checkDisciplinaryActionExists(SmSupplier supplier) {
+//		SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
+//		FacesScopes facesScopes = new FacesScopes();
+//		PmUser sUsers = facesScopes.getUserSessionBean();
+//		IQTNoticeBoardSO qtNoticeBoardSO = null;
+//		List<String> categoryCodes = null;
+//		
+//		if (sUsers != null && sUsers.getPreferredLanguage() != null){
+//			supplierDataMaintenanceReqDTO.setLanguage(sUsers.getPreferredLanguage());
+//		}
+//		
+//		supplierDataMaintenanceReqDTO.setSupplier(supplier);
+//		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+//		SupplierDataMaintenanceResDTO supplierDataMaintenanceResDTO = null;
+//
+//		ISearchBean<ScQtCategory> searchBean = new SearchBean<>();
+//		searchBean.getDataFilterBeans().add(
+//				new SearchFilterBean("scQt.qtId",
+//						SearchOperator.OPERATOR_EQUALS.value(),
+//						getManagedBean().getQtId()));
+//
+//
+//		searchBean.getSortColumns().add(
+//				new SearchOrderBean("pmCategoryL1.categoryL1Code"));
+//		searchBean.getSortColumns().add(
+//				new SearchOrderBean("pmCategoryL2.categoryL2Code"));
+//		searchBean.getSortColumns().add(
+//				new SearchOrderBean("pmCategoryL3.categoryL3Code"));
+//
+//		try {
+//			qtNoticeBoardSO = BusinessDelegate.getInstance()
+//					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//							IQTNoticeBoardSO.class);
+//			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+//			reqDTO.setQtCategorySearchBean(searchBean);
+//			NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
+//			if (null != resDTO && null != resDTO.getCategoryResultBean()) {
+//				ISearchResultBean<ScQtCategory> resultBean = resDTO.getCategoryResultBean();
+//				List<ScQtCategory> categories = resultBean.getResultList();
+//				if (CollectionUtils.isNotEmpty(categories)) {
+//					categoryCodes = new ArrayList<>();
+//					for (ScQtCategory qtCategory : categories) {
+//						categoryCodes.add(qtCategory.getPmCategoryL1().getCategoryL1Code()
+//								+ qtCategory.getPmCategoryL2().getCategoryL2Code()
+//								+ qtCategory.getPmCategoryL3().getCategoryL3Code());
+//					}
+//				}
+//			}
+//		} finally{
+//			qtNoticeBoardSO = null;
+//		}
+//		
+//		if (null != suppDataSO) {
+//			log.info(this.getClass().getName() + ".checkDisciplinaryActionExists() :  Checking Active Disciplinary Action for supplier ID: " + supplier.getSupplierId());
+//			supplierDataMaintenanceResDTO = suppDataSO.getDisciplinaryActionMsg(supplierDataMaintenanceReqDTO, categoryCodes);
+//			if (null != supplierDataMaintenanceResDTO && StringUtils.isNotEmpty(supplierDataMaintenanceResDTO.getErrorMessage())
+//					&& (supplierDataMaintenanceResDTO.getErrorMessage().contains("Disciplinary Action")
+//							|| supplierDataMaintenanceResDTO.getErrorMessage().contains("Tindakan Tatatertib"))) {
+//				log.info(this.getClass().getName() + ".checkDisciplinaryActionExists() :  Active Disciplinary Action exist for supplier ID: " + supplier.getSupplierId());
+//				this.getManagedBean().setQualified(false);
+//			}
+//		}
+//	}
 
 	/**
 	 * Handle Department drop down changed - reset selected ptj profile and
@@ -1366,6 +1416,7 @@ public class NoticeBoardBackingBean extends
 							orderedStatuses.indexOf(QTStatusConst.QT_AWARDED));
 					
 					statusIds.addAll(orderedStatuses);
+					statusIds.add(QTStatusConst.QT_CLOSE_PERMANENTLY); //Bug #38702
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_AWARDED);
@@ -1405,6 +1456,7 @@ public class NoticeBoardBackingBean extends
 				} else if (ParameterConst.NOTICE_BOARD_STATUS_CANCELLED
 						.equals(selectedTab)) {
 					statusIds.add(QTStatusConst.QT_CANCELLED);
+					statusIds.add(QTStatusConst.QT_CANCELED_DUETO_PROPOSALVALIDITY_EXPIRED);//Bug #38702
 					
 				} else {
 					
@@ -2353,6 +2405,16 @@ public class NoticeBoardBackingBean extends
 							specZoneDtl, briefingResDTO.getBriefingList(),
 							briefingResDTO.getSiteVisitList(),
 							briefingResDTO.getScQtBsv(),null);
+					
+					// #28777 & #29729 - Start
+					briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES);
+					if (briefingZoneBean.isBranchDeactivated()) {
+						this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+					} else {
+						this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+					}
+					// #28777 & #29729 - End
+				    
 					bsvZoneBeans.add(briefingZoneBean);
 					isNotRigistered = isNotRigistered(briefingZoneBean,isNotRigistered);
 					if(isNotRigistered && !isRenderRigsterbtn){
@@ -2516,10 +2578,14 @@ public class NoticeBoardBackingBean extends
 						//End Bug #26525
 						attendance.setIcPassPort(smPersonal.getIdentificationNo());
 						attendance.setEmail(smPersonal.getEmail());
+						
+						// #30447 - Start
+						attendance.setSalutation(setSalutationSupplierName(smPersonal.getIdentificationNo()));
+						// #30447 - End
+						
 						attendance.setName(smPersonal.getName());
 						attendance.setBsvRegistration(bsvRegistration);
 						setUserDetails(attendance);
-	
 						bsvAttandances.add(attendance);
 					}
 	
@@ -2532,6 +2598,9 @@ public class NoticeBoardBackingBean extends
 						if (bsvAttandances.contains(extAttandance)) {
 							bsvAttandances.remove(extAttandance);
 	
+							// #30447 - Start
+							extAttandance.setSalutation(setSalutationSupplierName(extAttandance.getIcPassPort()));
+							// #30447 - End
 						}
 						bsvAttandances.add(extAttandance);
 					}
@@ -2887,6 +2956,30 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtCategorySearchBean(searchBean);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
+				//#29732
+				String catCodeL1 = "";
+				String catCodeL2 = "";
+				String catCodeL3 = "";
+				String catCodeLevel = null;
+				String catCode = null;
+				
+				for(ScQtCategory checkCategoryUpdated : resDTO.getCategoryResultBean().getResultList()){
+					if(null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()){
+						 catCodeL1 = checkCategoryUpdated.getPmCategoryL1().getCategoryL1Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
+					} 
+					if (null != checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code()){
+						 catCodeL2 = checkCategoryUpdated.getPmCategoryL2().getCategoryL2Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
+					}
+					if (null != checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code()){
+						 catCodeL3 = checkCategoryUpdated.getPmCategoryL3().getCategoryL3Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
+					}
+					flagHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel, catCode,resDTO);
+					checkCategoryUpdated.setFlagDisplayNb(getManagedBean().getFlagUpdateCatInPmDisplay());
+				}
+				//#29732
 				return resDTO.getCategoryResultBean();
 			} finally{
 				qtNoticeBoardSO = null;
@@ -3477,21 +3570,19 @@ public class NoticeBoardBackingBean extends
 		return isRenderRigisterBtn;
 	}
 	
+	// #30447 - Start
 	/**
-	 * #30447 - Retrieve supplier Salutation by identification No
+	 * Retrieve supplier Salutation by identification No
+	 * 
 	 * @param identificationNo
 	 * @return salutationName
 	 */
 	public String supplierSalutation(String identificationNo) {
-		PmSalutation salutation = null;
-		String salutationName = null;
-		IQTNoticeBoardSO supplierSO = null;
-
+		String salutationName = StringUtils.EMPTY;
 		try {
-			supplierSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTNoticeBoardSO.class);
-			salutation = supplierSO.retrieveUserByIdentificationNo(identificationNo);
-
+			IQTNoticeBoardSO noticeBoardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+			PmSalutation salutation = noticeBoardSO.retrieveSalutationByIdentificationNo(identificationNo);
 			if (salutation != null) {
 				salutationName = salutation.getSalutationName();
 			}
@@ -3501,51 +3592,104 @@ public class NoticeBoardBackingBean extends
 					getUserIdSessionFromLoginId(), e);
 		}
 		return salutationName;
-	}//#30447 - end
+	}
 
-		// #29732 Start
-		public void onClickHistoryIcon(String catCode, String catCodeLevel,
-				Long catCodeID) {
-			ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
-							ICategoryCodeSO.class);
-			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-			CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
-
-			if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
-				reqDTO.setCategoryL1Id(catCodeID);
-				resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-			} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
-				reqDTO.setCategoryL2Id(catCodeID);
-				resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-			} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
-				reqDTO.setCategoryL3Id(catCodeID);
-				resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
-			}
-			getManagedBean().setHistoryList(
-					updateCreatedUserName(resDTO.getRemarkList()));
-			getManagedBean().setHisCatCode(catCode);
-			RequestContext.getCurrentInstance().execute("hisPopup.show()");
-		}
+	// #30447 - End
 	
-		private List<PmRemarkCategory> updateCreatedUserName(
-				List<PmRemarkCategory> remarkList) {
-			for (PmRemarkCategory rc : remarkList) {
-				PmUser user = PmCommonUtil
-						.retrieveUserById(rc.getCreatedBy(), true);
-				rc.setCreatedUsername(user.getUserName());
-			}
-			return remarkList;
+	// #30447 - Start
+	/**
+	 * To set salutation name for supplier
+	 * 
+	 * @param identificationNo
+	 * @return salutationName
+	 */
+	public String setSalutationSupplierName(String identificationNo) {
+		String salutation = supplierSalutation(identificationNo);
+		if (StringUtils.isNotBlank(salutation)) {
+			return salutation;
 		}
-		// #29732 End
+		return StringUtils.EMPTY;
+	}
+
+	// #30447 - End
+
+	// #29732 Start
+	public void onClickHistoryIcon(String catCodeL1, String catCodeL2, String catCodeL3,String catCodeLevel,
+			Long catCodeId,Long qtCateId, String categoryName, String catCode) {
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
+
+		if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+			reqDTO.setCategoryL1Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+			reqDTO.setCategoryL2Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+			reqDTO.setCategoryL3Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+		}
+		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+		getManagedBean().setHisCatCode(catCode);
+		
+		boolean flagCategoryUpdate = false;
+		for(ScQtCategory checkQtCatUpdate : this.getCategoryCodesDataModel().getList()){
+			if(null != checkQtCatUpdate){
+				flagCategoryUpdate = checkQtCatUpdate.getUpdateCatDesc();
+				break;
+			}
+		}
+		
+		if(this.getManagedBean().getFlagUpdateCatInPmDisplay() && !flagCategoryUpdate){
+			List<PmRemarkCategory> listCategoryDB = new ArrayList();
+			int i=0;
+			for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
+				if (i > 0) {
+				    listCategoryDB.add(removeIndex);
+				}
+				 i++;
+			}
+			getManagedBean().setHistoryList(listCategoryDB);
+		}
+		RequestContext.getCurrentInstance().execute("hisPopup.show()");
+	}
+
+	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
+		for (PmRemarkCategory rc : remarkList) {
+			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(), true);
+			rc.setCreatedUsername(user.getUserName());
+		}
+		return remarkList;
+	}
+
+	// #29732 End
 	// #29732 Start - fix ReOpen
-	public String toDate(Timestamp changedDate){
+	/**
+	 * Gets the spec so.
+	 * 
+	 * @return the spec so
+	 */
+	private IQTSpecSO getSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+	}
+
+	public List<ScQtCategory> retrieveScQtCategoryByQtCatID(Long qtCateId) {
+		List<ScQtCategory> listCategoryDB = new ArrayList();
+		IQTSpecSO specSO = getSpecSO();
+		listCategoryDB = specSO.retrieveScQtCategoryByQtCatID(this.getManagedBean().getScQt().getQtId(), qtCateId);
+
+		return listCategoryDB;
+	}
+
+	public String toDate(Timestamp changedDate) {
 		String pattern = CommonConstants.DEFAULT_12HR_DATETIME_FORMAT;
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String newChangedDate = simpleDateFormat.format(changedDate.getTime());
 		return newChangedDate;
 	}
+
 	// #29732 Start - fix ReOpen
 	
 	/**
@@ -3685,4 +3829,53 @@ public class NoticeBoardBackingBean extends
 		/*
 		 * Development #35054 END
 		 */
+		
+	// #29732 Start
+	public void flagHistoryPmCatCode(String catCodeL1, String catCodeL2, String catCodeL3, String catCodeLevel,
+			String catCode, NoticeBoardResDTO resDto) {
+
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+
+		String catCodeL1OldDesc = "";
+		String catCodeL2OldDesc = "";
+		String catCodeL3OldDesc = "";
+		boolean oldDescEmpty = false;
+		this.getManagedBean().setFlagUpdateCatInPmDisplay(false);
+
+		if (null != catCodeL1) {
+			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL1Nb(catCodeL1, catCodeLevel);
+			if (null != resDTO1.getCatCodeRemark()) {
+				catCodeL1OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL1OldDesc //this is to cater inserted null in DB, found some data were inserted null
+						|| null != resDTO1.getCatCodeRemark() && null != catCodeL1OldDesc) {
+					oldDescEmpty = true;
+				}
+			}
+		}
+		if (null != catCodeL2) {
+			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL2Nb(catCodeL2, catCodeLevel);
+			if (null != resDTO1.getCatCodeRemark()) {
+				catCodeL2OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL2OldDesc//this is to cater inserted null in DB, found some data were inserted null
+						|| null != resDTO1.getCatCodeRemark() && null != catCodeL2OldDesc) {
+					oldDescEmpty = true;
+				}
+			}
+		}
+		if (null != catCodeL3) {
+			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL3Nb(catCodeL3, catCodeLevel);
+			if (null != resDTO1.getCatCodeRemark()) {
+				catCodeL3OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL3OldDesc //this is to cater inserted null in DB, found some data were inserted null
+						|| null != resDTO1.getCatCodeRemark() && null != catCodeL3OldDesc) {
+					oldDescEmpty = true;
+				}
+			}
+		}
+		if (oldDescEmpty) {
+			this.getManagedBean().setFlagUpdateCatInPmDisplay(true);
+		}
+	}
+	// #29732 end
 }

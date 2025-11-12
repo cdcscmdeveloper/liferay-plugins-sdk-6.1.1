@@ -30,13 +30,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set; //#35238
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -96,13 +96,11 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -184,7 +182,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -635,8 +632,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			items = new SelectItem[parameterDescs.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
+			
+			// new #25725
+			// Add parameter code for convert to Italic
+			List<String> listParamCode = new ArrayList<String>();
+			listParamCode.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+			
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+				// new #25725 - Start
+				// check code name for convert to italic
+				String label = convertItalicCodeNameForMy(parameterDesc, listParamCode);
+
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), label);
+				// new #25725 - End
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -645,6 +653,29 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+
+	// new #25725 - Start
+	/**
+	 * Convert to italic if language code = "ms" and parameter code in the list
+	 * @param parameterDesc
+	 * @param listParamCode
+	 * @return
+	 */
+	public String convertItalicCodeNameForMy(PmParameterDesc parameterDesc, List<String> listParamCode) {
+		String label = parameterDesc.getCodeName();
+
+		FacesScopes face = new FacesScopes();
+		String language = face.getUserLocale().getLanguage();
+		String ParamCode = parameterDesc.getPmParameter().getParameterCode();
+
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParamCode.contains(ParamCode)) {
+			label = "<i>" + label + "</i>";
+		}
+
+		return label;
+	}
+
+	// new #25725 - End
 	
 	/** #21695 FARID START*/	
 	/**
@@ -3964,7 +3995,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				if(reasonCategory.equals(ParameterConst.JUSTIFICATION)){// filter for Justification category
 					for (PmParameterDesc parameterDesc: parameterDescs) {
 						if (!parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SOFTCERT_REJECTION_REASON.value()) 
-				        		&& !parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())) {
+				        		&& !parameterDesc.getPmParameter().getParameterCode().equals(ReasonCategory.SUPPLIER_REJECTION_REASON.value())
+				        				&& !parameterDesc.getPmParameter().getParameterCode().equals(ParameterConst.SPECIAL_ITEM_PK_7)) { //#28962
 							newParameterDescs.add(parameterDesc);
 				        }
 				    }
@@ -4437,31 +4469,52 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// #25000 - End
 	
+	@Deprecated
 	/**
 	 * Retrieves a list of personnel blacklisted under a specific supplier.
 	 *
 	 * @param supplierId
+	 * @param isActive
 	 * @return A list of {@code SmPersonBlacklist} objects representing blacklisted personnel associated with the supplier.
 	 */
-	public static List<BlacklistOwnerDirectorVO> getSupplierHasPersonnelBlacklist(Long supplierId) {
-		List<SmPersonBlacklist> blacklistPersonnel = SmServiceLookup.getBlacklistDirectorSO().retrieveSupplierHasPersonnelBlacklist(supplierId);
+	public static List<BlacklistOwnerDirectorVO> getSupplierHasPersonnelBlacklist(Long supplierId, boolean isActive) {
+		List<SmPersonBlacklist> blacklistPersonnel = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveSupplierHasPersonnelBlacklist(supplierId, isActive);
 		List<BlacklistOwnerDirectorVO> blacklist = new ArrayList<>();
 		if (blacklistPersonnel.isEmpty()){
 			return blacklist;
 		}
-		BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
 		for (SmPersonBlacklist per : blacklistPersonnel){
 			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-			reqDTO.setDirectorIdNo(per.getIdentificationNo());
 			
 			BlacklistDirectorResDTO resDTO = SmServiceLookup.getBlacklistDirectorSO()
-					.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
+					.retrieveAllPersonBlacklistByIdentificationNO(per.getIdentificationNo(), isActive);
 			if (resDTO != null && resDTO.getPersonBlacklist() != null) {
 				blacklistOwner.setIcNo(per.getIdentificationNo());
 				blacklist.add(blacklistOwner);
 			}
 		}
 		return blacklist;
+	}
+	
+	/**
+	 * Retrieve all blacklist owners/directors
+	 * @param disciplinaryActionId
+	 * @return
+	 */
+	public static List<BlacklistOwnerDirectorVO> getPersonnelBlacklist(Long disciplinaryActionId){
+		List<BlacklistOwnerDirectorVO> blacklistVO = new ArrayList<>();
+		List<SmPersonBlacklist> pblList = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveAllBlacklist(disciplinaryActionId);
+		if(EntityHelper.isCollectionEmpty(pblList)){
+			return blacklistVO;
+		}
+		for(SmPersonBlacklist pbl : pblList){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			blacklistOwner.setIcNo(pbl.getIdentificationNo());
+			blacklistVO.add(blacklistOwner);
+		}
+		return blacklistVO;
 	}
 	
 	//26238 - START
@@ -4487,5 +4540,26 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	} 
 	//26238 - END
+	
+	//#35238 start
+	/**
+	 * Common utility method to check if user has any role from the given set.
+	 * 
+	 * @param roles Array of roles
+	 * @return true if user has any role in the given set.
+	 */
+	public boolean hasAnyRoleUser(Set<String> roles) {
+		FacesScopes facesScopes = new FacesScopes();
+	    if (roles == null || roles.isEmpty()) {
+	        return false;
+	    }
+	    for (String role : roles) {
+	        if (facesScopes.hasRoleUser(role)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	//#35238 end
 }
 

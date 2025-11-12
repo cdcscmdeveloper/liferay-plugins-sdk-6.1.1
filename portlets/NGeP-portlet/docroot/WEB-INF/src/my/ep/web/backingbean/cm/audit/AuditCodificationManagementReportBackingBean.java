@@ -117,6 +117,7 @@ public class AuditCodificationManagementReportBackingBean extends
 		getManagedBean().setAuditCMSearchBean(auditCMSearchBean);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
+		getManagedBean().setActiveIndex(0);
 		loadCIDetails();
 		loadCEDetails();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, auditCDView);
@@ -146,6 +147,19 @@ public class AuditCodificationManagementReportBackingBean extends
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditCMSearchBean().setSearching(true);
 		searchCE.reloadData();
+	}
+	
+	/**
+	 * Reload item code and extension code data on selected tab
+	 */
+	public void onTabChange() {
+		int activeIndex = getManagedBean().getActiveIndex();
+
+		if (activeIndex == 0) {
+			loadCIDetails();
+		} else {
+			loadCEDetails();
+		}
 	}
 
 	/**

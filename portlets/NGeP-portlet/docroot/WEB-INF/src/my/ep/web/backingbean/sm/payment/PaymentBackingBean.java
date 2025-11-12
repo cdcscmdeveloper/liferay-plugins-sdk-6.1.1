@@ -1211,7 +1211,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			// if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
 			PyPaymentOrder pymtOrder = new PyPaymentOrder();
 			pymtOrder.setPyPayment(payment);
-			pymtOrder.setPaymentGateway("MOL");
+			pymtOrder.setPaymentGateway("EP");
 			// pymtOrder.setChannelName("TESTING");
 
 			payment.setPyPaymentOrder(pymtOrder);
@@ -1270,10 +1270,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					pyBill.getBillType());
 			setPaymentHttpSession(this.getManagedBean().getTaskId(), this
 					.getManagedBean().getBpmPojo());
-			this.setvCode(PaymentUtil.encryptAESKey(vKey));
 			this.getManagedBean()
 					.setPayLoad(
-							PaymentUtil.constructPayload(this.getManagedBean()
+							PaymentUtil.constructJsonPayload(this.getManagedBean()
 									.getMerchantCode(), vKey, this
 									.getManagedBean().getOrderId(), this
 									.getManagedBean().getTotalAmount(), this
@@ -1283,7 +1282,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 									.getManagedBean().getBillDesc(), this
 									.getManagedBean().getCountry(), this
 									.getCancelUrl()));
-			log.info("***************new payment gateway payload:"
+			log.info("######38377#####new payment gateway payload:"
 					+ this.getManagedBean().getPayLoad());
 			log.info("***********vcode:"+this.getvCode());
 			return "paymentGatewayCDCRequestSubmission";

@@ -17,7 +17,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalResDTO;
+import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -35,8 +39,6 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
-
-import org.apache.log4j.Logger;
 
 /**
  * Managed Bean for Rule Catalogue
@@ -143,6 +145,58 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	/* 27827 - END */
 	//#34397, #34398
 	private List<PmZone> mainZones;
+
+	/************ AUDIT #28895_35509 *************/
+	private FeeExemptionResDTO resDTO;
+	private FeeExemptionResDTO resDTOOld;
+
+	private List<PmPtjSpecialApproval> auditMainPtjSpecialApprovalListNewVal;
+	private List<PmPtjSpecialApproval> auditDeletedMainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> auditMainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> auditUpdateMainPtjSpecialApprovalList;
+	private PtjSpecialApprovalResDTO qtValuesResDTO;
+	private List<PmFeeExemption> auditDeletedFeeExemptionsForOrgType;
+	private List<PmFeeExemption> auditUpdatedFeeExemptionsForOrgType;
+	private List<PmFeeExemption> auditAddedFeeExemptionsForOrgType;
+	private List<PmFeeExemption> auditFeeExemptionsForOrgTypeOld;
+	private List<PmFeeExemption> auditDeletedFeeExemptionsForOrgItem;
+	private List<PmFeeExemption> auditUpdatedFeeExemptionsForOrgItem;
+	private List<PmFeeExemption> auditAddedFeeExemptionsForOrgItem;
+	private List<PmFeeExemption> auditFeeExemptionsForOrgItemOld;
+	private List<PmFeeExemption> auditDeletedFeeExemptionsForContract;
+	private List<PmFeeExemption> auditUpdatedFeeExemptionsForContract;
+	private List<PmFeeExemption> auditAddedFeeExemptionsForContract;
+	private List<PmFeeExemption> auditFeeExemptionsForOrgContractOld;
+	private List<PmFeeExemption> auditDeletedFeeExemptionsForComodity;
+	private List<PmFeeExemption> auditUpdatedFeeExemptionsForComodity;
+	private List<PmFeeExemption> auditAddedFeeExemptionsForComodity;
+	private List<PmFeeExemption> auditFeeExemptionsForOrgComodityOld;
+
+	private List<PmConfigRuleValue> auditResDTOSelectedRuleValueList;
+	private List<PmConfigRuleValue> auditSelectedRuleValueListOld;
+	private List<PmConfigRuleValue> auditDeletedSelectedRuleValueList;
+	private List<PmConfigRuleValue> auditAddedSelectedRuleValueList;
+	private List<PmConfigRuleValue> auditUpdatedSelectedRuleValueList;
+
+	private String auditLevelCode;
+	private String auditFeeExemptionType;
+	
+	//#36738 Start
+	private List<PmConfigRuleDesc> originalConfigRuleDescList;
+	private List<PmConfigRuleValue> originalConfigRuleValueList;
+	private List<PmPtjSpecialApproval> originalPtjSpecialApprovalList;
+	private String searchRuleType;
+	private String searchRuleDataTypeValues;
+	private String searchRuleDataTypeDesc;
+	private Date searchRuleDataTypeEffectiveDate;
+	private Date searchRuleDataTypeExpiryDate;
+	private Long searchRuleDataTypeZone;
+	private String searchPtjCode;
+	private String searchPtjName;
+	private String searchQtValueLimit;
+	//#36738 End
+
+	/************ AUDIT #28895_35509 *************/
 
 	public RuleCatalogueManageBean() {
 
@@ -1493,4 +1547,422 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.mainZones = mainZones;
 	}
 
+	/************ AUDIT #28895_35509 *************/
+	public FeeExemptionResDTO getResDTO() {
+		if (resDTO == null) {
+			resDTO = new FeeExemptionResDTO();
+		}
+		return resDTO;
+	}
+
+	public void setResDTO(FeeExemptionResDTO resDTO) {
+		this.resDTO = resDTO;
+	}
+
+	public FeeExemptionResDTO getResDTOOld() {
+		if (resDTOOld == null) {
+			resDTOOld = new FeeExemptionResDTO();
+		}
+		return resDTOOld;
+	}
+
+	public void setResDTOOld(FeeExemptionResDTO resDTOOld) {
+		this.resDTOOld = resDTOOld;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditDeletedMainPtjSpecialApprovalList() {
+		if (auditDeletedMainPtjSpecialApprovalList == null) {
+			auditDeletedMainPtjSpecialApprovalList = new ArrayList<>();
+		}
+		return auditDeletedMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditDeletedMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditDeletedMainPtjSpecialApprovalList) {
+		this.auditDeletedMainPtjSpecialApprovalList = auditDeletedMainPtjSpecialApprovalList;
+	}
+
+	public PtjSpecialApprovalResDTO getQtValuesResDTO() {
+		return qtValuesResDTO;
+	}
+
+	public void setQtValuesResDTO(PtjSpecialApprovalResDTO qtValuesResDTO) {
+		this.qtValuesResDTO = qtValuesResDTO;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditMainPtjSpecialApprovalList() {
+		if (auditMainPtjSpecialApprovalList == null) {
+			auditMainPtjSpecialApprovalList = new ArrayList<>();
+		}
+		return auditMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditMainPtjSpecialApprovalList) {
+		this.auditMainPtjSpecialApprovalList = auditMainPtjSpecialApprovalList;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditMainPtjSpecialApprovalListNewVal() {
+		if (auditMainPtjSpecialApprovalListNewVal == null) {
+			auditMainPtjSpecialApprovalListNewVal = new ArrayList<>();
+		}
+		return auditMainPtjSpecialApprovalListNewVal;
+	}
+
+	public void setAuditMainPtjSpecialApprovalListNewVal(List<PmPtjSpecialApproval> auditMainPtjSpecialApprovalListNewVal) {
+		this.auditMainPtjSpecialApprovalListNewVal = auditMainPtjSpecialApprovalListNewVal;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditUpdateMainPtjSpecialApprovalList() {
+		if (auditUpdateMainPtjSpecialApprovalList == null) {
+			auditUpdateMainPtjSpecialApprovalList = new ArrayList<>();
+		}
+		return auditUpdateMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditUpdateMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditUpdateMainPtjSpecialApprovalList) {
+		this.auditUpdateMainPtjSpecialApprovalList = auditUpdateMainPtjSpecialApprovalList;
+	}
+
+	public List<PmFeeExemption> getAuditDeletedFeeExemptionsForOrgType() {
+		if (auditDeletedFeeExemptionsForOrgType == null) {
+			auditDeletedFeeExemptionsForOrgType = new ArrayList<>();
+		}
+		return auditDeletedFeeExemptionsForOrgType;
+	}
+
+	public void setAuditDeletedFeeExemptionsForOrgType(List<PmFeeExemption> auditDeletedFeeExemptionsForOrgType) {
+		this.auditDeletedFeeExemptionsForOrgType = auditDeletedFeeExemptionsForOrgType;
+	}
+
+	public List<PmFeeExemption> getAuditUpdatedFeeExemptionsForOrgType() {
+		if (auditUpdatedFeeExemptionsForOrgType == null) {
+			auditUpdatedFeeExemptionsForOrgType = new ArrayList<>();
+		}
+		return auditUpdatedFeeExemptionsForOrgType;
+	}
+
+	public void setAuditUpdatedFeeExemptionsForOrgType(List<PmFeeExemption> auditUpdatedFeeExemptionsForOrgType) {
+		this.auditUpdatedFeeExemptionsForOrgType = auditUpdatedFeeExemptionsForOrgType;
+	}
+
+	public List<PmFeeExemption> getAuditAddedFeeExemptionsForOrgType() {
+		if (auditAddedFeeExemptionsForOrgType == null) {
+			auditAddedFeeExemptionsForOrgType = new ArrayList<>();
+		}
+		return auditAddedFeeExemptionsForOrgType;
+	}
+
+	public void setAuditAddedFeeExemptionsForOrgType(List<PmFeeExemption> auditAddedFeeExemptionsForOrgType) {
+		this.auditAddedFeeExemptionsForOrgType = auditAddedFeeExemptionsForOrgType;
+	}
+
+	public String getAuditLevelCode() {
+		return auditLevelCode;
+	}
+
+	public void setAuditLevelCode(String auditLevelCode) {
+		this.auditLevelCode = auditLevelCode;
+	}
+
+	public List<PmFeeExemption> getAuditFeeExemptionsForOrgTypeOld() {
+		if (auditFeeExemptionsForOrgTypeOld == null) {
+			auditFeeExemptionsForOrgTypeOld = new ArrayList<>();
+		}
+		return auditFeeExemptionsForOrgTypeOld;
+	}
+
+	public void setAuditFeeExemptionsForOrgTypeOld(List<PmFeeExemption> auditFeeExemptionsForOrgTypeOld) {
+		this.auditFeeExemptionsForOrgTypeOld = auditFeeExemptionsForOrgTypeOld;
+	}
+
+	public List<PmFeeExemption> getAuditDeletedFeeExemptionsForOrgItem() {
+		if (auditDeletedFeeExemptionsForOrgItem == null) {
+			auditDeletedFeeExemptionsForOrgItem = new ArrayList<>();
+		}
+		return auditDeletedFeeExemptionsForOrgItem;
+	}
+
+	public void setAuditDeletedFeeExemptionsForOrgItem(List<PmFeeExemption> auditDeletedFeeExemptionsForOrgItem) {
+		this.auditDeletedFeeExemptionsForOrgItem = auditDeletedFeeExemptionsForOrgItem;
+	}
+
+	public List<PmFeeExemption> getAuditUpdatedFeeExemptionsForOrgItem() {
+		if (auditUpdatedFeeExemptionsForOrgItem == null) {
+			auditUpdatedFeeExemptionsForOrgItem = new ArrayList<>();
+		}
+		return auditUpdatedFeeExemptionsForOrgItem;
+	}
+
+	public void setAuditUpdatedFeeExemptionsForOrgItem(List<PmFeeExemption> auditUpdatedFeeExemptionsForOrgItem) {
+		this.auditUpdatedFeeExemptionsForOrgItem = auditUpdatedFeeExemptionsForOrgItem;
+	}
+
+	public List<PmFeeExemption> getAuditAddedFeeExemptionsForOrgItem() {
+		if (auditAddedFeeExemptionsForOrgItem == null) {
+			auditAddedFeeExemptionsForOrgItem = new ArrayList<>();
+		}
+		return auditAddedFeeExemptionsForOrgItem;
+	}
+
+	public void setAuditAddedFeeExemptionsForOrgItem(List<PmFeeExemption> auditAddedFeeExemptionsForOrgItem) {
+		this.auditAddedFeeExemptionsForOrgItem = auditAddedFeeExemptionsForOrgItem;
+	}
+
+	public List<PmFeeExemption> getAuditFeeExemptionsForOrgItemOld() {
+		if (auditFeeExemptionsForOrgItemOld == null) {
+			auditFeeExemptionsForOrgItemOld = new ArrayList<>();
+		}
+		return auditFeeExemptionsForOrgItemOld;
+	}
+
+	public void setAuditFeeExemptionsForOrgItemOld(List<PmFeeExemption> auditFeeExemptionsForOrgItemOld) {
+		this.auditFeeExemptionsForOrgItemOld = auditFeeExemptionsForOrgItemOld;
+	}
+
+	public List<PmFeeExemption> getAuditDeletedFeeExemptionsForContract() {
+		if (auditDeletedFeeExemptionsForContract == null) {
+			auditDeletedFeeExemptionsForContract = new ArrayList<>();
+		}
+		return auditDeletedFeeExemptionsForContract;
+	}
+
+	public void setAuditDeletedFeeExemptionsForContract(List<PmFeeExemption> auditDeletedFeeExemptionsForContract) {
+		this.auditDeletedFeeExemptionsForContract = auditDeletedFeeExemptionsForContract;
+	}
+
+	public List<PmFeeExemption> getAuditUpdatedFeeExemptionsForContract() {
+		if (auditUpdatedFeeExemptionsForContract == null) {
+			auditUpdatedFeeExemptionsForContract = new ArrayList<>();
+		}
+		return auditUpdatedFeeExemptionsForContract;
+	}
+
+	public void setAuditUpdatedFeeExemptionsForContract(List<PmFeeExemption> auditUpdatedFeeExemptionsForContract) {
+		this.auditUpdatedFeeExemptionsForContract = auditUpdatedFeeExemptionsForContract;
+	}
+
+	public List<PmFeeExemption> getAuditAddedFeeExemptionsForContract() {
+		if (auditAddedFeeExemptionsForContract == null) {
+			auditAddedFeeExemptionsForContract = new ArrayList<>();
+		}
+		return auditAddedFeeExemptionsForContract;
+	}
+
+	public void setAuditAddedFeeExemptionsForContract(List<PmFeeExemption> auditAddedFeeExemptionsForContract) {
+		this.auditAddedFeeExemptionsForContract = auditAddedFeeExemptionsForContract;
+	}
+
+	public List<PmFeeExemption> getAuditFeeExemptionsForOrgContractOld() {
+		if (auditFeeExemptionsForOrgContractOld == null) {
+			auditFeeExemptionsForOrgContractOld = new ArrayList<>();
+		}
+		return auditFeeExemptionsForOrgContractOld;
+	}
+
+	public void setAuditFeeExemptionsForOrgContractOld(List<PmFeeExemption> auditFeeExemptionsForOrgContractOld) {
+		this.auditFeeExemptionsForOrgContractOld = auditFeeExemptionsForOrgContractOld;
+	}
+
+	public List<PmFeeExemption> getAuditDeletedFeeExemptionsForComodity() {
+		if (auditDeletedFeeExemptionsForComodity == null) {
+			auditDeletedFeeExemptionsForComodity = new ArrayList<>();
+		}
+		return auditDeletedFeeExemptionsForComodity;
+	}
+
+	public void setAuditDeletedFeeExemptionsForComodity(List<PmFeeExemption> auditDeletedFeeExemptionsForComodity) {
+		this.auditDeletedFeeExemptionsForComodity = auditDeletedFeeExemptionsForComodity;
+	}
+
+	public List<PmFeeExemption> getAuditUpdatedFeeExemptionsForComodity() {
+		if (auditUpdatedFeeExemptionsForComodity == null) {
+			auditUpdatedFeeExemptionsForComodity = new ArrayList<>();
+		}
+		return auditUpdatedFeeExemptionsForComodity;
+	}
+
+	public void setAuditUpdatedFeeExemptionsForComodity(List<PmFeeExemption> auditUpdatedFeeExemptionsForComodity) {
+		this.auditUpdatedFeeExemptionsForComodity = auditUpdatedFeeExemptionsForComodity;
+	}
+
+	public List<PmFeeExemption> getAuditAddedFeeExemptionsForComodity() {
+		if (auditAddedFeeExemptionsForComodity == null) {
+			auditAddedFeeExemptionsForComodity = new ArrayList<>();
+		}
+		return auditAddedFeeExemptionsForComodity;
+	}
+
+	public void setAuditAddedFeeExemptionsForComodity(List<PmFeeExemption> auditAddedFeeExemptionsForComodity) {
+		this.auditAddedFeeExemptionsForComodity = auditAddedFeeExemptionsForComodity;
+	}
+
+	public List<PmFeeExemption> getAuditFeeExemptionsForOrgComodityOld() {
+		if (auditFeeExemptionsForOrgComodityOld == null) {
+			auditFeeExemptionsForOrgComodityOld = new ArrayList<>();
+		}
+		return auditFeeExemptionsForOrgComodityOld;
+	}
+
+	public void setAuditFeeExemptionsForOrgComodityOld(List<PmFeeExemption> auditFeeExemptionsForOrgComodityOld) {
+		this.auditFeeExemptionsForOrgComodityOld = auditFeeExemptionsForOrgComodityOld;
+	}
+
+	public String getAuditFeeExemptionType() {
+		return auditFeeExemptionType;
+	}
+
+	public void setAuditFeeExemptionType(String auditFeeExemptionType) {
+		this.auditFeeExemptionType = auditFeeExemptionType;
+	}
+
+	public List<PmConfigRuleValue> getAuditDeletedSelectedRuleValueList() {
+		if (auditDeletedSelectedRuleValueList == null) {
+			auditDeletedSelectedRuleValueList = new ArrayList<>();
+		}
+		return auditDeletedSelectedRuleValueList;
+	}
+
+	public void setAuditDeletedSelectedRuleValueList(List<PmConfigRuleValue> auditDeletedSelectedRuleValueList) {
+		this.auditDeletedSelectedRuleValueList = auditDeletedSelectedRuleValueList;
+	}
+
+	public List<PmConfigRuleValue> getAuditUpdatedSelectedRuleValueList() {
+		if (auditUpdatedSelectedRuleValueList == null) {
+			auditUpdatedSelectedRuleValueList = new ArrayList<>();
+		}
+		return auditUpdatedSelectedRuleValueList;
+	}
+
+	public void setAuditUpdatedSelectedRuleValueList(List<PmConfigRuleValue> auditUpdatedSelectedRuleValueList) {
+		this.auditUpdatedSelectedRuleValueList = auditUpdatedSelectedRuleValueList;
+	}
+
+	public List<PmConfigRuleValue> getAuditSelectedRuleValueListOld() {
+		if (auditSelectedRuleValueListOld == null) {
+			auditSelectedRuleValueListOld = new ArrayList<>();
+		}
+		return auditSelectedRuleValueListOld;
+	}
+
+	public void setAuditSelectedRuleValueListOld(List<PmConfigRuleValue> auditSelectedRuleValueListOld) {
+		this.auditSelectedRuleValueListOld = auditSelectedRuleValueListOld;
+	}
+
+	public List<PmConfigRuleValue> getAuditAddedSelectedRuleValueList() {
+		if (auditAddedSelectedRuleValueList == null) {
+			auditAddedSelectedRuleValueList = new ArrayList<>();
+		}
+		return auditAddedSelectedRuleValueList;
+	}
+
+	public void setAuditAddedSelectedRuleValueList(List<PmConfigRuleValue> auditAddedSelectedRuleValueList) {
+		this.auditAddedSelectedRuleValueList = auditAddedSelectedRuleValueList;
+	}
+
+	public List<PmConfigRuleValue> getAuditResDTOSelectedRuleValueList() {
+		if (auditResDTOSelectedRuleValueList == null) {
+			auditResDTOSelectedRuleValueList = new ArrayList<>();
+		}
+		return auditResDTOSelectedRuleValueList;
+	}
+
+	public void setAuditResDTOSelectedRuleValueList(List<PmConfigRuleValue> auditResDTOSelectedRuleValueList) {
+		this.auditResDTOSelectedRuleValueList = auditResDTOSelectedRuleValueList;
+	}
+	/************ AUDIT #28895_35509 *************/
+	
+	//#36738 Start	
+	public String getSearchRuleType() {
+		return searchRuleType;
+	}
+	
+	public void setSearchRuleType(String searchRuleType) {
+		this.searchRuleType = searchRuleType;
+	}
+	
+	public String getSearchRuleDataTypeValues() {
+		return searchRuleDataTypeValues;
+	}
+	
+	public void setSearchRuleDataTypeValues(String searchRuleDataTypeValues) {
+		this.searchRuleDataTypeValues = searchRuleDataTypeValues;
+	}
+	
+	public String getSearchRuleDataTypeDesc() {
+		return searchRuleDataTypeDesc;
+	}
+	
+	public void setSearchRuleDataTypeDesc(String searchRuleDataTypeDesc) {
+		this.searchRuleDataTypeDesc = searchRuleDataTypeDesc;
+	}
+	
+	public Date getSearchRuleDataTypeEffectiveDate() {
+		return searchRuleDataTypeEffectiveDate;
+	}
+	
+	public void setSearchRuleDataTypeEffectiveDate(Date searchRuleDataTypeEffectiveDate) {
+		this.searchRuleDataTypeEffectiveDate = searchRuleDataTypeEffectiveDate;
+	}
+	
+	public Date getSearchRuleDataTypeExpiryDate() {
+		return searchRuleDataTypeExpiryDate;
+	}
+	
+	public void setSearchRuleDataTypeExpiryDate(Date searchRuleDataTypeExpiryDate) {
+		this.searchRuleDataTypeExpiryDate = searchRuleDataTypeExpiryDate;
+	}
+	
+	public Long getSearchRuleDataTypeZone() {
+		return searchRuleDataTypeZone;
+	}
+	
+	public void setSearchRuleDataTypeZone(Long searchRuleDataTypeZone) {
+		this.searchRuleDataTypeZone = searchRuleDataTypeZone;
+	}
+	
+	public List<PmConfigRuleDesc> getOriginalConfigRuleDescList() {
+		return originalConfigRuleDescList;
+	}
+	
+	public void setOriginalConfigRuleDescList(List<PmConfigRuleDesc> originalConfigRuleDescList) {
+		this.originalConfigRuleDescList = originalConfigRuleDescList;
+	}
+	
+	public List<PmConfigRuleValue> getOriginalConfigRuleValueList() {
+		return originalConfigRuleValueList;
+	}
+	
+	public void setOriginalConfigRuleValueList(List<PmConfigRuleValue> originalConfigRuleValueList) {
+		this.originalConfigRuleValueList = originalConfigRuleValueList;
+	}
+	
+	public String getSearchPtjCode() {
+		return searchPtjCode;
+	}
+	
+	public void setSearchPtjCode(String searchPtjCode) {
+		this.searchPtjCode = searchPtjCode;
+	}
+	
+	public String getSearchPtjName() {
+		return searchPtjName;
+	}
+	
+	public void setSearchPtjName(String searchPtjName) {
+		this.searchPtjName = searchPtjName;
+	}
+	
+	public String getSearchQtValueLimit() {
+		return searchQtValueLimit;
+	}
+	
+	public void setSearchQtValueLimit(String searchQtValueLimit) {
+		this.searchQtValueLimit = searchQtValueLimit;
+	}
+	public List<PmPtjSpecialApproval> getOriginalPtjSpecialApprovalList() {
+		return originalPtjSpecialApprovalList;
+	}
+	public void setOriginalPtjSpecialApprovalList(List<PmPtjSpecialApproval> originalPtjSpecialApprovalList) {
+		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
+	}
+	//#36738 End
 }

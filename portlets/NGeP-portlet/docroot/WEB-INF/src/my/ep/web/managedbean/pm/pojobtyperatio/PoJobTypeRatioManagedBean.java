@@ -50,6 +50,7 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 	
 	/************ AUDIT START #28895-35509 *************/
 	private Boolean brandNew = false;
+	private PmPoJobTypeRatio savedJobTypeRatio;
 	/************ AUDIT END #28895-35509 *************/
 	
 	public PoJobTypeRatioManagedBean() {
@@ -249,5 +250,14 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 	public void setBrandNew(Boolean brandNew) {
 		this.brandNew = brandNew;
 	}
+
+	public PmPoJobTypeRatio getSavedJobTypeRatio() {
+		return savedJobTypeRatio;
+	}
+
+	public void setSavedJobTypeRatio(PmPoJobTypeRatio savedJobTypeRatio) {
+		this.savedJobTypeRatio = savedJobTypeRatio;
+	}
 	/************ AUDIT END #28895-35509 *************/
+
 }

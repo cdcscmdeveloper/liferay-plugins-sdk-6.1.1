@@ -239,15 +239,18 @@ public class PoJobTypeRatioBackingBean extends BaseBackingBean<PoJobTypeRatioMan
 
 	public String savePoJobRatio() {
 		IPoJobTypeRatioSO jobRatioSO = null;
-		poJobRatioTypeValidation();
+		
+		//#34445 Start
 		try {
+			poJobRatioTypeValidation();
+
 			jobRatioSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IPoJobTypeRatioSO.class);
 			boolean isBrandNew = getManagedBean().getPoJobTypeRatio().isBrandNew();
 			PoJobTypeRatioReqDTO reqDTO = new PoJobTypeRatioReqDTO();
 			reqDTO.setJobTypeRatio(getManagedBean().getPoJobTypeRatio());
 			setupTrackingDiaryVal(reqDTO);
-			
+
 			/************ AUDIT START #28895-35509 *************/
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMWorkAllocationBackingBean();
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -258,6 +261,7 @@ public class PoJobTypeRatioBackingBean extends BaseBackingBean<PoJobTypeRatioMan
 			if (resDTO.isSuccessful() && resDTO.getPoJobTypeRatio() != null) {
 				/************ AUDIT START #28895-35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_WORK_ALLOCATION)) {
+					getManagedBean().setSavedJobTypeRatio(resDTO.getPoJobTypeRatio());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_WORK_ALLOCATION);
 				}
 				/************ AUDIT END #28895-35509 *************/
@@ -273,12 +277,15 @@ public class PoJobTypeRatioBackingBean extends BaseBackingBean<PoJobTypeRatioMan
 							MessageConst.INFO_779301, new String[] {});
 					initJobWeightMap();
 					getManagedBean().setPoJobTypeRatio(resDTO.getPoJobTypeRatio());
-					PmPoJobTypeRatio oriPoJobTypeRatio = (PmPoJobTypeRatio) (SerializationUtils
-							.clone(resDTO.getPoJobTypeRatio()));
+					PmPoJobTypeRatio oriPoJobTypeRatio = (PmPoJobTypeRatio) (SerializationUtils.clone(resDTO.getPoJobTypeRatio()));
 					getManagedBean().setOriPoJobTypeRatio(oriPoJobTypeRatio);
 					return NAV_TO_DETAILS;
 				}
 			}
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_DETAILS;
+		//#34445 End
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		} finally {

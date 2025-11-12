@@ -1,0 +1,183 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="contractTermPnlGrpId">
+
+		<p:dialog id="cmpexpTermDlgId" widgetVar="contractTerminationPopUp"
+			header="#{lbl['lbl.sc.comp.exp.termination.pop.up.header']}"
+			position="top" width="900" height="500" closable="true">
+			<ui:param name="contractVer"
+				value="#{evaluationBackingBean.managedBean.ctContractVer}"></ui:param>
+
+
+			<p:panel id="contractTermPnlid"
+				header="#{lbl['lbl.sc.comp.exp.termination.pop.up.pnl.header']}"
+				toggleable="true" style="width:100% !important;">
+
+
+				<table>
+					<tr>
+
+
+
+
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.termination.decision']}" /></td>
+						<td><p:inputText disabled="true"
+								value="#{evaluationBackingBean.getParameterDesc(contractVer.ctTermination.decisionType)}"
+								style="width:auto;" /></td>
+
+						<td style="width: 300px;"><p:outputLabel
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.decision.date']}" /></td>
+						<td><p:inputText disabled="true" style="width:auto;"
+								value="#{contractVer.ctTermination.decisionDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.file.ref.no']}"></p:outputLabel>
+						</td>
+						<td><p:inputText disabled="true"
+								value="#{contractVer.ctTermination.fileRefNo}"
+								style="width:auto;"></p:inputText> <ac:iconTooltip
+								value="#{'lbl.sc.spec.fin.company.exp.fed.gov.tooltip'}"></ac:iconTooltip>
+						</td>
+						<td style="width: 300px;"><p:outputLabel
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.last.remedy.notice.date']}"></p:outputLabel>
+						</td>
+						<td><p:inputText disabled="true"
+								value="#{contractVer.ctTermination.lastRemedyDate}"
+								style="width:auto;">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.last.remedy.file.no']}"></p:outputLabel>
+						</td>
+						<td><p:inputText disabled="true"
+								value="#{contractVer.ctTermination.lastRemedyFileNo}"
+								style="width:auto;"></p:inputText> <ac:iconTooltip
+								value="#{'lbl.sc.spec.fin.company.exp.fed.gov.tooltip'}"></ac:iconTooltip>
+						</td>
+
+						<td style="width: 300px;"><p:outputLabel
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.last.remedy.start.date']}"></p:outputLabel>
+						</td>
+						<td><p:inputText disabled="true" style="width:auto;"
+								value="#{contractVer.ctTermination.remedyStartDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText></td>
+
+					</tr>
+
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.recomnd.agncy.date']}" /></td>
+						<td><p:inputText disabled="true"
+								value="#{contractVer.ctTermination.recommendedAgencyDate}"
+								style="width:auto;">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText></td>
+
+						<td style="width: 300px;"><p:outputLabel
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.last.remedy.end.date']}" /></td>
+						<td><p:inputText disabled="true"
+								value="#{contractVer.ctTermination.remedyEndDate}"
+								style="width:auto;">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.recomnd.agncy']}" /></td>
+						<td><p:inputTextarea disabled="true"
+								value="#{contractVer.ctTermination.recommendedAgency}"
+								style="width:auto;" autoResize="false"></p:inputTextarea></td>
+					</tr>
+
+				</table>
+
+				<p:spacer height="10px;"></p:spacer>
+
+				<p:dataTable id="termResTbl" rowIndexVar="index"
+					var="terminationRes" rows="10"
+					value="#{contractVer.ctTermination.ctTerminationReasons}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowKey="#{terminationRes}">
+					<ac:paginator for="#{termResTbl}"></ac:paginator>
+					<p:column style="width:40%;">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.contract.non.clause']}" />
+						</f:facet>
+						<p:inputTextarea value="#{terminationRes.clauseNo}" rows="2"
+							disabled="true" autoResize="false" style="width:95%;">
+						</p:inputTextarea>
+					</p:column>
+					<p:column style="width:60%;">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.termination.remedy.description']}" />
+						</f:facet>
+						<p:inputTextarea value="#{terminationRes.description}" rows="2"
+							disabled="true" autoResize="false" style="width:95%;">
+						</p:inputTextarea>
+					</p:column>
+				</p:dataTable>
+				<p:spacer height="10px;"></p:spacer>
+
+				<table>
+					<tr>
+
+
+						<td><p:outputLabel style="font-weight: bold;"
+								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.termination.notice']} "></p:outputLabel>
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+						<td><p:dataGrid
+								value="#{contractVer.terminationLetterAttachments}"
+								var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+								style="width:100%" emptyMessage="">
+								<table>
+									<tr>
+										<td><p:commandLink value="#{attachFile.fileName}"
+												styleClass="blue_font"
+												action="#{ctBackingBean.downloadFile(attachFile)}" /></td>
+									</tr>
+								</table>
+							</p:dataGrid></td>
+
+					</tr>
+				</table>
+
+				<p:spacer height="10px;"></p:spacer>
+
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						styleClass="BtnSpacing" onclick="contractTerminationPopUp.hide();"
+						immediate="true" />
+				</div>
+
+
+			</p:panel>
+
+		</p:dialog>
+
+	</h:panelGroup>
+</ui:composition>

@@ -91,6 +91,7 @@
 			<portlet id="softCertProvider"></portlet>
 			<portlet id="pmSystemConfiguration"></portlet>
 			<portlet id="pmAuSearch"></portlet><!-- #35509 -->
+			<portlet id="pmAuUserOrgSearch"></portlet><!-- #35509 -->
 			<portlet id="pmSpecialService"></portlet><!-- #29644 -->
 			<portlet id="pmApproveAuthority"></portlet><!-- #27827 -->
 		</category>
@@ -169,6 +170,7 @@
 		    <portlet id="scBriefingSiteVisitRegistration"/>
 			<portlet id="scQuoteSearch"></portlet>
 			<portlet id="DirectPurchaseSearch"></portlet>
+			<portlet id="dpApprovalExceedThreshold"></portlet><!-- #26059 -->
 			<portlet id="scQuotationTenderSearch"></portlet>
 			<portlet id="scConsolidationReport"></portlet>
 			<portlet id="scQTRetry"/>
@@ -191,6 +193,7 @@
 			<portlet id="maintenanceRequestRevision"/>
 			<portlet id="demoInvitation"/><!-- #28784 -->
 			<portlet id="disciplinaryActionDp"/><!-- #26284 -->
+			<portlet id="finalizationCommitteeMaintenance"/><!-- #35320 -->
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
@@ -393,6 +396,11 @@
 		<!-- LOG :12491 Finish Button -->
 		<portlet id="FirstTimeMessage"></portlet>
 		<portlet id="spkiTest"></portlet>
+		<portlet id="testSmAI"></portlet><!-- #38890 -->
+		<!-- #9299 start -->
+		<portlet id="smCompExp"></portlet>
+		<portlet id="smCompExpAlert"></portlet>
+		<!-- #9299 end -->
 	</category>
 
 	<category name="category.ep.wp">

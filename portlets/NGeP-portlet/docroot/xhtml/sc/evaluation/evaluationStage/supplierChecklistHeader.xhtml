@@ -32,8 +32,10 @@
 						#{lbl['lbl.sc.eva.all.template']}</td>
 					</c:when>
 					<c:otherwise>
+						<ui:remove>#33787 Start Vinod</ui:remove>
 						<td style="font-size: 12px;">:
-						#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}</td>
+						#{evaluationBackingBean.getChecklistTitle(evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList)}</td>
+						<ui:remove>#33787 End Vinod</ui:remove>
 					</c:otherwise>
 				</c:choose>		
 			</tr>

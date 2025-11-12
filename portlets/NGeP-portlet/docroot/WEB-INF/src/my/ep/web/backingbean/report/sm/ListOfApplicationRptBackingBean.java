@@ -85,6 +85,10 @@ public class ListOfApplicationRptBackingBean extends
 		//#32521 - START
 		getManagedBean().setApplType(null);
 		//#32521 - END
+		//#38227 - START
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
+		//#38227 - END
 
 		setDefaultDateFromAndDateTo();
 	}
