@@ -790,14 +790,11 @@ public class TemplateSpecHelper {
 						specQuestion = resDTO.getSpecQuestionList().get(0);
 					}
 				}
-				//#25726 - Remove one-off from the condition
-				//Reopen #25726 note 221 - issue 10,14
+				
 				//#35521 @zaim - note 20. Change || with &&.
 				if(null != specQuestion.getClFulfilmentTypeCode()){
 					if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && 
-						!specQuestion.getClFulfilmentTypeCode().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
+						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 						if (itemDurationMonth != null) {
 							totalPrice = totalPrice.multiply(itemDurationMonth);
 						} else {
