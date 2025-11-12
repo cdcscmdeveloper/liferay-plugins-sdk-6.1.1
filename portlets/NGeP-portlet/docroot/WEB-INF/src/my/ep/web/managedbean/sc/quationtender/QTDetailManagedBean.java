@@ -1769,7 +1769,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	// #15391 - start
 	private boolean isChecklist;
-	private boolean isGenInfo = Boolean.FALSE; //Reopen #25726 note 187 - issue 2,4,5
+	private boolean isGenInfo;
 
 	// #15391 - end
 
@@ -1832,6 +1832,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean categoryDescriptionChange;//#29732 flag to check category has change
 	private boolean updateCatDesc; //#29732
 	private boolean updateCatInPm; //#29732
+	private boolean resetHistoryCatCode; //#29732
 
 	// #29732 End
 	
@@ -1924,6 +1925,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#28895 - 35500 end
 	
 	private boolean zoneQtyHasZeroVal;//#38679
+	
+	// #35320 - Start
+	private boolean afterSF;
+	// #35320 - End
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12231,6 +12236,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setUpdateCatInPm(boolean updateCatInPm) {
 		this.updateCatInPm = updateCatInPm;
 	}
+	
+	public boolean getResetHistoryCatCode() {
+		return resetHistoryCatCode;
+	}
+
+	public void setResetHistoryCatCode(boolean resetHistoryCatCode) {
+		this.resetHistoryCatCode = resetHistoryCatCode;
+	}
 	//#29732
 	
 	//#38679
@@ -12242,4 +12255,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
 	}
 	//#38679
+	
+	// #35320 - Start
+	public boolean isAfterSF() {
+		return afterSF;
+	}
+
+	public void setAfterSF(boolean afterSF) {
+		this.afterSF = afterSF;
+	}// #35320 - End
 }
