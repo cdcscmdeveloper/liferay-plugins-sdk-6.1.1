@@ -152,10 +152,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
-	
-	//24956 start
-    private boolean CtTypeMinistry;
-    //24956 end
     
     //30911 start
     private List<SelectItem> factoringAccList;
@@ -1258,16 +1254,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
-
-	//24956 start
-	public boolean isCtTypeMinistry() {
-		return CtTypeMinistry;
-	}
-
-	public void setCtTypeMinistry(boolean ctTypeMinistry) {
-		CtTypeMinistry = ctTypeMinistry;
-	}
-	//24956 end
 	
 	//30911 start
 	public List<SelectItem> getFactoringAccList() {
