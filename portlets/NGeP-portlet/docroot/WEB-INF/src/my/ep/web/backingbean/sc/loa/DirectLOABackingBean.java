@@ -12129,6 +12129,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		this.getManagedBean().setTemplateSpecCreate(
 				new CreateTemplateSpecPagingDataModel());
 		this.resetTemplate();
+		specCategory = (specCategory.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)
+				|| specCategory.equals(ParameterConst.ITEM_TYPE_PRODUK_STRING)) ? ParameterConst.ITEM_TYPE_PRODUCT_STRING
+				: ParameterConst.ITEM_TYPE_SERVICE_STRING;
 
 		if (specCategory.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
 			pmReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_SERVICE);
@@ -12172,7 +12175,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		String itemType = this.getManagedBean().getSearchItemTypeName();
+		String itemType = (this.getManagedBean().getSearchItemTypeName().equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)
+				|| this.getManagedBean().getSearchItemTypeName().equals(ParameterConst.ITEM_TYPE_PRODUK_STRING)) ? ParameterConst.ITEM_TYPE_PRODUCT_STRING
+				: ParameterConst.ITEM_TYPE_SERVICE_STRING;
 		List<TplSpecQuestion> questionsListNew = new ArrayList<>();
 
 		specReqDTO.setType(flowtype);
