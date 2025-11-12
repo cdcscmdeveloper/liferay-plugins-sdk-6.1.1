@@ -12087,10 +12087,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		this.getCategoryCodesForClone();
 		this.getManagedBean().setTemplateSpecCreate(new CreateTemplateSpecPagingDataModel());
 		this.resetTemplate();
+		String specCategoryLocal = (specCategory.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)
+				|| specCategory.equals(ParameterConst.ITEM_TYPE_PRODUK_STRING)) ? ParameterConst.ITEM_TYPE_PRODUCT_STRING
+				: ParameterConst.ITEM_TYPE_SERVICE_STRING;
 
-		if (specCategory.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
+		if (specCategoryLocal.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
 			pmReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_SERVICE);
-		} else if (specCategory.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
+		} else if (specCategoryLocal.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
 			pmReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT);
 		}
 		pmReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
@@ -12125,7 +12128,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		String itemType = this.getManagedBean().getSearchItemTypeName();
+		String itemType = (this.getManagedBean().getSearchItemTypeName().equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)
+				|| this.getManagedBean().getSearchItemTypeName().equals(ParameterConst.ITEM_TYPE_PRODUK_STRING)) ? ParameterConst.ITEM_TYPE_PRODUCT_STRING
+				: ParameterConst.ITEM_TYPE_SERVICE_STRING;
 		List<TplSpecQuestion> questionsListNew = new ArrayList<>();
 
 		specReqDTO.setType(flowtype);
