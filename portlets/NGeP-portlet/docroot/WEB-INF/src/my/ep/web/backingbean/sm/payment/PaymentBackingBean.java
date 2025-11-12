@@ -1211,7 +1211,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			// if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
 			PyPaymentOrder pymtOrder = new PyPaymentOrder();
 			pymtOrder.setPyPayment(payment);
-			pymtOrder.setPaymentGateway("MOL");
+			pymtOrder.setPaymentGateway("EP");
 			// pymtOrder.setChannelName("TESTING");
 
 			payment.setPyPaymentOrder(pymtOrder);
