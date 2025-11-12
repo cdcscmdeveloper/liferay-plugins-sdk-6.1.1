@@ -2944,7 +2944,7 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtCategorySearchBean(searchBean);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
-				
+				//#29732 start
 				String catCodeL1 = "";
 				String catCodeL2 = "";
 				String catCodeL3 = "";
@@ -2964,6 +2964,7 @@ public class NoticeBoardBackingBean extends
 					flagHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel, catCode,resDTO);
 					checkCategoryUpdated.setFlagDisplayNb(getManagedBean().getFlagUpdateCatInPmDisplay());
 				}
+				//#29732 end
 				return resDTO.getCategoryResultBean();
 			} finally{
 				qtNoticeBoardSO = null;
