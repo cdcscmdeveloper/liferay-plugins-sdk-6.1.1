@@ -2186,9 +2186,21 @@ public class QTSupplierQulCriteriaBackingBean extends
 					getManagedBean().setHistoryList(
 							updateCreatedUserName(resDTO.getRemarkList()));
 					getManagedBean().setHisCatCode(catCode);
-				}
-			}
+					if(this.getManagedBean().getUpdateCatInPm()&& !this.getManagedBean().getUpdateCatDesc()){
+						List<PmRemarkCategory> listCategoryDB = new ArrayList();
+						int i=0;
+						for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
+							if (i > 0) {
+							    listCategoryDB.add(removeIndex);
+							}
+							 i++;
+						}
+						getManagedBean().setHistoryList(listCategoryDB);
+					}
 
+				}
+				
+			}
 			RequestContext.getCurrentInstance().execute("hisPopup.show()");
 		}
 
