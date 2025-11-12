@@ -12513,7 +12513,7 @@ public class SpecificationBackingBean extends
 			//#28784 -update
 			Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 			if (status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && this.getManagedBean().getQt().
-					getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
+					getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && this.getManagedBean().isNewVersion()) {
 				this.getManagedBean().setDemoType(true);
 			}
 
@@ -22761,16 +22761,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		return Boolean.FALSE;
 	}//11104ReendorseStart728
-	
-	/**
-	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
-	 * @param
-	 * @return void
-	 */
-	private void checkDemoVersion(ScQt scQt) {
-		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-		this.getManagedBean().setNewVersion(isQtNewVersion);
-	}
 	
 	//11104 -start-
 	/**
