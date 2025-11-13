@@ -3564,9 +3564,11 @@ public class NoticeBoardBackingBean extends
 		getManagedBean().setHisCatCode(catCode);
 		
 		boolean flagCategoryUpdate = false;
+		Date createdDateQt = null;
 		for(ScQtCategory checkQtCatUpdate : this.getCategoryCodesDataModel().getList()){
 			if(null != checkQtCatUpdate){
 				flagCategoryUpdate = checkQtCatUpdate.getUpdateCatDesc();
+				createdDateQt = checkQtCatUpdate.getCreatedDate();
 				break;
 			}
 		}
@@ -3575,7 +3577,7 @@ public class NoticeBoardBackingBean extends
 			List<PmRemarkCategory> listCategoryDB = new ArrayList();
 			int i=0;
 			for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
-				if (i > 0) {
+				if (i > 0  && removeIndex.getChangedDate().after(createdDateQt)) {
 				    listCategoryDB.add(removeIndex);
 				}
 				 i++;
