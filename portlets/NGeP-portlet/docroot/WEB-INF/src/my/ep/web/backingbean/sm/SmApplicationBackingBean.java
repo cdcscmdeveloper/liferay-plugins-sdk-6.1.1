@@ -10697,7 +10697,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
 		assignValReqdToFalse();
-		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		//#34400
 		RequestContext.getCurrentInstance().update(updateIds);
 		
 		//#34400
@@ -11491,16 +11491,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		} else {
 			retMsg = null;
 		}
-		//START 12483
-		if(res != null && res.equalsIgnoreCase("REVISE")) {
-			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
-		} else if (res != null && res.equalsIgnoreCase("INQUIRY")) {
-			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
-		} else {
-			// #26136
-			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
-		}
-		//END 12483
+		//#34400 - start
+		RequestContext.getCurrentInstance().execute(
+				"$('.ui-dialog:visible').hide();$('.ui-widget-overlay').remove();");
+		//#34400 - end
 		return retMsg;
 	}
 	

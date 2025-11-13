@@ -404,7 +404,6 @@
 		height="400px" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
 		<ac:smSearchRejectReasons>
-		<div align="right">
 			<!-- #34400 -->
 			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="rejectBlockPanelWidget.show()"
 					oncomplete="rejectBlockPanelWidget.hide(); confirmRejectDlg.show();"
@@ -414,7 +413,7 @@
 					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
 					action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"
 					partialSubmit="true" process="@this" />
-		</div>
+
 		</ac:smSearchRejectReasons>
 	</p:dialog>
 	<!-- 13362 START -->
