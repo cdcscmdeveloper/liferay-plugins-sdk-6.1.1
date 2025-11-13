@@ -198,6 +198,8 @@ public abstract class BaseManagedBean implements Serializable {
 	//12471 End
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
+	// #28895_35501_DA - Updated FRS - Start
+	private boolean blacklistOwner;
 	
 //	37925 START
 	private boolean displayLabelCountryOriginLocal;
@@ -1278,4 +1280,13 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayDropdownRegStatus = displayDropdownRegStatus;
 	}
 //	37925 END
+	// #28895_35501_DA - Updated FRS - Start
+	public boolean isBlacklistOwner() {
+		return blacklistOwner;
+	}
+
+	public void setBlacklistOwner(boolean blacklistOwner) {
+		this.blacklistOwner = blacklistOwner;
+	}
+	// #28895_35501_DA - Updated FRS - End
 }
