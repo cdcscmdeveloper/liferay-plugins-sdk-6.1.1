@@ -54,9 +54,10 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 		cancelRegistration(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 
-		// #28895_35501_DA - Updated FRS
+		// #28895_35501_DA - Updated FRS - Start
 		isBlacklist = false;
 		blackListOwner(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+		// #28895_35501_DA - Updated FRS - End
 
 		bumiCancel(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 
