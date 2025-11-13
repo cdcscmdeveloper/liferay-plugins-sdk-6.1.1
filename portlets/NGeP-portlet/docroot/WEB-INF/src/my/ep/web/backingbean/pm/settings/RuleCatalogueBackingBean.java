@@ -5914,8 +5914,8 @@ public class RuleCatalogueBackingBean extends
 		if (searchLimitString != null && !searchLimitString.isEmpty()) {
 			BigDecimal searchLimit = new BigDecimal(searchLimitString);
 			for (PmPtjSpecialApproval ptjApproval : searchPtjApprovalList) {
-				BigDecimal procureAmount = ptjApproval.getProcureAmt();
-				if (procureAmount.equals(searchLimit)) {
+				BigDecimal ptjProcureLimitAmount = ptjApproval.getProcureAmt();
+				if (ptjProcureLimitAmount.equals(searchLimit)) {
 					result.add(ptjApproval);
 				}
 			}
