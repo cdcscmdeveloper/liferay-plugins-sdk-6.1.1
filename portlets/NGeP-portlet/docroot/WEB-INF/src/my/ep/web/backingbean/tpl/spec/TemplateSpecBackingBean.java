@@ -545,6 +545,7 @@ public class TemplateSpecBackingBean extends
 			PmParameter pmParameter = getParameterByTypeAndCode(
 					ParameterTypeConst.FULFILMENT_TYPE,
 					ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+			newQuestion.setClFulfilmentTypeCode(pmParameter);//#39497
 			//#25726 start
 			if(null != docType){
 				if(docType.equals(ParameterConst.DOCTYPE_DIRECT_NEGO)){
