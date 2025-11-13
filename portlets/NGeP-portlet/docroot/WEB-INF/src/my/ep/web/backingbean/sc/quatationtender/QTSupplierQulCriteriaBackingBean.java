@@ -2193,7 +2193,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 						int i=0;
 
 						for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
-							if (i > 0 && removeIndex.getChangedDate().after(qtCatCreatedDate)) {
+							if (i > 0 && null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)) {
 							    listCategoryDB.add(removeIndex);
 							}
 							 i++;
