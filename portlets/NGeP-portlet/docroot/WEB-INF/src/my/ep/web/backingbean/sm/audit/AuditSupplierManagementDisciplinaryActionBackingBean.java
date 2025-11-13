@@ -52,7 +52,8 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 		cancelRegistration(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 
-		blackListOwner(oldDisciplinaryAction, newDisciplinaryAction, auDetails, mBean);
+		// #28895_35501_DA - Updated FRS
+		blackListOwner(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 
 		bumiCancel(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 
@@ -63,6 +64,11 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 		endDate(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 
 		remark(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+		// #28895_35501_DA - Updated FRS - Start
+		if (this.getManagedBean().isBlacklistOwner()) {
+			ownerList(auDetails, mBean);
+		}
+		// #28895_35501_DA - Updated FRS - End
 
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails, AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION,
 				loginUserId);
@@ -107,39 +113,17 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 		}
 	}
 
-	private void blackListOwner(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
-			List<AuditSupplierManagementDetailDTO> auDetails, ViewSuppProfileManagedBean mBean) {
-		if (!oldDisciplinaryAction.isBlacklistOwner() && newDisciplinaryAction.isBlacklistOwner()) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, getLabel("lbl.sm.disciplinary.jktt.blacklist.owner"), null,
-					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
-			List<SmPersonnel> selectedOwnerAndDirectorList = mBean.getSelectedOwnerAndDirectorList();
-			for (SmPersonnel owner : selectedOwnerAndDirectorList) {
-				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD, AuditSupplierManagementConst.AU_FIELD_LABEL_ID_NAME,
-						null, owner.getName(), null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_NAME));
-				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_IDENTIFICATION_NO, null, owner.getIdentificationNo(), null, null,
-						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_IDENTIFICATION_NO));
-				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ROLE_IN_COMPANY, null, getRoleCompany(owner), null, null,
-						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_ROLE_IN_COMPANY));
-			}
-		}
-	}
-
-	private String getRoleCompany(SmPersonnel owner) {
-		String role = "";
-		if (owner.isEquityOwner()) {
-			role += getLabel("lbl.sm.person.equiOwner");
-		}
-		if (owner.isDirector()) {
-			role += role.isEmpty() ? getLabel("lbl.sm.person.dir") : ", " + getLabel("lbl.sm.person.dir");
-		}
-		if (owner.isContractSigner()) {
-			role += role.isEmpty() ? getLabel("lbl.sm.contract.signer") : ", " + getLabel("lbl.sm.contract.signer");
-		}
-		return role;
-	}
+	// #28895_35501_DA - Updated FRS - Start
+	private void blackListOwner(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction, 
+			List<AuditSupplierManagementDetailDTO> auDetails) {
+		if (!oldDisciplinaryAction.isBlacklistOwner() && newDisciplinaryAction.isBlacklistOwner()) { 
+			this.getManagedBean().setBlacklistOwner(true);
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD, 
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, getLabel("lbl.sm.disciplinary.jktt.blacklist.owner"), null, 
+					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE)); 
+		} 
+	} 
+	// #28895_35501_DA - Updated FRS - End
 
 	private void bumiCancel(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
 			List<AuditSupplierManagementDetailDTO> auDetails) {
@@ -225,4 +209,16 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 					null, newDisciplinaryAction.getRemark(), null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_REMARKS));
 		}
 	}
+	// #28895_35501_DA - Updated FRS - Start
+	private void ownerList(List<AuditSupplierManagementDetailDTO> auDetails, ViewSuppProfileManagedBean mBean) {
+		List<SmPersonnel> selectedOwnerAndDirectorList = mBean.getSelectedOwnerAndDirectorList();
+		for (SmPersonnel owner : selectedOwnerAndDirectorList) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD, AuditSupplierManagementConst.AU_FIELD_LABEL_ID_NAME, null,
+					owner.getName(), null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_NAME));
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_IDENTIFICATION_NO, null, owner.getIdentificationNo(), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_IDENTIFICATION_NO));
+		}
+	}
+	// #28895_35501_DA - Updated FRS - End
 }
