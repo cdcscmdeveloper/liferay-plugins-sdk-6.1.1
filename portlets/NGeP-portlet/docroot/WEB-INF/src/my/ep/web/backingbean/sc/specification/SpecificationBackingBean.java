@@ -13215,7 +13215,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				saveSpecMaintenanceWorkFlowStatus();
 				//#28784 - Start
 				addDemoTechnicalCheckList();
-				if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+				if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType) && this.getManagedBean().isNewVersion()) {
 					resetDemoSpecStatus();
 
 					boolean isModified = false;
