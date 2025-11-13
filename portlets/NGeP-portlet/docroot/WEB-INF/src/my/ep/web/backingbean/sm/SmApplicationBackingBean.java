@@ -19199,18 +19199,29 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	/**
 	 * Displays the appropriate FacesMessage for invalid categories.
+	 * Message will not be shown if all invalid categories are "Rejected" or if no invalid category exists.
 	 */
 	private void showInvalidCategoryMessage(final StringBuilder invalidCategories) {
+	    if (invalidCategories == null) {
+	        return;
+	    }
+	    final String invalidText = invalidCategories.toString().replace("<br/>", "").trim();
+
+	    // Do not show message if invalidCategories is empty 
+	    if (invalidText.isEmpty()) {
+	        return;
+	    }
+
 	    final String messageKey = getManagedBean().isSupplierUser()
 	            ? "lbl.sm.category.notValid.supp"
 	            : "lbl.sm.category.notValid.poappr";
 
-	    if(invalidCategories != null){
-	    	final FacesContext context = FacesContext.getCurrentInstance();
-		    context.addMessage(null, new FacesMessage(
-		            FacesMessage.SEVERITY_ERROR,
-		            null,
-		            SmCommonUtil.getMessage(messageKey, new String[]{invalidCategories.toString()})));
+	    final FacesContext context = FacesContext.getCurrentInstance();
+	    if (context != null) {
+	        context.addMessage(null, new FacesMessage(
+	                FacesMessage.SEVERITY_ERROR,
+	                null,
+	                SmCommonUtil.getMessage(messageKey, new String[]{invalidCategories.toString()})));
 	    }
 	}
 	//#38927 END
