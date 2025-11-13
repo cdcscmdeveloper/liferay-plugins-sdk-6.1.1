@@ -202,7 +202,7 @@
 					<f:facet name="header">  
 		                #{column.columnTitle}  
 		            </f:facet>
-						#{column.columnNameve.getValue(facesContext.ELContext)}
+						<h:outputText value="#{column.columnNameve.getValue(facesContext.ELContext)}" escape="false" />
 				</p:columns>
 				
 			</p:dataTable>
