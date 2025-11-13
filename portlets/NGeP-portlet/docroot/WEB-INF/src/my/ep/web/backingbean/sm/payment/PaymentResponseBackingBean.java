@@ -658,7 +658,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				PaymentResDTO pymtResDTO = null;
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
-//				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 
 				log.info("******ResponsePreRender - After Update******");
 				
@@ -815,6 +815,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_FAIL:
+		//#38377
+		case SupplierManagementConst.PAYMENT_GATEWAY_FAIL:
 			log.info(">>>>MOL_FAIL<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.ERROR_721051);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_ERROR);
@@ -822,6 +824,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_PENDING:
+		//#38377
+		case SupplierManagementConst.PAYMENT_GATEWAY_PENDING:
 			log.info(">>>>MOL_PENDING<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.INFO_721055);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
