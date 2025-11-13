@@ -19089,7 +19089,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    }
 
 	    if (validCategoryFound) {
-	        showInvalidCategoryMessage(invalidCategories, validCategoryFound);
+	        showInvalidCategoryMessage(invalidCategories);
 	    }
 	}
 
@@ -19200,12 +19200,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	/**
 	 * Displays the appropriate FacesMessage for invalid categories.
 	 */
-	private void showInvalidCategoryMessage(final StringBuilder invalidCategories, boolean validCategoryFound) {
+	private void showInvalidCategoryMessage(final StringBuilder invalidCategories) {
 	    final String messageKey = getManagedBean().isSupplierUser()
 	            ? "lbl.sm.category.notValid.supp"
 	            : "lbl.sm.category.notValid.poappr";
 
-	    if(validCategoryFound){
+	    if(invalidCategories != null){
 	    	final FacesContext context = FacesContext.getCurrentInstance();
 		    context.addMessage(null, new FacesMessage(
 		            FacesMessage.SEVERITY_ERROR,
