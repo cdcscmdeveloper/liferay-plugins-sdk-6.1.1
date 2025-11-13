@@ -9049,7 +9049,6 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}
-		System.out.println("---> sf1ae6wvsh  = " + this.getManagedBean().getQualifiedSuppliersCache());
 	}
 	// 26247 - end
 	
