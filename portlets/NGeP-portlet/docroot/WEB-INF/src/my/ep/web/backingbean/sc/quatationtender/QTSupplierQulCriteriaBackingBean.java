@@ -2138,7 +2138,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
 		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
 			for(ScQtCategory categoryCodeEdit : findQtCatCode){
-				qtCatCreatedDate = categoryCodeEdit.getPmCategoryL1().getCreatedDate();
+				qtCatCreatedDate = categoryCodeEdit.getCreatedDate();
 				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc() || this.getManagedBean().getUpdateCatInPm()){
 					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
 						reqDTO.setCategoryL1Id(catCodeId);
@@ -2185,6 +2185,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 				if(this.getManagedBean().getUpdateCatInPm() && !this.getManagedBean().getUpdateCatDesc()){
 					List<PmRemarkCategory> listCategoryDB = new ArrayList();
 					int i=0;
+					log.info("=====created date======"+qtCatCreatedDate);
 
 					for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
 						if (i > 0 && removeIndex.getChangedDate().after(qtCatCreatedDate)) {
