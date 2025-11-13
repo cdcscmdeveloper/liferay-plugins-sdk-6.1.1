@@ -2185,7 +2185,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 				if(this.getManagedBean().getUpdateCatInPm() && !this.getManagedBean().getUpdateCatDesc()){
 					List<PmRemarkCategory> listCategoryDB = new ArrayList();
 					int i=0;
-					log.info("=====created date======"+qtCatCreatedDate);
 
 					for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
 						if (i > 0 && removeIndex.getChangedDate().after(qtCatCreatedDate)) {
