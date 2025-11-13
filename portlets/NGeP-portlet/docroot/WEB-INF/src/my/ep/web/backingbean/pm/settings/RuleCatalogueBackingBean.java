@@ -5565,11 +5565,8 @@ public class RuleCatalogueBackingBean extends
 		
 		for (PmConfigRuleDesc configRuleDesc : configRuleDescList) {
 			if (searchRuleType != null && !searchRuleType.isEmpty()) {
-				String searchRegex = searchRuleType
-				        .replace("%", ".*?")
-				        .replace("_", ".")
-				        .replace("?", ".")
-				        .replace("*", ".*?");
+				String searchRegex = searchRegex(searchRuleType);
+				
 				if (configRuleDesc.getRuleDesc().toLowerCase().contains(searchRuleType.toLowerCase())
 						|| configRuleDesc.getRuleDesc().toLowerCase().matches(searchRegex.toLowerCase())) {
 					searchRuleDescList.add(configRuleDesc);
@@ -5682,8 +5679,7 @@ public class RuleCatalogueBackingBean extends
 					+ configRuleValue.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
 					+ configRuleValue.getCategoryL3Id().getCategoryL3Code()
 					;
-			String searchRegex = searchRuleValues.replace("%", ".*?").replace("_", ".").replace("?", ".")
-					.replace("*", ".*?");
+			String searchRegex = searchRegex(searchRuleValues);	
 			
 			if (ruleValue.toLowerCase().contains(searchRuleValues.toLowerCase())
 					|| ruleValue.toLowerCase().matches(searchRegex.toLowerCase())) {
@@ -5702,8 +5698,8 @@ public class RuleCatalogueBackingBean extends
 	 */
 	private List<PmConfigRuleValue> searchByRuleValuePTJ(List<PmConfigRuleValue> searchRuleTypeValueList, PmConfigRuleValue configRuleValue,String searchRuleValues){		
 		if (searchRuleValues != null && !searchRuleValues.isEmpty()) {
-			String searchRegex = searchRuleValues.replace("%", ".*?").replace("_", ".").replace("?", ".")
-					.replace("*", ".*?");
+			String searchRegex = searchRegex(searchRuleValues);
+			
 			if (configRuleValue.getRuleValue().toLowerCase().contains(searchRuleValues.toLowerCase())
 					|| configRuleValue.getRuleValue().toLowerCase().matches(searchRegex.toLowerCase())) {
 				searchRuleTypeValueList.add(configRuleValue);
@@ -5722,12 +5718,9 @@ public class RuleCatalogueBackingBean extends
 	private List<PmConfigRuleValue> searchByRuleValueDesc(List<PmConfigRuleValue> configRuleValuesList,String searchRuleValueDesc, Boolean multipleSearchFlag){		
 		List<PmConfigRuleValue> result = new ArrayList<>();
 
-		if (searchRuleValueDesc != null && !searchRuleValueDesc.isEmpty()) {
-			String searchRegex = searchRuleValueDesc.replace("%", ".*?")
-					.replace("_", ".")
-					.replace("?", ".")
-					.replace("*", ".*?");
-
+		if (searchRuleValueDesc != null && !searchRuleValueDesc.isEmpty()) {			
+			String searchRegex = searchRegex(searchRuleValueDesc);
+			
 			for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
 				String desc = configRuleValue.getRuleDescription().toLowerCase();
 				if (desc.contains(searchRuleValueDesc.toLowerCase()) || desc.matches(searchRegex.toLowerCase())) {
@@ -5897,13 +5890,9 @@ public class RuleCatalogueBackingBean extends
 	    for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
 	        String value = useName 
 	            ? ptjApproval.getPmOrgProfile().getOrgValidity().getOrgName()
-	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();
+	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();	            
+	        String searchRegex = searchRegex(search);
 	            
-	            String searchRegex = search
-				        .replace("%", ".*?")
-				        .replace("_", ".")
-				        .replace("?", ".")
-				        .replace("*", ".*?");
 	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
 	        		|| value.toLowerCase().matches(searchRegex)) {
 	            result.add(ptjApproval);
@@ -5950,5 +5939,24 @@ public class RuleCatalogueBackingBean extends
 	    this.getManagedBean().setSearchPtjName(null);
 	    this.getManagedBean().setSearchQtValueLimit(null);
 	}	
+	
+	/**
+	 * #36738
+	 * Change the search text into a regex
+	 */
+	public String searchRegex(String searchText){
+		String searchRegex = "";
+		if (!searchText.isEmpty()){
+			searchRegex = searchText
+			        .replace("%", ".*?")
+			        .replace("_", ".")
+			        .replace("?", ".")
+			        .replace("*", ".*?");
+			
+			return searchRegex;
+		}else{
+			return "";
+		}		
+	}
 	//#36738 End
 }
