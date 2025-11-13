@@ -5433,6 +5433,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.regStatus.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())).append(" ")
 				.append(SmCommonUtil.getStatusDescByStatusId(revisit.getNewPmRegStatus().getPmStatus().getStatusId()).getStatusName());
+		// #34031#note-85 : Issue 1
+		extRemark.append(".");
 	}
 
 	private void getDeletedRvCatCodes(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, int index) {

@@ -2956,7 +2956,7 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtCategorySearchBean(searchBean);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
-				
+				//#29732
 				String catCodeL1 = "";
 				String catCodeL2 = "";
 				String catCodeL3 = "";
@@ -2966,16 +2966,20 @@ public class NoticeBoardBackingBean extends
 				for(ScQtCategory checkCategoryUpdated : resDTO.getCategoryResultBean().getResultList()){
 					if(null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()){
 						 catCodeL1 = checkCategoryUpdated.getPmCategoryL1().getCategoryL1Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
 					} 
 					if (null != checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code()){
 						 catCodeL2 = checkCategoryUpdated.getPmCategoryL2().getCategoryL2Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
 					}
 					if (null != checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code()){
 						 catCodeL3 = checkCategoryUpdated.getPmCategoryL3().getCategoryL3Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
 					}
 					flagHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel, catCode,resDTO);
 					checkCategoryUpdated.setFlagDisplayNb(getManagedBean().getFlagUpdateCatInPmDisplay());
 				}
+				//#29732
 				return resDTO.getCategoryResultBean();
 			} finally{
 				qtNoticeBoardSO = null;
@@ -3629,6 +3633,28 @@ public class NoticeBoardBackingBean extends
 		}
 		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
 		getManagedBean().setHisCatCode(catCode);
+		
+		boolean flagCategoryUpdate = false;
+		Date createdDateQt = null;
+		for(ScQtCategory checkQtCatUpdate : this.getCategoryCodesDataModel().getList()){
+			if(null != checkQtCatUpdate){
+				flagCategoryUpdate = checkQtCatUpdate.getUpdateCatDesc();
+				createdDateQt = checkQtCatUpdate.getCreatedDate();
+				break;
+			}
+		}
+		
+		if(this.getManagedBean().getFlagUpdateCatInPmDisplay() && !flagCategoryUpdate){
+			List<PmRemarkCategory> listCategoryDB = new ArrayList();
+			int i=0;
+			for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
+				if (i > 0  && removeIndex.getChangedDate().after(createdDateQt)) {
+				    listCategoryDB.add(removeIndex);
+				}
+				 i++;
+			}
+			getManagedBean().setHistoryList(listCategoryDB);
+		}
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
 
