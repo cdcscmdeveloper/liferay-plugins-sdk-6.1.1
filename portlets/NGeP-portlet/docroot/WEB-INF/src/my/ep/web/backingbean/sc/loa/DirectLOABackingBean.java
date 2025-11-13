@@ -3934,7 +3934,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					scLoa.getContractDuration());
 			}
 			
-		
+			if(null == this.getManagedBean()
+					.getSpecTemplateSpecBean()
+					.getSpecMaster().getFulfilmentType()){
+				this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster().setFulfilmentType(fulfilMentType);
+			}
+			if(null == this.getManagedBean()
+					.getSpecTemplateSpecBean()
+					.getSpecMaster().getDocType()){
+				this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster().setDocType(docType);
+			}
 		}
 		  log.info("EndDirectLoacheckFulFilmentTypeContractDuration"+this.getManagedBean()
 					.getSpecTemplateSpecBean()
