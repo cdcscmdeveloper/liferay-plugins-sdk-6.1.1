@@ -2138,7 +2138,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
 		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
 			for(ScQtCategory categoryCodeEdit : findQtCatCode){
-				qtCatCreatedDate = categoryCodeEdit.getPmCategoryL1().getCreatedDate();
+				qtCatCreatedDate = categoryCodeEdit.getCreatedDate();
 				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc() || this.getManagedBean().getUpdateCatInPm()){
 					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
 						reqDTO.setCategoryL1Id(catCodeId);
