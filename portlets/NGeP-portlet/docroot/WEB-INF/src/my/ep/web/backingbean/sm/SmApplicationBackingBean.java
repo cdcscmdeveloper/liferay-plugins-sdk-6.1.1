@@ -1958,7 +1958,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
-		showRegisterationDecisionUI();
+		showRegistrationDecisionUI();
 //		37925 END
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setBusinessAndHadApprovedSpecialCatcode-23", 
@@ -18731,7 +18731,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//36504 - END
 //	#37925 START
-	private void showRegisterationDecisionUI() {
+	private void showRegistrationDecisionUI() {
 	    clearRegistrationStatusDisplay();
 	    
 	    SmAppl smAppl = getManagedBean().getSmAppl();
@@ -18879,7 +18879,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
      * @return A new list sorted according to the defined order.
      */
     private List<PmStatusDesc> manualSortByDefinedOrder(List<PmStatusDesc> unsortedList) {
-        List<PmStatusDesc> sortedList = new ArrayList<PmStatusDesc>();
+        List<PmStatusDesc> sortedList = new ArrayList<>();
 
         if (EntityHelper.isCollectionEmpty(unsortedList)) {
             return sortedList;
