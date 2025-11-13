@@ -131,8 +131,7 @@
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.schedule']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{(ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled 
-			or ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)
+			rendered="#{ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled 
 			and ctBackingBean.managedBean.contractVer.ctAmendment.otherChange
 			and ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral
 		    and amendmentBackingBean.managedBean.ackFA eq null}"
