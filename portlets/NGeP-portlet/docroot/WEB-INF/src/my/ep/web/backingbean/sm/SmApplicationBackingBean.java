@@ -19055,149 +19055,163 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//#38927 START
 	/**
-	 * Validate inactive category for supplier user and po/approver
-	 * 
-	 * @return void
+	 * Validates the supplier categories for the current application.
+	 * <p>
+	 * - For Supplier users: removes suspended categories and builds error messages.
+	 * - For PO/Approver users: checks decision flags and displays warning messages for invalid categories.
+	 * </p>
 	 */
 	public void validateCategory() {
-       log.info("Entered validateCategory()");
-        SmAppl smAppl = getManagedBean().getSmAppl();
-        List<SmSupplierCategory> categories = smAppl.getSmSupplierCategories();
+	    final SmAppl smAppl = getManagedBean().getSmAppl();
 
-        if (categories == null) {
-        	log.info("No categories to validate");
-            return;
-        }
+	    if (!isValidApplication(smAppl)) {
+	        return;
+	    }
 
-        String applType = smAppl.getApplType();
-        if (!isEligibleApplicationType(applType)) {
-        	log.info("Application type not eligible for validation");
-            return;
-        }
+	    boolean validCategoryFound = false;
+	    final StringBuilder invalidCategories = new StringBuilder("<br/>");
+	    int messageIndex = 1; 
 
-        boolean validCat = false;
-        StringBuilder smSuppCat = new StringBuilder("<br/>");
-        boolean showMsg = true;
-        int count = 0;
+	    for (Iterator<SmSupplierCategory> iterator = smAppl.getSmSupplierCategories().iterator(); iterator.hasNext();) {
+	        final SmSupplierCategory category = iterator.next();
 
-        for (Iterator<SmSupplierCategory> iterator = categories.iterator(); iterator.hasNext();) {
-            SmSupplierCategory category = iterator.next();
+	        if (!isSuspended(category)) {
+	            continue;
+	        }
 
-            if (isSuspended(category)) {
-                if (getManagedBean().isSupplierUser()) {
-                    iterator.remove();
-                    removeFacilityAssociations(category, smAppl);
-                } else {
-                    showMsg = evaluateDecisionFlags(category);
-                }
+	        validCategoryFound = true;
 
-                validCat = true;
-                smSuppCat.append(++count).append(". ")
-                         .append(formatCategoryDetails(category))
-                         .append("<br/>");
-            }
-        }
+	        if (getManagedBean().isSupplierUser()) {
+	            handleSupplierUserCategory(iterator, category, invalidCategories, messageIndex++);
+	        } else if (processPoOrApproverUser(category, invalidCategories, messageIndex)) {
+	            messageIndex++;
+	        }
+	    }
 
-        if (validCat) {
-            logAndShowError(smSuppCat.toString(), showMsg);
-        }
-
-        log.info("Exiting validateCategory()");
-    }
+	    if (validCategoryFound) {
+	        showInvalidCategoryMessage(invalidCategories, validCategoryFound);
+	    }
+	}
 
 	/**
-	 * Check category when apply KA/KR/KN
-	 * 
-	 * @param String applType
-	 * @return boolean
+	 * Checks if the application and category list are valid and of relevant type.
 	 */
-    private boolean isEligibleApplicationType(String applType) {
-        return ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(applType)
-            || ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES.equals(applType)
-            || ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(applType);
-    }
+	private boolean isValidApplication(final SmAppl smAppl) {
+	    if (smAppl == null || smAppl.getSmSupplierCategories() == null) {
+	        return false;
+	    }
+	    final String applType = smAppl.getApplType();
+	    return ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(applType)
+	            || ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES.equals(applType)
+	            || ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(applType);
+	}
 
-    /**
-	 * Check if having inactive category 
-	 * 
-	 * @param SmSupplierCategory
-	 * @return boolean
+	/**
+	 * Checks if a supplier category is marked as suspended.
+	 *
+	 * @param category the supplier category to check
+	 * @return true if the category is suspended
 	 */
-    private boolean isSuspended(SmSupplierCategory category) {
-        return category.getPmCategoryL3().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED;
-    }
+	private boolean isSuspended(final SmSupplierCategory category) {
+	    return category != null
+	            && category.getPmCategoryL3() != null
+	            && category.getPmCategoryL3().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED;
+	}
+	
+	/**
+	 * Handles category removal and message building for Supplier users.
+	 */
+	private void handleSupplierUserCategory(final Iterator<SmSupplierCategory> iterator,
+	                                        final SmSupplierCategory category,
+	                                        final StringBuilder invalidCategories,
+	                                        final int messageIndex) {
+	    removeCategoryFromFacilities(category);
+	    appendCategoryMessage(invalidCategories, messageIndex, category);
+	    iterator.remove();
+	}
 
-    /**
-	 * Evaluate Decision when PO/Approver reject the category
-	 * will not show the message
-	 * 
-	 * @param SmSupplierCategory
-	 * @return boolean
+	/**
+	 * Removes a suspended supplier category from all facilities it is associated with.
+	 *
+	 * @param category the suspended SmSupplierCategory to remove
 	 */
-    private boolean evaluateDecisionFlags(SmSupplierCategory category) {
-        boolean showMsg = true;
-        if (Integer.valueOf(0).equals(category.getPoDecFlg())) {
-            showMsg = false;
-        }
-        if (category.getApprvrDecFlg() != null) {
-            showMsg = !Integer.valueOf(0).equals(category.getApprvrDecFlg());
-        }
-        return showMsg;
-    }
+	private void removeCategoryFromFacilities(final SmSupplierCategory category) {
+	    final Iterator<SmFacility> facilityIterator = getManagedBean().getSmAppl().getSmFacilities().iterator();
+	    while (facilityIterator.hasNext()) {
+	        final SmFacility facility = facilityIterator.next();
+	        final Iterator<SmSupplierCategoryFacility> facilityCategoryIterator =
+	                facility.getSmSupplierCategoryFacilities().iterator();
 
-    /**
-	 * Remove facility when the category is inactive at supplier side
-	 * 
-	 * @param SmSupplierCategory category, SmAppl smAppl
-	 * @return void
-	 */
-    private void removeFacilityAssociations(SmSupplierCategory category, SmAppl smAppl) {
-        for (Iterator<SmFacility> facilityIterator = smAppl.getSmFacilities().iterator(); facilityIterator.hasNext();) {
-            SmFacility facility = facilityIterator.next();
-            for (SmSupplierCategoryFacility scf : facility.getSmSupplierCategoryFacilities()) {
-                if (Objects.equals(scf.getPmCategoryL3().getCategoryL3Id(),
-                                   category.getPmCategoryL3().getCategoryL3Id())) {
-                    facilityIterator.remove();
-                    break;
-                }
-            }
-        }
-    }
-    
-    /**
-	 * Format of category to show in the message
-	 * 
-	 * @param SmSupplierCategory category
-	 * @return String
-	 */
-    private String formatCategoryDetails(SmSupplierCategory category) {
-        return category.getPmCategoryL1().getCategoryL1Code()
-            + category.getPmCategoryL2().getCategoryL2Code()
-            + category.getPmCategoryL3().getCategoryL3Code()
-            + " - " + category.getCategoryL1Name() + "/"
-            + category.getCategoryL2Name() + "/"
-            + category.getCategoryL3Name();
-    }
+	        while (facilityCategoryIterator.hasNext()) {
+	            final SmSupplierCategoryFacility facilityCategory = facilityCategoryIterator.next();
+	            if (facilityCategory.getPmCategoryL3().getCategoryL3Id() == category.getPmCategoryL3().getCategoryL3Id()) {
+	                facilityCategoryIterator.remove();
+	            }
+	        }
+	    }
+	}
 
-    /**
-	 * Show error message 
-	 * 
-	 * @param String categoryDetails, boolean showMsg
-	 * @return void
+	/**
+	 * Processes decision flags for PO and Approver users and determines whether to append messages.
+	 *
+	 * @param category   the suspended category being validated
+	 * @param msgBuilder StringBuilder for collecting invalid category messages
+	 * @param index      the current numbering index
+	 * @return true if the category message was appended (indicating numbering should increase)
 	 */
-    private void logAndShowError(String categoryDetails, boolean showMsg) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        if (getManagedBean().isSupplierUser()) {
-            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-                SmCommonUtil.getMessage("lbl.sm.category.notValid.supp", new String[] { categoryDetails })));
-            log.info("Error message shown for supplier user");
-        } else if (showMsg) {
-            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-                SmCommonUtil.getMessage("lbl.sm.category.notValid.poappr", new String[] { categoryDetails })));
-            log.info("Error message shown for PO/approver");
-        } else {
-        	log.info("No error message shown due to decision flags");
-        }
-    }
+	private boolean processPoOrApproverUser(final SmSupplierCategory category,
+	                                        final StringBuilder msgBuilder,
+	                                        final int index) {
+	    boolean added = false;
+
+	    if (getManagedBean().isPoUser() && category.getPoDecFlg() != null && category.getPoDecFlg() != 0) {
+	        appendCategoryMessage(msgBuilder, index, category);
+	        added = true;
+	    }
+
+	    if (getManagedBean().isApproverUser() && category.getApprvrDecFlg() != null && category.getApprvrDecFlg() != 0) {
+	        appendCategoryMessage(msgBuilder, index, category);
+	        added = true;
+	    }
+
+	    return added;
+	}
+
+	/**
+	 * Appends a category's details to the validation message with numbering.
+	 *
+	 * @param builder  the StringBuilder accumulating the messages
+	 * @param index    the numbering for this category
+	 * @param category the category to append
+	 */
+	private void appendCategoryMessage(final StringBuilder builder, final int index, final SmSupplierCategory category) {
+	    builder.append(index)
+	           .append(". ")
+	           .append(category.getPmCategoryL1().getCategoryL1Code())
+	           .append(category.getPmCategoryL2().getCategoryL2Code())
+	           .append(category.getPmCategoryL3().getCategoryL3Code())
+	           .append(" - ")
+	           .append(category.getCategoryL1Name()).append("/")
+	           .append(category.getCategoryL2Name()).append("/")
+	           .append(category.getCategoryL3Name())
+	           .append("<br/>");
+	}
+	
+	/**
+	 * Displays the appropriate FacesMessage for invalid categories.
+	 */
+	private void showInvalidCategoryMessage(final StringBuilder invalidCategories, boolean validCategoryFound) {
+	    final String messageKey = getManagedBean().isSupplierUser()
+	            ? "lbl.sm.category.notValid.supp"
+	            : "lbl.sm.category.notValid.poappr";
+
+	    if(validCategoryFound){
+	    	final FacesContext context = FacesContext.getCurrentInstance();
+		    context.addMessage(null, new FacesMessage(
+		            FacesMessage.SEVERITY_ERROR,
+		            null,
+		            SmCommonUtil.getMessage(messageKey, new String[]{invalidCategories.toString()})));
+	    }
+	}
 	//#38927 END
 }
