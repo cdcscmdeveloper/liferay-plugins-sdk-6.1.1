@@ -519,17 +519,7 @@ public class TemplateSpecBackingBean extends
 				.equals(questionType);
 		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 				.equals(tplSpecMaster.getSpecTypeCode().getParameterCode());
-		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
-		
-		//#25726 start
-		PmParameter fulfilmentType = null;
-		String docType = null;
-		if(null != tplSpecMaster.getFulfilmentType()){
-			fulfilmentType = tplSpecMaster.getFulfilmentType();
-		}
-		if(null != tplSpecMaster.getDocType()){
-			docType = tplSpecMaster.getDocType();
-		}
+		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();		
 
 		if (questionList == null) {
 			questionList = new ArrayList<TplSpecQuestion>();
@@ -545,29 +535,7 @@ public class TemplateSpecBackingBean extends
 			PmParameter pmParameter = getParameterByTypeAndCode(
 					ParameterTypeConst.FULFILMENT_TYPE,
 					ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-			//#25726 start
-			if(null != docType){
-				if(docType.equals(ParameterConst.DOCTYPE_DIRECT_NEGO)){
-					if(null != fulfilmentType)
-						newQuestion.setClFulfilmentTypeCode(fulfilmentType);				
-				}else if(docType.equals(ParameterConst.DOCTYPE_QUOTATION)){
-					if(null != fulfilmentType)
-						newQuestion.setClFulfilmentTypeCode(fulfilmentType);					
-				}else{					
-					newQuestion.setClFulfilmentTypeCode(pmParameter);
-				}
-			}else{
-				if(null != tplSpecMaster.getScQtDoc()){
-					if(null != tplSpecMaster.getScQtDoc().getScQt()){
-						if(null != tplSpecMaster.getScQtDoc().getScQt().getFulfilmentType())
-							newQuestion.setClFulfilmentTypeCode(tplSpecMaster.getScQtDoc().getScQt().getFulfilmentType());
-					}					
-				}else{
-				newQuestion.setClFulfilmentTypeCode(pmParameter);
-				}
-			}
-			//#25726 end
-
+		
 			if (ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecMaster
 					.getItemTypeCode().getParameterCode())) {
 				if (tplSpecMaster.getTplSpecZone() != null) {
@@ -669,12 +637,8 @@ public class TemplateSpecBackingBean extends
 		// For Pid SQ ,No periodic schedule
 		if(!(getManagedBean().isPidSQ() || getManagedBean().isG2G())){			
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
-			//#25725 start
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);		
+			filteredList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);				
 		}
-		//#25725 end
 		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);		
 
 		searchBean.getDataFilterBeans().add(
@@ -3160,8 +3124,7 @@ public class TemplateSpecBackingBean extends
 			Boolean isItemTypeService, 
 			Boolean isFulfilmentTypeScheduled, 
 			long specZoneId,
-			BigDecimal questionId,
-			Boolean isFulfilmentTypeNonPeriodicScheduled) {
+			BigDecimal questionId) {
 
 			BigDecimal totalIndicativePrice = new BigDecimal("0.00");//Bug #29808
 			BigDecimal zeroChangeTo1 = new BigDecimal("1.00");//Bug #29808
@@ -3193,7 +3156,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(RoundIndicativePrice).setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 			} 
 			else {
-				if (isItemTypeService && !(isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
+				if (isItemTypeService && !(isFulfilmentTypeScheduled)) //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
 				{		totalIndicativePrice = totalIndicativePrice.add(clQuantity
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
@@ -3201,7 +3164,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(RoundIndicativePrice).setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 				} 
 				else {
-					if (isItemTypeService && (isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
+					if (isItemTypeService && (isFulfilmentTypeScheduled))//Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
 					{
 						totalIndicativePrice = totalIndicativePrice.add(clQuantity
 								.multiply(contractDuration)

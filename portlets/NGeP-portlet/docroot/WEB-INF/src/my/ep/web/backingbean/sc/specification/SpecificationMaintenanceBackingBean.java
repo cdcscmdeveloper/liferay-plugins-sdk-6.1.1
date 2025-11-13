@@ -506,7 +506,8 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 	this.getManagedBean().setQtSpecMaintanance(true);	
 	
 	// #28784 - Demo WIP
-	boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+	boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+			CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
 	this.getManagedBean().setNewVersion(isQtNewVersion);
    
  /* boolean isStatusPublish=  isQTStatusPublished(scQt

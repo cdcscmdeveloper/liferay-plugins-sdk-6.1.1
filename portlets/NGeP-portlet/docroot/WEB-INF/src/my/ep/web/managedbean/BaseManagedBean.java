@@ -166,9 +166,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private StreamedContent downloadfile;
 	private String inactiveSCMemberStr; //25037 - note 510
 
-	//#25726 start
-	private BigDecimal lowerLimit = new BigDecimal (200000);	
-	//#25726 end
+
 	
 	//#32236 start
 	private String outputPage;
@@ -181,6 +179,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean newVersion;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
+	// #28895_35501_DA - Updated FRS - Start
+	private boolean blacklistOwner;
 
 
 	public boolean isShowDetailSSM() {
@@ -1057,15 +1057,6 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	//25037 - end - note 510
 
-	//#25726 start
-	public BigDecimal getLowerLimit() {
-		return lowerLimit;
-	}
-
-	public void setLowerLimit(BigDecimal lowerLimit) {
-		this.lowerLimit = lowerLimit;
-	}	
-	//#25726 end
 
 	//#32236 start
 	public String getOutputPage() {
@@ -1120,4 +1111,13 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
+	// #28895_35501_DA - Updated FRS - Start
+	public boolean isBlacklistOwner() {
+		return blacklistOwner;
+	}
+
+	public void setBlacklistOwner(boolean blacklistOwner) {
+		this.blacklistOwner = blacklistOwner;
+	}
+	// #28895_35501_DA - Updated FRS - End
 }
