@@ -5679,7 +5679,7 @@ public class RuleCatalogueBackingBean extends
 					+ configRuleValue.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
 					+ configRuleValue.getCategoryL3Id().getCategoryL3Code()
 					;
-			String searchRegex = searchRegex(searchRuleValues);	
+			String searchRegex = searchRegex(searchRuleValues);
 			
 			if (ruleValue.toLowerCase().contains(searchRuleValues.toLowerCase())
 					|| ruleValue.toLowerCase().matches(searchRegex.toLowerCase())) {
@@ -5890,8 +5890,8 @@ public class RuleCatalogueBackingBean extends
 	    for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
 	        String value = useName 
 	            ? ptjApproval.getPmOrgProfile().getOrgValidity().getOrgName()
-	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();	            
-	        String searchRegex = searchRegex(search);
+	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();
+	            String searchRegex = searchRegex(search);
 	            
 	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
 	        		|| value.toLowerCase().matches(searchRegex)) {
@@ -5956,7 +5956,7 @@ public class RuleCatalogueBackingBean extends
 			return searchRegex;
 		}else{
 			return "";
-		}		
+		}
 	}
 	//#36738 End
 }
