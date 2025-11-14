@@ -1597,12 +1597,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			supplierReason.setDeleted(true);
 			getManagedBean().getDeleteRestrictions().add(supplierReason);
 			
-			/** 35509 START
-			if(getManagedBean().getAuditDeleteRestrictions() == null){
-				getManagedBean().setAuditDeleteRestrictions(new ArrayList<PmSupplierReason>());
-			}
-			getManagedBean().getAuditDeleteRestrictions().add(supplierReason);
-			/** 35509 END*/
 		}
 	}
 	
@@ -2376,6 +2370,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					// maintained: add new supplier item
 					ensureTargetListExists();
 					this.getManagedBean().getSelectedReason().addPmReasonRestr(tempReason);
+					//add audit
 				}
 			} else {
 				if (hasSuppAccTypeKey(tempReason)) {

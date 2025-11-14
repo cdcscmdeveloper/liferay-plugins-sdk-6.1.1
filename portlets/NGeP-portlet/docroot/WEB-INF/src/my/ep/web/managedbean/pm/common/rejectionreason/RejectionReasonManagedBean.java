@@ -88,6 +88,10 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private String ministryCodeName;
 	private String kumpPtjCodeName;
 	//#28962 - End
+	
+	// #28962 - Start
+	private List <PmReasonRestr> auditUpdateSupplAcctType;
+	// #28962 - End
 
 	public RejectionReasonManagedBean(){}
 
@@ -726,5 +730,16 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 		this.kumpPtjCodeName = kumpPtjCodeName;
 	}
 	//#28962 - End
+
+	//#28962-Audit - Start
+	public List <PmReasonRestr> getAuditUpdateSupplAcctType() {
+		return auditUpdateSupplAcctType;
+	}
+
+	public void setAuditUpdateSupplAcctType(List <PmReasonRestr> auditUpdateSupplAcctType) {
+		this.auditUpdateSupplAcctType = auditUpdateSupplAcctType;
+	}
+	
+	//#28962-Audit - End
 
 }
