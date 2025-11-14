@@ -652,7 +652,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setOrgCategory(orgCategory);
 		searchBean.setMasterLabel2(masterLabel2);
 
-		log.info("resetOrganisationSearchBean called");
 		log.info("Selected masterLabel2: " + getManagedBean().getSearchBean().getMasterLabel2());
 
 		getManagedBean().setResetMasterResult(true);
@@ -679,7 +678,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setOrgCategory(orgCategory);
 		searchBean.setMasterLabel2(masterLabel2);
 
-		log.info("resetOrganisationSearchBean called");
 		log.info("Selected masterLabel2: " + getManagedBean().getSearchBean().getMasterLabel2());
 
 		getManagedBean().setResetMasterResult(true);
