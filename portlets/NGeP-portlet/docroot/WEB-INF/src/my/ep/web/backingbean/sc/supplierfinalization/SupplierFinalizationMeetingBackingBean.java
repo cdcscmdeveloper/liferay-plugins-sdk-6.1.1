@@ -1558,12 +1558,14 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			renewSessionAndRetrieve();
 			
-			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
-								ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
-			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
+			//#35320 - Start
+			String committeeType = this.getManagedBean().getCommitteeType();			
+			String variable2 = getMessageCommon(getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
+			
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{variable1, variable2}, 
-						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{getManagedBean().getScQt().getQtNo(), variable2}, 
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 	
+			//#35320 - Start 				  
 		} finally {
 			qtMeetingSO = null;
 		}
@@ -2374,7 +2376,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId());
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
@@ -2420,7 +2422,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId());
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
