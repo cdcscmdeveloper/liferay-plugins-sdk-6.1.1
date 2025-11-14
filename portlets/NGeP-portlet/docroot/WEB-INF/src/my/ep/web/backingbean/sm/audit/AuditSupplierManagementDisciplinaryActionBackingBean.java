@@ -22,6 +22,8 @@ import my.ep.web.util.CommonUtils;
 public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditSupplierManagementBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;
+	// #28895_35501_DA - Updated FRS
+	private boolean isBlacklist;
 
 	/**
 	 * @param managedBean
@@ -52,8 +54,10 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 		cancelRegistration(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 
-		// #28895_35501_DA - Updated FRS
+		// #28895_35501_DA - Updated FRS - Start
+		isBlacklist = false;
 		blackListOwner(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+		// #28895_35501_DA - Updated FRS - End
 
 		bumiCancel(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 
@@ -65,7 +69,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 		remark(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 		// #28895_35501_DA - Updated FRS - Start
-		if (this.getManagedBean().isBlacklistOwner()) {
+		if (isBlacklist) {
 			ownerList(auDetails, mBean);
 		}
 		// #28895_35501_DA - Updated FRS - End
@@ -117,7 +121,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 	private void blackListOwner(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction, 
 			List<AuditSupplierManagementDetailDTO> auDetails) {
 		if (!oldDisciplinaryAction.isBlacklistOwner() && newDisciplinaryAction.isBlacklistOwner()) { 
-			this.getManagedBean().setBlacklistOwner(true);
+			isBlacklist = true;
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD, 
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, getLabel("lbl.sm.disciplinary.jktt.blacklist.owner"), null, 
 					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE)); 
