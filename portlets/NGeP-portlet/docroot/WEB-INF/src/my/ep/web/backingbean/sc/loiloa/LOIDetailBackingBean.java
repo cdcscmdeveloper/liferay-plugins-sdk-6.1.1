@@ -3415,9 +3415,14 @@ public class LOIDetailBackingBean extends
 			String taskName = this.getManagedBean().getTaskName();
 			if (Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION, SCProcessNameConst.SIGNOFF_FC_SELECTION)
 					.contains(taskName)) {
-				throw new EpException(MessageConst.ERROR_760601);
+				Locale userLocale = new FacesScopes().getUserLocale();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.ERROR_760601, null, MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale)));
+			} else {
+				throw e;
 			}
-			throw e;
 		}
 		// 26247 - end
 	}
