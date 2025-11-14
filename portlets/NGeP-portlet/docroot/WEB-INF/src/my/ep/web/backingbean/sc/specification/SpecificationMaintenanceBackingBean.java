@@ -620,6 +620,7 @@ private class SpecMaintenanceSearchQtDataModel extends
 			String changedCatCodeList = specBB.checkCatCodeChange();
 
 			if (!changedCatCodeList.isEmpty() && !this.getManagedBean().isReadOnly()) {
+				this.getManagedBean().setResetHistoryCatCode(true);
 				redirect = false;
 				this.getManagedBean().setActiveIndex(1);
 				specBB.retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
