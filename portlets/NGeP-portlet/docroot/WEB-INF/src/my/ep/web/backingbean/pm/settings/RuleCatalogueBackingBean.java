@@ -5677,8 +5677,7 @@ public class RuleCatalogueBackingBean extends
 		if (searchRuleValues != null && !searchRuleValues.isEmpty()) {
 			String ruleValue = configRuleValue.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ configRuleValue.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
-					+ configRuleValue.getCategoryL3Id().getCategoryL3Code()
-					;
+					+ configRuleValue.getCategoryL3Id().getCategoryL3Code();
 			String searchRegex = searchRegex(searchRuleValues);
 			
 			if (ruleValue.toLowerCase().contains(searchRuleValues.toLowerCase())
@@ -5718,7 +5717,7 @@ public class RuleCatalogueBackingBean extends
 	private List<PmConfigRuleValue> searchByRuleValueDesc(List<PmConfigRuleValue> configRuleValuesList,String searchRuleValueDesc, Boolean multipleSearchFlag){		
 		List<PmConfigRuleValue> result = new ArrayList<>();
 
-		if (searchRuleValueDesc != null && !searchRuleValueDesc.isEmpty()) {			
+		if (searchRuleValueDesc != null && !searchRuleValueDesc.isEmpty()) {
 			String searchRegex = searchRegex(searchRuleValueDesc);
 			
 			for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
