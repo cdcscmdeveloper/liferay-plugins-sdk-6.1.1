@@ -12087,10 +12087,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		this.getCategoryCodesForClone();
 		this.getManagedBean().setTemplateSpecCreate(new CreateTemplateSpecPagingDataModel());
 		this.resetTemplate();
+		String specCategoryLocal = (specCategory.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)
+				|| specCategory.equals(ParameterConst.ITEM_TYPE_PRODUK_STRING)) ? ParameterConst.ITEM_TYPE_PRODUCT_STRING
+				: ParameterConst.ITEM_TYPE_SERVICE_STRING;
 
-		if (specCategory.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
+		if (specCategoryLocal.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
 			pmReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_SERVICE);
-		} else if (specCategory.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
+		} else if (specCategoryLocal.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
 			pmReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT);
 		}
 		pmReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
@@ -12125,31 +12128,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-		String itemType = this.getManagedBean().getSearchItemTypeName();
+		String itemType = (this.getManagedBean().getSearchItemTypeName().equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)
+				|| this.getManagedBean().getSearchItemTypeName().equals(ParameterConst.ITEM_TYPE_PRODUK_STRING)) ? ParameterConst.ITEM_TYPE_PRODUCT_STRING
+				: ParameterConst.ITEM_TYPE_SERVICE_STRING;
 		List<TplSpecQuestion> questionsListNew = new ArrayList<>();
-		TplSpecMaster specMaster = new TplSpecMaster();
 
 		specReqDTO.setType(flowtype);
 		specReqDTO.setSpecMaster(tplSpecMaster);
 		specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
 		TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(specReqDTO);
 
-		if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
-			templateSpecBean = this.getManagedBean().getSpecTemplateSpecBean();
-			specMaster = this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
-			if (null != specMaster && null != specMaster.getTplSpecQuestions()
-					&& !specMaster.getTplSpecQuestions().isEmpty()) {
-				questionsListNew.addAll(specMaster.getTplSpecQuestions());
-			}
-		} else if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
-			templateSpecBean = this.getManagedBean().getProdTemplateSpecBean();
-			specMaster = this.getManagedBean().getProdTemplateSpecBean().getSpecMaster();
-			if (null != specMaster && null != specMaster.getTplSpecQuestions()
-					&& !specMaster.getTplSpecQuestions().isEmpty()) {
-				questionsListNew.addAll(specMaster.getTplSpecQuestions());
-			}
-		}
+		TemplateSpecBean templateSpecBean = updateSpecBeanForClone(itemType);
+		TplSpecMaster specMaster = updateSpecMasterForClone(itemType);
+		updateQuestionListAndSpecMaster(specMaster, questionsListNew, resDTO);
+		
 		List<TplSpecQuestion> questionsListCreate = TemplateSpecHelper.getInstance().cloneTplSpecQuestions(specMaster,
 				resDTO.getSpecMaster().getTplSpecQuestions());
 
@@ -12169,6 +12161,44 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		RequestContext.getCurrentInstance().execute(QTConstants.CLOSE_CLONE_LOA_SPEC_POPUP);
 
 		return;
+	}
+	
+	private TemplateSpecBean updateSpecBeanForClone(String itemType) {
+		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+		if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
+			templateSpecBean = this.getManagedBean().getSpecTemplateSpecBean();
+		} else if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
+			templateSpecBean = this.getManagedBean().getProdTemplateSpecBean();
+		}
+
+		return templateSpecBean;
+	}
+
+	private TplSpecMaster updateSpecMasterForClone(String itemType) {
+		TplSpecMaster specMaster = new TplSpecMaster();
+		if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
+			specMaster = this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
+		} else if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
+			specMaster = this.getManagedBean().getProdTemplateSpecBean().getSpecMaster();
+		}
+		return specMaster;
+	}
+
+	private void updateQuestionListAndSpecMaster(TplSpecMaster specMaster, List<TplSpecQuestion> questionsListNew,
+			TemplateSpecResDTO resDTO) {
+		if (null != specMaster && null != specMaster.getTplSpecQuestions()
+				&& !specMaster.getTplSpecQuestions().isEmpty()) {
+			questionsListNew.addAll(specMaster.getTplSpecQuestions());
+		}
+		if (null != specMaster && null == specMaster.getSpecTypeCode()
+				&& null != resDTO.getSpecMaster().getSpecTypeCode()) {
+			specMaster.setSpecTypeCode(resDTO.getSpecMaster().getSpecTypeCode());
+		}
+		if (null != specMaster && null == specMaster.getItemTypeCode()
+				&& null != resDTO.getSpecMaster().getItemTypeCode()) {
+			specMaster
+					.setItemTypeCode(resDTO.getSpecMaster().getItemTypeCode());
+		}
 	}
 
 	private void checkQuestionsforCreateTemplateSpec(List<TplSpecQuestion> questionsListNew, TplSpecMaster specMaster,

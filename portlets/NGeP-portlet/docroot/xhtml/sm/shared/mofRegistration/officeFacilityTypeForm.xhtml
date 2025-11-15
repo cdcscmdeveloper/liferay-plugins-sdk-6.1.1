@@ -128,9 +128,6 @@
 								<p:outputLabel value="For Rented Business Office, click the AI Assistant and upload the Stamped Premise Rental Agreement for data extraction" />
 							</p:tooltip>&#160;
 							<br/>
-							<h:outputText styleClass="instruction" 
-								value="Disclaimer: Please review and verify AI-generated data. The system is not responsible for data accuracy or integrity." />
-							
 						</td>
 					</tr>
 					</p:outputPanel>
@@ -624,5 +621,6 @@
 		<!-- 29480 - Update: remove code for Re-endorsed CR -->
 	</p:panel>
 	<!-- #38890 -->
-	<ac:smAIAssistant aiDlg="tenancyAI" smAppl="#{backingBean.managedBean.smAppl}" docType="tenancy"/>
+	<ac:smAIAssistant aiDlg="tenancyAI" docType="tenancy" updateId="offInfPan"
+		smAppl="#{backingBean.managedBean.smAppl}"/>
 </ui:composition>

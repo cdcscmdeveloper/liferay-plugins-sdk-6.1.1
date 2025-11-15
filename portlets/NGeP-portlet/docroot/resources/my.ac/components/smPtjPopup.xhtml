@@ -23,10 +23,10 @@
 						<table>
 							<tr>
 								<td><p:outputLabel styleClass="outputLabel-view-label2"
-										width="190px" value="#{lbl['lbl.sm.ptj.popup.ministry']}" /></td>
+										value="#{lbl['lbl.sm.ptj.popup.ministry']}" /></td>
 								<td><p:spacer height="1" /></td>
-								<td><p:selectOneMenu id="somMinistry" style="width:410px"
-										value="#{smPtjPopupMB.ministryProfileId}">
+								<td><p:selectOneMenu id="somMinistry"
+										value="#{smPtjPopupMB.ministryProfileId}" style="width:400px">
 										<f:selectItems value="#{smPtjPopupBB.getMinistryDropdown()}" />
 										<p:ajax event="change" process="@this" partialSubmit="true"
 											update="somPtjGroup" />
@@ -34,25 +34,25 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel styleClass="outputLabel-view-label2"
-										width="190px" value="#{lbl['lbl.sm.ptj.popup.ptjGroup']}" /></td>
+										value="#{lbl['lbl.sm.ptj.popup.ptjGroup']}" /></td>
 								<td><p:spacer height="1" /></td>
 								<td><p:selectOneMenu id="somPtjGroup"
 										disabled="#{smPtjPopupMB.disabledPtjGroup}"
-										style="width:410px" value="#{smPtjPopupMB.jabatanProfileId}">
+										value="#{smPtjPopupMB.jabatanProfileId}" style="width:400px">
 										<f:selectItems value="#{smPtjPopupBB.getPtjGroupDropdown()}" />
 										<p:ajax event="change" process="@this" partialSubmit="true" />
 									</p:selectOneMenu></td>
 							</tr>
 							<tr>
-								<td><p:selectOneMenu id="somPtjCodeName" width="200px"
-										value="#{smPtjPopupMB.ptjCodeNameKey}">
+								<td><p:selectOneMenu style="width:100px"
+										id="somPtjCodeName" value="#{smPtjPopupMB.ptjCodeNameKey}">
 										<f:selectItems
 											value="#{smPtjPopupBB.getPtjCodeNameDropDown()}" />
 										<p:ajax event="change" process="@this" partialSubmit="true" />
 									</p:selectOneMenu></td>
 								<td><p:spacer height="1" /></td>
-								<td><p:inputText style="width:400px"
-										value="#{smPtjPopupMB.ptjCodeNameValue}">
+								<td><p:inputText value="#{smPtjPopupMB.ptjCodeNameValue}"
+										style="width:400px">
 										<p:ajax event="keyup" process="@this" partialSubmit="true" />
 									</p:inputText></td>
 							</tr>
@@ -87,10 +87,12 @@
 							update="orgProfileDataTableId,:#{p:component('selectBtn')}"
 							listener="#{smPtjPopupBB.enableSelect}" process="@this"
 							partialSubmit="true" />
-						<p:column headerText="#{lbl['lbl.sm.ptj.popup.org.code']}">
+						<p:column headerText="#{lbl['lbl.sm.ptj.popup.org.code']}"
+							style="width: 20%;">
 							<h:outputText value="#{orgProfile.pmOrgValidity.orgCode}" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.ptj.popup.org.name']}">
+						<p:column headerText="#{lbl['lbl.sm.ptj.popup.org.name']}"
+							style="width: 80%;">
 							<h:outputText value="#{orgProfile.pmOrgValidity.orgName}" />
 						</p:column>
 					</p:dataTable>
