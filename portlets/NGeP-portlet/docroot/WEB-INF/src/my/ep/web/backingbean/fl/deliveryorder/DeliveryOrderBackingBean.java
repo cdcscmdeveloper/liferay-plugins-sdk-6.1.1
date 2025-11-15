@@ -2047,6 +2047,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	private void validatePurchaseOrderLimit() {
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentSO.class);
+		getManagedBean().setShowLimitExceededDialog(false);
 		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
 		Long fulfilmentReqId = order.getFlFulfilmentRequest().getFulfilmentReqId();
 
