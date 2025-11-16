@@ -4056,43 +4056,7 @@ public class SimpleQuoteBackingBean extends
 	public void submitPromptAction() {
 		debugLogger("submitPromptAction");
 		ScQuote quote = getManagedBean().getScQuote();
-		getManagedBean().setAutoUpdate(Boolean.TRUE);
-		
-		// #25725 start
-		if(!quote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){		
-			BigDecimal val = new BigDecimal ("5");
-			int result = 0;		
-			for(TplSpecQuestion tplSpecQuestion : getManagedBean()
-				.getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){		
-						
-				if(tplSpecQuestion.getClDurationMonth()!=null){
-					result =  tplSpecQuestion.getClDurationMonth().compareTo(val);
-				}
-			
-				if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
-				(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) && (result<0 && result != 0))){
-					validateDuration();
-					return;				
-				}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
-				(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && (result<0 && result != 0))){
-					validateDuration();
-					return;				
-				}else if((tplSpecQuestion.getClFulfilmentTypeCode() != null && 
-				tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) && (result>0 || result == 0)){
-					validateDuration();
-					return;			
-				}else if((tplSpecQuestion.getClFulfilmentTypeCode() != null && 
-				tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN))&& (result>0 || result == 0)){
-					validateDuration();
-					return;				
-				}
-			}
-		}
-		//#25725 end		
+		getManagedBean().setAutoUpdate(Boolean.TRUE);		
 		
 		// validate quote
 		validateQuote(quote, true);
@@ -4951,7 +4915,8 @@ public class SimpleQuoteBackingBean extends
 
 		// #26284 - Start
 		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
-		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED);
+		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_DELETED);
 
 		criteria.append("recordStatus")
 		.append("^").append(recordStatus.toString())
@@ -8251,22 +8216,6 @@ public class SimpleQuoteBackingBean extends
 		}
 		// #29832 end
 		
-		//#25725 start
-		public void validateDuration() {
-			
-			Locale locale = new FacesScopes().getUserLocale();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
-							.getMessage(
-									ResourceBundleUtils.getMessage("lbl.ct.sq.duration",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));		
-				
-			
-		}
-		//#25725 end
 		
 		//29832 start
 		public String excludeLevelCodeSupplier(){

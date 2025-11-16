@@ -1476,7 +1476,7 @@
 		<property name="columns">
 			<list>
   				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="scRequestItem.itemName" />
+					<property name="columnName" value="scRequestItem.cmItem.extensionCode, scRequestItem.uom.uomName, scRequestItem.itemName"/>
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.ct.item.name" />
