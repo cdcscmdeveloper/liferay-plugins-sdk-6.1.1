@@ -3577,7 +3577,7 @@ public class NoticeBoardBackingBean extends
 			List<PmRemarkCategory> listCategoryDB = new ArrayList();
 			int i=0;
 			for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
-				if (i > 0  && removeIndex.getChangedDate().after(createdDateQt)) {
+				if (i > 0 && null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
 				    listCategoryDB.add(removeIndex);
 				}
 				 i++;
