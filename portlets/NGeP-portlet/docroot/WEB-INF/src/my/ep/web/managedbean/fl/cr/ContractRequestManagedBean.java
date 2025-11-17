@@ -348,10 +348,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 
  // 28855 - End
- 	
-    //24956 start
-    private boolean CtTypeMinistry;
-    //24956 end
     
   //11076 - start
     private int totalExistingItem;
@@ -474,20 +470,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 										"fulfilment_type",
 										SearchOperator.OPERATOR_EQUALS.value(), 
 										searchTypesDD));
-					//start 24956
-					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)){
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"fulfilment_type",
-										SearchOperator.OPERATOR_EQUALS.value(), 
-										searchTypesDD));
-					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"fulfilment_type",
-										SearchOperator.OPERATOR_EQUALS.value(), 
-										searchTypesDD));	
-				//end 24956	
 					}
 				}
 				
@@ -531,8 +513,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				//FulfilmentResDTO resfDTO; -remove #38255
 				if(resDTO.isSuccessful()) {
 					for(VCtActiveContract vCtActiveContract : resDTO.getActiveContractResultBean().getResultList()) {
-						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-								|| vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) { //24956
+						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
 							contractReqDTO.setOrgProfileId(orgProfileId);//28469
@@ -3321,16 +3302,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 	
 	//29728 - end
-	
-	//24956 - start
-	public boolean isCtTypeMinistry() {
-		return CtTypeMinistry;
-	}
-
-	public void setCtTypeMinistry(boolean ctTypeMinistry) {
-		CtTypeMinistry = ctTypeMinistry;
-	}
-	//24956 - end
 	
 	//11076 -start
 		public int getTotalExistingItem() {
