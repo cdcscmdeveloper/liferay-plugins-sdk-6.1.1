@@ -1532,14 +1532,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		} else if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 			// #27476 start
-			if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterType()
-					.equalsIgnoreCase(ParameterConst.PROC_PARAM_TYPE_PR)) {
-				if (getManagedBean().getTaskId() != null) {
+			if (getManagedBean().getTaskId() != null) {
+				if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterType()
+						.equalsIgnoreCase(ParameterConst.PROC_PARAM_TYPE_PR)) {
 					validateThresholdPK7AndSpecialItem();
-				}
-			} else {
-				if (getManagedBean().getTaskId() != null) {
-
+				} else {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
@@ -5341,6 +5338,25 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setJustification(null);
 		}
 	}
+	
+	/**
+	 * 
+	 * is threshold for PK7 validation required
+	 * 
+	 * @return boolean
+	 */
+	private boolean isThresholdPK7Required() {
+		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterType()
+				.equalsIgnoreCase(ParameterConst.PROC_PARAM_TYPE_PR)
+				&& (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) || getManagedBean().getFulfilmentRequest()
+						.getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM))) {
+			return true;
+		}
+
+		return false;
+	}
 
 	/**
 	 * get threshold amount (DP Threshold) for PK7
@@ -5365,10 +5381,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * validation threshold for PK7 and Special Item
 	 */
 	private void validateThresholdPK7AndSpecialItem() {
-		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
-				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+		if (isThresholdPK7Required()) {
 			if (getThresholdForPK7() != null) {
 				// checking Threshold Per Item/ Per PTJ/ Per Year Validation
 				checkPRThresholdPerItemForPK7();
