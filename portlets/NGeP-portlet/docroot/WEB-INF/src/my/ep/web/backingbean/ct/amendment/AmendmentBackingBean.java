@@ -2764,9 +2764,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			// Start Fix - #33952, #25956			
-			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() && ctBackingBean
-					.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0)
-					&& ctBackingBean.getManagedBean().isContractExpired()){
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)
+					&& ctBackingBean.getManagedBean().isContractExpired()){ //#32418
 				
 				if ((ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION.equals(ctBackingBean.getManagedBean()
 								.getContractVer().getStatus().getStatusId()))
