@@ -669,10 +669,33 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		String ParamCode = parameterDesc.getPmParameter().getParameterCode();
 
 		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParamCode.contains(ParamCode)) {
-			label = "<i>" + label + "</i>";
+			label = toUnicodeItalic(label);
 		}
 
 		return label;
+	}
+	
+	
+	/**
+	 * @param input
+	 * @return
+	 */
+	private String toUnicodeItalic(String input) {
+	    StringBuilder sb = new StringBuilder();
+
+	    for (char c : input.toCharArray()) {
+	        if (c >= 'A' && c <= 'Z') {
+	            sb.append((char) (0x1D434 + (c - 'A'))); // Italic A–Z
+	        } else if (c >= 'a' && c <= 'z') {
+	            sb.append((char) (0x1D44E + (c - 'a'))); // Italic a–z
+	        } else if (c >= '0' && c <= '9') {
+	            sb.append((char) (0x1D7EC + (c - '0'))); // Italic 0–9
+	        } else {
+	            sb.append(c); // leave other characters unchanged
+	        }
+	    }
+
+	    return sb.toString();
 	}
 
 	// new #25725 - End
