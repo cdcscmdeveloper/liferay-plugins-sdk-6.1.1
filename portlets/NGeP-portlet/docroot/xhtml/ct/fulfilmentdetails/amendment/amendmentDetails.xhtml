@@ -2,6 +2,14 @@
 	xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<style>
+		.committee-type-radio label {
+			float: left;
+			margin-left: 10px;
+		}
+	</style>
+
 	<p:panel id="amend" header="#{lbl['lbl.ct.menu.amendment']}" toggleable="true" toggleSpeed="500">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.type']}" escape="false" />
 		<br />
@@ -374,9 +382,40 @@
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				</p:selectBooleanCheckbox><!-- Enhancement 15851 - shaqimi -->
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.pbqc']}" style="text-align:left" />
+				<!-- #24336 - Start -->
+				<p:outputLabel value="#{lbl['lbl.ct.committee.type']}" style="text-align:left" />
+				<!-- #24336 - End -->
 			</h:panelGrid>
 			<f:verbatim/>
+
+			<!-- #24336 - Start -->
+			<h:panelGroup id="secretryDropDownPanel" rendered="#{!ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
+				
+				<h:panelGrid rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}" >
+					<p:selectOneRadio id="committeeTypeId" style="margin-bottom: 8px; margin-left: 25px;" styleClass="committee-type-radio" layout="pageDirection"
+						value="#{amendmentBackingBean.managedBean.committeeTypeId}">
+						<f:selectItems value="#{amendmentBackingBean.getCommitteeType()}" />
+						<!-- For filtering Desk Officer Committee 
+						 	<p:ajax event="change" update="justiId"
+							listener="#{purchaseInquiryBackingBean.procurementTypeEvent}"
+							process="@this" /> -->
+					</p:selectOneRadio>
+				</h:panelGrid>
+
+				<h:panelGrid columns="3" columnClasses="columnWidth150" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
+					<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
+					<p:spacer width="2" />
+					<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}"
+						label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;"
+						disabled="#{ctBackingBean.managedBean.viewSCL}">
+						<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+			</h:panelGroup>
+			<f:verbatim/>
+			<!-- #24336 - End -->
+
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox id="approverAuthorityReq"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
@@ -386,19 +425,6 @@
 				<p:outputLabel value="#{lbl['lbl.ct.contract.approval']}" style="text-align:left" />
 			</h:panelGrid>
 		</h:panelGrid>
-
-		<h:panelGroup id="secretryDropDownPanel"
-			rendered="#{!ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
-			<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170"
-				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
-				<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
-				<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}"
-					label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;"
-					disabled="#{ctBackingBean.managedBean.viewSCL}">
-					<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
-				</p:selectOneMenu>
-			</h:panelGrid>
-		</h:panelGroup>
 
 		<h:panelGroup id="approvalLetterPanel">
 			<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170"

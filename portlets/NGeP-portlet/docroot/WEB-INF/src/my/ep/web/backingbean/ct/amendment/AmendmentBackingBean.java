@@ -1749,6 +1749,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// Enhancement #26186/#29793/#32860/#34097 start end - retrieve
 			// disciplinary info
 			
+			// #24336 - Start
+			getManagedBean().setCommitteeTypeId(null);
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPmParameter() != null) {
+				getManagedBean().setCommitteeTypeId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPmParameter().getParameterId());
+			}
+			// #24336 - End
+			
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer >END<");
 			
 		} finally {
@@ -10392,15 +10399,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				bean.setOtherChangeChecklist(false);
 			}
 		}
-		
 	}
 	
 	public boolean isCtApproverSetting() {
-		if (isCtApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME)) {
-			return true;
-		} else {
-			return false;
-		}
+		return isCtApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME);
 	}
 
 	private boolean isCtApprover() {
@@ -10427,6 +10429,34 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
 		}
 		handleNewAmtEffDate();
+	}
+	
+	public SelectItem[] getCommitteeType() {
+	    try {
+	        List<String> codes = Arrays.asList(
+	            ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE,
+	            ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD,
+	            ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH,
+	            ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
+	        );
+
+	        SearchBean<PmParameterDesc> searchBean = new SearchBean<>();
+	        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), codes));
+
+	        List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterConst.COMMITTE_TYPE, searchBean);
+	        
+	        SelectItem[] items = new SelectItem[parameterDescs.size()];
+	        int i = 0;
+	        for (PmParameterDesc desc : parameterDescs) {
+	            items[i++] = new SelectItem(desc.getPmParameter().getParameterId(), desc.getCodeName());
+	        }
+
+	        return items;
+	    } catch (Exception e) {
+	        SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getCommitteeType",
+	            ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "getCommitteeType", getUserIdSessionFromLoginId(), e);
+	        return new SelectItem[0];
+	    }
 	}
 	//#24336 - End
 	
