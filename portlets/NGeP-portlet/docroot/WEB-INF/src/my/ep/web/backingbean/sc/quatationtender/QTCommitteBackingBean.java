@@ -2033,16 +2033,11 @@ public class QTCommitteBackingBean extends
 			}
 
 			if (super.isQTStatusPublished(currentStatusId)) {
-				// 25037 - start - note 372
-				Long[] allowedStatusAfterPublish = new Long[] { QTStatusConst.QT_BRIEFING_SITE_VISIT,
-						QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE, QTStatusConst.QT_PROPOSAL_PREPARATION };
-				
-				if ((!Arrays.asList(allowedStatusAfterPublish).contains(currentStatusId) && Arrays.asList(
-						ParameterConst.QT_COMMITTEES_ORDERED_LIST).contains(commType))
-						|| ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)) {
+				// Bug_39340 - Start
+				if ((Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST).contains(commType))){
 					return false;
 				}
-				// 25037 - end - note 372
+				// Bug_39340 - End
 			} else if (!isEligibleStatusForBtns(currentStatusId, commType)) {
 				return false;
 			}
@@ -2803,10 +2798,6 @@ public class QTCommitteBackingBean extends
 	 */
 	public boolean isCommitteeRoleEditable(PmParameter role) {
 		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
-		// Bug_39340 - Start
-		Long[] allowedStatusAfterPublish = new Long[] { QTStatusConst.QT_BRIEFING_SITE_VISIT,
-				QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE, QTStatusConst.QT_PROPOSAL_PREPARATION };
-		// Bug_39340 - End
 
 		if (role != null && StringUtils.isNotEmpty(committeeType) && role.getParameterCode() != null) {
 			Long status = getCurrentQtStatusId();
@@ -2821,8 +2812,7 @@ public class QTCommitteBackingBean extends
 					return Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON).contains(role.getParameterCode());
 				}
 			} else {
-				// Bug_39340
-				if (status.equals(QTStatusConst.QT_EVALUATION_PROPOSAL) || Arrays.asList(allowedStatusAfterPublish).contains(status)) {
+				if (status.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)) {
 					// 36695 - start
 					Long currentCMTStatus = getCurrentCMTStatusId();
 					List<String> allowedRoles = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
