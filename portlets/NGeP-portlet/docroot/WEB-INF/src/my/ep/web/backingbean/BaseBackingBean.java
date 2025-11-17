@@ -217,6 +217,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//private StreamedContent file;
 	//27346 -  end
 	
+	// new #25725 - Start
+	// Reference characters
+	private static final char UPPER_A = 'A';
+	private static final char LOWER_A = 'a';
+	private static final char UPPER_Z = 'Z';
+	private static final char LOWER_Z = 'z';
+	private static final char DIGIT_0 = '0';
+
+	// Unicode italic starting points
+	private static final int UNICODE_ITALIC_UPPER_START = 0x1D434; // A–Z
+	private static final int UNICODE_ITALIC_LOWER_START = 0x1D44E; // a–z
+	private static final int UNICODE_ITALIC_DIGIT_START = 0x1D7EC; // 0–9
+	// new #25725 - End
+	
 	@SuppressWarnings("unchecked")
 	public BaseBackingBean() {
 		if (log.isDebugEnabled()) {
@@ -684,12 +698,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	    StringBuilder sb = new StringBuilder();
 
 	    for (char c : input.toCharArray()) {
-	        if (c >= 'A' && c <= 'Z') {
-	            sb.append((char) (0x1D434 + (c - 'A'))); // Italic A–Z
-	        } else if (c >= 'a' && c <= 'z') {
-	            sb.append((char) (0x1D44E + (c - 'a'))); // Italic a–z
-	        } else if (c >= '0' && c <= '9') {
-	            sb.append((char) (0x1D7EC + (c - '0'))); // Italic 0–9
+	        if (c >= UPPER_A && c <= UPPER_Z) {
+	            sb.append((char) (UNICODE_ITALIC_UPPER_START + (c - UPPER_A))); // Italic A–Z
+	        } else if (c >= LOWER_A && c <= LOWER_Z) {
+	            sb.append((char) (UNICODE_ITALIC_LOWER_START + (c - LOWER_A))); // Italic a–z
+	        } else if (c >= DIGIT_0 && c <= '9') {
+	            sb.append((char) (UNICODE_ITALIC_DIGIT_START + (c - DIGIT_0))); // Italic 0–9
 	        } else {
 	            sb.append(c); // leave other characters unchanged
 	        }
