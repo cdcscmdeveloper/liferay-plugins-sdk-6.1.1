@@ -27,7 +27,7 @@
 			<h:panelGrid columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
 				<p:selectOneMenu id="somMinistryForQtVal"
-					styleClass="ptjPopupSomWidth" style="width:250px;"
+					styleClass="ptjPopupSomWidth" style="width:250px;" panelStyle="width:250px"
 					disabled="#{ruleCatalogueBackingBean.managedBean.disabledSelectedMinistryId}"
 					value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
 					<f:selectItems value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />

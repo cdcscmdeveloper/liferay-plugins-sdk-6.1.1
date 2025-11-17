@@ -30,7 +30,7 @@
 			<h:panelGrid columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.rule.type']}" />
 				<p:inputText
-					value="#{ruleCatalogueBackingBean.managedBean.searchRuleType}" maxlength="100"/>
+					value="#{ruleCatalogueBackingBean.managedBean.searchRuleType}" maxlength="100" style="width:250px;"/>
 			</h:panelGrid>
 
 			<div class="ppRightBtn">
@@ -108,7 +108,7 @@
 				<p:outputLabel value="#{lbl['lbl.pm.zone']}"
 					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC'}" />
 				<p:selectOneMenu
-					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeZone}" style="width:250px;"
+					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeZone}" style="width:250px;" panelStyle="width:250px"
 					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC'}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.zone.semenanjung']}" itemValue="1" />
@@ -135,7 +135,7 @@
 				</p:calendar>
 			</h:panelGrid>
 			
-			<div style="text-align: left; margin-top: 10px;">
+			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{ruleCatalogueBackingBean.searchRuleValue}"
 					update="ruleTypeValueTableID" />
