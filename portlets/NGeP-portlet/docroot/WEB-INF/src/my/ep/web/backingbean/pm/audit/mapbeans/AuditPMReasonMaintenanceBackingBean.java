@@ -729,10 +729,12 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	}
 	
 	private void setNewSupplAcctType(List<PmReasonRestr> pmReasonRestrs){
+		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 		
 		if (CollectionUtils.isNotEmpty(pmReasonRestrs)) {
 			for(PmReasonRestr tempReason : pmReasonRestrs){
 				// belum add doc id
+//				this.docId = BigInteger.valueOf(tempReason.getReasonRestrId());
 				if (tempReason.isBrandNew()) {
 					detailObj(AuditConst.PM_AUD_RC_SUPPLIER_ACCT_FIELDLABELCODE, null,
 							checkPmParameterDesc(tempReason.getSupplAcctTypeId()));
@@ -743,13 +745,13 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	
 	// modify SupplAcctType
 	private void updateSupplAcctType(List<PmReasonRestr> pmReasonRestrs, List<PmReasonRestr> oldPmReasonRestrs){
+		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 		
 		if (CollectionUtils.isNotEmpty(pmReasonRestrs)) {
 			for(PmReasonRestr temp : pmReasonRestrs){
-				// belum add doc id
 				for(PmReasonRestr old : pmReasonRestrs){
 					if (temp.getReasonRestrId().equals(old.getReasonRestrId())&& !temp.getSupplAcctTypeId().getParameterCode().equals(old.getSupplAcctTypeId().getParameterCode())) {
-						
+						this.docId = BigInteger.valueOf(temp.getReasonRestrId());
 						detailObj(AuditConst.PM_AUD_RC_SUPPLIER_ACCT_FIELDLABELCODE, checkPmParameterDesc(temp.getSupplAcctTypeId()),
 								checkPmParameterDesc(old.getSupplAcctTypeId()));
 						
@@ -763,13 +765,13 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	
 	// delete
 	private void deleteSupplAcctType(List<PmReasonRestr> pmReasonRestrs){
-		
+		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_DEL;
+
 		if (CollectionUtils.isNotEmpty(pmReasonRestrs)) {
 			for(PmReasonRestr temp : pmReasonRestrs){
-				// belum add doc id
 				for(PmReasonRestr old : pmReasonRestrs){
 					if (temp.getReasonRestrId().equals(old.getReasonRestrId())) {
-						
+						this.docId = BigInteger.valueOf(temp.getReasonRestrId());
 						detailObj(AuditConst.PM_AUD_RC_SUPPLIER_ACCT_FIELDLABELCODE, checkPmParameterDesc(temp.getSupplAcctTypeId()),
 								checkPmParameterDesc(old.getSupplAcctTypeId()));
 					}
@@ -782,6 +784,9 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	
 	private void updatePK7WandSIT(PmReason oldReason, PmReason existingReason) {
 
+		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+		this.docId = BigInteger.valueOf(existingReason.getReasonId());
+		
 		if(!oldReason.getDpThreshold().equals(existingReason.getDpThreshold())){
 			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, String.valueOf(oldReason.getDpThreshold()),
 					String.valueOf(existingReason.getDpThreshold()));
