@@ -217,6 +217,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//private StreamedContent file;
 	//27346 -  end
 	
+	// new #25725 - Start
+	// Reference characters
+	private static final char UPPER_A = 'A';
+	private static final char LOWER_A = 'a';
+	private static final char UPPER_Z = 'Z';
+	private static final char LOWER_Z = 'z';
+	private static final char DIGIT_0 = '0';
+
+	// Unicode italic starting points
+	private static final int UNICODE_ITALIC_UPPER_START = 0x1D434; // A–Z
+	private static final int UNICODE_ITALIC_LOWER_START = 0x1D44E; // a–z
+	private static final int UNICODE_ITALIC_DIGIT_START = 0x1D7EC; // 0–9
+	// new #25725 - End
+	
 	@SuppressWarnings("unchecked")
 	public BaseBackingBean() {
 		if (log.isDebugEnabled()) {
@@ -632,8 +646,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			items = new SelectItem[parameterDescs.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
+			
+			// new #25725
+			// Add parameter code for convert to Italic
+			List<String> listParamCode = new ArrayList<String>();
+			listParamCode.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+			
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+				// new #25725 - Start
+				// check code name for convert to italic
+				String label = convertItalicCodeNameForMy(parameterDesc, listParamCode);
+
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), label);
+				// new #25725 - End
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -642,6 +667,52 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+
+	// new #25725 - Start
+	/**
+	 * Convert to italic if language code = "ms" and parameter code in the list
+	 * @param parameterDesc
+	 * @param listParamCode
+	 * @return
+	 */
+	public String convertItalicCodeNameForMy(PmParameterDesc parameterDesc, List<String> listParamCode) {
+		String label = parameterDesc.getCodeName();
+
+		FacesScopes face = new FacesScopes();
+		String language = face.getUserLocale().getLanguage();
+		String ParamCode = parameterDesc.getPmParameter().getParameterCode();
+
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParamCode.contains(ParamCode)) {
+			label = toUnicodeItalic(label);
+		}
+
+		return label;
+	}
+	
+	
+	/**
+	 * @param input
+	 * @return
+	 */
+	private String toUnicodeItalic(String input) {
+	    StringBuilder sb = new StringBuilder();
+
+	    for (char c : input.toCharArray()) {
+	        if (c >= UPPER_A && c <= UPPER_Z) {
+	            sb.append((char) (UNICODE_ITALIC_UPPER_START + (c - UPPER_A))); // Italic A–Z
+	        } else if (c >= LOWER_A && c <= LOWER_Z) {
+	            sb.append((char) (UNICODE_ITALIC_LOWER_START + (c - LOWER_A))); // Italic a–z
+	        } else if (c >= DIGIT_0 && c <= '9') {
+	            sb.append((char) (UNICODE_ITALIC_DIGIT_START + (c - DIGIT_0))); // Italic 0–9
+	        } else {
+	            sb.append(c); // leave other characters unchanged
+	        }
+	    }
+
+	    return sb.toString();
+	}
+
+	// new #25725 - End
 	
 	/** #21695 FARID START*/	
 	/**

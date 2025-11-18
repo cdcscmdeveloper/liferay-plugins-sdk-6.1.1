@@ -2033,11 +2033,16 @@ public class QTCommitteBackingBean extends
 			}
 
 			if (super.isQTStatusPublished(currentStatusId)) {
-				// Bug_39340 - Start - Maintenance: Remove code allow edit committee for status 60008, 60036, 60009
 				// 25037 - start - note 372
-				return false;
+				Long[] allowedStatusAfterPublish = new Long[] { QTStatusConst.QT_BRIEFING_SITE_VISIT,
+						QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE, QTStatusConst.QT_PROPOSAL_PREPARATION };
+				
+				if ((!Arrays.asList(allowedStatusAfterPublish).contains(currentStatusId) && Arrays.asList(
+						ParameterConst.QT_COMMITTEES_ORDERED_LIST).contains(commType))
+						|| ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)) {
+					return false;
+				}
 				// 25037 - end - note 372
-				// Bug_39340 - End
 			} else if (!isEligibleStatusForBtns(currentStatusId, commType)) {
 				return false;
 			}
@@ -2310,14 +2315,18 @@ public class QTCommitteBackingBean extends
 				}
 				count++;
 				if (count >= 2) {
-					throw new EpException(MessageConst.ERROR_760123,new String[]{committeeType});
+					//#35320 - Start
+					throw new EpException(MessageConst.ERROR_760712,new String[]{committeeType});
+					//#35320 - End
 					// Only required to have 1 chairperson for appoint committee
 				}
 			}
 		}
 
 		if (count == 0) {
-			throw new EpException(MessageConst.ERROR_760047,new String[]{committeeType});
+			//#35320 - Start
+			throw new EpException(MessageConst.ERROR_760711,new String[]{committeeType});
+			//#35320 - End
 			// At least one chairperson are required for appoint committee
 		}
 	}
@@ -2794,6 +2803,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public boolean isCommitteeRoleEditable(PmParameter role) {
 		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
+
 		if (role != null && StringUtils.isNotEmpty(committeeType) && role.getParameterCode() != null) {
 			Long status = getCurrentQtStatusId();
 			status = status == null ? new Long(0L) : status;
