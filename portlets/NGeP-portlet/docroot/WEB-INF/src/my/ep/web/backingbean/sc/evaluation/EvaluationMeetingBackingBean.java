@@ -2470,6 +2470,8 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 
 			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
 				auditResDTO.setNewValue(entry.getValue().get(0));
