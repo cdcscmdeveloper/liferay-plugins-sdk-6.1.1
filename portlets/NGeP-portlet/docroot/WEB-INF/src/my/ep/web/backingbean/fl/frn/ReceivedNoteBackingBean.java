@@ -2001,8 +2001,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * is displayed to the user. Otherwise, it proceeds directly with the GPKI signing action.
 	 *
 	 * @param outcome 
+	 * @return Navigation outcome string returned by gpkiSignAction, or null when the confirmation dialog is shown.
 	 */
-	public void checkLimitBeforeSubmit(String outcome) {
+	public String checkLimitBeforeSubmit(String outcome) {
+
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
 				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 
@@ -2012,15 +2014,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			if (getManagedBean().isShowLimitExceededDialog()) {
 				RequestContext.getCurrentInstance().update(":form:limitConfirmDlg");
 				RequestContext.getCurrentInstance().execute("limitConfirmDlg.show();");
-
-				return;
+				return null;
 			} else {
-				gpkiSignAction(outcome);
+				return gpkiSignAction(outcome);
 			}
-
-		} else {
-			gpkiSignAction(outcome);
 		}
+
+		return gpkiSignAction(outcome);
 	}
 	
 	/**
