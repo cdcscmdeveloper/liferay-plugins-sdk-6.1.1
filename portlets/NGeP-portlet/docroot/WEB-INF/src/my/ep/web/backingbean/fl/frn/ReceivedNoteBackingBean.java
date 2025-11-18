@@ -2163,10 +2163,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			PmParameter procurementType) {
 		String procurementTypeDesc = this.getParameterDesc(procurementType);
 
-		if (isPanel) {
-			procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.PANEL + ")";
-		} else {
-			procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.NON_PANEL + ")";
+		if(procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)){
+			if (isPanel) {
+				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.PANEL + ")";
+			} else {
+				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.NON_PANEL + ")";
+			}
 		}
 
 		if (!isPanel && supplierTypeId != null) {
