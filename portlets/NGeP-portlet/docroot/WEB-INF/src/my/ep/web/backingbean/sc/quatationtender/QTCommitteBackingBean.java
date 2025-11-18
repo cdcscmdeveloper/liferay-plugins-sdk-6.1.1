@@ -2033,11 +2033,16 @@ public class QTCommitteBackingBean extends
 			}
 
 			if (super.isQTStatusPublished(currentStatusId)) {
-				// Bug_39340 - Start
-				if ((Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST).contains(commType))){
+				// 25037 - start - note 372
+				Long[] allowedStatusAfterPublish = new Long[] { QTStatusConst.QT_BRIEFING_SITE_VISIT,
+						QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE, QTStatusConst.QT_PROPOSAL_PREPARATION };
+				
+				if ((!Arrays.asList(allowedStatusAfterPublish).contains(currentStatusId) && Arrays.asList(
+						ParameterConst.QT_COMMITTEES_ORDERED_LIST).contains(commType))
+						|| ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)) {
 					return false;
 				}
-				// Bug_39340 - End
+				// 25037 - end - note 372
 			} else if (!isEligibleStatusForBtns(currentStatusId, commType)) {
 				return false;
 			}
