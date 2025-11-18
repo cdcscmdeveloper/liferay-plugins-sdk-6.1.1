@@ -17,25 +17,36 @@
 	</cc:interface>
 
 	<cc:implementation>
+		<style type="text/css">
+			.ui-fileupload td.cancel,
+			.ui-fileupload td.start {
+		        display: none;
+		    }
+		</style>
+		
 		<ui:param name="ai" value="#{smAIDocBackingBean}" />
 		<p:remoteCommand name="resetDoc" action="#{ai.resetDoc()}" update="pnl#{cc.attrs.aiDlg}"/>
 		
-		<p:blockUI block="#{cc.attrs.aiDlg}" widgetVar="block#{cc.attrs.aiDlg}">
+		<p:dialog id="block#{cc.attrs.aiDlg}" widgetVar="block#{cc.attrs.aiDlg}"
+			modal="true" resizable="false" closable="false" showHeader="false">
 			<p:outputPanel style="display: flex; flex-direction: column;align-items: center;">
 				<p:outputLabel value="#{lbl['lbl.sm.ai.load']}..."/>
 				<p:spacer width="10" />
 				<p:graphicImage value="/css/images/ai/load.gif"/>
 			</p:outputPanel>
-		</p:blockUI>
-	
+		</p:dialog>
+		
 		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
-			dynamic="true" resizable="false" width="700px" onShow="resetDoc();"
-			header="#{lbl['lbl.btn.upload.doc']}">
-		<p:outputPanel id="pnl#{cc.attrs.aiDlg}">
+			dynamic="true" resizable="false" width="700px" 
+			header="#{lbl['lbl.btn.upload.doc']}"
+			styleClass="pop_up_top">
+			
+		<p:outputPanel id="pnl#{cc.attrs.aiDlg}" layout="block">
 		
 			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
-
-			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+			
+			<h:inputHidden id="ai"/>
+			<p:messages id="messages" for="ai" showDetail="true" autoUpdate="true" closable="true"/>
 			
 			<h:outputText value="#{lbl['lbl.sm.instruction.attachment']}" styleClass="instruction" escape="false" />
 

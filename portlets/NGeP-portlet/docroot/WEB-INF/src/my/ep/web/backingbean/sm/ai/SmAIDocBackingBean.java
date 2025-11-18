@@ -2,9 +2,11 @@ package my.ep.web.backingbean.sm.ai;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -60,35 +62,35 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 @ViewScoped
 public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
+	public static Logger log = Logger.getLogger(SmAIDocBackingBean.class);
 	private static final long serialVersionUID = 1L;
-	public static final Logger log = Logger.getLogger(SmAIDocBackingBean.class);
 
-	private static Map<String, List<SmApplDocFile>> docsMap = new HashMap<>();
-	private static Map<String, Boolean> postAIMap = new HashMap<>();
+	private Map<String, List<SmApplDocFile>> docsMap = new HashMap<>();
+	private Map<String, Boolean> postAIMap = new HashMap<>();
 	private List<SmApplDocFile> docs;
 	
-
-	private static String valueStr = "value";
-	private static String confidence = "confidence";
-	private static String fieldsStr = "fields";
-	private static String resultsStr = "results";
-	private static String propertiesStr = "properties";
-	private static String normalizedValueStr = "normalizedValue";
-	private static String googleUrl = EpPropertiesUtils.getInstance().getProperty("google.doc.url");
-	private static double minConfidence = 0.95;
-	private static double minScoreFuzzyMatch = 0.8;
+	private static final String VALUE = "value";
+	private static final String CONFIDENCE = "confidence";
+	private static final String FIELDS = "fields";
+	private static final String RESULTS = "results";
+	private static final String PROPERTIES = "properties";
+	private static final String NORM_VALUE = "normalizedValue";
+	private static final double MIN_CONFIDENCE = 0.95;
+	private static final double MIN_FUZZY_SCORE = 0.8;
 	private static final String TYPE_EPF = "epf";
 	private static final String TYPE_TENANCY = "tenancy";
 	private static final String TYPE_BANK = "bank";
+
+	private static String googleUrl = EpPropertiesUtils.getInstance().getProperty("google.doc.url");
 	
-	private static List<EPFEntity> epfs;
-	private static TenancyEntity tenancy;
-	private static List<EPFEntity.EmployeeInfo> selectedEmployees;
+	private List<EPFEntity> epfs;
+	private TenancyEntity tenancy;
+	private List<EPFEntity.EmployeeInfo> selectedEmployees;
 	private boolean postAI = false;
 	private String docType;
 	private SmAppl smAppl;
 	
-	private static String tempGoogleUrl = "http://192.168.62.17:5000/process";
+	private static final String tempGoogleUrl = "http://192.168.62.17:5000/process";
 	//172.23.114.72, 192.168.62.17 (dev)"
 	
 	private SmAppl testAppl;
@@ -127,7 +129,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		docs = docsMap.get(docType);
 		postAI = postAIMap.get(docType);
-		if (docs.size() < 1){
+		if (docs.isEmpty()){
 			epfs = null;
 			tenancy = null;
 			postAI = false;
@@ -150,6 +152,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		doc.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
 		doc.setFilePath(filePath);
 		
+		//wip
 		SmApplSupportDoc suppDoc = getSmApplSupportDoc(docType, smAppl);
 		if (suppDoc.getSmApplDocFiles() == null){
 			suppDoc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
@@ -165,7 +168,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 	}
 	
-	private static SmApplSupportDoc getSmApplSupportDoc(String docType, SmAppl appl){
+	
+	private SmApplSupportDoc getSmApplSupportDoc(String docType, SmAppl appl){
 		SmApplSupportDoc newDoc = new SmApplSupportDoc();
 		newDoc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
 		if(appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
@@ -189,12 +193,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param type
 	 * @param appl
 	 */
-	public static void processDoc(String type, SmAppl appl){
+	public void processDoc(String type, SmAppl appl){
 		if (StringUtils.isEmpty(type)){
 			return;
 		}
-		String docType = type.trim();
-		List<SmApplDocFile> docs = docsMap.get(docType);
+		docType = type.trim();
+		docs = docsMap.get(docType);
 		if (EntityHelper.isCollectionEmpty(docs)){
 			return;
 		}
@@ -224,10 +228,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		boolean hasError = showErrorMessage(docType, jsonWrappers);
 		try {
 			if (TYPE_EPF.equals(docType)){
-				processEPF(jsonWrappers, appl, docType);
+				processEPF(jsonWrappers, appl);
 				
-			} else if (TYPE_TENANCY.equals(docType)){
-				processTenancyAgreement(jsonWrappers, docType);
+			} else if (TYPE_TENANCY.equals(docType) && !hasError){
+				processTenancyAgreement(jsonWrappers);
 				
 			} else {
 				processBank(jsonWrappers);
@@ -253,7 +257,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			String content = getFakeData(filepath, filename);
 			return new JsonWrapper(System.currentTimeMillis(), content, docType);
 		}
-		if (!filename.endsWith("ai_demo.pdf")){
+		if (!filename.contains("ai_demo.pdf")){
 			return null;
 		}
 		///temporary demo filter - end
@@ -382,7 +386,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param appl
 	 * @param suppDoc
 	 */
-	public static void processBankStatement(SmAppl appl, SmApplSupportDoc suppDoc){
+	public void processBankStatement(SmAppl appl, SmApplSupportDoc suppDoc){
 		if (suppDoc == null || suppDoc.getPmDocument() == null || appl == null || appl.getSmSupplier() == null){
 			return;
 		}
@@ -427,7 +431,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	/**
 	 * @param appl
 	 */
-	public static void validateBank(SmAppl appl){
+	public void validateBank(SmAppl appl){
 		if (appl == null || appl.getSmSupplier() == null){
 			return;
 		}
@@ -498,7 +502,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			} else {
 				double score = fuzzyMatchJaroWinkler(bankName, bank.bankName);
 				log.info("Score: "+score+"\tBank1: "+bankName+"\tBank2:"+bank.bankName);
-				if (score < minScoreFuzzyMatch){
+				if (score < MIN_FUZZY_SCORE){
 					bank.validBankName = false;
 				}
 			}
@@ -577,8 +581,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					err = "Please upload a valid Bank Statement for AI data extraction";
 					break;
 				}
-			}
-			if (statusCode == 500){
+				
+			} else if (statusCode >= 400){
 				err = "AI processing is temporarily unavailable. Your document has been uploaded successfully, " +
 						"and you can still proceed with your application as usual.";
 				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null, err);
@@ -599,30 +603,29 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param jsonWrappers
 	 * @return
 	 */
-	public static List<DocEntity> processBank(List<JsonWrapper> jsonWrappers){
+	public List<DocEntity> processBank(List<JsonWrapper> jsonWrappers){
 		if (EntityHelper.isCollectionEmpty(jsonWrappers)){
 			return new ArrayList<>();
 		}
-		List<DocEntity> docs = new ArrayList<>();
+		List<DocEntity> docEnts = new ArrayList<>();
 		for (JsonWrapper json : jsonWrappers){
 			DocEntity doc = new DocEntity(json.apiId, json.entities);
-			docs.add(doc);
+			docEnts.add(doc);
 		}
-		return docs;
+		return docEnts;
 	}
 
 	/**
 	 * @param entities
 	 * @param docType
 	 */
-	public static void processTenancyAgreement(List<JsonWrapper> entities, String docType){
+	public void processTenancyAgreement(List<JsonWrapper> entities){
 		if (EntityHelper.isCollectionEmpty(entities)){
 			return;
 		}
 		List<TenancyEntity> tes = new ArrayList<>();
-		TenancyEntity te = null;
 		for (JsonWrapper entityWrapper : entities){
-			te = new TenancyEntity(entityWrapper.entities);
+			TenancyEntity te = new TenancyEntity(entityWrapper.entities);
 			tes.add(te);
 			tenancy = te;
 		}
@@ -633,7 +636,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param appl
 	 * @param docType
 	 */
-	public static void processEPF(List<JsonWrapper> entities, SmAppl appl, String docType){
+	public void processEPF(List<JsonWrapper> entities, SmAppl appl){
 		if (epfs == null){
 			epfs = new ArrayList<>();
 		}
@@ -655,7 +658,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (ee.employer != null){
 				score = fuzzyMatchJaroWinkler(companyName, ee.employer.employerName);
 			}
-			if (score < minScoreFuzzyMatch){
+			if (score < MIN_FUZZY_SCORE){
 				hasWrongCompanyName = true;
 			}
 		}
@@ -686,7 +689,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 */
 	public void deleteDoc(SmApplDocFile doc) {
 		docs.remove(doc);
-		if(docs.size() < 1){
+		if(docs.isEmpty()){
 			epfs = null;
 			tenancy = null;
 			postAI = false;
@@ -739,16 +742,16 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				return null;
 			}
 			JSONObject data = root.getJSONObject("data");
-			if (!data.has(resultsStr)) {
+			if (!data.has(RESULTS)) {
 				log.warn("  No results found in data");
 				return null;
 			}
-			JSONObject results = data.getJSONObject(resultsStr);
-			if (!results.has(fieldsStr)) {
+			JSONObject results = data.getJSONObject(RESULTS);
+			if (!results.has(FIELDS)) {
 				log.warn("  No fields found in results");
 				return null;
 			}
-			JSONArray fields = results.getJSONArray(fieldsStr);
+			JSONArray fields = results.getJSONArray(FIELDS);
 			if (fields.length() == 0) {
 				log.warn("  No fields found");
 				return null;
@@ -806,7 +809,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		String tempDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR) + "/" + filepath + filename;
 		File file = new File(tempDir);
-		byte[] fileBytes = Files.readAllBytes(file.toPath());
+
+		
+		if (!file.exists()) {
+			String errorMsg = "File not found: " + tempDir;
+			log.error(errorMsg);
+			throw new IOException(errorMsg);
+		}
+		if (file.length() == 0) {
+			String errorMsg = "File is empty (0 bytes): " + tempDir;
+			log.error(errorMsg);
+			throw new IOException(errorMsg);
+		}
+
+		log.info("Uploading file: " + filename + " (" + file.length() + " bytes from " + tempDir + ")");
 		
 		// Create boundary for multipart
 		String boundary = "----WebKitFormBoundary" + System.currentTimeMillis();
@@ -820,28 +836,51 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		conn.setConnectTimeout(30 * 1000); // 30 sec
 		conn.setReadTimeout(120 * 1000); // 2 min
 		
-		StringBuilder sb = new StringBuilder();
+		OutputStream out = conn.getOutputStream();
+		OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+
+		osw.write("--" + boundary + crlf);
+		osw.write("Content-Disposition: form-data; name=\"documentType\"" + crlf);
+		osw.write(crlf);
+		osw.write(docType + crlf);
+		osw.flush();
+
+		osw.write("--" + boundary + crlf);
+		osw.write("Content-Disposition: form-data; name=\"file\"; filename=\"" + filename + "\"" + crlf);
+		osw.write("Content-Type: application/pdf" + crlf);
+		osw.write(crlf);
+		osw.flush();
 		
-		sb.append("--").append(boundary).append(crlf);
-		sb.append("Content-Disposition: form-data; name=\"documentType\"").append(crlf);
-		sb.append(crlf);
-		sb.append(docType).append(crlf);
+		FileInputStream input = null;
+		try {
+			input = new FileInputStream(file);
+			byte[] buffer = new byte[8192];
+			int bytesRead;
+			long totalBytes = 0;
+
+			while ((bytesRead = input.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				totalBytes += bytesRead;
+			}
+			out.flush();
 		
-		sb.append("--").append(boundary).append(crlf);
-		sb.append("Content-Disposition: form-data; name=\"file\"; filename=\"")
-			.append(filename).append("\"").append(crlf);
-		sb.append("Content-Type: application/pdf").append(crlf);
-		sb.append(crlf);
+			log.info("Successfully streamed " + totalBytes + " bytes for file: " + filename);
 		
-		OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
-		out.write(sb.toString());
-		out.flush();
-		
-		conn.getOutputStream().write(fileBytes);
-		
-		out.write(crlf + "--" + boundary + "--" + crlf);
-		out.flush();
-		out.close();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					log.warn("Error closing file input stream", e);
+				}
+			}
+		}
+
+		// Write closing boundary
+		osw.write(crlf);
+		osw.write("--" + boundary + "--" + crlf);
+		osw.flush();
+		osw.close();
 		
 		try {
 			log.info("sendDocumentToExternalService-status: " + conn.getResponseCode() + " " 
@@ -861,7 +900,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		String bestResult = "";
 		for (String s : list){
 			double score = fuzzyMatchJaroWinkler(target, s);
-			if (score > bestScore && score > minScoreFuzzyMatch){
+			if (score > bestScore && score > MIN_FUZZY_SCORE){
 				bestScore = score;
 				bestResult = s;
 			}
@@ -1016,7 +1055,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				for (int i=0; i < entities.length(); i++){
 					JSONObject bankEntity = entities.getJSONObject(i);
 					String entityId = bankEntity.getString("entity");
-					JSONArray properties = bankEntity.getJSONArray(propertiesStr);
+					JSONArray properties = bankEntity.getJSONArray(PROPERTIES);
 					BankStatementEntity bankStatement = new BankStatementEntity(
 							properties, entityId);
 					this.bankStatements.add(bankStatement);
@@ -1083,10 +1122,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(valueStr, "");
-				String value = property.optString(normalizedValueStr, text);
-				double conf = property.optDouble(confidence, 0.0);
-				if (conf < minConfidence){
+				String text = property.optString(VALUE, "");
+				String value = property.optString(NORM_VALUE, text);
+				double conf = property.optDouble(CONFIDENCE, 0.0);
+				if (conf < MIN_CONFIDENCE){
 					log.info("Patut skip la kan? " + conf);
 				}
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
@@ -1164,70 +1203,27 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		private EmployerInfo employer;
 		private List<EmployeeInfo> employees;
 
-		private static class EmployerInfo {
+		private class EmployerInfo {
 			private String employerName;
-			private String referenceNumber;
-			private String employerAddress;
-			private String entityId;
-			private String postcode;
-			private String country;
-			private String state;
-			private String district;
-			private String city;
-			private String normalizedAddress;
 
-			private EmployerInfo(JSONArray properties, String entityId) throws JSONException {
-				this.entityId = entityId;
+			private EmployerInfo(JSONArray properties) throws JSONException {
 
 				for (int i = 0; i < properties.length(); i++) {
 					JSONObject property = properties.getJSONObject(i);
 					String type = property.optString("type", "");
-					String text = property.optString(valueStr, "");
-					String value = property.optString(normalizedValueStr, text);
-					double conf = property.optDouble(confidence, 0.0);
-					if (conf < minConfidence) {
+					String text = property.optString(VALUE, "");
+					String value = property.optString(NORM_VALUE, text);
+					double conf = property.optDouble(CONFIDENCE, 0.0);
+					if (conf < MIN_CONFIDENCE) {
 						log.info("Low confidence for employer field: " + conf);
 					}
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)) {
 						continue;
 					}
-					switch (type) {
-					case "employer_name":
+					if ("employer_name".equals(type)){
 						this.employerName = value.trim();
-						break;
-					case "reference_number":
-						this.referenceNumber = value.trim();
-						break;
-					case "employer_address":
-						this.employerAddress = value.trim();
-						JSONObject addressComponents = property.optJSONObject("addressComponents");
-						if (addressComponents != null) {
-							this.postcode = addressComponents.optString("postcode", "").trim();
-							this.country = addressComponents.optString("country", "").trim();
-							this.state = addressComponents.optString("state", "").trim();
-							this.district = addressComponents.optString("district", "").trim();
-							this.city = addressComponents.optString("city", "").trim();
-							this.normalizedAddress = addressComponents.optString("normalized_Address", "").trim();
-						}
-						break;
-					default:
 					}
 				}
-			}
-
-			@Override
-			public String toString() {
-				StringBuilder sb = new StringBuilder();
-				if (employerName != null) {
-					sb.append("Employer: ").append(employerName).append("\n");
-				}
-				if (referenceNumber != null) {
-					sb.append("Reference Number: ").append(referenceNumber).append("\n");
-				}
-				if (employerAddress != null) {
-					sb.append("Address: ").append(employerAddress).append("\n");
-				}
-				return sb.toString();
 			}
 		}
 
@@ -1241,20 +1237,16 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			private String kwspNumber;
 			private String nricNumber;
 			private String employeeName;
-			private String employeeContribution;
-			private String employerContribution;
-			private String entityId;
 
-			private EmployeeInfo(JSONArray properties, String entityId) throws JSONException {
-				this.entityId = entityId;
+			private EmployeeInfo(JSONArray properties) throws JSONException {
 
 				for (int i = 0; i < properties.length(); i++) {
 					JSONObject property = properties.getJSONObject(i);
 					String type = property.optString("type", "");
-					String text = property.optString(valueStr, "");
-					String value = property.optString(normalizedValueStr, text);
-					double conf = property.optDouble(confidence, 0.0);
-					if (conf < minConfidence) {
+					String text = property.optString(VALUE, "");
+					String value = property.optString(NORM_VALUE, text);
+					double conf = property.optDouble(CONFIDENCE, 0.0);
+					if (conf < MIN_CONFIDENCE) {
 						log.info("Low confidence for employee field: " + conf);
 					}
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)) {
@@ -1270,12 +1262,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 						break;
 					case "employee_name":
 						this.employeeName = value;
-						break;
-					case "employee_contribution":
-						this.employeeContribution = value;
-						break;
-					case "employer_contribution":
-						this.employerContribution = value;
 						break;
 					default:
 					}
@@ -1301,13 +1287,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entityObj = entities.getJSONObject(i);
 					String entityId = entityObj.getString("entity");
-					JSONArray properties = entityObj.getJSONArray(propertiesStr);
+					JSONArray properties = entityObj.getJSONArray(PROPERTIES);
 
 					if (entityId.startsWith("employee-")) {
-						EmployeeInfo employee = new EmployeeInfo(properties, entityId);
+						EmployeeInfo employee = new EmployeeInfo(properties);
 						this.employees.add(employee);
 					} else if (entityId.startsWith("employer-")) {
-						this.employer = new EmployerInfo(properties, entityId);
+						this.employer = new EmployerInfo(properties);
 					}
 				}
 
@@ -1321,36 +1307,35 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 	}
 
+	/**
+	 * JSON Mapping for Tenancy Agreement
+	 * @author AI
+	 */
 	public static class TenancyEntity {
-		public String agreementDate;
-		public String landlordsName;
-		public BigDecimal monthlyRental;
-		public String premisesAddress;
-		public String rentalDuration;
-		public String tenantsName;
-		public String propertyType;
-		public String postcode;
-		public String country;
-		public String state;
-		public String district;
-		public String city;
-		public String normalizedAddress;
+		private String landlordsName;
+		private BigDecimal monthlyRental;
+		private String premisesAddress;
+		private String postcode;
+		private String addr1;
+		private String addr2;
 		
-		public String codeState;
-		public String codeDistrict;
-		public String codeCity;
-		public PmCity pmCity;
+		private String codeCity;
+		private PmCity pmCity;
 
+		/**
+		 * 
+		 * @param entities
+		 */
 		public TenancyEntity(JSONArray entities) {
 			try {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(valueStr, "");
-					String value = entity.optString(normalizedValueStr, text);
-					double conf = entity.optDouble(confidence, 0.0);
+					String text = entity.optString(VALUE, "");
+					String value = entity.optString(NORM_VALUE, text);
+					double conf = entity.optDouble(CONFIDENCE, 0.0);
 
-					if (conf < minConfidence) {
+					if (conf < MIN_CONFIDENCE) {
 						log.info("Low confidence for tenancy field: " + conf);
 					}
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text)){
@@ -1358,9 +1343,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					}
 					value = value.trim();
 					switch (type) {
-					case "agreement_date":
-						this.agreementDate = value;
-						break;
 					case "landlords_name":
 						this.landlordsName = value;
 						break;
@@ -1370,15 +1352,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					case "premises_address":
 						this.premisesAddress = value;
 						setAddress(entity.optJSONObject("addressComponents"));
-						break;
-					case "rental_duration":
-						this.rentalDuration = value;
-						break;
-					case "tenants_name":
-						this.tenantsName = value;
-						break;
-					case "property_type":
-						this.propertyType = value;
 						break;
 					default:
 					}
@@ -1391,14 +1364,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		public void setAddress(JSONObject addr){
 			if (addr != null) {
 				this.postcode = addr.optString("postcode", "").trim();
-				this.country = addr.optString("country", "").trim();
-				this.state = addr.optString("state", "").trim();
-				this.district = addr.optString("district", "").trim();
-				this.city = addr.optString("city", "").trim();
 				String fullAddr = addr.optString("normalized_Address", "").trim();
-				this.normalizedAddress = truncateAddressAtPostcode(fullAddr, this.postcode);
-				this.codeState = addr.optString("state_code", "").trim();
-				this.codeDistrict = addr.optString("district_code", "").trim();
+				truncateAddressAtPostcode(fullAddr, this.postcode);
 				this.codeCity = addr.optString("city_code", "").trim();
 			}
 			if (!StringUtils.isEmpty(codeCity)){
@@ -1408,21 +1375,35 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		
         /**
-         * Truncates the address string at the first occurrence of the postcode.
+         * Truncates the address string at the postcode
          * @param normalizedAddress
          * @param postcode the postcode
          * @return the truncated address
          */
-		private String truncateAddressAtPostcode(String normalizedAddress, String postcode) {
-			if (StringUtils.isEmpty(normalizedAddress) || StringUtils.isEmpty(postcode)) {
-				return normalizedAddress;
+		private String truncateAddressAtPostcode(String addr, String postcode) {
+			if (StringUtils.isEmpty(addr) || StringUtils.isEmpty(postcode)) {
+				this.addr1 = addr;
+				this.addr2 = "";
+				return addr;
     		}
-			int postcodeIndex = normalizedAddress.indexOf(postcode);
+			int postcodeIndex = addr.indexOf(postcode);
 			if (postcodeIndex == -1) {
-				return normalizedAddress;
+				this.addr1 = addr;
+				this.addr2 = "";
+				return addr;
 			}
-			String truncated = normalizedAddress.substring(0, postcodeIndex).trim();
-			return truncated.replaceAll(",\\s*$", "").trim();
+			String truncated = addr.substring(0, postcodeIndex).trim();
+			String result = truncated.replaceAll(",\\s*$", "").trim();
+
+			int firstComma = result.indexOf(',');
+			if (firstComma != -1) {
+				this.addr1 = result.substring(0, firstComma);
+				this.addr2 = result.substring(firstComma + 1);
+			} else {
+				this.addr1 = result;
+				this.addr2 = "";
+			}
+			return result;
         }
 
 		public String getLandlordsName(){
@@ -1435,6 +1416,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		public String getPremisesAddress(){
 			return this.premisesAddress;
+		}
+		
+		public String getPostcode(){
+			return this.postcode;
+		}
+		
+		public String getAddr1(){
+			return this.addr1;
+		}
+
+		public String getAddr2(){
+			return this.addr2;
+		}
+
+		public PmCity getPmCity(){
+			return this.pmCity;
 		}
 	}
 }
