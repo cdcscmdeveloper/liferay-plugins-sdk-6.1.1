@@ -47,7 +47,12 @@
 		
 			<p:tabView id="settingTabId"
 				activeIndex="#{ruleCatalogueBackingBean.managedBean.tabActiveIndex}">
-
+				 <p:ajax event="tabChange" listener="#{ruleCatalogueBackingBean.onAnyTabChange}"
+            		update=":form:settingTabId:qtValueTableId
+                    :form:settingTabId:qtValueSearch
+                    :form:settingTabId:ruleConfigId
+                    ruleTypeValueTableID
+                    ruleTypeValueSearch" /> <!-- #36738 -->
 				<!--<p:tab id="generalSet" title="#{lbl['lbl.pm.settings.general.parameter']}">
 					<ui:include src="generalSettingTab.xhtml"></ui:include>
 				</p:tab>-->
@@ -56,7 +61,8 @@
 				</p:tab>
 				<p:tab title="#{lbl['lbl.pm.settings.fee.setting.tab']}">
 					<p:tabView id="feeSettingId"
-						activeIndex="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex}">
+						activeIndex="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex}"
+						dynamic="true" cache="false">
                         <p:tab title="#{lbl['lbl.pm.settings.fee.by.org.type']}">
 							<ui:include src="feeSettingByOrgType.xhtml"></ui:include>
 						</p:tab>
@@ -75,7 +81,8 @@
 				
 				<p:tab title="#{lbl['lbl.pm.settings.gst']}">
                 	<p:tabView id="gstId" 
-                		activeIndex="#{ruleCatalogueBackingBean.managedBean.gstIndex}">
+                		activeIndex="#{ruleCatalogueBackingBean.managedBean.gstIndex}"
+                		dynamic="true" cache="false">
          <!--        		<p:ajax event="tabChange" listener="#{ruleCatalogueBackingBean.onGstTabChange}"/>
                 		<p:tab id="taTabId" title="#{lbl['lbl.pm.settings.gst.taxableitem']}">
 							<ui:include src="gstTaxableItem.xhtml"></ui:include>
@@ -94,7 +101,8 @@
 				
                 <p:tab title="#{lbl['lbl.pm.settings.operational.threshold']}">
                 	<p:tabView id="thresholdId"
-                		activeIndex="#{ruleCatalogueBackingBean.managedBean.thresholdIndex}">
+                		activeIndex="#{ruleCatalogueBackingBean.managedBean.thresholdIndex}"
+                		dynamic="true" cache="false">
                 		<p:tab title="#{lbl['lbl.pm.settings.unplanned.qt.threshold']}">
 							<ui:include src="unplannedQtThreshold.xhtml"></ui:include>
 						</p:tab>
