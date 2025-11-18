@@ -5791,8 +5791,8 @@ public class RuleCatalogueBackingBean extends
 	 * @return
 	 */
 	private boolean isDateMatch(PmConfigRuleValue value, Date searchEff, Date searchExp) {
-		Date valueEffDate      = truncateDate(value.getEffDate());
-		Date valueExpDate      = truncateDate(value.getExpDate());
+		Date valueEffDate = truncateDate(value.getEffDate());
+		Date valueExpDate = truncateDate(value.getExpDate());
 		Date searchEffDate = truncateDate(searchEff);
 		Date searchExpDate = truncateDate(searchExp);
 		
@@ -5805,6 +5805,12 @@ public class RuleCatalogueBackingBean extends
 		return !valueEffDate.before(searchEff) && !valueExpDate.after(searchExp);
 	}
 	
+	/**
+	 * #36738
+	 * Standardized the time up to milliseconds of the dates for comparison
+	 * @param date
+	 * @return
+	 */
 	private Date truncateDate(Date date){
 		Calendar c = Calendar.getInstance();
 	    c.setTime(date);
