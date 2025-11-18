@@ -3141,6 +3141,7 @@ public class LOIDetailBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 								MessageConst.ERROR_760601, null, MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale)));
+				this.enableAutoUpdate();
 			} else {
 				throw e;
 			}
