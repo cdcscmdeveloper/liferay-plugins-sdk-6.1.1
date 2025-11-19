@@ -2183,29 +2183,23 @@ public class QTSupplierQulCriteriaBackingBean extends
 				}
 			}
 			
-			if(processAfter){
-				if(this.getManagedBean().getResetHistoryCatCode()){
-					getManagedBean().setHisCatCode(catCode);
-					this.getManagedBean().setHistoryList(null);
-				}else{
-					getManagedBean().setHistoryList(
-							updateCreatedUserName(resDTO.getRemarkList()));
-					getManagedBean().setHisCatCode(catCode);
-					if(this.getManagedBean().getUpdateCatInPm() && !this.getManagedBean().getUpdateCatDesc()){
-						List<PmRemarkCategory> listCategoryDB = new ArrayList();
-						int i=0;
+		if (processAfter) {
 
-						for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
-							if (i > 0 && null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)) {
-							    listCategoryDB.add(removeIndex);
-							}
-							 i++;
-						}
-						getManagedBean().setHistoryList(listCategoryDB);
+			getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+			getManagedBean().setHisCatCode(catCode);
+			if (this.getManagedBean().getUpdateCatInPm() && !this.getManagedBean().getUpdateCatDesc()) {
+				List<PmRemarkCategory> listCategoryDB = new ArrayList();
+				int i = 0;
+
+				for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
+					if (i > 0 && null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)) {
+						listCategoryDB.add(removeIndex);
 					}
-
+					i++;
 				}
+				getManagedBean().setHistoryList(listCategoryDB);
 			}
+		}
 
 			RequestContext.getCurrentInstance().execute("hisPopup.show()");
 		}
