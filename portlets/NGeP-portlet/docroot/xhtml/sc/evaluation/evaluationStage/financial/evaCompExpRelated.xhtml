@@ -29,24 +29,14 @@
 			<h:outputText value="#{experience.contractTitle} "
 				style="white-space: normal;word-wrap: break-word;" />
 		</p:column>
-		<p:column style="width:10%;white-space: normal;"
+		<p:column style="width:10%;white-space: normal;word-wrap: break-word;"
 			headerText="#{lbl['lbl.sc.fin.file.ref.no']}">
 			<h:outputText value="#{experience.fileRefrenceNo} " />
 		</p:column>
 		<p:column style="width:10%;white-space: normal;"
 			headerText="#{lbl['lbl.sc.fin.letter.accept.no']}">
 
-			<p:commandLink process="@this" styleClass="commandLink_link"
-				action="#{evaluationBackingBean.viewLOADetailsPage(experience, view.viewId)}"
-				rendered="#{experience.loaNo ne null and isTerminated}"
-				partialSubmit="true">
-				<h:outputText escape="false"
-					value="#{evaluationBackingBean.getLabelContent(experience.loaNo)}" />
-			</p:commandLink>
-			<h:outputText escape="false"
-				rendered="#{experience.loaNo ne null and !isTerminated}"
-				value="#{evaluationBackingBean.getLabelContent(experience.loaNo)}" />
-			<h:outputText rendered="#{experience.loaNo eq null}"
+			<h:outputText
 				value="#{evaluationBackingBean.getLabelContent(experience.loaNo)}" />
 
 		</p:column>
