@@ -2127,6 +2127,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			Long catCodeId,Long qtCateId, String categoryName, String catCode) {
 		boolean processAfter = false;
 		Date qtCatCreatedDate = null;
+		Date qtCatChangedDate = null;
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2140,6 +2141,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
 			for(ScQtCategory categoryCodeEdit : findQtCatCode){
 				qtCatCreatedDate = categoryCodeEdit.getCreatedDate();
+				qtCatChangedDate = categoryCodeEdit.getChangedDate();
 				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc() || this.getManagedBean().getUpdateCatInPm()){
 					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
 						reqDTO.setCategoryL1Id(catCodeId);
@@ -2178,7 +2180,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 		}
 		
-		if(processAfter){
+		if (processAfter) {
 
 			getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
 			getManagedBean().setHisCatCode(catCode);
@@ -2187,7 +2189,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 				int i = 0;
 
 				for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
-					if (i > 0 && null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)) {
+					if (i > 0 && null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)
+							&& removeIndex.getChangedDate().before(qtCatChangedDate)) {
 						listCategoryDB.add(removeIndex);
 					}
 					i++;
