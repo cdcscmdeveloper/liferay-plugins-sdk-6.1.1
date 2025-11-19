@@ -5574,11 +5574,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 
 		// check if supplier mof set in pm
-		reqDTO.setSuppTypeId(1008L); // replace with sm mof acc type id
+		reqDTO.setSuppTypeId(getParameterByTypeAndCode(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE_REASON,
+				FulfilmentConst.SM_SUPP_ACC_CODE_MOF_REASON).getParameterId());
 		boolean isSuppAccTypeRestrMof = reasonSO.isSuppAccTypeRestricted(reqDTO);
 
 		// check if supplier basic set in pm
-		reqDTO.setSuppTypeId(1009L); // replace with sm basic acc type id
+		reqDTO.setSuppTypeId(getParameterByTypeAndCode(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE_REASON,
+				FulfilmentConst.SM_SUPP_ACC_CODE_BASIC_REASON).getParameterId());
 		boolean isSuppAccTypeRestrBasic = reasonSO.isSuppAccTypeRestricted(reqDTO);
 
 		String suppAccType = getSuppAccType();
