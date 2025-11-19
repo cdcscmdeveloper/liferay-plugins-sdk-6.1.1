@@ -189,7 +189,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	//#24336 - Start
 	private String selectedCtValueOption;
-	private Long committeeTypeId;
 	//#24336 - END
 	
 	public void reassignValue(boolean value) 
@@ -1699,12 +1698,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	public void setSelectedCtValueOption(String selectedCtValueOption) {
 		this.selectedCtValueOption = selectedCtValueOption;
-	}
-	public Long getCommitteeTypeId() {
-		return committeeTypeId;
-	}
-	public void setCommitteeTypeId(Long committeeTypeId) {
-		this.committeeTypeId = committeeTypeId;
 	}
 	//#24336 - End
 	

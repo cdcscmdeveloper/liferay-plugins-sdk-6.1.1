@@ -1648,11 +1648,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().setBondPercentage(PerformanceBondUtil.calculatePerformanceBondPercentage(overall, periodBond));
 			// 24333 - End
 			
+			// #24336 Remove set committee type by contract amount - Start
 			// Amendment process	  
 			// Redmine 19600 - Amendment with Supplement
-			if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() >= 20000L){
-				getManagedBean().setCommitteeType(retrieveCommitteeType());
-			}
+			//if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() >= 20000L){
+			//	getManagedBean().setCommitteeType(retrieveCommitteeType());
+			//}
+			// #24336 - End
+			
 			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
 			if (getManagedBean().getTaskName() != null
 					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) 
@@ -1750,9 +1753,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// disciplinary info
 			
 			// #24336 - Start
-			getManagedBean().setCommitteeTypeId(null);
+			getManagedBean().setCommitteeType(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPmParameter() != null) {
-				getManagedBean().setCommitteeTypeId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPmParameter().getParameterId());
+				getManagedBean().setCommitteeType(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPmParameter().getParameterCode());
 			}
 			// #24336 - End
 			
@@ -2904,29 +2907,42 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			// #24336 - Start
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
-				// Validation for Reduction of Contract Amount
+				// Validation for Reduction of Contract Amount (submit)
 				validateReductionAmount();
 				
-				// Empty@Null validation for new amount effective date
+				// Empty@Null validation for new amount effective date (submit)
 				validateNewAmtEffDate();
 			}
 			
-			// Validation for amendment checklist
+			// Validation for amendment checklist (submit)
 			if(isApproverSetting() || isCtApproverSetting()){
 				validateAmendmentChecklist();
 			}
 			
+			// Validation for committee type radio (submit)
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq() 
+				&& getManagedBean().getCommitteeType() == null){
+				validateCommitteeTypeOption();
+			}
 			// #24336 - End
 			
 		}
 		
 		// #24336 - Start
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)  && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
-			// Validation for Reduction of Contract Amount (save)
-			validateReductionAmount();
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+				// Validation for Reduction of Contract Amount (save)
+				validateReductionAmount();
+				
+				// Empty@Null validation for new amount effective date (save)
+				validateNewAmtEffDate();
+			}
 			
-			// Empty@Null validation for new amount effective date (save)
-			validateNewAmtEffDate();
+			// Validation for committee type radio (save)
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq() 
+				&& getManagedBean().getCommitteeType() == null){
+				validateCommitteeTypeOption();
+			}
 		}
 		// #24336 - End
 
@@ -4146,20 +4162,25 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 
-	/**
-	 * The method used for retrieving the committee type
-	 * base on loa amount and procurement type
-	 */
-	private String retrieveCommitteeType() {	    
-
-		IContractAmendmentSO contractAmendmentSO = null;
-		contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-		String committeeType = contractAmendmentSO.getCommitteeType(ctBackingBean.getManagedBean().getContractVer()); 
-		if(committeeType == null) {
-			throw new EpException(MessageConst.ERROR_750017);
-		}
-		return committeeType;
-	}
+	// #24336 Remove set committee type by contract amount - Start
+//	/**
+//	 * The method used for retrieving the committee type
+//	 * base on loa amount and procurement type
+//	 */
+//	private String retrieveCommitteeType() {	    
+//
+//		IContractAmendmentSO contractAmendmentSO = null;
+//		contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+//		String committeeType = contractAmendmentSO.getCommitteeType(ctBackingBean.getManagedBean().getContractVer()); 
+//		if(committeeType == null) {
+//			throw new EpException(MessageConst.ERROR_750017);
+//		}
+//		
+//		log.info("****** committeeType : "+committeeType);
+//		
+//		return committeeType;
+//	}
+	// #24336 - End
 
 	/**
 	 * The method used to set the
@@ -6512,18 +6533,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	/**
 	 * The method used for generating a list of available secretary 
-	 * as selection.
+	 * by Committee Type Radio selection
 	 * 
 	 * @return the selection list of secretary
 	 */
-	public SelectItem[]  getSecretaryDropdownList() {
-		if (getManagedBean().getSecretaryList() == null ) {
-			SelectItem[] items = null;
+	// #24336 - Start
+	public SelectItem[] getSecretaryDropdownList() {
+		String committeeType = getManagedBean().getCommitteeType();
+		SelectItem[] items = null;
+		
+		if(committeeType != null){
+	// #24336 - End	
+			
 			ICommitteSO committeSO = null;
 			ISearchResultBean<PmUser> userResultList = null;
 			//Bug #29740
 			ISearchResultBean<PmUser> userListDO = null;
 			List<PmUser> userList = new ArrayList<PmUser>();
+			
 			try {
 
 				int i = 1;
@@ -6541,8 +6568,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				commReqDO.setDocId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
 				commReqDO.setDocType(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
 				//commReqDO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()); //Bug #33857
-								
-				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+				
+				if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 					committeReqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
 					//Bug #29740 - Add DO PB
@@ -6573,7 +6600,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 
 					for (PmUser user : userList) {//Bug #29740
-						items[i++] = new SelectItem(user.getUserId(), user.getUserName());
+						
+						// #24336 (display name with ic) - Start
+						String nameWithIcNo = user.getUserName() + " - " + user.getIdentificationNo();
+						items[i++] = new SelectItem(user.getUserId(), nameWithIcNo);
+						// #24336 - End
+						
 					}
 					
 					// Default the secretary if selection list only have one secretary
@@ -6585,11 +6617,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} catch (Exception e) {
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+				// #24336 - Start
+				items = resetSecretaryDropdownList();
+				getManagedBean().setSecretaryList(items);
+				// #24336 - End
 			}
+		
+		// #24336 - Start
+		} else {
+			items = resetSecretaryDropdownList();
+			getManagedBean().setSecretaryList(items);
+		// #24336 - End	
 		}
 		return getManagedBean().getSecretaryList();
-	}	
-
+	}
+	
+	// #24336 - Start
+	private SelectItem[] resetSecretaryDropdownList() {
+		SelectItem[] items = new SelectItem[1];
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		return items;
+	}
+	// #24336 - End
+	
 	/**
 	 * The method used for generating a list of available financial institution
 	 * for performance bond as selection.
@@ -10310,7 +10361,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			
 			throw new EpException(MessageConst.ERROR_100061, 
-					new String[]{ResourceBundleUtils.getMessage(ContractConst.NEW_AMOUNT_EFFECTIVE_DATE_MENU_LABEL, 
+					new String[]{ResourceBundleUtils.getMessage(ContractConst.NEW_AMOUNT_EFFECTIVE_DATE_LABEL, 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
 	}
@@ -10349,7 +10400,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    }
 	    
 		if(isError){
-			getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.APPROVER_SETTING_AMENDMENT_CHECKLIST_MENU_LABEL, 
+			getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.APPROVER_SETTING_AMENDMENT_CHECKLIST_LABEL, 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			throw new EpException(MessageConst.ERROR_750093);
 		}
@@ -10431,7 +10482,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		handleNewAmtEffDate();
 	}
 	
-	public SelectItem[] getCommitteeType() {
+	public List<SelectItem> getCommitteeTypeItems() {
+		
+		List<SelectItem> items = new ArrayList<>();
+		
 	    try {
 	        List<String> codes = Arrays.asList(
 	            ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE,
@@ -10442,21 +10496,47 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	        SearchBean<PmParameterDesc> searchBean = new SearchBean<>();
 	        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), codes));
-
 	        List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterConst.COMMITTE_TYPE, searchBean);
 	        
-	        SelectItem[] items = new SelectItem[parameterDescs.size()];
-	        int i = 0;
+        	IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
+    		String stateCode = iContractAmendmentSO.getPtjContractOwnerStateCode(ctBackingBean.getManagedBean().getContractVer());
+    		
 	        for (PmParameterDesc desc : parameterDescs) {
-	            items[i++] = new SelectItem(desc.getPmParameter().getParameterId(), desc.getCodeName());
-	        }
+	        	String code = desc.getPmParameter().getParameterCode();
+	        	SelectItem item = new SelectItem(code, desc.getCodeName());
+	        	
+	        	// Checking PTJ contract owner location
+	        	boolean disable = false;
+	        	if (ContractConst.STATE_CODE_SABAH.equals(stateCode)) {
+	                disable = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(code);
+	            } else if (ContractConst.STATE_CODE_SARAWAK.equals(stateCode)) {
+	                disable = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(code);
+	            } else {
+	                disable = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(code)
+	                       || ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(code);
+	            }
 
-	        return items;
+	            item.setDisabled(disable);
+	            items.add(item);
+	        }
 	    } catch (Exception e) {
-	        SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getCommitteeType",
-	            ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "getCommitteeType", getUserIdSessionFromLoginId(), e);
-	        return new SelectItem[0];
+	        SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getCommitteeTypeItems",
+	            ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "getCommitteeTypeItems", getUserIdSessionFromLoginId(), e);
 	    }
+	    return items;
+	}
+	
+	private void validateCommitteeTypeOption(){
+		getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+		
+		throw new EpException(MessageConst.ERROR_750094, 
+				new String[]{ResourceBundleUtils.getMessage(ContractConst.COMMITTEE_TYPE_LABEL, 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+	}
+	
+	public void onCommitteeTypeChange() {
+		
 	}
 	//#24336 - End
 	
