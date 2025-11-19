@@ -2158,6 +2158,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 						}
 							processAfter = true;
 					}else{
+						getManagedBean().setHisCatCode(catCode);
 						this.getManagedBean().setHistoryList(null);
 					}
 				}
@@ -2176,6 +2177,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 				processAfter = true;
 				
 				if(!this.getManagedBean().getUpdateCatInPm()){
+					getManagedBean().setHisCatCode(catCode);
 					this.getManagedBean().setHistoryList(null);
 					processAfter = false;
 				}
@@ -2183,6 +2185,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			
 			if(processAfter){
 				if(this.getManagedBean().getResetHistoryCatCode()){
+					getManagedBean().setHisCatCode(catCode);
 					this.getManagedBean().setHistoryList(null);
 				}else{
 					getManagedBean().setHistoryList(
@@ -2193,7 +2196,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 						int i=0;
 
 						for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
-							if (i > 0 && removeIndex.getChangedDate().after(qtCatCreatedDate)) {
+							if (i > 0 && null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)) {
 							    listCategoryDB.add(removeIndex);
 							}
 							 i++;

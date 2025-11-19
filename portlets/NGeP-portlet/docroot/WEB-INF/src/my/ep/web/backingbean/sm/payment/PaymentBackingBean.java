@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.biz.service.sm.pending.IPendingPaymentSO;
 import my.ep.constant.MessageConst;
@@ -58,7 +56,6 @@ import my.ep.web.managedbean.sm.payment.PaymentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.PaymentUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -78,14 +75,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(PaymentBackingBean.class);
 	private String paymentGatewayUrl;
-	// 34136
-	private String cdcPaymentGatewayUrl;
 	private String merchantId;
 	// 26307
 	private String billType;
 	private String vCode;
 	private final String paymentGatewayOnOff = EpPropertiesUtils.getInstance()
 			.getProperty("paymentgateway.molpay.onoff");
+	private final String paymentGatewayEpOnOff = EpPropertiesUtils.getInstance()
+			.getProperty("paymentgateway.ep.onoff");
 
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
 	private final String cancelUrl = SmCommonUtil.getBasePortalUrl()
@@ -122,6 +119,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	// 26307
 	public String getPaymentGatewayUrl() {
 		paymentGatewayUrl = getPaymentGateUrlByMerchantId(merchantId, billType);
+
+		// #38377
+		if (isCdcPaymentGateway(billType)) {
+			paymentGatewayUrl = EpPropertiesUtils.getInstance().getProperty(
+					"payment.url");
+		}
 		log.info("Bill Type =" + billType + "paymentGatewayUrl-----------"
 				+ paymentGatewayUrl);
 		return paymentGatewayUrl;
@@ -303,6 +306,19 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		return "paymentSummary";
 
 	}
+	
+	//#38377
+	private boolean isCdcPaymentGateway(String billType) {
+		boolean retVal = false;
+		if (billType != null
+				&& !billType
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)
+				&& paymentGatewayEpOnOff != null
+				&& paymentGatewayEpOnOff.trim().equals("1")) {
+			retVal = true;
+		}
+		return retVal;
+	}
 
 	/**
 	 * Create and update payment,bill,personnel and call payment gateway
@@ -353,7 +369,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			// if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
 			PyPaymentOrder pymtOrder = new PyPaymentOrder();
 			pymtOrder.setPyPayment(payment);
-			pymtOrder.setPaymentGateway("MOL");
+			//#38377
+			pymtOrder.setPaymentGateway(isCdcPaymentGateway(pyBill.getBillType())?"CDC":"MOL");
 			// pymtOrder.setChannelName("TESTING");
 
 			payment.setPyPaymentOrder(pymtOrder);
@@ -397,11 +414,19 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			// this.getManagedBean().
 			String orderId = resDTO.getPyBill().getPyPayments().get(0)
 					.getPaymentId().toString();
-			merchantId = SmCommonUtil
-					.getInstance()
-					.getPaymentGatewayMerchantIdByBillType(pyBill.getBillType());
-			String vKey = SmCommonUtil.getInstance()
-					.getPaymentGatewayVKeyByBillType(pyBill.getBillType());
+			
+			//#38377
+			merchantId = isCdcPaymentGateway(pyBill.getBillType()) ? EpPropertiesUtils
+					.getInstance().getProperty("payment.gov.merchantid")
+					: SmCommonUtil.getInstance()
+							.getPaymentGatewayMerchantIdByBillType(
+									pyBill.getBillType());
+			String vKey = isCdcPaymentGateway(pyBill.getBillType()) ? EpPropertiesUtils
+					.getInstance().getProperty("payment.gov.vkey")
+					: SmCommonUtil.getInstance()
+							.getPaymentGatewayVKeyByBillType(
+									pyBill.getBillType());
+					
 			String vc = SmCommonUtil.md5(totalAmount + merchantId + orderId
 					+ vKey);
 
@@ -417,6 +442,21 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			setPaymentHttpSession(this.getManagedBean().getTaskId(), this
 					.getManagedBean().getBpmPojo());
+			
+			//#38377
+			this.getManagedBean()
+					.setPayLoad(
+							PaymentUtil.constructJsonPayload(merchantId, vKey,
+									this.getManagedBean().getOrderId(), this
+											.getManagedBean().getTotalAmount(),
+									this.getManagedBean().getBillName(), this
+											.getManagedBean().getBillEmail(),
+									this.getManagedBean().getBillMobile(), this
+											.getManagedBean().getBillDesc(),
+									this.getManagedBean().getCountry(), this
+											.getCancelUrl()));
+			log.info("######38377#####new payment gateway payload:"
+					+ this.getManagedBean().getPayLoad());
 
 			return "paymentRequestSubmission";
 
@@ -1161,163 +1201,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		return cancelUrl;
 	}
 
-	// START 34136
-	/**
-	 * Create and update payment,bill,personnel and call new CDC payment gateway
-	 * 
-	 * @return String
-	 */
-	public String submitNewPaymentGateway() {
-		log.debug("********submitPayment******");
-		if (this.getManagedBean().getPyBill() != null) {
-
-			PmParameter paymentMode = ParameterHelper.getInstance()
-					.getParameterByTypeAndCode(
-							SupplierManagementConst.PM_PAYMENT_MODE,
-							SupplierManagementConst.ONLINE_PAYMENT);
-			PmStatus paymentStatus = SmCommonUtil.getInstance()
-					.retrievePmStatusById(
-							SupplierManagementConst.PM_STAT_PENDING_PAYMENT);
-			PyPayment payment = new PyPayment();
-
-			payment.setPaymentMode(paymentMode);
-			payment.setPmStatus(paymentStatus);
-
-			PyBill pyBill = this.getManagedBean().getPyBill();
-			pyBill.setPyPayments(new ArrayList<PyPayment>());
-			List<PyPaymentDtl> pymDtlList = new ArrayList<PyPaymentDtl>();
-			BigDecimal totalAmount = new BigDecimal(0);
-
-			for (PyBillDtl newBillDtl : this.getManagedBean()
-					.getNewPyBillDtlLs()) {
-				PyPaymentDtl paymentDtl = new PyPaymentDtl();
-				paymentDtl.setPyBillDtl(newBillDtl);
-				paymentDtl.setPyPayment(payment);
-				paymentDtl.setPaidAmt(newBillDtl.getItemPrice());
-				setPaymentChargeLineByType(paymentDtl);
-				pymDtlList.add(paymentDtl);
-				totalAmount = totalAmount.add(newBillDtl.getItemPrice());
-			}
-
-			totalAmount = totalAmount.add(getManagedBean().getGstAmount())
-					.setScale(2, BigDecimal.ROUND_UP);
-			payment.setPyPaymentDtls(pymDtlList);
-			payment.setPyBill(pyBill);
-			payment.setPaymentAmt(totalAmount);
-			payment.setPaymentDate(new Date());
-
-			log.info("***Total Amount***" + totalAmount);
-
-			// if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
-			PyPaymentOrder pymtOrder = new PyPaymentOrder();
-			pymtOrder.setPyPayment(payment);
-			pymtOrder.setPaymentGateway("EP");
-			// pymtOrder.setChannelName("TESTING");
-
-			payment.setPyPaymentOrder(pymtOrder);
-			// }
-
-			List<PyPayment> pyPaymentLs = new ArrayList<PyPayment>();
-			pyPaymentLs.add(payment);
-			pyBill.setPyPayments(pyPaymentLs);
-
-			PaymentReqDTO reqDTO = new PaymentReqDTO();
-			reqDTO.setSmBill(pyBill);
-			reqDTO.setSmAppl(getManagedBean().getSmAppl());
-			reqDTO.setPaymentType(getManagedBean().getPaymentType());
-
-			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance()
-					.getServiceObject("sm", IPaymentSO.class);
-			PaymentResDTO resDTO = new PaymentResDTO();
-			resDTO = reqSO.createPayment(reqDTO);
-
-			log.info("******Payment ID********"
-					+ resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
-
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-
-			this.getManagedBean().setOrderId(
-					resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
-			log.info("pmUser.getMobileFull()>>>>" + pmUser.getMobileFull());
-			this.getManagedBean().setBillMobile(pmUser.getMobileFull());
-			this.getManagedBean().setBillEmail(pmUser.getEmail());
-
-			String billType = getBillName(pyBill.getBillType(),
-					getManagedBean().getSmAppl().getSmSupplier()
-							.getCompanyName(), pyBill.getBillNo());
-			// 26307
-			this.billType = pyBill.getBillType();
-			this.getManagedBean().setBillName(
-					billType != null ? billType : getManagedBean().getSmAppl()
-							.getSmSupplier().getCompanyName());
-			this.getManagedBean().setBillDesc(
-					getManagedBean().getNewPyBillDtlLs().get(0).getItemDesc());
-			merchantId = SmCommonUtil.getInstance()
-					.getCDCPaymentGatewayMerchantIdByBillType(
-							pyBill.getBillType());
-			String vKey = SmCommonUtil.getInstance()
-					.getCDCPaymentGatewayVKeyByBillType(pyBill.getBillType());
-
-			log.info("******billType********" + pyBill);
-			log.info("******merchantId********" + merchantId);
-			log.info("******VKey********" + vKey);
-			log.info("****cancelUrl******" + cancelUrl);
-			BigDecimal ttlAmt = resDTO.getPyBill().getPyPayments().get(0)
-					.getPaymentAmt();
-			this.getManagedBean().setTotalAmount(ttlAmt);
-			this.getManagedBean().setMerchantCode(merchantId);
-			cdcPaymentGatewayUrl = getCdcPaymentGatewayUrl(merchantId,
-					pyBill.getBillType());
-			setPaymentHttpSession(this.getManagedBean().getTaskId(), this
-					.getManagedBean().getBpmPojo());
-			this.getManagedBean()
-					.setPayLoad(
-							PaymentUtil.constructJsonPayload(this.getManagedBean()
-									.getMerchantCode(), vKey, this
-									.getManagedBean().getOrderId(), this
-									.getManagedBean().getTotalAmount(), this
-									.getManagedBean().getBillName(), this
-									.getManagedBean().getBillEmail(), this
-									.getManagedBean().getBillMobile(), this
-									.getManagedBean().getBillDesc(), this
-									.getManagedBean().getCountry(), this
-									.getCancelUrl()));
-			log.info("######38377#####new payment gateway payload:"
-					+ this.getManagedBean().getPayLoad());
-			log.info("***********vcode:"+this.getvCode());
-			return "paymentGatewayCDCRequestSubmission";
-
-		}
-
-		return "";
-	}
-
-	/**
-	 * To get URL CDC Payment Gateway by bill type
-	 * 
-	 * @return String
-	 */
-	private String getCdcPaymentGatewayUrl(String merchantId, String billType) {
-
-		// if
-		// (billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT))
-		// {
-		// return EpPropertiesUtils.getInstance().getProperty("payment.url") +
-		// merchantId;
-		// }else{
-		// return EpPropertiesUtils.getInstance().getProperty("payment.url") +
-		// merchantId;
-		// }
-		return EpPropertiesUtils.getInstance().getProperty("payment.url");
-	}
-
-	public String getCdcPaymentGatewayUrl() {
-		return cdcPaymentGatewayUrl;
-	}
-
-	public void setCdcPaymentGatewayUrl(String cdcPaymentGatewayUrl) {
-		this.cdcPaymentGatewayUrl = cdcPaymentGatewayUrl;
-	}
 
 	// END 34136
 }
