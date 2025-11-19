@@ -2112,9 +2112,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	private void validatePurchaseOrderLimit() {
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentSO.class);
+		IPurchaseRequestSO purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
+
 		getManagedBean().setShowLimitExceededDialog(false);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+		Long fulfilmentReqId = getManagedBean().getFulfilmentRequest().getFulfilmentReqId();
+		reqDTO.setFlRequestId(fulfilmentReqId);
 
 		if (getManagedBean().getFulfilmentNote() != null
 				&& getManagedBean().getFulfilmentNote().getFulfilmentNoteId() != null) {
@@ -2125,14 +2128,21 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 		reqDTO.setActionCode(getManagedBean().getButtonAction());
 		BigDecimal totalReceivedAmount = getTotalReceivedAmount(reqDTO);
-
+		
+		PurchaseRequestReqDTO reqDTOPR = new PurchaseRequestReqDTO();
+		reqDTOPR.setFlRequestId(fulfilmentReqId);
+		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getPanelFlagByFlRequestId(reqDTOPR);
+		int isPanel = purResDTO.isPanel();
+		PmParameter procurementType = getManagedBean().getFulfilmentRequest().getProcurementType();
+		
+		reqDTO.setPanel(isPanel);
 		reqDTO.setValidationAmt(totalReceivedAmount);
+		reqDTO.setProcurementType(procurementType);
+		reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 		FulfilmentResDTO resDTO = fulfilmentSO.validatePOThresholdAmount(reqDTO);
 		if (resDTO != null) {
 			BigDecimal limitAmount = resDTO.getLimitAmount();
-			PmParameter procurementType = resDTO.getProcurementType();
 			String supplierTypeId = resDTO.getSupplierTypeId();
-			boolean isPanel = resDTO.isPanel();
 			boolean isExceedLimit = resDTO.isExceedLimit();
 			boolean isHasThreshold = resDTO.isHasThreshold();
 
@@ -2159,19 +2169,19 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * @param limitAmount     
 	 * @param procurementType 
 	 */
-	private void setMessageForPOExceedLimit(boolean isPanel, String supplierTypeId, BigDecimal limitAmount,
+	private void setMessageForPOExceedLimit(int isPanel, String supplierTypeId, BigDecimal limitAmount,
 			PmParameter procurementType) {
 		String procurementTypeDesc = this.getParameterDesc(procurementType);
 
 		if(procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)){
-			if (isPanel) {
+			if (isPanel==1) {
 				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.PANEL + ")";
 			} else {
 				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.NON_PANEL + ")";
 			}
 		}
 
-		if (!isPanel && supplierTypeId != null) {
+		if (isPanel==0 && supplierTypeId != null) {
 
 			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, supplierTypeId);
 

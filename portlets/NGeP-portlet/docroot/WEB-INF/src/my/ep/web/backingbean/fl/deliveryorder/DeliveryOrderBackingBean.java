@@ -46,6 +46,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -71,6 +72,8 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
@@ -2050,6 +2053,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	private void validatePurchaseOrderLimit() {
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentSO.class);
+		IPurchaseRequestSO purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
+
 		getManagedBean().setShowLimitExceededDialog(false);
 		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
 		Long fulfilmentReqId = order.getFlFulfilmentRequest().getFulfilmentReqId();
@@ -2057,15 +2062,23 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setFlRequestId(fulfilmentReqId);
 		BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTO);
-
+		
+		
+		PurchaseRequestReqDTO reqDTOPR = new PurchaseRequestReqDTO();
+		reqDTOPR.setFlRequestId(fulfilmentReqId);
+		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getPanelFlagByFlRequestId(reqDTOPR);
+		int isPanel = purResDTO.isPanel();
+		PmParameter procurementType = order.getFlFulfilmentRequest().getProcurementType();
+		
+		reqDTO.setPanel(isPanel);
 		reqDTO.setValidationAmt(totalDeliveryAmount);
+		reqDTO.setProcurementType(procurementType);
+		reqDTO.setSupplierId(order.getFlFulfilmentRequest().getSmSupplier().getSupplierId());
 		FulfilmentResDTO resDTO = fulfilmentSO.validatePOThresholdAmount(reqDTO);
 
 		if (resDTO != null) {
 			BigDecimal limitAmount = resDTO.getLimitAmount();
-			PmParameter procurementType = resDTO.getProcurementType();
 			String supplierTypeId = resDTO.getSupplierTypeId();
-			boolean isPanel = resDTO.isPanel();
 			boolean isExceedLimit = resDTO.isExceedLimit();
 			boolean isHasThreshold = resDTO.isHasThreshold();
 
@@ -2092,19 +2105,19 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * @param limitAmount     
 	 * @param procurementType 
 	 */
-	private void setMessageForPOExceedLimit(boolean isPanel, String supplierTypeId, BigDecimal limitAmount,
+	private void setMessageForPOExceedLimit(int isPanel, String supplierTypeId, BigDecimal limitAmount,
 			PmParameter procurementType) {
 		String procurementTypeDesc = this.getParameterDesc(procurementType);
 
 		if(procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)){
-			if (isPanel) {
+			if (isPanel==1) {
 				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.PANEL + ")";
 			} else {
 				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.NON_PANEL + ")";
 			}
 		}
 
-		if (!isPanel && supplierTypeId != null) {
+		if (isPanel==0 && supplierTypeId != null) {
 
 			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, supplierTypeId);
 
