@@ -1254,7 +1254,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	}
 	
 	// #-17376-144 start
-	
+
 	/**
 	 * Based on QTDetails Rendering Bidding Details Screen.
 	 * 

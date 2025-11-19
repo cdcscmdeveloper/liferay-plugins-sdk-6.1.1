@@ -1689,6 +1689,41 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 	// 29555 end
 	
+	// 29555 start
+	/*
+	 * set preparedby for managedbean by retrieving requistioner and docid
+	 */
+	public void getPreparedByName() {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		FlActor actor;
+
+		if (getManagedBean().getFulfilmentRequest() != null
+				&& getManagedBean().getFulfilmentRequest().getDocType() != null
+				&& getManagedBean().getFulfilmentRequest().getFulfilmentReqId() != null) {
+			actor = fulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentRequest().getDocType(),
+					getManagedBean().getFulfilmentRequest().getFulfilmentReqId(),
+					FulfilmentConst.ROLE_CODE_REQUISITIONER);
+
+			if (actor != null) {
+				getManagedBean().setPreparedBy(actor.getUserName());
+				return;
+			}
+		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getUserIdSessionFromLoginId());
+		UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+		if (userResDTO.getPmUser().getUserName() != null) {
+			getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+		}
+
+	}
+
+	// 29555 end
+	
 	/**
 	 * Checks if is check flg.
 	 *
@@ -5116,4 +5151,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 		}
 		//34555-End
+		
+	// #39192 - Start
+	/**
+	 * This method convert string to lower case.
+	 * 
+	 * @param bpmAction
+	 *            String of bpm action
+	 * @return String String that has been convert to lower case
+	 */
+	public String buttonLabelKey(String bpmAction) {
+		return "lbl.btn." + bpmAction.toLowerCase();
+	}
+	// #39192 - End
+	
 }
