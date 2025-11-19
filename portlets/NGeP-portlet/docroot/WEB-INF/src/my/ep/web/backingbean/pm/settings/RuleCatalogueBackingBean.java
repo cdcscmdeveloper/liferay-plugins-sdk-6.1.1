@@ -1207,6 +1207,16 @@ public class RuleCatalogueBackingBean extends
 		
 		PmConfigRuleValue selectedValueToDel = configRuleType
 				.getConfigRuleValues().get(rowIndex.intValue());
+		
+		/* START #35509 AUDIT PM */
+		selectedValueToDel.setRuleTypeCode(configRuleType.getRuleType());
+		selectedValueToDel.setRuleDescMS(configRuleType.getConfigRuleDesc().get(1).getRuleDesc());
+		selectedValueToDel.setRuleDataTypeCode(configRuleType.getRuleDataTypeId().getParameterCode());
+		selectedValueToDel.setRuleRangeType(BigInteger.valueOf(configRuleType.getRangeType()));
+		if (selectedValueToDel.getZoneId() != null) {
+			selectedValueToDel.setZoneName(getZoneName(selectedValueToDel.getZoneId()));
+		}
+		/* END 35509 AUDIT PM */
 
 		if (configRuleType.getRangeType() == 1
 				&& selectedValueToDel.isShowFlag()) {// if its range and parent
@@ -6090,6 +6100,12 @@ public class RuleCatalogueBackingBean extends
 		managedBeans.setAuditUpdatedFeeExemptionsForComodity(null);
 		managedBeans.setAuditDeletedFeeExemptionsForComodity(null);
 		managedBeans.setAuditAddedFeeExemptionsForComodity(null);
+		
+		this.getManagedBean().setAuditDeletedSelectedRuleValueList(null);
+		this.getManagedBean().setAuditSelectedRuleValueListOld(null);
+		this.getManagedBean().setAuditUpdatedSelectedRuleValueList(null);
+		this.getManagedBean().setAuditResDTOSelectedRuleValueList(null);
+		this.getManagedBean().setAuditAddedSelectedRuleValueList(null);
 	}
 	//END: #35509
 }

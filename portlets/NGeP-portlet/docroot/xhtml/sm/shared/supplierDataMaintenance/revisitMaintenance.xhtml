@@ -60,7 +60,7 @@
 									listener="#{supplierDataMaintenanceBackingBean.enableAddSmRvAssistOfficerBtn}" />
 							</p:inputText>
 							<p:commandButton value="#{lbl['lbl.sm.rv.btn.delete']}"
-								process="@this" update="@this" id="deleteRvAssistOfficerbtnId"
+								update="@this" id="deleteRvAssistOfficerbtnId"
 								action="#{supplierDataMaintenanceBackingBean.onDeleteRvAssistOfficer(rvAssistOfficer)}"
 								disabled="#{empty rvAssistOfficer.officerName}" />
 							<br />
@@ -69,8 +69,7 @@
 			</table>
 			<div align="right">
 				<p:commandButton id="addRvAssistOfficerbtnId"
-					value="#{lbl['lbl.sm.rv.btn.add']}" process="@this"
-					update="revisitPanelId"
+					value="#{lbl['lbl.sm.rv.btn.add']}" update="revisitPanelId"
 					action="#{supplierDataMaintenanceBackingBean.addSmRvAssistOfficer}"
 					disabled="#{supplierDataMaintenanceBackingBean.managedBean.disableAddSmRvAssistOfficerBtn}" />
 			</div>
@@ -97,7 +96,8 @@
 					<h:outputText value="#{index + 1}" />
 				</p:column>
 				<p:column style="overflow: hidden !important;">
-					<h:outputText value="#{suppDoc.pmDocument.docName}" />
+					<ui:remove>34031#note-71 : Issue 2</ui:remove>
+					<h:outputText value="#{lbl['lbl.sm.rv.supp.doc.name']}" />
 				</p:column>
 				<p:column>
 					<p:commandLink
@@ -129,11 +129,11 @@
 			<table style="width: 50%; table-layout: fixed">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.rv.visiting.remark']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+							value="#{lbl['lbl.sm.rv.visiting.remark']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputTextarea autoResize="false" cols="40"
 							id="revisitRemark" maxlength="3500"
-							label="#{lbl['lbl.sm.rv.visiting.remark']}" required="true"
+							label="#{lbl['lbl.sm.rv.visiting.remark']}"
 							value="#{supplierDataMaintenanceBackingBean.managedBean.smRevisit.revisitRemark}" />
 					</td>
 				</tr>

@@ -3,9 +3,12 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -26,6 +29,8 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	String roleCode = null;
 	String lvlCode2 = null;
 	String lvlCode3;
+	String docType;
+	String docNo;
 	BigInteger paramlvlId;
 	BigInteger docId;
 	String feeExemptionOrgType;
@@ -35,6 +40,7 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	BigInteger itemName;
 	String pattern = "dd/MM/yyyy";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+	Boolean isOrgType = false, isSupplierItem = false, isByCommodity = false, isByContractItem = false;
 
 	/**
 	 * @param managedBeans
@@ -42,6 +48,8 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	 * @return
 	 */
 	public AuditPMReqDTO spTFeeProcess(RuleCatalogueManageBean managedBeans, String roleCode) {
+		docNo = StringUtils.EMPTY;
+		docType = StringUtils.EMPTY;
 		this.roleCode = roleCode;
 		this.lvlCode2 = AuditConst.PM_LVL_CODE_2_SPFEE;
 		if (managedBeans.getAuditFeeExemptionType() != null) {
@@ -81,11 +89,13 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 				&& CollectionUtils.isNotEmpty(managedBeans.getAuditDeletedFeeExemptionsForOrgType())
 				|| CollectionUtils.isNotEmpty(managedBeans.getAuditAddedFeeExemptionsForOrgType())
 				|| CollectionUtils.isNotEmpty(managedBeans.getAuditUpdatedFeeExemptionsForOrgType())) {
+			isOrgType = true;
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_SPFEE_BYOT;
 			paramlvlId = AuditConst.PM_AUD_SYSPARAM_SPFEE_BYOT_PMPARAMETERLVLID;
 			spFeeByOrgType(managedBeans.getAuditFeeExemptionsForOrgTypeOld(),
 					managedBeans.getAuditUpdatedFeeExemptionsForOrgType(), managedBeans.getAuditDeletedFeeExemptionsForOrgType(),
 					managedBeans.getAuditAddedFeeExemptionsForOrgType());
+			isOrgType = false;
 		}
 	}
 
@@ -94,12 +104,14 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 				&& CollectionUtils.isNotEmpty(managedBeans.getAuditDeletedFeeExemptionsForOrgItem())
 				|| CollectionUtils.isNotEmpty(managedBeans.getAuditAddedFeeExemptionsForOrgItem())
 				|| CollectionUtils.isNotEmpty(managedBeans.getAuditUpdatedFeeExemptionsForOrgItem())) {
+			isSupplierItem = true;
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_SPFEE_BYSI;
 			paramlvlId = AuditConst.PM_AUD_SYSPARAM_SPFEE_BYSI_PMPARAMETERLVLID;
 			itemName = AuditConst.PM_AUD_SYSPARAM_SPFEE_BYSI_ITEMNAME_FIELDLABELID;
 			spFeeByOrgType(managedBeans.getAuditFeeExemptionsForOrgItemOld(),
 					managedBeans.getAuditUpdatedFeeExemptionsForOrgItem(), managedBeans.getAuditDeletedFeeExemptionsForOrgItem(),
 					managedBeans.getAuditAddedFeeExemptionsForOrgItem());
+			isSupplierItem = false;
 		}
 	}
 
@@ -108,12 +120,14 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 				&& CollectionUtils.isNotEmpty(managedBeans.getAuditDeletedFeeExemptionsForComodity())
 				|| CollectionUtils.isNotEmpty(managedBeans.getAuditAddedFeeExemptionsForComodity())
 				|| CollectionUtils.isNotEmpty(managedBeans.getAuditUpdatedFeeExemptionsForComodity())) {
+			isByCommodity = true;
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_SPFEE_BYCO;
 			paramlvlId = AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCO_PMPARAMETERLVLID;
 			itemName = AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCO_ITEMNAME_FIELDLABELID;
 			spFeeByOrgType(managedBeans.getAuditFeeExemptionsForOrgComodityOld(),
 					managedBeans.getAuditUpdatedFeeExemptionsForComodity(),
 					managedBeans.getAuditDeletedFeeExemptionsForComodity(), managedBeans.getAuditAddedFeeExemptionsForComodity());
+			isByCommodity = false;
 		}
 	}
 
@@ -122,12 +136,14 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 				&& CollectionUtils.isNotEmpty(managedBeans.getAuditDeletedFeeExemptionsForContract())
 				|| CollectionUtils.isNotEmpty(managedBeans.getAuditAddedFeeExemptionsForContract())
 				|| CollectionUtils.isNotEmpty(managedBeans.getAuditUpdatedFeeExemptionsForContract())) {
+			isByContractItem = true;
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_SPFEE_BYCI;
 			paramlvlId = AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCI_PMPARAMETERLVLID;
 			itemName = AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCI_ITEMNAME_FIELDLABELID;
 			spFeeByOrgType(managedBeans.getAuditFeeExemptionsForOrgContractOld(),
 					managedBeans.getAuditUpdatedFeeExemptionsForContract(),
 					managedBeans.getAuditDeletedFeeExemptionsForContract(), managedBeans.getAuditAddedFeeExemptionsForContract());
+			isByContractItem = false;
 		}
 	}
 
@@ -177,6 +193,8 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	 * @param updateVal
 	 */
 	public void processSPFeeByOrgTypeUpdate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
+		getDocNoAndDocType(updateVal);
+		
 		if (feeExemptionOrgType != null
 				&& updateVal.getOrgTypeId() != null
 				&& !pmfeeMain.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc()
@@ -197,6 +215,9 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		int pmfeeMainInt = pmfeeMain.getExpDate() == null ? 0 : 1;
 		int updateValInt = updateVal.getExpDate() == null ? 0 : 1;
 		boolean expDatebool = false;
+		if (updateVal.getEffDate() != null) {
+			getEffDate(pmfeeMain, updateVal);
+		}
 		if ((pmfeeMainInt == 1 && updateValInt == 1) && !pmfeeMain.getExpDate().equals(updateVal.getExpDate())) {
 			expDatebool = true;
 		}
@@ -206,23 +227,38 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		if (Boolean.valueOf(expDatebool)) {
 			getExpDate(pmfeeMain, updateVal, pmfeeMainInt);
 		}
-		if (updateVal.getEffDate() != null) {
-			getEffDate(pmfeeMain, updateVal);
+
+	}
+
+	private void getEffDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
+		if (updateVal.getEffDate() != null && 
+				!isSameDayLegacy(pmfeeMain.getEffDate(), updateVal.getEffDate())) {
+			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAM_SPFEE_EFFDATE_FIELDLABELID,
+					simpleDateFormat.format(pmfeeMain.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()),
+					AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 	}
 
 	private void getExpDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal, int pmfeeMainInt) {
-		spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID, 
+		spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAM_SPFEE_EXPDATE_FIELDLABELID, 
 				pmfeeMainInt == 0 ? null : simpleDateFormat.format(pmfeeMain.getExpDate()), 
 						updateVal.getExpDate() != null ? simpleDateFormat.format(updateVal.getExpDate()) : null,
 				AuditConst.PM_AUD_ACTION_TYPE_UPD);
 	}
 
-	private void getEffDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
-		if (updateVal.getEffDate() != null && !pmfeeMain.getEffDate().equals(updateVal.getEffDate())) {
-			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, 
-					simpleDateFormat.format(pmfeeMain.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
-		}
+	private Date truncateToDay(Date d) {
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(d);
+	    cal.set(Calendar.HOUR_OF_DAY, 0);
+	    cal.set(Calendar.MINUTE, 0);
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+	    return cal.getTime();
+	}
+
+	private boolean isSameDayLegacy(Date d1, Date d2) {
+	    if (d1 == null || d2 == null) return d1 == d2;
+	    return truncateToDay(d1).equals(truncateToDay(d2));
 	}
 
 	// *******QT CHECKLIST TAB FOR UPDATED VALUE PEOCESS END *******//
@@ -234,17 +270,15 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	 */
 	public void processSPTFeeCreateDeleted(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
 		PmFeeExemption pmFeeExemption = newCreatedItem != null ? newCreatedItem : deletedItem;
-		handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID,
-				getEffectiveDate(newCreatedItem, null), getEffectiveDate(null, deletedItem));
-
-		handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID,
-				getExpiryDate(newCreatedItem, null), getExpiryDate(null, deletedItem));
+		
+		getDocNoAndDocType(newCreatedItem);
 
 		if (feeExemptionOrgType != null) {
 			// orgName
 			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYOT_ORGTYPE_FIELDLABELID,
 					byOTNewCreated(newCreatedItem, null), byOTNewCreated(null, deletedItem));
 		}
+		
 		if (feeExemptionSuppItem != null) {
 			// suppName
 			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYSI_SUPPNAME_FIELDLABELID,
@@ -256,27 +290,34 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		}
 
 		if (feeExemptionComodity != null) {
-			// itemName
-			handleFieldAuditSPTFee(pmFeeExemption, itemName, byCONewDeleted(newCreatedItem, null),
-					byCONewDeleted(null, deletedItem));
-
 			// itemCode
 			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCO_ITEMCODE_FIELDLABELID,
 					byCOItemCodeNewDeleted(newCreatedItem, null), byCOItemCodeNewDeleted(null, deletedItem));
+			
+			// itemName
+			handleFieldAuditSPTFee(pmFeeExemption, itemName, byCONewDeleted(newCreatedItem, null),
+					byCONewDeleted(null, deletedItem));
 
 			// itemType
 			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCO_TYPE_FIELDLABELID,
 					byCOItemTypeExtensionNewDeleted(newCreatedItem, null), byCOItemTypeExtensionNewDeleted(null, deletedItem));
 		}
+		
 		if (feeExemptionContract != null) {
-			// itemName
-			handleFieldAuditSPTFee(pmFeeExemption, itemName, byCINewDeleted(newCreatedItem, null),
-					byCINewDeleted(null, deletedItem));
-
 			// ContractNo
 			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCI_CONTNO_FIELDLABELID,
 					byCIContractNoNewCreated(newCreatedItem, null), byCIContractNoNewCreated(null, deletedItem));
+			
+			// itemName
+			handleFieldAuditSPTFee(pmFeeExemption, itemName, byCINewDeleted(newCreatedItem, null),
+					byCINewDeleted(null, deletedItem));
 		}
+		
+		handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_EFFDATE_FIELDLABELID,
+				getEffectiveDate(newCreatedItem, null), getEffectiveDate(null, deletedItem));
+
+		handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_EXPDATE_FIELDLABELID,
+				getExpiryDate(newCreatedItem, null), getExpiryDate(null, deletedItem));
 	}
 
 	private void handleFieldAuditSPTFee(PmFeeExemption pmfee, BigInteger fieldLabelId, String newValue, String oldValue) {
@@ -394,6 +435,28 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		}
 		return null;
 	}
+	
+	private void getDocNoAndDocType(PmFeeExemption updateVal){
+		if (isOrgType) {
+			docNo = updateVal.getOrgTypeId().getParameterCode();
+			docType = updateVal.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeName();
+		}
+
+		if (isSupplierItem) {
+			docNo = updateVal.getOrgProfileId().getSmSupplier().getEpNo();
+			docType = updateVal.getOrgProfileId().getSmSupplier().getCompanyName();
+		}
+
+		if (isByCommodity) {
+			docNo = updateVal.getUnspscId().getUnspscCode();
+			docType = updateVal.getUnspscId().getUnspscTitle();
+		}
+
+		if (isByContractItem) {
+			docNo = updateVal.getContractId().getContractNo();
+			docType = updateVal.getRequestItemId() != null ? updateVal.getRequestItemId().getItemName() : StringUtils.EMPTY; 
+		}
+	}
 
 	// **QT CHECKLIST TAB FOR NEW CREATED AND DELETED VALUE PROCESS END**//
 
@@ -425,7 +488,7 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	public void addAuditDetail(BigInteger fieldLabelCode, String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO detailObj = new AuditPMSPDTO();
 		detailObj.setRoleCode(this.roleCode);
-		detailObj.setDocType(lvlCode3);
+		detailObj.setDocType(docType);
 		detailObj.setPmParameterLvlId(paramlvlId);
 		detailObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		detailObj.setLvlCode2(lvlCode2);
@@ -435,6 +498,7 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		detailObj.setFieldLabelCode(fieldLabelCode);
 		detailObj.setOldValue(oldValue);
 		detailObj.setNewValue(newValue);
+		detailObj.setDocNo(docNo);
 		objList.add(detailObj);
 		auditPMReqDTO.setObjList(objList);
 	}

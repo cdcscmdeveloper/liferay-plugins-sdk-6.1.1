@@ -58,6 +58,9 @@
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
 
 			<ui:remove> #28777#29729 - Start </ui:remove>
+			<p:remoteCommand name="fetchDisqualifiedSuppliers" actionListener="#{suppFinalizationBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
+					         process="@this" update="@([id$=disqualSuppDetailsPopupId])" oncomplete="disqualSuppDetailsPopup.show(); return false;"/>
+							 
 			<h:outputText escape="false"
 				value="#{lbl['lbl.sc.list.qualified.supplier']}"
 				style="font-weight:bold; font-size: 15px;"
@@ -629,7 +632,7 @@
 								<h:outputText value="#{lbl['lbl.sc.eval.ranking']}" />
 								<br />
 								<p:commandLink
-									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{SourcingConstants.recordStatusDisqualified}'}]);"
+									oncomplete="fetchDisqualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{SourcingConstants.recordStatusDisqualified}'}]);"
 									rendered="#{isOneTierWithTechnical or isTwoTier}"
 									process="@this">
 									<ui:remove> #34840 </ui:remove>
@@ -638,7 +641,7 @@
 								</p:commandLink>
 								<br />
 								<p:commandLink
-									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{SourcingConstants.recordStatusDisqualified}'}]);"
+									oncomplete="fetchDisqualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{SourcingConstants.recordStatusDisqualified}'}]);"
 									process="@this">
 									<ui:remove> #34840 </ui:remove>
 									<h:outputText value="#{lbl['lbl.sc.financial']}"
@@ -802,12 +805,13 @@
 						</c:otherwise>
 					</c:choose>
 				</p:column>
-				<ui:remove>26247 - start</ui:remove>
+				
 				<ui:param name="supplier"
 					value="#{shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 				<ui:param name="mofExpired"
 					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
-				<p:column styleClass="#{mofExpired ? 'red-background':''}">
+				<p:column
+					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
 					<h:outputText
 						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
@@ -815,7 +819,7 @@
 				<p:column>
 					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
-				<ui:remove>26247 - end</ui:remove>
+
 				<p:column rendered="#{false}}">
 					<h:outputText value="" />
 				</p:column>

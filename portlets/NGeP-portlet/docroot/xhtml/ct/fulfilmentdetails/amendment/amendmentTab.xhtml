@@ -131,8 +131,7 @@
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.schedule']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{(ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled 
-			or ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)
+			rendered="#{ctBackingBean.managedBean.contractVer.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled 
 			and ctBackingBean.managedBean.contractVer.ctAmendment.otherChange
 			and ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral
 		    and amendmentBackingBean.managedBean.ackFA eq null}"
@@ -167,7 +166,8 @@
 			rendered="#{(amendmentBackingBean.managedBean.ackFA eq null or amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa or ctBackingBean.managedBean.viewSCL)
 			 and (ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq or ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq)
 			 and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
-			 and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
+			 and (ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
+			 || ctBackingBean.isPk7FromDp())}"
 			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.performance.bond']))}" update=":form" />
 	<!-- END #24333 -->	
 			

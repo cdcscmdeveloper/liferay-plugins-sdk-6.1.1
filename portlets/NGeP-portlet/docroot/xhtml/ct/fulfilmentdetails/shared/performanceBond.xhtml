@@ -19,10 +19,20 @@
 	   	<p:spacer width="2" />	
 	   	<h:panelGrid columns="2">
 	   		<p:outputLabel id="contractPeriod" value="#{lbl['lbl.ct.bond.contractperiod']}" />
+	   		<!-- #32418 - Start -->
+	   		<h:panelGrid columns="6">
 			<p:inputText for="contractPeriod" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.calculateBondPeriod()}"  disabled="true">
 			</p:inputText>
-			
+			<p:spacer width="2" />
+			<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+
+			<p:inputText id="contractPeriodBondDaysId" styleClass="ppRightBtn"  value="#{ctBackingBean.managedBean.contractDaysPeriod}" maxlength="3" disabled="true" >
+			</p:inputText>
+			<p:spacer width="2" />
+			<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+			</h:panelGrid>
+			<!-- #32418 - End -->
 			<p:outputLabel id="overallContractAmount" value="#{lbl['lbl.ct.bond.overallamount']}" />
 			<p:inputText for="overallContractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.calculateOriginalOverallAmount()}"  disabled="true">
@@ -31,13 +41,13 @@
 	   	
 	   		<p:outputLabel id="bondPercentage" value="#{lbl['lbl.ct.bond.bondpercentage']}" />
 			<p:inputText for="bondPercentage" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage}"  disabled="true">
+	  			value="#{ctBackingBean.managedBean.bondPercentage == null ? 0.0 : ctBackingBean.managedBean.bondPercentage}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			
 			<p:outputLabel id="bondAmount" value="#{lbl['lbl.ct.bond.bondamount']}" />
 			<p:inputText for="bondAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.ctContractAmount.totalBondAmt}"  disabled="true">
+	  			value="#{ctBackingBean.managedBean.totalBondAmt == null ? 0.0 : ctBackingBean.managedBean.totalBondAmt}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			<p:outputLabel />
@@ -198,12 +208,7 @@
 		
 		<p:spacer width="2" />	
 		
-		<p:panel  id="bondSpl" toggleable="true" rendered="#{(ctBackingBean.managedBean.viewContract and 
-		ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faLoaCompleted)
-		or (ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractUpdate
-		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
-		or ctBackingBean.managedBean.notificationSetting)
-		and ctBackingBean.isAlreadyAmendment() and ctBackingBean.isContractExtendOrIsBond()}" toggleSpeed="500">
+		<p:panel  id="bondSpl" toggleable="true" rendered="#{ctBackingBean.isBondPanelRendered()}" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.spl.bond']}"/>
 	   	</f:facet>

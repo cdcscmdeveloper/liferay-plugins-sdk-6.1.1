@@ -32,8 +32,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class AuditPMManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
-	private VAuditPMDTO auditPmLocation = new VAuditPMDTO();
-
 	private AuditPMSearchBean searchBean;
 
 	private String selectedType;
@@ -93,19 +91,23 @@ public class AuditPMManagedBean extends BaseManagedBean {
 
 	private String locationDetailType;
 
+	private String paramLevelCode3;
+
 	private List<VAuditPMDTO> vpmAuditLocationDTOList;
 
+	private VAuditPMDTO vAuditPMDTO;
+
+	/**
+	 * Constructor
+	 */
 	public AuditPMManagedBean() {
 		state = new PmState();
 		division = new PmDivision();
 		district = new PmDistrict();
 		city = new PmCity();
 		state.setPmCountry(new PmCountry());
-		// division.setPmState(state);
 		district.setPmState(state);
-		// district.setPmDivision(division);
 		city.setPmDistrict(district);
-
 	}
 
 	public List<PmCountry> getCountries() {
@@ -393,21 +395,19 @@ public class AuditPMManagedBean extends BaseManagedBean {
 		this.searchBean = searchBean;
 	}
 
-	// /**
-	// * @return the searchBean
-	// */
-	// public AuditPMSearchBean getPMSearchBean() {
-	// if (searchBean == null)
-	// searchBean = new AuditPMSearchBean();
-	// return searchBean;
-	// }
-	//
-	// /**
-	// * @param searchBean
-	// * the searchBean to set
-	// */
-	// public void setPMSearchBean(AuditPMSearchBean searchBean) {
-	// this.searchBean = searchBean;
-	// }
+	public String getParamLevelCode3() {
+		return paramLevelCode3;
+	}
 
+	public void setParamLevelCode3(String paramLevelCode3) {
+		this.paramLevelCode3 = paramLevelCode3;
+	}
+
+	public VAuditPMDTO getvAuditPMDTO() {
+		return vAuditPMDTO;
+	}
+
+	public void setvAuditPMDTO(VAuditPMDTO vAuditPMDTO) {
+		this.vAuditPMDTO = vAuditPMDTO;
+	}
 }

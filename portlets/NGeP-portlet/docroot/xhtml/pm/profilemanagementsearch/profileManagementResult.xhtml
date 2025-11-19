@@ -30,6 +30,12 @@
 			<p:column headerText="#{lbl['lbl.pm.access.app.request.idno']}" style="width :15%;white-space : normal">
 				#{accessAPPL[5]}
 			</p:column>
+			<ui:remove>#38016 -Start</ui:remove>
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.rolestatus']}"
+				width="10%"> 
+		    	  #{profileManagSearchBackingBean.getRoleStatusDescByStatusId(accessAPPL[7])}
+			</p:column>
+			<ui:remove>#38016 -End</ui:remove>
 
 			<p:column headerText="#{lbl['lbl.pm.access.app.request.status']}" width="10%">
 			 <c:when test="#{not empty accessAPPL[5]}" >
