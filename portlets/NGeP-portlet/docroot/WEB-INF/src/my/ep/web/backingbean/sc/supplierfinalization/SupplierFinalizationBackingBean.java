@@ -1068,15 +1068,7 @@ public class SupplierFinalizationBackingBean extends
 			meetingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(qtId);
-			
-			// #35320 - Set QCA, QCB to QQC - Start
-			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
-					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
-				committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
-			}
-			// #35320 - End
-						
+			reqDTO.setQtId(qtId);						
 			reqDTO.setCommitteType(committeeType);
 
 			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
