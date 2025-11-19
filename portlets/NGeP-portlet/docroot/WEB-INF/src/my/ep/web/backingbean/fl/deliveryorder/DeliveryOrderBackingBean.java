@@ -1951,30 +1951,33 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	
 	// 30753-Start
 	/**
-	 * Validates limit rules before processing the submit action.  
-	 * If the action is SUBMIT and the limit is exceeded, a confirmation
-	 * dialog is displayed. Otherwise, the signing action proceeds normally.
+	 * Checks the threshold limit before allowing SUBMIT.
+	 * 
+	 * If the amount exceeds the limit, a confirmation popup is displayed.
+	 * Otherwise, the process continues to the signing action.
 	 *
 	 * @param outcome 
-	 * @throws Exception if validation or signing fails
+	 * @return The result from signingAction, or null if the popup is shown.
+	 * @throws Exception If validation or signing fails.
 	 */
-	public void checkLimitBeforeSubmit(String outcome) throws Exception {
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+	public String checkLimitBeforeSubmit(String outcome) throws Exception {
 
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+
+			getManagedBean().setButtonAction(outcome);
 			validateDeliveryAgainstLimit();
 
 			if (getManagedBean().isShowLimitExceededDialog()) {
 				RequestContext.getCurrentInstance().update(":form:limitConfirmDlg");
 				RequestContext.getCurrentInstance().execute("limitConfirmDlg.show();");
-
-				return;
+				return null;
 			} else {
-				signingAction(outcome);
+				return signingAction(outcome);
 			}
-
-		} else {
-			signingAction(outcome);
 		}
+
+		return signingAction(outcome);
 	}
 	
 	/**
