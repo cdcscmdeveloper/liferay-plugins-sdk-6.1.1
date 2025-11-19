@@ -243,8 +243,6 @@
 									value="#{smCompExpBB.getShortFileName(doc.fileName)}">
 									<p:fileDownload
 										value="#{smCompExpBB.downloadSelectedSuppDoc(doc.fileName, doc.filePath)}" />
-									<f:ajax process="@form" update=":form"
-										onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 								</h:commandLink>
 								<p:tooltip for="file" value="#{doc.fileName}" position="top" />
 								<p:spacer width="10" />
