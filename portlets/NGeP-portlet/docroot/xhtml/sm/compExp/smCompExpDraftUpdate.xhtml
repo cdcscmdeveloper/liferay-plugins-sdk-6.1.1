@@ -534,11 +534,27 @@
 					onclick="confirmDelSelectedCatDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
+		<p:dialog dynamic="true" height="100" id="delDuplicateSm" modal="true"
+			resizable="false" widgetVar="delDuplicateSmDialogWV" width="350px"
+			styleClass="pop_up_top">
+			<h:outputText
+				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate']}"
+				escape="false" />
+			<div align="right">
+				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}"
+					onclick="delDuplicateDialogWV.hide();"
+					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+					process="@form" update=":form"
+					value="#{lbl['lbl.sm.comp.exp.yes.btn']}" />
+				<p:commandButton value="#{lbl['lbl.sm.comp.exp.no.btn']}"
+					onclick="delDuplicateDialogWV.hide();" />
+			</div>
+		</p:dialog>
 		<p:dialog dynamic="true" height="100" id="delDuplicate" modal="true"
 			resizable="false" widgetVar="delDuplicateDialogWV" width="350px"
 			styleClass="pop_up_top">
 			<h:outputText
-				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate']}"
+				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate.draft']}"
 				escape="false" />
 			<div align="right">
 				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}"
