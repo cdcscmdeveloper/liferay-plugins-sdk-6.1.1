@@ -1184,9 +1184,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			Long decessionType = approvalRequest.getDecessionType().getParameterId();
 
 			//35500 fix issue 1 Start
-			if (supplierApprove){
-				approveValidityPeriodAuditTrail(scQt);			
-			}
+			approveValidityPeriodAuditTrail(scQt,supplierApprove);
 			//#35500 fix issue 1 End
 
 			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decessionType.longValue()
@@ -3779,6 +3777,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			auditResDTO.setAuGroupSectionId(groupTabSection);
 			auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#355500 Flag changes
+			if(this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REJECT)){
+				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_REJECT);
+			}else{
+				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
+			}
 			AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTO);
 
@@ -3791,10 +3795,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
 			
-
 			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
 				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 				auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
+				auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 				List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
 						: reqDTO.getDeletedDoaaList();
 				List<ScQtContactPerson> newDoaList = reqDTO.getDoaaList() == null ? new ArrayList<ScQtContactPerson>()
@@ -3839,10 +3844,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_APPROVE)) {
 					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);
+					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 				} else if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_REVISE)) {//#35500 fix issue 6
 					auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISION);
+					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 				} else {
-					return;
+					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);//#355500 Flag changes
+					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);
+					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_REJECT);
 				}
 				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 				auditReqList.add(auditReqDTO);
@@ -3856,7 +3867,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Audit trail for approver validity period extension
 	 * @param scQt
 	 */
-	public void approveValidityPeriodAuditTrail(ScQt scQt){
+	public void approveValidityPeriodAuditTrail(ScQt scQt,Boolean supplierApprove){
 		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 
@@ -3869,7 +3880,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
 		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-		auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);//check and/or change later
+		auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
+		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);//check and/or change later
+		auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_APPROVE : QTAuditConstant.PROCESS_FLAG_REJECT);
+		auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
+
 		
 		AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 		auditReqList.add(auditReqDTO);
