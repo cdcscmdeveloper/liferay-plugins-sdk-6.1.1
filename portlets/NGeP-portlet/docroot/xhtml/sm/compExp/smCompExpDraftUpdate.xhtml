@@ -476,7 +476,7 @@
 				value="#{lbl['lbl.sm.comp.exp.update.delete.btn']}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{smCompExpBB.onDeleteDraft}"
-				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}" />
+				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}" />
 			<p:commandButton id="btnDeclare"
 				value="#{lbl['lbl.sm.comp.exp.update.declare.btn']}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
