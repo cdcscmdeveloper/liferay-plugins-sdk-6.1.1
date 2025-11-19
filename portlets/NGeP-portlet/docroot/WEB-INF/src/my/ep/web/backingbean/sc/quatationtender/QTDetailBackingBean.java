@@ -1184,7 +1184,8 @@ public class QTDetailBackingBean extends
 					&& !status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
 					&& this.getManagedBean().isMaintanceFlow() && !status.equals(QTStatusConst.CMT_PENDING_APPROVAL)
 					&& !status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
-					&& !status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)) {
+					&& !status.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)
+					&& this.getManagedBean().isNewVersion()) {
 				this.getManagedBean().setDemoDisabled(false);
 				this.getManagedBean().setDemoType(true);
 				this.getManagedBean().setDemoAction(true);
