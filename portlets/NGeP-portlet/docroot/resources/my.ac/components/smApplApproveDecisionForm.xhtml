@@ -70,7 +70,11 @@
 						</td>
 					</tr>
 					<!-- #37925 START -->
-					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'B'}">
+					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne SupplierManagementConst.applTypeBumi 
+						and cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD
+						or cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD
+						or cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG
+						or cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
 							<td>

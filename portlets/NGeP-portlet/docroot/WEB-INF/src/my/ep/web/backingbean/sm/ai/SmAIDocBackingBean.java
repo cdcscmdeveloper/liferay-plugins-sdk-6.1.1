@@ -63,7 +63,11 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static final long serialVersionUID = 1L;
 	public static final Logger log = Logger.getLogger(SmAIDocBackingBean.class);
 
-	private static List<SmApplDocFile> docs = new ArrayList<>();
+	private static Map<String, List<SmApplDocFile>> docsMap = new HashMap<>();
+	private static Map<String, Boolean> postAIMap = new HashMap<>();
+	private List<SmApplDocFile> docs;
+	
+
 	private static String valueStr = "value";
 	private static String confidence = "confidence";
 	private static String fieldsStr = "fields";
@@ -77,8 +81,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static final String TYPE_TENANCY = "tenancy";
 	private static final String TYPE_BANK = "bank";
 	
-	private static List<EPFEntity> epfs = null;
-	private static TenancyEntity tenancy = null;
+	private static List<EPFEntity> epfs;
+	private static TenancyEntity tenancy;
 	private static List<EPFEntity.EmployeeInfo> selectedEmployees;
 	private boolean postAI = false;
 	private String docType;
@@ -112,6 +116,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	public void initContext(String docType, SmAppl smAppl) {
 		this.docType = docType;
 		this.smAppl = smAppl;
+
+		if (!docsMap.containsKey(docType)) {
+			docsMap.put(docType, new ArrayList<SmApplDocFile>());
+		}
+		
+		if (!postAIMap.containsKey(docType)) {
+			postAIMap.put(docType, Boolean.FALSE);
+		}
+		
+		docs = docsMap.get(docType);
+		postAI = postAIMap.get(docType);
+		if (docs.size() < 1){
+			epfs = null;
+			tenancy = null;
+			postAI = false;
+		}
 	}
 
 	/**
@@ -141,6 +161,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (docType != null) {
 			processDoc(docType, smAppl);
 			postAI = true;
+			postAIMap.put(docType, Boolean.TRUE);
 		}
 	}
 	
@@ -169,10 +190,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param appl
 	 */
 	public static void processDoc(String type, SmAppl appl){
-		if (StringUtils.isEmpty(type) || EntityHelper.isCollectionEmpty(docs)){
+		if (StringUtils.isEmpty(type)){
 			return;
 		}
 		String docType = type.trim();
+		List<SmApplDocFile> docs = docsMap.get(docType);
+		if (EntityHelper.isCollectionEmpty(docs)){
+			return;
+		}
 		log.info("...wip\t"+docs.size() +"\t_" + docType);
 		
 		List<JsonWrapper> jsonWrappers = new ArrayList<>();
@@ -199,10 +224,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		boolean hasError = showErrorMessage(docType, jsonWrappers);
 		try {
 			if (TYPE_EPF.equals(docType)){
-				processEPF(jsonWrappers);
+				processEPF(jsonWrappers, appl, docType);
 				
 			} else if (TYPE_TENANCY.equals(docType)){
-				processTenancyAgreement(jsonWrappers);
+				processTenancyAgreement(jsonWrappers, docType);
 				
 			} else {
 				processBank(jsonWrappers);
@@ -588,31 +613,57 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	/**
 	 * @param entities
+	 * @param docType
 	 */
-	public static void processTenancyAgreement(List<JsonWrapper> entities){
+	public static void processTenancyAgreement(List<JsonWrapper> entities, String docType){
 		if (EntityHelper.isCollectionEmpty(entities)){
 			return;
 		}
 		List<TenancyEntity> tes = new ArrayList<>();
+		TenancyEntity te = null;
 		for (JsonWrapper entityWrapper : entities){
-			TenancyEntity te = new TenancyEntity(entityWrapper.entities);
+			te = new TenancyEntity(entityWrapper.entities);
 			tes.add(te);
 			tenancy = te;
 		}
-		log.info(tenancy);
 	}
 
 	/**
 	 * @param entities
+	 * @param appl
+	 * @param docType
 	 */
-	public static void processEPF(List<JsonWrapper> entities){
-		epfs = new ArrayList<>();
+	public static void processEPF(List<JsonWrapper> entities, SmAppl appl, String docType){
+		if (epfs == null){
+			epfs = new ArrayList<>();
+		}
 		if (EntityHelper.isCollectionEmpty(entities)){
 			return;
 		}
+		
+		String companyName = "";
+		if (appl != null && appl.getSmSupplier() != null){
+			companyName = appl.getSmSupplier().getCompanyName();
+		}
+		boolean hasWrongCompanyName = false;
+		
 		for (JsonWrapper entityWrapper : entities){
 			EPFEntity ee = new EPFEntity(entityWrapper.entities);
 			epfs.add(ee);
+			
+			double score=0;
+			if (ee.employer != null){
+				score = fuzzyMatchJaroWinkler(companyName, ee.employer.employerName);
+			}
+			if (score < minScoreFuzzyMatch){
+				hasWrongCompanyName = true;
+			}
+		}
+		if(hasWrongCompanyName){
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+					"The company name in your EPF(s) does not match with the registered Business/Company Name" +
+					" in Company Information section.");
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 		// wip: need to save the doc to SmApplDocFile with PmDocument ID: 768, 864
 		//PENYATA CARUMAN KWSP (BORANG A) IAITU SENARAI NAMA PEKERJA YANG DICARUM SERTA RESIT
@@ -622,11 +673,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * Clear uploaded documents
 	 */
 	public void resetDoc() {
-		docs.clear();
-		epfs = null;
-		tenancy = null;
-		selectedEmployees = null;
-		postAI = false;
+		log.info("test");
 	}
 	
 	public List<SmApplDocFile> getDocs() {
@@ -638,9 +685,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param doc
 	 */
 	public void deleteDoc(SmApplDocFile doc) {
-		log.info(docs.size());
 		docs.remove(doc);
-		log.info(docs.size());
+		if(docs.size() < 1){
+			epfs = null;
+			tenancy = null;
+			postAI = false;
+		}
 	}
 	
 	public List<EPFEntity.EmployeeInfo> getEmployees() {

@@ -11249,6 +11249,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					&& (SCProcessNameConst.ENDORSE_SCORING.equals(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_SCORING
 							.equals(this.getManagedBean().getTaskName()))) {
 				this.getManagedBean().setCheckUserCanRevise(true);
+				this.getManagedBean().setResetHistoryCatCode(true);
 
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -11262,6 +11263,7 @@ if (null != checklist && !checklist.isEmpty()) {
 								new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale())));
 			} else {
+				this.getManagedBean().setResetHistoryCatCode(true);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
@@ -12640,6 +12642,12 @@ if (null != checklist && !checklist.isEmpty()) {
 	public void specCommitteBpmTask(String action) {
 		// #39062 Start Vinod 23/09/2025
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			//#29732 start -set weightage to true, since requirement is mandatory to select financial weightage.
+			if(this.getManagedBean().getWipStatusMax()>=SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
+					&& null != this.getManagedBean().getFinancialScoreSetting()){
+					this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
+				}
+			//#29732 end
 			updateEstimatedAmount();
 		}
 		// #39062 End Vinod 23/09/2025
@@ -15111,8 +15119,10 @@ if (null != checklist && !checklist.isEmpty()) {
 			String technicalDoccategory = checklist.getDocCategory();// 11104-778&25726
 			if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())
 					&& checklist.getScQtDoc() != null) {
+				// #39464 Start Vinod 06/11/2025. removed sample condition.
 				boolean isDatafetch = SourcingConstants.TECHNICAL_DOCTYPE.equals(technicalDoccategory)
-						&& SourcingConstants.FINANCIAL_DOCTYPE.equals(financialDocCategory) && isSample;// 11104-778&25726
+						&& SourcingConstants.FINANCIAL_DOCTYPE.equals(financialDocCategory);// 11104-778&25726
+				// #39464 End Vinod 06/11/2025.
 				if (isDatafetch) {
 					this.setTemplateSpecMaster(checklist);
 				}// 11104-778&25726
