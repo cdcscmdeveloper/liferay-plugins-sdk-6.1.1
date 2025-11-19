@@ -2178,10 +2178,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		
 		if(processAfter){
-			if(this.getManagedBean().getResetHistoryCatCode()){
-				getManagedBean().setHisCatCode(catCode);
-				this.getManagedBean().setHistoryList(null);
-			}else{
+
 				getManagedBean().setHistoryList(
 						updateCreatedUserName(resDTO.getRemarkList()));
 				getManagedBean().setHisCatCode(catCode);
@@ -2197,8 +2194,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 					}
 					getManagedBean().setHistoryList(listCategoryDB);
 				}
-
-			}
+			
 		}
 
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
