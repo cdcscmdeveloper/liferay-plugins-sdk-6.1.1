@@ -341,7 +341,7 @@
 									<h:commandLink id="file"
 										value="#{smCompExpBB.getShortFileName(doc.fileName)}">
 										<p:fileDownload
-											value="#{smCompExpBB.commonDownload(doc.filePath,doc.fileName)}" />
+											value="#{smCompExpBB.downloadSelectedSuppDoc(doc.fileName, doc.filePath)}" />
 										<f:ajax process="@form" update=":form"
 											onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 									</h:commandLink>
