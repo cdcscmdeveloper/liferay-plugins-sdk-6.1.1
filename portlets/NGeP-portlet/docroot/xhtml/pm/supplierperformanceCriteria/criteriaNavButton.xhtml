@@ -24,7 +24,7 @@
 					</c:when>
 					<c:otherwise>
 						<p:commandButton id="btnCriteriaUpdate" value="#{lbl['lbl.btn.update']}"
-							oncomplete="updateInfoDlg.show()" style="float:right;"/>
+							oncomplete="if (!args.validationFailed) updateInfoDlg.show()" style="float:right;"/> <!-- #34445, Fix as-is bug: #39087 Start -->
 					</c:otherwise>
 				</c:choose>
 				<!-- 34445 end -->
