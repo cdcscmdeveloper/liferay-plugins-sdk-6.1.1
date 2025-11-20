@@ -2004,16 +2004,21 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	private void validateContractOrderLimit() {
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentSO.class);
+		getManagedBean().setShowLimitExceededDialog(false);
 
 		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
 		reqDTO.setFlRequestId(order.getFlFulfilmentRequest().getFulfilmentReqId());
+		reqDTO.setOrgProfileId(order.getFlFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+		reqDTO.setCtContract(getManagedBean().getFulfilmentRequest().getCtContract());
+
 		FulfilmentResDTO resDTOLimit = fulfilmentSO.retrieveCOLimitAmount(reqDTO);
-		getManagedBean().setShowLimitExceededDialog(false);
 
 		if (resDTOLimit != null) {
 			BigDecimal limitAmount = resDTOLimit.getLimitAmount() != null ? resDTOLimit.getLimitAmount()
 					: BigDecimal.ZERO;
+			boolean isContractSharing = resDTOLimit.isContractSharing();
 
 			Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
 					.getFulfilmentRequest().getCtContract().getContractId() : null;
@@ -2022,7 +2027,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			reqDTODel.setContractId(contractId);
 			BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTODel);
 
-			if (resDTOLimit.isContractSharing() && limitAmount.compareTo(BigDecimal.ZERO) > 0
+			if (isContractSharing && limitAmount.compareTo(BigDecimal.ZERO) > 0
 					&& totalDeliveryAmount.compareTo(limitAmount) > 0) {
 
 				String msg = MessageUtils.getMessage(MessageConst.INFO_745095, new String[] { order
