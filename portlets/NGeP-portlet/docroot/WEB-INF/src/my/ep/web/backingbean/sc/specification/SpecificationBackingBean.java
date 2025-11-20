@@ -11263,6 +11263,7 @@ if (null != checklist && !checklist.isEmpty()) {
 								new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale())));
 			} else {
+				this.getManagedBean().setResetHistoryCatCode(true);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
@@ -12641,6 +12642,12 @@ if (null != checklist && !checklist.isEmpty()) {
 	public void specCommitteBpmTask(String action) {
 		// #39062 Start Vinod 23/09/2025
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			//#29732 start -set weightage to true, since requirement is mandatory to select financial weightage.
+			if(this.getManagedBean().getWipStatusMax()>=SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
+					&& null != this.getManagedBean().getFinancialScoreSetting()){
+					this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
+				}
+			//#29732 end
 			updateEstimatedAmount();
 		}
 		// #39062 End Vinod 23/09/2025
@@ -21813,7 +21820,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 								&& null != templateresDTO.getSpecMaster().getCtPanelItem()) {
 							panelItem = true;
 						}
-						if (panelItem) {
+						if (!panelItem) {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
 						} else {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);

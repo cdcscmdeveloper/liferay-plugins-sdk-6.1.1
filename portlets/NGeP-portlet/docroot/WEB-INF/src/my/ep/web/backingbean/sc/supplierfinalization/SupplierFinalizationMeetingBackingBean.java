@@ -2376,7 +2376,9 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId());
+			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
+					this.getManagedBean().getCurrentStatusId() : 
+					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
@@ -2422,7 +2424,9 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId());
+			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
+					this.getManagedBean().getCurrentStatusId() : 
+					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);

@@ -5565,11 +5565,8 @@ public class RuleCatalogueBackingBean extends
 		
 		for (PmConfigRuleDesc configRuleDesc : configRuleDescList) {
 			if (searchRuleType != null && !searchRuleType.isEmpty()) {
-				String searchRegex = searchRuleType
-				        .replace("%", ".*?")
-				        .replace("_", ".")
-				        .replace("?", ".")
-				        .replace("*", ".*?");
+				String searchRegex = searchRegex(searchRuleType);
+				
 				if (configRuleDesc.getRuleDesc().toLowerCase().contains(searchRuleType.toLowerCase())
 						|| configRuleDesc.getRuleDesc().toLowerCase().matches(searchRegex.toLowerCase())) {
 					searchRuleDescList.add(configRuleDesc);
@@ -5680,10 +5677,8 @@ public class RuleCatalogueBackingBean extends
 		if (searchRuleValues != null && !searchRuleValues.isEmpty()) {
 			String ruleValue = configRuleValue.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ configRuleValue.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
-					+ configRuleValue.getCategoryL3Id().getCategoryL3Code()
-					;
-			String searchRegex = searchRuleValues.replace("%", ".*?").replace("_", ".").replace("?", ".")
-					.replace("*", ".*?");
+					+ configRuleValue.getCategoryL3Id().getCategoryL3Code();
+			String searchRegex = searchRegex(searchRuleValues);
 			
 			if (ruleValue.toLowerCase().contains(searchRuleValues.toLowerCase())
 					|| ruleValue.toLowerCase().matches(searchRegex.toLowerCase())) {
@@ -5702,8 +5697,8 @@ public class RuleCatalogueBackingBean extends
 	 */
 	private List<PmConfigRuleValue> searchByRuleValuePTJ(List<PmConfigRuleValue> searchRuleTypeValueList, PmConfigRuleValue configRuleValue,String searchRuleValues){		
 		if (searchRuleValues != null && !searchRuleValues.isEmpty()) {
-			String searchRegex = searchRuleValues.replace("%", ".*?").replace("_", ".").replace("?", ".")
-					.replace("*", ".*?");
+			String searchRegex = searchRegex(searchRuleValues);
+			
 			if (configRuleValue.getRuleValue().toLowerCase().contains(searchRuleValues.toLowerCase())
 					|| configRuleValue.getRuleValue().toLowerCase().matches(searchRegex.toLowerCase())) {
 				searchRuleTypeValueList.add(configRuleValue);
@@ -5723,13 +5718,11 @@ public class RuleCatalogueBackingBean extends
 		List<PmConfigRuleValue> result = new ArrayList<>();
 
 		if (searchRuleValueDesc != null && !searchRuleValueDesc.isEmpty()) {
-			String searchRegex = searchRuleValueDesc.replace("%", ".*?")
-					.replace("_", ".")
-					.replace("?", ".")
-					.replace("*", ".*?");
-
+			String searchRegex = searchRegex(searchRuleValueDesc);
+			
 			for (PmConfigRuleValue configRuleValue : configRuleValuesList) {
-				String desc = configRuleValue.getRuleDescription().toLowerCase();
+				String desc = configRuleValue.getRuleDescription()!= null ? 
+						configRuleValue.getRuleDescription().toLowerCase() : configRuleValue.getCategoryL3Id().getCategoryName().toLowerCase();
 				if (desc.contains(searchRuleValueDesc.toLowerCase()) || desc.matches(searchRegex.toLowerCase())) {
 					result.add(configRuleValue);
 				}
@@ -5797,14 +5790,41 @@ public class RuleCatalogueBackingBean extends
 	 * @param searchExpDate
 	 * @return
 	 */
-	private boolean isDateMatch(PmConfigRuleValue value, Date searchEffDate, Date searchExpDate) {
-		if (searchEffDate != null && searchExpDate == null) {
-			return searchEffDate.equals(value.getEffDate());
+	private boolean isDateMatch(PmConfigRuleValue value, Date searchEff, Date searchExp) {
+		Date valueEffDate = truncateDate(value.getEffDate());
+		Date valueExpDate = truncateDate(value.getExpDate());
+		Date searchEffDate = truncateDate(searchEff);
+		Date searchExpDate = truncateDate(searchExp);
+		
+		if (searchEffDate != null && searchExpDate == null && valueEffDate != null) {
+			return searchEffDate.equals(valueEffDate);
 		}
-		if (searchExpDate != null && searchEffDate == null) {
-			return searchExpDate.equals(value.getExpDate());
+		if (searchExpDate != null && searchEffDate == null && valueExpDate != null) {
+			return searchExpDate.equals(valueExpDate);
 		}
-		return !value.getExpDate().before(searchEffDate) && !value.getEffDate().after(searchExpDate);
+		if (valueEffDate == null || valueExpDate == null) {
+			return false;
+		}
+		return !valueEffDate.before(searchEff) && !valueExpDate.after(searchExp);
+	}
+	
+	/**
+	 * #36738
+	 * Standardized the time up to milliseconds of the dates for comparison
+	 * @param date
+	 * @return
+	 */
+	private Date truncateDate(Date date){
+		if (date != null) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(date);
+			c.set(Calendar.HOUR_OF_DAY, 0);
+			c.set(Calendar.MINUTE, 0);
+			c.set(Calendar.SECOND, 0);
+			c.set(Calendar.MILLISECOND, 0);
+			return c.getTime();
+		}
+		return null;
 	}
 	
 	/**
@@ -5828,7 +5848,7 @@ public class RuleCatalogueBackingBean extends
 	    Long searchMinistry = this.getManagedBean().getSelectedMinistryId();
 	    String searchPtjName = this.getManagedBean().getSearchPtjName();
 	    String searchPtjCode = this.getManagedBean().getSearchPtjCode();
-	    String searchLimit = this.getManagedBean().getSearchQtValueLimit();
+	    BigDecimal searchLimit = this.getManagedBean().getSearchQtValueLimit();
 
 	    List<PmPtjSpecialApproval> originalList = this.getManagedBean().getOriginalPtjSpecialApprovalList();
 	    List<PmPtjSpecialApproval> resultList = new ArrayList<>(originalList);
@@ -5865,7 +5885,7 @@ public class RuleCatalogueBackingBean extends
 	    }
 
 	    // Filter by Limit
-	    if (StringUtils.isNotBlank(searchLimit)) {
+	    if (searchLimit != null) {
 	        List<PmPtjSpecialApproval> byLimit = searchByLimit(originalList, searchLimit);
 	        if (CollectionUtils.isEmpty(byLimit)) {
 	            resultList.clear();
@@ -5898,12 +5918,8 @@ public class RuleCatalogueBackingBean extends
 	        String value = useName 
 	            ? ptjApproval.getPmOrgProfile().getOrgValidity().getOrgName()
 	            : ptjApproval.getPmOrgProfile().getOrgValidity().getOrgCode();
+	            String searchRegex = searchRegex(search);
 	            
-	            String searchRegex = search
-				        .replace("%", ".*?")
-				        .replace("_", ".")
-				        .replace("?", ".")
-				        .replace("*", ".*?");
 	        if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
 	        		|| value.toLowerCase().matches(searchRegex)) {
 	            result.add(ptjApproval);
@@ -5919,24 +5935,19 @@ public class RuleCatalogueBackingBean extends
 	 * @param searchLimitString
 	 * @return
 	 */
-	private List<PmPtjSpecialApproval> searchByLimit(List<PmPtjSpecialApproval> searchPtjApprovalList,String searchLimitString) {
-		List<PmPtjSpecialApproval> result = new ArrayList<>();
+	private List<PmPtjSpecialApproval> searchByLimit(List<PmPtjSpecialApproval> searchPtjApprovalList, BigDecimal searchLimit) {
+	    List<PmPtjSpecialApproval> result = new ArrayList<>();
 
-		if (searchLimitString != null && !searchLimitString.isEmpty()) {
-			BigDecimal searchLimit = new BigDecimal(searchLimitString);
-			for (PmPtjSpecialApproval ptjApproval : searchPtjApprovalList) {
-				BigDecimal procureAmount = ptjApproval.getProcureAmt();
-				if (procureAmount.equals(searchLimit)) {
-					result.add(ptjApproval);
-				}
-			}
-		}
+	    if (searchLimit != null) {
+	        for (PmPtjSpecialApproval ptjApproval : searchPtjApprovalList) {
+	            BigDecimal ptjProcureLimitAmount = ptjApproval.getProcureAmt();
+	            if (ptjProcureLimitAmount != null && ptjProcureLimitAmount.compareTo(searchLimit) == 0) {
+	                result.add(ptjApproval);
+	            }
+	        }
+	    }
 
-		if (CollectionUtils.isNotEmpty(result)) {
-			return result;
-		} else {
-			return searchPtjApprovalList;
-		}
+	    return result;
 	}
 	
 	/**
@@ -5950,5 +5961,34 @@ public class RuleCatalogueBackingBean extends
 	    this.getManagedBean().setSearchPtjName(null);
 	    this.getManagedBean().setSearchQtValueLimit(null);
 	}	
+	
+	/**
+	 * #36738
+	 * Change the search text into a regex
+	 */
+	public String searchRegex(String searchText){
+		String searchRegex = "";
+		if (!searchText.isEmpty()){
+			searchRegex = searchText
+			        .replace("%", ".*?")
+			        .replace("_", ".")
+			        .replace("?", ".")
+			        .replace("*", ".*?");
+			
+			return searchRegex;
+		}else{
+			return "";
+		}
+	}
+	
+	/**
+	 * #36738
+	 * Reset search value on tab change
+	 */
+	public void onAnyTabChange() {
+		resetRuleType();
+		resetRuleValue();
+		resetQtValues();
+	}
 	//#36738 End
 }
