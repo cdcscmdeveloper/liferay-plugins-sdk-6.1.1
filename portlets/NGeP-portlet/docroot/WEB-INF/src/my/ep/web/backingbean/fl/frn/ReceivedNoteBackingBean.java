@@ -2054,6 +2054,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setFlRequestId(flNote.getFlRequest().getFulfilmentReqId());
+		reqDTO.setOrgProfileId(flNote.getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+		reqDTO.setCtContract(flNote.getFlRequest().getCtContract());
+		
 		FulfilmentResDTO resDTOLimit = fulfilmentSO.retrieveCOLimitAmount(reqDTO);
 
 		if (resDTOLimit != null && resDTOLimit.getLimitAmount() != null) {
