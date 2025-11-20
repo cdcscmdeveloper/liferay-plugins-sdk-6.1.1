@@ -4907,29 +4907,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	//#30428 - End
-	
-	//#25002 - start
-		
-	public List<ScAttachment> getApprovalLetter(){
-		List<ScAttachment> listAttachments = new ArrayList<>();
-		IQTAwardSO awardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		Long loaid = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
-		listAttachments = awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
-		return listAttachments;
-	}
-
-	public void downloadScAttachmentFile(ScAttachment scAttachment){
-		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-		try {
-			loaDetailBackingBean.downloadFile(scAttachment);
-		} catch (IOException e) {
-			//start - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
-			//stop - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
-		}
-	}
-	
-	//#25002 - end
 		
 	//Enhancement 29418 - shaqimi start
 	
