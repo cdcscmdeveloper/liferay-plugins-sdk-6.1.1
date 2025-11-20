@@ -33,8 +33,12 @@
 						value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}"/>
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelRegistration}" styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/>
-					<p:outputLabel rendered="#{registrationBackingBean.managedBean.blacklistOwner}" styleClass="outputLabel-view"
-						value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"/>
+					<!-- 38928 Start -->
+					<p:outputLabel
+						rendered="#{registrationBackingBean.managedBean.blacklistowner and !registrationBackingBean.managedBean.noDisciplinary}"
+						styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" /> 
+					<!-- 38928 End -->
 					<!-- 30842 Start -->
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelCategory}" styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}"/>
