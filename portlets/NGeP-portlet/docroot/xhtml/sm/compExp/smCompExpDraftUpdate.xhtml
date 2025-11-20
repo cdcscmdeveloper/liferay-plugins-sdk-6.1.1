@@ -388,12 +388,14 @@
 							label="#{lbl['lbl.sm.projDtls.mainCat']}"
 							value="#{smCompExpCatCode.categoryL1.categoryL1Id}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems itemLabel="#{main.categoryName}"
+							<f:selectItems
+								itemLabel="#{main.categoryL1Code} - #{main.categoryName}"
 								itemValue="#{main.categoryL1Id}"
 								value="#{smCompExpMB.supplierMainCatList}" var="main" />
 							<p:ajax event="change" update="subDDId,subDivDDId"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								listener="#{smCompExpBB.getSupplierSubCatList(smCompExpCatCode.categoryL1.categoryL1Id, index)}" />
+								listener="#{smCompExpBB.getSupplierSubCatList(smCompExpCatCode.categoryL1.categoryL1Id, 
+								smCompExpCatCode.categoryL2, smCompExpCatCode.categoryL3)}" />
 						</p:selectOneMenu>
 					</p:column>
 					<p:column style="width:32% !important;"
@@ -403,12 +405,14 @@
 							label="#{lbl['lbl.sm.projDtls.subCat']}"
 							value="#{smCompExpCatCode.categoryL2.categoryL2Id}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems itemLabel="#{sub.categoryName}"
+							<f:selectItems
+								itemLabel="#{sub.categoryL2Code} - #{sub.categoryName}"
 								itemValue="#{sub.categoryL2Id}"
-								value="#{smCompExpMB.supplierSubCatList}" var="sub" />
+								value="#{smCompExpCatCode.categoryL2.pmCategoryL2s}" var="sub" />
 							<p:ajax event="change" update="subDivDDId"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								listener="#{smCompExpBB.getSupplierSubDivCatList(smCompExpCatCode.categoryL2.categoryL2Id, index)}" />
+								listener="#{smCompExpBB.getSupplierSubDivCatList(smCompExpCatCode.categoryL2.categoryL2Id,
+								smCompExpCatCode.categoryL3)}" />
 						</p:selectOneMenu>
 					</p:column>
 					<p:column style="width:32% !important;"
@@ -418,9 +422,11 @@
 							label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 							value="#{smCompExpCatCode.categoryL3.categoryL3Id}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems itemLabel="#{subDiv.categoryName}"
+							<f:selectItems
+								itemLabel="#{subDiv.categoryL3Code} - #{subDiv.categoryName}"
 								itemValue="#{subDiv.categoryL3Id}"
-								value="#{smCompExpMB.supplierSubDivCatList}" var="subDiv" />
+								value="#{smCompExpCatCode.categoryL3.pmCategoryL3s}"
+								var="subDiv" />
 							<p:ajax event="change"
 								update=":#{p:component('smCompExpCatCodes')}, :#{p:component('addCatBtn')}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -522,8 +528,8 @@
 		<p:confirmDialog closable="true"
 			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
 			id="confirmDelSelectedCatId"
-			message="#{lbl['lbl.sm.comp.exp.update.project.cat.code.delete.msg']}" severity="alert"
-			widgetVar="confirmDelSelectedCatDialogWV">
+			message="#{lbl['lbl.sm.comp.exp.update.project.cat.code.delete.msg']}"
+			severity="alert" widgetVar="confirmDelSelectedCatDialogWV">
 			<div align="right">
 				<p:commandButton action="#{smCompExpBB.delSmCompExpCatDraft}"
 					onclick="confirmDelSelectedCatDialogWV.hide();"
