@@ -1144,7 +1144,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	private void deactivateMaster(Long compExpMasterId) {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(compExpMasterId);
-		getSmCompExpSo().deactivateMaster(reqDTO);
+		getSmCompExpSo().deleteMaster(reqDTO);
 	}
 
 	/**
