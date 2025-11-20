@@ -34,6 +34,9 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	 */
 	public void initPtjPopup() {
 		reset();
+		populateMinistryDD();
+		populatePtjCodeNameDD();
+		
 	}
 
 	/**
@@ -42,6 +45,7 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	public void reset() {
 		this.getManagedBean().setMinistryProfileId(null);
 		this.getManagedBean().setJabatanProfileId(null);
+		this.getManagedBean().setJabatanDD(null);
 		this.getManagedBean().setPtjCodeNameKey(ProfileManagementConst.PTJ_CODE);
 		this.getManagedBean().setPtjCodeNameValue(null);
 		this.getManagedBean().getOrgProfileDataModel().resetData();
@@ -50,25 +54,21 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 
 	/**
 	 * Retrieve Ministry dropdown list
-	 * 
-	 * @return SelectItem[]
 	 */
-	public SelectItem[] getMinistryDropdown() {
-		return PmCommonUtil.getMinistryDropdown();
+	public void populateMinistryDD() {
+		this.getManagedBean().setMinistryDD(PmCommonUtil.getMinistryDropdown());
 	}
 
 	/**
 	 * Retrieve PTJ Group dropdown list
-	 * 
-	 * @return SelectItem[]
 	 */
-	public SelectItem[] getPtjGroupDropdown() {
+	public void populateJabatanDD() {
 		if (null != this.getManagedBean().getMinistryProfileId()) {
 			this.getManagedBean().setDisabledPtjGroup(false);
 		} else {
 			this.getManagedBean().setDisabledPtjGroup(true);
 		}
-		return PmCommonUtil.getJabatanDropdown(this.getManagedBean().getMinistryProfileId());
+		this.getManagedBean().setJabatanDD(PmCommonUtil.getJabatanDropdown(this.getManagedBean().getMinistryProfileId()));
 	}
 
 	/**
@@ -76,13 +76,13 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	 * 
 	 * @return SelectItem[]
 	 */
-	public static SelectItem[] getPtjCodeNameDropDown() {
+	public void populatePtjCodeNameDD() {
 		SelectItem[] items = new SelectItem[2];
 		items[0] = new SelectItem(ProfileManagementConst.PTJ_CODE, ResourceBundleUtils.getMessage("lbl.sm.ptj.popup.ptjCode",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		items[1] = new SelectItem(ProfileManagementConst.PTJ_NAME, ResourceBundleUtils.getMessage("lbl.sm.ptj.popup.ptjName",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		return items;
+		this.getManagedBean().setPtjCodeNameDD(items);
 	}
 
 	/**
