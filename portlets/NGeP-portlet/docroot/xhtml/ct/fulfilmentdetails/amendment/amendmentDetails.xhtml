@@ -392,11 +392,11 @@
 			<f:verbatim/>
 
 			<!-- #24336 - Start -->
-			<h:panelGroup id="secretryDropDownPanel" rendered="#{!ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
+			<h:panelGroup id="secretryDropDownPanel">
 				
 				<h:panelGrid rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}" >
 					<p:selectOneRadio id="committeeType" style="margin-bottom: 8px; margin-left: 25px;" styleClass="committee-type-radio" layout="pageDirection"
-						value="#{amendmentBackingBean.managedBean.committeeType}">
+						value="#{amendmentBackingBean.managedBean.committeeType}" disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
 						<f:selectItems value="#{amendmentBackingBean.getCommitteeTypeItems()}" />
 						<p:ajax event="change" update="secretaryId" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 					</p:selectOneRadio>
@@ -407,7 +407,7 @@
 					<p:spacer width="2" />
 					<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}"
 						label="#{lbl['lbl.ct.secretary.committee']}" style="width:300px;"
-						disabled="#{ctBackingBean.managedBean.viewSCL}">
+						disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.managedBean.committeeType eq null}">
 						<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
