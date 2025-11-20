@@ -5812,13 +5812,16 @@ public class RuleCatalogueBackingBean extends
 	 * @return
 	 */
 	private Date truncateDate(Date date){
-		Calendar c = Calendar.getInstance();
-	    c.setTime(date);
-	    c.set(Calendar.HOUR_OF_DAY, 0);
-	    c.set(Calendar.MINUTE, 0);
-	    c.set(Calendar.SECOND, 0);
-	    c.set(Calendar.MILLISECOND, 0);
-	    return c.getTime();
+		if (date != null) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(date);
+			c.set(Calendar.HOUR_OF_DAY, 0);
+			c.set(Calendar.MINUTE, 0);
+			c.set(Calendar.SECOND, 0);
+			c.set(Calendar.MILLISECOND, 0);
+			return c.getTime();
+		}
+		return null;
 	}
 	
 	/**
