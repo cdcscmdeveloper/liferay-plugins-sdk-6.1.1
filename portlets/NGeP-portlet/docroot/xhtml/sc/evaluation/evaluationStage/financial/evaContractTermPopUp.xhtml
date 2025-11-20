@@ -47,8 +47,7 @@
 						</td>
 						<td><p:inputText disabled="true"
 								value="#{contractVer.ctTermination.fileRefNo}"
-								style="width:auto;"></p:inputText> <ac:iconTooltip
-								value="#{'lbl.sc.spec.fin.company.exp.fed.gov.tooltip'}"></ac:iconTooltip>
+								style="width:auto;"></p:inputText>
 						</td>
 						<td style="width: 300px;"><p:outputLabel
 								value="#{lbl['lbl.sc.comp.exp.termination.pop.up.last.remedy.notice.date']}"></p:outputLabel>
@@ -67,8 +66,7 @@
 						</td>
 						<td><p:inputText disabled="true"
 								value="#{contractVer.ctTermination.lastRemedyFileNo}"
-								style="width:auto;"></p:inputText> <ac:iconTooltip
-								value="#{'lbl.sc.spec.fin.company.exp.fed.gov.tooltip'}"></ac:iconTooltip>
+								style="width:auto;"></p:inputText> 
 						</td>
 
 						<td style="width: 300px;"><p:outputLabel
@@ -119,7 +117,7 @@
 					value="#{contractVer.ctTermination.ctTerminationReasons}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{terminationRes}">
-					<ac:paginator for="#{termResTbl}"></ac:paginator>
+					<ac:paginator for="termResTbl"></ac:paginator>
 					<p:column style="width:40%;">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
