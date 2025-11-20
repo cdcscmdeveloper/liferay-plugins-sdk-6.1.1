@@ -5796,11 +5796,14 @@ public class RuleCatalogueBackingBean extends
 		Date searchEffDate = truncateDate(searchEff);
 		Date searchExpDate = truncateDate(searchExp);
 		
-		if (searchEffDate != null && searchExpDate == null) {
+		if (searchEffDate != null && searchExpDate == null && valueEffDate != null) {
 			return searchEffDate.equals(valueEffDate);
 		}
-		if (searchExpDate != null && searchEffDate == null) {
+		if (searchExpDate != null && searchEffDate == null && valueExpDate != null) {
 			return searchExpDate.equals(valueExpDate);
+		}
+		if (valueEffDate == null || valueExpDate == null) {
+			return false;
 		}
 		return !valueEffDate.before(searchEff) && !valueExpDate.after(searchExp);
 	}
