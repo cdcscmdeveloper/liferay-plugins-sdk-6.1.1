@@ -2126,6 +2126,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			Long catCodeId,Long qtCateId, String categoryName, String catCode) {
 		boolean processAfter = false;
 		Date qtCatCreatedDate = null;
+		Date qtCatChangedDate = null;
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2139,6 +2140,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
 			for(ScQtCategory categoryCodeEdit : findQtCatCode){
 				qtCatCreatedDate = categoryCodeEdit.getCreatedDate();
+				qtCatChangedDate = categoryCodeEdit.getChangedDate();
 				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc() || this.getManagedBean().getUpdateCatInPm()){
 					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
 						reqDTO.setCategoryL1Id(catCodeId);
@@ -2177,27 +2179,22 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 		}
 		
-		if(processAfter){
-			if(this.getManagedBean().getResetHistoryCatCode()){
-				getManagedBean().setHisCatCode(catCode);
-				this.getManagedBean().setHistoryList(null);
-			}else{
-				getManagedBean().setHistoryList(
-						updateCreatedUserName(resDTO.getRemarkList()));
-				getManagedBean().setHisCatCode(catCode);
-				if(this.getManagedBean().getUpdateCatInPm() && !this.getManagedBean().getUpdateCatDesc()){
-					List<PmRemarkCategory> listCategoryDB = new ArrayList();
-					int i=0;
+		if (processAfter) {
 
-					for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
-						if (i > 0 && null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)) {
-						    listCategoryDB.add(removeIndex);
-						}
-						 i++;
+			getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+			getManagedBean().setHisCatCode(catCode);
+			if (this.getManagedBean().getUpdateCatInPm() && !this.getManagedBean().getUpdateCatDesc()) {
+				List<PmRemarkCategory> listCategoryDB = new ArrayList();
+				int i = 0;
+
+				for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
+					if (i > 0 && null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)
+							&& removeIndex.getChangedDate().before(qtCatChangedDate)) {
+						listCategoryDB.add(removeIndex);
 					}
-					getManagedBean().setHistoryList(listCategoryDB);
+					i++;
 				}
-
+				getManagedBean().setHistoryList(listCategoryDB);
 			}
 		}
 
