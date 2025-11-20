@@ -35,7 +35,6 @@ import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
 import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -68,8 +67,6 @@ import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaReqDTO;
 import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaResDTO;
 import my.ep.dto.pm.general.settings.gstitem.GstItemReqDTO;
 import my.ep.dto.pm.general.settings.gstitem.GstItemResDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -2112,7 +2109,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	private void validatePurchaseOrderLimit() {
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentSO.class);
-		IPurchaseRequestSO purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 
 		getManagedBean().setShowLimitExceededDialog(false);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -2128,13 +2126,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 		reqDTO.setActionCode(getManagedBean().getButtonAction());
 		BigDecimal totalReceivedAmount = getTotalReceivedAmount(reqDTO);
-		
-		PurchaseRequestReqDTO reqDTOPR = new PurchaseRequestReqDTO();
-		reqDTOPR.setFlRequestId(fulfilmentReqId);
-		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getPanelFlagByFlRequestId(reqDTOPR);
-		int isPanel = purResDTO.isPanel();
+
+		FulfilmentResDTO resDTOPanel = fulfilmentRequestSO.getPanelFlagByFlRequestId(reqDTO);
+		int isPanel = resDTOPanel.isPanel();
 		PmParameter procurementType = getManagedBean().getFulfilmentRequest().getProcurementType();
-		
+
 		reqDTO.setPanel(isPanel);
 		reqDTO.setValidationAmt(totalReceivedAmount);
 		reqDTO.setProcurementType(procurementType);

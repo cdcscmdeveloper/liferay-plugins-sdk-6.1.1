@@ -46,7 +46,6 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -72,8 +71,6 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
@@ -2053,7 +2050,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	private void validatePurchaseOrderLimit() {
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentSO.class);
-		IPurchaseRequestSO purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 
 		getManagedBean().setShowLimitExceededDialog(false);
 		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
@@ -2062,14 +2060,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setFlRequestId(fulfilmentReqId);
 		BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTO);
-		
-		
-		PurchaseRequestReqDTO reqDTOPR = new PurchaseRequestReqDTO();
-		reqDTOPR.setFlRequestId(fulfilmentReqId);
-		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getPanelFlagByFlRequestId(reqDTOPR);
-		int isPanel = purResDTO.isPanel();
+
+		FulfilmentResDTO resDTOPanel = fulfilmentRequestSO.getPanelFlagByFlRequestId(reqDTO);
+		int isPanel = resDTOPanel.isPanel();
 		PmParameter procurementType = order.getFlFulfilmentRequest().getProcurementType();
-		
+
 		reqDTO.setPanel(isPanel);
 		reqDTO.setValidationAmt(totalDeliveryAmount);
 		reqDTO.setProcurementType(procurementType);
@@ -2091,7 +2086,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setShowLimitExceededDialog(true);
 			} else {
 				if (isExceedLimit) {
-					setMessageForPOExceedLimit(isPanel,supplierTypeId,limitAmount,procurementType);
+					setMessageForPOExceedLimit(isPanel, supplierTypeId, limitAmount, procurementType);
 				}
 			}
 		}
