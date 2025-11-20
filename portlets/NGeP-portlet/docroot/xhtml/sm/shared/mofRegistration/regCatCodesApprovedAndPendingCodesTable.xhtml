@@ -229,14 +229,21 @@
 			<p:column rendered="#{backingBean.managedBean.approverUser}" style="white-space : normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
-				<p:inputTextarea autoResize="false" value="#{catBean.approverRemarks}" maxlength="2000"
-					style="white-space:normal;" rows="5" cols="20"
-					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}"
-					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
-					id="apprvrCatDecisionRmrk">
-					<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
-					<f:validateLength maximum="2000" />
-				</p:inputTextarea>
+				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
+					value="#{catBean.apprvrDecFlg}"
+					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
+					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+						itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+						itemValue="0" />
+					<p:ajax event="change" process="@this"
+						update="apprvrCatDecisionRmrk" partialSubmit="true"
+						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+				</p:selectOneRadio>
+				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
+					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 			</p:column>
 			<!-- 26238 add catBean.cancelCategory -->
 			<p:column rendered="#{backingBean.managedBean.approverUser}" style="white-space:normal;vertical-align: top;"
