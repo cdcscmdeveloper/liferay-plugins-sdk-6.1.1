@@ -50,7 +50,8 @@
 						<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty smSupplier.smMofAccounts}"/>
 					</p:column>
 					<!-- 32792 END -->
-					<!-- new requirement for wording #29778 -START -->
+					    <!-- new requirement for wording #29778 -START -->
+					    <!-- 38340 - START -->
 					<p:column headerText="#{lbl['lbl.sm.accountstatus']}" style="width :25%;white-space : normal">
 						<!-- #38899 -->
 						<h:outputText value="#{supplierDataMaintenanceBackingBean.getSupplierAccountStatus(smSupplier)}" />
