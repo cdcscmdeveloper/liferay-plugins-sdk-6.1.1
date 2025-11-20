@@ -2037,11 +2037,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			// #24336 - Start
 			// Set pmParameter by code
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq() && getManagedBean().getCommitteeType() != null){
-				PmParameter pmParameter = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, getManagedBean().getCommitteeType());
-				if(pmParameter != null){
-					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setCommitteeType(pmParameter);
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()){
+				if(getManagedBean().getCommitteeType() != null) {
+					PmParameter pmParameter = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, getManagedBean().getCommitteeType());
+					if(pmParameter != null){
+						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setCommitteeType(pmParameter);
+					}
 				}
+			}else{
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setCommitteeType(null);
 			}
 			// #24336 - End
 
