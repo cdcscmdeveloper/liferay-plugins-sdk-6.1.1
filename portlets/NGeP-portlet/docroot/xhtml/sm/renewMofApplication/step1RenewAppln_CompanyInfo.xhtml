@@ -36,7 +36,7 @@
 										<div align="right" style="width: 99%" class="button-wrapper">
 											<ui:include
 												src="/xhtml/sm/shared/mofRegistration/deleteApplicationCommonPage.xhtml" />
-											 <!-- #34159 - START - add param disablevalidation -->
+											 <!-- #39097 & #34159 - Start  -->
 											 <p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 												onclick="this.disabled=true;"
 												onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide();"
@@ -45,7 +45,7 @@
 												update=":form" style="margin-bottom:5px;" >
 												<f:param name="disableValidation" value="true" />
 											</p:commandButton>
-											<!-- #34159 - END -->
+											<!-- #39097 & #34159 - End  -->
 										</div>
 									</td>
 								</tr>
@@ -75,7 +75,7 @@
 									<td></td>
 									<td>
 										<div align="right" style="width: 100%">
-										<!-- #34159 - START - add param disablevalidation -->
+										<!-- #39097 & #34159 - Start - add param disablevalidation -->
 											<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 												onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 												actionListener="#{backingBean.setTabValue('0','1')}"
@@ -83,7 +83,7 @@
 												update=":form" iconPos="right" >
 												<f:param name="disableValidation" value="true" />
 											</p:commandButton>
-										<!-- #34159 - END -->
+										<!-- #39097 & #34159 - End -->
 										</div>
 									</td>
 								</tr>

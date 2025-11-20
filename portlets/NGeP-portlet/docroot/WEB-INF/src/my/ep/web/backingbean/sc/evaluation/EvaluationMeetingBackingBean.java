@@ -346,6 +346,7 @@ public class EvaluationMeetingBackingBean extends
 				}
 				if (null != qtCommittee) {
 					this.getManagedBean().setScQtCommittee(qtCommittee);
+					qtCommitteeSetCurrentStatusID(qtCommittee); // Bug #38975@Syazani 16/10/2025
 
 					ScCommittee sccommittee = resDTO.getQtCommittee()
 							.getScCommittee();
@@ -1691,8 +1692,16 @@ public class EvaluationMeetingBackingBean extends
 		// 25037 - end
 		MeetingResDTO activityResDTo = meetingso
 				.retriveCommitteActivityDtls(activityReqDTo);
+		
+		// Bug #38975@Syazani 16/10/2025 -- Start
+		// 25037 - start
+		retriveMeetingDetails(qtId, committeeType);
+		
 		if (null != activityResDTo
-				&& !activityResDTo.getCommitteMembers().isEmpty()) {
+				&& !activityResDTo.getCommitteMembers().isEmpty()
+				&& !Arrays.asList(QTStatusConst.getEvaluationMeetingActivityProhibitedDelete()).contains(
+						this.getManagedBean().getCurrentStatusId())) {
+			// Bug #38975@Syazani 16/10/2025 -- End
 			MeetingReqDTO deleteActivityDao = new MeetingReqDTO();
 			List<ScQtCommitteeActivity> deleteActivityList = new ArrayList<ScQtCommitteeActivity>();
 			for (ScQtCommitteeActivity activity : activityResDTo
@@ -1707,8 +1716,8 @@ public class EvaluationMeetingBackingBean extends
 					.setDeletedCommitteeActivityMembersList(deleteActivityList);
 			meetingso.deleteCommitteeActivityDtls(deleteActivityDao);
 		}
-		// 25037 - start
-		retriveMeetingDetails(qtId, committeeType);
+		
+		// Bug #38975@Syazani 16/10/2025
 
 		if (Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP).contains(taskName)
 				|| Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP).contains(taskName)) {
@@ -2424,6 +2433,8 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
 			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(newCommitteeMembers)) {
@@ -2459,6 +2470,8 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 
 			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
 				auditResDTO.setNewValue(entry.getValue().get(0));
@@ -2639,5 +2652,13 @@ public class EvaluationMeetingBackingBean extends
 		return auditReqList;
 	}	
 	// 25037 - end
+	
+	// Bug #38975@Syazani 16/10/2025 -- Start
+	private void qtCommitteeSetCurrentStatusID(ScQtCommittee qtCommittee) {
+		if (null != qtCommittee.getCurrentStatus() && null != qtCommittee.getCurrentStatus().getPmStatus()) {
+			this.getManagedBean().setCurrentStatusId(qtCommittee.getCurrentStatus().getPmStatus().getStatusId());
+		}
+	}
+	// Bug #38975@Syazani 16/10/2025 -- End
 
 }

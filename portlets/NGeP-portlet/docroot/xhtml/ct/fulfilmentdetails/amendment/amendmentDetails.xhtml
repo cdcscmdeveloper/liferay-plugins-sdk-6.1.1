@@ -7,9 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="amend" header="#{lbl['lbl.ct.menu.amendment']}" toggleable="true" toggleSpeed="500">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.type']}" escape="false"/> <br/>
-	<!-- #25002 - start added new instruction -->
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.with.supplement.process']}" escape="false"/><br/>
-	<!-- #25002 - end added new instruction -->
 	<!-- #34097 start -->
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.with.supplement.process.info']}" escape="false"/><br/><br/>
 	<!-- #34097 end -->
@@ -176,6 +173,8 @@
 			<h:panelGrid columns="3">
 				<p:inputText id="extendMonthsId" style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3"
+					onblur="this.value = this.value.trim() == '' ? '0' : this.value;"
+    				onchange="this.value = this.value.trim() == '' ? '0' : this.value;"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="change" update="extStartDate, extEndDate,extendMonthsId, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
 					</p:inputText>
@@ -185,6 +184,8 @@
 				<h:panelGrid columns="4">
 				<p:inputText id="extendDaysId" style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendDaysPeriod}" maxlength="2" max="27"
+					onblur="this.value = this.value.trim() == '' ? '0' : this.value;"
+    				onchange="this.value = this.value.trim() == '' ? '0' : this.value;"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 					<p:ajax event="change" update="extStartDate, extEndDate, extendDaysId, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
 					</p:inputText>

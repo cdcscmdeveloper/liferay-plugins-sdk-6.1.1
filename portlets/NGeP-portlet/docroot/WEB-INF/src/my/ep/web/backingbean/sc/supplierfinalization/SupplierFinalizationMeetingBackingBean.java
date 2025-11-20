@@ -1475,12 +1475,17 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			renewSessionAndRetrieve();
 			
-			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
-								ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
-			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
+			//#35320 - Start
+			String committeeType = this.getManagedBean().getCommitteeType();			
+			String variable2 = getMessageCommon(getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
+//			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
+//								ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
+//			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
+			
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{variable1, variable2}, 
-						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{getManagedBean().getScQt().getQtNo(), variable2}, 
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 	
+			//#35320 - Start
 		} finally {
 			qtMeetingSO = null;
 		}
@@ -2105,8 +2110,15 @@ if (CollectionUtils.isNotEmpty(
 		}
 		// 25037 note 284 - end
 
-		this.getManagedBean().setCurrentCommitteeType(
-				this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
+		// #35320 - Set QCA, QCB to QQC - Start
+		PmParameter committeeType = qtCommittee.getScCommittee().getCommitteeType();
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType.getParameterCode())
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType.getParameterCode())) {
+			committeeType.setParameterCode(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+		}
+		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(committeeType));
+		// #35320 - End
+				
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 		boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
 				QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
@@ -2305,9 +2317,13 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
+					this.getManagedBean().getCurrentStatusId() : 
+					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
 					||auditResDTO.getRoleCode().equals(RoleCode.PPB_SECRETARY.value())){
 				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_PB);
@@ -2349,10 +2365,14 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
+					this.getManagedBean().getCurrentStatusId() : 
+					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 			
 			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {
 				auditResDTO.setNewValue(entry.getValue().get(0));
@@ -2479,7 +2499,7 @@ if (CollectionUtils.isNotEmpty(
 	 */
 	public String checkRolesForAuditTrail() {
 		FacesScopes facesScopes = new FacesScopes();
-		String role = RoleCode.QCA_SECRETARY.value();
+		String role = RoleCode.QQC_SECRETARY.value();
 
 		try {
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2493,10 +2513,12 @@ if (CollectionUtils.isNotEmpty(
 			String currentCommitteeType = this.getManagedBean().getCommitteeType();
 			if (currentCommitteeType.equals("FSB") || currentCommitteeType.equals("FSW")) {
 				currentCommitteeType = "FPB";
+			}else if (currentCommitteeType.equals("QCA") || currentCommitteeType.equals("QCB")){
+				currentCommitteeType = "QQC";	
 			}
 			for (String userRole : pmRoles) {
 				String trimmedRole = userRole.substring(0, 3);
-				if (trimmedRole.equals(currentCommitteeType)) {
+				if (trimmedRole.equals(currentCommitteeType) && userRole.toLowerCase().contains("secretary")) {
 					return userRole;
 				}
 			}

@@ -91,7 +91,7 @@
 							</p:menuitem>
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								update="@form"
-								disabled="#{!(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled || directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"> <!-- #25726 add non periodic to condition -->
+								disabled="#{!(directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled )}">
 								<f:setPropertyActionListener
 									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 									value="5" />
@@ -188,63 +188,5 @@
 				</p:commandButton>
 			</div>
 		</p:confirmDialog>
-		
-		<!-- #25726 - start -->
-		
-		<p:dialog id="approvalLetterAlert" widgetVar="approvalLetterAlertDlg"
-		header="#{lbl['lbl.txt.alert']}" resizable="false" width="500"
-		modal="true">
-			<p:panel>				
-				<table>
-					<tr>
-						<td>
-							<h:graphicImage value="/css/images/design/exclamation.png" style="margin-top: 3px" />
-							<p:spacer width="10"></p:spacer>
-							<ui:fragment>
-								<h:outputText value="#{lbl['lbl.sc.approval.letter.alert']}" style="margin-top: 3px" escape="false"/>								
-								<br />
-								<br />
-							</ui:fragment> 							
-						</td>
-					</tr>
-				</table>			
-				
-				<p:spacer height="1px" />
-				<div class="ppRightBtn" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						id="approvalLetterAlertButton"
-						onclick ="approvalLetterAlertDlg.hide();"/>
-				</div>				
-			</p:panel>	
-		</p:dialog>
-		
-		<p:dialog id="bondChangesAlert" widgetVar="bondChangesAlertDlg"
-		header="#{lbl['lbl.txt.alert']}" resizable="false" width="500"
-		modal="true">
-			<p:panel>				
-				<table>
-					<tr>
-						<td>
-							<h:graphicImage value="/css/images/design/exclamation.png" style="margin-top: 3px" />
-							<p:spacer width="10"></p:spacer>
-							<ui:fragment>
-								<h:outputText value="#{lbl['lbl.sc.bond.changes']}" style="margin-top: 3px" escape="false"/>								
-								<br />
-								<br />
-							</ui:fragment> 							
-						</td>
-					</tr>
-				</table>			
-				
-				<p:spacer height="1px" />
-				<div class="ppRightBtn" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						id="bondChangesAlertButton"
-						onclick ="bondChangesAlertDlg.hide();"/>
-				</div>				
-			</p:panel>	
-		</p:dialog>
-		
-		<!-- #25726 - end -->
 	</ui:define>
 </ui:composition>
