@@ -1958,7 +1958,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
-		showRegisterationDecisionUI();
+		showRegistrationDecisionUI();
 //		37925 END
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setBusinessAndHadApprovedSpecialCatcode-23", 
@@ -18731,7 +18731,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//36504 - END
 //	#37925 START
-	private void showRegisterationDecisionUI() {
+	private void showRegistrationDecisionUI() {
 	    clearRegistrationStatusDisplay();
 	    
 	    SmAppl smAppl = getManagedBean().getSmAppl();
@@ -18879,7 +18879,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
      * @return A new list sorted according to the defined order.
      */
     private List<PmStatusDesc> manualSortByDefinedOrder(List<PmStatusDesc> unsortedList) {
-        List<PmStatusDesc> sortedList = new ArrayList<PmStatusDesc>();
+        List<PmStatusDesc> sortedList = new ArrayList<>();
 
         if (EntityHelper.isCollectionEmpty(unsortedList)) {
             return sortedList;
@@ -19199,18 +19199,29 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	/**
 	 * Displays the appropriate FacesMessage for invalid categories.
+	 * Message will not be shown if all invalid categories are "Rejected" or if no invalid category exists.
 	 */
 	private void showInvalidCategoryMessage(final StringBuilder invalidCategories) {
+	    if (invalidCategories == null) {
+	        return;
+	    }
+	    final String invalidText = invalidCategories.toString().replace("<br/>", "").trim();
+
+	    // Do not show message if invalidCategories is empty 
+	    if (invalidText.isEmpty()) {
+	        return;
+	    }
+
 	    final String messageKey = getManagedBean().isSupplierUser()
 	            ? "lbl.sm.category.notValid.supp"
 	            : "lbl.sm.category.notValid.poappr";
 
-	    if(invalidCategories != null){
-	    	final FacesContext context = FacesContext.getCurrentInstance();
-		    context.addMessage(null, new FacesMessage(
-		            FacesMessage.SEVERITY_ERROR,
-		            null,
-		            SmCommonUtil.getMessage(messageKey, new String[]{invalidCategories.toString()})));
+	    final FacesContext context = FacesContext.getCurrentInstance();
+	    if (context != null) {
+	        context.addMessage(null, new FacesMessage(
+	                FacesMessage.SEVERITY_ERROR,
+	                null,
+	                SmCommonUtil.getMessage(messageKey, new String[]{invalidCategories.toString()})));
 	    }
 	}
 	//#38927 END
