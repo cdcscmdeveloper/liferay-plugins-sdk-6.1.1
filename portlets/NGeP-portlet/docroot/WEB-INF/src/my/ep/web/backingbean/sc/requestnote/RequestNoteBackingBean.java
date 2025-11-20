@@ -3526,8 +3526,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void deleteRequestNoteDtl() {
 		debugLogger("deleteRequestNoteDtl");
 		int counter = 0;
-		List<ScRequestNoteDtl> deleteRequestNoteDtls = new ArrayList<ScRequestNoteDtl>();
-		List<ScRequestNoteDtl> mainRequestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+		List<ScRequestNoteDtl> deleteRequestNoteDtls = new ArrayList<>(); //#39290
+		List<ScRequestNoteDtl> mainRequestNoteDtls = new ArrayList<>(); //#39290
 		List<ScRequestNoteDtl> requestNoteDtls = getManagedBean().getRequestNoteDtls();
 		if (requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
@@ -3550,7 +3550,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 
-		getManagedBean().setDeleteRequestNoteDtls(deleteRequestNoteDtls);
+		//#39290 - start
+	    List<ScRequestNoteDtl> existingDeletes = getManagedBean().getDeleteRequestNoteDtls();
+	    if (existingDeletes == null) {
+	        existingDeletes = new ArrayList<>();
+	    }
+	    existingDeletes.addAll(deleteRequestNoteDtls);
+		getManagedBean().setDeleteRequestNoteDtls(existingDeletes);
+		//#39290 - end
 		getManagedBean().setRequestNoteDtls(mainRequestNoteDtls);
 		getManagedBean().getRequestNote().setRequestNoteDtls(mainRequestNoteDtls);
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -5577,8 +5584,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// #25725 add fullfilment type non periodic to the
 					// condition.
 					// add fix for 24348 calculation for RN
-					if (!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
-							&& !fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
+					if (!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 						if (itemDurationMonth != null) {
 							zonalSubTotalAmount = zonalSubTotalAmount.multiply(itemDurationMonth);
 						} else {
@@ -5592,9 +5598,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 				// - start- #27797
 				if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
-						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
-						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
+						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 					if (priceType.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
 						BigDecimal highestZonePrice = BigDecimal.ZERO;
 
@@ -6189,24 +6193,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 * @throws EpException
 		 *             always thrown with the error code and supplier name.
 		 */
-		private void errorMessage(ScRequestNoteDtl rnDtl, SupplierDataMaintenanceResDTO responseDto, DisciplinaryActionContext context) {
+		private void errorMessage(ScRequestNoteDtl rnDtl, SupplierDataMaintenanceResDTO responseDto,
+				DisciplinaryActionContext context) {
 			String supplierName = rnDtl.getScRequestSupplierItem().getSmSupplier() != null ? rnDtl
 					.getScRequestSupplierItem().getSmSupplier().getCompanyName() : StringUtils.EMPTY;
 	
-			switch (context) {
-			case ACTIVE:
+			if (context == DisciplinaryActionContext.ACTIVE) {
 				if (responseDto.isDisciplinaryActionDeletedDue()) {
 					throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
-				}else if (responseDto.isDisciplinaryActionPendingTransaction() || responseDto.isDisciplinaryActionDeletedDue()) {
+				} else if (responseDto.isDisciplinaryActionPendingTransaction()) {
+					throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+				} else {
 					throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
 				}
-				break;
-	
-			case AFTER_ENDED:
+			} else if (context == DisciplinaryActionContext.AFTER_ENDED) {
 				if (responseDto.isDisciplinaryActionPendingTransaction() || responseDto.isDisciplinaryActionDeletedDue()) {
 					throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
 				}
-				break;
 			}
 		}
 		
@@ -6437,8 +6440,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
-			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
-			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);
 			reqDTO.setFulfillmentTypes(fulfilmentTypes);
 			reqDTO.setUserIdRequired(false);
 
@@ -6964,7 +6965,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void supplierDisciplinaryActionStatus() {
 
 		try {
-			String status = StringUtils.EMPTY;
 			String reasonType = StringUtils.EMPTY;
 			String reasonLabel = StringUtils.EMPTY;
 			String detailLabel = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail", new String[0]); // base
@@ -6982,7 +6982,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						new String[] { reasonType });
 			}
 
-			status = detailLabel + DPConstants.SPACE + reasonLabel;
+			String status = detailLabel + DPConstants.SPACE + reasonLabel;
 
 			getManagedBean().setPopupMessage(status);
 			RequestContext.getCurrentInstance().execute("disciplinaryActionRequestNoteDlg.show();");

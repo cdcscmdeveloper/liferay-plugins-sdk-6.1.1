@@ -11,6 +11,7 @@
 		<cc:attribute name="tableId" required="true" />
 		<cc:attribute name="smApplSupportDocs" required="true" />
 		<cc:attribute name="mandatory" default="false"/>
+		<cc:attribute name="hasAI" default="false"/> <!-- #38890 -->
 	</cc:interface>
 
 	<cc:implementation>
@@ -20,7 +21,7 @@
 					
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" rendered="#{cc.attrs.mandatory}"
+					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="#{cc.attrs.hasAI ? 6 : 5}" rendered="#{cc.attrs.mandatory}"
 						style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
 					<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" rendered="#{!cc.attrs.mandatory}"
 						style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
@@ -30,6 +31,7 @@
 					<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" />
 					<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
 						rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
+					<p:column headerText="AI" rendered="#{cc.attrs.hasAI}"/> <!-- #38890 -->
 					<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}" />
 					<p:column headerText="#{lbl['lbl.sm.remark']}"/>
                 </p:row>
@@ -56,13 +58,37 @@
 		        		</p:commandLink>
 		        	</ui:remove>
 		        	<h:panelGroup rendered="#{not empty suppDoc.smApplDocFiles}">
-		        		<!-- #11641 -START reopen log #125-->
-		        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocs.filePath}#{applDocs.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocs.fileName)}</a>
-		        		<!-- #11641 - END reopen log #125-->
-		        	</h:panelGroup>
+						<!-- #39316 - Start -->
+						<h:commandLink id="file" value="#{sdoReviewBackingBean.getShortFileName(applDocs.fileName)}"
+							rendered="#{not empty applDocs and !suppDoc.pmDocument.hardCopyReq}">
+							<p:fileDownload
+								value="#{sdoReviewBackingBean.commonDownload(applDocs.filePath,applDocs.fileName,applDocs.fileName)}" />
+						</h:commandLink>
+						<!-- #39316 - End -->
+					</h:panelGroup>
 					<br />
 				</ui:repeat>
 				<!-- #28807 - End -->		        
+	        </p:column>
+	        
+	        <!-- #38890 -->
+	        <p:column style="width:3% !important; white-space:normal;overflow: hidden !important; text-align:center;"
+	        	rendered="#{cc.attrs.hasAI}">
+	        	<ui:repeat var="applDocs" value="#{suppDoc.smApplDocFiles}">
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 1}">
+						<p:graphicImage id="imgHasAI1" value="/css/images/ai/yes.png" />
+						<p:tooltip for="imgHasAI1">
+							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 2}">
+						<p:graphicImage id="imgHasAI2" value="/css/images/ai/no.png" />
+						<p:tooltip for="imgHasAI2">
+							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<br/>
+				</ui:repeat>
 	        </p:column>
 			
 			<p:column style="width:3% !important; white-space:normal;overflow: hidden !important;" >

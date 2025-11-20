@@ -33,9 +33,9 @@
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
 					</f:facet>
 				<p:menuButton value="#{lbl['lbl.btn.option']}">
-						<p:menuitem id="panelSearchId" value="#{lbl['lbl.btn.view']}"
+						<p:menuitem id="panelSearchId" value="#{lbl['lbl.pm.view']}"
 							icon="ui-icon-view"
-							action="#{searchPMAuditBackingBean.redirectToDetails(master.paramLevel3,master.pmParameterLvlId,master.createBy,master.roleCode)}" />
+							action="#{searchPMAuditBackingBean.redirectToDetails(master.paramLevel3,master.pmParameterLvlId,master.createBy,master.roleCode,master.paramLevelCode3,master)}" />
 					</p:menuButton>
 			</p:column>
 		</p:dataTable>

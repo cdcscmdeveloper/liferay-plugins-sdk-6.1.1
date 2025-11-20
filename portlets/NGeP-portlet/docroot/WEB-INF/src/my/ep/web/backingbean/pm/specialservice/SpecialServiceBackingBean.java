@@ -322,7 +322,11 @@ public class SpecialServiceBackingBean extends BaseBackingBean<SpecialServiceMan
 							MessageConst.INFO_790101, new String[] { resDTO.getSpecialService().getCodeName() });
 				}
 			}
-
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		//#34445 End	
 		} catch (Exception e) {
 			throw (e);
 		} finally {

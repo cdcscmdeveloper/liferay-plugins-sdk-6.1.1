@@ -36,8 +36,7 @@
 						<p:ajax event="change" update=":form:auditPMSearchPanel,:form:searchMasters"
 							listener="#{searchPMAuditBackingBean.changeType()}" />
 					</p:selectOneMenu></td>					
-				<td><p:message for="paramLevel1" id="paramLevel1Msg"
-						display="icon" /></td>
+				<td>&#160;</td>
 				<td>&#160;</td>
 			</tr>
 			<tr>
@@ -58,8 +57,7 @@
 						<p:ajax event="change"
 							update="paramLevel1,paramLevel2,paramLevel3,itemCode,itemName,roles,fromDate,toDate" />
 					</p:selectOneMenu></td>
-				<td><p:message for="paramLevel2" id="paramLevel2Msg"
-						display="icon" /></td>
+				<td>&#160;</td>
 				<td>&#160;</td>
 			</tr>
 			<tr>
@@ -80,8 +78,7 @@
 						<p:ajax event="change"
 							update="paramLevel1,paramLevel2,paramLevel3,itemCode,itemName,roles,fromDate,toDate" />
 					</p:selectOneMenu></td>
-				<td><p:message for="paramLevel3" id="paramLevel3Msg"
-						display="icon" /></td>
+				<td>&#160;</td>
 				<td>&#160;</td>
 			</tr>
 			<tr>
@@ -113,7 +110,7 @@
 							itemValue="#{roleItem.roleCode}" />
 						<p:ajax event="change" update="searchActionBylist" process="auditPMSearchPanel"/>
 					</p:selectOneMenu> <ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" /></td>
-				<td><p:message for="roles" id="rolesMsg" display="icon" /></td>
+				<td>&#160;</td>
 				<td>&#160;</td>
 			</tr>
 			<tr>
@@ -136,7 +133,8 @@
 				<td><p:calendar id="fromDate" showOn="button" size="36"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom}" readonlyInput="true">
-						<p:ajax event="dateSelect" update="toDate" />
+						<p:ajax event="dateSelect" process="@this" listener="#{searchPMAuditBackingBean.onFromDateSelect}" 
+					update="toDate"/>
 					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
 				<td><p:calendar showOn="button" size="30"

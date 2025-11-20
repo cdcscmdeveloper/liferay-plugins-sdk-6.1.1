@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<!-- #29661 -->
+	<f:event listener="#{qTDetailBB.getPanelCategory}" type="preRenderView" />
+
+	<ui:param name="isCtPanelCat"
+		value="#{qTDetailBB.managedBean.ctPanelCategory}" />
+	<p:panel id="openCategoryCodesPanel"
+		header="#{lbl['lbl.sc.category.code.list']}" toggleable="true">
+
+		<!-- category codes -->
+		<c:choose>
+			<c:when test="#{isCtPanelCat}">
+				<p:row>
+					<p:column>
+						<!-- category codes -->
+						<p:dataTable id="openPnlId" var="categoryCT" rowIndexVar="index"
+							value="#{qTDetailBB.managedBean.ctPanelCategoryCode}"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							rowKey="#{categoryCT}" rows="10" >
+
+							<ac:paginator for="openPnlId"></ac:paginator>
+
+							<p:column headerText="#{lbl['lbl.sc.sr.cat.code']}">
+									#{categoryCT.pmCategoryL1.categoryL1Code}#{categoryCT.pmCategoryL2.categoryL2Code}#{categoryCT.pmCategoryL3.categoryL3Code}
+									</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.main.category']}"
+								style="width:25%;white-space: normal;">
+								<h:outputText value="#{categoryCT.pmCategoryL1Name}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.sub.category']}"
+								style="width:25%;white-space: normal;">
+								<h:outputText value="#{categoryCT.pmCategoryL2Name}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
+								style="width:25%;white-space: normal;">
+								<h:outputText value="#{categoryCT.pmCategoryL3Name}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.category.type']}"
+								style="width:10%;white-space:normal;">
+								<h:outputText
+									value="#{suppliersReviewBackingBean.getParameterDesc(categoryCT.categoryType)}" />
+							</p:column>
+
+						</p:dataTable>
+						<p:spacer width="12px"></p:spacer>
+					</p:column>
+				</p:row>
+			</c:when>
+
+			<c:otherwise>
+				<p:row>
+					<p:column>
+						<!-- category codes -->
+						<p:dataTable id="restrictedPnlId" var="categorySC"
+							rowIndexVar="index"
+							rows="10" value="#{qTDetailBB.managedBean.qtCategoryList}"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							rowKey="#{categorySC}">
+
+							 <ac:paginator for="restrictedPnlId"></ac:paginator>
+
+							<p:column headerText="#{lbl['lbl.sc.sr.cat.code']}">
+									#{categorySC.pmCategoryL1.categoryL1Code}#{categorySC.pmCategoryL2.categoryL2Code}#{categorySC.pmCategoryL3.categoryL3Code}
+									</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.main.category']}"
+								style="width:25%;white-space: normal;">
+								<h:outputText value="#{categorySC.pmCategoryL1Name}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.sub.category']}"
+								style="width:25%;white-space: normal;">
+								<h:outputText value="#{categorySC.pmCategoryL2Name}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
+								style="width:25%;white-space: normal;">
+								<h:outputText value="#{categorySC.pmCategoryL3Name}" />
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.category.type']}"
+								style="width:10%;white-space:normal;">
+								<h:outputText
+									value="#{qTDetailBB.getParameterDescByString(categorySC.categoryType)}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:column>
+				</p:row>
+			</c:otherwise>
+		</c:choose>
+		<p:spacer width="12px"></p:spacer>
+
+	</p:panel>
+</ui:composition>

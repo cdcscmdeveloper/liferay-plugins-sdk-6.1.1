@@ -17,12 +17,14 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.SLALogFulfilmentConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -47,7 +49,7 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 	private static final long serialVersionUID = 1L;
 
 	/** The search accounting office. */
-	private IPagingDataModel<PmAgOffice> searchAccountingOffice = new SearchOfficePagingDataModel();
+	private transient IPagingDataModel<PmAgOffice> searchAccountingOffice = new SearchOfficePagingDataModel();
 	
 	private PmAgOffice agOffice;
 
@@ -91,16 +93,16 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 	 * main method for report generation method
 	 */
 	public void generateReport(){
-		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+		LinkedHashMap<String,String> params = new LinkedHashMap<>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 
 		if(getManagedBean().getPmAccountingOffice() == null){
 			throw new EpException(MessageConst.ERROR_REPORT_780065);
 		}
-		if( getManagedBean().getReportCode().equalsIgnoreCase("FL_071") ){
-			if( getManagedBean().isCheckSFOneOff() == false &&  getManagedBean().isCheckSFPeriodic() == false){
-				throw new EpException(MessageConst.ERROR_REPORT_780066);
-			}
+		if (getManagedBean().getReportCode().equalsIgnoreCase(
+				FlReportConst.FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE)
+				&& !getManagedBean().isCheckSFOneOff() && !getManagedBean().isCheckSFPeriodic()) {
+			throw new EpException(MessageConst.ERROR_REPORT_780066);
 		}
 		if(getManagedBean().getDocumentType() == null){
 			throw new EpException(MessageConst.ERROR_REPORT_780067);
@@ -119,14 +121,14 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 
 
 		//add PSF one off
-		if (getManagedBean().isCheckSFOneOff() == true ) {
+		if (getManagedBean().isCheckSFOneOff()) {
 			params.put(FlReportConst.FL_RPT_PSF_ONE_OFF, "Y");
 		}else{
 			params.put(FlReportConst.FL_RPT_PSF_ONE_OFF, "N");
 		}
 
 		//add PSF period
-		if (getManagedBean().isCheckSFPeriodic() == true) {
+		if (getManagedBean().isCheckSFPeriodic()) {
 			params.put(FlReportConst.FL_RPT_PSF_PERIOD, "Y");
 		}else{
 			params.put(FlReportConst.FL_RPT_PSF_PERIOD, "N");
@@ -149,7 +151,9 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 			try{
 				generateFLExcelReport(getManagedBean().getReportCode(), params);
 			}catch(Exception e){
-				e.printStackTrace();
+				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE, SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB,
+						getManagedBean().getReportCode(), SLALogFulfilmentConst.FL_TRANSACTION_FEE_GENERATE_RPT,
+						getUserIdSessionFromLoginId(), e);
 			}
 		}
 	}
@@ -200,10 +204,10 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 				String inputAg = getManagedBean().getInputAgOff();
 				AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
 				if (StringUtils.isNotBlank(inputAg)){
-					if(getManagedBean().getOffDropdown().equalsIgnoreCase("officeName")){
+					if("officeName".equalsIgnoreCase(getManagedBean().getOffDropdown())){
 						reqDTO.setAgOfficeDesc(inputAg);
 						reqDTO.setAgOfficeCode(null);
-					}else if(getManagedBean().getOffDropdown().equalsIgnoreCase("officeCode")){
+					}else if("officeCode".equalsIgnoreCase(getManagedBean().getOffDropdown())){
 						reqDTO.setAgOfficeDesc(null);
 						reqDTO.setAgOfficeCode(inputAg);
 					}else{
@@ -218,7 +222,7 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 				log.info("29554: setAgOfficeCode: "+reqDTO.getAgOfficeCode());
 
 				reqDTO.setOfficeSearchBean(searchBean);
-				agOfficeSO = (IAgOfficeSO) BusinessDelegate.getInstance()
+				agOfficeSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IAgOfficeSO.class);
 				AgOfficeResDTO resDTO= agOfficeSO.searchAgOfficeList(reqDTO);
@@ -227,7 +231,10 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 					return resDTO.getOfficeResultBean();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+						SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+						SLALogFulfilmentConst.FL_TRANSACTION_FEE_AG_OFFICE_LIST, getUserIdSessionFromLoginId(), e);
+
 				throw new EpException(MessageConst.ERROR_770005);
 			}
 
@@ -283,6 +290,7 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 	 */
 	public void allAgOffChecked(AjaxBehaviorEvent e) {
 		String valCheck = (String) e.getComponent().getAttributes().get("value");
+		this.agOffice = null;
 		this.getManagedBean().setInputAgOff(null);
 		this.getManagedBean().setIsAllAgOff(valCheck);
 		searchAccountingOffice();
@@ -294,12 +302,11 @@ public class TransactionFeeRptBackingBean extends FlReportBackingBean<Transactio
 	 * @return
 	 */
 	public boolean isSelectButtonDisable() {
-		if(getManagedBean().getIsAllAgOff() != null){
-			if(getManagedBean().getIsAllAgOff().equalsIgnoreCase("true")){
-				return false;
-			}
+		if (getManagedBean().getIsAllAgOff() != null && "true".equalsIgnoreCase(getManagedBean().getIsAllAgOff())) {
+			this.agOffice = null;
+			return false;
 		}
-		if(getAgOffice() !=null) {
+		if (getAgOffice() != null) {
 			return false;
 		}
 		return true;

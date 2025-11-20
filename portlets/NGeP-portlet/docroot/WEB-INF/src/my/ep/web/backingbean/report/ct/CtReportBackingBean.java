@@ -126,6 +126,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		//#30918 - start
 		ContractManagementReportBackingBean ctManagementReportBB = new ContractManagementReportBackingBean();
 		//#30918 - end
+		ContractItemUsageMonitoringDtlsBackingBean ccContractItemUsageMonitoringDtlsBackingBean = new ContractItemUsageMonitoringDtlsBackingBean(); //#34889 
+
 		
 		// reset common search criteria
 		resetSearch();
@@ -143,6 +145,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		//#30918 -start
 		ctManagementReportBB.resetSearch();
 		//#30918 - end
+		ccContractItemUsageMonitoringDtlsBackingBean.resetSearch(); //#34889
 	}
 	
 	/**

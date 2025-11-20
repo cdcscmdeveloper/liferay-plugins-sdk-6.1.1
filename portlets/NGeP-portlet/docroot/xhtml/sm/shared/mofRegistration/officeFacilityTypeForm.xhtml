@@ -69,8 +69,8 @@
 							alertValue="#{backingBean.getOwnershipTypeLabel(backingBean.managedBean.latestAppl.hqFacility.ownershipType)}"/>
 						
 						<p:message for="ownTypeId" showDetail="false" showSummary="true"
-							display="icon" /></td>
-					<td colspan='2'>&#160;</td>
+							display="icon" />
+					</td>
 				</tr>
 				<!-- 29480 - Update: remove code for Re-endorsed CR -->
 				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O' or backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
@@ -115,6 +115,23 @@
 						</p:outputPanel>
 						<td colspan='2'>&#160;</td>
 					</tr>
+					<!-- #38890 - start -->
+					<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R' 
+									and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}">
+					<tr>
+						<td colspan="2">
+							<p:commandButton value="AI Assistant" onclick="tenancyAI.show()" immediate="true">
+									<p:ajax partialSubmit="true" process="@this" />
+							</p:commandButton>
+							<p:graphicImage id="tttenancyAI" value="/css/images/design/tooltips.png" />
+							<p:tooltip id="tt2tenancyAI" for="tttenancyAI">
+								<p:outputLabel value="For Rented Business Office, click the AI Assistant and upload the Stamped Premise Rental Agreement for data extraction" />
+							</p:tooltip>&#160;
+							<br/>
+						</td>
+					</tr>
+					</p:outputPanel>
+					<!-- #38890 - end -->
 					<tr>
 						<td><p:outputLabel value="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'?
 								lbl['lbl.sm.facility.landLordName']:lbl['lbl.sm.facility.ownerName']}" /> 
@@ -226,21 +243,21 @@
 				</p:outputPanel>
 
 				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
-				<!-- #36718 - add panel for refresh address -->
+				<!-- #39097 & #36718 - add panel for refresh address -->
 				<p:outputPanel id="compFacilityAddrPanel" >	
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}"
 								style="padding-top :5px;" /> <p:outputLabel value="*"
 								styleClass="mandatory" /></td>
 						<td>
-							<!-- #36718 - change required condition -->
+							<!-- #39097 & #36718 - Start - change required condition --> 
 							<p:inputText id="companyAdd1" size="35" maxlength="100"
 								required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.companyaddress']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" 
 								disabled="#{backingBean.managedBean.upsCannotEdit}" >
 								<p:ajax partialSubmit="true" process="@this" />
 							</p:inputText>
-							
+							<!-- #39097 & #36718 - End  -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address1}" 
@@ -252,7 +269,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td>
-							<!-- #34159 - START -->
+							<!-- #39097 & #34159 - Start - change required condition -->
 							<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								id="companyCntry"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId}"
@@ -261,13 +278,13 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="basicCountry"
 									value="#{backingBean.managedBean.countryItems}" />
-								<!-- #36718 - add more id id ajax process -->
-								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
-									listener="#{backingBean.onChangeCountry(backingBean.managedBean.basicCompanyFacility.smAddress, 
-								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-									update="basicOffFacState,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
-							</p:selectOneMenu> 
-							<!-- #34159 - END -->
+								<!-- #39097 & #36718 - add more id id ajax process -->
+									<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
+										listener="#{backingBean.onChangeCountry(backingBean.managedBean.basicCompanyFacility.smAddress, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
+										update="basicOffFacState,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+								<!-- #39097 & #36718 - End  -->
+								</p:selectOneMenu> 
+							<!-- #39097 & #34159 - End  -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCountry.countryId}" 
@@ -295,7 +312,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td>
-							<!-- #34159 - START -->
+							<!-- #39097 & #34159 - Start - change required condition -->
 							<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.stateId}"
 								id="basicOffFacState" required="#{!empty param['disableValidation']}"
@@ -304,14 +321,13 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offState"
 									value="#{backingBean.managedBean.basicOffFacStates}" />
-								<!-- #36718 - add more id id ajax process -->
-								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
-									listener="#{backingBean.onChangeState(backingBean.managedBean.basicCompanyFacility.smAddress, 
-								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-									update="ofp,basicOffFacDist,
-									divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+								<!-- #39097 & #36718 - add more id id ajax process -->
+									<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
+										listener="#{backingBean.onChangeState(backingBean.managedBean.basicCompanyFacility.smAddress, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
+										update="ofp,basicOffFacDist,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+								<!-- #39097 & #36718 - End  -->
 							</p:selectOneMenu>
-							<!-- #34159 - END -->
+							<!-- #39097 & #34159 - End -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmState.stateId}" 
@@ -326,42 +342,44 @@
 				<td></td>
 				<td></td>
 				<td class="tdTitle">
-				<!-- #34159 - START -->
+				<!-- #39097 & #34159 - Start  --> 
 					<h:panelGroup id="divisionOfficeLabelPanelId">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"/>
 						<p:outputLabel value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"/>
-				<!-- #34159 - END -->	
+				<!-- #39097 & #34159 - End  -->	
 				</h:panelGroup>
 				</td>
 				<td class="tdContent">
-					<!-- #34159 - START -->
+					<!-- #39097 & #34159- change required condition --> 
 					<h:panelGroup id="divisionOfficeDropdownPanelId">
-						<p:selectOneMenu id="basicOffFacDivision" required="#{!empty param['disableValidation']}"
-						label="#{lbl['lbl.sm.division']}"
-						rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"
-						value="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionId}"
-						style="width: 207px;margin-bottom: 5px;"
-						disabled="#{backingBean.managedBean.upsCannotEdit}">
-						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
-						<f:selectItems var="division"
-							value="#{backingBean.managedBean.basicOffFacDivisions}"
-							itemValue="#{division.divisionId}"
-							itemLabel="#{division.divisionName}" />
-						<!-- #36718 - add more id id ajax process -->
-						<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
-								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, 
-								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-								update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
-					</p:selectOneMenu>
-					<!-- #35086 -->
-					<ac:smFieldChangeAlert 
-						isShow="#{backingBean.managedBean.showFieldChanges}"
-						oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId}" 
-						currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionId}" 
-						alertValue="#{backingBean.getDivisionLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId)}"/>
-					<p:message id="basicOffFacDivisionMsg" for="basicOffFacDivision" showSummary="true" showDetail="false" display="icon" />
-					<!-- #34159 - END -->
-					</h:panelGroup>
+									<!-- #39097 & #34159 - change required condition -->
+									<p:selectOneMenu id="basicOffFacDivision" required="#{!empty param['disableValidation']}"
+										label="#{lbl['lbl.sm.division']}"
+										rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"
+										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionId}"
+										style="width: 207px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
+										<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+										<f:selectItems var="division" value="#{backingBean.managedBean.basicOffFacDivisions}"
+											itemValue="#{division.divisionId}" itemLabel="#{division.divisionName}" />
+										<!-- #39097 & #36718 - add more id id ajax process -->
+										<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
+											listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
+											update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+										<!-- #39097 & #36718 - End  -->
+									</p:selectOneMenu>
+									<!-- #39097 & #34159 - End  -->
+									<!-- #35086 -->
+									<ac:smFieldChangeAlert isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId}"
+										currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionId}"
+										alertValue="#{backingBean.getDivisionLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId)}" />
+									<!-- #39097 - Start -->
+									<p:message id="basicOffFacDivisionMsg" for="basicOffFacDivision" showSummary="true" showDetail="false"
+										display="icon" />
+									<!-- #39097 - End -->
+									<!-- #34159 - END -->
+								</h:panelGroup> 
+								<!-- #39097 & #34159 - End -->
 				</td>
             </tr>
 					<tr>
@@ -380,7 +398,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td>
-							<!-- #34159 - START -->
+							<!-- #39097 & #34159 - change required condition -->
 							<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								id="basicOffFacDist" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.district']}"
@@ -389,13 +407,14 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offDist"
 									value="#{backingBean.managedBean.basicOffFacDistricts}" />
-								<!-- #36718 - add more id id ajax process -->
+								<!-- #39097 & #36718 - add more id id ajax process -->
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeDistrict(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+								<!-- #39097 & #36718 - End  -->
 							</p:selectOneMenu> 
-							<!-- #34159 - END -->
+							<!-- #39097 & #34159 - End -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDistrict.districtId}" 
@@ -411,7 +430,7 @@
 						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td>
-							<!-- #34159 - START -->
+							<!-- #39097 & #34159 - change required condition -->
 							<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								id="basicOffFacCity" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.towncity']}"
@@ -420,13 +439,14 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offCity"
 									value="#{backingBean.managedBean.basicOffFacCities}" />
-								<!-- #36718 - add more id id ajax process -->
+								<!-- #39097 & #36718 - add more id in ajax process -->
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeCity(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+								<!-- #39097 & #36718 -->
 							</p:selectOneMenu> 
-							<!-- #34159 - END -->
+							<!-- #39097 & #34159 - End -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmCity.cityId}" 
@@ -443,7 +463,7 @@
 						<td><p:outputPanel id="postCodeOffFacPanelId">
 								<p:outputPanel
 									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId==backingBean.managedBean.myCountryId}">
-									<!-- #36718 - change required condition -->
+									<!-- #39097 & #36718 - change required condition -->
 									<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostMyCode"
 										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
@@ -453,6 +473,7 @@
 										<f:validator validatorId="postcodeValidator" />
 										<p:ajax partialSubmit="true" process="@this" />
 									</p:inputText>
+									<!-- #39097 & #36718 - End  -->
 									
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -465,7 +486,7 @@
 								</p:outputPanel>
 								<p:outputPanel
 									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId!=backingBean.managedBean.myCountryId}">
-									<!-- #36718 - change required condition -->
+									<!-- #39097 & #36718 - change required condition -->
 									<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostForeignCode"
 										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
@@ -474,7 +495,7 @@
 										<!-- Disable for UPS 32008 - END -->
 										<p:ajax partialSubmit="true" process="@this" />
 									</p:inputText>
-									
+									<!-- #39097 & #36718 - End  -->
 									<ac:smFieldChangeAlert 
 										isShow="#{backingBean.managedBean.showFieldChanges}"
 										oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}" 
@@ -494,7 +515,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td colspan="3"  >
-					<!-- #36718 - START - put coordinate input into outputPanel to update using ajax -->
+					<!-- #39097 & #36718 - Start - put coordinate input into outputPanel to update using ajax --> 
 					<p:outputPanel id="hqFacCoordinatePanelId">
 						<script>
 						
@@ -517,7 +538,7 @@
 						
 						</script>
 						<!-- 37771 -->	
-						<!-- #36718 - change value coordinate -->		 
+						<!-- #39097 & #36718 - change value coordinate -->
 						<ac:gmap id="acgmap2" 
 							address="getAddress2()"
 							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
@@ -530,12 +551,14 @@
 							alertLatValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLatitude}"
 							oriLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}" 
 							currLongValue="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}" 
-							alertLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}"/>					
+							alertLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}"/>	
+							<!-- 39097 & #36718 - End -->				
 					</p:outputPanel>
+					<!-- #39097 & #36718 - End  -->
 					</td>
 				</tr>
 				</p:outputPanel>
-				<!-- #36718 - END -->
+				<!-- #39097 & #36718 - End -->
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
@@ -597,4 +620,7 @@
 		</p:confirmDialog>
 		<!-- 29480 - Update: remove code for Re-endorsed CR -->
 	</p:panel>
+	<!-- #38890 -->
+	<ac:smAIAssistant aiDlg="tenancyAI" docType="tenancy" updateId="offInfPan"
+		smAppl="#{backingBean.managedBean.smAppl}"/>
 </ui:composition>
