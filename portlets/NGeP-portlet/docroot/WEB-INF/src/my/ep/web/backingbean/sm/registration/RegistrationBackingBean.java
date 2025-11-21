@@ -6108,7 +6108,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					.getPersonBlacklist();
 		}
 		
-		if(ban != null){
+		if(ban != null && ban.getIdentificationNo() != null){
 			throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
 		}
 	}

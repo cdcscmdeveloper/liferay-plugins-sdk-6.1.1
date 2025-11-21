@@ -417,12 +417,16 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			//#38377
 			merchantId = isCdcPaymentGateway(pyBill.getBillType()) ? EpPropertiesUtils
-					.getInstance().getProperty("payment.gov.vkey")
+					.getInstance().getProperty("payment.gov.merchantid")
 					: SmCommonUtil.getInstance()
 							.getPaymentGatewayMerchantIdByBillType(
 									pyBill.getBillType());
-			String vKey = SmCommonUtil.getInstance()
-					.getPaymentGatewayVKeyByBillType(pyBill.getBillType());
+			String vKey = isCdcPaymentGateway(pyBill.getBillType()) ? EpPropertiesUtils
+					.getInstance().getProperty("payment.gov.vkey")
+					: SmCommonUtil.getInstance()
+							.getPaymentGatewayVKeyByBillType(
+									pyBill.getBillType());
+					
 			String vc = SmCommonUtil.md5(totalAmount + merchantId + orderId
 					+ vKey);
 
@@ -440,16 +444,17 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					.getManagedBean().getBpmPojo());
 			
 			//#38377
-			this.getManagedBean().setPayLoad(
-					PaymentUtil.constructJsonPayload(this.getManagedBean()
-							.getMerchantCode(), vKey, this.getManagedBean()
-							.getOrderId(), this.getManagedBean()
-							.getTotalAmount(), this.getManagedBean()
-							.getBillName(), this.getManagedBean()
-							.getBillEmail(), this.getManagedBean()
-							.getBillMobile(), this.getManagedBean()
-							.getBillDesc(), this.getManagedBean().getCountry(),
-							this.getCancelUrl()));
+			this.getManagedBean()
+					.setPayLoad(
+							PaymentUtil.constructJsonPayload(merchantId, vKey,
+									this.getManagedBean().getOrderId(), this
+											.getManagedBean().getTotalAmount(),
+									this.getManagedBean().getBillName(), this
+											.getManagedBean().getBillEmail(),
+									this.getManagedBean().getBillMobile(), this
+											.getManagedBean().getBillDesc(),
+									this.getManagedBean().getCountry(), this
+											.getCancelUrl()));
 			log.info("######38377#####new payment gateway payload:"
 					+ this.getManagedBean().getPayLoad());
 
