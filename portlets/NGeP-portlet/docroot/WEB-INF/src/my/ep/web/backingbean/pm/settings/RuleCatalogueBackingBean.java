@@ -348,6 +348,7 @@ public class RuleCatalogueBackingBean extends
 			initGst();
 			initQuotationWithTenderValue();
 			initYearEndForProcessing();
+			onAnyTabChange();//#36738
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
 		} catch (Exception e) {
@@ -5593,7 +5594,6 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleType(new String());
 		this.getManagedBean().setConfigRuleDescList(this.getManagedBean().getOriginalConfigRuleDescList());
 		this.getManagedBean().setSelectedRuleDescType(this.getManagedBean().getOriginalConfigRuleDescList().get(0));
-		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleTypeValueTableID");
 	}
 	
 	/**
