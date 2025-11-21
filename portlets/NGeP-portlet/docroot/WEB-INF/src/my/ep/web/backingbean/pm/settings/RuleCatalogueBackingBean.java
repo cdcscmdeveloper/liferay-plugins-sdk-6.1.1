@@ -5639,7 +5639,7 @@ public class RuleCatalogueBackingBean extends
 		}
 
 		// search via zone
-		if (searchRuleZone != null) {
+		if (searchRuleZone != null && !searchRuleZone.equals(0L)) {
 			List<PmConfigRuleValue> byZone = searchByZone(originalList, searchRuleZone, false);
 			if (CollectionUtils.isEmpty(byZone)) {
 				resultList.clear();
