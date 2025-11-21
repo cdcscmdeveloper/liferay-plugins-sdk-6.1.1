@@ -317,16 +317,19 @@ public class AuthorizedSignatoryBackingBean extends
 		boolean isActive = true;
 
 		// #34445, Fix as-is bug: #39354 START. Remove code because its no longer use
+		// effDate after currentDate
 		/*if(! pmCertSignatory.isBrandNew() && pmCertSignatory.getEffDate().compareTo(currentDate)>0){
 			isActive = false;
 		// expDate not null and expDate before currentDate
-		}else */
-		// #34445, Fix as-is bug: #39354 END. Remove code because its no longer use
-		
-		// effDate after currentDate
+		}else if(pmCertSignatory.getExpDate()!=null && pmCertSignatory.getExpDate().compareTo(currentDate)<0){
+			isActive = false;
+		} */
+
 		if(pmCertSignatory.getExpDate()!=null && pmCertSignatory.getExpDate().compareTo(currentDate)<0){
 			isActive = false;
 		}
+		// #34445, Fix as-is bug: #39354 END. Remove code because its no longer use
+
 		return isActive;
 	}
 	
