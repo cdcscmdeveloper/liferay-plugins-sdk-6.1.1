@@ -236,8 +236,7 @@ public class AuthorizedSignatoryBackingBean extends
 					for (int index2 = index1 + 1; index2 < certSignatories.size(); index2++) {
 						if (certSignatories.get(index2).getRecordStatusFlg() 
 								== DbValueConst.RECORD_STATUS_ACTIVE) {
-							// Overlap exists if (StartA <= EndB) and (EndA
-							// >= StartB)
+							// Overlap exists if (StartA <= EndB) and (EndA >= StartB)
 							Date startA = certSignatories.get(index1).getEffDate();
 							Date endA = certSignatories.get(index1).getExpDate();
 							Date startB = certSignatories.get(index2).getEffDate();
@@ -295,11 +294,9 @@ public class AuthorizedSignatoryBackingBean extends
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770144);
 		} else if (activeNumber == 0) {
-
 			// #34445, Fix as-is bug: #39354 START
 			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
 			// #34445, Fix as-is bug: #39354 END
-
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770145);
 		}
