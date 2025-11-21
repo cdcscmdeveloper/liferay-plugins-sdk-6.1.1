@@ -2006,45 +2006,64 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				IFulfilmentSO.class);
 		getManagedBean().setShowLimitExceededDialog(false);
 
-		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 
-		reqDTO.setFlRequestId(order.getFlFulfilmentRequest().getFulfilmentReqId());
-		reqDTO.setOrgProfileId(order.getFlFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
-		reqDTO.setCtContract(getManagedBean().getFulfilmentRequest().getCtContract());
+		FlFulfilmentOrder order = getManagedBean().getFulfilmentOrder();
+		if (order == null || order.getFlFulfilmentRequest() == null) {
+			return;
+		}
+
+		FlFulfilmentRequest flRequest = order.getFlFulfilmentRequest();
+		if (flRequest.getPreparedOrgProfile() == null) {
+			return;
+		}
+
+		reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
+		reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+		reqDTO.setCtContract(flRequest.getCtContract());
 
 		FulfilmentResDTO resDTOLimit = fulfilmentSO.retrieveCOLimitAmount(reqDTO);
 
 		if (resDTOLimit != null) {
-			BigDecimal limitAmount = resDTOLimit.getLimitAmount() != null ? resDTOLimit.getLimitAmount()
-					: BigDecimal.ZERO;
-			boolean isContractSharing = resDTOLimit.isContractSharing();
+			setMessageForCOExceedLimit(resDTOLimit, flRequest);
+		}
+	}
+	
+	/**
+	 * Sets the limit exceeded message when Contract Order (CO) exceeds the
+	 * allowed limit.
+	 * 
+	 * @param resDTOLimit
+	 * @param flRequest
+	 */
+	private void setMessageForCOExceedLimit(FulfilmentResDTO resDTOLimit, FlFulfilmentRequest flRequest) {
+		BigDecimal limitAmount = resDTOLimit.getLimitAmount() != null ? resDTOLimit.getLimitAmount() : BigDecimal.ZERO;
+		boolean isContractSharing = resDTOLimit.isContractSharing();
 
-			Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
-					.getFulfilmentRequest().getCtContract().getContractId() : null;
+		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
+				.getFulfilmentRequest().getCtContract().getContractId() : null;
 
-			FulfilmentReqDTO reqDTODel = new FulfilmentReqDTO();
-			reqDTODel.setContractId(contractId);
-			BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTODel);
+		FulfilmentReqDTO reqDTODel = new FulfilmentReqDTO();
+		reqDTODel.setContractId(contractId);
+		BigDecimal totalDeliveryAmount = calculateTotalDeliveryAmount(reqDTODel);
 
-			if (isContractSharing && limitAmount.compareTo(BigDecimal.ZERO) > 0
-					&& totalDeliveryAmount.compareTo(limitAmount) > 0) {
+		if (isContractSharing && limitAmount.compareTo(BigDecimal.ZERO) > 0
+				&& totalDeliveryAmount.compareTo(limitAmount) > 0) {
 
-				String msg = MessageUtils.getMessage(MessageConst.INFO_745095, new String[] { order
-						.getFlFulfilmentRequest().getPreparedOrgProfile().getOrgName() },
-						MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale());
+			String msg = MessageUtils.getMessage(MessageConst.INFO_745095, new String[] { flRequest
+					.getPreparedOrgProfile().getOrgName() }, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
+					.getUserLocale());
 
-				getManagedBean().setLimitExceededMessage(msg);
-				getManagedBean().setShowLimitExceededDialog(true);
+			getManagedBean().setLimitExceededMessage(msg);
+			getManagedBean().setShowLimitExceededDialog(true);
 
-			} else if (limitAmount.compareTo(BigDecimal.ZERO) > 0 && totalDeliveryAmount.compareTo(limitAmount) > 0) {
+		} else if (limitAmount.compareTo(BigDecimal.ZERO) > 0 && totalDeliveryAmount.compareTo(limitAmount) > 0) {
 
-				String msg = MessageUtils.getMessage(MessageConst.INFO_745094, null,
-						MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale());
+			String msg = MessageUtils.getMessage(MessageConst.INFO_745094, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					getFacesScopes().getUserLocale());
 
-				getManagedBean().setLimitExceededMessage(msg);
-				getManagedBean().setShowLimitExceededDialog(true);
-			}
+			getManagedBean().setLimitExceededMessage(msg);
+			getManagedBean().setShowLimitExceededDialog(true);
 		}
 	}
 

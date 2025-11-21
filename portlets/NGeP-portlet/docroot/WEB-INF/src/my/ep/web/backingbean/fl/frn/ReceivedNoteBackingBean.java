@@ -88,6 +88,7 @@ import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCriteria;
@@ -2050,21 +2051,26 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentSO.class);
 		getManagedBean().setShowLimitExceededDialog(false);
+
 		FlFulfilmentNote flNote = getManagedBean().getFulfilmentNote();
+		if (flNote == null || flNote.getFlRequest() == null || flNote.getFlRequest().getPreparedOrgProfile() == null) {
+			return;
+		}
+
+		FlFulfilmentRequest flRequest = flNote.getFlRequest();
 
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setFlRequestId(flNote.getFlRequest().getFulfilmentReqId());
-		reqDTO.setOrgProfileId(flNote.getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-		reqDTO.setCtContract(flNote.getFlRequest().getCtContract());
-		
+		reqDTO.setFlRequestId(flRequest.getFulfilmentReqId());
+		reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+		reqDTO.setCtContract(flRequest.getCtContract());
+
 		FulfilmentResDTO resDTOLimit = fulfilmentSO.retrieveCOLimitAmount(reqDTO);
 
 		if (resDTOLimit != null && resDTOLimit.getLimitAmount() != null) {
 			BigDecimal limitAmount = resDTOLimit.getLimitAmount();
 			boolean isContractSharing = resDTOLimit.isContractSharing();
 
-			Long contractId = flNote.getFlRequest().getCtContract() != null ? flNote.getFlRequest().getCtContract()
-					.getContractId() : null;
+			Long contractId = flRequest.getCtContract() != null ? flRequest.getCtContract().getContractId() : null;
 
 			FulfilmentReqDTO reqDTOFrn = new FulfilmentReqDTO();
 			reqDTOFrn.setContractId(contractId);
@@ -2078,10 +2084,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			reqDTOFrn.setActionCode(getManagedBean().getButtonAction());
 			BigDecimal totalReceivedAmount = getTotalReceivedAmount(reqDTOFrn);
 
-			checkLimitExceeded(isContractSharing, flNote, limitAmount, totalReceivedAmount);
+			checkLimitExceeded(isContractSharing, flRequest, limitAmount, totalReceivedAmount);
 		}
 	}
-	
+
 	/**
 	 * Validates whether the total delivery amount exceeds the defined contract
 	 * limit.
@@ -2093,13 +2099,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * @throws EpException
 	 *             if the total delivery exceeds the allowed limit
 	 */
-	private void checkLimitExceeded(Boolean isContractSharing, FlFulfilmentNote flNote, BigDecimal limitAmount,
+	private void checkLimitExceeded(Boolean isContractSharing, FlFulfilmentRequest flRequest, BigDecimal limitAmount,
 			BigDecimal totalReceivedAmount) {
 
 		if (isContractSharing && limitAmount.compareTo(BigDecimal.ZERO) > 0
 				&& totalReceivedAmount.compareTo(limitAmount) > 0) {
-			throw new EpException(MessageConst.ERROR_745099, new String[] { flNote.getFlRequest()
-					.getPreparedOrgProfile().getOrgName() });
+			throw new EpException(MessageConst.ERROR_745099, new String[] { flRequest.getPreparedOrgProfile()
+					.getOrgName() });
 		} else if (limitAmount.compareTo(BigDecimal.ZERO) > 0 && totalReceivedAmount.compareTo(limitAmount) > 0) {
 			throw new EpException(MessageConst.ERROR_745098);
 		}
