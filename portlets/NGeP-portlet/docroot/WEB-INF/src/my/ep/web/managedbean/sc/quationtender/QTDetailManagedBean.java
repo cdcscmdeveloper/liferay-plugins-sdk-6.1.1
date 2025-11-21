@@ -1697,7 +1697,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #25426 - Start
 	private boolean firstViewPageCAUsers = false;
 	// #25426 - End
-
+	
 	// #28784 -start-
 	private boolean demoType;
 	private boolean demoAction;
@@ -1709,7 +1709,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean demoSpecialCase;
 	private Long demoSampleChecklistStatusId;
 	// #28784 -end-
-
+	
 	// 25791-start
 	private List<ScQt> qtTrackingDiaryView;
 	private String qtAuditMaintenanceView;
