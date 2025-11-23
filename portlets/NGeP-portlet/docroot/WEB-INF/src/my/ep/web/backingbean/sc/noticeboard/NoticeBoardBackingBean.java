@@ -2877,12 +2877,15 @@ public class NoticeBoardBackingBean extends
 				for(ScQtCategory checkCategoryUpdated : resDTO.getCategoryResultBean().getResultList()){
 					if(null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()){
 						 catCodeL1 = checkCategoryUpdated.getPmCategoryL1().getCategoryL1Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
 					} 
 					if (null != checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code()){
 						 catCodeL2 = checkCategoryUpdated.getPmCategoryL2().getCategoryL2Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
 					}
 					if (null != checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code()){
 						 catCodeL3 = checkCategoryUpdated.getPmCategoryL3().getCategoryL3Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
 					}
 					flagHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel, catCode,resDTO);
 					checkCategoryUpdated.setFlagDisplayNb(getManagedBean().getFlagUpdateCatInPmDisplay());
@@ -3485,6 +3488,28 @@ public class NoticeBoardBackingBean extends
 		}
 		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
 		getManagedBean().setHisCatCode(catCode);
+		
+		boolean flagCategoryUpdate = false;
+		Date createdDateQt = null;
+		for(ScQtCategory checkQtCatUpdate : this.getCategoryCodesDataModel().getList()){
+			if(null != checkQtCatUpdate){
+				flagCategoryUpdate = checkQtCatUpdate.getUpdateCatDesc();
+				createdDateQt = checkQtCatUpdate.getCreatedDate();
+				break;
+			}
+		}
+		
+		if(this.getManagedBean().getFlagUpdateCatInPmDisplay() && !flagCategoryUpdate){
+			List<PmRemarkCategory> listCategoryDB = new ArrayList();
+			int i=0;
+			for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
+				if (i > 0 && null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
+				    listCategoryDB.add(removeIndex);
+				}
+				 i++;
+			}
+			getManagedBean().setHistoryList(listCategoryDB);
+		}
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
 	// #29732 -end-
