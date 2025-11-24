@@ -4364,10 +4364,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 * qt.setClosingDate(getManagedBean().getQt().getClosingDate());
 				 */
 			}
+			//#29661 Start
 			if (this.getManagedBean().getQt().getQtStatus().getStatusId()
 					.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))){
-				convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),true);//#29661
+				convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),true);
 			}
+			//#29661 End
 			
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
@@ -15024,7 +15026,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * Convert CT panel category code data to ScQt category code data 
 	 * @param panelCategoryCodeList
 	 */
-	private void convertPanelCategoryCodeToScQtCategory(List<CtPanelCategory> panelCategoryCodeList, boolean insertFlag) {
+	private void convertPanelCategoryCodeToScQtCategory(List<CtPanelCategory> panelCategoryCodeList, boolean qtInsertFlag) {
 		
 		if (CollectionUtils.isNotEmpty(panelCategoryCodeList)) {
 
@@ -15044,7 +15046,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}
 			this.getManagedBean().setQtCategoryList(scQtCategoryListNew);
 		} 
-		if (insertFlag){
+		if (qtInsertFlag){
 			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTSpecSO.class);
 			List<ScQtCategory> scQtCategoryList = this.getManagedBean().getQtCategoryList() != null ?
 					this.getManagedBean().getQtCategoryList(): new ArrayList<ScQtCategory>();
