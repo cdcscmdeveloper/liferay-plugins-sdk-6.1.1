@@ -33,7 +33,6 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.osb.sc.IQTOsbSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
@@ -54,8 +53,7 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.osb.sc.QTOsbReqDTO;
-import my.ep.dto.osb.sc.QTOsbResDTO;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -991,6 +989,11 @@ public class LOIDetailBackingBean extends
 	// 26247 - 31061 - end
 	
 	private void processRecommendedSuppliersByPKG(List<ScQtRecommend> scQtRecommendList) {
+		// 26247 - start
+		for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+			setRecommendedSupplierList(scQtRecommend);
+		}
+		// 26247 - end
 		ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
 		setRecommendedSupplierList(scQtRecommend);
 		
@@ -2991,8 +2994,10 @@ public class LOIDetailBackingBean extends
 					.getScQtFinalization();
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) getManagedBean()
 					.getPayLoad();
-
-			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls(true);
+			// 26247 - start
+			boolean isSubmit = !BpmOutcomeConst.BPM_REVISE.equals(outcome);
+			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls(isSubmit);
+			// 26247 - end
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setOutcome(outcome);
 			if (null != digiSign) {
@@ -3034,9 +3039,23 @@ public class LOIDetailBackingBean extends
 				// #25638 - End.
 			}
 
-		} finally {
-			// qtAwardSO = null;
 		}
+		// 26247 - start
+		catch (EpException e) {
+			String taskName = this.getManagedBean().getTaskName();
+			if (Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION, SCProcessNameConst.SIGNOFF_FC_SELECTION)
+					.contains(taskName)) {
+				Locale userLocale = new FacesScopes().getUserLocale();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.ERROR_760601, null, MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale)));
+				this.enableAutoUpdate();
+			} else {
+				throw e;
+			}
+		}
+		// 26247 - end
 	}
 	
 	/**
@@ -3065,9 +3084,7 @@ public class LOIDetailBackingBean extends
 	private AwardSupplierReqDTO parseMultipleLoiDtls(boolean isSubmit) {
 		Long statusId  = getManagedBean().getCurrentStatusId();
 		// 26247 - start
-		if (Arrays.asList(QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION,
-				QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION).contains(statusId)) {
-		// 26247 - end
+		if (isSubmit) {
 			List<TplSpecZoneDtl> zoneDeDtls = getManagedBean().getMultiLOIZoneDetails();
 			if (getManagedBean().isItemized()) {
 				if (getManagedBean().getScQt().isZonal() && 
@@ -3099,24 +3116,23 @@ public class LOIDetailBackingBean extends
 					awardSelectedSupplierAction();//34905
 				}				
 			}
-			
-			if (isSubmit) {
-				ScLoi scLoi = this.getManagedBean().getScLoi();
-				if (CollectionUtils.isNotEmpty(
-							scLoi.getScLoiReports())) {
-					for (ScLoiReport report 
-								: scLoi.getScLoiReports()) {
-						if (report.getScLoiReportAttachment() == null && 
-								ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-									.equals(report.getDefinationType().getParameterCode())) {
-							tabMenuListener(3);
-							throw new EpException(MessageConst.ERROR_760415, 
-												  new String[] { report.getTitle() });
-						}
+
+			ScLoi scLoi = this.getManagedBean().getScLoi();
+			if (CollectionUtils.isNotEmpty(
+						scLoi.getScLoiReports())) {
+				for (ScLoiReport report 
+							: scLoi.getScLoiReports()) {
+					if (report.getScLoiReportAttachment() == null && 
+							ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+								.equals(report.getDefinationType().getParameterCode())) {
+						tabMenuListener(3);
+						throw new EpException(MessageConst.ERROR_760415, 
+											  new String[] { report.getTitle() });
 					}
 				}
 			}
 		}
+		// 26247 - end
 		
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();

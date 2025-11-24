@@ -410,14 +410,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 		this.qtId = qtId;
 	}
 	//26247 - end
-	
-	public SmSupplier getSmSupplier() {
-		return smSupplier;
-	}
 
-	public void setSmSupplier(SmSupplier smSupplier) {
-		this.smSupplier = smSupplier;
-	}
 	// #28895_35501 Start - AUDIT TRAIL SM
 	public PmUser getOldSelectedUser() {
 		return oldSelectedUser;

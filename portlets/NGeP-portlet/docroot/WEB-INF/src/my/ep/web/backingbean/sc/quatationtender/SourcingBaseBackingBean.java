@@ -190,7 +190,6 @@ import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAtta
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -212,10 +211,9 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.sc.DisciplinaryActionUtils;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
-import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
@@ -7171,36 +7169,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	 * @return
 	 */
 	public boolean disabledQTProcess(SmSupplier supplier) {
-		if (null == supplier || null == supplier.getScQt()) {
-			return false;
-		}
-		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
-		boolean isDirectDiciplinaryAction = false;
-		if(CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())){
-			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
-			isDirectDiciplinaryAction = Arrays.asList(disciplinaryAction.isBlacklistOwner(), 
-					disciplinaryAction.isCancelRegistration(),
-					disciplinaryAction.isSuspendRegistration()).contains(true);
-		}
-				
-		boolean isDisciplinaryAction = isDirectDiciplinaryAction && supplier.isDisciplinaryActions() && !supplier.isWarningDA();
-		boolean isCancelledOrBlacklisted = viewSuppProfileBean.evaluateCancellationBlacklist(supplier);
-		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
-		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
-				&& !supplier.isBumi();
-
-		List<String> cancelledCategoryCodes = new ArrayList<>();
-		cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
-		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
-		boolean hasCancelledCategories = CollectionUtils.isNotEmpty(cancelledCategoryCodes);
-
-		boolean isSuspendRegistration = viewSuppProfileBean.evaluateSuspendRegistration(supplier);
-
-		return Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction,
-				isSuspendRegistration).contains(true)
-				|| !Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_EXPIRED).contains(
-						mofRecordStatus);
+		return DisciplinaryActionUtils.disabledQTProcess(supplier);
 	}
+
 	// 26247 - end
 	
 	//#28784 - Start
