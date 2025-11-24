@@ -82,10 +82,8 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 	/** The log. */
 	private static Logger log = Logger.getLogger(ZoneMaintenanceBackingBean.class);
 	
-	//[#26282] disciplinary action - start
 	//Navigation Details
-	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml";
-	//[#26282] disciplinary action - end
+	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml"; //[#26282] disciplinary action
 
 	/**
 	 * Instantiates a new zone maintenance backing bean.
@@ -105,7 +103,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		getManagedBean().setSelectedSupplierZone(null);
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+		ICountrySO reqSO = BusinessDelegate.getInstance().getServiceObject("pm", ICountrySO.class); // SonarLint Fixing
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 		
@@ -946,8 +944,6 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 			if(disciplinaryAct.isBlacklistOwner()) {
 				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
 			}
-		} else {
-			log.info("[#26282] - Disciplinary action does not imposed on supplier");
-		}		 
+		}
 	}
 }
