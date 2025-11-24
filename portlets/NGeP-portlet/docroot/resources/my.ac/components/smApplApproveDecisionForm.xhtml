@@ -60,21 +60,8 @@
 							</td>
 						</tr>
 					</p:outputPanel>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.panHdr.offFacility']}" /></td>
-						<td>
-							<h:outputText value="#{lbl['lbl.sm.facility.facilityType.home.office']}" 
-								rendered="#{cc.attrs.facilityType eq 'H'}"/>
-							<h:outputText value="#{lbl['lbl.sm.facility.facilityType.business.office']}" 
-								rendered="#{cc.attrs.facilityType eq 'B'}" />
-						</td>
-					</tr>
 					<!-- #37925 START -->
-					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne SupplierManagementConst.applTypeBumi 
-						and cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD
-						or cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD
-						or cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG
-						or cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG}">
+					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne SupplierManagementConst.applTypeBumi} ">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
 							<td>
@@ -84,6 +71,16 @@
 						</tr>
 					</p:outputPanel>
 					
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.panHdr.offFacility']}" /></td>
+						<td>
+							<h:outputText value="#{lbl['lbl.sm.facility.facilityType.home.office']}" 
+								rendered="#{cc.attrs.facilityType eq 'H'}"/>
+							<h:outputText value="#{lbl['lbl.sm.facility.facilityType.business.office']}" 
+								rendered="#{cc.attrs.facilityType eq 'B'}" />
+						</td>
+					</tr>
+										
 					<p:outputPanel rendered="#{cc.attrs.bean.displayCheckboxChangeCurrentStatus}">
 					<!-- #37925 END -->
 						<tr>
