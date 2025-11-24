@@ -81,7 +81,6 @@ public class SLALogConstant {
 	public static final String VIEW_QT_BID_SCHEDULES_DATA_MODEL = "ScheduleBiddingPagingDataModel";
 	
 	// 25791-end
-	
 	private SLALogConstant(){
 		
 	}	

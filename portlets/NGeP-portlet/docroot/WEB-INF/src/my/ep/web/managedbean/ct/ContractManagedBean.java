@@ -214,7 +214,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	//24333 - Start
 	private BigDecimal bondPercentage;
+	private BigDecimal totalBondAmt;
 	//24333 - End
+	
+	//32418 - Start
+	private int contractDaysPeriod;
+	//32418 - End
 	
 	/**
 	 * @return the fileDirectory
@@ -1687,5 +1692,23 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setBondPercentage(BigDecimal bondPercentage) {
 		this.bondPercentage = bondPercentage;
 	}
+	
+	public BigDecimal getTotalBondAmt() {
+		return totalBondAmt;
+	}
+
+	public void setTotalBondAmt(BigDecimal totalBondAmt) {
+		this.totalBondAmt = totalBondAmt;
+	}
 	//#24333 - End
+	
+	//32418 - Start
+	public int getContractDaysPeriod() {
+		return contractDaysPeriod;
+	}
+
+	public void setContractDaysPeriod(int contractDaysPeriod) {
+		this.contractDaysPeriod = contractDaysPeriod;
+	}
+	//32418 - End
 }

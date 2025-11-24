@@ -250,23 +250,30 @@ public class CriteriaBackingBean extends
 		log.info("saveSupplierCriteriaDtls - Start");
 		String returnPage = null;
 
-		if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
-			generateCriteriaCode();
+		//#34445 Start
+		try {
+			
+			if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
+				generateCriteriaCode();
 
-		}
+			}
 
-		if (DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean()
-				.getSelectedCriteria().getRecordStatusFlg().intValue()) {
-			validateCriteriaDesc();
-		}
+			if (DbValueConst.RECORD_STATUS_ACTIVE == getManagedBean().getSelectedCriteria().getRecordStatusFlg()
+					.intValue()) {
+				validateCriteriaDesc();
+			}
 
-		if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
-			returnPage = createCriteria(this.getManagedBean()
-					.getSelectedCriteria());
-		} else {
-			returnPage = updateCriteria(this.getManagedBean()
-					.getSelectedCriteria());
+			if (this.getManagedBean().getSelectedCriteria().isBrandNew()) {
+				returnPage = createCriteria(this.getManagedBean().getSelectedCriteria());
+			} else {
+				returnPage = updateCriteria(this.getManagedBean().getSelectedCriteria());
+			}
+
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
 		}
+		//#34445 End
 		log.info("saveSupplierCriteriaDtls - End");
 		return returnPage;
 	}
@@ -311,6 +318,12 @@ public class CriteriaBackingBean extends
 			
 			CriteriaResDTO resDTO = reqSO.updateSupCriteria(reqDTO);
 			if(resDTO.isSuccessful()){
+				/************ AUDIT #28895_35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
+					getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
+				}
+				/************ END AUDIT #28895_35509 *************/
 				loadCriteria(resDTO.getPmCriteria().getCriteriaId());
 				log.info("updateCriteria - successful");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
@@ -319,12 +332,6 @@ public class CriteriaBackingBean extends
 						MessageUtils.getMessage(MessageConst.INFO_779006, new String[]{newCriteria.getCriteriaCode()},
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				
-				/************ START: AUDIT #28895_35509 *************/
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
-					getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
-					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
-				}
-				/************ END: AUDIT #28895_35509 *************/					
 			}
 			
 		}catch (Exception e){

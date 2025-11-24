@@ -166,9 +166,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private StreamedContent downloadfile;
 	private String inactiveSCMemberStr; //25037 - note 510
 
-	//#25726 start
-	private BigDecimal lowerLimit = new BigDecimal (200000);	
-	//#25726 end
+
 	
 	//#32236 start
 	private String outputPage;
@@ -181,8 +179,15 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean newVersion;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
-
-
+	
+//	37925 START
+	private boolean displayLabelCountryOriginLocal;
+	private boolean displayLabelCountryOriginForeign;
+	private boolean displayCheckboxChangeCurrentStatus;
+	private boolean displayLabelRegistrationStatus;
+	private boolean displayDropdownRegStatus;
+//	37925 END
+	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1057,15 +1062,6 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	//25037 - end - note 510
 
-	//#25726 start
-	public BigDecimal getLowerLimit() {
-		return lowerLimit;
-	}
-
-	public void setLowerLimit(BigDecimal lowerLimit) {
-		this.lowerLimit = lowerLimit;
-	}	
-	//#25726 end
 
 	//#32236 start
 	public String getOutputPage() {
@@ -1120,4 +1116,46 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
+
+//	37925 START
+	public boolean isDisplayLabelCountryOriginLocal() {
+		return displayLabelCountryOriginLocal;
+	}
+
+	public void setDisplayLabelCountryOriginLocal(boolean displayLabelCountryOriginLocal) {
+		this.displayLabelCountryOriginLocal = displayLabelCountryOriginLocal;
+	}
+
+	public boolean isDisplayLabelCountryOriginForeign() {
+		return displayLabelCountryOriginForeign;
+	}
+
+	public void setDisplayLabelCountryOriginForeign(boolean displayLabelCountryOriginForeign) {
+		this.displayLabelCountryOriginForeign = displayLabelCountryOriginForeign;
+	}
+
+	public boolean isDisplayCheckboxChangeCurrentStatus() {
+		return displayCheckboxChangeCurrentStatus;
+	}
+
+	public void setDisplayCheckboxChangeCurrentStatus(boolean displayCheckboxChangeCurrentStatus) {
+		this.displayCheckboxChangeCurrentStatus = displayCheckboxChangeCurrentStatus;
+	}
+
+	public boolean isDisplayLabelRegistrationStatus() {
+		return displayLabelRegistrationStatus;
+	}
+
+	public void setDisplayLabelRegistrationStatus(boolean displayLabelRegistrationStatus) {
+		this.displayLabelRegistrationStatus = displayLabelRegistrationStatus;
+	}
+
+	public boolean isDisplayDropdownRegStatus() {
+		return displayDropdownRegStatus;
+	}
+
+	public void setDisplayDropdownRegStatus(boolean displayDropdownRegStatus) {
+		this.displayDropdownRegStatus = displayDropdownRegStatus;
+	}
+//	37925 END
 }

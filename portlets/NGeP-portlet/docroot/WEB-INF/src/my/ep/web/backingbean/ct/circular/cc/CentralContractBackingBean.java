@@ -689,7 +689,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * @return true if pending update status, false otherwise
 	 */
 	private boolean isPendingUpdateStatus(Long statusId) {
-	    return ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL.equals(statusId)
+	    return ContractStatusConst.CQ_PENDING_UPDATE_SUBMISSION.equals(statusId)
+	    	|| ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL.equals(statusId)
 	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION_APPROVAL.equals(statusId)
 	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION.equals(statusId);
 	}
@@ -778,6 +779,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 								 ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
 					 }
 				 }
+			 }
+			 
+			 // Validate For Extension date - #39213
+			 if(getManagedBean().isCircularExtension() && (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+					 && getManagedBean().getCircularVer().getExtendEndDate() == null) {
+				 getManagedBean().setSelectedTabIndex(0);
+				 throw new EpException(MessageConst.ERROR_100022,
+						 new String[]{ResourceBundleUtils.getMessage("lbl.ct.extension.end.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())}); 
 			 }
 
 			 // Validate duplicated contract
