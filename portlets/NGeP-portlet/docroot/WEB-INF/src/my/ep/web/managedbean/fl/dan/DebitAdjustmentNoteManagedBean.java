@@ -93,7 +93,7 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	private boolean prevHideRemarks;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	//24893 - start
@@ -755,7 +755,6 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	public void setPrevHideRemarks(boolean prevHideRemarks) {
 		this.prevHideRemarks = prevHideRemarks;
 	}
-	
 	//26279 - start
 	public String getDisciplinaryActionMessage() {
 		return disciplinaryActionMessage;
@@ -765,12 +764,12 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
