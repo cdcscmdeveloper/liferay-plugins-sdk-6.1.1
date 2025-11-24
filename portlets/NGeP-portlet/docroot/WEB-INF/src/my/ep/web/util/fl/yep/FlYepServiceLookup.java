@@ -7,9 +7,9 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 public class FlYepServiceLookup {
 
 	/**
-	 * Get IAgreementAutoCancelSO
+	 * Get IFulfilmentYepSO
 	 * 
-	 * @return IAgreementAutoCancelSO
+	 * @return IFulfilmentYepSO
 	 */
 	public static IFulfilmentYepSO getFlYepSO() {
 		return (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(
