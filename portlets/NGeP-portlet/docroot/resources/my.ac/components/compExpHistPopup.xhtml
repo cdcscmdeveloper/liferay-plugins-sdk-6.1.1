@@ -16,7 +16,7 @@
 		<p:dialog id="compExpHistPopup"
 			header="#{lbl['lbl.sm.comp.exp.hist.header']}"
 			widgetVar="compExpHistPopupWV" modal="true" styleClass="pop_up_top"
-			position="top" width="700px">
+			position="top" width="100%" style="overflow:auto">
 			<p:dataTable
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				id="historyDataTable" lazy="true" rowIndexVar="index" rows="10"
@@ -197,9 +197,7 @@
 							<p:graphicImage value="/css/images/design/download.png"
 								style="margin-right:2px;" />
 							<p:fileDownload
-								value="#{cc.attrs.bBean.commonDownload(doc.filePath,doc.fileName)}" />
-							<f:ajax process="@form" update=":form"
-								onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
+								value="#{cc.attrs.bBean.downloadSelectedSuppDoc(doc.fileName, doc.filePath)}" />
 						</h:commandLink>
 						<p:tooltip for="file" value="#{doc.fileName}" position="top" />
 						<br />

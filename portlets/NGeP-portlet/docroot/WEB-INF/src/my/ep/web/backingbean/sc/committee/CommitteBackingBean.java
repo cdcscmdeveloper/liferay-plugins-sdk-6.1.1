@@ -794,6 +794,8 @@ public class CommitteBackingBean extends
 				
 				//#35320 - START
 				if (null == scQtCommittee) {
+					getManagedBean().setRefreshFCMaintenancePage(Boolean.TRUE);
+					getTabInfo();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
@@ -2637,6 +2639,9 @@ public class CommitteBackingBean extends
 		List<QtCommitteeMemberBean> list = (List<QtCommitteeMemberBean>) (Object) history.deserializeList(history
 				.getCommitteeMembers());
 		CustomUtils.sortQtCommitteeMemberRole(list);
+		//#35320 - START
+		list = sortMemberByAlphabetOrder(list);
+		//35320 - END
 		this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setScCommitteeId(history.getScCommittee().getCommitteeId());
@@ -2774,7 +2779,7 @@ public class CommitteBackingBean extends
 		}
 
 		String committeeType = committee.getCommitteeType().getParameterCode();
-		if (Arrays.asList(SourcingConstants.FINAL_COMMITTEES_ORDER).contains(committeeType)) {
+		if (Arrays.asList(SourcingConstants.getFinalCommitteesOrder()).contains(committeeType)) {
 			return true;
 		}
 		return committee.isRecordStatus();
@@ -2802,16 +2807,18 @@ public class CommitteBackingBean extends
 
 				Collections.sort(committeeList, new CommitteeTypeComparator());
 
-				List<String> commList = new ArrayList<>();
-				Map<String, ScCommittee> committeeMap = new LinkedHashMap<>();
-				for (ScCommittee committee : committeeList) {
-					String paramCode = committee.getCommitteeType().getParameterCode();
+				List<String> commList = getCommitteeList(committeeList);
+				Map<String, ScCommittee> committeeMap = getCommitteeMap(committeeList);
 
-					committeeMap.put(paramCode, committee);
-					commList.add(paramCode);
+				ScCommittee newCommittee = getDisplayCommittee(committeeMap);
+
+				boolean isScQtCommitteeExist = isScQtCommiteeExist(newCommittee);
+
+				if (isScQtCommitteeExist) {
+					displayCommittee = createNewCommittee(newCommittee);
+				} else {
+					displayCommittee = newCommittee;
 				}
-
-				displayCommittee = getDisplayCommittee(committeeMap);
 
 				this.getManagedBean().setCommitteMap(committeeMap);
 				int activeIndex;
@@ -2852,7 +2859,6 @@ public class CommitteBackingBean extends
 			this.getManagedBean().setHeaderTitle(
 					ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
 							scCommittee.getCommitteeType().getParameterCode()));
-			this.getManagedBean().setMemberPaginator(new Paginator(latestCommittee, 10));
 
 			onSelectHistory();
 		} catch (Exception ex) {
@@ -2861,8 +2867,12 @@ public class CommitteBackingBean extends
 		}
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_COMMITTEE_MAINTENANCE + "?faces-redirect=true");
+		if (!getManagedBean().isRefreshFCMaintenancePage()) {
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, NAV_TO_COMMITTEE_MAINTENANCE + "?faces-redirect=true");
+		} else {
+			getManagedBean().setRefreshFCMaintenancePage(Boolean.FALSE);
+		}
 	}
 	// #35320 - END
 
@@ -3119,6 +3129,107 @@ public class CommitteBackingBean extends
 		} else {
 			searchUserAction();
 		}
+	}
+	// #35320 - END
+	
+	//35320 - START
+	private List<QtCommitteeMemberBean> sortMemberByAlphabetOrder(List<QtCommitteeMemberBean> committeeMember){
+
+		List<QtCommitteeMemberBean> newCommittee = new ArrayList<>();
+		List<QtCommitteeMemberBean> memberList = new ArrayList<>();
+		
+		if(CollectionUtils.isNotEmpty(committeeMember)){
+			for(QtCommitteeMemberBean bean : committeeMember){
+				if(bean.getMemberRole().equals(ParameterConst.COMMITTEE_ROLE_MEMBER)){
+					memberList.add(bean);
+				} else {
+					newCommittee.add(bean);
+				}
+			}
+		}
+
+		// Sort using Comparator
+        Collections.sort(memberList, new Comparator<QtCommitteeMemberBean>() {
+            @Override
+            public int compare(QtCommitteeMemberBean u1, QtCommitteeMemberBean u2) {
+                return u1.getMemberName().compareToIgnoreCase(u2.getMemberName());
+            }
+        });
+        
+        if(CollectionUtils.isNotEmpty(memberList)){
+        	for(QtCommitteeMemberBean bean2 : memberList){
+            	newCommittee.add(bean2);
+            }
+        }
+		return newCommittee;
+	}
+	// #35320 - END
+
+	// #35320 - START
+	private boolean isScQtCommiteeExist(ScCommittee displayCommittee) {
+
+		boolean isExist = Boolean.FALSE;
+
+		try {
+			ICommitteSO committeeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+
+			isExist = committeeSO.isScQtCommitteeExist(displayCommittee.getCommitteeId());
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, null, null,
+					"CommitteBackingBean.createNewCommittee", null, ex);
+		}
+		return isExist;
+	}
+	// #35320 - END
+
+	// #35320 - START
+	private ScCommittee createNewCommittee(ScCommittee newCommittee) {
+
+		CommitteResDTO resDTO = new CommitteResDTO();
+		try {
+			ICommitteSO committeeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+
+			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+			committeReqDTO.setScCommittee(newCommittee);
+			committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			committeReqDTO.setCommitteeType(newCommittee.getCommitteeType().getParameterCode());
+
+			resDTO = committeeSO.saveCommitteeMaintenanceAndAssignRole(committeReqDTO);
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, null, null,
+					"CommitteBackingBean.createNewCommittee", null, ex);
+		}
+		return resDTO.getCommittee();
+	}
+	// #35320 - END
+
+	// #35320 - START
+	private Map<String, ScCommittee> getCommitteeMap(List<ScCommittee> committeeList) {
+		Map<String, ScCommittee> committeeMap = new LinkedHashMap<>();
+		for (ScCommittee committee : committeeList) {
+			String paramCode = committee.getCommitteeType().getParameterCode();
+
+			if (CollectionUtils.isNotEmpty(committee.getScCommitteeMemberHistories())) {
+				committeeMap.put(paramCode, committee);
+			}
+		}
+		return committeeMap;
+	}
+	// #35320 - END
+
+	// #35320 - START
+	private List<String> getCommitteeList(List<ScCommittee> committeeList) {
+		List<String> commList = new ArrayList<>();
+		for (ScCommittee committee : committeeList) {
+			String paramCode = committee.getCommitteeType().getParameterCode();
+
+			if (CollectionUtils.isNotEmpty(committee.getScCommitteeMemberHistories())) {
+				commList.add(paramCode);
+			}
+		}
+		return commList;
 	}
 	// #35320 - END
 }

@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1957,7 +1958,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
-		showRegisterationDecisionUI();
+		showRegistrationDecisionUI();
 //		37925 END
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setBusinessAndHadApprovedSpecialCatcode-23", 
@@ -3379,7 +3380,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			if ((outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY) || outputPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION))
 					&& (getManagedBean().isSupplierUser())) {
+				validateCategory(); //#38927
 				SmApplicationUtil.getInstance().removeNotApplicableInformationBeforeSave(getManagedBean());
+			}else if(outputPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)){//38927
+				validateCategory();
 			}
 			// #34303 - End
 			setSupplierChangeValues(currentPageType);
@@ -4090,6 +4095,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					// #37779 - Start
 					SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
 					// #37779 - End
+					validateCategory(); //#38927
 					setDefaultPoReviewSection(); //#36622
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
@@ -4164,6 +4170,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					// #37779 - Start
 					SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
 					// #37779 - End
+					validateCategory(); //#38927
 					setDefaultApproverReviewSection(); //#36622
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
@@ -11258,7 +11265,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
 		assignValReqdToFalse();
-		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		//#34400
 		RequestContext.getCurrentInstance().update(updateIds);
 		// #28777 & #29727 - Start
 		/*
@@ -12156,16 +12163,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		} else {
 			retMsg = null;
 		}
-		//START 12483
-		if(res != null && res.equalsIgnoreCase("REVISE")) {
-			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
-		} else if (res != null && res.equalsIgnoreCase("INQUIRY")) {
-			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
-		} else {
-			// #26136
-			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
-		}
-		//END 12483
+		//#34400 - start
+		RequestContext.getCurrentInstance().execute(
+				"$('.ui-dialog:visible').hide();$('.ui-widget-overlay').remove();");
+		//#34400 - end
 		return retMsg;
 	}
 
@@ -18730,13 +18731,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//36504 - END
 //	#37925 START
-	private void showRegisterationDecisionUI() {
+	private void showRegistrationDecisionUI() {
 	    clearRegistrationStatusDisplay();
 	    
 	    SmAppl smAppl = getManagedBean().getSmAppl();
 	    String companyCountry = getCompanyCountry(smAppl);
 	    String applType = smAppl.getApplType();
-	    String supplierType = smAppl.getSupplierType();
 
 	    SmSupplier smSupplier = getManagedBean().getSmSupplier();
 	    String businessType = smSupplier.getBusinessType();
@@ -18744,7 +18744,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    boolean isForeignCompany = !SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA.equalsIgnoreCase(companyCountry);
 	    
 	    setCountryOriginUI(applType, businessType, isForeignCompany);
-	    setRegistrationStatusUI(supplierType, applType, isForeignCompany);
+	    setRegistrationStatusUI(businessType, smAppl, isForeignCompany);
 	}
 
 	private String getCompanyCountry(SmAppl smAppl) {
@@ -18752,40 +18752,70 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    return (country != null && !country.isEmpty()) ? country : SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
 	}
 
+	/**
+	 * Configures the Country of Origin UI flags based on application type, 
+	 * business type, and company origin.
+	 *
+	 * @param applType         the application type
+	 * @param businessType     the business type
+	 * @param isForeignCompany true if the company is foreign
+	 */
 	private void setCountryOriginUI(String applType, String businessType, boolean isForeignCompany) {
-	    // Reset country origin displays for BUMI applications
+
+	    // Early return for BUMI applications
 	    if (SupplierManagementConst.APPL_TYPE_BUMI.equalsIgnoreCase(applType)) {
 	        getManagedBean().setDisplayLabelCountryOriginLocal(false);
 	        getManagedBean().setDisplayLabelCountryOriginForeign(false);
 	        return;
 	    }
-	    
-	    // Configure displays for ROC business types
-	    boolean isRocBusinessType = isRocBusinessType(businessType);
-	    if (isRocBusinessType) {
+
+	    boolean rocBusiness = isRocBusinessType(businessType);
+
+	    // ROC business logic
+	    if (rocBusiness) {
 	        getManagedBean().setDisplayLabelCountryOriginForeign(isForeignCompany);
 	        getManagedBean().setDisplayLabelCountryOriginLocal(!isForeignCompany);
+	        return;
 	    }
+
+	    // Non-ROC business logic
+	    getManagedBean().setDisplayLabelCountryOriginForeign(!isForeignCompany);
+	    getManagedBean().setDisplayLabelCountryOriginLocal(isForeignCompany);
 	}
+
 
 	private boolean isRocBusinessType(String businessType) {
 	    return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD.equalsIgnoreCase(businessType)
 	            || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(businessType);
 	}
 
-	private void setRegistrationStatusUI(String supplierType, 
-	        String applType, boolean isForeignCompany) {
-	    
-	    if (isForeignCompany) {
-	        foreignRegistrationUI(isForeignCompany);
-	    } else {
-	        if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
-	            localContractorRegistrationUI(applType, isForeignCompany);
-	        } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
-	            localConsultantRegistrationUI(isForeignCompany);
-	        }
-	        // Default case - no action needed
+	/**
+	 * Updates the registration UI based on business type, supplier application data,
+	 * and whether the company is foreign.
+	 *
+	 * @param businessType      the business type (nullable)
+	 * @param application       the supplier application (nullable)
+	 * @param isForeignCompany  indicates whether the company is foreign
+	 */
+	private void setRegistrationStatusUI(String businessType, SmAppl smAppl, boolean isForeignCompany) {
+
+	    if (smAppl == null || smAppl.getSupplierType() == null) {
+	        return;
 	    }
+
+	    String supplierType = smAppl.getSupplierType();
+
+	    if (isForeignCompany && isRocBusinessType(businessType)) {
+	        foreignRegistrationUI(true);
+
+	    } else if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
+	        localContractorRegistrationUI(smAppl.getApplType(), false);
+
+	    } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
+	        localConsultantRegistrationUI(false);
+	    }
+
+	    // No other cases to process
 	}
 
 	/**
@@ -18799,7 +18829,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    getManagedBean().setDisplayLabelRegistrationStatus(false);
 	    getManagedBean().setDisplayDropdownRegStatus(false);
 	}
-
 
 	/**
 	 * Configures the UI elements for local constructor registration based on the application type
@@ -18878,7 +18907,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
      * @return A new list sorted according to the defined order.
      */
     private List<PmStatusDesc> manualSortByDefinedOrder(List<PmStatusDesc> unsortedList) {
-        List<PmStatusDesc> sortedList = new ArrayList<PmStatusDesc>();
+        List<PmStatusDesc> sortedList = new ArrayList<>();
 
         if (EntityHelper.isCollectionEmpty(unsortedList)) {
             return sortedList;
@@ -19029,4 +19058,199 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return "";
 	}
 	// #9299 - End
+	//#38890
+	public void updateTenancyAI(SmAIDocBackingBean.TenancyEntity te){
+		if (te == null){
+			return;
+		}
+		SmFacility fac = getManagedBean().getBasicCompanyFacility();
+		fac.setRentalRate(te.monthlyRental);
+		fac.setOwnerName(te.landlordsName);
+		
+		SmAddress addr = fac.getSmAddress();
+		if (te.pmCity != null){
+			addr.setStateId(te.pmCity.getPmDistrict().getPmState().getStateId());
+			onChangeState(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+			addr.setDistrictId(te.pmCity.getPmDistrict().getDistrictId());
+			onChangeDistrict(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+			addr.setCityId(te.pmCity.getCityId());
+			onChangeCity(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+		}
+		addr.setPostcode(te.postcode);
+		addr.setAddress1(te.normalizedAddress);
+		addr.setAddress2("");
+		addr.setAddress3("");
+	}
+	//#38927 START
+	/**
+	 * Validates the supplier categories for the current application.
+	 * <p>
+	 * - For Supplier users: removes suspended categories and builds error messages.
+	 * - For PO/Approver users: checks decision flags and displays warning messages for invalid categories.
+	 * </p>
+	 */
+	public void validateCategory() {
+	    final SmAppl smAppl = getManagedBean().getSmAppl();
+
+	    if (!isValidApplication(smAppl)) {
+	        return;
+	    }
+
+	    boolean validCategoryFound = false;
+	    final StringBuilder invalidCategories = new StringBuilder("<br/>");
+	    int messageIndex = 1; 
+
+	    for (Iterator<SmSupplierCategory> iterator = smAppl.getSmSupplierCategories().iterator(); iterator.hasNext();) {
+	        final SmSupplierCategory category = iterator.next();
+
+	        if (!isSuspended(category)) {
+	            continue;
+	        }
+
+	        validCategoryFound = true;
+
+	        if (getManagedBean().isSupplierUser()) {
+	            handleSupplierUserCategory(iterator, category, invalidCategories, messageIndex++);
+	        } else if (processPoOrApproverUser(category, invalidCategories, messageIndex)) {
+	            messageIndex++;
+	        }
+	    }
+
+	    if (validCategoryFound) {
+	        showInvalidCategoryMessage(invalidCategories);
+	    }
+	}
+
+	/**
+	 * Checks if the application and category list are valid and of relevant type.
+	 */
+	private boolean isValidApplication(final SmAppl smAppl) {
+	    if (smAppl == null || smAppl.getSmSupplierCategories() == null) {
+	        return false;
+	    }
+	    final String applType = smAppl.getApplType();
+	    return ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(applType)
+	            || ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES.equals(applType)
+	            || ParameterConst.NEW_SM_APPLN_FOR_MOF.equals(applType);
+	}
+
+	/**
+	 * Checks if a supplier category is marked as suspended.
+	 *
+	 * @param category the supplier category to check
+	 * @return true if the category is suspended
+	 */
+	private boolean isSuspended(final SmSupplierCategory category) {
+	    return category != null
+	            && category.getPmCategoryL3() != null
+	            && category.getPmCategoryL3().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED;
+	}
+	
+	/**
+	 * Handles category removal and message building for Supplier users.
+	 */
+	private void handleSupplierUserCategory(final Iterator<SmSupplierCategory> iterator,
+	                                        final SmSupplierCategory category,
+	                                        final StringBuilder invalidCategories,
+	                                        final int messageIndex) {
+	    removeCategoryFromFacilities(category);
+	    appendCategoryMessage(invalidCategories, messageIndex, category);
+	    iterator.remove();
+	}
+
+	/**
+	 * Removes a suspended supplier category from all facilities it is associated with.
+	 *
+	 * @param category the suspended SmSupplierCategory to remove
+	 */
+	private void removeCategoryFromFacilities(final SmSupplierCategory category) {
+	    final Iterator<SmFacility> facilityIterator = getManagedBean().getSmAppl().getSmFacilities().iterator();
+	    while (facilityIterator.hasNext()) {
+	        final SmFacility facility = facilityIterator.next();
+	        final Iterator<SmSupplierCategoryFacility> facilityCategoryIterator =
+	                facility.getSmSupplierCategoryFacilities().iterator();
+
+	        while (facilityCategoryIterator.hasNext()) {
+	            final SmSupplierCategoryFacility facilityCategory = facilityCategoryIterator.next();
+	            if (facilityCategory.getPmCategoryL3().getCategoryL3Id() == category.getPmCategoryL3().getCategoryL3Id()) {
+	                facilityCategoryIterator.remove();
+	            }
+	        }
+	    }
+	}
+
+	/**
+	 * Processes decision flags for PO and Approver users and determines whether to append messages.
+	 *
+	 * @param category   the suspended category being validated
+	 * @param msgBuilder StringBuilder for collecting invalid category messages
+	 * @param index      the current numbering index
+	 * @return true if the category message was appended (indicating numbering should increase)
+	 */
+	private boolean processPoOrApproverUser(final SmSupplierCategory category,
+	                                        final StringBuilder msgBuilder,
+	                                        final int index) {
+	    boolean added = false;
+
+	    if (getManagedBean().isPoUser() && category.getPoDecFlg() != null && category.getPoDecFlg() != 0) {
+	        appendCategoryMessage(msgBuilder, index, category);
+	        added = true;
+	    }
+
+	    if (getManagedBean().isApproverUser() && category.getApprvrDecFlg() != null && category.getApprvrDecFlg() != 0) {
+	        appendCategoryMessage(msgBuilder, index, category);
+	        added = true;
+	    }
+
+	    return added;
+	}
+
+	/**
+	 * Appends a category's details to the validation message with numbering.
+	 *
+	 * @param builder  the StringBuilder accumulating the messages
+	 * @param index    the numbering for this category
+	 * @param category the category to append
+	 */
+	private void appendCategoryMessage(final StringBuilder builder, final int index, final SmSupplierCategory category) {
+	    builder.append(index)
+	           .append(". ")
+	           .append(category.getPmCategoryL1().getCategoryL1Code())
+	           .append(category.getPmCategoryL2().getCategoryL2Code())
+	           .append(category.getPmCategoryL3().getCategoryL3Code())
+	           .append(" - ")
+	           .append(category.getCategoryL1Name()).append("/")
+	           .append(category.getCategoryL2Name()).append("/")
+	           .append(category.getCategoryL3Name())
+	           .append("<br/>");
+	}
+	
+	/**
+	 * Displays the appropriate FacesMessage for invalid categories.
+	 * Message will not be shown if all invalid categories are "Rejected" or if no invalid category exists.
+	 */
+	private void showInvalidCategoryMessage(final StringBuilder invalidCategories) {
+	    if (invalidCategories == null) {
+	        return;
+	    }
+	    final String invalidText = invalidCategories.toString().replace("<br/>", "").trim();
+
+	    // Do not show message if invalidCategories is empty 
+	    if (invalidText.isEmpty()) {
+	        return;
+	    }
+
+	    final String messageKey = getManagedBean().isSupplierUser()
+	            ? "lbl.sm.category.notValid.supp"
+	            : "lbl.sm.category.notValid.poappr";
+
+	    final FacesContext context = FacesContext.getCurrentInstance();
+	    if (context != null) {
+	        context.addMessage(null, new FacesMessage(
+	                FacesMessage.SEVERITY_ERROR,
+	                null,
+	                SmCommonUtil.getMessage(messageKey, new String[]{invalidCategories.toString()})));
+	    }
+	}
+	//#38927 END
 }

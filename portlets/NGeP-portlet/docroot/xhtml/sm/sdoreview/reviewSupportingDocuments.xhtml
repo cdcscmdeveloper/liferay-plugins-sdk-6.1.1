@@ -113,10 +113,16 @@
 						           				<p:fileDownload value="#{sdoReviewBackingBean.file}" />
 						        			</p:commandLink>
 						        		</ui:remove>
-						        		<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
-						        			<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}</a>
-						        		</h:panelGroup>
-										<br />
+											<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
+												<!-- #39316 - Start -->
+												<h:commandLink id="mandfile" value="#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}"
+													rendered="#{not empty applDocsFile and !inquirytbl.pmDocument.hardCopyReq}">
+													<p:fileDownload
+														value="#{sdoReviewBackingBean.commonDownload(applDocsFile.filePath,applDocsFile.fileName,applDocsFile.fileName)}" />
+												</h:commandLink>
+												<!-- #39316 - End -->
+											</h:panelGroup>
+											<br />
 									</ui:repeat>
 								</p:column>
 								<!-- #34392 - End -->
@@ -175,10 +181,16 @@
 							           			<p:fileDownload value="#{sdoReviewBackingBean.file}" />
 							        		</p:commandLink>
 							        	</ui:remove>
-							        	<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
-							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}</a>
-							        	</h:panelGroup>
-										<br />
+											<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
+												<!-- #39316 - Start -->
+												<h:commandLink id="nonMandfile" value="#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}"
+													rendered="#{not empty applDocsFile and !inquirytbl.pmDocument.hardCopyReq}">
+													<p:fileDownload
+														value="#{sdoReviewBackingBean.commonDownload(applDocsFile.filePath,applDocsFile.fileName,applDocsFile.fileName)}" />
+												</h:commandLink>
+												<!-- #39316 - End -->
+											</h:panelGroup>
+											<br />
 									</ui:repeat>
 								</p:column>
 								<!-- #34392 - End -->

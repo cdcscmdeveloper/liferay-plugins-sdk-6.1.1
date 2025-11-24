@@ -19,8 +19,8 @@
 						value="#{searchPMUserOrgAuditBackingBean.getDropdownRoleList()}"
 						var="roleItem" itemLabel="#{roleItem.roleName}"
 						itemValue="#{roleItem.roleCode}" />
-					<p:ajax event="change" update="roles,searchActionBylist,@form"
-						process="userOrgAuditPMSearchPanel" />
+					<p:ajax event="change" update="searchActionBylist,userOrgAuditPMSearchPanel"
+						process="userOrgAuditPMSearchPanel" listener="#{searchPMUserOrgAuditBackingBean.resetActionType()}"/>
 				</p:selectOneMenu> <ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" /></td>
 			<td><p:message for="roles" id="rolesMsg" display="icon" /></td>
 			<td>&#160;</td>
