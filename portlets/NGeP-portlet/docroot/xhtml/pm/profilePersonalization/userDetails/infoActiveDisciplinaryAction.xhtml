@@ -80,7 +80,9 @@
 		</table>
 		<!-- 26186 start -->
 		<div id="ctMessage">
-			
+			<ui:fragment rendered="#{not empty profilePersonalizationBackingBean.managedBean.ctSupplierMsgNonDA}">
+				<ui:include src="infoActiveCt.xhtml" />
+			</ui:fragment>
 		</div>
 		<!-- 26186 end -->
  
