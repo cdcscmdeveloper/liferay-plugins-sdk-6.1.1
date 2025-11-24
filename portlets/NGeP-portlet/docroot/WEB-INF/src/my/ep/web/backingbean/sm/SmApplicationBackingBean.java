@@ -144,6 +144,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -1223,16 +1224,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmSupplier smApplSupplier = new SmSupplier();
 
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		
 		log.info("[proceedToApplication] #31754 fromBpm: " + fromBpm);
 		if (!fromBpm) {
 			subStartTime = System.currentTimeMillis();
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "getCurrentSupplier-1", 
 					subStartTime); //20211005@fadhli - #31754
 			boolean cannotProceedAlertMsg = false;
-
+			//26238, 28144
+			checkActiveDisciplinaryAction(currSupp, applicationType);
+			
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 
@@ -1618,8 +1621,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().getSmAppl().setSmStaffTotals(
 					SmApplicationUtil.getStaffList(smAppl));
 		}
-
-		getManagedBean().setTabActiveIndex(0);
+		
+		checkActiveDisciplinaryAction(currSupp, applicationType);
+		
 		if (!fromBpm) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 
@@ -1864,6 +1868,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.getPmRegStatus().getPmStatus().getStatusId(),
 							getManagedBean().getRegStatusDescList(), "pmStatus");
 			// 27877 - start - if it is pending site review after approval, registration status can follow what was recommended
+			// 26238 -  Disciplinary action - 28801 
 			BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
 			String pendingSiteVisitReviewAfterApprovedStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
 			if (getManagedBean().getCurrentStatus() != null && !getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
@@ -2633,6 +2638,43 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	}
 	
+	//#26238
+	private void checkActiveDisciplinaryAction(SmSupplier currSupp, String applType){
+		if (currSupp == null){
+			return;
+		}
+		long startTime = System.currentTimeMillis();
+		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
+				.getExternalContext().getRequest()).getRequestedSessionId(); 
+		//39061
+		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplierForCMCD(currSupp);
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
+				"SmApplicationBackingBean", "checkActiveDisciplinaryAction", startTime); //20211005@fadhli - #31754
+		if (EntityHelper.isCollectionEmpty(discList)){
+			return;
+		}
+		String errorDA = SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action", null);
+		boolean hasCannotLoginDA = SmApplicationUtil.hasCannotLoginDA(discList);
+		List<String> disableApplTypes = Arrays.asList(
+				ParameterConst.NEW_SM_APPLN_FOR_MOF, ParameterConst.NEW_SM_APPLN_FOR_BUMI, 
+				ParameterConst.NEW_SM_APPLN_FOR_RENEW, ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
+		if (hasCannotLoginDA && disableApplTypes.contains(applType)){
+			throw new EpException(errorDA);
+		}
+		if (ParameterConst.NEW_SM_APPLN_FOR_BUMI.equalsIgnoreCase(applType)){
+			for(SmDisciplinaryAction disc : discList) {
+				if(disc.isBumiputeraCancel()){
+					throw new EpException(errorDA);
+				}
+			}
+		}
+		//#26238 Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration
+		if(ParameterConst.NEW_SM_APPLN_FOR_UPDATE.equalsIgnoreCase(applType)){
+			SmApplicationUtil.enableBankSectionOnly(getManagedBean(), discList);
+		}
+		getManagedBean().setTabActiveIndex(getManagedBean().getEditVO().isDisciplinary() ? 4 : 0);
+	}
+	
 	//#3460 - Start
 	/**
 	 * To retrieveSdoRemark from task list for supplier
@@ -2969,24 +3011,30 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (!StringUtils.isBlank(applType)
 				&& !getManagedBean().getSmAppl().isActiveAppl()
 				&& getManagedBean().isSupplierUser()) {
-			if (getManagedBean().getCompanyBasicGst() != null) {
-				SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
-						.getSmSupplier().getRegNo(), getManagedBean()
-						.getCompanyBasicGst().getGstRegNo());
-				SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
-						ruleHelper);
+			//27805: Disciplinary Action - start
+			if(!getManagedBean().getEditVO().isDisciplinary()){
+				if (getManagedBean().getCompanyBasicGst() != null) {
+					SmCommonUtil.validateGstRegNoUniqueness(getManagedBean()
+							.getSmSupplier().getRegNo(), getManagedBean()
+							.getCompanyBasicGst().getGstRegNo());
+					SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
+							ruleHelper);
+				}
+				if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+						.getSmSupplier())) {
+					throw new EpException(MessageConst.ERROR_722542);
+				}
+				//#27356
+				SmApplicationUtil.validateCoordinate(getManagedBean());
+				// #34303 - start
+				setValueForFacilityHeadquarters();
+				// #34303 - end
+				RequestContext.getCurrentInstance().execute(
+						"saveDraftConfirmDialog.show();");
+			} else if(getManagedBean().getEditVO().isDisciplinary()) {
+				validateUpdateSmAppl(applType, currentPageType, outputPageType,false);
 			}
-			if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
-					.getSmSupplier())) {
-				throw new EpException(MessageConst.ERROR_722542);
-			}
-			//#27356
-			SmApplicationUtil.validateCoordinate(getManagedBean());
-			// #34303 - start
-			setValueForFacilityHeadquarters();
-			// #34303 - end
-			RequestContext.getCurrentInstance().execute(
-					"saveDraftConfirmDialog.show();");
+			//27805: Disciplinary Action - end
 		} else {
 			if ((getManagedBean().isApproverUser() || getManagedBean()
 					.isPoUser())
@@ -4254,10 +4302,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				validSave = SmApplicationUtil.validateBasicInfoBeforeSave(
 						validSave, getManagedBean(), currentTab);
-				//#27853
-				if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
-					SmApplicationUtil.validateCoordinate(getManagedBean());
-				}
+				//#27853, 27748 - SM Disciplinary action - 26238
+				boolean isDisciplinary = getManagedBean().getEditVO()!= null && getManagedBean().getEditVO().isDisciplinary();
+				if (!isDisciplinary && !getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
+						SmApplicationUtil.validateCoordinate(getManagedBean());
+					}
 			}
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
@@ -4357,7 +4406,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 
 	private void validateBeforeSubmit() {
-
+		//START 26238 -  Disciplonary action - 27748
+		SmApplicationUtil.enableBankSectionOnly(getManagedBean(), null);
+		if(getManagedBean().getEditVO()!=null && getManagedBean().getEditVO().isDisciplinary()){
+			return;
+		}
+		//START END -  Disciplonary action - 27748
 		// validate dont have facility
 		SmApplicationUtil.validateDontHavePremise(getManagedBean().getSmAppl());
 
@@ -6273,13 +6327,101 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		log.info("Start deleteSelectedPendingApprovalCategoryCodes");
 		if (getManagedBean().getDeleteNewApplCategoryList() != null
 				&& getManagedBean().getDeleteNewApplCategoryList().size() > 0) {
-			List<SmSupplierCategory> categories = getManagedBean()
-					.getDeleteNewApplCategoryList();
-			deleteCatCodes(categories);
-			// API FOR LIST OF OVERLAPPING CATEGORIES
-			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 
-			initPhysicalConsultingCatcode();
+			List<SmSupplierCategory> categories = getManagedBean().getDeleteNewApplCategoryList();
+
+			// 28391: Disciplinary Action - start - <
+
+			List<SmSupplierCategory> activeCategoryList = getManagedBean().getActiveCategoryList();
+			boolean flagProceedDeleteCategory = true;
+		    // 28660: Disciplinary Action - start
+			boolean flagProceedDeleteCategoryAddChecking = true; 
+			// 28660: Disciplinary Action - end
+			
+			
+			for (SmSupplierCategory eachActiveCategory : activeCategoryList) {
+
+				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
+					flagProceedDeleteCategory = false;
+				}
+				
+				// 28660: Disciplinary Action - start
+				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04") || 
+						eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05") ||
+						eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")){
+					flagProceedDeleteCategoryAddChecking = false;
+				}
+				// 28660: Disciplinary Action - end
+			}
+			// 28391: Disciplinary Action - end - <28391>
+
+			// 28391: Disciplinary Action - Start - <28391>
+			// 28660: Disciplinary Action - start
+			if (flagProceedDeleteCategory && flagProceedDeleteCategoryAddChecking || flagProceedDeleteCategory 
+					&& !flagProceedDeleteCategoryAddChecking) {
+				// 28660: Disciplinary Action - end
+				deleteCatCodes(categories);
+
+				// API FOR LIST OF OVERLAPPING CATEGORIES
+				SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+
+				initPhysicalConsultingCatcode();
+
+			} else {
+				// 28660: Disciplinary Action - start
+				boolean flagProceedDeleteCategoryFirstCheck = false;
+				boolean flagProceedDeleteCategorySecondCheck = false;
+				boolean flagProceedDeleteCategoryFinalCheck = false; 
+				
+				for (SmSupplierCategory eachSelectedCategory : categories) {
+					
+					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
+						flagProceedDeleteCategoryFirstCheck = true;
+					}
+					
+					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04") || 
+							eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05") ||
+							eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")){
+						flagProceedDeleteCategorySecondCheck = true;
+					}
+				}
+				
+				if(flagProceedDeleteCategorySecondCheck && flagProceedDeleteCategoryFirstCheck){
+					flagProceedDeleteCategoryFinalCheck = true;
+				} else if (!flagProceedDeleteCategorySecondCheck){
+					flagProceedDeleteCategoryFinalCheck = true;
+				} 
+
+				if (flagProceedDeleteCategoryFinalCheck) {
+					// 28660: Disciplinary Action - end
+					deleteCatCodes(categories);
+
+					// API FOR LIST OF OVERLAPPING CATEGORIES
+					SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+
+					initPhysicalConsultingCatcode();
+				} else {
+					throw new EpException(MessageConst.INFO_776044);
+				}
+			}
+			// 28391: Disciplinary Action - end - <28391>
+
 		} else {
 			throw new EpException(MessageConst.ERROR_722534, new String[] { "Category Code" });
 		}
@@ -6337,16 +6479,48 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.equals(getManagedBean().getSelectedCategory()
 									.getPmCategoryL3().getCategoryL3Id())) {
 				validCat = false;
+				Date currentDate = new Date();
+				
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.DELETED_RECORD_STATUS) == 0 || cat.getCancelledDate() != null) {
 					if (cat.getCancelledDate() != null
 							&& !isValidToAddAfterDeleted(cat.getCancelledDate())) {
-						throw new EpException(MessageConst.ERROR_722563);
+						// 29952 - Start
+						if (cat.isCancelCategory() && currentDate.after(getManagedBean().getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
+							validCat = true;
+						} else {
+							throw new EpException(MessageConst.ERROR_722563);
+						}
+						// 29952 - End		
 					} else {
 						validCat = true;
 					}
 				} else {
-					throw new EpException(MessageConst.ERROR_722533);
+					// 29952, 39421 - START
+					int status = cat.getRecordStatusFlg();
+
+					SmSupplier supplier = getManagedBean().getSmAppl().getSmSupplier();
+					List<SmDisciplinaryAction> disciplinaryActions = supplier.getSmDisciplinaryActions();
+
+					Date endDate = (disciplinaryActions != null && !disciplinaryActions.isEmpty())
+					        ? disciplinaryActions.get(0).getEndDate()
+					        : null;
+
+					boolean isNotPending = !(SupplierManagementConst.PENDING_ACTIVATION_RECORD_STATUS == status);
+
+					boolean isCancelledOrSuspended = cat.isCancelCategory()
+					        || (SupplierManagementConst.CANCEL_RECORD_STATUS == status)
+					        || ((SupplierManagementConst.RECORD_STATUS_SUSPENDED == status)
+					            && cat.getDisciplinaryActionId() != null);
+
+					boolean isAfterEndDate = (endDate != null && currentDate.after(endDate));
+
+					if (isNotPending && isCancelledOrSuspended && isAfterEndDate) {
+					    validCat = true;
+					} else {
+					    throw new EpException(MessageConst.ERROR_722533);
+					}
+					// 29952, 39421 - END
 				}
 			}
 		}
@@ -6371,11 +6545,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.getSelectedCategory().getPmCategoryL3()
 							.getCategoryL3Id(), getManagedBean().getSmAppl()
 							.getSmSupplierCategories(), "pmCategoryL3");
-			if (cat != null) {
+			
+			//29399 - Start add category with expired DA category
+			if (cat != null  && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED) {
 				// #25794 & #26031 - start
-				// update applRefId to NULL if previous data is deleted (9)
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+				// update applRefId to NULL if previous data is deleted (9) or canceled(2)
+				if ((cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) || 
+						(cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED)) {
 					cat.setApplRefId(null);
+					//#30864 Start
+					cat.setDisciplinaryActionId(null);
+					//#30864 End
 				}
 				// #25794 & #26031 - end
 				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
@@ -6387,6 +6568,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				cat.setPoRemarks(null);
 				cat.setPrevApproverRemarks(null);
 				cat.setApproverRemarks(null);
+				cat.setActiveDA(false);
 				cat.setCancelledDate(null);
 			} else {
 				getManagedBean().getSmAppl().getSmSupplierCategories()
@@ -7928,7 +8110,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void saveOrUpdateAppl() {
 		//checkin if coordinate null #27853
 		if(!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()){
-		SmApplicationUtil.validateCoordinate(getManagedBean());
+			//START 27748
+			if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+				SmApplicationUtil.validateCoordinate(getManagedBean());
+			}
+			//END 27748		
 		}
 		
 		// checking if suddenly premise information is missing (#21955)
@@ -9512,7 +9698,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		}
 		if (!this.getManagedBean().isPoInquiryRespond()) {
-			validateBeforeSubmit();
+			//26238 -  Disciplinary action - 27748
+			if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
+				validateBeforeSubmit();
+			}
+			//26238 -  Disciplinary action - 27748
 
 			// validate if no SDO exist then dont allowed to submit
 			SmAddress hqAddr = getManagedBean().getSmAppl().getSmCompanyBasic()
@@ -10412,7 +10602,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		//#12483 - END
 		//Bug #26705
-		getlatestPoOverlappingRemarks();
+		// #39422 - Start - Comment method
+		// getlatestPoOverlappingRemarks();
+		// #39422 - End
 		
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
@@ -10697,7 +10889,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
 		assignValReqdToFalse();
-		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		//#34400
 		RequestContext.getCurrentInstance().update(updateIds);
 		
 		//#34400
@@ -11491,16 +11683,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		} else {
 			retMsg = null;
 		}
-		//START 12483
-		if(res != null && res.equalsIgnoreCase("REVISE")) {
-			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
-		} else if (res != null && res.equalsIgnoreCase("INQUIRY")) {
-			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
-		} else {
-			// #26136
-			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
-		}
-		//END 12483
+		//#34400 - start
+		RequestContext.getCurrentInstance().execute(
+				"$('.ui-dialog:visible').hide();$('.ui-widget-overlay').remove();");
+		//#34400 - end
 		return retMsg;
 	}
 	
@@ -12877,9 +13063,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void setDefaultApproverReviewSection() {
 		//#Enhancement #11765
 		if(!alreadyExecute && SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC.equalsIgnoreCase(getManagedBean().getCurrentPageType())){ //#36576
+			//#26238 (39072)
 			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
-					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
-					.isApproverUser());
+					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType());
 			if (catList.size() != 0) {
 				FacesContext fc = FacesContext.getCurrentInstance();
 				//#Enhancement #11765
@@ -12948,10 +13134,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					throw new EpException(MessageConst.ERROR_722570);
 				}
 			}
-		////END Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
+		////END Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen, #26238 (39072)
 			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
-					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
-					.isApproverUser());
+					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType());
 			if (catList.size() != 0) {
 				alreadyExecute = true;
 				FacesContext fc = FacesContext.getCurrentInstance();				

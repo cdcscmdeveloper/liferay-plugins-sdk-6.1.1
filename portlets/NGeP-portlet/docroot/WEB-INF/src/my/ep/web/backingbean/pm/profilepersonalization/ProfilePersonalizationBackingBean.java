@@ -1751,6 +1751,20 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		//26238 -  End Disciplinary Action - 28111
 	}
 	//26238 -  Start Disciplinary Action - 28111
+	
+	private String getDisciplinaryActionMsg(SmSupplier supplier) {
+		if (supplier == null){
+			return null;
+		}
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+		Locale locale = new FacesScopes().getUserLocale();
+		reqDTO.setLanguage(locale != null && locale.getLanguage() != null ? locale.getLanguage() : "en");
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveDisciplinaryActionMsg(reqDTO);
+		return resDTO.getErrorMessage();
+	}
+	
 	private void retrieveDisciplinaryAction(SmSupplier currSupp) {
 		if(currSupp == null){
 			currSupp = SmApplicationUtil.getCurrentSupplier();

@@ -51,7 +51,7 @@
 				</table>
 				<ui:remove>#28784 WIP @idham -start-</ui:remove>
 				<h:outputText
-					value="#{evaluationBackingBean.retrieveDemoSupplierNo(demoSupplier.scQtProposal.supplierNo)}"
+					value="#{demoSupplier.scQtProposal.scQtDemoSupplier.demoNo}"
 					rendered="#{!evaluationBackingBean.managedBean.demoWip}"></h:outputText>
 				<ui:remove>#28784 WIP @idham -end-</ui:remove>
 			</p:column> 
@@ -120,11 +120,11 @@
 				<h:panelGroup id="demoSupplierAttach">
 					<ac:scSingleFileUploadButton id="attachedIdsDemoDtl"
 						popupWidgetVar="demoSupplierAttachDlg"
-						attachment="#{evaluationBackingBean.retrieveDemoSupplierAttachment(demoSupplier.scQtProposal.supplierNo)}"
+						attachment="#{demoSupplier.scQtProposal.scQtDemoSupplier.scQtDemoSupplierAttachment}"
 						deleteFileUploadListener="evaluationBackingBean.deleteProposalDemoUploadFile"
 						readonly="#{evaluationBackingBean.managedBean.readOnly}">
 						<f:setPropertyActionListener for="actionEvent"
-							value="#{evaluationBackingBean.retrieveDemoSupplier(demoSupplier.scQtProposal.supplierNo)}"
+							value="#{demoSupplier.scQtProposal.scQtDemoSupplier}"
 							target="#{evaluationBackingBean.managedBean.scQtDemoSupplier}" />
 					</ac:scSingleFileUploadButton>
 				</h:panelGroup>
