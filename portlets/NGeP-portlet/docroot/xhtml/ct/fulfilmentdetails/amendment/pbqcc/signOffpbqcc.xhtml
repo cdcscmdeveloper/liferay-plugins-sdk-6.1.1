@@ -14,7 +14,7 @@
     		or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq)}">
 		<h:panelGrid columns="2" style="width:100%"
 			columnClasses="columnWidth150">
-
+			<!-- #26186 start-->
 			<h:panelGrid columns="2" style="float:right;">
 				<h:outputText value="* " styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.pbm.decision.date']}" />
@@ -23,10 +23,10 @@
 				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcDecisionDate}"
 				size="25" id="calPbqDecision" navigator="true" required="true"
 				label="#{lbl['lbl.ct.pbm.decision.date']}" readonlyInput="true"
-				showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+				showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 				disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails}">
 			</p:calendar>
-
+			<!-- #26186 end-->
 			<h:panelGrid columns="2" style="float:right;">
 				<h:outputText value="* " styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.decision']}" />
@@ -217,18 +217,20 @@
 		rendered="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMofMeetingDecision
 			or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq)}">
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150">
-		
-		<h:panelGrid columns="2" style="float:right;">
-			<h:outputText value="* " styleClass="mandatory" />
-			<p:outputLabel value="#{lbl['lbl.ct.mof.decision.date']}"    />
-		</h:panelGrid>
-		<p:calendar value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofDecisionDate}" size="25" id="calMofDecision" navigator="true"
-			required="true" label="#{lbl['lbl.ct.mof.decision.date']}"
-			readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-			disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails}">
-		</p:calendar>
-		
-		<h:panelGrid columns="2" style="float:right;">
+			<!-- #26186 start-->
+			<h:panelGrid columns="2" style="float:right;">
+				<h:outputText value="* " styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.ct.mof.decision.date']}" />
+			</h:panelGrid>
+			<p:calendar
+				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofDecisionDate}"
+				size="25" id="calMofDecision" navigator="true" required="true"
+				label="#{lbl['lbl.ct.mof.decision.date']}" readonlyInput="true"
+				showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails}">
+			</p:calendar>
+			<!-- #26186 end-->
+			<h:panelGrid columns="2" style="float:right;">
 			<h:outputText value="* " styleClass="mandatory" />
 			<p:outputLabel value="#{lbl['lbl.ct.decision']}"    />
 		</h:panelGrid>

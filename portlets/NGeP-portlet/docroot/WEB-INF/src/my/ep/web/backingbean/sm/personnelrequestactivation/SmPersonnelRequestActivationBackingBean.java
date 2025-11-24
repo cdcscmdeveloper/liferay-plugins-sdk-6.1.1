@@ -31,17 +31,21 @@ public class SmPersonnelRequestActivationBackingBean extends
 	 */
 	public void preRenderRequestActivation() {
 		renewSesionObject();
-		//27848 - start
+		// 26238 - 27848 - start
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-		List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-		if(activeDisc != null){
-			String labelNameVal = "";
-			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-							new String[] { labelNameVal })));
+		if (currSupp != null) {
+			List<SmDisciplinaryAction> activeDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+			// 26238 - 39217
+			getManagedBean().setDisciplinaryAction(SmApplicationUtil.hasCannotLoginDA(activeDA));
+			if (getManagedBean().isDisciplinaryAction()) {
+				FacesContext.getCurrentInstance().addMessage(
+						"imposedDisciplinary",
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+								new String[] { "" })));
+			}
 		}
 		getManagedBean().setSmSupplier(currSupp);
-		//27848 - end
+		// 26238 - 27848 - end
 		initExpiredPersonnels();
 		getManagedBean().setTargetPage("1");
 		SmCommonUtil.setMDCUserId();
