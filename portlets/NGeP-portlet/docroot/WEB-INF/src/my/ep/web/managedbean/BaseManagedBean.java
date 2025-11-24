@@ -179,10 +179,15 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean newVersion;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
-	// #28895_35501_DA - Updated FRS - Start
-	private boolean blacklistOwner;
-
-
+	
+//	37925 START
+	private boolean displayLabelCountryOriginLocal;
+	private boolean displayLabelCountryOriginForeign;
+	private boolean displayCheckboxChangeCurrentStatus;
+	private boolean displayLabelRegistrationStatus;
+	private boolean displayDropdownRegStatus;
+//	37925 END
+	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1111,13 +1116,46 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
-	// #28895_35501_DA - Updated FRS - Start
-	public boolean isBlacklistOwner() {
-		return blacklistOwner;
+
+//	37925 START
+	public boolean isDisplayLabelCountryOriginLocal() {
+		return displayLabelCountryOriginLocal;
 	}
 
-	public void setBlacklistOwner(boolean blacklistOwner) {
-		this.blacklistOwner = blacklistOwner;
+	public void setDisplayLabelCountryOriginLocal(boolean displayLabelCountryOriginLocal) {
+		this.displayLabelCountryOriginLocal = displayLabelCountryOriginLocal;
 	}
-	// #28895_35501_DA - Updated FRS - End
+
+	public boolean isDisplayLabelCountryOriginForeign() {
+		return displayLabelCountryOriginForeign;
+	}
+
+	public void setDisplayLabelCountryOriginForeign(boolean displayLabelCountryOriginForeign) {
+		this.displayLabelCountryOriginForeign = displayLabelCountryOriginForeign;
+	}
+
+	public boolean isDisplayCheckboxChangeCurrentStatus() {
+		return displayCheckboxChangeCurrentStatus;
+	}
+
+	public void setDisplayCheckboxChangeCurrentStatus(boolean displayCheckboxChangeCurrentStatus) {
+		this.displayCheckboxChangeCurrentStatus = displayCheckboxChangeCurrentStatus;
+	}
+
+	public boolean isDisplayLabelRegistrationStatus() {
+		return displayLabelRegistrationStatus;
+	}
+
+	public void setDisplayLabelRegistrationStatus(boolean displayLabelRegistrationStatus) {
+		this.displayLabelRegistrationStatus = displayLabelRegistrationStatus;
+	}
+
+	public boolean isDisplayDropdownRegStatus() {
+		return displayDropdownRegStatus;
+	}
+
+	public void setDisplayDropdownRegStatus(boolean displayDropdownRegStatus) {
+		this.displayDropdownRegStatus = displayDropdownRegStatus;
+	}
+//	37925 END
 }
