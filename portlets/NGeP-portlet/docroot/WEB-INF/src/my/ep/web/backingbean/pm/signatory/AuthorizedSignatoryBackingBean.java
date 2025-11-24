@@ -224,7 +224,7 @@ public class AuthorizedSignatoryBackingBean extends
 		if(certSignatories==null || certSignatories.isEmpty()){
 			throw new EpException(MessageConst.ERROR_770142);
 		}
-
+		
 		//date overlapping
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date endLess = sdf.parse("2099-12-31");
@@ -247,7 +247,7 @@ public class AuthorizedSignatoryBackingBean extends
 							}if(endB==null){
 								endB = endLess;
 							}
-
+							
 							boolean isCurrentPairOverlap = false;
 							isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
 
@@ -275,7 +275,7 @@ public class AuthorizedSignatoryBackingBean extends
 				}
 			}
 		}
-
+		
 		//only one active
 		int activeNumber = 0;
 		if(certSignatories!=null){
