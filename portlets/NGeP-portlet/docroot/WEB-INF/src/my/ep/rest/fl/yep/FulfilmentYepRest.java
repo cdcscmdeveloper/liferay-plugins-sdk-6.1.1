@@ -5,9 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-import my.ep.biz.service.fl.IFulfilmentYepSO;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.fl.yep.FlYepServiceLookup;
 
 import org.apache.log4j.Logger;
 
@@ -15,9 +13,6 @@ import org.apache.log4j.Logger;
 public class FulfilmentYepRest {
 
 	public static Logger log = Logger.getLogger(FulfilmentYepRest.class);
-	
-	IFulfilmentYepSO fulfilmentYepSO = (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentYepSO.class);
 
 	@GET
 	@Path("/terminatetask/{docNo}/{phaseNo}/{limit}/{isBatch}")
@@ -27,7 +22,7 @@ public class FulfilmentYepRest {
 			log.info("Initiate Process:terminateTaskYEP: docNo: "+docNo+"|phaseNo: "+phaseNo+"|limit: "+limit+"|isBatch: "+isBatch);
 			long startTime = System.currentTimeMillis();
 
-			fulfilmentYepSO.terminateTaskManual(docNo, phaseNo, limit, isBatch);
+			FlYepServiceLookup.getFlYepSO().terminateTaskManual(docNo, phaseNo, limit, isBatch);
 			
 			long endTime = System.currentTimeMillis();
 			log.info("End Process:terminateTaskYEP");
