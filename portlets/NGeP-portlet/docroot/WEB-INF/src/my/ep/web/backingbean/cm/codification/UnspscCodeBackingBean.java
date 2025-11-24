@@ -609,15 +609,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		}
 
 		//20190830@emy - CR15028 - end
-		
-		//#30878@08052021 - start
-		log.info("DA CMCD 1 " + action);
-		if (action.equalsIgnoreCase("OK")) {
-			log.info("azzatest01 " + this.getManagedBean().getRequestCode().getRequestId());
-			reqDTO.setDocId(this.getManagedBean().getRequestCode().getRequestId());
-			resDTO = unspscSO.updateIsCompletedTaskWorkflowStatus(reqDTO);
-		}
-		//#30878@08052021 - end
 
 		return "BPMtesting";
 
@@ -2574,15 +2565,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		boolean isDDBrandSelected = false;
 		boolean isDDMeasurementSelected = false;
 		boolean isDDColorSelected = false;
-		
-		//#30878@08052021 - start
-		log.info("DA CMCD 2 " + action);
-		if (action.equalsIgnoreCase("OK")) {
-			log.info("azzatest02 " + this.getManagedBean().getRequestCode().getRequestId());
-			reqDTO.setDocId(this.getManagedBean().getRequestCode().getRequestId());
-			resDTO = unspscSO.updateIsCompletedTaskWorkflowStatus(reqDTO);
-		}
-		//#30878@08052021 - end
 
 			if (this.getManagedBean().getReviewExtCodeList() != null
 					&& this.getManagedBean().getReviewExtCodeList().size() > 0) {
