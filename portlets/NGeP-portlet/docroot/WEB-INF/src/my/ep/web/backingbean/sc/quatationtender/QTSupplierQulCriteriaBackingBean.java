@@ -2191,7 +2191,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			getManagedBean().setHistoryList(
 					updateCreatedUserName(resDTO.getRemarkList()));
 			getManagedBean().setHisCatCode(catCode);
-			if(this.getManagedBean().getUpdateCatInPm() && !this.getManagedBean().getUpdateCatDesc()){
+			if (this.getManagedBean().getUpdateCatInPm()) {
 				List<PmRemarkCategory> listCategoryDB = new ArrayList();
 				int i=0;
 
