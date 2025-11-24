@@ -254,9 +254,6 @@
 			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa.content']}">
 					<ui:include src="supplier/instructionHeader.xhtml" />
 					<ui:include src="letterOfAcceptance.xhtml" />
-					<p:outputPanel rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg or amendmentBackingBean.managedBean.disciplinaryAction}">
-				    	<ui:include src="supplier/supplierDisciplinary.xhtml" />
-				    </p:outputPanel>
 			    </p:outputPanel>
 			    
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.view.loa']
