@@ -391,6 +391,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		private List<SmApplSupportDoc> missinDocs;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean auditAccess;
+	private Long currRegStatusId; //#26238
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2588,5 +2589,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.auditAccess = auditAccess;
 	}
 	// #28895_35501 End
-		
+	// #38856 End
+	public Long getCurrRegStatusId() {
+		return currRegStatusId;
+	}
+
+	public void setCurrRegStatusId(Long currRegStatusId) {
+		this.currRegStatusId = currRegStatusId;
+	}
+	// #38856 End
 }

@@ -72,8 +72,14 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 					"generateRptExcelForAuditTrailDetailsAll", getUserIdSessionFromLoginId(), e);
 		}
 		Workbook wb = new XSSFWorkbook();
-		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)
-				|| getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+		// #28895_35501_DA Start - AUDIT TRAIL SM DA
+		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)) { 
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_BANK_INFO, getManagedBean().getBankInfoList()); 
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_USER_PROFILE, getManagedBean().getUserInfoList()); 
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DISCIPLINARY_ACTION, getManagedBean().getDisciplinaryActionInfoList()); 
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, getManagedBean().getAdminInfoList()); 
+		} else if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) { 
+		// #28895_35501_DA End
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_BANK_INFO, getManagedBean().getBankInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_USER_PROFILE, getManagedBean().getUserInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, getManagedBean().getAdminInfoList());
@@ -81,6 +87,8 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 				|| getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_CANCEL_REGISTERED_CATEGORY, getManagedBean().getCatCodeInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_SUPPLIER_INFO, getManagedBean().getSupplierInfoList());
+			// #28895_35501_DA - AUDIT TRAIL SM DA
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DISCIPLINARY_ACTION, getManagedBean().getDisciplinaryActionInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVED_CATEGORY_CODE, getManagedBean().getApprovedCatCodeInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_OVERLAPPING_CATEGORY, getManagedBean().getOverlappingRemarkInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVER_REMARKS, getManagedBean().getApproverRemarkInfoList());
@@ -94,6 +102,8 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 	private void resetList() {
 		getManagedBean().getBankInfoList().clear();
 		getManagedBean().getUserInfoList().clear();
+		// #28895_35501_DA - AUDIT TRAIL SM DA
+		getManagedBean().getDisciplinaryActionInfoList().clear();
 		getManagedBean().getAdminInfoList().clear();
 		getManagedBean().getSupplierInfoList().clear();
 		getManagedBean().getApproverRemarkInfoList().clear();
@@ -111,6 +121,11 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			case 2:
 				getManagedBean().getUserInfoList().add(rsltReport);
 				break;
+			// #28895_35501_DA Start - AUDIT TRAIL SM DA
+			case 3:
+				getManagedBean().getDisciplinaryActionInfoList().add(rsltReport);
+				break;
+			// #28895_35501_DA End
 			case 4:
 				getManagedBean().getAdminInfoList().add(rsltReport);
 				break;
@@ -174,6 +189,10 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		} else if (getManagedBean().getActiveIndex() == 1) {
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_USER_PROFILE, rsltReportList);
 		} else if (getManagedBean().getActiveIndex() == 2) {
+			// #28895_35501_DA Start - AUDIT TRAIL SM DA
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DISCIPLINARY_ACTION, rsltReportList);
+		} else if (getManagedBean().getActiveIndex() == 3) {
+		// #28895_35501_DA End
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, rsltReportList);
 		}
 	}
@@ -194,14 +213,18 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		} else if (getManagedBean().getActiveIndex() == 1) {
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_SUPPLIER_INFO, rsltReportList);
 		} else if (getManagedBean().getActiveIndex() == 2) {
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVED_CATEGORY_CODE, rsltReportList);
-		} else if (getManagedBean().getActiveIndex() == 3) {
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_OVERLAPPING_CATEGORY, rsltReportList);
-		} else if (getManagedBean().getActiveIndex() == 4) {
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVER_REMARKS, rsltReportList);
-		} else if (getManagedBean().getActiveIndex() == 5) {
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_USER_PROFILE, rsltReportList);
-		} else if (getManagedBean().getActiveIndex() == 6) {
+			// #28895_35501_DA Start - AUDIT TRAIL SM DA
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DISCIPLINARY_ACTION, rsltReportList); 
+		} else if (getManagedBean().getActiveIndex() == 3) { 
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVED_CATEGORY_CODE, rsltReportList); 
+		} else if (getManagedBean().getActiveIndex() == 4) { 
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_OVERLAPPING_CATEGORY, rsltReportList); 
+		} else if (getManagedBean().getActiveIndex() == 5) { 
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVER_REMARKS, rsltReportList); 
+		} else if (getManagedBean().getActiveIndex() == 6) { 
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_USER_PROFILE, rsltReportList); 
+		} else if (getManagedBean().getActiveIndex() == 7) {
+		// #28895_35501_DA End
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, rsltReportList);
 		}
 	}

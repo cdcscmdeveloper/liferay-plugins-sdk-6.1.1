@@ -327,7 +327,12 @@ public class SalutationBackingBean extends
 											resDTO.getSalutation().getSalutationCode()});					
 					}
 				}
-		 }catch(Exception e){
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		// #34445 End
+		}catch(Exception e){
 			 throw e;
 		 }finally{
 			 salutationSO = null;

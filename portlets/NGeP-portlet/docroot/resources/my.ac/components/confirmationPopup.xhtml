@@ -27,7 +27,12 @@
 		<!-- 25037 -start- -->
 		<cc:attribute name="dialogCSS" default="" />
 		<cc:attribute name="loadingWidget" default=""/>
-		<!-- 25037 -end- -->	
+		<!-- 25037 -end- -->
+		<!-- #34445 - start -->
+		<cc:attribute name="bean" type="java.lang.Object" />
+		<cc:attribute name="hasParam" default="false" />
+		<cc:attribute name="okParam" method-signature="java.lang.String action(java.lang.String)" />
+		<!-- #34445 - end -->	
 	</cc:interface>
 
 	<cc:implementation>
@@ -82,6 +87,14 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<c:choose>
+					<!-- #34445 start -->
+				    <c:when test="#{cc.attrs.hasParam}">
+						<p:commandButton id="yesWithParamId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+							partialSubmit="true" onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
+							action="#{cc.attrs.okParam}"
+							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+					</c:when>
+				    <!-- #34445 end -->
 					<!-- 25037 -start- -->				
 					<c:when test="#{not empty cc.attrs.loadingWidget}">
 						<ui:remove><!--trigger external blockwidget, TODO: maybe refactor this conditional fragment --></ui:remove>
