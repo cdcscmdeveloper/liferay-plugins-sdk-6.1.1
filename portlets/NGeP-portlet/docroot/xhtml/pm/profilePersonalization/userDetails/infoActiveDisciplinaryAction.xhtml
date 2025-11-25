@@ -75,6 +75,10 @@
 						
 						<h:outputText rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"
 							value="#{lbl['lbl.sm.supplier.to.view.disc.action.details']}"/>
+						<ui:remove>26247 - start</ui:remove>
+						<h:outputText rendered="#{not empty profilePersonalizationBackingBean.managedBean.qtDisciplinaryActionMsg}"
+							value="#{profilePersonalizationBackingBean.managedBean.qtDisciplinaryActionMsg}" escape="false"/>
+						<ui:remove>26247 - end</ui:remove>
 					</td>
 				</tr>
 		</table>
