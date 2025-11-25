@@ -10972,7 +10972,9 @@ public class SmApplicationBackingBean extends
 		}
 		//#12483 - END
 		//Bug #26705
-		getlatestPoOverlappingRemarks();
+		// #39422 - Start - Comment method
+		// getlatestPoOverlappingRemarks();
+		// #39422 - End
 		
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
