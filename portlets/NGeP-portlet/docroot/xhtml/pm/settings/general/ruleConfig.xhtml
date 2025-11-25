@@ -117,15 +117,16 @@
 				</p:selectOneMenu>
 
 				<h:outputLabel value="#{lbl['lbl.pm.as.effdate']}" />
-				<p:calendar
+				<p:calendar navigator="true"
 					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeEffectiveDate}"
 					id="pbdateFrom" showOn="button" readonlyInput="true" style="width:250px;"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-					<p:ajax event="dateSelect" update="pbdateTo" />
+					<p:ajax event="dateSelect" update="pbdateTo" process="@this"/>
 				</p:calendar>
 				
 				<h:outputLabel value="#{lbl['lbl.pm.as.expdate']}" />
-				<p:calendar id="pbdateTo" showOn="button" style="width:250px;"
+				<p:calendar navigator="true"
+					id="pbdateTo" showOn="button" style="width:250px;"
 					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeExpiryDate}"
 					mindate="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeEffectiveDate}"
 					readonlyInput="true"
