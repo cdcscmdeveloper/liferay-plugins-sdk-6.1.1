@@ -1028,7 +1028,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveApprovalTabDtl();
 			}
 			//bug #30435 - end
-			convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode());//#29661
+			convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),false);//#29661
 			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
@@ -4369,6 +4369,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 * qt.setClosingDate(getManagedBean().getQt().getClosingDate());
 				 */
 			}
+			//#29661 Start
+			if (this.getManagedBean().getQt().getQtStatus().getStatusId()
+					.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))){
+				convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),true);
+			}
+			//#29661 End
+			
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
@@ -15024,7 +15031,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * Convert CT panel category code data to ScQt category code data 
 	 * @param panelCategoryCodeList
 	 */
-	private void convertPanelCategoryCodeToScQtCategory(List<CtPanelCategory> panelCategoryCodeList) {
+	private void convertPanelCategoryCodeToScQtCategory(List<CtPanelCategory> panelCategoryCodeList, boolean qtInsertFlag) {
 		
 		if (CollectionUtils.isNotEmpty(panelCategoryCodeList)) {
 
@@ -15044,5 +15051,14 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}
 			this.getManagedBean().setQtCategoryList(scQtCategoryListNew);
 		} 
+		if (CollectionUtils.isNotEmpty(panelCategoryCodeList) && qtInsertFlag){
+			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTSpecSO.class);
+			List<ScQtCategory> scQtCategoryList = this.getManagedBean().getQtCategoryList() != null ?
+					this.getManagedBean().getQtCategoryList(): new ArrayList<ScQtCategory>();
+					
+			for (ScQtCategory scQtCategory : scQtCategoryList){
+				specSO.insertCategoryCode(scQtCategory);
+			}
+		}
 	}
 }
