@@ -108,6 +108,17 @@
 						<h:outputText id="isBumiVBI"
 							value="#{(bidPriceItem.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 					</p:column>
+					<ui:remove>26247 - start</ui:remove>
+					<p:column style="white-space:normal;width:18%;">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+						</f:facet>
+						<ac:disciplinaryActionYesNo
+							supplier="#{bidPriceItem.supplier}" index="#{index}"/>
+					</p:column>
+					<ui:remove>26247 - end</ui:remove>
 					<p:column style="align : center; width : 14%"
 						headerText="#{lbl['lbl.sc.starting.price']}">
 						<h:outputText id="itemStartPriceVBI" style="float : right"

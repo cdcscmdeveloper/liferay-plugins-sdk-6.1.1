@@ -1202,25 +1202,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
 		ScLoa scLoa = resDTO.getScLoa();
-		
-		// #26247 - #33073 - #33354 - Start.
-		if (null != scLoa && null != scLoa.getScLoiLoa() && null != scLoa.getScLoiLoa().getSmSupplier()){
-			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-			
-			try {
-				qtSuppFinalizationSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTSuppFinalizationSO.class);
-				
-				if (null != qtSuppFinalizationSO) {
-					SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoa.getScLoiLoa().getSmSupplier());
-					scLoa.getScLoiLoa().setSmSupplier(smSupplier);
-				}
-			} finally {
-				qtSuppFinalizationSO = null;
+		// 26247 - start
+		boolean supplierExist = null != scLoa && null != scLoa.getScLoiLoa()
+				&& null != scLoa.getScLoiLoa().getSmSupplier();
+		if (supplierExist) {
+			Long qtId = scLoa.getScLoiLoa().getDocId();
+			if (!Arrays.asList(ParameterConst.DOCTYPE_DIRECT_NEGO, ParameterConst.DOCTYPE_QUOTATION).contains(
+					scLoa.getScLoiLoa().getDocType())) {
+				qtId = null;
 			}
+			SmSupplier smSupplier = getQtSuppFinalizationSO().evaluateDisciplinaryActions(
+					scLoa.getScLoiLoa().getSmSupplier(), qtId);
+			scLoa.getScLoiLoa().setSmSupplier(smSupplier);
 		}
-		// #26247 - #33073 - #33354 - End.
+		// 26247 - end
+
 		
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
@@ -1232,7 +1228,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		//Supplier overall contract amount
 		//Enhancement #24259 #24269
-//		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
 		BigDecimal overallCtAmout = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		//log.info(":::populateLOADetails() overallCtAmout (RM) = "+ overallCtAmout);
 		//end Enhancement #24259 #24269
@@ -6104,30 +6099,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
 
 			// #26247 - #33073 - #33354 - Start.
-			if (CollectionUtils.isNotEmpty(loiLoaList) && loiLoaList.size() > 0) {
-				IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+			if (CollectionUtils.isNotEmpty(loiLoaList)) {
+				for (ScLoiLoa scLoiLoa : loiLoaList) {
+					SmSupplier smSupplier = getQtSuppFinalizationSO().evaluateDisciplinaryActions(
+							scLoiLoa.getSmSupplier(), qtId);
+					scLoiLoa.setSmSupplier(smSupplier);
 
-				try {
-					for (ScLoiLoa scLoiLoa: loiLoaList) {
-						qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-										IQTSuppFinalizationSO.class);
-						
-						if (null != qtSuppFinalizationSO) {
-							SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoiLoa.getSmSupplier());
-							scLoiLoa.setSmSupplier(smSupplier);
-						}
-					}
-				} finally {
-					qtSuppFinalizationSO = null;
-				}
-			}
-			// #26247 - #33073 - #33354 - End.
-
-			if (loiLoaList != null && loiLoaList.size() > 0) {
+				} 
 				loaBackingBean.getManagedBean().setSuppLoiLoaMap(resDTO.getLoiLoaSupplierMap());
 				loaBackingBean.getManagedBean().setScLoiLoaList(loiLoaList);
 				loaBackingBean.getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
-			}	
+			}
+			// #26247 - #33073 - #33354 - End.	
 		}
 		loaBackingBean.generateSuppLoiLoaList();
 	}
