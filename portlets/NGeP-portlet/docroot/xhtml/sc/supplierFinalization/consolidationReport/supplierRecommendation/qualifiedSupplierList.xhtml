@@ -175,30 +175,19 @@
 					</h:outputText>
 				</p:column>
 				
-				<p:column rendered="#{!empty qualifiedSupp.smMofAccount and qualifiedSupp.smMofAccount.recordStatusFlg
-								  	 								eq DbValueConst.recordStatusActive}">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
+				<ui:remove>26247 - start</ui:remove>
+				<ui:param name="supplier"
+					value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
+					<h:outputText
+						value="#{consolidationReportBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty qualifiedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
-				</p:column>
-						
 				<p:column>
-					<ui:remove>#26247 - start </ui:remove>						
-					<ui:remove>#31033 - start </ui:remove>							 
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-					<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<ui:remove>#31033 - end </ui:remove>
-					<h:outputText rendered="#{!qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-					<ui:remove>#26247 - end </ui:remove>
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
+				<ui:remove>26247 - end</ui:remove>
 				
 				<p:column rendered="#{false}" >
 					<h:outputText value="" />
@@ -210,7 +199,8 @@
 						value="#{qualifiedSupp.deskOfficerRank}" size="5" maxlength="3"
 						required="false" autocomplete="false"
 						label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
-						disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
+						disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 
+							or consolidationReportBackingBean.disabledQTProcess(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
 							or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove>21692</ui:remove>
 						<!-- 21695 -end- --><!-- 26247 -end- -->
 						<ac:validateNumber
@@ -244,10 +234,4 @@
 			</p:dataTable>
 		</p:outputPanel>
 	</p:panel>
-	<ui:remove>#26247 #31033 #32560 - start </ui:remove>
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<ui:remove>#26247 #31033 #32560 - end </ui:remove>
 </ui:composition>

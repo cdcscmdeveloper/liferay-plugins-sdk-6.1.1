@@ -266,31 +266,21 @@
 					</c:choose>
 				</p:column>
 				
-				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and 
-									   shortlistedSupp.smMofAccount.recordStatusFlg
-								  	 			eq DbValueConst.recordStatusActive}">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
+				<ui:remove>26247 - start</ui:remove>
+				<ui:param name="supplier"
+					value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
+					<h:outputText
+						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty shortlistedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
-				</p:column>
-						
 				<p:column>
-				<ui:remove> #26247 #31033 - start </ui:remove>	
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<ui:remove> #31033 - end </ui:remove>	
-					
-					<h:outputText rendered="#{!shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-				<ui:remove> #26247 - end </ui:remove>	
+					<ac:disciplinaryActionYesNo
+						supplier="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+						index="#{index}" />
 				</p:column>
+				<ui:remove>26247 - end</ui:remove>
 				
 				<p:column rendered="#{false}">
 					<h:outputText value="" />
@@ -520,31 +510,20 @@
 					</c:choose>
 				</p:column>
 				
-				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and 
-									   shortlistedSupp.smMofAccount.recordStatusFlg
-								  	 			eq DbValueConst.recordStatusActive}">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
+				<ui:remove>26247 - start</ui:remove>
+				<ui:param name="supplier"
+					value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
+					<h:outputText
+						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty shortlistedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
-				</p:column>
-						
+
 				<p:column>
-				<ui:remove> #26247 #31033 - start </ui:remove>
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<ui:remove> #31033 - end </ui:remove>
-					
-					<h:outputText rendered="#{!shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-				<ui:remove> #26247 - end </ui:remove>
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
+				<ui:remove>26247 - end</ui:remove>
 				
 				<p:column  rendered="#{false}">
 					<h:outputText value="" />
@@ -586,12 +565,5 @@
 				
 			</p:dataTable>
 		</p:outputPanel>
-		
 	</p:panel>
-	<!-- #30823, #31033, #32560, #26247 Start -->
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<!-- #30823, #31033, #32560, #26247 End -->
 </ui:composition>
