@@ -21,21 +21,51 @@
 					</div>
 				</td>
 			</tr>
-			<tr>
-				<td><p:selectOneMenu id="somMinistryForQtVal"
-						styleClass="ptjPopupSomWidth"
-						label="#{lbl['lbl.pm.org.ptj.search.ministry']}"
-						disabled="#{ruleCatalogueBackingBean.managedBean.disabledSelectedMinistryId}"
-						value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
-						<f:selectItems
-							value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update=":form:settingTabId:qtValueTableId"
-							listener="#{ruleCatalogueBackingBean.selectQtValues()}" />
-					</p:selectOneMenu></td>
-				<td></td>
-			</tr>
 		</table>
+		
+		<!-- #36738 Start -->
+		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true" id="qtValueSearch" collapsed="true">
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
+				<p:selectOneMenu id="somMinistryForQtVal"
+					styleClass="ptjPopupSomWidth" style="width:250px;" panelStyle="width:250px"
+					disabled="#{ruleCatalogueBackingBean.managedBean.disabledSelectedMinistryId}"
+					value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
+					<f:selectItems value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />
+				</p:selectOneMenu>
+				<p:outputLabel value="#{lbl['lbl.pm.org.ptjCode']}" />
+				<p:inputText
+					value="#{ruleCatalogueBackingBean.managedBean.searchPtjCode}"
+					maxlength="20" style="width:250px;"
+					onkeypress="return /[0-9]/.test(String.fromCharCode(event.charCode));"/>
+				<p:outputLabel value=" #{lbl['lbl.pm.org.ptjName']}" />
+				<p:inputText
+					value="#{ruleCatalogueBackingBean.managedBean.searchPtjName}"
+					maxlength="255" style="width:250px;" />
+				<p:outputLabel value=" #{lbl['lbl.pm.settings.qt.limit']}" />
+				<p:inputText id="qtLimit"
+					value="#{ruleCatalogueBackingBean.managedBean.searchQtValueLimit}"
+					maxlength="18" style="width:250px;">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:attribute name="label" value="#{lbl['lbl.pm.settings.qt.limit']}" />	
+					<f:attribute name="min" value="0" />
+					<f:attribute name="max" value="9999999.99" />
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+				</p:inputText>
+				<p:message id="qtLimitMsg" for="qtLimit" display="tooltip" />
+			</h:panelGrid>
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{ruleCatalogueBackingBean.searchQtValues}"
+					update=":form:settingTabId:qtValueTableId" />
+				&#160;
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{ruleCatalogueBackingBean.resetQtValues}" process="@this"
+					update=":form:settingTabId:qtValueTableId :form:settingTabId:qtValueSearch" />
+			</div>
+		</p:panel>
+		<!-- #36738 End -->
 
 		<p:dataTable id="qtValueTableId" widgetVar="qtValueTableWidget"
 			var="ptjSpecialApproval" rows="10"
@@ -67,6 +97,7 @@
 					value="#{ptjSpecialApproval.procureAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:attribute name="label" value="#{lbl['lbl.pm.settings.qt.limit']}" />	<!-- #36738 -->
 					<f:attribute name="min" value="0" />
 					<f:attribute name="max" value="9999999.99" />
 					<f:validator validatorId="quantityDoubleRangeValidator" />
