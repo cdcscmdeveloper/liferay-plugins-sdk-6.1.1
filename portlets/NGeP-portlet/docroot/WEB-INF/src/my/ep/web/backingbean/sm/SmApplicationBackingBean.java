@@ -10973,11 +10973,7 @@ public class SmApplicationBackingBean extends
 		//#12483 - END
 		//Bug #26705
 		// #39422 - Start - Comment method
-<<<<<<< HEAD
 		getlatestPoOverlappingRemarks();
-=======
-		// getlatestPoOverlappingRemarks();
->>>>>>> refs/remotes/origin/release-sit
 		// #39422 - End
 		
 		// 27877 - start - not required when pending site visit
