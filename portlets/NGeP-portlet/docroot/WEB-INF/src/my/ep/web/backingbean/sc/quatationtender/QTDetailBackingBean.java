@@ -15046,7 +15046,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}
 			this.getManagedBean().setQtCategoryList(scQtCategoryListNew);
 		} 
-		if (qtInsertFlag){
+		if (CollectionUtils.isNotEmpty(panelCategoryCodeList) && qtInsertFlag){
 			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTSpecSO.class);
 			List<ScQtCategory> scQtCategoryList = this.getManagedBean().getQtCategoryList() != null ?
 					this.getManagedBean().getQtCategoryList(): new ArrayList<ScQtCategory>();
