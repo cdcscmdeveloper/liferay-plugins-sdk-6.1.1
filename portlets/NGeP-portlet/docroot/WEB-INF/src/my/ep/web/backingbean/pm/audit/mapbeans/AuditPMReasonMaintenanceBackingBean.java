@@ -645,7 +645,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	}
 
 	private BigInteger checkDocIdSupplierReason(Long pmParameterId) {
-		PmReason pmReason = managedBeans.getSelectedReason();
+		PmReason pmReason = managedBeans.getNewPmReason() == null ? managedBeans.getSelectedReason() : managedBeans.getNewPmReason();
 		BigInteger docId = null;
 
 		for (PmSupplierReason pmSupplierReason : pmReason.getPmSupplierReasons()) {
