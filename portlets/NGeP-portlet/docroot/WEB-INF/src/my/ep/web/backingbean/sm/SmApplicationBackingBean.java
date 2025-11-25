@@ -10973,7 +10973,7 @@ public class SmApplicationBackingBean extends
 		//#12483 - END
 		//Bug #26705
 		// #39422 - Start - Comment method
-		// getlatestPoOverlappingRemarks();
+		getlatestPoOverlappingRemarks();
 		// #39422 - End
 		
 		// 27877 - start - not required when pending site visit
@@ -16523,9 +16523,11 @@ public class SmApplicationBackingBean extends
 				for (SmRemark rmk : remResDTO.getRemarksList())
 					if (rmk.getDocType()
 							.equals(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER)) {
-						getManagedBean()
-								.setApplnOverLapRemarks(rmk.getRemark());
-
+						// #39422 - Start - Add log info
+//						getManagedBean()
+//								.setApplnOverLapRemarks(rmk.getRemark());
+						log.info("Redmine 39422 (Overlap Category) = " + rmk.getRemark());
+						// #39422 - End
 					}
 			}
 		}
