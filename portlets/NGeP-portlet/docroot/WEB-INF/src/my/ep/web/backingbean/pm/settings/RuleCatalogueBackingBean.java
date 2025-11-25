@@ -348,6 +348,7 @@ public class RuleCatalogueBackingBean extends
 			initGst();
 			initQuotationWithTenderValue();
 			initYearEndForProcessing();
+			onAnyTabChange();//#36738
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
 		} catch (Exception e) {
@@ -5593,7 +5594,6 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleType(new String());
 		this.getManagedBean().setConfigRuleDescList(this.getManagedBean().getOriginalConfigRuleDescList());
 		this.getManagedBean().setSelectedRuleDescType(this.getManagedBean().getOriginalConfigRuleDescList().get(0));
-		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleTypeValueTableID");
 	}
 	
 	/**
@@ -5639,7 +5639,7 @@ public class RuleCatalogueBackingBean extends
 		}
 
 		// search via zone
-		if (searchRuleZone != null) {
+		if (searchRuleZone != null && !searchRuleZone.equals(0L)) {
 			List<PmConfigRuleValue> byZone = searchByZone(originalList, searchRuleZone, false);
 			if (CollectionUtils.isEmpty(byZone)) {
 				resultList.clear();
@@ -5796,11 +5796,14 @@ public class RuleCatalogueBackingBean extends
 		Date searchEffDate = truncateDate(searchEff);
 		Date searchExpDate = truncateDate(searchExp);
 		
-		if (searchEffDate != null && searchExpDate == null) {
+		if (searchEffDate != null && searchExpDate == null && valueEffDate != null) {
 			return searchEffDate.equals(valueEffDate);
 		}
-		if (searchExpDate != null && searchEffDate == null) {
+		if (searchExpDate != null && searchEffDate == null && valueExpDate != null) {
 			return searchExpDate.equals(valueExpDate);
+		}
+		if (valueEffDate == null || valueExpDate == null) {
+			return false;
 		}
 		return !valueEffDate.before(searchEff) && !valueExpDate.after(searchExp);
 	}
@@ -5812,13 +5815,16 @@ public class RuleCatalogueBackingBean extends
 	 * @return
 	 */
 	private Date truncateDate(Date date){
-		Calendar c = Calendar.getInstance();
-	    c.setTime(date);
-	    c.set(Calendar.HOUR_OF_DAY, 0);
-	    c.set(Calendar.MINUTE, 0);
-	    c.set(Calendar.SECOND, 0);
-	    c.set(Calendar.MILLISECOND, 0);
-	    return c.getTime();
+		if (date != null) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(date);
+			c.set(Calendar.HOUR_OF_DAY, 0);
+			c.set(Calendar.MINUTE, 0);
+			c.set(Calendar.SECOND, 0);
+			c.set(Calendar.MILLISECOND, 0);
+			return c.getTime();
+		}
+		return null;
 	}
 	
 	/**

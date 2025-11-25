@@ -21820,7 +21820,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 								&& null != templateresDTO.getSpecMaster().getCtPanelItem()) {
 							panelItem = true;
 						}
-						if (panelItem) {
+						if (!panelItem) {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
 						} else {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);
@@ -23995,10 +23995,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		for (ScQtCheckList scQtCheckList : scQtChecklistListLocal) {
 			Long checklistStatus = scQtCheckList.getPmStatus().getStatusId();
-			if(checklistStatus.equals(QTStatusConst.TS_PENDING_SUBMISSION)){
+			if (scQtCheckList.isSelected() && checklistStatus.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
 				return;
-			}
-			if (scQtCheckList.isSelected()) {
+			} else if (scQtCheckList.isSelected() && checklistStatus.equals(QTStatusConst.TS_COMPLETED)) {
 				selectedCount++;
 			}
 		}
