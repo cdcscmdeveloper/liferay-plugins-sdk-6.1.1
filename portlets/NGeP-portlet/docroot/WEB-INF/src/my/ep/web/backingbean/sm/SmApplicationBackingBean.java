@@ -18779,8 +18779,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    }
 
 	    // Non-ROC business logic
-	    getManagedBean().setDisplayLabelCountryOriginForeign(!isForeignCompany);
-	    getManagedBean().setDisplayLabelCountryOriginLocal(isForeignCompany);
+	    getManagedBean().setDisplayLabelCountryOriginForeign(false);
+	    getManagedBean().setDisplayLabelCountryOriginLocal(true);
 	}
 
 
