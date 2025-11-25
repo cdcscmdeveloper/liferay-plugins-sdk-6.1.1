@@ -1083,8 +1083,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		if (billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
 			return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";// + EpPropertiesUtils.getInstance().getProperty("molpay.cdc.url.exts");	//temp add ext	for testing purpose.. do not merge to prd
 		}else{
-			// #26307 - payment gateway change 
-			return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.gov.url.ext");
+			// #38377
+			if (isCdcPaymentGateway(billType)) {
+				return EpPropertiesUtils.getInstance().getProperty("payment.url");
+			} else {
+				// #26307 - payment gateway change
+				return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId
+						+ EpPropertiesUtils.getInstance().getProperty("molpay.gov.url.ext");
+			}
 		}		
 		
 	}
