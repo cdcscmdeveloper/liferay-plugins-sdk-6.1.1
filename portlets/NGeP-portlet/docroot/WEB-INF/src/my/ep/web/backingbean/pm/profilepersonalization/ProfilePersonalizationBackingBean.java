@@ -1717,6 +1717,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			// end 32229
 			// 26238 - START Disciplinary Action - end
 			startTime = System.currentTimeMillis();
+			handleQtMsg(originalServletRequest, getManagedBean().getSmSupplier(), qtId);// 26247
 			handleCtMsg(taskName);// #26186
 
 			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_MANAGEMENT, "DA-5", LOG_CLASS_PRERENDER,
@@ -1879,6 +1880,48 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			facesScopes.getUserSessionBean().setDisciplinaryAction(true);
 		}
 	}
+	
+	//26247 - start
+	/**
+	 * Handles QT Message.
+	 * <p>
+	 * - Reads QT Id from request.
+	 * - Validates and parses it safely.
+	 * - Retrieves updated supplier details for disciplinary info.
+	 * - Updates managed bean with QT warning message if applicable.
+	 *
+	 * @param request  original servlet request
+	 * @param supplier previously retrieve supplier
+	 * @param qtId     previously available qtId (may be overridden)
+	 */
+	private void handleQtMsg(HttpServletRequest originalServletRequest, SmSupplier smSupplier, Long id) {
+		String currentUrl = PortalUtil.getCurrentURL(originalServletRequest);
+		if (null == currentUrl || !currentUrl.contains(SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL.split("\\?")[0])) {
+			return;
+		}
+		String qtIdParam = originalServletRequest.getParameter(PARAM_QT_ID);
+		Long qtId = id; // keep original value unless overridden
+		SmSupplier supplier = smSupplier;
+		this.getManagedBean().setQtId(qtId);
+		if (qtIdParam != null) {
+			qtId = Long.valueOf(qtIdParam);
+		}
+		if (null != supplier && null != qtId) {
+			this.getManagedBean().setQtId(qtId);
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			supplier = supplierSearchSO.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), qtId);
+
+			ViewSuppProfileBackingBean viewSuppProfileBB = new ViewSuppProfileBackingBean();
+			String qtWarningMessage = viewSuppProfileBB.evaluateQTWarningMessage(supplier);
+			String message = getManagedBean().getDisciplinaryActionMsg();
+			if (StringUtils.isNotEmpty(message) && StringUtils.isNotEmpty(qtWarningMessage)) {
+				qtWarningMessage = "<br/>" + qtWarningMessage;
+			}
+			getManagedBean().setQtDisciplinaryActionMsg(qtWarningMessage);
+		}
+	}
+	//26247 - end
 	
 	/**
 	 * Handles CT Message.

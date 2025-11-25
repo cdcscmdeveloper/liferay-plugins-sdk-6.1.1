@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -692,7 +693,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		/*
 		 * 31101 - Shafful 
 		 */
-		settingDisciplinaryAction(biddingPackagePriceList,null);		
+		settingDisciplinaryAction(biddingPackagePriceList, null, false);// #28777&#29729
 		// #31101, #26247 -end-
 
 		BigDecimal bumiSuppLowestOfferedPrice = null;
@@ -726,11 +727,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 					packageBean.setShortlistedSupplier(shortlistedSupplier);
 				}
 				if (supplierId.equals(awardedSupplierId)) {
-					/*
-					 * Bug 31101, #26247 - Added disciplinary Action filter -start-
-					 */
-					getManagedBean().setSelectedPackageBean(packageBean.getScBidSupplier().getSmSupplier().isDisciplinaryActions()?null:packageBean);
-					// #31101, #26247 -end-
+					// 26247, 31101 - start
+					SmSupplier supplier = packageBean.getScBidSupplier().getSmSupplier();
+					getManagedBean().setSelectedPackageBean(null);
+					if(!this.disabledQTProcess(supplier)){
+						getManagedBean().setSelectedPackageBean(packageBean);
+					}
+					// 26247, 31101 - end
 
 					if (getManagedBean().isZonal()) {
 						selectedPackageBeans.put(getManagedBean().getSelectedZone()
@@ -756,50 +759,26 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}		
 	}
 	
-	/**
-	 *  @see Bug #31101, Enhancement #26247 -start-
-	 *  @author shafful
-	 *  To Setting Disciplinary Action during online bidding recommendation Stage
-	 */
+	// 26247 - start
 	private void settingDisciplinaryAction(List<BidPackageBean> biddingPackagePriceList,
-			List<BidItemBean> biddingItemPriceList) {
-		IQTDetailSO qtDetailSO;
-		// #26247 - 32802 - Start.
-		Long qtId = null;
-		// #26247 - 32802 - End.
-
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTDetailSO.class);
-			if (biddingPackagePriceList != null && biddingPackagePriceList.size() > 0) {
-				for (BidPackageBean bidPackage : biddingPackagePriceList) {
-					// #26247 - 32802 - Start.
-					if (null != bidPackage.getScQtProposal() && null != bidPackage.getScQtProposal().getScQtSupplier()
-                        && null != bidPackage.getScQtProposal().getScQtSupplier().getScQt()) {
-                      qtId = bidPackage.getScQtProposal().getScQtSupplier().getScQt().getQtId();
-                    }
-
-					bidPackage.getScBidSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidPackage.getScBidSupplier().getSmSupplier(), qtId));
-					// #26247 - 32802 - End.
-				}
+			List<BidItemBean> biddingItemPriceList, boolean isDisqualified) {
+		ScQt scQt = this.getManagedBean().getScQt();
+		if (CollectionUtils.isNotEmpty(biddingPackagePriceList)) {
+			for (BidPackageBean bidPackage : biddingPackagePriceList) {
+				SmSupplier supplier = bidPackage.getScBidSupplier().getSmSupplier();
+				getQTDetailSO().evaluateDisciplinaryActions(supplier, scQt.getQtId());
+			} 
+			if (!isDisqualified) {// #28777 & #29729
 				getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
-			} else {
-				for (BidItemBean bidItem : biddingItemPriceList) {
-					// #26247 - 32802 - Start.
-					if (null != bidItem.getScQtProposal() && null != bidItem.getScQtProposal().getScQtSupplier()
-                        && null != bidItem.getScQtProposal().getScQtSupplier().getScQt()) {
-                      qtId = bidItem.getScQtProposal().getScQtSupplier().getScQt().getQtId();
-                    }
-
-					bidItem.setSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidItem.getSupplier(), qtId));
-					// #26247 - 32802 - End.
-				}
-			}
-		} finally {
-			qtDetailSO = null;
-		}
-	}
-	// Bug #31101, Enhancement #26247 -end-
+			}// #28777 & #29729
+		} else if (CollectionUtils.isNotEmpty(biddingItemPriceList)) {
+			for (BidItemBean bidItem : biddingItemPriceList) {
+				SmSupplier supplier = bidItem.getSupplier();
+				getQTDetailSO().evaluateDisciplinaryActions(supplier, scQt.getQtId());
+			} 
+		} 
+	} 
+	// 26247 - end
 	
 	private void retrieveBiddingItems(ScheduleBiddingReqDTO reqDTO) {
 		IScheduleBiddingSO scheduleBiddingSO = null;
@@ -990,7 +969,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 					/*
 					 * 31101, 26247 - WIP Impact , added Disciplinary Action -start-
 					 */
-					settingDisciplinaryAction(null, biddingItemPriceList);
+					settingDisciplinaryAction(null, biddingItemPriceList, false);
 					// 31101, 26247 -end-
 
 					for (BidItemBean itemBean : biddingItemPriceList) {
@@ -2472,72 +2451,68 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 	
 	private void validateBiddingSubmission() {
-		boolean isItemized = getManagedBean().isItemized();
-		ScQtFinalization scQtFinalization 
-					= getManagedBean().getScQtFinalization();
-		List<String> awardedRecommendDtlIds = new ArrayList<String>();
-		Map<Long,List<Long>> cancelledBidScheduleItemsMap = null;
-		IScheduleBiddingSO scheduleBiddingSO = null;
-		
+		// 26247, 38591 - start
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
+		reqDTO.setQtID(getManagedBean().getScQt().getQtId());
+		reqDTO.setBidScheduleStatusId(BidStatusConst.BID_CANCELLED);
+		ScheduleBiddingResDTO resDTO = getScheduleBiddingSO().retrieveItemsByBidScheduleStatus(reqDTO);
+		Map<Long, List<Long>> cancelledBidScheduleItemsMap = resDTO.getItemsMap();
+
+		Map<Long, ScQtRecommend> recommendMap = new HashMap<>();
+		Map<Long, Boolean> identifierMap = new HashMap<>();
+		getManagedBean().setAwardedRecommendDtlIds(new ArrayList<String>());
+		for (ScQtRecommend recommend : scQtFinalization.getScQtRecommends()) {
+			Long recommendId = recommend.getQtRecommendId();
+			recommendMap.put(recommendId, recommend);
+			TplSpecZoneDtl specZoneDtl = recommend.getTplSpecZoneDtl();
+
+			boolean bidScheduleCancelledItem = specZoneDtl != null
+					&& MapUtils.isNotEmpty(cancelledBidScheduleItemsMap)
+					&& cancelledBidScheduleItemsMap.containsKey(specZoneDtl.getSpecZoneId())
+					&& cancelledBidScheduleItemsMap.get(specZoneDtl.getSpecZoneId()).contains(
+							recommend.getRequestItem().getRequestNoteItemId());
+
+			boolean itemValidForSelection = !recommend.isCancelled() && !bidScheduleCancelledItem
+					&& CollectionUtils.isNotEmpty(recommend.getRecommendDtls());
+
+			if (!identifierMap.containsKey(recommendId) && itemValidForSelection) {
+				identifierMap.put(recommendId, false);
+			} 
+			if (identifierMap.containsKey(recommendId)) {
+				for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
+					SmSupplier supplier = recommendDtl.getSupplier();
+					if (recommendDtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)
+							&& !this.disabledQTProcess(supplier)) {
+						identifierMap.put(recommendId, true);
+						getManagedBean().getAwardedRecommendDtlIds().add(recommendDtl.getRecommendDtlId().toString());
+					}
+				}
+			}
+		}
 		try {
-			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
-			reqDTO.setQtID(getManagedBean().getScQt().getQtId());
-			reqDTO.setBidScheduleStatusId(BidStatusConst.BID_CANCELLED);
-			
-			scheduleBiddingSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IScheduleBiddingSO.class);
-			ScheduleBiddingResDTO resDTO = scheduleBiddingSO
-								.retrieveItemsByBidScheduleStatus(reqDTO);
-			cancelledBidScheduleItemsMap = resDTO.getItemsMap();
-		} finally {
-			scheduleBiddingSO = null;
-		}
-		
-		for (ScQtRecommend item :
-					scQtFinalization.getScQtRecommends()) {
-			boolean itemNotExistsInCancelledBidSchedule = true;
-			Long specZoneDtlId = null;
-			if (item.getTplSpecZoneDtl() == null) {
-				specZoneDtlId = 0L;
-			} else {
-				specZoneDtlId = item.getTplSpecZoneDtl().getSpecZoneId();
-			}
-			
-			if (MapUtils.isNotEmpty(cancelledBidScheduleItemsMap) && 
-					cancelledBidScheduleItemsMap.containsKey(specZoneDtlId) && 
-					cancelledBidScheduleItemsMap.get(specZoneDtlId).contains(
-								item.getRequestItem().getRequestNoteItemId())) {
-				itemNotExistsInCancelledBidSchedule = false;
-			}
-			
-			if (!item.isCancelled() && itemNotExistsInCancelledBidSchedule &&
-						CollectionUtils.isNotEmpty(item.getRecommendDtls()) ) {
-				boolean isSupplierSelected = false;
-				for (ScQtRecommendDtl recommendDtl 
-							: item.getRecommendDtls()) {
-					if (recommendDtl.getRecordStatusFlg()
-							.equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-						isSupplierSelected = true;
-						awardedRecommendDtlIds.add(
-								recommendDtl.getRecommendDtlId().toString());
-						break;
+			for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
+				if (!entry.getValue()) {
+					ScQtRecommend recommend = recommendMap.get(entry.getKey());
+					if (getManagedBean().isZonal()) {
+						setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
 					}
-				}
-				if (!isSupplierSelected) {
-					TplSpecZoneDtl specZoneDtl = item.getTplSpecZoneDtl();
-					setZoneAndTabIndexOnException(specZoneDtl);
-					if (isItemized) {
-						throw new EpException(MessageConst.ERROR_760377, 
-									new String[] {item.getRequestItem().getItemName()});
-					} else {
-						throw new EpException(MessageConst.ERROR_760376);
+					if (getManagedBean().isItemized()) {
+						throw new EpException(MessageConst.ERROR_760377, new String[] { recommend.getRequestItem()
+								.getItemName() });
 					}
+					throw new EpException(MessageConst.ERROR_760376);
 				}
 			}
+		} catch (EpException e) {
+			String taskName = this.getManagedBean().getTaskName();
+			if (Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION, SCProcessNameConst.SIGNOFF_FC_SELECTION)
+					.contains(taskName)) {
+				throw new EpException(MessageConst.ERROR_760601);
+			}
+			throw e;
 		}
-		
-		getManagedBean().setAwardedRecommendDtlIds(awardedRecommendDtlIds);
+		// 26247, 38591 - end
 	}
 
 	private void setZoneAndTabIndexOnException(TplSpecZoneDtl zoneDtl) {
