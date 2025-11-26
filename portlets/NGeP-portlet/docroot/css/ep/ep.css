@@ -3731,3 +3731,11 @@ table.rptTbl {
 	background-image: url('../images/design/rating.png') !important;
 }
 /*29021 end - fix cosmetic, rating star not hard to see*/
+
+/* 26247 - start */
+.red-background {
+	background-color:red; 
+	color:white; 
+	font-weight:bold;
+}
+/* 26247 - end */
