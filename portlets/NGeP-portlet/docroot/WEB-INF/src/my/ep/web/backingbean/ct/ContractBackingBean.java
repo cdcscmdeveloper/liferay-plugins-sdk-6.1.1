@@ -5256,7 +5256,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         {@code reasonId} is resolved; {@code false} otherwise.
 	 */
 	public boolean isPk7Agencies() {
-		PmReason reason = resolveProcTypeForCtPk7();
+		PmReason reason = getReasonForPk7();
 		if (reason == null) {// avoid NullPointerException
 			return false;
 		} else {
@@ -5275,19 +5275,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the {@link PmReason} indicating the PK7 justification type, or
 	 *         {@code null} if the contract is not PK7-related.
 	 */
-	public PmReason resolveProcTypeForCtPk7() {
+	public PmReason getReasonForPk7() {
 		PmReason reason = null;
-		reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
-				"contractVer.ctContract.loa.justificationType");
-
-		if (reason == null) {
+		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 			List<CtContractItem> items = getManagedBean().getContractVer().getCtContractItems();
 			if (items != null && items.get(0).getScRequestItem().getRequestNote() != null) {
-				reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
+				reason = (PmReason) EntityHelper
+						.getNestedProperty(getManagedBean(),
 								"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");
 			}
+		} else {
+			reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
+					"contractVer.ctContract.loa.justificationType");
 		}
 		return reason;
 	}
-	//End - #30045
+	// End - #30045
 }  
