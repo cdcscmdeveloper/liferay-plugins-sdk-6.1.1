@@ -107,22 +107,18 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 		
-		//[#26282] disciplinary action - start
+		// [#26282] disciplinary action - start
 		checkForDisciplinaryAction();
-		//[#26282] disciplinary action - end
 
-		FacesContext fc = FacesContext.getCurrentInstance();		
-		
-		//[#26282] disciplinary action - start
-		if(this.getManagedBean().isDaCancelReg() || this.getManagedBean().isDaBlacklistOwner()) {
-			//disciplinary action page
-			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, NAV_TO_DA);
+		FacesContext fc = FacesContext.getCurrentInstance();
+
+		if (this.getManagedBean().isDaCancelReg() || this.getManagedBean().isDaBlacklistOwner()) {
+			// disciplinary action page
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_DA);
 		} else {
-			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, "cmSupplierZoneMaintenance");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "cmSupplierZoneMaintenance");
 		}
-		//[#26282] disciplinary action - end
+		// [#26282] disciplinary action - end
 
 	}
 
@@ -907,43 +903,46 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		RequestContext.getCurrentInstance().update(":form:treeZoneLocationPopup");
 	}
 	
-	//[#26282]
+	// [#26282] and SonarLint Fixing - Start
+	/**
+	 * To check what DA the supplier involve
+	 */
 	public void checkForDisciplinaryAction() {
-		
+
 		Long supplierId = null;
-		
-		if(getManagedBean().getCurrentSupplier() != null 
-				&& getManagedBean().getCurrentSupplier().getSupplierId() != null) {			
+
+		if (getManagedBean().getCurrentSupplier() != null && getManagedBean().getCurrentSupplier().getSupplierId() != null) {
 			supplierId = getManagedBean().getCurrentSupplier().getSupplierId();
 		}
-		
-		//check for disciplinary action (DA)	
+
+		// check for disciplinary action (DA)
 		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(supplierId);
-		
-		if(disciplinaryActList != null && disciplinaryActList.size() > 0) {
+
+		if (disciplinaryActList != null && !disciplinaryActList.isEmpty()) {
 			SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
-			
+
 			log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
 			log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
 			log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
 			log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
-			
-			//disciplinary action - Warning
-			if(disciplinaryAct.isWarning()) {
+
+			// disciplinary action - Warning
+			if (disciplinaryAct.isWarning()) {
 				this.getManagedBean().setDaWarning(disciplinaryAct.isWarning());
 			}
-			//disciplinary action - Suspend Registration
-			if(disciplinaryAct.isSuspendRegistration()) {
+			// disciplinary action - Suspend Registration
+			if (disciplinaryAct.isSuspendRegistration()) {
 				this.getManagedBean().setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
 			}
-			//disciplinary action - Cancel Registration
-			if(disciplinaryAct.isCancelRegistration()) {
+			// disciplinary action - Cancel Registration
+			if (disciplinaryAct.isCancelRegistration()) {
 				this.getManagedBean().setDaCancelReg(disciplinaryAct.isCancelRegistration());
 			}
-			//disciplinary action - Blacklist  Owner/Director of Company
-			if(disciplinaryAct.isBlacklistOwner()) {
+			// disciplinary action - Blacklist Owner/Director of Company
+			if (disciplinaryAct.isBlacklistOwner()) {
 				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
 			}
 		}
 	}
+	// [#26282] and SonarLint Fixing - End
 }
