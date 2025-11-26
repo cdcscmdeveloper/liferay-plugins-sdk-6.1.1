@@ -191,6 +191,8 @@ public class PaymentUtil {
 			String clientKey, Long orderId, BigDecimal amount, String billName,
 			String email, String mobile, String billDesc, String country,
 			String cancelUrl) {
+		log.info("#38377--billName:"+billName);
+		log.info("#38377--billDesc:"+billDesc);
 		String payload = null;
 		StringBuilder sb = new StringBuilder();
 		sb.append("{").append("\"orderId\":\"").append(orderId.toString())
