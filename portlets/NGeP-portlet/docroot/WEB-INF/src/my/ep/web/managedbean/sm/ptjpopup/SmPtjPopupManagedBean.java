@@ -2,6 +2,7 @@ package my.ep.web.managedbean.sm.ptjpopup;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -34,9 +35,12 @@ public class SmPtjPopupManagedBean extends BaseManagedBean {
 	private LogKey logKey = new LogKey();
 
 	private Long ministryProfileId;
+	private SelectItem[] ministryDD;
 	private Long jabatanProfileId;
+	private SelectItem[] jabatanDD;
 	private String ptjCodeNameKey;
 	private String ptjCodeNameValue;
+	private SelectItem[] ptjCodeNameDD;
 	private transient IPagingDataModel<PmOrgProfile> orgProfileDataModel = new OrgProfileDataModel();
 	private boolean disabledSelect;
 	private boolean disabledPtjGroup;
@@ -50,12 +54,28 @@ public class SmPtjPopupManagedBean extends BaseManagedBean {
 		this.ministryProfileId = ministryProfileId;
 	}
 
+	public SelectItem[] getMinistryDD() {
+		return ministryDD;
+	}
+
+	public void setMinistryDD(SelectItem[] ministryDD) {
+		this.ministryDD = ministryDD;
+	}
+
 	public Long getJabatanProfileId() {
 		return jabatanProfileId;
 	}
 
 	public void setJabatanProfileId(Long jabatanProfileId) {
 		this.jabatanProfileId = jabatanProfileId;
+	}
+
+	public SelectItem[] getJabatanDD() {
+		return jabatanDD;
+	}
+
+	public void setJabatanDD(SelectItem[] jabatanDD) {
+		this.jabatanDD = jabatanDD;
 	}
 
 	public String getPtjCodeNameKey() {
@@ -72,6 +92,14 @@ public class SmPtjPopupManagedBean extends BaseManagedBean {
 
 	public void setPtjCodeNameValue(String ptjCodeNameValue) {
 		this.ptjCodeNameValue = ptjCodeNameValue;
+	}
+
+	public SelectItem[] getPtjCodeNameDD() {
+		return ptjCodeNameDD;
+	}
+
+	public void setPtjCodeNameDD(SelectItem[] ptjCodeNameDD) {
+		this.ptjCodeNameDD = ptjCodeNameDD;
 	}
 
 	private class OrgProfileDataModel extends PagingDataModel<PmOrgProfile> {

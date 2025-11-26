@@ -226,8 +226,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	private static final char DIGIT_0 = '0';
 
 	// Unicode italic starting points
-	private static final int UNICODE_ITALIC_UPPER_START = 0x1D434; // A–Z
-	private static final int UNICODE_ITALIC_LOWER_START = 0x1D44E; // a–z
+	private static final int UNICODE_ITALIC_UPPER_START = 0x1D608; // A–Z
+	private static final int UNICODE_ITALIC_LOWER_START = 0x1D622; // a–z
 	private static final int UNICODE_ITALIC_DIGIT_START = 0x1D7EC; // 0–9
 	// new #25725 - End
 	
@@ -698,14 +698,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	    StringBuilder sb = new StringBuilder();
 
 	    for (char c : input.toCharArray()) {
+
 	        if (c >= UPPER_A && c <= UPPER_Z) {
-	            sb.append((char) (UNICODE_ITALIC_UPPER_START + (c - UPPER_A))); // Italic A–Z
+	            int codePoint = UNICODE_ITALIC_UPPER_START + (c - UPPER_A);
+	            sb.append(Character.toChars(codePoint));
+
 	        } else if (c >= LOWER_A && c <= LOWER_Z) {
-	            sb.append((char) (UNICODE_ITALIC_LOWER_START + (c - LOWER_A))); // Italic a–z
+	            int codePoint = UNICODE_ITALIC_LOWER_START + (c - LOWER_A);
+	            sb.append(Character.toChars(codePoint));
+
 	        } else if (c >= DIGIT_0 && c <= '9') {
-	            sb.append((char) (UNICODE_ITALIC_DIGIT_START + (c - DIGIT_0))); // Italic 0–9
+	            int codePoint = UNICODE_ITALIC_DIGIT_START + (c - DIGIT_0);
+	            sb.append(Character.toChars(codePoint));
+
 	        } else {
-	            sb.append(c); // leave other characters unchanged
+	            sb.append(c);
 	        }
 	    }
 
