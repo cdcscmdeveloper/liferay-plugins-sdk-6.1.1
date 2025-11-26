@@ -101,7 +101,8 @@
 				
                 <p:tab title="#{lbl['lbl.pm.settings.operational.threshold']}">
                 	<p:tabView id="thresholdId"
-                		activeIndex="#{ruleCatalogueBackingBean.managedBean.thresholdIndex}">
+                		activeIndex="#{ruleCatalogueBackingBean.managedBean.thresholdIndex}"
+                		dynamic="true" cache="false"><!-- #36738 -->
                 		<p:tab title="#{lbl['lbl.pm.settings.unplanned.qt.threshold']}">
 							<ui:include src="unplannedQtThreshold.xhtml"></ui:include>
 						</p:tab>
