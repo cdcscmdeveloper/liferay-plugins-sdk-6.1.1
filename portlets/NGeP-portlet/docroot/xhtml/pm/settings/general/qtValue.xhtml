@@ -27,7 +27,7 @@
 			<h:panelGrid columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
 				<p:selectOneMenu id="somMinistryForQtVal"
-					styleClass="ptjPopupSomWidth" style="width:250px;"
+					styleClass="ptjPopupSomWidth" style="width:250px;" panelStyle="width:250px"
 					disabled="#{ruleCatalogueBackingBean.managedBean.disabledSelectedMinistryId}"
 					value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
 					<f:selectItems value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />
@@ -35,7 +35,8 @@
 				<p:outputLabel value="#{lbl['lbl.pm.org.ptjCode']}" />
 				<p:inputText
 					value="#{ruleCatalogueBackingBean.managedBean.searchPtjCode}"
-					maxlength="20" style="width:250px;" />
+					maxlength="20" style="width:250px;"
+					onkeypress="return /[0-9]/.test(String.fromCharCode(event.charCode));"/>
 				<p:outputLabel value=" #{lbl['lbl.pm.org.ptjName']}" />
 				<p:inputText
 					value="#{ruleCatalogueBackingBean.managedBean.searchPtjName}"

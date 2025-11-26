@@ -193,7 +193,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Long searchRuleDataTypeZone;
 	private String searchPtjCode;
 	private String searchPtjName;
-	private String searchQtValueLimit;
+	private BigDecimal searchQtValueLimit;
 	//#36738 End
 
 	/************ AUDIT #28895_35509 *************/
@@ -1951,11 +1951,11 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.searchPtjName = searchPtjName;
 	}
 	
-	public String getSearchQtValueLimit() {
+	public BigDecimal getSearchQtValueLimit() {
 		return searchQtValueLimit;
 	}
 	
-	public void setSearchQtValueLimit(String searchQtValueLimit) {
+	public void setSearchQtValueLimit(BigDecimal searchQtValueLimit) {
 		this.searchQtValueLimit = searchQtValueLimit;
 	}
 	public List<PmPtjSpecialApproval> getOriginalPtjSpecialApprovalList() {

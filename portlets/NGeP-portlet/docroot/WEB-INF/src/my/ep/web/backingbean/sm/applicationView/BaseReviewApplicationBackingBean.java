@@ -5397,7 +5397,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		StringBuilder extRemark = new StringBuilder();
 		extRemark.append("");
 
-		int index = 1;
+		// #34031#note-98 : Issue 14
+		double index = 1.1;
 		String doubleNewLine = "<br /><br />";
 		if (null != revisit.getOldPmRegStatus() && null != revisit.getNewPmRegStatus()) {
 			getRegStatus(revisit, extRemark, doubleNewLine, index);
@@ -5420,11 +5421,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return extRemark.toString();
 	}
 
-	private void getRegStatus(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, int index) {
+	// #34031#note-98 : Issue 14
+	private void getRegStatus(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, double index) {
 		extRemark
 				.append(doubleNewLine)
 				.append(index)
-				.append(". ")
+				// #34031#note-98 : Issue 14
+				.append(" ")
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.regStatus.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()))
 				.append(" ")
@@ -5437,11 +5440,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		extRemark.append(".");
 	}
 
-	private void getDeletedRvCatCodes(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, int index) {
+	// #34031#note-98 : Issue 14
+	private void getDeletedRvCatCodes(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, double index) {
 		extRemark
 				.append(doubleNewLine)
 				.append(index)
-				.append(". ")
+				// #34031#note-98 : Issue 14
+				.append(" ")
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.deleted.categories", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()));
 		int deletedIndex = 1;
@@ -5451,15 +5456,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code())
 					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append(" - ")
 					.append(deletedRvCatCode.getSmSupplierCategory().getCategoryL3Name());
+			// #34031#note-98 : Issue 15 - Start
+			if (null != deletedRvCatCode.getSmSupplierCategory().getOtherDesc() && !deletedRvCatCode.getSmSupplierCategory().getOtherDesc().isEmpty()) {
+				extRemark.append("<br />").append("&emsp;&emsp;&emsp;").append(deletedRvCatCode.getSmSupplierCategory().getOtherDesc());
+			}
+			// #34031#note-98 : Issue 15 - End
 			deletedIndex++;
 		}
 	}
 
-	private void getAddedRvCatCodes(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, int index) {
+	// #34031#note-98 : Issue 14
+	private void getAddedRvCatCodes(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, double index) {
 		extRemark
 				.append(doubleNewLine)
 				.append(index)
-				.append(". ")
+				// #34031#note-98 : Issue 14
+				.append(" ")
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.added.categories", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()));
 		int addedIndex = 1;
@@ -5469,16 +5481,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code())
 					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append(" - ")
 					.append(addedRvCatCode.getSmSupplierCategory().getCategoryL3Name());
+			// #34031#note-98 : Issue 15 - Start
+			if (null != addedRvCatCode.getSmSupplierCategory().getOtherDesc() && !addedRvCatCode.getSmSupplierCategory().getOtherDesc().isEmpty()) {
+				extRemark.append("<br />").append("&emsp;&emsp;&emsp;").append(addedRvCatCode.getSmSupplierCategory().getOtherDesc());
+			}
+			// #34031#note-98 : Issue 15 - End
 			addedIndex++;
 		}
 	}
 
-	private void updatedRvCatCodes(SmRvCatCode updatedRvCatCodes, StringBuilder extRemark, String doubleNewLine, int index) {
+	// #34031#note-98 : Issue 14
+	private void updatedRvCatCodes(SmRvCatCode updatedRvCatCodes, StringBuilder extRemark, String doubleNewLine, double index) {
 		extRemark
 				.append(doubleNewLine)
 				.append(index)
-				.append(". ")
-				.append(" ")
+				// #34031#note-98 : Issue 14
+				.append(" ") 
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.categories.desc.part.one",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
 				.append(" ")

@@ -18,7 +18,7 @@
 
 	<cc:implementation>
 		<ui:param name="ai" value="#{smAIDocBackingBean}" />
-		<p:remoteCommand name="resetDoc" action="#{ai.resetDoc()}" update="#{cc.attrs.aiDlg}"/>
+		<p:remoteCommand name="resetDoc" action="#{ai.resetDoc()}" update="pnl#{cc.attrs.aiDlg}"/>
 		
 		<p:blockUI block="#{cc.attrs.aiDlg}" widgetVar="block#{cc.attrs.aiDlg}">
 			<p:outputPanel style="display: flex; flex-direction: column;align-items: center;">
@@ -29,8 +29,10 @@
 		</p:blockUI>
 	
 		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
-			dynamic="true" resizable="false" width="700px" 
+			dynamic="true" resizable="false" width="700px" onShow="resetDoc();"
 			header="#{lbl['lbl.btn.upload.doc']}">
+		<p:outputPanel id="pnl#{cc.attrs.aiDlg}">
+		
 			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
 
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
@@ -139,6 +141,7 @@
 					
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
 			</div>
+		</p:outputPanel>
 		</p:dialog>
 	</cc:implementation>
 </ui:component>

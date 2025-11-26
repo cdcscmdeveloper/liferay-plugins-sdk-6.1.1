@@ -127,6 +127,11 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		docs = docsMap.get(docType);
 		postAI = postAIMap.get(docType);
+		if (docs.size() < 1){
+			epfs = null;
+			tenancy = null;
+			postAI = false;
+		}
 	}
 
 	/**
@@ -668,14 +673,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * Clear uploaded documents
 	 */
 	public void resetDoc() {
-		if (docType != null) {
-			docsMap.put(docType, new ArrayList<SmApplDocFile>());
-			postAIMap.put(docType, Boolean.FALSE);
-			docs = docsMap.get(docType);
-			epfs = null;
-			tenancy = null;
-			postAI = false;
-		}
+		log.info("test");
 	}
 	
 	public List<SmApplDocFile> getDocs() {
@@ -687,9 +685,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param doc
 	 */
 	public void deleteDoc(SmApplDocFile doc) {
-		log.info(docs.size());
 		docs.remove(doc);
-		log.info(docs.size());
+		if(docs.size() < 1){
+			epfs = null;
+			tenancy = null;
+			postAI = false;
+		}
 	}
 	
 	public List<EPFEntity.EmployeeInfo> getEmployees() {

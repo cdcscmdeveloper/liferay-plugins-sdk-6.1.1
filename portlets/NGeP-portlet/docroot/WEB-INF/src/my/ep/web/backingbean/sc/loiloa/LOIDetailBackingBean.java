@@ -2952,6 +2952,13 @@ public class LOIDetailBackingBean extends
 			scLoi.setScLoiRemarks(finalScLoiRemarks);
 			// remove empty remark - end
 			
+			//#21692 - Start
+			if (QTStatusConst.LOI_PENDING_NEGOTIATION
+					.equals(statusId)) {
+				awardDataType = addLastDocumentPayload(scLoi, awardDataType);
+			}
+			//#21692 - End
+			
 			//#30008 - Start
 			Long parameterId = null;
 			if (this.getManagedBean().getDecisionCode() != null) {
@@ -3415,9 +3422,15 @@ public class LOIDetailBackingBean extends
 			String taskName = this.getManagedBean().getTaskName();
 			if (Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION, SCProcessNameConst.SIGNOFF_FC_SELECTION)
 					.contains(taskName)) {
-				throw new EpException(MessageConst.ERROR_760601);
+				Locale userLocale = new FacesScopes().getUserLocale();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.ERROR_760601, null, MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale)));
+				this.enableAutoUpdate();
+			} else {
+				throw e;
 			}
-			throw e;
 		}
 		// 26247 - end
 	}
@@ -7868,6 +7881,15 @@ public class LOIDetailBackingBean extends
 			SLAUtils.getInstance().logSLAError("LOI", "cancelLOIWIP", getManagedBean().getScLoi().getLoiNo(),
 					"cancelLOIWIP", getUserIdSessionFromLoginId(), e);
 		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private SCAwardSupplierDataType addLastDocumentPayload(ScLoi scLoi, SCAwardSupplierDataType awardDataType) {
+		if (scLoi.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+			awardDataType.setLastDocument(getQtAwardSO().isLastDocumentLOI(scLoi.getScLoiLoa().getDocId()));
+		}		
+		return awardDataType;
 	}
 	//#21692 - End
 }
