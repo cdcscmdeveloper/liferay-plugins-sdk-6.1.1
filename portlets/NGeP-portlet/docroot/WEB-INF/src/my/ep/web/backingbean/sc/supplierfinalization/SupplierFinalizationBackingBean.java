@@ -1440,7 +1440,7 @@ public class SupplierFinalizationBackingBean extends
 					 } else {
 						 evaluationStage = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
 					 }
-					 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage";
+					 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.fec.consolidation.stage";//#38679
 			 		 break;
 		}
 		getManagedBean().setEvaluationHeader(evaluationHeader);
