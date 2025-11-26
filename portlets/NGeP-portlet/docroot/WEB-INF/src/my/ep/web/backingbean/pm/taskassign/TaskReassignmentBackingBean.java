@@ -2825,7 +2825,7 @@ public class TaskReassignmentBackingBean extends
 							SearchOperator.OPERATOR_NOT_IN.value(),
 								new ArrayList<Long>(Arrays.asList(userId,
 									getFacesScopes().getUserSessionBean()
-										.getUserId()))));
+										.getUserId()))));			
 			
 			//#38680- Start
 			String role = roleList.toString().replace("[", "").replace("]", "")

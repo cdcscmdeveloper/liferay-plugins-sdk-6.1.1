@@ -239,8 +239,8 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean;
+import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
@@ -8551,7 +8551,8 @@ public class QTDetailBackingBean extends
 	private void removeCommitteeActivityDetails(ScQt scQt, ScQtFinalization scQtFinalization) { // Bug #38975@Syazani 16/10/2025
 		IQTMeetingSO meetingso = null;
 		try {
-			meetingso = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+			meetingso = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTMeetingSO.class);
 			List<String> committeeType = new ArrayList<String>();
 			if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(scQt.getEvaluationType())) {
 				committeeType.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
@@ -10953,7 +10954,6 @@ public class QTDetailBackingBean extends
 		return -1L;
 	}
 	// 25791 -end-
-
 
 	// 25791 -start-
 	/**
