@@ -3779,6 +3779,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				CommitteReqDTO reqDTO = new CommitteReqDTO();
 				reqDTO.setQtId(scQt.getQtId());
+				
+				//#32350 - Start
+				reqDTO.setScQt(scQt);
+				//#32350 - End
+				
 				CommitteResDTO resDTO = committeSO
 						.retrieveFinalizationCommitteeType(reqDTO);
 
@@ -15046,7 +15051,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}
 			this.getManagedBean().setQtCategoryList(scQtCategoryListNew);
 		} 
-		if (qtInsertFlag){
+		if (CollectionUtils.isNotEmpty(panelCategoryCodeList) && qtInsertFlag){
 			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTSpecSO.class);
 			List<ScQtCategory> scQtCategoryList = this.getManagedBean().getQtCategoryList() != null ?
 					this.getManagedBean().getQtCategoryList(): new ArrayList<ScQtCategory>();
