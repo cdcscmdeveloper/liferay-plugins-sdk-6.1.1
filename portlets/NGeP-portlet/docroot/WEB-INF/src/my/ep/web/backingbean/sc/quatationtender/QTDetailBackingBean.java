@@ -2675,7 +2675,7 @@ public class QTDetailBackingBean extends
 
 	public void retrieveCommitteeAppointmentTabDtl(int formCommitteeFlag, int reformCommitteeFlag,
 			boolean committeeReadOnly) {
-		// Bug 32277 - end		
+	// Bug 32277 - end	
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
