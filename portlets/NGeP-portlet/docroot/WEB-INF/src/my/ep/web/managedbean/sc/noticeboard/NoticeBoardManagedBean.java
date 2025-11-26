@@ -192,9 +192,9 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	// #29732 Start
 	private String hisCatCode;
 	private List<PmRemarkCategory> historyList;
-	private boolean updateCatInPm; //#29732
-	private boolean flagUpdateCatInPmDisplay; //#29732
-
+	private boolean updateCatInPm;
+	private boolean flagUpdateCatInPmDisplay;
+	private boolean catCodeQtUpdateDesc;
 	// #29732 End
 	
 	// #29624 - start
@@ -1348,6 +1348,14 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	public void setFlagUpdateCatInPmDisplay(boolean flagUpdateCatInPmDisplay) {
 		this.flagUpdateCatInPmDisplay = flagUpdateCatInPmDisplay;
+	}
+	
+	public boolean getCatCodeQtUpdateDesc() {
+		return catCodeQtUpdateDesc;
+	}
+
+	public void setCatCodeQtUpdateDesc(boolean catCodeQtUpdateDesc) {
+		this.catCodeQtUpdateDesc = catCodeQtUpdateDesc;
 	}
 	//#29732
 
