@@ -921,8 +921,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 		}
 
 		// check for disciplinary action (DA)
-		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil
-				.checkForDisciplinaryAction(supplierId);
+		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(supplierId);
 
 		if (disciplinaryActList != null && !disciplinaryActList.isEmpty()) {
 			SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
