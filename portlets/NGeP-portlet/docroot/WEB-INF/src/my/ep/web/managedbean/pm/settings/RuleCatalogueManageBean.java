@@ -199,7 +199,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String searchPtjCode;
 	private String searchPtjName;
 	private BigDecimal searchQtValueLimit;
-
 	// #36738 End
 
 	/************ END: AUDIT #28895_35509 *************/
@@ -1879,6 +1878,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.auditResDTOSelectedRuleValueList = auditResDTOSelectedRuleValueList;
 	}
 	/************ END: AUDIT #28895_35509 *************/
+	
 	//#36738 Start
 	public List<PmConfigRuleDesc> getOriginalConfigRuleDescList() {
 		return originalConfigRuleDescList;
