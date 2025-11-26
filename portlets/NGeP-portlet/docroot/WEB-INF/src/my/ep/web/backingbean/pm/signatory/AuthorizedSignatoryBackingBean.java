@@ -281,10 +281,14 @@ public class AuthorizedSignatoryBackingBean extends
 				}
 			}
 		}
-		if(activeNumber>1){
+
+		if (activeNumber > 1) {
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770144);
-		}else if(activeNumber==0){
+		} else if (activeNumber == 0) {
+			// #34445, Fix as-is bug: #39354 START
+			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
+			// #34445, Fix as-is bug: #39354 END
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770145);
 		}
@@ -300,13 +304,21 @@ public class AuthorizedSignatoryBackingBean extends
 		log.info("checkEffDate");
 		Date currentDate =  DateUtils.getCurrentDateWithoutTime();
 		boolean isActive = true;
+
+		// #34445, Fix as-is bug: #39354 START. Remove code because its no longer use
 		// effDate after currentDate
-		if(! pmCertSignatory.isBrandNew() && pmCertSignatory.getEffDate().compareTo(currentDate)>0){
+		/*if(! pmCertSignatory.isBrandNew() && pmCertSignatory.getEffDate().compareTo(currentDate)>0){
 			isActive = false;
 		// expDate not null and expDate before currentDate
 		}else if(pmCertSignatory.getExpDate()!=null && pmCertSignatory.getExpDate().compareTo(currentDate)<0){
 			isActive = false;
+		} */
+
+		if(pmCertSignatory.getExpDate()!=null && pmCertSignatory.getExpDate().compareTo(currentDate)<0){
+			isActive = false;
 		}
+		// #34445, Fix as-is bug: #39354 END. Remove code because its no longer use
+
 		return isActive;
 	}
 	
