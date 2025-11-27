@@ -57,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
@@ -131,19 +132,10 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setDisableAddNewUser(validatePersonLimit(smSupplier));
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 		
-		//27536 : Disciplinary Action - start also fix 27537
-		String labelNameVal = "";
-		SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-		supReqDTO.setSupplier(smSupplier);
-		SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-		if(activeDisc != null
-				&& activeDisc.getSmDisciplinaryActions() != null){
-			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-							new String[] { labelNameVal })));
+		//27536 : Disciplinary Action - start also fix 27537 - #26238
+		if(hasValidDisciplinaryAction(getManagedBean().getSmSupplier())){
+			getManagedBean().setSuppInPunishment(true);
 			getManagedBean().setDisableAddNewUser(true);
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/userProfileMaintenance/userProfileSearch.xhtml", "", null, null);
 		}
 		//27536 : Disciplinary Action - end also fix 27537
 				
@@ -212,22 +204,7 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setHasActiveAppl(true);
 		}
 		
-		//26238 - start
-		//check disciplinary action on supplier
-		String labelNameVal = "";
-		SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-		supReqDTO.setSupplier(smSupplier);
-		SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-		if(activeDisc != null
-				&& activeDisc.getSmDisciplinaryActions() != null){
-			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-							new String[] { labelNameVal })));
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/userProfileMaintenance/adminReAssign.xhtml", "", null, null);
-		}
-		//26238 - end
-
+		hasValidDisciplinaryAction(smSupplier);		//#26238
 		redirectPage = "adminReAssign.xhtml";
 		if (!EntityHelper.isCollectionEmpty(resDTO.getSmPersonnelList())) {
 			List<SmPersonnel> authorizedPersonnelList = resDTO
@@ -3835,6 +3812,26 @@ public class SmPersonnelBackingBean extends
 		return valid;
 	}
 	//32515 END
+	
+	//#26238, 39217
+	/**
+	 * Display error if supplier has active DA 
+	 * (cancel registration / suspend registration / blacklist owner)
+	 * @param supplier
+	 * @return
+	 */
+	private boolean hasValidDisciplinaryAction(SmSupplier supplier){
+		List<SmDisciplinaryAction> activeDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		if (SmApplicationUtil.hasCannotLoginDA(activeDA)){
+			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", 
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+							new String[] { "" })));
+			return true;
+		}
+		return false;
+	}
+	
 	// #28895_35501 Start - AUDIT TRAIL SM
 	private void copyOldData(SmSupplier smSupplier) {
 		getManagedBean().setOldSmSupplier(smSupplier);

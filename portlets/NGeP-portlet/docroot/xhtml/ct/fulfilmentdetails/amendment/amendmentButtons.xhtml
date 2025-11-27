@@ -5,7 +5,15 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+	<!-- #26186 start -->
+	<script>
+		function sendParamToSupplierDA() {
+	        Liferay.fire('amendmentAckSupplierFA', {
+				ackSupplierFA: true
+	        });
+	    }
+	</script>
+	<!-- #26186 end -->
 	<ac:gpkiPopup
 			textBeforeSign="#{amendmentBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(gpkiBackingBean.pmDigiSign)}"
@@ -17,10 +25,13 @@
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
 		
-		<ui:fragment rendered="#{amendmentBackingBean.managedBean.disciplinaryActionMsg!=null and not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}">
-			<ui:include	src="amendmentInfo.xhtml" />
-		</ui:fragment>
-		
+	<!--#26186 start-->
+	<ui:fragment
+		rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg or not empty amendmentBackingBean.managedBean.supplierMsg}">
+		<ui:include src="amendmentInfo.xhtml" />
+	</ui:fragment>
+	<!--#26186 start-->
+
 		<!--#24333 start-->
 		<h:panelGrid columns="1" rendered="#{ctBackingBean.managedBean.contractVer.status.statusId eq CtStatusConst.faPendingVerification and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
 		and ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq and ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend
@@ -29,7 +40,7 @@
 	   	position = "left" style="color:red;" />
 	   	</h:panelGrid>
 	   	<!--#24333 end-->
-
+	   	
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"

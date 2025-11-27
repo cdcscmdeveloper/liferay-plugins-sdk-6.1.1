@@ -625,6 +625,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE))) {
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}
+					checkBlacklistedOwners(owner.getIdentificationNo(), true); //#26238 - 39069, #39355
 				}
 				//Check Director
 				for(SmPersonnel director:this.getManagedBean().getSmPersonnelDirector()){
@@ -643,6 +644,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE))) {
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}
+					checkBlacklistedOwners(director.getIdentificationNo(), true); //#26238 - 39069, #39355
 				}
 			}//#29582 #30064 end
 		}else{
@@ -681,64 +683,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//27537 : Disciplinary Action - start - fixed together for 27536 & 27520
 			if(this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) || 
 				this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) ){
-				if(this.getManagedBean().getSmPersonnel() != null ){
-					if(suppOwner.getIdentificationNo() != null){
-						//32851 - start
-						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-						reqDTO.setDirectorIdNo(suppOwner.getIdentificationNo());
-						SmPersonBlacklist ban = SmServiceLookup.getBlacklistDirectorSO()
-								.retrievePersonBlacklistByIdentificationNO(reqDTO).getPersonBlacklist();
-						if(ban != null){
-							throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
-						}
-						//32851 - end
-						
-						
-						//26238: Disciplinary Action -32851 - start remove second checking for imposed DA since checking already run based on table sm_person_blacklist
-								
-//						IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
-//						PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
-//						
-//						personneleqDTO.setIdentificationNo(suppOwner.getIdentificationNo());
-//						PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelByIdNo(personneleqDTO);
-//						
-//						if(personnelResDTO != null && personnelResDTO.getSmPersonnelList().size() > 0){
-//							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-//								
-//								if(null != personnel.getSmAppl()){
-//									
-//									SmAppl latestAppl = new SmAppl();
-//									latestAppl.setSmSupplier(personnel.getSmAppl().getSmSupplier());
-//									
-//									SmSupplier supplier = latestAppl.getSmSupplier();
-//									
-//									//27876: Disciplinary Action - start - <27876>
-//									List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-//									//27876: Disciplinary Action - end - <27876>
-//									
-//									//CR 27382: Static Code Analysis
-//									//if(discList != null && discList.size() > 0){ asal
-//									if(discList != null && !discList.isEmpty()){
-//										for(SmDisciplinaryAction disc : discList){
-//											//27861:  Disciplinary Action - start - 28798
-//											//32851
-//											if(//( disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isBlacklistOwner() ) ||
-//													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isCancelRegistration() ) ||
-//													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isSuspendRegistration() ) ){
-//												throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
-//												
-//											}
-//											//27861:  Disciplinary Action - end - 28798
-//										}
-//									}
-//								}
-//							}
-//						}
-						//26238: Disciplinary Action -32851 - start remove second checking for imposed DA since checking already run based on table sm_person_blacklist
-									
-								}
-							}
-						}
+				checkBlacklistedOwners(suppOwner.getIdentificationNo(), false); //#26238 - 39069, #39355
+			}
 			//27537 : Disciplinary Action - end
 			
 			if(SmCommonUtil.isSupplierOwnerIndividualAcc(suppOwner.getIdentificationType().getParameterCode(),suppOwner.getIdentificationNo(),
@@ -804,6 +750,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//12492 - START
 		return firstUserRegistration;	
 		//12492 - END
+	}
+	
+	//#26238 - 39069, #39355
+	/**
+	 * Check Disciplinary Action for blacklisted owners/directors
+	 * @param identificationNo
+	 */
+	private void checkBlacklistedOwners(String identificationNo, boolean checkDate){
+		if (StringUtils.isEmpty(identificationNo)){
+			return;
+		}
+		//32851 - start
+		SmPersonBlacklist ban = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveValidBlacklist(identificationNo, checkDate).getPersonBlacklist(); // #39355
+		if(ban != null){
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
+		}
+		//32851 - end
 	}
 
 	/**
@@ -1307,6 +1271,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}*/
 		validateNewIC(smPersonnel,false);
+		checkBlacklistedOwners(smPersonnel.getIdentificationNo(), false); //#26238 - 39069, #39355
 		RequestContext.getCurrentInstance().execute("firstUserTncDialog.show()");
 	}
 
@@ -2851,12 +2816,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 				getManagedBean().setApplType(getManagedBean().getSmAppl().getApplType());
 				
-				//26238 - retrieve active DA. To display at basic account supplier screen
-				if(resDTO.getSmSupp() != null){
-					retrieveActiveDisicplinaryAction(resDTO.getSmSupp());
-				}
-				//26238 - end
-				
 				//27691 start - to show owner & director info for NON SSM Company
 				if(!resDTO.getSmSupp().getSmAppl().isApplValidWithSsm()){
 					for(SmPersonnel personnel : this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
@@ -2891,6 +2850,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 				//27691 END
+				//26238 - retrieve active DA. To display at basic account supplier screen
+				retrieveActiveDisciplinaryAction(resDTO.getSmSupp());
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					// #27691 - Start
 					if(!resDTO.getSmSupp().getSmAppl().isApplValidWithSsm()){
@@ -5473,62 +5434,68 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	//26238 - start 
-	public void retrieveActiveDisicplinaryAction(SmSupplier supplier){
+	/**
+	 * Retrieve active DA
+	 * @param supplier
+	 */
+	public void retrieveActiveDisciplinaryAction(SmSupplier supplier){
+		if (supplier == null){
+			return;
+		}
+		//39068 - START
+		supplier.setEndDate(true);
+		//39153 - start
+		List<SmDisciplinaryAction> allDAs = SmApplicationUtil
+				.retrieveSmDisciplinaryActionBySupplier(supplier);
+		getManagedBean().setDisciplinaryAction(
+				!EntityHelper.isCollectionEmpty(allDAs));
+		//39068 - END
 		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		if(EntityHelper.isCollectionEmpty(discList)){
+			getManagedBean().setNoDisciplinary(DbValueConst.FLAG_YES);
+			boolean hasCannotLoginDA = checkPendingDisciplinaryAction(allDAs);
+			getManagedBean().setActiveDisicplinaryAction(hasCannotLoginDA);
+			//39153 - end
+			return;
+		}
+		getManagedBean().setNoDisciplinary(DbValueConst.FLAG_NO);
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(supplier.getSupplierId());
 		
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
-		
-		if(discList != null && !discList.isEmpty()){
-			for(SmDisciplinaryAction disc : discList){
-				//Start 30842
-				if(disc.isWarning() || disc.isSuspendRegistration() 
-						|| disc.isCancelRegistration() || disc.isBlacklistOwner() || disc.isCancelCategory()){
-					if(disc.isWarning())
-						this.getManagedBean().setWarning(true);					
-					if(disc.isSuspendRegistration())
-						this.getManagedBean().setSuspendRegistration(true);
-					if(disc.isCancelRegistration())
-						this.getManagedBean().setCancelRegistration(true);
-					if(disc.isBlacklistOwner())
-						this.getManagedBean().setBlacklistowner(true);
-					if(disc.isCancelCategory())
-						this.getManagedBean().setCancelCategory(true);
-				//End 30842
-					
-					if(!disc.isWarning()){
-						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
-						if(personnelResDTO != null 
-								&& personnelResDTO.getSmPersonnelList().size() > 0){
-							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-								if(personnel.isCancelRegistration()
-										|| personnel.isSuspendRegistration()
-											|| personnel.isBlacklisted()){
-									blacklistOwner.setIcNo(personnel.getIdentificationNo());
-									blacklistownerDirectorList.add(blacklistOwner);
-								}
-							}
-							this.getManagedBean().setBlacklistownerDirectorList(blacklistownerDirectorList);
-						}
-					}
-					this.getManagedBean().setStartDate(DateUtils.dateToString("dd/MM/yyyy",disc.getStartDate()));
-					this.getManagedBean().setEndDate(DateUtils.dateToString("dd/MM/yyyy",disc.getEndDate()));
-					this.getManagedBean().setRemarks(disc.getRemark());
-				}
-			}
-			
-			//26238
-			this.getManagedBean().setActiveDisicplinaryAction(false);
-			if(this.getManagedBean().isSuspendRegistration() || this.getManagedBean().isCancelRegistration() 
-					|| this.getManagedBean().isBlacklistowner()){
-				this.getManagedBean().setActiveDisicplinaryAction(true);
-			}
-		} else {
-			this.getManagedBean().setNoDisciplinary(true);
+		//27915: Disciplinary Action - start - 26238
+		for(SmDisciplinaryAction disc : discList){
+			getManagedBean().setWarning(disc.isWarning());
+			getManagedBean().setCancelCategory(disc.isCancelCategory());
+			getManagedBean().setSuspendRegistration(disc.isSuspendRegistration());
+			getManagedBean().setCancelRegistration(disc.isCancelRegistration());
+			getManagedBean().setBlacklistowner(disc.isBlacklistOwner());
+			//26238 - 38419
+			getManagedBean().setBlacklistownerDirectorList(getPersonnelBlacklist(
+					disc.getDisciplinaryActionId()));
+			String pattern = "dd/MM/yyyy";
+			getManagedBean().setStartDate(DateUtils.dateToString(pattern, disc.getStartDate()));
+			getManagedBean().setEndDate(DateUtils.dateToString(pattern, disc.getEndDate()));
+			getManagedBean().setRemarks(disc.getRemark());
 		}
-	} //26238 - end
+		getManagedBean().setActiveDisicplinaryAction(
+				getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration() 
+				|| getManagedBean().isBlacklistowner());
+	}
+	
+	//39153
+	private boolean checkPendingDisciplinaryAction(List<SmDisciplinaryAction> discList){
+		if (EntityHelper.isCollectionEmpty(discList)){
+			return false;
+		}
+		for (SmDisciplinaryAction da : discList){
+			if(da.isCancelRegistration() || da.isBlacklistOwner()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//26238 - end
 	
 	//16052019 - SSM INTEGRATION CR => START
 	public void listenerChangeRole(){
@@ -6028,4 +5995,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 			return items;
 		} //#36710 --END
+	// 39392 - START
+	/**
+	 * Check Disciplinary Action for blacklisted owners/directors
+	 * @param suplierOwner
+	 */
+	public static void checkBannedOwners(List<SmSupplierOwner> suplierOwner){
+		
+		SmPersonBlacklist ban = new SmPersonBlacklist();
+
+		for(SmSupplierOwner owner : suplierOwner){
+			ban = SmServiceLookup.getBlacklistDirectorSO()
+					.retrieveValidBlacklist(owner.getIdentificationNo(), true)
+					.getPersonBlacklist();
+		}
+		
+		if(ban != null && ban.getIdentificationNo() != null){
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
+		}
+	}
+	// 39392 - END
 }

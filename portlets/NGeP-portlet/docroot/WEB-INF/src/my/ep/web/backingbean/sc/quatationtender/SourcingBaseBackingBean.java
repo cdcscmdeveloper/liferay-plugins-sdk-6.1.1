@@ -66,10 +66,12 @@ import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -80,6 +82,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -208,6 +211,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.sc.DisciplinaryActionUtils;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -276,6 +280,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE, SourcingConstants.MALAYSIA_COUNTRY_CODE);
 	// 26226 - end
 	
+	//26247 - start
+	private final Map<String, String> recordStatusParamMap = new HashMap<>();
+	//26247 - end
+
 	//private static final String UTF = "UTF-8";
 	
 	// #18685 - Start
@@ -814,7 +822,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	protected IQTDetailSO getQTDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
-	
+
+	// 26247 - start
+	protected IQTSuppFinalizationSO getQtSuppFinalizationSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSuppFinalizationSO.class);
+	}
+
+	protected IQTBriefingSO getQtBriefingSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
+	}
+
+	protected IScheduleBiddingSO getScheduleBiddingSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScheduleBiddingSO.class);
+	}
+
+	// 26247 - end
+
 	//38343 - start
 	protected IDocumentSO getDocumentSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
@@ -2052,28 +2077,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		if(isDirectLoa) {
 			//#24540 - start -
 			boolean setBondReq = true;
-			
+			//#25726 commit under #39080 - Start
+			//remove contract type condition.
 			if (null != scLoa.getQtType() 
 					&& null != scLoa.getQtType().getParameterId() 
 					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
 					&& null != scLoa.getScQt() 
 					&& null != scLoa.getScQt().getFulfilmentType()
 					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)  
-					&& null != scLoa.getContractType() 
-					&& null != scLoa.getContractType().getParameterId()
-					&& scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				setBondReq = false;
-			}
-			
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
+					||scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
+			//#25726 commit under #39080 - End
 				setBondReq = false;
 			}
 			
@@ -7117,4 +7134,82 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	}
 
 	// #29007 End vinod
+	
+	// 26247 - start
+	/**
+	 * Retrieve mof status descriptions
+	 * @param mofAccount
+	 * @return mof status description
+	 */
+	public String evaluateMOFStatus(SmMofAccount mofAccount) {
+		if (recordStatusParamMap.isEmpty()) {
+			List<PmParameterDesc> paramDescs = this.getParameterDescsByTypeAndSearchBean(
+					ParameterTypeConst.RECORD_STATUS, null);
+			for (PmParameterDesc paramDesc : paramDescs) {
+				recordStatusParamMap.put(
+						paramDesc.getPmParameter().getParameterCode().concat(paramDesc.getLanguageCode()),
+						paramDesc.getCodeName());
+			}
+		}
+
+		Locale locale = new FacesScopes().getUserLocale();
+		String mofStatus = "0";
+		if (null != mofAccount) {
+			mofStatus = mofAccount.getRecordStatusFlg().toString();
+		}
+		return recordStatusParamMap.get(mofStatus.concat(locale.getLanguage()));
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	/**
+	 * Evaluate if qt is disabled for futher action for non/disciplinary action scenario
+	 * @param scQt
+	 * @param supplier
+	 * @return
+	 */
+	public boolean disabledQTProcess(SmSupplier supplier) {
+		return DisciplinaryActionUtils.disabledQTProcess(supplier);
+	}
+
+	// 26247 - end
+	
+	//#28784 - Start
+	public boolean checkParentRepublishQT(ScQt scQt) {
+		try {
+			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			reqDTO.setDocId(scQt.getParentQtId());
+
+			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO)
+					.getWorkFlowStatus();
+			if (currentWorkFlowStatus != null
+					&& currentWorkFlowStatus.getPmStatus() != null
+					&& currentWorkFlowStatus.getPmStatus().getStatusId()
+							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH)) {
+				return validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "checkParentRepublishQT", scQt.getQtNo(),
+					"checkParentRepublishQT", getUserIdSessionFromLoginId(), e);
+		}
+
+		return Boolean.TRUE;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	/**
+	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
+	 * @param
+	 * @return void
+	 */
+	public void checkDemoVersion(ScQt scQt) {
+		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
+	}
+	//#28784 - End
 }

@@ -52,11 +52,13 @@
 					</c:otherwise>
 				</c:choose>
 				<!-- #28175 Reopen #141 End -->
-				<!-- 30865,32298 Start -->
-				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'C'}" styleClass="warning" style="color:red !important; text-align:left;">
+				<!-- 30865,32298, 38896 Start -->
+				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'C'}" styleClass="warning" 
+					style="color:red !important; text-align:left; float:none">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
-				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'M'}" styleClass="warning" style="color:red !important; text-align:left;">
+				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'M'}" styleClass="warning" 
+					style="color:red !important; text-align:left; float:none">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
 				<!-- 30865,32298 End -->
