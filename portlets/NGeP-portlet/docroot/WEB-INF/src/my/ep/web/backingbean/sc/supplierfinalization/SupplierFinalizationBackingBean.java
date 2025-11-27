@@ -11555,27 +11555,27 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	private void validationNeedSupplierIfHaveBranchDeleted(List<ScQtRecommendDtl> recommendDtls,
 			TplSpecZoneDtl tplSpecZoneDtl, ScQt scQt, String itemName) {
 
+		List<Long> recommendSupplierIds = new ArrayList<>();
 		if (CollectionUtils.isNotEmpty(recommendDtls)) {
-			List<Long> recommendSupplierIds = new ArrayList<>();
 			for (ScQtRecommendDtl recommendDtl : recommendDtls) {
 				Long supplierId = recommendDtl.getSupplier().getSupplierId();
 				recommendSupplierIds.add(supplierId);
 			}
+		}
 
-			if (tplSpecZoneDtl != null) {
-				Long selectedZoneId = tplSpecZoneDtl.getSpecZoneId();
-				List<Long> quaQtSupplierIdList = retrieveZoneQtSuppliersIdsByQtIdAndSpecZoneId(true, scQt.getQtId(),
-						selectedZoneId);
-				if (!CollectionUtils.containsAny(quaQtSupplierIdList, recommendSupplierIds)) {
-					navigateToSupplierFinalizationTab();
-					validationNeedSupplier(tplSpecZoneDtl, itemName);
-				}
-			} else {
-				List<Long> quaQtSupplierIdList = retrieveQtSuppliersIdsByQtId(true, scQt.getQtId());
-				if (!CollectionUtils.containsAny(quaQtSupplierIdList, recommendSupplierIds)) {
-					navigateToSupplierFinalizationTab();
-					validationNeedSupplier(tplSpecZoneDtl, itemName);
-				}
+		if (tplSpecZoneDtl != null) {
+			Long selectedZoneId = tplSpecZoneDtl.getSpecZoneId();
+			List<Long> quaQtSupplierIdList = retrieveZoneQtSuppliersIdsByQtIdAndSpecZoneId(true, scQt.getQtId(),
+					selectedZoneId);
+			if (!CollectionUtils.containsAny(quaQtSupplierIdList, recommendSupplierIds)) {
+				navigateToSupplierFinalizationTab();
+				validationNeedSupplier(tplSpecZoneDtl, itemName);
+			}
+		} else {
+			List<Long> quaQtSupplierIdList = retrieveQtSuppliersIdsByQtId(true, scQt.getQtId());
+			if (!CollectionUtils.containsAny(quaQtSupplierIdList, recommendSupplierIds)) {
+				navigateToSupplierFinalizationTab();
+				validationNeedSupplier(tplSpecZoneDtl, itemName);
 			}
 		}
 	}
