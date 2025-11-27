@@ -5989,6 +5989,7 @@ public class RuleCatalogueBackingBean extends
 		resetRuleType();
 		resetRuleValue();
 		resetQtValues();
+		this.getManagedBean().setCollapsePanel(true);
 	}
 	//#36738 End
 }
