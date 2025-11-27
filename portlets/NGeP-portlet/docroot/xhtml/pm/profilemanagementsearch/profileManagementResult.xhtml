@@ -14,6 +14,7 @@
 			value="#{profileManagSearchBackingBean.accessAPPLDataModel}"
 			var="accessAPPL">
 			<ac:paginator for="dtPmResult" />
+			<ui:remove>#38016 -Start</ui:remove>
 			<p:column headerText="#{lbl['lbl.pm.access.app.result.createdDate']}" style="width :10%;white-space : normal">			
 				<ac:labelDateTime value="#{accessAPPL[1]}" />
 			</p:column>
@@ -30,18 +31,17 @@
 			<p:column headerText="#{lbl['lbl.pm.access.app.request.idno']}" style="width :10%;white-space : normal">
 				#{accessAPPL[5]}
 			</p:column>
-			<ui:remove>#38016 -Start</ui:remove>
 			<p:column headerText="#{lbl['lbl.pm.access.app.request.rolestatus']}"
 				width="5%"> 
 		    	  #{profileManagSearchBackingBean.getRoleStatusDescByStatusId(accessAPPL[7])}
 			</p:column>
-			<ui:remove>#38016 -End</ui:remove>
-
+			
 			<p:column headerText="#{lbl['lbl.pm.access.app.request.status']}" width="5%">
 			 <c:when test="#{not empty accessAPPL[5]}" >
 		    	  #{profileManagSearchBackingBean.getStatusDescById(accessAPPL[6])}
 			  </c:when>
 			</p:column>
+			<ui:remove>#38016 -End</ui:remove>
 			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
 				<p:commandLink partialSubmit="true" process="@this"
 						action="#{accessApplBackingBean.redirectToAccessApplView(accessAPPL[0], accessAPPL[6],profileManagSearchBackingBean.managedBean.selectedAppTypeParamCode)}"
