@@ -661,7 +661,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 
-	// new #25725 - Start
+	// new #25725/25726 - Start
 	
 	
 	/**
@@ -670,8 +670,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean checkItalicCodeNameForMy(Long parameterId) {
-		System.out.println("checkItalicCodeNameForMy ");
-		System.out.println("parameterId " + parameterId);
 
 		PmParameter newPmParameter = new PmParameter();
 
@@ -697,9 +695,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		FacesScopes face = new FacesScopes();
 		String language = face.getUserLocale().getLanguage();
 
-		if (// SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language)
-			// &&
-		listParameter.containsKey(paramType)) {
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParameter.containsKey(paramType)) {
 			List<String> validTypes = listParameter.get(paramType);
 
 			if (validTypes.contains(paramCode)) {
@@ -717,7 +713,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public List<String> getItalicCodeNames(String type) {
-		System.out.println("getItalicCodeNames");
 		List<String> codeNames = new ArrayList<>();
 
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(type,
@@ -733,7 +728,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 
-	// new #25725 - End
+	// new #25725/25726 - End
 	
 	/** #21695 FARID START*/	
 	/**
