@@ -992,17 +992,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			//supplierName - Max length 86 
 			String trunSuppName = supplierName.length() > 86 ? supplierName.substring(0, 86) : supplierName;
 			
-			//#38377
-			if(isCdcPaymentGateway(billType)){
-				billName = trunSuppName;
-			}else{
-				if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
-					billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.proccessing", new String[]{trunSuppName,docNo});
-				}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)){
-					billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.registration", new String[]{trunSuppName,docNo});
-				}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
-					billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.softcert", new String[]{trunSuppName,docNo});
-				}
+			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
+				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.proccessing", new String[]{trunSuppName,docNo});
+			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_REG_FEE)){
+				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.registration", new String[]{trunSuppName,docNo});
+			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
+				billName = SmCommonUtil.getMessage("lbl.sm.payment.bill.name.softcert", new String[]{trunSuppName,docNo});
 			}
 		}
 		return billName;
