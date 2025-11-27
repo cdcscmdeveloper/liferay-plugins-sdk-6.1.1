@@ -1,7 +1,6 @@
 /* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.backingbean.sc.noticeboard;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -18,7 +17,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -45,6 +43,7 @@ import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO; //#29732
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -75,10 +74,14 @@ import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;//#29732
+import my.ep.persistence.entity.pm.common.PmCategoryL2;//#29732
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -114,7 +117,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
@@ -126,7 +128,6 @@ import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
 import my.ep.web.constant.sc.QTConstants;
-import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
 import my.ep.web.util.DateUtils;
@@ -157,10 +158,6 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 // #29732 Start - fix ReOpen
 import java.sql.Timestamp;
@@ -766,36 +763,6 @@ public class NoticeBoardBackingBean extends
 		return CHECK_SUPPLIER_QUAL_PAGE;
 	}
 	
-	// 26247 - start
-	/** 
-	 * Navigate current page to check qualification
-	 * 
-	 * @param qtId
-	 */
-	public void navigateToCheckQualification(Long qtId){
-		try {
-			FacesScopes facesScope = new FacesScopes();
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
-
-			String currentURL = themeDisplay.getURLCurrent();
-			String friendlyURL = themeDisplay.getLayout().getGroup().getFriendlyURL();
-			String commonUrl = currentURL.substring(0, currentURL.indexOf(friendlyURL) + friendlyURL.length());
-			String screenUrl = SourcingConstants.NAV_PAGE_CHECK_SUPPLIER_QUALIFICATION;
-			StringBuilder navigationUrl = new StringBuilder();
-			navigationUrl.append(commonUrl).append("/").append(screenUrl).append(qtId).append("&origin=noticeboard");
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.redirect(navigationUrl.toString());
-		} catch (IOException | PortalException | SystemException e) {
-			SLAUtils.getInstance().logSLAError(
-					ModuleCodeConst.SUPPLIER_SELECTION,
-					ParameterConst.DOCTYPE_QUOTATION,
-					"",
-					SLALogConstant.QT_NOTICEBOARD_BACKING_BEAN + SLALogConstant.QT_SLA_DOT_SEPARATOR
-							+ SLALogConstant.QT_NAVIGATE_TO_CHECK_QUALIFICATION, getUserIdSessionFromLoginId(), e);
-		}
-	}
-	// 26247 - end
-
 	/**
 	 * Pre-render view to navigate porlet to bsv supplier registration screen
 	 */
@@ -855,15 +822,11 @@ public class NoticeBoardBackingBean extends
 				.getOriginalServletRequest(servletRequest);
 		String qtId = originalServletRequest
 				.getParameter(SourcingConstants.NAV_PARAM_QUOTATION_TENDER_ID);
-		// 26247 - start
-		String origin = originalServletRequest.getParameter("origin");
-		if (StringUtils.isNotBlank(qtId)) { 
-			if (null == origin) {
-				super.renewSesionObject();
-				getManagedBean().setNavigateFromNoticeBoard(false);
-			}
+		
+		if (StringUtils.isNotBlank(qtId)) {
+			super.renewSesionObject();
 			isUser();
-		// 26247 - end
+			getManagedBean().setNavigateFromNoticeBoard(false);
 			String redirectUrl = gotoSupplierQualificationCriteria(Long.valueOf(qtId));
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -2981,6 +2944,30 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtCategorySearchBean(searchBean);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
+				//#29732 start
+				String catCodeL1 = "";
+				String catCodeL2 = "";
+				String catCodeL3 = "";
+				String catCodeLevel = null;
+				String catCode = null;
+				
+				for(ScQtCategory checkCategoryUpdated : resDTO.getCategoryResultBean().getResultList()){
+					if(null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()){
+						 catCodeL1 = checkCategoryUpdated.getPmCategoryL1().getCategoryL1Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
+					} 
+					if (null != checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code()){
+						 catCodeL2 = checkCategoryUpdated.getPmCategoryL2().getCategoryL2Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
+					}
+					if (null != checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code()){
+						 catCodeL3 = checkCategoryUpdated.getPmCategoryL3().getCategoryL3Id().toString();
+						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
+					}
+					flagHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel, catCode,resDTO);
+					checkCategoryUpdated.setFlagDisplayNb(getManagedBean().getFlagUpdateCatInPmDisplay());
+				}
+				//#29732 end
 				return resDTO.getCategoryResultBean();
 			} finally{
 				qtNoticeBoardSO = null;
@@ -3556,45 +3543,47 @@ public class NoticeBoardBackingBean extends
 	}
 	
 	// #29732 Start
-	public void onClickHistoryIcon(String catCode, String catCodeLevel,
-			Long catCodeId,Long qtCateId) {
-		boolean processAfter = false;
-		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICategoryCodeSO.class);
+	public void onClickHistoryIcon(String catCodeL1, String catCodeL2, String catCodeL3,String catCodeLevel,
+			Long catCodeId,Long qtCateId, String categoryName, String catCode) {
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
-		
-		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
-		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
-			for(ScQtCategory categoryCodeEdit : findQtCatCode){
-				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()){
-					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
-						reqDTO.setCategoryL1Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
-						reqDTO.setCategoryL2Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
-						reqDTO.setCategoryL3Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
-					}
-						processAfter = true;
-				}else{
-					this.getManagedBean().setHistoryList(null);
-				}
-			}
-		}else{
-			this.getManagedBean().setHistoryList(null);
-		}
-		
-		if(processAfter){
-			getManagedBean().setHistoryList(
-					updateCreatedUserName(resDTO.getRemarkList()));
-			getManagedBean().setHisCatCode(catCode);
-		}
 
+		if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+			reqDTO.setCategoryL1Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+			reqDTO.setCategoryL2Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+		} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+			reqDTO.setCategoryL3Id(catCodeId);
+			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
+		}
+		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+		getManagedBean().setHisCatCode(catCode);
+		
+		boolean flagCategoryUpdate = false;
+		Date createdDateQt = null;
+		for(ScQtCategory checkQtCatUpdate : this.getCategoryCodesDataModel().getList()){
+			if(null != checkQtCatUpdate){
+				flagCategoryUpdate = checkQtCatUpdate.getUpdateCatDesc();
+				createdDateQt = checkQtCatUpdate.getCreatedDate();
+				break;
+			}
+		}
+		
+		if(this.getManagedBean().getFlagUpdateCatInPmDisplay() && !flagCategoryUpdate){
+			List<PmRemarkCategory> listCategoryDB = new ArrayList();
+			int i=0;
+			for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
+				if (i > 0 && null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
+				    listCategoryDB.add(removeIndex);
+				}
+				 i++;
+			}
+			getManagedBean().setHistoryList(listCategoryDB);
+		}
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
 
@@ -3634,4 +3623,54 @@ public class NoticeBoardBackingBean extends
 		return newChangedDate;
 	}
 	// #29732 Start - fix ReOpen
+	
+	// #29732 Start
+	public void flagHistoryPmCatCode(String catCodeL1, String catCodeL2, String catCodeL3, String catCodeLevel,
+			String catCode, NoticeBoardResDTO resDto) {
+
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+
+		String catCodeL1OldDesc = "";
+		String catCodeL2OldDesc = "";
+		String catCodeL3OldDesc = "";
+		boolean oldDescEmpty = false;
+		this.getManagedBean().setFlagUpdateCatInPmDisplay(false);
+
+		if (null != catCodeL1) {
+			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL1Nb(catCodeL1, catCodeLevel);
+			if (null != resDTO1.getCatCodeRemark()) {
+				catCodeL1OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL1OldDesc //this is to cater inserted null in DB, found some data were inserted null
+						|| null != resDTO1.getCatCodeRemark() && null != catCodeL1OldDesc) {
+					oldDescEmpty = true;
+				}
+			}
+		}
+		if (null != catCodeL2) {
+			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL2Nb(catCodeL2, catCodeLevel);
+			if (null != resDTO1.getCatCodeRemark()) {
+				catCodeL2OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL2OldDesc//this is to cater inserted null in DB, found some data were inserted null
+						|| null != resDTO1.getCatCodeRemark() && null != catCodeL2OldDesc) {
+					oldDescEmpty = true;
+				}
+			}
+		}
+		if (null != catCodeL3) {
+			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL3Nb(catCodeL3, catCodeLevel);
+			if (null != resDTO1.getCatCodeRemark()) {
+				catCodeL3OldDesc = resDTO1.getCatCodeRemark().getOldDescription();
+				if (null != resDTO1.getCatCodeRemark() && null == catCodeL3OldDesc //this is to cater inserted null in DB, found some data were inserted null
+						|| null != resDTO1.getCatCodeRemark() && null != catCodeL3OldDesc) {
+					oldDescEmpty = true;
+				}
+			}
+		}
+
+		if (oldDescEmpty) {
+			this.getManagedBean().setFlagUpdateCatInPmDisplay(true);
+		}
+	}
+	// #29732 end
 }

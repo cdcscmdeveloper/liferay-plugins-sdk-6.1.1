@@ -2149,6 +2149,14 @@ public class QTCommitteBackingBean extends
 							.getScCommitteeMembers())) {
 					
 						String committeeType = committee.getCommitteeType().getParameterCode();
+						
+						// #35320 - Set QCA, QCB to QQC - Start						
+						if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+								|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
+							committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+						}						
+						// #35320 - End	
+						
 						committeeType=retrieveCommitteeDescription(committeeType,new FacesScopes().getUserLocale());
 						isChairpersonRequired(committee.getScCommitteeMembers(),committeeType);
 						isSecretaryRequired(committee.getScCommitteeMembers(),committeeType);
@@ -2185,14 +2193,19 @@ public class QTCommitteBackingBean extends
 				}
 				count++;
 				if (count >= 2) {
-					throw new EpException(MessageConst.ERROR_760123,new String[]{committeeType});
+					//#35320 - Start
+//					throw new EpException(MessageConst.ERROR_760123,new String[]{committeeType});
+					throw new EpException(MessageConst.ERROR_760712,new String[]{committeeType});
+					//#35320 - End
 					// Only required to have 1 chairperson for appoint committee
 				}
 			}
 		}
 
 		if (count == 0) {
-			throw new EpException(MessageConst.ERROR_760047,new String[]{committeeType});
+			//#35320 - Start
+			throw new EpException(MessageConst.ERROR_760711,new String[]{committeeType});
+			//#35320 - End
 			// At least one chairperson are required for appoint committee
 		}
 	}

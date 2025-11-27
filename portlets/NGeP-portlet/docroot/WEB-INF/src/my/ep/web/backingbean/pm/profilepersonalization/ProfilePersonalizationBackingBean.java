@@ -227,6 +227,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		adminUserRoleMap.put("COLLECTOR_GOV", Arrays.asList("BPK_ADMIN"));
 		adminUserRoleMap.put("PTJ_APPROVER", Arrays.asList("PTJ_ADMIN"));
 		adminUserRoleMap.put("SUPPORT_APPL", Arrays.asList("SUPPORT_ADMIN"));
+		//#35322 - START
+		adminUserRoleMap.put("QQC_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QQC_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QQC_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		//#35322 - END
 
 	}
 	//26238
@@ -1868,16 +1873,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 */
 	private void handleQtMsg(HttpServletRequest originalServletRequest, SmSupplier smSupplier, Long id) {
 		String currentUrl = PortalUtil.getCurrentURL(originalServletRequest);
-		currentUrl = currentUrl == null ? "" : currentUrl;		
-		boolean checkQualificationPage = currentUrl.contains(SourcingConstants.NAV_PAGE_CHECK_SUPPLIER_QUALIFICATION.split("\\?")[0]);
-		boolean noticeBoardPage = currentUrl.contains(SourcingConstants.NAV_PAGE_NOTICE_BOARD);
-		boolean supplierProposalPage = currentUrl.contains(SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL.split("\\?")[0]);
-		if (!supplierProposalPage && !checkQualificationPage && !noticeBoardPage) 
-		{
+		if (null == currentUrl || !currentUrl.contains(SourcingConstants.NAV_PAGE_SUPPLIER_PROPOSAL.split("\\?")[0])) {
 			return;
 		}
 		String qtIdParam = originalServletRequest.getParameter(PARAM_QT_ID);
-		Long qtId = supplierProposalPage ? id: null;
+		Long qtId = id; // keep original value unless overridden
 		SmSupplier supplier = smSupplier;
 		this.getManagedBean().setQtId(qtId);
 		if (qtIdParam != null) {

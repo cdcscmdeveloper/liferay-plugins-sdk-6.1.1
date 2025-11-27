@@ -835,14 +835,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}
 		//28221 - end
 		
-		//24956 - start
-		if (getManagedBean().getInvoice().getFlRequest().getCtContract() != null
-				&& getManagedBean().getInvoice().getFlRequest().getCtContract().getContractType().
-				getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-			getManagedBean().setCtTypeMinistry(true);
-		}
-		//24956 - end
-		
 		//check is normal invoice or tax invoice
 		reqDTO.setInvoice(getManagedBean().getInvoice());
 		resDTO = invoiceSO.isInvoiceTaxable(reqDTO);

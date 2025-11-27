@@ -70,7 +70,9 @@
 					value="#{profileOfRegCompanyRptBB.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 					saveObject="profileOfRegCompanyRptBB.managedBean.selectedOrgProfile"
 					conditionField="#{profileOfRegCompanyRptBB.constructConditionFields()}"
-					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
+					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}"
+					displayResultWhenFirstLoad = "false" 
+					displayResultWhenReset = "false" > <!-- 39214 -->
 				</ac:lov>
 				<!-- #30824 & #29712, #32564 - end -->
 			</td>
@@ -97,7 +99,9 @@
 					saveObject="profileOfRegCompanyRptBB.managedBean.selectedMofAccount"
 					conditionField="#{profileOfRegCompanyRptBB.constructConditionFields()}"
 					postUpdateListener="profileOfRegCompanyRptBB.populateMofNo"
-					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
+					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" 
+					displayResultWhenFirstLoad = "false" 
+					displayResultWhenReset = "false" > <!-- 39214 -->
 				</ac:lov>
 				<!-- #30824 & #29712, #32564 - end -->
 			</td>

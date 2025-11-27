@@ -497,26 +497,21 @@ public class CreateQtBackingBean extends
 		return ministrySpecApprovers;
 	}
 	
-	//20210615@asyrafahaziq - Bug #30891 - Start //Reopen #25726 - note 110 issue 3
+	//20210615@asyrafahaziq - Bug #30891 - Start
 	public void ContractPeriodChange() {
 		try {			
 		if (null != this.getManagedBean().getLoginRoleType()
 					&& !"".equals(this.getManagedBean().getLoginRoleType())
 					&& "SC".equalsIgnoreCase(this.getManagedBean()
 							.getLoginRoleType())) {
-			//Reopen #25726 - note 131 start - remove condition as all fulfillment is included in the condition
+		 if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())){	
 			
 			 Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();
-			//Reopen #25726 note 220 - issue 7
-             PmParameter contractType = this.getManagedBean().getQt().getContractType();
 
-			if ((currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)  ||  
+			if (currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)  ||  
 				currentStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) ||
-				isQTStatusGreaterThan(currentStatus,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING))&&
-				contractType != null &&  
-				!ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(contractType.getParameterCode())){ //Reopen #25726 note 220 - issue 7
-
+				  isQTStatusGreaterThan(currentStatus,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){
 			
 			SpecificationBackingBean specificationBackingBean = new SpecificationBackingBean();
 			List<ScQtCheckList> financialSpecCheckList = this.getManagedBean()
@@ -536,9 +531,10 @@ public class CreateQtBackingBean extends
 									.getParameterCode())) {
 					financialchecklist.setPmStatus(status);
 				}
-			  }
+			}
 			}
 		  }
+		}
 		}
 		} finally {
 
@@ -1433,8 +1429,6 @@ public class CreateQtBackingBean extends
 		 */try {
 			Long type = (Long) event.getComponent().getAttributes()
 					.get("value");
-			// Reopen 25726 note 271- Issue 4 
-			PmParameter previousFulfilmentType = this.getManagedBean().getQt().getFulfilmentType();
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				//Start Reopen 9019 #note-289 remove the alert message while save
@@ -1450,46 +1444,12 @@ public class CreateQtBackingBean extends
 				}
 				//End Reopen 9019 #note-289 remove the alert message while save
 			}
-			// #25726 START
-			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
-					.getManagedBean().getFulfilmentType())) {
-				this.getManagedBean()
-						.getQt()
-						.setScheduleType(
-								ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
-			} else if ((ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN
-							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()))) {
-				this.getManagedBean()
-						.getQt()
-						.setScheduleType(
-								ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
-				this.getManagedBean().setTotalProgressivePayment(0);
-
-			} else if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED
-					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) || (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
-							.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())))) {
-				this.getManagedBean()
-						.getQt()
-						.setScheduleType(
-								ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
-				this.getManagedBean().setTotalFrequency(0);
-				this.getManagedBean().setTotalProgressivePayment(0);
-
-			}
-			// #25726 END
-			// Reopen 25726 note 271- Issue 4 
-			PmParameter newFulfilmentType = this.getManagedBean().getQt().getFulfilmentType	();
-			boolean isUpdatefulfillment = updatefullfillmentDetails (newFulfilmentType, previousFulfilmentType);
-
+			
 			this.getManagedBean().getQt().setScQtSchedules(null);
 			this.getManagedBean().getQt().setScQtProgressivePayments(null);
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
-			// Reopen 25726 note 271- Issue 4 
-			if (!isUpdatefulfillment){
-				removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
-			}
+			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			//20210615@asyrafahaziq - Bug #30891 - Start
 //			 if (!this.getManagedBean().getQt().getContractDuration().equals(null) ) {
@@ -1557,36 +1517,6 @@ public class CreateQtBackingBean extends
 
 	}
 	
-	// Reopen 25726 note 271- Issue 4 
-	/**
-	 * this method is used to update fulfillment details objects in fulfillment
-	 * details side menu.
-	 * 
-	 * @Param String(String scheduleType).
-	 * 
-	 */
-	private boolean updatefullfillmentDetails(PmParameter newFulfilmentType,PmParameter previousFulfilmentType ) {
-		
-		if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()) || 
-			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()))&&
-			(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()) || 
-			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()))){
-			
-			List<ScQtSchedule> scheduleList = this.getManagedBean()
-					.getScheduleList();
-
-			if (CollectionUtils.isNotEmpty(scheduleList)) {
-				
-				for (ScQtSchedule qtSchedule : scheduleList) {
-						qtSchedule.setScheduleType(newFulfilmentType);
-				}
-			}
-			 return true;
-		}
-		
-      return false;
-	}
-
 	
 	/**
 	 * Retrieve parameter desc by type.
