@@ -18737,7 +18737,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    SmAppl smAppl = getManagedBean().getSmAppl();
 	    String companyCountry = getCompanyCountry(smAppl);
 	    String applType = smAppl.getApplType();
-	    String supplierType = smAppl.getSupplierType();
 
 	    SmSupplier smSupplier = getManagedBean().getSmSupplier();
 	    String businessType = smSupplier.getBusinessType();
@@ -18745,7 +18744,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    boolean isForeignCompany = !SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA.equalsIgnoreCase(companyCountry);
 	    
 	    setCountryOriginUI(applType, businessType, isForeignCompany);
-	    setRegistrationStatusUI(supplierType, applType, isForeignCompany);
+	    setRegistrationStatusUI(businessType, smAppl, isForeignCompany);
 	}
 
 	private String getCompanyCountry(SmAppl smAppl) {
@@ -18753,40 +18752,70 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    return (country != null && !country.isEmpty()) ? country : SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
 	}
 
+	/**
+	 * Configures the Country of Origin UI flags based on application type, 
+	 * business type, and company origin.
+	 *
+	 * @param applType         the application type
+	 * @param businessType     the business type
+	 * @param isForeignCompany true if the company is foreign
+	 */
 	private void setCountryOriginUI(String applType, String businessType, boolean isForeignCompany) {
-	    // Reset country origin displays for BUMI applications
+
+	    // Early return for BUMI applications
 	    if (SupplierManagementConst.APPL_TYPE_BUMI.equalsIgnoreCase(applType)) {
 	        getManagedBean().setDisplayLabelCountryOriginLocal(false);
 	        getManagedBean().setDisplayLabelCountryOriginForeign(false);
 	        return;
 	    }
-	    
-	    // Configure displays for ROC business types
-	    boolean isRocBusinessType = isRocBusinessType(businessType);
-	    if (isRocBusinessType) {
+
+	    boolean rocBusiness = isRocBusinessType(businessType);
+
+	    // ROC business logic
+	    if (rocBusiness) {
 	        getManagedBean().setDisplayLabelCountryOriginForeign(isForeignCompany);
 	        getManagedBean().setDisplayLabelCountryOriginLocal(!isForeignCompany);
+	        return;
 	    }
+
+	    // Non-ROC business logic
+	    getManagedBean().setDisplayLabelCountryOriginForeign(false);
+	    getManagedBean().setDisplayLabelCountryOriginLocal(true);
 	}
+
 
 	private boolean isRocBusinessType(String businessType) {
 	    return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD.equalsIgnoreCase(businessType)
 	            || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(businessType);
 	}
 
-	private void setRegistrationStatusUI(String supplierType, 
-	        String applType, boolean isForeignCompany) {
-	    
-	    if (isForeignCompany) {
-	        foreignRegistrationUI(isForeignCompany);
-	    } else {
-	        if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
-	            localContractorRegistrationUI(applType, isForeignCompany);
-	        } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
-	            localConsultantRegistrationUI(isForeignCompany);
-	        }
-	        // Default case - no action needed
+	/**
+	 * Updates the registration UI based on business type, supplier application data,
+	 * and whether the company is foreign.
+	 *
+	 * @param businessType      the business type (nullable)
+	 * @param application       the supplier application (nullable)
+	 * @param isForeignCompany  indicates whether the company is foreign
+	 */
+	private void setRegistrationStatusUI(String businessType, SmAppl smAppl, boolean isForeignCompany) {
+
+	    if (smAppl == null || smAppl.getSupplierType() == null) {
+	        return;
 	    }
+
+	    String supplierType = smAppl.getSupplierType();
+
+	    if (isForeignCompany && isRocBusinessType(businessType)) {
+	        foreignRegistrationUI(true);
+
+	    } else if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
+	        localContractorRegistrationUI(smAppl.getApplType(), false);
+
+	    } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
+	        localConsultantRegistrationUI(false);
+	    }
+
+	    // No other cases to process
 	}
 
 	/**
@@ -18800,7 +18829,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    getManagedBean().setDisplayLabelRegistrationStatus(false);
 	    getManagedBean().setDisplayDropdownRegStatus(false);
 	}
-
 
 	/**
 	 * Configures the UI elements for local constructor registration based on the application type
