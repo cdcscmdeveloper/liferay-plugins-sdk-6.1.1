@@ -3697,6 +3697,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				CommitteReqDTO reqDTO = new CommitteReqDTO();
 				reqDTO.setQtId(scQt.getQtId());
+				
+				//#32350 - Start
+				reqDTO.setScQt(scQt);
+				//#32350 - End
+				
 				CommitteResDTO resDTO = committeSO
 						.retrieveFinalizationCommitteeType(reqDTO);
 
