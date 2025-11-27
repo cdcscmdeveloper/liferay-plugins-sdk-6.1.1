@@ -164,8 +164,6 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private boolean daBlacklistOwner;
 	//[#26282] disciplinary action - end
 
-
-
 	private SearchFilterBean codeFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean titleFilterBean = new SearchFilterBean(
@@ -1508,7 +1506,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setTempBrandName(String tempBrandName) {
 		this.tempBrandName = tempBrandName;
 	}
-	
+	   
+	// [#26282] disciplinary action - start
 	public boolean isDaWarning() {
 		return daWarning;
 	}
@@ -1539,8 +1538,9 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
-	}	
-	
+	}
+	// [#26282] disciplinary action - End
+
 	/*[#27625] begin*/
 	public String getTypeName() {
 		return typeName;
