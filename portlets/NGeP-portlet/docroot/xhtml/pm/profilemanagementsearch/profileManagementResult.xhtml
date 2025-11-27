@@ -14,30 +14,30 @@
 			value="#{profileManagSearchBackingBean.accessAPPLDataModel}"
 			var="accessAPPL">
 			<ac:paginator for="dtPmResult" />
-			<p:column headerText="#{lbl['lbl.pm.access.app.result.createdDate']}" style="width :25%;white-space : normal">			
+			<p:column headerText="#{lbl['lbl.pm.access.app.result.createdDate']}" style="width :10%;white-space : normal">			
 				<ac:labelDateTime value="#{accessAPPL[1]}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.access.app.request.organization.type']}" style="width :25%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.organization.type']}" style="width :18%;white-space : normal">
 			#{accessAPPL[2]}
 			 #{profileManagSearchBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, accessAPPL[2])}			
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.access.app.request.organization.name']}" style="width :25%;white-space : normal">			
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.organization.name']}" style="width :23%;white-space : normal">			
 				#{accessAPPL[3]}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.access.app.request.username']}" style="width :25%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.username']}" style="width :24%;white-space : normal">
 				#{accessAPPL[4]}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.access.app.request.idno']}" style="width :15%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.idno']}" style="width :10%;white-space : normal">
 				#{accessAPPL[5]}
 			</p:column>
 			<ui:remove>#38016 -Start</ui:remove>
 			<p:column headerText="#{lbl['lbl.pm.access.app.request.rolestatus']}"
-				width="10%"> 
+				width="5%"> 
 		    	  #{profileManagSearchBackingBean.getRoleStatusDescByStatusId(accessAPPL[7])}
 			</p:column>
 			<ui:remove>#38016 -End</ui:remove>
 
-			<p:column headerText="#{lbl['lbl.pm.access.app.request.status']}" width="10%">
+			<p:column headerText="#{lbl['lbl.pm.access.app.request.status']}" width="5%">
 			 <c:when test="#{not empty accessAPPL[5]}" >
 		    	  #{profileManagSearchBackingBean.getStatusDescById(accessAPPL[6])}
 			  </c:when>
