@@ -194,6 +194,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String searchPtjCode;
 	private String searchPtjName;
 	private BigDecimal searchQtValueLimit;
+	private Boolean collapsePanel;
 	//#36738 End
 
 	/************ AUDIT #28895_35509 *************/
@@ -1965,4 +1966,10 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
 	}
 	//#36738 End
+	public Boolean getCollapsePanel() {
+		return collapsePanel;
+	}
+	public void setCollapsePanel(Boolean collapsePanel) {
+		this.collapsePanel = collapsePanel;
+	}
 }
