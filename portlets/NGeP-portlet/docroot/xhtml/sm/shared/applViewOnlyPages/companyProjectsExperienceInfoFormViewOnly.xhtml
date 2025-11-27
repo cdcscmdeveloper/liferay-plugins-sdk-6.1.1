@@ -28,13 +28,14 @@
 		</ui:fragment>
 	</c:if>
 	<c:if
-		test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history')}">
-		<p:panel header="#{lbl['lbl.sm.projDtls.panHdr']}" toggleable="true">
+		test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history')
+            and !viewSmApplBackingBean.getAppVersionDetailsWithRedmineNo()}">
+		<p:panel header="#{lbl['lbl.sm.projDtls.panHdr']}" toggleable="true" >
 			<h:outputText
-				rendered="#{viewSmApplBackingBean.managedBean.supplierUser and !viewSmApplBackingBean.getAppVersionDetailsWithRedmineNo()}"
+				rendered="#{viewSmApplBackingBean.managedBean.supplierUser}"
 				value="#{lbl['lbl.sm.comp.exp.new.version.application.status.supplier']}" />
 			<h:outputText
-				rendered="#{(viewSmApplBackingBean.managedBean.approverUser or viewSmApplBackingBean.managedBean.poUser) and !viewSmApplBackingBean.getAppVersionDetailsWithRedmineNo()}"
+				rendered="#{viewSmApplBackingBean.managedBean.approverUser or viewSmApplBackingBean.managedBean.poUser}"
 				value="#{lbl['lbl.sm.comp.exp.new.version.application.status.ups']}" />
 		</p:panel>
 	</c:if>
