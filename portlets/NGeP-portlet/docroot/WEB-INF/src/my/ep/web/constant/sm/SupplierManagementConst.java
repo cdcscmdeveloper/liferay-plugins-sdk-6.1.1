@@ -772,6 +772,9 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_DISCIPLINARY_ACTION_INFO = "disciplinaryActionInfoTab";
 	// #34031
 	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
+	// #9299
+	public static final String SM_COMP_EXP_FILE_PATH = "/SM/COMPEXP/";
+	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
 	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
@@ -1575,35 +1578,35 @@ public class SupplierManagementConst {
 	// 36504 - END
 
 //	#37925 START
-	public static String getApplTypeBumi() {
+	public String getApplTypeBumi() {
 		return APPL_TYPE_BUMI;
 	}
 
-	public static String getApplTypeCategory() {
+	public String getApplTypeCategory() {
 		return APPL_TYPE_CATEGORY;
 	}
 
-	public static String getApplTypeUpdate() {
+	public String getApplTypeUpdate() {
 		return APPL_TYPE_UPDATE;
 	}
 
-	public static String getApplTypeMof() {
+	public String getApplTypeMof() {
 		return APPL_TYPE_MOF;
 	}
 
-	public static String getApplTypeBasic() {
+	public String getApplTypeBasic() {
 		return APPL_TYPE_BASIC;
 	}
 
-	public static String getApplTypeRenewal() {
+	public String getApplTypeRenewal() {
 		return APPL_TYPE_RENEWAL;
 	}
 
-	public static String getSsmCompanyCountryDefault() {
+	public String getSsmCompanyCountryDefault() {
 		return SSM_COMPANY_COUNTRY_DEFAULT;
 	}
 
-	public static String getSsmCompanyCountryMalaysia() {
+	public String getSsmCompanyCountryMalaysia() {
 		return SSM_COMPANY_COUNTRY_MALAYSIA;
 	}
 //	#37925 END

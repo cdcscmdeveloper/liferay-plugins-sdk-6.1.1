@@ -6193,25 +6193,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 * @throws EpException
 		 *             always thrown with the error code and supplier name.
 		 */
-		private void errorMessage(ScRequestNoteDtl rnDtl, SupplierDataMaintenanceResDTO responseDto, DisciplinaryActionContext context) {
+		private void errorMessage(ScRequestNoteDtl rnDtl, SupplierDataMaintenanceResDTO responseDto,
+				DisciplinaryActionContext context) {
 			String supplierName = rnDtl.getScRequestSupplierItem().getSmSupplier() != null ? rnDtl
 					.getScRequestSupplierItem().getSmSupplier().getCompanyName() : StringUtils.EMPTY;
-
-			switch (context) {
-			case ACTIVE:
+	
+			if (context == DisciplinaryActionContext.ACTIVE) {
 				if (responseDto.isDisciplinaryActionDeletedDue()) {
-			        throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
-			    } else if (responseDto.isDisciplinaryActionPendingTransaction()) {
-			        throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
-			    } else {
-			        throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
-			    }
-
-			case AFTER_ENDED:
+					throw new EpException(MessageConst.ERROR_760701, new String[] { supplierName });
+				} else if (responseDto.isDisciplinaryActionPendingTransaction()) {
+					throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+				} else {
+					throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
+				}
+			} else if (context == DisciplinaryActionContext.AFTER_ENDED) {
 				if (responseDto.isDisciplinaryActionPendingTransaction() || responseDto.isDisciplinaryActionDeletedDue()) {
 					throw new EpException(MessageConst.ERROR_760500, new String[] { supplierName });
 				}
-				break;
 			}
 		}
 		
@@ -6967,7 +6965,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void supplierDisciplinaryActionStatus() {
 
 		try {
-			String status = StringUtils.EMPTY;
 			String reasonType = StringUtils.EMPTY;
 			String reasonLabel = StringUtils.EMPTY;
 			String detailLabel = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail", new String[0]); // base
@@ -6985,7 +6982,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						new String[] { reasonType });
 			}
 
-			status = detailLabel + DPConstants.SPACE + reasonLabel;
+			String status = detailLabel + DPConstants.SPACE + reasonLabel;
 
 			getManagedBean().setPopupMessage(status);
 			RequestContext.getCurrentInstance().execute("disciplinaryActionRequestNoteDlg.show();");
