@@ -654,6 +654,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				PaymentResDTO pymtResDTO = null;
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
+				log.info(">>>>#38377 disable payment<<<");
 //				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 
 				log.info("******ResponsePreRender - After Update******");
