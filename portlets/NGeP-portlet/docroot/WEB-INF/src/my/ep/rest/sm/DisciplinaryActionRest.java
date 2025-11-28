@@ -56,6 +56,12 @@ public class DisciplinaryActionRest {
 			//that occur error data has been update from last read.
 			//27426 : Disciplinary Action - start 
 			
+			// 39302 - START
+			// START : Update flag pending Disciplinary Action for start and end date today.
+			SupplierDataMaintenanceResDTO resDTOPending = SmServiceLookup.getSupplierDataMaintenanceSO().retrievePendingTodayStartEndDisciplinaryAction();
+			updatePendingFlag(resDTOPending.getSmDisciplinaryActions());
+			// 39302 - END
+
 			//NO 1 : find data with end date less than current date to release DA
 			SupplierDataMaintenanceResDTO resDTO =  SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction(false);
 			releaseDA(resDTO.getSmDisciplinaryActions());
@@ -87,6 +93,20 @@ public class DisciplinaryActionRest {
 			return Response.status(200).entity("success calling process disciplinary action !!").build();
 		}
 	}
+	
+	// 39302 - START
+	private void updatePendingFlag(List<SmDisciplinaryAction> daList) {
+		if (EntityHelper.isCollectionEmpty(daList)){
+			return;
+		}
+		
+		for (SmDisciplinaryAction disc : daList) {
+			if(disc != null){
+				 SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingTodayStartEndDisciplinaryAction(disc);
+			}										
+		}
+	}
+	// 39302 - END
 	
 	private void releaseDA(List<SmDisciplinaryAction> daList){
 		if (EntityHelper.isCollectionEmpty(daList)){

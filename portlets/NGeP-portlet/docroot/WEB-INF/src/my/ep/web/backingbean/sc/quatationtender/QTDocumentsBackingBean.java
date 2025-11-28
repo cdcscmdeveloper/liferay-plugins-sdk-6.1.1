@@ -2163,6 +2163,7 @@ public class QTDocumentsBackingBean extends
 				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 				TplSpecMaster master = null;
 				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+				PmParameter itemTypeCode = master.getItemTypeCode();	 //Bug #39065@Syazani 08/10/2025
 				
 				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
 					TplSpecQuestion parentQuestion = question
@@ -2231,7 +2232,7 @@ public class QTDocumentsBackingBean extends
 						question.setClReviewRemark("");
 					}
 					
-					trimSpecZoneDtlZoneName(question); // Bug #39065@Syazani 08/10/2025
+					trimSpecZoneDtlZoneName(question, itemTypeCode); // Bug #39065@Syazani 08/10/2025
 					
 					if (parentQuestion != null) {
 						int specCount = parentQuestion.getSpecCount();
@@ -3322,11 +3323,14 @@ public class QTDocumentsBackingBean extends
 	// Bug #38731@Syazani 20/08/2025 -- End
 	
 	// Bug #39065@Syazani 08/10/2025 -- Start
-	private void trimSpecZoneDtlZoneName(TplSpecQuestion question) {
+	private void trimSpecZoneDtlZoneName(TplSpecQuestion question, PmParameter itemTypeCode) {
+		String itemTypeCodeStr = null != itemTypeCode ? itemTypeCode.getParameterCode() : "";
+		int maxLength = itemTypeCodeStr.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) ? QTConstants.QT_VM_SPLIT_ZONENAME_SERVICE_MAXLENGTH
+				: QTConstants.QT_VM_SPLIT_ZONENAME_PRODUCT_MAXLENGTH;
 		if (!CollectionUtils.isEmpty(question.getTplSpecZoneQties())) {
 			for (TplSpecZoneQty tplSpecZoneQty : question.getTplSpecZoneQties()) {
 				TplSpecZoneDtl tplSpecZoneDtl = tplSpecZoneQty.getTplSpecZoneDtl();
-				String zoneName = VmUtil.getInstance().splitText(tplSpecZoneDtl.getZoneName(), 17);
+				String zoneName = VmUtil.getInstance().splitText(tplSpecZoneDtl.getZoneName(), maxLength);
 				zoneName = zoneName.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
 				zoneName = zoneName.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
 				zoneName = zoneName.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);

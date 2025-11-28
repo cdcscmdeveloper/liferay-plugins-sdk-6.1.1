@@ -23,7 +23,7 @@
 								<p:commandButton id="btnReasonSave" value="#{lbl['lbl.btn.save']}" oncomplete="if (!args.validationFailed) saveInfoDlg.show()"/>
 							</c:when>
 							<c:otherwise>
-								<p:commandButton id="btnReasonUpdate" value="#{lbl['lbl.btn.update']}" oncomplete="updateInfoDlg.show()"/>
+								<p:commandButton id="btnReasonUpdate" value="#{lbl['lbl.btn.update']}" oncomplete="if (!args || !args.validationFailed) updateInfoDlg.show()"/> <!--#28962-->
 							</c:otherwise>
 						</c:choose>
 						<!-- 34445 end -->

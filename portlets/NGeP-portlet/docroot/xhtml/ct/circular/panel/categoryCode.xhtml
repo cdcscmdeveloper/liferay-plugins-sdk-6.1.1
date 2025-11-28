@@ -7,35 +7,41 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<style>
-		.center-header th,
-		.center-header .ui-dt-c {
-			text-align: center !important;
-		}
-		       .center-checkbox-column {
-            text-align: center !important;
-            vertical-align: middle !important;
-            width: 3% !important;
-        }
+	.center-header th,.center-header .ui-dt-c {
+		text-align: center !important;
+	}
 
-        .center-checkbox-column .ui-chkbox {
-            display: inline-block;
-            margin: 0 auto;
-            width: 16px;
-            height: 16px;
-            vertical-align: middle;
-        }
+	.center-checkbox-column {
+		text-align: center !important;
+		vertical-align: middle !important;
+		width: 3% !important;
+		padding: 4px !important; /* opsional: pastikan ada ruang */
+	}
 
-        /* Optional: agar header juga center */
-        .center-checkbox-column .ui-column-header-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+	.center-checkbox-column .ui-chkbox {
+		display: inline-block !important;
+		margin: 0 auto !important;
+		width: 16px !important;
+		height: 16px !important;
+		vertical-align: middle !important;
+	}
+
+	.center-checkbox-column .ui-chkbox-box {
+		margin: 0 auto !important;
+		width: 16px !important;
+		height: 16px !important;
+	}
+
+	.center-checkbox-column .ui-column-header-content {
+		display: flex !important;
+		justify-content: center !important;
+		align-items: center !important;
+	}
 	</style>
 
 	<p:panel id="categoriCodeId"
-		header="#{lbl['lbl.ct.menu.category.code']}" toggleable="true"
-		toggleSpeed="500"
+		header="#{lbl['lbl.ct.menu.category.code']}"
+		toggleable="true" toggleSpeed="500"
 		style="width: 100% !important; max-width: none !important;">
 
 		<h:outputText styleClass="instruction"
@@ -43,18 +49,22 @@
 		<br />
 
 		<div style="width: 100%; overflow-x: auto;">
-			<p:dataTable id="panelCategoryCodeDt" var="cateGory"
+			<p:dataTable id="panelCategoryCodeDt"
+				var="cateGory"
 				value="#{panelBackingBean.managedBean.circularVer.ctPanelCategoryList}"
 				rowKey="#{cateGory}"
 				selection="#{panelBackingBean.managedBean.selectedCategoryList}"
-				rowIndexVar="index" widgetVar="openCodes" paginator="true" rows="10"
+				rowIndexVar="index"
+				widgetVar="openCodes"
+				paginator="true"
+				rows="10"
 				style="width:100% !important; table-layout: auto;"
 				tableStyleClass="center-header">
 
 				<ac:paginator for="panelCategoryCodeDt" />
 
 				<p:column selectionMode="multiple" style="width:3%" rendered="#{!panelBackingBean.managedBean.viewContract}"
-				styleClass="center-checkbox-column" headerStyle="text-align: center;"/>
+				styleClass="center-checkbox-column" headerStyleClass="center-checkbox-column" />
 				<!-- Ajax untuk update button delete -->
 			 	<p:ajax event="toggleSelect"
 					listener="#{panelBackingBean.onCategorySelectionChange}"
@@ -73,58 +83,64 @@
 					</f:facet>
 					#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
 				</p:column>
-
+				
 				<!-- Category -->
 				<p:column headerText="#{lbl['lbl.ct.tbl.category']}" style="min-width: 200px; white-space: normal;">
 					<h:outputText value="#{cateGory.pmCategoryL1Name}" />
 				</p:column>
-
+				
 				<!-- Sub Category -->
 				<p:column headerText="#{lbl['lbl.ct.tbl.sub.category']}" style="min-width: 200px; white-space: normal;">
 					<h:outputText value="#{cateGory.pmCategoryL2Name}" />
 				</p:column>
-
+				
 				<!-- Sub Category Division -->
 				<p:column headerText="#{lbl['lbl.ct.tbl.sub.category.div']}" style="min-width: 200px; white-space: normal;">
 					<h:outputText value="#{cateGory.pmCategoryL3Name}" />
 				</p:column>
-
+				
 				<!-- Category Type -->
 				<p:column headerText="#{lbl['lbl.ct.tbl.category.type']}" style="min-width: 120px; white-space: normal;">
 					<h:outputText value="#{panelBackingBean.getParameterDesc(cateGory.categoryType)}" />
 				</p:column>
+
 			</p:dataTable>
 		</div>
 
 		<h:panelGroup id="addButtonId">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
-					process="@this, panelCategoryCodeDt" partialSubmit="true"
-					update="@([id$=catCodePopup])" oncomplete="catCodePopup.show();"
+					process="@this, panelCategoryCodeDt"
+					partialSubmit="true"
+					update="@([id$=catCodeCtPopup])"
+					oncomplete="catCodePopup.show();"
 					rendered="#{!panelBackingBean.managedBean.viewContract}"
 					action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
 
-				<p:commandButton id="deleteButtonId" value="#{lbl['lbl.ct.delete']}"
-					process="@this, panelCategoryCodeDt" partialSubmit="true"
+				<p:commandButton id="deleteButtonId"
+					value="#{lbl['lbl.ct.delete']}"
+					process="@this, panelCategoryCodeDt"
+					partialSubmit="true"
 					rendered="#{!panelBackingBean.managedBean.viewContract}"
 					disabled="#{empty panelBackingBean.managedBean.selectedCategoryList}"
-					update="@([id$=#{categoryCodeDeleteId}])"
+					update=":form:categoryCodeDeleteId, :form:deleteButtonId"
 					oncomplete="categoryCodeDeletePopUp.show()" />
 			</div>
 		</h:panelGroup>
-		
-		<ui:param name="categoryCodeDeleteId"
-		value="categoryCodeDeleteId" />
+
+		<ui:param name="categoryCodeDeleteId" value="categoryCodeDeleteId" />
 		<ac:confirmationPopup id="#{categoryCodeDeleteId}"
 			widget="categoryCodeDeletePopUp"
-			okAction="panelBackingBean.deleteCategoryCode" width="400"
-			height="200" title="#{lbl['lbl.ct.tbl.category']}"
+			okAction="panelBackingBean.deleteCategoryCode"
+			width="400" height="200"
+			title="#{lbl['lbl.ct.tbl.category']}"
 			content="#{lbl['lbl.ct.dialog.confirm.category.code']}"
-			update="@([id$=panelCategoryCodeDt])" />
+			update=":form:panelCategoryCodeDt,:form:deleteButtonId"/>
 
-		<ac:categoryCodePopup id="catCodePopup"
+		<ac:categoryCodeCtPopup id="catCodeCtPopup"
 			okAction="panelBackingBean.addNewCategoryCode"
 			update="@([id$=panelCategoryCodeDt])" />
+
 
 	</p:panel>
 </ui:composition>

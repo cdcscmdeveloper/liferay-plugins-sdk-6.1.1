@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.sc.supplierfinalization;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -57,6 +58,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	
 	//28895-35500 Start
 	private List<ScCommitteeMember> removeCommitteeAuditTrailList;
+	private HashMap<PmUser, List<String>> mapModifiedRole;
 	private List<ScCommitteeMember> newCommitteeAuditTrailList;
 	//28895 - 35500 END
 	
@@ -710,5 +712,13 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		this.newCommitteeAuditTrailList = newCommitteeAuditTrailList;
 	}
 	//#28895 - 35500 end
+
+	public HashMap<PmUser, List<String>> getMapModifiedRole() {
+		return mapModifiedRole;
+	}
+
+	public void setMapModifiedRole(HashMap<PmUser, List<String>> mapModifiedRole) {
+		this.mapModifiedRole = mapModifiedRole;
+	}
 
 }

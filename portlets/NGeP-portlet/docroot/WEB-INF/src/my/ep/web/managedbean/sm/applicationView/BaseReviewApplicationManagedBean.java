@@ -11,11 +11,15 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.sm.compexp.ISmCompExpSO;
+import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
+import my.ep.dto.sm.compexp.SmCompExpReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
@@ -41,6 +45,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -64,6 +69,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -83,6 +89,7 @@ import my.ep.web.vo.SmSectionEditorVO;
 import org.apache.commons.lang3.StringUtils;
 //#34031
 import my.ep.persistence.entity.sm.SmRevisit;
+import my.ep.persistence.logging.LogKey;
 
 public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
@@ -403,7 +410,10 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	// #38856 Start
 	private Long currRegStatusId;
 	// #38856 End
-	
+	// #9299 Start
+	private transient IPagingDataModel<SmCompExpMaster> masterAllDataModel = new MasterAllPagingDataModel();
+	private LogKey logKey = new LogKey();
+	// #9299 End
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
@@ -2689,4 +2699,39 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.otherDescEdited = otherDescEdited;
 	}
 	// 36504 - END
+	// 9299 - Start
+	private class MasterAllPagingDataModel extends PagingDataModel<SmCompExpMaster> {
+
+		private static final long serialVersionUID = 1L;
+
+		public MasterAllPagingDataModel() {
+			super("MasterAllDataTable", true);
+		}
+
+		@Override
+		public ISearchResultBean<SmCompExpMaster> pageChangeListener(ISearchBean<SmCompExpMaster> searchBean) {
+
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setSupplierId(getSmSupplier().getSupplierId());
+
+			try {
+				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+				return smCompExpSo.retriveSmCompExpMasterAllList(reqDTO, searchBean).getMasterResultBean();
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", getSmSupplier().getSupplierId().toString(),
+						"ISmCompExpSO", logKey.getUserId(), e);
+				throw new EpException(MessageConst.ERROR_000001);
+			}
+		}
+
+	}
+
+	public IPagingDataModel<SmCompExpMaster> getMasterAllDataModel() {
+		return masterAllDataModel;
+	}
+
+	public void setMasterAllDataModel(IPagingDataModel<SmCompExpMaster> masterAllDataModel) {
+		this.masterAllDataModel = masterAllDataModel;
+	}
+	// 9299 - END
 }

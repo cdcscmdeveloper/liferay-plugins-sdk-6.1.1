@@ -78,7 +78,9 @@
 					style="width: 110px;margin-bottom: 5px;"
 					disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED or (approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or assertDisabledRole}">
 					<p:ajax event="change" partialSubmit="true" process="@this"
-						listener="#{approvalBackingBean.roleChangedListener(committeeapprover)}" />
+						listener="#{approvalBackingBean.onChangeRole(committeeapprover)}" /><!-- #35500 issue fix 4-9 -->
+					<!-- <p:ajax event="change" partialSubmit="true" process="@this"
+						listener="#{approvalBackingBean.roleChangedListener(committeeapprover)}" />		 -->			
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems var="role" itemDisabled="#{!role.selectable}"

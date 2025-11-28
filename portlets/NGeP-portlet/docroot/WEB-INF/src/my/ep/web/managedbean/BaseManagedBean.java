@@ -1238,14 +1238,6 @@ public abstract class BaseManagedBean implements Serializable {
 	// #28895_35501 End
 
 //	37925 START
-	public Boolean getIsDowngradeRole() {
-		return isDowngradeRole;
-	}
-
-	public void setIsDowngradeRole(Boolean isDowngradeRole) {
-		this.isDowngradeRole = isDowngradeRole;
-	}
-
 	public boolean isDisplayLabelCountryOriginLocal() {
 		return displayLabelCountryOriginLocal;
 	}

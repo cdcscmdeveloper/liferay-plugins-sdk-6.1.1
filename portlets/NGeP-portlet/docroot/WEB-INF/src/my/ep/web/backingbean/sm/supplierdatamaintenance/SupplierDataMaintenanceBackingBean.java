@@ -400,6 +400,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		initSmRvHistory();
 		// #34031 End
+		getManagedBean().setViewMode(true); //#39231
 	}
 	
 	private void setFlagShowButtonSubmit(SmSupplier supplier, String mofStatus){
@@ -1909,8 +1910,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	private boolean isDeletedStatus(SmSupplier supplier, String mofStatus) {
 		boolean hasPending = supplier.isPendingBlacklist() || supplier.isPendingCancel() || supplier.isPendingSuspend();
 
+		// 38609 - START
 		return !hasPending && StringUtils.isNotEmpty(mofStatus)
-				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED);
+				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED); //#39424
+		// 38609 - END
 	}
 	//#39079 - START
 	private boolean isCancelRegStatus(String mofStatus, SmSupplier supplier) {
