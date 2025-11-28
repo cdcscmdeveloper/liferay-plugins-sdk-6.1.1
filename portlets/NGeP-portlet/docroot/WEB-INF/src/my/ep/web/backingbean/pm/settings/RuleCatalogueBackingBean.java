@@ -5939,6 +5939,7 @@ public class RuleCatalogueBackingBean extends
         }
         //#36738 Start
         this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+        resetRuleValue();
         //#36738 End
 	}
 	
@@ -6551,6 +6552,7 @@ public class RuleCatalogueBackingBean extends
 		resetRuleType();
 		resetRuleValue();
 		resetQtValues();
+		this.getManagedBean().setCollapsePanel(true);
 	}
 	// #36738 End
 }
