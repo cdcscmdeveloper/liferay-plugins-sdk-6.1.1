@@ -255,6 +255,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			//32678-End
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			//start 21229
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			
 			//START 28246 NEW implementation: IF SentIddCre = 1 , ACTION CODE CRE already sent and next action must ADJ
 			if(getManagedBean().getPaymentAdvice().getFlInvoice() !=null){				
