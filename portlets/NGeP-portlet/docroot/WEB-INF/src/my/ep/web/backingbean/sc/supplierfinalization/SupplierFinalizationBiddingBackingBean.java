@@ -1311,8 +1311,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 							.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 					activity.setSignedOff(!isSecretary ? activity.isSignedOff() : signOffStatus.contains(this
 							.getManagedBean().getCurrentStatusId()));
-					activity.setAttended(!isSecretary ? activity.isAttended() : activity.isAttended() ?
-							activity.isAttended() : statuses.contains(this.getManagedBean().getCurrentStatusId()));
+					activity.setAttended(!isSecretary || activity.isAttended() ? activity.isAttended() : statuses.contains(this
+							.getManagedBean().getCurrentStatusId()));
 					//#21692 - End
 					setUserDetails(activity);
 					missingActivities.add(activity);
