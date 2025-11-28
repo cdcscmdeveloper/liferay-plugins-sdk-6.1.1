@@ -361,13 +361,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode;
 	// #29468 
 	
-	// #25726 START #Sqube Vulnerability Minor G47 start
-	private BigDecimal limit = new BigDecimal(500000);
-	private boolean AgreementReqChange = false;
-	private boolean above500K = true;
-	private boolean fullfilmentTypeChange = false; 
-	private boolean requiredAgreementChange = false; 
-	// #25726 END #Sqube Vulnerability Minor G47 end
 	
 	// Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
@@ -2032,49 +2025,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.searchItemForDL = searchItemForDL;
 	}
 	/*#29007 End Vinod*/
-	
-	// #25726 START
-	public BigDecimal getLimit() {
-		return limit;
-	}
-
-	public void setLimit(BigDecimal limit) {
-		this.limit = limit;
-	}	
-
-	public boolean isAgreementReqChange() {
-		return AgreementReqChange;
-	}
-
-	public void setAgreementReqChange(boolean agreementReqChange) {
-		AgreementReqChange = agreementReqChange;
-	}
-
-	public boolean isAbove500K() {
-		return above500K;
-	}
-
-	public void setAbove500K(boolean above500k) {
-		above500K = above500k;
-	}
-	
-	public boolean isFullfilmentTypeChange() {
-		return fullfilmentTypeChange;
-	}
-
-	public void setFullfilmentTypeChange(boolean fullfilmentTypeChange) {
-		this.fullfilmentTypeChange = fullfilmentTypeChange;
-	}
-
-	public boolean isRequiredAgreementChange() {
-		return requiredAgreementChange;
-	}
-
-	public void setRequiredAgreementChange(boolean requiredAgreementChange) {
-		this.requiredAgreementChange = requiredAgreementChange;
-	}
-	
-	// #25726 END
 	
 	//#29468
 	public QtnTenderSearchBean getQtnTendertemplateSearchBean() {

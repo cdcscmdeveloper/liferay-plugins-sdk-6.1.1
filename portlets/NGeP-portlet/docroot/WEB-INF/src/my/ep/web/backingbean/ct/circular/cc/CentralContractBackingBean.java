@@ -689,7 +689,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * @return true if pending update status, false otherwise
 	 */
 	private boolean isPendingUpdateStatus(Long statusId) {
-	    return ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL.equals(statusId)
+	    return ContractStatusConst.CQ_PENDING_UPDATE_SUBMISSION.equals(statusId)
+	    	|| ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL.equals(statusId)
 	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION_APPROVAL.equals(statusId)
 	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION.equals(statusId);
 	}

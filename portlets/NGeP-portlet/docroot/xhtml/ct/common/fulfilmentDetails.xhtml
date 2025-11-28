@@ -5,46 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
-	<!-- #25002 start  -->
-	<style type="text/css">
-		.ui-datagrid-content-empty {
-    		 padding-top: 1px;
-    		 padding-right: 0px;
-    		 padding-left: 3px;
-   			 padding-bottom: 5px;
-   			 max-width : 140px;
-		}	
-	
-		.ui-datagrid-column{
-			padding-top: 1px;
-		    padding-right: 0px;
-		    padding-left: 3px;
-		    padding-bottom: 5px;
-		}	
-		
-		a.blue_font_wrap {
-			font-family: Tahoma, Arial;
-			font-size: 11px;
-			font-weight: bold;
-			color: #3c8bc2;
-			text-decoration: none;
-			overflow-wrap: anywhere;
-		}
-		
-		label.approval {
-		    display: inline-block;
-		    text-align: left;
-		    font-size: 12px;
-		    font-weight: normal;
-		    vertical-align: middle;
-		    float: right;
-		    font-family: Arial;
-		    width:111px;
-		}
-	</style>
-	<!-- #25002 end -->
-
 	<p:panel id="fd" toggleable="true" collapsed="false" toggleSpeed="500">
 	<f:facet name="header">
 		<h:outputText value="#{lbl['lbl.ct.panel.contract']}"/>
@@ -266,26 +226,6 @@
 				 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement']}" />
 			 </h:panelGrid>
 	       </h:panelGrid>	
-	       <!-- #25002 start -->
-		    <h:panelGrid columns="3">
-		    <h:panelGrid>
-		    </h:panelGrid>
-		     <h:outputLabel value="#{lbl['lbl.ct.approval.letter.of.pegawai']}" styleClass="approval" escape ='false'/>
-		     <h:panelGrid columns="2">	
-		      <!-- ctBackingBean.managedBean.contractVer.ctContractAmount.ctPerformanceBonds -->
-		      <p:dataGrid id="ApprovalLetterPegawaiPengawal" value="#{ctBackingBean.getApprovalLetter()}"
-					var="attachFile" rowIndexVar="attachFileIndex" columns="1" styleClass="ui-datagrid-content-empty"
-					emptyMessage ="#{lbl['lbl.txt.na']}">
-					
-						<h:commandLink value="#{attachFile.fileName}"
-									styleClass="blue_font_wrap"  action="#{ctBackingBean.downloadScAttachmentFile(attachFile)}" />
-				
-				</p:dataGrid>
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approval.letter.of.pegawai']}" style="padding-top:2px;" />
-				</h:panelGrid> 	
-		    
-	       </h:panelGrid>	
-		    <!-- #25002 end -->		
 	       <h:panelGrid columns="3" 
 	           rendered="#{false and !ctBackingBean.managedBean.directPurchase}">
 			  <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContract.mto}"

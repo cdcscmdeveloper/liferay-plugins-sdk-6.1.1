@@ -3,6 +3,8 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -213,6 +215,9 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		int pmfeeMainInt = pmfeeMain.getExpDate() == null ? 0 : 1;
 		int updateValInt = updateVal.getExpDate() == null ? 0 : 1;
 		boolean expDatebool = false;
+		if (updateVal.getEffDate() != null) {
+			getEffDate(pmfeeMain, updateVal);
+		}
 		if ((pmfeeMainInt == 1 && updateValInt == 1) && !pmfeeMain.getExpDate().equals(updateVal.getExpDate())) {
 			expDatebool = true;
 		}
@@ -222,8 +227,15 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		if (Boolean.valueOf(expDatebool)) {
 			getExpDate(pmfeeMain, updateVal, pmfeeMainInt);
 		}
-		if (updateVal.getEffDate() != null) {
-			getEffDate(pmfeeMain, updateVal);
+
+	}
+
+	private void getEffDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
+		if (updateVal.getEffDate() != null && 
+				!isSameDayLegacy(pmfeeMain.getEffDate(), updateVal.getEffDate())) {
+			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAM_SPFEE_EFFDATE_FIELDLABELID,
+					simpleDateFormat.format(pmfeeMain.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()),
+					AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 	}
 
@@ -234,11 +246,19 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 				AuditConst.PM_AUD_ACTION_TYPE_UPD);
 	}
 
-	private void getEffDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
-		if (updateVal.getEffDate() != null && !pmfeeMain.getEffDate().equals(updateVal.getEffDate())) {
-			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAM_SPFEE_EFFDATE_FIELDLABELID, 
-					simpleDateFormat.format(pmfeeMain.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
-		}
+	private Date truncateToDay(Date d) {
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(d);
+	    cal.set(Calendar.HOUR_OF_DAY, 0);
+	    cal.set(Calendar.MINUTE, 0);
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+	    return cal.getTime();
+	}
+
+	private boolean isSameDayLegacy(Date d1, Date d2) {
+	    if (d1 == null || d2 == null) return d1 == d2;
+	    return truncateToDay(d1).equals(truncateToDay(d2));
 	}
 
 	// *******QT CHECKLIST TAB FOR UPDATED VALUE PEOCESS END *******//

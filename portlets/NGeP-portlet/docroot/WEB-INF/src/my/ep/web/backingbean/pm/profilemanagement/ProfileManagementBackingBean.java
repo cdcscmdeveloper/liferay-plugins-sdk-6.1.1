@@ -3354,6 +3354,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 
 			}
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

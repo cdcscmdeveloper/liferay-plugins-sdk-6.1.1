@@ -308,6 +308,8 @@ public class LovAuditBackingBean implements Serializable {
 		createSearchOptions(lovBean);
 
 		columnsToDisplay.clear();
+
+		List<LovColumnBean> reorderedColumns = new ArrayList<>();
 		for (LovColumnBean column : lovBean.getColumns()) {
 			if (column.isViewable() && !AuditConst.DESIGNATION.equalsIgnoreCase(column.getColumnName())) {
 
@@ -330,9 +332,17 @@ public class LovAuditBackingBean implements Serializable {
 
 				column.setColumnNameve(valueExpression);
 
-				columnsToDisplay.add(column);
+				// Add identificationNo first
+				if ("identificationNo".equalsIgnoreCase(column.getColumnName())) {
+					reorderedColumns.add(0, column);
+				} else if ("UserName".equalsIgnoreCase(column.getColumnName())) {
+					reorderedColumns.add(column);
+				}
 			}
 		}
+
+		columnsToDisplay.clear();
+		columnsToDisplay.addAll(reorderedColumns);
 
 		resetAction();
 	}
