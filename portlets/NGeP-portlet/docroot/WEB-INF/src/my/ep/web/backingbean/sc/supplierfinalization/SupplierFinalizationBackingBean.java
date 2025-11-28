@@ -11514,7 +11514,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		
 		String outcome = this.getManagedBean().getOutcome();
 	    boolean isEndorseOrSignOff = false;
-		if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
+		if (outcome != null && (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF))) {
 			isEndorseOrSignOff = true;
 		}
 
