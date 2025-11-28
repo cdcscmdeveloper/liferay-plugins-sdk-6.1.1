@@ -647,18 +647,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			
-			// new #25725
-			// Add parameter code for convert to Italic
-			List<String> listParamCode = new ArrayList<String>();
-			listParamCode.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-			
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				// new #25725 - Start
-				// check code name for convert to italic
-				String label = convertItalicCodeNameForMy(parameterDesc, listParamCode);
-
-				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), label);
-				// new #25725 - End
+				
+				SelectItem item = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+				 
+				items[i++] = item;
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -668,58 +661,74 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 
-	// new #25725 - Start
+	// new #25725/25726 - Start
+	
+	
 	/**
-	 * Convert to italic if language code = "ms" and parameter code in the list
-	 * @param parameterDesc
-	 * @param listParamCode
+	 * Check for italic if language code = "ms" and parameter code in the list
+	 * @param parameterId
 	 * @return
 	 */
-	public String convertItalicCodeNameForMy(PmParameterDesc parameterDesc, List<String> listParamCode) {
-		String label = parameterDesc.getCodeName();
+	public boolean checkItalicCodeNameForMy(Long parameterId) {
+
+		PmParameter newPmParameter = new PmParameter();
+
+		if (parameterId != null) {
+			newPmParameter = ParameterHelper.getInstance().getPmParameterById(parameterId);
+		}
+
+		if (newPmParameter == null) {
+			return false;
+		}
+
+		String paramType = newPmParameter.getParameterType();
+		String paramCode = newPmParameter.getParameterCode();
+
+		Map<String, List<String>> listParameter = new HashMap<>();
+
+		// Store multiple FULFILMENT_TYPE values in a list
+		List<String> fulfilmentTypes = new ArrayList<>();
+		fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+
+		listParameter.put(ParameterTypeConst.FULFILMENT_TYPE, fulfilmentTypes);
 
 		FacesScopes face = new FacesScopes();
 		String language = face.getUserLocale().getLanguage();
-		String ParamCode = parameterDesc.getPmParameter().getParameterCode();
 
-		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParamCode.contains(ParamCode)) {
-			label = toUnicodeItalic(label);
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParameter.containsKey(paramType)) {
+			List<String> validTypes = listParameter.get(paramType);
+
+			if (validTypes.contains(paramCode)) {
+				return true;
+			}
 		}
 
-		return label;
+		return false;
 	}
 	
 	
 	/**
-	 * @param input
+	 * Get list code names is italic
+	 * @param type
 	 * @return
 	 */
-	private String toUnicodeItalic(String input) {
-	    StringBuilder sb = new StringBuilder();
+	public List<String> getItalicCodeNames(String type) {
+		List<String> codeNames = new ArrayList<>();
 
-	    for (char c : input.toCharArray()) {
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(type,
+				null);
+		for (PmParameterDesc p : parameterDescs) {
+			Long id = p.getPmParameter().getParameterId();
 
-	        if (c >= UPPER_A && c <= UPPER_Z) {
-	            int codePoint = UNICODE_ITALIC_UPPER_START + (c - UPPER_A);
-	            sb.append(Character.toChars(codePoint));
-
-	        } else if (c >= LOWER_A && c <= LOWER_Z) {
-	            int codePoint = UNICODE_ITALIC_LOWER_START + (c - LOWER_A);
-	            sb.append(Character.toChars(codePoint));
-
-	        } else if (c >= DIGIT_0 && c <= '9') {
-	            int codePoint = UNICODE_ITALIC_DIGIT_START + (c - DIGIT_0);
-	            sb.append(Character.toChars(codePoint));
-
-	        } else {
-	            sb.append(c);
-	        }
-	    }
-
-	    return sb.toString();
+			if (checkItalicCodeNameForMy(id)) {
+				codeNames.add(p.getCodeName());
+			}
+		}
+		return codeNames;
 	}
+	
 
-	// new #25725 - End
+	// new #25725/25726 - End
 	
 	/** #21695 FARID START*/	
 	/**
