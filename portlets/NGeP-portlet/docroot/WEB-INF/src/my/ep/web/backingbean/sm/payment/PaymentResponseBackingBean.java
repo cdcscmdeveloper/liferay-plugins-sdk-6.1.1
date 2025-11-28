@@ -213,6 +213,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("appl>>>>>>>>>>>" + appl);
 		
 		if(paymentTaskId != null && paymentBpmPojo != null &&  appl != null){
+			log.info("######38377 inside paymentTaskId not null#####");
 			responsePreRender(paymentTaskId, paymentBpmPojo, appl);
 			responseRedirect();
 		}else{
@@ -279,6 +280,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	 */
 	public void responsePreRender(String paymentTaskId, Object paymentBpmPojo, SmAppl appl) throws NoSuchMethodException,SecurityException, IllegalAccessException,
 	IllegalArgumentException, InvocationTargetException {
+		log.info("######38377 inside responsePreRender#####");
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
@@ -1048,8 +1050,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		System.out.println("key1>>>>>" + key1);
 	}*/
 	private Map<String, String> getHttpReqMap(HttpServletRequest httpReq) {
+		log.info("######38377  inside getHttpReqMap#####");
 		String paymentGateway = "N";
 		String payload = httpReq.getParameter("payload");
+		log.info("######38377#####payload: " + payload);
 		String orderId = httpReq.getParameter("orderid");
 		String tranID = httpReq.getParameter("tranID");
 		String status = httpReq.getParameter("status");
