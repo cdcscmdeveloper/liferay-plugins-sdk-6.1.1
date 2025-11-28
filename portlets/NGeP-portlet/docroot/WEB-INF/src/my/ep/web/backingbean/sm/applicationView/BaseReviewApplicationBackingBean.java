@@ -5400,8 +5400,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.deleted.categories", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()));
 		int deletedIndex = 1;
-		// #34031#note-111 : Issue 20
-		sortRvCatCode(revisit.getDeletedRvCatCodes());
 		for (SmRvCatCode deletedRvCatCode : revisit.getDeletedRvCatCodes()) {
 			extRemark.append("<br />").append("&emsp;").append(index).append(".").append(deletedIndex).append(" ")
 					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code())
