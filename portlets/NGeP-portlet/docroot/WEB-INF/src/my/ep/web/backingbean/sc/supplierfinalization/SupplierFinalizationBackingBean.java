@@ -1017,8 +1017,8 @@ public class SupplierFinalizationBackingBean extends
 									.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 							commActivity.setSignedOff(!isSecretary ? commActivity.isSignedOff() : signOffStatus.contains(
 									this.getManagedBean().getCurrentStatusId()));
-							commActivity.setAttended(!isSecretary || commActivity.isAttended()? commActivity.isAttended() : statuses.contains(
-									this.getManagedBean().getCurrentStatusId()));
+							commActivity.setAttended(!isSecretary ? commActivity.isAttended() : commActivity.isAttended() ?
+									commActivity.isAttended() : statuses.contains(this.getManagedBean().getCurrentStatusId()));
 							//#21692 - End
 							committeeEndorsementList.add(commActivity);
 						}
