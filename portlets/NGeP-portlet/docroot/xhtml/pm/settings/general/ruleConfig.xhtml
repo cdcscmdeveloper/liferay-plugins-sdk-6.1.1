@@ -95,10 +95,10 @@
 
 		<!-- 36738 Start -->
 		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
-         style="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'C') or 
-                 (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC') ? '' : 'display:none'}"
-         id="ruleTypeValueSearch"
-         collapsed="#{ruleCatalogueBackingBean.managedBean.collapsePanel}">
+         	style="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'C') or
+                 	(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC') ? '' : 'display:none'}"
+         	id="ruleTypeValueSearch"
+         	collapsed="#{ruleCatalogueBackingBean.managedBean.collapsePanel}">
 
 			<h:panelGrid columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.value']}" />
