@@ -36,7 +36,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{ruleCatalogueBackingBean.searchRuleType}"
-					update=":form:settingTabId:ruleConfigId" />
+					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch"/>
 				&#160;
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{ruleCatalogueBackingBean.resetRuleType}" process="@this"
@@ -95,8 +95,10 @@
 					
 		<!-- 36738 Start -->
 		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
-			rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'C') or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC')}"
-			id="ruleTypeValueSearch" collapsed="#{ruleCatalogueBackingBean.managedBean.collapsePanel}">
+         	style="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'C') or
+                 	(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC') ? '' : 'display:none'}"
+         	id="ruleTypeValueSearch"
+         	collapsed="#{ruleCatalogueBackingBean.managedBean.collapsePanel}">
 
 			<h:panelGrid columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.value']}" />
