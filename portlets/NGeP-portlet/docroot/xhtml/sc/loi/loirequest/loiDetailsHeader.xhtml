@@ -11,35 +11,39 @@
 				<tr>
 					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.loiloa.loi.no']}" />
-						<!-- 28780 start -->
-						<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" />
-						<!-- 28780 end -->
+						<ui:remove>25791 remove coding</ui:remove>
 					</td>
 					<td class="header-info-text" width="15%">
 						#{lOIDetailBackingBean.managedBean.scLoi.brandNew ?
 						lbl['lbl.sc.system.generated'] :
 						lOIDetailBackingBean.managedBean.scLoi.loiNo} 
-						<!-- 28780 start -->
-						<p:commandLink process="@this" partialSubmit="true"
-							action="#{qTDetailBB.editQuationTenderDetails(lOIDetailBackingBean.managedBean.scQt, false, true, view.viewId)}">
-							<h:outputText
-								value="#{lOIDetailBackingBean.managedBean.scQt.qtNo}"
-								escape="false" />
-						</p:commandLink> 
-						<!-- 28780 end -->
+						<ui:remove>25791 remove coding</ui:remove>
 					</td>
 					<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 					</td>
 					<td class="header-info-text" width="35%">
-					#{lOIDetailBackingBean.retrievePTJByOrgProfileId
-(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.pmOrgProfile.orgProfileId,
-lOIDetailBackingBean.isQTStatusPublished(lOIDetailBackingBean.managedBean.currentStatusId)?lOIDetailBackingBean.managedBean.scQt.publishDate : lOIDetailBackingBean.managedBean.scQt.createdDate)}
-						</td>
+						#{lOIDetailBackingBean.retrievePTJByOrgProfileId
+						(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.pmOrgProfile.orgProfileId,
+						lOIDetailBackingBean.isQTStatusPublished(lOIDetailBackingBean.managedBean.currentStatusId)?lOIDetailBackingBean.managedBean.scQt.publishDate
+						: lOIDetailBackingBean.managedBean.scQt.createdDate)}</td>
 					<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" />
 					</td>
 					<td class="header-info-text" width="20%">
 						#{lOIDetailBackingBean.managedBean.status}</td>
 				</tr>
+				<ui:remove>#25791-start</ui:remove>
+				<tr>
+					<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" />
+					</td>
+					<td class="header-info-text" width="15%"><p:commandLink
+							process="@this" partialSubmit="true"
+							action="#{qTDetailBB.editQuationTenderDetails(lOIDetailBackingBean.managedBean.scQt, false, true, view.viewId)}">
+							<h:outputText
+								value="#{lOIDetailBackingBean.managedBean.scQt.qtNo}"
+								escape="false" />
+						</p:commandLink></td>
+				</tr>
+				<ui:remove>#25791-end</ui:remove>
 			</table>
 		</div>
 	</p:outputPanel>

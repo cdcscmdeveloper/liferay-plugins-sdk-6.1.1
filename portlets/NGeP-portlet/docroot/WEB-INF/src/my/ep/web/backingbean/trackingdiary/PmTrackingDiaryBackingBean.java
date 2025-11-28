@@ -61,6 +61,7 @@ import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.trackingdiary.PmTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -364,6 +365,13 @@ public class PmTrackingDiaryBackingBean extends
 	public void redirectToMainPage(){
 		log.info(".....redirectToMainPage.....");
 		log.info("............this.getManagedBean().getBackURL()"+this.getManagedBean().getBackURL());
+		
+		// 25791 -start-
+		if (this.getManagedBean().isBiddingUrl()) {
+			this.getManagedBean().setBackURL(QTConstants.QT_MAINTENANCE_BIDDING_MANAGEMENT_VIEW);
+			this.getManagedBean().setBiddingUrl(Boolean.FALSE);
+		}
+		// 25791 -end-
 		// Start Fix - #36608
 		if (getManagedBean().getSelectedDocNo() != null) {
 			getManagedBean().setSelectedDocNo(null);

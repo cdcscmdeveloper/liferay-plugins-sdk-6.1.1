@@ -192,7 +192,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private CtPerformanceBond[] selectedBondList;
 	private List<SelectItem> populateBankAccountList;
 	private IPagingDataModel<PmUser> committeDataModel = new CommittePagingDataModel();
-	
+
 	//Start Fix - #33287
 	private boolean isUntickContractExtension = false;
 	private boolean isUntickItemPrice = false;
@@ -2602,7 +2602,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			// End Fix - #33952, #25956
-			
+
 			//Start Fix - #38613, #33287 - *apply for both contract expired and non-expired
 			// Validation for amendment when extension period - 0 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
@@ -3779,7 +3779,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Calendar previousDate = Calendar.getInstance();
 		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 		previousDate.add(Calendar.DATE, -1);
-		
+
 		// Start Fix - #33287
 		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
 
@@ -3897,15 +3897,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					addDupObj.setChangePrice(true);
 					addDupObj.setAssociateCtItemPrice(ctItemPrice);
 					ctItemPrice.setChkIndexOfRow(true);
+					
 					//Start Fix - #33287
-					if(ctItemPrice.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
+					if (ctItemPrice.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
 							|| ctItemPrice.getEffDate().compareTo(ctItemPrice.getExpDate()) == 1){
 						ctItemPrice.setExpDate(currentAmendEffDate);
 						addDupObj.setEffDate(nextDate.getTime());
-					}else{
+					} else {
 						ctItemPrice.setExpDate(previousDate.getTime());
 					}
 					//End Fix - #33287
+					
 					ctItemPriceList.add(addDupObj);
 				}
 			}
@@ -4061,15 +4063,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 					addDupObj.setChangeQuantity(true);
 					addDupObj.setAssociateCtItemMaxQty(ctItemMaxQty);
+					
 					//Start Fix - #33287
-					if(ctItemMaxQty.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
+					if (ctItemMaxQty.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
 							|| ctItemMaxQty.getEffDate().compareTo(ctItemMaxQty.getExpDate()) == 1){
 						ctItemMaxQty.setExpDate(currentAmendEffDate);
 						addDupObj.setEffDate(nextDate.getTime());
-					}else{
+					} else {
 						ctItemMaxQty.setExpDate(previousDate.getTime());
 					}
 					//End Fix - #33287
+					
 					ctItemMaxQty.setChkIndexOfRow(true);
 					ctItemMaxQtyList.add(addDupObj);
 				}
@@ -4253,10 +4257,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			List<CtItemPrice> itemPriceList = selectedItem.getCtItemPrices();
 			for (int i = 0; i < itemPriceList.size(); i++) {
 				if (itemPriceList.get(i).isChangePrice()) {
-					if(itemPriceList.get(i - 1).getEffDate().compareTo(currentAmendEffDate) == 0){
+					if (itemPriceList.get(i - 1).getEffDate().compareTo(currentAmendEffDate) == 0){
 						itemPriceList.get(i - 1).setExpDate(currentAmendEffDate);
 						itemPriceList.get(i).setEffDate(nextDate.getTime());						
-					}else{
+					} else {
 						itemPriceList.get(i - 1).setExpDate(getPreviousDate().getTime());
 						itemPriceList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 					}
@@ -4295,10 +4299,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			for (int i = 0; i < itemMaxQtyList.size(); i++) {
 				if (itemMaxQtyList.get(i).isChangeQuantity()) {
 					//Start Fix - #33287
-					if(itemMaxQtyList.get(i - 1).getEffDate().compareTo(currentAmendEffDate) == 0){
+					if (itemMaxQtyList.get(i - 1).getEffDate().compareTo(currentAmendEffDate) == 0){
 						itemMaxQtyList.get(i - 1).setExpDate(currentAmendEffDate);
 						itemMaxQtyList.get(i).setEffDate(nextDate.getTime());
-					}else{
+					} else {
 						itemMaxQtyList.get(i - 1).setExpDate(getPreviousDate().getTime());
 						itemMaxQtyList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 					}
@@ -4585,7 +4589,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofApproved(true);
 		}
 	}
-	
+
 	//***Start Fix - #33287
 	/**
 	 * The method used to set the amendment information
@@ -4646,7 +4650,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			onChangeValueChecked();
 		}
 		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
-			resetItemPrice(); // #30879
+			resetItemPrice(); // #30879 
 			//Start Fix - #33287
 			isUntickItemPrice = true;
 			spToCheck = true;
@@ -4656,7 +4660,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		ConstructTabSideMenu();
 	}
-	
+
 	// Start Fix - #33287
 	private boolean isCentralContractWithoutLoaAmt() {
 		return ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
@@ -4691,7 +4695,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			onChangeValueChecked();
 		}
 		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
-			resetItemQty(); // #30879
+			resetItemQty(); // #30879 
 			//Start Fix - #33287
 			isUntickItemMaxQty = true;
 			spToCheck = true;
@@ -4795,7 +4799,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
 		}
 	}
-
+			
 	// End fix - #33287
 
 	// Start Fix - #33287
@@ -4808,10 +4812,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
 			spToCheck = true;
 		}
-		// End Fix - #33287
 	}
+	// End Fix - #33287
 	
-	//***End Fix - #33287
 	/**
 	 * The method used to set the related amendment information
 	 * when user extended the contract period.
