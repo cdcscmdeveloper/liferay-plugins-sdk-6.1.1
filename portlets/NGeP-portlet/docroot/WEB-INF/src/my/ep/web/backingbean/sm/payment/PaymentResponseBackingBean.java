@@ -78,8 +78,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			.getProperty("molpay.ipnurl");
 	// #38377
 	private final String paymentGatewayEpOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.ep.onoff");
-	// #38377
-	private boolean isValidPGResponse = true;
 
 	public PaymentResponseBackingBean(){
 		
@@ -672,10 +670,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				PaymentResDTO pymtResDTO = null;
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
-				log.info(">>>>#38377 disable payment<<<");
-				isValidPGResponse = isValidCdcPaymentGatewayResponse(pyPayment.getPyBill().getBillType(), payload);
-				log.info("#38377########isValidPGResponse:"+isValidPGResponse);
-//				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				log.info(">>>>#38377 enable payment update<<<");
+				// #38377
+				if(isResponseValid(pyPayment.getPyBill().getBillType(), payload)){
+					pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				}
 
 				log.info("******ResponsePreRender - After Update******");
 				
@@ -1201,17 +1200,18 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	}
 	
 	//#38377
-	private boolean isValidCdcPaymentGatewayResponse(String billType, String payload) {
-		boolean retVal = false;
+	private boolean isResponseValid(String billType, String payload) {
+		boolean retVal = true;
 		if (billType != null
 				&& !billType
 						.equalsIgnoreCase(
 								my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)
 				&& paymentGatewayEpOnOff != null
-				&& paymentGatewayEpOnOff.trim().equals("1") && payload != null
-				&& payload.length() > 0) {
-			retVal = true;
+				&& paymentGatewayEpOnOff.trim().equals("1") && (payload == null
+				|| payload.isEmpty())) {
+			retVal = false;
 		}
+		log.info("######38377#####isResponseValid:"+retVal);
 		return retVal;
 	}
 	
