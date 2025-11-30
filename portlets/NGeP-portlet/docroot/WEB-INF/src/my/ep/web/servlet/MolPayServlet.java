@@ -365,8 +365,7 @@ public class MolPayServlet extends HttpServlet {
 					log.info("#38377########pymtReqDTO.setPaymentType : "+pymtReqDTO.getPaymentType());
 					pymtReqDTO.setMethodName("doPost-MolPayServlet");
 					
-					PaymentResDTO pymtResDTO = new PaymentResDTO();
-//					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
+					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
 						if(nbcb.equals("1")){
