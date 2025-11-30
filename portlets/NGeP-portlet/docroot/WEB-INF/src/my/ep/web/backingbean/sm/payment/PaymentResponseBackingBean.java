@@ -76,6 +76,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	public static Logger log = Logger.getLogger(PaymentResponseBackingBean.class);
 	private final String molIpnUrl = EpPropertiesUtils.getInstance()
 			.getProperty("molpay.ipnurl");
+	// #38377
+	private final String paymentGatewayEpOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.ep.onoff");
+	// #38377
+	private boolean isValidPGResponse = true;
 
 	public PaymentResponseBackingBean(){
 		
@@ -287,6 +291,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		
 		//#38377
 		Map<String,String> reqMap = getHttpReqMap(httpServletRequest);
+		String payload = reqMap.get("payload");
 		String orderId = reqMap.get("orderid");
 		String tranID = reqMap.get("tranID");
 		String status = reqMap.get("status");
@@ -668,6 +673,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
 				log.info(">>>>#38377 disable payment<<<");
+				isValidPGResponse = isValidCdcPaymentGatewayResponse(pyPayment.getPyBill().getBillType(), payload);
+				log.info("#38377########isValidPGResponse:"+isValidPGResponse);
 //				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 
 				log.info("******ResponsePreRender - After Update******");
@@ -1153,6 +1160,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		}
 
 		Map<String, String> reqMap = new HashMap<>();
+		reqMap.put("payload", payload);
 		reqMap.put("amount", amount);
 		reqMap.put("orderid", orderId);
 		reqMap.put("appcode", appcode);
@@ -1190,6 +1198,21 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("######38377#####paymentGateway:" + reqMap.get("paymentGateway"));
 
 		return reqMap;
+	}
+	
+	//#38377
+	private boolean isValidCdcPaymentGatewayResponse(String billType, String payload) {
+		boolean retVal = false;
+		if (billType != null
+				&& !billType
+						.equalsIgnoreCase(
+								my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)
+				&& paymentGatewayEpOnOff != null
+				&& paymentGatewayEpOnOff.trim().equals("1") && payload != null
+				&& payload.length() > 0) {
+			retVal = true;
+		}
+		return retVal;
 	}
 	
 }
