@@ -291,6 +291,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		
 		//#38377
 		Map<String,String> reqMap = getHttpReqMap(httpServletRequest);
+		String payload = reqMap.get("payload");
 		String orderId = reqMap.get("orderid");
 		String tranID = reqMap.get("tranID");
 		String status = reqMap.get("status");
