@@ -397,6 +397,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				Long currentstatusID = this.getManagedBean().getCurrentStatusId();//33310
 				SCAwardSupplierDataType awardSupplierDataType = (SCAwardSupplierDataType) this
 						.getManagedBean().getPayLoad();
+				//#29661 Start
+				List<SmSupplierCategory> supplierCategoryList = this.getManagedBean().getSupplierCategoryList() != null ?
+						this.getManagedBean().getSupplierCategoryList() : new ArrayList<SmSupplierCategory>();
+				List<SmSupplierCategory> procurementRelatedCategoryList = this.getManagedBean().getProcurementRelatedCategoryList() != null ?
+						this.getManagedBean().getProcurementRelatedCategoryList() : new ArrayList<SmSupplierCategory>();
+				//#29661 End
 				renewSesionObject();
 				this.getManagedBean().setTaskId(taskId);
 				this.getManagedBean().setOutComes(outComes);
@@ -405,6 +411,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setValidatewitness(validateWitness); //#17376
 				this.getManagedBean().setIconForDL(directLoa);//29007
 				this.getManagedBean().setCurrentStatusId(currentstatusID);//33310
+				//#29661 Start
+				this.getManagedBean().setSupplierCategoryList(supplierCategoryList);
+				this.getManagedBean().setProcurementRelatedCategoryList(procurementRelatedCategoryList);
+				//#29661 End
 				// Bug #38049@Syazani 29/04/2025 -- Start
 				if (null != selectedOrgType) {
 					this.getManagedBean().setSelectedOrgType(selectedOrgType);
@@ -433,7 +443,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// #29007 Start Vinod
 			this.getManagedBean().setBpmVersionNo(bpmVersionNo);
 			// #29007 End Vinod
-
 		} finally {
 			// qtAwardSO = null;
 		}
