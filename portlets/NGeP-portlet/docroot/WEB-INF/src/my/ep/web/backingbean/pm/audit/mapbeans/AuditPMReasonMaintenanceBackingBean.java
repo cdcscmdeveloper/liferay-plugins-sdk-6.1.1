@@ -795,22 +795,21 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 		this.docId = BigInteger.valueOf(existingReason.getReasonId());
-		
-		// DecimalFormat formatter = new DecimalFormat("#,##0.00");
+		DecimalFormat formatter = new DecimalFormat("#,##0.00");
 		// paidUpCapital.setOldValue(formatter.format(oldpmCategoryL3.getPaidUpCapital().setScale(2)));
 		
 		
 		// handle null when compare dgn null value
 		if(!oldReason.getDpThreshold().equals(existingReason.getDpThreshold())){
-			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, String.valueOf(oldReason.getDpThreshold()),
-					String.valueOf(existingReason.getDpThreshold()));
+			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, formatter.format(oldReason.getDpThreshold().setScale(2)),
+					formatter.format(existingReason.getDpThreshold().setScale(2)));
 		}
 		
 //		if(existingReason.getDpThreshold() != null && )
 		
 		if(!oldReason.getPrThreshold().equals(existingReason.getPrThreshold())){
-			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, String.valueOf(oldReason.getPrThreshold()),
-					String.valueOf(existingReason.getPrThreshold()));
+			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, String.valueOf(oldReason.getPrThreshold().setScale(2)),
+					String.valueOf(existingReason.getPrThreshold().setScale(2)));
 		}
 		
 		setNewSupplAcctType(managedBeans.getAuditAddSupplAcctType());
@@ -850,7 +849,6 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	private void addAgency() {
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 		this.docId = docGroupId;
-		// String orgCode
 
 		if (CollectionUtils.isNotEmpty(managedBeans.getAuditAddAgency())) {
 			for (PmReasonRestr addAgency : managedBeans.getAuditAddAgency()) {
