@@ -1325,7 +1325,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 							.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 					activity.setSignedOff(!isSecretary ? activity.isSignedOff() : signOffStatus.contains(this
 							.getManagedBean().getCurrentStatusId()));
-					activity.setAttended(!isSecretary ? activity.isAttended() : statuses.contains(this
+					activity.setAttended(!isSecretary || activity.isAttended() ? activity.isAttended() : statuses.contains(this
 							.getManagedBean().getCurrentStatusId()));
 					//#21692 - End
 					setUserDetails(activity);
@@ -3464,16 +3464,28 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 **/
 	private void checkNeedSupplierIfHaveBranchDeleted(String outcome) {
 		if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
-			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+
+			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
+			ScQt scQt = this.getManagedBean().getScQt();
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setScQt(scQt);
+
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationDtls(reqDTO);
+
+			ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
 			List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
 
-			if (CollectionUtils.isNotEmpty(recommendedItems)) {
+			if (CollectionUtils.isNotEmpty(recommendedItems)
+					&& checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())) {
 				for (ScQtRecommend qtRecommend : recommendedItems) {
 					String itemName = qtRecommend.getRequestItem().getItemName();
 					List<ScQtRecommendDtl> recommendDtls = qtRecommend.getRecommendDtls();
 					validationNeedSupplierIfHaveBranchDeleted(recommendDtls, itemName);
 				}
 			}
+
 		}
 	}
 
@@ -3483,8 +3495,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 	/**
 	 * Method to throw validation if no selected any suppliers
 	 * 
-	 * @param itemName
 	 * @param recommendDtls
+	 * @param itemName
 	 * 
 	 **/
 	private void validationNeedSupplierIfHaveBranchDeleted(List<ScQtRecommendDtl> recommendDtls, String itemName) {
@@ -3502,8 +3514,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				if (!checkDisqualifiedSupplierBranchDeleted(qtId, supplierId)
 						&& !biddingSO.checkNotActiveScBidSuppliersByBidScheduleIdAndSupplierId(bidScheduleId,
 								supplierId)
-						&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED
-						&& checkListDisqualifiedSupplierBranchDeleted(qtId)) {
+						&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 
 					throw new EpException(MessageConst.ERROR_760622, new String[] { itemName });
 				}
@@ -3511,6 +3522,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 
+	// #28777 & #29729 - End
 	
 	//#21692 - Start
 	public boolean supplierRejectEPV(ScQtProposal proposal) {

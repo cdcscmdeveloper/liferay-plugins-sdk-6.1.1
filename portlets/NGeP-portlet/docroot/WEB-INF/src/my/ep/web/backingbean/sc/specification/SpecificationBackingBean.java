@@ -23995,10 +23995,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		for (ScQtCheckList scQtCheckList : scQtChecklistListLocal) {
 			Long checklistStatus = scQtCheckList.getPmStatus().getStatusId();
-			if(checklistStatus.equals(QTStatusConst.TS_PENDING_SUBMISSION)){
+			if (scQtCheckList.isSelected() && checklistStatus.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
 				return;
-			}
-			if (scQtCheckList.isSelected()) {
+			} else if (scQtCheckList.isSelected() && checklistStatus.equals(QTStatusConst.TS_COMPLETED)) {
 				selectedCount++;
 			}
 		}

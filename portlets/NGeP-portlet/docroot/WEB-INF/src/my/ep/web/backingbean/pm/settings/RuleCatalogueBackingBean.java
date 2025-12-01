@@ -348,6 +348,7 @@ public class RuleCatalogueBackingBean extends
 			initGst();
 			initQuotationWithTenderValue();
 			initYearEndForProcessing();
+			onAnyTabChange();//#36738
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
 		} catch (Exception e) {
@@ -5290,6 +5291,7 @@ public class RuleCatalogueBackingBean extends
         }
         //#36738 Start
         this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+        resetRuleValue();
         //#36738 End
 	}
 	
@@ -5593,7 +5595,6 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleType(new String());
 		this.getManagedBean().setConfigRuleDescList(this.getManagedBean().getOriginalConfigRuleDescList());
 		this.getManagedBean().setSelectedRuleDescType(this.getManagedBean().getOriginalConfigRuleDescList().get(0));
-		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleTypeValueTableID");
 	}
 	
 	/**
@@ -5639,7 +5640,7 @@ public class RuleCatalogueBackingBean extends
 		}
 
 		// search via zone
-		if (searchRuleZone != null) {
+		if (searchRuleZone != null && !searchRuleZone.equals(0L)) {
 			List<PmConfigRuleValue> byZone = searchByZone(originalList, searchRuleZone, false);
 			if (CollectionUtils.isEmpty(byZone)) {
 				resultList.clear();
@@ -5989,6 +5990,7 @@ public class RuleCatalogueBackingBean extends
 		resetRuleType();
 		resetRuleValue();
 		resetQtValues();
+		this.getManagedBean().setCollapsePanel(true);
 	}
 	//#36738 End
 }

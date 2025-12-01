@@ -1028,7 +1028,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveApprovalTabDtl();
 			}
 			//bug #30435 - end
-			convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode());//#29661
+			convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),false);//#29661
 			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
@@ -3770,6 +3770,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
+		// #35350 - Start;
+		if (scQt.getFinalizationCommitte() != null && scQt.getFinalizationCommitte().getParameterCode() != null) {
+			if (scQt.getFinalizationCommitte().getParameterCode()
+					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
+					|| scQt.getFinalizationCommitte().getParameterCode()
+							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+				if (isStatusTrigger(currentStatusId)) {
+					scQt.setFinalizationCommitte(new PmParameter());
+					scQt.setFinalizationSecratery(new PmUser());
+					this.getManagedBean().setQt(scQt);
+				}
+			}
+		}
+		// #35350 - End
+		
 		if (finalizationSecratary == null
 				&& isQTStatusLessThanOrEquals(currentStatusId, QTStatusConst.QT_PENDING_LOA)) {
 			ICommitteSO committeSO;
@@ -3778,7 +3793,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 
 				CommitteReqDTO reqDTO = new CommitteReqDTO();
-				reqDTO.setQtId(scQt.getQtId());
+				reqDTO.setQtId(scQt.getQtId());				
+				
 				CommitteResDTO resDTO = committeSO
 						.retrieveFinalizationCommitteeType(reqDTO);
 
@@ -4364,6 +4380,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 * qt.setClosingDate(getManagedBean().getQt().getClosingDate());
 				 */
 			}
+			//#29661 Start
+			if (this.getManagedBean().getQt().getQtStatus().getStatusId()
+					.equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))){
+				convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode(),true);
+			}
+			//#29661 End
+			
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
@@ -15019,7 +15042,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * Convert CT panel category code data to ScQt category code data 
 	 * @param panelCategoryCodeList
 	 */
-	private void convertPanelCategoryCodeToScQtCategory(List<CtPanelCategory> panelCategoryCodeList) {
+	private void convertPanelCategoryCodeToScQtCategory(List<CtPanelCategory> panelCategoryCodeList, boolean qtInsertFlag) {
 		
 		if (CollectionUtils.isNotEmpty(panelCategoryCodeList)) {
 
@@ -15039,5 +15062,29 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}
 			this.getManagedBean().setQtCategoryList(scQtCategoryListNew);
 		} 
+		if (CollectionUtils.isNotEmpty(panelCategoryCodeList) && qtInsertFlag){
+			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTSpecSO.class);
+			List<ScQtCategory> scQtCategoryList = this.getManagedBean().getQtCategoryList() != null ?
+					this.getManagedBean().getQtCategoryList(): new ArrayList<ScQtCategory>();
+					
+			for (ScQtCategory scQtCategory : scQtCategoryList){
+				specSO.insertCategoryCode(scQtCategory);
+			}
+		}
+	}
+	
+	/**
+	 * #35320
+	 * @param statusId
+	 * @return boolean
+	 */
+	private static boolean isStatusTrigger(long statusId) {
+        final List<Long> triggerStatuses = Arrays.asList(
+                QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+                QTStatusConst.QT_REVISION_PUBLICATION,
+                QTStatusConst.QT_PENDING_SCHEDULE_REVISION,
+                QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY
+        );
+        return triggerStatuses.contains(statusId);
 	}
 }
