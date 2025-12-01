@@ -23,7 +23,8 @@
 		</table>
 
 		<!-- #36738 Start -->
-		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true" id="qtValueSearch" collapsed="true">
+		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true" id="qtValueSearch"
+			collapsed="#{ruleCatalogueBackingBean.managedBean.collapsePanel}">
 			<h:panelGrid columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
 				<p:selectOneMenu id="somMinistryForQtVal"
@@ -35,7 +36,8 @@
 				<p:outputLabel value="#{lbl['lbl.pm.org.ptjCode']}" />
 				<p:inputText
 					value="#{ruleCatalogueBackingBean.managedBean.searchPtjCode}"
-					maxlength="20" style="width:250px;" />
+					maxlength="20" style="width:250px;"
+					onkeypress="return /[0-9]/.test(String.fromCharCode(event.charCode));"/>
 				<p:outputLabel value=" #{lbl['lbl.pm.org.ptjName']}" />
 				<p:inputText
 					value="#{ruleCatalogueBackingBean.managedBean.searchPtjName}"
