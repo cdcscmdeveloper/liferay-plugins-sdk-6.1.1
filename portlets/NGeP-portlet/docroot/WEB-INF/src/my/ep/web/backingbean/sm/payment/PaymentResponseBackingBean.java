@@ -79,6 +79,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	public static Logger log = Logger.getLogger(PaymentResponseBackingBean.class);
 	private final String molIpnUrl = EpPropertiesUtils.getInstance()
 			.getProperty("molpay.ipnurl");
+	// #38377
+	private final String paymentGatewayEpOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.ep.onoff");
+	// #38377
+	private boolean isValidPGResponse = true;
 
 	public PaymentResponseBackingBean(){
 		
@@ -288,6 +292,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		
 		//#38377
 		Map<String,String> reqMap = getHttpReqMap(httpServletRequest);
+		String payload = reqMap.get("payload");
 		String orderId = reqMap.get("orderid");
 		String tranID = reqMap.get("tranID");
 		String status = reqMap.get("status");
@@ -590,33 +595,40 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					e.printStackTrace();
 				}
 				//32422 END
-				log.info("channel--------------------26307"+channel);
 				paymentOrder.setChannelName(channel);
+				log.info("#38377########paymentOrder.setChannelName:"+paymentOrder.getChannelName());
 				//#33137 - start
-				log.info("SET TRANSACTION ID--------------------33137 : "+tranID);
 				smPaymentRes.setTransactionId(tranID);
 				smPaymentRes.setMolpayTransactionId(molpayTranId);
 				smPaymentRes.setFpxTranId(fpxTranId);
+				log.info("#38377########smPaymentRes.setTransactionId:"+smPaymentRes.getTransactionId());
 				//#33137 - end
 				smPaymentRes.setErrorCode(errorCode);
 				smPaymentRes.setErrorDesc(errorDesc);
+				log.info("#38377########smPaymentRes.setErrorCode:"+smPaymentRes.getErrorCode());
+				log.info("#38377########smPaymentRes.setErrorDesc:"+smPaymentRes.getErrorDesc());
 				//32422 START
 				if(bankDate != null){
 					smPaymentRes.setTransactionDate(bankDate);
 				}else{
 					smPaymentRes.setTransactionDate(txDate);
 				}
+				log.info("#38377########smPaymentRes.setTransactionDate:"+smPaymentRes.getTransactionDate());
 				smPaymentRes.setBankDateTime(bankDate);
+				log.info("#38377########smPaymentRes.setBankDateTime:"+smPaymentRes.getBankDateTime());
 				//32422 END
 				smPaymentRes.setPyPaymentOrder(paymentOrder);
 				smPaymentRes.setPaymentStatus(status);
+				log.info("#38377########smPaymentRes.setPaymentStatus:"+smPaymentRes.getPaymentStatus());
 				smPaymentRes.setPaidAmt(txAmount);
+				log.info("#38377########smPaymentRes.setPaidAmt:"+smPaymentRes.getPaidAmt());
 				paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 				//26307
-				log.info("Status Code : "+statusCode);
+				log.info("#38377########Status Code : "+statusCode);
 				if(statusCode!= null){
 					PmStatus paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(statusCode);
 					pyPayment.setPmStatus(paymentStatus);
+					log.info("#38377########paymentStatus : "+paymentStatus);
 				}
 				
 
@@ -633,6 +645,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				}
 				//END 35182
 				pymtReqDTO.setValidPayment(validPayment);
+				log.info("#38377########pymtReqDTO.setValidPayment : "+pymtReqDTO.isValidPayment());
 				pymtReqDTO.setPyPayment(pyPayment);
 				pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 
@@ -654,11 +667,15 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				String paymentType = StringUtils.EMPTY;
 				paymentType = getPaymentFeeTypeByBillType(pyPayment.getPyBill().getBillType());
 				pymtReqDTO.setPaymentType(paymentType);
+				log.info("#38377########pymtReqDTO.setPaymentType : "+pymtReqDTO.getPaymentType());
 				pymtReqDTO.setMethodName("responsePreRender-PaymentResponseBackingBean");
 				PaymentResDTO pymtResDTO = null;
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
-				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				// #38377
+				if(isResponseValid(pyPayment.getPyBill().getBillType(), payload)){
+					pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				}
 
 				log.info("******ResponsePreRender - After Update******");
 				
@@ -1065,6 +1082,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	private Map<String, String> getHttpReqMap(HttpServletRequest httpReq) {
 		String paymentGateway = "N";
 		String payload = httpReq.getParameter("payload");
+		log.info("######38377#####payload: " + payload);
 		String orderId = httpReq.getParameter("orderid");
 		String tranID = httpReq.getParameter("tranID");
 		String status = httpReq.getParameter("status");
@@ -1153,6 +1171,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		}
 
 		Map<String, String> reqMap = new HashMap<>();
+		reqMap.put("payload", payload);
 		reqMap.put("amount", amount);
 		reqMap.put("orderid", orderId);
 		reqMap.put("appcode", appcode);
@@ -1190,6 +1209,22 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("######38377#####paymentGateway:" + reqMap.get("paymentGateway"));
 
 		return reqMap;
+	}
+	
+	//#38377
+	private boolean isResponseValid(String billType, String payload) {
+		boolean retVal = true;
+		if (billType != null
+				&& !billType
+						.equalsIgnoreCase(
+								my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)
+				&& paymentGatewayEpOnOff != null
+				&& paymentGatewayEpOnOff.trim().equals("1") && (payload == null
+				|| payload.isEmpty())) {
+			retVal = false;
+		}
+		log.info("######38377#####isResponseValid:"+retVal);
+		return retVal;
 	}
 	
 }
