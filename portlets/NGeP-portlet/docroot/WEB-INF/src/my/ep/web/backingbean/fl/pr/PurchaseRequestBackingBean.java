@@ -439,7 +439,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							scReqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()));
 						}
 
-						scReqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());//TODO
+						scReqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
 						PurchaseRequestResDTO zoneIdResDTO = purchaseRequestSO.getSupplierItemZoneIdByFlAddress(scReqDTO);
 						itemAddr.setZoneId(zoneIdResDTO.getSpecZoneId());
 
@@ -5127,6 +5127,4 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return "lbl.btn." + bpmAction.toLowerCase();
 	}
 	// #39192 - End
-	
-
 }
