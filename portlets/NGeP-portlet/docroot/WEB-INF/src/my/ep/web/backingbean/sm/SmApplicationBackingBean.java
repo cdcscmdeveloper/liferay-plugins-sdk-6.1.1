@@ -18606,15 +18606,25 @@ public class SmApplicationBackingBean extends
 	    clearRegistrationStatusDisplay();
 	    
 	    SmAppl smAppl = getManagedBean().getSmAppl();
-	    String companyCountry = getCompanyCountry(smAppl);
+	    if(smAppl == null) {
+	    	// Nothing to process if application data is unavailable
+	    	return;
+	    }
+	    
+	    String ssmCompanyCountry = getCompanyCountry(smAppl);
 	    String applType = smAppl.getApplType();
 
 	    SmSupplier smSupplier = getManagedBean().getSmSupplier();
+	    if(smSupplier == null){
+	    	// Cannot proceed without supplier data
+	    	return;
+	    }
+	    
 	    String businessType = smSupplier.getBusinessType();
 	    
-	    boolean isForeignCompany = !SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA.equalsIgnoreCase(companyCountry);
+	    boolean isForeignCompany = !SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA.equalsIgnoreCase(ssmCompanyCountry);
 	    
-	    setCountryOriginUI(applType, businessType, isForeignCompany);
+	    setCountryOriginUI(applType, businessType, ssmCompanyCountry);
 	    setRegistrationStatusUI(businessType, smAppl, isForeignCompany);
 	}
 
@@ -18624,34 +18634,56 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Configures the Country of Origin UI flags based on application type, 
-	 * business type, and company origin.
+	 * Determines and sets the supplier's country of origin for UI display.
 	 *
-	 * @param applType         the application type
-	 * @param businessType     the business type
-	 * @param isForeignCompany true if the company is foreign
+	 * @param applType     the application type
+	 * @param businessType        the supplier's business type
+	 * @param ssmCompanyCountry   the SSM registered country
 	 */
-	private void setCountryOriginUI(String applType, String businessType, boolean isForeignCompany) {
+	private void setCountryOriginUI(String applType, String businessType, String ssmCompanyCountry) {
+		if(applType == null || businessType == null){
+			return;
+		}
+		
+		if(applType.equals(SupplierManagementConst.APPL_TYPE_BUMI)){
+			setCountryOriginLabel(SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA);
+			return;
+		}
+		
+		// ROC business uses actual company country, others default to Malaysia
+	    if (isRocBusinessType(businessType)) {
+	        setCountryOriginLabel(ssmCompanyCountry);
+	        return;
+	    }
+	    
+	    setCountryOriginLabel(SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA);
+	}
+	
+	/**
+	 * Sets the UI label for the supplier's country of origin.
+	 *
+	 * @param ssmCountryCode the SSM country code to resolve
+	 */
+	public void setCountryOriginLabel(String ssmCountryCode) {
 
-	    // Early return for BUMI applications
-	    if (SupplierManagementConst.APPL_TYPE_BUMI.equalsIgnoreCase(applType)) {
-	        getManagedBean().setDisplayLabelCountryOriginLocal(false);
-	        getManagedBean().setDisplayLabelCountryOriginForeign(false);
+	    if (ssmCountryCode == null) {
 	        return;
 	    }
 
-	    boolean rocBusiness = isRocBusinessType(businessType);
+	    PmCountry pmCountry;
 
-	    // ROC business logic
-	    if (rocBusiness) {
-	        getManagedBean().setDisplayLabelCountryOriginForeign(isForeignCompany);
-	        getManagedBean().setDisplayLabelCountryOriginLocal(!isForeignCompany);
+	    // Use UNKNOWN country handler when code matches the special value
+	    if (SupplierManagementConst.COUNTRY_UNKNOWN_CODE.equalsIgnoreCase(ssmCountryCode)) {
+	        pmCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_UNKNOWN_CODE);
+	    } else {
+	        pmCountry = SmCommonUtil.retrievePmCountryByCountryCodeSSM(ssmCountryCode);
+	    }
+
+	    if (pmCountry == null || pmCountry.getCountryName() == null) {
 	        return;
 	    }
 
-	    // Non-ROC business logic
-	    getManagedBean().setDisplayLabelCountryOriginForeign(false);
-	    getManagedBean().setDisplayLabelCountryOriginLocal(true);
+	    getManagedBean().setStrLabelCountryOrigin(pmCountry.getCountryName());
 	}
 
 	private boolean isRocBusinessType(String businessType) {
@@ -18693,8 +18725,7 @@ public class SmApplicationBackingBean extends
 	 * Sets the visibility of the country origin, registration status, and related UI elements to false.
 	 */
 	public void clearRegistrationStatusDisplay() {
-	    getManagedBean().setDisplayLabelCountryOriginForeign(false);
-	    getManagedBean().setDisplayLabelCountryOriginLocal(false);
+	    getManagedBean().setStrLabelCountryOrigin("");
 	    getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
 	    getManagedBean().setDisplayLabelRegistrationStatus(false);
 	    getManagedBean().setDisplayDropdownRegStatus(false);
@@ -18866,7 +18897,6 @@ public class SmApplicationBackingBean extends
 	 */
 	public void foreignRegistrationUI(boolean isForeignCompany) {
 	    assignValReqdToFalse();
-	    getManagedBean().setDisplayLabelCountryOriginForeign(true);
 	    getManagedBean().setDisplayLabelRegistrationStatus(isForeignCompany);
 	    setRegistrationStatusValue(isForeignCompany);
 	}
