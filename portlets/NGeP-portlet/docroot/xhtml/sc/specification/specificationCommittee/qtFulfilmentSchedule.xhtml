@@ -11,7 +11,7 @@
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
-				rendered="#{qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicScheduled}">
+				rendered="#{qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled}">
 
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.instruction']}"
@@ -22,7 +22,7 @@
 					escape="false" />
 
 				<p:dataTable id="frequencySchedule" var="frequency" rows="10"
-					rendered="#{qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled or qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeNonPeriodicScheduled}"
+					rendered="#{qTDetailBB.managedBean.fulfilmentType eq ParameterConst.fulfilmentTypeScheduled}"
 					rowIndexVar="index" widgetVar="freqScheduleWidget"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{qTDetailBB.managedBean.scheduleList}">
