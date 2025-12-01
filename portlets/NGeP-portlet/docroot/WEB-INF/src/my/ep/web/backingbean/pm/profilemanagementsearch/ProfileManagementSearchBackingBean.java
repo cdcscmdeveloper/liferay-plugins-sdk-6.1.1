@@ -311,12 +311,10 @@ public class ProfileManagementSearchBackingBean extends
 	if(paramCode != null){
 	    if(paramCode.equals(ParameterConst.DOCTYPE_MARKET_RESEARCH)){
 		  this.getManagedBean().getProfileManagSearchBean().setMarketResearch(true);
-//		  this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(false);
 		  this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(null);
 		  statusIds = mrStatusIds;
 	    }else if(paramCode.equals(ParameterConst.DOCTYPE_COMPANY_PROFILE)){
 	    	this.getManagedBean().getProfileManagSearchBean().setCompanyProfile(true);
-//	    	this.getManagedBean().getProfileManagSearchBean().setMarketResearch(false);
 	    	this.getManagedBean().getProfileManagSearchBean().setMarketResearch(null);
 	    	 statusIds = cpStatusIds;
 	    }
@@ -326,7 +324,7 @@ public class ProfileManagementSearchBackingBean extends
 			try {
 				List<PmStatusDesc> statusDescList = new ArrayList<PmStatusDesc>();
 				//#38016 - harun disabled as old code always get CP status id 
-				for(Long statusId:statusIds){	
+				for(Long statusId:statusIds){
 					PmStatusDesc pmStatusDesc = StatusHelper.getInstance().getStatusDescById(statusId);
 					if(pmStatusDesc != null){
 					
@@ -349,11 +347,7 @@ public class ProfileManagementSearchBackingBean extends
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 								e.getMessage()));
 			}
-		  
-	
 		  setApplicationStatus(items);
-
-		  //////////////
 	}
 }
  
