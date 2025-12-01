@@ -181,8 +181,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean forceReplace;
 	
 //	37925 START
-	private boolean displayLabelCountryOriginLocal;
-	private boolean displayLabelCountryOriginForeign;
+	private String strLabelCountryOrigin;
 	private boolean displayCheckboxChangeCurrentStatus;
 	private boolean displayLabelRegistrationStatus;
 	private boolean displayDropdownRegStatus;
@@ -1118,20 +1117,12 @@ public abstract class BaseManagedBean implements Serializable {
 	// #28895_35501 End
 
 //	37925 START
-	public boolean isDisplayLabelCountryOriginLocal() {
-		return displayLabelCountryOriginLocal;
+	public String getStrLabelCountryOrigin() {
+		return strLabelCountryOrigin;
 	}
 
-	public void setDisplayLabelCountryOriginLocal(boolean displayLabelCountryOriginLocal) {
-		this.displayLabelCountryOriginLocal = displayLabelCountryOriginLocal;
-	}
-
-	public boolean isDisplayLabelCountryOriginForeign() {
-		return displayLabelCountryOriginForeign;
-	}
-
-	public void setDisplayLabelCountryOriginForeign(boolean displayLabelCountryOriginForeign) {
-		this.displayLabelCountryOriginForeign = displayLabelCountryOriginForeign;
+	public void setStrLabelCountryOrigin(String strLabelCountryOrigin) {
+		this.strLabelCountryOrigin = strLabelCountryOrigin;
 	}
 
 	public boolean isDisplayCheckboxChangeCurrentStatus() {
