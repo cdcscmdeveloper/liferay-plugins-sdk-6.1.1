@@ -3818,13 +3818,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-				//Bug #39043 start
+				//Bug #39043 #39512 start
 				if (null != suppAns.getSupplierId()
 						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   
-						//&& null != tplSpecAnswer.getAnswerRemark()){ Bug #39043 end				
-					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+					String remark = tplSpecAnswer.getAnswerRemark();
+					answerRemarkList.add(remark != null ? remark : SSTConstant.TB);
 					break;
 				}
+				//Bug #39043 #39512 end
 			}
 		}
 	}
@@ -3972,7 +3973,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 				        if (tempRemark == null) {
 				            tempRemark = SSTConstant.TB;
-				        } //else { Bug #39043
+				        } //else { Bug #39043 #39512
 				            if (tempSpecZoneQty > 0) {
 				            	//[Start] - #36326- Sqube DP Code Smell Major G100
 				            	if (tempRemarkIndex >= tempSpecZoneQty && (indexRemarkStore == 0 || tempRemarkIndex > indexRemarkStore)) {
@@ -3989,7 +3990,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				                }
 				            }
 				            tempRemarkIndex++;
-				        //} Bug #39043
+				        //} Bug #39043 #39512
 
 				        if (shouldBreak) {
 				            break;
