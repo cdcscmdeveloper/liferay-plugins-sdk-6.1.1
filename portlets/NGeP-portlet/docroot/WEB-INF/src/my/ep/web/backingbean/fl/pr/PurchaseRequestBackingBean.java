@@ -5129,5 +5129,4 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return "lbl.btn." + bpmAction.toLowerCase();
 	}
 	// #39192 - End
-	
 }
