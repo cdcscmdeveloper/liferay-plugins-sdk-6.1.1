@@ -216,6 +216,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.sc.DisciplinaryActionUtils;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -3308,10 +3309,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public SelectItem[] getRepresentativeTypeDropdownValues(String committeeType){
 		SelectItem[] items = null;
 		
-		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
-				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
+		// #35320 - Start
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
-		}
+		}// #35320 - End
 		  else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PPR);
 		}
@@ -3815,13 +3818,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-				//Bug #39043 start
+				//Bug #39043 #39512 start
 				if (null != suppAns.getSupplierId()
 						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   
-						//&& null != tplSpecAnswer.getAnswerRemark()){ Bug #39043 end				
-					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+					String remark = tplSpecAnswer.getAnswerRemark();
+					answerRemarkList.add(remark != null ? remark : SSTConstant.TB);
 					break;
 				}
+				//Bug #39043 #39512 end
 			}
 		}
 	}
@@ -3969,7 +3973,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 				        if (tempRemark == null) {
 				            tempRemark = SSTConstant.TB;
-				        } //else { Bug #39043
+				        } //else { Bug #39043 #39512
 				            if (tempSpecZoneQty > 0) {
 				            	//[Start] - #36326- Sqube DP Code Smell Major G100
 				            	if (tempRemarkIndex >= tempSpecZoneQty && (indexRemarkStore == 0 || tempRemarkIndex > indexRemarkStore)) {
@@ -3986,7 +3990,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				                }
 				            }
 				            tempRemarkIndex++;
-				        //} Bug #39043
+				        //} Bug #39043 #39512
 
 				        if (shouldBreak) {
 				            break;
@@ -7497,40 +7501,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	// 26247 - start
 	/**
 	 * Evaluate if qt is disabled for futher action for non/disciplinary action scenario
-	 * @param scQt
 	 * @param supplier
 	 * @return
 	 */
 	public boolean disabledQTProcess(SmSupplier supplier) {
-		if (null == supplier || null == supplier.getScQt()) {
-			return false;
-		}
-		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
-		boolean isDirectDiciplinaryAction = false;
-		if (CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
-			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
-			isDirectDiciplinaryAction = Arrays.asList(disciplinaryAction.isBlacklistOwner(),
-					disciplinaryAction.isCancelRegistration(), disciplinaryAction.isSuspendRegistration()).contains(
-					true);
-		}
-		
-		boolean isDisciplinaryAction = isDirectDiciplinaryAction && supplier.isDisciplinaryActions() && !supplier.isWarningDA();
-		boolean isCancelledOrBlacklisted = viewSuppProfileBean.evaluateCancellationBlacklist(supplier);
-		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
-		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
-				&& !supplier.isBumi();
-
-		List<String> cancelledCategoryCodes = new ArrayList<>();
-		cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
-		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
-		boolean hasCancelledCategories = CollectionUtils.isNotEmpty(cancelledCategoryCodes);
-
-		boolean isSuspendRegistration = viewSuppProfileBean.evaluateSuspendRegistration(supplier);
-
-		return Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction,
-				isSuspendRegistration).contains(true)
-				|| !Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_EXPIRED).contains(
-						mofRecordStatus);
+		return DisciplinaryActionUtils.disabledQTProcess(supplier);
 	}
 	// 26247 - end
 	// #33787 Start Vinod
@@ -7781,6 +7756,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return true/false.
 	 */
 	public boolean loaReportCheck(ScQtPRPExperience prpExp) {
+		if (null == prpExp || null == prpExp.getSourceType()) {
+			return Boolean.FALSE;
+		}
+		
 		PmParameter sourceType = prpExp.getSourceType();
 		boolean isSourceType = null != sourceType && null != prpExp.getScLoa();
 
@@ -7841,10 +7820,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		} catch (Exception e) {
 			Long qtPrpExpId = scQtPRPExperience.getQtPrpExperienceId();
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SOURCING_BACKINGBEAN,
 					String.valueOf(qtPrpExpId),
-					SLALogConstant.DOWNLOAD_SUPPLIER_LOA_DETAILS_REPORTS,
+					SLALogConstant.DOWNLOAD_SUPPLIER_LOA_DETAILS_REPORTS
+							.concat(SourcingConstants.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
@@ -7949,10 +7930,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return resDTO.getLoiLoaSupplierMap();
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SOURCING_BACKINGBEAN,
 					String.valueOf(qtId),
-					SLALogConstant.RETRIEVE_SUPP_MAP_REPORT,
+					SLALogConstant.RETRIEVE_SUPP_MAP_REPORT
+							.concat(SourcingConstants.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 		return null;
@@ -7985,10 +7968,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} catch (Exception e) {
 			Long qtProposalCheckListId = scQtProposalChecklist
 					.getQtProposalChecklistId();
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SOURCING_BACKINGBEAN,
 					String.valueOf(qtProposalCheckListId),
-					SLALogConstant.RETRIEVE_CONTRACT_STATUS_COUNT,
+					SLALogConstant.RETRIEVE_CONTRACT_STATUS_COUNT
+							.concat(SourcingConstants.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 
@@ -8030,10 +8015,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			} catch (Exception e) {
 				Long qtId = evaluationReqDTO.getQtId();
 
-				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+				SLAUtils.getInstance().logSLAError(
+						SLALogConstant.QT_MODULE,
 						SLALogConstant.QT_SOURCING_BACKINGBEAN,
 						String.valueOf(qtId),
-						SLALogConstant.COMP_EXP_SUPP_PAGING_DATA_MODEL,
+						SLALogConstant.COMP_EXP_SUPP_PAGING_DATA_MODEL
+								.concat(SourcingConstants.COMP_EXP_ERROR),
 						getUserIdSessionFromLoginId(), e);
 
 			}
@@ -8102,10 +8089,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} catch (Exception e) {
 			Long qtPrpExpId = scQtPRPExperience.getQtPrpExperienceId();
 
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SOURCING_BACKINGBEAN,
 					String.valueOf(qtPrpExpId),
-					SLALogConstant.COMP_EXP_LOA_DETAILS_PAGE,
+					SLALogConstant.COMP_EXP_LOA_DETAILS_PAGE
+							.concat(SourcingConstants.COMP_EXP_ERROR),
 					getUserIdSessionFromLoginId(), e);
 		}
 

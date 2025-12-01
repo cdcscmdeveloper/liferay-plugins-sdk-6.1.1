@@ -110,26 +110,22 @@
 
 				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="width:6%;text-align: center;">
+					
+					<!-- #35320 start -->
 					<ui:param name="isFCCommitteeType"
 						value="#{scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeB or 
-			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeA or
-			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoardB or 
-			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoardA or
-			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoard or
-			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSbh or 
-			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSwk}" />
+						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeA or
+						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoardB or 
+						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoardA or
+						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoard or
+						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSbh or 
+						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSwk or
+						scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommittee}" />
 					<p:commandLink
 						action="#{committeBackingBean.editAction(scqtcommittee)}"
-						partialSubmit="true" process="@this"
-						rendered="#{(isFCCommitteeType and committeBackingBean.isCommitteeRecordStatusActive(scqtcommittee.scCommittee)) or (!isFCCommitteeType and scqtcommittee.scCommittee.committeStatus.statusId ne QTStatusConst.CMT_COMPLETED)}">
-						<h:graphicImage
-							value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
-							styleClass="tasklist_title1" />
-					</p:commandLink>
-					<p:commandLink
-						action="#{committeBackingBean.editAction(scqtcommittee)}"
-						partialSubmit="true" process="@this"
-						rendered="#{(isFCCommitteeType and !committeBackingBean.isCommitteeRecordStatusActive(scqtcommittee.scCommittee)) or (!isFCCommitteeType and scqtcommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED)}">
+						partialSubmit="true" process="@this">
+					<!-- #35320 end -->
+
 						<h:graphicImage
 							value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 							styleClass="tasklist_title1" />

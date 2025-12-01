@@ -1,0 +1,146 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<cc:interface>
+		<cc:attribute name="historyPaginator" required="true" />
+		<cc:attribute name="memberHistoryPaginator" required="true" />
+		<cc:attribute name="selectedHistory" required="true" />
+		<cc:attribute name="onSelectHistory" required="true" />
+		<cc:attribute name="committeeName" required="true" />
+		<cc:attribute name="isSFCommittee" default="#{false}" required="false" />
+		<cc:attribute name="isLegacy" default="#{false}" required="false" />
+	</cc:interface>
+
+	<cc:implementation>
+		<ui:param name="historyPaginator" value="#{cc.attrs.historyPaginator}" />
+		<ui:param name="memberHistoryPaginator"
+			value="#{cc.attrs.memberHistoryPaginator}" />
+		<ui:param name="selectedHistory" value="#{cc.attrs.selectedHistory}" />
+		<ui:param name="committeeName" value="#{cc.attrs.committeeName}" />
+		<ui:param name="onSelectHistory" value="#{cc.attrs.onSelectHistory}" />
+		<ui:param name="backingBean" value="#{cc.attrs.backingBean}" />
+		<ui:param name="isSFCommittee" value="#{cc.attrs.isSFCommittee}" />
+		<ui:param name="isLegacy" value="#{cc.attrs.isLegacy}" />
+
+		<style>
+.firstCol {
+	width: 25%;
+	min-width: 220px;
+	vertical-align: top;
+	height: auto;
+}
+
+.secondCol {
+	width: 75%;
+	vertical-align: top;
+	height: auto;
+}
+
+.gridContainer {
+	width: 100%;
+}
+
+.sp-centered {
+	text-align: center;
+	display: block;
+}
+
+.history-member-table span>img {
+	margin-top: -4px;
+}
+</style>
+
+		<h:panelGroup id="updateId" layout="block">
+
+			<h:panelGrid columns="2" styleClass="gridContainer"
+				columnClasses="firstCol, secondCol">
+				<p:panel id="maintenanceHistoryPanelId"
+					header="#{lbl['lbl.sc.committee.history']}">
+					<p:dataTable id="historyTableId" styleClass=""
+						value="#{historyPaginator.model}" var="history"
+						rowKey="#{history}" rowIndexVar="index"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						selectionMode="single" selection="#{selectedHistory}">
+						<p:ajax event="rowSelect"
+							listener="#{backingBean[onSelectHistory]}"
+							update="@([id$=updateId])" />
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sm.no']}"
+									styleClass="sp-centered" />
+							</f:facet>
+							<h:outputText
+								value="#{((historyPaginator.pageIndex-1)*5)+(index+1)}"
+								styleClass="sp-centered" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.created.date']}"
+									styleClass="sp-centered" />
+							</f:facet>
+							<h:outputText value="#{history.createdDate}"
+								styleClass="sp-centered">
+								<f:convertDateTime
+									pattern="#{CommonUtils
+										.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+					<ac:detachablePaginator minimal="true"
+						loopId="@([id$=maintenanceHistoryPanelId])"
+						paginatorObject="#{historyPaginator}" />
+				</p:panel>
+
+				<p:tabView id="committeeTypeTabView"
+					activeIndex="#{backingBean.managedBean.activeIndex}" dynamic="true"
+					cache="false">
+					<p:ajax event="tabChange"
+						listener="#{backingBean.onTabChangeAction}" immediate="true" />
+
+					<p:tab id="qqc" title="#{lbl['lbl.sc.committee.QQC']}"
+						styleClass="noBorders tr,noBorders td"
+						rendered="#{backingBean.managedBean.committeMap.containsKey('QQC')}">
+						<ui:include src="committeeMaintenanceMemberPanel.xhtml">
+							<ui:param name="prefix" value="tab1" />
+							<ui:param name="tableId" value="memberList_tab1" />
+						</ui:include>
+					</p:tab>
+
+					<p:tab id="ppb" title="#{lbl['lbl.sc.committee.PPB']}"
+						styleClass="noBorders tr,noBorders td"
+						rendered="#{backingBean.managedBean.committeMap.containsKey('PPB')}">
+						<ui:include src="committeeMaintenanceMemberPanel.xhtml">
+							<ui:param name="prefix" value="tab2" />
+							<ui:param name="tableId" value="memberList_tab2" />
+						</ui:include>
+					</p:tab>
+
+					<p:tab id="fsb" title="#{lbl['lbl.sc.committee.FSB']}"
+						styleClass="noBorders tr,noBorders td"
+						rendered="#{backingBean.managedBean.committeMap.containsKey('FSB')}">
+						<ui:include src="committeeMaintenanceMemberPanel.xhtml">
+							<ui:param name="prefix" value="tab3" />
+							<ui:param name="tableId" value="memberList_tab3" />
+						</ui:include>
+					</p:tab>
+
+					<p:tab id="fsw" title="#{lbl['lbl.sc.committee.FSW']}"
+						styleClass="noBorders tr,noBorders td"
+						rendered="#{backingBean.managedBean.committeMap.containsKey('FSW')}">
+						<ui:include src="committeeMaintenanceMemberPanel.xhtml">
+							<ui:param name="prefix" value="tab4" />
+							<ui:param name="tableId" value="memberList_tab4" />
+						</ui:include>
+					</p:tab>
+				</p:tabView>
+			</h:panelGrid>
+		</h:panelGroup>
+	</cc:implementation>
+</ui:composition>

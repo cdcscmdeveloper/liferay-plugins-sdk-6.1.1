@@ -57,13 +57,14 @@
 								</p:commandLink>
 							</p:column>
 						</p:dataTable>
-
-						<p:commandButton value="#{lbl['lbl.btn.add']}"
-							id="agencyValuesAddBtn" process="@this" partialSubmit="true"
-							update="@([id$=agencyPopup])" style="float:right;"
-							oncomplete="agencyPopup.show();"
-							action="#{rejectionReasonBackingBean.initPtjPopup}">
-						</p:commandButton>
+                        
+                        <div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.add']}"
+								id="agencyValuesAddBtn" process="@this" partialSubmit="true"
+								update="@([id$=agencyPopup])" style="float:right;"
+								oncomplete="agencyPopup.show();"
+								action="#{rejectionReasonBackingBean.initPtjPopup}"/>
+						</div>
 					</p:outputPanel>
 				</p:tab>
 
