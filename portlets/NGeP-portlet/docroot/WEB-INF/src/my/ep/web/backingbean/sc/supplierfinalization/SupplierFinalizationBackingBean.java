@@ -11511,93 +11511,175 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	private void checkNeedSupplierIfHaveBranchDeleted() {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-		
+
 		String outcome = this.getManagedBean().getOutcome();
-	    boolean isEndorseOrSignOff = false;
-		if (outcome != null && (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF))) {
+		boolean isEndorseOrSignOff = false;
+		if (outcome != null
+				&& (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF))) {
 			isEndorseOrSignOff = true;
 		}
 
 		ScQt scqt = this.getManagedBean().getScQt();
 		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 		reqDTO.setScQt(scqt);
-
 		SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationDtls(reqDTO);
 		ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
 		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
-		
-		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems) && checkListDisqualifiedSupplierBranchDeleted(scqt.getQtId())) {
-			for (ScQtRecommend qtRecommend : recommendedItems) {
-				TplSpecZoneDtl tplSpecZoneDtl = qtRecommend.getTplSpecZoneDtl();
-				String itemName = qtRecommend.getRequestItem().getItemName();
-				List<ScQtRecommendDtl> recommendDtls = qtRecommend.getRecommendDtls();
-				validationNeedSupplierIfHaveBranchDeleted(recommendDtls, tplSpecZoneDtl, scqt, itemName);
-			}
+
+		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)
+				&& checkListDisqualifiedSupplierBranchDeleted(scqt.getQtId())) {
+			validationNeedSupplier(recommendedItems, scqt);
 		}
 	}
 
 	// #28777 & #29729 - End
-	
+
 	// #28777 & #29729 - Start
 	/**
-	 * Method to throw validation if no selected any suppliers
+	 * Method to set recommend details to do identifier data either true or
+	 * false
 	 * 
 	 * @param recommendDtls
-	 * @param tplSpecZoneDtl
 	 * @param scQt
-	 * @param itemName
 	 * 
 	 **/
-	private void validationNeedSupplierIfHaveBranchDeleted(List<ScQtRecommendDtl> recommendDtls,
-			TplSpecZoneDtl tplSpecZoneDtl, ScQt scQt, String itemName) {
+	private void validationNeedSupplier(List<ScQtRecommend> recommendedItems, ScQt scQt) {
 
-		List<Long> recommendSupplierIds = new ArrayList<>();
-		if (CollectionUtils.isNotEmpty(recommendDtls)) {
-			for (ScQtRecommendDtl recommendDtl : recommendDtls) {
-				Long supplierId = recommendDtl.getSupplier().getSupplierId();
-				recommendSupplierIds.add(supplierId);
+		Map<Long, ScQtRecommend> recommendMap = new HashMap<>();
+		Map<Long, Boolean> identifierMap = new HashMap<>();
+		boolean isItemized = this.getManagedBean().isItemize();
+
+		for (ScQtRecommend recommend : recommendedItems) {
+			Long recommendId = recommend.getQtRecommendId();
+			recommendMap.put(recommendId, recommend);
+			TplSpecZoneDtl tplSpecZoneDtl = recommend.getTplSpecZoneDtl();
+
+			if (!identifierMap.containsKey(recommendId)) {
+				identifierMap.put(recommendId, false);
+			}
+
+			if (identifierMap.containsKey(recommendId)) {
+				for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
+					Long supplierId = recommendDtl.getSupplier().getSupplierId();
+					identifierMap
+							.put(recommendId,
+									checkIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt,
+											supplierId) ? true : false);
+				}
 			}
 		}
 
+		if (isItemized) {
+			validationItemizedSupplier(recommendMap, identifierMap, scQt);
+		} else {
+			validationPackageSupplier(recommendMap, identifierMap, scQt);
+		}
+	}
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if have supplier branch deleted
+	 * 
+	 * @param tplSpecZoneDtl
+	 * @param recommendDtl
+	 * @param scQt
+	 * @param supplierId
+	 * 
+	 **/
+	private Boolean checkIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
+			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId) {
+
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+
 		if (tplSpecZoneDtl != null) {
-			Long selectedZoneId = tplSpecZoneDtl.getSpecZoneId();
-			List<Long> quaQtSupplierIdList = retrieveZoneQtSuppliersIdsByQtIdAndSpecZoneId(true, scQt.getQtId(),
-					selectedZoneId);
-			if (!CollectionUtils.containsAny(quaQtSupplierIdList, recommendSupplierIds)) {
-				navigateToSupplierFinalizationTab();
-				validationNeedSupplier(tplSpecZoneDtl, itemName);
+			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+			if (!sourcingIntegrationSO.flagZonesBiddingDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId,
+					specZoneId) && recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				return true;
 			}
 		} else {
-			List<Long> quaQtSupplierIdList = retrieveQtSuppliersIdsByQtId(true, scQt.getQtId());
-			if (!CollectionUtils.containsAny(quaQtSupplierIdList, recommendSupplierIds)) {
+			if (!sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId)
+					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation if no supplier for itemized
+	 * 
+	 * @param recommendMap
+	 * @param identifierMap
+	 * @param scQt
+	 * 
+	 * 
+	 **/
+	private void validationItemizedSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
+			ScQt scQt) {
+
+		boolean foundFalse = false;
+		Long falseKey = null;
+
+		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
+			if (!entry.getValue()) {
+				foundFalse = true;
+				falseKey = entry.getKey();
+				break;
+			}
+		}
+
+		if (foundFalse) {
+			ScQtRecommend recommend = recommendMap.get(falseKey);
+			if (scQt.isZonal()) {
+				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
+				throw new EpException(MessageConst.ERROR_760623, new String[] {
+						recommend.getTplSpecZoneDtl().getZoneName(), recommend.getRequestItem().getItemName() });
+			} else {
 				navigateToSupplierFinalizationTab();
-				validationNeedSupplier(tplSpecZoneDtl, itemName);
+				throw new EpException(MessageConst.ERROR_760622, new String[] { recommend.getRequestItem()
+						.getItemName() });
 			}
 		}
 	}
 
 	// #28777 & #29729 - End
-	
+
 	// #28777 & #29729 - Start
 	/**
-	 * Method to validate Itemized or Package
+	 * Method to display validation if no supplier for package
 	 * 
-	 * @param tplSpecZoneDtl
-	 * @param itemName
+	 * @param recommendMap
+	 * @param identifierMap
+	 * @param scQt
 	 * 
 	 **/
-	private void validationNeedSupplier(TplSpecZoneDtl tplSpecZoneDtl, String itemName) {
-		if (tplSpecZoneDtl != null) {
-			String zoneName = tplSpecZoneDtl.getZoneName();
-			if (this.getManagedBean().isItemize()) {
-				throw new EpException(MessageConst.ERROR_760623, new String[] { zoneName, itemName });
-			} else {
-				throw new EpException(MessageConst.ERROR_760625, new String[] { zoneName });
+	private void validationPackageSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
+			ScQt scQt) {
+
+		boolean foundFalse = false;
+		Long trueKey = null;
+
+		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
+			if (!entry.getValue()) {
+				foundFalse = true;
+				trueKey = entry.getKey();
+				break;
 			}
-		} else {
-			if (this.getManagedBean().isItemize()) {
-				throw new EpException(MessageConst.ERROR_760622, new String[] { itemName });
+		}
+
+		if (foundFalse) {
+			ScQtRecommend recommend = recommendMap.get(trueKey);
+			if (scQt.isZonal()) {
+				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
+				throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
+						.getZoneName() });
 			} else {
+				navigateToSupplierFinalizationTab();
 				throw new EpException(MessageConst.ERROR_760624);
 			}
 		}

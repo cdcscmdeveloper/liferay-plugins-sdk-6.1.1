@@ -25,7 +25,6 @@ import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
@@ -64,8 +63,6 @@ import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 
 import com.liferay.portal.util.PortalUtil;
-//#29481 - Start
-//#29481 - End
 //#26307 start 
 //#26307 start 
 
@@ -81,8 +78,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			.getProperty("molpay.ipnurl");
 	// #38377
 	private final String paymentGatewayEpOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.ep.onoff");
-	// #38377
-	private boolean isValidPGResponse = true;
 
 	public PaymentResponseBackingBean(){
 		
@@ -175,7 +170,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				orderId = paymentId.toString();
 				errorDesc = "";
 				errorCode = "";
-				paydate = DateUtils.dateToString(CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, pyPymt.getPaymentDate());
+				paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
 				if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 					log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 					channel = pyPymt.getPyPaymentOrder().getChannelName();
@@ -220,6 +215,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("appl>>>>>>>>>>>" + appl);
 		
 		if(paymentTaskId != null && paymentBpmPojo != null &&  appl != null){
+			log.info("######38377 inside paymentTaskId not null#####");
 			responsePreRender(paymentTaskId, paymentBpmPojo, appl);
 			responseRedirect();
 		}else{
@@ -286,6 +282,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	 */
 	public void responsePreRender(String paymentTaskId, Object paymentBpmPojo, SmAppl appl) throws NoSuchMethodException,SecurityException, IllegalAccessException,
 	IllegalArgumentException, InvocationTargetException {
+		log.info("######38377 inside responsePreRender#####");
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
@@ -311,6 +308,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String molpayTranId = null;
 		//#End 33137
 		// #26307 start
+		
+		//#38377
 		String cardType = reqMap.get("cardType");
 		String extraP = reqMap.get("extraP");
 		
@@ -368,7 +367,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						orderId = paymentId.toString();
 						errorDesc = "";
 						errorCode = "";
-						paydate = DateUtils.dateToString(CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, pyPymt.getPaymentDate());
+						paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
 						if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 							log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 							channel = pyPymt.getPyPaymentOrder().getChannelName();
@@ -438,9 +437,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info("SKey & Key1 Are Match>>>>");
 				
 				//#38377
-				if(reqMap.get("paymentGateway").equals("Y")){
+				if(amount == null){
 					amount = resDTO.getPyPayment().getPaymentAmt().toString();
 				}
+				
 				BigDecimal txAmount = new BigDecimal(amount);
 				//Long txID = Long.valueOf(tranID);
 
@@ -458,9 +458,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 				log.info("Status Success 0>>>>>");
 				String softcertUserName = null;
-				
-				//#38377
-				if (status.equals(SupplierManagementConst.MOL_SUCCESS) || status.equals(SupplierManagementConst.PAYMENT_GATEWAY_SUCCESS)) {
+				if (status.equals(SupplierManagementConst.MOL_SUCCESS)) {
 					BigDecimal paymentAmount = pyPayment.getPaymentAmt();
 					log.info("paymentId>>>>" + paymentId);
 					log.info("orderId>>>>" + orderId);
@@ -496,12 +494,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					} else {
 						statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 					}
-				} 
-				//#38377
-				else if (status.equals(SupplierManagementConst.MOL_PENDING) || status.equals(SupplierManagementConst.PAYMENT_GATEWAY_PENDING)) {
+				} else if (status.equals(SupplierManagementConst.MOL_PENDING)) {
 					statusCode = SupplierManagementConst.PM_STAT_PENDING_PAYMENT;
 
-				} else if (status.equals(SupplierManagementConst.MOL_FAIL) || status.equals(SupplierManagementConst.PAYMENT_GATEWAY_FAIL)) {
+				} else if (status.equals(SupplierManagementConst.MOL_FAIL)) {
 					statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 				}
 				// #26307 start 
@@ -550,35 +546,37 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				Timestamp bankDate = new Timestamp(System.currentTimeMillis());
 				Boolean validFormat = false;
 				try {
-					if (date1.trim().equals("0000-00-00 00:00:00")) {
-						log.info("Invalid Date ==== " + date1);
+					if(date1.trim().equals("0000-00-00 00:00:00")){
+						log.info("Invalid Date ==== "+date1);
 						date1 = null;
 					}
-					if (date1 == null || date1.trim().equals("")) {
+					if(date1 == null || date1.trim().equals("")){
 						throw new Exception();
 					}
-					if (date1 != null) {
-						log.info("Bank Date&Time ==== " + date1);
+					if(date1 != null){
+						log.info("Bank Date&Time ==== "+date1);
 						SimpleDateFormat sdfrmt = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
-						try {
-							log.info("In try");
-							sdfrmt.parse(date1);
-							log.info("Setting Valid Format to true");
-							validFormat = true;
-						} catch (ParseException e) {
-							log.info("In Parse Catch");
-							validFormat = false;
-						} finally {
-							log.info("In finally");
-							if (validFormat) {
-								log.info("Valid Format");
-								bankDate = DateUtils.convertStringToTimestamp(CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, date1);
+					    try{
+					    	log.info("In try");
+					        sdfrmt.parse(date1);
+					        log.info("Setting Valid Format to true");
+					        validFormat = true;
+					    }
+					    catch(ParseException e){
+					    	log.info("In Parse Catch");
+						    validFormat = false;
+					    }
+					    finally {
+					    	log.info("In finally");
+					    	if(validFormat){
+					    		log.info("Valid Format");
+								bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
 								pymtReqDTO.setBankDate(bankDate);
-							} else {
+							}else{
 								log.info("Invalid Format");
 								throw new Exception();
 							}
-						}
+					    }
 					}
 				} catch (Exception e) {
 					log.info("bankDate is null");
@@ -589,15 +587,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				Timestamp txDate = new Timestamp(System.currentTimeMillis());
 				try {
 					txDate = DateUtils.convertStringToTimestamp(
-							CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, paydate);
+							"yyyy-MM-dd HH:mm:ss", paydate);
 				} catch (Exception e) {
 					txDate = new Timestamp(System.currentTimeMillis());
 					e.printStackTrace();
 				}
 				//32422 END
+				log.info("channel--------------------26307"+channel);
 				paymentOrder.setChannelName(channel);
 				log.info("#38377########paymentOrder.setChannelName:"+paymentOrder.getChannelName());
 				//#33137 - start
+				log.info("SET TRANSACTION ID--------------------33137 : "+tranID);
 				smPaymentRes.setTransactionId(tranID);
 				smPaymentRes.setMolpayTransactionId(molpayTranId);
 				smPaymentRes.setFpxTranId(fpxTranId);
@@ -638,10 +638,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 				//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 				//START 35182
-				if (pyPayment.getPyBill() != null
-						&& pyPayment.getPyBill().getBillType()
-								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
-					pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);
+				if (pyPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {					
+					pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);					
 				}
 				//END 35182
 				pymtReqDTO.setValidPayment(validPayment);
@@ -672,6 +670,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				PaymentResDTO pymtResDTO = null;
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
+				log.info(">>>>#38377 disable payment<<<");
 				// #38377
 				if(isResponseValid(pyPayment.getPyBill().getBillType(), payload)){
 					pymtResDTO = reqSO.updatePayment(pymtReqDTO);
@@ -740,9 +739,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		
 		boolean paymentStatus = false;
 		switch (status) {
-		case (SupplierManagementConst.MOL_SUCCESS):
-		//#38377
-		case (SupplierManagementConst.PAYMENT_GATEWAY_SUCCESS):
+		case SupplierManagementConst.MOL_SUCCESS:
 			log.info(">>>>MOL_SUCCESS<<<<<<<<<<" + status);
 			String msgCode = null;
 
@@ -765,8 +762,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_FAIL:
-		//#38377
-		case SupplierManagementConst.PAYMENT_GATEWAY_FAIL:
 			log.info(">>>>MOL_FAIL<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.ERROR_721051);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_ERROR);
@@ -774,8 +769,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_PENDING:
-		//#38377
-		case SupplierManagementConst.PAYMENT_GATEWAY_PENDING:
 			log.info(">>>>MOL_PENDING<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.INFO_721055);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
@@ -812,10 +805,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		boolean paymentStatus = false;
 		switch (status) {
 		case SupplierManagementConst.MOL_SUCCESS:
-		//#38377
-		case (SupplierManagementConst.PAYMENT_GATEWAY_SUCCESS):
 			log.info(">>>>MOL_SUCCESS<<<<<<<<<<" + status);
-			
+
 			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
 				getManagedBean().setMessageId(MessageConst.INFO_721058);
 			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
@@ -832,8 +823,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_FAIL:
-		//#38377
-		case SupplierManagementConst.PAYMENT_GATEWAY_FAIL:
 			log.info(">>>>MOL_FAIL<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.ERROR_721051);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_ERROR);
@@ -841,8 +830,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_PENDING:
-		//#38377
-		case SupplierManagementConst.PAYMENT_GATEWAY_PENDING:
 			log.info(">>>>MOL_PENDING<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.INFO_721055);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
@@ -1028,7 +1015,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String[] strArr = new String[]{sbName.toString()};
 		return strArr;
 	}
-	
+
 	private void setMessageSoftcert(Long paymentId, List<PyBillDtl> bills){
 		FacesScopes fs = new FacesScopes();
 		boolean isAdmin = fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
@@ -1080,6 +1067,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		System.out.println("key1>>>>>" + key1);
 	}*/
 	private Map<String, String> getHttpReqMap(HttpServletRequest httpReq) {
+		log.info("######38377  inside getHttpReqMap#####");
 		String paymentGateway = "N";
 		String payload = httpReq.getParameter("payload");
 		log.info("######38377#####payload: " + payload);
