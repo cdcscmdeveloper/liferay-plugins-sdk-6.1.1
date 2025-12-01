@@ -347,7 +347,7 @@ public class ProfileManagementSearchBackingBean extends
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 								e.getMessage()));
 			}
-		  setApplicationStatus(items);
+			setApplicationStatus(items);
 	}
 }
  
