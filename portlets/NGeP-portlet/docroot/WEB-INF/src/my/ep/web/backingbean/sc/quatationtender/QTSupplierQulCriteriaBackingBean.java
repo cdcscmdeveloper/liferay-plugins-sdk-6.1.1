@@ -2184,18 +2184,16 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 			getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
 			getManagedBean().setHisCatCode(catCode);
-			if (this.getManagedBean().getUpdateCatInPm()) {
-				List<PmRemarkCategory> listCategoryDB = new ArrayList();
-				for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
-					if (null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)
-							&& removeIndex.getChangedDate().before(qtCatChangedDate)) {
-						listCategoryDB.add(removeIndex);
-					}
+			
+			List<PmRemarkCategory> listCategoryDB = new ArrayList();
+			for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
+				if (null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)
+						&& removeIndex.getChangedDate().before(qtCatChangedDate)) {
+					listCategoryDB.add(removeIndex);
 				}
-				getManagedBean().setHistoryList(listCategoryDB);
 			}
+			getManagedBean().setHistoryList(listCategoryDB);
 		}
-
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
 	// #29732 End
