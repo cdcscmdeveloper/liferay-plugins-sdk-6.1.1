@@ -16219,10 +16219,16 @@ public class SmApplicationUtil {
 				draft.setSmSupplier(smAppl.getSmSupplier());
 				draft.setSmAppl(smAppl);
 				draft.setTitle(exp.getTitle());
-				draft.setOriAgencyName(exp.getClientName());
 				draft.setContractValue(exp.getContractValue());
 				draft.setSourceType(retrievePmParameterById(ParameterConst.SOURCE_TYPE_ID_SM));
 				draft.setProcumentMode(retrievePmParameterById(exp.getProcurementModeId().longValue()));
+				draft.setClientType(exp.getClientType());
+				if(exp.getClientType().equalsIgnoreCase("F")){
+					draft.setOriAgencyName(exp.getClientName());
+				}else if(exp.getClientType().equalsIgnoreCase("O")){
+					draft.setAgencyName(exp.getClientName());	
+				}
+				
 				List<SmCompExpCatDraft> catDraftList = new ArrayList<>();
 				for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {
 					SmCompExpCatDraft catDraft = new SmCompExpCatDraft();

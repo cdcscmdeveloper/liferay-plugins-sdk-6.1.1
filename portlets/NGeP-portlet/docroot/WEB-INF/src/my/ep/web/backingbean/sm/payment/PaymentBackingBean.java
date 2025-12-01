@@ -180,6 +180,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 		log.info("*******Bill Object**********"
 				+ resDTO.getPyBill().getBillId());
+		log.info("######38377#####billId init: " + resDTO.getPyBill().getBillId());
 		this.getManagedBean().setPyBill(resDTO.getPyBill());
 		List<PyBillDtl> smBillDtls = resDTO.getPyBill().getPyBillDtls();
 
@@ -212,7 +213,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				this.getManagedBean().setApplicationPayment(billDtl);
 			}
 		}
-
+		log.info("#38377#####inside billDtl ID:"
+				+ this.getManagedBean().getApplicationPayment() != null ? this
+				.getManagedBean().getApplicationPayment().getBillDtlId() : null);
 		if (getManagedBean().isSoftcertPayment()) {
 			setBilledSoftCertPersonnels(pyBillDtlLs);
 		}
@@ -236,7 +239,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
 		reqDTO.setBillId(this.getManagedBean().getPyBill().getBillId());
 		PendingPaymentResDTO resDTO = reqSO.checkAlreadyDonePayement(reqDTO);
-				
+		
+		log.info("#38377#####inside proceedToPaymentSummary completePayment:"+resDTO.isFoundCompletePayment());
 		if(resDTO.isFoundCompletePayment()){
 			log.info("<<<< Failure Payment - Bill ID >>>> "+reqDTO.getBillId());
 			throw new EpException(MessageConst.ERROR_721055);
