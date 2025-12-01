@@ -50,8 +50,8 @@
 					update="spkiOutputPanel" process="@form"
 					disabled="#{isDisciplinaryAction}" />
 				<ui:remove>26247 - end - added isDisciplinaryAction</ui:remove>	
-				
-
+					
+				<p:commandButton value="#{lbl['lbl.btn.update']}"
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
 					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed}"
 					update="@this" process="@this" partialSubmit="true"/>
