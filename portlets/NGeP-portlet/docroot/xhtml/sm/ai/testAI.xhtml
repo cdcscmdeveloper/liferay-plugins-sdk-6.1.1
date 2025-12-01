@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection" />
@@ -11,13 +12,18 @@
 	<ui:define name="content">
 	
 	<br/>
-	bank
-	<ac:smAIAssistant aiDlg="ai" docType="bank"/>
+	EPF
+	<p:commandButton value="AI Assistant" onclick="epfAI.show()" immediate="true"> 
+		<p:ajax partialSubmit="true" process="@this" />
+	</p:commandButton>
+	<ac:smAIAssistant aiDlg="epfAI" docType="epf" smAppl="#{smAIDocBackingBean.test()}" />
+	
 	<br/>
-	epf
-	<ac:smAIAssistant aiDlg="ai2" docType="epf"/>
 	<br/>
-	tenancy
-	<ac:smAIAssistant aiDlg="ai3" docType="tenancy"/>
+	TENANCY
+	<p:commandButton value="AI Assistant" onclick="tenancyAI.show()" immediate="true">
+		<p:ajax partialSubmit="true" process="@this" />
+	</p:commandButton>
+	<ac:smAIAssistant aiDlg="tenancyAI" docType="tenancy" smAppl="#{smAIDocBackingBean.test()}" />
 	</ui:define>
 </ui:composition>

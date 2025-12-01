@@ -23,7 +23,7 @@
 				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 				value="#{lbl['lbl.sm.comp.exp.draft.btn.back']}" />
 		</div>
-		<p:panel header="#{lbl['lbl.sm.comp.exp.draft.header.sm']}"
+		<p:panel id="smPanel" header="#{lbl['lbl.sm.comp.exp.draft.header.sm']}"
 			toggleable="true">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sm.comp.exp.draft.instruction.sm']}" />
@@ -35,39 +35,39 @@
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
-							style="text-align: center !important;" />
+							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
-							style="text-align: center !important;" />
+							style="width:50% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
-							style="text-align: center !important;" />
+							style="width:20% !important; text-align: center !important;" />
 						<p:column
 							headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
-							style="text-align: center !important;" />
+							style="width:20% !important; text-align: center !important;" />
 						<p:column
 							headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
-							style="text-align: center !important;" />
+							style="width:8% !important; text-align: center !important;" />
 					</p:row>
 				</p:columnGroup>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<h:outputText value="#{index+1}" />
 				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 					<h:outputText value="#{draftSm.title}" />
 				</p:column>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<h:outputText value="#{draftSm.contractValue}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<h:outputText value="#{draftSm.contractEffDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<p:commandLink
 						action="#{smCompExpBB.redirectToDraftUpdate(draftSm)}"
 						oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
@@ -77,7 +77,7 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.sm.comp.exp.draft.header.ct']}"
+		<p:panel id="ctPanel" header="#{lbl['lbl.sm.comp.exp.draft.header.ct']}"
 			toggleable="true">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sm.comp.exp.draft.instruction.ct']}" />
@@ -89,39 +89,39 @@
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
-							style="text-align: center !important;" />
+							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
-							style="text-align: center !important;" />
+							style="width:50% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
-							style="text-align: center !important;" />
+							style="width:20% !important; text-align: center !important;" />
 						<p:column
 							headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
-							style="text-align: center !important;" />
+							style="width:20% !important; text-align: center !important;" />
 						<p:column
 							headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
-							style="text-align: center !important;" />
+							style="width:8% !important; text-align: center !important;" />
 					</p:row>
 				</p:columnGroup>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<h:outputText value="#{index+1}" />
 				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 					<h:outputText value="#{draftCt.title}" />
 				</p:column>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<h:outputText value="#{draftCt.contractValue}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<h:outputText value="#{draftCt.contractEffDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<p:commandLink
 						action="#{smCompExpBB.redirectToDraftUpdate(draftCt)}"
 						oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
@@ -131,7 +131,7 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.sm.comp.exp.draft.header.qt']}"
+		<p:panel id="qtPanel" header="#{lbl['lbl.sm.comp.exp.draft.header.qt']}"
 			toggleable="true">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sm.comp.exp.draft.instruction.qt']}" />
@@ -143,39 +143,39 @@
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
-							style="text-align: center !important;" />
+							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
-							style="text-align: center !important;" />
+							style="width:50% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
-							style="text-align: center !important;" />
+							style="width:20% !important; text-align: center !important;" />
 						<p:column
 							headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
-							style="text-align: center !important;" />
+							style="width:20% !important; text-align: center !important;" />
 						<p:column
 							headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
-							style="text-align: center !important;" />
+							style="width:8% !important; text-align: center !important;" />
 					</p:row>
 				</p:columnGroup>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<h:outputText value="#{index+1}" />
 				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 					<h:outputText value="#{draftQt.title}" />
 				</p:column>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<h:outputText value="#{draftQt.contractValue}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<h:outputText value="#{draftQt.contractEffDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
+				<p:column style="text-align: center !important;">
 					<p:commandLink
 						action="#{smCompExpBB.redirectToDraftUpdate(draftQt)}"
 						oncomplete="blockWidget.hide()" onstart="blockWidget.show()"

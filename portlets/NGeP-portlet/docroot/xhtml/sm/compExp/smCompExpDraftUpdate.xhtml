@@ -89,7 +89,7 @@
 									rendered="#{smCompExpMB.disableClienType or (!smCompExpMB.disableClienType and 
 								smCompExpMB.selectedDraft.oriAgencyName ne null)}"
 									value="#{smCompExpMB.selectedDraft.agencyName}" />
-								<p:inputText size="60"
+								<p:inputText size="60" style="width: auto !important;"
 									rendered="#{!smCompExpMB.disableClienType and smCompExpMB.selectedDraft.oriAgencyName eq null}"
 									value="#{smCompExpMB.selectedDraft.agencyName}" />
 							</p:outputPanel>
@@ -116,7 +116,7 @@
 							<p:spacer width="3px" />
 							<p:inputText id="fileExtensionNo"
 								label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
-								maxlength="3" size="3"
+								maxlength="3" size="3" style="width: auto !important;"
 								value="#{smCompExpMB.selectedDraft.fileExtensionNo}">
 								<p:ajax event="blur"
 									listener="#{smCompExpBB.trimFileExtensionNo}"
@@ -341,9 +341,7 @@
 									<h:commandLink id="file"
 										value="#{smCompExpBB.getShortFileName(doc.fileName)}">
 										<p:fileDownload
-											value="#{smCompExpBB.commonDownload(doc.filePath,doc.fileName)}" />
-										<f:ajax process="@form" update=":form"
-											onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
+											value="#{smCompExpBB.downloadSelectedSuppDoc(doc.fileName, doc.filePath)}" />
 									</h:commandLink>
 									<p:tooltip for="file" value="#{doc.fileName}" position="top" />
 									<p:spacer width="10" />
@@ -371,7 +369,7 @@
 				widgetVar="smCompExpCatCodesWV">
 				<ac:paginator for="smCompExpCatCodes" />
 				<c:if test="#{smCompExpMB.smCompExpCatDraftListEmpty}">
-					<p:column style="width:2%">
+					<p:column style="width:2% !important;">
 						<f:facet name="header">
 							<p:selectBooleanCheckbox value="#{smCompExpMB.selectedAll}">
 								<p:ajax listener="#{smCompExpBB.selectAllDraftCatCodes}"
@@ -383,43 +381,52 @@
 								update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}" />
 						</p:selectBooleanCheckbox>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+					<p:column style="width:34% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 						<h:outputText styleClass="mandatory" value="*" />
-						<p:selectOneMenu id="mainDDId"
+						<p:selectOneMenu id="mainDDId" style="width:95% !important;"
 							label="#{lbl['lbl.sm.projDtls.mainCat']}"
 							value="#{smCompExpCatCode.categoryL1.categoryL1Id}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems itemLabel="#{main.categoryName}"
+							<f:selectItems
+								itemLabel="#{main.categoryL1Code} - #{main.categoryName}"
 								itemValue="#{main.categoryL1Id}"
 								value="#{smCompExpMB.supplierMainCatList}" var="main" />
 							<p:ajax event="change" update="subDDId,subDivDDId"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								listener="#{smCompExpBB.getSupplierSubCatList(smCompExpCatCode.categoryL1.categoryL1Id, index)}" />
+								listener="#{smCompExpBB.getSupplierSubCatList(smCompExpCatCode.categoryL1.categoryL1Id, 
+								smCompExpCatCode.categoryL2, smCompExpCatCode.categoryL3)}" />
 						</p:selectOneMenu>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+					<p:column style="width:32% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.subCat']}">
 						<h:outputText styleClass="mandatory" value="*" />
-						<p:selectOneMenu id="subDDId"
+						<p:selectOneMenu id="subDDId" style="width:95% !important;"
 							label="#{lbl['lbl.sm.projDtls.subCat']}"
 							value="#{smCompExpCatCode.categoryL2.categoryL2Id}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems itemLabel="#{sub.categoryName}"
+							<f:selectItems
+								itemLabel="#{sub.categoryL2Code} - #{sub.categoryName}"
 								itemValue="#{sub.categoryL2Id}"
-								value="#{smCompExpMB.supplierSubCatList}" var="sub" />
+								value="#{smCompExpCatCode.categoryL2.pmCategoryL2s}" var="sub" />
 							<p:ajax event="change" update="subDivDDId"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								listener="#{smCompExpBB.getSupplierSubDivCatList(smCompExpCatCode.categoryL2.categoryL2Id, index)}" />
+								listener="#{smCompExpBB.getSupplierSubDivCatList(smCompExpCatCode.categoryL2.categoryL2Id,
+								smCompExpCatCode.categoryL3)}" />
 						</p:selectOneMenu>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+					<p:column style="width:32% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 						<h:outputText styleClass="mandatory" value="*" />
-						<p:selectOneMenu id="subDivDDId"
+						<p:selectOneMenu id="subDivDDId" style="width:95% !important;"
 							label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 							value="#{smCompExpCatCode.categoryL3.categoryL3Id}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems itemLabel="#{subDiv.categoryName}"
+							<f:selectItems
+								itemLabel="#{subDiv.categoryL3Code} - #{subDiv.categoryName}"
 								itemValue="#{subDiv.categoryL3Id}"
-								value="#{smCompExpMB.supplierSubDivCatList}" var="subDiv" />
+								value="#{smCompExpCatCode.categoryL3.pmCategoryL3s}"
+								var="subDiv" />
 							<p:ajax event="change"
 								update=":#{p:component('smCompExpCatCodes')}, :#{p:component('addCatBtn')}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -428,13 +435,16 @@
 					</p:column>
 				</c:if>
 				<c:if test="#{!smCompExpMB.smCompExpCatDraftListEmpty}">
-					<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+					<p:column style="width:34% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 						<h:outputText value="#{smCompExpCatCode.categoryL1Name}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+					<p:column style="width:33% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.subCat']}">
 						<h:outputText value="#{smCompExpCatCode.categoryL2Name}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+					<p:column style="width:33% !important;"
+						headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 						<h:outputText value="#{smCompExpCatCode.categoryL3Name}" />
 					</p:column>
 				</c:if>
@@ -472,7 +482,7 @@
 				value="#{lbl['lbl.sm.comp.exp.update.delete.btn']}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{smCompExpBB.onDeleteDraft}"
-				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdCt}" />
+				rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}" />
 			<p:commandButton id="btnDeclare"
 				value="#{lbl['lbl.sm.comp.exp.update.declare.btn']}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -530,11 +540,27 @@
 					onclick="confirmDelSelectedCatDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
+		<p:dialog dynamic="true" height="100" id="delDuplicateSm" modal="true"
+			resizable="false" widgetVar="delDuplicateSmDialogWV" width="350px"
+			styleClass="pop_up_top">
+			<h:outputText
+				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate']}"
+				escape="false" />
+			<div align="right">
+				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}"
+					onclick="delDuplicateDialogWV.hide();"
+					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+					process="@form" update=":form"
+					value="#{lbl['lbl.sm.comp.exp.yes.btn']}" />
+				<p:commandButton value="#{lbl['lbl.sm.comp.exp.no.btn']}"
+					onclick="delDuplicateDialogWV.hide();" />
+			</div>
+		</p:dialog>
 		<p:dialog dynamic="true" height="100" id="delDuplicate" modal="true"
 			resizable="false" widgetVar="delDuplicateDialogWV" width="350px"
 			styleClass="pop_up_top">
 			<h:outputText
-				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate']}"
+				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate.draft']}"
 				escape="false" />
 			<div align="right">
 				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}"

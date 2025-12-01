@@ -31,10 +31,10 @@
 		test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history')}">
 		<p:panel header="#{lbl['lbl.sm.projDtls.panHdr']}" toggleable="true">
 			<h:outputText
-				rendered="#{viewSmApplBackingBean.managedBean.supplierUser}"
+				rendered="#{viewSmApplBackingBean.managedBean.supplierUser and !viewSmApplBackingBean.getAppVersionDetailsWithRedmineNo()}"
 				value="#{lbl['lbl.sm.comp.exp.new.version.application.status.supplier']}" />
 			<h:outputText
-				rendered="#{viewSmApplBackingBean.managedBean.approverUser or viewSmApplBackingBean.managedBean.poUser}"
+				rendered="#{(viewSmApplBackingBean.managedBean.approverUser or viewSmApplBackingBean.managedBean.poUser) and !viewSmApplBackingBean.getAppVersionDetailsWithRedmineNo()}"
 				value="#{lbl['lbl.sm.comp.exp.new.version.application.status.ups']}" />
 		</p:panel>
 	</c:if>
