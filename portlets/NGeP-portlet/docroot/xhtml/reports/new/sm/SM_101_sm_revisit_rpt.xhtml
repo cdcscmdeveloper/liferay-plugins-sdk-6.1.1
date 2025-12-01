@@ -21,11 +21,14 @@
 		<tr>
 			<td class="tdTitle"><p:outputLabel
 					value="#{lbl['lbl.sm.rv.rpt.site.visit.officer.name']}" /></td>
-			<td class="tdContent"><ac:lov id="lovUser" lovId="PM_USER_ID"
-					readonly="true" headerText="#{lbl['lbl.sm.rv.sv.officer']}"
-					conditionField="pmUserOrgs.pmUserRoles.pmRole.roleCode^#{smRevisitRptBB.managedBean.svoRoleCode}"
-					value="#{smRevisitRptBB.managedBean.revisitOfficer.userName}"
-					saveObject="smRevisitRptBB.managedBean.revisitOfficer" /></td>
+			<ui:remove>#39435 Start</ui:remove>
+			<td class="tdContent"><ac:lov id="lovUser"
+					lovId="PM_USER_ID_RPT" readonly="true"
+					headerText="#{lbl['lbl.sm.rv.sv.officer']}"
+					conditionField="#{smRevisitRptBB.getConditionFieldsSVO()}"
+					saveObject="smRevisitRptBB.managedBean.revisitOfficer"
+					value="#{smRevisitRptBB.managedBean.revisitOfficer.userName}" /></td>
+			<ui:remove>#39435 Start</ui:remove>
 			<td class="tdTitle"><p:outputLabel
 					value="#{lbl['lbl.sm.rv.rpt.visit.date.from']}" /></td>
 			<td><table style="width: 100%;">
