@@ -9001,8 +9001,8 @@ public class SupplierFinalizationBackingBean extends
 		final String evaluationStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM;
 		SearchBean<ScQtEvaluationResultDtl> searchBean = new SearchBean<>();
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean(QTSearchBeanConst.SEARCH_QTEVALUATIONRESULT_EVALUATIONSTAGE, SearchOperator.OPERATOR_EQUALS.value(),
-						evaluationStage));
+				new SearchFilterBean(QTSearchBeanConst.SEARCH_QTEVALUATIONRESULT_EVALUATIONSTAGE,
+						SearchOperator.OPERATOR_EQUALS.value(), evaluationStage));
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean(
 						QTSearchBeanConst.SEARCH_SQTEVALUATIONRESULT_SCQTPROPOSAL_SCQTSUPPLIER_RECORDSTATUSFLG,
@@ -9013,12 +9013,30 @@ public class SupplierFinalizationBackingBean extends
 		reqDTO.setSearchBean(searchBean);
 		reqDTO.setEvaluationStage(evaluationStage);
 
+		List<TplSpecZoneDtl> specZoneDtls = this.getManagedBean().getZoneDetails();
+		if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+			for (TplSpecZoneDtl specZoneDtl : specZoneDtls) {
+				reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
+				prepareSupplierCache(reqDTO);
+			}
+			return;
+		}
+		prepareSupplierCache(reqDTO);
+
+	}
+
+	// 26247 - end
+
+	// 26247 - start
+	private void prepareSupplierCache(SuppFinalizationReqDTO reqDTO) {
 		SuppFinalizationResDTO resDTO = getQtSuppFinalizationSO().retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 		List<ScQtEvaluationResultDtl> qualifiedSuppliers = resDTO.getQualifiedSuppliersByEvalStage().getResultList();
-
+		if (CollectionUtils.isEmpty(qualifiedSuppliers)) {
+			return;
+		}
 		for (ScQtEvaluationResultDtl qualSupplier : qualifiedSuppliers) {
-			Long zoneId = (qualSupplier.getTplSpecZoneDtl() == null ? DEFAULT_ZONE : qualSupplier.getTplSpecZoneDtl()
-					.getSpecZoneId());
+			Long zoneId = qualSupplier.getTplSpecZoneDtl() == null ? DEFAULT_ZONE : qualSupplier.getTplSpecZoneDtl()
+					.getSpecZoneId();
 			Long requestItemId = qualSupplier.getScRequestItem().getRequestNoteItemId();
 
 			List<QtEvaluationResultDtlBean> cachedSuppliers = getCachedSuppliersFromMap(zoneId, requestItemId);
@@ -9060,6 +9078,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 	}
+
 	// 26247 - end
 	
 	// 26247 - start
