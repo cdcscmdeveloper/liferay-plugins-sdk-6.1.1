@@ -65,12 +65,11 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
 							<td>
-								<h:outputText rendered="#{cc.attrs.bean.displayLabelCountryOriginLocal}" value="#{lbl['lbl.sm.approver.country.of.origin.local']}" />
-								<h:outputText rendered="#{cc.attrs.bean.displayLabelCountryOriginForeign}" value="#{lbl['lbl.sm.approver.country.of.origin.foreign']}" />
+								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" />
 							</td>
 						</tr>
 					</p:outputPanel>
-					<!-- #37925 END -->
+					
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.panHdr.offFacility']}" /></td>
 						<td>
