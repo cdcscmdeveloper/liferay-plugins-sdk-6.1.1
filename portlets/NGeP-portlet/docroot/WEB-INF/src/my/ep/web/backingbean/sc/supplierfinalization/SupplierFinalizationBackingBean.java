@@ -6255,7 +6255,7 @@ public class SupplierFinalizationBackingBean extends
 				// #35320 - End
 				
 				Map<String,String[]> higherAuthoritiesMap 
-							= this.getManagedBean().getHigherAuthoritiesMap();
+							= getManagedBean().getHigherAuthoritiesMap();
 				
 				// 1 - Non Unanimous decision
 				// != 1 - Other decision(s)
