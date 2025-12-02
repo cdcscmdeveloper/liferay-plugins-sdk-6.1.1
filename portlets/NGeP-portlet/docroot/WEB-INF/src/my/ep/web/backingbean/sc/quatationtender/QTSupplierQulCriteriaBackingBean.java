@@ -2149,7 +2149,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			 findQtCatCodeCurrent = retrieveCurrentScQtCategoryCode();
 			 findQtCatCode = findQtCatCodeCurrent;
 			}
-			if( null != findQtCatCode && !findQtCatCode.isEmpty() || null != findQtCatCodeCurrent && !findQtCatCodeCurrent.isEmpty()){
+			if( null != findQtCatCode && !findQtCatCode.isEmpty()){
 				for(ScQtCategory categoryCodeEdit : findQtCatCode){
 					qtCatCreatedDate = categoryCodeEdit.getCreatedDate();
 					qtCatChangedDate = categoryCodeEdit.getChangedDate();
