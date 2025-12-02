@@ -246,7 +246,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		setMaxEffDate(expDate);
 		setMinExpDate(effDate);
 
-		if (this.getManagedBean().isMasterNew() || (null != contractStatus && !contractStatus.equals(ParameterConst.CONTRACT_STATUS_TERMINATED))) {
+		boolean terminated = false;
+		if(null != contractStatus && contractStatus.equals(ParameterConst.CONTRACT_STATUS_TERMINATED)){
+			terminated = true;
+		}
+		if (!terminated) {
 			if (this.getManagedBean().isDraftUpdate()) {
 				this.getManagedBean().getSelectedDraft().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
 			} else if (this.getManagedBean().isMasterUpdate()) {
@@ -326,13 +330,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		smCompExpCatDraftList = getSmCompExpSo().retrieveSmCompExpCatDraftList(reqDTO).getSmCompExpCatDraftList();
 		smCompExpCatDraftList = filterCatCode(smCompExpCatDraftList, this.getManagedBean().getSupplier().getSmAppl().getApplId());
 
-		if (smCompExpCatDraftList.isEmpty()) {
-			addSmCompExpCatDraft();
-			this.getManagedBean().setSmCompExpCatDraftListEmpty(true);
-			getSupplierMainCatList();
-		} else {
-			this.getManagedBean().setSmCompExpCatDraftList(smCompExpCatDraftList);
-			this.getManagedBean().setSmCompExpCatDraftListEmpty(false);
+		getSupplierMainCatList();
+		if (smCompExpCatDraftList.isEmpty()) { 
+			addSmCompExpCatDraft(); 
+		} else { 
+			this.getManagedBean().setSmCompExpCatDraftList(smCompExpCatDraftList); 
+			this.getManagedBean().setSmCompExpCatDraftNotComplete(false);
 		}
 	}
 
