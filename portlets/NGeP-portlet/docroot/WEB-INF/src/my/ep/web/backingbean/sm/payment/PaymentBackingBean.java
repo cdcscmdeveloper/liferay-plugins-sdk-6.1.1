@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +55,7 @@ import my.ep.web.managedbean.sm.payment.PaymentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.PaymentUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -84,6 +84,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
 	private final String cancelUrl = SmCommonUtil.getBasePortalUrl() + "/web/epapp/task-list";
+	
+	// #38377
+	private final String paymentGatewayEpOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.ep.onoff");
 
 
 	public void preRenderApplicationPayment(){
@@ -177,6 +180,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 		log.info("*******Bill Object**********"
 				+ resDTO.getPyBill().getBillId());
+		log.info("######38377#####billId init: " + resDTO.getPyBill().getBillId());
 		this.getManagedBean().setPyBill(resDTO.getPyBill());
 		List<PyBillDtl> smBillDtls = resDTO.getPyBill().getPyBillDtls();
 
@@ -209,7 +213,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				this.getManagedBean().setApplicationPayment(billDtl);
 			}
 		}
-
+		log.info("#38377#####inside billDtl ID:"
+				+ this.getManagedBean().getApplicationPayment() != null ? this
+				.getManagedBean().getApplicationPayment().getBillDtlId() : null);
 		if (getManagedBean().isSoftcertPayment()) {
 			setBilledSoftCertPersonnels(pyBillDtlLs);
 		}
@@ -338,7 +344,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			// if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
 			PyPaymentOrder pymtOrder = new PyPaymentOrder();
 			pymtOrder.setPyPayment(payment);
-			pymtOrder.setPaymentGateway("MOL");
+			//#38377
+			pymtOrder.setPaymentGateway(isCdcPaymentGateway(pyBill.getBillType())?"CDC":"MOL");
 			// pymtOrder.setChannelName("TESTING");
 
 			payment.setPyPaymentOrder(pymtOrder);
@@ -377,8 +384,20 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			// this.getManagedBean().
 			String orderId = resDTO.getPyBill().getPyPayments().get(0)
 					.getPaymentId().toString();
-			merchantId = SmCommonUtil.getInstance().getPaymentGatewayMerchantIdByBillType(pyBill.getBillType());
-			String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(pyBill.getBillType());
+			
+			//#38377
+			merchantId = isCdcPaymentGateway(pyBill.getBillType()) ? EpPropertiesUtils
+					.getInstance().getProperty("payment.gov.merchantid")
+					: SmCommonUtil.getInstance()
+							.getPaymentGatewayMerchantIdByBillType(
+									pyBill.getBillType());
+					
+			//#38377
+			String vKey = isCdcPaymentGateway(pyBill.getBillType()) ? EpPropertiesUtils
+					.getInstance().getProperty("payment.gov.vkey")
+					: SmCommonUtil.getInstance()
+							.getPaymentGatewayVKeyByBillType(
+									pyBill.getBillType());
 			String vc = SmCommonUtil.md5(totalAmount + merchantId + orderId + vKey);
 			
 			log.info("******billType********" + pyBill);
@@ -393,11 +412,37 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
 			
+			//#38377
+			this.getManagedBean()
+					.setPayLoad(
+							PaymentUtil.constructJsonPayload(merchantId, vKey,
+									this.getManagedBean().getOrderId(), this
+											.getManagedBean().getTotalAmount(),
+									this.getManagedBean().getBillName(), this
+											.getManagedBean().getBillEmail(),
+									this.getManagedBean().getBillMobile(), this
+											.getManagedBean().getBillDesc(),
+									this.getManagedBean().getCountry(), this
+											.getCancelUrl()));
+			
 			return "paymentRequestSubmission";
 
 		}
 
 		return "";
+	}
+	
+	//#38377
+	private boolean isCdcPaymentGateway(String billType) {
+		boolean retVal = false;
+		if (billType != null
+				&& !billType
+						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)
+				&& paymentGatewayEpOnOff != null
+				&& paymentGatewayEpOnOff.trim().equals("1")) {
+			retVal = true;
+		}
+		return retVal;
 	}
 		
 
@@ -1041,8 +1086,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		if (billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
 			return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";// + EpPropertiesUtils.getInstance().getProperty("molpay.cdc.url.exts");	//temp add ext	for testing purpose.. do not merge to prd
 		}else{
-			// #26307 - payment gateway change 
-			return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.gov.url.ext");
+			// #38377
+			if (isCdcPaymentGateway(billType)) {
+				return EpPropertiesUtils.getInstance().getProperty("payment.url");
+			} else {
+				// #26307 - payment gateway change
+				return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId
+						+ EpPropertiesUtils.getInstance().getProperty("molpay.gov.url.ext");
+			}
 		}		
 		
 	}

@@ -1934,14 +1934,17 @@ public class SmApplicationBackingBean extends
 
 		// set registration status list exclude current registration status only
 		// if registration list size more than one
+//		37925 START
 		getManagedBean().setRegStatusDescList(
-				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
+				SmApplicationUtil.getInstance().retrieveRegistrationStatusListBySupplierTypeApplType(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
 		getManagedBean().setRecommendRegStatusDescList(
 				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(
 						getManagedBean().getSmAppl().getSupplierType(),
 						applicationType));
+		showRegistrationDecisionUI();
+//		37925 END
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setBusinessAndHadApprovedSpecialCatcode-23", 
 				subStartTime); //20211005@fadhli - #31754
@@ -10867,7 +10870,7 @@ public class SmApplicationBackingBean extends
 	 *            - the recommendation
 	 */
 	public void submitPOEscalationToApprover(String recommendation) {
-		assignValReqdToTrue();
+//		assignValReqdToTrue(); #37925
 		// validate equity owner
 		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
@@ -10969,16 +10972,18 @@ public class SmApplicationBackingBean extends
 		}
 		//#12483 - END
 		//Bug #26705
+		// #39422 - Start - Comment method
 		getlatestPoOverlappingRemarks();
+		// #39422 - End
 		
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
 		String pendingSiteVisitReviewAfterApprovedStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
-		if (!getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
-			assignValReqdToTrue();
-		} else {
+//		#37925 START
+		if (getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
 			assignValReqdToFalse();
 		}
+//		#37925 END
 		// 27877 - end
 		getManagedBean().getSmAppl().setBumi(
 				getManagedBean().getSmAppl().getSmSupplier().isBumi());
@@ -11430,6 +11435,10 @@ public class SmApplicationBackingBean extends
 		log.info("31181-message for reject before renew session:"+res); //#31181 add log
 		renewSesionObject();
 		log.info("31181-message for reject after renew session:"+res); //#31181 add log
+		//#34400 - start
+		RequestContext.getCurrentInstance().execute(
+				"$('.ui-dialog:visible').hide();$('.ui-widget-overlay').remove();");
+		//#34400 - end
 		return "cancelPendingAcknowledgePage";
 	}
 
@@ -12926,6 +12935,8 @@ public class SmApplicationBackingBean extends
 					SmApplDocFile file = new SmApplDocFile();
 					file.setFileName(StringUtils.replace(event.getFile()
 							.getFileName(), " ", "-"));
+					String uniqueName = generateUniqueFilename(file.getFileName()); //#39282
+					file.setFileName(uniqueName);
 					String filePath = Calendar.getInstance().get(Calendar.YEAR)
 							+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
 							+ "/SD/";
@@ -12939,7 +12950,8 @@ public class SmApplicationBackingBean extends
 					doc.getNewAddedFiles().add(file);
 					//#34392 - end
 					//#34552 - end
-					commonUploadFile(event, filePath);
+					/*commonUploadFile(event, filePath);*/
+					SmCommonUtil.processUpload(filePath, event, file.getFileName()); //#39282
 				}
 			}
 		}
@@ -12971,6 +12983,8 @@ public class SmApplicationBackingBean extends
 				//#28807 - START
 				SmApplDocFile aaa = new SmApplDocFile();
 				aaa.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
+				String uniqueName = generateUniqueFilename(aaa.getFileName()); //#39282
+				aaa.setFileName(uniqueName);
 				aaa.setSmApplSupportDoc(doc);
 				aaa.setFilePath(filePath);
 				doc.getSmApplDocFiles().add(aaa);
@@ -12993,7 +13007,8 @@ public class SmApplicationBackingBean extends
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
 
-				commonUploadFile(event, filePath);
+				/*commonUploadFile(event, filePath);*/
+				SmCommonUtil.processUpload(filePath, event, aaa.getFileName()); //#39282
 			}
 		}
 
@@ -16518,9 +16533,11 @@ public class SmApplicationBackingBean extends
 				for (SmRemark rmk : remResDTO.getRemarksList())
 					if (rmk.getDocType()
 							.equals(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER)) {
-						getManagedBean()
-								.setApplnOverLapRemarks(rmk.getRemark());
-
+						// #39422 - Start - Add log info
+//						getManagedBean()
+//								.setApplnOverLapRemarks(rmk.getRemark());
+						log.info("Redmine 39422 (Overlap Category) = " + rmk.getRemark());
+						// #39422 - End
 					}
 			}
 		}
@@ -18589,6 +18606,332 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	// #36718 - End
+	
+//	#37925 START
+	private void showRegistrationDecisionUI() {
+	    clearRegistrationStatusDisplay();
+	    
+	    SmAppl smAppl = getManagedBean().getSmAppl();
+	    if(smAppl == null) {
+	    	// Nothing to process if application data is unavailable
+	    	return;
+	    }
+	    
+	    String ssmCompanyCountry = getCompanyCountry(smAppl);
+	    String applType = smAppl.getApplType();
+
+	    SmSupplier smSupplier = getManagedBean().getSmSupplier();
+	    if(smSupplier == null){
+	    	// Cannot proceed without supplier data
+	    	return;
+	    }
+	    
+	    String businessType = smSupplier.getBusinessType();
+	    
+	    boolean isForeignCompany = !SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA.equalsIgnoreCase(ssmCompanyCountry);
+	    
+	    setCountryOriginUI(applType, businessType, ssmCompanyCountry);
+	    setRegistrationStatusUI(businessType, smAppl, isForeignCompany);
+	}
+
+	private String getCompanyCountry(SmAppl smAppl) {
+	    String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
+	    return (country != null && !country.isEmpty()) ? country : SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;
+	}
+
+	/**
+	 * Determines and sets the supplier's country of origin for UI display.
+	 *
+	 * @param applType     the application type
+	 * @param businessType        the supplier's business type
+	 * @param ssmCompanyCountry   the SSM registered country
+	 */
+	private void setCountryOriginUI(String applType, String businessType, String ssmCompanyCountry) {
+		if(applType == null || businessType == null){
+			return;
+		}
+		
+		if(applType.equals(SupplierManagementConst.APPL_TYPE_BUMI)){
+			setCountryOriginLabel(SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA);
+			return;
+		}
+		
+		// ROC business uses actual company country, others default to Malaysia
+	    if (isRocBusinessType(businessType)) {
+	        setCountryOriginLabel(ssmCompanyCountry);
+	        return;
+	    }
+	    
+	    setCountryOriginLabel(SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA);
+	}
+	
+	/**
+	 * Sets the UI label for the supplier's country of origin.
+	 *
+	 * @param ssmCountryCode the SSM country code to resolve
+	 */
+	public void setCountryOriginLabel(String ssmCountryCode) {
+
+	    if (ssmCountryCode == null) {
+	        return;
+	    }
+
+	    PmCountry pmCountry;
+
+	    // Use UNKNOWN country handler when code matches the special value
+	    if (SupplierManagementConst.COUNTRY_UNKNOWN_CODE.equalsIgnoreCase(ssmCountryCode)) {
+	        pmCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_UNKNOWN_CODE);
+	    } else {
+	        pmCountry = SmCommonUtil.retrievePmCountryByCountryCodeSSM(ssmCountryCode);
+	    }
+
+	    if (pmCountry == null || pmCountry.getCountryName() == null) {
+	        return;
+	    }
+
+	    getManagedBean().setStrLabelCountryOrigin(pmCountry.getCountryName());
+	}
+
+	private boolean isRocBusinessType(String businessType) {
+	    return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD.equalsIgnoreCase(businessType)
+	            || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD.equalsIgnoreCase(businessType);
+	}
+
+	/**
+	 * Updates the registration UI based on business type, supplier application data,
+	 * and whether the company is foreign.
+	 *
+	 * @param businessType      the business type (nullable)
+	 * @param application       the supplier application (nullable)
+	 * @param isForeignCompany  indicates whether the company is foreign
+	 */
+	private void setRegistrationStatusUI(String businessType, SmAppl smAppl, boolean isForeignCompany) {
+
+	    if (smAppl == null || smAppl.getSupplierType() == null) {
+	        return;
+	    }
+
+	    String supplierType = smAppl.getSupplierType();
+
+	    if (isForeignCompany && isRocBusinessType(businessType)) {
+	        foreignRegistrationUI(true);
+
+	    } else if (SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(supplierType)) {
+	        localContractorRegistrationUI(smAppl.getApplType(), false);
+
+	    } else if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(supplierType)) {
+	        localConsultantRegistrationUI(false);
+	    }
+
+	    // No other cases to process
+	}
+
+	/**
+	 * Clears the display status for various registration-related UI elements.
+	 * Sets the visibility of the country origin, registration status, and related UI elements to false.
+	 */
+	public void clearRegistrationStatusDisplay() {
+	    getManagedBean().setStrLabelCountryOrigin("");
+	    getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
+	    getManagedBean().setDisplayLabelRegistrationStatus(false);
+	    getManagedBean().setDisplayDropdownRegStatus(false);
+	}
+
+	/**
+	 * Configures the UI elements for local constructor registration based on the application type
+	* and whether the company is foreign.
+	*
+	* @param applType          the type of application (e.g., MOF, BUMI, UPDATE, CATEGORY, RENEWAL)
+	* @param isForeignCompany  true if the company is foreign; false otherwise
+	*/
+	public void localContractorRegistrationUI(String applType, boolean isForeignCompany) {
+	    PmStatusDesc currentStatusDesc = SmApplicationUtil.getCurrRegStatusDesc(getManagedBean().getSmAppl());
+	    
+	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType) || 
+	        SupplierManagementConst.APPL_TYPE_BUMI.equals(applType)) {
+	        assignValReqdToFalse();
+	        getManagedBean().setDisplayLabelRegistrationStatus(true);
+	        setRegistrationStatusValue(isForeignCompany);
+	    } else if (SupplierManagementConst.APPL_TYPE_UPDATE.equals(applType) || 
+	               SupplierManagementConst.APPL_TYPE_CATEGORY.equals(applType) || 
+	               SupplierManagementConst.APPL_TYPE_RENEWAL.equals(applType)) {
+	        if (isRegisteredStatus(currentStatusDesc)) {
+	            assignValReqdToFalse();
+	            getManagedBean().setDisplayLabelRegistrationStatus(true);
+	        } else {
+	            assignValReqdToTrue();
+	            getManagedBean().setDisplayCheckboxChangeCurrentStatus(true);
+	            getManagedBean().setDisplayDropdownRegStatus(true);
+	            updateRegistrationStatusList(currentStatusDesc);
+	        }
+	    }
+	    // Default case - no action needed
+	}
+
+	private boolean isRegisteredStatus(PmStatusDesc statusDesc) {
+	    return statusDesc.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
+	}
+
+	/**
+	 * Updates the registration status list based on the current status description.
+	 * 
+	 * @param currentStatusDesc The current status description to compare with.
+	 */
+	private void updateRegistrationStatusList(PmStatusDesc currentStatusDesc) {
+	    List<PmStatusDesc> regStatusList = getManagedBean().getRegStatusDescList();
+	    
+	    // Check if the list is not empty
+	    if (EntityHelper.isCollectionEmpty(regStatusList)) {
+	        return;
+	    }
+	    
+	    List<PmStatusDesc> newList = new ArrayList<>();  // Use diamond operator
+	    
+	    long currentStatusId = currentStatusDesc.getPmStatus().getStatusId();
+	    
+	    // Iterate over the registration status list
+	    for (PmStatusDesc pmStatusDesc : regStatusList) {
+	        long pmStatusId = pmStatusDesc.getPmStatus().getStatusId();
+	        
+	        // Add conditions based on the current status id
+	        if (isValidRegistrationStatus(currentStatusId, pmStatusId)) {
+	            newList.add(pmStatusDesc);
+	        }
+	    }
+	    // Manually sort according to predefined order
+        List<PmStatusDesc> sortedList = manualSortByDefinedOrder(newList);
+        
+	    getManagedBean().setRegStatusDescList(sortedList);
+	}
+	
+	/**
+     * Manually sorts a list of {@link PmStatusDesc} based on a fixed predefined order.
+     * <pre>
+     * Order: PM_STATUS_REGISTRATION_STATUS_REGISTERED, PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA, PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME, PM_STATUS_REGISTRATION_STATUS_FOREIGN
+     * </pre>
+     *
+     * @param unsortedList The list to sort.
+     * @return A new list sorted according to the defined order.
+     */
+    private List<PmStatusDesc> manualSortByDefinedOrder(List<PmStatusDesc> unsortedList) {
+        List<PmStatusDesc> sortedList = new ArrayList<>();
+
+        if (EntityHelper.isCollectionEmpty(unsortedList)) {
+            return sortedList;
+        }
+
+        int[] sortOrder = {
+        		(int) SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED, 
+        		(int) SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA, 
+        		(int) SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME, 
+        		(int) SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN
+        };
+
+        // Add elements in defined order
+        for (int i = 0; i < sortOrder.length; i++) {
+            long targetId = sortOrder[i];
+
+            for (PmStatusDesc desc : unsortedList) {
+                if (desc != null && desc.getPmStatus() != null
+                        && desc.getPmStatus().getStatusId() == targetId) {
+                    sortedList.add(desc);
+                }
+            }
+        }
+
+        // Add remaining statuses (if any not in order list)
+        for (PmStatusDesc desc : unsortedList) {
+            if (desc == null || desc.getPmStatus() == null) {
+                continue;
+            }
+
+            long id = desc.getPmStatus().getStatusId();
+            if (!isInOrderArray(sortOrder, id)) {
+                sortedList.add(desc);
+            }
+        }
+
+        return sortedList;
+    }
+
+    /**
+     * Checks if a given status ID is present in the predefined order array.
+     */
+    private boolean isInOrderArray(int[] order, long statusId) {
+        for (int i = 0; i < order.length; i++) {
+            if (order[i] == statusId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+	/**
+	 * Determines if the registration status is valid based on current and pmStatus IDs.
+	 * 
+	 * @param currentStatusId The current status ID to compare.
+	 * @param pmStatusId The status ID from the list.
+	 * @return true if the status combination is valid, otherwise false.
+	 */
+	private boolean isValidRegistrationStatus(long currentStatusId, long pmStatusId) {
+	    if (currentStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA) {
+	        return pmStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
+	                || pmStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME;
+	    } else if (currentStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME) {
+	        return pmStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED
+	                || pmStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA;
+	    } else {
+	        return pmStatusId == SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
+	    }
+	}
+	
+	/**
+	 * Configures the registration UI for a local consultant based on the company type.
+	 * 
+	 * @param isForeignCompany Indicates if the company is foreign. Affects the registration status.
+	 */
+	public void localConsultantRegistrationUI(boolean isForeignCompany) {
+	    assignValReqdToFalse();
+	    setRegistrationStatusValue(isForeignCompany);
+	    getManagedBean().setDisplayLabelRegistrationStatus(true);
+	}
+
+	/**
+	 * Configures the registration UI for a foreign company.
+	 * 
+	 * @param isForeignCompany Indicates if the company is foreign, affecting registration status.
+	 */
+	public void foreignRegistrationUI(boolean isForeignCompany) {
+	    assignValReqdToFalse();
+	    getManagedBean().setDisplayLabelRegistrationStatus(isForeignCompany);
+	    setRegistrationStatusValue(isForeignCompany);
+	}
+
+	public void setRegistrationStatusValue(boolean isForeignCompany) {
+	    String language = new FacesScopes().getUserLocale().getLanguage();
+	    long targetStatusId = isForeignCompany ? 
+	            SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN : 
+	            SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
+	    
+	    for (PmStatusDesc pmStatusDesc : getManagedBean().getRegStatusDescList()) {
+	        if (language.equalsIgnoreCase(pmStatusDesc.getLanguageCode()) 
+	                && pmStatusDesc.getPmStatus().getStatusId() == targetStatusId) {
+	            updateRegistrationStatus(pmStatusDesc);
+	            break; // Exit loop once match is found
+	        }
+	    }
+	}
+
+	private void updateRegistrationStatus(PmStatusDesc pmStatusDesc) {
+	    getManagedBean().setCurrRegStatus(pmStatusDesc.getStatusName());
+	    
+	    if (getManagedBean().isPoUser()) {
+	        getManagedBean().setPoRecommendStatusId(pmStatusDesc.getPmStatus().getStatusId());
+	    } else if (getManagedBean().isApproverUser()) {
+	        getManagedBean().setApprovedStatusId(pmStatusDesc.getPmStatus().getStatusId());
+	    }
+	}
+//	#37925 END
 	//#38927 START
 	/**
 	 * Validates the supplier categories for the current application.
@@ -18761,5 +19104,22 @@ public class SmApplicationBackingBean extends
 	    }
 	}
 	//#38927 END
+	//#39282
+	/**
+	 * To generate unique file name yyyyMMdd_HHmmss
+	 *
+	 * @param String  the StringBuilder accumulating the messages
+	 */
+	private String generateUniqueFilename(String originalFilename) {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String oriFilename = "";
+        String extension = "";
+        int dotIndex = originalFilename.lastIndexOf('.');
+        if (dotIndex > 0) {
+            extension = originalFilename.substring(dotIndex);
+            oriFilename = originalFilename.substring(0, dotIndex);
+        }
 
+        return oriFilename + "_" + timestamp + extension;
+    }
 }
