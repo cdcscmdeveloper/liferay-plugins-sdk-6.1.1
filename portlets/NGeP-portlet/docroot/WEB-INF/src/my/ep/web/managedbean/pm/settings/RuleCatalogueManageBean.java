@@ -193,7 +193,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Long searchRuleDataTypeZone;
 	private String searchPtjCode;
 	private String searchPtjName;
-	private String searchQtValueLimit;
+	private BigDecimal searchQtValueLimit;
+	private Boolean collapsePanel;
 	//#36738 End
 
 	/************ AUDIT #28895_35509 *************/
@@ -1951,18 +1952,28 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.searchPtjName = searchPtjName;
 	}
 	
-	public String getSearchQtValueLimit() {
+	public BigDecimal getSearchQtValueLimit() {
 		return searchQtValueLimit;
 	}
 	
-	public void setSearchQtValueLimit(String searchQtValueLimit) {
+	public void setSearchQtValueLimit(BigDecimal searchQtValueLimit) {
 		this.searchQtValueLimit = searchQtValueLimit;
 	}
+
 	public List<PmPtjSpecialApproval> getOriginalPtjSpecialApprovalList() {
 		return originalPtjSpecialApprovalList;
 	}
+
 	public void setOriginalPtjSpecialApprovalList(List<PmPtjSpecialApproval> originalPtjSpecialApprovalList) {
 		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
+	}
+
+	public Boolean getCollapsePanel() {
+		return collapsePanel;
+	}
+
+	public void setCollapsePanel(Boolean collapsePanel) {
+		this.collapsePanel = collapsePanel;
 	}
 	//#36738 End
 }

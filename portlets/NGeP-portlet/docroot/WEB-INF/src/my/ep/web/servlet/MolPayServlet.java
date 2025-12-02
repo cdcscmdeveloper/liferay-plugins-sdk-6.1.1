@@ -125,6 +125,7 @@ public class MolPayServlet extends HttpServlet {
 		log.info("extraP:" + extraP);
 		
 		//#38377
+		log.info("#38377########paymentGateway map:"+reqMap.get("paymentGateway"));
 		if(reqMap.get("paymentGateway").equals("Y") || nbcb != null){
 			Long ordId = Long.valueOf(orderId);
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
@@ -281,6 +282,7 @@ public class MolPayServlet extends HttpServlet {
 					//32422 END
 					log.info("channel---------"+channel);
 					paymentOrder.setChannelName(channel);
+					log.info("#38377########paymentOrder.setChannelName:"+paymentOrder.getChannelName());
 					
 					//#33137 - start
 					if(channel.equalsIgnoreCase("FPX")){
@@ -294,29 +296,39 @@ public class MolPayServlet extends HttpServlet {
 					//#38377
 					smPaymentRes.setMolpayTransactionId(reqMap.get("paymentGateway").equals("Y")?null:molpayTransId);
 					smPaymentRes.setFpxTranId(reqMap.get("paymentGateway").equals("Y")?null:tranID);
+					log.info("#38377########smPaymentRes.setTransactionId:"+smPaymentRes.getTransactionId());
+					log.info("#38377########smPaymentRes.setFpxTranId:"+smPaymentRes.getFpxTranId());
+					log.info("#38377########smPaymentRes.setMolpayTransactionId:"+smPaymentRes.getMolpayTransactionId());
 					//#33137 - end
 					smPaymentRes.setErrorCode(errorCode);
 					smPaymentRes.setErrorDesc(errorDesc);
+					log.info("#38377########smPaymentRes.setErrorCode:"+smPaymentRes.getErrorCode());
+					log.info("#38377########smPaymentRes.setErrorDesc:"+smPaymentRes.getErrorDesc());
 					//32422 START
 					if(bankDate != null){
 						smPaymentRes.setTransactionDate(bankDate);
 					}else{
 						smPaymentRes.setTransactionDate(txDate);
 					}
+					log.info("#38377########smPaymentRes.setTransactionDate:"+smPaymentRes.getTransactionDate());
 					smPaymentRes.setBankDateTime(bankDate);
+					log.info("#38377########smPaymentRes.setBankDateTime:"+smPaymentRes.getBankDateTime());
 					//32422 END
 					smPaymentRes.setPyPaymentOrder(paymentOrder);
 					smPaymentRes.setPaymentStatus(status);
+					log.info("#38377########smPaymentRes.setPaymentStatus:"+smPaymentRes.getPaymentStatus());
 					smPaymentRes.setPaidAmt(txAmount);
+					log.info("#38377########smPaymentRes.setPaidAmt:"+smPaymentRes.getPaidAmt());
 					paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 					int requeryCount = paymentOrder.getRequeryCount() + 1;
 					paymentOrder.setRequeryCount(requeryCount);
-
+					log.info("#38377########Status Code : "+statusCode);
 					if(statusCode != null){
 						StatusReqDTO statusReqDTO = new StatusReqDTO();
 						statusReqDTO.setStatusId(statusCode);
 						PmStatus pmStat= SmServiceLookup.getStatusSO().retrieveStatusByStatusId(statusReqDTO).getPmStatus();
 						smPayment.setPmStatus(pmStat);
+						log.info("#38377########paymentStatus : "+pmStat);
 					}
 					
 					
@@ -324,6 +336,7 @@ public class MolPayServlet extends HttpServlet {
 					
 					//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 					pymtReqDTO.setValidPayment(validPayment);
+					log.info("#38377########pymtReqDTO.setValidPayment : "+pymtReqDTO.isValidPayment());
 					pymtReqDTO.setPyPayment(smPayment);
 					pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 
@@ -350,8 +363,12 @@ public class MolPayServlet extends HttpServlet {
 						log.info(">>>>paymentType<<<"+paymentType);
 					}
 					pymtReqDTO.setPaymentType(paymentType);
+					log.info("#38377########pymtReqDTO.setPaymentType : "+pymtReqDTO.getPaymentType());
 					pymtReqDTO.setMethodName("doPost-MolPayServlet");
-					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
+					
+					log.info(">>>>#38377 disable payment update<<<");
+//					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
+					PaymentResDTO pymtResDTO = new PaymentResDTO();
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
 						if(nbcb.equals("1")){
@@ -405,6 +422,7 @@ public class MolPayServlet extends HttpServlet {
 	private Map<String,String> getHttpReqMap(HttpServletRequest httpReq){
 		String paymentGateway = "N";
 		String payload = httpReq.getParameter("payload");
+		log.info("#38377########payload:"+payload);
 		String nbcb = httpReq.getParameter("nbcb") != null ? httpReq.getParameter("nbcb") : null;
 		String amount = httpReq.getParameter("amount");
 		String orderId = httpReq.getParameter("orderid");
@@ -465,21 +483,32 @@ public class MolPayServlet extends HttpServlet {
 		if (jsonObject != null) {
 			try {
 				orderId = jsonObject.getString("orderId");
+				log.info("######38377#####json orderId: " + orderId);
 				tranID = jsonObject.getString("transId");
+				log.info("######38377#####json tranID: " + tranID);
 				status = jsonObject.getString("status");
+				log.info("######38377#####json status: " + status);
 				paydate = jsonObject.getString("trxDate");
+				log.info("######38377#####json paydate: " + paydate);
 				channel = jsonObject.getString("channel");
+				log.info("######38377#####json channel: " + channel);
 				currency = jsonObject.getString("currency");
+				log.info("######38377#####json currency: " + currency);
 				if (channel
 						.equals(SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE)) {
 					cardType = ParameterConst.CARD_TYPES_CREDIT; 
 				}
 				paydate = DateUtils.reformatDate(paydate,
 						"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd HH:mm:ss");
+				log.info("######38377#####formatted paydate: " + paydate);
 				date1 = paydate;
+				log.info("######38377#####json date1: " + date1);
 				paymentGateway = "Y";
+				log.info("######38377#####json paymentGateway: " + paymentGateway);
 				errorCode = jsonObject.getString("errCode");
+				log.info("######38377#####json errCode: " + errorCode);
 				errorDesc = jsonObject.getString("errDesc");
+				log.info("######38377#####json errorDesc: " + errorDesc);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

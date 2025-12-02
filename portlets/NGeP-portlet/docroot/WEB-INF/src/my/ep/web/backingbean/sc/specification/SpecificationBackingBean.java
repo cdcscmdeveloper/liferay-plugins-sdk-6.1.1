@@ -11877,13 +11877,10 @@ if (null != checklist && !checklist.isEmpty()) {
 			
 			scoreSetting.add(financialItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
-// #21695 farid, if partial set weightage to false			
-			// #21695 farid, if partial set weightage to false
-			if (this.getManagedBean().getQt().isPartial() == true) {
-				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
-			} else if (!this.getManagedBean().isWeightage35384WIP() && !this.getManagedBean().getQt().isPartial()) {
-				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true); // #38151 set to weightage
-			}// #38151 if not wip, set to true without partial offer
+			// #21695 farid, if partial set weightage to true #38679			
+			if (this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
+			}
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 				.getRecommendationPackageScore();
@@ -21820,7 +21817,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 								&& null != templateresDTO.getSpecMaster().getCtPanelItem()) {
 							panelItem = true;
 						}
-						if (panelItem) {
+						if (!panelItem) {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
 						} else {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);
@@ -23995,10 +23992,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		for (ScQtCheckList scQtCheckList : scQtChecklistListLocal) {
 			Long checklistStatus = scQtCheckList.getPmStatus().getStatusId();
-			if(checklistStatus.equals(QTStatusConst.TS_PENDING_SUBMISSION)){
+			if (scQtCheckList.isSelected() && checklistStatus.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
 				return;
-			}
-			if (scQtCheckList.isSelected()) {
+			} else if (scQtCheckList.isSelected() && checklistStatus.equals(QTStatusConst.TS_COMPLETED)) {
 				selectedCount++;
 			}
 		}
