@@ -1440,7 +1440,7 @@ public class SupplierFinalizationBackingBean extends
 					 } else {
 						 evaluationStage = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
 					 }
-					 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage";
+					 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.fec.consolidation.stage";//#38679
 			 		 break;
 		}
 		getManagedBean().setEvaluationHeader(evaluationHeader);
@@ -1860,6 +1860,7 @@ public class SupplierFinalizationBackingBean extends
 					
 					processSuppliersBeforeSaving();
 					validateSupplierByPackageAndItem(skipValidation);// 26247
+					checkNeedSupplierIfHaveBranchDeleted();//#28777#29729
 						
 						List<QtEvaluationResultDtlBean> cachedSupplierBeans = null;
 						Map<MapKey,List<QtEvaluationResultDtlBean>> cachedSuppliersMap = 
@@ -6123,14 +6124,7 @@ public class SupplierFinalizationBackingBean extends
 			String CommType = "";
 			expectTotalIndPriceBelowThreshold = expectTotalIndPriceBelowThreshold(getManagedBean().getScQt(),"SF");																				
 			CommType = getManagedBean().getCommitteeType();
-			*/
-			
-			//#35320 - Start
-			final String committeeType = getManagedBean().getCommitteeType();
-			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
-				checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
-			}
-			//#35320 - End
+			*/			
 			
 			for (PmReasonDesc reasonDesc : reasonList) {
 				//Include checking/control for #26169 #38 based on SF Decision, Forward To Higher Authority
@@ -6436,11 +6430,7 @@ public class SupplierFinalizationBackingBean extends
 					//#26169 #85 - START
 					//#26169 #85 - 09092020- include checking null 
 					if(currUserLoginOrgProfile != null)reqDTO.setOrgProfileId(currUserLoginOrgProfile.getOrgProfileId());
-					//#26169 #85 - END
-					
-					//#35320 - WIP Set scqt - Start
-					reqDTO.setScQt(scQt);
-					//#35320 - End
+					//#26169 #85 - END					
 					
 					CommitteResDTO resDTO = committeeSO.retrieveFinalizationCommitteeType(reqDTO);
 					if (resDTO != null) {
@@ -6451,14 +6441,21 @@ public class SupplierFinalizationBackingBean extends
 					committeeSO = null;
 				}
 			}
-			if (MapUtils.isNotEmpty(
-					higherAuthoritiesMap) && 
-						!higherAuthoritiesMap.containsKey(committeeType + 
-							SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS)) {
-				disableFwdToHighAuthorityOption = true;
-				getManagedBean().setDisableFwdToHighAuthorityOption(
-									disableFwdToHighAuthorityOption);
+			
+			// #35320 - Start
+			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
+					|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
+				checkAllSupplierOfferPriceByItemIsExceedCommitteeAuthority();
 			}
+
+			if (!this.getManagedBean().isSuppOfferPriceExceedCommunityAuthority()
+					&& MapUtils.isNotEmpty(higherAuthoritiesMap)
+					&& !higherAuthoritiesMap.containsKey(committeeType
+							+ SourcingConstants.FORWARD_TO_HIGHER_AUTHORITY_DECISION_OTHERS)) {
+				disableFwdToHighAuthorityOption = true;
+				getManagedBean().setDisableFwdToHighAuthorityOption(disableFwdToHighAuthorityOption);
+			}// #35320 - End
 		}
 		
 		String decision = null;
@@ -11213,6 +11210,22 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to retrieve qualified or disqualified supplier for QtSuppliersId
+	 * 
+	 * @param isQualified
+	 * @param qtId
+	 * @return List<Long>
+	 **/
+	public List<Long> retrieveQtSuppliersIdsByQtId(boolean isQualified, Long qtId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.retrieveQtSuppliersIdsByQtId(isQualified, qtId);
+	}
+
+	// #28777 & #29729 - End
 
 	// #28777 & #29729 - Start
 	/**
@@ -11227,6 +11240,190 @@ public class SupplierFinalizationBackingBean extends
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		return sourcingIntegrationSO.retrieveZoneQtSuppliersIdsByQtIdAndSpecZoneId(isQualified, qtId, specZoneId);
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check outcome is endorse or signoff and recommend details
+	 * 
+	 **/
+	private void checkNeedSupplierIfHaveBranchDeleted() {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
+		String outcome = this.getManagedBean().getOutcome();
+		boolean isEndorseOrSignOff = false;
+		if (outcome != null
+				&& (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF))) {
+			isEndorseOrSignOff = true;
+		}
+
+		ScQt scqt = this.getManagedBean().getScQt();
+		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+		reqDTO.setScQt(scqt);
+		SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationDtls(reqDTO);
+		ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
+		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
+
+		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)
+				&& checkListDisqualifiedSupplierBranchDeleted(scqt.getQtId())) {
+			validationNeedSupplier(recommendedItems, scqt);
+		}
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to set recommend details to do identifier data either true or
+	 * false
+	 * 
+	 * @param recommendDtls
+	 * @param scQt
+	 * 
+	 **/
+	private void validationNeedSupplier(List<ScQtRecommend> recommendedItems, ScQt scQt) {
+
+		Map<Long, ScQtRecommend> recommendMap = new HashMap<>();
+		Map<Long, Boolean> identifierMap = new HashMap<>();
+		boolean isItemized = this.getManagedBean().isItemize();
+
+		for (ScQtRecommend recommend : recommendedItems) {
+			Long recommendId = recommend.getQtRecommendId();
+			recommendMap.put(recommendId, recommend);
+			TplSpecZoneDtl tplSpecZoneDtl = recommend.getTplSpecZoneDtl();
+
+			if (!identifierMap.containsKey(recommendId)) {
+				identifierMap.put(recommendId, false);
+			}
+
+			if (identifierMap.containsKey(recommendId)) {
+				for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
+					Long supplierId = recommendDtl.getSupplier().getSupplierId();
+					identifierMap
+							.put(recommendId,
+									checkIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt,
+											supplierId) ? true : false);
+				}
+			}
+		}
+
+		if (isItemized) {
+			validationItemizedSupplier(recommendMap, identifierMap, scQt);
+		} else {
+			validationPackageSupplier(recommendMap, identifierMap, scQt);
+		}
+	}
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if have supplier branch deleted
+	 * 
+	 * @param tplSpecZoneDtl
+	 * @param recommendDtl
+	 * @param scQt
+	 * @param supplierId
+	 * 
+	 **/
+	private Boolean checkIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
+			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId) {
+
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+
+		if (tplSpecZoneDtl != null) {
+			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+			if (!sourcingIntegrationSO.flagZonesBiddingDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId,
+					specZoneId) && recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				return true;
+			}
+		} else {
+			if (!sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId)
+					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation if no supplier for itemized
+	 * 
+	 * @param recommendMap
+	 * @param identifierMap
+	 * @param scQt
+	 * 
+	 * 
+	 **/
+	private void validationItemizedSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
+			ScQt scQt) {
+
+		boolean foundFalse = false;
+		Long falseKey = null;
+
+		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
+			if (!entry.getValue()) {
+				foundFalse = true;
+				falseKey = entry.getKey();
+				break;
+			}
+		}
+
+		if (foundFalse) {
+			ScQtRecommend recommend = recommendMap.get(falseKey);
+			if (scQt.isZonal()) {
+				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
+				throw new EpException(MessageConst.ERROR_760623, new String[] {
+						recommend.getTplSpecZoneDtl().getZoneName(), recommend.getRequestItem().getItemName() });
+			} else {
+				navigateToSupplierFinalizationTab();
+				throw new EpException(MessageConst.ERROR_760622, new String[] { recommend.getRequestItem()
+						.getItemName() });
+			}
+		}
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation if no supplier for package
+	 * 
+	 * @param recommendMap
+	 * @param identifierMap
+	 * @param scQt
+	 * 
+	 **/
+	private void validationPackageSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
+			ScQt scQt) {
+
+		boolean foundFalse = false;
+		Long trueKey = null;
+
+		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
+			if (!entry.getValue()) {
+				foundFalse = true;
+				trueKey = entry.getKey();
+				break;
+			}
+		}
+
+		if (foundFalse) {
+			ScQtRecommend recommend = recommendMap.get(trueKey);
+			if (scQt.isZonal()) {
+				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
+				throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
+						.getZoneName() });
+			} else {
+				navigateToSupplierFinalizationTab();
+				throw new EpException(MessageConst.ERROR_760624);
+			}
+		}
 	}
 
 	// #28777 & #29729 - End
