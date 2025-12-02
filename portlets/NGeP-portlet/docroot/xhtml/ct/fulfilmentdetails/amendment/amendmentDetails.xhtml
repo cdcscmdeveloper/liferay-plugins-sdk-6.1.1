@@ -238,33 +238,6 @@
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
 
-			<!-- #24336 start 
-			<p:outputLabel value="#{lbl['lbl.ct.additional.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>			
-			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
-				<p:inputText id="addValueTxt" styleClass="ppRightBtn" style="width:80px;"  
-				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}" 
-				   disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
-					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					 <p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this" listener="#{amendmentBackingBean.changeAdditionalValue}"
-					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
-				</p:inputText>
-				<p:spacer width="1"/>
-			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.contract.amount']}" />
-			    <p:spacer width="1"/>
-				<p:message for="addValueTxt" display="icon" />
-			</h:panelGrid>
-			
-			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
-			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(1)}">
-				<p:inputText id="addValue" styleClass="ppRightBtn" style="width:90px;" disabled="true"
-					value="#{amendmentBackingBean.newContractAmt()}" >
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-				<p:spacer width="1"/>
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.contract.amount']}" />
-			</h:panelGrid>			
-		 #24336 end -->
-
 			<h:panelGrid columns="2" style="float:right;" rendered="#{amendmentBackingBean.showEffectiveDateInput}">
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" styleClass="required" />
 			</h:panelGrid>
@@ -298,62 +271,6 @@
 				!amendmentBackingBean.getAmendValue(2)}" />
 			<f:verbatim rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
 				!amendmentBackingBean.getAmendValue(2)}" />
-			<!-- #24336 start -
-			<p:outputLabel value="#{lbl['lbl.ct.new.gst.amt']}" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}"/>	
-			<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
-				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
-				   value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
-				   disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
-				   		or ctBackingBean.managedBean.disableGstAmount}"
-				   rendered="#{ctBackingBean.managedBean.gstCheckingGUI}">
-					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					 <p:ajax event="blur" update="newGstAmtTxt, overallAmt" process="@this" 
-					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
-				</p:inputText>
-				<p:message for="newGstAmtTxt" display="icon" />
-				<p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
-	   				 rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.txt.na']}">
-				</p:inputText>
-				<p:spacer width="1"/>
-			    <p:graphicImage id="iconToolTipGst" value="/css/images/design/tooltips.png" /> 
-				  	<p:tooltip id="gstTooltipSource" for="iconToolTipGst" style="max-width: 450px; z-index: 9999;">
-						<h:outputText id="gstLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.additional.new.gst.amt']}" />
-					</p:tooltip>
-			</h:panelGrid>
-			
-							
-			<p:outputLabel value="#{lbl['lbl.ct.new.stax.amt']}" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}"/>	
-			<h:panelGrid columns="5" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
-				<p:inputText id="newStaxAmtTxt" styleClass="ppRightBtn"  maxlength="18" style="width:80px;"
-				   disabled = "#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
-				   		or ctBackingBean.managedBean.disableStaxAmount}"
-				   		rendered="#{ctBackingBean.managedBean.staxCheckingGUI}" 
-				   		value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}">
-					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					 <p:ajax event="blur" update="newStaxAmtTxt, overallAmt" process="@this" 
-					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
-				</p:inputText>
-				<p:message for="newStaxAmtTxt" display="icon" />
-				<p:spacer width="1"/>
-			    <p:graphicImage id="iconToolTipSst" value="/css/images/design/tooltips.png" /> 
-				  	<p:tooltip id="sstTooltipSource" for="iconToolTipSst" style="max-width: 500px; z-index: 9999;">
-						<h:outputText id="sstLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.additional.new.stax.amt']}" />
-					</p:tooltip>
-			</h:panelGrid>
-			
-			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
-			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(1)}">
-				<p:inputText id="overallAmt" styleClass="ppRightBtn" style="width:90px;" disabled="true"
-					value="#{amendmentBackingBean.newOverallContractAmount()}" >
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-			    <p:spacer width="1"/>
-			    <p:graphicImage id="iconToolTipAmt" value="/css/images/design/tooltips.png" /> 
-				  	<p:tooltip id="amtTooltipSource" for="iconToolTipAmt">
-						<h:outputText id="amtLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.new.overall.contract.amt']}" />
-					</p:tooltip>
-			</h:panelGrid>	
-			 #24336 end -->
 			<f:verbatim rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
 				!amendmentBackingBean.getAmendValue(3)}" />
 
