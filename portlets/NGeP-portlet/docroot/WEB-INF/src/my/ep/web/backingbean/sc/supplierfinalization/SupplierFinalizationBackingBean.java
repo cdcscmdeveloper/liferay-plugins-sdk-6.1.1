@@ -6246,8 +6246,16 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (reason != null) {
 				String committeeType = getManagedBean().getCommitteeType();
+				
+				// #35320 - Set WIP QCA, QCB to QQC - Start				
+				if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+						|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
+					committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+				}
+				// #35320 - End
+				
 				Map<String,String[]> higherAuthoritiesMap 
-							= getManagedBean().getHigherAuthoritiesMap();
+							= this.getManagedBean().getHigherAuthoritiesMap();
 				
 				// 1 - Non Unanimous decision
 				// != 1 - Other decision(s)
