@@ -199,6 +199,7 @@
 	<p:dialog width="550px" height="500px" style="z-index:-1;"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
 		id="banchDialog" resizable="false" modal="true" closable="true">
+		<p:ajax event="close" listener="#{backingBean.assignCancelBranchBean}" resetValues="true"/> <!-- #38991 -->
 		
 		<p:outputPanel layout="block" id="branchBlockPanel">
 			<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
