@@ -11480,22 +11480,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	
 	// #28777 & #29729 - Start
 	/**
-	 * Method to retrieve qualified or disqualified supplier for QtSuppliersId
-	 * 
-	 * @param isQualified
-	 * @param qtId
-	 * @return List<Long>
-	 **/
-	public List<Long> retrieveQtSuppliersIdsByQtId(boolean isQualified, Long qtId) {
-		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		return sourcingIntegrationSO.retrieveQtSuppliersIdsByQtId(isQualified, qtId);
-	}
-
-	// #28777 & #29729 - End
-
-	// #28777 & #29729 - Start
-	/**
 	 * Method to retrieve qualified or disqualified zone for QtSuppliersId
 	 * 
 	 * @param isQualified
@@ -11602,17 +11586,64 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 		if (tplSpecZoneDtl != null) {
 			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
-			if (!sourcingIntegrationSO.flagZonesBiddingDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId,
-					specZoneId) && recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				return true;
+			List<Long> quaQtSupplierIdList = retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(true, scQt.getQtId(),
+					specZoneId);
+			for (Long quaQtSupplier : quaQtSupplierIdList) {
+				if (!sourcingIntegrationSO.flagZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId,
+						specZoneId)
+						&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
+						&& quaQtSupplier.equals(supplierId)) {
+					return true;
+				}
+
 			}
+
 		} else {
-			if (!sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId)
-					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				return true;
+
+			List<Long> quaQtSupplierIdList = retrieveSuppliersIdsByQtId(true, scQt.getQtId());
+			for (Long quaQtSupplier : quaQtSupplierIdList) {
+				if (!sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId)
+						&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
+						&& quaQtSupplier.equals(supplierId)) {
+					return true;
+				}
 			}
+
 		}
 		return false;
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to retrieve qualified supplier to get suppliersId
+	 * 
+	 * @param isQualified
+	 * @param qtId
+	 * @return List<Long>
+	 **/
+	public List<Long> retrieveSuppliersIdsByQtId(boolean isQualified, Long qtId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.retrieveSuppliersIdsByQtId(isQualified, qtId);
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to retrieve qualified supplier to get suppliersIds
+	 * 
+	 * @param isQualified
+	 * @param qtId
+	 * @param specZoneId
+	 * @return List<Long>
+	 **/
+	public List<Long> retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(boolean isQualified, Long qtId, Long specZoneId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(isQualified, qtId, specZoneId);
 	}
 
 	// #28777 & #29729 - End
@@ -11669,26 +11700,17 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	private void validationPackageSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
 			ScQt scQt) {
 
-		boolean foundFalse = false;
-		Long trueKey = null;
-
 		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
 			if (!entry.getValue()) {
-				foundFalse = true;
-				trueKey = entry.getKey();
-				break;
-			}
-		}
-
-		if (foundFalse) {
-			ScQtRecommend recommend = recommendMap.get(trueKey);
-			if (scQt.isZonal()) {
-				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
-				throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
-						.getZoneName() });
-			} else {
-				navigateToSupplierFinalizationTab();
-				throw new EpException(MessageConst.ERROR_760624);
+				ScQtRecommend recommend = recommendMap.get(entry.getKey());
+				if (scQt.isZonal()) {
+					setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
+					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
+							.getZoneName() });
+				} else {
+					navigateToSupplierFinalizationTab();
+					throw new EpException(MessageConst.ERROR_760624);
+				}
 			}
 		}
 	}
