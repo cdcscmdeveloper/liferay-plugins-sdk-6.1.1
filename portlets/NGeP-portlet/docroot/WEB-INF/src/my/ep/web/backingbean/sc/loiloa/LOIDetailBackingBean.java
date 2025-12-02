@@ -7011,30 +7011,34 @@ public class LOIDetailBackingBean extends
 	 * 
 	 **/
 	private void checkNeedSupplierIfHaveBranchDeleted(String outcome) {
-		
-		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-		
+	
+		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTAwardSO.class);
+	
 		boolean isEndorseOrSignOff = false;
 		if (outcome != null
 				&& (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF))) {
 			isEndorseOrSignOff = true;
 		}
-		
+	
 		ScQt scqt = this.getManagedBean().getScQt();
-		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-		reqDTO.setScQt(scqt);
-		SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationDtls(reqDTO);
-		ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
-		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
-
+		String committeeType = this.getManagedBean().getCommitteeType();
+		List<String> getRecommendDtlIds = this.getManagedBean().getRecommendDtlIds();
+		
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setQtId(scqt.getQtId());
+		reqDTO.setCommitteeType(committeeType);
+		reqDTO.setRecommendDtlIdList(getRecommendDtlIds);
+	
+		AwardSupplierResDTO resDTO = qtAwardSO.retrieveMultipleLoiDtls(reqDTO);
+		List<ScQtRecommend> recommendedItems = resDTO.getScQtRecommendList();
+	
 		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)
 				&& checkListDisqualifiedSupplierBranchDeleted(scqt.getQtId())) {
 			validationNeedSupplier(recommendedItems, scqt);
 		}
 	}
-
+	
 	// #28777 & #29729 - End
 	
 	// #28777 & #29729 - Start
@@ -7197,7 +7201,6 @@ public class LOIDetailBackingBean extends
 	 * @param tplSpecZoneDtl
 	 **/
 	private void setZoneAndTabIndexOnException(TplSpecZoneDtl tplSpecZoneDtl) {
-		log.info("setZoneAndTabIndexOnException");
 		List<TplSpecZoneDtl> specZoneDtls = this.getManagedBean().getMultiLOIZoneDetails();
 		if (tplSpecZoneDtl != null && CollectionUtils.isNotEmpty(specZoneDtls)) {
 			TplSpecZoneDtl zoneDtl = getManagedBean().getZoneMap().get(tplSpecZoneDtl.getSpecZoneId());
