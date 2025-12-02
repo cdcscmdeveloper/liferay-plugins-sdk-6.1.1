@@ -125,6 +125,7 @@ public class MolPayServlet extends HttpServlet {
 		log.info("extraP:" + extraP);
 		
 		//#38377
+		log.info("#38377########paymentGateway map:"+reqMap.get("paymentGateway"));
 		if(reqMap.get("paymentGateway").equals("Y") || nbcb != null){
 			Long ordId = Long.valueOf(orderId);
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
@@ -365,7 +366,9 @@ public class MolPayServlet extends HttpServlet {
 					log.info("#38377########pymtReqDTO.setPaymentType : "+pymtReqDTO.getPaymentType());
 					pymtReqDTO.setMethodName("doPost-MolPayServlet");
 					
-					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
+					log.info(">>>>#38377 disable payment update<<<");
+//					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
+					PaymentResDTO pymtResDTO = new PaymentResDTO();
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
 						if(nbcb.equals("1")){
@@ -419,6 +422,7 @@ public class MolPayServlet extends HttpServlet {
 	private Map<String,String> getHttpReqMap(HttpServletRequest httpReq){
 		String paymentGateway = "N";
 		String payload = httpReq.getParameter("payload");
+		log.info("#38377########payload:"+payload);
 		String nbcb = httpReq.getParameter("nbcb") != null ? httpReq.getParameter("nbcb") : null;
 		String amount = httpReq.getParameter("amount");
 		String orderId = httpReq.getParameter("orderid");
@@ -479,21 +483,32 @@ public class MolPayServlet extends HttpServlet {
 		if (jsonObject != null) {
 			try {
 				orderId = jsonObject.getString("orderId");
+				log.info("######38377#####json orderId: " + orderId);
 				tranID = jsonObject.getString("transId");
+				log.info("######38377#####json tranID: " + tranID);
 				status = jsonObject.getString("status");
+				log.info("######38377#####json status: " + status);
 				paydate = jsonObject.getString("trxDate");
+				log.info("######38377#####json paydate: " + paydate);
 				channel = jsonObject.getString("channel");
+				log.info("######38377#####json channel: " + channel);
 				currency = jsonObject.getString("currency");
+				log.info("######38377#####json currency: " + currency);
 				if (channel
 						.equals(SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE)) {
 					cardType = ParameterConst.CARD_TYPES_CREDIT; 
 				}
 				paydate = DateUtils.reformatDate(paydate,
 						"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd HH:mm:ss");
+				log.info("######38377#####formatted paydate: " + paydate);
 				date1 = paydate;
+				log.info("######38377#####json date1: " + date1);
 				paymentGateway = "Y";
+				log.info("######38377#####json paymentGateway: " + paymentGateway);
 				errorCode = jsonObject.getString("errCode");
+				log.info("######38377#####json errCode: " + errorCode);
 				errorDesc = jsonObject.getString("errDesc");
+				log.info("######38377#####json errorDesc: " + errorDesc);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
