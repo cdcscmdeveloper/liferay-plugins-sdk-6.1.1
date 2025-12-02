@@ -442,7 +442,12 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		} else {
 			for (ScQtContactPerson contactPerson : selectedContactList) {
 				contactList.remove(contactPerson);
-				deletedContactList.add(contactPerson);
+				if (CollectionUtils.isNotEmpty(deletedContactList) && !deletedContactList.contains(contactPerson)){//#35500 Fix Reopen 27th Nov
+					deletedContactList.add(contactPerson);
+				} else if (CollectionUtils.isEmpty(deletedContactList)) {
+					deletedContactList.add(contactPerson);
+				}
+				
 				//#28895-35500 start
 				if (newDoaList != null && newDoaList.contains(contactPerson)){
 					newDoaList.remove(contactPerson);
