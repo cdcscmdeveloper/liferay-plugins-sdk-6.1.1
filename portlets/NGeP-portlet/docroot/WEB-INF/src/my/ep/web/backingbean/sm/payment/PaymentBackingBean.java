@@ -180,6 +180,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 		log.info("*******Bill Object**********"
 				+ resDTO.getPyBill().getBillId());
+		log.info("######38377#####billId init: " + resDTO.getPyBill().getBillId());
 		this.getManagedBean().setPyBill(resDTO.getPyBill());
 		List<PyBillDtl> smBillDtls = resDTO.getPyBill().getPyBillDtls();
 
@@ -212,7 +213,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				this.getManagedBean().setApplicationPayment(billDtl);
 			}
 		}
-
+		log.info("#38377#####inside billDtl ID:"
+				+ this.getManagedBean().getApplicationPayment() != null ? this
+				.getManagedBean().getApplicationPayment().getBillDtlId() : null);
 		if (getManagedBean().isSoftcertPayment()) {
 			setBilledSoftCertPersonnels(pyBillDtlLs);
 		}
