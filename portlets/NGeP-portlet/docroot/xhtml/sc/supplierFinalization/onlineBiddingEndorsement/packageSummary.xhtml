@@ -61,29 +61,27 @@
 				<h:outputText value="#{(price.scBidSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			
-			<ui:remove>
-				Bug 31101 - WIP Impact 
-			</ui:remove>
-			<p:column>
+			<ui:remove>26247 - start</ui:remove>
+			<ui:param name="supplier"
+				value="#{price.scBidSupplier.smSupplier}" />
+			<ui:param name="mofExpired"
+				value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+			<p:column styleClass="#{mofExpired ? 'red-background':''}">
 				<f:facet name="header">
-									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
-								</f:facet>
-				<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-					rendered="#{price.scBidSupplier.smSupplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(price.scBidSupplier.smSupplier)}" 
-					process="@this" partialSubmit="true" update=":form">
-						<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-				</p:commandLink><p:spacer width="2"/>
-				
-				<h:outputText rendered="#{!price.scBidSupplier.smSupplier.disciplinaryActions}"
-				 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />								
+					<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
+				</f:facet>
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+			</p:column>		
+			<p:column style="white-space:normal;width:18%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+				</f:facet>
+				<ac:disciplinaryActionYesNo
+					supplier="#{supplier}" maxRow="5" index="#{rowIndex}"/>
 			</p:column>
-			
-			<ui:remove>
-				Bug 31101 - END
-			</ui:remove>
+			<ui:remove>26247 - end</ui:remove>
 			
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}" style="width:10%; white-space:normal; text-align:right;">
 				<h:outputText value="#{price.scBidSupplier.packageStartPrice}">
@@ -140,17 +138,18 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>			
-			<ui:remove>
-				31101 - Added Disciplinary Action filter
-			</ui:remove>
+			<ui:remove>26247 - start</ui:remove>
+			<ui:param name="isDisciplinaryAction" value="#{suppFinalBiddingBackingBean.disabledQTProcess(price.scBidSupplier.smSupplier)}"/>
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
 					  styleClass="td-check-box-spacing" selectionMode="single" 
 					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}"
 					  disabledSelection="#{!isMofSelection and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
-					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or price.scBidSupplier.smSupplier.disciplinaryActions) or
-					  									suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" /> <ui:remove>21692</ui:remove>		
+					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or isDisciplinaryAction) or
+					  									suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" /> 
+			<ui:remove>21692</ui:remove>
+			<ui:remove>26247 - end - added isDisciplinaryAction</ui:remove>			
 		</p:dataTable>
 	</p:panel>
 	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"

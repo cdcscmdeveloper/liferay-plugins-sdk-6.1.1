@@ -52,11 +52,13 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
@@ -69,6 +71,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
@@ -1353,7 +1356,7 @@ public class ConsolidationReportBackingBean extends
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-			reqDTO.setDoRankRequired(true);
+			// reqDTO.setDoRankRequired(true); //26247
 			reqDTO.setCountOfQualiedSuppliersReq(true);
 
 			if (specZone != null) {
@@ -1517,6 +1520,8 @@ public class ConsolidationReportBackingBean extends
 			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
 		}
 
+		int countDisabled = countSupplierWithDisciplinaryAction(qualifiedSuppliers);
+		
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer
 		if (scQt != null && !scQt.isPartial()) {
@@ -1549,6 +1554,11 @@ public class ConsolidationReportBackingBean extends
 				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
 						specZoneDtl, item.getRequestItem(),
 						itemQualifiedSuppliers);
+				
+				// 26247 - start
+				int countItemDisabled = countSupplierWithDisciplinaryAction(qualifiedSuppliers);
+				totalQualifiedSuppliers = totalQualifiedSuppliers - countItemDisabled;
+				// 26247 - end
 
 				// #31443, #21695 Start -exclude validate if quantity 0
 				if (scQt != null && !scQt.isPartial() && item.getOrderQty() != null
@@ -1587,22 +1597,25 @@ public class ConsolidationReportBackingBean extends
 		if (CollectionUtils.isNotEmpty(qualifiedSupplierBeans)) {
 
 			// Sort the suppliers as per the rank given by the desk officer
-			Collections.sort(qualifiedSupplierBeans,
-					new Comparator<QtEvaluationResultDtlBean>() {
-						public int compare(QtEvaluationResultDtlBean supplier1,
-								QtEvaluationResultDtlBean supplier2) {
-							if (supplier1.getDeskOfficerRank() != null
-									&& supplier2.getDeskOfficerRank() != null) {
-
-								// Ascending order
-								return supplier1.getDeskOfficerRank()
-										.intValue()
-										- supplier2.getDeskOfficerRank()
-												.intValue();
-							}
-							return -1;
-						}
-					});
+			// 26247 - start
+			CustomUtils.sort(qualifiedSupplierBeans, new Comparator<QtEvaluationResultDtlBean>() {
+				@Override
+				public int compare(QtEvaluationResultDtlBean supplier1, QtEvaluationResultDtlBean supplier2) { 
+					BigDecimal rank1 = supplier1.getDeskOfficerRank();
+					BigDecimal rank2 = supplier2.getDeskOfficerRank();
+					if (rank1 == null && rank2 == null) {
+						return 0;
+					}
+					if (rank1 == null) {
+						return -1;
+					}
+					if (rank2 == null) {
+						return 1;
+					}
+					return rank1.compareTo(rank2);
+				}
+			});
+			// 26247 - end
 
 			for (QtEvaluationResultDtlBean qualifiedSupp : qualifiedSupplierBeans) {
 				BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
@@ -2372,7 +2385,11 @@ public class ConsolidationReportBackingBean extends
 		if (resDTO != null) {
 			qualifiedSuppliers = resDTO.getQualifiedSupplierDetails();
 			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
-			}
+			// 26247 - start
+			int countDisabled = countSupplierWithDisciplinaryAction(qualifiedSuppliers);
+			totalQualifiedSuppliers = totalQualifiedSuppliers - countDisabled;
+			// 26247 - end
+		}
 
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer
@@ -2406,6 +2423,10 @@ public class ConsolidationReportBackingBean extends
 				if (resDTO != null) {
 					itemQualifiedSuppliers = resDTO.getQualifiedSupplierDetails();
 					totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
+					// 26247 - start
+					int countItemDisabled = countSupplierWithDisciplinaryAction(itemQualifiedSuppliers);
+					totalQualifiedSuppliers = totalQualifiedSuppliers - countItemDisabled;
+					// 26247 - end
 				}
 
 				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(specZoneDtl, item.getRequestItem(),
@@ -2477,16 +2498,25 @@ public class ConsolidationReportBackingBean extends
 		if (CollectionUtils.isNotEmpty(qualifiedSupplierBeans)) {
 
 			// Sort the suppliers as per the rank given by the desk officer
-			Collections.sort(qualifiedSupplierBeans, new Comparator<QtEvaluationResultDtlBean>() {
+			// 26247 - start
+			CustomUtils.sort(qualifiedSupplierBeans, new Comparator<QtEvaluationResultDtlBean>() {
+				@Override
 				public int compare(QtEvaluationResultDtlBean supplier1, QtEvaluationResultDtlBean supplier2) {
-					if (supplier1.getDeskOfficerRank() != null && supplier2.getDeskOfficerRank() != null) {
-
-						// Ascending order
-						return supplier1.getDeskOfficerRank().intValue() - supplier2.getDeskOfficerRank().intValue();
+					BigDecimal rank1 = supplier1.getDeskOfficerRank();
+					BigDecimal rank2 = supplier2.getDeskOfficerRank();
+					if (rank1 == null && rank2 == null) {
+						return 0;
 					}
-					return -1;
+					if (rank1 == null) {
+						return -1;
+					}
+					if (rank2 == null) {
+						return 1;
+					}
+					return rank1.compareTo(rank2);
 				}
 			});
+			// 26247 - end
 
 			for (QtEvaluationResultDtlBean qualifiedSupp : qualifiedSupplierBeans) {
 				BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
@@ -2633,16 +2663,35 @@ public class ConsolidationReportBackingBean extends
 	}
 	//#21692 - End
 	
-	//#21692 - Start
+	// #21692 - Start
 	private void setRankNull(ScQtEvaluationResultDtl qualSupplier) {
-		boolean disagreeProposalValidityExtension = qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() != null
-				&& (qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED
-				|| qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
-		
-		if (disagreeProposalValidityExtension) {
+		boolean disagreeProposalValidityExtension = qualSupplier.getQtEvaluationResult().getScQtProposal()
+				.getIsAgreeQtExtendPeriod() != null
+				&& (qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED || qualSupplier
+						.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+		// 26247 - start
+		SmSupplier supplier = qualSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier();
+		if (disagreeProposalValidityExtension || this.disabledQTProcess(supplier)) {
 			qualSupplier.setDeskOfficerRank(null);
+			updateCachedData(qualSupplier);
 		}
+		// 26247 - end
 	}
-	//#21692 - End
+	// #21692 - End
 	
+	// 26247 - start
+	private int countSupplierWithDisciplinaryAction(List<ScQtEvaluationResultDtl> evaluationResultDtls){
+		int countItemDisabled = 0;
+		if (CollectionUtils.isNotEmpty(evaluationResultDtls)) {
+			for (ScQtEvaluationResultDtl resultDtl : evaluationResultDtls) {
+				ScQtEvaluationResult scQtEvaluationResult = resultDtl.getQtEvaluationResult();
+				ScQtProposal scQtProposal = scQtEvaluationResult.getScQtProposal();
+				if (this.disabledQTProcess(scQtProposal.getScQtSupplier().getSmSupplier())) {
+					countItemDisabled++;
+				}
+			}
+		}
+		return countItemDisabled;
+	}
+	// 26247 - end
 }

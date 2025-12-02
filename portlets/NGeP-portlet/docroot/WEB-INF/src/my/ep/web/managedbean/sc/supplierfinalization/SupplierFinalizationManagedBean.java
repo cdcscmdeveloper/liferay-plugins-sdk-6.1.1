@@ -295,6 +295,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private ScQt checkCategoryCodeQt; // #29466
 	private boolean allSupplierDisagreeEPV;//#21692
+	// 26247 - start
+	private List<String> disabledSupplierIds;
+
+	// 26247 - end
 
 	// 39077 -start-
 	private boolean isReviseBriefMsg = Boolean.FALSE;
@@ -2483,6 +2487,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 	
+	// 26247 - start
+	public List<String> getDisabledSupplierIds() {
+		return disabledSupplierIds;
+	}
+
+	public void setDisabledSupplierIds(List<String> disabledSupplierIds) {
+		this.disabledSupplierIds = disabledSupplierIds;
+	}
+	// 26247 - end
+
 	// 39077 -start-
 	/**
 	 * @return the isReviseBriefMsg

@@ -36,7 +36,6 @@ import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -58,21 +57,16 @@ import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -86,7 +80,6 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
@@ -108,7 +101,6 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -145,9 +137,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -288,15 +278,6 @@ public class SPDetailBackingBean extends
 				resDTO = proposalSO.retrieveProposalDetail(reqDTO);
 			}
 			// #25201 -end-
-			
-			// 32723 -start-
-			if (this.getManagedBean().getQt() != null) {
-				if (this.getManagedBean().getQt().getDisciplinaryActionPresent() != null) {
-					resDTO.getScQt().setDisciplinaryActionPresent(
-							this.getManagedBean().getQt().getDisciplinaryActionPresent());
-				}
-			}
-			// 32723 -end-
 
 			ScQt scQt = resDTO.getScQt();
 			
@@ -1360,8 +1341,7 @@ public class SPDetailBackingBean extends
 									 }
 								}
 							}
-							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
-									.getSpecAnswerList().size())){
+							if (!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean.getSpecAnswerList().size())){
 								// #21695 -start-
 								for (TplSpecAnswer answerNullPrice : toDeleteZoneAnswers) {
 									throw new EpException(MessageConst.ERROR_760464);
@@ -1384,8 +1364,7 @@ public class SPDetailBackingBean extends
 				proposalReqDTO.setToBeRemovedSpecAnswers(tobeDeletedAnswers);
 				proposalReqDTO.setToBeRemovedSpecSuppAnswers(tobeDeletedSuppAnswers);
 			} else {
-				answers = getManagedBean().getTemplateSpecBean()
-						.getSpecAnswerList();
+				answers = getManagedBean().getTemplateSpecBean().getSpecAnswerList();
 			}
             if(answers == null || answers.size() == 0){
 				// #21695 -start-
@@ -5932,9 +5911,21 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear().intValue());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setApplId(scQtProposalChecklist.getScQtProposal().getSupplierApplId()); //Bug #30980
+			reqDTO.setComExpClientType("F"); //Bug #38267 
 
 			ProposalResDTO sdto = proposalSO.getCompanyExperience(reqDTO);
 			List<SmCompanyExperience> suppExpList = sdto.getCompExperienceList();
+			//Bug #38267 start
+			if (null != scQtProposalChecklist.getProposalScore() && !scQtProposalChecklist.getProposalScore().isEmpty()){
+				ScQtProposalScore propScore = scQtProposalChecklist.getProposalScore().get(0);
+				if (propScore.getCriteriaValue().compareTo(BigDecimal.valueOf(suppExpList.size())) != 0) {
+					//Query without F filter
+					reqDTO.setComExpClientType(null);
+					sdto = proposalSO.getCompanyExperience(reqDTO);
+					suppExpList = sdto.getCompExperienceList();
+				}
+			}
+			//Bug #38267 end
 			this.getManagedBean().setSupplierExperienceList(suppExpList);
 			this.getManagedBean().setSuppExpSize(suppExpList.size());
 			
@@ -6222,132 +6213,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	    return specZoneDetail;
 	}
 	//#28785-End	
-	
-	//#26247 -start-
-	/**
-	 * @return
-	 */
-	public boolean checkDisciplinaryActionForQTCat() {
-		//#27233#note-36 for #26247 -start-
-		log.debug("Entered inside " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
 		
-		if (null != this.getManagedBean().getQt()) {
-			if (StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
-				log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : checking DA for QT No. : " + this.getManagedBean().getQt().getQtNo());
-				
-				if (null != getManagedBean().getQtProposal() && null != getManagedBean().getQtProposal().getScQtSupplier()
-						&& null != getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier()) {
-					log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : checking DA for Supplier ID : " + getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier().getSupplierId());
-					// #28338 - Start.
-					List<SmDisciplinaryAction> resultList = null;
-					SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-					supReqDTO.setSupplier(getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier());
-					
-					SupplierDataMaintenanceResDTO dataRes = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-					
-					if(null != dataRes && dataRes.getSmDisciplinaryActions() != null && dataRes.getSmDisciplinaryActions().size() > 0){
-						resultList = dataRes.getSmDisciplinaryActions();
-						// #28338 -end-
-						
-						List<String> catCodeList = null;
-						
-						// #30609 - Start.
-						for (SmDisciplinaryAction disciplinaryAction : resultList) {
-							if (disciplinaryAction.isSuspendRegistration()) {
-								this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-								getManagedBean().setDisableUpdateProposal(true);
-								
-								return true;
-							}
-						}
-						// #30609 - End.
-						
-						for (SmDisciplinaryAction disciplinaryAction : resultList) {
-							// #28338 -start-
-							if (disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration()
-									|| disciplinaryAction.isBlacklistOwner()
-									|| disciplinaryAction.isManufacturerCancel()
-									|| disciplinaryAction.isBumiputeraCancel()) {
-								this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-								log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-								
-								return true;
-							} else if (disciplinaryAction.isCancelCategory()) {
-								// #28338 -end-
-								if (null == catCodeList) {
-									catCodeList = new ArrayList<>();
-								}
-
-								List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
-
-								if (!EntityHelper.isCollectionEmpty(catList) && catList.size() > 0) {
-									for (Object[] arr : catList) {
-										String catCode = StringUtils.EMPTY;
-										catCode = arr[3].toString() + arr[4].toString() + arr[5].toString();
-										catCodeList.add(catCode);
-									}
-								}
-							}
-						}
-						
-						if (CollectionUtils.isNotEmpty(catCodeList)) {
-							IQTDetailSO QtDetailsSO;
-							QuationTenderResDTO tenderResDTO;
-							
-							try {
-								QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-								QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-								// tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-								tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
-								
-								tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
-								
-								if (!this.getManagedBean().getQt().isPanel()) {
-									List<ScQtCategory> categoryResults = tenderResDTO.getCategories();
-									
-									if (CollectionUtils.isNotEmpty(categoryResults)) {
-										for (ScQtCategory category : categoryResults) {
-											String scQtCatCode = category.getPmCategoryL1().getCategoryL1Code().toString() 
-													+ category.getPmCategoryL2().getCategoryL2Code().toString() 
-													+ category.getPmCategoryL3().getCategoryL3Code().toString() ;
-											
-											if (catCodeList.contains(scQtCatCode)) {
-												this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-												log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-												return true;
-											}
-										}
-										
-										this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
-										log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA not found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-									}
-								}
-							} finally {
-								QtDetailsSO=null;
-							}
-						}
-					// #28338 -start-
-					} else {
-						this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
-						// #28338 -end-
-						log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA not found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-					}
-					// #28338 - End.
-				}
-			} else if ("true".equals(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
-				log.debug("Exit " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA already present for QT No. : " + this.getManagedBean().getQt().getQtNo());
-				return true;
-			}
-		}
-		
-		log.debug("Exit " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
-		//#27233#note-36 for #26247 -end-
-		
-		return false;
-	}
-	//#26247 -end-
-	
 	// #21695 farid start display tree node
 	private void populateZoneDetailIntoTreeNode(TemplateSpecBean templateSpecBean) {
 
@@ -6421,12 +6287,12 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			reqDTO.setAnswerList(answerList);
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 
-			TemplateSpecResDTO resDTO = templateSpecSO.checkTecNotOfferAllSupProposal(reqDTO);
+			//TemplateSpecResDTO resDTO = templateSpecSO.checkTecNotOfferAllSupProposal(reqDTO);
+			templateSpecSO.checkTecNotOfferAllSupProposal(reqDTO);
 		} else if (scQt.isPartial() && !scQt.isZonal()) {
 			List<TplSpecAnswer> answerList = this.getManagedBean().getTemplateSpecBean().getSpecAnswerList();
 			ITemplateSpecSO templateSpecSO = null;
-			templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-					ITemplateSpecSO.class);
+			templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
@@ -6438,7 +6304,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			reqDTO.setAnswerList(answerList);
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 
-			TemplateSpecResDTO resDTO = templateSpecSO.validateSpecAnwerNotOfferNonZonal(reqDTO);
+			//TemplateSpecResDTO resDTO = templateSpecSO.validateSpecAnwerNotOfferNonZonal(reqDTO);
+			templateSpecSO.validateSpecAnwerNotOfferNonZonal(reqDTO);
 		}
 	}
 	// #21695 Farid end 27/8/2021
@@ -6517,6 +6384,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	}
 	// Bug #33947, #21695 Farid End
 	// 20220127@syazani - Enhancement #3657 - specific error message - Start
+	/*
 	private boolean duplicateErrorZoneCheck(String str, List<String> errorLst) {
 		if (errorLst.size() > 0) {
 			for (String err : errorLst) {
@@ -6527,6 +6395,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		}
 		return false;
 	}
+	*/
 	// 20220127@syazani - Enhancement #3657 - specific error message - End
 	
 	//#21695 - Start
