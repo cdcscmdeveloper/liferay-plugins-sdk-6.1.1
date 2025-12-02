@@ -199,6 +199,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String searchPtjCode;
 	private String searchPtjName;
 	private BigDecimal searchQtValueLimit;
+	private Boolean collapsePanel;
 	// #36738 End
 
 	/************ END: AUDIT #28895_35509 *************/
@@ -1883,74 +1884,105 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public List<PmConfigRuleDesc> getOriginalConfigRuleDescList() {
 		return originalConfigRuleDescList;
 	}
+
 	public void setOriginalConfigRuleDescList(List<PmConfigRuleDesc> originalConfigRuleDescList) {
 		this.originalConfigRuleDescList = originalConfigRuleDescList;
 	}
+
 	public List<PmConfigRuleValue> getOriginalConfigRuleValueList() {
 		return originalConfigRuleValueList;
 	}
+
 	public void setOriginalConfigRuleValueList(List<PmConfigRuleValue> originalConfigRuleValueList) {
 		this.originalConfigRuleValueList = originalConfigRuleValueList;
 	}
+
 	public List<PmPtjSpecialApproval> getOriginalPtjSpecialApprovalList() {
 		return originalPtjSpecialApprovalList;
 	}
+
 	public void setOriginalPtjSpecialApprovalList(List<PmPtjSpecialApproval> originalPtjSpecialApprovalList) {
 		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
 	}
+
 	public String getSearchRuleType() {
 		return searchRuleType;
 	}
+
 	public void setSearchRuleType(String searchRuleType) {
 		this.searchRuleType = searchRuleType;
 	}
+
 	public String getSearchRuleDataTypeValues() {
 		return searchRuleDataTypeValues;
 	}
+
 	public void setSearchRuleDataTypeValues(String searchRuleDataTypeValues) {
 		this.searchRuleDataTypeValues = searchRuleDataTypeValues;
 	}
+
 	public String getSearchRuleDataTypeDesc() {
 		return searchRuleDataTypeDesc;
 	}
+
 	public void setSearchRuleDataTypeDesc(String searchRuleDataTypeDesc) {
 		this.searchRuleDataTypeDesc = searchRuleDataTypeDesc;
 	}
+
 	public Date getSearchRuleDataTypeEffectiveDate() {
 		return searchRuleDataTypeEffectiveDate;
 	}
+
 	public void setSearchRuleDataTypeEffectiveDate(Date searchRuleDataTypeEffectiveDate) {
 		this.searchRuleDataTypeEffectiveDate = searchRuleDataTypeEffectiveDate;
 	}
+
 	public Date getSearchRuleDataTypeExpiryDate() {
 		return searchRuleDataTypeExpiryDate;
 	}
+
 	public void setSearchRuleDataTypeExpiryDate(Date searchRuleDataTypeExpiryDate) {
 		this.searchRuleDataTypeExpiryDate = searchRuleDataTypeExpiryDate;
 	}
+
 	public Long getSearchRuleDataTypeZone() {
 		return searchRuleDataTypeZone;
 	}
+
 	public void setSearchRuleDataTypeZone(Long searchRuleDataTypeZone) {
 		this.searchRuleDataTypeZone = searchRuleDataTypeZone;
 	}
+
 	public String getSearchPtjCode() {
 		return searchPtjCode;
 	}
+
 	public void setSearchPtjCode(String searchPtjCode) {
 		this.searchPtjCode = searchPtjCode;
 	}
+
 	public String getSearchPtjName() {
 		return searchPtjName;
 	}
+
 	public void setSearchPtjName(String searchPtjName) {
 		this.searchPtjName = searchPtjName;
 	}
+
 	public BigDecimal getSearchQtValueLimit() {
 		return searchQtValueLimit;
 	}
+
 	public void setSearchQtValueLimit(BigDecimal searchQtValueLimit) {
 		this.searchQtValueLimit = searchQtValueLimit;
+	}
+
+	public Boolean getCollapsePanel() {
+		return collapsePanel;
+	}
+
+	public void setCollapsePanel(Boolean collapsePanel) {
+		this.collapsePanel = collapsePanel;
 	}
 	//#36738 End
 }
