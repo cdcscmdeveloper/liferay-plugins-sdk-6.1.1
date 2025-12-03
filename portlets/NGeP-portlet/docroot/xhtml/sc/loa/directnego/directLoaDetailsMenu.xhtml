@@ -6,6 +6,37 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<!-- #25726/25725 - Check and display Italic value - Start -->	
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
+
+<h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{directLOABackingBean.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+</h:outputScript>
+<!-- #25726/25725 - Check and display Italic value - End -->
 	<ac:lovPopup />	
 	<ui:include src="../shared/loaInstructionHeader.xhtml" />
 	<!-- #31033 starts -->
@@ -511,20 +542,23 @@
 							<td>
 								<c:choose>
 								<!-- 20231122@asyrafhaziq_25726 - Issue 17 --><!-- #29468 Added !isPendingApprovalStatus and !isPendingRevApprovalStatus Vinod -->
+								<!-- #25726/25725 - Check and display Italic value -->
 									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral 
 									and !isPendingApprovalStatus and !isPendingRevApprovalStatus}">
 									<p:selectOneMenu id="fulfilId"
 										required="true"
 										label="#{lbl['lbl.sc.fullfillent.type']}"
 										value="#{directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType.parameterId}"
-										style="width: 246px;margin-bottom: 5px;">
-
+										style="width: 246px;margin-bottom: 5px;"
+										styleClass="#{directLOABackingBean.checkItalicCodeNameForMy(directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+                 						panelStyleClass="fulfil-panel">
 		
 											<f:selectItems
 												value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 											<p:ajax event="change" process="@this" partialSubmit="true"
 												update="@this, menuItems,agreementReqPG, expDateLabel, effDateLabel, contractDurationLabel, @([id$=uploadApprovalLetterPg])"
-												listener="#{directLOABackingBean.fulfilmentChange}"></p:ajax>
+												listener="#{directLOABackingBean.fulfilmentChange}"
+												oncomplete="styleFulfilmentDropdown();"></p:ajax>
 												
 											<p:ajax event="change" 
 												listener="#{directLOABackingBean.changeResetValuePK7FullfilmentType()}" ></p:ajax> <ui:remove> #25726#323 </ui:remove>
@@ -542,9 +576,11 @@
 										<p:message id="fulfilType" for="fulfilId" display="icon" />							
 									</c:when>
 									<c:otherwise>
+									<!-- #25726/25725 - Check and display Italic value -->
 										<p:inputText id="fulfilTypeTxt"
 											value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType)}"
-											size="35" disabled="true" />							
+											size="35" disabled="true" 
+											styleClass="#{directLOABackingBean.checkItalicCodeNameForMy(directLOABackingBean.managedBean.scLoa.scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"/>							
 									</c:otherwise>
 								</c:choose>
 							</td>	

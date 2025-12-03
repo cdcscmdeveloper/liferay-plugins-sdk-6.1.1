@@ -191,6 +191,8 @@ public class PaymentUtil {
 			String clientKey, Long orderId, BigDecimal amount, String billName,
 			String email, String mobile, String billDesc, String country,
 			String cancelUrl) {
+		log.info("#38377--billName:"+billName);
+		log.info("#38377--billDesc:"+billDesc);
 		String payload = null;
 		StringBuilder sb = new StringBuilder();
 		sb.append("{").append("\"orderId\":\"").append(orderId.toString())
@@ -269,17 +271,18 @@ public class PaymentUtil {
 	}
 
 	public static JSONObject getPaymentGatewayJson(String payload) {
+		log.info("#38377#####inside getPaymentGatewayJson:"+payload);
 		JSONObject jsonObject = null;
 		if (!StringUtils.isBlank(payload)) {
 			try {
-				log.info("encrypted payload:" + payload);
+				log.info("#38377 encrypted payload:" + payload);
 				payload = AESEncryptor.decrypt(payload, PasswordUtils
 						.decrypt(EpPropertiesUtils.getInstance().getProperty(
 								"payment.gov.vkey")));
-				log.info("decrypted payload:" + payload);
+				log.info("#38377 decrypted payload:" + payload);
 				jsonObject = new JSONObject(payload);
 			} catch (Exception e1) {
-				log.error("error decrypted payload due to ", e1);
+				log.info("#38377 error decrypted payload:" + e1.getMessage());
 			}
 		}
 		return jsonObject;
