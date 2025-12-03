@@ -189,7 +189,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			detailDescription.setRoleCode(roleCode);
 			detailDescription.setDocType(docType);
 			detailDescription.setDocNo(reason.getReasonCode());
-			detailDescription.setDocGroupId(docId);
+			detailDescription.setDocGroupId(docGroupId);
 			detailDescription.setPmParameterLvlId(parameterLevelId);
 			detailDescription.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailDescription.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
@@ -230,7 +230,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			purchaseFromContract.setRoleCode(roleCode);
 			purchaseFromContract.setDocType(docType);
 			purchaseFromContract.setDocNo(existingReason.getReasonCode());
-			purchaseFromContract.setDocGroupId(BigInteger.valueOf(existingReason.getReasonId()));
+			purchaseFromContract.setDocGroupId(docGroupId);
 			purchaseFromContract.setPmParameterLvlId(parameterLevelId);
 			purchaseFromContract.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			purchaseFromContract.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
@@ -258,7 +258,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		contractOrCircular.setRoleCode(roleCode);
 		contractOrCircular.setDocType(docType);
 		contractOrCircular.setDocNo(existingReason.getReasonCode());
-		contractOrCircular.setDocGroupId(docId);
+		contractOrCircular.setDocGroupId(docGroupId);
 		contractOrCircular.setPmParameterLvlId(parameterLevelId);
 		contractOrCircular.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		contractOrCircular.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
@@ -299,7 +299,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		sourcingMethod.setRoleCode(roleCode);
 		sourcingMethod.setDocType(docType);
 		sourcingMethod.setDocNo(existingReason.getReasonCode());
-		sourcingMethod.setDocGroupId(docId);
+		sourcingMethod.setDocGroupId(docGroupId);
 		sourcingMethod.setPmParameterLvlId(parameterLevelId);
 		sourcingMethod.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		sourcingMethod.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
@@ -356,7 +356,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			restriction.setRoleCode(roleCode);
 			restriction.setDocType(docType);
 			restriction.setDocNo(existingReason.getReasonCode());
-			restriction.setDocGroupId(BigInteger.valueOf(existingReason.getReasonId()));
+			restriction.setDocGroupId(docGroupId);
 			restriction.setPmParameterLvlId(parameterLevelId);
 			restriction.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			restriction.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
@@ -373,7 +373,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			restriction.setRoleCode(roleCode);
 			restriction.setDocType(docType);
 			restriction.setDocNo(existingReason.getReasonCode());
-			restriction.setDocGroupId(BigInteger.valueOf(existingReason.getReasonId()));
+			restriction.setDocGroupId(docGroupId);
 			restriction.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value()));
 			restriction.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			restriction.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
@@ -390,7 +390,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			restriction.setRoleCode(roleCode);
 			restriction.setDocType(docType);
 			restriction.setDocNo(existingReason.getReasonCode());
-			restriction.setDocGroupId(BigInteger.valueOf(existingReason.getReasonId()));
+			restriction.setDocGroupId(docGroupId);
 			restriction.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value()));
 			restriction.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			restriction.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
@@ -414,7 +414,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				restrictionDetails.setDocType(docType);
 				restrictionDetails.setDocNo(docNo);
 				restrictionDetails.setDocId(BigInteger.valueOf(suppReason.getSupplierReasonId()));
-				restrictionDetails.setDocGroupId(docId);
+				restrictionDetails.setDocGroupId(docGroupId);
 				restrictionDetails.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode)
 						.value()));
 				restrictionDetails.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -437,7 +437,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				restrictionDetails.setDocType(docType);
 				restrictionDetails.setDocNo(docNo);
 				restrictionDetails.setDocId(BigInteger.valueOf(suppReason.getSupplierReasonId()));
-				restrictionDetails.setDocGroupId(docId);
+				restrictionDetails.setDocGroupId(docGroupId);
 				restrictionDetails.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode)
 						.value()));
 				restrictionDetails.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -460,7 +460,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				restrictionDetails.setDocType(docType);
 				restrictionDetails.setDocNo(docNo);
 				restrictionDetails.setDocId(BigInteger.valueOf(suppReason.getSupplierReasonId()));
-				restrictionDetails.setDocGroupId(docId);
+				restrictionDetails.setDocGroupId(docGroupId);
 				restrictionDetails.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode)
 						.value()));
 				restrictionDetails.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -484,7 +484,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				restrictionDetails.setRoleCode(roleCode);
 				restrictionDetails.setDocType(docType);
 				restrictionDetails.setDocNo(docNo);
-				restrictionDetails.setDocGroupId(docId);
+				restrictionDetails.setDocGroupId(docGroupId);
 				restrictionDetails.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode)
 						.value()));
 				restrictionDetails.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -506,7 +506,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				restrictionDetails.setRoleCode(roleCode);
 				restrictionDetails.setDocType(docType);
 				restrictionDetails.setDocNo(docNo);
-				restrictionDetails.setDocGroupId(docId);
+				restrictionDetails.setDocGroupId(docGroupId);
 				restrictionDetails.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode)
 						.value()));
 				restrictionDetails.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -528,7 +528,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				restrictionDetails.setRoleCode(roleCode);
 				restrictionDetails.setDocType(docType);
 				restrictionDetails.setDocNo(docNo);
-				restrictionDetails.setDocGroupId(docId);
+				restrictionDetails.setDocGroupId(docGroupId);
 				restrictionDetails.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode)
 						.value()));
 				restrictionDetails.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -554,7 +554,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 					reasonApplicability.setRoleCode(roleCode);
 					reasonApplicability.setDocType(docType);
 					reasonApplicability.setDocNo(docNo);
-					reasonApplicability.setDocGroupId(docId);
+					reasonApplicability.setDocGroupId(docGroupId);
 					reasonApplicability.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode)
 							.value()));
 					reasonApplicability.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -577,7 +577,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				reasonApplicability.setRoleCode(roleCode);
 				reasonApplicability.setDocType(docType);
 				reasonApplicability.setDocNo(docNo);
-				reasonApplicability.setDocGroupId(docId);
+				reasonApplicability.setDocGroupId(docGroupId);
 				reasonApplicability.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode)
 						.value()));
 				reasonApplicability.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -599,7 +599,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				reasonApplicability.setRoleCode(roleCode);
 				reasonApplicability.setDocType(docType);
 				reasonApplicability.setDocNo(docNo);
-				reasonApplicability.setDocGroupId(docId);
+				reasonApplicability.setDocGroupId(docGroupId);
 				reasonApplicability.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode)
 						.value()));
 				reasonApplicability.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -705,7 +705,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
 		dtlObj.setLvlCode3(parameterCode);
 		dtlObj.setDocId(docId);
-		dtlObj.setDocGroupId(docGroupId); //  28962-audit
+		dtlObj.setDocGroupId(docGroupId);
 		dtlObj.setFieldLabelCode(fieldLabelId);
 		if (oldValue != null) {
 			dtlObj.setOldValue(oldValue);

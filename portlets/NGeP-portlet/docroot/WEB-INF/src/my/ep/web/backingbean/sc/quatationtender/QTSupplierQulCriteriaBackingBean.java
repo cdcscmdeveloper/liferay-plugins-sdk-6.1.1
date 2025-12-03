@@ -2129,10 +2129,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 	// #29732 Start
 		@SuppressWarnings("null")
 		public void onClickHistoryIcon(String catCodeL1, String catCodeL2, String catCodeL3,String catCodeLevel,
-				Long catCodeId,Long qtCateId, String categoryName, String catCode) {
+				Long catCodeId,Long qtCateId, String categoryName, String catCode) {		
 			boolean processAfter = false;
 			Date qtCatCreatedDate = null;
 			Date qtCatChangedDate = null;
+			List<ScQtCategory> findQtCatCodeCurrent = null;
 
 			ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
 					.getInstance().getServiceObject(
@@ -2144,6 +2145,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 			checkHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3,catCodeLevel);
 
 			List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
+			if(null == findQtCatCode){
+			 findQtCatCodeCurrent = retrieveCurrentScQtCategoryCode();
+			 findQtCatCode = findQtCatCodeCurrent;
+			}
 			if( null != findQtCatCode && !findQtCatCode.isEmpty()){
 				for(ScQtCategory categoryCodeEdit : findQtCatCode){
 					qtCatCreatedDate = categoryCodeEdit.getCreatedDate();
@@ -2186,11 +2191,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 				}
 			}
 			
-		if (processAfter) {
+			if (processAfter) {
 
-			getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
-			getManagedBean().setHisCatCode(catCode);
-			if (this.getManagedBean().getUpdateCatInPm()) {
+				getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+				getManagedBean().setHisCatCode(catCode);
+				
 				List<PmRemarkCategory> listCategoryDB = new ArrayList();
 				for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
 					if (null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)
@@ -2200,8 +2205,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 				}
 				getManagedBean().setHistoryList(listCategoryDB);
 			}
-		}
-
 			RequestContext.getCurrentInstance().execute("hisPopup.show()");
 		}
 
