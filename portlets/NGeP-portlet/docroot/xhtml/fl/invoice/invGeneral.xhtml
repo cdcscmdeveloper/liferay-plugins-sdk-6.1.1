@@ -373,9 +373,14 @@
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/remark.xhtml" /></td>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/attachment.xhtml" /></td>
+						src="/xhtml/fl/shared/remark.xhtml" />
+				</td>
+				<ui:remove>#38898 used panelGroup</ui:remove>
+				<td width="50%" valign="top">
+					<h:panelGroup>
+						<ui:include src="/xhtml/fl/shared/attachment.xhtml" />
+					</h:panelGroup>
+				</td>
 			</tr>
 		</table>
 	</p:panel>
