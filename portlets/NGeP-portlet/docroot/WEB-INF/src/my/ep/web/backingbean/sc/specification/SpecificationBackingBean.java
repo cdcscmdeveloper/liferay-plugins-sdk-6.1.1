@@ -24057,7 +24057,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String reportName = ReportConst.SC_PVW_TECH_CHECKLIST_DTL_JSP;
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
-				.getScQtCheckSt2financeProposalList(), false);
+				.getTechChecklistPreview(), false);
 		validatePrepareQtChecklist();
 		technicalCheckListPreview();
 	}
@@ -24093,7 +24093,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String reportName = ReportConst.SC_PVW_FIN_CHECKLIST_SUMMARY_JSP;
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
-				.getFinChecklistPreview(), true);
+				.getScQtCheckSt2financeProposalList(), true);
 	}
 
 	// #10141 End Vinod
