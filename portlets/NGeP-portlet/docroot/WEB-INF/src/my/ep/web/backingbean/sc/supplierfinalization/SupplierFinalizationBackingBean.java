@@ -11568,13 +11568,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				identifierMap.put(recommendId, false);
 			}
 
-			if (identifierMap.containsKey(recommendId)) {
-				for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
-					Long supplierId = recommendDtl.getSupplier().getSupplierId();
-					identifierMap
-							.put(recommendId,
-									checkIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt,
-											supplierId) ? true : false);
+			for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
+				Long supplierId = recommendDtl.getSupplier().getSupplierId();
+				if (checkFlagIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId)
+						&& identifierMap.containsKey(recommendId)) {
+					identifierMap.put(recommendId, true);
 				}
 			}
 		}
@@ -11596,37 +11594,54 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * @param supplierId
 	 * 
 	 **/
-	private Boolean checkIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
+	private Boolean checkFlagIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
 			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId) {
+
+		if (tplSpecZoneDtl != null) {
+			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+			List<Long> qualifiedZoneSupplierList = retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(true, scQt.getQtId(),
+					specZoneId);
+			for (Long qualifiedZoneSupplier : qualifiedZoneSupplierList) {
+				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
+						qualifiedZoneSupplier)) {
+					return true;
+				}
+			}
+
+		} else {
+
+			List<Long> qualifiedSupplierList = retrieveSuppliersIdsByQtId(true, scQt.getQtId());
+			for (Long qualifiedSupplier : qualifiedSupplierList) {
+				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
+						qualifiedSupplier)) {
+					return true;
+				}
+			}
+
+		}
+		return false;
+	}
+
+	private Boolean checkDetailIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
+			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId, Long qualifiedSupplier) {
 
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 
 		if (tplSpecZoneDtl != null) {
 			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
-			List<Long> quaQtSupplierIdList = retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(true, scQt.getQtId(),
-					specZoneId);
-			for (Long quaQtSupplier : quaQtSupplierIdList) {
-				if (!sourcingIntegrationSO.flagZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId,
-						specZoneId)
-						&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
-						&& quaQtSupplier.equals(supplierId)) {
-					return true;
-				}
-
+			if (!sourcingIntegrationSO.flagZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId,
+					specZoneId)
+					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
+					&& qualifiedSupplier.equals(supplierId)) {
+				return true;
 			}
-
 		} else {
-
-			List<Long> quaQtSupplierIdList = retrieveSuppliersIdsByQtId(true, scQt.getQtId());
-			for (Long quaQtSupplier : quaQtSupplierIdList) {
-				if (!sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId)
-						&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
-						&& quaQtSupplier.equals(supplierId)) {
-					return true;
-				}
+			if (!sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId)
+					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
+					&& qualifiedSupplier.equals(supplierId)) {
+				return true;
 			}
-
 		}
 		return false;
 	}
