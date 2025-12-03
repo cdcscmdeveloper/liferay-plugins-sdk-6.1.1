@@ -11586,7 +11586,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 	// #28777 & #29729 - Start
 	/**
-	 * Method to check if have supplier branch deleted
+	 * Method to check flag identifier if have supplier branch deleted
 	 * 
 	 * @param tplSpecZoneDtl
 	 * @param recommendDtl
@@ -11622,6 +11622,19 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return false;
 	}
 
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check detail identifier if have supplier branch deleted
+	 * 
+	 * @param tplSpecZoneDtl
+	 * @param recommendDtl
+	 * @param scQt
+	 * @param supplierId
+	 * @param qualifiedSupplier
+	 * 
+	 **/
 	private Boolean checkDetailIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
 			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId, Long qualifiedSupplier) {
 
