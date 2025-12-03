@@ -11793,9 +11793,9 @@ public class SpecificationBackingBean extends
 			
 			scoreSetting.add(financialItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
-// #21695 farid, if partial set weightage to false			
-			if (this.getManagedBean().getQt().isPartial() == true){
-				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
+			// #21695 farid, set weightage to true #38679			
+			if (this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
 			}
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
