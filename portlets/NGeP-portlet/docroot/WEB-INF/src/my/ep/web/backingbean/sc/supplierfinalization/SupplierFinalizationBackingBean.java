@@ -8064,13 +8064,31 @@ public class SupplierFinalizationBackingBean extends
 		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 		reqDTO.setSearchBean(searchBean);
 		reqDTO.setEvaluationStage(evaluationStage);
-
+		
+		List<TplSpecZoneDtl> specZoneDtls = this.getManagedBean().getZoneDetails();
+		if(CollectionUtils.isNotEmpty(specZoneDtls)){
+			for(TplSpecZoneDtl specZoneDtl:specZoneDtls){
+				reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
+				prepareSupplierCache(reqDTO);
+			}
+			return;
+		}
+		prepareSupplierCache(reqDTO);
+		
+		
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	private void prepareSupplierCache(SuppFinalizationReqDTO reqDTO) {
 		SuppFinalizationResDTO resDTO = getQtSuppFinalizationSO().retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 		List<ScQtEvaluationResultDtl> qualifiedSuppliers = resDTO.getQualifiedSuppliersByEvalStage().getResultList();
-
+		if (CollectionUtils.isEmpty(qualifiedSuppliers)) {
+			return;
+		}
 		for (ScQtEvaluationResultDtl qualSupplier : qualifiedSuppliers) {
-			Long zoneId = (qualSupplier.getTplSpecZoneDtl() == null ? DEFAULT_ZONE : qualSupplier.getTplSpecZoneDtl()
-					.getSpecZoneId());
+			Long zoneId = qualSupplier.getTplSpecZoneDtl() == null ? DEFAULT_ZONE : qualSupplier.getTplSpecZoneDtl()
+					.getSpecZoneId();
 			Long requestItemId = qualSupplier.getScRequestItem().getRequestNoteItemId();
 
 			List<QtEvaluationResultDtlBean> cachedSuppliers = getCachedSuppliersFromMap(zoneId, requestItemId);
