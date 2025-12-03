@@ -57,7 +57,7 @@
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{finChecklist.selected}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=financialChecklistTitleListId])"
-							listener="#{specificationBackingBean.updateSelectedFinancialChecklistPreviewIndx(finChecklist,index)}" />
+							listener="#{specificationBackingBean.updateSelectedFinancialChecklistPreviewIndex(finChecklist)}" />
 					</p:selectBooleanCheckbox>
 				</p:column>
 

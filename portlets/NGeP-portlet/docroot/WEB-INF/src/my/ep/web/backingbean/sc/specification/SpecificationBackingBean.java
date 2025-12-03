@@ -23607,11 +23607,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 * @param checkList
 	 * 
-	 * @param index
-	 * 
 	 * @return
 	 */
-	public void updateSelectedTechnicalChecklistPreviewIndx(ScQtCheckList checkList, int index) {
+	public void updateSelectedTechnicalChecklistPreviewIndex(ScQtCheckList checkList) {
 		for (ScQtCheckList scQtCheckList : this.getManagedBean().getTechChecklistPreview()) {
 			if (scQtCheckList.getQtChecklistId().equals(checkList.getQtChecklistId())) {
 				if (checkList.isSelected()) {
@@ -23639,11 +23637,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 * @param checkList
 	 * 
-	 * @param index
-	 * 
 	 * @return
 	 */
-	public void updateSelectedFinancialChecklistPreviewIndx(ScQtCheckList checkList, int index) {
+	public void updateSelectedFinancialChecklistPreviewIndex(ScQtCheckList checkList) {
 		for (ScQtCheckList scQtCheckList : this.getManagedBean().getFinChecklistPreview()) {
 			if (scQtCheckList.getQtChecklistId().equals(checkList.getQtChecklistId())) {
 				if (checkList.isSelected()) {
