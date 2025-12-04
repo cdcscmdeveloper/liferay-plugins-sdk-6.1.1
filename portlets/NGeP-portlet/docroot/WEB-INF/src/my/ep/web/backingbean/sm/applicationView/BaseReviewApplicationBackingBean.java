@@ -5451,14 +5451,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						new FacesScopes().getUserLocale()));
 		int deletedIndex = 1;
 		for (SmRvCatCode deletedRvCatCode : revisit.getDeletedRvCatCodes()) {
-			extRemark.append("<br />").append("&emsp;").append(index).append(".").append(deletedIndex).append(" ")
+			extRemark.append("<p style=\"margin: 0 0 0 15px;\">").append(index).append(".").append(deletedIndex).append(" ")
 					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code())
 					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code())
 					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append(" - ")
-					.append(deletedRvCatCode.getSmSupplierCategory().getCategoryL3Name());
+					.append(deletedRvCatCode.getSmSupplierCategory().getCategoryL3Name()).append("</p>");
 			// #34031#note-98 : Issue 15 - Start
 			if (null != deletedRvCatCode.getSmSupplierCategory().getOtherDesc() && !deletedRvCatCode.getSmSupplierCategory().getOtherDesc().isEmpty()) {
-				extRemark.append("<br />").append("&emsp;&emsp;&emsp;").append(deletedRvCatCode.getSmSupplierCategory().getOtherDesc());
+				extRemark.append("<p style=\"margin: 0 0 0 45px;\">").append(deletedRvCatCode.getOtherDesc()).append("</p>");
 			}
 			// #34031#note-98 : Issue 15 - End
 			deletedIndex++;
@@ -5478,14 +5478,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		// #34031#note-111 : Issue 20
 		sortRvCatCode(revisit.getAddedRvCatCodes());
 		for (SmRvCatCode addedRvCatCode : revisit.getAddedRvCatCodes()) {
-			extRemark.append("<br />").append("&emsp;").append(index).append(".").append(addedIndex).append(" ")
+			extRemark.append("<p style=\"margin: 0 0 0 15px;\">").append(index).append(".").append(addedIndex).append(" ")
 					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code())
 					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code())
 					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append(" - ")
-					.append(addedRvCatCode.getSmSupplierCategory().getCategoryL3Name());
+					.append(addedRvCatCode.getSmSupplierCategory().getCategoryL3Name()).append("</p>");
 			// #34031#note-98 : Issue 15 - Start
 			if (null != addedRvCatCode.getSmSupplierCategory().getOtherDesc() && !addedRvCatCode.getSmSupplierCategory().getOtherDesc().isEmpty()) {
-				extRemark.append("<br />").append("&emsp;&emsp;&emsp;").append(addedRvCatCode.getSmSupplierCategory().getOtherDesc());
+				extRemark.append("<p style=\"margin: 0 0 0 45px;\">").append(addedRvCatCode.getOtherDesc()).append("</p>");
 			}
 			// #34031#note-98 : Issue 15 - End
 			addedIndex++;
