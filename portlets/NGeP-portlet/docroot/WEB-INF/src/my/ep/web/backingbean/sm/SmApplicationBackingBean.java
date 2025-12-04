@@ -4196,7 +4196,7 @@ public class SmApplicationBackingBean extends
 				initBusinessPremise();
 
 			}
-			assignValReqdToFalse();
+//			assignValReqdToFalse(); #37925
 		}
 		return valid;
 	}
