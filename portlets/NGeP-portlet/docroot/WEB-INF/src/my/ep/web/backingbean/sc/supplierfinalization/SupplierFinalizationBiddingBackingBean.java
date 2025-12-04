@@ -3457,6 +3457,22 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	// #28777 & #29729 - Start
 	/**
+	 * Method to check list had disqualified zones
+	 * 
+	 * @param qtId
+	 * @param specZoneId
+	 * @return true or false
+	 **/
+	public Boolean checkListZonesDisqualifiedSupplierBranchDeleted(Long qtId, Long specZoneId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.checkListZonesDisqualifiedSupplierBranchDeleted(qtId, specZoneId);
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
 	 * Method to check outcome endorse/sign off and get recommend details
 	 * 
 	 * @param outcome
@@ -3480,24 +3496,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 		ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
 		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
 
-		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)
-				&& checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())) {
-
-			ScBidSchedule scBidSchedule;
-			Long bidScheduleId;
-
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getBiddingItemList())) {
-				scBidSchedule = this.getManagedBean().getBiddingItemList().get(0).getScBidSchedule();
-				bidScheduleId = scBidSchedule.getBidScheduleId();
-				validationNeedSupplier(recommendedItems, scQt, bidScheduleId);
-			}
-
-			if (this.getManagedBean().getScheduledBid() != null) {
-				scBidSchedule = this.getManagedBean().getScheduledBid();
-				bidScheduleId = scBidSchedule.getBidScheduleId();
-				validationNeedSupplier(recommendedItems, scQt, bidScheduleId);
-			}
-
+		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)) {
+			validationNeedSupplier(recommendedItems, scQt);
 		}
 	}
 
@@ -3510,10 +3510,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * 
 	 * @param recommendedItems
 	 * @param scQt
-	 * @param bidScheduleId
 	 * 
 	 **/
-	private void validationNeedSupplier(List<ScQtRecommend> recommendedItems, ScQt scQt, Long bidScheduleId) {
+	private void validationNeedSupplier(List<ScQtRecommend> recommendedItems, ScQt scQt) {
 
 		Map<Long, ScQtRecommend> recommendMap = new HashMap<>();
 		Map<Long, Boolean> identifierMap = new HashMap<>();
@@ -3528,13 +3527,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 				identifierMap.put(recommendId, false);
 			}
 
-			if (identifierMap.containsKey(recommendId)) {
-				for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
-					Long supplierId = recommendDtl.getSupplier().getSupplierId();
-					identifierMap.put(
-							recommendId,
-							checkIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
-									bidScheduleId) ? true : false);
+			for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
+				Long supplierId = recommendDtl.getSupplier().getSupplierId();
+				if (checkFlagIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId)
+						&& identifierMap.containsKey(recommendId)) {
+					identifierMap.put(recommendId, true);
 				}
 			}
 		}
@@ -3550,41 +3547,108 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 	// #28777 & #29729 - Start
 	/**
-	 * Method to check if have supplier branch deleted
+	 * Method to check flag identifier if have supplier branch deleted
 	 * 
 	 * @param tplSpecZoneDtl
 	 * @param recommendDtl
 	 * @param scQt
 	 * @param supplierId
-	 * @param bidScheduleId
 	 * 
 	 **/
-	private Boolean checkIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
-			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId, Long bidScheduleId) {
-
-		IBiddingSO biddingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IBiddingSO.class);
-		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+	private Boolean checkFlagIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
+			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId) {
 
 		if (tplSpecZoneDtl != null) {
 			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
-			if (!sourcingIntegrationSO.flagZonesBiddingDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId,
-					specZoneId)
-					&& !biddingSO.checkNotActiveScBidSuppliersByBidScheduleIdAndSupplierId(bidScheduleId, supplierId)
-					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				return true;
+			List<Long> qualifiedZoneSupplierList = retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(true, scQt.getQtId(),
+					specZoneId);
+			for (Long qualifiedZoneSupplier : qualifiedZoneSupplierList) {
+				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
+						qualifiedZoneSupplier) && checkBiddingSupplierDeactivated(scQt.getQtId())) {
+					return true;
+				}
 			}
+
 		} else {
-			if (!sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId)
-					&& !biddingSO.checkNotActiveScBidSuppliersByBidScheduleIdAndSupplierId(bidScheduleId, supplierId)
-					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				return true;
+
+			List<Long> qualifiedSupplierList = retrieveSuppliersIdsByQtId(true, scQt.getQtId());
+			for (Long qualifiedSupplier : qualifiedSupplierList) {
+				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
+						qualifiedSupplier) && checkBiddingSupplierDeactivated(scQt.getQtId())) {
+					return true;
+				}
 			}
+
 		}
 		return false;
 	}
+	
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check detail identifier if have supplier branch deleted
+	 * 
+	 * @param tplSpecZoneDtl
+	 * @param recommendDtl
+	 * @param scQt
+	 * @param supplierId
+	 * @param qualifiedSupplier
+	 * 
+	 **/
+	private Boolean checkDetailIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
+			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId, Long qualifiedSupplier) {
+		int recordStatusFlg = recommendDtl.getRecordStatusFlg().intValue();
 
+		if (tplSpecZoneDtl != null) {
+			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+			if (checkListZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), specZoneId)
+					&& recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE && qualifiedSupplier.equals(supplierId)) {
+				return true;
+			}
+		} else {
+			if (checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())
+					&& recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE && qualifiedSupplier.equals(supplierId)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to retrieve qualified supplier to get suppliersId
+	 * 
+	 * @param isQualified
+	 * @param qtId
+	 * @return List<Long>
+	 **/
+	public List<Long> retrieveSuppliersIdsByQtId(boolean isQualified, Long qtId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.retrieveSuppliersIdsByQtId(isQualified, qtId);
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to retrieve qualified supplier to get suppliersIds
+	 * 
+	 * @param isQualified
+	 * @param qtId
+	 * @param specZoneId
+	 * @return List<Long>
+	 **/
+	public List<Long> retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(boolean isQualified, Long qtId, Long specZoneId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(isQualified, qtId, specZoneId);
+	}
+	
 	// #28777 & #29729 - End
 
 	// #28777 & #29729 - Start
@@ -3614,11 +3678,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 		if (foundFalse) {
 			ScQtRecommend recommend = recommendMap.get(falseKey);
 			if (scQt.isZonal()) {
-				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
 				throw new EpException(MessageConst.ERROR_760623, new String[] {
 						recommend.getTplSpecZoneDtl().getZoneName(), recommend.getRequestItem().getItemName() });
 			} else {
-				navigateToBiddingSummaryTab();
 				throw new EpException(MessageConst.ERROR_760622, new String[] { recommend.getRequestItem()
 						.getItemName() });
 			}
@@ -3639,26 +3701,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 	private void validationPackageSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
 			ScQt scQt) {
 
-		boolean foundFalse = false;
-		Long trueKey = null;
-
 		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
 			if (!entry.getValue()) {
-				foundFalse = true;
-				trueKey = entry.getKey();
-				break;
-			}
-		}
-
-		if (foundFalse) {
-			ScQtRecommend recommend = recommendMap.get(trueKey);
-			if (scQt.isZonal()) {
-				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
-				throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
-						.getZoneName() });
-			} else {
-				navigateToBiddingSummaryTab();
-				throw new EpException(MessageConst.ERROR_760624);
+				ScQtRecommend recommend = recommendMap.get(entry.getKey());
+				if (scQt.isZonal()) {
+					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
+							.getZoneName() });
+				} else {
+					throw new EpException(MessageConst.ERROR_760624);
+				}
 			}
 		}
 	}
