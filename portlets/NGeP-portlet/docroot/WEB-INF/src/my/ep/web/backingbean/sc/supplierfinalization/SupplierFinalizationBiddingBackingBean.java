@@ -3564,7 +3564,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 					specZoneId);
 			for (Long qualifiedZoneSupplier : qualifiedZoneSupplierList) {
 				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
-						qualifiedZoneSupplier) && checkBiddingSupplierDeactivated(scQt.getQtId())) {
+						qualifiedZoneSupplier) || checkBiddingSupplierDeactivated(scQt.getQtId())) {
 					return true;
 				}
 			}
@@ -3574,7 +3574,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			List<Long> qualifiedSupplierList = retrieveSuppliersIdsByQtId(true, scQt.getQtId());
 			for (Long qualifiedSupplier : qualifiedSupplierList) {
 				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
-						qualifiedSupplier) && checkBiddingSupplierDeactivated(scQt.getQtId())) {
+						qualifiedSupplier) || checkBiddingSupplierDeactivated(scQt.getQtId())) {
 					return true;
 				}
 			}
