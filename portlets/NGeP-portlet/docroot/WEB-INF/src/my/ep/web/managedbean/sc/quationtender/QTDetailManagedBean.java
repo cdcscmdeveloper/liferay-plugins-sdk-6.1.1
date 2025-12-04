@@ -1698,18 +1698,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean firstViewPageCAUsers = false;
 	// #25426 - End
 	
-	// #28784 -start-
-	private boolean demoType;
-	private boolean demoAction;
-	private List<ScQtCheckList> demoSpecTemplateList;
-	private List<TplSpecQuestion> demoOriSpecQuestionTemplateList;
-	private boolean demoDisabled;
-	private boolean qtSpecMaintanance;
-	private boolean demoEvalDisabled;
-	private boolean demoSpecialCase;
-	private Long demoSampleChecklistStatusId;
-	// #28784 -end-
-	
 	// 25791-start
 	private List<ScQt> qtTrackingDiaryView;
 	private String qtAuditMaintenanceView;
@@ -1722,6 +1710,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<Long, VCtContract> checkLOAContract;
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
 	// 25791-End
+	
+	// #28784 -start-
+	private boolean demoType;
+	private boolean demoAction;
+	private List<ScQtCheckList> demoSpecTemplateList;
+	private List<TplSpecQuestion> demoOriSpecQuestionTemplateList;
+	private boolean demoDisabled;
+	private boolean qtSpecMaintanance;
+	private boolean demoEvalDisabled;
+	private boolean demoSpecialCase;
+	private Long demoSampleChecklistStatusId;
+	// #28784 -end-
 
 	/**
 	 * Instantiates a new QT detail managed bean.

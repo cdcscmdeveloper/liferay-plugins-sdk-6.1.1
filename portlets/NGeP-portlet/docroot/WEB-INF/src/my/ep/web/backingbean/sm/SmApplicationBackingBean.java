@@ -1189,6 +1189,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		alreadyExecute = false;//avoid duplicate execute function setDefaultApproverReviewSection() && setDefaultPoReviewSection()
 		getManagedBean().setRedirectToPersonPage(false);
 		assignValReqdToFalse();
+		getManagedBean().setMofNumber(null); //#39076
 		if (!applicationType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 
@@ -1880,13 +1881,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		List<SmMofAccount> accounts = getManagedBean().getSmSupplier()
 				.getSmMofAccounts();
+		//#39076
+		Collections.sort(accounts, new Comparator<SmMofAccount>() {
+			@Override
+			public int compare(SmMofAccount o1, SmMofAccount o2) {
+				if (o1.getCreatedDate() == null || o2.getCreatedDate() == null)
+					return 0;
+				return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+			}
+		});
 		if (!EntityHelper.isCollectionEmpty(accounts)) {
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
 						getManagedBean().getSmSupplier().getSmAppl()
 								.getSupplierType())
-						&& account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+						&& !account.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 					getManagedBean().setMofNumber(account.getMofNo());
 				}
 			}
@@ -4254,6 +4263,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			}
 			break;
+		//#38991 -START
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH:
+			if (!getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				if (getManagedBean().isSupplierUser()){
+					validSave = SmApplicationUtil.validateComExpProjectBeforeSave(
+							validSave, getManagedBean(), currentTab);
+					}
+				}
+			break;				
+		//#38991 -END
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
 			if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
@@ -4380,6 +4400,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			}
 		}
+		//#38991 -START
+		// validate company experience 
+		SmApplicationUtil.validateComExpProjectBeforeSave(true, 
+				getManagedBean(), -1);
+		//#38991 -END
 
 		// validate personnel
 		SmApplicationUtil.validatePersonnelBeforeSave(true, -1,

@@ -3811,8 +3811,9 @@ public class QTDetailBackingBean extends
 							if (isQTStatusPublished(statusId)) {
 								tabBeans.add(new TabBean(titleName, approvalCategoryCode, qtApproval, 
 										approverSettingDtls(RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile().getOrgProfileId(), qtApproval)));
-							} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) 
-									|| QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId) || isStatusOfBpkOrScheduleRevise(statusId)) {
+							} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) ||
+									QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId) ||
+									isStatusOfBpkOrScheduleRevise(statusId)) {
 								this.getManagedBean().setPublicationApproval(qtApproval);
 							}
 						} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE.equals(approvalCategoryCode) 
@@ -11801,7 +11802,7 @@ public class QTDetailBackingBean extends
 	}
 	// 25791 -end-
 	
-		/*
+	/*
 	 * Set evaluation Type and demo required radio button to show or disabled, 
 	 * #28784
 	 */
