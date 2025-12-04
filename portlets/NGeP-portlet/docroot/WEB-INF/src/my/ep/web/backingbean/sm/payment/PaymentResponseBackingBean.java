@@ -1134,25 +1134,36 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		// #33137 - end
 		// #32422 END
 		
+		String paymentRefNo = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
-				orderId = jsonObject.getString("orderId");
-				tranID = jsonObject.getString("transId");
-				status = jsonObject.getString("status");
-				paydate = jsonObject.getString("trxDate");
-				channel = jsonObject.getString("channel");
-				currency = jsonObject.getString("currency");
-				if (channel
-						.equals(SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE)) {
-					cardType = ParameterConst.CARD_TYPES_CREDIT; 
-				}
-				paydate = DateUtils.reformatDate(paydate,
-						"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd HH:mm:ss");
-				date1 = paydate;
+				paymentRefNo = jsonObject.optString("paymentRefNo",null);
+				orderId = jsonObject.optString("orderId",null);
+				tranID = jsonObject.optString("transId",null);
+				status = jsonObject.optString("status",null);
+				paydate = jsonObject.optString("trxDate",null);
+				channel = jsonObject.optString("channel",null);
+				currency = jsonObject.optString("currency",null);
+				errorCode = jsonObject.optString("errCode",null);
+				errorDesc = jsonObject.optString("errDesc",null);
+				if (SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE.equals(channel)) {
+			        cardType = ParameterConst.CARD_TYPES_CREDIT;
+			    }
+				if (paydate != null && !paydate.isEmpty()) {
+			        try {
+			            paydate = DateUtils.reformatDate(
+			                paydate,
+			                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+			                "yyyy-MM-dd HH:mm:ss"
+			            );
+			            date1 = paydate;
+			        } catch (Exception e) {
+			            // handle/ log bad date format without breaking the rest
+			            // e.g., keep original paydate or set to null
+			        }
+			    }
 				paymentGateway = "Y";
-				errorCode = jsonObject.getString("errCode");
-				errorDesc = jsonObject.getString("errDesc");
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -1177,6 +1188,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		reqMap.put("cardType", cardType);
 		reqMap.put("molpayTransId", molpayTransId);
 		reqMap.put("paymentGateway", paymentGateway);
+		reqMap.put("paymentRefNo", paymentRefNo);
 
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
 		log.info("######38377#####tranID: " + reqMap.get("tranID"));
@@ -1195,6 +1207,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("######38377#####cardType:" + reqMap.get("cardType"));
 		log.info("######38377#####molpayTransId:" + reqMap.get("molpayTransId"));
 		log.info("######38377#####paymentGateway:" + reqMap.get("paymentGateway"));
+		log.info("######38377#####paymentRefNo:" + reqMap.get("paymentRefNo"));
 
 		return reqMap;
 	}
