@@ -7031,10 +7031,10 @@ public class LOIDetailBackingBean extends
 		reqDTO.setRecommendDtlIdList(getRecommendDtlIds);
 	
 		AwardSupplierResDTO resDTO = qtAwardSO.retrieveMultipleLoiDtls(reqDTO);
-		List<ScQtRecommend> recommendedItems = resDTO.getScQtRecommendList();
-	
-		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)
-				&& checkListDisqualifiedSupplierBranchDeleted(scqt.getQtId())) {
+		ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
+		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
+
+		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)) {
 			validationNeedSupplier(recommendedItems, scqt);
 		}
 	}
@@ -7120,7 +7120,7 @@ public class LOIDetailBackingBean extends
 		}
 		return false;
 	}
-	
+
 	// #28777 & #29729 - End
 	
 	// #28777 & #29729 - Start
@@ -7136,21 +7136,18 @@ public class LOIDetailBackingBean extends
 	 **/
 	private Boolean checkDetailIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
 			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId, Long qualifiedSupplier) {
-
-		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		int recordStatusFlg = recommendDtl.getRecordStatusFlg().intValue();
 
 		if (tplSpecZoneDtl != null) {
 			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
-			if (!sourcingIntegrationSO.flagZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId,
-					specZoneId)
-					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
+			if (checkListZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), specZoneId)
+					&& recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE
 					&& qualifiedSupplier.equals(supplierId)) {
 				return true;
 			}
 		} else {
-			if (!sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId)
-					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
+			if (checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())
+					&& recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE
 					&& qualifiedSupplier.equals(supplierId)) {
 				return true;
 			}
@@ -7219,11 +7216,9 @@ public class LOIDetailBackingBean extends
 		if (foundFalse) {
 			ScQtRecommend recommend = recommendMap.get(falseKey);
 			if (scQt.isZonal()) {
-				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
 				throw new EpException(MessageConst.ERROR_760623, new String[] {
 						recommend.getTplSpecZoneDtl().getZoneName(), recommend.getRequestItem().getItemName() });
 			} else {
-				tabMenuListener(3);
 				throw new EpException(MessageConst.ERROR_760622, new String[] { recommend.getRequestItem()
 						.getItemName() });
 			}
@@ -7248,45 +7243,15 @@ public class LOIDetailBackingBean extends
 			if (!entry.getValue()) {
 				ScQtRecommend recommend = recommendMap.get(entry.getKey());
 				if (scQt.isZonal()) {
-					setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
 					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
 							.getZoneName() });
 				} else {
-					tabMenuListener(3);
 					throw new EpException(MessageConst.ERROR_760624);
 				}
 			}
 		}
 	}
 
-	// #28777 & #29729 - End
-	
-	// #28777 & #29729 - Start
-	/**
-	 * Method to redirect to any zones tab after validation
-	 * 
-	 * @param tplSpecZoneDtl
-	 **/
-	private void setZoneAndTabIndexOnException(TplSpecZoneDtl tplSpecZoneDtl) {
-		List<TplSpecZoneDtl> specZoneDtls = this.getManagedBean().getMultiLOIZoneDetails();
-		if (tplSpecZoneDtl != null && CollectionUtils.isNotEmpty(specZoneDtls)) {
-			TplSpecZoneDtl zoneDtl = getManagedBean().getZoneMap().get(tplSpecZoneDtl.getSpecZoneId());
-			this.getManagedBean().setZoneActiveIndex(zoneDtl.getZoneTabIndex());
-			onZoneTabChangeAction(getManagedBean().getZoneMap().get(zoneDtl.getSpecZoneId()));
-		}
-	}
-
-	/**
-	 * Method to redirect to tab recommendation after validation
-	 * 
-	 * @param tplSpecZoneDtl
-	 **/
-	private void onZoneTabChangeAction(TplSpecZoneDtl tplSpecZoneDtl) {
-		this.getManagedBean().setSelectedZone(tplSpecZoneDtl);
-		this.getManagedBean().setZoneActiveIndex(tplSpecZoneDtl.getZoneTabIndex());
-		tabMenuListener(3);
-	}
-	
 	// #28777 & #29729 - End
 	
 	// #37831 - #29007 Start Vinod 23/04/2025

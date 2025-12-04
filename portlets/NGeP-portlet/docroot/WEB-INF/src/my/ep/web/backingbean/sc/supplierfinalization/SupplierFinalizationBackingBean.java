@@ -11278,8 +11278,7 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
 		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
 
-		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)
-				&& checkListDisqualifiedSupplierBranchDeleted(scqt.getQtId())) {
+		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)) {
 			validationNeedSupplier(recommendedItems, scqt);
 		}
 	}
@@ -11381,21 +11380,18 @@ public class SupplierFinalizationBackingBean extends
 	 **/
 	private Boolean checkDetailIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
 			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId, Long qualifiedSupplier) {
-
-		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		int recordStatusFlg = recommendDtl.getRecordStatusFlg().intValue();
 
 		if (tplSpecZoneDtl != null) {
 			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
-			if (!sourcingIntegrationSO.flagZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId,
-					specZoneId)
-					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
+			if (checkListZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), specZoneId)
+					&& recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE
 					&& qualifiedSupplier.equals(supplierId)) {
 				return true;
 			}
 		} else {
-			if (!sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(scQt.getQtId(), supplierId)
-					&& recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
+			if (checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())
+					&& recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE
 					&& qualifiedSupplier.equals(supplierId)) {
 				return true;
 			}
@@ -11465,11 +11461,9 @@ public class SupplierFinalizationBackingBean extends
 		if (foundFalse) {
 			ScQtRecommend recommend = recommendMap.get(falseKey);
 			if (scQt.isZonal()) {
-				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
 				throw new EpException(MessageConst.ERROR_760623, new String[] {
 						recommend.getTplSpecZoneDtl().getZoneName(), recommend.getRequestItem().getItemName() });
 			} else {
-				navigateToSupplierFinalizationTab();
 				throw new EpException(MessageConst.ERROR_760622, new String[] { recommend.getRequestItem()
 						.getItemName() });
 			}
@@ -11494,11 +11488,9 @@ public class SupplierFinalizationBackingBean extends
 			if (!entry.getValue()) {
 				ScQtRecommend recommend = recommendMap.get(entry.getKey());
 				if (scQt.isZonal()) {
-					setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
 					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
 							.getZoneName() });
 				} else {
-					navigateToSupplierFinalizationTab();
 					throw new EpException(MessageConst.ERROR_760624);
 				}
 			}
