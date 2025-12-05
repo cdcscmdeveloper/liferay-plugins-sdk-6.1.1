@@ -1,102 +1,53 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:cc="http://java.sun.com/jsf/composite">
-	
-	<cc:interface>
-		<cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.other.desc.history.header']}"  />
-		<cc:attribute name="categoryCodeList" type="java.util.List" required="true" />
-		<cc:attribute name="applNo" type="java.lang.String" required="true" />
-	</cc:interface>
-	<cc:implementation>
-		<p:dialog id="otherDescriptionHistoryDlgId"
-			header="#{cc.attrs.dialogHeader}"
-			closable="true"
-			widgetVar="otherDescriptionHistoryDlg" 
-			modal="true"
-			resizable="false" 
-			style="width: 900px; height: 600px; overflow: hidden;">
-			<p:outputPanel id="otherDescriptionMsg" style="height: 500px; overflow-y: auto;" >
-				<ui:repeat var="cat" value="#{cc.attrs.categoryCodeList}">
-					<p:outputPanel rendered="#{not empty cat.smSuppCatOtherDescHistory}">
-						<h:outputText 
-							value="#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:ac="http://ac.my/jsf/composite/cc" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:cc="http://java.sun.com/jsf/composite">
+  <cc:interface>
+    <cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.other.desc.history.header']}" />
+    <cc:attribute name="categoryCodeList" type="java.util.List" required="true" />
+    <cc:attribute name="applNo" type="java.lang.String" required="true" />
+  </cc:interface>
+  <cc:implementation>
+    <p:dialog id="otherDescriptionHistoryDlgId" header="#{cc.attrs.dialogHeader}" closable="true" widgetVar="otherDescriptionHistoryDlg" modal="true" resizable="false" style="width: 900px; height: 600px; overflow: hidden;">
+      <p:outputPanel id="otherDescriptionMsg" style="height: 500px; overflow-y: auto;">
+        <ui:repeat var="cat" value="#{cc.attrs.categoryCodeList}">
+          <p:panel rendered="#{not empty cat.smSuppCatOtherDescHistory}">
+            <h:outputText value="#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
 								 (#{empty cat.categoryL1Name ? cat.pmCategoryL1.categoryName : cat.categoryL1Name}, 
 								 #{empty cat.categoryL2Name ? cat.pmCategoryL2.categoryName : cat.categoryL2Name}, 
-								 #{empty cat.categoryL3Name ? cat.pmCategoryL3.categoryName : cat.categoryL3Name})" 
-								style="float: left;white-space: normal;"/><br />
-						<p:dataTable var="otherDescBean" widgetVar="smCatCodesHistoryDtWidVar"
-							value="#{cat.smSuppCatOtherDescHistory}"
-							rowKey="#{otherDescBean}" rowIndexVar="index" id="OtherDescriptionDtId"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							scrollable="#{cat.smSuppCatOtherDescHistory.size() gt 10}" >
-							<ac:paginator for="OtherDescriptionDtId" />
-								<p:column
-									headerText="#{lbl['lbl.sm.other.desc.history.no']}"
-									style="width : 2% !important; vertical-align:top;">
-									<p:outputLabel value="#{index + 1}"
-										style="float: left;white-space: normal !important;" />
-								</p:column>
-								<p:column
-									headerText="#{lbl['lbl.sm.other.desc.history.application.no']}"
-									style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-									<h:outputText
-										value="#{cc.attrs.applNo}" />
-								</p:column>
-								<p:column
-									headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}"
-									style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-									<h:outputText
-										value="#{otherDescBean.createdDate}" >
-										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-									</h:outputText>
-								</p:column>
-								<p:column
-									headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']}"
-									style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-									<h:outputText
-										rendered="#{not empty otherDescBean}"
-										value="#{otherDescBean.otherDesc}" />
-									<h:outputText
-										rendered="#{empty otherDescBean}"
-										value="#{otherDescBean.otherDesc}" />
-								</p:column>
-								<p:column
-									headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}"
-									style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-									<h:outputText
-										rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}"
-										value="#{cat.otherDesc}" />
-								</p:column>
-								<p:column
-									headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}"
-									style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-									<h:outputText
-										rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}"
-										value="#{PmCommonUtil.retriveUserName(otherDescBean.createdBy)}" />
-								</p:column>
-								<p:column
-									headerText="#{lbl['lbl.sm.other.desc.history.update.information.approver']}"
-									style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-									<h:outputText
-										rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP}"
-										value="#{otherDescBean.otherDesc}" />
-								</p:column>
-								<p:column
-									headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}"
-									style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-									<h:outputText
-										rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP}"
-										value="#{PmCommonUtil.retriveUserName(otherDescBean.createdBy)}" />
-								</p:column>
-						</p:dataTable><br />
-					</p:outputPanel>
-				</ui:repeat>
-			</p:outputPanel>
-		</p:dialog>
-	</cc:implementation>
+								 #{empty cat.categoryL3Name ? cat.pmCategoryL3.categoryName : cat.categoryL3Name})" style="float: left;white-space: normal;" />
+            <br />
+            <p:dataTable id="OtherDescriptionDtId" var="otherDescBean" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" value="#{cat.smSuppCatOtherDescHistory}" rowKey="#{otherDescBean}" rowIndexVar="index">
+              <ac:paginator for="OtherDescriptionDtId" />
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.no']}" style="width : 2% !important; vertical-align:top;">
+                <p:outputLabel value="#{index + 1}" style="float: left;white-space: normal !important;" />
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.application.no']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+                <h:outputText value="#{cc.attrs.applNo}" />
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.date.time']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+                <h:outputText value="#{otherDescBean.createdDate}">
+                  <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                </h:outputText>
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+                <h:outputText rendered="#{not empty otherDescBean}" value="#{otherDescBean.otherDesc}" />
+                <h:outputText rendered="#{empty otherDescBean}" value="#{otherDescBean.otherDesc}" />
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+                <h:outputText rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}" value="#{cat.otherDesc}" />
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+                <h:outputText rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}" value="#{PmCommonUtil.retriveUserName(otherDescBean.createdBy)}" />
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.update.information.approver']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+                <h:outputText rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP}" value="#{otherDescBean.otherDesc}" />
+              </p:column>
+              <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+                <h:outputText rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP}" value="#{PmCommonUtil.retriveUserName(otherDescBean.createdBy)}" />
+              </p:column>
+            </p:dataTable>
+            <br />
+          </p:panel>
+        </ui:repeat>
+      </p:outputPanel>
+    </p:dialog>
+  </cc:implementation>
 </ui:composition>

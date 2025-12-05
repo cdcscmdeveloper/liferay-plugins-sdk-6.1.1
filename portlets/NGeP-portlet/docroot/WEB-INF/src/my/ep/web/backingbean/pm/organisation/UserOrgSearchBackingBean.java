@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.organisation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern; //#27868
 
 import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
@@ -12,27 +13,36 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean; // #27868
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.DropDownLabelConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst; // #27868
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constant.sc.DPSearchBeanConst; // #27868
 import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;  // #27868
+import my.ep.dto.pm.authorization.user.UserResDTO;  // #27868
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst; // #27868
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.type.aut.SearchCondition; // #27868
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;//27868
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.sc.DPConstants; // #27868
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.pm.organisation.UserOrgSearchManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -173,18 +183,16 @@ public class UserOrgSearchBackingBean extends
 				if(getManagedBean().getJabatanProfileId() != null){
 					reqDTO.setUserJabatanId(getManagedBean().getJabatanProfileId());
 				}
-				ISearchBean<PmUserOrg> searchBeanData = getSearchBeanData(searchBean);
-			
-				
-				IUserSO userSO =  BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								IUserSO.class);
-				reqDTO.setUserOrgSearchBean(searchBeanData);
+				// #27868 - start
 				UserOrgResDTO resDTO = null;
-				if(ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getOrgType())){
-					resDTO = userSO.retrieveUserPtjListByParents(reqDTO);
+
+				if (getManagedBean().getPtjProfileId() != null) {
+					reqDTO.setUserPtjId(getManagedBean().getPtjProfileId());
+					resDTO = retrieveUserOrgResultBeanIfHavePtjProfile(searchBean, reqDTO, resDTO);
+				} else {
+					resDTO = retrieveUserOrgResultBeanIfNoPtjProfile(searchBean, reqDTO, resDTO);
 				}
+				// #27868 - end
 				
 				if (resDTO != null && resDTO.isSuccessful()) {
 					return resDTO.getUserOrgResultBean();
@@ -197,6 +205,55 @@ public class UserOrgSearchBackingBean extends
 			return null;
 		}
 		
+		// #27868 - start
+		/**
+		 * Retrieves user organization data if the current organization type is PTJ.
+		 *
+		 * @param searchBean the search criteria for user organization
+		 * @param reqDTO the request DTO containing search parameters
+		 * @param resDTO the initial response DTO
+		 * @return updated {@link UserOrgResDTO} with PTJ user data if applicable; otherwise, the original {@code resDTO}
+		 */
+		private UserOrgResDTO retrieveUserOrgResultBeanIfHavePtjProfile(ISearchBean<PmUserOrg> searchBean,
+				UserOrgReqDTO reqDTO, UserOrgResDTO resDTO) {
+			ISearchBean<PmUserOrg> searchBeanData = getSearchBeanDataRn(searchBean);
+			UserOrgResDTO respDTO = resDTO;
+
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			reqDTO.setUserOrgSearchBean(searchBeanData);
+
+			if (ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getOrgType())) {
+				respDTO = userSO.retrieveUserOfPtjListByParents(reqDTO);
+			}
+			return respDTO;
+		}
+
+		/**
+		 * Retrieves user organization data when PTJ profile is not available.
+		 *
+		 * @param searchBean the search criteria for user organization
+		 * @param reqDTO the request DTO containing search parameters
+		 * @param resDTO the initial response DTO
+		 * @return updated {@link UserOrgResDTO} with user PTJ list if applicable; otherwise, the original {@code resDTO}
+		 */
+		private UserOrgResDTO retrieveUserOrgResultBeanIfNoPtjProfile(ISearchBean<PmUserOrg> searchBean,
+				UserOrgReqDTO reqDTO, UserOrgResDTO resDTO) {
+			ISearchBean<PmUserOrg> searchBeanData = getSearchBeanData(searchBean);
+			UserOrgResDTO respDTO = resDTO;
+
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			reqDTO.setUserOrgSearchBean(searchBeanData);
+
+			if (ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getOrgType())) {
+				respDTO = userSO.retrieveUserPtjListByParents(reqDTO);
+			}
+			return respDTO;
+		}
+
+		// #27868 - end
+	
 		/**
 		 * Search data base on searchBean
 		 * @param searchBean
@@ -264,6 +321,90 @@ public class UserOrgSearchBackingBean extends
 			return searchBean;
 		}
 		
+		// start #27868
+		/**
+		 * Search data base on searchBean
+		 * 
+		 * @param searchBean
+		 * @return
+		 */
+		private ISearchBean<PmUserOrg> getSearchBeanDataRn(ISearchBean<PmUserOrg> searchBean) {
+			String searchName = getManagedBean().getSearchName();
+			String searchIdentificationType = getManagedBean().getIdentificationTypeId();
+			String searchIcNo = getManagedBean().getSearchIcNo();
+
+			addUserNameFilter(searchBean, searchName);
+			addIdentificationTypeFilter(searchBean, searchIdentificationType);
+			addIcNumberFilter(searchBean, searchIcNo);
+			addRoleCodeFilter(searchBean);
+
+			return searchBean;
+		}
+		
+		/**
+		 * Adds filter for user name if present.
+		 */
+		private void addUserNameFilter(ISearchBean<PmUserOrg> searchBean, String searchName) {
+			if (StringUtils.isNotBlank(searchName)) {
+				SearchFilterBean filterBean = new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSER_USERNAME,
+						SearchOperator.OPERATOR_LIKE.value(), searchName);
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+			}
+		}
+
+		/**
+		 * Adds filter for identification type if present.
+		 */
+		private void addIdentificationTypeFilter(ISearchBean<PmUserOrg> searchBean, String searchIdentificationType) {
+			if (StringUtils.isNotBlank(searchIdentificationType)) {
+				SearchFilterBean filterBean = new SearchFilterBean(
+						DPSearchBeanConst.SEARCH_IDENTIFICATIONCODE_PARAMETERCODE,
+						SearchOperator.OPERATOR_EQUALS.value(), searchIdentificationType);
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+			}
+		}
+
+		/**
+		 * Adds filter for IC number if present.
+		 */
+		private void addIcNumberFilter(ISearchBean<PmUserOrg> searchBean, String searchIcNo) {
+			if (StringUtils.isNotBlank(searchIcNo)) {
+				SearchFilterBean filterBean = new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSER_IDENTIFICATIONNO,
+						SearchOperator.OPERATOR_LIKE.value(), searchIcNo);
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+			}
+		}
+
+		/**
+		 * Adds role code and status filters to the search bean.
+		 * 
+		 * @param searchBean
+		 *            the search bean for filtering user roles
+		 */
+		private void addRoleCodeFilter(ISearchBean<PmUserOrg> searchBean) {
+			SearchFilterBean deskRoleFilter = new SearchFilterBean(
+					DPSearchBeanConst.SEARCH_PMUSERROLES_PMROLE_ROLECODE, SearchOperator.OPERATOR_EQUALS.value(),
+					DPSearchBeanConst.DESK_OFFICER);
+
+			SearchFilterBean reqRoleFilter = new SearchFilterBean(DPSearchBeanConst.SEARCH_PMUSERROLES_PMROLE_ROLECODE,
+					SearchOperator.OPERATOR_EQUALS.value(), DPSearchBeanConst.REQUISITIONER,
+					SearchCondition.CONDITION_OR.value());
+
+			SearchMultiFilterBean roleOrGroup = new SearchMultiFilterBean(deskRoleFilter, reqRoleFilter);
+
+			SearchFilterBean statusFilter = new SearchFilterBean(DPSearchBeanConst.SEARCH_PMUSERROLES_RECORDSTATUSFLG,
+					SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE);
+
+			SearchMultiFilterBean finalFilter = new SearchMultiFilterBean(roleOrGroup,
+					SearchCondition.CONDITION_AND.value(), statusFilter);
+
+			searchBean.getDataFilterBeans().add(finalFilter);
+		}
+		// end #27868
+
 		private boolean isOrgCode(String ptjCodeName) {
 		    return ptjCodeName.equalsIgnoreCase(ProfileManagementConst.PTJ_CODE) || 
 		           ptjCodeName.equalsIgnoreCase(ProfileManagementConst.KPTJ_CODE) ||
@@ -407,4 +548,247 @@ public class UserOrgSearchBackingBean extends
 		return new FacesScopes();
 	}
 	
+	// start - #27868
+	/**
+	 * Returns PTJ dropdown based on Jabatan profile ID.
+	 */
+	public SelectItem[] getPtjDropdown() {
+		return PmCommonUtil.getPtjDropdown(getManagedBean().getJabatanProfileId());
+	}
+
+	/**
+	 * Returns dropdown list of identity types.
+	 */
+	public SelectItem[] getIdentityTypeList() {
+		return getDropdownCodeValues(ParameterTypeConst.IDENTIFICATION_TYPES);
+	}
+
+	/**
+	 * Search user by organization type
+	 * 
+	 * @param orgType
+	 */
+	public void searchUserOfOrgs(String orgType) {
+		getManagedBean().setOrgType(orgType);
+		FacesScopes facesScopes = new FacesScopes();
+
+		Long selectedjabatan = getManagedBean().getJabatanProfileId();
+		Long selectedPtj = getManagedBean().getPtjProfileId();
+		String idType = getManagedBean().getIdentificationTypeId();
+		String searhIcNo = getManagedBean().getSearchIcNo();
+
+		final Pattern icPattern = Pattern.compile(DPConstants.IC_PATTERN);
+
+		// 1. Validate PTJ selection
+		validatePtjSelection(selectedjabatan, selectedPtj, facesScopes);
+
+		// 2. Validate IC Number format
+		validateIcNumber(searhIcNo, idType, icPattern);
+
+		getUserOrgDataModel().reloadData();
+	}
+
+	/**
+	 * Load default result by organization type.
+	 * 
+	 * @param orgType the organization type
+	 * @param orgProfileId the organization profile ID
+	 */
+	public void loadDefaultResult(String orgType, Long orgProfileId) {
+		getManagedBean().setOrgType(orgType);
+		initDefaultMinistryForRnPreparedBy(orgProfileId);
+
+		getUserOrgDataModel().reloadData();
+	}
+
+	/**
+	 * Validates that both selected Jabatan and PTJ are not null.
+	 * 
+	 * @param selectedJabatan
+	 *            The selected Jabatan ID.
+	 * @param selectedPtj
+	 *            The selected PTJ ID.
+	 * @param facesScopes
+	 *            FacesScopes instance for resource bundle messages.
+	 * @throws EpException
+	 *             if either Jabatan or PTJ is null.
+	 */
+	private void validatePtjSelection(Long selectedJabatan, Long selectedPtj, FacesScopes facesScopes) {
+		if (selectedJabatan == null) {
+			throw new EpException(MessageConst.ERROR_760720, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.gfmas.glpcgdef", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+		}
+
+		if (selectedPtj == null) {
+			throw new EpException(MessageConst.ERROR_760720, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.ptj", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+		}
+	}
+
+	/**
+	 * Validates the IC number format.
+	 * 
+	 * @param searhIcNo
+	 *            The IC number to validate.
+	 * @param idType
+	 *            The identification type (e.g., "IC").
+	 * @param icPattern
+	 *            The compiled regex pattern for IC numbers.
+	 * @throws EpException
+	 *             if the IC number is not valid based on the pattern and ID
+	 *             type.
+	 */
+	private void validateIcNumber(String searhIcNo, String idType, Pattern icPattern) {
+		// Condition: IC No. is not blank AND does not match pattern AND (idType
+		// is IC OR idType is blank)
+		if (StringUtils.isNotBlank(searhIcNo) && !icPattern.matcher(searhIcNo).matches()
+				&& (DPConstants.IDENTIFICATION_TYPE_IC.equalsIgnoreCase(idType) || !StringUtils.isNotBlank(idType))) {
+			throw new EpException(MessageConst.ERROR_760721);
+		}
+	}
+
+	/**
+	 * To initiate data
+	 * 
+	 * @param orgProfileId
+	 */
+	public void initDefaultMinistryForRnPreparedBy(Long orgProfileId) {
+		initPtjPopupForRn();
+
+		RoleCode[] allowedRoles = { RoleCode.REQUISITIONER };
+
+		for (RoleCode role : allowedRoles) {
+			if (getFacesScopes().hasRoleUser(role.value())) {
+				getManagedBean().setMinistryProfileId(orgProfileId);
+				getManagedBean().setDisabledMinistry(true);
+				return;
+			}
+		}
+	}
+
+	/**
+	 * To set PTJ details info
+	 */
+	public void initPtjPopupForRn() {
+		this.renewSesionObject();
+
+		PmOrgProfile ministryProfile = new PmOrgProfile();
+		PmOrgProfile ptjGroupProfile = new PmOrgProfile();
+		PmOrgProfile ptjProfile = new PmOrgProfile();
+
+		PmOrgProfile orgProfile = getOrgProfileByLoginUser();
+		if (orgProfile != null) {
+			String orgType = orgProfile.getOrgTypeCode().getParameterCode();
+			if (ParameterConst.ORG_TYPE_MINISTRY.equals(orgType)) {
+				ministryProfile = orgProfile;
+			} else if (ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)) {
+				ptjGroupProfile = orgProfile;
+				ministryProfile = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
+			} else if (ParameterConst.ORG_TYPE_PTJ.equals(orgType)) {
+				ptjProfile = orgProfile;
+				ptjGroupProfile = retrieveJabatanOrgProfile(orgProfile.getOrgProfileId());
+				ministryProfile = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
+			}
+		}
+
+		getManagedBean().setMinistryProfileId(ministryProfile.getOrgProfileId());
+		getManagedBean().setDisabledMinistry(true);
+		getManagedBean().setJabatanProfileId(ptjGroupProfile.getOrgProfileId());
+		getManagedBean().setPtjProfileId(ptjProfile.getOrgProfileId());
+	}
+
+	/**
+	 * Retrieves user's organization profile based on login session user ID.
+	 */
+	private PmOrgProfile getOrgProfileByLoginUser() {
+		PmOrgProfile pmOrgProfile = null;
+		Long userId = new FacesScopes().getUserSessionBean().getUserId();
+
+		if (userId != null) {
+			try {
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(userId);
+				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+				pmOrgProfile = loadPmOrgProfile(resDTO);
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("DP", "UserOrgSearchBackingBean", null, "getOrgProfileByLoginUser",
+						getUserIdSessionFromLoginId(), e);
+			}
+		}
+
+		return pmOrgProfile;
+	}
+
+	/**
+	 * Loads the first available PmOrgProfile from the user organization list.
+	 */
+	private PmOrgProfile loadPmOrgProfile(UserResDTO resDTO) {
+		PmOrgProfile pmOrgProfile = null;
+		if (resDTO.getUserOrgList() != null && !resDTO.getUserOrgList().isEmpty()) {
+			for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
+				if (pmUserOrg.getPmOrgProfile() != null) {
+					pmOrgProfile = pmUserOrg.getPmOrgProfile();
+					break;
+				}
+			}
+		}
+		return pmOrgProfile;
+	}
+
+	/**
+	 * OK action execute
+	 * 
+	 * @param methodActionStr
+	 */
+	public void okActionForRN(String methodActionStr) {
+		log.info("okAction");
+
+		if (StringUtils.isNotBlank(methodActionStr)) {
+			MethodExpression methodExp = FacesScopes.createMethodExpression(FacesContext.getCurrentInstance(),
+					methodActionStr, null, new Class[] { PmUserOrg.class });
+			if (getManagedBean().getSelectedUser() != null) {
+				methodExp.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[] { getManagedBean()
+						.getSelectedUser() });
+			}
+
+			RequestContext.getCurrentInstance().execute(DPConstants.USER_PTJ_POPUP_RN_HIDE);
+		}
+	}
+
+	/**
+	 * Executes RN OK action based on given method and save index.
+	 * 
+	 * @param methodActionStr the method expression string to invoke
+	 * @param saveIndex the index used for saving
+	 */
+	public void okActionForRN(String methodActionStr, Integer saveIndex) {
+		log.info("okAction");
+		RequestNoteBackingBean requestNoteBackingBean = new RequestNoteBackingBean();
+		requestNoteBackingBean.getManagedBean().setSaveIndex(saveIndex);
+
+		if (StringUtils.isNotBlank(methodActionStr)) {
+			MethodExpression methodExp = FacesScopes.createMethodExpression(FacesContext.getCurrentInstance(),
+					methodActionStr, null, new Class[] { PmUserOrg.class });
+			if (getManagedBean().getSelectedUser() != null) {
+				methodExp.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[] { getManagedBean()
+						.getSelectedUser() });
+			}
+
+			RequestContext.getCurrentInstance().execute(DPConstants.USER_PTJ_POPUP_RN_HIDE);
+		}
+	}
+
+	/**
+	 * reset
+	 */
+	public void resetUserOrgRN() {
+
+		this.renewSesionObject();
+		getUserOrgDataModel().resetData();
+		initPtjPopupForRn();
+	}
+	// end - #27868
 }

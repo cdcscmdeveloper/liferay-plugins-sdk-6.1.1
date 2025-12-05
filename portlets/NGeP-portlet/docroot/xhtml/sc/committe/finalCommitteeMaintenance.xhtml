@@ -168,7 +168,7 @@
 				</p:dataTable>
 
 				<div class="ppRightBtn">
-					<p:commandButton id="quotationcommitteeadd" styleClass="BtnSpacing"
+					<p:commandButton id="committeeAddButton" styleClass="BtnSpacing"
 						value="#{lbl['lbl.btn.add']}" process="@this"
 						action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
 						oncomplete="committeeScreen3.show();" update="@(.addQCMember)"
@@ -188,7 +188,7 @@
 						styleClass="BtnSpacing" update="form:qtfinalcommitteeid"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
-					<p:tooltip id="ttUpdateButton" for="quotationcommitteeadd">
+					<p:tooltip id="ttUpdateButton" for="committeeUpdateButton">
 						<h:outputText escape="false"
 							value="#{lbl['lbl.sc.committee.tooltip']}" />
 					</p:tooltip>

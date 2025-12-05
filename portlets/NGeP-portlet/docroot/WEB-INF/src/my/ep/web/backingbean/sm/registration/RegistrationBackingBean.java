@@ -6104,11 +6104,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		for(SmSupplierOwner owner : suplierOwner){
 			ban = SmServiceLookup.getBlacklistDirectorSO()
-					.retrieveValidBlacklist(owner.getIdentificationNo(), false)
+					.retrieveValidBlacklist(owner.getIdentificationNo(), true)
 					.getPersonBlacklist();
 		}
 		
-		if(ban != null){
+		if(ban != null && ban.getIdentificationNo() != null){
 			throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
 		}
 	}

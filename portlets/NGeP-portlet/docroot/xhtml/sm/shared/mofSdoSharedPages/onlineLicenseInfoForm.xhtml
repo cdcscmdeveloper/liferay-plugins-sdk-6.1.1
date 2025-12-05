@@ -105,7 +105,13 @@
 						</p:commandLink>
 						</ui:remove>
 						<h:panelGroup rendered="#{not empty onlineLicenseTable.smApplDocFiles}">
-							<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{applDocsFile.fileName}</a>
+							<!-- #39316 - Start -->
+							<h:commandLink id="file" value="#{backingBean.getShortFileName(applDocsFile.fileName)}"
+								rendered="#{not empty applDocsFile and !onlineLicenseTable.pmDocument.hardCopyReq}">
+								<p:fileDownload
+									value="#{backingBean.commonDownload(applDocsFile.filePath,applDocsFile.fileName,applDocsFile.fileName)}" />
+							</h:commandLink>
+							<!-- #39316 - End -->
 						</h:panelGroup>
 						<br />
 					</ui:repeat>

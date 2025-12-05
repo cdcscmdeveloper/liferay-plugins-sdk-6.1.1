@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -164,6 +163,7 @@ import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.ct.ContractHashSetConst; //#35238 / #26186
 import my.ep.web.constant.report.ReportConst; //24333
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -223,32 +223,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private boolean isUntickOther = false;
 	private boolean spToCheck = false;
 	//End Fix - #33287
-	//#34097/#26186 start
-	private static final Set<Long> CANCEL_STATUS_CONST = new HashSet<>(Arrays.asList(
-            ContractStatusConst.FA_PENDING_SUBMISSION,
-            ContractStatusConst.FA_PENDING_REVISION,
-            ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION,
-            ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION_REVISION,
-            ContractStatusConst.FA_PENDING_MEETING_DECISION,
-            ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION,
-            ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION,
-            ContractStatusConst.FA_PENDING_LOA_SUBMISSION,
-            ContractStatusConst.FA_PENDING_LOA_REVISION
-    ));
-	private static final Set<Long> REJECT_STATUS_CONST = new HashSet<>(Arrays.asList(
-			ContractStatusConst.FA_PENDING_APPROVAL,
-			ContractStatusConst.FA_PENDING_REVISION_APPROVAL,
-			ContractStatusConst.FA_PENDING_LOA_APPROVAL,
-			ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL
-    ));
-	//#34097/#26186 end
-	//#35238 start
-	private static final Set<String> COMMITTEE_TYPE_QUOTATION = new HashSet<>(Arrays.asList(
-			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A,
-			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B,
-			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE
-    ));
-	//#35238 end
 	
 	/**
 	 * The constructor used for initializing the variable.
@@ -2765,9 +2739,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			// Start Fix - #33952, #25956			
-			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() && ctBackingBean
-					.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0)
-					&& ctBackingBean.getManagedBean().isContractExpired()){
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)
+					&& ctBackingBean.getManagedBean().isContractExpired()){ //#32418
 				
 				if ((ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION.equals(ctBackingBean.getManagedBean()
 								.getContractVer().getStatus().getStatusId()))
@@ -5461,8 +5436,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
 			isUntickContractExtension = true;
 			spToCheck = true;
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
 		}
 		changeAmendmentEffDate();
 	}
@@ -5494,8 +5467,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			resetItemPrice(); // #30879 
 			isUntickItemPrice = true;
 			spToCheck = true;
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 		}
 		ConstructTabSideMenu();
 	}
@@ -5537,8 +5509,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			resetItemQty(); // #30879 
 			isUntickItemMaxQty = true;
 			spToCheck = true;
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 		}
 		ConstructTabSideMenu();
 	}
@@ -5552,9 +5523,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			spToCheck = false;
 		}
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
-		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+		if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}
 	}
@@ -5578,16 +5548,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-			
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);			
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
 			isCentralContractTypeCheck();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}
 	}
@@ -5636,8 +5603,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 
 		if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}
 
@@ -7424,7 +7390,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		previousDate.add(Calendar.DATE, -1);
 		return previousDate;
 	}
-
+	
 	/**
 	 * The method to used auto update of request.
 	 */
@@ -7494,7 +7460,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				// #25956 - Start - Fixing for _Secretary Role
 				//#35238 start
-				if (isQuotationCommitteeType() && hasQuotationSecretary()) { 
+				if (isQuotationCommitteeType() && hasAnyRoleUser(ContractHashSetConst.QUOTATION_SECRETARY_ROLES)) { 
 					userRole = RoleCode.QQC_SECRETARY.value();					
 				} 
 				//#35238 end
@@ -7540,7 +7506,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (getFacesScopes().hasRoleUser(RoleCode.FPB_CHAIRPERSON.value())) {
 						userRole = RoleCode.FPB_CHAIRPERSON.value();
 					}
-				} else {
+				}
+				//#35238 start
+				else if (isQuotationCommitteeType() && hasAnyRoleUser(ContractHashSetConst.QUOTATION_CHAIRPERSON_ROLES)){
+					userRole = RoleCode.QQC_CHAIRPERSON.value();
+				}
+				//#35238 end
+				else {
 					String roleCode = getManagedBean().getCommitteeType() + "_CHAIRPERSON";
 					if (getFacesScopes().hasRoleUser(roleCode)) {
 						userRole = roleCode;
@@ -7552,7 +7524,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (getFacesScopes().hasRoleUser(RoleCode.FPB_MEMBER.value())) {
 						userRole = RoleCode.FPB_MEMBER.value();
 					}
-				} else {
+				}
+				//#35238 start
+				else if (isQuotationCommitteeType() && hasAnyRoleUser(ContractHashSetConst.QUOTATION_MEMBER_ROLES)){
+					userRole = RoleCode.QQC_MEMBER.value();
+				}
+				//#35238 end
+				else {
 					String roleCode = getManagedBean().getCommitteeType() + "_MEMBER";
 					if (getFacesScopes().hasRoleUser(roleCode)) {
 						userRole = roleCode;
@@ -7627,8 +7605,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
 		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
 			isUntickOther = true;
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}
 	}
@@ -9663,10 +9640,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		List<String> listButton = new ArrayList<>(Arrays.asList(strButton));
 		boolean condition = false;
 
-		if (!listButton.contains(BpmOutcomeConst.BPM_CANCEL) && CANCEL_STATUS_CONST.contains(statusId)) {
+		if (!listButton.contains(BpmOutcomeConst.BPM_CANCEL) && ContractHashSetConst.CANCEL_STATUS_CONST.contains(statusId)) {
 			listButton.add(BpmOutcomeConst.BPM_CANCEL);
 			condition = true;
-		} else if (!listButton.contains(BpmOutcomeConst.BPM_REJECT) && REJECT_STATUS_CONST.contains(statusId)) {
+		} else if (!listButton.contains(BpmOutcomeConst.BPM_REJECT) && ContractHashSetConst.REJECT_STATUS_CONST.contains(statusId)) {
 			listButton.add(BpmOutcomeConst.BPM_REJECT);
 			condition = true;
 		} else if (!listButton.contains(BpmOutcomeConst.BPM_REVISE) &&
@@ -10011,7 +9988,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public boolean isQuotationCommitteeType() {
 		return getManagedBean().getCommitteeType() != null
-				&& COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType());
+				&& ContractHashSetConst.COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType());
 	}
 	
 	/**
@@ -10023,20 +10000,55 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private Long getParameterId(PmParameter pmParameter) {
 	    return pmParameter != null ? pmParameter.getParameterId() : null;
 	}
-	
-	/**
-	 * Checks if the user has any quotation secretary roles.
-	 * 
-	 * @return true if has any role related.
-	 */
-	private boolean hasQuotationSecretary() {
-		Set<String> qqcSecretary = new HashSet<>();
-		qqcSecretary.add(RoleCode.QCA_SECRETARY.value());
-		qqcSecretary.add(RoleCode.QCB_SECRETARY.value());
-		qqcSecretary.add(RoleCode.QQC_SECRETARY.value());
-		
-		return hasAnyRoleUser(qqcSecretary);
-	}	
 	//#35238 end
+	
+	// Start Fix - #39538
+	/**
+	 * Resets the amendment effective date based on contract and amendment conditions.
+	 *
+	 * <p>
+	 * If the amendment is a contract extension and the contract is already expired,
+	 * the amendment effective date will be set to the extension start date.
+	 * Otherwise, if amendment changes require a reset, a new effective date
+	 * will be calculated and applied.
+	 * </p>
+	 *
+	 * @param amendment the amendment entity used to determine whether the effective date should be reset
+	 */
+	private void resetEffDate(CtAmendment amendment) {
+		Calendar cal = Calendar.getInstance();
+		boolean shouldResetEffDate = amendmentFlagCheck(amendment, cal);
+		
+		if (amendment.isContractExtend() && ctBackingBean.getManagedBean().isContractExpired()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(
+							ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+		} else if (shouldResetEffDate) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(retrieveNewEffDate());
+		}
+	}
 
+	/**
+	 * Determines whether the amendment effective date should be reset.
+	 *
+	 * <p>
+	 * The effective date should be reset only when:
+	 * <ul>
+	 *   <li>The amendment is NOT a contract extension</li>
+	 *   <li>There are NO changes to item, value, clause or other attributes</li>
+	 *   <li>The current amendment effective date is NOT equal to today's date</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param amendment the amendment being evaluated
+	 * @param cal the current date reference used for comparison
+	 * @return true if the amendment effective date should be reset, otherwise false
+	 */
+	private boolean amendmentFlagCheck(CtAmendment amendment, Calendar cal) {
+		boolean isAmendItemFlag = amendment.isItemPriceChange() || amendment.isQuantityChange();
+		boolean isAmendValueFlag =  amendment.isValueChange() || amendment.isValueChangeByGst() || amendment.isValueChangeByStax();
+		boolean isAmendClauseAndOtherFlag =  amendment.isClauseChange() || amendment.isOtherChange();	
+		boolean overallChange = isAmendItemFlag || isAmendValueFlag || isAmendClauseAndOtherFlag;
+		return !amendment.isContractExtend()  && !overallChange  && !amendment.getAmendmentEffDate().equals(cal.getTime());
+	}
+	// End Fix - #39538
 }
