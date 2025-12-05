@@ -1889,7 +1889,11 @@ public class QTCommitteBackingBean extends
 				selectedList.get(i).setRepresentativeTypeId(null);
 				committeeMembers.add(selectedList.get(i));
 				//#28895 - 35500 start
-				deletedCommitteeMembers.add(selectedList.get(i));
+				if (CollectionUtils.isNotEmpty(deletedCommitteeMembers) && !deletedCommitteeMembers.contains(selectedList.get(i))){//#35500 Fix Reopen 27th Nov
+					deletedCommitteeMembers.add(selectedList.get(i));
+				}else if (CollectionUtils.isEmpty(deletedCommitteeMembers)) {
+					deletedCommitteeMembers.add(selectedList.get(i));
+				}
 				if (!(newScCommitteeMemberList == null || newScCommitteeMemberList.isEmpty())) {
 					newScCommitteeMemberList.remove(selectedList.get(i));
 				}				

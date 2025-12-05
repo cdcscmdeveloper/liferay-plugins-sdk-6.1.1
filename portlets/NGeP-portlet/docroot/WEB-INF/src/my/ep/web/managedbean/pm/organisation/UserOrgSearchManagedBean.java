@@ -23,6 +23,7 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	private Long ministryProfileId;
 	private Long pegawaiPengawalProfileId;
 	private Long jabatanProfileId;
+	private Long ptjProfileId; //#27868
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
 	private PmUserOrg selectedUser;
@@ -38,6 +39,11 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	private String userCodeNameSearchValues;
 	private Long zone;
 	
+	//start - #27868
+	private String searchName;
+	private String searchIcNo;
+	private String identificationTypeId;
+	//end - #27868
 	
 	public UserOrgSearchManagedBean() {
       //Do nothing
@@ -70,6 +76,23 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	public void setJabatanProfileId(Long jabatanProfileId) {
 		this.jabatanProfileId = jabatanProfileId;
 	}
+	
+	// start - 27868
+	/**
+	 * @return the ptjProfileId
+	 */
+	public Long getPtjProfileId() {
+		return ptjProfileId;
+	}
+
+	/**
+	 * @param ptjProfileId the ptjProfileId to set
+	 */
+	public void setPtjProfileId(Long ptjProfileId) {
+		this.ptjProfileId = ptjProfileId;
+	}
+
+	// end - 27868
 
 	/**
 	 * @return the ptjCodeName
@@ -267,6 +290,50 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 		this.currentActiveOrg = currentActiveOrg;
 	}
 
-	
-	
+	//start - #27868
+	/**
+	 * @return the searchName
+	 */
+	public String getSearchName() {
+		return searchName;
+	}
+
+	/**
+	 * @param searchName
+	 *            the searchName to set
+	 */
+	public void setSearchName(String searchName) {
+		this.searchName = searchName;
+	}
+
+	/**
+	 * @return the searchIcNo
+	 */
+	public String getSearchIcNo() {
+		return searchIcNo;
+	}
+
+	/**
+	 * @param searchIcNo
+	 *            the searchIcNo to set
+	 */
+	public void setSearchIcNo(String searchIcNo) {
+		this.searchIcNo = searchIcNo;
+	}
+
+	/**
+	 * @return the identificationTypeId
+	 */
+	public String getIdentificationTypeId() {
+		return identificationTypeId;
+	}
+
+	/**
+	 * @param identificationTypeId
+	 *            the identificationTypeId to set
+	 */
+	public void setIdentificationTypeId(String identificationTypeId) {
+		this.identificationTypeId = identificationTypeId;
+	}
+	//end - #27868
 }
