@@ -3314,7 +3314,7 @@ public class LOIDetailBackingBean extends
 			checkSupplierAwardedRejectValidityExtension();//#21692
 		}
 		//#21692 - End
-		checkNeedSupplierIfHaveBranchDeleted(outcome);// #28777&#29729
+		//checkNeedSupplierIfHaveBranchDeleted(outcome);// #28777&#29729
 				
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
