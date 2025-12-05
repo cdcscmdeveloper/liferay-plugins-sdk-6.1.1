@@ -1660,12 +1660,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().setBondPercentage(PerformanceBondUtil.calculatePerformanceBondPercentage(overall, periodBond));
 			// 24333 - End
 			
-			// #24336 (Remove set committee type by contract amount) - Start
-			// Amendment process	  
-			// Redmine 19600 - Amendment with Supplement
-			//if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() >= 20000L){
-			//	getManagedBean().setCommitteeType(retrieveCommitteeType());
-			//}
+			// #24336 (Set committee type by contract amount (#19600) replaced by radio select) - Start
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
+				getManagedBean().setCommitteeType(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType().getParameterCode());
+			}
 			// #24336 - End
 			
 			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
@@ -1799,7 +1797,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 			
+			// #24336 - Start
+			setCommitteeTypeValue();
+			// #24336 - End
+						
 			setSecretary();
+			
 			if(!ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid()){
 				ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
 			}
@@ -2043,11 +2046,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#30014 - End
 			
-			// #24336 - Start
-			// Set pmParameter committee type by code
-			setCommitteeTypeValue();
-			// #24336 - End
-
 			reqDTO.setCtContract(ctBackingBean.getManagedBean().getContractVer().getCtContract());
 			reqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -2896,7 +2894,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				// #24336 - End
 				
-				//Validation for committee
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
 
 					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
@@ -10642,7 +10639,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setSecretaryId(cmiRes.getUserId());
 		}
 	}
-	
 	//#24336 - End
 	
 }
