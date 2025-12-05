@@ -11131,7 +11131,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the dialog id to be close
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
-		assignValReqdToFalse();
+//		assignValReqdToFalse(); #37925
 
 		//		#15629 -- start - 27/1/2020
 		// 		#30974 - start
