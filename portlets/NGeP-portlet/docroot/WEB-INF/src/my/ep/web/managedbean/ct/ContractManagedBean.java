@@ -234,6 +234,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean clauseChangeChecklist;
 	private boolean valueChangeByGstChecklist;
 	private boolean otherChangeChecklist;
+	private boolean initPage = false;
 	//#24336 - End
 	
 	/**
@@ -1807,6 +1808,14 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setOtherChangeChecklist(boolean otherChangeChecklist) {
 		this.otherChangeChecklist = otherChangeChecklist;
+	}
+
+	public boolean isInitPage() {
+		return initPage;
+	}
+
+	public void setInitPage(boolean initPage) {
+		this.initPage = initPage;
 	}
 	//#24336 - End
 }

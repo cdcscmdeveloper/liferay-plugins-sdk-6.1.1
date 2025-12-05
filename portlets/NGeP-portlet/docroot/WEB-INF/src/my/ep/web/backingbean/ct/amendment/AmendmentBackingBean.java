@@ -75,6 +75,7 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
+import my.ep.dto.ct.committee.CommitteeMemberInfoResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
@@ -176,8 +177,6 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil; //24333
 import my.ep.web.util.NumberWordUtilEn; //24333
-import my.ep.web.util.NumberWordUtil;
-import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
@@ -678,17 +677,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ConstructTabSideMenu();
 				
 				// #24336 - Start
-				// Handle amendment checklist value
-				handleSelectedAmendmentChecklistValue();
-				
-				// Handle amendment type valuechange
-				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
-					handleContractValueTypeChange();
-					handleNewAmtEffDate();
-				}
-				
-				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
-					getManagedBean().setCommitteeType(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType().getParameterCode());
+				if(!ctBackingBean.getManagedBean().isInitPage()){
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
+						getManagedBean().setCommitteeType(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType().getParameterCode());
+					}
+					
+					// Handle amendment checklist value
+					handleSelectedAmendmentChecklistValue();
+					
+					// Handle amendment type valuechange
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+						handleContractValueTypeChange();
+						handleNewAmtEffDate();
+					}
+					
+					// Set default original desk officer committee from QT (if not save yet)
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
+						log.info("handleOriginalDeskOfficerCommitteeQT...");
+						handleOriginalDeskOfficerCommitteeQT();
+					}
+					ctBackingBean.getManagedBean().setInitPage(true);
 				}
 				// #24336 - End
 
@@ -6534,7 +6542,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	// #24336 - Start
 	public SelectItem[] getSecretaryDropdownList() {
 		String committeeType = getManagedBean().getCommitteeType();
-		SelectItem[] items = null;
+		SelectItem[] items;
 		
 		if(committeeType != null){
 	// #24336 - End	
@@ -6606,32 +6614,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (items != null && items.length == 2) {
 						getManagedBean().setSecretaryId((Long)items[1].getValue());
 					}
-					
-					// #24336 (default secretary from QT) - Start
-					else{
-						
-						// set default original desk officer committee from QT if not save yet
-						if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
-							long committeeTypeId = 0L;
-							PmParameter commType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, committeeType);
-							if(commType != null){
-								committeeTypeId = commType.getParameterId();
-							}
-							
-							long memberRoleId = 0L;
-							PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_SECRETARY);
-							if(memberRole != null){
-								memberRoleId = memberRole.getParameterId();
-							}
-							
-							IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
-							long qtId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId();
-							
-							long secretaryId = iContractAmendmentSO.retrieveOriginalDeskOfficerCommittee(qtId, committeeTypeId, memberRoleId);
-							getManagedBean().setSecretaryId(secretaryId);
-						}
-					}
-					// #24336 - End
 					
 					getManagedBean().setSecretaryList(items);
 				}
@@ -10628,6 +10610,39 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				new String[]{ResourceBundleUtils.getMessage(ContractConst.COMMITTEE_TYPE_LABEL, 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	}
+	
+	private void handleOriginalDeskOfficerCommitteeQT(){
+		
+		IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
+		long qtId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId();
+		CommitteeMemberInfoResDTO cmiRes = iContractAmendmentSO.retrieveOriginalDeskOfficerCommittee(qtId, SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
+		
+		if(cmiRes != null){
+			
+			// tick checkbox
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbqcAuthorityReq(true);
+			
+			// normalize committee code
+			String code = cmiRes.getCommitteeTypeCode();
+
+		    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
+		        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
+		    		code = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+		    }
+
+		    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
+		        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
+		    		code = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
+		    }
+		    
+		    // set radio
+			getManagedBean().setCommitteeType(code);
+			
+			// set secretary
+			getManagedBean().setSecretaryId(cmiRes.getUserId());
+		}
+	}
+	
 	//#24336 - End
 	
 }
