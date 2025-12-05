@@ -302,6 +302,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = reqMap.get("channel") != null ? reqMap.get("channel") : null;
 		String errorCode = reqMap.get("error_code") != null ? reqMap.get("error_code") : null;
 		String errorDesc = reqMap.get("error_desc") != null ? reqMap.get("error_desc") : null;
+		String paymentRefNo = reqMap.get("paymentRefNo");
+		String bankName = reqMap.get("bankName");
 		
 		//#Start 33137
 		String fpxTranId = null;
@@ -406,6 +408,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("error_desc:" + errorDesc); 
 		log.info("channel:" + channel); 
 		log.info("extraP:" + extraP); 
+		log.info("bankName:" + bankName); 
+		log.info("paymentRefNo:" + paymentRefNo); 
 		
 		// #26307 end
 		// #32422 START 
@@ -622,6 +626,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info("#38377########smPaymentRes.setPaymentStatus:"+smPaymentRes.getPaymentStatus());
 				smPaymentRes.setPaidAmt(txAmount);
 				log.info("#38377########smPaymentRes.setPaidAmt:"+smPaymentRes.getPaidAmt());
+				smPaymentRes.setBankName(bankName);
+				log.info("#38377########smPaymentRes.setBankName:"+smPaymentRes.getBankName());
 				paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 				//26307
 				log.info("#38377########Status Code : "+statusCode);
@@ -1135,10 +1141,14 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		// #32422 END
 		
 		String paymentRefNo = "";
+		String bankName = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
 				paymentRefNo = jsonObject.optString("paymentRefNo",null);
+				log.info("######38377#####json paymentRefNo: " + paymentRefNo);
+				bankName = jsonObject.optString("bankName",null);
+				log.info("######38377#####json bankName: " + bankName);
 				orderId = jsonObject.optString("orderId",null);
 				tranID = jsonObject.optString("transId",null);
 				status = jsonObject.optString("status",null);
@@ -1189,6 +1199,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		reqMap.put("molpayTransId", molpayTransId);
 		reqMap.put("paymentGateway", paymentGateway);
 		reqMap.put("paymentRefNo", paymentRefNo);
+		reqMap.put("bankName", bankName);
 
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
 		log.info("######38377#####tranID: " + reqMap.get("tranID"));
@@ -1207,6 +1218,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("######38377#####cardType:" + reqMap.get("cardType"));
 		log.info("######38377#####molpayTransId:" + reqMap.get("molpayTransId"));
 		log.info("######38377#####paymentGateway:" + reqMap.get("paymentGateway"));
+		log.info("######38377#####bankName:" + reqMap.get("bankName"));
 		log.info("######38377#####paymentRefNo:" + reqMap.get("paymentRefNo"));
 
 		return reqMap;
