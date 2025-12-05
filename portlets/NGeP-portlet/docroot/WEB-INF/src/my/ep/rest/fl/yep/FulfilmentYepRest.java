@@ -32,7 +32,7 @@ public class FulfilmentYepRest {
 	/**
 	 * rest for yep manual terminate to call bpm so terminate
 	 * 
-	 * @param reqDTO
+	 * @param reqDTO FlYepRestReqDTO
 	 * @return Response
 	 */
 	@POST
@@ -47,8 +47,12 @@ public class FulfilmentYepRest {
 			if (reqDTO.getKeyPass() == null || !reqDTO.getKeyPass().equals(keyPass)) {
 				return Response.status(Response.Status.UNAUTHORIZED).entity("keyPass invalid!").build();
 			}
-			FlYepResDTO resDTO = FlYepServiceLookup.getFlYepSO().terminateTaskManual(reqDTO.getDocNo(),
-					reqDTO.getPhaseNo(), reqDTO.getLimit(), reqDTO.isBatch());
+			
+			if(reqDTO.isBatch() && reqDTO.getFromDate() == null && reqDTO.getToDate() == null){
+				return Response.status(Response.Status.UNAUTHORIZED).entity("range date is required!").build();
+			}
+			
+			FlYepResDTO resDTO = FlYepServiceLookup.getFlYepSO().terminateTaskManual(reqDTO);
 
 			long endTime = System.currentTimeMillis();
 			log.info("End Process:terminateTaskYEP");
