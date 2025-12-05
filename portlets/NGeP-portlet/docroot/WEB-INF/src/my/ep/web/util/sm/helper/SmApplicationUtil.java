@@ -16214,6 +16214,10 @@ public class SmApplicationUtil {
 	public static void setCompExpDraft(SmAppl smAppl) {
 		List<SmCompExpDraft> smCompExpDraft = new ArrayList<>();
 		for (SmCompanyExperience exp : smAppl.getSmCompanyExperiences()) {
+			boolean isConsultant = false;
+			if (exp.getSupplierType().equals(ParameterConst.SUPPLIER_TYPE_CONSULTANT)) {
+				isConsultant = true;
+			}
 			if (exp.isNewlyAdded()) {
 				SmCompExpDraft draft = new SmCompExpDraft();
 				draft.setSmSupplier(smAppl.getSmSupplier());
@@ -16221,14 +16225,22 @@ public class SmApplicationUtil {
 				draft.setTitle(exp.getTitle());
 				draft.setContractValue(exp.getContractValue());
 				draft.setSourceType(retrievePmParameterById(ParameterConst.SOURCE_TYPE_ID_SM));
-				draft.setProcumentMode(retrievePmParameterById(exp.getProcurementModeId().longValue()));
 				draft.setClientType(exp.getClientType());
 				if(exp.getClientType().equalsIgnoreCase("F")){
 					draft.setOriAgencyName(exp.getClientName());
 				}else if(exp.getClientType().equalsIgnoreCase("O")){
 					draft.setAgencyName(exp.getClientName());	
 				}
-				
+				draft.setPaymentMethod(retrievePmParameterById(exp.getPaymentMethodId().longValue()));
+				draft.setContractEffDate(exp.getProcurementDate());
+				if(isConsultant){
+					draft.setFileReferenceNo(exp.getRefNo());
+					draft.setProjectLoc(exp.getProjectLocation());
+					draft.setWorkServDesc(exp.getWorkServiceDesc());
+					draft.setConsultantFee(exp.getConsultantFee());
+				} else {
+					draft.setProcumentMode(retrievePmParameterById(exp.getProcurementModeId().longValue()));
+				}
 				List<SmCompExpCatDraft> catDraftList = new ArrayList<>();
 				for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {
 					SmCompExpCatDraft catDraft = new SmCompExpCatDraft();
