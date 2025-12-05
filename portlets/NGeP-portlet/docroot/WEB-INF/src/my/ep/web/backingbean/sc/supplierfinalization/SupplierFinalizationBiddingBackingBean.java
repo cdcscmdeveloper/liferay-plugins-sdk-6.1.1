@@ -3591,7 +3591,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 	/**
 	 * Method to check detail identifier if have supplier deactivated
 	 * 
-	 * @param tplSpecZoneDtl
 	 * @param recommendDtl
 	 * @param scQt
 	 * @param supplierId
