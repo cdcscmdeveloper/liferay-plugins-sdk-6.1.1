@@ -3564,7 +3564,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 					specZoneId);
 			for (Long qualifiedZoneSupplier : qualifiedZoneSupplierList) {
 				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
-						qualifiedZoneSupplier) || checkBiddingSupplierDeactivated(scQt.getQtId())) {
+						qualifiedZoneSupplier) || checkDetailIdentifierForSupplierDeactivated(recommendDtl, scQt, supplierId,
+								qualifiedZoneSupplier)) {
 					return true;
 				}
 			}
@@ -3574,7 +3575,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 			List<Long> qualifiedSupplierList = retrieveSuppliersIdsByQtId(true, scQt.getQtId());
 			for (Long qualifiedSupplier : qualifiedSupplierList) {
 				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
-						qualifiedSupplier) || checkBiddingSupplierDeactivated(scQt.getQtId())) {
+						qualifiedSupplier) || checkDetailIdentifierForSupplierDeactivated(recommendDtl, scQt, supplierId,
+								qualifiedSupplier)) {
 					return true;
 				}
 			}
@@ -3583,6 +3585,29 @@ public class SupplierFinalizationBiddingBackingBean extends
 		return false;
 	}
 	
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check detail identifier if have supplier deactivated
+	 * 
+	 * @param tplSpecZoneDtl
+	 * @param recommendDtl
+	 * @param scQt
+	 * @param supplierId
+	 * @param qualifiedSupplier
+	 * 
+	 **/
+	private Boolean checkDetailIdentifierForSupplierDeactivated(ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId, Long qualifiedSupplier) {
+		int recordStatusFlg = recommendDtl.getRecordStatusFlg().intValue();
+
+		if (checkBiddingSupplierDeactivated(scQt.getQtId())
+				&& recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE && qualifiedSupplier.equals(supplierId)) {
+			return true;
+		}
+		return false;
+	}
+
 	// #28777 & #29729 - End
 	
 	// #28777 & #29729 - Start
