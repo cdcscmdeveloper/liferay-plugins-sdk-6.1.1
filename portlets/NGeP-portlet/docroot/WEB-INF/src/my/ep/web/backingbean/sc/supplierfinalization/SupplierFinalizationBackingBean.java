@@ -12352,7 +12352,7 @@ public class SupplierFinalizationBackingBean extends
 	 * @return list of offered prices; may be empty but never null
 	 */
 	private List<BigDecimal> getOfferedPrices(ScQtFinalization scQtFinalization) {
-		List<BigDecimal> prices = new ArrayList<BigDecimal>();
+		List<BigDecimal> prices = new ArrayList<>();
 
 		if (getManagedBean().isItemize()) {
 			for (ScQtRecommend item : scQtFinalization.getScQtRecommends()) {
@@ -12482,8 +12482,7 @@ public class SupplierFinalizationBackingBean extends
 	        return; // nothing to do
 	    }
 
-	    final String committeeType = getManagedBean().getCommitteeType();
-	    final String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+	    final String committeeType = getManagedBean().getCommitteeType();	    
 	    final boolean exceedAmount = checkAllSupplierOfferPriceIsExceedCommitteeAuthority();
 
 	    if (!exceedAmount) {
@@ -12494,9 +12493,9 @@ public class SupplierFinalizationBackingBean extends
 	            ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode);
 
 	    if (isForwardToHigherAuthority) {
-	        validateExceedWithForward(committeeType, committeeName);
+	        validateExceedWithForward(committeeType);
 	    } else {
-	        throwCommitteeException(committeeType, committeeName);
+	        throwCommitteeException(committeeType);
 	    }
 	}
 
@@ -12505,12 +12504,12 @@ public class SupplierFinalizationBackingBean extends
 	 * Handles the case when the amount exceeds committee authority and
 	 * the decision is forwarded to a higher authority.
 	 */
-	private void validateExceedWithForward(final String committeeType, final String committeeName) {
+	private void validateExceedWithForward(final String committeeType) {
 
 	    final PmReason reason = getManagedBean().getScQtFinalization().getReason();
 
 	    if (reason == null) {
-	        throwCommitteeException(committeeType, committeeName);
+	        throwCommitteeException(committeeType);
 	        return;
 	    }
 
@@ -12523,7 +12522,7 @@ public class SupplierFinalizationBackingBean extends
 
 	    if (!ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY
 	            .equalsIgnoreCase(reasonType)) {
-	        throwCommitteeException(committeeType, committeeName);
+	        throwCommitteeException(committeeType);
 	    }
 	}
 
@@ -12532,7 +12531,7 @@ public class SupplierFinalizationBackingBean extends
 	 * Throws an {@link EpException} with the appropriate message based on the
 	 * specified committee type.
 	 */
-	private void throwCommitteeException(final String committeeType, final String committeeName) {		
+	private void throwCommitteeException(final String committeeType) {		
 		final String offeredPrice = getManagedBean().getSelectedSupplierOfferedPrice();
 		String procurementMode = this.getParameterDesc(getManagedBean().getScQt().getProcurementMode());
 
@@ -12626,7 +12625,7 @@ public class SupplierFinalizationBackingBean extends
 		final IQTSuppFinalizationSO service = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 
-		final ISearchBean<ScQtEvaluationResultDtl> searchBean = new SearchBean<ScQtEvaluationResultDtl>();
+		final ISearchBean<ScQtEvaluationResultDtl> searchBean = new SearchBean<>();
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("qtEvaluationResult.evaluationStage", SearchOperator.OPERATOR_EQUALS.value(),
 						SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM));
