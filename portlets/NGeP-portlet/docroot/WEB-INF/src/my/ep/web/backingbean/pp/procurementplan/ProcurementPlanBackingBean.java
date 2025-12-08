@@ -1527,7 +1527,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		AuditProcurementPlanBackingBeanTemplate auTemplate = new AuditProcurementPlanBackingBeanTemplate();
 		auTemplate.saveAuditData(action, isNeedAudit);
 	}
-
 	//#35502 End - For Audit Trail required
 
 	/**
