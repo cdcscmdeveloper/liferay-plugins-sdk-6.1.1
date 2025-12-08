@@ -60,7 +60,7 @@
 
 			<h:panelGrid columns="2" styleClass="gridContainer"
 				columnClasses="firstCol, secondCol">
-				<p:panel id="historyPanelId"
+				<p:panel id="maintenanceHistoryPanelId"
 					header="#{lbl['lbl.sc.committee.history']}">
 					<p:dataTable id="historyTableId" styleClass=""
 						value="#{historyPaginator.model}" var="history"
@@ -94,7 +94,7 @@
 						</p:column>
 					</p:dataTable>
 					<ac:detachablePaginator minimal="true"
-						loopId="@([id$=historyPanelId])"
+						loopId="@([id$=maintenanceHistoryPanelId])"
 						paginatorObject="#{historyPaginator}" />
 				</p:panel>
 
@@ -102,7 +102,7 @@
 					activeIndex="#{backingBean.managedBean.activeIndex}" dynamic="true"
 					cache="false">
 					<p:ajax event="tabChange"
-						listener="#{backingBean.onTabChangeAction}" immediate="true" />
+						listener="#{committeBackingBean.onTabChangeAction}" immediate="true" />
 
 					<p:tab id="qqc" title="#{lbl['lbl.sc.committee.QQC']}"
 						styleClass="noBorders tr,noBorders td"
@@ -137,6 +137,15 @@
 						<ui:include src="committeeMaintenanceMemberPanel.xhtml">
 							<ui:param name="prefix" value="tab4" />
 							<ui:param name="tableId" value="memberList_tab4" />
+						</ui:include>
+					</p:tab>
+					
+					<p:tab id="norecordfound" title="#{lbl['lbl.sc.committee.notfound']}"
+						styleClass="noBorders tr,noBorders td"
+						rendered="#{backingBean.managedBean.committeMap eq null}">
+						<ui:include src="committeeMaintenanceMemberPanel.xhtml">
+							<ui:param name="prefix" value="tab5" />
+							<ui:param name="tableId" value="memberList_tab5" />
 						</ui:include>
 					</p:tab>
 				</p:tabView>

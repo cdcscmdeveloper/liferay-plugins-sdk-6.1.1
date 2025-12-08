@@ -572,11 +572,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				if (auditCtBean.getAuditCtConfigState()) {
 					CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
 					
-					if ((getManagedBean().isUpdateAction() || ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_APPROVAL)
-							|| ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_REVISION_APPROVAL)
-							|| ctCircularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_PENDING_UPDATE_REVISION))
-							&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))) {
+					if (shouldProcessAudit(auditCtBean, ctCircularVer, action)) {
 											
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
 						auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
@@ -3496,5 +3492,46 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 	}
 	// #30014 - End
+	
+	//#35506 - Start
+	/**
+	 * Checks if audit processing should be executed based on config, status, and action.
+	 *
+	 * @param auditCtBean   the audit contract bean
+	 * @param ctCircularVer the Panel circular version being processed
+	 * @param action        the user action
+	 * @return true if audit should be processed, false otherwise
+	 */
+	private boolean shouldProcessAudit(AuditContractBackingBean auditCtBean, CtCircularVer ctCircularVer, String action) {
+	    return auditCtBean.getAuditCtConfigState()
+	        && (getManagedBean().isUpdateAction() || isPendingUpdateStatus(ctCircularVer.getStatus().getStatusId()))
+	        && isAllowedAction(action);
+	}
+
+	/**
+	 * Checks if the status is a pending update status.
+	 *
+	 * @param statusId the status ID
+	 * @return true if pending update status, false otherwise
+	 */
+	private boolean isPendingUpdateStatus(Long statusId) {
+	    return ContractStatusConst.PQ_PENDING_UPDATE_SUBMISSION.equals(statusId)
+	    	|| ContractStatusConst.PQ_PENDING_UPDATE_APPROVAL.equals(statusId)
+	        || ContractStatusConst.PQ_PENDING_UPDATE_REVISION_APPROVAL.equals(statusId)
+	        || ContractStatusConst.PQ_PENDING_UPDATE_REVISION.equals(statusId);
+	}
+
+	/**
+	 * Checks if the action is allowed for audit.
+	 *
+	 * @param action the user action
+	 * @return true if allowed for audit, false otherwise
+	 */
+	private boolean isAllowedAction(String action) {
+	    return BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)
+	        || BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
+	}
+	//#35506 - End
 
 }
