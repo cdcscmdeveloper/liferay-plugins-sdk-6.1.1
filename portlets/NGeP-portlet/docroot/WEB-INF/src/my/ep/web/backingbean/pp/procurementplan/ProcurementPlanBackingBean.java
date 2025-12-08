@@ -2188,7 +2188,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpRemark remark = new PpRemark();
 			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_REMARK);
-			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849, #35502 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -4535,7 +4535,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpRemark remark = new PpRemark();
 			remark.setEditable(true);
 			remark.setRemarkType(ProcurementPlanConst.REMARK_TYPE_JUSTIFICATION);
-			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849, #35502 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
