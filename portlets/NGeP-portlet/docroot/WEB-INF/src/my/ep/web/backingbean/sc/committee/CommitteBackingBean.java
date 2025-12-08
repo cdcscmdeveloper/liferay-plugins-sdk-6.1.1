@@ -2841,16 +2841,22 @@ public class CommitteBackingBean extends
 
 			CommitteResDTO resDto = this.getCommitteeSO()
 					.getCommitteeMergedHistory(reqDto);
-			List<ScCommitteeMemberHistory> histories = resDto
-					.getMemberHistory();
-			List<ScCommitteeMember> latestCommittee = resDto.getMemberList();
-			Collections.sort(latestCommittee, new MemberRoleComparator());
-			ScCommittee scCommittee = resDto.getCommittee();
+			List<ScCommitteeMemberHistory> histories = new ArrayList<>();
+			if (null != resDto.getMemberHistory()) {
+				histories = resDto.getMemberHistory();
+			}
 
+			List<ScCommitteeMember> latestCommittee = resDto.getMemberList();
+			if (null != latestCommittee) {
+				Collections.sort(latestCommittee, new MemberRoleComparator());
+			}
+
+			ScCommittee scCommittee = resDto.getCommittee();
 			ScCommitteeMember loggedInMember = getSecretaryMember(latestCommittee);
 			this.getManagedBean().setCommitteMember(loggedInMember);
-
-			retriveUserDetails(loggedInUserId);
+			if (null != getManagedBean().getCommitteMember() && null != reqDto) {
+				retriveUserDetails(loggedInUserId);
+			}
 
 			Paginator historyPaginator = new Paginator(histories);
 			List<?> historyModel = historyPaginator.getModel();
@@ -2868,10 +2874,16 @@ public class CommitteBackingBean extends
 							.getCommitteeType().getParameterCode() : null);
 			this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 			this.getManagedBean().setLatestMembers(latestCommittee);
-			this.getManagedBean().setHeaderTitle(
-					ParameterHelper.getInstance().getParameterDesc(
-							ParameterTypeConst.SC_COMMITTEE_TYPE,
-							scCommittee.getCommitteeType().getParameterCode()));
+
+			if (null != scCommittee) {
+				this.getManagedBean().setHeaderTitle(
+						ParameterHelper.getInstance().getParameterDesc(
+								ParameterTypeConst.SC_COMMITTEE_TYPE,
+								scCommittee.getCommitteeType()
+										.getParameterCode()));
+			} else {
+				this.getManagedBean().setHeaderTitle("");
+			}
 
 			onSelectCommitteeHistory();
 		} catch (Exception ex) {
@@ -3295,7 +3307,7 @@ public class CommitteBackingBean extends
 	public void onSelectCommitteeHistory() throws IOException {
 		ScCommitteeMemberHistory history = this.getManagedBean()
 				.getSelectedCommitteeHistory();
-		List<QtCommitteeMemberBean> list = null;
+		List<QtCommitteeMemberBean> list;
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 
 		if (null != history) {
@@ -3307,14 +3319,18 @@ public class CommitteBackingBean extends
 					.setMemberHistoryPaginator(new Paginator(list));
 			reqDTO.setScCommitteeId(history.getScCommittee().getCommitteeId());
 		} else {
-			reqDTO.setScCommitteeId(this.getManagedBean().getScCommittee()
-					.getCommitteeId());
+			if (null != this.getManagedBean().getScCommittee()) {
+				reqDTO.setScCommitteeId(this.getManagedBean().getScCommittee()
+						.getCommitteeId());
+			}
 		}
 
-		CommitteResDTO resDTO = this.getCommitteeSO()
-				.retrieveCommitteDtlByCommitteeId(reqDTO);
-		if (null != history) {
-			history.setScCommittee(resDTO.getCommittee());
+		if (null != reqDTO.getScCommitteeId()) {
+			CommitteResDTO resDTO = this.getCommitteeSO()
+					.retrieveCommitteDtlByCommitteeId(reqDTO);
+			if (null != history) {
+				history.setScCommittee(resDTO.getCommittee());
+			}
 		}
 	}
 	// #35320 - END
