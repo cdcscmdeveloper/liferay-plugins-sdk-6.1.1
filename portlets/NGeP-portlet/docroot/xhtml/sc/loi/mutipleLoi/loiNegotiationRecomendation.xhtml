@@ -148,10 +148,10 @@
 								disabledSelection="#{!isPendingNegotiationStatus 
 												  or !(supplierDtl.scQtRecommendDtl.get(0).loiAwarded) 
 												  or lOIDetailBackingBean.managedBean.readOnly 
-												  or lOIDetailBackingBean.disabledQTProcess(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
+												  or lOIDetailBackingBean.disabledQTProcess(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier) 
 												  or supplierDtl.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq
 												  				SourcingConstants.extendProposalValidityPeriodRejected}" /><ui:remove>21692</ui:remove>
-							<ui:remove>26247 - end</ui:remove>							
+							<ui:remove>26247 - end</ui:remove>
 						</p:dataTable> 
 						
 						<p:dataTable id="recommendTbl" var="item"

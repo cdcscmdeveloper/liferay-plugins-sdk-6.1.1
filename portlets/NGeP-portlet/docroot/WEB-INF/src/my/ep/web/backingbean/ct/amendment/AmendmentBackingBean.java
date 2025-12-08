@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright  2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.amendment;
 
@@ -14,7 +14,6 @@ import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols; //24333
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,7 +103,6 @@ import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtBondWaiverDetail; //#13847
 import my.ep.persistence.entity.ct.CtContractVer;
-import my.ep.persistence.entity.ct.CtDisciplinaryAction;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
@@ -7249,9 +7247,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/**
 	 * the method will retrieve the disciplinary action info from supplier module.
-	 * If supplier type of punishment is “Suspend Registration” or “Cancel Registration” 
-	 * or “Blacklist Owner / Director of Company” or “Cancellation of Bumiputera Status” 
-	 * or “Cancellation of Manufacturer Status”, this Amendment With Supplemental process not able to proceed
+	 * If supplier type of punishment is Suspend Registration or Cancel Registration 
+	 * or Blacklist Owner / Director of Company or Cancellation of Bumiputera Status 
+	 * or Cancellation of Manufacturer Status, this Amendment With Supplemental process not able to proceed
 	**/
 	private void retrieveDA() { // #32712
 		SmSupplier currentSupplier = getSupplier(); // #34097
@@ -8123,7 +8121,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} else {
+			    log.info("Here is SPKI START");
 				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				log.info("Here is SPKI END");
 				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			}
 			return null;
