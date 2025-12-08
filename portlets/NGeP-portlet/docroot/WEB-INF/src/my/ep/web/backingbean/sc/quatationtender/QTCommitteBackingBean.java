@@ -1889,7 +1889,11 @@ public class QTCommitteBackingBean extends
 				selectedList.get(i).setRepresentativeTypeId(null);
 				committeeMembers.add(selectedList.get(i));
 				//#28895 - 35500 start
-				deletedCommitteeMembers.add(selectedList.get(i));
+				if (CollectionUtils.isNotEmpty(deletedCommitteeMembers) && !deletedCommitteeMembers.contains(selectedList.get(i))){//#35500 Fix Reopen 27th Nov
+					deletedCommitteeMembers.add(selectedList.get(i));
+				}else if (CollectionUtils.isEmpty(deletedCommitteeMembers)) {
+					deletedCommitteeMembers.add(selectedList.get(i));
+				}
 				if (!(newScCommitteeMemberList == null || newScCommitteeMemberList.isEmpty())) {
 					newScCommitteeMemberList.remove(selectedList.get(i));
 				}				
@@ -2803,10 +2807,6 @@ public class QTCommitteBackingBean extends
 	 */
 	public boolean isCommitteeRoleEditable(PmParameter role) {
 		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
-		// Bug_39340 - Start
-		Long[] allowedStatusAfterPublish = new Long[] { QTStatusConst.QT_BRIEFING_SITE_VISIT,
-				QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE, QTStatusConst.QT_PROPOSAL_PREPARATION };
-		// Bug_39340 - End
 
 		if (role != null && StringUtils.isNotEmpty(committeeType) && role.getParameterCode() != null) {
 			Long status = getCurrentQtStatusId();
@@ -2821,8 +2821,7 @@ public class QTCommitteBackingBean extends
 					return Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON).contains(role.getParameterCode());
 				}
 			} else {
-				// Bug_39340
-				if (status.equals(QTStatusConst.QT_EVALUATION_PROPOSAL) || Arrays.asList(allowedStatusAfterPublish).contains(status)) {
+				if (status.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)) {
 					// 36695 - start
 					Long currentCMTStatus = getCurrentCMTStatusId();
 					List<String> allowedRoles = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,

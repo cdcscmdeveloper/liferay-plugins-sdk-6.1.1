@@ -25,7 +25,6 @@ import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
@@ -64,8 +63,6 @@ import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 
 import com.liferay.portal.util.PortalUtil;
-//#29481 - Start
-//#29481 - End
 //#26307 start 
 //#26307 start 
 
@@ -79,6 +76,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	public static Logger log = Logger.getLogger(PaymentResponseBackingBean.class);
 	private final String molIpnUrl = EpPropertiesUtils.getInstance()
 			.getProperty("molpay.ipnurl");
+	// #38377
+	private final String paymentGatewayEpOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.ep.onoff");
 
 	public PaymentResponseBackingBean(){
 		
@@ -171,7 +170,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				orderId = paymentId.toString();
 				errorDesc = "";
 				errorCode = "";
-				paydate = DateUtils.dateToString(CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, pyPymt.getPaymentDate());
+				paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
 				if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 					log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 					channel = pyPymt.getPyPaymentOrder().getChannelName();
@@ -216,6 +215,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("appl>>>>>>>>>>>" + appl);
 		
 		if(paymentTaskId != null && paymentBpmPojo != null &&  appl != null){
+			log.info("######38377 inside paymentTaskId not null#####");
 			responsePreRender(paymentTaskId, paymentBpmPojo, appl);
 			responseRedirect();
 		}else{
@@ -282,12 +282,14 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 	 */
 	public void responsePreRender(String paymentTaskId, Object paymentBpmPojo, SmAppl appl) throws NoSuchMethodException,SecurityException, IllegalAccessException,
 	IllegalArgumentException, InvocationTargetException {
+		log.info("######38377 inside responsePreRender#####");
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		
 		//#38377
 		Map<String,String> reqMap = getHttpReqMap(httpServletRequest);
+		String payload = reqMap.get("payload");
 		String orderId = reqMap.get("orderid");
 		String tranID = reqMap.get("tranID");
 		String status = reqMap.get("status");
@@ -300,12 +302,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = reqMap.get("channel") != null ? reqMap.get("channel") : null;
 		String errorCode = reqMap.get("error_code") != null ? reqMap.get("error_code") : null;
 		String errorDesc = reqMap.get("error_desc") != null ? reqMap.get("error_desc") : null;
+		String paymentRefNo = reqMap.get("paymentRefNo");
+		String bankName = reqMap.get("bankName");
+		String providerTransId = reqMap.get("providerTransId");
 		
 		//#Start 33137
 		String fpxTranId = null;
 		String molpayTranId = null;
 		//#End 33137
 		// #26307 start
+		
+		//#38377
 		String cardType = reqMap.get("cardType");
 		String extraP = reqMap.get("extraP");
 		
@@ -363,7 +370,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						orderId = paymentId.toString();
 						errorDesc = "";
 						errorCode = "";
-						paydate = DateUtils.dateToString(CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, pyPymt.getPaymentDate());
+						paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
 						if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 							log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 							channel = pyPymt.getPyPaymentOrder().getChannelName();
@@ -402,6 +409,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("error_desc:" + errorDesc); 
 		log.info("channel:" + channel); 
 		log.info("extraP:" + extraP); 
+		log.info("bankName:" + bankName); 
+		log.info("paymentRefNo:" + paymentRefNo); 
+		log.info("providerTransId:" + providerTransId); 
 		
 		// #26307 end
 		// #32422 START 
@@ -433,9 +443,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				log.info("SKey & Key1 Are Match>>>>");
 				
 				//#38377
-				if(reqMap.get("paymentGateway").equals("Y")){
+				if(amount == null){
 					amount = resDTO.getPyPayment().getPaymentAmt().toString();
 				}
+				
 				BigDecimal txAmount = new BigDecimal(amount);
 				//Long txID = Long.valueOf(tranID);
 
@@ -453,9 +464,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 				log.info("Status Success 0>>>>>");
 				String softcertUserName = null;
-				
-				//#38377
-				if (status.equals(SupplierManagementConst.MOL_SUCCESS) || status.equals(SupplierManagementConst.PAYMENT_GATEWAY_SUCCESS)) {
+				if (status.equals(SupplierManagementConst.MOL_SUCCESS)) {
 					BigDecimal paymentAmount = pyPayment.getPaymentAmt();
 					log.info("paymentId>>>>" + paymentId);
 					log.info("orderId>>>>" + orderId);
@@ -491,12 +500,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					} else {
 						statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 					}
-				} 
-				//#38377
-				else if (status.equals(SupplierManagementConst.MOL_PENDING) || status.equals(SupplierManagementConst.PAYMENT_GATEWAY_PENDING)) {
+				} else if (status.equals(SupplierManagementConst.MOL_PENDING)) {
 					statusCode = SupplierManagementConst.PM_STAT_PENDING_PAYMENT;
 
-				} else if (status.equals(SupplierManagementConst.MOL_FAIL) || status.equals(SupplierManagementConst.PAYMENT_GATEWAY_FAIL)) {
+				} else if (status.equals(SupplierManagementConst.MOL_FAIL)) {
 					statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 				}
 				// #26307 start 
@@ -545,35 +552,37 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				Timestamp bankDate = new Timestamp(System.currentTimeMillis());
 				Boolean validFormat = false;
 				try {
-					if (date1.trim().equals("0000-00-00 00:00:00")) {
-						log.info("Invalid Date ==== " + date1);
+					if(date1.trim().equals("0000-00-00 00:00:00")){
+						log.info("Invalid Date ==== "+date1);
 						date1 = null;
 					}
-					if (date1 == null || date1.trim().equals("")) {
+					if(date1 == null || date1.trim().equals("")){
 						throw new Exception();
 					}
-					if (date1 != null) {
-						log.info("Bank Date&Time ==== " + date1);
+					if(date1 != null){
+						log.info("Bank Date&Time ==== "+date1);
 						SimpleDateFormat sdfrmt = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
-						try {
-							log.info("In try");
-							sdfrmt.parse(date1);
-							log.info("Setting Valid Format to true");
-							validFormat = true;
-						} catch (ParseException e) {
-							log.info("In Parse Catch");
-							validFormat = false;
-						} finally {
-							log.info("In finally");
-							if (validFormat) {
-								log.info("Valid Format");
-								bankDate = DateUtils.convertStringToTimestamp(CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, date1);
+					    try{
+					    	log.info("In try");
+					        sdfrmt.parse(date1);
+					        log.info("Setting Valid Format to true");
+					        validFormat = true;
+					    }
+					    catch(ParseException e){
+					    	log.info("In Parse Catch");
+						    validFormat = false;
+					    }
+					    finally {
+					    	log.info("In finally");
+					    	if(validFormat){
+					    		log.info("Valid Format");
+								bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
 								pymtReqDTO.setBankDate(bankDate);
-							} else {
+							}else{
 								log.info("Invalid Format");
 								throw new Exception();
 							}
-						}
+					    }
 					}
 				} catch (Exception e) {
 					log.info("bankDate is null");
@@ -584,7 +593,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				Timestamp txDate = new Timestamp(System.currentTimeMillis());
 				try {
 					txDate = DateUtils.convertStringToTimestamp(
-							CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, paydate);
+							"yyyy-MM-dd HH:mm:ss", paydate);
 				} catch (Exception e) {
 					txDate = new Timestamp(System.currentTimeMillis());
 					e.printStackTrace();
@@ -592,31 +601,46 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				//32422 END
 				log.info("channel--------------------26307"+channel);
 				paymentOrder.setChannelName(channel);
+				log.info("#38377########paymentOrder.setChannelName:"+paymentOrder.getChannelName());
 				//#33137 - start
 				log.info("SET TRANSACTION ID--------------------33137 : "+tranID);
 				smPaymentRes.setTransactionId(tranID);
 				smPaymentRes.setMolpayTransactionId(molpayTranId);
 				smPaymentRes.setFpxTranId(fpxTranId);
+				log.info("#38377########smPaymentRes.setTransactionId:"+smPaymentRes.getTransactionId());
 				//#33137 - end
 				smPaymentRes.setErrorCode(errorCode);
 				smPaymentRes.setErrorDesc(errorDesc);
+				log.info("#38377########smPaymentRes.setErrorCode:"+smPaymentRes.getErrorCode());
+				log.info("#38377########smPaymentRes.setErrorDesc:"+smPaymentRes.getErrorDesc());
 				//32422 START
 				if(bankDate != null){
 					smPaymentRes.setTransactionDate(bankDate);
 				}else{
 					smPaymentRes.setTransactionDate(txDate);
 				}
+				log.info("#38377########smPaymentRes.setTransactionDate:"+smPaymentRes.getTransactionDate());
 				smPaymentRes.setBankDateTime(bankDate);
+				log.info("#38377########smPaymentRes.setBankDateTime:"+smPaymentRes.getBankDateTime());
 				//32422 END
 				smPaymentRes.setPyPaymentOrder(paymentOrder);
 				smPaymentRes.setPaymentStatus(status);
+				log.info("#38377########smPaymentRes.setPaymentStatus:"+smPaymentRes.getPaymentStatus());
 				smPaymentRes.setPaidAmt(txAmount);
+				log.info("#38377########smPaymentRes.setPaidAmt:"+smPaymentRes.getPaidAmt());
+				//#38377
+				smPaymentRes.setBankName(bankName);
+				log.info("#38377########smPaymentRes.setBankName:"+smPaymentRes.getBankName());
+				//#38377
+				smPaymentRes.setProviderTransactionId(providerTransId);
+				log.info("#38377########smPaymentRes.setProviderTransactionId:"+smPaymentRes.getProviderTransactionId());
 				paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 				//26307
-				log.info("Status Code : "+statusCode);
+				log.info("#38377########Status Code : "+statusCode);
 				if(statusCode!= null){
 					PmStatus paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(statusCode);
 					pyPayment.setPmStatus(paymentStatus);
+					log.info("#38377########paymentStatus : "+paymentStatus);
 				}
 				
 
@@ -626,13 +650,12 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 
 				//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 				//START 35182
-				if (pyPayment.getPyBill() != null
-						&& pyPayment.getPyBill().getBillType()
-								.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
-					pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);
+				if (pyPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {					
+					pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);					
 				}
 				//END 35182
 				pymtReqDTO.setValidPayment(validPayment);
+				log.info("#38377########pymtReqDTO.setValidPayment : "+pymtReqDTO.isValidPayment());
 				pymtReqDTO.setPyPayment(pyPayment);
 				pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 
@@ -654,11 +677,16 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				String paymentType = StringUtils.EMPTY;
 				paymentType = getPaymentFeeTypeByBillType(pyPayment.getPyBill().getBillType());
 				pymtReqDTO.setPaymentType(paymentType);
+				log.info("#38377########pymtReqDTO.setPaymentType : "+pymtReqDTO.getPaymentType());
 				pymtReqDTO.setMethodName("responsePreRender-PaymentResponseBackingBean");
 				PaymentResDTO pymtResDTO = null;
 				
 				log.info(">>>>>counter equal to 1<<<<<<");
-				pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				log.info(">>>>#38377 enable payment update<<<");
+				// #38377
+				if(isResponseValid(pyPayment.getPyBill().getBillType(), payload)){
+					pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+				}
 
 				log.info("******ResponsePreRender - After Update******");
 				
@@ -723,9 +751,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		
 		boolean paymentStatus = false;
 		switch (status) {
-		case (SupplierManagementConst.MOL_SUCCESS):
-		//#38377
-		case (SupplierManagementConst.PAYMENT_GATEWAY_SUCCESS):
+		case SupplierManagementConst.MOL_SUCCESS:
 			log.info(">>>>MOL_SUCCESS<<<<<<<<<<" + status);
 			String msgCode = null;
 
@@ -748,8 +774,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_FAIL:
-		//#38377
-		case SupplierManagementConst.PAYMENT_GATEWAY_FAIL:
 			log.info(">>>>MOL_FAIL<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.ERROR_721051);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_ERROR);
@@ -757,8 +781,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_PENDING:
-		//#38377
-		case SupplierManagementConst.PAYMENT_GATEWAY_PENDING:
 			log.info(">>>>MOL_PENDING<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.INFO_721055);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
@@ -795,10 +817,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		boolean paymentStatus = false;
 		switch (status) {
 		case SupplierManagementConst.MOL_SUCCESS:
-		//#38377
-		case (SupplierManagementConst.PAYMENT_GATEWAY_SUCCESS):
 			log.info(">>>>MOL_SUCCESS<<<<<<<<<<" + status);
-			
+
 			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
 				getManagedBean().setMessageId(MessageConst.INFO_721058);
 			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
@@ -815,8 +835,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_FAIL:
-		//#38377
-		case SupplierManagementConst.PAYMENT_GATEWAY_FAIL:
 			log.info(">>>>MOL_FAIL<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.ERROR_721051);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_ERROR);
@@ -824,8 +842,6 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			break;
 
 		case SupplierManagementConst.MOL_PENDING:
-		//#38377
-		case SupplierManagementConst.PAYMENT_GATEWAY_PENDING:
 			log.info(">>>>MOL_PENDING<<<<<<<<<<" + status);
 			getManagedBean().setMessageId(MessageConst.INFO_721055);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
@@ -1011,7 +1027,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String[] strArr = new String[]{sbName.toString()};
 		return strArr;
 	}
-	
+
 	private void setMessageSoftcert(Long paymentId, List<PyBillDtl> bills){
 		FacesScopes fs = new FacesScopes();
 		boolean isAdmin = fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
@@ -1063,8 +1079,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		System.out.println("key1>>>>>" + key1);
 	}*/
 	private Map<String, String> getHttpReqMap(HttpServletRequest httpReq) {
+		log.info("######38377  inside getHttpReqMap#####");
 		String paymentGateway = "N";
 		String payload = httpReq.getParameter("payload");
+		log.info("######38377#####payload: " + payload);
 		String orderId = httpReq.getParameter("orderid");
 		String tranID = httpReq.getParameter("tranID");
 		String status = httpReq.getParameter("status");
@@ -1128,31 +1146,51 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		// #33137 - end
 		// #32422 END
 		
+		String paymentRefNo = "";
+		String bankName = "";
+		String providerTransId = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
-				orderId = jsonObject.getString("orderId");
-				tranID = jsonObject.getString("transId");
-				status = jsonObject.getString("status");
-				paydate = jsonObject.getString("trxDate");
-				channel = jsonObject.getString("channel");
-				currency = jsonObject.getString("currency");
-				if (channel
-						.equals(SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE)) {
-					cardType = ParameterConst.CARD_TYPES_CREDIT; 
-				}
-				paydate = DateUtils.reformatDate(paydate,
-						"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd HH:mm:ss");
-				date1 = paydate;
+				paymentRefNo = jsonObject.optString("paymentRefNo",null);
+				log.info("######38377#####json paymentRefNo: " + paymentRefNo);
+				providerTransId = jsonObject.optString("providerTransId",null);
+				log.info("######38377#####json providerTransId: " + providerTransId);
+				bankName = jsonObject.optString("bankName",null);
+				log.info("######38377#####json bankName: " + bankName);
+				orderId = jsonObject.optString("orderId",null);
+				tranID = jsonObject.optString("transId",null);
+				status = jsonObject.optString("status",null);
+				paydate = jsonObject.optString("trxDate",null);
+				channel = jsonObject.optString("channel",null);
+				amount = jsonObject.optString("amount",null);
+				currency = jsonObject.optString("currency",null);
+				errorCode = jsonObject.optString("errCode",null);
+				errorDesc = jsonObject.optString("errDesc",null);
+				if (SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE.equals(channel)) {
+			        cardType = ParameterConst.CARD_TYPES_CREDIT;
+			    }
+				if (paydate != null && !paydate.isEmpty()) {
+			        try {
+			            paydate = DateUtils.reformatDate(
+			                paydate,
+			                "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+			                "yyyy-MM-dd HH:mm:ss"
+			            );
+			            date1 = paydate;
+			        } catch (Exception e) {
+			            // handle/ log bad date format without breaking the rest
+			            // e.g., keep original paydate or set to null
+			        }
+			    }
 				paymentGateway = "Y";
-				errorCode = jsonObject.getString("errCode");
-				errorDesc = jsonObject.getString("errDesc");
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 		}
 
 		Map<String, String> reqMap = new HashMap<>();
+		reqMap.put("payload", payload);
 		reqMap.put("amount", amount);
 		reqMap.put("orderid", orderId);
 		reqMap.put("appcode", appcode);
@@ -1170,6 +1208,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		reqMap.put("cardType", cardType);
 		reqMap.put("molpayTransId", molpayTransId);
 		reqMap.put("paymentGateway", paymentGateway);
+		reqMap.put("paymentRefNo", paymentRefNo);
+		reqMap.put("providerTransId", providerTransId);
+		reqMap.put("bankName", bankName);
 
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
 		log.info("######38377#####tranID: " + reqMap.get("tranID"));
@@ -1188,8 +1229,27 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("######38377#####cardType:" + reqMap.get("cardType"));
 		log.info("######38377#####molpayTransId:" + reqMap.get("molpayTransId"));
 		log.info("######38377#####paymentGateway:" + reqMap.get("paymentGateway"));
+		log.info("######38377#####bankName:" + reqMap.get("bankName"));
+		log.info("######38377#####paymentRefNo:" + reqMap.get("paymentRefNo"));
+		log.info("######38377#####providerTransId:" + reqMap.get("providerTransId"));
 
 		return reqMap;
+	}
+	
+	//#38377
+	private boolean isResponseValid(String billType, String payload) {
+		boolean retVal = true;
+		if (billType != null
+				&& !billType
+						.equalsIgnoreCase(
+								my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)
+				&& paymentGatewayEpOnOff != null
+				&& paymentGatewayEpOnOff.trim().equals("1") && (payload == null
+				|| payload.isEmpty())) {
+			retVal = false;
+		}
+		log.info("######38377#####isResponseValid:"+retVal);
+		return retVal;
 	}
 	
 }
