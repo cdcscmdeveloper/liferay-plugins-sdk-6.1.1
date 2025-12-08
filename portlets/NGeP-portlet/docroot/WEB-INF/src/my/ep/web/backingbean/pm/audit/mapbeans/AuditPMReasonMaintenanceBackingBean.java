@@ -136,7 +136,6 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			if (parameterCode.equalsIgnoreCase(ParameterConst.WIP_ITEM_PK7) || 
 					parameterCode.equalsIgnoreCase(ParameterConst.SPECIAL_ITEM_WITH_APPROVAL)){
 				updatePK7WandSIT(oldReason, existingReason);
-				// agency
 			}
 			// 28962-Audit END
 
