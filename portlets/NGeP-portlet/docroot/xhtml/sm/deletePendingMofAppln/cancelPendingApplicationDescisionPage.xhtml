@@ -89,7 +89,7 @@
 			<div align="center">
 				<!-- #34400 -->
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					onclick="approveAppCanDialog.hide(); confirmApproveDlg.show();"  />
+					onclick="confirmApproveDlg.show();"  />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					onclick="approveAppCanDialog.hide();" />
 			</div>
@@ -105,7 +105,7 @@
 				<!-- #34400 -->
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					partialSubmit="true" process="rejectAppCanDialog"
-					oncomplete="if (!args.validationFailed){rejectAppCanDialog.hide(); confirmRejectDlg.show();}" />
+					oncomplete="if (!args.validationFailed)confirmRejectDlg.show();" />
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					action="#{backingBean.resetMofCancellationFinalApproveOrReject('rejectAppCanDialog')}"
 					partialSubmit="true" process="@this" />
