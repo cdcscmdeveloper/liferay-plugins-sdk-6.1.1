@@ -186,7 +186,8 @@
 						value="#{lbl['lbl.btn.update']}" process="@all"
 						action="#{committeBackingBean.updateCommitteDetails(BpmOutcomeConstant.bpmSubmit)}"
 						styleClass="BtnSpacing" update="form:qtfinalcommitteeid"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						rendered="#{isCommitteeRecordStatusActive}" />
 
 					<p:tooltip id="ttUpdateButton" for="committeeUpdateButton">
 						<h:outputText escape="false"
