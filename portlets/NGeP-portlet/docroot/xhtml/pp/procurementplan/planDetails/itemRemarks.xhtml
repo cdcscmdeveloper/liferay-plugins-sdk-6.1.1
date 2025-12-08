@@ -60,7 +60,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			  <p:commandButton id="cmdItemRemarkOk" value="#{lbl['lbl.btn.ok']}" process=":form:opItemRemark" action="#{pPlanBackingBean.confirmRemarkCloseDialog}"  update="@form"/>
 			  <!--#35502 Fix as-is bug: #38352 - Start -->
 			  <p:commandButton id="cmdItemRemarkCancel" value="#{lbl['lbl.btn.cancel']}" process="@this" immediate="true" oncomplete="dlItemRemarkWv.hide();" update="@form"/>
-			  <!--#35502 Fix as-is bug: #38352 - End -->	
+			  <!--#35502 Fix as-is bug: #38352 - End -->
 			</div>      
 		</p:outputPanel>
 	</p:dialog>
