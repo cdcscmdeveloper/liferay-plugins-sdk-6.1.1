@@ -1534,7 +1534,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			// #27476 start
 			if (getManagedBean().getTaskId() != null) {
 				if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterType()
-						.equalsIgnoreCase(ParameterConst.PROC_PARAM_TYPE_PR)) {
+						.equalsIgnoreCase(FulfilmentConst.PROC_PARAM_TYPE_PR)) {
 					validateThresholdPK7AndSpecialItem();
 				} else {
 					FacesContext.getCurrentInstance().addMessage(
@@ -5347,7 +5347,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 */
 	private boolean isThresholdPK7Required() {
 		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterType()
-				.equalsIgnoreCase(ParameterConst.PROC_PARAM_TYPE_PR)
+				.equalsIgnoreCase(FulfilmentConst.PROC_PARAM_TYPE_PR)
 				&& (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) || getManagedBean().getFulfilmentRequest()
 						.getProcurementType().getParameterCode()
@@ -5392,9 +5392,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 								MessageConst.ERROR_740077,
 								new String[] {
-										getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR,
+										getParameterDesc(FulfilmentConst.PROC_PARAM_TYPE_PR,
 												ParameterConst.PROC_TYPE_PK7),
-										getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR,
+										getParameterDesc(FulfilmentConst.PROC_PARAM_TYPE_PR,
 												ParameterConst.PROC_TYPE_SPECIAL_ITEM),
 										getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 										getManagedBean().getReason() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -5477,8 +5477,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 							MessageConst.ERROR_740075,
 							new String[] {
-									getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR, ParameterConst.PROC_TYPE_PK7),
-									getParameterDesc(ParameterConst.PROC_PARAM_TYPE_PR,
+									getParameterDesc(FulfilmentConst.PROC_PARAM_TYPE_PR, ParameterConst.PROC_TYPE_PK7),
+									getParameterDesc(FulfilmentConst.PROC_PARAM_TYPE_PR,
 											ParameterConst.PROC_TYPE_SPECIAL_ITEM),
 									getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 									getManagedBean().getReason() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -5563,7 +5563,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 */
 	public void validatePRSupplierAccType() {
 
-		log.info("27476: start validatePRSupplierAccType");
 		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IReasonSO.class);
 
@@ -5608,7 +5607,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		buildErrorMessageForPK7SupplierAccountTypeExceed(isErrorMsgThrowForSuppAccTypeValidation,
 				suppAccType);
 		
-		log.info("27476: end validatePRSupplierAccType");
 	}
 
 	/**
