@@ -3032,6 +3032,7 @@ public class LOIDetailBackingBean extends
 			checkSupplierAwardedRejectValidityExtension();
 		}
 		//#21692 - End
+		checkNeedSupplierIfHaveBranchDeleted(outcome);// #28777&#29729
 				
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
@@ -6980,6 +6981,55 @@ public class LOIDetailBackingBean extends
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		return sourcingIntegrationSO.checkListZonesDisqualifiedSupplierBranchDeleted(qtId, specZoneId);
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check outcome endorse/sign off and get recommend details
+	 * 
+	 * @param outcome
+	 * 
+	 **/
+	private void checkNeedSupplierIfHaveBranchDeleted(String outcome) {
+		if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
+			List<ScQtRecommend> recommendList = getManagedBean().getRecommendList();
+			for (ScQtRecommend scQtRecommend : recommendList) {
+				String itemName = scQtRecommend.getRequestItem().getItemName();
+				List<ScQtEvaluationResultDtl> recommendedSuppplierList = scQtRecommend.getAwardSupplierList();
+				validationNeedSupplierIfHaveBranchDeleted(itemName, recommendedSuppplierList);
+			}
+		}
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to throw validation if no selected any suppliers
+	 * 
+	 * @param itemName
+	 * @param recommendedSuppplierList
+	 * 
+	 **/
+	private void validationNeedSupplierIfHaveBranchDeleted(String itemName,
+			List<ScQtEvaluationResultDtl> recommendedSuppplierList) {
+
+		int countNotSelectedSupplier = 0;
+		if (CollectionUtils.isNotEmpty(recommendedSuppplierList)) {
+			for (ScQtEvaluationResultDtl recommendedSupplier : recommendedSuppplierList) {
+				if (recommendedSupplier.getScQtRecommendDtl().get(0).getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+					countNotSelectedSupplier++;
+				}
+			}
+		}
+
+		Long qtId = getManagedBean().getScQt().getQtId();
+		if (recommendedSuppplierList.size() == countNotSelectedSupplier
+				&& checkListDisqualifiedSupplierBranchDeleted(qtId)) {
+			throw new EpException(MessageConst.ERROR_760622, new String[] { itemName });
+		}
 	}
 
 	// #28777 & #29729 - End

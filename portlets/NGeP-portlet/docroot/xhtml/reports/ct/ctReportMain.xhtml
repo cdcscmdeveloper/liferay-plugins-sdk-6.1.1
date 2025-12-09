@@ -100,6 +100,14 @@
 				<ui:include src="/xhtml/reports/ct/cc/CT_027_ContractItemMonitoringUsageRpt.xhtml"></ui:include>
 			</c:if>	
 			<!--#29416 end-->
+			<!-- #30918 - start -->
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptCcVal}">
+				<ui:include src="/xhtml/reports/ct/cc/CT_036_ContractManagementReportCC.xhtml"></ui:include>
+			</c:if>				
+			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptMcVal}">
+				<ui:include src="/xhtml/reports/ct/mc/CT_037_ContractManagementReport.xhtml"></ui:include>
+			</c:if>	
+			<!-- #30918 - end -->	
 			<!-- #34889 Start -->
 			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringDtlsRptCcVal}">
 				<ui:include src="/xhtml/reports/ct/cc/CT_038_ContractItemUsageMonitoringDtlsCC.xhtml"></ui:include>

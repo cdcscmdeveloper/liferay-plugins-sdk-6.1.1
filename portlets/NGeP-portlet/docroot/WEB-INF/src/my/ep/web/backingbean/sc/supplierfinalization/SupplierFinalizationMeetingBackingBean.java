@@ -2105,8 +2105,15 @@ if (CollectionUtils.isNotEmpty(
 		}
 		// 25037 note 284 - end
 
-		this.getManagedBean().setCurrentCommitteeType(
-				this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
+		// #35320 - Set QCA, QCB to QQC - Start
+		PmParameter committeeType = qtCommittee.getScCommittee().getCommitteeType();
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType.getParameterCode())
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType.getParameterCode())) {
+			committeeType.setParameterCode(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+		}
+		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(committeeType));
+		// #35320 - End
+				
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 		boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
 				QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
