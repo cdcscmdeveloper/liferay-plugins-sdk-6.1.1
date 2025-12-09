@@ -754,16 +754,12 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 
 		if (CollectionUtils.isNotEmpty(pmReasonRestrs)) {
-			System.out.println("masuk modify ::::::::::::::::: 2");
 			for (PmReasonRestr temp : pmReasonRestrs) {
-				System.out.println("masuk modify ::::::::::::::::: 3");
 				for (PmReasonRestr old : oldPmReasonRestrs) {
-					System.out.println("masuk modify ::::::::::::::::: 4");
 					if (temp.getReasonRestrId().equals(old.getReasonRestrId())
 							&& !temp.getSupplAcctTypeId().getParameterId()
 									.equals(old.getSupplAcctTypeId().getParameterId())) {
 						this.docId = BigInteger.valueOf(temp.getReasonRestrId());
-						System.out.println("masuk modify ::::::::::::::::: 5");
 						detailObj(AuditConst.PM_AUD_RC_SUPPLIER_ACCT_FIELDLABELCODE,
 								checkPmParameterDesc(old.getSupplAcctTypeId()),
 								checkPmParameterDesc(temp.getSupplAcctTypeId()));
@@ -795,28 +791,50 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 		this.docId = BigInteger.valueOf(existingReason.getReasonId());
 		DecimalFormat formatter = new DecimalFormat("#,##0.00");
-		// paidUpCapital.setOldValue(formatter.format(oldpmCategoryL3.getPaidUpCapital().setScale(2)));
-		
-		
+
 		// handle null when compare dgn null value
-		if(!oldReason.getDpThreshold().equals(existingReason.getDpThreshold())){
-			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, formatter.format(oldReason.getDpThreshold().setScale(2)),
+		if (existingReason.getDpThreshold() == null
+				&& !oldReason.getDpThreshold().equals(existingReason.getDpThreshold())) {
+			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE,
+					formatter.format(oldReason.getDpThreshold().setScale(2)), null);
+		} else if (oldReason.getDpThreshold() == null
+				&& !existingReason.getDpThreshold().equals(oldReason.getDpThreshold())) {
+			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, null,
+					formatter.format(existingReason.getDpThreshold().setScale(2)));
+		} else if (existingReason.getDpThreshold() != null && oldReason.getDpThreshold() != null
+				&& !oldReason.getDpThreshold().equals(existingReason.getDpThreshold())) {
+			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE,
+					formatter.format(oldReason.getDpThreshold().setScale(2)),
 					formatter.format(existingReason.getDpThreshold().setScale(2)));
 		}
 		
-//		if(existingReason.getDpThreshold() != null && )
-		
-		if(!oldReason.getPrThreshold().equals(existingReason.getPrThreshold())){
+
+		// PR threshold
+		/**if(!oldReason.getPrThreshold().equals(existingReason.getPrThreshold())){
 			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, String.valueOf(oldReason.getPrThreshold().setScale(2)),
 					String.valueOf(existingReason.getPrThreshold().setScale(2)));
+		}*/
+		
+		if (existingReason.getPrThreshold() == null
+				&& !oldReason.getPrThreshold().equals(existingReason.getPrThreshold())) {
+			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE,
+					formatter.format(oldReason.getDpThreshold().setScale(2)), null);
+		} else if (oldReason.getPrThreshold() == null
+				&& !existingReason.getPrThreshold().equals(oldReason.getPrThreshold())) {
+			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, null,
+					formatter.format(existingReason.getDpThreshold().setScale(2)));
+		} else if (existingReason.getDpThreshold() != null && oldReason.getDpThreshold() != null
+				&& !oldReason.getDpThreshold().equals(existingReason.getDpThreshold())) {
+			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE,
+					formatter.format(oldReason.getDpThreshold().setScale(2)),
+					formatter.format(existingReason.getDpThreshold().setScale(2)));
 		}
 		
 		setNewSupplAcctType(managedBeans.getAuditAddSupplAcctType());
 		updateSupplAcctType(managedBeans.getAuditUpdateSupplAcctType(), oldReason.getPmReasonRestr());
 		deleteSupplAcctType(managedBeans.getAuditDeleteSupplAcctType());
 		
-		// if SIT
-		// add agency
+		// if Special item
 		addAgency();
 		deleteAgency();
 		
