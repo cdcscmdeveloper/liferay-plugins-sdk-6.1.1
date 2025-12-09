@@ -47,7 +47,7 @@ public class SmSideMenuIconUtil {
 			String sectionType) {
 		SmApplicationUtil.checkOverLappingCategories(bean);
 		if (bean.isSupplierUser()) {
-			enableBankSectionOnly(bean);
+			SmApplicationUtil.enableBankSectionOnly(bean, null); //#26238 (39061)
 		}
 		
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
@@ -343,6 +343,13 @@ public class SmSideMenuIconUtil {
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+				
+				// 36504 - START
+				if (bean.isOtherDescChange()) {
+					bean.getEditVO().setPoEditCategory(true);
+				}
+				// 36504 - END
+				
 				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
@@ -357,6 +364,14 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+				
+				// 36504 - START
+				if (bean.isOtherDescChange()) {
+					bean.getEditVO().setPoEditCategory(true);
+					bean.getEditVO().setAppEditCategory(true);
+				}
+				// 36504 - END
+				
 				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
@@ -525,23 +540,6 @@ public class SmSideMenuIconUtil {
 		}
 	}
 	
-	//27641, 27736 : Disciplinary Action - #26238 - START 
-	public static void enableBankSectionOnly(SmApplicationManagedBean bean) {
-		if(bean.getSmSupplier() != null){
-			List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
-			
-			if(activeDisc != null && activeDisc.size() > 0){
-				for(SmDisciplinaryAction disc : activeDisc){
-					if(disc.isSuspendRegistration()){
-						bean.getEditVO().setDisciplinary(true);
-					}
-				}						
-			} else {
-				bean.getEditVO().setDisciplinary(false);
-			}
-		}				
-	}
-	//27641, 27736 : Disciplinary Action - #26238 - END
 
 	public static String getSideMenuVerificationIcon(
 			SmApplicationManagedBean bean, String sectionType) {

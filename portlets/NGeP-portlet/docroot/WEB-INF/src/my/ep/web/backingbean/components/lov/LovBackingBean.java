@@ -395,6 +395,25 @@ public class LovBackingBean implements Serializable {
 						valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
 								.createValueExpression(FacesContext.getCurrentInstance().getELContext(),
 										"#{" + column.getMethodName() + "}", Object.class);
+					}else if (column.getColumnName() != null && column.getColumnName().contains(",")){ //Start Fix - #29416, #34889
+					    String[] cols = column.getColumnName().split(",");
+					    String itemCodeExp = cols[0].trim();
+					    String unitExp = cols.length > 1 ? cols[1].trim() : null;
+					    String nameExp = cols.length > 2 ? cols[2].trim() : null;
+					    String expression = "";
+					    if (unitExp != null && nameExp != null) {
+					        expression = String.format(
+					            "#{entity.%s} #{entity.%s}<br/>#{entity.%s}",
+					            itemCodeExp, unitExp, nameExp
+					        );
+					    } else if (unitExp != null) {
+					        expression = String.format("#{entity.%s} #{entity.%s}", itemCodeExp, unitExp);
+					    } else {
+					        expression = String.format("#{entity.%s}", itemCodeExp);
+					    }
+					    valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
+					        .createValueExpression(FacesContext.getCurrentInstance().getELContext(), expression, Object.class);
+					  //End Fix - #29416, #34889
 					} else {
 						valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
 								.createValueExpression(FacesContext.getCurrentInstance().getELContext(),

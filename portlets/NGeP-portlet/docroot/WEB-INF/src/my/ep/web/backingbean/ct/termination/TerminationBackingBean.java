@@ -392,6 +392,16 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 
 			getManagedBean().getContractVer().setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+			
+			//#30014 - Start (Set Company Experience Date and Flag to 4 - App Realtime/Data Patching)
+			if(outcome != null && getManagedBean().getTaskName() != null){
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)) {
+					getManagedBean().getCtContract().setCompExprDate(new Date());
+					getManagedBean().getCtContract().setCompExprFlag(ContractConst.COMP_EXP_APP_RLTM);
+				}	
+			}
+
+			//#30014 - End
 			reqDTO.setCtContract(getManagedBean().getCtContract());
 			reqDTO.setCtContractVer(getManagedBean().getContractVer());
 
@@ -418,6 +428,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			resDTO = contractTerminationSO.saveContractTerminationDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
+				
 				String messageId = MessageConst.INFO_700046;
 				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;

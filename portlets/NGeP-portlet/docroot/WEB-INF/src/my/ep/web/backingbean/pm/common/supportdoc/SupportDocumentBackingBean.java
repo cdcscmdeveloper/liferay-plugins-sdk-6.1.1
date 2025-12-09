@@ -2170,6 +2170,8 @@ public class SupportDocumentBackingBean extends
 				PmDocument pmDocumentOld = retrieveDocumentById(reqDTO.getPmDocument().getDocumentId());
 				getManagedBean().setSelectedDocumentOld(pmDocumentOld);
 			}
+			
+			getManagedBean().setReqDTO(reqDTO);
 			/************ AUDIT #28895_35509 - END *************/
 
 			resDTO = reqSO.saveDocument(reqDTO);

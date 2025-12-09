@@ -11711,6 +11711,7 @@ public class SupplierApplicationBackingBean extends
 							.getSmAppl().getSmFacilities())) {
 				for (SmFacility fac : l3.getFacilityList()) {
 					if (fac.isSelected()) {
+						/*Here is the missing tagging*/
 						facMain = (SmFacility) EntityHelper
 								.getEntityBySinglePropertyFromList(fac
 										.getFacilityId(), getManagedBean()
@@ -11780,6 +11781,7 @@ public class SupplierApplicationBackingBean extends
 							.append(cat.getPmCategoryL1().getCategoryL1Code())
 							.append(cat.getPmCategoryL2().getCategoryL2Code())
 							.append(cat.getPmCategoryL3().getCategoryL3Code());
+					/*here is missing tagging second commit*/
 
 					throw new EpException(MessageConst.ERROR_722514,
 							new String[] { sb.toString() });
@@ -11788,7 +11790,7 @@ public class SupplierApplicationBackingBean extends
 		}
 		RequestContext.getCurrentInstance().execute("catCodePopup.show()");
 	}
-
+	//Start 99999
 	private MofRegistrationResDTO getCurrentRegStatus() {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
@@ -11805,7 +11807,11 @@ public class SupplierApplicationBackingBean extends
 						&& (suppCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || suppCategory
 								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
 					suppCategory.setApprvrDecFlg(suppCategory.getPoDecFlg());
-				}
+				} else if (suppCategory.getPoDecFlg() != null
+						&& (suppCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || suppCategory
+								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
+					suppCategory.setApprvrDecFlg(suppCategory.getPoDecFlg());
+				}//this if is for the missing tagging
 			}
 		}
 	}
@@ -11906,6 +11912,7 @@ public class SupplierApplicationBackingBean extends
 					.getSelectedRecommendReasonDescs()) {
 				reasonIdList.add(reason.getPmReason().getReasonId());
 			}
+			/*Here is the missing tagging*/
 			getManagedBean().setRecommendReasonId(
 					reasonIdList.toArray(new Long[reasonIdList.size()]));
 		}else{
@@ -11917,6 +11924,7 @@ public class SupplierApplicationBackingBean extends
 	/**
 	 * Sets the SM application recommend rejection reasons selected.
 	 */
+	//Start 99999
 	private void setSmApplRecommendRejectionReasons() {
 		StringBuilder sb = new StringBuilder();
 		// int count = 0;
@@ -11964,6 +11972,7 @@ public class SupplierApplicationBackingBean extends
 		getManagedBean().getSmAppl().getSmApplRejectReasons().addAll(resList);
 		getManagedBean().setReasonDesc(sb.toString());
 	}	
+	//end 99999
 	// #15629 -- end
 	
 }

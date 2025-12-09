@@ -1255,11 +1255,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to validate deduction type.
 	 * User can not selected same type of deduction again.
 	 */	
-	public void validateDeductionType(CtDeduction deduction)  {
+	public void validateDeductionType(CtDeduction deduction, String action)  {
 
 		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
 			int count = 0;
-			String parameterCode;
 			for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
 				PmParameter deductionTypeById = deId.getDeductionType();
 				PmParameter deductionType = deduction.getDeductionType();
@@ -1268,16 +1267,49 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if (deductionTypeById.getParameterId() != null && deductionType.getParameterId() != null
 						&& deductionType.getParameterId().intValue() == deductionTypeById.getParameterId().intValue()) {
 					count++;
-					parameterCode =  getParameterCode(deductionTypeById);
-					if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && 
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
-						throw new EpException(MessageConst.ERROR_100046,
-								new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionType().getParameterId()))});
+					resetAndValidateDeduction(deId, deduction, deductionTypeById, count, action); //#35506
 				}
 			}
 		}
 	}
+	
+	// #35506 (Resetting and validation) - Start
+	/**
+	 * Overloaded method used for Ajax listener calls.
+	 * Delegates to the main method with action = null.
+	 */
+	public void validateDeductionType(CtDeduction deduction) {
+	    validateDeductionType(deduction, null);
+	}
+	
+	/**
+	 * Processes validation and reset rules for deduction types. Combines
+	 * comparison, resetting, and duplicate validation logic.
+	 */
+	private void resetAndValidateDeduction(CtDeduction deId, CtDeduction deduction, PmParameter deductionTypeById, int count, String action) {
+
+		String parameterCode = getParameterCode(deductionTypeById);
+		if (parameterCode == null) {
+			return;
+		}
+
+		// --- Reset section ---
+		if (action == null) {
+			final double zeroAmount = BigDecimal.ZERO.doubleValue();
+			deId.setAmount(zeroAmount);
+			deId.setDeductionDesc(null);
+		}
+		
+		// --- Duplicate validation section ---
+		if (!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
+				&& !parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
+				&& !parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2) {
+
+			throw new EpException(MessageConst.ERROR_100046, new String[] { getParameterDesc(ParameterHelper.getInstance().getPmParameterById(
+					deduction.getDeductionType().getParameterId())) });
+		}
+	}
+	// #35506 (Resetting and validation) - End
 
 	/**
 	 * The method used to add new deduction.
@@ -2463,6 +2495,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			CtBondWaiverDetail bondWaiver = SerializationUtils.clone(defermentLatest);
 			bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 			bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+			bondWaiver.setPrevId(null); //#35506
+			bondWaiver.setCreatedDate(new Timestamp(new Date().getTime())); //#35506
 
 			defermentHistory.add(bondWaiver);
 			Collections.reverse(defermentHistory);
@@ -4632,7 +4666,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
-
+		
+		//resets the contract days period to 0 because days are not applicable in the LOA process
+		getManagedBean().setContractDaysPeriod(ContractConst.VALUE_OF_0);
 		return String.valueOf(getManagedBean().getCtContractAmount().getContractPeriodBond());
 	}
 	
@@ -4691,6 +4727,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    String docType = contractVer.getDocType();
 	    return docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)
 	            || getManagedBean().isViewContract();
 	}	
 	
@@ -5184,14 +5221,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			return true;
 		}
 
-		// Specific document types
-		String docType = getManagedBean().getContractVer().getDocType();
-		if (ParameterConst.DOCTYPE_CONTRACT_UPDATE.equals(docType) || ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT.equals(docType)) {
-			return true;
-		}
-
-		// Notification setting enabled
-		return getManagedBean().isNotificationSetting();
+		// Check Specific by docType
+		return isContractUpdateOrView(getManagedBean().getContractVer());
 	}
 	// 24333 - End
 	

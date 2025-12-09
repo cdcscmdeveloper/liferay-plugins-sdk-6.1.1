@@ -7,7 +7,37 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true" id="catcodeMainPanelId">
-		
+		<!-- 36504 - START -->
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputPanel
+						align="left">
+						<h:outputText
+							value="#{lbl['lbl.sm.other.desc.history.click']}"
+							escape="false" />
+						<p:commandLink
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{backingBean.otherDescriptionHistory}"
+							process="@this"
+							partialSubmit="true"
+							update=":form">
+							<u><h:outputText
+									value="#{lbl['lbl.sm.other.desc.history.here']}"
+									style="color:blue;"
+									escape="false" /></u>
+						</p:commandLink>
+						<p:spacer width="2" />
+						<h:outputText
+							value="#{lbl['lbl.sm.other.desc.history.to.view.history.of.other.desc']}"
+							escape="false" />
+						<br />
+						<p:spacer height="2" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
+		<!-- 36504 - END -->
+			
 		<ui:include src="regCatCodesApprovedMaintenance.xhtml" />
 			
 		<p:outputPanel id="catCodeInfPan" layout="block">
@@ -123,5 +153,9 @@
 		</div>
 
 	</p:confirmDialog>
-
+	
+	<!-- 36504 - START -->
+	<ac:otherDescriptionHistory categoryCodeList="#{backingBean.managedBean.approvedCategoryList}" applNo="#{backingBean.managedBean.smAppl.applNo}" />
+   	<!-- 36504 - END -->
+   	
 </ui:composition>

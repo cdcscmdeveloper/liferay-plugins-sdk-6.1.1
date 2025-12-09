@@ -58,10 +58,14 @@
 		        		</p:commandLink>
 		        	</ui:remove>
 		        	<h:panelGroup rendered="#{not empty suppDoc.smApplDocFiles}">
-		        		<!-- #11641 -START reopen log #125-->
-		        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocs.filePath}#{applDocs.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocs.fileName)}</a>
-		        		<!-- #11641 - END reopen log #125-->
-		        	</h:panelGroup>
+						<!-- #39316 - Start -->
+						<h:commandLink id="file" value="#{sdoReviewBackingBean.getShortFileName(applDocs.fileName)}"
+							rendered="#{not empty applDocs and !suppDoc.pmDocument.hardCopyReq}">
+							<p:fileDownload
+								value="#{sdoReviewBackingBean.commonDownload(applDocs.filePath,applDocs.fileName,applDocs.fileName)}" />
+						</h:commandLink>
+						<!-- #39316 - End -->
+					</h:panelGroup>
 					<br />
 				</ui:repeat>
 				<!-- #28807 - End -->		        
@@ -72,13 +76,13 @@
 	        	rendered="#{cc.attrs.hasAI}">
 	        	<ui:repeat var="applDocs" value="#{suppDoc.smApplDocFiles}">
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 1}">
-						<p:graphicImage id="imgHasAI1" value="/css/images/design/ico-check.png" />
+						<p:graphicImage id="imgHasAI1" value="/css/images/ai/yes.png" />
 						<p:tooltip for="imgHasAI1">
 							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
 						</p:tooltip>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 2}">
-						<p:graphicImage id="imgHasAI2" value="/css/images/design/ico-reject.png" />
+						<p:graphicImage id="imgHasAI2" value="/css/images/ai/no.png" />
 						<p:tooltip for="imgHasAI2">
 							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
 						</p:tooltip>

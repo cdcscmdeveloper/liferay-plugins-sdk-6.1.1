@@ -17,7 +17,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Timestamp;
+import java.util.Date; //#38151
+import java.sql.Timestamp; //#38151
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -48,6 +49,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO; //#38151
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -66,6 +68,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO; //#38151
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -75,9 +78,11 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sc.quationtender.ScQt; //#38151
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
@@ -256,6 +261,7 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.setSpecAnswersToDelete(null);
 				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
 				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
+				checkWeightage35384WIP(); //#38151
 				// #21695 - Farid
 				if (specMaster.getSpecTypeCode() != null &&
 						ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode())
@@ -1735,6 +1741,12 @@ public class TemplateSpecBackingBean extends
 		} else{
 			// update new zone qts when TplSpecAnswers exists
 			if(CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())){
+				// #39210 Start Vinod 3/10/2025
+				List<TplSpecAnswer> specAnswersNew = checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(templateSpecBean);
+				if (CollectionUtils.isNotEmpty(specAnswersNew)) {
+					specQuestion.setTplSpecAnswers(specAnswersNew);
+				}
+				// #39210 End Vinod 3/10/2025
 				for (int i = 0; i < specQuestion.getTplSpecZoneQties().size(); i++) {
 					for (TplSpecZoneQty tplSpecZoneQty : specQuestion.getTplSpecZoneQties()) {
 
@@ -5844,6 +5856,84 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	
+	// #39210 Start Vinod 3/10/2025
+	/**
+	 * This method will check if the zone details are null and create new
+	 * answers if null.
+	 * 
+	 * @param templateSpecBean
+	 * @return List<TplSpecAnswer>
+	 */
+	private List<TplSpecAnswer> checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(TemplateSpecBean templateSpecBean) {
+		TplSpecQuestion specQuestion = templateSpecBean.getSelectedSpecQuestion();
+		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE.equals(specQuestion.getTplSpecMaster()
+				.getItemTypeCode().getParameterCode());
+		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+		List<TplSpecAnswer> specAnswersNew = new ArrayList<>();
+		String priceType = specQuestion.getClPriceTypeCode().getParameterCode();
+		boolean isPriceTypeZonalStandard = specHelper.isPriceTypeZonalStandard(priceType);
 
+		for (TplSpecAnswer tplSpecAnswer : specQuestion.getTplSpecAnswers()) {
+			if (null == tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() && isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion.getTplSpecMaster().getTplSpecZone().getTplSpecZoneDtls()) {
+					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(templateSpecBean, specQuestion,
+							specZoneDtl, null);
+
+					calcTotalAmount(templateSpecBean, specAnswer, isItemTypeService);
+					specAnswersNew.add(specAnswer);
+
+				}
+			} else if (null == tplSpecAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() && !isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion.getTplSpecMaster().getTplSpecZone().getTplSpecZoneDtls()) {
+					populateTierSpecAnswers(templateSpecBean, specQuestion, specZoneDtl, specAnswersNew);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(specAnswersNew)) {
+				break;
+			}
+		}
+
+		return specAnswersNew;
+	}
+	// #39210 End Vinod 3/10/2025
 	
+
+	//#38151 Start
+
+	private void checkWeightage35384WIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt();
+		Date publishDate = qt.getPublishDate();
+		Date createdDate = qt.getCreatedDate();
+		
+		if (null == publishDate) {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+			Timestamp effTimestamp = new Timestamp(effDate.getTime());
+			
+			if (createdDate.before(effTimestamp)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}else{
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+
+			if (publishDate.before(effDate)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}
+	}
+	//#38151 End
 }
