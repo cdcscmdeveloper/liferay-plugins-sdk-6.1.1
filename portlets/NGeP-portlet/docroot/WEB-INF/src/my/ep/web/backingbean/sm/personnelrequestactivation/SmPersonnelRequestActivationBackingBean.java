@@ -36,9 +36,11 @@ public class SmPersonnelRequestActivationBackingBean extends
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		if (currSupp != null){
 			List<SmDisciplinaryAction> activeDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-			if (!EntityHelper.isCollectionEmpty(activeDA) && SmApplicationUtil.hasCannotLoginDA(activeDA)){
-			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+			//26238 - 39217
+			getManagedBean().setDisciplinaryAction(SmApplicationUtil.hasCannotLoginDA(activeDA));
+			if (getManagedBean().isDisciplinaryAction()){
+				FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
 								new String[] { "" })));
 			}
 		}

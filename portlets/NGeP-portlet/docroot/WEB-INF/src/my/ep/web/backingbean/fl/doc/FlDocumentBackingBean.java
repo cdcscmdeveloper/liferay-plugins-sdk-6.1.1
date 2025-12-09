@@ -622,14 +622,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			invBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
 			invBB.getManagedBean().setBackToPrevious(null);
 			
-			//24956 - start
-			if (invBB.getManagedBean().getInvoice().getFlRequest().getCtContract() != null
-					&& invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getContractType().
-					getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				invBB.getManagedBean().setCtTypeMinistry(true);
-			}
-			//24956 - end
-			
 			for(FlDeliveryOrder flDeliveryOrder : invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().getFlDeliveryOrders()) {
 				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 					invBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);

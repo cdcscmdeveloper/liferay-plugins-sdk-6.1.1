@@ -202,16 +202,13 @@
 				<h:outputText value="#{lbl['lbl.sm.deleted']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 9 and empty aprvdCatBean.disciplinaryActionId}" />
 					
+				<!-- 32815 - start, (26238) 38984 -->
 				<h:outputText value="#{lbl['lbl.sm.status.cancelation.da']}"
-					rendered="#{aprvdCatBean.recordStatusFlg eq 9 and not empty aprvdCatBean.disciplinaryActionId}" />
-				
-				<!-- 32815 - start -->	
-				<h:outputText value="#{lbl['lbl.sm.status.cancelation.da']}"
-					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) 
-								and not empty aprvdCatBean.disciplinaryActionId and aprvdCatBean.typeDisciplinaryAction != 'M'}" />
+					rendered="#{aprvdCatBean.typeDisciplinaryAction != 'M' and not empty aprvdCatBean.disciplinaryActionId}" />
 				
 				<h:outputText value="#{lbl['lbl.sm.cancellation.manufacturer.category.code.by.disciplinary.action']}"
-					rendered="#{aprvdCatBean.recordStatusFlg eq 2 and aprvdCatBean.typeDisciplinaryAction eq 'M'}" />
+					rendered="#{aprvdCatBean.typeDisciplinaryAction eq 'M' and not empty aprvdCatBean.disciplinaryActionId}" />
+	
 				<!-- 32815 - end -->
 			<!-- #28220 - disciplinary action- end -->
 			</p:column>

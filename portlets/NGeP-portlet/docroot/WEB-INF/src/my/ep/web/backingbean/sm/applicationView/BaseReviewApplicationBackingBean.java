@@ -2410,12 +2410,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 			if (getManagedBean().isViewApplicationHistory()) {
 				// for history load all category
-				//32815 - start
-				if(cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED){
+				//32815 - start, 26238 (38984)
+				if(cat.getDisciplinaryActionId() != null){
 					SmDisciplinaryAction da = SmApplicationUtil
 							.retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
 					if(da != null && da.isManufacturerCancel()){
-						cat.setTypeDisciplinaryAction("M");
+						cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE);
+					} else {
+						cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
 					}
 				}
 				//32815 - end
@@ -5345,7 +5347,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		StringBuilder extRemark = new StringBuilder();
 		extRemark.append("");
 
-		int index = 1;
+		// #34031#note-98 : Issue 14
+		double index = 1.1;
 		String doubleNewLine = "<br /><br />";
 		if (null != revisit.getOldPmRegStatus() && null != revisit.getNewPmRegStatus()) {
 			getRegStatus(revisit, extRemark, doubleNewLine, index);
@@ -5359,7 +5362,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getAddedRvCatCodes(revisit, extRemark, doubleNewLine, index);
 			index++;
 		}
-		if (null != revisit.getAddedRvCatCodes() && !revisit.getUpdatedRvCatCodes().isEmpty()) {
+		if (null != revisit.getUpdatedRvCatCodes() && !revisit.getUpdatedRvCatCodes().isEmpty()) {
 			for (SmRvCatCode updatedRvCatCodes : revisit.getUpdatedRvCatCodes()) {
 				updatedRvCatCodes(updatedRvCatCodes, extRemark, doubleNewLine, index);
 				index++;
@@ -5368,11 +5371,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return extRemark.toString();
 	}
 
-	private void getRegStatus(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, int index) {
+	// #34031#note-98 : Issue 14
+	private void getRegStatus(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, double index) {
 		extRemark
 				.append(doubleNewLine)
 				.append(index)
-				.append(". ")
+				// #34031#note-98 : Issue 14
+				.append(" ")
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.regStatus.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()))
 				.append(" ")
@@ -5381,60 +5386,100 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.regStatus.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())).append(" ")
 				.append(SmCommonUtil.getStatusDescByStatusId(revisit.getNewPmRegStatus().getPmStatus().getStatusId()).getStatusName());
+		// #34031#note-85 : Issue 1
+		extRemark.append(".");
 	}
 
-	private void getDeletedRvCatCodes(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, int index) {
+	// #34031#note-98 : Issue 14
+	private void getDeletedRvCatCodes(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, double index) {
 		extRemark
 				.append(doubleNewLine)
 				.append(index)
-				.append(". ")
+				// #34031#note-98 : Issue 14
+				.append(" ")
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.deleted.categories", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()));
 		int deletedIndex = 1;
 		for (SmRvCatCode deletedRvCatCode : revisit.getDeletedRvCatCodes()) {
-			extRemark.append("<br />").append("&emsp;").append(index).append(".").append(deletedIndex).append(" ")
+			extRemark.append("<p style=\"margin: 0 0 0 15px;\">").append(index).append(".").append(deletedIndex).append(" ")
 					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code())
 					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code())
 					.append(deletedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append(" - ")
-					.append(deletedRvCatCode.getSmSupplierCategory().getCategoryL3Name());
+					.append(deletedRvCatCode.getSmSupplierCategory().getCategoryL3Name()).append("</p>");
+			// #34031#note-98 : Issue 15 - Start
+			if (null != deletedRvCatCode.getSmSupplierCategory().getOtherDesc() && !deletedRvCatCode.getSmSupplierCategory().getOtherDesc().isEmpty()) {
+				extRemark.append("<p style=\"margin: 0 0 0 45px;\">").append(deletedRvCatCode.getOtherDesc()).append("</p>");
+			}
+			// #34031#note-98 : Issue 15 - End
 			deletedIndex++;
 		}
 	}
 
-	private void getAddedRvCatCodes(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, int index) {
+	// #34031#note-98 : Issue 14
+	private void getAddedRvCatCodes(SmRevisit revisit, StringBuilder extRemark, String doubleNewLine, double index) {
 		extRemark
 				.append(doubleNewLine)
 				.append(index)
-				.append(". ")
+				// #34031#note-98 : Issue 14
+				.append(" ")
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.added.categories", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()));
 		int addedIndex = 1;
+		// #34031#note-111 : Issue 20
+		sortRvCatCode(revisit.getAddedRvCatCodes());
 		for (SmRvCatCode addedRvCatCode : revisit.getAddedRvCatCodes()) {
-			extRemark.append("<br />").append("&emsp;").append(index).append(".").append(addedIndex).append(" ")
+			extRemark.append("<p style=\"margin: 0 0 0 15px;\">").append(index).append(".").append(addedIndex).append(" ")
 					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code())
 					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code())
 					.append(addedRvCatCode.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code()).append(" - ")
-					.append(addedRvCatCode.getSmSupplierCategory().getCategoryL3Name());
+					.append(addedRvCatCode.getSmSupplierCategory().getCategoryL3Name()).append("</p>");
+			// #34031#note-98 : Issue 15 - Start
+			if (null != addedRvCatCode.getSmSupplierCategory().getOtherDesc() && !addedRvCatCode.getSmSupplierCategory().getOtherDesc().isEmpty()) {
+				extRemark.append("<p style=\"margin: 0 0 0 45px;\">").append(addedRvCatCode.getOtherDesc()).append("</p>");
+			}
+			// #34031#note-98 : Issue 15 - End
 			addedIndex++;
 		}
 	}
 
-	private void updatedRvCatCodes(SmRvCatCode updatedRvCatCodes, StringBuilder extRemark, String doubleNewLine, int index) {
+	// #34031#note-98 : Issue 14
+	private void updatedRvCatCodes(SmRvCatCode updatedRvCatCodes, StringBuilder extRemark, String doubleNewLine, double index) {
 		extRemark
 				.append(doubleNewLine)
 				.append(index)
-				.append(". ")
-				.append(" ")
+				// #34031#note-98 : Issue 14
+				.append(" ") 
 				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.categories.desc.part.one",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
 				.append(" ")
-				.append(updatedRvCatCodes.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code())
-				.append(updatedRvCatCodes.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code())
-				.append(updatedRvCatCodes.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code())
-				.append(" ")
-				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.categories.desc.part.two",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())).append(" ")
-				.append(updatedRvCatCodes.getOtherDesc());
+				// #34031#note-111 : Issue 19 - Start
+				.append(updatedRvCatCodes.getSmSupplierCategory().getCategoryL1Name())
+				.append(" ") 
+				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.categories.desc.part.two", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
+				.append(" ") 
+				.append(updatedRvCatCodes.getOldOtherDesc())
+				.append(" ") 
+				.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.categories.desc.part.three",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())).append(" ") 
+				.append(updatedRvCatCodes.getOtherDesc()); 
+				// #34031#note-111 : Issue 19 - End
 	}
 	// #34031 End
+	// #34031#note-111 : Issue 20 - Start
+	public static void sortRvCatCode(List<SmRvCatCode> rvCatCodes) {
+		Collections.sort(rvCatCodes, new Comparator<SmRvCatCode>() {
+			@Override
+			public int compare(final SmRvCatCode r1, final SmRvCatCode r2) {
+				String r1Code = r1.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code()
+						+ r1.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code() 
+						+ r1.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code();
+				String r2Code = r2.getSmSupplierCategory().getPmCategoryL1().getCategoryL1Code()
+						+ r2.getSmSupplierCategory().getPmCategoryL2().getCategoryL2Code() 
+						+ r2.getSmSupplierCategory().getPmCategoryL3().getCategoryL3Code();
+				return (r1Code.compareTo(r2Code));
+			}
+		});
+	}
+	// #34031#note-111 : Issue 20 - End
 }

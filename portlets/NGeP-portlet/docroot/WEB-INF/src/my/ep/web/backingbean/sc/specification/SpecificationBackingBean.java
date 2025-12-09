@@ -1476,11 +1476,7 @@ public class SpecificationBackingBean extends
 									.getFulfilmentType())
 					|| ParameterConst.FULFILMENT_TYPE_ONE_OFF
 							.equalsIgnoreCase(this.getManagedBean()
-									.getFulfilmentType()) || ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
-									.equalsIgnoreCase(this.getManagedBean()
-											.getFulfilmentType()) || ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN
-											.equalsIgnoreCase(this.getManagedBean()
-													.getFulfilmentType())) {//25635&33723&25725
+									.getFulfilmentType())) {//25635&33723
 				retriveFulfilmentDtls();
 				// checktemplateSpecStatus(this.getManagedBean().getQt());
 				// checkFinancialSpecStatus(this.getManagedBean().getQt());
@@ -1880,30 +1876,9 @@ public class SpecificationBackingBean extends
 				templateSpecBackingbean
 						.updateItemWeightageReq(templateSpecBean);
 
-			} else {
-				//#21695 fix panel disable weightage 27/1/2022 start
-				if (this.getManagedBean().getQt().isPartial() == true){
-					this.getManagedBean().setSpecItemWeightageRequired(true);
-					if(this.getManagedBean().getTemplateSpecBean() != null){
-						if(this.getManagedBean().getTemplateSpecBean().getSpecMaster() != null){
-							this.getManagedBean().getTemplateSpecBean().getSpecMaster().setWeightageReq(false);
-							this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
-							if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null){
-								for(TplSpecQuestion specQuestWeightage : this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
-									if(specQuestWeightage!=null){
-										specQuestWeightage.setWeightageReq(false);
-										this.getManagedBean().setSpecItemWeightageRequired(true);
-									}
-								}
-							}
-							
-						}
-					}
-				}else{
-				this.getManagedBean().setSpecItemWeightageRequired(false);
-				}
-				//#21695 fix panel disable weightage 27/1/2022 end
-			}
+			} 
+			// #38679 remove (no longer needed because requirement has changed)
+
 			templateSpecBean.setSpecMaster(specMaster);
 			if (this.getManagedBean().getQt().isZonal()
 					&& this.getManagedBean().getQt().getQtType()
@@ -2091,11 +2066,7 @@ public class SpecificationBackingBean extends
 					checklistSorting(this.getManagedBean()
 							.getScQtCheckSt2techProposal());
 				}
-			   // 20231122@asyrafhaziq_25726 - Issue 14 
-			   if (null == this.getManagedBean()
-						.getScQtCheckSt2financeProposalList()
-						|| this.getManagedBean()
-								.getScQtCheckSt2financeProposalList().isEmpty()){
+				
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
 				if (CollectionUtils.isNotEmpty(this.getManagedBean()
@@ -2103,7 +2074,6 @@ public class SpecificationBackingBean extends
 					checklistSorting(this.getManagedBean()
 							.getScQtCheckSt2financeProposalList());
 				}
-			   }
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
@@ -2403,6 +2373,7 @@ public class SpecificationBackingBean extends
 				// 37813,35384 remove coding.
 				techWeightageSum();
 				techScoreSum();
+				checkhaszeroquantity(); //#38679
 				
 //#28948 Start - remove this (fixed in #21695)			
 				//#25635 danial 11/3/2020
@@ -8334,17 +8305,7 @@ public class SpecificationBackingBean extends
 					ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 					docDefTypeReqDTO
 							.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-					// Reopen #25726 note 110 - issue 4
-					if(null != this.getManagedBean().getFulfilmentType()){
-						if(this.getManagedBean().getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
-							docDefTypeReqDTO
-							.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
-						}else{
-							docDefTypeReqDTO
-							.setParameterCode(ParameterConst.SCHEDULE_TYPE_NON_PERIODIC);
-						}
-					}
-					// Reopen #25726 end
+					docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
 					ParameterResDTO docDefTypeResDTO = parameterSo
 							.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 					
@@ -11202,6 +11163,7 @@ public class SpecificationBackingBean extends
 					&& (SCProcessNameConst.ENDORSE_SCORING.equals(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_SCORING
 							.equals(this.getManagedBean().getTaskName()))) {
 				this.getManagedBean().setCheckUserCanRevise(true);
+				this.getManagedBean().setResetHistoryCatCode(true);
 
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -11215,6 +11177,7 @@ public class SpecificationBackingBean extends
 								new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale())));
 			} else {
+				this.getManagedBean().setResetHistoryCatCode(true);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
@@ -11314,18 +11277,13 @@ public class SpecificationBackingBean extends
 		// Bug #35688@Syazani 10/07/2024 -- End
 
 		/*end*/
-		// #25726 Add Non Periodic As And When
 		if (null != this.getManagedBean().getFulfilmentType()
 				&& !"".equalsIgnoreCase(this.getManagedBean()
 						.getFulfilmentType())
 				&& (this.getManagedBean()
 						.getFulfilmentType()
 						.equalsIgnoreCase(
-								ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) 
-								|| (this.getManagedBean()
-										.getFulfilmentType()
-										.equalsIgnoreCase(
-												ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)))) {
+								ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
 			scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
 		}
 		if (null != this.getManagedBean().getFulfilmentType()
@@ -11344,11 +11302,7 @@ public class SpecificationBackingBean extends
 				&& (this.getManagedBean()
 						.getFulfilmentType()
 						.equalsIgnoreCase(
-								ParameterConst.FULFILMENT_TYPE_SCHEDULED)) 
-								|| this.getManagedBean()
-								.getFulfilmentType()
-								.equalsIgnoreCase(
-										ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) {
+								ParameterConst.FULFILMENT_TYPE_SCHEDULED))) {
 			if (null == scQt.getScheduleType()) {
 				scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 			}
@@ -11665,10 +11619,10 @@ public class SpecificationBackingBean extends
 			}//#28784 - end
 			scoreSetting.add(technicalScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
-// #21695 farid, if partial set weightage to false		
-			if (this.getManagedBean().getQt().isPartial() == true){
-				this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
-			}
+			// #21695 farid, if partial set weightage to false			
+//			if (this.getManagedBean().getQt().isPartial() == true){
+//				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
+//			} // #38679 remove,based on new requirement. 
 		}
 		ScQtScoreSetting financialScoreSetting = this.getManagedBean()
 				.getFinancialScoreSetting();
@@ -11764,9 +11718,9 @@ public class SpecificationBackingBean extends
 			
 			scoreSetting.add(financialItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
-// #21695 farid, if partial set weightage to false			
-			if (this.getManagedBean().getQt().isPartial() == true){
-				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
+			// #21695 farid, set weightage to true #38679			
+			if (this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
 			}
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
@@ -12015,7 +11969,10 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(checklist.getDefinationType()
 								.getParameterCode()) &&
 								checklist.getScQtDoc() != null) {
-					boolean isDatafetch=SourcingConstants.TECHNICAL_DOCTYPE.equals(technicalDoccategory) &&  SourcingConstants.FINANCIAL_DOCTYPE.equals(financialDoccategory) && isSample;//11104-778&25726
+					// #39464 Start Vinod 06/11/2025. removed sample condition.
+					boolean isDatafetch = SourcingConstants.TECHNICAL_DOCTYPE.equals(technicalDoccategory)
+							&& SourcingConstants.FINANCIAL_DOCTYPE.equals(financialDoccategory);// 11104-778&25726
+					// #39464 End Vinod 06/11/2025.
 					log.info("===subChecklistisDatafetch========="+isDatafetch);
 					if(isDatafetch){
 						log.info("===subChecklistBeforeFetchQuestionSize========="+checklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions().size());
@@ -12475,9 +12432,7 @@ public class SpecificationBackingBean extends
 								.getFulfilmentType())
 						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
 								.equalsIgnoreCase(this.getManagedBean()
-										.getFulfilmentType()) || ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED
-										.equalsIgnoreCase(this.getManagedBean()
-												.getFulfilmentType())) {//25635&33723&25725
+										.getFulfilmentType())) {//25635&33723
 					specReqDTO.setScQt(fulfilMentdtls);
 					specSO.validateSCFulfillmentSchedules(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
@@ -12559,7 +12514,7 @@ public class SpecificationBackingBean extends
 			//#28784 -update
 			Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 			if (status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && this.getManagedBean().getQt().
-					getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
+					getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && this.getManagedBean().isNewVersion()) {
 				this.getManagedBean().setDemoType(true);
 			}
 
@@ -12584,6 +12539,12 @@ public class SpecificationBackingBean extends
 	public void specCommitteBpmTask(String action) {
 		// #39062 Start Vinod 23/09/2025
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			//#29732 start -set weightage to true, since requirement is mandatory to select financial weightage.
+			if(this.getManagedBean().getWipStatusMax()>=SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
+					&& null != this.getManagedBean().getFinancialScoreSetting()){
+					this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
+				}
+			//#29732 end
 			updateEstimatedAmount();
 		}
 		// #39062 End Vinod 23/09/2025
@@ -15254,25 +15215,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setIndex(-1);
 			this.getManagedBean().setAutoUpdate(true);
 			
-			// #21695 farid, if partial set weightage to false and disable, always set to direct scoring		
-						if (this.getManagedBean().getQt().isPartial() == true){
-							this.getManagedBean().setSpecItemWeightageRequired(true);
-							if(this.getManagedBean().getTemplateSpecBean() != null){
-								if(this.getManagedBean().getTemplateSpecBean().getSpecMaster() != null){
-									this.getManagedBean().getTemplateSpecBean().getSpecMaster().setWeightageReq(false);
-									this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
-									if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null){
-										for(TplSpecQuestion specQuestWeightage : this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
-											if(specQuestWeightage!=null){
-												specQuestWeightage.setWeightageReq(false);
-											}
-										}
-									}
-									
-								}
-							}
-						}
-			//END #21695	
+			// #38679 remove (no longer needed coz requirement has changed)
 			
 			templateSpecSO = null;
 			RequestContext.getCurrentInstance().execute(
@@ -19638,9 +19581,7 @@ public class SpecificationBackingBean extends
 		Boolean isItemTypeService = false;
 		Boolean isFulfilmentTypeScheduled = false;	
 		Boolean isZonal = false;
-		// #25726 START
-		Boolean isFulfilmentTypeNonPeriodicScheduled = false;	
-		// #25726 END
+
 		
 		if (templateSpecBean.getSpecMaster().getTplSpecZone() != null) {
 			isZonal = true;
@@ -19650,14 +19591,10 @@ public class SpecificationBackingBean extends
 		} 
 
 		// #25039#67#92 - start
-		// #25726 START
 		if (this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 			isFulfilmentTypeScheduled = true;
 		}
-		if(this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
-			isFulfilmentTypeNonPeriodicScheduled = true;
-		}
-		//#25726 END
+		
 		if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 			isItemTypeService = true;
 		}
@@ -19751,8 +19688,7 @@ public class SpecificationBackingBean extends
 									isItemTypeService,
 									isFulfilmentTypeScheduled, 
 									specZoneId, 
-									questionId,
-									isFulfilmentTypeNonPeriodicScheduled); 
+									questionId); 
 						}//#25039 end 21-3-2020
 					}
 				}
@@ -20966,7 +20902,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 								&& null != templateresDTO.getSpecMaster().getCtPanelItem()) {
 							panelItem = true;
 						}
-						if (panelItem) {
+						if (!panelItem) {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
 						} else {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);
@@ -22833,16 +22769,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		return Boolean.FALSE;
 	}//11104ReendorseStart728
 	
-	/**
-	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
-	 * @param
-	 * @return void
-	 */
-	private void checkDemoVersion(ScQt scQt) {
-		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-		this.getManagedBean().setNewVersion(isQtNewVersion);
-	}
-	
 	//11104 -start-
 	/**
 	 * sample checklist status update after template spec save.
@@ -23130,4 +23056,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 	// #39062 End Vinod 23/09/2025
 	
+	// #38679
+	public void checkhaszeroquantity() {
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		this.getManagedBean().setZoneQtyHasZeroVal(templateSpecSO.validateQuantityItem(this.getManagedBean().getQt().getQtId()));	
+	}
+	// #38679
 }
