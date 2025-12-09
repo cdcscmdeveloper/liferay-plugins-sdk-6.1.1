@@ -228,8 +228,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//End Fix - #33287
 	
 	//#24336 - Start
+	// Flag to show the amendment is about reducing contract value.
 	public static final boolean REDUCTION_OF_CONTRACT_VALUE = true;
 	
+	// Gets the service that handles contract amendment logic.
 	private IContractAmendmentSO getIContractAmendmentSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 	}
@@ -677,25 +679,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ConstructTabSideMenu();
 				
 				// #24336 - Start
+				// Runs all initial setup when the page is first loaded
 				if(!ctBackingBean.getManagedBean().isInitPage()){
-					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
-						getManagedBean().setCommitteeType(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType().getParameterCode());
-					}
 					
-					// Handle amendment checklist value
+					// Sets the committee type into the bean
+					mapCommitteeType();
+					
+					// Loads the correct checklist options based on data.
 					handleSelectedAmendmentChecklistValue();
 					
-					// Handle amendment type valuechange
-					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
-						handleContractValueTypeChange();
-						handleNewAmtEffDate();
-					}
+					// Updates values when amendment type changes.
+					handleAmendmentTypeValueChange();
 					
-					// Set default original desk officer committee from QT (if not save yet)
-					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
-						log.info("handleOriginalDeskOfficerCommitteeQT...");
-						handleOriginalDeskOfficerCommitteeQT();
-					}
+					// Sets default desk officer committee if no saved value.
+					handleOriginalDeskOfficerCommitteeQT();
+					
+					// Mark page initialization completed to avoid repeating setup
 					ctBackingBean.getManagedBean().setInitPage(true);
 				}
 				// #24336 - End
@@ -1660,10 +1659,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().setBondPercentage(PerformanceBondUtil.calculatePerformanceBondPercentage(overall, periodBond));
 			// 24333 - End
 			
-			// #24336 (Set committee type by contract amount (#19600) replaced by radio select) - Start
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
-				getManagedBean().setCommitteeType(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType().getParameterCode());
-			}
+			// #24336 (replace #19600 by radio select) - Start
+			mapCommitteeType();
 			// #24336 - End
 			
 			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
@@ -1779,7 +1776,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * This method will navigate to acknowledgment page with a 
 	 * confirmation message once submit successfully. 
 	 *
-	 * @param  action  the user action on this contract
+	 * @param outcome action the user action on this contract
 	 * @return the navigate URL 
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
@@ -1798,6 +1795,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			// #24336 - Start
+			// Convert committee type code to reference object for saving.
 			setCommitteeTypeValue();
 			// #24336 - End
 						
@@ -2888,7 +2886,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()) {
 				
 				// #24336 - Start
-				// Validation for committee type radio
+				// Ensure a committee type is selected, otherwise trigger validation error
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null) {
 					validateCommitteeTypeOption();
 				}
@@ -2904,6 +2902,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
+			
 			// Validation mandatory for approval letter if approver authority is required
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isApproverAuthorityReq() && (!isContractAmountAmend() && 
 					!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange())) {
@@ -2922,14 +2921,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			// #24336 - Start
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
-				// Validation for Reduction of Contract Amount (submit)
+				// Validate reduction amount does not exceed the allowed contract limit
 				validateReductionAmount();
 				
-				// Empty@Null validation for new amount effective date (submit)
+				// Ensure the new amount effective date is provided.
 				validateNewAmtEffDate();
 			}
-			
-			// Validation for amendment checklist (submit)
+			// Validate all required amendment checklist items are completed before submit
 			if(isApproverSetting() || isCtApproverSetting()){
 				validateAmendmentChecklist();
 			}
@@ -2939,14 +2937,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// #24336 - Start
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
-				// Validation for Reduction of Contract Amount (save)
+				// Validate reduction amount does not exceed the allowed contract limit
 				validateReductionAmount();
 				
-				// Empty@Null validation for new amount effective date (save)
+				// Ensure the new amount effective date is provided.
 				validateNewAmtEffDate();
 			}
-			
-			// Validation for committee type radio (save)
+			// Ensure a committee type is selected, otherwise trigger validation error
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq() 
 				&& getManagedBean().getCommitteeType() == null){
 				validateCommitteeTypeOption();
@@ -3560,7 +3557,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#29549 end
 			
-			//#24336 (add isCtApproverSetting())  - Start
+			//#24336 - Start
+			// Display approver menu items
 			if ((isApproverSetting() || isCtApproverSetting()) && !getManagedBean().isPrepareLOA()) {
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuApprover);
 			}
@@ -4170,26 +4168,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 
-	// #24336 Remove set committee type by contract amount - Start
-//	/**
-//	 * The method used for retrieving the committee type
-//	 * base on loa amount and procurement type
-//	 */
-//	private String retrieveCommitteeType() {	    
-//
-//		IContractAmendmentSO contractAmendmentSO = null;
-//		contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-//		String committeeType = contractAmendmentSO.getCommitteeType(ctBackingBean.getManagedBean().getContractVer()); 
-//		if(committeeType == null) {
-//			throw new EpException(MessageConst.ERROR_750017);
-//		}
-//		
-//		log.info("****** committeeType : "+committeeType);
-//		
-//		return committeeType;
-//	}
-	// #24336 - End
-
 	/**
 	 * The method used to set the
 	 *  secretary for different committee type.
@@ -4342,6 +4320,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} else {
 			
 			//#24336 - Start
+			// Calculate the current contract amount with additions or reductions.
 			BigDecimal baseAmt = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
 			BigDecimal addAmt = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount();
 			BigDecimal reduceAmt = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getReductionAmt();
@@ -4371,6 +4350,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		BigDecimal contractAmt = newContractAmt();
 		
 		// #24336 - Start
+		// Include new GST amount if contract value changed by GST
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() 
 				&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null){
 			contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
@@ -4380,11 +4360,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return contractAmt;
 	}
 	
-	
 	public BigDecimal newOverallContractAmount() {
 		BigDecimal contractAmount = newOverallContractAmt();
-	
+		
 		// #24336 - Start
+		// Include service tax if contract value changed by GST
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() 
 				&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null){
 			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
@@ -4394,7 +4374,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return contractAmount;
 	}
 	// End - #29589
-	
   
 	/**
 	 * The method used to retrieve the new contract period
@@ -5563,6 +5542,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
 				
 				// #24336 - Start
+				// Handle logic when value-change checkbox is toggled
 				onChangeValueChecked();
 				// #24336 - End
 			}
@@ -5609,6 +5589,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);	
 				
 				// #24336 - Start
+				// Handle logic when value-change checkbox is toggled
 				onChangeValueChecked();
 				// #24336 - End
 			}
@@ -5641,6 +5622,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			spToCheck = false;
 			
 			//#24336 - Start
+			// Handle changes when the contract value type (addition/reduction) is selected.
 			handleContractValueTypeChange();
 			//#24336 - End
 		}
@@ -5648,6 +5630,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 		
 		//#24336 - Start
+		// Reset the reduction amount to zero.
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);
 		//#24336 - End
 		
@@ -5656,6 +5639,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			spToCheck = true;
 			
 			//#24336 - Start
+			// Reset the new amount effective date.
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewAmtEffDate(null);
 			//#24336 - End
 		}
@@ -5669,14 +5653,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
 			
 			// #24336 - Start
+			// Reset the reduction and addition amount to zero.
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);	
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);	
+			// Handle changes when the contract value type (addition/reduction) is selected.
 			handleContractValueTypeChange();
 			// #24336 - End
 			
 			setGstAndStaxAmounts();	
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() 
+					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(true);
 			}
@@ -6537,6 +6524,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return the selection list of secretary
 	 */
 	// #24336 - Start
+	// Filtering dropdown list by committee type
 	public SelectItem[] getSecretaryDropdownList() {
 		String committeeType = getManagedBean().getCommitteeType();
 		SelectItem[] items;
@@ -6599,12 +6587,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 
 					for (PmUser user : userList) {//Bug #29740
-						
 						// #24336 (display name with ic) - Start
 						String nameWithIcNo = user.getUserName() + " - " + user.getIdentificationNo();
 						items[i++] = new SelectItem(user.getUserId(), nameWithIcNo);
 						// #24336 - End
-						
 					}
 					
 					// Default the secretary if selection list only have one secretary
@@ -6633,6 +6619,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	// #24336 - Start
+	// Reset dropdown: return list with only the default 'Select One' option
 	private SelectItem[] resetSecretaryDropdownList() {
 		SelectItem[] items = new SelectItem[1];
 		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
@@ -10239,7 +10226,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	//#24336 - Start
 	/**
-	 * Handles changes to the contract value type input (reduction or addition).
+	 * Handle changes when the contract value type (addition/reduction) is selected.
 	 */
 	public void handleContractValueTypeChange() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
@@ -10294,8 +10281,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	/**
 	 * Updates the new contract amount effective date based on certain business rules.
-	 * @return new contract amount effective date
-	 * @param newCtAmount
 	 */
 	public void handleNewAmtEffDate() {
 		
@@ -10388,6 +10373,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    return amount;
 	}
 	
+	// Validate reduction amount does not exceed the allowed contract limit
 	private void validateReductionAmount(){
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
 			BigDecimal reducibleCtAmount = getReducibleContractAmount();
@@ -10401,6 +10387,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	
+	// Ensure the new amount effective date is provided
 	private void validateNewAmtEffDate(){
 		boolean isDisableNewCtAmountEffDate = ctBackingBean.getManagedBean().isDisableNewCtAmountEffDate();
 		if (!isDisableNewCtAmountEffDate && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewAmtEffDate() == null) {
@@ -10414,8 +10401,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	
+	// Validate all required amendment checklist items are completed
 	private void validateAmendmentChecklist(){
-		
 		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 		ContractManagedBean bean = ctBackingBean.getManagedBean();
 		
@@ -10428,7 +10415,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		        amendment.isValueChangeByGst(),
 		        amendment.isOtherChange()
 		    };
-
 	    boolean[] checklistFlags = new boolean[]{
 	        bean.isContractExtendChecklist(),
 	        bean.isItemPriceChangeChecklist(),
@@ -10438,7 +10424,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        bean.isValueChangeByGstChecklist(),
 	        bean.isOtherChangeChecklist()
 	    };
-	    
 	    boolean isError = false;
 	    for (int i = 0; i < amendmentFlags.length; i++) {
 	        if (amendmentFlags[i] && !checklistFlags[i]) {
@@ -10446,67 +10431,66 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	            break;
 	        }
 	    }
-	    
 		if(isError){
-			getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.APPROVER_SETTING_AMENDMENT_CHECKLIST_LABEL, 
+			getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing()
+					.get(ResourceBundleUtils.getMessage(ContractConst.APPROVER_SETTING_AMENDMENT_CHECKLIST_LABEL, 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			throw new EpException(MessageConst.ERROR_750093);
 		}
-		
 	}
 	
-	private void handleSelectedAmendmentChecklistValue(){
-		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		ContractManagedBean bean = ctBackingBean.getManagedBean();
-		
-		boolean isContractExtend = amendment.isContractExtend();
-		boolean isItemPriceChange = amendment.isItemPriceChange();
-		boolean isQuantityChange = amendment.isQuantityChange();
-		boolean isValueChange = amendment.isValueChange();
-		boolean isClauseChange = amendment.isClauseChange();
-		boolean isValueChangeByGst = amendment.isValueChangeByGst();
-		boolean isOtherChange = amendment.isOtherChange();
-		
-		if(isCtApproverSetting()){
-			bean.setContractExtendChecklist(isContractExtend ? true : false);			
-			bean.setItemPriceChangeChecklist(isItemPriceChange ? true : false);
-			bean.setQuantityChangeChecklist(isQuantityChange ? true : false);
-			bean.setValueChangeChecklist(isValueChange ? true : false);
-			bean.setClauseChangeChecklist(isClauseChange ? true : false);
-			bean.setValueChangeByGstChecklist(isValueChangeByGst ? true : false);
-			bean.setOtherChangeChecklist(isOtherChange ? true : false);
-		}else{
-			if(!isContractExtend){
-				bean.setContractExtendChecklist(false);
-			}
-			if(!isItemPriceChange){
-				bean.setItemPriceChangeChecklist(false);
-			}
-			if(!isQuantityChange){
-				bean.setQuantityChangeChecklist(false);
-			}
-			if(!isValueChange){
-				bean.setValueChangeChecklist(false);
-			}
-			if(!isClauseChange){
-				bean.setClauseChangeChecklist(false);
-			}
-			if(!isValueChangeByGst){
-				bean.setValueChangeByGstChecklist(false);
-			}
-			if(!isOtherChange){
-				bean.setOtherChangeChecklist(false);
-			}
-		}
+	// Loads the correct checklist options based on data
+	private void handleSelectedAmendmentChecklistValue() {
+	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+	    ContractManagedBean bean = ctBackingBean.getManagedBean();
+
+	    if (isCtApproverSetting()) {
+	        bean.setContractExtendChecklist(amendment.isContractExtend());
+	        bean.setItemPriceChangeChecklist(amendment.isItemPriceChange());
+	        bean.setQuantityChangeChecklist(amendment.isQuantityChange());
+	        bean.setValueChangeChecklist(amendment.isValueChange());
+	        bean.setClauseChangeChecklist(amendment.isClauseChange());
+	        bean.setValueChangeByGstChecklist(amendment.isValueChangeByGst());
+	        bean.setOtherChangeChecklist(amendment.isOtherChange());
+	    } else {
+	        updateChecklist(bean, amendment);
+	    }
 	}
 	
+	// Clears unchecked checklist options based on amendment flags
+	private void updateChecklist(ContractManagedBean contractManagedBean, CtAmendment ctAmendment) {
+	    if (!ctAmendment.isContractExtend()) {
+	    	contractManagedBean.setContractExtendChecklist(false);
+	    }
+	    if (!ctAmendment.isItemPriceChange()) {
+	    	contractManagedBean.setItemPriceChangeChecklist(false);
+	    }
+	    if (!ctAmendment.isQuantityChange()) {
+	    	contractManagedBean.setQuantityChangeChecklist(false);
+	    }
+	    if (!ctAmendment.isValueChange()) {
+	    	contractManagedBean.setValueChangeChecklist(false);
+	    }
+	    if (!ctAmendment.isClauseChange()) {
+	    	contractManagedBean.setClauseChangeChecklist(false);
+	    }
+	    if (!ctAmendment.isValueChangeByGst()) {
+	    	contractManagedBean.setValueChangeByGstChecklist(false);
+	    }
+	    if (!ctAmendment.isOtherChange()) {
+	    	contractManagedBean.setOtherChangeChecklist(false);
+	    }
+	}
+	
+	// Checks whether the current user is the Contract Approver and is currently handling the Review FA status
 	public boolean isCtApproverSetting() {
 		String taskName = getManagedBean().getTaskName();
 	    return taskName != null 
 	        && isCtApprover() 
 	        && taskName.equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME);
 	}
-
+	
+	// Checks whether the current user is the Contract Approver
 	private boolean isCtApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value());
 	}
@@ -10533,10 +10517,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		handleNewAmtEffDate();
 	}
 	
+	// Gets committee type options and hides the ones not allowed based on the contract owner's state.
 	public List<SelectItem> getCommitteeTypeItems() {
-		
 		List<SelectItem> items = new ArrayList<>();
-		
 	    try {
 	        List<String> codes = Arrays.asList(
 	            ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE,
@@ -10544,7 +10527,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	            ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH,
 	            ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
 	        );
-
 	        SearchBean<PmParameterDesc> searchBean = new SearchBean<>();
 	        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), codes));
 	        List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterConst.COMMITTE_TYPE, searchBean);
@@ -10578,6 +10560,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    return items;
 	}
 	
+	// Convert committee type code to reference object for saving.
 	private void setCommitteeTypeValue() {
 
 	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
@@ -10599,6 +10582,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    }
 	}
 	
+	// Ensure a committee type is selected, otherwise trigger validation error
 	private void validateCommitteeTypeOption(){
 		getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
@@ -10608,35 +10592,52 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	}
 	
+	// Sets default desk officer committee if no saved value.
 	private void handleOriginalDeskOfficerCommitteeQT(){
-		
-		IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
-		long qtId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId();
-		CommitteeMemberInfoResDTO cmiRes = iContractAmendmentSO.retrieveOriginalDeskOfficerCommittee(qtId, SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
-		
-		if(cmiRes != null){
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
+			IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
+			long qtId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId();
+			CommitteeMemberInfoResDTO cmiRes = iContractAmendmentSO.retrieveOriginalDeskOfficerCommittee(qtId, SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
 			
-			// tick checkbox
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbqcAuthorityReq(true);
-			
-			// normalize committee code
-			String code = cmiRes.getCommitteeTypeCode();
-
-		    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
-		        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
-		    		code = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
-		    }
-
-		    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
-		        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
-		    		code = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
-		    }
-		    
-		    // set radio
-			getManagedBean().setCommitteeType(code);
-			
-			// set secretary
-			getManagedBean().setSecretaryId(cmiRes.getUserId());
+			if(cmiRes != null){
+				
+				// tick checkbox
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbqcAuthorityReq(true);
+				
+				// normalize committee code
+				String code = cmiRes.getCommitteeTypeCode();
+	
+			    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
+			        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
+			    		code = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+			    }
+	
+			    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
+			        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
+			    		code = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
+			    }
+			    
+			    // set radio
+				getManagedBean().setCommitteeType(code);
+				
+				// set secretary
+				getManagedBean().setSecretaryId(cmiRes.getUserId());
+			}
+		}
+	}
+	
+	// Sets the committee type into the bean
+	private void mapCommitteeType() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
+			getManagedBean().setCommitteeType(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType().getParameterCode());
+		}
+	}
+	
+	// Updates values when amendment type changes.
+	private void handleAmendmentTypeValueChange() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+			handleContractValueTypeChange();
+			handleNewAmtEffDate();
 		}
 	}
 	//#24336 - End
