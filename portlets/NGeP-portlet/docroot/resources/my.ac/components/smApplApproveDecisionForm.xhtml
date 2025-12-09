@@ -49,7 +49,7 @@
 					<p:outputPanel rendered="#{not empty cc.attrs.bean.poRecommendationDesc}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
-							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}"/></td>
+							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}" converter="capitalizeConverter" /></td>
 						</tr>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N'}">
@@ -66,7 +66,7 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
 							<td>
-								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" />
+								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" converter="capitalizeConverter" />
 							</td>
 						</tr>
 					</p:outputPanel>

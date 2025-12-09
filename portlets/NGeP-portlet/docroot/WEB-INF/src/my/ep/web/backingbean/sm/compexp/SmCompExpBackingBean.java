@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -246,7 +247,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		setMaxEffDate(expDate);
 		setMinExpDate(effDate);
 
-		if (this.getManagedBean().isMasterNew() || (null != contractStatus && !contractStatus.equals(ParameterConst.CONTRACT_STATUS_TERMINATED))) {
+		boolean terminated = false;
+		if(null != contractStatus && contractStatus.equals(ParameterConst.CONTRACT_STATUS_TERMINATED)){
+			terminated = true;
+		}
+		if (!terminated) {
 			if (this.getManagedBean().isDraftUpdate()) {
 				this.getManagedBean().getSelectedDraft().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
 			} else if (this.getManagedBean().isMasterUpdate()) {
@@ -326,13 +331,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		smCompExpCatDraftList = getSmCompExpSo().retrieveSmCompExpCatDraftList(reqDTO).getSmCompExpCatDraftList();
 		smCompExpCatDraftList = filterCatCode(smCompExpCatDraftList, this.getManagedBean().getSupplier().getSmAppl().getApplId());
 
-		if (smCompExpCatDraftList.isEmpty()) {
-			addSmCompExpCatDraft();
-			this.getManagedBean().setSmCompExpCatDraftListEmpty(true);
-			getSupplierMainCatList();
-		} else {
-			this.getManagedBean().setSmCompExpCatDraftList(smCompExpCatDraftList);
-			this.getManagedBean().setSmCompExpCatDraftListEmpty(false);
+		getSupplierMainCatList();
+		if (smCompExpCatDraftList.isEmpty()) { 
+			addSmCompExpCatDraft(); 
+		} else { 
+			this.getManagedBean().setSmCompExpCatDraftList(smCompExpCatDraftList); 
+			this.getManagedBean().setSmCompExpCatDraftNotComplete(false);
 		}
 	}
 
@@ -711,7 +715,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
 
 		if (resDTO != null) {
-			catL2.setPmCategoryL2s(resDTO.getCategoryL2List());
+			catL2.setPmCategoryL2s(new ArrayList<PmCategoryL2>(new LinkedHashSet<PmCategoryL2>(resDTO.getCategoryL2List())));
 		} else {
 			catL2.setPmCategoryL2s(null);
 		}
@@ -743,7 +747,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		if (resDTO != null) {
-			catL3.setPmCategoryL3s(resDTO.getCategoryL3List());
+			catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>(new LinkedHashSet<PmCategoryL3>(resDTO.getCategoryL3List())));
 		} else {
 			catL3.setPmCategoryL3s(null);
 		}
@@ -1198,7 +1202,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
 		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
-		this.getManagedBean().getSelectedMaster().getProcumentMode().getParameterId();
+		if(null != this.getManagedBean().getSelectedMaster().getPaymentMethod()){
+			this.getManagedBean().getSelectedMaster().getPaymentMethod().getParameterId();
+		} else {
+			this.getManagedBean().getSelectedMaster().setPaymentMethod(new PmParameter());
+		}
+		if(null != this.getManagedBean().getSelectedMaster().getProcumentMode()){
+			this.getManagedBean().getSelectedMaster().getProcumentMode().getParameterId();
+		} else {
+			this.getManagedBean().getSelectedMaster().setProcumentMode(new PmParameter());
+		}
 
 		dateChange();
 
