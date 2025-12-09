@@ -92,6 +92,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper; //#24333
+import my.ep.helper.EntityHelper; //#30045
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -205,7 +206,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	private static final Map<String, String> months;
-	
+	//Start - #30045
+	private Long reasonId = null;
+	private String reasonCode = null;
+	//End - #30045
 	static
 	{
 		months = new HashMap<String, String>();
@@ -1781,12 +1785,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 								SearchCondition.CONDITION_OR.value())));
 				
 				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
+				//Start - #30045
+				if(isPk7Agencies()){
+					reqDTO.setPk7Related(true);
+					if(!reasonCode.isEmpty()){
+						reqDTO.setReasonCode(reasonCode);
+					}
+					
+				}
+				//End - #30045
 				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getOrgProfileResultBean();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_CONTRACTBACKINGBEAN, null,
+						"ContractBackingBean.pageChangeListener()", null, e);
 			}
 			return null;
 		}
@@ -2624,21 +2638,36 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public SelectItem[] getMinistryDropdown() {		
 		SelectItem[] items = null;
-
+		
 		try {
 			int i = 0;
-			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
-
+			OrgProfileResDTO resDTO = new OrgProfileResDTO();
+			//Start - #30045
+			if (isPk7Agencies()) {
+				IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IReasonSO.class);
+				reasonCode = reasonSO.getReasonCodeAppliedForCt(reasonId);
+				if(!reasonCode.isEmpty()){
+					reqDTO.setReasonCode(reasonCode);
+					List<Long> listAffected = orgProfileSO.retrieveAffectedAgencies(reqDTO);
+					reqDTO.setPk7Related(true);
+					reqDTO.setOrgProfileIdListForPk7(listAffected);
+				}
+				
+			}
+			//End - #30045
+			resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
 			List<PmOrgProfile> list = resDTO.getOrgProfileList();
 			items = new SelectItem[list.size()];
 			for (PmOrgProfile orgProfile : list) {
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_CONTRACTBACKINGBEAN, null,
+					"ContractBackingBean.getMinistryDropdown()", null, e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 		return items;
@@ -5240,4 +5269,61 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
 	}
 	//#35506 - End
+	// Start - #30045
+	/**
+	 * Determines whether the current contract or request is associated 
+	 * with a PK7 or Special Item agency based on its resolved {@link PmReason}.
+	 * <p>
+	 * The method attempts to resolve the procurement type by calling 
+	 * {@code resolveProcTypeForPk7()}. If no reason is found, the method 
+	 * immediately returns {@code false} to avoid {@link NullPointerException}.
+	 * </p>
+	 *
+	 * <p>
+	 * Currently, the decision is simplified to check whether the resolved 
+	 * {@link PmReason} has a non-null {@code reasonId}. If the {@code reasonId} 
+	 * is not {@code null}, the contract is considered to fall under PK7 or 
+	 * special item rules.
+	 * </p>
+	 *
+	 * @return {@code true} if a valid {@link PmReason} with a non-null 
+	 *         {@code reasonId} is resolved; {@code false} otherwise.
+	 */
+	public boolean isPk7Agencies() {
+		PmReason reason = getReasonForPk7();
+		if (reason == null) {// avoid NullPointerException
+			return false;
+		} else {
+			reasonId = reason.getReasonId();
+		}
+		return true;
+	}
+
+	/**
+	 * <p>
+	 * If a {@link PmReason} is found in either check, the contract is
+	 * considered to be PK7-related. If both checks return {@code null}, the
+	 * contract is treated as a normal (non-PK7) contract.
+	 * </p>
+	 * 
+	 * @return the {@link PmReason} indicating the PK7 justification type, or
+	 *         {@code null} if the contract is not PK7-related.
+	 */
+	public PmReason getReasonForPk7() {
+		PmReason reason = null;
+		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			List<CtContractItem> items = getManagedBean().getContractVer().getCtContractItems();
+			if (items != null && items.get(0).getScRequestItem().getRequestNote() != null) {
+				reason = (PmReason) EntityHelper
+						.getNestedProperty(getManagedBean(),
+								"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].justificationType");
+			}
+		} else {
+			reason = (PmReason) EntityHelper.getNestedProperty(getManagedBean(),
+					"contractVer.ctContract.loa.justificationType");
+		}
+		return reason;
+	}
+	// End - #30045
 }  
