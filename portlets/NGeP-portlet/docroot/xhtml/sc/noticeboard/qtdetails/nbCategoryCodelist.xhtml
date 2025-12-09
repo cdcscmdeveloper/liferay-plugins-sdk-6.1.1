@@ -44,9 +44,11 @@
 					and scQtCategory.flagDisplayNb}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
+							rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL1flag}"
 							escape="false"/>
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL1.changedDate)}&#41;">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL1.changedDate)}&#41;"
+						rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL1flag}">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
@@ -72,9 +74,11 @@
 					and scQtCategory.flagDisplayNb}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
+							rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL2flag}"
 							escape="false" />
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL2.changedDate)}&#41;">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL2.changedDate)}&#41;"
+						rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL2flag}">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
@@ -100,9 +104,11 @@
 					and scQtCategory.flagDisplayNb}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
+							rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL3flag}"
 							escape="false"/>
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL3.changedDate)}&#41;">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL3.changedDate)}&#41;"
+						rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL3flag}">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
@@ -115,8 +121,4 @@
 				historyList="#{noticeBoardBackingBean.managedBean.historyList}"
 				widget="hisPopup" />
 	<!-- #29732 End -->
-			
-			
-			
-	
 </ui:composition>
