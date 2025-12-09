@@ -2087,9 +2087,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scLoa.setBondPercentage(null);
 		}
 		return scLoa;
-	}
-	
-	//Enhancement #24259 #24269	#25726
+	}//Enhancement #24259 #24269	#25726
 	/**
 	 * Calculate bond amount with SST.
 	 * 
@@ -2101,29 +2099,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		
 		if(isDirectLoa) {
-			boolean setBondReq = true;
-			// Reopen 25726 note 271- Issue 2 
-//			if (null != scLoa.getScQt() 
-//					&& null != scLoa.getScQt().getFulfilmentType()
-//					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-//					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-//					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
-//					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED))) {
-//					if((overallCtAmount.compareTo(this.getManagedBean().getLowerLimit()) < 0) || (overallCtAmount.compareTo(this.getManagedBean().getLowerLimit()) == 0))
-//				setBondReq = false;
-//			}
+			boolean setBondReq = true; 
 			//20231122@asyrafhaziq_25726 - Issue 16
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
+			//new #25726 - Start
+			
+			List<String> flTypeCodes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_ONE_OFF,
+					ParameterConst.FULFILMENT_TYPE_SCHEDULED,
+					ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+			boolean isQTtypePK7 = null != scLoa.getQtType() && null != scLoa.getQtType().getParameterId()
+					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType().getParameterCode());
+			boolean isFulfilmentType = null != scLoa.getScQt() && null != scLoa.getScQt().getFulfilmentType()
 					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
-					||scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
+					&& flTypeCodes.contains(scLoa.getScQt().getFulfilmentType().getParameterCode());
+
+			if (isQTtypePK7 && isFulfilmentType) {
+		
+			//new #25726 - End
 				setBondReq = false;
 			}
 			
@@ -2149,6 +2140,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return scLoa;
 	}		
 	//end Enhancement #24259 #24269	#25726
+
 
 	/**
 	 * Get the OverallContractAmount.
