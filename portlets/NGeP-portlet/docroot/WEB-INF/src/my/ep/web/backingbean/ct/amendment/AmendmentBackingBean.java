@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright  2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.amendment;
 
@@ -7247,9 +7247,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/**
 	 * the method will retrieve the disciplinary action info from supplier module.
-	 * If supplier type of punishment is “Suspend Registration” or “Cancel Registration” 
-	 * or “Blacklist Owner / Director of Company” or “Cancellation of Bumiputera Status” 
-	 * or “Cancellation of Manufacturer Status”, this Amendment With Supplemental process not able to proceed
+	 * If supplier type of punishment is Suspend Registration or Cancel Registration 
+	 * or Blacklist Owner / Director of Company or Cancellation of Bumiputera Status 
+	 * or Cancellation of Manufacturer Status, this Amendment With Supplemental process not able to proceed
 	**/
 	private void retrieveDA() { // #32712
 		SmSupplier currentSupplier = getSupplier(); // #34097
@@ -8079,6 +8079,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see Exception
 	 */
 	public String preRejectContractAmendment(String outcome) throws Exception {
+	    log.info("enter preRejectContractAmendment with outcome:"+outcome);
 		if ((BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
 			
 			setSecretary();
@@ -8113,6 +8114,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 		} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome) && isSupplierRole()
 				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+			log.info("enter preRejectContractAmendment BpmOutcomeConst.BPM_REJECT:"+outcome);
 			validateRemarkCancel(outcome);
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -8121,7 +8123,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} else {
+			    log.info("Here is SPKI START");
 				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				log.info("Here is SPKI END");
 				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			}
 			return null;
