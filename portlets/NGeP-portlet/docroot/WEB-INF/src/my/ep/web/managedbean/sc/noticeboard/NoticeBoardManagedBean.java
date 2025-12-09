@@ -192,6 +192,10 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private boolean updateCatInPm;
 	private boolean flagUpdateCatInPmDisplay;
 	private boolean catCodeQtUpdateDesc;
+	private boolean displayAfterPublish;
+	private boolean pmCatL1flag;
+	private boolean pmCatL2flag;
+	private boolean pmCatL3flag;
 	// #29732 End
 	
 	public NoticeBoardManagedBean() {
@@ -1341,6 +1345,38 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	public void setCatCodeQtUpdateDesc(boolean catCodeQtUpdateDesc) {
 		this.catCodeQtUpdateDesc = catCodeQtUpdateDesc;
+	}
+	
+	public boolean getDisplayAfterPublish() {
+		return displayAfterPublish;
+	}
+
+	public void setDisplayAfterPublish(boolean displayAfterPublish) {
+		this.displayAfterPublish = displayAfterPublish;
+	}
+	
+	public boolean getPmCatL1flag() {
+		return pmCatL1flag;
+	}
+
+	public void setPmCatL1flag(boolean pmCatL1flag) {
+		this.pmCatL1flag = pmCatL1flag;
+	}
+	
+	public boolean getPmCatL2flag() {
+		return pmCatL2flag;
+	}
+
+	public void setPmCatL2flag(boolean pmCatL2flag) {
+		this.pmCatL2flag = pmCatL2flag;
+	}
+	
+	public boolean getPmCatL3flag() {
+		return pmCatL3flag;
+	}
+
+	public void setPmCatL3flag(boolean pmCatL3flag) {
+		this.pmCatL3flag = pmCatL3flag;
 	}
 	
 	// #29732 End
