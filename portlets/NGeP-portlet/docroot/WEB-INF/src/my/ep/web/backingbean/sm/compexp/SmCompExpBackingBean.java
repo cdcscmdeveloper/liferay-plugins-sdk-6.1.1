@@ -1033,6 +1033,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		master.setContractEffDate(draft.getContractEffDate());
 		master.setContractExpDate(draft.getContractExpDate());
 		master.setContractStatus(draft.getContractStatus());
+		master.setContractId(draft.getContractId());
+		master.setQtId(draft.getQtId());
+		master.setMigration(draft.isMigration());
 		if (this.getManagedBean().isConsultant()) {
 			master.setProjectLoc(draft.getProjectLoc());
 			master.setWorkServDesc(draft.getWorkServDesc());
@@ -1094,7 +1097,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
 		SmCompExpResDTO resDTO;
-		resDTO = getSmCompExpSo().deactivateDraft(reqDTO);
+		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1407,6 +1410,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		history.setContractEffDate(master.getContractEffDate());
 		history.setContractExpDate(master.getContractExpDate());
 		history.setContractStatus(master.getContractStatus());
+		history.setContractId(master.getContractId());
+		history.setQtId(master.getQtId());
+		history.setMigration(master.isMigration());
 		if (this.getManagedBean().isConsultant()) {
 			history.setProjectLoc(master.getProjectLoc());
 			history.setWorkServDesc(master.getWorkServDesc());
