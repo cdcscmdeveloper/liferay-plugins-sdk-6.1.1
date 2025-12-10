@@ -106,6 +106,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
@@ -150,6 +151,7 @@ import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
+import my.ep.persistence.entity.pm.common.PmReasonRestr;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -5581,32 +5583,91 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		reqDTO.setSuppTypeId(getParameterByTypeAndCode(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE_REASON,
 				FulfilmentConst.SM_SUPP_ACC_CODE_BASIC_REASON).getParameterId());
 		boolean isSuppAccTypeRestrBasic = reasonSO.isSuppAccTypeRestricted(reqDTO);
+		
+		// check if supplier g2g set in pm
+		reqDTO.setSuppTypeId(getParameterByTypeAndCode(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE_REASON,
+				FulfilmentConst.SM_SUPP_ACC_CODE_G2G_REASON).getParameterId());
+		boolean isSuppAccTypeRestrG2G = reasonSO.isSuppAccTypeRestricted(reqDTO);
+		
+		String supplierAccType = getSuppAccType();
+		
+		if (!isSuppAccTypeRestrMof && !isSuppAccTypeRestrBasic && !isSuppAccTypeRestrG2G) {
+			return;
+		}
 
-		String suppAccType = getSuppAccType();
+		if (supplierAccType == FulfilmentConst.SM_SUPP_ACC_CODE_MOF && isSuppAccTypeRestrMof) {
+			supplierAccTypeForMofCheck(mofAcc);
+			return;
 
-		boolean isErrorMsgThrowForSuppAccTypeValidation = false;
+		} else if (supplierAccType == FulfilmentConst.SM_SUPP_ACC_CODE_BASIC && isSuppAccTypeRestrBasic) {
+			supplierAccTypeForBasicCheck();
+			return;
 
-		if (isSuppAccTypeRestrMof && !isSuppAccTypeRestrBasic) {// pm set supplier mof only
+		} else if (supplierAccType == FulfilmentConst.SM_SUPP_ACC_CODE_G2G && isSuppAccTypeRestrG2G) {
+			supplierAccTypeForG2GCheck();
+			return;
+		}
 
-			if (mofAcc == null || mofAcc.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-				isErrorMsgThrowForSuppAccTypeValidation = true;
+		buildErrorMessageSupplierAccountTypeNonApplicable();
+	}
+	
+	/**
+	 * check supplier account type for MOF
+	 * 
+	 * @param mofAcc
+	 */
+	private void supplierAccTypeForMofCheck(SmMofAccount mofAcc) {
+		SmSupplier supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+
+		int mofStatus = mofAcc.getRecordStatusFlg();
+		int supplierStatus = supplier.getRecordStatusFlg();
+
+		Set<Integer> recordBasicMofCheck = new HashSet<>();
+		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_SUSPENDED);
+		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_ACTIVE);
+		recordBasicMofCheck.add(DbValueConst.RECORD_STATUS_CANCELLED);
+
+		// MOF deleted checks
+		if (mofStatus == DbValueConst.RECORD_STATUS_DELETED) {
+
+			if (recordBasicMofCheck.contains(supplierStatus)) {
+				buildErrorMessageSupplierAccountTypeNonApplicable();
 			}
 
-		} else if (!isSuppAccTypeRestrMof && isSuppAccTypeRestrBasic) {// pm set supplier basic only
-			if (mofAcc != null
-					|| getManagedBean().getFulfilmentRequest().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-				isErrorMsgThrowForSuppAccTypeValidation = true;
-			}
-
-		} else {// pm set both basic and mof or not defined
-			if (getManagedBean().getFulfilmentRequest().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-				isErrorMsgThrowForSuppAccTypeValidation = true;
+			if (supplierStatus == DbValueConst.RECORD_STATUS_DELETED) {
+				buildErrorMessageSupplierAccountTypeNonActive();
 			}
 		}
 
-		buildErrorMessageForPK7SupplierAccountTypeExceed(isErrorMsgThrowForSuppAccTypeValidation,
-				suppAccType);
+		// Supplier cancelled or expired
+		if (supplierStatus == DbValueConst.RECORD_STATUS_CANCELLED
+				|| supplierStatus == DbValueConst.RECORD_STATUS_EXPIRED) {
+			buildErrorMessageSupplierAccountTypeNonActive();
+		}
+	}
+	
+	/**
+	 * check supplier account type for G2G
+	 * 
+	 */
+	private void supplierAccTypeForG2GCheck() {
+		SmSupplier supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
 		
+		if(supplier.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+			buildErrorMessageSupplierAccountTypeNonActive();
+		}
+	}
+	
+	/**
+	 * check supplier account type for Basic
+	 * 
+	 */
+	private void supplierAccTypeForBasicCheck() {
+		SmSupplier supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+		
+		if(supplier.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+			buildErrorMessageSupplierAccountTypeNonActive();
+		}
 	}
 
 	/**
@@ -5616,6 +5677,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 */
 	private String getSuppAccType() {
 
+		if(getManagedBean().getFulfilmentRequest().getSmSupplier().getSmAppl().getSupplierType().equals(FulfilmentConst.SM_SUPP_ACC_CODE_G2G)){
+			return FulfilmentConst.SM_SUPP_ACC_CODE_G2G;
+		}
+		
 		SmMofAccount mofAcc = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
 				getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 		String suppAccType = FulfilmentConst.SM_SUPP_ACC_CODE_BASIC;
@@ -5628,20 +5693,61 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	}
 
 	/**
-	 * Error message if PK7/Special Item threshold exceed for supplier account
+	 * Error message if PK7/Special Item Supplier Account type non active
 	 * type
 	 * 
-	 * @param isShowErrorMsgForPRThreshold
+	 * 1B
 	 */
-	private void buildErrorMessageForPK7SupplierAccountTypeExceed(
-			boolean isErrorMsgThrowForSuppAccTypeValidation, String suppAccType) {
-		if (isErrorMsgThrowForSuppAccTypeValidation) {
-			throw new EpException(MessageConst.ERROR_740082, new String[] {
-					getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, suppAccType),
+	private void buildErrorMessageSupplierAccountTypeNonActive() {
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IReasonSO.class);
+
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getReasonId());
+
+		ReasonResDTO resDTO = reasonSO.retrieveSuppAccTypeByReasonId(reqDTO);
+
+		StringBuilder allowableSuppAccTypeMsgBuilder = new StringBuilder();
+		String pronounAllowableSuppAccType = "is";
+
+		if (!resDTO.getReasonRestrList().isEmpty()) {
+
+			if (resDTO.getReasonRestrList().size() > 1) {
+				pronounAllowableSuppAccType = "are";
+			}
+
+			for (PmReasonRestr reasonRestr : resDTO.getReasonRestrList()) {
+
+				if (allowableSuppAccTypeMsgBuilder.length() > 0) {
+					allowableSuppAccTypeMsgBuilder.append(", ");
+				}
+
+				allowableSuppAccTypeMsgBuilder.append(getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE,
+						reasonRestr.getSupplAcctTypeId().getParameterCode()));
+
+			}
+
+		}
+
+		throw new EpException(MessageConst.ERROR_740082, new String[] {
+				getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, getSuppAccType()),
+				getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+				getManagedBean().getReason(), pronounAllowableSuppAccType, allowableSuppAccTypeMsgBuilder.toString() });
+
+	}
+	
+	/**
+	 * Error message if PK7/Special Item Supplier Account type non applicable
+	 * 
+	 * 1A
+	 */
+	private void buildErrorMessageSupplierAccountTypeNonApplicable() {
+			throw new EpException(MessageConst.ERROR_740083, new String[] {
+					getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, getSuppAccType()),
 					getManagedBean().getFulfilmentRequest().getSmSupplier().getCompanyName(),
 					getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 					getManagedBean().getReason() });
-		}
+		
 	}
 	// #27476 end
 }
