@@ -17417,24 +17417,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public String currentReviseReason() {
 		String currReason = null;
 		Timestamp currDate = null;
-		//temp cater null issue by najmi 10122025 start
-		if (this.getManagedBean().getSmAppl() != null && this.getManagedBean().getSmAppl().getSmApplRevises() != null) {
-			for (SmApplRevise smApplRevise : this.getManagedBean().getSmAppl().getSmApplRevises()) {
-				if (currDate == null) {
-					currDate = smApplRevise.getCreatedDate();
+		for (SmApplRevise smApplRevise : this.getManagedBean().getSmAppl().getSmApplRevises()) {
+			if (currDate == null) {
+				currDate = smApplRevise.getCreatedDate();
+				currReason = smApplRevise.getReviseReason();
+			} else {
+				if (smApplRevise.getCreatedDate().after(currDate)) {
 					currReason = smApplRevise.getReviseReason();
-				} else {
-					if (smApplRevise.getCreatedDate().after(currDate)) {
-						currReason = smApplRevise.getReviseReason();
-						currDate = smApplRevise.getCreatedDate();
-					} else {
-						currReason = "";
-						currDate = new Timestamp(System.currentTimeMillis());
-					}
+					currDate = smApplRevise.getCreatedDate();
 				}
 			}
 		}
-		//temp cater null issue by najmi 10122025 end
 
 		return currReason;
 	}
