@@ -1786,7 +1786,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				
 				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
 				//Start - #30045
-				if(isPk7Agencies()){
+				if(isSpecialItemAgencies()){
 					reqDTO.setPk7Related(true);
 					if(!reasonCode.isEmpty()){
 						reqDTO.setReasonCode(reasonCode);
@@ -2646,13 +2646,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			OrgProfileResDTO resDTO = new OrgProfileResDTO();
 			//Start - #30045
-			if (isPk7Agencies()) {
+			if (isSpecialItemAgencies()) {
 				IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IReasonSO.class);
 				reasonCode = reasonSO.getReasonCodeAppliedForCt(reasonId);
 				if(!reasonCode.isEmpty()){
 					reqDTO.setReasonCode(reasonCode);
-					List<Long> listAffected = orgProfileSO.retrieveAffectedAgencies(reqDTO);
+					List<Long> listAffected = orgProfileSO.retrieveAgencyByReasonCode(reqDTO);
 					reqDTO.setPk7Related(true);
 					reqDTO.setOrgProfileIdListForPk7(listAffected);
 				}
@@ -5289,8 +5289,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return {@code true} if a valid {@link PmReason} with a non-null 
 	 *         {@code reasonId} is resolved; {@code false} otherwise.
 	 */
-	public boolean isPk7Agencies() {
-		PmReason reason = getReasonForPk7();
+	public boolean isSpecialItemAgencies() {
+		PmReason reason = getReasonForSpecialItem();
 		if (reason == null) {// avoid NullPointerException
 			return false;
 		} else {
@@ -5309,7 +5309,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the {@link PmReason} indicating the PK7 justification type, or
 	 *         {@code null} if the contract is not PK7-related.
 	 */
-	public PmReason getReasonForPk7() {
+	public PmReason getReasonForSpecialItem() {
 		PmReason reason = null;
 		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
