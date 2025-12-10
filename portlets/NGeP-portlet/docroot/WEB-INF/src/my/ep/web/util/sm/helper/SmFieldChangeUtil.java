@@ -56,8 +56,9 @@ public class SmFieldChangeUtil {
 					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
 					.getSmAppl();
 			bean.setLatestApproveAppl(srcAppl);
-			//#35194
-			if (bean.getSmAppl().isResubmit() && bean.getSmAppl().getOriginalAppl() != null) {
+			//#35194 
+			//#37771 START -comment these line because unusable - changes in logic
+			/*if (bean.getSmAppl().isResubmit() && bean.getSmAppl().getOriginalAppl() != null) {
 				mofReqDTO.setSmAppl(bean.getSmAppl());
 				SmAppl latestRejectedAppl = SmServiceLookup
 						.getMofRegistrationSO()
@@ -71,7 +72,8 @@ public class SmFieldChangeUtil {
 				} else {
 					srcAppl = applRevDTO.getSmAppl();
 				}
-			}
+			}*/
+			//#37771 - END
 			bean.setLatestAppl(srcAppl);
 			bean.getLatestAppl()
 					.setHqFacility(
@@ -205,7 +207,9 @@ public class SmFieldChangeUtil {
 					setEquityCompanyFieldChangeStatus(latestAppl, currAppl);
 
 				} else if (currentPage
-						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)
+						|| currentPage
+						.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) { //#38890
 					// smSupplierBanks
 					setBankFieldChangeStatus(latestAppl, currAppl);
 				}
@@ -215,6 +219,22 @@ public class SmFieldChangeUtil {
 
 			// smManufacturingDtls
 		}
+	}
+	
+	//#38890
+	public static void setBankFieldChangeStatus(SmAppl currAppl){
+		if (currAppl == null){
+			return;
+		}
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(currAppl.getSmSupplier().getSupplierId());
+		SmAppl latestAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveLatestSmApplWithChildBySupplierId(reqDTO)
+				.getSmAppl();
+		if (latestAppl == null){
+			return;
+		}
+		setBankFieldChangeStatus(latestAppl, currAppl);
 	}
 
 	/**

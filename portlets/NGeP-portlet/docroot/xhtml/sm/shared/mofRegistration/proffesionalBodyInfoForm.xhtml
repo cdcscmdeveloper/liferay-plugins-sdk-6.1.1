@@ -100,6 +100,8 @@
 						<p:graphicImage rendered="#{backingBean.managedBean.upsCannotEdit}" value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
+					<!-- #37771 -->
+					<ac:smFieldChangeTableAlertView object="#{profBean}" />
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -148,7 +150,7 @@
 			</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="630px"
+	<p:dialog width="800px"
 		header="#{lbl['lbl.sm.profBody.profBodDiaHdr']}"
 		widgetVar="profDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="profPop" closable="true">
@@ -174,7 +176,15 @@
 
 						<p:ajax event="change" process="@this"
 							update="profBodyOthersAssoc, profBodyOthersAssocMand" />
-					</p:selectOneMenu> <p:message id="profBodyBdyMsg" for="profBodyBdy"
+					</p:selectOneMenu> 
+					<!-- #37771 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.latestAppl.smAssociationBodies[0].pmCertBody.certBodyId}"
+						oriValue="#{backingBean.managedBean.latestAppl.smAssociationBodies[0].pmCertBody.bodyName}" 
+						currValue="#{backingBean.managedBean.selectedAssocBody.pmCertBody.bodyName}" 
+						alertValue="#{backingBean.managedBean.latestAppl.smAssociationBodies[0].pmCertBody.bodyName}"/>
+					<p:message id="profBodyBdyMsg" for="profBodyBdy"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
@@ -189,6 +199,13 @@
 						required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId eq 10}"
 						value="#{backingBean.managedBean.selectedAssocBody.otherAssociation}"
 						disabled="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId ne 10 or backingBean.managedBean.upsCannotEdit}" />
+					<!-- #37771 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.latestAppl.smAssociationBodies[0].pmCertBody.certBodyId}"
+						oriValue="#{backingBean.managedBean.latestAppl.smAssociationBodies[0].otherAssociation}" 
+						currValue="#{backingBean.managedBean.selectedAssocBody.otherAssociation}" 
+						alertValue="#{backingBean.managedBean.latestAppl.smAssociationBodies[0].otherAssociation}"/>
 					<p:message id="profBodyOthersAssocMsg" for="profBodyOthersAssoc"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -202,7 +219,15 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.profBody.regNo']}" id="profBodyRegNo"
 						value="#{backingBean.managedBean.selectedAssocBody.regNo}"
-						maxlength="30" disabled="#{backingBean.managedBean.upsCannotEdit}" /> <p:message id="profBodyRegNoMsg"
+						maxlength="30" disabled="#{backingBean.managedBean.upsCannotEdit}" /> 
+					<!-- #37771 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.latestAppl.smAssociationBodies[0].pmCertBody.certBodyId}"
+						oriValue="#{backingBean.managedBean.latestAppl.smAssociationBodies[0].regNo}" 
+						currValue="#{backingBean.managedBean.selectedAssocBody.regNo}" 
+						alertValue="#{backingBean.managedBean.latestAppl.smAssociationBodies[0].regNo}"/>	
+					<p:message id="profBodyRegNoMsg"
 						for="profBodyRegNo" showSummary="true" showDetail="false"
 						display="icon" /></td>
 				<!-- 31763 END-->
@@ -216,7 +241,15 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						mindate="#{CommonConstants.THREE_MONTHS_LATER_DATE}"
 						yearRange="0:+20" readonlyInput="true"
-						value="#{backingBean.managedBean.selectedAssocBody.expDate}" disabled="#{backingBean.managedBean.upsCannotEdit}" /> <p:message
+						value="#{backingBean.managedBean.selectedAssocBody.expDate}" disabled="#{backingBean.managedBean.upsCannotEdit}" /> 
+					<!-- #37771 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges 
+							and not empty backingBean.managedBean.latestAppl.smAssociationBodies[0].pmCertBody.certBodyId}"
+						oriValue="#{backingBean.managedBean.latestAppl.smAssociationBodies[0].expDate}" 
+						currValue="#{backingBean.managedBean.selectedAssocBody.expDate}" 
+						alertValue="#{backingBean.getDateFormat(backingBean.managedBean.latestAppl.smAssociationBodies[0].expDate)}"/>
+					<p:message
 						id="profBodyExpDateMsg" for="profBodyExpDate" showSummary="true"
 						showDetail="false" display="icon" disabled="#{backingBean.managedBean.upsCannotEdit}" /></td>
 			</tr>

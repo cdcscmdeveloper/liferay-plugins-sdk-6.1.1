@@ -16,26 +16,29 @@
 					value="#{pmReportsBackingBean.managedBean.serviceType}">
 					<f:selectItems
 						value="#{pmReportsBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" />
-					<!-- 34299 - START -reendorse -->
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-					<!-- 34299 - END -reendorse -->
+					<!-- 34299, 36719 - START -reendorse -->
+					<p:ajax event="change" partialSubmit="true" update="@form" />
+					<!-- 34299 36719 - END -reendorse -->
 				</p:selectOneMenu></td>
 		</tr>
 		<tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.financialorg.name']}" /></td>
-		<td><ac:lov id="pmFinOrgName" lovId="PM_ORG_PROFILE_FFC_REPORT"
+		<!-- 36719 - Start -->
+		<td><ac:lov id="pmFinOrgName" lovId="PM_FIN_SVC_REPORT"
 				size="50" update="@this,:form:regNoIt"
 				headerText="#{lbl['lbl.pm.header.general.finance']}" readonly="true"
-				value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName}"
-				saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" /></td>
+				value="#{pmReportsBackingBean.managedBean.selectedFinancialOrg.finOrgName}"
+				saveObject="pmReportsBackingBean.managedBean.selectedFinancialOrg" 
+				conditionField="#{pmReportsBackingBean.constructConditionFieldForFinSvc()}"/></td>		
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}" /></td>
 			<td><p:inputText id="regNoIt" maxlength="50" readonly="true"
 				  size="50"
-					value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.bizRegNumber}">
+					value="#{pmReportsBackingBean.managedBean.selectedFinancialOrg.bizRegNumber}">
 				</p:inputText></td>
 		</tr>
+		<!-- 36719 - End -->
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.profilestatus']}" /></td>
 			<td><p:selectOneMenu
@@ -44,7 +47,7 @@
 						itemValue="#{null}" />
 					<f:selectItems
 						value="#{pmReportsBackingBean.getStatusOptions()}" />
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+					<p:ajax event="change" partialSubmit="true" update="@form" /> 	<!-- 36719 -->
 				</p:selectOneMenu></td>
 		</tr>
 	</table>

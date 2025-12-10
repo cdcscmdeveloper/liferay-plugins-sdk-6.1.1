@@ -135,20 +135,20 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 				
 				//35503 Start - segment for audit trail required				
 				for (CmUnspsc auSegObj : reqDTO.getUnspscList()) {
+					auditDTO.getSegmentUnspscCode().add(auSegObj.getUnspscCode()); 
+					auditDTO.getSegmentUnspscCode().add(Integer.toString(AuditCMConst.SEG_CODE_ID)); 
+					auditDTO.getSegmentUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_SEG)); 
 					auditDTO.getSegmentUnspscTitle().add(auSegObj.getUnspscTitle()); 
 					auditDTO.getSegmentUnspscTitle().add(Integer.toString(AuditCMConst.SEG_LABEL_BM_ID)); 
 					auditDTO.getSegmentUnspscTitle().add(Integer.toString(AuditCMConst.FIELD_LABEL_BM_ID_SEG)); 
 					auditDTO.getSegmentUnspscTitleEng().add(auSegObj.getUnspscTitleEng()); 
 					auditDTO.getSegmentUnspscTitleEng().add(Integer.toString(AuditCMConst.SEG_LABEL_BI_ID)); 
 					auditDTO.getSegmentUnspscTitleEng().add(Integer.toString(AuditCMConst.FIELD_LABEL_BI_ID_SEG)); 
-					auditDTO.getSegmentUnspscCode().add(auSegObj.getUnspscCode()); 
-					auditDTO.getSegmentUnspscCode().add(Integer.toString(AuditCMConst.SEG_CODE_ID)); 
-					auditDTO.getSegmentUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_SEG)); 
 				}
 
+				auditDTO.getAuditSegmentList().add(auditDTO.getSegmentUnspscCode());
 				auditDTO.getAuditSegmentList().add(auditDTO.getSegmentUnspscTitle()); 
 				auditDTO.getAuditSegmentList().add(auditDTO.getSegmentUnspscTitleEng()); 
-				auditDTO.getAuditSegmentList().add(auditDTO.getSegmentUnspscCode()); 
 				this.getManagedBean().setAuditSegmentList(auditDTO.getAuditSegmentList()); 
 				this.getManagedBean().setAuditSegmentCode(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode()); 
 				//35503 End - segment for audit trail required
@@ -182,20 +182,20 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 				
 				//35503 Start - segment for audit trail required				
 				for (CmUnspsc auSegObj : reqDTO.getUnspscList()) { 
+					auditDTO.getSegmentUnspscCode().add(auSegObj.getUnspscCode()); 
+					auditDTO.getSegmentUnspscCode().add(Integer.toString(AuditCMConst.SEG_CODE_ID)); 
+					auditDTO.getSegmentUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_SEG));
 					auditDTO.getSegmentUnspscTitle().add(auSegObj.getUnspscTitle()); 
 					auditDTO.getSegmentUnspscTitle().add(Integer.toString(AuditCMConst.SEG_LABEL_BM_ID)); 
 					auditDTO.getSegmentUnspscTitle().add(Integer.toString(AuditCMConst.FIELD_LABEL_BM_ID_SEG)); 
 					auditDTO.getSegmentUnspscTitleEng().add(auSegObj.getUnspscTitleEng()); 
 					auditDTO.getSegmentUnspscTitleEng().add(Integer.toString(AuditCMConst.SEG_LABEL_BI_ID)); 
-					auditDTO.getSegmentUnspscTitleEng().add(Integer.toString(AuditCMConst.FIELD_LABEL_BI_ID_SEG)); 
-					auditDTO.getSegmentUnspscCode().add(auSegObj.getUnspscCode()); 
-					auditDTO.getSegmentUnspscCode().add(Integer.toString(AuditCMConst.SEG_CODE_ID)); 
-					auditDTO.getSegmentUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_SEG)); 
+					auditDTO.getSegmentUnspscTitleEng().add(Integer.toString(AuditCMConst.FIELD_LABEL_BI_ID_SEG));  
 				}
 
+				auditDTO.getAuditSegmentList().add(auditDTO.getSegmentUnspscCode()); 
 				auditDTO.getAuditSegmentList().add(auditDTO.getSegmentUnspscTitle()); 
 				auditDTO.getAuditSegmentList().add(auditDTO.getSegmentUnspscTitleEng()); 
-				auditDTO.getAuditSegmentList().add(auditDTO.getSegmentUnspscCode()); 
 				this.getManagedBean().setAuditSegmentList(auditDTO.getAuditSegmentList()); 
 				this.getManagedBean().setAuditSegmentCode(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode()); 
 				//35503 End - segment for audit trail required
@@ -236,20 +236,20 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 				
 				//35503 Start - family for audit trail required				
 				for (CmUnspsc auFamObj : reqDTO.getFamilyList()) { 
+					auditDTO.getFamilyUnspscCode().add(auFamObj.getUnspscCode()); 
+					auditDTO.getFamilyUnspscCode().add(Integer.toString(AuditCMConst.FAM_CODE_ID)); 
+					auditDTO.getFamilyUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_FAM)); 
 					auditDTO.getFamilyUnspscTitle().add(auFamObj.getUnspscTitle()); 
 					auditDTO.getFamilyUnspscTitle().add(Integer.toString(AuditCMConst.FAM_LABEL_BM_ID)); 
 					auditDTO.getFamilyUnspscTitle().add(Integer.toString(AuditCMConst.FIELD_LABEL_BM_ID_FAM)); 
 					auditDTO.getFamilyUnspscTitleEng().add(auFamObj.getUnspscTitleEng()); 
 					auditDTO.getFamilyUnspscTitleEng().add(Integer.toString(AuditCMConst.FAM_LABEL_BI_ID)); 
 					auditDTO.getFamilyUnspscTitleEng().add(Integer.toString(AuditCMConst.FIELD_LABEL_BI_ID_FAM)); 
-					auditDTO.getFamilyUnspscCode().add(auFamObj.getUnspscCode()); 
-					auditDTO.getFamilyUnspscCode().add(Integer.toString(AuditCMConst.FAM_CODE_ID)); 
-					auditDTO.getFamilyUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_FAM)); 
 				}
 
+				auditDTO.getAuditFamilyList().add(auditDTO.getFamilyUnspscCode()); 
 				auditDTO.getAuditFamilyList().add(auditDTO.getFamilyUnspscTitle()); 
 				auditDTO.getAuditFamilyList().add(auditDTO.getFamilyUnspscTitleEng()); 
-				auditDTO.getAuditFamilyList().add(auditDTO.getFamilyUnspscCode()); 
 				this.getManagedBean().setAuditFamilyList(auditDTO.getAuditFamilyList()); 
 				this.getManagedBean().setAuditFamilyCode(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode()); 
 				//35503 End - family for audit trail required
@@ -284,20 +284,20 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 				
 				//35503 Start - family for audit trail required				
 				for (CmUnspsc auFamObj : reqDTO.getFamilyList()) { 
+					auditDTO.getFamilyUnspscCode().add(auFamObj.getUnspscCode()); 
+					auditDTO.getFamilyUnspscCode().add(Integer.toString(AuditCMConst.FAM_CODE_ID)); 
+					auditDTO.getFamilyUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_FAM));
 					auditDTO.getFamilyUnspscTitle().add(auFamObj.getUnspscTitle()); 
 					auditDTO.getFamilyUnspscTitle().add(Integer.toString(AuditCMConst.FAM_LABEL_BM_ID)); 
 					auditDTO.getFamilyUnspscTitle().add(Integer.toString(AuditCMConst.FIELD_LABEL_BM_ID_FAM)); 
 					auditDTO.getFamilyUnspscTitleEng().add(auFamObj.getUnspscTitleEng()); 
 					auditDTO.getFamilyUnspscTitleEng().add(Integer.toString(AuditCMConst.FAM_LABEL_BI_ID)); 
 					auditDTO.getFamilyUnspscTitleEng().add(Integer.toString(AuditCMConst.FIELD_LABEL_BI_ID_FAM)); 
-					auditDTO.getFamilyUnspscCode().add(auFamObj.getUnspscCode()); 
-					auditDTO.getFamilyUnspscCode().add(Integer.toString(AuditCMConst.FAM_CODE_ID)); 
-					auditDTO.getFamilyUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_FAM)); 
 				}
 
+				auditDTO.getAuditFamilyList().add(auditDTO.getFamilyUnspscCode()); 
 				auditDTO.getAuditFamilyList().add(auditDTO.getFamilyUnspscTitle()); 
 				auditDTO.getAuditFamilyList().add(auditDTO.getFamilyUnspscTitleEng()); 
-				auditDTO.getAuditFamilyList().add(auditDTO.getFamilyUnspscCode()); 
 				this.getManagedBean().setAuditFamilyList(auditDTO.getAuditFamilyList()); 
 				this.getManagedBean().setAuditFamilyCode(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode()); 
 				//35503 End - family for audit trail required
@@ -337,20 +337,20 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 				
 				//35503 Start - class for audit trail required				
 				for (CmUnspsc auClsObj : reqDTO.getClassList()) { 
+					auditDTO.getClassUnspscCode().add(auClsObj.getUnspscCode()); 
+					auditDTO.getClassUnspscCode().add(Integer.toString(AuditCMConst.CLS_CODE_ID)); 
+					auditDTO.getClassUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_CLS));
 					auditDTO.getClassUnspscTitle().add(auClsObj.getUnspscTitle()); 
 					auditDTO.getClassUnspscTitle().add(Integer.toString(AuditCMConst.CLS_LABEL_BM_ID)); 
 					auditDTO.getClassUnspscTitle().add(Integer.toString(AuditCMConst.FIELD_LABEL_BM_ID_CLS)); 
 					auditDTO.getClassUnspscTitleEng().add(auClsObj.getUnspscTitleEng()); 
 					auditDTO.getClassUnspscTitleEng().add(Integer.toString(AuditCMConst.CLS_LABEL_BI_ID)); 
 					auditDTO.getClassUnspscTitleEng().add(Integer.toString(AuditCMConst.FIELD_LABEL_BI_ID_CLS)); 
-					auditDTO.getClassUnspscCode().add(auClsObj.getUnspscCode()); 
-					auditDTO.getClassUnspscCode().add(Integer.toString(AuditCMConst.CLS_CODE_ID)); 
-					auditDTO.getClassUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_CLS)); 
 				}
 
+				auditDTO.getAuditClassList().add(auditDTO.getClassUnspscCode()); 
 				auditDTO.getAuditClassList().add(auditDTO.getClassUnspscTitle()); 
 				auditDTO.getAuditClassList().add(auditDTO.getClassUnspscTitleEng()); 
-				auditDTO.getAuditClassList().add(auditDTO.getClassUnspscCode()); 
 				this.getManagedBean().setAuditClassList(auditDTO.getAuditClassList()); 
 				this.getManagedBean().setAuditClassCode(this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode()); 
 				//35503 End - class for audit trail required
@@ -387,20 +387,20 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 				
 				//35503 Start - class for audit trail required				
 				for (CmUnspsc auClsObj : reqDTO.getClassList()) { 
+					auditDTO.getClassUnspscCode().add(auClsObj.getUnspscCode()); 
+					auditDTO.getClassUnspscCode().add(Integer.toString(AuditCMConst.CLS_CODE_ID)); 
+					auditDTO.getClassUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_CLS)); 
 					auditDTO.getClassUnspscTitle().add(auClsObj.getUnspscTitle()); 
 					auditDTO.getClassUnspscTitle().add(Integer.toString(AuditCMConst.CLS_LABEL_BM_ID)); 
 					auditDTO.getClassUnspscTitle().add(Integer.toString(AuditCMConst.FIELD_LABEL_BM_ID_CLS)); 
 					auditDTO.getClassUnspscTitleEng().add(auClsObj.getUnspscTitleEng()); 
 					auditDTO.getClassUnspscTitleEng().add(Integer.toString(AuditCMConst.CLS_LABEL_BI_ID)); 
 					auditDTO.getClassUnspscTitleEng().add(Integer.toString(AuditCMConst.FIELD_LABEL_BI_ID_CLS)); 
-					auditDTO.getClassUnspscCode().add(auClsObj.getUnspscCode()); 
-					auditDTO.getClassUnspscCode().add(Integer.toString(AuditCMConst.CLS_CODE_ID)); 
-					auditDTO.getClassUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_CLS)); 
 				}
 
+				auditDTO.getAuditClassList().add(auditDTO.getClassUnspscCode()); 
 				auditDTO.getAuditClassList().add(auditDTO.getClassUnspscTitle()); 
 				auditDTO.getAuditClassList().add(auditDTO.getClassUnspscTitleEng()); 
-				auditDTO.getAuditClassList().add(auditDTO.getClassUnspscCode()); 
 				this.getManagedBean().setAuditClassList(auditDTO.getAuditClassList()); 
 				this.getManagedBean().setAuditClassCode(this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode()); 
 				//35503 End - class for audit trail required
@@ -437,20 +437,20 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
      			
      			//35503 Start - commodity for audit trail required				
 				for (CmUnspsc auComObj : reqDTO.getCommodityList()) {
+					auditDTO.getCommodityUnspscCode().add(auComObj.getUnspscCode());
+					auditDTO.getCommodityUnspscCode().add(Integer.toString(AuditCMConst.COM_CODE_ID));
+					auditDTO.getCommodityUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_COM));
 					auditDTO.getCommodityUnspscTitle().add(auComObj.getUnspscTitle());
 					auditDTO.getCommodityUnspscTitle().add(Integer.toString(AuditCMConst.COM_LABEL_BM_ID));
 					auditDTO.getCommodityUnspscTitle().add(Integer.toString(AuditCMConst.FIELD_LABEL_BM_ID_COM));
 					auditDTO.getCommodityUnspscTitleEng().add(auComObj.getUnspscTitleEng());
 					auditDTO.getCommodityUnspscTitleEng().add(Integer.toString(AuditCMConst.COM_LABEL_BI_ID));
 					auditDTO.getCommodityUnspscTitleEng().add(Integer.toString(AuditCMConst.FIELD_LABEL_BI_ID_COM));
-					auditDTO.getCommodityUnspscCode().add(auComObj.getUnspscCode());
-					auditDTO.getCommodityUnspscCode().add(Integer.toString(AuditCMConst.COM_CODE_ID));
-					auditDTO.getCommodityUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_COM));
 				}
 
+				auditDTO.getAuditCommodityList().add(auditDTO.getCommodityUnspscCode());
 				auditDTO.getAuditCommodityList().add(auditDTO.getCommodityUnspscTitle());
 				auditDTO.getAuditCommodityList().add(auditDTO.getCommodityUnspscTitleEng());
-				auditDTO.getAuditCommodityList().add(auditDTO.getCommodityUnspscCode());
 				this.getManagedBean().setAuditCommodityList(auditDTO.getAuditCommodityList());
 				this.getManagedBean().setAuditCommodityCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
 				//35503 End - commodity for audit trail required
@@ -486,20 +486,20 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 				
 				//35503 Start - commodity for audit trail required				
 				for (CmUnspsc auComObj : reqDTO.getCommodityList()) {
+					auditDTO.getCommodityUnspscCode().add(auComObj.getUnspscCode());
+					auditDTO.getCommodityUnspscCode().add(Integer.toString(AuditCMConst.COM_CODE_ID));
+					auditDTO.getCommodityUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_COM));
 					auditDTO.getCommodityUnspscTitle().add(auComObj.getUnspscTitle());
 					auditDTO.getCommodityUnspscTitle().add(Integer.toString(AuditCMConst.COM_LABEL_BM_ID));
 					auditDTO.getCommodityUnspscTitle().add(Integer.toString(AuditCMConst.FIELD_LABEL_BM_ID_COM));
 					auditDTO.getCommodityUnspscTitleEng().add(auComObj.getUnspscTitleEng());
 					auditDTO.getCommodityUnspscTitleEng().add(Integer.toString(AuditCMConst.COM_LABEL_BI_ID));
 					auditDTO.getCommodityUnspscTitleEng().add(Integer.toString(AuditCMConst.FIELD_LABEL_BI_ID_COM));
-					auditDTO.getCommodityUnspscCode().add(auComObj.getUnspscCode());
-					auditDTO.getCommodityUnspscCode().add(Integer.toString(AuditCMConst.COM_CODE_ID));
-					auditDTO.getCommodityUnspscCode().add(Integer.toString(AuditCMConst.FIELD_LABEL_CODE_ID_COM));
 				}
 
+				auditDTO.getAuditCommodityList().add(auditDTO.getCommodityUnspscCode());
 				auditDTO.getAuditCommodityList().add(auditDTO.getCommodityUnspscTitle());
 				auditDTO.getAuditCommodityList().add(auditDTO.getCommodityUnspscTitleEng());
-				auditDTO.getAuditCommodityList().add(auditDTO.getCommodityUnspscCode());
 				this.getManagedBean().setAuditCommodityList(auditDTO.getAuditCommodityList());
 				this.getManagedBean().setAuditCommodityCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
 				//35503 End - commodity for audit trail required

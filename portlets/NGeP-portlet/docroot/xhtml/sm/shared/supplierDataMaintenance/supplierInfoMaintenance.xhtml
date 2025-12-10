@@ -83,7 +83,7 @@
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{supplierDataMaintenanceBackingBean.onViewDisciplinaryAction}" 
 				partialSubmit="true" update=":form">
-					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></u>
+					<strong><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></strong>
 			</p:commandLink><p:spacer width="2"/>
 			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
 			<p:spacer height="2"/>
@@ -209,17 +209,19 @@
 						value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" />
 					<p:outputLabel value="*" styleClass="mandatory" 
 					rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+				<!-- #38653 : Disciplinary Action - Start -->
 				<td><p:calendar showOn="button" navigator="true"
 						display="inline" readonlyInput="true"
 						label="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" id="startDate"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}"  
 						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
-						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}">
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction or supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.disciplinaryActionId != null}">
 						<p:ajax event="dateSelect" update="endDate" process="@this" partialSubmit="true"/>
 					</p:calendar>
 					<p:message id="startDateMsg" for="startDate"
 							showSummary="true" showDetail="false" display="icon" /></td>
+				<!-- #38653 : Disciplinary Action - End -->
 				<td></td>
 				<td></td>
 			</tr>
@@ -268,5 +270,6 @@
 		</table>
 	</p:panel>
 	<!-- 26238 onViewDisciplinaryAction -->
-	<ac:disciplinaryActionHistory voList="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVOs}" /> 
+	<ac:disciplinaryActionHistory voList="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVOs}" 
+		showCatCode="true"/> <!-- #38283 -->
 </ui:composition>

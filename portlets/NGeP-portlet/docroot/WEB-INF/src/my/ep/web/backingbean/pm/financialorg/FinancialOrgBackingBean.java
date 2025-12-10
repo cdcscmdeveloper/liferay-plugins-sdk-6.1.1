@@ -38,6 +38,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.exception.EpException;
@@ -84,7 +86,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-
+import my.ep.biz.service.pm.common.address.IAddressSO;
+// 35509 START
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
+import my.ep.constant.pm.AuditConst;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMFinancialOrgBackingBean;
+//35509 END
 /**
  * Backing Bean for Financial Org
  * 
@@ -147,6 +155,29 @@ public class FinancialOrgBackingBean extends
 	public void preRenderFinOrgView() throws Exception {
 		log.info("preRenderFinOrgView");
 		this.getManagedBean().setFacCompanyInformation(true);
+
+		/********************************35509 - shaqimi start***************************/
+		if(getManagedBean().getOldPmAddress() == null){
+			getManagedBean().setOldPmAddress(new PmAddress());
+		}
+		
+		if(getManagedBean().getOldContactPerson() == null){
+			getManagedBean().setOldContactPerson(new PmContact());
+		}
+		
+		if(getManagedBean().getOldBankServicesList() == null){
+			getManagedBean().setOldBankServicesList(new ArrayList<PmParameterDesc>());
+		}
+		
+		if(getManagedBean().getOldFinancialAccList() == null){
+			getManagedBean().setOldFinancialAccList(new ArrayList<PmFinancialAcc>());
+		}
+		
+		if(getManagedBean().getNewFinancialAccList() == null){
+			getManagedBean().setNewFinancialAccList(new ArrayList<PmFinancialAcc>());
+		}
+		/********************************35509 - shaqimi end  ***************************/
+		
 		isRoleFactoringUser();	
 		IFinancialOrgSO finanOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
 		List<Object[]> resultBean  = finanOrgSO.findFactoringOrgId(getFacesScopesGen().getUserSessionBean().getLoginId());			
@@ -242,6 +273,29 @@ public class FinancialOrgBackingBean extends
 	 */
 	public String redirectToFinOrg(Long id) throws Exception {
 		log.info("redirectToFinOrg");
+
+		/********************************35509 - shaqimi start***************************/
+		if(getManagedBean().getOldPmAddress() == null){
+			getManagedBean().setOldPmAddress(new PmAddress());
+		}
+		
+		if(getManagedBean().getOldContactPerson() == null){
+			getManagedBean().setOldContactPerson(new PmContact());
+		}
+		
+		if(getManagedBean().getOldBankServicesList() == null){
+			getManagedBean().setOldBankServicesList(new ArrayList<PmParameterDesc>());
+		}
+		
+		if(getManagedBean().getOldFinancialAccList() == null){
+			getManagedBean().setOldFinancialAccList(new ArrayList<PmFinancialAcc>());
+		}
+		
+		if(getManagedBean().getNewFinancialAccList() == null){
+			getManagedBean().setNewFinancialAccList(new ArrayList<PmFinancialAcc>());
+		}
+		/********************************35509 - shaqimi end  ***************************/
+		
 		resetBeans();
 		retrieveServiceTypeMap();
 
@@ -337,6 +391,11 @@ public class FinancialOrgBackingBean extends
 	public void maintainFinancialOrg(Long id) {
 		log.info("maintainFinancialOrg");
 		getManagedBean().setServiceTypes(new ArrayList<String>());
+
+		/***************AUDIT 35509 - shaqimi start***********************/
+		this.getManagedBean().setPmAddressTypeId(null);
+		/***************AUDIT 35509 - shaqimi end  ***********************/
+		
 		this.getManagedBean().setFinancialOrg(retrievePmFinancialOrg(id));	
 		updateAddressAndContactPersonMandatory();
 		for (PmFinancialSvc financialSvc : this.getManagedBean().getFinancialOrg().getPmFinancialSvcs()) {
@@ -388,7 +447,7 @@ public class FinancialOrgBackingBean extends
 		}
 		}
 		
-
+		
 		
 		// financial org Address
 		List<PmAddressType> finAddressTypes = this.getManagedBean().getFinancialOrg().getPmAddressTypes();
@@ -407,6 +466,10 @@ public class FinancialOrgBackingBean extends
 					// financial contact
 					if (pmAddressType.getPmContacts() != null && !pmAddressType.getPmContacts().isEmpty()) {
 						this.getManagedBean().setContactPerson(pmAddressType.getPmContacts().get(0));
+
+						/***************AUDIT 35509 - shaqimi start***********************/
+						this.getManagedBean().setPmAddressTypeId(pmAddressType.getAddressTypeId());
+						/***************AUDIT 35509 - shaqimi end  ***********************/
 						contactExist= true;
 					}else if(!contactExist){
 						log.info("Contact not Exist");
@@ -574,6 +637,11 @@ public class FinancialOrgBackingBean extends
 	private void retrieveServiceTypeMap(){
 		log.info("retrieveServiceTypeMap");
 		List<PmParameterDesc> parameterDescs = retrieveServiceTypeList();
+		/****************AUDIT 35509 - shaqimi start******************/
+		if(getManagedBean().getOldBankServicesList().size() == 0){
+			getManagedBean().setOldBankServicesList(retrieveServiceTypeList());
+		}
+		/****************AUDIT 35509 - shaqimi start******************/
 		serviceTypeMapper = new HashMap<Long,Object>();
 		for(PmParameterDesc pmDesc: parameterDescs){
 			serviceTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
@@ -1048,16 +1116,46 @@ public class FinancialOrgBackingBean extends
 			
 			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IFinancialOrgSO.class);
+			
+			/************ AUDIT #28895-35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMFinancialOrgBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			
+			AddressReqDTO offAddressReqDTO = new AddressReqDTO();
+			AddressResDTO offAddressResDTO = new AddressResDTO();
+			
+			if(this.getManagedBean().getPmAddress().getAddressId() != null){
+				offAddressReqDTO.setAddressId(this.getManagedBean().getPmAddress().getAddressId());
+				offAddressResDTO = addressSO.retrieveAddressDtlById(offAddressReqDTO);
+			}
+			
+			if(this.getManagedBean().getPmAddressTypeId() != null){
+				AddressReqDTO addressTypeReqDTO = new AddressReqDTO();
+				addressTypeReqDTO.setAddressTypeId(this.getManagedBean().getPmAddressTypeId());
+				
+				AddressResDTO addressTypeResDTO = addressSO.retrieveAddressTypeByAddressTypeId(addressTypeReqDTO);
+				if(addressTypeResDTO.getPmAddressType() != null && addressTypeResDTO.getPmAddressType().getPmContacts() != null){
+					getManagedBean().setOldContactPerson(addressTypeResDTO.getPmAddressType().getPmContacts().get(0));
+				}
+			}
+			
+			getFinancialAccs();
+
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_FINANCIALORGANISATION) && financialOrg.getFinancialOrgId() != null) {
+				reqDTO.setFinancialOrgId(financialOrg.getFinancialOrgId());
+				PmFinancialOrg oldFinancialOrg = financialOrgSO.retrieveFinancialOrgDtlById(reqDTO).getPmFinancialOrg();
+				
+				setOldFinancialSvcs(oldFinancialOrg, offAddressResDTO);
+			}
+			/************ AUDIT #28895-35509 *************/
+			
 			FinancialOrgResDTO resDTO = financialOrgSO.saveOrUpdateFinancialOrgDetails(reqDTO);
 	
 			if (resDTO.isSuccessful()) {
 				result = resDTO.isSuccessful();
-//				FacesContext.getCurrentInstance().addMessage(
-//						null,
-//						new FacesMessage(FacesMessage.SEVERITY_INFO,
-//								"Financial Org successfully.", "Org Name : "
-//										+ this.getManagedBean().getFinancialOrg()
-//												.getFinOrgName()));
 				
 				String message = "";
 				if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
@@ -1080,6 +1178,23 @@ public class FinancialOrgBackingBean extends
 						    message
 				    		));
 	
+				/************ AUDIT #28895-35509 *************/
+				getManagedBean().setSavedFinancialOrg(resDTO.getPmFinancialOrg());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_FINANCIALORGANISATION)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_FINANCIAL_ORG);
+				}
+				
+				getManagedBean().setOldContactPerson(new PmContact());
+				getManagedBean().setOldPmAddress(new PmAddress());	
+				getManagedBean().setOldBankServicesList(new ArrayList<PmParameterDesc>());
+				getManagedBean().setOldFinancialAccList(new ArrayList<PmFinancialAcc>());
+				getManagedBean().setNewFinancialAccList(new ArrayList<PmFinancialAcc>());
+				getManagedBean().setPmAddressTypeId(null);
+
+				resetBeans();
+				retrieveServiceTypeMap();
+				maintainFinancialOrg(resDTO.getPmFinancialOrg().getFinancialOrgId());
+				/************ AUDIT #28895-35509 *************/
 			}
 		}
 		catch (Exception e) {
@@ -1090,6 +1205,44 @@ public class FinancialOrgBackingBean extends
 		}
 		return redirectUrl;
 	}
+	
+	/********************************AUDIT 35509 - shaqimi start - backlog SIT #18************************/
+	//sonarlint. to add new financial accs for audit
+	private void getFinancialAccs(){
+		for(PmFinancialAcc financialAcc : getManagedBean().getFinancialOrg().getPmFinancialAccs()){
+			if(financialAcc.getFinancialAccId() == null){
+				for(PmFinancialOrg finOrg: getPaymentBankList()){
+					if(finOrg.getFinancialOrgId().equals(financialAcc.getPmPaymentBankOrg().getFinancialOrgId())){
+						financialAcc.getPmPaymentBankOrg().setFinOrgName(finOrg.getFinOrgName());
+						getManagedBean().getNewFinancialAccList().add(financialAcc);
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	//sonarlint. to set old financial svcs to use for checking in audit
+	private void setOldFinancialSvcs(PmFinancialOrg oldFinancialOrg, AddressResDTO offAddressResDTO){
+		//get old data
+		getManagedBean().setOldFinancialOrg(oldFinancialOrg != null ? oldFinancialOrg : 
+			this.getManagedBean().getFinancialOrg());
+		
+		for (PmFinancialSvc financialSvc : this.getManagedBean().getOldFinancialOrg().getPmFinancialSvcs()) {
+			for(PmParameterDesc desc : getManagedBean().getOldBankServicesList()){
+				PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
+				if(desc.getPmParameter().getParameterId().equals(pmParameter.getParameterId()) 
+						&& DbValueConst.RECORD_STATUS_ACTIVE == financialSvc.getRecordStatusFlg()){
+					desc.setSelected(true);
+					break;
+				} 
+		 	}
+		}
+		
+		getManagedBean().setOldPmAddress(offAddressResDTO.getPmAddress() == null ?
+				getManagedBean().getPmAddress() : offAddressResDTO.getPmAddress());
+	}
+	/********************************AUDIT 35509 - shaqimi end - backlog SIT #18  ************************/
 	
 	/**
 	 * save pmOrgProfile if financial org contains factoring org
@@ -1517,7 +1670,6 @@ public class FinancialOrgBackingBean extends
 			finAcc.setEffDate(new Date());
 			finAcc.setPmPaymentBankOrg(new PmFinancialOrg());
 			pmFinancialAccList.add(finAcc);
-			this.getManagedBean().getFinancialOrg().setPmFinancialAccs(pmFinancialAccList);
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}

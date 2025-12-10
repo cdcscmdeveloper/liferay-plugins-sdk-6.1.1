@@ -19,11 +19,20 @@
 							immediate="true"
 							action="#{evaluationBackingBean.technicalBackaction}" /> <ui:fragment
 							rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}">
-							<p:commandButton value="#{lbl['lbl.btn.save']}"
+							<ui:remove>#29187 Start Moved update to backingbean for note #582 Vinod
+							Added hidden button to update data note #721
+							</ui:remove>
+							<p:commandButton value="#{lbl['lbl.btn.save']}" 
+								style="display:none;" id="hidSaveButtonId" binding="#{hidSaveButton}"
 								disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
-								style="float:right;" update="@all" onstart="blockWidget.show();"
+								update="@all" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								action="#{evaluationBackingBean.checkSampleCompliance}" />
+								action="#{evaluationBackingBean.saveProposalScoreDtls}" />
+							<p:commandButton value="#{lbl['lbl.btn.save']}"
+								style="float:right;"
+								disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
+								action="#{evaluationBackingBean.validateSaveSampleForMandatorySpec(hidSaveButton.clientId)}" />
+							<ui:remove>#29187 End Vinod</ui:remove>
 						</ui:fragment></td>
 				</tr>
 			</table>
@@ -54,10 +63,12 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="blockWidget.show();"
 					oncomplete="complianceSampleConfirmPopUp.hide(); blockWidget.hide();"
-					partialSubmit="true" process="@form" update="@form" 
-					action="#{evaluationBackingBean.saveProposalScoreDtls}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="complianceSampleConfirmPopUp.hide();" 
-					type="button" partialSubmit="true"  process="@this"/>
+					partialSubmit="true" process="@form" 
+					action="#{evaluationBackingBean.validateSaveSampleForMandatorySpec(hidSaveButton.clientId)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="blockWidget.show();"
+					oncomplete="complianceSampleConfirmPopUp.hide(); blockWidget.hide();" 
+					action="#{evaluationBackingBean.resetComplianceConfirmationFlag}"
+					partialSubmit="true" process="@this"/>
 			</div>
 	</p:dialog>
 	<ui:remove>#29187 End Vinod</ui:remove>

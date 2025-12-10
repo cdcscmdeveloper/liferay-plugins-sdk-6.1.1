@@ -94,6 +94,10 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private String newIdentifiction;
 	// #28895_35501 End
 	
+	//#36718 - START
+	private SmPersonnelAddress latestMailAddr;
+	//#36718 - END
+	
 	public ForceReplaceSuppAdminManagedBean() {
 		
 	}
@@ -545,4 +549,15 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 		this.newIdentifiction = newIdentifiction;
 	}
 	// #28895_35501 End
+
+	//#36718 - START
+	public SmPersonnelAddress getLatestMailAddr() {
+		return latestMailAddr;
+	}
+
+	public void setLatestMailAddr(SmPersonnelAddress latestMailAddr) {
+		this.latestMailAddr = latestMailAddr;
+	}
+	//#36718 - END
+	
 }

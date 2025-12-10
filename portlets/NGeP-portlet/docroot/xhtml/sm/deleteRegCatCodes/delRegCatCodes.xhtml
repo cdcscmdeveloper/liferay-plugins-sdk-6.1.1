@@ -50,17 +50,18 @@
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" />
 					</p:row>
 				</p:columnGroup>
-				<p:column selectionMode="multiple" rowspan="2" width="5%" />
-				<p:column>
+				<!-- #37605 -->
+				<p:column selectionMode="multiple" rowspan="2" width="5%" style="vertical-align: top;"/>
+				<p:column style="vertical-align: top;">
 					<h:outputText value="#{index+1}" />
 				</p:column>
-				<p:column>
+				<p:column style="vertical-align: top;">
 					<h:outputText value="#{catBean.approvedDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
+				<p:column style="vertical-align: top;">
 					<h:outputText
 						value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
 					<br />
@@ -71,17 +72,17 @@
 						value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 				</p:column>
 
-				<p:column>
+				<p:column style="width :auto;white-space : normal;vertical-align: top;">
 					<h:outputText value="#{catBean.otherDesc}" />
 				</p:column>
 
-				<p:column>
+				<p:column style="vertical-align: top;">
 					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 						rendered="#{!catBean.specialCategory}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 						rendered="#{catBean.specialCategory}" />
 				</p:column>
-				<p:column>
+				<p:column style="vertical-align: top;">
 					<p:inputTextarea cols="30" rendered="#{catBean.selected}"
 						id="delRmrks" value="#{catBean.remarks}" 
 						onkeyup="limitTextArea(this,502);" onkeydown="limitTextArea(this,502);">

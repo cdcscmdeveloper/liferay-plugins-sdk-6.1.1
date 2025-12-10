@@ -14,6 +14,7 @@
 		<cc:attribute name="facilityNameLabel" required="true" />
 		<cc:attribute name="facilityAddressLabel" required="true" />
 		<cc:attribute name="backingBean" required="true" />
+		<cc:attribute name="isBusinessOffice" default="false" />	<!-- #28775 -->
 	</cc:interface>
 
 	<cc:implementation>
@@ -137,7 +138,7 @@
 					</p:panel><br /></ui:remove><!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
 
 					<p:panel header="#{lbl['lbl.sm.facility.information']}"
-						rendered="#{tableVar.l3.facilityType ne 'B'}" toggleable="true">
+						rendered="#{!cc.attrs.isBusinessOffice}" toggleable="true"> <!-- #28775 -->
 
 						<p:dataTable var="facVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

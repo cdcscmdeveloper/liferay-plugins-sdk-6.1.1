@@ -19,7 +19,7 @@
 			<td width="25%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.officeloc.prvt.prchs.price')</td>
 			<td width="25%">#if($review) $!officePrice #end</td>
 		#elseif($officeOwnership == "R")
-			<td class="txtBold" width="25%">$smVmUtil.getDescByLabel('lbl.sm.officeloc.rent.mnthly.rate')</td>
+			<td class="txtBold" width="25%">$smVmUtil.getDescByLabel('lbl.sm.officelocation.rent.mnthly.rate')</td>
 			<td width="25%">#if($review) $!officeRentalRate #end</td>
 		#end
 	</tr>
@@ -113,8 +113,36 @@
 #elseif($templateCode == "L" || $templateCode == "B")
 	<br /><br />
     #parse("templates/sm/sitevisit/shared/premiseLocation.vm")
+    
+#elseif($templateCode == "PC")
+<br /><br />
+#set($printFacility = $svTask.smSvTemplate.smSvFacility)
+<table>
+	<tr>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.ownership')</td>
+		<td>
+			#if($!printFacility)
+				#if($printFacility.ownershipType == "O") $smVmUtil.getDescByLabel('lbl.sm.facility.own') #end
+				#if($printFacility.ownershipType == "R") $smVmUtil.getDescByLabel('lbl.sm.facility.rent') #end
+			#end
+		</td>
+	</tr>
+	<tr>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.printing.premiseloc.docs')</td>
+		<td>
+			#if($printFacility.document) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end
+		</td>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.printing.premiseloc.aggrmnt.lttr')</td>
+		<td>
+			#if($printFacility.agreementLetter) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end
+		</td>
+	</tr>
+</table>
+<br /><br />
 #end
-
+<div style="page-break-before: always;"></div>
 <table>
 	<tr><td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.comments')</u></td></tr>
 	#if($review)
@@ -131,7 +159,7 @@
 	#if($review)
 		#if($svTask.recommended)
 			<tr><td>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.approve')</td></tr>
-		#else
+		#elseif($svTask.recommended != $null)
 			<tr><td>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.reject')</td></tr>
 		#end
 		<br /><br /><br />

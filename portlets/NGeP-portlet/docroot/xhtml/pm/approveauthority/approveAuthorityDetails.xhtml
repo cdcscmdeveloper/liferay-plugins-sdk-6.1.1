@@ -10,9 +10,10 @@
 	<p:panel id="pApprAuthorityResult" header="#{ApproveAuthorityBackingBean.managedBean.comName}" style="width=800px; height:50;" toggleable="true">
 		<p:spacer height="10"></p:spacer>
 		<div class="ppRightBtn" align="right">
-			<p:commandButton id="btnSave" value="#{lbl['lbl.pm.approveAuthority.save']}"
-				update="listAuthTbl"
-				action="#{ApproveAuthorityBackingBean.saveNewCommittee}" />
+			<!-- 34445 start -->
+			<p:commandButton value="#{lbl['lbl.pm.approveAuthority.save']}" id="btnSave"
+				oncomplete="saveAuthInfoDlg.show();"/>
+			<!-- 34445 end -->
 		</div>
 		<h:panelGroup>		
 			<p:dataTable id="listAuthTbl" rows="10"
@@ -70,12 +71,15 @@
 		</div>
 	</p:panel>
 	
+	<!-- 34445 start -->
+	<p:blockUI block="updateCommitteeDialog" widgetVar="updateCommitteePopupBlockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	<!-- 34445 end -->
+	
 	<p:dialog id="updateCommitteeDialog" header="#{lbl['lbl.pm.approveAuthority.update']}" modal="true" 
-	widgetVar="updateCommitteeDialog" dynamic="true" width="800px" position="339,300">
+		widgetVar="updateCommitteeDialog" dynamic="true" width="800px" position="339,300">
 		<p:ajax event="close" update="@this" listener="#{ApproveAuthorityBackingBean.closePopup()}" />
-		<p:blockUI block="updateCommitteeDialog" widgetVar="updateCommitteePopupBlockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>
 		<p:panel id="updateCommitteePanel" toggleable="true">
 			<h:panelGroup id="committeePopupPanel"> 	
 		 	<table>
@@ -119,14 +123,14 @@
 		 		<tr>
 		 			<td colspan="2" style="text-align: right;">
 			 			<div class="ppRightBtn">
-							<p:commandButton id="comSaveButton" 
-								value="#{lbl['lbl.pm.approveAuthority.save']}" 
-								action="#{ApproveAuthorityBackingBean.updateAuthCommittee()}"
-								update="listAuthTbl"
-								process="updateCommitteePanel"
-								onclick="updateCommitteePopupBlockWidget.show()" oncomplete="updateCommitteePopupBlockWidget.hide()">
-								<f:param name="disableValidation" value="true" />
-							</p:commandButton>
+			 				<!-- 34445 start -->
+							<p:commandButton id="comSaveButton"
+				                 value="#{lbl['lbl.pm.approveAuthority.save']}"
+				                 update="@([id$=updateCommitteePanel])"
+				                 process="@form"
+				                 oncomplete="if (!args.validationFailed) saveAprvAuthInfoDlg.show();" />
+							<!-- 34445 end -->
+							
 							<p:commandButton id="comCancel"
 								value="#{lbl['lbl.btn.cancel']}" process="@this"
 								action="#{ApproveAuthorityBackingBean.closePopup()}"
@@ -138,4 +142,20 @@
 	 	</h:panelGroup>
 	 </p:panel>
 	</p:dialog>
+
+	<!-- 34445 start -->
+	<ac:confirmationPopupSM id="saveAuthInfoDlg" widget="saveAuthInfoDlg"
+		okAction="ApproveAuthorityBackingBean.saveNewCommittee"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.pm.btn.save.msg']}" 
+		update="@([id$=listAuthTbl])"/>
+				
+	<ac:confirmationPopupSM id="saveAprvAuthInfoDlg" widget="saveAprvAuthInfoDlg"
+		okAction="ApproveAuthorityBackingBean.updateAuthCommittee"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.pm.btn.save.msg']}" 
+		update="@([id$=listAuthTbl])"/>
+ 	<!-- 34445 end -->
 </ui:composition>

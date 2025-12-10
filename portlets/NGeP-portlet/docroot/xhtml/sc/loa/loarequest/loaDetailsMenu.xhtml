@@ -5,7 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+<!-- #25726/25725 - Check and display Italic value -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
 	<ui:include src="../shared/loaInstructionHeader.xhtml"/>
 
 	<ac:lovPopup />
@@ -17,8 +22,6 @@
 	<ui:param name="isPeriodic" value="#{(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen) or
 	(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled)}"></ui:param>
 	<ui:param name="isOneOff" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff}"></ui:param>
-	<ui:param name="isNonPeriodic" value="#{(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen) or
-	(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"></ui:param>
 	<ui:param name="isPK7" value="#{lOADetailBackingBean.isPK7(lOADetailBackingBean.managedBean.scLoa)}"></ui:param><!-- #25725 note 146 -->
 	
 	<c:if test="#{lOADetailBackingBean.managedBean.above500K}">
@@ -35,12 +38,18 @@
 	<!-- #25725 note 146 end -->
 	<!-- #25725 end -->	
 	
+	<!-- new #25726 -->
+	<ui:param name="isContractPeriodAbove4" value="#{lOADetailBackingBean.isContractPeriodAbove4()}"/>
+	
 	<!-- #25726 start -->
 	<ui:param name="StatusLOASubmission" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
 	<ui:param name="StatusLOAApproval" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_APPROVAL}"></ui:param>
 	<ui:param name="StatusLOARevision" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION}"></ui:param>
 	<ui:param name="StatusLOARevisionApproval" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION_APPROVAL}"></ui:param>
 	<!-- #25726 end -->
+	<ui:remove>27868 - start</ui:remove>
+	<ui:param name="isProcurementTypeSpecialItem" value="#{lOADetailBackingBean.managedBean.scLoa.procurementType.parameterCode eq ParameterConst.procTypeSpecialItem}"></ui:param>
+	<ui:remove>27868 - end</ui:remove>
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -75,22 +84,17 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
-			<!-- Bug #30600 , #31033, #33073, #33354 Start -->
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
-			</td>
-			<td>
-				<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-					rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier)}" 
-					process="@this" partialSubmit="true" update=":form">
-				<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-				</p:commandLink><p:spacer width="2"/>
-				<h:outputText rendered="#{!lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
-					value="#{lbl['lbl.cm.dialog.cofirm.no']}" /><p:spacer width="2"/>
-				<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
-			</td>
-		    <!-- Bug #30600 , #31033, #33073, #33354 End -->
+			<ui:remove>26247 - start</ui:remove>
+			<ui:param name="supplier" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"/>
+			<c:if test="#{not empty supplier.scQt}">
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
+				</td>
+				<td>
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" showTooltip="true" />
+				</td>
+			</c:if>
+			<ui:remove>26247 - end</ui:remove>
 		</tr>
 
 		<tr>
@@ -270,25 +274,49 @@
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementMode)}"
 						size="35" disabled="true" />
 				</td>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.qttentype']}" rendered="#{isDocTypeQuotation}" />
+				<ui:remove> #27868 start </ui:remove>
+				<ui:fragment rendered="#{isDocTypeQuotation}">
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qttentype']}" rendered="#{isDocTypeQuotation}" />
+					</td>
+					<td>
+						<p:inputText id="qtTypeTxt"
+							value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.qtType)}"
+							size="28" disabled="true"
+							rendered="#{isDocTypeQuotation}" />
+					</td>
+				</ui:fragment>
+				<td style="width: 155px;">
+					<p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" rendered="#{isDocTypePurchaseRequest}" />
 				</td>
 				<td>
-					<p:inputText id="qtTypeTxt"
-						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.qtType)}"
-						size="28" disabled="true"
-						rendered="#{isDocTypeQuotation}" />
+					<p:inputText id="procTypeTxt"
+						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementType)}"
+						size="35" disabled="true"
+						rendered="#{isDocTypePurchaseRequest}" />
 				</td>
+				<ui:remove> #27868 end </ui:remove>
 			</tr>
 
 			<tr>
 				<td width="21%">
 					<p:outputLabel value="#{lbl['lbl.sc.procurment.type.category']}" />
 				</td>
-				<td colspan="3"><p:inputText id="procurmentTypeCatId"
+				<ui:remove> #27868 start </ui:remove>
+				<td><p:inputText id="procurmentTypeCatId"
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementTypeCatId)}"
 						size="35" label="#{lbl['lbl.sc.procurment.type.category']}"
 						disabled="true" /></td>
+				<td style="width: 155px;">
+					<p:outputLabel value="#{lbl['lbl.sc.reason']}" rendered="#{isDocTypePurchaseRequest}" />
+				</td>
+				<td>
+					<p:inputText id="reasonTxt"
+						value="#{lOADetailBackingBean.getReasonDescPurchaseRequest()}"
+						size="35" disabled="true"
+						rendered="#{isDocTypePurchaseRequest}" />
+				</td>
+				<ui:remove> #27868 end </ui:remove>
 			</tr>
 			<tr>
 			 <td>
@@ -296,14 +324,27 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			 </td>
 			<td colspan="3">
-				<p:inputText disabled="#{isDocTypeQuotation || !isEditableStatus || lOADetailBackingBean.managedBean.readOnly}"
-					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="29" maxlength="50"/>
+			<!-- #29661 start -->
+				<p:inputText id="fileNo" disabled="#{isDocTypeQuotation || !isEditableStatus || lOADetailBackingBean.managedBean.readOnly}"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="29" maxlength="50">
+					<p:ajax event="blur"  process="@this" 
+					partialSubmit="true" update="@this"
+					listener="#{createQtBB.setFileNo(lOADetailBackingBean.managedBean.scLoa != null 
+        						? lOADetailBackingBean.managedBean.scLoa.scQt : null)}">
+					</p:ajax>
+				</p:inputText>
 				<p:inputText id="fileExtNo"  style="margin-left: 2px;width: 28px; text-align:right;"
 					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="6"
 					required="true"
 					label="#{lbl['lbl.sc.qt.fileno']}"
 					maxlength="3"
-					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}" />
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.readOnly}">					
+					<p:ajax event="blur"  process="@this" 
+					partialSubmit="true" update="@this"
+					listener="#{lOADetailBackingBean.setFileExtNo(lOADetailBackingBean.managedBean.scLoa)}">
+					</p:ajax>
+					</p:inputText>		
+					<!-- #29661 end -->
 				<p:message id="fileExtNoMsg" for="fileExtNo" display="icon" />
 			</td>
 		</tr>
@@ -334,9 +375,11 @@
 				<p:outputLabel value="#{lbl['lbl.sc.request.note.fulfill.type']}" />				
 			</td>
 			<td colspan="3">
+				<!-- #25726/25725 - Check and display Italic value -->
 				<p:inputText 
 					value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode)}"
-					disabled="true" size="35"/>
+					disabled="true" size="35"
+					styleClass="#{lOADetailBackingBean.checkItalicCodeNameForMy(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterId) ? 'italic-item' : ''}"/>
 				<!-- #25726 START -->
 				<c:if test="#{isDocTypeQuotation}">
 				<!-- Reopen #25726 note 221 - issue 12 -->			 
@@ -615,21 +658,36 @@
 							readonly="true"
 							/>
 						&#160;
-						<p:commandLink id="ptjSearchCL" partialSubmit="true"
-							disabled="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterId==null}"
-							process="@this" update=":form:orgProfileCcId:ptjPopup"
-							action="#{organisationSearchBackingBean.initPtjPopupDefaultMinistry(lOADetailBackingBean.managedBean.ministryOrgProfile.orgProfileId)}"
-							oncomplete="ptjPopup.show();" >
-							<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
-						</p:commandLink>
-					</p:outputPanel>
+						<ui:remove>27868 - start</ui:remove>
+							<c:choose>
+								<c:when test="#{isProcurementTypeSpecialItem}">
+									<p:commandLink id="ptjSearchCL" partialSubmit="true"
+										disabled="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterId==null}"
+										process="@this" update=":form:orgProfileCcId:ptjPopup"
+										action="#{organisationSearchBackingBean.initPtjPopupDefaultSpecialItem(lOADetailBackingBean.managedBean.ministryOrgProfile.orgProfileId, lOADetailBackingBean.managedBean.ptjIds)}"
+										oncomplete="ptjPopup.show();">
+										<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+									</p:commandLink>
+								</c:when>
+								<c:otherwise>
+									<p:commandLink id="ptjSearchCL" partialSubmit="true"
+										disabled="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterId==null}"
+										process="@this" update=":form:orgProfileCcId:ptjPopup"
+										action="#{organisationSearchBackingBean.initPtjPopupDefaultMinistry(lOADetailBackingBean.managedBean.ministryOrgProfile.orgProfileId)}"
+										oncomplete="ptjPopup.show();">
+										<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+									</p:commandLink>
+								</c:otherwise>
+							</c:choose>
+						<ui:remove>27868 - end</ui:remove>
+						</p:outputPanel>
 
 					<h:panelGroup rendered="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
 						or lOADetailBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtjGroup}">
 						<ac:ptjPopup 
 							id="orgProfileCcId"
 							orgTypeParamCode="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode}"
-							okAction="lOADetailBackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj"/><!-- :form:contAdminId --> <!-- #26475 -->
+							okAction="lOADetailBackingBean.userListener" isProcurementTypeSpecialItem="#{isProcurementTypeSpecialItem}" update=":form:opPtjOrgCode,:form:itSelectedPtj"/><!-- :form:contAdminId --> <!-- #26475 --><ui:remove>27868</ui:remove>
 					</h:panelGroup>
 				</c:if>
 				<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.agency.tooltip']}" />
@@ -744,48 +802,53 @@
 					<td colspan="3">
 						<p:outputPanel id="uploadApprovalLetterPg"> 
 							<!-- #25726 START -->													
-							<!-- #25725 note 165  --><h:panelGroup  rendered="#{isEditableStatus and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and (!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and (!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)))}" 
+							<!-- #25725 note 165  --><!-- new #25726 - Start -->
+						<h:panelGroup
+							rendered="#{isEditableStatus and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)}"
 							required="true">
+							<!-- new #25726 - End -->
 							<!-- #25726 END -->
-								<table>
-									<tr>
-										<td width="300">
-											<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" escape="false"/> 
-											<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-										</td>
-										<td>
-											<p:outputPanel id="uploadedPage">						
-												<p:commandButton 
+							<table>
+								<tr>
+									<td width="300"><p:outputLabel
+											value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}"
+											escape="false" /> <p:outputLabel value="*"
+											styleClass="mandatory" rendered="#{isEditableStatus}" /></td>
+									<td><p:outputPanel id="uploadedPage">
+											<p:commandButton
 												oncomplete="uploadApprovalLetterDlg.show();return false;"
-					 							icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg" 
-					 							rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null and isEditableStatus}"/><!-- #25725 note 165  -->								
-												<p:commandLink
+												icon="ui-icon-upload" immediate="true"
+												update="uploadApprovalLetterDlg"
+												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null and isEditableStatus}" />
+											<!-- #25725 note 165  -->
+											<p:commandLink
 												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
-												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
+												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 												action="#{lOADetailBackingBean.fileDownload}"
 												styleClass="blue_font"
-												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>
-												<p:commandLink oncomplete="deleteApprovalLetterDlg.show();return false;"
-												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null and !lOADetailBackingBean.disabledButton()}" process="@this" partialSubmit="true"
+												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}" />
+											<p:commandLink
+												oncomplete="deleteApprovalLetterDlg.show();return false;"
+												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null and !lOADetailBackingBean.disabledButton()}"
+												process="@this" partialSubmit="true"
 												disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}">
-			   										<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-			 	 								</p:commandLink>
-			 	 							</p:outputPanel> 
-			 	 						</td>
-										<td style="margin-top: -3px">
-											<c:if test="#{isDocTypeQuotation}">
-												<ac:iconTooltip
-													value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" /> <ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
-											</c:if>
-											<c:if test="#{!isDocTypeQuotation}">
-												<ac:iconTooltip
-													value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
-											</c:if>
-										</td>
-									</tr>
-			 	 				</table>			 	 				
-			 	 			</h:panelGroup>	
-			 	 			<!-- #25725 note 165  --><h:panelGroup rendered="#{!isEditableStatus and !isSupplierAckStatus and !isAckReceiptSupplierActStatus and lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
+												<h:graphicImage value="/css/images/design/icon_trash.png"
+													styleClass="tasklist_title1" />
+											</p:commandLink>
+										</p:outputPanel></td>
+									<td style="margin-top: -3px"><c:if
+											test="#{isDocTypeQuotation}">
+											<ac:iconTooltip
+												value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" />
+											<ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
+										</c:if> <c:if test="#{!isDocTypeQuotation}">
+											<ac:iconTooltip
+												value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+										</c:if></td>
+								</tr>
+							</table>
+						</h:panelGroup>
+						<!-- #25725 note 165  --><h:panelGroup rendered="#{!isEditableStatus and !isSupplierAckStatus and !isAckReceiptSupplierActStatus and lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
 			 	 				<table>
 									<tr>
 										<td width="300">
@@ -828,12 +891,6 @@
 			readonly="true"
 			rendered="#{not empty lOADetailBackingBean.managedBean.supplierRemarks}" />
 	</p:outputPanel>
-	<!-- Bug #30600, #31033 #32560 Start -->
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<!-- Bug #30600, #31033 #32560 End -->
 	
 	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
 		resizable="false" width="700px" height="350px" modal="true" 

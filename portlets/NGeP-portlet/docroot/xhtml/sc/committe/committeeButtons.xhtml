@@ -14,10 +14,14 @@
 					process="@this" update="@this"
 					rendered="#{committeBackingBean.managedBean.taskId eq null}" />
 					
+				<!-- #35320 start -->	
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{committeBackingBean.updateCommitteDetails(BpmOutcomeConstant.bpmSubmit)}"
-					process="@all" rendered="#{empty committeBackingBean.managedBean.payLoad and isCommitteeRecordStatusActive}" 
+					process="@all"
+					rendered="#{empty committeBackingBean.managedBean.payLoad and isCommitteeRecordStatusActive
+						and !committeBackingBean.managedBean.viewCommitteePage}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+				<!-- #35320 end -->
 					
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{committeBackingBean.updateCommitteDetails(BpmOutcomeConstant.bpmSave)}"
