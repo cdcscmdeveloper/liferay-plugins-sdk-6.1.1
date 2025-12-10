@@ -7114,6 +7114,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					isRemarkRequired = true;
 				}
 				scRequestNoteDtl.setBpkThresholdDecision(group.getDecision());
+				scRequestNoteDtl.setApprovedDate(new Date());
 				requestNoteDtls.add(scRequestNoteDtl);
 			}
 			count++;
