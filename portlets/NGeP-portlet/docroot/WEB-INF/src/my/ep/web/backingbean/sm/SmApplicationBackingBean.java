@@ -17427,6 +17427,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					if (smApplRevise.getCreatedDate().after(currDate)) {
 						currReason = smApplRevise.getReviseReason();
 						currDate = smApplRevise.getCreatedDate();
+					} else {
+						currReason = "";
+						currDate = new Timestamp(System.currentTimeMillis());
 					}
 				}
 			}
