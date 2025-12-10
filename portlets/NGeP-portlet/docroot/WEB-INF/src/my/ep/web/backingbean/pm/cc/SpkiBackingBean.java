@@ -129,30 +129,41 @@ public class SpkiBackingBean extends BaseBackingBean<BaseManagedBean> implements
 
 	public void getChallengeQuestions() {
 		// #30425 - Start
+		log.info("-------enter getChallengeQuestions");
 		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
+		log.info("-------enter getSpkiEnabledProperty()-"+getSpkiEnabledProperty());
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
 			// start checking for validation
+			log.info("-------enter validateInternalSPKI");
 			validateInternalSPKI(getSupplier().getEpNo());
 			// end checking for validation
 		}
 		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
 		// #30425 - End, #36605
+		log.info("------- getChallengeQuestions:getSpkiEnabledProperty()"+getSpkiEnabledProperty());
+		log.info("------- isCertEnabled()"+isCertEnabled(null));
 		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(null)) {
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
+				log.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
 				// #30425 - Start
 				log.info(">>>>>>>>>>>>>>> into trustgate <<<<<<<<<<<<<");
 				// #30425 - End
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(getLoginUser().getIdentificationNo(), getSupplier().getEpNo(), challengeQues1);
+				log.info(">>>>>>>>>>>>>>> end trustgate <<<<<<<<<<<<<");
 			} else {
-				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
+				log.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
 				// #30425 - Start
 				log.info(">>>>>>>>>>>>>>> Into Digicert <<<<<<<<<");
 				// #30425 - End
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(getLoginUser().getIdentificationNo());
+				log.info(">>>>>>>>>>>>>>> End Digicert <<<<<<<<<");
 			}
+			log.info("-------1 getChallengeQuestions");
 			setChallengeQues1(challs.get(0));
+			log.info("-------2 getChallengeQuestions");
+			log.info("-------3 getChallengeQuestions"+challs.get(0));
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			log.info("-------End getChallengeQuestions");
 		}
 	}
 
