@@ -17414,21 +17414,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 // #15629 -- end
 	
 	//#12483 - START
-	public String currentReviseReason(){
+	public String currentReviseReason() {
 		String currReason = null;
 		Timestamp currDate = null;
-		for(SmApplRevise smApplRevise : this.getManagedBean().getSmAppl().getSmApplRevises()){
-			if(currDate==null){
+		for (SmApplRevise smApplRevise : this.getManagedBean().getSmAppl().getSmApplRevises()) {
+			if (currDate == null) {
 				currDate = smApplRevise.getCreatedDate();
 				currReason = smApplRevise.getReviseReason();
-			}else{
-				if(smApplRevise.getCreatedDate().after(currDate)){
+			} else {
+				if (smApplRevise.getCreatedDate().after(currDate)) {
 					currReason = smApplRevise.getReviseReason();
-					currDate   = smApplRevise.getCreatedDate();
+					currDate = smApplRevise.getCreatedDate();
 				}
 			}
 		}
-		
+
 		return currReason;
 	}
 	
