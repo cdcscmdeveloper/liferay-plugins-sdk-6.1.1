@@ -63,12 +63,12 @@ public class FulfilmentYepRest {
 						.entity("Success calling terminateTaskYEP!! Run for " + (endTime - startTime) + " milliseconds")
 						.build();
 			} else {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Fail terminateTaskYEP!").build();
+				return Response.status(Response.Status.BAD_REQUEST).entity("Fail terminateTaskYEP!").build();
 			}
 
 		} catch (Exception e) {
 			log.error(e);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
 		}
 	}
 
