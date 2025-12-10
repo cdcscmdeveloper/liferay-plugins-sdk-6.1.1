@@ -76,10 +76,15 @@
 						    	#{reasonDesc.pmLanguage.languageName}
 					        </p:column>
 							<p:column headerText="* #{lbl['lbl.pm.reason.desc']}">
-								<p:inputTextarea id="itReasonDesc" disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
+								<!-- #34445, Fix as-is bug: #39087 Start -->
+								<p:inputTextarea id="itReasonDesc"
+									disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
 									value="#{reasonDesc.reasonDesc}" cols="50" rows="5"
 									required="true" maxlength="255"
-									label="#{lbl['lbl.pm.reason.desc']}" autoResize="false" />
+									label="#{lbl['lbl.pm.reason.desc']}" autoResize="false">
+									<f:validateLength maximum="255" />
+								</p:inputTextarea>
+								<!-- #34445, Fix as-is bug: #39087 End -->
 								<p:message id="itReasonDescMsg" for="itReasonDesc"
 									display="icon" />
 							</p:column>
@@ -113,6 +118,54 @@
 					</tr>
 
 				</c:if>
+
+				<!--28962- Start-->
+				<c:if
+					test="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.specialItemWithApproval
+	                || rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.wipItemPK7}">
+					<tr>
+						<th>
+							<p:outputLabel value="#{lbl['lbl.pm.reason.direct.purchase.threshold']}" />
+						</th>
+						<td>
+							<p:inputText id="directPurchaseThreshold" size="20"
+								maxlength="17" style="text-align:left"
+								label="#{lbl['lbl.pm.reason.direct.purchase.threshold']}"
+								value="#{rejectionReasonBackingBean.managedBean.selectedReason.dpThreshold}">
+								<f:converter converterId="pmIntegerConverter" />
+								<f:attribute name="max" value="99999999999.99" />
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
+								<f:validator validatorId="quantityDoubleRangeValidator" />
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:inputText> 
+							<p:graphicImage id="toolTipDP" value="/css/images/design/tooltips.png" /> 
+							<p:tooltip for="toolTipDP" value="#{lbl['lbl.pm.reason.threshold.tooltip']}" showEffect="fade" hideEffect="fade" /> 
+							<p:message id="directPurchaseThresholdMsg" for="directPurchaseThreshold" display="icon" />
+						</td>
+					</tr>
+					<tr>
+						<th>
+							<p:outputLabel value=" #{lbl['lbl.pm.reason.purchase.request.threshold']}" />
+						</th>
+						<td>
+							<p:inputText id="purchaseRequestThreshold" size="20"
+								maxlength="17" style="text-align:left"
+								label="#{lbl['lbl.pm.reason.purchase.request.threshold']}"
+								value="#{rejectionReasonBackingBean.managedBean.selectedReason.prThreshold}">
+								<f:converter converterId="pmIntegerConverter" />
+								<f:attribute name="max" value="99999999999.99" />
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
+								<f:validator validatorId="quantityDoubleRangeValidator" />
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:inputText> 
+							<p:graphicImage id="toolTipPR" value="/css/images/design/tooltips.png" /> 
+							<p:tooltip for="toolTipPR" value="#{lbl['lbl.pm.reason.threshold.tooltip']}" position="bottom" /> 
+							<p:message id="purchaseRequestThresholdMsg" for="purchaseRequestThreshold" display="icon" />
+						</td>
+					</tr>
+				</c:if>
+				<!--28962- End-->
+
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pm.status']}" /> <p:outputLabel
 							value="* " styleClass="mandatory" /></th>
@@ -220,6 +273,13 @@
 					</p:panel>
 				</p:tab>
 			</p:tabView>
+			<!--28962- Start-->
+			<c:if
+				test="#{rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.specialItemWithApproval 
+				|| rejectionReasonBackingBean.managedBean.selectedReason.reasonCategoryCode.parameterCode==ParameterConst.wipItemPK7}">
+				<ui:include src="agencySuppAccTypeList.xhtml" />
+			</c:if>
+			<!--28962- End-->
 		</p:panel>
 		<!-- Restriction List (App Type, Supp Type, Comp Reg Type) -->
 		<ui:include src="restrictionList.xhtml" />

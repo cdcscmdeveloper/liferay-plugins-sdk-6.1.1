@@ -508,6 +508,17 @@
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sm.person.composition.listDtHdr']}"
 			toggleable="true" id="smPersonnelParentPan">
+			<!-- #38890 - start -->
+			<p:commandButton value="AI Assistant" onclick="epfAI.show()" immediate="true">
+					<p:ajax partialSubmit="true" process="@this" />
+			</p:commandButton>
+			<p:graphicImage id="ttepfAI" value="/css/images/design/tooltips.png" />
+			<p:tooltip id="tt2epfAI" for="ttepfAI">
+				<p:outputLabel value="Click the AI Assistant and upload the EPF Contribution Statement for data extraction" />
+			</p:tooltip>&#160;
+			<br/>
+			<!-- #38890 - end -->
+			
 			<ui:param name="lblShareholderInstruction" value="lbl.sm.shareholder.composistion.#{backingBean.managedBean.smSupplier.businessType}" />
 			<ui:param name="lblPersonnelInstruction" value="lbl.sm.personnel.composistion.#{backingBean.managedBean.smAppl.supplierType}#{backingBean.managedBean.smSupplier.businessType}" />
 			<!-- 34587 START -->
@@ -654,5 +665,7 @@
 		</p:dataTable>
 		
 	</p:dialog>
-
+	<!-- #38890 -->
+	<ac:smAIAssistant aiDlg="epfAI" docType="epf" updateId="persInfoDtPanel" 
+		smAppl="#{backingBean.managedBean.smAppl}" />
 </ui:composition>

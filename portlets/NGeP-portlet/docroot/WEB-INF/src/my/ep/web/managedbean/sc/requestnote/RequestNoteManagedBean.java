@@ -30,6 +30,7 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;//#27868
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -350,6 +351,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean disciplinaryActionWarning = false;
 	private boolean disciplinaryActionCancelRegistration = false;
 	private boolean disciplinaryActionBlacklist = false;
+	private boolean disciplinaryActionPendingTransaction = false;
+	private boolean disciplinaryActionDeletedDue = false;
 	private String popupMessage;
 	//26284 - End
 	
@@ -407,6 +410,15 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean sourcingDpNewBpmVer = Boolean.FALSE;
     //#36119 - end
     
+    //27868 - start
+    private Date createdDate;
+    private PmParameter selectedOrgType;
+    private PmUserOrg selectedUserPtj;
+    private String supplierAccountTypeErrorMessage;
+	private PmOrgProfile selectedPtj;
+	private PmOrgProfile ministryOrgProfile;
+	private Integer saveIndex; 
+    //27868 - end
 	private boolean bpkApproverMode = Boolean.FALSE; //#26059
 	private boolean rnExceedThreshold = Boolean.FALSE; //#26059
 	private boolean showAttachments = Boolean.TRUE; //#26059
@@ -2413,7 +2425,109 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
 		this.disciplinaryActionWarning = disciplinaryActionWarning;
 	}
+	
+	/**
+	 * @return the disciplinaryActionPendingTransaction
+	 */
+	public boolean isDisciplinaryActionPendingTransaction() {
+		return disciplinaryActionPendingTransaction;
+	}
+
+	/**
+	 * @return the disciplinaryActionDeletedDue
+	 */
+	public boolean isDisciplinaryActionDeletedDue() {
+		return disciplinaryActionDeletedDue;
+	}
+
+	/**
+	 * @param disciplinaryActionPendingTransaction the disciplinaryActionPendingTransaction to set
+	 */
+	public void setDisciplinaryActionPendingTransaction(boolean disciplinaryActionPendingTransaction) {
+		this.disciplinaryActionPendingTransaction = disciplinaryActionPendingTransaction;
+	}
+
+	/**
+	 * @param disciplinaryActionDeletedDue the disciplinaryActionDeletedDue to set
+	 */
+	public void setDisciplinaryActionDeletedDue(boolean disciplinaryActionDeletedDue) {
+		this.disciplinaryActionDeletedDue = disciplinaryActionDeletedDue;
+	}
+
 	//#26284 - End
+	//27868 - start
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public PmParameter getSelectedOrgType() {
+		if (this.selectedOrgType == null) {
+			this.selectedOrgType = new PmParameter();
+		}
+		return selectedOrgType;
+	}
+
+	public void setSelectedOrgType(PmParameter selectedOrgType) {
+		this.selectedOrgType = selectedOrgType;
+	}
+	
+	public PmUserOrg getSelectedUserPtj() {
+		return selectedUserPtj;
+	}
+
+	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
+		this.selectedUserPtj = selectedUserPtj;
+	}
+	
+
+	public PmOrgProfile getSelectedPtj() {
+		return selectedPtj;
+	}
+
+	public void setSelectedPtj(PmOrgProfile selectedPtj) {
+		this.selectedPtj = selectedPtj;
+	}
+	
+	public PmOrgProfile getMinistryOrgProfile() {
+		return ministryOrgProfile;
+	}
+
+	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
+		this.ministryOrgProfile = ministryOrgProfile;
+	}
+
+	/**
+	 * @return the getSupplierAccountTypeErrorMessage
+	 */
+	public String getSupplierAccountTypeErrorMessage() {
+		return supplierAccountTypeErrorMessage;
+	}
+
+	/**
+	 * @param getSupplierAccountTypeErrorMessage the getSupplierAccountTypeErrorMessage to set
+	 */
+	public void setSupplierAccountTypeErrorMessage(String getSupplierAccountTypeErrorMessage) {
+		this.supplierAccountTypeErrorMessage = getSupplierAccountTypeErrorMessage;
+	}
+
+	public Integer getSaveIndex() {
+		return saveIndex;
+	}
+
+	public void setSaveIndex(Integer saveIndex) {
+		this.saveIndex = saveIndex;
+	}
+	//27868 - end
 	// #26059 - start
 	/**
 	 * Checks if the current mode is BPK Approver mode.

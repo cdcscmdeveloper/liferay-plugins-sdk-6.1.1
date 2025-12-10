@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
+import my.ep.dto.sm.smSuppCatOtherDescHistory.SmSuppCatOtherDescHistoryReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -69,6 +70,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -671,6 +673,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean basicSupplier;
 	//#34831 - End
 	
+	// 36504 - START
+	private boolean updateRecordTC;
+	private boolean otherDescChange;
+	private String otherDescEdited;
+	private IPagingDataModel<SmSuppCatOtherDescHistory> otherDescDataModel = new OtherDescSearchPagingDataModel();
+	// 36504 - END
+
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4679,4 +4688,91 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setBasicSupplier(boolean basicSupplier) {
 		this.basicSupplier = basicSupplier;
 	}
+	
+	// 36504 - START
+	/**
+	 * @return the updateRecordTC
+	 */
+	public boolean isUpdateRecordTC() {
+		return updateRecordTC;
+	}
+
+	/**
+	 * @param updateRecordTC the updateRecordTC to set
+	 */
+	public void setUpdateRecordTC(boolean updateRecordTC) {
+		this.updateRecordTC = updateRecordTC;
+	}
+
+	/**
+	 * @return the otherDescEdited
+	 */
+	public String getOtherDescEdited() {
+		return otherDescEdited;
+	}
+
+	/**
+	 * @param otherDescEdited the otherDescEdited to set
+	 */
+	public void setOtherDescEdited(String otherDescEdited) {
+		this.otherDescEdited = otherDescEdited;
+	}
+
+	/**
+	 * @return the otherDescChange
+	 */
+	public boolean isOtherDescChange() {
+		return otherDescChange;
+	}
+
+	/**
+	 * @param otherDescChange the otherDescChange to set
+	 */
+	public void setOtherDescChange(boolean otherDescChange) {
+		this.otherDescChange = otherDescChange;
+	}
+	
+	public IPagingDataModel<SmSuppCatOtherDescHistory> getOtherDescDataModel() {
+		return otherDescDataModel;
+	}
+
+	public void setOtherDescDataModel(IPagingDataModel<SmSuppCatOtherDescHistory> otherDescDataModel) {
+		this.otherDescDataModel = otherDescDataModel;
+	}
+	
+	private class OtherDescSearchPagingDataModel extends PagingDataModel<SmSuppCatOtherDescHistory> {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public OtherDescSearchPagingDataModel() {
+			super("OtherDescriptionDtId");
+		}
+
+		@Override
+		protected ISearchResultBean<SmSuppCatOtherDescHistory> pageChangeListener(ISearchBean<SmSuppCatOtherDescHistory> searchBean) {
+			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
+			reqDTO.setOtherDescHistorySearchBean(searchBean);
+			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+			try {
+				return getOtherDescHistoryResultBean(reqDTO);
+			} catch (Exception ex) {
+				return new SearchResultBean<SmSuppCatOtherDescHistory>();
+			} finally {
+				reqDTO = null;
+			}
+		}
+
+		private ISearchResultBean<SmSuppCatOtherDescHistory> getOtherDescHistoryResultBean(SmSuppCatOtherDescHistoryReqDTO reqDTO) {
+			reqDTO.getOtherDescHistorySearchBean().getDataFilterBeans().clear();
+//			reqDTO.setSupplierCategoryId(getSupplierAppl());;
+			return SmServiceLookup.getMofRegistrationSO().retrieveOtherDescHistorySearchBean(reqDTO).getOtherDescResultBean();
+		}
+	}
+
+	public void searchOtherDescHistoryDesc() {
+		otherDescDataModel.reloadData();
+	}
+	// 36504 - END
 }

@@ -47,7 +47,8 @@
 			style="text-align:center;">
 			<p:commandLink value="#{map['poNo']}" styleClass="command-link"
 				action="#{requestNoteBackingBean.viewPurchaseOrder(map['poId'])}"
-				immediate="true" />
+				rendered="#{not empty map['poStatus']}"
+				immediate="true" /> <ui:remove>#39192</ui:remove>
 		</p:column>
 		<p:column headerText="#{lbl['lbl.td.status']}"
 			style="text-align:center;">

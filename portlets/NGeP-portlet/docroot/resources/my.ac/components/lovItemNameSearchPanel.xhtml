@@ -25,6 +25,16 @@
 			value="#{ccContractItemMonitoringRptBB.managedBean.contractNo}"
 			readonly="true" style="width: 87%; margin-left: 8px;"
 			rendered="#{not empty ccContractItemMonitoringRptBB.managedBean.contractNo}" />
+		
+		<!-- Label for ccContractNoDtlsRpt #34889 -->	
+		<p:outputLabel for="ccContractNoDtlsRpt" value="#{lbl['lbl.ct.contract.no']}"
+			style="font-weight:bold; margin-bottom: 5px; margin-right: 10px;"
+			rendered="#{not empty ccContractItemUsageMonitoringDtlsReportBB.managedBean.contractNo and lovBackingBean.isCentralItemUsageMonitoringDetailsReport()}" />
+
+		<p:inputText id="ccContractNoDtlsRpt"
+			value="#{ccContractItemUsageMonitoringDtlsReportBB.managedBean.contractNo}"
+			readonly="true" style="width: 87%; margin-left: 8px;"
+			rendered="#{not empty ccContractItemUsageMonitoringDtlsReportBB.managedBean.contractNo and lovBackingBean.isCentralItemUsageMonitoringDetailsReport()}" />
 	</h:panelGrid>
 
 	<h:panelGrid columns="2" id="lovCriteriaItem" cellspacing="0">		

@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<!-- #29661 SpecificationCommittee -->
+
+	<p:spacer width="12px"></p:spacer>
+	<table class="categoryCodeTable" style="width: 100%">
+		<tr>
+			<td><h:outputText value="*" styleClass="mandatory" />&#160; <h:outputText
+					style="text-align:left;font-weight: bold;"
+					value="#{lbl['lbl.sc.sr.cat.code']}" />&#160;</td>
+		</tr>
+	</table>
+
+	<p:panelGrid styleClass="companyHeaderGrid" style="width: 100%">
+		<p:row>
+			<p:column>
+				<!-- category codes -->
+						<p:panelGrid styleClass="companyHeaderGrid" style="width: 100%">
+							<p:row>
+								<p:column>
+									<!-- category codes -->
+									<p:dataTable id="restrictedPnlId" var="cateGory"
+										widgetVar="restrictedPnlId"
+										value="#{specificationBackingBean.managedBean.qtCategoryList}"
+										emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+										rowKey="#{cateGory}">
+
+										<p:column headerText="#{lbl['lbl.sc.category.code']}">
+									#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
+									</p:column>
+
+										<p:column headerText="#{lbl['lbl.sc.main.category']}"
+											style="white-space: normal;">
+											<h:outputText value="#{cateGory.pmCategoryL1Name}" />
+										</p:column>
+
+										<p:column headerText="#{lbl['lbl.sc.sub.category']}"a
+											style="white-space: normal;">
+											<h:outputText value="#{cateGory.pmCategoryL2Name}" />
+										</p:column>
+
+										<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
+											style="white-space: normal;">
+											<h:outputText value="#{cateGory.pmCategoryL3Name}" />
+										</p:column>
+
+										<p:column headerText="#{lbl['lbl.sc.category.type']}">
+											<h:outputText
+												value="#{qtDetailBB.getParameterDescByString(cateGory.categoryType)}" />
+										</p:column>
+
+									</p:dataTable>
+
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+				<p:spacer width="12px"></p:spacer>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+</ui:composition>

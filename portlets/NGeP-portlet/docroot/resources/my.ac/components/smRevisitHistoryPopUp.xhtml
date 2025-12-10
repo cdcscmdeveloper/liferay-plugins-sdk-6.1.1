@@ -103,7 +103,7 @@
 				<div align="right">
 					<p:commandButton id="downloadRevisitHistoryId"
 						value="#{lbl['lbl.sm.rv.history.btn.download']}"
-						rendered="#{!cc.attrs.backingBean.managedBean.supplierUser}">
+						rendered="#{!cc.attrs.backingBean.managedBean.supplierUser}" ajax="false">
 						<p:fileDownload
 							value="#{cc.attrs.backingBean.downloadRevisitHistory()}" />
 					</p:commandButton>

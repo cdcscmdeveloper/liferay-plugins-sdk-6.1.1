@@ -57,6 +57,7 @@ public class TemplateSpecBean implements Serializable {
 	private ScQt qt;
 	private List<TplSpecAnswer> hideanswerList;//32453-End
 	private boolean wordBreakForQT;//#29007 Added Vinod
+	private boolean weightage35384WIP;;//#38151
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -371,5 +372,15 @@ public class TemplateSpecBean implements Serializable {
 		this.wordBreakForQT = wordBreakForQT;
 	}
 	// #29007 End Vinod
+	
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
 	
 }

@@ -85,7 +85,7 @@
 			</div>
 			<h:panelGrid columns="4" style="width:70%" columnClasses="columnWidth10, columnWidth30, columnWidth5,columnWidth20"> </h:panelGrid>	
 			
-		<p:dataTable id="suspensionProdDataModel" var="itemData" lazy="true" rows="10"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+		<p:dataTable id="suspensionProdDataModel" var="itemData" lazy="true" rows="10"  paginator="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		    value="#{suspensionBackingBean.managedBean.suspensionProductListingPagingDataModel}" selectionMode="single" selection="#{ctBackingBean.managedBean.selectedItem}" 
 		     rowIndexVar="index" rowKey="#{itemData}"
                   onExpandStart="" widgetVar="ctItemsTable" >
