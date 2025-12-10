@@ -506,6 +506,7 @@ public class MolPayServlet extends HttpServlet {
 				paymentRefNo = jsonObject.optString("paymentRefNo",null);
 				log.info("######38377#####json paymentRefNo: " + paymentRefNo);
 				providerTransId = jsonObject.optString("providerTransId",null);
+				providerTransId = providerTransId==null?paymentRefNo:providerTransId;
 				log.info("######38377#####json providerTransId: " + providerTransId);
 				paymentGateway = "Y";
 				bankName = jsonObject.optString("bankName",null);
