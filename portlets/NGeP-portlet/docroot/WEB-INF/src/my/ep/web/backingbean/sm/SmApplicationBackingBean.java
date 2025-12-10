@@ -1541,8 +1541,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					getManagedBean().getReasonDescInitList());
 			subStartTime = System.currentTimeMillis();
 			getManagedBean().setRejectionOtherReasonId(
-					SmApplicationUtil.retrieveOtherRejectReasonIdByParamCodeAndType(ReasonCategory.SUPPLIER_REJECTION_REASON.value(), 
-							SupplierManagementConst.SM_REASON_CODE_OTHERS) == null ? null : Long.parseLong("1"));
+					SmApplicationUtil
+							.retrieveOtherRejectReasonIdByParamCodeAndType(
+									ReasonCategory.SUPPLIER_REJECTION_REASON
+											.value(),
+									SupplierManagementConst.SM_REASON_CODE_OTHERS));
 			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 					"SmApplicationBackingBean.proceedToApplication", "retrieveOtherRejectReasonIdByParamCodeAndType-15", 
 					subStartTime); //20211005@fadhli - #31754
@@ -17414,24 +17417,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public String currentReviseReason() {
 		String currReason = null;
 		Timestamp currDate = null;
-		//temp cater null issue by najmi 10122025 start
-		if (this.getManagedBean().getSmAppl() != null && this.getManagedBean().getSmAppl().getSmApplRevises() != null) {
-			for (SmApplRevise smApplRevise : this.getManagedBean().getSmAppl().getSmApplRevises()) {
-				if (currDate == null) {
-					currDate = smApplRevise.getCreatedDate();
+		for (SmApplRevise smApplRevise : this.getManagedBean().getSmAppl().getSmApplRevises()) {
+			if (currDate == null) {
+				currDate = smApplRevise.getCreatedDate();
+				currReason = smApplRevise.getReviseReason();
+			} else {
+				if (smApplRevise.getCreatedDate().after(currDate)) {
 					currReason = smApplRevise.getReviseReason();
-				} else {
-					if (smApplRevise.getCreatedDate().after(currDate)) {
-						currReason = smApplRevise.getReviseReason();
-						currDate = smApplRevise.getCreatedDate();
-					} else {
-						currReason = "";
-						currDate = new Timestamp(System.currentTimeMillis());
-					}
+					currDate = smApplRevise.getCreatedDate();
 				}
 			}
 		}
-		//temp cater null issue by najmi 10122025 end
 
 		return currReason;
 	}
