@@ -44,81 +44,81 @@ public class AmendTabSideMenus {
 		face = new FacesScopes();
 
 		if (menuWithAmendFulfilment == null) {
-			menuWithAmendFulfilment =  new ArrayList<String>(Arrays.asList(
+			menuWithAmendFulfilment =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.fd", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuWithAmendSetting == null) {
-			menuWithAmendSetting =  new ArrayList<String>(Arrays.asList(
+			menuWithAmendSetting =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.setting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuWithZone == null) {
-			menuWithZone=  new ArrayList<String>(Arrays.asList(
+			menuWithZone=  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.zone", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuWithItem == null) {
-			menuWithItem =  new ArrayList<String>(Arrays.asList(
+			menuWithItem =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.item", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuWithPrepareLoa ==  null) {
-			menuWithPrepareLoa =  new ArrayList<String>(Arrays.asList(
+			menuWithPrepareLoa =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.content", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuWithPrepareBond ==  null) {
-			menuWithPrepareBond =  new ArrayList<String>(Arrays.asList(
+			menuWithPrepareBond =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 		//24333 - Start
 		if (menuWithBond ==  null) {
-			menuWithBond =  new ArrayList<String>(Arrays.asList(
+			menuWithBond =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 		//24333 - End
 		if (menuWithDecision == null) {
-			menuWithDecision =  new ArrayList<String>(Arrays.asList(
+			menuWithDecision =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuWithMeetings == null) {
-			menuWithMeetings =  new ArrayList<String>(Arrays.asList(
+			menuWithMeetings =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.meeting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuWithDeclaration == null) {
-			menuWithDeclaration =  new ArrayList<String>(Arrays.asList(
+			menuWithDeclaration =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.declaration", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuDeduction == null) {
-			menuDeduction =  new ArrayList<String>(Arrays.asList(
+			menuDeduction =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.deduction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuWithAgency == null) {
-			menuWithAgency =  new ArrayList<String>(Arrays.asList(
+			menuWithAgency =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.agency", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuSchedule == null) {
-			menuSchedule =  new ArrayList<String>(Arrays.asList(
+			menuSchedule =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 
 		if (menuWithAmendSupplier == null) {
-			menuWithAmendSupplier =  new ArrayList<String>(Arrays.asList(
+			menuWithAmendSupplier =  new ArrayList<>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.content", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.view.loa", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
 		//#35132
 		if (menuApprover == null) {
-			menuApprover =  new ArrayList<String>(Arrays.asList(
+			menuApprover =  new ArrayList<>(Arrays.asList(
 					// #24336 - Start
 					ResourceBundleUtils.getMessage("lbl.ct.menu.approver.setting.amendment.checklist", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 					// #24336 - End
