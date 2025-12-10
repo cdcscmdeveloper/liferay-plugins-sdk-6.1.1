@@ -5,6 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+<!-- #25726/25725 - Check and display Italic value -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
 
 	<ui:include src="../shared/loaInstructionHeader.xhtml"/>
 
@@ -330,9 +336,11 @@
 				<p:outputLabel value="#{lbl['lbl.sc.request.note.fulfill.type']}" />				
 			</td>
 			<td colspan="3">
+			<!-- #25726/25725 - Check and display Italic value -->
 				<p:inputText 
 					value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode)}"
-					disabled="true" size="35"/>
+					disabled="true" size="35"
+					styleClass="#{lOADetailBackingBean.checkItalicCodeNameForMy(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterId) ? 'italic-item' : ''}"/>
 				<!-- #25726 START -->
 				<c:if test="#{isDocTypeQuotation}">
 					<!-- Reopen #25726 note 221 - issue 12 -->			 
