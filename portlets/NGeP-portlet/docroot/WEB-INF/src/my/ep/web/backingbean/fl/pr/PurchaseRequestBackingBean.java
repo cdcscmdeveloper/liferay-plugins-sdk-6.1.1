@@ -5699,6 +5699,22 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * 1B
 	 */
 	private void buildErrorMessageSupplierAccountTypeNonActive() {
+
+		throw new EpException(MessageConst.ERROR_740082, new String[] {
+				getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, getSuppAccType()),
+				getManagedBean().getFulfilmentRequest().getSmSupplier().getCompanyName(),
+				getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
+				getManagedBean().getReason() });
+
+	}
+	
+	/**
+	 * Error message if PK7/Special Item Supplier Account type non applicable
+	 * 
+	 * 1A
+	 */
+	private void buildErrorMessageSupplierAccountTypeNonApplicable() {
+
 		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IReasonSO.class);
 
@@ -5722,32 +5738,32 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					allowableSuppAccTypeMsgBuilder.append(", ");
 				}
 
+				String suppTypeCode;
+
+				// convert supplier account type code from MA to M
+				switch (reasonRestr.getSupplAcctTypeId().getParameterCode()) {
+				case FulfilmentConst.SM_SUPP_ACC_CODE_MOF_REASON:
+					suppTypeCode = FulfilmentConst.SM_SUPP_ACC_CODE_MOF;
+					break;
+				case FulfilmentConst.SM_SUPP_ACC_CODE_BASIC_REASON:
+					suppTypeCode = FulfilmentConst.SM_SUPP_ACC_CODE_BASIC;
+					break;
+				default:
+					suppTypeCode = FulfilmentConst.SM_SUPP_ACC_CODE_G2G;
+				}
+
 				allowableSuppAccTypeMsgBuilder.append(getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE,
-						reasonRestr.getSupplAcctTypeId().getParameterCode()));
+						suppTypeCode));
 
 			}
 
 		}
 
-		throw new EpException(MessageConst.ERROR_740082, new String[] {
+		throw new EpException(MessageConst.ERROR_740083, new String[] {
 				getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, getSuppAccType()),
 				getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 				getManagedBean().getReason(), pronounAllowableSuppAccType, allowableSuppAccTypeMsgBuilder.toString() });
 
-	}
-	
-	/**
-	 * Error message if PK7/Special Item Supplier Account type non applicable
-	 * 
-	 * 1A
-	 */
-	private void buildErrorMessageSupplierAccountTypeNonApplicable() {
-			throw new EpException(MessageConst.ERROR_740083, new String[] {
-					getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, getSuppAccType()),
-					getManagedBean().getFulfilmentRequest().getSmSupplier().getCompanyName(),
-					getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
-					getManagedBean().getReason() });
-		
 	}
 	// #27476 end
 }
