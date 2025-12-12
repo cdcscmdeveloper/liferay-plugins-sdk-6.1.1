@@ -165,7 +165,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * @param rowIndex
 	 */
 	public void deleteReasonApplicability(int rowIndex){
-		log.info("...............ok................");
+		log.info("...............deleteReasonApplicability................");
 
 		// 35509
 		if (getManagedBean().getDeletePIDReasonList() == null) {
