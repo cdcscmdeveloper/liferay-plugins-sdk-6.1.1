@@ -153,6 +153,7 @@ import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.SSTConstant; //#27868
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
@@ -776,6 +777,99 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return items;
 	}
+	
+	//27868 - start
+	/**
+	 * Retrieves dropdown values for Reason codes based on profile ID and
+	 * category code. If no reasons are found for the given profile ID, it will
+	 * load reasons without profile filtering.
+	 * 
+	 * @param profileId
+	 *            the profile ID used to filter reasons
+	 * @param categoryCode
+	 *            the category code of the reason
+	 * @return an array of SelectItem objects for use in a dropdown list
+	 */
+	public SelectItem[] getReasonCodeDropdownValues(Long profileId, String categoryCode) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(profileId, categoryCode);
+
+			items = new SelectItem[reasonDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			for (PmReasonDesc reasonDesc : reasonDescs) {
+				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
+			}
+
+			if (reasonDescs.isEmpty()) {
+				List<PmReasonDesc> reasonDescsWithoutProfileId = ReasonHelper.getInstance().getReasonDescList(
+						categoryCode);
+				for (PmReasonDesc reasonDesc : reasonDescsWithoutProfileId) {
+					items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					SSTConstant.EMPTY_STRING, SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+		return items;
+	}
+	
+	/**
+	 * Retrieves combined radio button values from new and old parameter types.
+	 * Includes the old parameter only if its code matches the given
+	 * oldParameterCode.
+	 * 
+	 * @param newParameterType
+	 *            the parameter type for new values
+	 * @param oldParameterType
+	 *            the parameter type for old values
+	 * @param oldParameterCode
+	 *            the specific old parameter code to include
+	 * @return an array of SelectItem objects representing the combined radio
+	 *         button options
+	 */
+	public SelectItem[] getRadioButtonCodeValuesCombineWIPParameter(String newParameterType, String oldParameterType,
+			String oldParameterCode) {
+
+		List<SelectItem> items = new ArrayList<>();
+
+		try {
+			List<PmParameterDesc> newParameterDescs = ParameterHelper.getInstance().getParameterDescList(
+					newParameterType);
+
+			for (PmParameterDesc desc : newParameterDescs) {
+				items.add(new SelectItem(desc.getPmParameter().getParameterCode(), desc.getCodeName()));
+			}
+
+			List<PmParameterDesc> oldParameterDescs = ParameterHelper.getInstance().getParameterDescList(
+					oldParameterType);
+
+			for (PmParameterDesc desc : oldParameterDescs) {
+				if (oldParameterCode != null
+						&& oldParameterCode.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(desc.getPmParameter().getParameterCode(), desc.getCodeName()));
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance()
+					.logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, SSTConstant.EMPTY_STRING,
+							SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM,
+							getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items.toArray(new SelectItem[0]);
+	}	
+	//27868 - end
 
 	/**
 	 * Get reason by reason category code and reason code

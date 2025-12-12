@@ -15,8 +15,8 @@
 	<cc:implementation>
 		<p:dialog id="compExpSuppProfViewPopup"
 			header="#{lbl['lbl.sm.comp.exp.master.list.panel']}"
-			widgetVar="compExpSuppProfViewPopupWV" modal="true" styleClass="pop_up_top"
-			position="top" width="700px">
+			widgetVar="compExpSuppProfViewPopupWV" modal="true"
+			styleClass="pop_up_top" position="top" width="700px">
 			<div align="center">
 				<table>
 					<tr>
@@ -89,8 +89,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" />
-						</td>
+								value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
 								value="#{cc.attrs.mBean.selectedMaster.contractEffDate}">
@@ -101,8 +100,7 @@
 					<tr>
 						<td style="width: 34%"><p:outputLabel
 								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" />
-						</td>
+								value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /></td>
 						<td style="width: 66%"><h:outputText
 								styleClass="outputLabel-view"
 								value="#{cc.attrs.mBean.selectedMaster.contractExpDate}">
@@ -170,18 +168,22 @@
 						var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
 						<ac:paginator for="smCompExpCatCodes" />
 						<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL1Name}" />
+							<h:outputText value="#{smCompExpCatCode.categoryL1Name}"
+								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL2Name}" />
+							<h:outputText value="#{smCompExpCatCode.categoryL2Name}"
+								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL3Name}" />
+							<h:outputText value="#{smCompExpCatCode.categoryL3Name}"
+								style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;" />
 						</p:column>
 					</p:dataTable>
 				</p:panel>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.sm.comp.exp.master.popup.btn.ok']}"
+					<p:commandButton
+						value="#{lbl['lbl.sm.comp.exp.master.popup.btn.ok']}"
 						oncomplete="compExpSuppProfViewPopupWV.hide()" process="@this" />
 				</div>
 			</div>
