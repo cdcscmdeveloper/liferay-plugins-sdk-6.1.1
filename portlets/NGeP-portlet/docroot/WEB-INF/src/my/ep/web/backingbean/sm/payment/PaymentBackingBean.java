@@ -85,6 +85,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
 	private final String cancelUrl = SmCommonUtil.getBasePortalUrl() + "/web/epapp/task-list";
 	
+	//#38377
+	private final String responseUrl = SmCommonUtil.getBasePortalUrl() + EpPropertiesUtils.getInstance().getProperty("payment.response.path");
+	
+	//#38377
+	private final String callbackUrl = SmCommonUtil.getBasePortalUrl() + EpPropertiesUtils.getInstance().getProperty("payment.callback.path");
+	
 	// #38377
 	private final String paymentGatewayEpOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.ep.onoff");
 
@@ -180,6 +186,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 		log.info("*******Bill Object**********"
 				+ resDTO.getPyBill().getBillId());
+		log.info("######38377#####billId init: " + resDTO.getPyBill().getBillId());
 		this.getManagedBean().setPyBill(resDTO.getPyBill());
 		List<PyBillDtl> smBillDtls = resDTO.getPyBill().getPyBillDtls();
 
@@ -212,7 +219,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				this.getManagedBean().setApplicationPayment(billDtl);
 			}
 		}
-
+		log.info("#38377#####inside billDtl ID:"
+				+ this.getManagedBean().getApplicationPayment() != null ? this
+				.getManagedBean().getApplicationPayment().getBillDtlId() : null);
 		if (getManagedBean().isSoftcertPayment()) {
 			setBilledSoftCertPersonnels(pyBillDtlLs);
 		}
@@ -236,7 +245,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
 		reqDTO.setBillId(this.getManagedBean().getPyBill().getBillId());
 		PendingPaymentResDTO resDTO = reqSO.checkAlreadyDonePayement(reqDTO);
-				
+		
+		log.info("#38377#####inside proceedToPaymentSummary completePayment:"+resDTO.isFoundCompletePayment());
 		if(resDTO.isFoundCompletePayment()){
 			log.info("<<<< Failure Payment - Bill ID >>>> "+reqDTO.getBillId());
 			throw new EpException(MessageConst.ERROR_721055);
@@ -402,6 +412,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			log.info("******VKey********" + vKey);
 			log.info("******VC********" + vc);
 			log.info("****cancelUrl******" + cancelUrl);
+			log.info("****callbackUrl******" + callbackUrl);
+			log.info("****responseUrl******" + responseUrl);
 			BigDecimal ttlAmt = resDTO.getPyBill().getPyPayments().get(0)
 					.getPaymentAmt();
 			this.setvCode(vc);
@@ -410,17 +422,17 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
 			
 			//#38377
-			this.getManagedBean()
-					.setPayLoad(
-							PaymentUtil.constructJsonPayload(merchantId, vKey,
-									this.getManagedBean().getOrderId(), this
-											.getManagedBean().getTotalAmount(),
-									this.getManagedBean().getBillName(), this
-											.getManagedBean().getBillEmail(),
-									this.getManagedBean().getBillMobile(), this
-											.getManagedBean().getBillDesc(),
-									this.getManagedBean().getCountry(), this
-											.getCancelUrl()));
+			this.getManagedBean().setPayLoad(
+					PaymentUtil.constructJsonPayload(merchantId, vKey, this
+							.getManagedBean().getOrderId(), this
+							.getManagedBean().getTotalAmount(), this
+							.getManagedBean().getBillName(), this
+							.getManagedBean().getBillEmail(), this
+							.getManagedBean().getBillMobile(), this
+							.getManagedBean().getBillDesc(), this
+							.getManagedBean().getCountry(),
+							this.getCancelUrl(), this.responseUrl,
+							this.callbackUrl));
 			
 			return "paymentRequestSubmission";
 

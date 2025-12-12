@@ -11877,13 +11877,10 @@ if (null != checklist && !checklist.isEmpty()) {
 			
 			scoreSetting.add(financialItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
-// #21695 farid, if partial set weightage to false			
-			// #21695 farid, if partial set weightage to false
-			if (this.getManagedBean().getQt().isPartial() == true) {
-				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
-			} else if (!this.getManagedBean().isWeightage35384WIP() && !this.getManagedBean().getQt().isPartial()) {
-				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true); // #38151 set to weightage
-			}// #38151 if not wip, set to true without partial offer
+			// #21695 farid, if partial set weightage to true #38679			
+			if (this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
+			}
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 				.getRecommendationPackageScore();
@@ -23610,32 +23607,26 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 * @param checkList
 	 * 
-	 * @param index
-	 * 
 	 * @return
 	 */
-	public void updateSelectedTechnicalChecklistPreviewIndx(ScQtCheckList checkList, int index) {
-		if (checkList.isSelected()) {
-			checkList.setIndex(index);
-		} else {
-			checkList.setIndex(-1);
-		}
-		int checklistPreviewCount = 0;
+	public void updateSelectedTechnicalChecklistPreviewIndex(ScQtCheckList checkList) {
 		for (ScQtCheckList scQtCheckList : this.getManagedBean().getTechChecklistPreview()) {
-			if (null != scQtCheckList.getPmDocument() && null != checkList.getPmDocument()
-					&& index != checklistPreviewCount
-					&& checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()) {
-				if (this.getManagedBean().getTechChecklistPreview().get(checklistPreviewCount).isSelected()) {
-					this.getManagedBean().getTechChecklistPreview().get(checklistPreviewCount).setSelected(false);
-					this.getManagedBean().getTechChecklistPreview().get(checklistPreviewCount).setIndex(-1);
+			if (scQtCheckList.getQtChecklistId().equals(checkList.getQtChecklistId())) {
+				if (checkList.isSelected()) {
+					scQtCheckList.setSelected(true);
 				} else {
-					this.getManagedBean().getTechChecklistPreview().get(checklistPreviewCount).setSelected(true);
-					this.getManagedBean().getTechChecklistPreview().get(checklistPreviewCount)
-							.setIndex(checklistPreviewCount);
+					scQtCheckList.setSelected(false);
 				}
 			}
-			checklistPreviewCount++;
 		}
+
+		for (ScQtCheckList scQtCheckList : this.getManagedBean().getTechChecklistPreview()) {
+			if (!scQtCheckList.isSelected()) {
+				this.getManagedBean().setSelectAllTechPreview(false);
+				return;
+			}
+		}
+		this.getManagedBean().setSelectAllTechPreview(true);
 	}
 
 	// #10141 End Vinod
@@ -23646,32 +23637,26 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 * @param checkList
 	 * 
-	 * @param index
-	 * 
 	 * @return
 	 */
-	public void updateSelectedFinancialChecklistPreviewIndx(ScQtCheckList checkList, int index) {
-		if (checkList.isSelected()) {
-			checkList.setIndex(index);
-		} else {
-			checkList.setIndex(-1);
-		}
-		int checklistPreviewCount = 0;
+	public void updateSelectedFinancialChecklistPreviewIndex(ScQtCheckList checkList) {
 		for (ScQtCheckList scQtCheckList : this.getManagedBean().getFinChecklistPreview()) {
-			if (null != scQtCheckList.getPmDocument() && null != checkList.getPmDocument()
-					&& index != checklistPreviewCount
-					&& checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()) {
-				if (this.getManagedBean().getFinChecklistPreview().get(checklistPreviewCount).isSelected()) {
-					this.getManagedBean().getFinChecklistPreview().get(checklistPreviewCount).setSelected(false);
-					this.getManagedBean().getFinChecklistPreview().get(checklistPreviewCount).setIndex(-1);
+			if (scQtCheckList.getQtChecklistId().equals(checkList.getQtChecklistId())) {
+				if (checkList.isSelected()) {
+					scQtCheckList.setSelected(true);
 				} else {
-					this.getManagedBean().getFinChecklistPreview().get(checklistPreviewCount).setSelected(true);
-					this.getManagedBean().getFinChecklistPreview().get(checklistPreviewCount)
-							.setIndex(checklistPreviewCount);
+					scQtCheckList.setSelected(false);
 				}
 			}
-			checklistPreviewCount++;
 		}
+
+		for (ScQtCheckList scQtCheckList : this.getManagedBean().getFinChecklistPreview()) {
+			if (!scQtCheckList.isSelected()) {
+				this.getManagedBean().setSelectAllFinPreview(false);
+				return;
+			}
+		}
+		this.getManagedBean().setSelectAllFinPreview(true);
 	}
 
 	// #10141 End Vinod
@@ -24038,7 +24023,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String reportName = ReportConst.SC_PVW_TECH_CHECKLIST_SUMMARY_JSP;
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
-				.getTechChecklistPreview(), true);
+				.getScQtCheckSt2techProposal(), true);
 	}
 
 	// #10141 End Vinod
@@ -24104,7 +24089,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String reportName = ReportConst.SC_PVW_FIN_CHECKLIST_SUMMARY_JSP;
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
-				.getFinChecklistPreview(), true);
+				.getScQtCheckSt2financeProposalList(), true);
 	}
 
 	// #10141 End Vinod

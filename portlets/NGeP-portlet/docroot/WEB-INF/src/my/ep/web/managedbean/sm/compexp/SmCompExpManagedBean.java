@@ -60,7 +60,6 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private List<SmCompExpMasterDoc> smCompExpDocList;
 	private String smCompExpFilePath;
 	private List<SmCompExpCatDraft> smCompExpCatDraftList;
-	private boolean smCompExpCatDraftListEmpty;
 	private boolean smCompExpCatDraftNotComplete;
 	private List<PmCategoryL1> supplierMainCatList;
 	private boolean selectedAll;
@@ -214,14 +213,6 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setSmCompExpCatDraftList(List<SmCompExpCatDraft> smCompExpCatDraftList) {
 		this.smCompExpCatDraftList = smCompExpCatDraftList;
-	}
-
-	public boolean isSmCompExpCatDraftListEmpty() {
-		return smCompExpCatDraftListEmpty;
-	}
-
-	public void setSmCompExpCatDraftListEmpty(boolean smCompExpCatDraftListEmpty) {
-		this.smCompExpCatDraftListEmpty = smCompExpCatDraftListEmpty;
 	}
 
 	public boolean isSmCompExpCatDraftNotComplete() {
