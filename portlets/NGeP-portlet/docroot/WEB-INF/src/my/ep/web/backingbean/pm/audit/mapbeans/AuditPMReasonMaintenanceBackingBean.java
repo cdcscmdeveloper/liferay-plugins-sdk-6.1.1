@@ -324,57 +324,59 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	}
 
 	private void updateSRR(PmReason oldReason, PmReason existingReason) {
-		AuditPMSPDTO restriction = new AuditPMSPDTO();
 
 		if (oldReason.isByAppType() != existingReason.isByAppType()) {
-			restriction.setRoleCode(roleCode);
-			restriction.setDocType(docType);
-			restriction.setDocNo(existingReason.getReasonCode());
-			restriction.setDocGroupId(docGroupId);
-			restriction.setPmParameterLvlId(parameterLevelId);
-			restriction.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-			restriction.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
-			restriction.setLvlCode3(parameterCode);
-			restriction.setDocId(BigInteger.valueOf(existingReason.getReasonId()));
-			restriction.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_APP_TYPE_FIELDLABELCODE);
-			restriction.setOldValue(oldReason.isByAppType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-			restriction.setNewValue(existingReason.isByAppType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-			restriction.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			objList.add(restriction);
+			AuditPMSPDTO restrictionAppType = new AuditPMSPDTO();
+			restrictionAppType.setRoleCode(roleCode);
+			restrictionAppType.setDocType(docType);
+			restrictionAppType.setDocNo(existingReason.getReasonCode());
+			restrictionAppType.setDocGroupId(docGroupId);
+			restrictionAppType.setPmParameterLvlId(parameterLevelId);
+			restrictionAppType.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+			restrictionAppType.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
+			restrictionAppType.setLvlCode3(parameterCode);
+			restrictionAppType.setDocId(BigInteger.valueOf(existingReason.getReasonId()));
+			restrictionAppType.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_APP_TYPE_FIELDLABELCODE);
+			restrictionAppType.setOldValue(oldReason.isByAppType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
+			restrictionAppType.setNewValue(existingReason.isByAppType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
+			restrictionAppType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+			objList.add(restrictionAppType);
 		}
 
 		if (oldReason.isByRegType() != existingReason.isByRegType()) {
-			restriction.setRoleCode(roleCode);
-			restriction.setDocType(docType);
-			restriction.setDocNo(existingReason.getReasonCode());
-			restriction.setDocGroupId(docGroupId);
-			restriction.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value()));
-			restriction.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-			restriction.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
-			restriction.setLvlCode3(parameterCode);
-			restriction.setDocId(BigInteger.valueOf(existingReason.getReasonId()));
-			restriction.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_BUSS_TYPE_FIELDLABELCODE);
-			restriction.setOldValue(oldReason.isByRegType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-			restriction.setNewValue(existingReason.isByRegType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-			restriction.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			objList.add(restriction);
+			AuditPMSPDTO restrictionRegType = new AuditPMSPDTO();
+			restrictionRegType.setRoleCode(roleCode);
+			restrictionRegType.setDocType(docType);
+			restrictionRegType.setDocNo(existingReason.getReasonCode());
+			restrictionRegType.setDocGroupId(docGroupId);
+			restrictionRegType.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value()));
+			restrictionRegType.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+			restrictionRegType.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
+			restrictionRegType.setLvlCode3(parameterCode);
+			restrictionRegType.setDocId(BigInteger.valueOf(existingReason.getReasonId()));
+			restrictionRegType.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_BUSS_TYPE_FIELDLABELCODE);
+			restrictionRegType.setOldValue(oldReason.isByRegType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
+			restrictionRegType.setNewValue(existingReason.isByRegType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
+			restrictionRegType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+			objList.add(restrictionRegType);
 		}
 
 		if (oldReason.isBySupplierType() != existingReason.isBySupplierType()) {
-			restriction.setRoleCode(roleCode);
-			restriction.setDocType(docType);
-			restriction.setDocNo(existingReason.getReasonCode());
-			restriction.setDocGroupId(docGroupId);
-			restriction.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value()));
-			restriction.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-			restriction.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
-			restriction.setLvlCode3(parameterCode);
-			restriction.setDocId(BigInteger.valueOf(existingReason.getReasonId()));
-			restriction.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_SUPPL_TYPE_FIELDLABELCODE);
-			restriction.setOldValue(oldReason.isBySupplierType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-			restriction.setNewValue(existingReason.isBySupplierType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-			restriction.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			objList.add(restriction);
+			AuditPMSPDTO restrictionSuppType = new AuditPMSPDTO();
+			restrictionSuppType.setRoleCode(roleCode);
+			restrictionSuppType.setDocType(docType);
+			restrictionSuppType.setDocNo(existingReason.getReasonCode());
+			restrictionSuppType.setDocGroupId(docGroupId);
+			restrictionSuppType.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value()));
+			restrictionSuppType.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+			restrictionSuppType.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
+			restrictionSuppType.setLvlCode3(parameterCode);
+			restrictionSuppType.setDocId(BigInteger.valueOf(existingReason.getReasonId()));
+			restrictionSuppType.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_SUPPL_TYPE_FIELDLABELCODE);
+			restrictionSuppType.setOldValue(oldReason.isBySupplierType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
+			restrictionSuppType.setNewValue(existingReason.isBySupplierType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
+			restrictionSuppType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+			objList.add(restrictionSuppType);
 		}
 
 	}
