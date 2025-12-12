@@ -165,15 +165,17 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * @param rowIndex
 	 */
 	public void deleteReasonApplicability(int rowIndex){
-		log.info("...............deleteReasonApplicability................");
+		log.info("...............ok................");
 
 		// 35509
 		if (getManagedBean().getDeletePIDReasonList() == null) {
 			getManagedBean().setDeletePIDReasonList(new ArrayList<PmPIDReason>());
 		}
 
+		if(!this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(rowIndex).isBrandNew()){
 		this.getManagedBean().getDeletePIDReasonList()
 				.add(this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(rowIndex));
+		}
 		// 35509
 		
 			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
