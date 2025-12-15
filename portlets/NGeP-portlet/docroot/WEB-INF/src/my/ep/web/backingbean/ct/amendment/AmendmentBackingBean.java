@@ -8079,6 +8079,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see Exception
 	 */
 	public String preRejectContractAmendment(String outcome) throws Exception {
+	    log.info("enter preRejectContractAmendment with outcome:"+outcome);
 		if ((BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
 			
 			setSecretary();
@@ -8113,6 +8114,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 		} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome) && isSupplierRole()
 				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+			log.info("enter preRejectContractAmendment BpmOutcomeConst.BPM_REJECT:"+outcome);
 			validateRemarkCancel(outcome);
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
