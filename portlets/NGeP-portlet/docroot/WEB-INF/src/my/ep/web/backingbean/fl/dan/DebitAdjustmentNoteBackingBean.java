@@ -148,6 +148,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			if(getManagedBean().getPmDigiSign()!=null) {
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}

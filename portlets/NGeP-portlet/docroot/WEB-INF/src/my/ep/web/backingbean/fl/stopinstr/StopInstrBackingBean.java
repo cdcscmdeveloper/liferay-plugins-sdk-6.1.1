@@ -154,6 +154,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 
 			FulfilmentResDTO resDTO;//36386

@@ -491,7 +491,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			int deliveryTerm = 0;
 			deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
 			String uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
-			Calendar calendar = Calendar.getInstance();
+			//Calendar calendar = Calendar.getInstance();
 			if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
 				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
 				getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));//34555
@@ -565,7 +565,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setEmailValidate(false);
 		retrieveCountryList();
 		getManagedBean().setFlManualAddress(new FlDeliveryAddress());
-		getManagedBean().getFlManualAddress().setDeliveryAddressId(1L);//TODO 
+		getManagedBean().getFlManualAddress().setDeliveryAddressId(1L);
 		getManagedBean().getFlManualAddress().setPmAddressId(null);
 		getManagedBean().getFlManualAddress().setFlAddress(new FlAddress());
 		// default to Malaysia
@@ -623,12 +623,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			if (!isAddressContains) {
 				deliveryAddr = new FlDeliveryAddress();
 				deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
-				deliveryAddr.setPmAddressId(addrType.getPmAddress().getAddressId());//TODO remove comment when no error hit
+				deliveryAddr.setPmAddressId(addrType.getPmAddress().getAddressId());
 				deliveryAddr.setStartDate(getManagedBean().getFulfilmentRequest().getStartDate());
 				deliveryAddr.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
 				deliveryAddr.setPmUom(getManagedBean().getFulfilmentRequest().getPmUom());
 				deliveryAddr.setDeliveryTerm(getManagedBean().getFulfilmentRequest().getDeliveryTerm());
-				deliveryAddr.setFlAddress(convertPmAddressToFlAddress(addrType.getPmAddress()));//TODO NEW
+				deliveryAddr.setFlAddress(convertPmAddressToFlAddress(addrType.getPmAddress()));
 				if (null == getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
 					getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 				}
@@ -3685,7 +3685,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
 		OrgProfileResDTO resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
-		Long newKumpOrgId = 0L;//TODO remove after data are all pacthed
+		Long newKumpOrgId = 0L;
 		if(resDTO.getPmOrgProfile() != null){
 			newKumpOrgId = resDTO.getPmOrgProfile().getOrgProfileId();
 		}
@@ -3799,7 +3799,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setAddressId(addressId);
 			reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
 			AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
-			if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
+			if(resDTO.getAddressTypeList().isEmpty()){
 				throw new EpException(MessageConst.ERROR_745077, new String[]{getFullAddress(delAddr.getFlAddress())});
 			}
 		}
@@ -4284,7 +4284,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					&& !resDto.getSearchAddressResultBean().getResultList()
 							.isEmpty()) {
 
-				List<PmAddressType> pmAddressResultList = resDto.getSearchAddressResultBean().getResultList();
+				//List<PmAddressType> pmAddressResultList = resDto.getSearchAddressResultBean().getResultList();
 				PmAddressType retrievedPmAddressType = resDto.getSearchAddressResultBean().getResultList().get(0);
 				return retrievedPmAddressType;
 			}

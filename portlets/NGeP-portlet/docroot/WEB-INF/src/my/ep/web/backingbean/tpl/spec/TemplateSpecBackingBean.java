@@ -2978,7 +2978,7 @@ public class TemplateSpecBackingBean extends
 	
 	// #31134&11104 -start-
 	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
-		int count = 0;
+		//int count = 0;
 
 		for (TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()) {
 			if (retrieveAns != null && retrieveAns.getTplSpecTierQty() != null) {
