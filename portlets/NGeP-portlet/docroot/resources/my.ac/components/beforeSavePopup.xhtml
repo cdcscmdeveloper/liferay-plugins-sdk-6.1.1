@@ -40,7 +40,7 @@
 					header="#{lbl['lbl.pm.header.general.org.search']}"
 					toggleable="true">
 					<table style="margin-left: auto; margin-right: auto;">
-						<tr>
+						<tr style="border: 2px solid white; border-collapse: collapse;">
 							<td><p:outputLabel id="searchMinistryLbL"
 									value="#{lbl['lbl.sc.ministry']}" /></td>
 							<td colspan="3"><p:selectOneMenu id="somMinistry"
@@ -53,7 +53,7 @@
 										update="@this" />
 								</p:selectOneMenu></td>
 						</tr>
-						<tr>
+						<tr style="border: 2px solid white; border-collapse: collapse;">
 							<td><p:outputLabel id="searchPtjGroupLbL"
 									value="#{lbl['lbl.sc.kumpulan.ptj']}" /></td>
 							<td colspan="3"><p:selectOneMenu id="somJabatan"
@@ -67,7 +67,7 @@
 										update="ptjPanel" />
 								</p:selectOneMenu></td>
 						</tr>
-						<tr>
+						<tr style="border: 2px solid white; border-collapse: collapse;">
 							<td><p:outputLabel id="searchPtjLbL"
 									value="#{lbl['lbl.sc.ptj']}" /></td>
 							<td colspan="3"><p:outputPanel id="ptjPanel" layout="block">
@@ -80,20 +80,20 @@
 									</p:selectOneMenu>
 								</p:outputPanel></td>
 						</tr>
-						<tr>
+						<tr style="border: 2px solid white; border-collapse: collapse;">
 							<td><p:outputLabel id="searchNameLbL"
 									value="#{lbl['lbl.sc.name']}" /></td>
-							<td><p:inputText id="searchName" style="width:97%"
+							<td><p:inputText id="searchName" style="width:60%"
 									value="#{userOrganisationSearchBackingBean.managedBean.searchName}">
 									<p:ajax event="blur" process="@this" partialSubmit="true"
 										update="@this" />
 								</p:inputText></td>
 						</tr>
-						<tr>
+						<tr style="border: 2px solid white; border-collapse: collapse;">
 							<td><p:outputLabel id="searchIdentificationTypeIdLbL"
 									value="#{lbl['lbl.pm.profiles.userdetails.idtype']}" /></td>
 							<td colspan="3">
-									<p:selectOneMenu id="somIdType" styleClass="userPtjPopupSomWidth"
+									<p:selectOneMenu id="somIdType" style="width:30%" styleClass="userPtjPopupSomWidth"
 										value="#{userOrganisationSearchBackingBean.managedBean.identificationTypeId}">
 										<f:selectItems
 											value="#{userOrganisationSearchBackingBean.getIdentityTypeList()}" />
@@ -101,10 +101,10 @@
 											update="@this" />
 									</p:selectOneMenu></td>
 						</tr>
-						<tr>
+						<tr style="border: 2px solid white; border-collapse: collapse;">
 							<td><p:outputLabel id="searchIcLbL"
 									value="#{lbl['lbl.pm.ic.no']}" /></td>
-							<td><p:inputText id="searchIc" style="width:97%"
+							<td><p:inputText id="searchIc" style="width:35%"
 									value="#{userOrganisationSearchBackingBean.managedBean.searchIcNo}">
 									<p:ajax event="blur" process="@this" partialSubmit="true"
 										update="@this" />
@@ -157,7 +157,7 @@
 						</p:dataTable>
 					</h:panelGroup>
 					<table style="width: 100%;">
-						<tr>
+						<tr style="border: 2px solid white; border-collapse: collapse;">
 							<td style="text-align: right;"><p:commandButton id="slbtn"
 									value="#{lbl['lbl.btn.select']}" partialSubmit="true"
 									action="#{userOrganisationSearchBackingBean.okActionForRN(cc.attrs.okAction)}"
