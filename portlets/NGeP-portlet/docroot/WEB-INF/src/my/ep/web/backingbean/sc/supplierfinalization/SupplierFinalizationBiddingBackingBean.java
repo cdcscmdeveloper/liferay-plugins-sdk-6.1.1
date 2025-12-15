@@ -3539,9 +3539,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 
 		if (isItemized) {
-			validationItemizedSupplier(recommendMap, identifierMap, scQt, isBranchDeleted));
+			validationItemizedSupplier(recommendMap, identifierMap, scQt, isBranchDeleted);
 		} else {
-			validationPackageSupplier(recommendMap, identifierMap, scQt, isBranchDeleted));
+			validationPackageSupplier(recommendMap, identifierMap, scQt, isBranchDeleted);
 		}
 	}
 
