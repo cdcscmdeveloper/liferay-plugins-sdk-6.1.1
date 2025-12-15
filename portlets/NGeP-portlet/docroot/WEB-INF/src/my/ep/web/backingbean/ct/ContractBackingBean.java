@@ -1787,7 +1787,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
 				//Start - #30045
 				if(isSpecialItemAgencies()){
-					reqDTO.setSpecialItemReson(true);
+					reqDTO.setSpecialItemReason(true);
 					if(!reasonCode.isEmpty()){
 						reqDTO.setReasonCode(reasonCode);
 					}
@@ -2653,7 +2653,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if(!reasonCode.isEmpty()){
 					reqDTO.setReasonCode(reasonCode);
 					List<Long> listAffected = orgProfileSO.retrieveAgencyByReasonCode(reqDTO);
-					reqDTO.setSpecialItemReson(true);
+					reqDTO.setSpecialItemReason(true);
 					reqDTO.setOrgProfileIdListForSpecialItem(listAffected);
 				}
 				
