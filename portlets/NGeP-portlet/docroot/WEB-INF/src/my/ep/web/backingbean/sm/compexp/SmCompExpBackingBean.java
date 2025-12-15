@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -247,7 +248,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		setMinExpDate(effDate);
 
 		boolean terminated = false;
-		if(null != contractStatus && contractStatus.equals(ParameterConst.CONTRACT_STATUS_TERMINATED)){
+		if (null != contractStatus && contractStatus.equals(ParameterConst.CONTRACT_STATUS_TERMINATED)) {
 			terminated = true;
 		}
 		if (!terminated) {
@@ -331,10 +332,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		smCompExpCatDraftList = filterCatCode(smCompExpCatDraftList, this.getManagedBean().getSupplier().getSmAppl().getApplId());
 
 		getSupplierMainCatList();
-		if (smCompExpCatDraftList.isEmpty()) { 
-			addSmCompExpCatDraft(); 
-		} else { 
-			this.getManagedBean().setSmCompExpCatDraftList(smCompExpCatDraftList); 
+		if (smCompExpCatDraftList.isEmpty()) {
+			addSmCompExpCatDraft();
+		} else {
+			this.getManagedBean().setSmCompExpCatDraftList(smCompExpCatDraftList);
 			this.getManagedBean().setSmCompExpCatDraftNotComplete(false);
 		}
 	}
@@ -694,7 +695,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @param catL2
 	 * @param catL3
 	 */
-	public void getSupplierSubCatList(long categoryL1Id, PmCategoryL2 catL2, PmCategoryL3 catL3) {
+	public void getSupplierSubCatList(long categoryL1Id, PmCategoryL2 catL2, PmCategoryL3 catL3, int index) {
 		SmSupplier supplier = new SmSupplier();
 		if (this.getManagedBean().isDraftUpdate()) {
 			supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
@@ -714,11 +715,22 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
 
 		if (resDTO != null) {
-			catL2.setPmCategoryL2s(resDTO.getCategoryL2List());
+			catL2.setPmCategoryL2s(new ArrayList<PmCategoryL2>(new LinkedHashSet<PmCategoryL2>(resDTO.getCategoryL2List())));
 		} else {
 			catL2.setPmCategoryL2s(null);
 		}
 		catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
+		if (this.getManagedBean().isDraftUpdate()) {
+			this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL2().setCategoryL2Id(null);
+			this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
+		} else if (this.getManagedBean().isMasterUpdate()) {
+			this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL2().setCategoryL2Id(null);
+			this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+		} else if (this.getManagedBean().isMasterNew()) {
+			this.getManagedBean().getNewMaster().getCompExpMasterCats().get(index).getCategoryL2().setCategoryL2Id(null);
+			this.getManagedBean().getNewMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+		}
+		this.getManagedBean().setSmCompExpCatDraftNotComplete(true);
 	}
 
 	/**
@@ -727,7 +739,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @param categoryL2Id
 	 * @param catL3
 	 */
-	public void getSupplierSubDivCatList(long categoryL2Id, PmCategoryL3 catL3) {
+	public void getSupplierSubDivCatList(long categoryL2Id, PmCategoryL3 catL3, int index) {
 		SmSupplier supplier = new SmSupplier();
 		if (this.getManagedBean().isDraftUpdate()) {
 			supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
@@ -746,10 +758,18 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		if (resDTO != null) {
-			catL3.setPmCategoryL3s(resDTO.getCategoryL3List());
+			catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>(new LinkedHashSet<PmCategoryL3>(resDTO.getCategoryL3List())));
 		} else {
 			catL3.setPmCategoryL3s(null);
 		}
+		if (this.getManagedBean().isDraftUpdate()) {
+			this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
+		} else if (this.getManagedBean().isMasterUpdate()) {
+			this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+		} else if (this.getManagedBean().isMasterNew()) {
+			this.getManagedBean().getNewMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
+		}
+		this.getManagedBean().setSmCompExpCatDraftNotComplete(true);
 	}
 
 	/**
@@ -761,16 +781,23 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void checkDuplicateDraftCatCode(Long categoryL3Id, int index) {
 		int i = 0;
+		boolean listHaveNull = false;
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
-			if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
+			if (null == cat.getCategoryL3().getCategoryL3Id()) {
+				listHaveNull = true;
+			} else if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
 				this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
 				this.getManagedBean().setSmCompExpCatDraftNotComplete(true);
 				throw new EpException(MessageConst.ERROR_775222);
 			}
 			i++;
 		}
-		this.getManagedBean().setSmCompExpCatDraftNotComplete(false);
+		if (null != this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().getCategoryL3Id() && !listHaveNull) {
+			this.getManagedBean().setSmCompExpCatDraftNotComplete(false);
+		} else {
+			this.getManagedBean().setSmCompExpCatDraftNotComplete(true);
+		}
 	}
 
 	/**
@@ -789,9 +816,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 
 		int i = 0;
+		boolean listHaveNull = false;
 		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatMaster cat : catList) {
-			if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
+			if (null == cat.getCategoryL3().getCategoryL3Id()) {
+				listHaveNull = true;
+			} else if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
 				if (this.getManagedBean().isMasterUpdate()) {
 					this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().setCategoryL3Id(null);
 				} else if (this.getManagedBean().isMasterNew()) {
@@ -802,7 +832,15 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			}
 			i++;
 		}
-		this.getManagedBean().setSmCompExpCatMasterNotComplete(false);
+		if (this.getManagedBean().isMasterUpdate() && !listHaveNull
+				&& null != this.getManagedBean().getSelectedMaster().getCompExpMasterCats().get(index).getCategoryL3().getCategoryL3Id()) {
+			this.getManagedBean().setSmCompExpCatMasterNotComplete(false);
+		} else if (this.getManagedBean().isMasterNew() && !listHaveNull
+				&& null != this.getManagedBean().getNewMaster().getCompExpMasterCats().get(index).getCategoryL3().getCategoryL3Id()) {
+			this.getManagedBean().setSmCompExpCatMasterNotComplete(false);
+		} else {
+			this.getManagedBean().setSmCompExpCatMasterNotComplete(true);
+		}
 	}
 
 	/**
@@ -1032,6 +1070,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		master.setContractEffDate(draft.getContractEffDate());
 		master.setContractExpDate(draft.getContractExpDate());
 		master.setContractStatus(draft.getContractStatus());
+		master.setContractId(draft.getContractId());
+		master.setQtId(draft.getQtId());
+		master.setMigration(draft.isMigration());
 		if (this.getManagedBean().isConsultant()) {
 			master.setProjectLoc(draft.getProjectLoc());
 			master.setWorkServDesc(draft.getWorkServDesc());
@@ -1093,7 +1134,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
 		SmCompExpResDTO resDTO;
-		resDTO = getSmCompExpSo().deactivateDraft(reqDTO);
+		resDTO = getSmCompExpSo().deleteDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1201,7 +1242,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
 		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
 		this.getManagedBean().setSelectedMaster(resDTO.getMaster());
-		this.getManagedBean().getSelectedMaster().getProcumentMode().getParameterId();
+		if (null != this.getManagedBean().getSelectedMaster().getPaymentMethod()) {
+			this.getManagedBean().getSelectedMaster().getPaymentMethod().getParameterId();
+		} else {
+			this.getManagedBean().getSelectedMaster().setPaymentMethod(new PmParameter());
+		}
+		if (null != this.getManagedBean().getSelectedMaster().getProcumentMode()) {
+			this.getManagedBean().getSelectedMaster().getProcumentMode().getParameterId();
+		} else {
+			this.getManagedBean().getSelectedMaster().setProcumentMode(new PmParameter());
+		}
 
 		dateChange();
 
@@ -1263,7 +1313,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (!error && update) {
 			updateSmComExpMaster(false);
 		} else if (!error) {
-			master.setSmAppl(this.getManagedBean().getSupplier().getSmAppl());			
+			master.setSmAppl(this.getManagedBean().getSupplier().getSmAppl());
 			for (SmCompExpMasterDoc doc : master.getCompExpMasterDocs()) {
 				doc.setCompExpMaster(master);
 			}
@@ -1281,7 +1331,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				reqDTO.setCategoryL3Id(cat.getCategoryL3().getCategoryL3Id());
 				cat.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO).getCategoryL3());
 				cat.setCategoryL3Name(cat.getCategoryL3().getCategoryName());
-				
+
 				cat.setCompExpMaster(master);
 			}
 			saveMaster(master, clienType);
@@ -1397,6 +1447,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		history.setContractEffDate(master.getContractEffDate());
 		history.setContractExpDate(master.getContractExpDate());
 		history.setContractStatus(master.getContractStatus());
+		history.setContractId(master.getContractId());
+		history.setQtId(master.getQtId());
+		history.setMigration(master.isMigration());
 		if (this.getManagedBean().isConsultant()) {
 			history.setProjectLoc(master.getProjectLoc());
 			history.setWorkServDesc(master.getWorkServDesc());
@@ -1580,7 +1633,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().getNewMaster().getSourceType().setParameterId(ParameterConst.SOURCE_TYPE_ID_SM);
 
 		dateChange();
-		
+
 		List<SmCompExpCatMaster> catList = new ArrayList<>();
 		this.getManagedBean().getNewMaster().setCompExpMasterCats(catList);
 		addSmCompExpCatMaster();

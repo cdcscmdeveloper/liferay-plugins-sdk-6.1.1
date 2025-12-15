@@ -2317,8 +2317,9 @@ public class SimpleQuoteBackingBean extends
 
 				quote.setJustificationType(getReasonByCategoryAndCode(
 						finalizePK7Code(), quote.getJustificationType().getReasonCode()));
-				validateUserProfileAgency(quote);
+
 				if (!getManagedBean().isNewPK7Code()) {
+					validateUserProfileAgency(quote);
 					validateSupplierAccountType(quote);
 				}
 				
@@ -8913,8 +8914,6 @@ public class SimpleQuoteBackingBean extends
 	protected void assignSuppAcctType(List<String> suppAcctTypes, PmReasonRestr pmReasonRestr) {
 		if (pmReasonRestr.getSupplAcctTypeId() != null) {
 			suppAcctTypes.add(pmReasonRestr.getSupplAcctTypeId().getParameterCode());
-		} else {
-			suppAcctTypes.add(DPConstants.PARAMETER_CODE_G2G_ACCOUNT);
 		}
 	}
 
