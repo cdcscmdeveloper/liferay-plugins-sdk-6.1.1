@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -30,6 +31,8 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -44,6 +47,7 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.fl.FlAddress;
@@ -67,8 +71,11 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -873,5 +880,60 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return Boolean.TRUE;
 	}
 	//36386 -End
+	// #31344 -start-
+	/**
+	 * Show Details Items in popup
+	 * 
+	 * @param cmItemId
+	 * @return void
+	 */
+	public void showItemDescPopup(Long cmItemId) {
+        if (cmItemId == null) {
+            return;
+        }
+        
+        CodificationReqDTO cReqDTO = new CodificationReqDTO();
+        cReqDTO.setItemId(cmItemId);
+        ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+                ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+        CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
+        if (codificationResDTO == null || codificationResDTO.getCmItem() == null) {
+            return;
+        }
 
+        CmItem item = codificationResDTO.getCmItem();
+        populateItemDescPopup(item);
+    }
+
+    /**
+     * Populate the item description for pop up
+     * 
+     * @param item
+     * @return void
+     */
+	private void populateItemDescPopup(CmItem item) {
+        CommonUtils common = new CommonUtils();
+        CodificationBackingBean cdbb = new CodificationBackingBean();
+        
+        String segmentTitle = common.removeItemNameNA(item.getCmType().getTypeName()) + " " +
+        		common.removeItemNameNA(item.getCmBrand().getBrandName()) + " " +
+        		common.removeItemNameNA(item.getCmMeasurement().getMeasurementName()) + " " +
+        		common.removeItemNameNA(item.getCmColor().getColorName());
+
+        String segmentCode = item.getCmType().getTypeCode() +
+                             item.getCmBrand().getBrandCode() +
+                             item.getCmMeasurement().getMeasurementCode() +
+                             item.getCmColor().getColorCode();
+        
+        String familyTitle = item.getCmUnspsc().getUnspscTitle() + " " + segmentTitle;
+
+        cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
+        cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
+        cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
+        cdbb.getManagedBean().setSegmentTitle(segmentTitle);
+        cdbb.getManagedBean().setSegmentCode(segmentCode);
+        cdbb.getManagedBean().setFamilyTitle(familyTitle);
+    }
+		
+	// #31344 -end-
 }

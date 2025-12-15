@@ -83,6 +83,10 @@ public class FlReportConst implements Serializable {
 	public static final String FL_083_SUM_FOR_PO_CANCELLATION_REASON = "FL_083";
 	public static final String FL_084_SUPPLIER_TRANSACTION = "FL_084";
 	//29550 - end
+	//31344 - start
+	public static final String FL_085_ITEM_THRESHOLD = "FL_085";
+	public static final String FL_086_ITEM_PANEL_THRESHOLD = "FL_086";
+	//31344 - end
 	
 	// Panel Const
 	public static final String FL_033_SUMMARY = "FL_033";
@@ -168,6 +172,12 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_EP_NO = "PEPNO";
 	public static final String FL_RPT_PURCHASE_GROUP_STATUS = "PGSTATUS";
 	//29550 - End
+	
+	//31344 - start
+	public static final String FL_RPT_PROCUREMENT_TYPE = "PPROCTYPE";
+	public static final String FL_RPT_REASON = "PREASON";
+	public static final String FL_PARAMETER_TYPE_RPT = "RPT";
+	//31344 - end
 	
 	public FlReportConst(){}
 
@@ -418,5 +428,14 @@ public class FlReportConst implements Serializable {
 		return FL_RPT_PURCHASE_GROUP_STATUS;
 	}
 	
+	//31344 - start
+	public String getFl085ItemThreshold() {
+		return FL_085_ITEM_THRESHOLD;
+	}
+	
+	public String getFl086ItemPanelThreshold() {
+		return FL_086_ITEM_PANEL_THRESHOLD;
+	}
+	//31344 - end
 	
  }
