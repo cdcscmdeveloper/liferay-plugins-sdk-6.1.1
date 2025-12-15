@@ -2815,9 +2815,9 @@ public class NoticeBoardBackingBean extends
 						boolean resultL3vsPublish = pmChangeDateL3.after(publishTimestamp);
 
 						if ((resultL1vsPublish ||resultL2vsPublish ||resultL3vsPublish) && (resultL1 || resultL2 || resultL3)) {
-							getManagedBean().setPmCatL1flag(resultL1);
-							getManagedBean().setPmCatL2flag(resultL2);
-							getManagedBean().setPmCatL3flag(resultL3);
+							getManagedBean().setPmCatL1flag(resultL1vsPublish);
+							getManagedBean().setPmCatL2flag(resultL2vsPublish);
+							getManagedBean().setPmCatL3flag(resultL3vsPublish);
 							getManagedBean().setDisplayAfterPublish(true);
 						}
 						if (null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()) {
