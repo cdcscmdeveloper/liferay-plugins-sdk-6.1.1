@@ -16,7 +16,9 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
@@ -194,16 +196,19 @@ public class CommonUtils {
 	
 	// #31344 start
 	/**
-	 * Filter item name to remove "N/A" or “NA” or “N A”.
+	 * Filter item name to remove "N/A" or “N A”.
 	 * 
 	 * @param itemName
 	 * @return itemName
 	 */
 	public String filterItemNameNA(String itemName) {
-		if(itemName != null && !itemName.isEmpty()){
-			return itemName.replaceAll("\\s(NA|N/A|N A|na|n/a|n a)\\b", "");
-		}
-		return itemName;
+		if (itemName != null && !itemName.isEmpty()) {
+            // Only remove N/A and N A
+            String cleaned = itemName.replaceAll("\\bN\\s*/\\s*A\\b|\\bN\\s+A\\b", "");
+            cleaned = cleaned.replaceAll(" +", " ").trim();
+            return cleaned;
+        }
+        return itemName;
 	}
 	// #31344 end
 

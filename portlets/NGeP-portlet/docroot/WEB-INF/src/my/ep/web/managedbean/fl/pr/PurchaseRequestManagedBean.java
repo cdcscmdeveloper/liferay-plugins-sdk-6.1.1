@@ -314,6 +314,10 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//29555 start
     private String preparedBy;
     //29555 end
+    
+    //31344
+    private List<FlFulfilmentItemAddr> itemExceedBpkApproval;
+    private List<FlFulfilmentItemAddr> itemExceedThresholdItem;
 
 /**
  * Gets the charge line item root.
@@ -3427,4 +3431,22 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	// 29555-End
 
+	//31344
+	public List<FlFulfilmentItemAddr> getItemExceedBpkApproval() {
+		return itemExceedBpkApproval;
+	}
+
+	public void setItemExceedBpkApproval(List<FlFulfilmentItemAddr> itemExceedBpkApproval) {
+		this.itemExceedBpkApproval = itemExceedBpkApproval;
+	}
+
+	public List<FlFulfilmentItemAddr> getItemExceedThresholdItem() {
+		return itemExceedThresholdItem;
+	}
+
+	public void setItemExceedThresholdItem(List<FlFulfilmentItemAddr> itemExceedThresholdItem) {
+		this.itemExceedThresholdItem = itemExceedThresholdItem;
+	}
+	//31344
+	
 }

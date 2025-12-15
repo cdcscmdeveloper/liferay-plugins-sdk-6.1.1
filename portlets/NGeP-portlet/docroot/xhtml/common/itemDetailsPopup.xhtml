@@ -60,27 +60,29 @@
 							value="#{codificationBackingBean.managedBean.commodityTitle}"
 							style="width:300px;" disabled="true" /></td>
 				</tr>
-				<tr style="border: hidden !important;">
-					<td width="15%" style="border: hidden !important; padding: 0;">
-						<p:outputLabel style="font-weight: bold;"
-							value="#{lbl['lbl.sc.qt.extension.code']}" />
-					</td>
-					<td width="30%" style="border: 10px !important; padding: 0;">
-						<p:inputText id="segmentCodeId"
-							value="#{codificationBackingBean.managedBean.segmentCode}"
-							style="width:300px;" disabled="true" />
-					</td>
-					<td width="15%" style="border: hidden !important; padding: 0;">
-						<p:outputLabel style="font-weight: bold;"
-							value="#{lbl['lbl.sc.qt.extension.title']}" />
-					</td>
-					<td><p:inputText id="segmentTitleId"
-							value="#{codificationBackingBean.managedBean.segmentTitle}"
-							style="width:300px;" disabled="true" /></td>
-
-
-
-				</tr>
+				<ui:fragment rendered="#{codificationBackingBean.managedBean.segmentTitle!=null}">
+					<tr style="border: hidden !important;" rendered="#{empty codificationBackingBean.managedBean.segmentTitle}">
+						<td width="15%" style="border: hidden !important; padding: 0;">
+							<p:outputLabel style="font-weight: bold;"
+								value="#{lbl['lbl.sc.qt.extension.code']}" />
+						</td>
+						<td width="30%" style="border: 10px !important; padding: 0;">
+							<p:inputText id="segmentCodeId"
+								value="#{codificationBackingBean.managedBean.segmentCode}"
+								style="width:300px;" disabled="true" />
+						</td>
+						<td width="15%" style="border: hidden !important; padding: 0;">
+							<p:outputLabel style="font-weight: bold;"
+								value="#{lbl['lbl.sc.qt.extension.title']}" />
+						</td>
+						<td><p:inputText id="segmentTitleId"
+								value="#{codificationBackingBean.managedBean.segmentTitle}"
+								style="width:300px;" disabled="true" /></td>
+	
+	
+	
+					</tr>
+				</ui:fragment>
 			</table>
 		</p:panel>
 	</p:dialog>
