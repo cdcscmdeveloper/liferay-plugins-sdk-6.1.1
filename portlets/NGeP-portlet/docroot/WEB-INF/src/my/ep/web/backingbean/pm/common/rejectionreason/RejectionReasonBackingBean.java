@@ -151,8 +151,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			getManagedBean().setDeletePIDReasonList(new ArrayList<PmPIDReason>());
 		}
 
-		this.getManagedBean().getDeletePIDReasonList()
-				.add(this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(rowIndex));
+		if (!this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(rowIndex).isBrandNew()) {
+			this.getManagedBean().getDeletePIDReasonList()
+					.add(this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(rowIndex));
+		}
 		// 35509
 		
 			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
