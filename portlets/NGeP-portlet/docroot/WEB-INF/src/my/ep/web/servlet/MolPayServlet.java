@@ -98,6 +98,9 @@ public class MolPayServlet extends HttpServlet {
 		String paydate = reqMap.get("paydate");
 		String skey = reqMap.get("skey");
 		String channel = reqMap.get("channel");
+		String paymentRefNo = reqMap.get("paymentRefNo");
+		String bankName = reqMap.get("bankName");
+		String providerTransId = reqMap.get("providerTransId");
 		log.info("set session--");
 		req.getSession().setAttribute("orderidS", orderId);
 		log.info("getsession servlet: -"+req.getSession().getAttribute("orderidS"));
@@ -122,6 +125,8 @@ public class MolPayServlet extends HttpServlet {
 		log.info("error_desc:" + errorDesc);
 		log.info("channel:" + channel);
 		log.info("extraP:" + extraP);
+		log.info("paymentRefNo:" + paymentRefNo);
+		log.info("providerTransId:" + providerTransId);
 		
 		//#38377
 		log.info("#38377########paymentGateway map:"+reqMap.get("paymentGateway"));
@@ -316,6 +321,12 @@ public class MolPayServlet extends HttpServlet {
 					log.info("#38377########smPaymentRes.setPaymentStatus:"+smPaymentRes.getPaymentStatus());
 					smPaymentRes.setPaidAmt(txAmount);
 					log.info("#38377########smPaymentRes.setPaidAmt:"+smPaymentRes.getPaidAmt());
+					//#38377
+					smPaymentRes.setBankName(bankName);
+					log.info("#38377########smPaymentRes.setBankName:"+smPaymentRes.getBankName());
+					//#38377
+					smPaymentRes.setProviderTransactionId(providerTransId);
+					log.info("#38377########smPaymentRes.setProviderTransactionId:"+smPaymentRes.getProviderTransactionId());
 					paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 					int requeryCount = paymentOrder.getRequeryCount() + 1;
 					paymentOrder.setRequeryCount(requeryCount);
@@ -487,11 +498,18 @@ public class MolPayServlet extends HttpServlet {
 		}
 		
 		String paymentRefNo = "";
+		String bankName = "";
+		String providerTransId = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
 				paymentRefNo = jsonObject.optString("paymentRefNo",null);
+				log.info("######38377#####json paymentRefNo: " + paymentRefNo);
+				providerTransId = jsonObject.optString("providerTransId",null);
+				log.info("######38377#####json providerTransId: " + providerTransId);
 				paymentGateway = "Y";
+				bankName = jsonObject.optString("bankName",null);
+				log.info("######38377#####json bankName: " + bankName);
 				log.info("######38377#####json paymentGateway: " + paymentGateway);
 				orderId = jsonObject.optString("orderId", null);
 				log.info("######38377#####json orderId: " + orderId);
@@ -503,6 +521,8 @@ public class MolPayServlet extends HttpServlet {
 				log.info("######38377#####json paydate: " + paydate);
 				channel = jsonObject.optString("channel", null);
 				log.info("######38377#####json channel: " + channel);
+				amount = jsonObject.optString("amount", null);
+				log.info("######38377#####json amount: " + amount);
 				currency = jsonObject.optString("currency", null);
 				log.info("######38377#####json currency: " + currency);
 				if (SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE.equals(channel)) {
@@ -548,6 +568,8 @@ public class MolPayServlet extends HttpServlet {
 		reqMap.put("molpayTransId", molpayTransId);
 		reqMap.put("paymentGateway", paymentGateway);
 		reqMap.put("paymentRefNo", paymentRefNo);
+		reqMap.put("providerTransId", providerTransId);
+		reqMap.put("bankName", bankName);
 		
 		log.info("######38377#####nbcb:" + reqMap.get("nbcb"));
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
@@ -567,7 +589,9 @@ public class MolPayServlet extends HttpServlet {
 		log.info("######38377#####cardType:" + reqMap.get("cardType"));
 		log.info("######38377#####molpayTransId:" + reqMap.get("molpayTransId"));
 		log.info("######38377#####paymentGateway:" + reqMap.get("paymentGateway"));
+		log.info("######38377#####bankName:" + reqMap.get("bankName"));
 		log.info("######38377#####paymentRefNo:" + reqMap.get("paymentRefNo"));
+		log.info("######38377#####providerTransId:" + reqMap.get("providerTransId"));
 		
 		return reqMap;
 	}
