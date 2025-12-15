@@ -19,7 +19,7 @@ public class ItemExceedThresholdRptManagedBean extends DpReportManagedBean {
 	private PmOrgProfile selectedMinistry;
 	private PmOrgProfile selectedKumpulanPTJ;
 	private PmOrgProfile selectedPTJ;
-	private Boolean centralPanelContract = false;;
+	private Boolean centralPanelContract = null;;
 	private String circularNo;
 	private String itemCode;
 	private Long procurementType;
