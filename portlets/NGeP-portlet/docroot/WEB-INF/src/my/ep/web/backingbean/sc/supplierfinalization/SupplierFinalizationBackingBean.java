@@ -11299,6 +11299,7 @@ public class SupplierFinalizationBackingBean extends
 		Map<Long, ScQtRecommend> recommendMap = new HashMap<>();
 		Map<Long, Boolean> identifierMap = new HashMap<>();
 		boolean isItemized = this.getManagedBean().isItemize();
+		boolean isBranchDeleted = false;
 
 		for (ScQtRecommend recommend : recommendedItems) {
 			Long recommendId = recommend.getQtRecommendId();
@@ -11314,14 +11315,15 @@ public class SupplierFinalizationBackingBean extends
 				if (checkFlagIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId)
 						&& identifierMap.containsKey(recommendId)) {
 					identifierMap.put(recommendId, true);
+					isBranchDeleted = true;
 				}
 			}
 		}
 
 		if (isItemized) {
-			validationItemizedSupplier(recommendMap, identifierMap, scQt);
+			validationItemizedSupplier(recommendMap, identifierMap, scQt, isBranchDeleted);
 		} else {
-			validationPackageSupplier(recommendMap, identifierMap, scQt);
+			validationPackageSupplier(recommendMap, identifierMap, scQt, isBranchDeleted);
 		}
 	}
 	
@@ -11445,7 +11447,7 @@ public class SupplierFinalizationBackingBean extends
 	 * 
 	 **/
 	private void validationItemizedSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
-			ScQt scQt) {
+			ScQt scQt, boolean isBranchDeleted) {
 
 		boolean foundFalse = false;
 		Long falseKey = null;
@@ -11458,7 +11460,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 
-		if (foundFalse) {
+		if (foundFalse && isBranchDeleted) {
 			ScQtRecommend recommend = recommendMap.get(falseKey);
 			if (scQt.isZonal()) {
 				throw new EpException(MessageConst.ERROR_760623, new String[] {
@@ -11482,10 +11484,10 @@ public class SupplierFinalizationBackingBean extends
 	 * 
 	 **/
 	private void validationPackageSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
-			ScQt scQt) {
+			ScQt scQt, boolean isBranchDeleted) {
 
 		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
-			if (!entry.getValue()) {
+			if (!entry.getValue() && isBranchDeleted) {
 				ScQtRecommend recommend = recommendMap.get(entry.getKey());
 				if (scQt.isZonal()) {
 					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
