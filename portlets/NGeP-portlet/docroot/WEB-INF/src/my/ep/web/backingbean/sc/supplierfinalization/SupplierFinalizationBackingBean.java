@@ -11581,7 +11581,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		if (isItemized) {
 			validationItemizedSupplier(recommendMap, identifierMap, scQt, isBranchDeleted);
 		} else {
-			validationPackageSupplier(recommendMap, identifierMap, scQt);
+			validationPackageSupplier(recommendMap, identifierMap, scQt, isBranchDeleted);
 		}
 	}
 	
@@ -11742,10 +11742,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * 
 	 **/
 	private void validationPackageSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
-			ScQt scQt) {
+			ScQt scQt, boolean isBranchDeleted) {
 
 		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
-			if (!entry.getValue()) {
+			if (!entry.getValue() && isBranchDeleted) {
 				ScQtRecommend recommend = recommendMap.get(entry.getKey());
 				if (scQt.isZonal()) {
 					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
