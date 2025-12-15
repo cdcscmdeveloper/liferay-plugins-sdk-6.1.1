@@ -1,5 +1,9 @@
 package my.ep.web.constant.sc;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author zaim
  * This class contains constants related to the DP module.
@@ -119,6 +123,20 @@ public class DPConstants {
 	
 	//27868 - end
 
+	// 26059 - start
+	public static final String SC_ITEM_EXCEEDED_THRESHOLD_NON_PANEL = "SC_ITEM_EXCEEDED_THRESHOLD_NON_PANEL.jsp";
+
+	public static final String SC_ITEM_EXCEEDED_THRESHOLD_PANEL = "SC_ITEM_EXCEEDED_THRESHOLD_PANEL.jsp";
+
+	public static final String FULFILMENT_TYPE_G2G = "G2G";
+	
+	public static final String FULFILMENT_TYPE_NORMAL = "Normal";
+
+	public static final List<Long> LIST_STATUS_ITEM_EXCEED_THRESHOLD_REPORT =
+	        Collections.unmodifiableList(
+	            Arrays.asList(62603L,60708L,60703L,60706L,60710L,60715L,60711L)
+	        );
+	// 26059 - end
 	private DPConstants() {
 		// This constructor is intentionally left empty
 	}

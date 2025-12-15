@@ -14,24 +14,31 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.constant.report.DpReportConst;
+import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.managedbean.report.dp.ItemExceedThresholdRptManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * @author zaim
@@ -42,6 +49,11 @@ import org.apache.commons.lang3.StringUtils;
 @ViewScoped
 public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemExceedThresholdRptManagedBean> {
 
+	/** The log. */
+	private static final Logger log = EpLogger
+			.getLogger(ItemExceedThresholdRptBackingBean.class);
+	
+	String isCentralPanelContract = "1";
 	/**
 	 * @param args
 	 */
@@ -117,7 +129,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		addIfNotNull(map, DpReportConst.PARAM_KEY_MINISTRY, getManagedBean().getSelectedMinistry());
 		addIfNotNull(map, DpReportConst.PARAM_KEY_KUMPULAN_PTJ, getManagedBean().getSelectedKumpulanPTJ());
 		addIfNotNull(map, DpReportConst.PARAM_KEY_PTJ, getManagedBean().getSelectedPTJ());
-		addIfNotEmpty(map, DpReportConst.PARAM_KEY_CENTRAL_PANEL_CONTRACT, getManagedBean().getCentralPanelContract());
+		addIfNotNull(map, DpReportConst.PARAM_KEY_CENTRAL_PANEL_CONTRACT, getManagedBean().getCentralPanelContract());
 		addIfNotEmpty(map, DpReportConst.PARAM_KEY_CIRCULAR_NO, getManagedBean().getCircularNo());
 		addIfNotNull(map, DpReportConst.PARAM_KEY_STATUS, getManagedBean().getStatus());
 		addIfNotEmpty(map, DpReportConst.PARAM_KEY_ITEM_CODE, getManagedBean().getItemCode());
@@ -130,6 +142,14 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 
 		if (MapUtils.isNotEmpty(map)) {
 			// mandatory map values
+			if (getManagedBean().getCentralPanelContract()){
+				//panel
+				this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_PANEL);
+			}else {
+				// non panel
+				this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_NON_PANEL);
+			}
+
 			map.put(DpReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
 			map.put(DpReportConst.PARAM_KEY_REPORT_ID, getManagedBean().getReportCode());
 			map.put(DpReportConst.PARAM_KEY_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
@@ -275,16 +295,19 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 * @return the procurement mode dropdown values
 	 */
 	public SelectItem[] getProcurementModeDropdownValues() {
-		Long paramCodeG2g = 1013L;
 		SelectItem[] items = getDropdownValuesBySearchBean("RPT", null);
 
 		List<SelectItem> list = new ArrayList<>();
 		for (SelectItem item : items) {
-
-			if (item.getValue() == null || !item.getValue().equals(paramCodeG2g)) {
-				list.add(item);
+			if (getManagedBean().getCentralPanelContract()){
+				if (item.getValue() == null || item.getLabel().equals(DPConstants.FULFILMENT_TYPE_NORMAL)){
+					list.add(item);
+				}
+			}else {
+				if (item.getValue() == null || !item.getLabel().equals(DPConstants.FULFILMENT_TYPE_G2G)) {
+					list.add(item);
+				}
 			}
-
 		}
 
 		SelectItem[] filtered = list.toArray(new SelectItem[list.size()]);
@@ -376,15 +399,12 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 * changes in the JSF view.
 	 */
 	public void onCentralPanelChange() {
-		String centralPanelNo = "0";
-		String centralPanelYes = "1";
-
-		if (getManagedBean().getCentralPanelContract() == null
-				|| getManagedBean().getCentralPanelContract().equalsIgnoreCase(centralPanelNo)) {
-			getManagedBean().setCentralPanelContractSelected(false);
-		} else if (getManagedBean().getCentralPanelContract().equalsIgnoreCase(centralPanelYes)) {
+		if (getManagedBean().getCentralPanelContract()) {
 			getManagedBean().setCentralPanelContractSelected(true);
+		}else {
+			getManagedBean().setCentralPanelContractSelected(false);
 		}
+		getProcurementModeDropdownValues();
 	}
 
 	/**
@@ -481,5 +501,66 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		FacesContext.getCurrentInstance().validationFailed();
 	}
+	
+	/**
+	 * Listener method that populate status for dropdown in JSF.
+	 */
+	public SelectItem[] getStatusDropdown(){
+		
+		SelectItem[] items = getStatusValuesBySearchBean(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.REQUEST_NOTE_RN, null);
+		
+		List<SelectItem> list = new ArrayList<>();
+		for (SelectItem item : items) {
+			if (item != null){
+				list.add(item);
+			}
+		}
 
+		SelectItem[] filtered = list.toArray(new SelectItem[list.size()]);
+		
+		if (filtered != null && items.length > 0) {
+			filtered[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.sc.rpt.status.all",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+		}
+		return filtered;
+	}
+	
+	/**
+	 * @param moduleCode
+	 * @param docType
+	 * @param searchBean
+	 * @return
+	 */
+	public SelectItem[] getStatusValuesBySearchBean(String moduleCode, String docType, SearchBean<PmStatusDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		
+		try {
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(moduleCode, docType, searchBean);
+
+			items = new SelectItem[statusDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.sc.rpt.status.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			
+			for (PmStatusDesc desc : statusDescs){
+				if (desc.getPmStatus() != null && DPConstants.LIST_STATUS_ITEM_EXCEED_THRESHOLD_REPORT.contains(desc.getPmStatus().getStatusId())){
+					items[i++] = new SelectItem(desc.getPmStatus().getStatusId(), desc.getStatusName());
+				}
+			}
+			
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}	
+		return items;
+		
+	}
+	
+	/**
+	 * Listener method triggered when the Status dropdown value changes in the
+	 * JSF view.
+	 */
+	public void onChangeStatus(){
+		getManagedBean().setStatus(getManagedBean().getStatus());
+	}
 }
