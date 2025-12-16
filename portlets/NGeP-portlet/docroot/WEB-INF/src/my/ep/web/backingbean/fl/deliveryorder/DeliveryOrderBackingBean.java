@@ -2128,15 +2128,15 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			PmParameter procurementType) {
 		String procurementTypeDesc = this.getParameterDesc(procurementType);
 
-		if(procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)){
-			if (isPanel==1) {
+		if (procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
+			if (isPanel == 1) {
 				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.PANEL + ")";
 			} else {
 				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.NON_PANEL + ")";
 			}
 		}
 
-		if (isPanel==0 && supplierTypeId != null) {
+		if (isPanel == 0 && supplierTypeId != null) {
 
 			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, supplierTypeId);
 
@@ -2153,7 +2153,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 
 			getManagedBean().setLimitExceededMessage(msg);
 			getManagedBean().setShowLimitExceededDialog(true);
-		} 
+		}
 	}
 	
 	/**
