@@ -323,9 +323,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 	    	}else{
 	    		this.getManagedBean().getQt().setOpenFor(ParameterConst.OPEN_FOR_ALL);
 	    	}
-		}
-		
-		checkCatCodeWIPIcon();
+		}		
+		checkCatCodeWIPIcon(); // #29732
 	}
 
 	
@@ -2124,38 +2123,43 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	// #29732 Start
-	@SuppressWarnings("null")
 	public void onClickHistoryIcon(String catCodeL1, String catCodeL2, String catCodeL3,String catCodeLevel,
 			Long catCodeId,Long qtCateId, String categoryName, String catCode) {
-		boolean processAfter = false;
-		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICategoryCodeSO.class);
+		boolean processFilterResult = false;
+		Date qtCatCreatedDate = null;
+		Date qtCatChangedDate = null;
+		List<ScQtCategory> findQtCatCodeCurrent = null;
+
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
+		// below method checkHistoryPmCatCode is to cater if cat code desc null, some of the data during development is return null description
+		checkHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel);
 		
 		List<ScQtCategory> findQtCatCode = retrieveScQtCategoryByQtCatID(qtCateId);
-		if( null != findQtCatCode && !findQtCatCode.isEmpty()){
-			for(ScQtCategory categoryCodeEdit : findQtCatCode){
-				if(categoryCodeEdit.getQtCategoryId().equals(qtCateId) && categoryCodeEdit.getUpdateCatDesc()){
-					if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
-						reqDTO.setCategoryL1Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
-						reqDTO.setCategoryL2Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-					} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
-						reqDTO.setCategoryL3Id(catCodeId);
-						resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
-					}
-						processAfter = true;
-				}else{
-					this.getManagedBean().setHistoryList(null);
+		if (null == findQtCatCode) {
+			findQtCatCodeCurrent = retrieveCurrentScQtCategoryCode();
+			findQtCatCode = findQtCatCodeCurrent;
+		}
+		if (null != findQtCatCode && !findQtCatCode.isEmpty()) {
+			for (ScQtCategory categoryCodeEdit : findQtCatCode) {
+				qtCatCreatedDate = categoryCodeEdit.getCreatedDate();
+				qtCatChangedDate = categoryCodeEdit.getChangedDate();
+				if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
+					reqDTO.setCategoryL1Id(catCodeId);
+					resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+				} else if (catCodeLevel.equals(QTConstants.CATEGORY_L2_CODE)) {
+					reqDTO.setCategoryL2Id(catCodeId);
+					resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+				} else if (catCodeLevel.equals(QTConstants.CATEGORY_L3_CODE)) {
+					reqDTO.setCategoryL3Id(catCodeId);
+					resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 				}
+				processFilterResult = true;
 			}
-		}else{
-			
+		} else {
+			//condition if list return null
 			if (catCodeLevel.equals(QTConstants.CATEGORY_L1_CODE)) {
 				reqDTO.setCategoryL1Id(catCodeId);
 				resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
@@ -2166,24 +2170,32 @@ public class QTSupplierQulCriteriaBackingBean extends
 				reqDTO.setCategoryL3Id(catCodeId);
 				resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 			}
-			processAfter = true;
+			processFilterResult = true;
 			
-			checkHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3,catCodeLevel);
-			if(!this.getManagedBean().getUpdateCatInPm()){
+			if (!this.getManagedBean().getUpdateCatInPm()) {
+				getManagedBean().setHisCatCode(catCode);
 				this.getManagedBean().setHistoryList(null);
-				processAfter = false;
+				processFilterResult = false;
 			}
 		}
-		
-		if(processAfter){
-			getManagedBean().setHistoryList(
-					updateCreatedUserName(resDTO.getRemarkList()));
-			getManagedBean().setHisCatCode(catCode);
-		}
 
+		if (processFilterResult) {
+
+			getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
+			getManagedBean().setHisCatCode(catCode);
+
+			List<PmRemarkCategory> listCategoryDB = new ArrayList();
+			for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
+				if (null != qtCatCreatedDate && removeIndex.getChangedDate().after(qtCatCreatedDate)
+						&& removeIndex.getChangedDate().before(qtCatChangedDate)) {
+					listCategoryDB.add(removeIndex);
+				}
+			}
+			getManagedBean().setHistoryList(listCategoryDB);
+		}
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
-
+	// #29732 End
 	// #29732 Start - reOpen Fix
 	public String checkCatCodeWIPIcon() {
 
@@ -2256,9 +2268,22 @@ public class QTSupplierQulCriteriaBackingBean extends
 		String catCodeL2OldDesc = "";
 		String catCodeL3OldDesc = "";
 		boolean oldDescEmpty = false;
-				
+		List<ScQtCategory> categoryListQt = null;
 		List<PmRemarkCategory> categoryList = this.getManagedBean().getHistoryList(); // or getAll()
-
+		if(null == categoryList){ //if null, it coming from qt after save the cat code.
+			 categoryListQt = this.getManagedBean().getQtCategoryList();
+			 for(ScQtCategory findCatId : categoryListQt){
+				 if(findCatId.getPmCategoryL1().getCategoryL1Code().equals(catCodeL1)){
+					 catCodeL1 = findCatId.getPmCategoryL1().getCategoryL1Id().toString();
+				 }
+				 if(findCatId.getPmCategoryL2().getCategoryL2Code().equals(catCodeL2)){
+					 catCodeL2 = findCatId.getPmCategoryL2().getCategoryL2Id().toString();
+				 }
+				 if(findCatId.getPmCategoryL3().getCategoryL3Code().equals(catCodeL3)){
+					 catCodeL3 = findCatId.getPmCategoryL3().getCategoryL3Id().toString();
+				 }
+			 }
+		}
 		if(null != catCodeL1){
 
 			CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveHisCategoryDtlByCatIdL1Nb(catCodeL1,catCodeLevel);
@@ -2294,14 +2319,26 @@ public class QTSupplierQulCriteriaBackingBean extends
 			this.getManagedBean().setUpdateCatInPm(true);
 
 		}else{
-			for(PmRemarkCategory currentCategoryList : categoryList){
-				
-				if(null != catCodeL1OldDesc && catCodeL1OldDesc.equalsIgnoreCase(currentCategoryList.getOldDescription())||
-						null != catCodeL2OldDesc && catCodeL2OldDesc.equalsIgnoreCase(currentCategoryList.getOldDescription()) ||
-						null != catCodeL3OldDesc && catCodeL3OldDesc.equalsIgnoreCase(currentCategoryList.getOldDescription())){
-					this.getManagedBean().setUpdateCatInPm(true);
+			if(null == categoryList){
+				for(ScQtCategory currentCategoryList : categoryListQt){
+					
+					if(null != catCodeL1OldDesc && !catCodeL1OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL1Name())||
+							null != catCodeL2OldDesc && !catCodeL2OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL2Name()) ||
+							null != catCodeL3OldDesc && !catCodeL3OldDesc.equalsIgnoreCase(currentCategoryList.getPmCategoryL3Name())){
+						this.getManagedBean().setUpdateCatInPm(true);
+					}
+					
 				}
-				
+			}else{
+				for(PmRemarkCategory currentCategoryList : categoryList){
+					
+					if(null != catCodeL1OldDesc && catCodeL1OldDesc.equalsIgnoreCase(currentCategoryList.getOldDescription())||
+							null != catCodeL2OldDesc && catCodeL2OldDesc.equalsIgnoreCase(currentCategoryList.getOldDescription()) ||
+							null != catCodeL3OldDesc && catCodeL3OldDesc.equalsIgnoreCase(currentCategoryList.getOldDescription())){
+						this.getManagedBean().setUpdateCatInPm(true);
+					}
+					
+				}
 			}
 		}
 	}

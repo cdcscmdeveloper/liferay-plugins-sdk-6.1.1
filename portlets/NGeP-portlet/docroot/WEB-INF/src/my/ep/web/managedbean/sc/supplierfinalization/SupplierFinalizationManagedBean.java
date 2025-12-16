@@ -333,6 +333,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	// 39077 -end-
 	
+	// #35320 - Start
+	private String selectedSupplierOfferedPrice;
+	// #35320 - End
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2650,6 +2654,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	 //39077 -end-
 	
+	// #35320 - Start
+	public String getSelectedSupplierOfferedPrice() {
+		return selectedSupplierOfferedPrice;
+	}
+
+	public void setSelectedSupplierOfferedPrice(String selectedSupplierOfferedPrice) {
+		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
+	}// #35320 - End
 	
 }
 // ***25201

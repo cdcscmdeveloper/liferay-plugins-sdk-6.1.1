@@ -1246,6 +1246,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DO);
 					auditResDTO.setNewValue(entry.getValue().getUserName());
 					auditResDTO.setNewValueId(entry.getValue().getUserId());
+					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_DO_MAINTENANCE);//#355500 Flag changes
+					auditResDTO.setProcessFlag(getFacesScopes().hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())? QTAuditConstant.PROCESS_FLAG_APPROVE:QTAuditConstant.PROCESS_FLAG_SUBMIT);
 					
 					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 					auditReqList.add(auditReqDTO);
@@ -1370,7 +1372,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				IAuditTrailSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 				if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
-					prepareAuditTrailDeskOfficer(qtAuditTrailSO);
+					prepareAuditTrailDeskOfficer(qtAuditTrailSO,outcome);
 				}
 				//#28895-35500 end
 				
@@ -1532,7 +1534,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	 * Prepare audit trails parameters for Desk Officer
 	 * @param qtAuditTrailSO
 	 */
-	private void prepareAuditTrailDeskOfficer(IQTAuditTrailSO qtAuditTrailSO) {
+	private void prepareAuditTrailDeskOfficer(IQTAuditTrailSO qtAuditTrailSO,String outcome) {
 		List<AuditTrailReqDTO> auReqList = new ArrayList<>();
 		AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 
@@ -1550,6 +1552,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		Long newTempDoId = this.getManagedBean().getNewTempDeskOfficer().getUserId();
 		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DO);
+		auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);//#355500 Flag changes
+		auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_DO_MAINTENANCE);
 
 		if (auditResDTO.getNewValueId().compareTo(newTempDoId) == 0
 				&& (auditResDTO.getStatusId().compareTo(QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED) == 0 
@@ -1560,6 +1564,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			auditResDTO.setNewValueId(null);
 			auditResDTO.setActionType(null);
 			auditResDTO.setQtFieldLabelId(null);
+			auditResDTO.setProcessFlag(BpmOutcomeConst.BPM_APPROVE.equals(outcome) //#355500 Flag changes
+					? QTAuditConstant.PROCESS_FLAG_APPROVE : QTAuditConstant.PROCESS_FLAG_REJECT);
 		}
 
 		AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);

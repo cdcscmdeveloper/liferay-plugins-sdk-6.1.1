@@ -60,6 +60,16 @@
 							</td>
 						</tr>
 					</p:outputPanel>
+					<!-- #37925 START -->
+					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne SupplierManagementConst.applTypeBumi}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
+							<td>
+								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" />
+							</td>
+						</tr>
+					</p:outputPanel>
+					
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.panHdr.offFacility']}" /></td>
 						<td>
@@ -69,7 +79,9 @@
 								rendered="#{cc.attrs.facilityType eq 'B'}" />
 						</td>
 					</tr>
-					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N' and cc.attrs.smAppl.applType ne 'B'}">
+					
+					<p:outputPanel rendered="#{cc.attrs.bean.displayCheckboxChangeCurrentStatus}">
+					<!-- #37925 END -->
 						<tr>
 							<td style="border-style: none !important;float: right !important;">
 								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" 
@@ -93,7 +105,8 @@
 							</td>
 			
 							<td>
-								<p:outputPanel rendered="#{!cc.attrs.poRecommend}">
+								<h:outputText value="#{cc.attrs.bean.currRegStatus}" rendered="#{cc.attrs.bean.displayLabelRegistrationStatus}" /><!-- #37925 -->
+								<p:outputPanel rendered="#{!cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
 										id="approveSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.approvedStatusId}"
@@ -105,7 +118,7 @@
 									<p:message id="approveSelBoxMsg" for="approveSelBox"
 										showSummary="true" showDetail="false" display="icon" />
 								</p:outputPanel>
-								<p:outputPanel rendered="#{cc.attrs.poRecommend}">
+								<p:outputPanel rendered="#{cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
 										id="poRecommendSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.poRecommendStatusId}"
@@ -325,6 +338,9 @@
 								label="#{lbl['lbl.sm.remarks.overLapping']}"
 								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 								required="false">
+								<!-- 39422 START -->
+								<p:ajax event="blur" process="@this" update="@this"/>
+								<!-- 39422 End -->
 								<f:validateLength maximum="2500" />
 							</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
 								for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"

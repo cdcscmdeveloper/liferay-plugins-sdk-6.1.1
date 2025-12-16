@@ -227,6 +227,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		adminUserRoleMap.put("COLLECTOR_GOV", Arrays.asList("BPK_ADMIN"));
 		adminUserRoleMap.put("PTJ_APPROVER", Arrays.asList("PTJ_ADMIN"));
 		adminUserRoleMap.put("SUPPORT_APPL", Arrays.asList("SUPPORT_ADMIN"));
+		//#35322 - START
+		adminUserRoleMap.put("QQC_CHAIRPERSON", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QQC_SECRETARY", Arrays.asList("PTJ_ADMIN"));
+		adminUserRoleMap.put("QQC_MEMBER", Arrays.asList("PTJ_ADMIN"));
+		//#35322 - END
 
 	}
 	//26238
