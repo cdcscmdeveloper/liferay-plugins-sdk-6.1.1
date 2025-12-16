@@ -34,7 +34,7 @@
 							value="* " styleClass="mandatory" /></th>
 					<td><p:dataTable id="dtCriteriaDesc" styleClass="criteriaDescList"
 							var="criteriaDesc"
-							value="#{criteriaBackingBean.managedBean.selectedCriteria.pmCriteriaDescs}" sortBy="#{criteriaDesc.pmLanguage.languageName}">
+							value="#{criteriaBackingBean.managedBean.selectedCriteria.pmCriteriaDescs}">
 							<p:column headerText="#{lbl['lbl.pm.settings.language']}"
 								width="10%">  
 								#{criteriaDesc.pmLanguage.languageName}
@@ -64,6 +64,15 @@
 							<f:selectItems
 								value="#{criteriaBackingBean.getStatusList()}" />
 						</p:selectOneMenu></td>
+				</tr>
+	    <tr>
+					<td>
+					<p:dataTable id="dtCriteriaDesc1" styleClass="criteriaDescList"
+							var="criteriaDesc1"
+							value="#{criteriaBackingBean.managedBean.selectedCriteria.pmCriteriaDescs}">
+					<p:outputLabel value="#{criteriaDesc1.pmLanguage.languageName}" />
+					<p:outputLabel value="#{criteriaDesc1.criteria}" />
+							</p:dataTable></td>
 				</tr>
 	</table>
    </p:panel>	
