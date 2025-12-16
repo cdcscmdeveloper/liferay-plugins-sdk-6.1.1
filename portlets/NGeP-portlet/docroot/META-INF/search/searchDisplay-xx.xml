@@ -2198,6 +2198,7 @@
 					<property name="bundleKey" value="lbl.sm.epno" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
+				<!-- 35321 - start -->
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="mofNo" />
 					<property name="bundleFile"
@@ -2205,6 +2206,7 @@
 					<property name="bundleKey" value="lbl.sc.suppAccType.mofNo" />
 					<property name="searchable" value="false" />
 				</bean>
+				<!-- 35321 - end -->
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="regNo" />
 					<property name="bundleFile"
