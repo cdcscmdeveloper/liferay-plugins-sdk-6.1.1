@@ -23,6 +23,16 @@
 	</cc:interface>
 	
 	<cc:implementation>
+		<!-- 13362 START -->
+		<script>
+					$(function(){
+					    // Self-executing recursive animation
+					    (function pulse(){
+					        $('#blinkId4').delay(1000).fadeOut('slow').delay(50).fadeIn('slow',pulse);
+					    })();
+					});
+		</script>
+		<!-- 13362 END -->
 		<p:outputPanel id="#{cc.attrs.changeRegStatusUpdateId}">
 			<table style="width: 100%" border="#{cc.attrs.border ? 1 : 0}">
 				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
@@ -115,13 +125,64 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<c:if test="#{cc.attrs.overLappedCategoryExists}">
+				<!-- 13362 START -->
+				<tr><td><br></br></td></tr>
 					<tr>
-						<td colspan="2"><p:outputLabel
-								value="#{lbl['lbl.sm.remarks.overLap.note1']}" escape="false" /></td>
+						<td></td>
+						<td align="left">
+							<span id="blinkId4">
+								<!-- #13362 START -->
+								<p:graphicImage id="alert-img-overlapcat"
+									style="vertical-align:top"
+									value="/css/images/design/icon_alert.png" />
+								<strong><h:outputText
+										styleClass="warning"
+										value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
+							</span>
+							<span style="opacity: 0.0;">
+								<p:graphicImage id="alert-img-overlapcat2"
+									style="vertical-align:top"
+									value="/css/images/design/icon_alert.png" />
+								<strong><h:outputText
+										styleClass="instruction"
+										value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
+								<!-- #13362 END -->
+							</span>
+						</td>
 					</tr>
 					<tr>
+						<td></td>
+						<td align="left">
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>&#160;
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>&#160;
+							<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{backingBean.onViewOverlapCategory()}"
+						process="@this"
+						partialSubmit="true">
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.here']}" escape="false"/>
+					</p:commandLink>&#160; 
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/>
+					
+						</td>
+					</tr>
+				<tr><td><br></br></td></tr>
+				<!-- 13362 END -->
+					<tr>
+					<td></td>
+						<td align="left"><p:outputLabel style="float:left;"
+								value="#{lbl['lbl.sm.remarks.overLap.note1']}" escape="false" /></td>
+					</tr>
+					<!-- 13362 START -->
+					<tr>
+					<td></td>
+						<td align="left"><p:outputLabel style="float:left;"
+								value="#{lbl['lbl.sm.remarks.overLap.note3']}" escape="false" /></td>
+					</tr>
+					<!-- 13362 END -->
+					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /></td>
-						<td style="padding-top: 5px;"><p:inputTextarea cols="30"
+						<td style="padding-top: 5px;"><p:inputTextarea cols="90"
 								style="width : auto;" rows="10" id="rmrksForSplApprTxtArea"
 								maxlength="2500"
 								value="#{cc.attrs.overLapRemarks}"
@@ -134,7 +195,8 @@
 								display="icon" /></td>
 					</tr>
 					<tr>
-						<td colspan="2"><p:outputLabel
+					<td></td>
+						<td align="left"><p:outputLabel style="float:left;"
 								value="#{lbl['lbl.sm.remarks.overLap.note2']}" escape="false" /></td>
 					</tr>
 				</c:if>

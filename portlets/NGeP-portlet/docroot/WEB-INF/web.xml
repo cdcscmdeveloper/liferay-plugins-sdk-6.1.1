@@ -1,15 +1,11 @@
 <?xml version="1.0"?>
 
-<web-app
-	version="2.5"
-	xmlns="http://java.sun.com/xml/ns/javaee"
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
->
-
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<context-param>
-  		<param-name>javax.faces.CONFIG_FILES</param-name>
-  		<param-value>/WEB-INF/config/faces-config/faces-config-common.xml,
+		<param-name>javax.faces.CONFIG_FILES</param-name>
+		<param-value>/WEB-INF/config/faces-config/faces-config-common.xml,
   		/WEB-INF/config/faces-config/cm/faces-config-codification.xml,
   		/WEB-INF/config/faces-config/pp/faces-config-pp.xml,
   		/WEB-INF/config/faces-config/pm/faces-config-pm.xml,
@@ -23,104 +19,113 @@
   		/WEB-INF/config/faces-config/rpt/faces-config-rpt.xml
 		</param-value>
 	</context-param>
-	
+
 	<!-- param to test recaptcha -->
 	<context-param>
-	  <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
-	  <param-value>6LcXDhETAAAAADzvzFzkhUTe3zSBQEK0ZFiq7AGh</param-value>
-	 </context-param>
-	 <context-param>
-	  <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
-	  <param-value>6LcXDhETAAAAACgGdU1IE6RLXg6hYwWk581fYfkQ</param-value>
-	 </context-param>
+		<param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+		<param-value>6LcXDhETAAAAADzvzFzkhUTe3zSBQEK0ZFiq7AGh</param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+		<param-value>6LcXDhETAAAAACgGdU1IE6RLXg6hYwWk581fYfkQ</param-value>
+	</context-param>
 	<!-- end param to test recaptcha -->
-<context-param>
-    <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-    <param-value>server</param-value>
-</context-param>
+
+	<context-param>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<!-- <param-value>server</param-value> -->
+		<param-value>client</param-value>
+	</context-param>
 	<context-param>
 		<param-name>com.sun.faces.expressionFactory</param-name>
 		<param-value>org.jboss.el.ExpressionFactoryImpl</param-value>
 	</context-param>
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<!-- <param-value>Development</param-value> --> 
+		<!-- <param-value>Development</param-value> -->
 		<param-value>Production</param-value>
 	</context-param>
-	 <context-param>
-	  <param-name>contextConfigLocation</param-name>
-	  <param-value>META-INF/search/searchDisplay-*.xml</param-value>
-	 </context-param>
-	 <context-param>
-  		<param-name>javax.portlet.faces.RENDER_POLICY</param-name>
-  		<param-value>ALWAYS_DELEGATE</param-value>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>META-INF/search/searchDisplay-*.xml</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.portlet.faces.RENDER_POLICY</param-name>
+		<param-value>ALWAYS_DELEGATE</param-value>
 	</context-param>
 	<context-param>
 	    <param-name>facelets.SKIP_COMMENTS</param-name>
 	    <param-value>true</param-value>
     </context-param>
-	 <listener>
-	  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	 </listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<filter>
-  		<filter-name>PrimeFaces FileUpload Filter</filter-name>
-  		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
-  		<init-param>
-   		<param-name>thresholdSize</param-name><param-value>51200</param-value></init-param>
- 	</filter>
- 	<filter-mapping>
-  		<filter-name>PrimeFaces FileUpload Filter</filter-name>
-  		<servlet-name>Faces Servlet</servlet-name>
- 	</filter-mapping>
- 	<context-param>
-	    <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
-	    <param-value>/WEB-INF/config/faces-config/ss/dptable.xml</param-value>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+		<init-param>
+			<param-name>thresholdSize</param-name>
+			<param-value>51200</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+	</filter-mapping>
+	<context-param>
+		<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+		<param-value>/WEB-INF/config/faces-config/ss/dptable.xml</param-value>
 	</context-param>
 	<context-param>
 		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
 		<param-value>true</param-value>
-	</context-param>	
+	</context-param>
 	<servlet>
-	    <servlet-name>imageServlet</servlet-name>
-	    <servlet-class>my.ep.web.servlet.ImageServlet</servlet-class>
+		<servlet-name>imageServlet</servlet-name>
+		<servlet-class>my.ep.web.servlet.ImageServlet</servlet-class>
 	</servlet>
 	<servlet>
-	    <servlet-name>fileDownloadServlet</servlet-name>
-	    <servlet-class>my.ep.web.servlet.FileDownloadServlet</servlet-class>
+		<servlet-name>fileDownloadServlet</servlet-name>
+		<servlet-class>my.ep.web.servlet.FileDownloadServlet</servlet-class>
 	</servlet>
+	<servlet-mapping>
+		<servlet-name>imageServlet</servlet-name>
+		<url-pattern>/image/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>fileDownloadServlet</servlet-name>
+		<url-pattern>/filedownload/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>molpayServlet</servlet-name>
+		<servlet-class>my.ep.web.servlet.MolPayServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>molpayServlet</servlet-name>
+		<url-pattern>/molpayCallBack/*</url-pattern>
+	</servlet-mapping>
+	
 	<servlet>
 	    <servlet-name>liferayOIMServlet</servlet-name>
 	    <servlet-class>my.ep.web.servlet.CreateLiferayOIMServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-	    <servlet-name>imageServlet</servlet-name>
-	    <url-pattern>/image/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-	    <servlet-name>fileDownloadServlet</servlet-name>
-	    <url-pattern>/filedownload/*</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-    <servlet-name>molpayServlet</servlet-name>
-    <servlet-class>my.ep.web.servlet.MolPayServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>molpayServlet</servlet-name>
-    <url-pattern>/molpayCallBack/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>liferayOIMServlet</servlet-name>
-    <url-pattern>/createLiferayOIM/*</url-pattern>
-  </servlet-mapping>
-	
+	    <servlet-name>liferayOIMServlet</servlet-name>
+	    <url-pattern>/createLiferayOIM/*</url-pattern>
+	 </servlet-mapping>
+
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>nextgen</param-value>
+	</context-param>
+
 	<!-- Quartz Startup Config -->
-	 <!--  <context-param>
+	<!-- <context-param>
 		<param-name>quartz:shutdown-on-unload</param-name>
 		<param-value>true</param-value>
 	</context-param>
@@ -131,57 +136,73 @@
 	<context-param>
 		<param-name>quartz:start-on-load</param-name>
 		<param-value>true</param-value>
-	</context-param>  -->
-	
+	</context-param>
+	<context-param>
+		<param-name>quartz:start-delay-seconds</param-name>
+		<param-value>600</param-value>
+	</context-param> -->
+
 	<!-- Used to initialize Quartz Scheduler Factory -->
-	 <!--  <listener>
+	<!--<listener>
 		<listener-class>org.quartz.ee.servlet.QuartzInitializerListener</listener-class>
-	</listener> --> 
-	
+	</listener> -->
+
 	<!-- Use to initialize Quartz Jobs from Servlet -->
-	<!--  <servlet>
+	<!--
+	<servlet>
 		<servlet-name>ScSchedulerJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.sc.ScSchedulerServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
-	
-	 <servlet>
+	<servlet>
 		<servlet-name>CmSchedulerJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.cm.CmSchedulerServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
-	
 	<servlet>
 		<servlet-name>PmSchedulerJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.pm.PmSchedulerServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
-	</servlet> 
-	
-	 <servlet>
+	</servlet>
+	<servlet>
 		<servlet-name>SmBatchJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.sm.SmSchedulerServlet</servlet-class>
 		<load-on-startup>4</load-on-startup>
-	</servlet> 
-	
+	</servlet>
+
 	<servlet>
 		<servlet-name>CtSchedulerJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.ct.CtSchedulerServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
-	</servlet>  
+	</servlet>
+
 	<servlet>
 		<servlet-name>FLSchedulerServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.fl.FLSchedulerServlet</servlet-class>
-		<load-on-startup>4</load-on-startup>
+		<load-on-startup>3</load-on-startup>
 	</servlet>
+
 	<servlet>
-		<servlet-name>CRMSchedulerServlet</servlet-name>
-		<servlet-class>my.ep.web.scheduler.servlet.crm.CRMSchedulerServlet</servlet-class>
+		<servlet-name>NtfSchedulerServlet</servlet-name>
+		<servlet-class>my.ep.web.scheduler.servlet.ntf.NtfSchedulerServlet</servlet-class>
 		<load-on-startup>4</load-on-startup>
 	</servlet>
+
 	<servlet>
 		<servlet-name>EPOLSchedulerServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.epol.EPOLSchedulerServlet</servlet-class>
 		<load-on-startup>4</load-on-startup>
-	</servlet>	-->
+	</servlet>
+	<servlet>
+		<servlet-name>SpaSchedulerServlet</servlet-name>
+		<servlet-class>my.ep.web.scheduler.servlet.spa.SpaSchedulerServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+		<servlet>
+		<servlet-name>GfmasSchedulerServlet</servlet-name>
+		<servlet-class>my.ep.web.scheduler.servlet.gfmas.GfmasSchedulerServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>-->
 	
+
 </web-app>

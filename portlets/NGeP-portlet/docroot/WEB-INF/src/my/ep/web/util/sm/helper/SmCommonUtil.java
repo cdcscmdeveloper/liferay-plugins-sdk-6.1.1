@@ -20,7 +20,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,6 +84,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sm.DisciplinaryActionConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -217,7 +217,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -234,7 +233,6 @@ import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
-// TODO: Auto-generated Javadoc
 public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	private static SmCommonUtil instance;
@@ -1357,6 +1355,38 @@ public class SmCommonUtil {
 		return msg;
 	}
 
+	//13362 - START
+	public static String getMessageMalay(String key, String[] params) {
+		String preferredLang = CommonConstants.LANGUAGE_CODE_MALAY;
+		Locale usrLocale = getLocaleByLang(preferredLang);
+		String msg = "";
+
+		log.info("ROLE NAME USRLOCALE VALUE =====>" + usrLocale);
+		if (params != null) {
+			msg = ResourceBundleUtils.getMessage(key, params,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		} else {
+			msg = ResourceBundleUtils.getMessage(key,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		}
+
+		return msg;
+	}
+	
+	private static Locale getLocaleByLang(String lang){
+		if(StringUtils.isNotBlank(lang)){
+			if(lang.equalsIgnoreCase(CommonConstants.LANGUAGE_CODE_MALAY)){
+				return new Locale(CommonConstants.LANGUAGE_CODE_MALAY,CommonConstants.DEFAULT_COUNTRY_CODE);
+			}else{
+				return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+			}
+		}else{
+			return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		}
+	}
+	//13362 - END
+
+
 	/**
 	 * Get message from Message Bundle
 	 * 
@@ -1492,7 +1522,6 @@ public class SmCommonUtil {
 				//end #30900
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
@@ -3763,17 +3792,17 @@ public class SmCommonUtil {
 				: new String[] {};
 		try {
 			if (hostNameArr != null && hostNameArr.length > 1) {
-				Hashtable env = new Hashtable();
+				Hashtable<String, String> env = new Hashtable<String, String>();
 				env.put("java.naming.factory.initial",
 						"com.sun.jndi.dns.DnsContextFactory");
 				DirContext ictx = new InitialDirContext(env);
 				Attributes attrs = ictx.getAttributes(hostNameArr[1],
 						new String[] { "NS" });
 				Attribute attr = attrs.get("NS");
-				ArrayList res = new ArrayList();
+				ArrayList<String> res = new ArrayList<String>();
 
 				if (attr != null) {
-					NamingEnumeration en = attr.getAll();
+					NamingEnumeration<?> en = attr.getAll();
 					while (en.hasMore()) {
 						String x = (String) en.next();
 						if (x.endsWith("."))
@@ -4341,7 +4370,6 @@ public class SmCommonUtil {
 		try {
 			return reqSO.ssmActive();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -5213,7 +5241,6 @@ public class SmCommonUtil {
 
 			@Override
 			public int compare(SmApplRejectReason o1, SmApplRejectReason o2) {
-				// TODO Auto-generated method stub
 				return o1.getPmReason().getReasonId().compareTo(o2.getPmReason().getReasonId());
 			}
 

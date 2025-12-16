@@ -4621,8 +4621,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Start Fix - #33287
 			isUntickContractExtension = true; 
 			spToCheck = true; 
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime()); 
 			//End Fix - #33287
 		}
 		changeAmendmentEffDate();
@@ -4654,8 +4652,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Start Fix - #33287
 			isUntickItemPrice = true;
 			spToCheck = true;
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			//End Fix - #33287
 		}
 		ConstructTabSideMenu();
@@ -4699,8 +4696,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Start Fix - #33287
 			isUntickItemMaxQty = true;
 			spToCheck = true;
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			//End Fix - #33287
 		}
 		ConstructTabSideMenu();
@@ -4717,8 +4713,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}
 		//End Fix - #33287
@@ -4747,14 +4742,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			//Start Fix - #33287
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
 			isCentralContractTypeCheck();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}
 		//End Fix - #33287
@@ -4808,8 +4801,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			spToCheck = false;
 		}
 		if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}
 	}
@@ -6672,6 +6664,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.onChangeServiceTax();
 		}
 		ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
+		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
+			isUntickOther = true;
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
+			spToCheck = true;
+		}
 	}
 
 	/**
@@ -7984,4 +7981,61 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	}
 	// End Fix - #33287
+	
+	// Start Fix - #39538
+	/**
+	 * Resets the amendment effective date based on contract and amendment
+	 * conditions.
+	 * 
+	 * <p>
+	 * If the amendment is a contract extension and the contract is already
+	 * expired, the amendment effective date will be set to the extension start
+	 * date. Otherwise, if amendment changes require a reset, a new effective
+	 * date will be calculated and applied.
+	 * </p>
+	 * 
+	 * @param amendment
+	 *            the amendment entity used to determine whether the effective
+	 *            date should be reset
+	 */
+	private void resetEffDate(CtAmendment amendment) {
+		Calendar cal = Calendar.getInstance();
+		boolean shouldResetEffDate = amendmentFlagCheck(amendment, cal);
+
+		if (amendment.isContractExtend()
+				&& ctBackingBean.getManagedBean().isContractExpired()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(
+							ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+		} else if (shouldResetEffDate) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(retrieveNewEffDate());
+		}
+	}
+
+	/**
+	 * Determines whether the amendment effective date should be reset.
+	 * 
+	 * <p>
+	 * The effective date should be reset only when:
+	 * <ul>
+	 * <li>The amendment is NOT a contract extension</li>
+	 * <li>There are NO changes to item, value, clause or other attributes</li>
+	 * <li>The current amendment effective date is NOT equal to today's date</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param amendment
+	 *            the amendment being evaluated
+	 * @param cal
+	 *            the current date reference used for comparison
+	 * @return true if the amendment effective date should be reset, otherwise
+	 *         false
+	 */
+	private boolean amendmentFlagCheck(CtAmendment amendment, Calendar cal) {
+		boolean isAmendItemFlag = amendment.isItemPriceChange() || amendment.isQuantityChange();
+		boolean isAmendValueFlag = amendment.isValueChange() || amendment.isValueChangeByGst() || amendment.isValueChangeByStax();
+		boolean isAmendClauseAndOtherFlag = amendment.isClauseChange() || amendment.isOtherChange();
+		boolean overallChange = isAmendItemFlag || isAmendValueFlag || isAmendClauseAndOtherFlag;
+		return !amendment.isContractExtend() && !overallChange && !amendment.getAmendmentEffDate().equals(cal.getTime());
+	}
+	// End Fix - #39538
 }
