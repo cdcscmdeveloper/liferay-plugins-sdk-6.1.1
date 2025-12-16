@@ -5368,7 +5368,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			for (SmRvCatCode updatedRvCatCode : revisit.getUpdatedRvCatCodes()) {
 				remark.append("<br />");
 				updatedRvCatCodes(updatedRvCatCode, remark, index);
-				remark.append("<br />");
 				index++; 
 			} 
 		} 
