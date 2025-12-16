@@ -682,17 +682,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				// Runs all initial setup when the page is first loaded
 				if(!ctBackingBean.getManagedBean().isInitPage()){
 					
-					// Sets the committee type into the bean
-					mapCommitteeType();
+					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null){
+						// Sets default desk officer committee from QT
+						handleOriginalDeskOfficerCommitteeQT();
+					}else{
+						// Sets the saved committee type into the bean
+						mapCommitteeType();
+					}
 					
 					// Loads the correct checklist options based on data.
 					handleSelectedAmendmentChecklistValue();
 					
 					// Updates values when amendment type changes.
 					handleAmendmentTypeValueChange();
-					
-					// Sets default desk officer committee if no saved value.
-					handleOriginalDeskOfficerCommitteeQT();
 					
 					// Mark page initialization completed to avoid repeating setup
 					ctBackingBean.getManagedBean().setInitPage(true);
@@ -946,6 +948,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		//Bug 34142, 15851 - shaqimi start 04/12/2022
 		ctBackingBean.getManagedBean().setInPage(false);
+		
+		//24336
+		//Reset page initialization
+		ctBackingBean.getManagedBean().setInitPage(false);
 		
 		if(ctBackingBean.getManagedBean().isViewSCL()){
 			return viewSCLBackAction();
@@ -10626,10 +10632,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	
-	// Sets the committee type into the bean
+	// Sets saved committee type into the bean
 	private void mapCommitteeType() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
-			getManagedBean().setCommitteeType(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType().getParameterCode());
+		PmParameter committeeType = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType();
+		if (committeeType != null) {
+			String code = committeeType.getParameterCode();
+			
+			// Handle WIP data:
+			// If committee type is QCA or QCB, normalize it to QQC for display
+		    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
+		        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
+		    		code = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+		    }
+			getManagedBean().setCommitteeType(code);
 		}
 	}
 	
