@@ -239,8 +239,8 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean;
+import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
@@ -2675,7 +2675,7 @@ public class QTDetailBackingBean extends
 
 	public void retrieveCommitteeAppointmentTabDtl(int formCommitteeFlag, int reformCommitteeFlag,
 			boolean committeeReadOnly) {
-		// Bug 32277 - end		
+	// Bug 32277 - end	
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
@@ -3811,8 +3811,9 @@ public class QTDetailBackingBean extends
 							if (isQTStatusPublished(statusId)) {
 								tabBeans.add(new TabBean(titleName, approvalCategoryCode, qtApproval, 
 										approverSettingDtls(RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile().getOrgProfileId(), qtApproval)));
-							} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) 
-									|| QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId) || isStatusOfBpkOrScheduleRevise(statusId)) {
+							} else if (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) ||
+									QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId) ||
+									isStatusOfBpkOrScheduleRevise(statusId)) {
 								this.getManagedBean().setPublicationApproval(qtApproval);
 							}
 						} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE.equals(approvalCategoryCode) 
@@ -8551,7 +8552,8 @@ public class QTDetailBackingBean extends
 	private void removeCommitteeActivityDetails(ScQt scQt, ScQtFinalization scQtFinalization) { // Bug #38975@Syazani 16/10/2025
 		IQTMeetingSO meetingso = null;
 		try {
-			meetingso = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+			meetingso = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTMeetingSO.class);
 			List<String> committeeType = new ArrayList<String>();
 			if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(scQt.getEvaluationType())) {
 				committeeType.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
@@ -10954,7 +10956,6 @@ public class QTDetailBackingBean extends
 	}
 	// 25791 -end-
 
-
 	// 25791 -start-
 	/**
 	 * This method is used to view the LOA Details page.
@@ -11801,7 +11802,7 @@ public class QTDetailBackingBean extends
 	}
 	// 25791 -end-
 	
-		/*
+	/*
 	 * Set evaluation Type and demo required radio button to show or disabled, 
 	 * #28784
 	 */
