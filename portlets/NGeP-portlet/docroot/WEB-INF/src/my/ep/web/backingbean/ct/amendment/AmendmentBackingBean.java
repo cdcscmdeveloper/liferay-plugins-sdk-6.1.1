@@ -135,6 +135,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -10602,32 +10603,34 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private void handleOriginalDeskOfficerCommitteeQT(){
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
 			IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
-			long qtId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId();
-			CommitteeMemberInfoResDTO cmiRes = iContractAmendmentSO.retrieveOriginalDeskOfficerCommittee(qtId, SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
 			
-			if(cmiRes != null){
-				
-				// tick checkbox
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbqcAuthorityReq(true);
-				
-				// normalize committee code
-				String code = cmiRes.getCommitteeTypeCode();
-	
-			    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
-			        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
-			    		code = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
-			    }
-	
-			    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
-			        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
-			    		code = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
-			    }
-			    
-			    // set radio
-				getManagedBean().setCommitteeType(code);
-				
-				// set secretary
-				getManagedBean().setSecretaryId(cmiRes.getUserId());
+			ScQt scQt = ctBackingBean.getManagedBean().getContractVer().getCtContract().getQuotationTender();
+			if(scQt != null){
+				CommitteeMemberInfoResDTO cmiRes = iContractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId(), SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
+				if(cmiRes != null){
+					
+					// tick checkbox Committee Type
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbqcAuthorityReq(true);
+					
+					// normalize committee code
+					String code = cmiRes.getCommitteeTypeCode();
+		
+				    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
+				        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
+				    		code = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+				    }
+		
+				    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
+				        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
+				    		code = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
+				    }
+				    
+				    // set radio
+					getManagedBean().setCommitteeType(code);
+					
+					// set secretary
+					getManagedBean().setSecretaryId(cmiRes.getUserId());
+				}
 			}
 		}
 	}
