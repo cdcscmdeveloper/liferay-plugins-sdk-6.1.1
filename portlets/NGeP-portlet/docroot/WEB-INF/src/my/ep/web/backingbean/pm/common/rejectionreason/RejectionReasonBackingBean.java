@@ -762,9 +762,18 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON) && selectedPmReason.getReasonId() != null) {
 				PmReason oldPmReason = retrieveReasonObjById(selectedPmReason.getReasonId());
+				// 28962 - audit 
+				if (ParameterConst.WIP_ITEM_PK7.equalsIgnoreCase(getManagedBean().getSelectedReason()
+						.getReasonCategoryCode().getParameterCode()) ||
+						ParameterConst.SPECIAL_ITEM_WITH_APPROVAL.equalsIgnoreCase(getManagedBean().getSelectedReason()
+								.getReasonCategoryCode().getParameterCode())) {
+					loadSuppType(oldPmReason);
+				}
+				// 28962 - audit
 				getManagedBean().setOldPmReason(oldPmReason);
 			}
 			/************ AUDIT #28895-35509 END *************/
+			
 			if (this.getManagedBean().getSelectedReason().isBrandNew()) {
 				returnPage = createRejectReason(this.getManagedBean().getSelectedReason());
 			} else {
@@ -1599,12 +1608,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			supplierReason.setDeleted(true);
 			getManagedBean().getDeleteRestrictions().add(supplierReason);
 			
-			/** 35509 START
-			if(getManagedBean().getAuditDeleteRestrictions() == null){
-				getManagedBean().setAuditDeleteRestrictions(new ArrayList<PmSupplierReason>());
-			}
-			getManagedBean().getAuditDeleteRestrictions().add(supplierReason);
-			/** 35509 END*/
 		}
 	}
 	
@@ -2378,11 +2381,24 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					// maintained: add new supplier item
 					ensureTargetListExists();
 					this.getManagedBean().getSelectedReason().addPmReasonRestr(tempReason);
+					// audit start
+					if (this.getManagedBean().getAuditAddSupplAcctType() == null) {
+						this.getManagedBean().setAuditAddSupplAcctType(new ArrayList<PmReasonRestr>());
+					}
+					this.getManagedBean().getAuditAddSupplAcctType().add(tempReason);
+					// audit end
 				}
 			} else {
 				if (hasSuppAccTypeKey(tempReason)) {
 					log.info("update supplier account type");
 					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
+					// audit start
+					if (this.getManagedBean().getAuditUpdateSupplAcctType() == null) {
+						this.getManagedBean().setAuditUpdateSupplAcctType(new ArrayList<PmReasonRestr>());
+					}
+					this.getManagedBean().getAuditUpdateSupplAcctType().add(tempReason);
+					System.out.println("masuk modify ::::::::::::::::: ");
+					// audit end
 					updateExtById(target, tempReason);
 				}
 			}
@@ -2396,6 +2412,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				if (hasValidAgencyKey(agency)) {
 					ensureTargetListExists();
 					this.getManagedBean().getSelectedReason().addPmReasonRestr(agency);
+					// audit start
+					if (this.getManagedBean().getAuditAddAgency() == null) {
+						this.getManagedBean().setAuditAddAgency(new ArrayList<PmReasonRestr>());
+					}
+					this.getManagedBean().getAuditAddAgency().add(agency);
+					// audit end
 				}
 			}
 		}
@@ -2413,6 +2435,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
 					updateExtById(target, tempReason);
 				}
+				
+				// audit start
+				if (this.getManagedBean().getAuditDeleteSupplAcctType() == null) {
+					this.getManagedBean().setAuditDeleteSupplAcctType(new ArrayList<PmReasonRestr>());
+				}
+				this.getManagedBean().getAuditDeleteSupplAcctType().add(tempReason);
+				// audit end
+				
 			}
 		}
 	}
@@ -2429,6 +2459,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
 					updateExtById(target, delAgency);
 				}
+				
+				// audit start
+				if (this.getManagedBean().getAuditDeleteAgency() == null) {
+					this.getManagedBean().setAuditDeleteAgency(new ArrayList<PmReasonRestr>());
+				}
+				this.getManagedBean().getAuditDeleteAgency().add(delAgency);
+				// audit end
+				
 			}
 		}
 	}
