@@ -6485,7 +6485,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setDisciplinaryActionDeletedDue(resDto.isDisciplinaryActionDeletedDue());
 			getManagedBean().setDisciplinaryActionPendingTransaction(resDto.isDisciplinaryActionPendingTransaction());
 
-			return resDto.isDisciplinaryActionPendingTransaction();
+			return resDto.isDisciplinaryActionBlackListOwner() || resDto.isDisciplinaryActionCancelRegistration();
 
 		} catch (Exception e) {
 			String exceptionSupplierId = supplier != null ? Long.toString(supplier.getSupplierId()) : StringUtils.EMPTY;
