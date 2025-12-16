@@ -211,7 +211,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.bean.sc.common.ZonesBean;	// Bug #36730@Syazani 07/01/2025
+import my.ep.web.bean.sc.common.ZonesBean; // Bug #36730@Syazani 07/01/2025
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
@@ -219,7 +219,7 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;	// Bug #36730@Syazani 07/01/2025
+import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean; // Bug #36730@Syazani 07/01/2025
 import my.ep.web.type.sc.quationtender.ApprovalStatus;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -233,7 +233,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.output.CountingOutputStream;	// Bug #35485@Syazani 08/02/2024
+import org.apache.commons.io.output.CountingOutputStream; // Bug #35485@Syazani 08/02/2024
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -265,23 +265,23 @@ import com.liferay.portal.util.PortalUtil;
  * @since 22.11.2013
  * 
  */
-public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
-		extends BaseBackingBean<T> {
+public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends BaseBackingBean<T> {
 	private static final long serialVersionUID = 1L;
 	// 26226 - start
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
 			SourcingConstants.MALAYSIA_COUNTRY_CODE);
 	// 26226 - end
-	
+
 	/**
 	 * Logger instance.
 	 */
 	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
-	
-	//private static final String UTF = "UTF-8";
-	
+
+	// private static final String UTF = "UTF-8";
+
 	// #18685 - Start
-	protected static final String  UNDER_SCORE = "_";
+	protected static final String UNDER_SCORE = "_";
+
 	// #18685 - End
 
 	/**
@@ -292,12 +292,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	protected void uploadAttachment(UploadedFile file, ScAttachment attachment)
-			throws FileNotFoundException, IOException {
+	protected void uploadAttachment(UploadedFile file, ScAttachment attachment) throws FileNotFoundException,
+			IOException {
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
 		FileOutputStream fos = null;
-		try{
+		try {
 			if (fileBytes != null) {
 				attachment.setFileName(fileName);
 				attachment.setFileDesc("File uploded");
@@ -305,26 +305,27 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				fos = new FileOutputStream(getActualFilePath(attachment));
 				fos.write(fileBytes);
 			}
-		}
-		finally{
-			if(fos != null){
+		} finally {
+			if (fos != null) {
 				fos.close();
 			}
 		}
 	}
 
-	// Redmine 25396: remove duplication option view by adding new drop down field
-	/** 
-	* get faces scopes
-	* 
-	* @return FacesScopes
-	*/
+	// Redmine 25396: remove duplication option view by adding new drop down
+	// field
+	/**
+	 * get faces scopes
+	 * 
+	 * @return FacesScopes
+	 */
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
+
 	// end of 25396
-		
+
 	/**
 	 * To populate details into ScAttachment instance.
 	 * 
@@ -332,8 +333,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	protected void populateAttachmentDetails(ScAttachment attachment)
-			throws FileNotFoundException, IOException {
+	protected void populateAttachmentDetails(ScAttachment attachment) throws FileNotFoundException, IOException {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		PmUser createdUser = new FacesScopes().getUserSessionBean();
 
@@ -361,8 +361,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		theDir.mkdirs();
 
 		AttachmentFormat scFormat = getAttachmentFormat(attachment);
-		String formatedFileName = scFormat.format(attachment.getFileName(),
-				attachment.getPrefixFileName());
+		String formatedFileName = scFormat.format(attachment.getFileName(), attachment.getPrefixFileName());
 
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(formatedFileName);
@@ -372,8 +371,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	private AttachmentFormat getAttachmentFormat(ScAttachment scAttachment) {
-		if (scAttachment instanceof ScLoaReportAttachment
-				|| scAttachment instanceof ScQtCheckListAttachment
+		if (scAttachment instanceof ScLoaReportAttachment || scAttachment instanceof ScQtCheckListAttachment
 				|| scAttachment instanceof ScQtProposalChecklistAttachment
 				|| scAttachment instanceof ScQtFinalizationAttachment
 				|| scAttachment instanceof ScQtFinalizationReportAttachment
@@ -412,8 +410,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param attachment
 	 * @return
 	 */
-	public <ATTACHMENT extends ScAttachment> String determineIcon(
-			ATTACHMENT attachment) {
+	public <ATTACHMENT extends ScAttachment> String determineIcon(ATTACHMENT attachment) {
 		String imageFileName = "icon_file_default.png";
 		String ext = "";
 
@@ -429,11 +426,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				imageFileName = "icon_doc.png";
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				imageFileName = "icon_pdf.png";
-			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)
-					|| "csv".equalsIgnoreCase(ext)) {
+			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext) || "csv".equalsIgnoreCase(ext)) {
 				imageFileName = "icon_exel.png";
-			} else if ("jpg".equalsIgnoreCase(ext) || "bmp".equalsIgnoreCase(ext)
-					|| "png".equalsIgnoreCase(ext) || "gif".equalsIgnoreCase(ext)) {
+			} else if ("jpg".equalsIgnoreCase(ext) || "bmp".equalsIgnoreCase(ext) || "png".equalsIgnoreCase(ext)
+					|| "gif".equalsIgnoreCase(ext)) {
 				imageFileName = "icon_image.png";
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				imageFileName = "icon_txt.png";
@@ -449,32 +445,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return File instance.
 	 * @throws IOException
 	 */
-	public <ATTACHMENT extends ScAttachment> File downloadFile(
-			ATTACHMENT scAttachment) throws IOException {
+	public <ATTACHMENT extends ScAttachment> File downloadFile(ATTACHMENT scAttachment) throws IOException {
 		File file = null;
-		if (scAttachment != null
-				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
+		if (scAttachment != null && StringUtils.isNotBlank(scAttachment.getFileName())) {
 			try {
 				String fileName = scAttachment.getFileName();
-				if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
+				if (StringUtils.isNotBlank(scAttachment.getTempFileName())) {
 					String extension = FilenameUtils.getExtension(scAttachment.getFileName());
 					fileName = scAttachment.getTempFileName() + "." + extension;
 				}
-				file = downloadFile(getActualFilePath(scAttachment),
-						fileName, scAttachment);	// Bug #35485@Syazani 08/02/2024
+				file = downloadFile(getActualFilePath(scAttachment), fileName, scAttachment); // Bug
+																								// #35485@Syazani
+																								// 08/02/2024
 			} catch (FileNotFoundException exception) {
 				// Separate the file name from absolute path
-				String splitMsg[] = StringUtils.split(exception.getMessage(),
-						SourcingConstants.BACK_SLASH);
+				String splitMsg[] = StringUtils.split(exception.getMessage(), SourcingConstants.BACK_SLASH);
 				int size = splitMsg.length;
 				String filePath = Arrays.toString(splitMsg);
 				if (size > 1) {
 					filePath = splitMsg[size - 1];
 				}
-				throw new EpException(MessageConst.ERROR_760411,
-						new String[] { StringUtils.replace(filePath,
-								SourcingConstants.FILE_EXCEPTION_MSG, " ") });
-						
+				throw new EpException(MessageConst.ERROR_760411, new String[] { StringUtils.replace(filePath,
+						SourcingConstants.FILE_EXCEPTION_MSG, " ") });
+
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_760412);
@@ -490,9 +483,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return File instance
 	 * @throws IOException
 	 */
-	public File downloadFile(String filePath, String fileName, ScAttachment scAttachment)	// Bug #35485@Syazani 08/02/2024
+	public File downloadFile(String filePath, String fileName, ScAttachment scAttachment) // Bug
+																							// #35485@Syazani
+																							// 08/02/2024
 			throws IOException {
-		long byteSize = 0;	// Bug #35485@Syazani 08/02/2024
+		long byteSize = 0; // Bug #35485@Syazani 08/02/2024
 		if (filePath != null) {
 			InputStream input = null;
 			try {
@@ -503,12 +498,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				// Cannot open connection, maybe local file
 				input = new FileInputStream(filePath);
 			}
-			byteSize = downloadFileByInputStream(input, fileName);	// Bug #35485@Syazani 08/02/2024
+			byteSize = downloadFileByInputStream(input, fileName); // Bug
+																	// #35485@Syazani
+																	// 08/02/2024
 		}
-         //input has been closed in the called method bcoz here in catch they alternative 
+		// input has been closed in the called method bcoz here in catch they
+		// alternative
 		// use to upload back to database
 		File file = new File(filePath);
-		scAttachment.setFileSize(byteSize);	// Bug #35485@Syazani 08/02/2024
+		scAttachment.setFileSize(byteSize); // Bug #35485@Syazani 08/02/2024
 		return file;
 	}
 
@@ -524,49 +522,56 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected long downloadFileByInputStream(InputStream input, String fileName) throws IOException {
 		// Bug #35485@Syazani 08/02/2024 -- End
 		log.info("Inside downloadFile(..)");
-		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+				.getResponse();
 		HttpServletResponse response = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		OutputStream out = null;
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		CountingOutputStream countingStream = null;
 		long bytesWritten = 0;
 		// Bug #35485@Syazani 08/02/2024 -- End
-		
-		try{
+
+		try {
 			response.setHeader("Pragma", "no-cache");
-			//response.setDateHeader("Expires", 0);
+			// response.setDateHeader("Expires", 0);
 			// response.setContentType("application/vnd.ms-excel");
 			// response.setHeader("Content-Transfer-Encoding", "binary");
 			// to fix firefox issue of space
 			String finalFileName = fileName.replaceAll("\\s+", QTConstants.REPLACE_CHAR);
 			log.info("finalFileName: " + finalFileName);
-			response.setHeader("Content-Disposition", "attachment; filename=\""+ finalFileName + "\";");
-//			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
-//			response.setContentType("application/octet-stream");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + finalFileName + "\";");
+			// response.setHeader("Content-Disposition", "attachment; filename="
+			// + finalFileName);
+			// response.setContentType("application/octet-stream");
 			response.setContentType(getMimeType(finalFileName)); // asal
-			//response.setContentType("application/pdf"); //najmi test
-			
+			// response.setContentType("application/pdf"); //najmi test
+
 			response.flushBuffer();
 
 			out = response.getOutputStream();
-			countingStream = new CountingOutputStream(out);	// Bug #35485@Syazani 08/02/2024
-			
+			countingStream = new CountingOutputStream(out); // Bug
+															// #35485@Syazani
+															// 08/02/2024
+
 			byte[] buffer = new byte[4096];
 			int bytesRead;
 			while ((bytesRead = input.read(buffer)) != -1) {
-				countingStream.write(buffer, 0, bytesRead);	// Bug #35485@Syazani 08/02/2024
+				countingStream.write(buffer, 0, bytesRead); // Bug
+															// #35485@Syazani
+															// 08/02/2024
 				buffer = new byte[4096];
 			}
-			bytesWritten = countingStream.getByteCount();	// Bug #35485@Syazani 08/02/2024
+			bytesWritten = countingStream.getByteCount(); // Bug #35485@Syazani
+															// 08/02/2024
 			out.flush();
 			FacesContext.getCurrentInstance().responseComplete();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally{
-			if(input!= null){
+		} finally {
+			if (input != null) {
 				input.close();
 			}
-			if(out != null){
+			if (out != null) {
 				out.close();
 			}
 		}
@@ -580,29 +585,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scAttachments
 	 * @throws IOException
 	 */
-	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(String zipFileName, List<ATTACHMENT> scAttachments) throws IOException {
+	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(String zipFileName, List<ATTACHMENT> scAttachments)
+			throws IOException {
 		HttpServletResponse response = null;
 		ZipOutputStream zos = null;
 		log.info("-----------before set header----------");
 		try {
-			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
 			response = PortalUtil.getHttpServletResponse(portalresponse);
-//			response.setContentType("Content-type: text/zip");
+			// response.setContentType("Content-type: text/zip");
 			String finalFileName = zipFileName + ".zip";
-			//START:test by syazwan
-			//response.setContentType("application/x-download");
-			response.setHeader("Content-Disposition", "attachment; filename="+ finalFileName);
+			// START:test by syazwan
+			// response.setContentType("application/x-download");
+			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
 			response.setContentType(getMimeType(finalFileName));
-			//response.setContentType("application/zip");
-			//response.setHeader("Content-Transfer-Encoding", "application/octet-stream");
+			// response.setContentType("application/zip");
+			// response.setHeader("Content-Transfer-Encoding",
+			// "application/octet-stream");
 			log.info("-----------after set header----------");
-			//END:Test by syazwan
-			
+			// END:Test by syazwan
+
 			zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
-		
-		
-			downloadAllFilesAsZipFile(zos,scAttachments);
-			
+
+			downloadAllFilesAsZipFile(zos, scAttachments);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
@@ -623,24 +630,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		WordprocessingMLPackage wordMLPackage;
 		try {
 			wordMLPackage = WordprocessingMLPackage.createPackage();
-			AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(
-					new PartName("/hw.html"));
+			AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
 			afiPart.setBinaryData(content.getBytes());
 			afiPart.setContentType(new ContentType("text/html"));
-			Relationship altChunkRel = wordMLPackage.getMainDocumentPart()
-					.addTargetPart(afiPart);
+			Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
 
 			CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
 			ac.setId(altChunkRel.getId());
 			wordMLPackage.getMainDocumentPart().addObject(ac);
-			wordMLPackage.getContentTypeManager().addDefaultContentType("html",
-					"text/html");
+			wordMLPackage.getContentTypeManager().addDefaultContentType("html", "text/html");
 			wordMLPackage.save(new java.io.File(filePath));
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
 		} catch (Docx4JException e) {
 			e.printStackTrace();
-		}finally{
+		} finally {
 			wordMLPackage = null;
 		}
 		log.info("Exit converthtmlToDocFile(..)");
@@ -661,11 +665,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
 
 			try {
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveJabatanByOrgProfileId(reqDTO);
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
 				departmentOrgProfile = resDTO.getPmOrgProfile();
 
 				resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
@@ -701,28 +703,27 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @param baseObject
 	 */
-	//Bug #31583 - start
+	// Bug #31583 - start
 	public void setUserDetails(BaseEntity baseObject) {
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 		PmUser user = new PmUser();
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(new FacesScopes().getUserScreenName());
 		UserResDTO resDTO = userSO.retrieveUserByLoginId(userReqDTO);
 		if (resDTO.getPmUser() == null) {
-		  user = new FacesScopes().getUserSessionBean();
-		}else{
-		  user = resDTO.getPmUser();
+			user = new FacesScopes().getUserSessionBean();
+		} else {
+			user = resDTO.getPmUser();
 		}
 		if (baseObject.isBrandNew()) {
 			baseObject.setCreatedBy(user.getUserId());
-			baseObject
-					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
 		baseObject.setChangedBy(user.getUserId());
 	}
-	//Bug #31583 - end
+
+	// Bug #31583 - end
 
 	/**
 	 * To get Message constant.
@@ -742,11 +743,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			msgCode = MessageConst.INFO_700007;
 		} else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
 			msgCode = MessageConst.INFO_700013;
-		}
-		else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
+		} else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
 			msgCode = MessageConst.INFO_700013;
-		}
-		else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)) {
+		} else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)) {
 			msgCode = MessageConst.INFO_700032;
 		}
 		// 28834 starts
@@ -790,7 +789,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return user;
 	}
 
-	//Bug #33726 start
+	// Bug #33726 start
 	public PmUser retrieveUserDtlById(Long userId) {
 		PmUser user = null;
 		try {
@@ -806,7 +805,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return user;
 	}
-	//Bug #33726 end
+
+	// Bug #33726 end
 
 	protected IUserSO getUserSOGlobal() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -823,7 +823,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected IQTDetailSO getQTDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
-	
+
 	/**
 	 * To initialize remarks.
 	 * 
@@ -833,7 +833,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param clazz
 	 * @return ScRemark instance
 	 */
-	// 25037 - start - note 284 
+	// 25037 - start - note 284
 	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
 			PARENT_ENTITY parent, ScWorkFlowStatus workFlowStatus, List<REMARK_CLASS> scRemarks,
 			Class<REMARK_CLASS> clazz) {
@@ -843,7 +843,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
 			PARENT_ENTITY parent, ScWorkFlowStatus workFlowStatus, List<REMARK_CLASS> scRemarks,
 			Class<REMARK_CLASS> clazz, boolean isSameScreen) {
-	// 25037 - end - note 284 
+		// 25037 - end - note 284
 
 		try {
 			if (scRemarks == null) {
@@ -853,30 +853,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			REMARK_CLASS prevRemark = null;
 			if (scRemarks.size() > 0) {
 				prevRemark = scRemarks.get(0);
-				
+
 				for (int row = 0; row < scRemarks.size(); row++) {
 					ScRemark scRemark = scRemarks.get(row);
-					if (compareUserName(scRemark.getCreatedUser().getLoginId()) &&
-							!isDiffWithPrevWorkFlowStatus(workFlowStatus, scRemark) && !isSameScreen) { // 25037 - note 284 
+					if (compareUserName(scRemark.getCreatedUser().getLoginId())
+							&& !isDiffWithPrevWorkFlowStatus(workFlowStatus, scRemark) && !isSameScreen) { // 25037
+																											// -
+																											// note
+																											// 284
 						scRemark.setEditable(true);
 					}
 				}
 			}
 
 			FacesScopes facesScopes = new FacesScopes();
-			if (scRemarks.size() == 0
-					|| !compareUserName(prevRemark.getCreatedUser()
-							.getLoginId())
-							|| isDiffWithPrevWorkFlowStatus(workFlowStatus, prevRemark) || isSameScreen) { // 25037 - note 284
+			if (scRemarks.size() == 0 || !compareUserName(prevRemark.getCreatedUser().getLoginId())
+					|| isDiffWithPrevWorkFlowStatus(workFlowStatus, prevRemark) || isSameScreen) { // 25037
+																									// -
+																									// note
+																									// 284
 				REMARK_CLASS remark = clazz.newInstance();
-				remark.setCreatedBy(facesScopes.getUserSessionBean()
-						.getUserId());
+				remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setCreatedUser(facesScopes.getUserSessionBean());
 				remark.setParent(parent);
-				if(null!=workFlowStatus && !workFlowStatus.isBrandNew()){
-				remark.setScWorkFlowStatus(workFlowStatus);
+				if (null != workFlowStatus && !workFlowStatus.isBrandNew()) {
+					remark.setScWorkFlowStatus(workFlowStatus);
 				}
 
 				scRemarks.add(0, remark);
@@ -891,17 +894,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			throw new EpException(ia.getMessage());
 		}
 	}
-	
+
 	private boolean isDiffWithPrevWorkFlowStatus(ScWorkFlowStatus workFlowStatus, ScRemark prevRemark) {
-		return workFlowStatus != null && 
-				(
-					prevRemark.getScWorkFlowStatus() == null || 
-					(
-						prevRemark.getScWorkFlowStatus() != null &&
-						prevRemark.getScWorkFlowStatus().getWorkflowStatusId() != null 
-						&& !prevRemark.getScWorkFlowStatus().getWorkflowStatusId().equals(workFlowStatus.getWorkflowStatusId())
-					)
-				);
+		return workFlowStatus != null
+				&& (prevRemark.getScWorkFlowStatus() == null || (prevRemark.getScWorkFlowStatus() != null
+						&& prevRemark.getScWorkFlowStatus().getWorkflowStatusId() != null && !prevRemark
+						.getScWorkFlowStatus().getWorkflowStatusId().equals(workFlowStatus.getWorkflowStatusId())));
 	}
 
 	/**
@@ -910,8 +908,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scRemarks
 	 * @return List<ScRemarks> remarks
 	 */
-	protected <REMARK_CLASS extends ScRemark> List<REMARK_CLASS> finalizeRemarks(
-			List<REMARK_CLASS> scRemarks) {
+	protected <REMARK_CLASS extends ScRemark> List<REMARK_CLASS> finalizeRemarks(List<REMARK_CLASS> scRemarks) {
 		if (scRemarks != null && scRemarks.size() > 0) {
 			ScRemark scRemark = scRemarks.get(0);
 
@@ -931,7 +928,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return StreamContent instance
 	 * @throws IOException
 	 */
-	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(ATTACHMENT scAttachment, String contentType) throws IOException {
+	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(ATTACHMENT scAttachment,
+			String contentType) throws IOException {
 		ByteArrayOutputStream tmpOut = null;
 		FileInputStream in = null;
 		try {
@@ -948,7 +946,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 					tmpOut.write(buf, 0, len);
 				}
-				
+
 				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0, tmpOut.size());
 
 				ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
@@ -963,13 +961,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
-	protected List<PmParameterDesc> retrieveParametersBySearchBean(
-			String parameterType, ISearchBean<PmParameterDesc> searchBean) {
-		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
-				parameterType, searchBean);
+	protected List<PmParameterDesc> retrieveParametersBySearchBean(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(parameterType, searchBean);
 
 	}
-	
+
 	/**
 	 * To get report from orcle reports only for .rtf format file
 	 * 
@@ -980,8 +977,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return File instance
 	 * @throws IOException
 	 */
-	protected File generateRtfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment, boolean isDirectDownload)
-			throws IOException {
+	protected File generateRtfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment,
+			boolean isDirectDownload) throws IOException {
 
 		String reportUrl = generateReportURL(reportName, paramMap);
 		log.info("reportUrl: " + reportUrl);
@@ -990,16 +987,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+				.getResponse();
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try {
-			
+
 			log.info("-----------after set header hatta .rtf only ----------");
-			log.info(" isDirectDownload "+isDirectDownload);
+			log.info(" isDirectDownload " + isDirectDownload);
 			log.info(" filename=" + attachment.getFileName());
-			String finalFileName = attachment.getFileName(); 
+			String finalFileName = attachment.getFileName();
 			log.info(" finalFileName=" + finalFileName);
 			if (!isDirectDownload) {
 				res.setContentType("application/rtf");
@@ -1007,8 +1005,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 				res.flushBuffer();
 				out = res.getOutputStream();
-	     	}
-		
+			}
+
 			log.info("-----------after set header hatta .rtf only ----------");
 
 			File localFile = new File(getActualFilePath(attachment));
@@ -1053,7 +1051,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
-	//36715 END
+
+	// 36715 END
 
 	/**
 	 * To get report from orcle reports
@@ -1065,8 +1064,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return File instance
 	 * @throws IOException
 	 */
-	protected File generatePdfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment, boolean isDirectDownload)
-			throws IOException {
+	protected File generatePdfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment,
+			boolean isDirectDownload) throws IOException {
 
 		String reportUrl = generateReportURL(reportName, paramMap);
 		log.info("reportUrl: " + reportUrl);
@@ -1075,36 +1074,38 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+				.getResponse();
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try {
-//			if (!isDirectDownload) {
-//				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
-//				res.setHeader("Content-Transfer-Encoding", "binary");
-//				//res.setContentType("application/octet-stream");
-//				res.setContentType("text/rtf");
-//				res.flushBuffer();
-//				out = res.getOutputStream();
-//			}
-			
-			//36715 START
+			// if (!isDirectDownload) {
+			// res.setHeader("Content-Disposition", "attachment; filename=" +
+			// attachment.getFileName());
+			// res.setHeader("Content-Transfer-Encoding", "binary");
+			// //res.setContentType("application/octet-stream");
+			// res.setContentType("text/rtf");
+			// res.flushBuffer();
+			// out = res.getOutputStream();
+			// }
+
+			// 36715 START
 			log.info("-----------after set header hatta ----------");
-			log.info(" isDirectDownload "+isDirectDownload);
+			log.info(" isDirectDownload " + isDirectDownload);
 			log.info(" filename=" + attachment.getFileName());
-			String finalFileName = attachment.getFileName() + ".zip"; 
+			String finalFileName = attachment.getFileName() + ".zip";
 			if (!isDirectDownload) {
 				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
 				res.setHeader("Content-Transfer-Encoding", "binary");
-				//res.setContentType("application/pdf");
+				// res.setContentType("application/pdf");
 				res.setContentType(getMimeType(finalFileName)); // asal
 				res.flushBuffer();
 				out = res.getOutputStream();
-	     	}
-		
+			}
+
 			log.info("-----------after set header hatta ----------");
-			//36715 END
+			// 36715 END
 
 			File localFile = new File(getActualFilePath(attachment));
 
@@ -1157,8 +1158,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param docId
 	 * @param docNumber
 	 */
-	protected void updatePmDigiSignData(PmDigiSign pmDigiSign, String docType,
-			Long docId, String docNumber) {
+	protected void updatePmDigiSignData(PmDigiSign pmDigiSign, String docType, Long docId, String docNumber) {
 		pmDigiSign.setDocId(new BigDecimal(docId));
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
@@ -1174,8 +1174,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param docNumber
 	 * @param textBeforeSign
 	 */
-	protected void updateSpkiDigiSignData(PmDigiSign pmDigiSign,
-			String docType, Long docId, String docNumber, String textBeforeSign) {
+	protected void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType, Long docId, String docNumber,
+			String textBeforeSign) {
 		FacesScopes facesScope = new FacesScopes();
 		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
@@ -1194,8 +1194,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return boolean flag
 	 */
 	protected boolean isDigiSigningRequired(String roleCode) {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
@@ -1204,15 +1204,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		if (null != roleDesc) {
 			for (PmRoleDesc pmRoleDesc : roleDesc) {
-				if (roleCode.equalsIgnoreCase(pmRoleDesc.getPmRole()
-						.getRoleCode())) {
+				if (roleCode.equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {
 					return true;
 				}
 
 			}
 		} else {
-			throw new EpException("User does not exist with the role"
-					+ roleCode);
+			throw new EpException("User does not exist with the role" + roleCode);
 		}
 		return false;
 	}
@@ -1226,20 +1224,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @return boolean flag
 	 */
-	protected boolean isDigiSigningRequired(String roleCode,
-			List<ScQtCommitteeActivity> committeeActivities) {
+	protected boolean isDigiSigningRequired(String roleCode, List<ScQtCommitteeActivity> committeeActivities) {
 		boolean hasRequiredRole = isDigiSigningRequired(roleCode);
 
 		if (hasRequiredRole && CollectionUtils.isNotEmpty(committeeActivities)) {
-			Long currentUsersId = new FacesScopes().getUserSessionBean()
-					.getUserId();
+			Long currentUsersId = new FacesScopes().getUserSessionBean().getUserId();
 			for (ScQtCommitteeActivity commActivity : committeeActivities) {
-				ScCommitteeMember commMember = commActivity
-						.getScCommitteeMember();
-				if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(commMember
-						.getMemberRole().getParameterCode())
-						&& commMember.getPmUser().getUserId()
-								.equals(currentUsersId)) {
+				ScCommitteeMember commMember = commActivity.getScCommitteeMember();
+				if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(commMember.getMemberRole().getParameterCode())
+						&& commMember.getPmUser().getUserId().equals(currentUsersId)) {
 					return true;
 				}
 			}
@@ -1262,8 +1255,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return String instance
 	 */
 	public static String getMessageCommon(String name) {
-		return ResourceBundleUtils.getMessage(name,
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		return ResourceBundleUtils.getMessage(name, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
 	}
 
@@ -1277,14 +1269,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		String status = "";
 		try {
-			ISupplierSearchSO suppSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISupplierSearchSO.class);
+			ISupplierSearchSO suppSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 			reqDTO.setSupplierId(supplierId);
 			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
-			SupplierSearchResDTO resDTO = suppSO
-					.retriveSupplierStatusDescById(reqDTO);
+			SupplierSearchResDTO resDTO = suppSO.retriveSupplierStatusDescById(reqDTO);
 			if (resDTO != null) {
 				status = resDTO.getSupplierStatus();
 			}
@@ -1322,8 +1312,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return String roleCode
 	 */
 	public String getUserRoleCode() {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
@@ -1371,8 +1361,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param list
 	 * @param markDeletedList
 	 */
-	public List<ScQtCheckList> markDeleteSelectedRowsActionById(
-			List<ScQtCheckList> list, List<ScQtCheckList> markDeletedList) {
+	public List<ScQtCheckList> markDeleteSelectedRowsActionById(List<ScQtCheckList> list,
+			List<ScQtCheckList> markDeletedList) {
 		// List<Integer> toBeRemoveIndx = new ArrayList<Integer>();
 		if (log.isDebugEnabled()) {
 			log.debug("markDeleteSelectedRowsAction");
@@ -1386,14 +1376,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				for (int i = 0; i < list.size(); i++) {
 					if (list.get(i).isSelected()) {
 						list.get(i).setDeleted(true);
-						if (null == list.get(i).getTitle()
-								|| StringUtils.isBlank(list.get(i).getTitle())) {
+						if (null == list.get(i).getTitle() || StringUtils.isBlank(list.get(i).getTitle())) {
 							list.get(i).setTitle("hellodelete");
 						}
-					int index=	list.get(i).getIndex();
-					index=index-markDeletedList.size();
-					log.debug("DeletedIndex"+index);
-					markDeletedList.add(list.get(index));
+						int index = list.get(i).getIndex();
+						index = index - markDeletedList.size();
+						log.debug("DeletedIndex" + index);
+						markDeletedList.add(list.get(index));
 
 						list.remove(index);
 						i--;
@@ -1419,47 +1408,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param list
 	 * @param toBeRemovedList
 	 */
-	public void deleteRowsActionById(List<? extends BaseEntity> list,
-			List<Integer> toBeRemovedList) {
+	public void deleteRowsActionById(List<? extends BaseEntity> list, List<Integer> toBeRemovedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
 		}
 
-		if (CollectionUtils.isNotEmpty(list)
-				&& CollectionUtils.isNotEmpty(toBeRemovedList)) {
+		if (CollectionUtils.isNotEmpty(list) && CollectionUtils.isNotEmpty(toBeRemovedList)) {
 			for (int i = 0; i < toBeRemovedList.size(); i++) {
 				list.remove(toBeRemovedList.get(i).intValue());
 			}
 		}
 	}
-	//20190416@asyarfhaziq_Enhancement #8197 - Start
-		/**
-		 * Validate Mix Category code.
-		 * 
-		 * @param pmCategoryL3
-		 *            the category l3
-		 * @param categoryList
-		 *            the category list
-		 */
-		public void validateMixCategoryCode(PmCategoryL3 pmCategoryL3,
-				List<ScQtCategory> categoryList) {
-			boolean isDuplicate = false;
-			for (int i = 0; i < categoryList.size(); i++) {
-				ScQtCategory scQtCategory = categoryList.get(i);
-				if (("99".equals(pmCategoryL3.getCategoryL3Code()) && !"99"
-						.equals(scQtCategory.getPmCategoryL3().getCategoryL3Code()))
-						|| (!"99".equals(pmCategoryL3.getCategoryL3Code()) && "99"
-								.equals(scQtCategory.getPmCategoryL3()
-										.getCategoryL3Code()))) {
-					isDuplicate = true;
-					break;
-				}
-			}
-			if (isDuplicate) {
-				throw new EpException(MessageConst.ERROR_760482);
+
+	// 20190416@asyarfhaziq_Enhancement #8197 - Start
+	/**
+	 * Validate Mix Category code.
+	 * 
+	 * @param pmCategoryL3
+	 *            the category l3
+	 * @param categoryList
+	 *            the category list
+	 */
+	public void validateMixCategoryCode(PmCategoryL3 pmCategoryL3, List<ScQtCategory> categoryList) {
+		boolean isDuplicate = false;
+		for (int i = 0; i < categoryList.size(); i++) {
+			ScQtCategory scQtCategory = categoryList.get(i);
+			if (("99".equals(pmCategoryL3.getCategoryL3Code()) && !"99".equals(scQtCategory.getPmCategoryL3()
+					.getCategoryL3Code()))
+					|| (!"99".equals(pmCategoryL3.getCategoryL3Code()) && "99".equals(scQtCategory.getPmCategoryL3()
+							.getCategoryL3Code()))) {
+				isDuplicate = true;
+				break;
 			}
 		}
-		//20190416@asyarfhaziq_Enhancement #8197 - End
+		if (isDuplicate) {
+			throw new EpException(MessageConst.ERROR_760482);
+		}
+	}
+
+	// 20190416@asyarfhaziq_Enhancement #8197 - End
 	/**
 	 * Validate Duplicate Category code.
 	 * 
@@ -1468,24 +1455,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param categoryList
 	 *            the category list
 	 */
-	public void validateDuplicateCategoryCode(PmCategoryL3 pmCategoryL3,
-			List<ScQtCategory> categoryList) {
+	public void validateDuplicateCategoryCode(PmCategoryL3 pmCategoryL3, List<ScQtCategory> categoryList) {
 		boolean isDuplicate = false;
 		for (int i = 0; i < categoryList.size(); i++) {
 			ScQtCategory scQtCategory = categoryList.get(i);
 
-			if (scQtCategory.getPmCategoryL3().getCategoryL3Code()
-					.equals(pmCategoryL3.getCategoryL3Code())
-					&& scQtCategory
-							.getPmCategoryL2()
-							.getCategoryL2Code()
-							.equals(pmCategoryL3.getPmCategoryL2()
-									.getCategoryL2Code())
-					&& scQtCategory
-							.getPmCategoryL1()
-							.getCategoryL1Code()
-							.equals(pmCategoryL3.getPmCategoryL2()
-									.getPmCategoryL1().getCategoryL1Code())) {
+			if (scQtCategory.getPmCategoryL3().getCategoryL3Code().equals(pmCategoryL3.getCategoryL3Code())
+					&& scQtCategory.getPmCategoryL2().getCategoryL2Code()
+							.equals(pmCategoryL3.getPmCategoryL2().getCategoryL2Code())
+					&& scQtCategory.getPmCategoryL1().getCategoryL1Code()
+							.equals(pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code())) {
 				isDuplicate = true;
 
 				break;
@@ -1499,8 +1478,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	/**
 	 * Gets the request types.
-	 *
-	 * @param paramaterTypes the paramater types
+	 * 
+	 * @param paramaterTypes
+	 *            the paramater types
 	 * @return the request types
 	 */
 	public List<String> getRequestTypes(String paramaterTypes) {
@@ -1519,14 +1499,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param outCome
 	 *            the out come
 	 */
-	protected void updateApprovalRequest(
-			List<ScQtApprovalRequest> approvalRequests, String outCome) {
+	protected void updateApprovalRequest(List<ScQtApprovalRequest> approvalRequests, String outCome) {
 
 		PmParameter parameter = null;
 		if (!BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)) {
-			parameter = getParameterByTypeAndCode(
-					ParameterTypeConst.APPROVAL_DECISION_TYPE, ApprovalStatus
-							.valueOf(outCome).getApprovalStatus());
+			parameter = getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_DECISION_TYPE,
+					ApprovalStatus.valueOf(outCome).getApprovalStatus());
 		}
 		if (CollectionUtils.isNotEmpty(approvalRequests)) {
 			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
@@ -1534,8 +1512,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					approvalRequest.setApproverAction(parameter);
 				}
 				approvalRequest.setApproverActionDate(new Date());
-				approvalRequest.setApproverId(new FacesScopes()
-						.getUserSessionBean());
+				approvalRequest.setApproverId(new FacesScopes().getUserSessionBean());
 
 			}
 		}
@@ -1551,12 +1528,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 *            the list of ScQtCategory instance (optional)
 	 * @return
 	 */
-	public boolean isMultipleProposalCategory(ScQt scQt,
-			List<ScQtCategory> scQtCategories) {
+	public boolean isMultipleProposalCategory(ScQt scQt, List<ScQtCategory> scQtCategories) {
 		IQTDetailSO qtDetailSO = null;
 		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtdetail(scQt);
@@ -1572,33 +1548,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * Check if one tier threshold
 	 * 
 	 * @param estimatedAmount
-	 * 		the estimated amount
-	 * @return	the indicator is one tier threshold
+	 *            the estimated amount
+	 * @return the indicator is one tier threshold
 	 */
 	public boolean isOneTierThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
-			ruleSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.ONE_TIER_EVALUATION_THRESHOLD);
-			
+
 			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
 					.getRuleValueList();
 			if (configRuleValues != null && configRuleValues.size() > 0) {
 				PmConfigRuleValue configRuleValue = configRuleValues.get(0);
-				
+
 				if (estimatedAmount != null && estimatedAmount.compareTo(BigDecimal.valueOf(0)) > 0) {
 					if (configRuleValue != null && configRuleValue.getRuleValue() != null) {
 						return estimatedAmount.compareTo(new BigDecimal(configRuleValue.getRuleValue())) <= 0;
 					}
 				}
-				
+
 			} else {
-				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(reqDTO.getRuleType())});
+				throw new EpException(MessageConst.ERROR_770222, new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
 			}
-			
+
 			return false;
 
 		} finally {
@@ -1610,35 +1585,36 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * Check if bumiputra threshold
 	 * 
 	 * @param estimatedAmount
-	 * 		the estimated amount
-	 * @return	the indicator is bumiputra threshold
+	 *            the estimated amount
+	 * @return the indicator is bumiputra threshold
 	 */
 	protected boolean isOpenForBumiputraThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
-			ruleSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.OPEN_FOR_BUMI_THRESHOLD);
-			
+
 			List<PmConfigRuleValue> configRuleValues = ruleSO.getRuleValuesByTypeInCurrentDate(reqDTO)
 					.getRuleValueList();
 
 			if (estimatedAmount != null && estimatedAmount.compareTo(BigDecimal.valueOf(0)) > 0) {
 				if (configRuleValues != null && configRuleValues.size() > 0) {
 					PmConfigRuleValue configRuleValue = configRuleValues.get(0);
-					
-					if (configRuleValue != null && configRuleValue.getFromValue() != null && configRuleValue.getToValue() != null) {
-						return estimatedAmount.compareTo(configRuleValue.getFromValue()) >= 0 && 
-								estimatedAmount.compareTo(configRuleValue.getToValue()) <= 0;
+
+					if (configRuleValue != null && configRuleValue.getFromValue() != null
+							&& configRuleValue.getToValue() != null) {
+						return estimatedAmount.compareTo(configRuleValue.getFromValue()) >= 0
+								&& estimatedAmount.compareTo(configRuleValue.getToValue()) <= 0;
 					}
-					
+
 				} else {
-					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(reqDTO.getRuleType())});
-				}	
+					throw new EpException(MessageConst.ERROR_770222,
+							new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
+				}
 			}
-			
+
 			return false;
 
 		} finally {
@@ -1650,61 +1626,59 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * Check if quotation threshold
 	 * 
 	 * @param estimatedAmount
-	 * 		the estimated amount
-	 * @return	the indicator is quotation threshold
+	 *            the estimated amount
+	 * @return the indicator is quotation threshold
 	 */
 	protected boolean isQuotationThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
-			ruleSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.QUOTATION_THRESHOLD);
-			reqDTO.setCompareValue(estimatedAmount != null ? estimatedAmount.toString() : "0");	// Bug #36072@Syazani 22/07/2024
-			List<String> ruleValueStrList = ruleSO
-					.getRuleValuesByTypeAndCurrentDateRange(reqDTO)
-					.getRuleValueStrList();
+			reqDTO.setCompareValue(estimatedAmount != null ? estimatedAmount.toString() : "0"); // Bug
+																								// #36072@Syazani
+																								// 22/07/2024
+			List<String> ruleValueStrList = ruleSO.getRuleValuesByTypeAndCurrentDateRange(reqDTO).getRuleValueStrList();
 
 			if (ruleValueStrList != null && ruleValueStrList.size() > 0) {
-				return ParameterConst.PROCUREMENT_MODE_QUOTATION
-						.equals(ruleValueStrList.get(0));
-			}/* else {
-				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(reqDTO.getRuleType())});
-			}*/ // temporary take out because xhtml using it.
-			
+				return ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(ruleValueStrList.get(0));
+			}/*
+			 * else { throw new EpException(MessageConst.ERROR_770222, new
+			 * String[]{getRuleTypeDesc(reqDTO.getRuleType())}); }
+			 */// temporary take out because xhtml using it.
+
 			return true;
 
 		} finally {
 			ruleSO = null;
 		}
 	}
-	
+
 	/**
 	 * Get purchase request threshold amount
 	 * 
-	 * @return	the purchase request threshold amount
+	 * @return the purchase request threshold amount
 	 */
 	protected BigDecimal getPRThresholdAmount() {
 		IRuleSO ruleSO = null;
 		BigDecimal maxProcurementAmt = new BigDecimal(0);
 
 		try {
-			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IRuleSO.class);
 
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
 			ruleReqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
 			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 
 			if (ruleResDTO.isSuccessful()) {
-				if (ruleResDTO.getRuleValueList() != null
-						&& ruleResDTO.getRuleValueList().size() > 0) {
-					maxProcurementAmt = new BigDecimal(ruleResDTO
-							.getRuleValueList().get(0).getRuleValue());
+				if (ruleResDTO.getRuleValueList() != null && ruleResDTO.getRuleValueList().size() > 0) {
+					maxProcurementAmt = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
 				} else {
-					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-				}	
+					throw new EpException(MessageConst.ERROR_770222,
+							new String[] { getRuleTypeDesc(ruleReqDTO.getRuleType()) });
+				}
 			}
 
 		} finally {
@@ -1713,32 +1687,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return maxProcurementAmt;
 	}
-	
+
 	/**
 	 * Get panel threshold amount
 	 * 
-	 * @return	the panel threshold amount
+	 * @return the panel threshold amount
 	 */
 	protected BigDecimal getPanelThresholdAmount() {
 		IRuleSO ruleSO = null;
 		BigDecimal maxProcurementAmt = new BigDecimal(0);
 
 		try {
-			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IRuleSO.class);
 
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
 			ruleReqDTO.setRuleType(RuleTypeConst.PANEL_THRESHOLD);
 			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
-			
+
 			if (ruleResDTO.isSuccessful()) {
-				if(ruleResDTO.getRuleValueList()!=null && ruleResDTO.getRuleValueList().size()>0) {
+				if (ruleResDTO.getRuleValueList() != null && ruleResDTO.getRuleValueList().size() > 0) {
 					maxProcurementAmt = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
 				} else {
-					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-				}	
+					throw new EpException(MessageConst.ERROR_770222,
+							new String[] { getRuleTypeDesc(ruleReqDTO.getRuleType()) });
+				}
 			}
-			
+
 		} finally {
 			ruleSO = null;
 		}
@@ -1751,28 +1726,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @return the role type dropdown values
 	 */
-	public List<PmParameterDesc> getRoleTypeDropdownValues(
-			boolean isChairPersonReq) {
+	public List<PmParameterDesc> getRoleTypeDropdownValues(boolean isChairPersonReq) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		if (!isChairPersonReq) {
 			List<String> recommendList = new ArrayList<String>();
 			recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_NOT_IN.value(),
+					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_NOT_IN.value(),
 							recommendList));
 		}
 
-		return retrieveParametersBySearchBean(
-				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+		return retrieveParametersBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 
 	}
 
 	/**
 	 * Retrive mof account by supplier.
-	 *
-	 * @param smSupplier the sm supplier
+	 * 
+	 * @param smSupplier
+	 *            the sm supplier
 	 * @return the sm mof account
 	 */
 	public SmMofAccount retriveMofAccountBySupplier(SmSupplier smSupplier) {
@@ -1783,17 +1756,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		try {
 			if (null != smSupplier && null != smSupplier.getSupplierId()) {
-				log.info("===sourcingbasebackingbean mof account smsupplierid==="
-						+ smSupplier.getSupplierId());
-				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-								IMofAccountSO.class);
+				log.info("===sourcingbasebackingbean mof account smsupplierid===" + smSupplier.getSupplierId());
+				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 				MofAccountReqDTO mofAccReqDTO = new MofAccountReqDTO();
 				mofAccReqDTO.setSupplierId(smSupplier.getSupplierId());
-				mofAccReqDTO
-						.setSupplierType(ParameterConst.SUPPLIER_TYPE_CONTRACTOR);
-				mofAccResDTO = mofAccountSO
-						.retrieveMofNoBySupplierId(mofAccReqDTO);
+				mofAccReqDTO.setSupplierType(ParameterConst.SUPPLIER_TYPE_CONTRACTOR);
+				mofAccResDTO = mofAccountSO.retrieveMofNoBySupplierId(mofAccReqDTO);
 				if (null != mofAccResDTO.getMofAccount()) {
 					mofAccount = mofAccResDTO.getMofAccount();
 					smSupplier.setSmMofAccount(mofAccount);
@@ -1821,8 +1790,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 *            (TplSpecZoneDtl Object)
 	 * @return List<TplSpecZoneDtl>
 	 */
-	public List<TplSpecZoneDtl> convertTreeNodesToZoneCriteria(
-			List<TreeNode> treeNodes, TplSpecZoneDtl zoneDtl) {
+	public List<TplSpecZoneDtl> convertTreeNodesToZoneCriteria(List<TreeNode> treeNodes, TplSpecZoneDtl zoneDtl) {
 
 		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
 		List<TplSpecZoneLoc> results = null;
@@ -1847,22 +1815,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							for (TreeNode devision : district) {
 
 								if (devision.getChildCount() > 0) {
-									for (TreeNode districtNode : devision
-											.getChildren()) {
-										TplSpecZoneLoc criteria = (TplSpecZoneLoc) districtNode
-												.getData();
+									for (TreeNode districtNode : devision.getChildren()) {
+										TplSpecZoneLoc criteria = (TplSpecZoneLoc) districtNode.getData();
 
-										criteria.setPmDistrict(((TplSpecZoneLoc) districtNode
-												.getData()).getPmDistrict());
-										criteria.setPmDivision(((TplSpecZoneLoc) districtNode
-												.getParent().getData())
+										criteria.setPmDistrict(((TplSpecZoneLoc) districtNode.getData())
+												.getPmDistrict());
+										criteria.setPmDivision(((TplSpecZoneLoc) districtNode.getParent().getData())
 												.getPmDivision());
-										criteria.setPmState(((TplSpecZoneLoc) treeNode2
-												.getData()).getPmState());
-										criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
-												.getData()));
-										tplSpecZoneDtl = criteria
-												.getTplSpecZoneDtl();
+										criteria.setPmState(((TplSpecZoneLoc) treeNode2.getData()).getPmState());
+										criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1.getData()));
+										tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
 										// criteria.setScQtSupplierCriteria(supplierCriteria);
 										setUserDetails(criteria);
 										results.add(criteria);
@@ -1873,17 +1835,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 								} else {
 
-									TplSpecZoneLoc criteria = (TplSpecZoneLoc) devision
-											.getData();
-									criteria.setPmDistrict(((TplSpecZoneLoc) devision
-											.getData()).getPmDistrict());
-									criteria.setPmState(((TplSpecZoneLoc) treeNode2
-											.getData()).getPmState());
+									TplSpecZoneLoc criteria = (TplSpecZoneLoc) devision.getData();
+									criteria.setPmDistrict(((TplSpecZoneLoc) devision.getData()).getPmDistrict());
+									criteria.setPmState(((TplSpecZoneLoc) treeNode2.getData()).getPmState());
 
-									criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
-											.getData()));
-									tplSpecZoneDtl = criteria
-											.getTplSpecZoneDtl();
+									criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1.getData()));
+									tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
 									// criteria.setScQtSupplierCriteria(supplierCriteria);
 									setUserDetails(criteria);
 									results.add(criteria);
@@ -1899,13 +1856,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							}
 						} else {
 
-							TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode2
-									.getData();
-							criteria.setPmState(((TplSpecZoneLoc) treeNode2
-									.getData()).getPmState());
+							TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode2.getData();
+							criteria.setPmState(((TplSpecZoneLoc) treeNode2.getData()).getPmState());
 
-							criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
-									.getData()));
+							criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1.getData()));
 							tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
 							// criteria.setScQtSupplierCriteria(supplierCriteria);
 							setUserDetails(criteria);
@@ -1950,8 +1904,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 *            (supplierCriteria object)
 	 * @return List<ScQtLocCriteria>
 	 */
-	public List<ScQtLocCriteria> convertTreeNodesToLocationCriteria(
-			List<TreeNode> treeNodes, ScQtSupplierCriteria supplierCriteria) {
+	public List<ScQtLocCriteria> convertTreeNodesToLocationCriteria(List<TreeNode> treeNodes,
+			ScQtSupplierCriteria supplierCriteria) {
 		List<ScQtLocCriteria> locCriterias = new ArrayList<ScQtLocCriteria>();
 		if (null != treeNodes && !treeNodes.isEmpty()) {
 			for (TreeNode treeNode : treeNodes) {
@@ -1961,28 +1915,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (null != district && !district.isEmpty()) {
 						for (TreeNode devision : district) {
 							if (devision.getChildCount() > 0) {
-								for (TreeNode districtNode : devision
-										.getChildren()) {
-									ScQtLocCriteria criteria = ((ScQtLocCriteria) districtNode
-											.getData());
-									criteria.setPmDistrict(((ScQtLocCriteria) districtNode
-											.getData()).getPmDistrict());
-									criteria.setPmDivision(((ScQtLocCriteria) districtNode
-											.getParent().getData())
+								for (TreeNode districtNode : devision.getChildren()) {
+									ScQtLocCriteria criteria = ((ScQtLocCriteria) districtNode.getData());
+									criteria.setPmDistrict(((ScQtLocCriteria) districtNode.getData()).getPmDistrict());
+									criteria.setPmDivision(((ScQtLocCriteria) districtNode.getParent().getData())
 											.getPmDivision());
-									criteria.setPmState(((ScQtLocCriteria) treeNode2
-											.getData()).getPmState());
+									criteria.setPmState(((ScQtLocCriteria) treeNode2.getData()).getPmState());
 									criteria.setScQtSupplierCriteria(supplierCriteria);
 									setUserDetails(criteria);
 									locCriterias.add(criteria);
 								}
 							} else {
-								ScQtLocCriteria criteria = ((ScQtLocCriteria) devision
-										.getData());
-								criteria.setPmDistrict(((ScQtLocCriteria) devision
-										.getData()).getPmDistrict());
-								criteria.setPmState(((ScQtLocCriteria) treeNode2
-										.getData()).getPmState());
+								ScQtLocCriteria criteria = ((ScQtLocCriteria) devision.getData());
+								criteria.setPmDistrict(((ScQtLocCriteria) devision.getData()).getPmDistrict());
+								criteria.setPmState(((ScQtLocCriteria) treeNode2.getData()).getPmState());
 								criteria.setScQtSupplierCriteria(supplierCriteria);
 								setUserDetails(criteria);
 								locCriterias.add(criteria);
@@ -1991,8 +1937,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						}
 					} else {
 
-						ScQtLocCriteria criteria = (ScQtLocCriteria) treeNode2
-								.getData();
+						ScQtLocCriteria criteria = (ScQtLocCriteria) treeNode2.getData();
 						criteria.setScQtSupplierCriteria(supplierCriteria);
 						setUserDetails(criteria);
 
@@ -2015,14 +1960,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void generateBondLetterFromVelocityToPdf(ScAttachment attachment,
-			ScLoa scLoa) throws Exception {
+	public void generateBondLetterFromVelocityToPdf(ScAttachment attachment, ScLoa scLoa) throws Exception {
 		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				CommonConstants.DEFAULT_DATE_FORMAT);
+		SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		DecimalFormat amountDF = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+				commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		attachment.setFileName("Bond Letter.pdf");
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
@@ -2033,26 +1975,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String expiryPeriod = "..........................";
 		String bondAmountWord = "..................................................";
 		int type = 0;
-		
+
 		if (scLoa != null) {
 			type = 1;
-			
-            if(scLoa.getScLoiLoa() != null){
-            	if(StringUtils.isNotEmpty(scLoa.getScLoiLoa().getSupplierName())){
-            		supplierName =  scLoa.getScLoiLoa().getSupplierName() ;
-            	}
-            	if(StringUtils.isNotEmpty(scLoa.getScLoiLoa().getTitle())){
-            		sourcingTitle =  scLoa.getScLoiLoa().getTitle() ;
-            	}
-            }
-            if(scLoa.getBondAmt() != null){
-            	bondAmount = amountDF.format(scLoa.getBondAmt());
-            	bondAmountWord = NumberWordUtil.convert(scLoa.getBondAmt().longValue());
-            }
-            if(scLoa.getBondResDueDate() != null){
-            	expiryPeriod = dateFormat.format(scLoa.getBondResDueDate());
-            }
-		} 
+
+			if (scLoa.getScLoiLoa() != null) {
+				if (StringUtils.isNotEmpty(scLoa.getScLoiLoa().getSupplierName())) {
+					supplierName = scLoa.getScLoiLoa().getSupplierName();
+				}
+				if (StringUtils.isNotEmpty(scLoa.getScLoiLoa().getTitle())) {
+					sourcingTitle = scLoa.getScLoiLoa().getTitle();
+				}
+			}
+			if (scLoa.getBondAmt() != null) {
+				bondAmount = amountDF.format(scLoa.getBondAmt());
+				bondAmountWord = NumberWordUtil.convert(scLoa.getBondAmt().longValue());
+			}
+			if (scLoa.getBondResDueDate() != null) {
+				expiryPeriod = dateFormat.format(scLoa.getBondResDueDate());
+			}
+		}
 
 		context.put("type", type);
 		context.put("contractNo", contractNo);
@@ -2062,8 +2004,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		context.put("bondAmountWord", bondAmountWord);
 		context.put("expiryPeriod", expiryPeriod);
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOA_BOND_LETTER, context,
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOA_BOND_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
@@ -2084,91 +2025,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 * since the duration is 3 month) - 9933600 Bond amount - 9933600 * 0.05
 		 * = 496680
 		 * 
-		 * redmine Bug #11021 and Bug #11494 
+		 * redmine Bug #11021 and Bug #11494
 		 * 
-		 * If less than 2 years: 
-		 * Bond calculation base on total contract value multiple by 2.5% or 5%
-		 * 900,000 * 5% = 45,000
+		 * If less than 2 years: Bond calculation base on total contract value
+		 * multiple by 2.5% or 5% 900,000 * 5% = 45,000
 		 * -------------------------------------------------------------------
-		 * If more than 2 years: 
-		 * Bond calculation base on contract value per year, multiple
-		 * by 2.5% or 5%. 900,000/30 bulan = 30,000
+		 * If more than 2 years: Bond calculation base on contract value per
+		 * year, multiple by 2.5% or 5%. 900,000/30 bulan = 30,000
 		 * 
 		 * Setahun : 30,000*12 = 360,000
 		 * 
-		 * Nilai Bon : 360,000 * 2.5% = 9,000 
-		 * 
+		 * Nilai Bon : 360,000 * 2.5% = 9,000
 		 */
-		BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(),
-				scLoa.getGstAmt());
-		if(isDirectLoa/* && scLoa.isBrandNew()*/){
-//			scLoa.setBondReq(isPerformanceBondRequired(scLoa.getLoaAmt()));
+		BigDecimal overallCtAmount = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+		if (isDirectLoa/* && scLoa.isBrandNew() */) {
+			// scLoa.setBondReq(isPerformanceBondRequired(scLoa.getLoaAmt()));
 			scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
 		}
-		
-		if (scLoa.isBondReq()) {
-			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
-				BigDecimal contractPeriod = scLoa.getContractDuration();
 
-				PerformanceBondUtil.calculatePerformanceBondAmt(overallCtAmount, contractPeriod, scLoa);
-			}
-		}else{
-			scLoa.setBondAmt(null);
-			scLoa.setBondPercentage(null);
-		}
-		return scLoa;
-	}
-	
-	//Enhancement #24259 #24269	
-	/**
-	 * Calculate bond amount with SST.
-	 * 
-	 * @param scLoa
-	 *            the sc loa
-	 * @return the big decimal
-	 */	
-	public ScLoa calcBondAmountWithSST(ScLoa scLoa, boolean isDirectLoa) {
-		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
-		
-		if(isDirectLoa) {
-			//#24540 - start -
-			boolean setBondReq = true;
-			
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)  
-					&& null != scLoa.getContractType() 
-					&& null != scLoa.getContractType().getParameterId()
-					&& scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				setBondReq = false;
-			}
-			
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
-				setBondReq = false;
-			}
-			
-			if (setBondReq) {
-				scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
-			}
-			//#24540 - end -
-		}
-		
-		System.out.println("____ calcBondAmountWithSST "+scLoa.getScLoiLoa().getDocId()+": "+scLoa.getScLoiLoa().getDocId() +"overallAmount: "+overallCtAmount+" scLoa.isBondReq():"+scLoa.isBondReq());
-		
 		if (scLoa.isBondReq()) {
 			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
-				System.out.println("____ calcBondAmountWithSST LoaAmt: "+scLoa.getLoaAmt()+" Contract Duration: "+scLoa.getContractDuration());
 				BigDecimal contractPeriod = scLoa.getContractDuration();
 
 				PerformanceBondUtil.calculatePerformanceBondAmt(overallCtAmount, contractPeriod, scLoa);
@@ -2176,34 +2052,103 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} else {
 			scLoa.setBondAmt(null);
 			scLoa.setBondPercentage(null);
-		} 
-		
+		}
 		return scLoa;
-	}	
-	//end Enhancement #24259 #24269	
+	}
+
+	// Enhancement #24259 #24269
+	/**
+	 * Calculate bond amount with SST.
+	 * 
+	 * @param scLoa
+	 *            the sc loa
+	 * @return the big decimal
+	 */
+	public ScLoa calcBondAmountWithSST(ScLoa scLoa, boolean isDirectLoa) {
+		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
+
+		if (isDirectLoa) {
+			// #24540 - start -
+			boolean setBondReq = true;
+
+			if (null != scLoa.getQtType()
+					&& null != scLoa.getQtType().getParameterId()
+					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)
+					&& null != scLoa.getScQt()
+					&& null != scLoa.getScQt().getFulfilmentType()
+					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
+					&& scLoa.getScQt().getFulfilmentType().getParameterCode()
+							.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF) && null != scLoa.getContractType()
+					&& null != scLoa.getContractType().getParameterId()
+					&& scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				setBondReq = false;
+			}
+
+			if (null != scLoa.getQtType()
+					&& null != scLoa.getQtType().getParameterId()
+					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)
+					&& null != scLoa.getScQt()
+					&& null != scLoa.getScQt().getFulfilmentType()
+					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
+					&& (scLoa.getScQt().getFulfilmentType().getParameterCode()
+							.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || scLoa.getScQt().getFulfilmentType()
+							.getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
+				setBondReq = false;
+			}
+
+			if (setBondReq) {
+				scLoa.setBondReq(PerformanceBondUtil.isPerformanceBondRequired(overallCtAmount, null));
+			}
+			// #24540 - end -
+		}
+
+		System.out.println("____ calcBondAmountWithSST " + scLoa.getScLoiLoa().getDocId() + ": "
+				+ scLoa.getScLoiLoa().getDocId() + "overallAmount: " + overallCtAmount + " scLoa.isBondReq():"
+				+ scLoa.isBondReq());
+
+		if (scLoa.isBondReq()) {
+			if (scLoa.getLoaAmt() != null && scLoa.getContractDuration() != null) {
+				System.out.println("____ calcBondAmountWithSST LoaAmt: " + scLoa.getLoaAmt() + " Contract Duration: "
+						+ scLoa.getContractDuration());
+				BigDecimal contractPeriod = scLoa.getContractDuration();
+
+				PerformanceBondUtil.calculatePerformanceBondAmt(overallCtAmount, contractPeriod, scLoa);
+			}
+		} else {
+			scLoa.setBondAmt(null);
+			scLoa.setBondPercentage(null);
+		}
+
+		return scLoa;
+	}
+
+	// end Enhancement #24259 #24269
 
 	/**
 	 * Get the OverallContractAmount.
+	 * 
 	 * @param offerPrice
 	 * @param gstAmount
 	 * @return the contractAmount.
 	 */
-	public BigDecimal overallCtAmount(BigDecimal offerPrice,
-			BigDecimal gstAmount) {
+	public BigDecimal overallCtAmount(BigDecimal offerPrice, BigDecimal gstAmount) {
 
 		BigDecimal overallCtAmount = offerPrice;
 		if (gstAmount != null) {
 			overallCtAmount = overallCtAmount.add(gstAmount);
-			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
+			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE); // Bug
+																		// #35600@Syazani
+																		// 19/09/2024
 		}
 
 		return overallCtAmount;
 
 	}
 
-	//Enhancement #24259 #24269	
+	// Enhancement #24259 #24269
 	/**
 	 * Get the OverallContractAmount with SST.
+	 * 
 	 * @param offerPrice
 	 * @param sstAmount
 	 * @return the contractAmount.
@@ -2212,30 +2157,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = offerPrice;
 		if (sstAmount != null) {
 			overallCtAmount = overallCtAmount.add(sstAmount);
-			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
+			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE); // Bug
+																		// #35600@Syazani
+																		// 19/09/2024
 		}
 
 		return overallCtAmount;
 	}
-	//end Enhancement #24259 #24269	
-	
+
+	// end Enhancement #24259 #24269
+
 	/**
 	 * Check ProposalValidity Days Reached or not.
+	 * 
 	 * @param scQt
 	 * @return boolean
 	 */
 	public boolean handleProposalValidityDays(ScQt scQt) {
 		Date validityDate = null;
 		if (null != scQt.getProposalValidityEndDate()) {
-			log.info("scQt.getProposalValidityEndDate() not null"
-					+ scQt.getProposalValidityEndDate());
+			log.info("scQt.getProposalValidityEndDate() not null" + scQt.getProposalValidityEndDate());
 			validityDate = scQt.getProposalValidityEndDate();
 		}
-		
+
 		boolean isValidityDateNotReached = false;
 		if (null != validityDate) {
-			isValidityDateNotReached = 
-						checkProposalValidityDateReach(validityDate);
+			isValidityDateNotReached = checkProposalValidityDateReach(validityDate);
 		}
 
 		return isValidityDateNotReached;
@@ -2247,66 +2194,61 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @return boolean isPerformanceBondRequired
 	 */
-	/*public boolean isPerformanceBondRequired(BigDecimal loaAmount) {
-		if (null != loaAmount) {
-			IRuleSO ruleSO = null;
-			try {
-				ruleSO = (IRuleSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IRuleSO.class);
-				RuleReqDTO ruleReqDTO = new RuleReqDTO();
-				ruleReqDTO.setRuleType(RuleTypeConst.BOND);
-				List<PmConfigRuleValue> ruleValueList = ruleSO
-						.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
-
-				if (ruleValueList != null && ruleValueList.size() > 0) {
-					PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-					if (loaAmount.compareTo(new BigDecimal(configRuleValue
-							.getRuleValue())) > 0) {
-
-						return true;
-					}
-
-				}
-
-			} finally {
-				ruleSO = null;
-			}
-
-		}
-		
-		return false;
-	}*/
+	/*
+	 * public boolean isPerformanceBondRequired(BigDecimal loaAmount) { if (null
+	 * != loaAmount) { IRuleSO ruleSO = null; try { ruleSO = (IRuleSO)
+	 * BusinessDelegate.getInstance()
+	 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+	 * RuleReqDTO ruleReqDTO = new RuleReqDTO();
+	 * ruleReqDTO.setRuleType(RuleTypeConst.BOND); List<PmConfigRuleValue>
+	 * ruleValueList = ruleSO
+	 * .getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
+	 * 
+	 * if (ruleValueList != null && ruleValueList.size() > 0) {
+	 * PmConfigRuleValue configRuleValue = ruleValueList.get(0); if
+	 * (loaAmount.compareTo(new BigDecimal(configRuleValue .getRuleValue())) >
+	 * 0) {
+	 * 
+	 * return true; }
+	 * 
+	 * }
+	 * 
+	 * } finally { ruleSO = null; }
+	 * 
+	 * }
+	 * 
+	 * return false; }
+	 */
 
 	/**
 	 * To check whether proposalValidityDatereached or not..
+	 * 
 	 * @param proposalValidityEndDate
 	 * @return isProposalValidityDateReached
 	 */
-	public boolean checkProposalValidityDateReach(Date proposalValidityEndDate){
+	public boolean checkProposalValidityDateReach(Date proposalValidityEndDate) {
 		if (proposalValidityEndDate != null) {
-			long days = DateUtils.getDaysDifference(
-								  new Date(), proposalValidityEndDate);
+			long days = DateUtils.getDaysDifference(new Date(), proposalValidityEndDate);
 			int day = (int) days;
 			if (day >= 0) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Get the PTJ Organization Profile By Login User
 	 * 
-	 * @return	the PmOrgProfile instance
+	 * @return the PmOrgProfile instance
 	 */
 	public PmOrgProfile getPTJOrgProfileByLoginUser() {
-		
+
 		Long userId = new FacesScopes().getUserSessionBean().getUserId();
 		return getPTJOrgProfileByUserId(userId);
 	}
-	
+
 	/**
 	 * Gets the message.
 	 * 
@@ -2321,29 +2263,27 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String msg = "";
 
 		if (params != null) {
-			msg = ResourceBundleUtils.getMessage(key, params,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+			msg = ResourceBundleUtils.getMessage(key, params, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		} else {
-			msg = ResourceBundleUtils.getMessage(key,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+			msg = ResourceBundleUtils.getMessage(key, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
 
 		return msg;
 	}
-	
+
 	protected SmAddress cloneSmAddress(SmAddress address) {
 		log.info("cloneSmAddress : " + address);
-		
+
 		SmAddress newAddress = null;
 
 		if (address != null) {
 			try {
 				newAddress = (SmAddress) BeanUtils.cloneBean(address);
-				
+
 				if (newAddress != null) {
 					newAddress.setBrandNew(true);
 					newAddress.setAddressId(null);
-					
+
 					newAddress.setSmAssociateCompanies(null);
 					newAddress.setSmCompanyAddresses(null);
 					newAddress.setSmEquityCompanies(null);
@@ -2351,43 +2291,40 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					newAddress.setSmPersonnelAddresses(null);
 					newAddress.setSmSupplierBanks(null);
 					newAddress.setSmSupplierBranches(null);
-					
+
 					setUserDetails(newAddress);
 				}
-			} catch (IllegalAccessException
-					| InstantiationException
-					| InvocationTargetException
+			} catch (IllegalAccessException | InstantiationException | InvocationTargetException
 					| NoSuchMethodException e) {
 				e.printStackTrace();
 				log.error(e);
 				log.warn("clone " + address + ": " + address.getAddressId() + " failed.");
 			}
 		}
-		
+
 		return newAddress;
 	}
-	
+
 	/**
 	 * Gets the panel group items by circuler ver.
-	 *
-	 * @param circular the circular
+	 * 
+	 * @param circular
+	 *            the circular
 	 * @return the panel group items by circuler ver
 	 */
 	public List<CtPanelItemGroup> getPanelGroupItemsByCirculerVer(CtCircularVer circular) {
 		IPanelGroupItemSO ipanelGroupItemSO;
 		try {
 			PanelGroupItemReqDTO reqDTO = new PanelGroupItemReqDTO();
-			
-			ipanelGroupItemSO = (IPanelGroupItemSO) EpEjbBusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
-							IPanelGroupItemSO.class);
+
+			ipanelGroupItemSO = (IPanelGroupItemSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelGroupItemSO.class);
 			if (null != circular) {
 				reqDTO.setCircularVerId(circular.getCircularVerId());
-								
-				PanelGroupItemResDTO resDTO = ipanelGroupItemSO
-						.retrievePanelGroupItemsByCircularVerId(reqDTO);
-				
-						return resDTO.getCtPanelItemGroupList();
+
+				PanelGroupItemResDTO resDTO = ipanelGroupItemSO.retrievePanelGroupItemsByCircularVerId(reqDTO);
+
+				return resDTO.getCtPanelItemGroupList();
 			}
 
 		} finally {
@@ -2396,18 +2333,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return null;
 
 	}
-	
+
 	/**
 	 * Check if QT Status published.
 	 * 
 	 * @param currentStatusId
-	 * 		the current status id
-	 * @return	the indicator qt status published.
+	 *            the current status id
+	 * @return the indicator qt status published.
 	 */
 	public boolean isQTStatusPublished(Long currentStatusId) {
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT);
 	}
-	
+
 	// 25037 - start
 	/**
 	 * Determine state is currently in evaluation state based on status provided
@@ -2418,163 +2355,162 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean isQTStatusEvaluation(Long currentStatusId) {
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL);
 	}
+
 	// 25037 - end
 
-	
 	/**
 	 * Check if QT Status greater than or equals from status.
 	 * 
 	 * @param currentStatusId
-	 * 		the current status id
+	 *            the current status id
 	 * @param fromStatusId
-	 * 		the from status id
-	 * @return	the indicator qt status greater than or equals from status.
+	 *            the from status id
+	 * @return the indicator qt status greater than or equals from status.
 	 */
 	public boolean isQTStatusGreaterThanOrEquals(Long currentStatusId, Long fromStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		
+
 		return orderedStatuses.indexOf(currentStatusId) >= orderedStatuses.indexOf(fromStatusId);
 	}
-	
+
 	/**
 	 * Check if QT Status greater than from status.
 	 * 
 	 * @param currentStatusId
-	 * 		the current status id
+	 *            the current status id
 	 * @param fromStatusId
-	 * 		the from status id
-	 * @return	the indicator qt status greater than from status.
+	 *            the from status id
+	 * @return the indicator qt status greater than from status.
 	 */
 	public boolean isQTStatusGreaterThan(Long currentStatusId, Long fromStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		
+
 		return orderedStatuses.indexOf(currentStatusId) > orderedStatuses.indexOf(fromStatusId);
 	}
-	
+
 	/**
 	 * Check if QT Status less than or equals from status.
 	 * 
 	 * @param currentStatusId
-	 * 		the current status id
+	 *            the current status id
 	 * @param toStatusId
-	 * 		the to status id
-	 * @return	the indicator qt status less than from status.
+	 *            the to status id
+	 * @return the indicator qt status less than from status.
 	 */
 	public boolean isQTStatusLessThanOrEquals(Long currentStatusId, Long toStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		
+
 		return orderedStatuses.indexOf(currentStatusId) <= orderedStatuses.indexOf(toStatusId);
 	}
-	
+
 	/**
 	 * Check if QT Status less than from status.
 	 * 
 	 * @param currentStatusId
-	 * 		the current status id
+	 *            the current status id
 	 * @param toStatusId
-	 * 		the to status id
-	 * @return	the indicator qt status less than from status.
+	 *            the to status id
+	 * @return the indicator qt status less than from status.
 	 */
 	public boolean isQTStatusLessThan(Long currentStatusId, Long toStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		
+
 		return orderedStatuses.indexOf(currentStatusId) < orderedStatuses.indexOf(toStatusId);
 	}
-	
+
 	/**
 	 * Check if QT Status is in between from and to status.
 	 * 
 	 * @param currentStatusId
-	 * 		the current status id
+	 *            the current status id
 	 * @param fromStatusId
-	 * 		the from status id
+	 *            the from status id
 	 * @param toStatusId
-	 * 		the to status id
-	 * @return	the indicator qt status in between from and to status.
+	 *            the to status id
+	 * @return the indicator qt status in between from and to status.
 	 */
 	public boolean isQTStatusInBetween(Long currentStatusId, Long fromStatusId, Long toStatusId) {
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		orderedStatuses = orderedStatuses.subList(
-				orderedStatuses.indexOf(fromStatusId), 
-				orderedStatuses.indexOf(toStatusId)+1);
-		
+		orderedStatuses = orderedStatuses.subList(orderedStatuses.indexOf(fromStatusId),
+				orderedStatuses.indexOf(toStatusId) + 1);
+
 		return orderedStatuses.contains(currentStatusId);
 	}
-	
+
 	/**
 	 * Check if Current Committee greater than or equals compare committee.
 	 * 
 	 * @param currentCommittee
-	 * 		the current committee
+	 *            the current committee
 	 * @param otherCommittee
-	 * 		the compare committee
-	 * @return	the indicator greater than or equals compare committee.
+	 *            the compare committee
+	 * @return the indicator greater than or equals compare committee.
 	 */
 	public boolean isCurrentCommitteeGreaterThanOrEquals(String currentCommittee, String otherCommittee) {
 		List<String> committeesOrder = Arrays.asList(SourcingConstants.COMMITTEES_ORDER);
-		
+
 		return committeesOrder.indexOf(currentCommittee) >= committeesOrder.indexOf(otherCommittee);
 	}
-	
+
 	/**
 	 * Contract type drop down values.
+	 * 
 	 * @return the list
 	 */
 	public List<PmParameterDesc> getContractTypes(String procurementMode) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		// check logged in user allow central contract.
-		boolean  isAllowCentralContract =  isAllowCentralContract();
-		
-		if(!isAllowCentralContract || procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));
-		} 
+		boolean isAllowCentralContract = isAllowCentralContract();
 
-		List<PmParameterDesc> contractTypes = ParameterHelper.getInstance()
-				.getParameterDescListBySearchBean(
-						ParameterTypeConst.CONTRACT_TYPE, searchBean);
+		if (!isAllowCentralContract || procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							ParameterConst.CONTRACT_TYPE_CENTRAL));
+		}
+
+		List<PmParameterDesc> contractTypes = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				ParameterTypeConst.CONTRACT_TYPE, searchBean);
 
 		return contractTypes;
 	}
-	
+
 	/**
 	 * is Allow Central Contract
 	 * 
-	 * @return 
+	 * @return
 	 */
-	private boolean isAllowCentralContract(){
-		boolean allowCentralContract  = false;
+	private boolean isAllowCentralContract() {
+		boolean allowCentralContract = false;
 		Long userId = new FacesScopes().getUserSessionBean().getUserId();
-		
+
 		if (userId != null) {
 			IUserSO userSO = null;
 			try {
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setUserId(userId);
-				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
 				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 
-				if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
-					for (PmUserOrg pmUserOrg :  resDTO.getUserOrgList()) {
-						if( pmUserOrg.getPmOrgProfile() != null){
+				if (resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size() > 0) {
+					for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
+						if (pmUserOrg.getPmOrgProfile() != null) {
 							Boolean isBPK = pmUserOrg.getPmOrgProfile().getBpk();
-							if(isBPK != null  && isBPK){
-								allowCentralContract  = true;
+							if (isBPK != null && isBPK) {
+								allowCentralContract = true;
 								break;
 							}
 						}
 					}
 				}
-			}finally{
+			} finally {
 				userSO = null;
 			}
 		}
-		
-		return allowCentralContract;		
+
+		return allowCentralContract;
 	}
-	
-	
+
 	// 25037 - start
 	/**
 	 * Gets the role type dropdown values.
@@ -2599,33 +2535,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public List<PmParameterDesc> getRoleTypeDropdownValuesBasedOnPTJ(boolean isChairPersonReq, ScQt scqt, PmUser user,
 			String[] filteredRoles) {
-	// 25037 - end	
+		// 25037 - end
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
-		boolean isptj=false;
+		boolean isptj = false;
 		if (!isChairPersonReq) {
-			isptj=orgProfileCheckExist( scqt, user,isptj);
-		if(isptj==true){
-			recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_NOT_IN.value(),
-							recommendList));
-			
-		}
-			
-		}else{
-			isptj=orgProfileCheckExist( scqt, user,isptj);
-			
-			
-		}
-		if(isptj==false){
-				recommendList.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+			isptj = orgProfileCheckExist(scqt, user, isptj);
+			if (isptj == true) {
+				recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_IN.value(),
+						new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_NOT_IN.value(),
 								recommendList));
+
 			}
+
+		} else {
+			isptj = orgProfileCheckExist(scqt, user, isptj);
+
+		}
+		if (isptj == false) {
+			recommendList.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+			searchBean.getDataFilterBeans()
+					.add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
+							recommendList));
+		}
 
 		// 25037 - start
 		List<PmParameterDesc> list = retrieveParametersBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
@@ -2642,129 +2575,132 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return list;
 		// 25037 - end
 	}
-	
-	private boolean orgProfileCheckExist(ScQt scqt,PmUser user, boolean isptj){
-		PmOrgProfile orgProfile=null;
-		try{
-			orgProfile=retriveMinistryByOrgprofile(scqt.getPmOrgProfile().getOrgProfileId());
-		if(null!=user.getPmUserOrgs() && null!=orgProfile){
-			//orgProfile.setOrgProfileId(273481L);
-			log.info("===qt PtjId==="+orgProfile.getOrgProfileId());
-		for(PmUserOrg userorg:user.getPmUserOrgs()){
-			log.info("===user org record status==="+userorg.isRecordStatus());
-			if(userorg.isRecordStatus() && null!=userorg.getPmOrgProfile()){
-				PmOrgProfile localorgProfile=retriveMinistryByOrgprofile(userorg.getPmOrgProfile().getOrgProfileId());
-				if(null!=localorgProfile && localorgProfile.getOrgProfileId().equals(orgProfile.getOrgProfileId())){
-				isptj=true;
-				break;
+
+	private boolean orgProfileCheckExist(ScQt scqt, PmUser user, boolean isptj) {
+		PmOrgProfile orgProfile = null;
+		try {
+			orgProfile = retriveMinistryByOrgprofile(scqt.getPmOrgProfile().getOrgProfileId());
+			if (null != user.getPmUserOrgs() && null != orgProfile) {
+				// orgProfile.setOrgProfileId(273481L);
+				log.info("===qt PtjId===" + orgProfile.getOrgProfileId());
+				for (PmUserOrg userorg : user.getPmUserOrgs()) {
+					log.info("===user org record status===" + userorg.isRecordStatus());
+					if (userorg.isRecordStatus() && null != userorg.getPmOrgProfile()) {
+						PmOrgProfile localorgProfile = retriveMinistryByOrgprofile(userorg.getPmOrgProfile()
+								.getOrgProfileId());
+						if (null != localorgProfile
+								&& localorgProfile.getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
+							isptj = true;
+							break;
+						}
+					}
+
 				}
 			}
-			
-		}
-		}
-		}finally{
-			
+		} finally {
+
 		}
 		return isptj;
 	}
-	
-	private PmOrgProfile retriveMinistryByOrgprofile(Long orgProfileId){
-		IOrgProfileSO	orgProfileSO=null;
-		PmOrgProfile orgProfile=null;
-		try{
-			
-			orgProfileSO= BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			if(null!=orgProfileId){
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgProfileId(orgProfileId);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveMinistryByOrgProfileId(reqDTO);
-			if (resDTO.getPmOrgProfile() != null) {
-			 orgProfile=resDTO.getPmOrgProfile();
+
+	private PmOrgProfile retriveMinistryByOrgprofile(Long orgProfileId) {
+		IOrgProfileSO orgProfileSO = null;
+		PmOrgProfile orgProfile = null;
+		try {
+
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IOrgProfileSO.class);
+			if (null != orgProfileId) {
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileId(orgProfileId);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+				if (resDTO.getPmOrgProfile() != null) {
+					orgProfile = resDTO.getPmOrgProfile();
+				}
 			}
-		}
-		}finally{
-			orgProfileSO=null;
+		} finally {
+			orgProfileSO = null;
 		}
 		return orgProfile;
 	}
+
 	/**
 	 * Gets the days by rule type.
-	 *
-	 * @param RuleType the rule type
+	 * 
+	 * @param RuleType
+	 *            the rule type
 	 * @return the days by rules
 	 */
-	protected Integer getDaysByRuleType(String ruleType){
+	protected Integer getDaysByRuleType(String ruleType) {
 		Integer days = 0;
 		IRuleSO ruleSO;
 		try {
-			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IRuleSO.class);
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
 			ruleReqDTO.setRuleType(ruleType);
-			
-			List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+
+			List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
+					.getRuleValueList();
 			if (ruleValueList != null && ruleValueList.size() > 0) {
 				PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-				days  = Integer.valueOf(configRuleValue.getRuleValue());
+				days = Integer.valueOf(configRuleValue.getRuleValue());
 			} else {
-				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+				throw new EpException(MessageConst.ERROR_770222,
+						new String[] { getRuleTypeDesc(ruleReqDTO.getRuleType()) });
 			}
 		} finally {
-			ruleSO= null;
+			ruleSO = null;
 		}
-		
+
 		return days;
 	}
-	
+
 	/**
 	 * To update closing date and proposal validity date.
 	 * 
 	 * @param scQt
-	 * 		the ScQt instance
+	 *            the ScQt instance
 	 */
 	protected void updatePublishClosingDate(ScQt scQt) {
 		Date clsDate = null;
 		if (null != scQt.getProposalStartDate()) {
-			clsDate = DateUtils.addDays(scQt.getProposalStartDate(),
-					scQt.getPublishPeriod());
-		} 
-		
+			clsDate = DateUtils.addDays(scQt.getProposalStartDate(), scQt.getPublishPeriod());
+		}
+
 		if (null != clsDate) {
 			clsDate = DateUtils.setDefaultDateTime(clsDate);
 		}
 
 		scQt.setClosingDate(clsDate);
-		
-		if(scQt.isSampleReq()){
+
+		if (scQt.isSampleReq()) {
 			scQt.setSampleClosingDate(clsDate);
 		}
-		
+
 		updateProposalValidityDate(scQt);
 	}
-	
+
 	/**
 	 * To update proposal validity date.
 	 * 
 	 * @param scQt
-	 * 		the ScQt instance
+	 *            the ScQt instance
 	 */
 	protected void updateProposalValidityDate(ScQt scQt) {
 		Date clsDate = scQt.getClosingDate();
 		Date proposalValidityEndDate = null;
-		
+
 		if (null != clsDate) {
 			clsDate = DateUtils.setDefaultDateTime(clsDate);
-			// 25635&33724-proposal validity days null -start-  Bug #36221
+			// 25635&33724-proposal validity days null -start- Bug #36221
 			if (null != scQt.getQtValidityPeriod()) {
-				proposalValidityEndDate = DateUtils.addDays(clsDate,
-						scQt.getQtValidityPeriod());
+				proposalValidityEndDate = DateUtils.addDays(clsDate, scQt.getQtValidityPeriod());
 			} // 25635&33724-proposal validity days null Bug #36221
 		}
 		scQt.setProposalValidityEndDate(proposalValidityEndDate);
 	}
-	
+
 	/**
 	 * Role change listner.
 	 * 
@@ -2774,56 +2710,52 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public void roleChangedListener(ScCommitteeMember member) {
 		Long paramId = member.getMemberRoleId();
 		if (paramId != null) {
-			member.setMemberRole(ParameterHelper
-					.getInstance()
-					.getPmParameterById(paramId));
+			member.setMemberRole(ParameterHelper.getInstance().getPmParameterById(paramId));
 		}
 	}
-	
+
 	/**
 	 * Representive type change.
-	 *
-	 * @param member the member
+	 * 
+	 * @param member
+	 *            the member
 	 */
 	public void representiveTypeChangedListener(ScCommitteeMember member) {
 		Long paramId = member.getRepresentativeTypeId();
 		if (null != paramId) {
-			member.setRepresentativeType(ParameterHelper.getInstance()
-					.getPmParameterById(paramId));
+			member.setRepresentativeType(ParameterHelper.getInstance().getPmParameterById(paramId));
 		}
 	}
-	
+
 	/**
 	 * Get PmStatus by status id
 	 * 
 	 * @param statusId
-	 * 		the status id
-	 * @return	the PmStatus instance
+	 *            the status id
+	 * @return the PmStatus instance
 	 */
 	public PmStatus getPmStatusByStatusId(Long statusId) {
 		if (statusId != null) {
 			IStatusSO statusSO = null;
 			try {
-				statusSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-				
+				statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStatusSO.class);
+
 				StatusReqDTO reqDTO = new StatusReqDTO();
 				reqDTO.setStatusId(statusId);
-				return statusSO
-						.retrieveStatusByStatusId(reqDTO)
-						.getPmStatus();
+				return statusSO.retrieveStatusByStatusId(reqDTO).getPmStatus();
 
 			} finally {
 				statusSO = null;
-			}	
+			}
 		}
-		
+
 		return null;
 	}
-	
-	protected ScAddress createOrUpdateScAddress(ScAddress scAddress, SmAddress smAddress, 
-							SmPersonnel smPersonnel, SmCompanyBasic smCompanyBasic) {
-		
+
+	protected ScAddress createOrUpdateScAddress(ScAddress scAddress, SmAddress smAddress, SmPersonnel smPersonnel,
+			SmCompanyBasic smCompanyBasic) {
+
 		if (smAddress != null) {
 			if (scAddress == null) {
 				scAddress = new ScAddress();
@@ -2831,7 +2763,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scAddress.setAddress1(smAddress.getAddress1());
 			scAddress.setAddress2(smAddress.getAddress2());
 			scAddress.setAddress3(smAddress.getAddress3());
-			//scAddress.setAddress4(smAddress.getAddress4());
+			// scAddress.setAddress4(smAddress.getAddress4());
 			scAddress.setPostcode(smAddress.getPostcode());
 			scAddress.setPmCountry(smAddress.getPmCountry());
 			scAddress.setPmState(smAddress.getPmState());
@@ -2840,11 +2772,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scAddress.setPmCity(smAddress.getPmCity());
 			scAddress.setMapLatitude(smAddress.getMapLatitude());
 			scAddress.setMapLongitude(smAddress.getMapLongitude());
-			
+
 			if (smPersonnel == null) {
 				// to reset all contact person details as null.
 				smPersonnel = new SmPersonnel();
-			} 
+			}
 			scAddress.setContactEmail(smPersonnel.getEmail());
 			scAddress.setContactFaxArea(smPersonnel.getFaxArea());
 			scAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
@@ -2856,11 +2788,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
 			scAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
 			scAddress.setContactPhoneNo(smPersonnel.getPhoneNo());
-			
+
 			if (smCompanyBasic == null) {
 				// to reset all company contact details as null.
 				smCompanyBasic = new SmCompanyBasic();
-			} 
+			}
 			scAddress.setFaxArea(smCompanyBasic.getFaxArea());
 			scAddress.setFaxCountry(smCompanyBasic.getFaxCountry());
 			scAddress.setFaxNo(smCompanyBasic.getFaxNo());
@@ -2868,41 +2800,40 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scAddress.setPhoneCountry(smCompanyBasic.getPhoneCountry());
 			scAddress.setPhoneNo(smCompanyBasic.getPhoneNo());
 		}
-		
+
 		return scAddress;
 	}
-	
+
 	/**
-	 * if exceeds 12 PM,next day else today 
-	 *  
+	 * if exceeds 12 PM,next day else today
+	 * 
 	 * @return Date
 	 */
 	public Date handlePublishDate() {
-		
+
 		int hour = DateUtils.getCurrentHours();
 		Date today = DateUtils.getCurrentDateWithoutTime();
 		return hour >= 12 ? DateUtils.addDays(today, 1) : today;
 	}
-	
+
 	/**
 	 * Fetch PmParameter based on parameter Id
 	 * 
 	 * @param parameterId
 	 * @return PmParameter
 	 */
-	public PmParameter retrieveParameterById(Long parameterId){
-		
+	public PmParameter retrieveParameterById(Long parameterId) {
+
 		PmParameter pmParameter = null;
 		if (parameterId != null) {
 			IParameterSO parameterSO = null;
 			try {
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO.setParameterId(parameterId);
-				parameterSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-				ParameterResDTO parameterResDTO = parameterSO
-						.retrieveParameterById(parameterReqDTO);
-				if(parameterResDTO != null && parameterResDTO.isSuccessful()){
+				parameterSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+				ParameterResDTO parameterResDTO = parameterSO.retrieveParameterById(parameterReqDTO);
+				if (parameterResDTO != null && parameterResDTO.isSuccessful()) {
 					pmParameter = parameterResDTO.getPmParameter();
 				}
 			} finally {
@@ -2911,9 +2842,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 		return pmParameter;
-	
+
 	}
-	
+
 	public PmParameter retrieveParameterByTypeAndCode(String parameterType, String parameterCode) {
 		PmParameter pmParameter = null;
 		try {
@@ -2934,32 +2865,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	/**
 	 * Validate deduction payment dtls.
 	 * 
-	 * @param List<ScQtDeduction>
-	 *          	  the deductions
-	 *          
+	 * @param List
+	 *            <ScQtDeduction> the deductions
+	 * 
 	 */
 	public void validateDeductionPaymentDtls(List<ScQtDeduction> deductions) {
 
 		if (CollectionUtils.isNotEmpty(deductions)) {
 			for (ScQtDeduction deduction : deductions) {
 				PmParameter deductionType = deduction.getDeductionType();
-				if (null != deductionType
-						&& null == deductionType.getParameterId()) {
+				if (null != deductionType && null == deductionType.getParameterId()) {
 					throw new EpException(MessageConst.ERROR_740035);
 				} else {
-					if (CollectionUtils.isEmpty(deduction
-							.getScQtDeductionClauses())) {
-						throw new EpException(MessageConst.ERROR_760324,
-								new String[] { getParameterDesc(
-										deductionType.getParameterType(),
-										deductionType.getParameterCode()) });
+					if (CollectionUtils.isEmpty(deduction.getScQtDeductionClauses())) {
+						throw new EpException(MessageConst.ERROR_760324, new String[] { getParameterDesc(
+								deductionType.getParameterType(), deductionType.getParameterCode()) });
 					}
-					for(ScQtDeductionClause clause : deduction.getScQtDeductionClauses()) {
-						if(StringUtils.isBlank(clause.getClauseDesc())) {
-							throw new EpException(MessageConst.ERROR_760451,
-									new String[] { getParameterDesc(
-											deductionType.getParameterType(),
-											deductionType.getParameterCode()) });
+					for (ScQtDeductionClause clause : deduction.getScQtDeductionClauses()) {
+						if (StringUtils.isBlank(clause.getClauseDesc())) {
+							throw new EpException(MessageConst.ERROR_760451, new String[] { getParameterDesc(
+									deductionType.getParameterType(), deductionType.getParameterCode()) });
 						}
 					}
 				}
@@ -2968,25 +2893,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if (deductions.size() > 1) {
 					for (ScQtDeduction scQtDeduction : deductions) {
 						if (!deduction.equals(scQtDeduction)) {
-							if (!(deductionType.getParameterCode().equals(
-									ParameterConst.DEDUCTION_TYPE_FIXED)
-									|| deductionType
-											.getParameterCode()
-											.equals(ParameterConst.DEDUCTION_TYPE_OTHERS) || deductionType
-											.getParameterCode()
-											.equals(ParameterConst.DEDUCTION_TYPE_NON_FIXED))) {
-								if (deduction.getDeductionType()
-										.getParameterId() == scQtDeduction
-										.getDeductionType().getParameterId()) {
-									throw new EpException(
-											MessageConst.ERROR_700027,
-											new String[] { ResourceBundleUtils
-													.getMessage(
-															getParameterDesc(scQtDeduction
-																	.getDeductionType()),
-															ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-															new FacesScopes()
-																	.getUserLocale()) });
+							if (!(deductionType.getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_FIXED)
+									|| deductionType.getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_OTHERS) || deductionType
+									.getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_NON_FIXED))) {
+								if (deduction.getDeductionType().getParameterId() == scQtDeduction.getDeductionType()
+										.getParameterId()) {
+									throw new EpException(MessageConst.ERROR_700027,
+											new String[] { ResourceBundleUtils.getMessage(
+													getParameterDesc(scQtDeduction.getDeductionType()),
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()) });
 								}
 							}
 						}
@@ -2995,25 +2911,27 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
-	
+
 	/**
 	 * Check Is QT send Cancel request
-	 *
-	 * @param qt the qt
+	 * 
+	 * @param qt
+	 *            the qt
 	 */
-	public boolean checkQTCancelRuquested(ScQt scQt){
+	public boolean checkQTCancelRuquested(ScQt scQt) {
 		boolean isQTCancelRequested = false;
 		IScWorkFlowStatusSO workFlowStatusSO;
 		try {
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IScWorkFlowStatusSO.class);
 			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
 			reqDTO.setDocType(ParameterConst.DOCTYPE_QT_CANCELLATION);
 			reqDTO.setDocId(scQt.getQtId());
-			
-			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
-			if(currentWorkFlowStatus != null && currentWorkFlowStatus.getPmStatus() != null &&
-					currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QC_PENDING_CANCELATON)) {
+
+			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO)
+					.getWorkFlowStatus();
+			if (currentWorkFlowStatus != null && currentWorkFlowStatus.getPmStatus() != null
+					&& currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QC_PENDING_CANCELATON)) {
 				isQTCancelRequested = true;
 			}
 		} finally {
@@ -3021,28 +2939,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return isQTCancelRequested;
 	}
-	
+
 	/**
 	 * Gets the mof no by supplier id.
-	 *
-	 * @param supplierId the supplier id
+	 * 
+	 * @param supplierId
+	 *            the supplier id
 	 * @return the mof no by supplier id
 	 */
 	public String getMofNoBySupplierId(Long supplierId) {
-		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IMofAccountSO.class);
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 		MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
 		accountReqDTO.setSupplierId(supplierId);
-		MofAccountResDTO mofAccountResDTO = mofAccountSO
-				.retrieveMofNoBySupplierId(accountReqDTO);
+		MofAccountResDTO mofAccountResDTO = mofAccountSO.retrieveMofNoBySupplierId(accountReqDTO);
 		if (mofAccountResDTO.getMofAccount() != null) {
 			return mofAccountResDTO.getMofAccount().getMofNo();
 		}
 		return null;
 	}
-	
+
 	/**
 	 * To check is performance bond required
 	 * 
@@ -3051,7 +2967,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean isPerformanceBondRequired(BigDecimal loaAmount, List<ScQtCategory> qtCategories) {
 		return PerformanceBondUtil.isPerformanceBondRequired(loaAmount, qtCategories);
 	}
-	
+
 	/**
 	 * Get member role based parameter type 'FCR' and code
 	 * 
@@ -3062,32 +2978,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		String memberRole = null;
 		if (pmParameter != null) {
-				memberRole = getParameterDesc(
-						ParameterTypeConst.FINALIZATION_COMMITTEE_ROLE,
-						pmParameter.getParameterCode());
-			
+			memberRole = getParameterDesc(ParameterTypeConst.FINALIZATION_COMMITTEE_ROLE,
+					pmParameter.getParameterCode());
+
 		}
 		return memberRole;
 	}
-	
+
 	/**
 	 * Gets the procurement type tool tip.
-	 *
+	 * 
 	 * @return the procurement type tool tip
 	 */
-	public String getProcurementTypeToolTip(){
+	public String getProcurementTypeToolTip() {
 		// MaxProcurementAmt
 		BigDecimal maxProcurementAmt = getPRThresholdAmount();
-		DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		DecimalFormat amountDF = new DecimalFormat(
+				new CommonUtils().getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
-		String message = ResourceBundleUtils.getMessage(
-				"lbl.sc.procurementtype.tooltip", new String[] {amountDF.format(maxProcurementAmt)}, 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		String message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip",
+				new String[] { amountDF.format(maxProcurementAmt) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale());
 		return message;
 	}
-	
+
 	/**
 	 * Set PTJ Org Profile of user for committee member.
 	 * 
@@ -3095,45 +3009,40 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public void setCommitteeMemberOrgProfile(ScCommitteeMember scMember) {
 		/*
-		 * Enhancement #21689 - start -
-		 * IF BPK DONT SET ORG_PROFILE (PTJ)
+		 * Enhancement #21689 - start - IF BPK DONT SET ORG_PROFILE (PTJ)
 		 */
-		if(scMember.getPmUser()!=null && scMember.getPmUser().getOrgTypeCode()!=null) {
-			//20210716@asyrafhaziq - 30421 -start
+		if (scMember.getPmUser() != null && scMember.getPmUser().getOrgTypeCode() != null) {
+			// 20210716@asyrafhaziq - 30421 -start
 			String orgTypeCode = scMember.getPmUser().getOrgTypeCode().getParameterCode();
-			if(orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)){
-				scMember.setPmOrgProfile(getBKPOrgProfileByUserId(scMember.getPmUser()
-						.getUserId()));
-			} else if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)){
-				scMember.setPmOrgProfile(getOTHOrgProfileByUserId(scMember.getPmUser()
-						.getUserId()));
+			if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)) {
+				scMember.setPmOrgProfile(getBKPOrgProfileByUserId(scMember.getPmUser().getUserId()));
+			} else if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)) {
+				scMember.setPmOrgProfile(getOTHOrgProfileByUserId(scMember.getPmUser().getUserId()));
 			}
-			//20210716@asyrafhaziq - 30421 -end
+			// 20210716@asyrafhaziq - 30421 -end
 			else {
-				scMember.setPmOrgProfile(getPTJOrgProfileByUserId(scMember.getPmUser()
-						.getUserId()));
-			}			
+				scMember.setPmOrgProfile(getPTJOrgProfileByUserId(scMember.getPmUser().getUserId()));
+			}
 		}
 	}
-	
+
 	private PmOrgProfile getBKPOrgProfileByUserId(Long userId) {
 		PmOrgProfile pmOrgProfile = null;
-		
+
 		if (userId != null) {
 			IOrgProfileSO orgProfileSO = null;
-			
+
 			try {
-				orgProfileSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
+				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setUserId(userId);
 				reqDTO.setOrgType(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN.value());
-				
+
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
-				
+
 				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
 					pmOrgProfile = pmOrgProfiles.get(0);
 				}
@@ -3142,29 +3051,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				orgProfileSO = null;
 			}
 		}
-		
+
 		return pmOrgProfile;
 	}
-	// Enhancement #21689 - end - 
-	//20210716@asyrafhaziq - 30421 -start
+
+	// Enhancement #21689 - end -
+	// 20210716@asyrafhaziq - 30421 -start
 	private PmOrgProfile getOTHOrgProfileByUserId(Long userId) {
 		PmOrgProfile pmOrgProfile = null;
-		
+
 		if (userId != null) {
 			IOrgProfileSO orgProfileSO = null;
-			
+
 			try {
-				orgProfileSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
+				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setUserId(userId);
 				reqDTO.setOrgType(OrganizationType.OTHERS.value());
-				
+
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
-				
+
 				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
 					pmOrgProfile = pmOrgProfiles.get(0);
 				}
@@ -3173,25 +3082,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				orgProfileSO = null;
 			}
 		}
-		
+
 		return pmOrgProfile;
 	}
-	//20210716@asyrafhaziq - 30421 -end	
+
+	// 20210716@asyrafhaziq - 30421 -end
 	private PmOrgProfile getPTJOrgProfileByUserId(Long userId) {
 
 		PmOrgProfile pmOrgProfile = null;
 		if (userId != null) {
 			IOrgProfileSO orgProfileSO = null;
 			try {
-				orgProfileSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
+				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
 
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setUserId(userId);
 				reqDTO.setOrgType(OrganizationType.DIVISION.value());
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 				List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
 				if (pmOrgProfiles != null && pmOrgProfiles.size() > 0) {
 					pmOrgProfile = pmOrgProfiles.get(0);
@@ -3203,50 +3111,50 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return pmOrgProfile;
 	}
-	
+
 	/**
-	 * Populate values into Representative Type drop down in Committee Members table
-	 * @return  an array of representative type(s)
+	 * Populate values into Representative Type drop down in Committee Members
+	 * table
+	 * 
+	 * @return an array of representative type(s)
 	 */
-	public SelectItem[] getRepresentativeTypeDropdownValues(String committeeType){
+	public SelectItem[] getRepresentativeTypeDropdownValues(String committeeType) {
 		SelectItem[] items = null;
-		
-		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
-				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
+
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
-			//Enhancement #21691 - start -
+			// Enhancement #21691 - start -
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PPR);
-			//Enhancement #21691 - end -
+			// Enhancement #21691 - end -
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
-		
+
 		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBA);
-		
+
 		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH);
-		
+
 		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType)) {
 			items = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK);
 		}
 		return items;
 	}
-	
+
 	/**
 	 * Set Committeemember data.
 	 * 
 	 * @param deleteScMember
-	 *  @param currentScMember
+	 * @param currentScMember
 	 */
-	public ScCommitteeMember setCommitteeMemberData(ScCommitteeMember deletedCommitteeMember,ScCommitteeMember currentCommitteeMember) {
+	public ScCommitteeMember setCommitteeMemberData(ScCommitteeMember deletedCommitteeMember,
+			ScCommitteeMember currentCommitteeMember) {
 		deletedCommitteeMember.setDeleted(false);
-		deletedCommitteeMember.setRepresentativeType(
-				currentCommitteeMember.getRepresentativeType());
-		deletedCommitteeMember.setMemberRole(
-				currentCommitteeMember.getMemberRole());
-		deletedCommitteeMember.setMemberRoleId(
-				currentCommitteeMember.getMemberRoleId());
+		deletedCommitteeMember.setRepresentativeType(currentCommitteeMember.getRepresentativeType());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setMemberRoleId(currentCommitteeMember.getMemberRoleId());
 		deletedCommitteeMember.setMemberName(currentCommitteeMember.getMemberName());
 		deletedCommitteeMember.setDesignation(currentCommitteeMember.getDesignation());
 		deletedCommitteeMember.setEmail(currentCommitteeMember.getEmail());
@@ -3257,39 +3165,35 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		deletedCommitteeMember.setAccessRight(currentCommitteeMember.getAccessRight());
 		deletedCommitteeMember.setScCommittee(currentCommitteeMember.getScCommittee());
 		if (deletedCommitteeMember.getMemberRole() != null) {
-			deletedCommitteeMember.setMemberRoleId(
-					deletedCommitteeMember.getMemberRole().getParameterId());	
+			deletedCommitteeMember.setMemberRoleId(deletedCommitteeMember.getMemberRole().getParameterId());
 		}
 		if (deletedCommitteeMember.getRepresentativeType() != null) {
-			deletedCommitteeMember.setRepresentativeTypeId(
-					deletedCommitteeMember.getRepresentativeType().getParameterId());
+			deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType()
+					.getParameterId());
 		}
-		
+
 		return deletedCommitteeMember;
 	}
-	
+
 	/**
 	 * Get PmPtjSpecialApproval based on ptj orgprofile id
 	 * 
 	 * @param orgProfileId
 	 * @return PmPtjSpecialApproval
 	 */
-	public PmPtjSpecialApproval getPtjSpecialApprovalByOrgProfileId(
-			Long orgProfileId) {
+	public PmPtjSpecialApproval getPtjSpecialApprovalByOrgProfileId(Long orgProfileId) {
 
 		PmPtjSpecialApproval ptjSpecApproval = null;
 		if (orgProfileId != null) {
 			IPtjSpecialApprovalSO ptjSpecialApprovalSO = null;
 			try {
-				ptjSpecialApprovalSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IPtjSpecialApprovalSO.class);
+				ptjSpecialApprovalSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IPtjSpecialApprovalSO.class);
 
 				PtjSpecialApprovalReqDTO reqDTO = new PtjSpecialApprovalReqDTO();
 				reqDTO.setOrgProfileId(orgProfileId);
-				//reqDTO.setOrgProfileId(238501L);
-				PtjSpecialApprovalResDTO resDTO = ptjSpecialApprovalSO
-						.isPtjSpecialApproval(reqDTO);
+				// reqDTO.setOrgProfileId(238501L);
+				PtjSpecialApprovalResDTO resDTO = ptjSpecialApprovalSO.isPtjSpecialApproval(reqDTO);
 				if (resDTO.isValid()) {
 					ptjSpecApproval = resDTO.getPtjSpecialApproval();
 				}
@@ -3301,7 +3205,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return ptjSpecApproval;
 	}
-	
+
 	/**
 	 * @param orgProfileId
 	 * @return true if addressType present
@@ -3312,46 +3216,46 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (orgProfileId != null) {
 			IOrgProfileSO orgProfile = null;
 			try {
-				orgProfile = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
-				OrgProfileResDTO orgResDto = orgProfile
-						.retrieveOrgStateCodeByOrgProfileId(orgProfileId);
+				orgProfile = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+				OrgProfileResDTO orgResDto = orgProfile.retrieveOrgStateCodeByOrgProfileId(orgProfileId);
 				if (orgResDto.getStateStatusId() != null) {
 					isPtjAddressTypePresent = true;
 				}
-			} catch(Exception e){
-				//14648-No need to throw exception at time of page loading.
+			} catch (Exception e) {
+				// 14648-No need to throw exception at time of page loading.
 				isPtjAddressTypePresent = false;
 			}
-			
+
 			finally {
 				orgProfile = null;
 			}
 		}
 		return isPtjAddressTypePresent;
 	}
-	
+
 	/**
 	 * Checks if is supplier.
-	 *
+	 * 
 	 * @return true, if is supplier
 	 */
 	public boolean isSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
-		if(facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value()) // supplier and govt seller
+		if (facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value()) // supplier
+																	// and govt
+																	// seller
 				|| facesScopes.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
 				|| facesScopes.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
 				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
 				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())){
+				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
 
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
 	}
-	
+
 	/**
 	 * Enable drop down for ProcumentMethod if true
 	 * 
@@ -3361,39 +3265,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected boolean checkForProcumentMethodDropdown(ScQt scQt) {
 
 		boolean isProcumentMethodDropdownReq = false;
-		BigDecimal amount = scQt.getEstimatedAmount() != null ? scQt
-				.getEstimatedAmount() : scQt.getTmpExpectedIntendedPrice();
+		BigDecimal amount = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : scQt
+				.getTmpExpectedIntendedPrice();
 		PmPtjSpecialApproval ptjSpecialApproval = scQt.getPtjSpecialApproval();
-		if (!scQt.isPanel() && 
-				!isQuotationThresHold(amount) &&
-				BooleanUtils.isTrue(scQt.getObtainSpecialApproval()) && 
-				ptjSpecialApproval != null &&
-				ptjSpecialApproval.getProcureAmt() != null &&
-				amount != null &&
-				amount.compareTo(ptjSpecialApproval.getProcureAmt()) <= 0) {
+		if (!scQt.isPanel() && !isQuotationThresHold(amount) && BooleanUtils.isTrue(scQt.getObtainSpecialApproval())
+				&& ptjSpecialApproval != null && ptjSpecialApproval.getProcureAmt() != null && amount != null
+				&& amount.compareTo(ptjSpecialApproval.getProcureAmt()) <= 0) {
 			isProcumentMethodDropdownReq = true;
 		}
 		return isProcumentMethodDropdownReq;
 	}
-	
+
 	/**
 	 * Get list of statuses which are not recommended for Spec Maintenance
 	 * 
 	 * @return nonRecommendedStatuses
 	 */
-	protected List<Long> nonRecommendedStatusesForSpecMaint(){
-		
+	protected List<Long> nonRecommendedStatusesForSpecMaint() {
+
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		orderedStatuses = orderedStatuses.subList(
-						  orderedStatuses.indexOf(QTStatusConst.QT_PENDING_QT_SUBMISSION),
-						  orderedStatuses
-								.indexOf(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) + 1);
+		orderedStatuses = orderedStatuses.subList(orderedStatuses.indexOf(QTStatusConst.QT_PENDING_QT_SUBMISSION),
+				orderedStatuses.indexOf(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) + 1);
 		List<Long> nonRecommendedStatuses = new ArrayList<Long>(orderedStatuses.size());
 		nonRecommendedStatuses.addAll(orderedStatuses);
-		
+
 		return nonRecommendedStatuses;
 	}
-	
+
 	/**
 	 * Get file name as doc title with actual file type.
 	 * 
@@ -3407,8 +3305,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String fileName = null;
 		if (filePath != null) {
 			StringBuilder builder = new StringBuilder();
-			String number = (String) (increment <= 9 ? "0" + (increment)
-					: Integer.toString(increment));
+			String number = (String) (increment <= 9 ? "0" + (increment) : Integer.toString(increment));
 			builder.append(number).append("_").append(docTitle);
 			String[] splitFile = filePath.split("\\.");
 			if (splitFile.length > 0) {
@@ -3418,7 +3315,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return fileName;
 	}
-	
+
 	/**
 	 * Add defined message to FacesMessage based on msgcode from
 	 * message-common.properties
@@ -3428,15 +3325,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	protected void addFacesMessage(FacesContext fc, String msgCode, Object[] params) {
 
-		fc.addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-						MessageUtils.getMessage(msgCode, params,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())
-								+ " (" + msgCode + ")"));
+		fc.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(msgCode, params,
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()) + " (" + msgCode + ")"));
 	}
-	
-	
+
 	/**
 	 * checkKertasTaklimat Uploaded report
 	 * 
@@ -3444,43 +3338,52 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param finalizationReports
 	 * 
 	 */
-	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports){
-		if(CollectionUtils.isNotEmpty(finalizationReports)){
-			int count=0;
-			for(ScQtFinalizationReport finalizationReport:finalizationReports){
-				if(null!=finalizationReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())){
-				++count;	
+	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports) {
+		if (CollectionUtils.isNotEmpty(finalizationReports)) {
+			int count = 0;
+			for (ScQtFinalizationReport finalizationReport : finalizationReports) {
+				if (null != finalizationReport.getPmDocument()
+						&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
+								.getPmDocument().getDocDefinitionKey())) {
+					++count;
 				}
-				
+
 			}
-			log.info("checkKertasTaklimatReports count"+count);
-			if(count==1){
-				log.info("enter count1"+count);
-				for(ScQtFinalizationReport finalizationReport:finalizationReports){
-					if(null!=finalizationReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())){
-						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
+			log.info("checkKertasTaklimatReports count" + count);
+			if (count == 1) {
+				log.info("enter count1" + count);
+				for (ScQtFinalizationReport finalizationReport : finalizationReports) {
+					if (null != finalizationReport.getPmDocument()
+							&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
+									.getPmDocument().getDocDefinitionKey())) {
+						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);
 					}
-					
-				}	
-			}else if(count>1){
-				log.info("enter countGreaterThan1"+count);
-				 String SPACE = " ";
-				  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
-				 			+ SPACE + "(" + (count-1) + ")";
-				  log.info("reportTitle"+reportTitle);
-				for(ScQtFinalizationReport finalizationReport:finalizationReports){
-					if(null!=finalizationReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey()) && reportTitle.equalsIgnoreCase(finalizationReport.getTitle()) ){
-						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);	
+
+				}
+			} else if (count > 1) {
+				log.info("enter countGreaterThan1" + count);
+				String SPACE = " ";
+				String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE)
+						+ SPACE
+						+ "("
+						+ (count - 1) + ")";
+				log.info("reportTitle" + reportTitle);
+				for (ScQtFinalizationReport finalizationReport : finalizationReports) {
+					if (null != finalizationReport.getPmDocument()
+							&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
+									.getPmDocument().getDocDefinitionKey())
+							&& reportTitle.equalsIgnoreCase(finalizationReport.getTitle())) {
+						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);
 						break;
 					}
-					
-				}	
+
+				}
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * this method used to delete deliveryAddress when zonedetailschange.
 	 * 
@@ -3488,178 +3391,176 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * 
 	 */
-	protected void deleteDeliveryAdreesZoneDetails(ScQt scQt){
+	protected void deleteDeliveryAdreesZoneDetails(ScQt scQt) {
 		IQTSpecSO specSO = null;
-		try{
-			 specSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSpecSO.class);
-			 SpecificationReqDTO reqDTO=new SpecificationReqDTO();
-			 reqDTO.setScQt(scQt);
-			 specSO.removeZonalDeliveryDetails(reqDTO);
-		}finally{
-			specSO=null;
+		try {
+			specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setScQt(scQt);
+			specSO.removeZonalDeliveryDetails(reqDTO);
+		} finally {
+			specSO = null;
 		}
 	}
-	
+
 	/**
 	 * Sort frequent schedule list.
-	 *
-	 * @param scQtScheduleList the sc qt schedule list
+	 * 
+	 * @param scQtScheduleList
+	 *            the sc qt schedule list
 	 */
 	protected void sortFrequentScheduleList(List<ScQtSchedule> scQtScheduleList) {
 		Comparator<ScQtSchedule> comparator = new Comparator<ScQtSchedule>() {
 			@Override
 			public int compare(ScQtSchedule o1, ScQtSchedule o2) {
-				return new CompareToBuilder().append(o1.getScheduleNo(),
-						o2.getScheduleNo()).toComparison();
+				return new CompareToBuilder().append(o1.getScheduleNo(), o2.getScheduleNo()).toComparison();
 			}
 		};
 		Collections.sort(scQtScheduleList, comparator);
 	}
-	
+
 	/**
 	 * Sort progressive payment list.
-	 *
-	 * @param progressivePaymentList the progressive payment list
+	 * 
+	 * @param progressivePaymentList
+	 *            the progressive payment list
 	 */
-	protected void sortProgressivePaymentList(
-			List<ScQtProgressivePayment> progressivePaymentList) {
+	protected void sortProgressivePaymentList(List<ScQtProgressivePayment> progressivePaymentList) {
 		Comparator<ScQtProgressivePayment> comparator = new Comparator<ScQtProgressivePayment>() {
 			@Override
-			public int compare(ScQtProgressivePayment o1,
-					ScQtProgressivePayment o2) {
-				return new CompareToBuilder().append(o1.getPhaseNo(),
-						o2.getPhaseNo()).toComparison();
+			public int compare(ScQtProgressivePayment o1, ScQtProgressivePayment o2) {
+				return new CompareToBuilder().append(o1.getPhaseNo(), o2.getPhaseNo()).toComparison();
 			}
 		};
 		Collections.sort(progressivePaymentList, comparator);
 	}
-	
+
 	private String getMimeType(String fileName) {
 		String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
-		
-		String mimeType = (String)CommonConstants.getFileExtMap().get(fileExt);
-		
+
+		String mimeType = (String) CommonConstants.getFileExtMap().get(fileExt);
+
 		return (mimeType != null) ? mimeType : "octet-stream";
 	}
-	
-	protected <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFile(ZipOutputStream zos,List<ATTACHMENT> scAttachments) throws IOException{
-		//ZipOutputStream zos = new ZipOutputStream(os);
+
+	protected <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFile(ZipOutputStream zos,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		// ZipOutputStream zos = new ZipOutputStream(os);
 		for (ScAttachment scAttachment : scAttachments) {
 			// Get the file
 			FileInputStream fis = null;
 			BufferedInputStream fif = null;
-			try{
-				if (null != scAttachment
-						&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
+			try {
+				if (null != scAttachment && StringUtils.isNotBlank(scAttachment.getFilePath())) {
 					File file = new File(getActualFilePath(scAttachment));
 
-					if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
+					if (StringUtils.isNotBlank(scAttachment.getTempFileName())) {
 						String extension = FilenameUtils.getExtension(scAttachment.getFileName());
 						zos.putNextEntry(new ZipEntry(scAttachment.getTempFileName() + "." + extension));
 					} else {
 						zos.putNextEntry(new ZipEntry(scAttachment.getFileName()));
 					}
-					
+
 					try {
 						fis = new FileInputStream(file);
 					} catch (FileNotFoundException fnfe) {
-						zos.write(("ERROR: Could not find file " + file
-								.getName()).getBytes());
+						zos.write(("ERROR: Could not find file " + file.getName()).getBytes());
 						continue;
 					}
-					 fif = new BufferedInputStream(fis);
+					fif = new BufferedInputStream(fis);
 					// Write the contents of the file
 					int data = 0;
 					while ((data = fif.read()) != -1) {
 						zos.write(data);
 					}
 				}
-			}
-			finally{
-				if(fis != null){
+			} finally {
+				if (fis != null) {
 					fis.close();
 				}
-				if(fif != null){
+				if (fif != null) {
 					fif.close();
 				}
 				zos.closeEntry();
 			}
 		}
 	}
-	
+
 	/**
 	 * Method to return true, if is printing or false if is not printing
-	 * @param category of printing only
-	 * @return	true or false
+	 * 
+	 * @param category
+	 *            of printing only
+	 * @return true or false
 	 **/
-	
-	public boolean isPrintedForBumiputraOnly(List<ScQtCategory> listQfCategory, boolean printed) { 
+
+	public boolean isPrintedForBumiputraOnly(List<ScQtCategory> listQfCategory, boolean printed) {
 		ICategoryCodeSO categoryCodeSO = null;
-	    try{
-	    	categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
-	    			ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
-				
-				if (!EntityHelper.isCollectionEmpty(listQfCategory)) {
-					for(ScQtCategory cat : listQfCategory){
-						if(cat.getPmCategoryL3().getCategoryL3Code() != null){
-							CategoryCodeReqDTO catCodeReqDTO = new CategoryCodeReqDTO();
-							catCodeReqDTO.setCategoryL3Id(cat.getPmCategoryL3().getCategoryL3Id());	
-							catCodeReqDTO.setIsPrinting(1);
-							//true, if is printing or false if is not printing	
-							CategoryCodeResDTO catCodeResDTO = categoryCodeSO.checkIsPrinting(catCodeReqDTO);
-							if(catCodeResDTO.isPrinting()){
-								printed = true;
-								break;
-							}
+		try {
+			categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					ICategoryCodeSO.class);
+
+			if (!EntityHelper.isCollectionEmpty(listQfCategory)) {
+				for (ScQtCategory cat : listQfCategory) {
+					if (cat.getPmCategoryL3().getCategoryL3Code() != null) {
+						CategoryCodeReqDTO catCodeReqDTO = new CategoryCodeReqDTO();
+						catCodeReqDTO.setCategoryL3Id(cat.getPmCategoryL3().getCategoryL3Id());
+						catCodeReqDTO.setIsPrinting(1);
+						// true, if is printing or false if is not printing
+						CategoryCodeResDTO catCodeResDTO = categoryCodeSO.checkIsPrinting(catCodeReqDTO);
+						if (catCodeResDTO.isPrinting()) {
+							printed = true;
+							break;
 						}
 					}
 				}
-				
-				return printed;	
-				
-	    }finally{
-	    	categoryCodeSO = null;
-	    }
+			}
+
+			return printed;
+
+		} finally {
+			categoryCodeSO = null;
+		}
 	}
 
-	// Redmine 25396: remove duplication option view by adding new drop down field
+	// Redmine 25396: remove duplication option view by adding new drop down
+	// field
 	/**
 	 * Checks if is supplier role.
-	 *
+	 * 
 	 * @return true, if is supplier role
 	 */
-	public boolean hasSupplierRole(){
-		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+	public boolean hasSupplierRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
 			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+		} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+		} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+		} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
 			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
+		} else if (getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
 			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+		} else if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
 			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+		} else if (getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
 			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+		} else if (getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
 	}
-	
-	//29194 - Start
+
+	// 29194 - Start
 	/**
 	 * To get userRole Code
 	 * 
 	 * @return String roleCode
 	 */
 	public String getUserRoleCodeSQ() {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
@@ -3690,22 +3591,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (PmRoleDesc pmRoleDesc : roleDesc) {
 				pmRoleCodes.add(pmRoleDesc.getPmRole().getRoleCode());
 			}
-			
+
 			if (pmRoleCodes.contains(RoleCode.REQUISITIONER.value())) {
 				roleCode = RoleCode.REQUISITIONER.value();
-			}else{
+			} else {
 				for (String role : roleCodes) {
 					if (pmRoleCodes.contains(role)) {
 						roleCode = role;
 						break;
 					}
 				}
-			}		
+			}
 		}
 		return roleCode;
 	}
-	//29194 - End
-	
+
+	// 29194 - End
+
 	/**
 	 * Check is it login user is Government User
 	 * 
@@ -3726,9 +3628,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return false;
 		}
 	}
+
 	// end of 25396
 
-	// ----------------------------------- group of #18685 - start ----------------------------------------
+	// ----------------------------------- group of #18685 - start
+	// ----------------------------------------
 	// #18685-Start.
 	/**
 	 * Retrieve report tab dtl.Event handle set attachment for Reports tab.
@@ -3736,89 +3640,95 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	/**
 	 * @param scqt
 	 * @param committeeType
-	 * @param taskType 
+	 * @param taskType
 	 */
-	public void retrieveReportTabDtl (ScQt scqt, String committeeType, String taskType) {
+	public void retrieveReportTabDtl(ScQt scqt, String committeeType, String taskType) {
 		log.debug("start retrieveReportTabDtl");
 
 		IQTEvaluationSO evaluationSO;
 		EvaluationResDTO resDTO = null;
-		
+
 		try {
-			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTEvaluationSO.class);
+
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(scqt.getQtId());
 			reqDTO.setCommType(EvaluationReport.getName(committeeType));
 			reqDTO.setDocDefinationKey(ParameterConst.DOCUMENT_DEFINITION_TYPE);
-			
+
 			resDTO = evaluationSO.retriveQtDtlsByRemarksAttachments(reqDTO);
 			resDTO = evaluationSO.retriveReportDetails(reqDTO);
-			
+
 			if (null != resDTO.getReports() && !resDTO.getReports().isEmpty()) {
 				Iterator<ScQtEvaluationReport> iterator = resDTO.getReports().iterator();
-				
+
 				if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
 					while (iterator.hasNext()) {
-						ScQtEvaluationReport report = iterator.next(); 
+						ScQtEvaluationReport report = iterator.next();
 
 						if (SourcingConstants.PERAKUAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-								|| SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
+								|| SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT.equals(report.getPmDocument()
+										.getDocDefinitionKey())) {
 							iterator.remove();
 						}
 					}
 				}
-				
+
 				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
 					while (iterator.hasNext()) {
-						ScQtEvaluationReport report = iterator.next(); 
+						ScQtEvaluationReport report = iterator.next();
 
 						if (SourcingConstants.PERAKUAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-								|| SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-								|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-								|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
-								|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
-							iterator.remove(); 
+								|| SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(report.getPmDocument()
+										.getDocDefinitionKey())
+								|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(report.getPmDocument()
+										.getDocDefinitionKey())
+								|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT.equals(report
+										.getPmDocument().getDocDefinitionKey())
+								|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(report.getPmDocument()
+										.getDocDefinitionKey())) {
+							iterator.remove();
 						}
 					}
-					
+
 					if (resDTO.getReports().isEmpty()) {
-						//createReportForSF(scqt); 
+						// createReportForSF(scqt);
 					}
 				}
-				
+
 				getManagedBean().setScQtEvaluationReportList(resDTO.getReports());
 			}
-				
-		
-			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-					.equalsIgnoreCase(committeeType)) {
-				this.getManagedBean().setReportDownloadFileName(
-						QTConstants.EVALUATION_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
 
-			} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-					.equalsIgnoreCase(committeeType)) {
+			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
+				this.getManagedBean().setReportDownloadFileName(QTConstants.EVALUATION_COMMITTEE_REPORT_ZIP_TITLE); // Bug
+																													// #35485@Syazani
+																													// 08/02/2024
+
+			} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(committeeType)) {
 				ScAttachment attachment = scqt.getScOpenCommitteeReportAttachment();
-				
-				this.getManagedBean().setReportDownloadFileName(
-						QTConstants.OPENING_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
+
+				this.getManagedBean().setReportDownloadFileName(QTConstants.OPENING_COMMITTEE_REPORT_ZIP_TITLE); // Bug
+																													// #35485@Syazani
+																													// 08/02/2024
 				this.getManagedBean().setScAttachment(attachment);
 
-			} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-					.equalsIgnoreCase(committeeType)) {
+			} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
 				ScAttachment attachment = scqt.getScTechnicalEvaluationReportAttachment();
-				
+
 				this.getManagedBean().setReportDownloadFileName(
-						QTConstants.TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
+						QTConstants.TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE); // Bug
+																						// #35485@Syazani
+																						// 08/02/2024
 				this.getManagedBean().setScAttachment(attachment);
 
-			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-					.equalsIgnoreCase(committeeType)) {
+			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
 				ScAttachment attachment = scqt.getScFinancialEvaluationReportAttachment();
 
 				this.getManagedBean().setReportDownloadFileName(
-						QTConstants.FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
+						QTConstants.FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE); // Bug
+																						// #35485@Syazani
+																						// 08/02/2024
 				this.getManagedBean().setScAttachment(attachment);
 
 			}
@@ -3827,76 +3737,79 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
+
 	// #18685-End.
-	
+
 	// #18685-Start.
 	/**
 	 * Create new report during Supplier Finalization Preparation.
-	 * @param qtId 
+	 * 
+	 * @param qtId
 	 * @param scqt
 	 */
 	private void createReportForSF(PmDocument document, ScQtFinalization scQtFinalization, Long qtId) {
 		DocumentReqDTO docReqDTO = new DocumentReqDTO();
 		docReqDTO.setDocName(document.getDocName());
 		docReqDTO.setDocumentId(qtId);
-		
+
 		List<String> docDefinitionKeys = new ArrayList<>();
 		docDefinitionKeys.add(document.getDocDefinitionKey());
 
 		docReqDTO.setDocDefinitionKeys(docDefinitionKeys);
-		
-		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IDocumentSO.class);
-		
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		
+
+		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+
+		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
 		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 		paramReqDTO.setParameterType(ParameterTypeConst.DOCUMENT_CATEGORY);
 		paramReqDTO.setParameterCode(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
-		
+
 		ParameterResDTO paramResDTO = parameterSO.retrieveParameterByTypeAndCode(paramReqDTO);
 		PmParameter docCategoryCode = null;
-		
+
 		if (null != paramResDTO) {
 			docCategoryCode = paramResDTO.getPmParameter();
 		}
-		
+
 		DocumentResDTO docResDTO = reqSO.retrieveDocument(docReqDTO, docCategoryCode);
-		
+
 		if (null != docResDTO && docResDTO.isSuccessful() && null != docResDTO.getDocument()) {
-					
+
 			ScQtFinalizationReport report = new ScQtFinalizationReport();
-			
+
 			if (scQtFinalization == null) {
 				scQtFinalization = new ScQtFinalization();
 			}
-			
+
 			try {
-				parameterSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-				
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+
 				report.setScQtFinalization(scQtFinalization);
 				report.setDocCategory(docResDTO.getDocument().getDocCategoryCode().getParameterCode());
 				report.setPmDocument(docResDTO.getDocument());
 				report.setTitle(docResDTO.getDocument().getDocName());
 				report.setDefinationType(docResDTO.getDocument().getDocDefinitionTypeCode());
-				report.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER); 
+				report.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
 			} finally {
 				parameterSO = null;
 				reqSO = null;
 			}
-			
+
 			if (null == getManagedBean().getNewBriefingPaperReportList()) {
 				List<ScQtFinalizationReport> newBriefingPaperReportList = new ArrayList<>();
-				getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList );
+				getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList);
 			}
-			
+
 			getManagedBean().getNewBriefingPaperReportList().add(report);
 		}
 	}
+
 	// #18685-End.
-	
+
 	// #18685-Start.
 	/**
 	 * Download all reports.download all evaluation reports.
@@ -3909,22 +3822,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			throws Exception {
 		// Bug #35485@Syazani 08/02/2024 -- End
 		log.debug(this.getClass().getName() + ".downloadAllReports()");
-		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
-				.getNewBriefingPaperReportList();
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getNewBriefingPaperReportList();
 		List<ScAttachment> attachments = new ArrayList<ScAttachment>();
-		String fileName = getManagedBean().getReportDownloadFileName();	// Bug #35485@Syazani 08/02/2024
-		
+		String fileName = getManagedBean().getReportDownloadFileName(); // Bug
+																		// #35485@Syazani
+																		// 08/02/2024
+
 		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-					.equalsIgnoreCase(scQtFinalizationReport
-							.getDefinationType().getParameterCode())) {
-				if(null!=scQtFinalizationReport.getScQtFinalizationReportAttachment()) {
-					attachments.add(scQtFinalizationReport.getScQtFinalizationReportAttachment());	
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD.equalsIgnoreCase(scQtFinalizationReport
+					.getDefinationType().getParameterCode())) {
+				if (null != scQtFinalizationReport.getScQtFinalizationReportAttachment()) {
+					attachments.add(scQtFinalizationReport.getScQtFinalizationReportAttachment());
 				}
 			}
-			
+
 		}
-		
+
 		if ("evaluation".equalsIgnoreCase(typeRegen)) {
 			ScAttachment attachment1 = regenerateDocumentEvaAttachmentByFileName(scqt,
 					(ScAttachment) scAttachment.cloneEntity(), fileName);
@@ -3945,8 +3858,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
+
 	// #18685-End.
-	
+
 	// #18685-Start.
 	/**
 	 * @param scqt
@@ -3957,70 +3871,61 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	private ScAttachment generateDocumentAttachment(ScQt scqt, String committeeType) throws Exception {
 		ScAttachment reportAttachment = new ScQtFinalizationReportAttachment();
 		ScQt scQt = scqt;
-		
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(committeeType)) {
+
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
 			reportAttachment = new ScEvaluationCommitteeReportAttachment();
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equalsIgnoreCase(committeeType)) {
+		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(committeeType)) {
 			reportAttachment = new ScOpenCommitteeReportAttachment();
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(committeeType)) {
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
 			reportAttachment = new ScTechnicalEvaluationReportAttachment();
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(committeeType)) {
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(committeeType)) {
 			reportAttachment = new ScFinancialEvaluationReportAttachment();
-		}	
-		
-		StringBuilder fileName = new StringBuilder(
-				getManagedBean().getReportDownloadFileName());
+		}
+
+		StringBuilder fileName = new StringBuilder(getManagedBean().getReportDownloadFileName());
 		fileName.append(".pdf");
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
-		
+
 		generateEvaluationPdf((ScAttachment) reportAttachment, scqt, committeeType);
-		
+
 		return reportAttachment;
 	}
+
 	// #18685-End.
-	
+
 	// #18685-Start.
 	/**
-	 * @param committeeType 
+	 * @param committeeType
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
-	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt, String committeeType)
-			throws Exception {
+	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt, String committeeType) throws Exception {
 		populateAttachmentDetails(attachment);
-		
+
 		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
 		String reportName = StringUtils.EMPTY;
-		
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
+
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType)) {
 			reportName = ReportConst.SC_EC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equals(committeeType)) {
+		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(committeeType)) {
 			reportName = ReportConst.SC_OC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(committeeType)) {
 			reportName = ReportConst.SC_TEC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(committeeType)) {
 			reportName = ReportConst.SC_FEC_RPT_JSP;
 		}
-		
+
 		String estimatedAmountStr = null;
 		IQTDetailSO qtDetailSO = null;
-		
+
 		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
 			BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
-			
-			if (null != estimatedAmount) { 
+
+			if (null != estimatedAmount) {
 				estimatedAmountStr = estimatedAmount.toPlainString();
 			}
 		} finally {
@@ -4029,30 +3934,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
-		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
-				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
-		
-		if (StringUtils.isNotBlank(reportName)) { 
+
+		if (StringUtils.isNotBlank(reportName)) {
 			// Add dynamic value for boolean value in below line.
 			generatePdfFromOracle(reportName, paramMap, attachment, true);
 		} else {
 			log.info("ReportName is empty");
 		}
 	}
+
 	// #18685-End.
-	
+
 	// #18685-Start.
 	/**
-	 * Delete reports upload file.Event handle to delete upload file in
-	 * reports tab.
+	 * Delete reports upload file.Event handle to delete upload file in reports
+	 * tab.
+	 * 
 	 * @param delEntity
-	 *               (BaseEntity delEntity).
+	 *            (BaseEntity delEntity).
 	 */
 	public void deleteReportsUploadFile(BaseEntity delEntity) {
 		try {
-			ScQtFinalizationReport selectedEvaluationReport = getManagedBean()
-					.getSelectedBriefingReport();
+			ScQtFinalizationReport selectedEvaluationReport = getManagedBean().getSelectedBriefingReport();
 			selectedEvaluationReport.setScQtFinalizationReportAttachment(null);
 			getManagedBean().setSelectedBriefingReport(selectedEvaluationReport);
 		} finally {
@@ -4061,36 +3966,40 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// #18685-End.
-	
-	// #18685-Start.	
+
+	// #18685-Start.
 	/**
 	 * @param finalizationReports
-	 * @param scQt 
+	 * @param scQt
 	 */
 	public void populateEvolutionReports(List<ScQtFinalizationReport> finalizationReports, ScQt scQt) {
 		if (null != scQt) {
 			String evaluationType = scQt.getEvaluationType();
-			
+
 			if (StringUtils.isNotEmpty(evaluationType)) {
 				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
-				
+
 				while (iterator.hasNext()) {
 					ScQtFinalizationReport report = iterator.next();
-					
+
 					if (null != report) {
 						if (getManagedBean().getEvaluationReportList() == null) {
 							List<ScQtFinalizationReport> erList = new ArrayList<>();
 							getManagedBean().setEvaluationReportList(erList);
 						}
+						boolean isDemoRequired = report.getTitle().equalsIgnoreCase(
+								SourcingConstants.DEMO_EVALUATION_REPORT)
+								&& !checkDemoWIP(scQt);//#28784
 
 						// #28784 -start-
-						if (null != report.getPmDocument() || report.getTitle().equalsIgnoreCase(SourcingConstants.DEMO_EVALUATION_REPORT))
+						if (null != report.getPmDocument() || isDemoRequired)
 						// #28784 -end-
 						{
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
-								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
+								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument()
+										.getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
-									//iterator.remove(); // 37622 - remove code
+									// iterator.remove(); // 37622 - remove code
 								}
 							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
 								// #28784 -start-
@@ -4105,7 +4014,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								// #28784 -end-
 								{
 									getManagedBean().getEvaluationReportList().add(report);
-									//iterator.remove(); // 37622 - remove code
+									// iterator.remove(); // 37622 - remove code
 								}
 							}
 						}
@@ -4114,42 +4023,55 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
+
 	// #18685-End.
-	
-	// #18685-Start.	
+
+	// #18685-Start.
 	/**
-	 * @param taskType 
+	 * @param taskType
 	 * 
 	 */
-	public void validateEvaluationReports(String taskType){
+	public void validateEvaluationReports(String taskType) {
 		List<ScQtFinalizationReport> scQtFinalizationReportList = this.getManagedBean().getNewBriefingPaperReportList();
-		Set<String> validateDuplicateSets = null; //Bug #33988@Syazani - 27/09/2022
+		Set<String> validateDuplicateSets = null; // Bug #33988@Syazani -
+													// 27/09/2022
 		if (null != scQtFinalizationReportList && scQtFinalizationReportList.size() > 0) {
 			String reportNames = "";
 
 			resetUnSavedReportContent(scQtFinalizationReportList);
-			
-			//Bug #33988@Syazani -- Start 27/09/2022 
+
+			// Bug #33988@Syazani -- Start 27/09/2022
 			if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
 				validateDuplicateSets = new HashSet<String>();
 			}
-			//Bug #33988@Syazani -- End 27/09/2022
+			// Bug #33988@Syazani -- End 27/09/2022
 
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
-				
-				//Bug #33988@Syazani -- Start 27/09/2022 
-				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().toLowerCase().trim())) { //Bug #33988@Syazani -- 01/03/2023
-					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
+
+				// Bug #33988@Syazani -- Start 27/09/2022
+				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)
+						&& !validateDuplicateSets.add(scQtFinalizationReport.getTitle().toLowerCase().trim())) { // Bug
+																													// #33988@Syazani
+																													// --
+																													// 01/03/2023
+					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); // Bug
+																															// #33988@Syazani
+																															// -
+																															// 06/12/2022
 				}
-				//Bug #33988@Syazani -- End 27/09/2022 
+				// Bug #33988@Syazani -- End 27/09/2022
 
 				if (null != scQtFinalizationReport.getPmDocument()) {
 					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
-						if (SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
-							|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
-							|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
-							|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())) {
-							
+						if (SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(scQtFinalizationReport
+								.getPmDocument().getDocDefinitionKey())
+								|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(scQtFinalizationReport
+										.getPmDocument().getDocDefinitionKey())
+								|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT
+										.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
+								|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(scQtFinalizationReport
+										.getPmDocument().getDocDefinitionKey())) {
+
 							if (StringUtils.isEmpty(scQtFinalizationReport.getReportContent())) {
 								if (StringUtils.isEmpty(reportNames)) {
 									reportNames = reportNames + scQtFinalizationReport.getTitle();
@@ -4158,10 +4080,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								}
 							}
 						} else if (scQtFinalizationReport.getScQtFinalizationReportAttachment() == null) {
-							//throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
+							// throw new EpException(MessageConst.ERROR_775150,
+							// new String[] { scQtFinalizationReport.getTitle()
+							// });
 						}
 					} else if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
-						if (SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())) {
+						if (SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT.equals(scQtFinalizationReport.getPmDocument()
+								.getDocDefinitionKey())) {
 							if (StringUtils.isEmpty(scQtFinalizationReport.getReportContent())) {
 								if (StringUtils.isEmpty(reportNames)) {
 									reportNames = reportNames + scQtFinalizationReport.getTitle();
@@ -4170,7 +4095,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								}
 							}
 						} else if (scQtFinalizationReport.getScQtFinalizationReportAttachment() == null) {
-							//throw new EpException(MessageConst.ERROR_775150, new String[] { scQtFinalizationReport.getTitle() });
+							// throw new EpException(MessageConst.ERROR_775150,
+							// new String[] { scQtFinalizationReport.getTitle()
+							// });
 						}
 					}
 				}
@@ -4180,45 +4107,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					throw new EpException(MessageConst.ERROR_775166, new String[] { scQtFinalizationReport.getTitle() });
 				}
 
-			} 
-				
+			}
+
 			if (StringUtils.isNotEmpty(reportNames)) {
 				throw new EpException(MessageConst.ERROR_775149, new String[] { reportNames });
 			}
 		}
 	}
+
 	// #18685-End.
-	
-	// #18685-Start.	
+
+	// #18685-Start.
 	/**
 	 * @param scQtFinalizationReportList
 	 */
-	public void resetUnSavedReportContent(
-			List<ScQtFinalizationReport> scQtFinalizationReportList) {
+	public void resetUnSavedReportContent(List<ScQtFinalizationReport> scQtFinalizationReportList) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 		List<Long> qtReportIds = new ArrayList<Long>();
-		
+
 		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 			qtReportIds.add(scQtFinalizationReport.getQtReportId());
 		}
 
 		try {
-		    qtSuppFinalizationSO = BusinessDelegate.getInstance()
-		        .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-		                IQTSuppFinalizationSO.class);
-		    SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-		    ScQtFinalization scQtFinalization = this.getManagedBean().getNewBriefingPaperReportList().get(0).getScQtFinalization();
-		   
-		    if (scQtFinalization == null) {
-		      scQtFinalization = new ScQtFinalization();
-		    }
-		    
-		    reqDTO.setScQtFinalization(scQtFinalization);
-		    reqDTO.setQtReportIdList(qtReportIds);
-		    reqDTO.setDocumentCategory(this.getManagedBean().getNewBriefingPaperReportList().get(0).getDocCategory());
-		    
-		    SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
-		    
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSuppFinalizationSO.class);
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			ScQtFinalization scQtFinalization = this.getManagedBean().getNewBriefingPaperReportList().get(0)
+					.getScQtFinalization();
+
+			if (scQtFinalization == null) {
+				scQtFinalization = new ScQtFinalization();
+			}
+
+			reqDTO.setScQtFinalization(scQtFinalization);
+			reqDTO.setQtReportIdList(qtReportIds);
+			reqDTO.setDocumentCategory(this.getManagedBean().getNewBriefingPaperReportList().get(0).getDocCategory());
+
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
+
 			if (null != resDTO && null != resDTO.getScQtFinalizationReports()
 					&& resDTO.getScQtFinalizationReports().size() > 0) {
 				repLoop: for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
@@ -4241,30 +4168,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			qtSuppFinalizationSO = null;
 		}
 	}
+
 	// #18685-End.
 
-	// #18685-Start.	
+	// #18685-Start.
 	/**
-	 * this method is used to save the userInput type popup window content in reports tab.
+	 * this method is used to save the userInput type popup window content in
+	 * reports tab.
+	 * 
 	 * @param brefingPaperRepor
-	 *                 (ScQtEvaluationReport evaluationReport).
-	 *                 
+	 *            (ScQtEvaluationReport evaluationReport).
+	 * 
 	 */
 	public void saveEditTemplateDocContent(ScQtFinalizationReport brefingPaperRepor) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-		
+
 		try {
 			List<ScQtFinalizationReport> brefingPaperReportList = this.getManagedBean().getNewBriefingPaperReportList();
-			
+
 			if (null != brefingPaperRepor && !this.getManagedBean().isReadOnly()
 					&& CollectionUtils.isNotEmpty(brefingPaperReportList)) {
 				int index = brefingPaperReportList.indexOf(brefingPaperRepor);
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				ScQtFinalizationReport updatedReport = getManagedBean().getNewBriefingPaperReportList().get(index);
-				
+
 				List<ScQtFinalizationReport> updatedReportList = new ArrayList<>();
 				updatedReportList.add(updatedReport);
-				
+
 				reqDTO.setAddNewBriefingPaperReportList(updatedReportList);
 
 				qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4276,11 +4206,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
+
 	// #18685-End.
-	
+
 	// #18685-Start.
 	/**
-	 *reports file upload.to upload files for manual added reports.
+	 * reports file upload.to upload files for manual added reports.
 	 * 
 	 * @param event
 	 *            (Mandatory)
@@ -4294,7 +4225,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			ScAttachment scAttachment = null;
 			ScQtFinalizationReport briefingReport = getManagedBean().getSelectedBriefingReport();
 			ScQtFinalizationReportAttachment reportAttachment = briefingReport.getScQtFinalizationReportAttachment();
-			
+
 			if (null == reportAttachment) {
 				reportAttachment = new ScQtFinalizationReportAttachment();
 				reportAttachment.setScQtFinalizationReport(briefingReport);
@@ -4303,24 +4234,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				reportAttachment.setScQtFinalizationReport(briefingReport);
 				briefingReport.setScQtFinalizationReportAttachment(reportAttachment);
 			}
-			
+
 			int index = 0;
 
 			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
 					&& this.getManagedBean().getNewBriefingPaperReportList().size() > 0) {
 				for (ScQtFinalizationReport finalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
-					if (finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+					if (finalizationReport.getDefinationType().getParameterCode()
+							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
 						index++;
 					}
 				}
 			}
-			
+
 			reportAttachment.setDocNo(getManagedBean().getDocNo());
-			
+
 			scAttachment = reportAttachment;
-			
+
 			uploadAttachment(event.getFile(), scAttachment);
-			
+
 			String fileName = scAttachment.getFileName();
 
 			if (index >= 0 && fileName != null) {
@@ -4330,109 +4262,111 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			briefingReport.setScQtFinalizationReportAttachment(reportAttachment);
 		}
 	}
+
 	// #18685-End.
-	
-	// #18685-Start.	
+
+	// #18685-Start.
 	/**
 	 * @param reportTitle
 	 * @param scQtFinalization
-	 * @param qtId 
+	 * @param qtId
 	 */
-	public void saveNewBriefingPaperReportList(List<String> reportDocDefList, ScQtFinalization scQtFinalization, Long qtId){
-		
+	public void saveNewBriefingPaperReportList(List<String> reportDocDefList, ScQtFinalization scQtFinalization,
+			Long qtId) {
+
 		IDocumentSO documentSO = null;
-		
+
 		try {
-			documentSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IDocumentSO.class);
-			
+			documentSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+
 			DocumentReqDTO documentReqDTO = new DocumentReqDTO();
 			documentReqDTO.setDocDefinitionKeys(reportDocDefList);
 			documentReqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
-			
+
 			DocumentResDTO documentResDTO = documentSO.retrieveDocuementsByDocDefKeys(documentReqDTO);
-			
+
 			if (documentResDTO.isSuccessful()) {
 				if (scQtFinalization == null) {
 					scQtFinalization = new ScQtFinalization();
 				}
-				
-				for(PmDocument document:documentResDTO.getDocumentList()){
+
+				for (PmDocument document : documentResDTO.getDocumentList()) {
 					createReportForSF(document, scQtFinalization, qtId);
 				}
 			}
 		} finally {
 			documentSO = null;
-		}		
-			
+		}
+
 		if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-			
+
 			try {
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				reqDTO.setPayLoad(getManagedBean().getPayLoad());
-				
-				qtSuppFinalizationSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTSuppFinalizationSO.class);
-				
+
+				qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
 				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-				
+
 				qtSuppFinalizationSO.saveFinalizationReports(reqDTO);
 			} finally {
 				qtSuppFinalizationSO = null;
 			}
 		}
-		
+
 	}
+
 	// #18685-End.
-	
+
 	// #18685-Start.
 	/**
 	 * delete existing report details records from database.
-	 *  
+	 * 
 	 */
 	public void deleteReportsTabDtls() {
 		List<ScQtFinalizationReport> removeFinalizationReports = getManagedBean().getRemoveFinalizationReports();
-		
+
 		if (null == removeFinalizationReports) {
 			removeFinalizationReports = new ArrayList<ScQtFinalizationReport>();
 			getManagedBean().setRemoveFinalizationReports(removeFinalizationReports);
 		}
-		
+
 		markDeleteSelectedRowsAction(getManagedBean().getNewBriefingPaperReportList(), removeFinalizationReports);
-		
+
 		if (CollectionUtils.isNotEmpty(removeFinalizationReports)) {
 			getManagedBean().setRemoveFinalizationReports(removeFinalizationReports);
 		}
 	}
+
 	// #18685-End.
-	
+
 	// #18685-Start.
 	/**
 	 * checkKertasTaklimat Uploaded report
 	 * 
 	 * 
 	 * @param finalizationReports
-	 * @param reportTitleList 
+	 * @param reportTitleList
 	 * 
 	 */
-	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports, List<String> reportDocDefList, String taskType) {
+	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports,
+			List<String> reportDocDefList, String taskType) {
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
 			int count = 0;
 			// #28834 -start-
 			List<ScQtFinalizationReport> localListReport = new ArrayList<ScQtFinalizationReport>();
 			// #28834 -end-
 			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
-			
+
 			while (iterator.hasNext()) {
 				ScQtFinalizationReport finalizationReport = iterator.next();
-				
+
 				if (null != finalizationReport.getPmDocument()) {
-					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
-							.equalsIgnoreCase(finalizationReport
-									.getPmDocument().getDocCategoryCode()
-									.getParameterCode())) {
+					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
+							.getPmDocument().getDocCategoryCode().getParameterCode())) {
 						// #28834 -start-
 						if (finalizationReport.getDefinationType().getParameterCode()
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)) {
@@ -4449,17 +4383,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 						if (reportDocDefList.contains(finalizationReport.getPmDocument().getDocDefinitionKey())) {
 							getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
-							
+
 							iterator.remove();
-							
+
 							continue;
 						}
 					}
 
 					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)
-							&& finalizationReport
-									.getPmDocument()
-									.getDocDefinitionKey()
+							&& finalizationReport.getPmDocument().getDocDefinitionKey()
 									.equals(SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT)) {
 
 						if (null == getManagedBean().getSfBriefingPaperReportList()) {
@@ -4470,19 +4402,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						getManagedBean().getSfBriefingPaperReportList().add(finalizationReport);
 
 						iterator.remove();
-						
+
 						continue;
 					}
 
-					if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && 
-							(finalizationReport.getPmDocument().getDocDefinitionKey().equals(SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT)
-									|| finalizationReport.getPmDocument().getDocDefinitionKey().equals(SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT)
-									|| finalizationReport.getPmDocument().getDocDefinitionKey().equals(SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT)
-									|| finalizationReport.getPmDocument().getDocDefinitionKey().equals(SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT))) {
+					if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)
+							&& (finalizationReport.getPmDocument().getDocDefinitionKey()
+									.equals(SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT)
+									|| finalizationReport.getPmDocument().getDocDefinitionKey()
+											.equals(SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT)
+									|| finalizationReport.getPmDocument().getDocDefinitionKey()
+											.equals(SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT) || finalizationReport
+									.getPmDocument().getDocDefinitionKey()
+									.equals(SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT))) {
 
 						if (null == getManagedBean().getConsolidationBriefingPaperReportList()) {
 							List<ScQtFinalizationReport> consolidationBriefingPaperReportList = new ArrayList<>();
-							
+
 							getManagedBean().setConsolidationBriefingPaperReportList(
 									consolidationBriefingPaperReportList);
 						}
@@ -4490,23 +4426,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						getManagedBean().getConsolidationBriefingPaperReportList().add(finalizationReport);
 
 						iterator.remove();
-						
+
 						continue;
 
 					}
 
 				}
-				
+
 				if ("UP".equals(finalizationReport.getDefinationType().getParameterCode())
 						&& !finalizationReport.getTitle().contains("Kertas Keputusan")) {
 					if (null == getManagedBean().getNewBriefingPaperReportList()) {
 						List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
-						
-						getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList );
-					}					
-					
+
+						getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList);
+					}
+
 					getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
-					
+
 					iterator.remove();
 				}
 			}
@@ -4514,18 +4450,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)
 					&& CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())) {
 				List<ScQtFinalizationReport> tempList = new ArrayList<>();
-				
+
 				for (String reportName : reportDocDefList) {
 					for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
-						
-						if (null != report && null != report.getPmDocument() && reportName.equals(report.getPmDocument().getDocDefinitionKey())) {
+
+						if (null != report && null != report.getPmDocument()
+								&& reportName.equals(report.getPmDocument().getDocDefinitionKey())) {
 							tempList.add(report);
-							
+
 							break;
 						}
 					}
 				}
-				
+
 				for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
 					if ("UP".equals(report.getDefinationType().getParameterCode())) {
 						tempList.add(report);
@@ -4536,11 +4473,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				getManagedBean().getNewBriefingPaperReportList().addAll(tempList);
 			}
 
-//			log.info("checkKertasTaklimatReports count" + count);
+			// log.info("checkKertasTaklimatReports count" + count);
 			if (count == 1) {
-//				log.info("enter count1" + count);
+				// log.info("enter count1" + count);
 				for (ScQtFinalizationReport finalizationReport : finalizationReports) {
-					
+
 					if (null != finalizationReport.getPmDocument()
 							&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
 									.getPmDocument().getDocDefinitionKey())) {
@@ -4549,22 +4486,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 				}
 			} else if (count > 1) {
-//				log.info("enter countGreaterThan1" + count);
+				// log.info("enter countGreaterThan1" + count);
 				String SPACE = " ";
 				String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE)
 						+ SPACE
 						+ "("
 						+ (count - 1) + ")";
-//				log.info("reportTitle" + reportTitle);
-				
+				// log.info("reportTitle" + reportTitle);
+
 				for (ScQtFinalizationReport finalizationReport : finalizationReports) {
 					if (null != finalizationReport.getPmDocument()
 							&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
 									.getPmDocument().getDocDefinitionKey())
 							&& reportTitle.equalsIgnoreCase(finalizationReport.getTitle())) {
 						finalizationReport.setKertasTaklimatUpload(Boolean.TRUE);
-						
+
 						break;
 					}
 
@@ -4572,14 +4509,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
+
 	// 1.247.8.7.4.22
 	// last 18685 at uat seblom 28834 masuk uat //
 	// #18685-End.
 
-	// #18685-Start.	
-    /**
-     * @param finalizationReport
-     */
+	// #18685-Start.
+	/**
+	 * @param finalizationReport
+	 */
 	public void closeScQtFinalizationReport(ScQtFinalizationReport finalizationReport) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 		boolean reportFound = false;
@@ -4590,16 +4528,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			ScQtFinalization scQtFinalization = finalizationReport.getScQtFinalization();
-			
+
 			if (scQtFinalization == null) {
 				scQtFinalization = new ScQtFinalization();
 			}
-			
+
 			reqDTO.setScQtFinalization(scQtFinalization);
-			
+
 			List<Long> qtReportIds = new ArrayList<Long>();
 			qtReportIds.add(finalizationReport.getQtReportId());
-			
+
 			reqDTO.setQtReportIdList(qtReportIds);
 			reqDTO.setDocumentCategory(finalizationReport.getDocCategory());
 
@@ -4609,7 +4547,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					&& resDTO.getScQtFinalizationReports().size() > 0) {
 				ScQtFinalizationReport scQtFinalizationReport = resDTO.getScQtFinalizationReports().get(0);
 				int index = 0;
-				
+
 				for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
 					if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
 						getManagedBean().getNewBriefingPaperReportList().get(index)
@@ -4617,18 +4555,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						reportFound = true;
 						break;
 					}
-					
+
 					index++;
 				}
 			}
-			
+
 		} finally {
 			if (!reportFound) {
 				finalizationReport.setReportContent("");
 			}
 			qtSuppFinalizationSO = null;
 		}
-	}  
+	}
+
 	// #18685-End.
 
 	// #28215 for #18685 - Start
@@ -4637,60 +4576,61 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public void saveScQtFinalizationReport(ScQtFinalizationReport finalizationReport) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-		
+
 		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			
+
 			List<ScQtFinalizationReport> briefingPaperReportList = new ArrayList<>();
 
 			finalizationReport.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
 			finalizationReport.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
-			
+
 			briefingPaperReportList.add(finalizationReport);
-			
-			reqDTO.setAddNewBriefingPaperReportList(briefingPaperReportList );
+
+			reqDTO.setAddNewBriefingPaperReportList(briefingPaperReportList);
 			finalizationReport = qtSuppFinalizationSO.saveFinalizationReports(reqDTO);
 			int index = 0;
-			
+
 			for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
-				//Bug #33988@Syazani -- Start 27/09/2022
+				// Bug #33988@Syazani -- Start 27/09/2022
 				if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())
 						&& (report.getDefinationType() != null && report.getDefinationType().getParameterCode()
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_USER_INPUT))) {
-					//Bug #33988@Syazani -- End 27/09/2022
+					// Bug #33988@Syazani -- End 27/09/2022
 					getManagedBean().getNewBriefingPaperReportList().set(index, finalizationReport);
 					getManagedBean().setSelectedBriefingReport(finalizationReport);
 
 					break;
 				}
-				
+
 				index++;
 			}
-			
+
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
 	}
+
 	// #28215 for #18685 - End
-	// ----------------------------------- group of #18685 - end ----------------------------------------
-	
-	//Enhancement #25729 Allow create QT below threshold RM20k - start -
-	//#25729 #142 start - checking total indicative price <= 20k
+	// ----------------------------------- group of #18685 - end
+	// ----------------------------------------
+
+	// Enhancement #25729 Allow create QT below threshold RM20k - start -
+	// #25729 #142 start - checking total indicative price <= 20k
 	/**
 	 * Get Total Indicative Price threshold amount
 	 * 
-	 * @return	the panel Total Indicative Price amount
+	 * @return the panel Total Indicative Price amount
 	 */
 	protected BigDecimal getTotalIndPriceThresholdAmount() {
 		IRuleSO ruleSO = null;
 		BigDecimal indPriceThreshold = new BigDecimal(0);
 
 		try {
-			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IRuleSO.class);
 
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
 			ruleReqDTO.setRuleType(RuleTypeConst.QTOTAL_INDI_PRICE_THRESHOLD);
@@ -4698,13 +4638,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 
 			if (ruleResDTO.isSuccessful()) {
-				//#35061 - Start
-				if(ruleResDTO.getRuleValueList()!=null && !ruleResDTO.getRuleValueList().isEmpty()) {
-				//#35061 - End
+				// #35061 - Start
+				if (ruleResDTO.getRuleValueList() != null && !ruleResDTO.getRuleValueList().isEmpty()) {
+					// #35061 - End
 					indPriceThreshold = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
 				} else {
-					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-				}	
+					throw new EpException(MessageConst.ERROR_770222,
+							new String[] { getRuleTypeDesc(ruleReqDTO.getRuleType()) });
+				}
 			}
 
 		} finally {
@@ -4713,18 +4654,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return indPriceThreshold;
 	}
-	
+
 	// 25729 QT threshold RM20k - 50k -start-
 	public boolean expectTotalIndPriceBetweenThreshold(ScQt scQt) {
 		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-			
-		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
-			log.info(":::expectTotalIndPriceBetweenThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
-			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
 
-			if (SourcingConstants.QT_BELOW_20K <= tmpExpectedIntendedPrice.doubleValue() &&
-					SourcingConstants.QT_BELOW_50K >= tmpExpectedIntendedPrice.doubleValue()) {
+		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+			log.info(":::expectTotalIndPriceBetweenThreshold() scQt.isPanel(): " + scQt.isPanel() + " :::");
+			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice: " + tmpExpectedIntendedPrice
+					+ " :::");
+			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice.doubleValue: "
+					+ tmpExpectedIntendedPrice.doubleValue() + " :::");
+
+			if (SourcingConstants.QT_BELOW_20K <= tmpExpectedIntendedPrice.doubleValue()
+					&& SourcingConstants.QT_BELOW_50K >= tmpExpectedIntendedPrice.doubleValue()) {
 
 				return Boolean.TRUE;
 			}
@@ -4732,6 +4675,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return Boolean.FALSE;
 	}
+
 	// 25729 QT threshold RM20k - 50k -end-
 
 	// #25729 #142 Start - Allow create QT below threshold RM20k
@@ -4758,50 +4702,50 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return Boolean.FALSE;
 	}
+
 	// #25729 #142 end
 	// Enhancement #25729 Allow create QT below threshold RM20k - end -
-	
+
 	// #25638 - Start
 	public void displayReviseInstrn(List<ScQtCommitteeActivity> committeeList) {
-		if (	// #25638 - #31322 - Start.
-				null != this.getManagedBean().getOutComes()
-				&& this.getManagedBean().getOutComes().length > 0
-				&& ArrayUtils.contains(this.getManagedBean().getOutComes(), BpmOutcomeConst.BPM_REVISE)
-				&&
+		if ( // #25638 - #31322 - Start.
+		null != this.getManagedBean().getOutComes() && this.getManagedBean().getOutComes().length > 0
+				&& ArrayUtils.contains(this.getManagedBean().getOutComes(), BpmOutcomeConst.BPM_REVISE) &&
 				// #25638 - #31322 - End.
 				null != getManagedBean().getCurrentStatusId()) {
 			long currentStatus = getManagedBean().getCurrentStatusId().longValue();
-			
+
 			if ((currentStatus == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue())
 					|| (currentStatus == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
 				for (ScQtCommitteeActivity committeeActivity : committeeList) {
-					
+
 					if (null != committeeActivity
 							&& null != committeeActivity.getScCommitteeMember()
 							&& null != committeeActivity.getScCommitteeMember().getMemberRole()
 							&& ParameterConst.COMMITTEE_ROLE_SECRETARY.equalsIgnoreCase(committeeActivity
 									.getScCommitteeMember().getMemberRole().getParameterCode())) {
 						PmUser secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
-						
+
 						if (secretaryUser.getUserId().longValue() != new FacesScopes().getUserSessionBean().getUserId()) {
 							getManagedBean().setDisplayReviseInstrn(true);
 						}
-						
+
 						break;
 					}
 				}
 			}
 		}
 	}
+
 	// #25638 - End
-	
-    // #11134 - Start
+
+	// #11134 - Start
 	protected <A extends ScRemark> List<A> filterSupplierRemarks(List<A> scRemarksIn, boolean includedBrandNew) {
 		List<A> supplierRemarks = new ArrayList<>();
-		
+
 		if (CollectionUtils.isNotEmpty(scRemarksIn)) {
 			List<Long> userIds = new ArrayList<>();
-			
+
 			for (ScRemark remark : scRemarksIn) {
 				if (remark != null && remark.getCreatedBy() != null && (includedBrandNew || !remark.isBrandNew())) {
 					userIds.add(remark.getCreatedBy());
@@ -4820,16 +4764,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 			}
 		}
-		
+
 		return supplierRemarks;
 	}
-    // #11134 - End
 
-    // #11134 - Start
+	// #11134 - End
+
+	// #11134 - Start
 	protected List<Long> getUserSupplierListByUserIds(List<Long> userIds) {
 		List<Long> result = new ArrayList<>();
 		IUserSO userSO = null;
-		
+
 		try {
 			userSO = BusinessDelegate.getInstance().getServiceObject(IUserSO.class);
 
@@ -4859,99 +4804,102 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return result;
 	}
-    // #11134 - end	
-	
+
+	// #11134 - end
+
 	/**
-	 * Defect: #34924
-	 * Method: Checking and validate using validator: string value has unrecognized symbol/character.
-	 * @param context the context
-	 * @param component the component
-	 * @param value the value
+	 * Defect: #34924 Method: Checking and validate using validator: string
+	 * value has unrecognized symbol/character.
+	 * 
+	 * @param context
+	 *            the context
+	 * @param component
+	 *            the component
+	 * @param value
+	 *            the value
 	 */
-	public void isContentExistUnicode(FacesContext context, UIComponent component,
-			Object value) {
-		
+	public void isContentExistUnicode(FacesContext context, UIComponent component, Object value) {
+
 		String strContent = (String) value;
 		String labelNameVal = (String) component.getAttributes().get("label");
-		
+
 		boolean isExistUnicodeSymbol = Boolean.FALSE;
-		
-		if(strContent != null && !strContent.isEmpty()){
-			if(strContent.contains("\1")){//SOH
+
+		if (strContent != null && !strContent.isEmpty()) {
+			if (strContent.contains("\1")) {// SOH
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\2")){//STX
+			} else if (strContent.contains("\2")) {// STX
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\3")){//ETX
+			} else if (strContent.contains("\3")) {// ETX
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\4")){//EOT
+			} else if (strContent.contains("\4")) {// EOT
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\5")){//ENQ
+			} else if (strContent.contains("\5")) {// ENQ
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\6")){//ACK
+			} else if (strContent.contains("\6")) {// ACK
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\7")){//BEL
+			} else if (strContent.contains("\7")) {// BEL
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\10")){
+			} else if (strContent.contains("\10")) {
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\11")){//VT
+			} else if (strContent.contains("\11")) {// VT
 				isExistUnicodeSymbol = Boolean.TRUE;
-			/*}else if(strContent.contains("\14")){//SO
+				/*
+				 * }else if(strContent.contains("\14")){//SO
+				 * isExistUnicodeSymbol = Boolean.TRUE; }else
+				 * if(strContent.contains("\15")){//SI isExistUnicodeSymbol =
+				 * Boolean.TRUE;
+				 */
+			} else if (strContent.contains("\16")) {// DLE
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\15")){//SI
-				isExistUnicodeSymbol = Boolean.TRUE;*/
-			}else if(strContent.contains("\16")){//DLE
+			} else if (strContent.contains("\17")) {// DC1
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\17")){//DC1
+			} else if (strContent.contains("\18")) {// DC2
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\18")){//DC2
+			} else if (strContent.contains("\19")) {// DC3
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\19")){//DC3
+			} else if (strContent.contains("\20")) {// DC4
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\20")){//DC4
+			} else if (strContent.contains("\21")) {// NAK
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\21")){//NAK
+			} else if (strContent.contains("\22")) {// SYN
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\22")){//SYN
+			} else if (strContent.contains("\23")) {// ETB
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\23")){//ETB
+			} else if (strContent.contains("\24")) {// CAN
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\24")){//CAN
+			} else if (strContent.contains("\25")) {// EM
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\25")){//EM
+			} else if (strContent.contains("\26")) {// SUB
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\26")){//SUB
+			} else if (strContent.contains("\27")) {// ESC
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\27")){//ESC
+			} else if (strContent.contains("\28")) {// FS
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\28")){//FS
+			} else if (strContent.contains("\29")) {// GS
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\29")){//GS
+			} else if (strContent.contains("\30")) {// RS
 				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\30")){//RS
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\31")){//US
+			} else if (strContent.contains("\31")) {// US
 				isExistUnicodeSymbol = Boolean.TRUE;
 			}
 		}
-		
-		if(isExistUnicodeSymbol){
-			if(labelNameVal != null && !labelNameVal.isEmpty()){
-				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
-						.getMessage(MessageConst.ERROR_760543,
-								new String[] {labelNameVal },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
+
+		if (isExistUnicodeSymbol) {
+			if (labelNameVal != null && !labelNameVal.isEmpty()) {
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_760543, new String[] { labelNameVal },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		}
 	}
-	
-	//#35473 11104_start
+
+	// #35473 11104_start
 	public String replaceWithBR(String specDetails) {
-		
-		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
-				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-	}//#35473 11104_end
-	
+
+		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+	}// #35473 11104_end
+
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	private ScAttachment regenerateDocumentEvaAttachmentByFileName(ScQt scqt, ScAttachment reportAttachment,
 			String fileName) throws Exception {
@@ -5027,6 +4975,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		// No need to explicitly close the stream; it's done automatically
 	}
+
 	// Bug #35485@Syazani 08/02/2024 -- End
 
 	// #26226 - Start
@@ -5055,9 +5004,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			quoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQuoteSO.class);
 			String supplierName = scLoa.getScLoiLoa().getSupplierName();
-			//35295 @zaim start
+			// 35295 @zaim start
 			Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
-			//35295 @zaim end
+			// 35295 @zaim end
 			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
 			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
@@ -5075,12 +5024,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			for (ScLoiLoaItem item : items) {
 				Long itemId = item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
-				/* #35295 - start change N/A to T/B
-				 * if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
-					dafaltValue = SSTConstant.NA;
-				}
-				#35295 - end
-				*/
+				/*
+				 * #35295 - start change N/A to T/B if
+				 * (SSTConstant.LANGUAGE_CODE_EN.equals(new
+				 * FacesScopes().getUserLocale().getLanguage())) { dafaltValue =
+				 * SSTConstant.NA; } #35295 - end
+				 */
 
 				if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
 					TplSpecMaster master = null;
@@ -5120,7 +5069,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 							for (TplSpecAnswer tplSpecAns : quoteResDTO.getServiceAnswersTpl()) {
 								if (tplSpecAns == null || tplSpecAns.getTplSpecQuestion() == null) {
-									continue; // Skip null values to prevent NullPointerException
+									continue; // Skip null values to prevent
+												// NullPointerException
 								}
 
 								if (Objects.equals(tplSpecAns.getTplSpecQuestion().getSpecQuestionId(), answer
@@ -5132,21 +5082,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									if (specList == null) {
 										specList = new ArrayList<>();
 									}
-									//start #29006 - note 850,852,856
+									// start #29006 - note 850,852,856
 									String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
-									
+
 									specValue = specValue.replace("<", "#60;");
 									specValue = specValue.replace(">", "#62;");
 									specValue = specValue.replace("&", "#and;");
-									
+
 									specList.add(specValue);
 									tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
-									//end #29006 - note 850,852,856
+									// end #29006 - note 850,852,856
 								}
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
 							// #25025 - End fixing sonarlint
-							
+
 							/** This code is for LOA with Single Item Details **/
 							if (items.size() == 1) {
 								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
@@ -5162,7 +5112,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
-									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
+									master.setSpecCreatedBySQ(Boolean.TRUE); // 36122
+																				// -
+																				// @zaim
+																				// -
+																				// add
+																				// flag
+																				// to
+																				// indicate
+																				// data
+																				// from
+																				// DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -5186,7 +5146,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
-									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
+									master.setSpecCreatedBySQ(Boolean.TRUE); // 36122
+																				// -
+																				// @zaim
+																				// -
+																				// add
+																				// flag
+																				// to
+																				// indicate
+																				// data
+																				// from
+																				// DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -5208,7 +5178,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														.getSpecQuestionId()))) {
 
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
-									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
+									master.setSpecCreatedBySQ(Boolean.TRUE); // 36122
+																				// -
+																				// @zaim
+																				// -
+																				// add
+																				// flag
+																				// to
+																				// indicate
+																				// data
+																				// from
+																				// DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -5226,7 +5206,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								 **/
 								if (answer.getTplSpecQuestion().getClDeliveryTerm() == null) {
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
-									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
+									master.setSpecCreatedBySQ(Boolean.TRUE); // 36122
+																				// -
+																				// @zaim
+																				// -
+																				// add
+																				// flag
+																				// to
+																				// indicate
+																				// data
+																				// from
+																				// DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -5257,7 +5247,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						}
 					}
 				}
-				//start - #29006 note 794
+				// start - #29006 note 794
 				if (CollectionUtils.isNotEmpty(quoteResDTO.getProductAnswersTpl())) {
 
 					TplSpecMaster master = null;
@@ -5282,7 +5272,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								days = answer.getTplSpecQuestion().getClDeliveryTerm();
 							}
 						}
-						
+
 						if (answer.getAnswerRemark() != null) {
 							answer.getTplSpecQuestion().setAnswerRemarks(answer.getAnswerRemark());
 						} else {
@@ -5298,7 +5288,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 							for (TplSpecAnswer tplSpecAns : quoteResDTO.getProductAnswersTpl()) {
 								if (tplSpecAns == null || tplSpecAns.getTplSpecQuestion() == null) {
-									continue; // Skip null values to prevent NullPointerException
+									continue; // Skip null values to prevent
+												// NullPointerException
 								}
 								if (Objects.equals(tplSpecAns.getTplSpecQuestion().getSpecQuestionId(), answer
 										.getTplSpecQuestion().getSpecQuestionId())
@@ -5309,16 +5300,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									if (specList == null) {
 										specList = new ArrayList<>();
 									}
-									//start #29006 - note 850,852,856
+									// start #29006 - note 850,852,856
 									String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
-									
+
 									specValue = specValue.replace("<", "#60;");
 									specValue = specValue.replace(">", "#62;");
 									specValue = specValue.replace("&", "#and;");
-									
+
 									specList.add(specValue);
 									tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
-									//end #29006 - note 850,852,856
+									// end #29006 - note 850,852,856
 								}
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
@@ -5339,7 +5330,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
-									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
+									master.setSpecCreatedBySQ(Boolean.TRUE); // 36122
+																				// -
+																				// @zaim
+																				// -
+																				// add
+																				// flag
+																				// to
+																				// indicate
+																				// data
+																				// from
+																				// DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -5362,7 +5363,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
-									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
+									master.setSpecCreatedBySQ(Boolean.TRUE); // 36122
+																				// -
+																				// @zaim
+																				// -
+																				// add
+																				// flag
+																				// to
+																				// indicate
+																				// data
+																				// from
+																				// DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -5386,7 +5397,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														.getSpecQuestionId()))) {
 
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
-									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
+									master.setSpecCreatedBySQ(Boolean.TRUE); // 36122
+																				// -
+																				// @zaim
+																				// -
+																				// add
+																				// flag
+																				// to
+																				// indicate
+																				// data
+																				// from
+																				// DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -5433,17 +5454,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							}
 						}
 					}
-				
+
 				}
-				//end - #29006 note 794
-				//35295 @zaim start
-				if (tempRequestItemId.equals(0L) || !tempRequestItemId.equals(item.getScRequestItem().getRequestNoteItemId())) {
-			        tempRequestItemId = item.getScRequestItem().getRequestNoteItemId();
-			        listSSTItem.add(item);
-			    }
-				//35295 @zaim end
+				// end - #29006 note 794
+				// 35295 @zaim start
+				if (tempRequestItemId.equals(0L)
+						|| !tempRequestItemId.equals(item.getScRequestItem().getRequestNoteItemId())) {
+					tempRequestItemId = item.getScRequestItem().getRequestNoteItemId();
+					listSSTItem.add(item);
+				}
+				// 35295 @zaim end
 			}
-			//35295 - start
+			// 35295 - start
 			if (listSSTItem != null && !listSSTItem.isEmpty()) {
 				for (ScLoiLoaItem sstItem : listSSTItem) {
 					if ((quoteResDTO.getSpecMaster() != null && !quoteResDTO.getSpecMaster().isEmpty())) {
@@ -5480,15 +5502,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 												if (q.getQuestionType().equalsIgnoreCase(
 														ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM)
 														&& !isZonalAdded) {
-													map.put(SSTConstant.clItem, VmUtil.getInstance().escapeAndWrapText(q.getClItem(), 16,SSTConstant.FILE_TYPE_DOC));//35295 #124 @zaim
+													map.put(SSTConstant.clItem,
+															VmUtil.getInstance().escapeAndWrapText(q.getClItem(), 16,
+																	SSTConstant.FILE_TYPE_DOC));// 35295
+																								// #124
+																								// @zaim
 													map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,
 															getParameterDesc(q.getClFulfilmentTypeCode(),
 																	SourcingConstants.MY_LOCALE));
 													map.put(SSTConstant.uomName, sstItem.getScRequestItem().getUom()
 															.getUomName());
-													//35295 - start #124
-													map.put(SSTConstant.zoneName, VmUtil.getInstance().escapeAndWrapText(zoneDtl.getZoneName(), 11,SSTConstant.FILE_TYPE_DOC));
-													//35295 - end
+													// 35295 - start #124
+													map.put(SSTConstant.zoneName,
+															VmUtil.getInstance().escapeAndWrapText(
+																	zoneDtl.getZoneName(), 11,
+																	SSTConstant.FILE_TYPE_DOC));
+													// 35295 - end
 													map.put(SSTConstant.quantity, sstItem.getQty().toString());
 													map.put(SSTConstant.clUomFrequency,
 															q.getClUomFrequency() == null ? SSTConstant.TB : q
@@ -5510,11 +5539,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																&& ans.getTplSpecSuppAnswer().getTplSpecZoneDtl()
 																		.getSpecZoneId()
 																		.equals(zoneDtl.getSpecZoneId())) {
-															//35295 #124 @zaim start
+															// 35295 #124 @zaim
+															// start
 															answerRemark = ans.getAnswerRemark() == null ? SSTConstant.TB
 																	: ans.getAnswerRemark();
-															map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answerRemark, 13,SSTConstant.FILE_TYPE_DOC)); 
-															//35295 #124 @zaim end
+															map.put(SSTConstant.answerRemark,
+																	VmUtil.getInstance()
+																			.escapeAndWrapText(answerRemark, 13,
+																					SSTConstant.FILE_TYPE_DOC));
+															// 35295 #124 @zaim
+															// end
 														}
 													}
 													isZonalAdded = Boolean.TRUE;
@@ -5525,9 +5559,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 													// second row zone name
 													map.put(SSTConstant.clItem, SSTConstant.nbsp);
 													map.put(SSTConstant.uomName, SSTConstant.nbsp);
-													//35295 - start #93
-													map.put(SSTConstant.zoneName, VmUtil.getInstance().escapeAndWrapText(zoneDtl.getZoneName(), 11,SSTConstant.FILE_TYPE_DOC));
-													//35295 - end
+													// 35295 - start #93
+													map.put(SSTConstant.zoneName,
+															VmUtil.getInstance().escapeAndWrapText(
+																	zoneDtl.getZoneName(), 11,
+																	SSTConstant.FILE_TYPE_DOC));
+													// 35295 - end
 													map.put(SSTConstant.quantity, SSTConstant.nbsp);
 													map.put(SSTConstant.clUomFrequency, SSTConstant.nbsp);
 													map.put(SSTConstant.clUomPerDay, SSTConstant.nbsp);
@@ -5543,14 +5580,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																	&& ans.getTplSpecSuppAnswer().getTplSpecZoneDtl()
 																			.getSpecZoneId()
 																			.equals(zoneDtl.getSpecZoneId())) {
-																map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answerRemark, 13,SSTConstant.FILE_TYPE_DOC)); //35295 - #124 start
+																map.put(SSTConstant.answerRemark,
+																		VmUtil.getInstance().escapeAndWrapText(
+																				answerRemark, 13,
+																				SSTConstant.FILE_TYPE_DOC)); // 35295
+																												// -
+																												// #124
+																												// start
 																break;
 															}
 														}
 													}
 
 												} else {
-													map.put(SSTConstant.specValue, VmUtil.getInstance().escapeAndWrapText(q.getClSpecDetail(), 60,SSTConstant.FILE_TYPE_DOC)); //35295 #124 @zaim
+													map.put(SSTConstant.specValue,
+															VmUtil.getInstance().escapeAndWrapText(q.getClSpecDetail(),
+																	60, SSTConstant.FILE_TYPE_DOC)); // 35295
+																										// #124
+																										// @zaim
 													map.put(SSTConstant.questionType, q.getQuestionType());
 													listPRQuestion.add(map);
 													break;
@@ -5576,7 +5623,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 													.equals(sstItem.getScRequestItem().getTplSpecQuestion()
 															.getSpecQuestionId())) {
 
-												map.put(SSTConstant.clItem, VmUtil.getInstance().escapeAndWrapText(q.getClItem(), 16,SSTConstant.FILE_TYPE_DOC)); //35295 #124 @zaim
+												map.put(SSTConstant.clItem,
+														VmUtil.getInstance().escapeAndWrapText(q.getClItem(), 16,
+																SSTConstant.FILE_TYPE_DOC)); // 35295
+																								// #124
+																								// @zaim
 												map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,
 														getParameterDesc(q.getClFulfilmentTypeCode(),
 																SourcingConstants.MY_LOCALE));
@@ -5597,20 +5648,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																.getClDurationMonth().toString());
 												for (TplSpecAnswer ans : q.getTplSpecAnswers()) {
 													if (ans.getTplSpecQuestion().getSpecQuestionId()
-															.equals(q.getSpecQuestionId()) && ans
-															.getTplSpecSuppAnswer().getSmSupplier().getSupplierId()
-															.equals(supplierId)) {
+															.equals(q.getSpecQuestionId())
+															&& ans.getTplSpecSuppAnswer().getSmSupplier()
+																	.getSupplierId().equals(supplierId)) {
 														answerRemark = ans.getAnswerRemark() == null ? SSTConstant.TB
 																: ans.getAnswerRemark();
-														map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answerRemark, 13,SSTConstant.FILE_TYPE_DOC)); //35295 #124 @zaim
+														map.put(SSTConstant.answerRemark,
+																VmUtil.getInstance().escapeAndWrapText(answerRemark,
+																		13, SSTConstant.FILE_TYPE_DOC)); // 35295
+																											// #124
+																											// @zaim
 													}
 												}
 												map.put(SSTConstant.ROWSPAN_ITEM_NAME,
-														String.valueOf(q.getListSpecQuestion().size() + SSTConstant.NON_ZONAL_ROW));
+														String.valueOf(q.getListSpecQuestion().size()
+																+ SSTConstant.NON_ZONAL_ROW));
 												map.put(SSTConstant.questionType, q.getQuestionType());
 												listPRQuestion.add(map);
 												listConstructQuestion.add(listPRQuestion);
-												//listPRQuestion = new ArrayList<>();
+												// listPRQuestion = new
+												// ArrayList<>();
 											}
 										} else {
 											if (q.getParentSpecQuestion().getSpecQuestionId() != null
@@ -5618,7 +5675,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 															.getSpecQuestionId()
 															.equals(sstItem.getScRequestItem().getTplSpecQuestion()
 																	.getSpecQuestionId())) {
-												map.put(SSTConstant.specValue, VmUtil.getInstance().escapeAndWrapText(q.getClSpecDetail(), 60,SSTConstant.FILE_TYPE_DOC)); //35295 #124 @zaim
+												map.put(SSTConstant.specValue,
+														VmUtil.getInstance().escapeAndWrapText(q.getClSpecDetail(), 60,
+																SSTConstant.FILE_TYPE_DOC)); // 35295
+																								// #124
+																								// @zaim
 												map.put(SSTConstant.questionType, q.getQuestionType());
 												listPRQuestion.add(map);
 												listConstructQuestion.add(listPRQuestion);
@@ -5632,7 +5693,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					// 35295 @zaim end
 				}
 			}
-			//35295 - end
+			// 35295 - end
 			context.put(SSTConstant.serviceScope, dafaltValue);
 			context.put(SSTConstant.SUPPLIER_NAME, supplierName);
 			context.put(SSTConstant.ZONE_ID, zoneId);
@@ -5641,7 +5702,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			context.put(SSTConstant.isZonal, scLoa.getScLoiLoa().isZonal());
 			context.put("isWipData", isWipData); // #29006
 			context.put("supplierId", scLoa.getScLoiLoa().getSmSupplier().getSupplierId()); // #29006
-			context.put(SSTConstant.LIST_PURCHASE_REQUEST_SST,listConstructQuestion); //35295
+			context.put(SSTConstant.LIST_PURCHASE_REQUEST_SST, listConstructQuestion); // 35295
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "GenerateSST", scLoa.getLoaNo(),
 					"constructPRSupplierSpecificationAndRemarks", getUserIdSessionFromLoginId(), e);
@@ -5650,8 +5711,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			days = null;
 		}
 	}
+
 	// #26226 - End
-	
+
 	// #26226 - Start
 	/**
 	 * @param answer
@@ -5676,8 +5738,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					"populateSpecAnswers", getUserIdSessionFromLoginId(), e);
 		}
 	}
+
 	// #26226 - End
-	
+
 	/**
 	 * @param dafaltValue
 	 * @param newTplSpecQuestionsList
@@ -5708,13 +5771,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				// space and before space) length for data 'ITEM'.
 				String[] words = clItem.split(" "); // get array of words
 				StringBuilder sb = new StringBuilder();
-				StringBuilder subSb; //Bug #36438@Syazani - 24/10/2024
+				StringBuilder subSb; // Bug #36438@Syazani - 24/10/2024
 				for (String word : words) // affect each word in string
 				{
 					int length = word.length();
 					if (length >= 20) {
 						// subSb reset here due to redundant text issue
-						subSb = new StringBuilder();	//Bug #36438@Syazani - 24/10/2024
+						subSb = new StringBuilder(); // Bug #36438@Syazani -
+														// 24/10/2024
 						String subWord;
 						for (int i = 0; i < length; i += 20) {
 							subWord = word.substring(i, Math.min(length, i + 20));
@@ -5791,7 +5855,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			parentQuestion.setSpecCount(specCount + 1);
 		}
 		question.setTplSpecMaster(master);
-		
+
 		// #26226 - Start
 		if (newTplSpecQuestionsList != null) {
 			if (newTplSpecQuestionsList.size() == 0) {
@@ -5859,7 +5923,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<ScQtCheckList> scQtCheckLists = resDto.getSpecResultBean().getResultList();
 
 			if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
-				loopScQtCheckListsConstructSupplierSpecificationAndRemarks(scQtCheckLists, masters, scLoa, dafaltValue);	// Bug #36438@Syazani - 24/10/2024
+				loopScQtCheckListsConstructSupplierSpecificationAndRemarks(scQtCheckLists, masters, scLoa, dafaltValue); // Bug
+																															// #36438@Syazani
+																															// -
+																															// 24/10/2024
 			}
 
 			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
@@ -5870,8 +5937,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			specSO = null;
 		}
 	}
+
 	// #26130 -end-
-	
+
 	// Bug #36438@Syazani - 24/10/2024 -- Start
 	private void loopScQtCheckListsConstructSupplierSpecificationAndRemarks(List<ScQtCheckList> scQtCheckLists,
 			List<TplSpecMaster> masters, ScLoa scLoa, String dafaltValue) {
@@ -5913,9 +5981,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				master.setTplSpecQuestions(newTplSpecQuestionsList);
 
 				masters.add(master);
-			}	// Bug #36438@Syazani - 24/10/2024
+			} // Bug #36438@Syazani - 24/10/2024
 		}
-	} 
+	}
+
 	// Bug #36438@Syazani - 24/10/2024
 
 	// #26130 -end-
@@ -5927,9 +5996,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param specMasters
 	 */
 	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa,
-			List<TplSpecMaster> specMastersParam) {	//Bug #36438@Syazani - 24/10/2024
-		//Making sure it didn't impact original value
-		List<TplSpecMaster> specMasters = CustomUtils.getInstance().deepCopyArrayList(specMastersParam);	//Bug #36438@Syazani - 24/10/2024
+			List<TplSpecMaster> specMastersParam) { // Bug #36438@Syazani -
+													// 24/10/2024
+		// Making sure it didn't impact original value
+		List<TplSpecMaster> specMasters = CustomUtils.getInstance().deepCopyArrayList(specMastersParam); // Bug
+																											// #36438@Syazani
+																											// -
+																											// 24/10/2024
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
 
 		String dafaltValue = "T/B";
@@ -5962,33 +6035,36 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		context.put("masters", masters);
 		context.put("bean", this);
 	}
+
 	// Enhancement #26130 -end-
 
-	//Bug #36104 start
+	// Bug #36104 start
 	private void getAnswerRemarkItem(ScLoa scLoa, List<String> answerRemarkList, TplSpecQuestion tplSpecQuestion) {
 
 		SmSupplier suppLoa = scLoa.getScLoiLoa().getSmSupplier();
-		if(CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecAnswers())){		
+		if (CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecAnswers())) {
 			for (TplSpecAnswer tplSpecAnswer : tplSpecQuestion.getTplSpecAnswers()) {
-				
+
 				SmSupplier suppAns = new SmSupplier();
-			
-				if(null != tplSpecAnswer.getTplSpecSuppAnswer() 
-						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
+
+				if (null != tplSpecAnswer.getTplSpecSuppAnswer()
+						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()) {
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-				//Bug #39043 start
+				// Bug #39043 start
 				if (null != suppAns.getSupplierId()
-						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   
-						//&& null != tplSpecAnswer.getAnswerRemark()){ //Bug #39043 end				
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()) {
+					// && null != tplSpecAnswer.getAnswerRemark()){ //Bug #39043
+					// end
 					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
 					break;
 				}
 			}
 		}
 	}
-	//Bug #36104 end
-	
+
+	// Bug #36104 end
+
 	// #26130 - Start
 	/**
 	 * @param scLoa
@@ -6008,7 +6084,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						answerRemarkList = new ArrayList<>();
 					}
 
-					getAnswerRemarkItem(scLoa, answerRemarkList, tplSpecQuestion); //Bug #36104
+					getAnswerRemarkItem(scLoa, answerRemarkList, tplSpecQuestion); // Bug
+																					// #36104
 
 					addSpecList = true;
 					continue;
@@ -6072,7 +6149,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							feedbackList.add(i, "&nbsp;");
 						}
 
-						if (CollectionUtils.isNotEmpty(answerRemarkList) && answerRemarkList.size() != (question.getTplSpecZoneQties().size() + specList.size())) {
+						if (CollectionUtils.isNotEmpty(answerRemarkList)
+								&& answerRemarkList.size() != (question.getTplSpecZoneQties().size() + specList.size())) {
 							answerRemarkList.add(i, "&nbsp;");
 						}
 					}
@@ -6138,32 +6216,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 						if (tempRemark == null) {
 							tempRemark = getDefaultValue();
-						} //else { Bug #39043
-							if (tempSpecZoneQty > 0) {
-								if (tempRemarkIndex >= tempSpecZoneQty) {
-									if (indexRemarkStore == 0) {
-										map.put("remark", tempRemark);
-										indexRemarkStore = tempRemarkIndex;
-										break;
-									} else if (tempRemarkIndex > indexRemarkStore) {
-										map.put("remark", tempRemark);
-										indexRemarkStore = tempRemarkIndex;
-										break;
-									}
-
-								}
-
-								tempRemarkIndex++;
-							} else {
-								if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore) {
+						} // else { Bug #39043
+						if (tempSpecZoneQty > 0) {
+							if (tempRemarkIndex >= tempSpecZoneQty) {
+								if (indexRemarkStore == 0) {
+									map.put("remark", tempRemark);
+									indexRemarkStore = tempRemarkIndex;
+									break;
+								} else if (tempRemarkIndex > indexRemarkStore) {
 									map.put("remark", tempRemark);
 									indexRemarkStore = tempRemarkIndex;
 									break;
 								}
 
-								tempRemarkIndex++;
 							}
-						//} Bug #39043
+
+							tempRemarkIndex++;
+						} else {
+							if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore) {
+								map.put("remark", tempRemark);
+								indexRemarkStore = tempRemarkIndex;
+								break;
+							}
+
+							tempRemarkIndex++;
+						}
+						// } Bug #39043
 
 					}
 
@@ -6325,10 +6403,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return listSpec;
 	}
+
 	// #26130 - zaim end
 
-	// temporary for Prod #26130. Start remove here if #21695 ready for Prod -start-
-	// origin method private void initializeTplSpecMaster(ScQtCheckList checklist, ScLoa scLoa)
+	// temporary for Prod #26130. Start remove here if #21695 ready for Prod
+	// -start-
+	// origin method private void initializeTplSpecMaster(ScQtCheckList
+	// checklist, ScLoa scLoa)
 	// at QTSpecSO.java
 	private void validateSpecZoneQty(TplSpecQuestion question, ScLoa scLoa) {
 
@@ -6379,6 +6460,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
+
 	// temporary for Prod #26130. End remove here if #21695 ready for Prod -end-
 
 	// #26130 start
@@ -6396,6 +6478,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return null;
 		}
 	}
+
 	// #26130 - End
 
 	// #26130 start
@@ -6412,6 +6495,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return sb.toString();
 	}
+
 	// #26130 end
 
 	// 26130 - start
@@ -6440,6 +6524,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return isExist;
 	}
+
 	// #26130 -end-
 
 	// #26130 -start-
@@ -6464,6 +6549,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return isExist;
 	}
+
 	// 26130 - end
 
 	// 11104-start
@@ -6484,6 +6570,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return CheckStatus.contains(currentStatusId);
 	}
+
 	// 11104-End
 
 	// 11104_newEndorseStart
@@ -6507,6 +6594,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return tmpresDTO.getSpecMaster().getTplSpecQuestions();
 	}
+
 	// 11104_newEndorseEnd
 
 	// 11104_newEndorseStart
@@ -6549,6 +6637,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return Boolean.FALSE;
 	}
+
 	// 11104_newEndorseEnd
 
 	// 11104_newEndorseStart
@@ -6563,8 +6652,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return Boolean.FALSE;
 	}
+
 	// 11104_newEndorseEnd
-	
+
 	// 25037 - Start
 	/**
 	 * Validate if current task bpm version is supported by the version
@@ -6602,6 +6692,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return false;
 	}
+
 	// 25037 - end
 
 	// 25037 - start
@@ -6670,6 +6761,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return arr;
 	}
+
 	// 25037 - end
 
 	// 25037 - start
@@ -6704,11 +6796,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return omittedList;
 	}
+
 	// 25037 - end
 
 	// 25037 - start
 	/**
 	 * Deserialize and populate history list
+	 * 
 	 * @param scCommittee
 	 * @return list of QtCommitteeMemberBean
 	 */
@@ -6735,6 +6829,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return list;
 	}
+
 	// 25037 - end
 
 	// 25037 - start
@@ -6764,6 +6859,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return taskNames;
 	}
+
 	// 25037 - end
 
 	// 25037 - start
@@ -6774,7 +6870,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param qt
 	 * @param validateCommitteeApproval
 	 */
-	@SuppressWarnings("unchecked") // 25037 - note 629
+	@SuppressWarnings("unchecked")
+	// 25037 - note 629
 	public void assertSpecCommitteeMaintenanceInProgress(ScQt qt, boolean validateCommitteeApproval) {
 
 		// specification maintenance cannot be concurrent to spec committee
@@ -6849,6 +6946,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		this.getManagedBean().setInactiveSCMemberStr(retrieveInactiveUserString(memberList));
 	}
+
 	// 25037 - end
 
 	// 25037 - start
@@ -6895,11 +6993,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return inactiveUserSb.toString();
 	}
+
 	// 25037 - end - note 510
 	// 25037 - end
 
 	// 25037 - start
-	// 25037 - start - note 677 
+	// 25037 - start - note 677
 	/**
 	 * Evaluate the corresponding Representative/Agency parameter type based on
 	 * committee type. PBA, PBB, QCA, FSW, FSB, QCB, PPB
@@ -6925,7 +7024,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return StringUtils.EMPTY;
 		}
 	}
-	// 25037 - end - note 677 
+
+	// 25037 - end - note 677
 	// 25037 - end
 
 	// 25037 - start
@@ -6943,11 +7043,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String action = StringUtils.upperCase(taskName.split(" ")[0]);
 		return Arrays.asList(actions).contains(action);
 	}
+
 	// 25037 - end
 
 	// 25037 - start
 	/**
-	 * Evaluate if committee is editable by taskname for screen update committee 
+	 * Evaluate if committee is editable by taskname for screen update committee
 	 * during evaluation and finalization
 	 * 
 	 * @param currentTaskName
@@ -6966,6 +7067,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				SCProcessNameConst.COORDINATE_FC_MEETING));
 		return taskNames.contains(taskName);
 	}
+
 	// 25037 - end
 
 	// 25037 - start
@@ -6991,22 +7093,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return committeeNames;
 	}
+
 	// 25037 - end
-	
+
 	// 25037 - start
 	/**
 	 * Sort outcomes.
-	 *
+	 * 
 	 * @param outcomes
 	 * @return the string[]
 	 */
 	public String[] sortQtOutcomes(String[] outcomes) {
 		if (null == outcomes) {
-			return ArrayUtils.EMPTY_STRING_ARRAY; 
+			return ArrayUtils.EMPTY_STRING_ARRAY;
 		}
 		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
 		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[] {BpmOutcomeConst.BPM_REVISE};
+			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_REVISE };
 			List<String> sortOrder = Arrays.asList(orderedAction);
 
 			@Override
@@ -7017,8 +7120,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String[] bpmOutcomes = new String[bpmActions.size()];
 		return bpmActions.toArray(bpmOutcomes);
 	}
+
 	// 25037 - end
-	
+
 	// Bug #36730@Syazani 07/01/2025 -- Start
 	protected void validateSupplierCriteriaIntegrity(ScQt scQt) {
 		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
@@ -7087,8 +7191,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
+
 	// Bug #36730@Syazani 07/01/2025 -- End
-	
+
 	// 37622 - start
 	/**
 	 * Create a new list for displaying briefing paper report and filter
@@ -7105,17 +7210,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		for (ScQtFinalizationReport briefingPaperReport : briefingPaperList) {
 			String definitionKey = null != briefingPaperReport.getPmDocument() ? briefingPaperReport.getPmDocument()
 					.getDocDefinitionKey() : "";
-			String subStringDemoReport = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);//#28784
+			String subStringDemoReport = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);// #28784
 			if (!Arrays.asList(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT,
 					SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT,
 					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT,
 					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT).contains(definitionKey)
-					&& !briefingPaperReport.getTitle().contains(subStringDemoReport)) {//#28784
+					&& !briefingPaperReport.getTitle().contains(subStringDemoReport)) {// #28784
 				reportList.add(briefingPaperReport);
 			}
 		}
 		return reportList;
 	}
+
 	// 37622 - end
 
 	// #29007 Start vinod
@@ -7148,6 +7254,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return isQualifiedToInsertItemSpecOffer(workFlowStatus, minVersion, version);
 	}
+
 	// #29007 End vinod
 
 	// #29007 Start vinod
@@ -7162,6 +7269,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return false;
 	}
+
 	// #29007 End vinod
 
 	// 25791-start
@@ -7188,6 +7296,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return "";
 		}
 	}
+
 	// 25791 -end-
 
 	// 25791 -start-
@@ -7214,9 +7323,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return "";
 	}
+
 	// 25791-End
-	
-	//#28784 - Start
+
+	// #28784 - Start
 	/**
 	 * Checking Demo WIP for QT that Republished. If QT was Republished without
 	 * Specification changes, it will go directly to status 60034L. If status is
@@ -7240,9 +7350,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			List<ScWorkFlowStatus> currentWorkFlowStatus = workFlowStatusSO.retrieveWorkFlowStatus(reqDTO)
 					.getWorkFlowStatusList();
-			// Checking for current QT, if status is 60034L, then it is without Specification changes
+			// Checking for current QT, if status is 60034L, then it is without
+			// Specification changes
 			if (CollectionUtils.isNotEmpty(currentWorkFlowStatus)) {
-				// checking for Parent QT, if WIP then Republished QT will also be WIP
+				// checking for Parent QT, if WIP then Republished QT will also
+				// be WIP
 				return validateSupportedTask(getQTDetailSO().retrieveQtNoByparentQtId(scQt.getParentQtId()),
 						CompositeValidityConst.PM_COMPOSITE_VALIDITY);
 			}
@@ -7253,11 +7365,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
 	}
-	//#28784 - End
 
-	//#28784 - Start
+	// #28784 - End
+
+	// #28784 - Start
 	/**
-	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
+	 * #28784 - Check Demo BPM Version and set true or false to
+	 * QTDetailManagedBean,
+	 * 
 	 * @param
 	 * @return void
 	 */
@@ -7266,5 +7381,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
 		this.getManagedBean().setNewVersion(isQtNewVersion);
 	}
-	//#28784 - End
+
+	// #28784 - End
+
+	// #28784 - Start
+	private boolean checkDemoWIP(ScQt scQt) {
+		try {
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			return evaluationSO.checkDemoWip(reqDTO);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkDemoWIP",
+					scQt.getQtNo(), "checkDemoWIP", getUserIdSessionFromLoginId(), e);
+		}
+		return true;
+	}
+	// #28784 - End
 }
