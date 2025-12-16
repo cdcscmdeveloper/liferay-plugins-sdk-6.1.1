@@ -509,12 +509,12 @@
 		<p:panel header="#{lbl['lbl.sm.person.composition.listDtHdr']}"
 			toggleable="true" id="smPersonnelParentPan">
 			<!-- #38890 - start -->
-			<p:commandButton value="AI Assistant" onclick="epfAI.show()" immediate="true">
+			<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" onclick="epfAI.show()" immediate="true">
 					<p:ajax partialSubmit="true" process="@this" />
 			</p:commandButton>
 			<p:graphicImage id="ttepfAI" value="/css/images/design/tooltips.png" />
 			<p:tooltip id="tt2epfAI" for="ttepfAI">
-				<p:outputLabel value="Click the AI Assistant and upload the EPF Contribution Statement for data extraction" />
+				<p:outputLabel value="#{lbl['lbl.sm.ai.epf.tips']}" />
 			</p:tooltip>&#160;
 			<br/>
 			<!-- #38890 - end -->
