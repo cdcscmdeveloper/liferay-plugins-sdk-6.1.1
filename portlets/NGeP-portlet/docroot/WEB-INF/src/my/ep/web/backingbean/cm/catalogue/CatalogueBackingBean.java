@@ -1910,7 +1910,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			getManagedBean().setItemSpec(null);
 			//#30457 - Start
 			getManagedBean().setCatDPScreen(true);
-			//#30457 - End			
+			//#30457 - End
 			getManagedBean().setMofNo(supplierItem.getMofNo()); //#38972
 
 			// Panel Circular Item
