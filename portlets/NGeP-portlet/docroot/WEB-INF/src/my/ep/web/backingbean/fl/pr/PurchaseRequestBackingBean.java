@@ -5392,7 +5392,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.ERROR_740077,
+								MessageConst.ERROR_740078,
 								new String[] {
 										getParameterDesc(FulfilmentConst.PROC_PARAM_TYPE_PR,
 												ParameterConst.PROC_TYPE_PK7),
@@ -5477,7 +5477,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-							MessageConst.ERROR_740075,
+							MessageConst.ERROR_740076,
 							new String[] {
 									getParameterDesc(FulfilmentConst.PROC_PARAM_TYPE_PR, ParameterConst.PROC_TYPE_PK7),
 									getParameterDesc(FulfilmentConst.PROC_PARAM_TYPE_PR,
@@ -5506,7 +5506,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				numberedList.append(i + 1).append(". ").append(itemNameList.get(i)).append("<br>");
 			}
 			if (isShowErrorMsgForPRThreshold) {
-				throw new EpException(MessageConst.ERROR_740076, new String[] { numberedList.toString(),
+				throw new EpException(MessageConst.ERROR_740077, new String[] { numberedList.toString(),
 						String.valueOf(getThresholdForPK7()),
 						getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 						getManagedBean().getReason() });
@@ -5514,7 +5514,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.ERROR_740076,
+								MessageConst.ERROR_740077,
 								new String[] { numberedList.toString(), String.valueOf(getThresholdForPK7()),
 										getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 										getManagedBean().getReason() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -5541,7 +5541,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			if (outcomeCheckReason.contains(action)
 					&& getManagedBean().getRequestNoteWithDtlsList() != null
 					&& getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				String msgId = isFlFulfilmentRequisitioner() ? MessageConst.ERROR_740073 : MessageConst.ERROR_740074;
+				String msgId = isFlFulfilmentRequisitioner() ? MessageConst.ERROR_740074 : MessageConst.ERROR_740075;
 
 				throw new EpException(msgId, new String[] { getManagedBean().getReason(),
 						getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()) });
@@ -5700,7 +5700,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 */
 	private void buildErrorMessageSupplierAccountTypeNonActive() {
 
-		throw new EpException(MessageConst.ERROR_740082, new String[] {
+		throw new EpException(MessageConst.ERROR_740083, new String[] {
 				getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, getSuppAccType()),
 				getManagedBean().getFulfilmentRequest().getSmSupplier().getCompanyName(),
 				getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
@@ -5759,7 +5759,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 		}
 
-		throw new EpException(MessageConst.ERROR_740083, new String[] {
+		throw new EpException(MessageConst.ERROR_740084, new String[] {
 				getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, getSuppAccType()),
 				getParameterDesc(getManagedBean().getFulfilmentRequest().getProcurementType()),
 				getManagedBean().getReason(), pronounAllowableSuppAccType, allowableSuppAccTypeMsgBuilder.toString() });
