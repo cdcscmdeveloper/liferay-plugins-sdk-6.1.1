@@ -15418,7 +15418,7 @@ public class SmApplicationUtil {
 		sbCompExperience.append("<br/>");
 		int x = 0;
 		SmAppl appl = managedBean.getSmAppl();
-		
+			
 		for (SmCompanyExperience compExperience : appl.getSmCompanyExperiences()){
 			if (compExperience.getClientType() == null) {
 				validCompExperience = false;

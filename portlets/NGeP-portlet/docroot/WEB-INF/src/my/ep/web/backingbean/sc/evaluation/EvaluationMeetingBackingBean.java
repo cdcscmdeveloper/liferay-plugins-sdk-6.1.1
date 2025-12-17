@@ -1691,7 +1691,7 @@ public class EvaluationMeetingBackingBean extends
 		// Bug #38975@Syazani 16/10/2025 -- Start
 		// 25037 - start
 		retriveMeetingDetails(qtId, committeeType);
-		
+
 		if (null != activityResDTo
 				&& !activityResDTo.getCommitteMembers().isEmpty()
 				&& !Arrays.asList(QTStatusConst.getEvaluationMeetingActivityProhibitedDelete()).contains(

@@ -693,12 +693,12 @@ public class TemplateSpecHelper {
 		BigDecimal totalPrice = null;
 		//#38916 - Start
 		if(specQuestion.getClPriceTypeCode() != null){
-			boolean isPriceTypeTier = isPriceTypeTier(
-					specQuestion.getClPriceTypeCode().getParameterCode());
+			boolean isPriceTypeTier = isPriceTypeTier(specQuestion.getClPriceTypeCode().getParameterCode());
 			BigDecimal unitPriceTemp = null != unitPrice ? unitPrice.setScale(2, QTConstants.QT_ROUNDING_MODE) : null; //Bug #35600@Syazani 19/09/2024
+			
 			if (!isPriceTypeTier) {
-				totalPrice = calulateTotalAmount(specQuestion, unitPriceTemp, quantity);	//Bug #35600@Syazani 19/09/2024
-			}	
+				totalPrice = calulateTotalAmount(specQuestion, unitPriceTemp, quantity);//Bug #35600@Syazani 19/09/2024
+			}
 		}
 		//#38916 - End
 		return totalPrice;

@@ -84,7 +84,6 @@ public class SyncProcBoardFromPMRest {
 						user.put("Role", "Chairperson");
 						failedUser.add(user);
 					}
-					
 					if (count == 10) {
 						break;
 					}
@@ -457,5 +456,5 @@ public class SyncProcBoardFromPMRest {
 			return Response.status(406).entity(e.getMessage()).build();
 		}
 	}
-	///END 32821 TO CREATE USER IF ONLY EXIST IN PM 
+	///END 32821 TO CREATE USER IF ONLY EXIST IN PM
 }

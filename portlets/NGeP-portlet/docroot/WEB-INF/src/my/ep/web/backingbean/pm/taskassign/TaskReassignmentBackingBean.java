@@ -52,8 +52,10 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.pm.ProfileManagementStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.sc.QTStatusConst; //#38680
 import my.ep.constants.BpmConstants;
+import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.SCProcessNameConst; //#38680
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
@@ -2776,7 +2778,7 @@ public class TaskReassignmentBackingBean extends
 							SearchOperator.OPERATOR_NOT_IN.value(),
 								new ArrayList<Long>(Arrays.asList(userId,
 									getFacesScopes().getUserSessionBean()
-										.getUserId()))));
+										.getUserId()))));			
 			
 			//#38680- Start
 			String role = roleList.toString().replace("[", "").replace("]", "")
@@ -4744,7 +4746,7 @@ public class TaskReassignmentBackingBean extends
 		}
 	}
 	//7465, 29822 - end
-	
+
 	//#38680- Start
 	/**
 	 * Check Activity Name

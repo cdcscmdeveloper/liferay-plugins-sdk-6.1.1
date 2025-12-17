@@ -4353,7 +4353,8 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			break;				
-		//#38991 -END			
+		//#38991 -END
+			
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
 			if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
