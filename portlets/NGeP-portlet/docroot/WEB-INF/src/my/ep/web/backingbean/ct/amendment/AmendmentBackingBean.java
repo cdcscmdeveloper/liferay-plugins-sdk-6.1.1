@@ -681,24 +681,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				// #24336 - Start
 				// Runs all initial setup when the page is first loaded
-				if(!ctBackingBean.getManagedBean().isInitPage()){
-					
-					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null){
-						// Sets default desk officer committee from QT
-						handleOriginalDeskOfficerCommitteeQT();
-					}else{
-						// Sets the saved committee type into the bean
-						mapCommitteeType();
-					}
-					
-					// Loads the correct checklist options based on data.
-					handleSelectedAmendmentChecklistValue();
-					
-					// Updates values when amendment type changes.
-					handleAmendmentTypeValueChange();
-					
-					// Mark page initialization completed to avoid repeating setup
-					ctBackingBean.getManagedBean().setInitPage(true);
+				if (!ctBackingBean.getManagedBean().isInitPage()) {
+				    initializePage();
 				}
 				// #24336 - End
 
@@ -10613,17 +10597,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbqcAuthorityReq(true);
 					
 					// normalize committee code
-					String code = cmiRes.getCommitteeTypeCode();
-		
-				    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
-				        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
-				    		code = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
-				    }
-		
-				    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
-				        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
-				    		code = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
-				    }
+					String code = normalizeCommitteeCode(cmiRes.getCommitteeTypeCode());
 				    
 				    // set radio
 					getManagedBean().setCommitteeType(code);
@@ -10634,19 +10608,29 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 	}
+
+	private String normalizeCommitteeCode(String code) {
+	    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
+	        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
+	        return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+	    }
+
+	    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
+	        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
+	        return ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
+	    }
+	    return code;
+	}
 	
 	// Sets saved committee type into the bean
 	private void mapCommitteeType() {
 		PmParameter committeeType = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType();
 		if (committeeType != null) {
-			String code = committeeType.getParameterCode();
 			
 			// Handle WIP data:
 			// If committee type is QCA or QCB, normalize it to QQC for display
-		    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
-		        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
-		    		code = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
-		    }
+			String code = normalizeCommitteeCode(committeeType.getParameterCode());
+			
 			getManagedBean().setCommitteeType(code);
 		}
 	}
@@ -10658,6 +10642,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			handleNewAmtEffDate();
 		}
 	}
+	
+	private void initializePage() {
+	    initCommitteeType();
+	    // Loads the correct checklist options based on data.
+	    handleSelectedAmendmentChecklistValue();
+	    // Updates values when amendment type changes.
+	    handleAmendmentTypeValueChange();
+	    // Mark page initialization completed to avoid repeating setup
+	    ctBackingBean.getManagedBean().setInitPage(true);
+	}
+	
+	private void initCommitteeType() {
+	    if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null) {
+	    	// Sets default desk officer committee from QT
+	        handleOriginalDeskOfficerCommitteeQT();
+	    }else{
+	    	// Sets saved committee type into the bean
+	    	mapCommitteeType();
+	    }
+	}
+
 	//#24336 - End
 	
 }
