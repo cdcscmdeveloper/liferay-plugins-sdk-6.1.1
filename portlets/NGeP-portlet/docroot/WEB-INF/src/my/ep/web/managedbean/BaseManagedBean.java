@@ -167,6 +167,8 @@ public abstract class BaseManagedBean implements Serializable {
 	// #29007 Start
 	// #28784 - Demo WIP - To display QT BPM version
 	private String bpmVersionNo;
+	private boolean newVersion;
+
 	// #29007 End
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
@@ -1038,4 +1040,16 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
+	
+	//#28784 - Start
+	public boolean isNewVersion() {
+		return newVersion;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setNewVersion(boolean newVersion) {
+		this.newVersion = newVersion;
+	}
+	//#28784 - End
 }

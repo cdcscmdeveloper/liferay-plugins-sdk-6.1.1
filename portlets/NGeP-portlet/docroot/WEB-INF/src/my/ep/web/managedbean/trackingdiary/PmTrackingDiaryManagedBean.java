@@ -127,6 +127,8 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private transient List<Map<String, String>> purchaseRequestMapList;
 	// #25790 - end
 
+	private boolean isBiddingUrl = Boolean.FALSE; // 25791
+	
 	private String selectedDocNo;//Fix - #36608
 	
 	public String getBackURL() {
@@ -548,7 +550,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 					return resDto.getUserResultBean();
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmUser>();
 				}
 			} finally {
 				userSO = null;
@@ -631,7 +633,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						return resDTO.getCategoryResultBean();
 					}
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<Object[]>();
 				}
 
 			} catch (Exception e) {
@@ -691,7 +693,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 							return resDto.getOrgProfileResultBean();
 						}
 					} else {
-						return new SearchResultBean();
+						return new SearchResultBean<PmOrgProfile>();
 					}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -766,7 +768,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					return iSearchResultBean;
 
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmUserGroup>();
 				}
 			} finally {
 				groupSO = null;
@@ -821,7 +823,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 					return resDto.getMeasurementSearchResultBean();
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmUom>();
 				}
 			} finally {
 				uomSO = null;
@@ -868,7 +870,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 					return resDto.getEducationSearchResultBean();
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmEduField>();
 				}
 			} finally {
 				eduSO = null;
@@ -915,7 +917,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 					return resDto.getCertBodyResultBean();
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmCertBody>();
 				}
 			} finally {
 				pcbSO = null;
@@ -999,7 +1001,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						return resDto.getFinaceialOrgResultBean();
 					}
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmFinancialOrg>();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1115,8 +1117,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					// #25790 - End
 
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 				
 				return resDTO.getResultBean();
@@ -1269,4 +1270,22 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.purchaseRequestMapList = purchaseRequestMapList;
 	}
 	// #25790 - end
+
+	// 25791 -start-
+	/**
+	 * 
+	 * @return the isBiddingUrl
+	 */
+	public boolean isBiddingUrl() {
+		return isBiddingUrl;
+	}
+
+	/**
+	 * @param isBiddingUrl
+	 *            the isBiddingUrl to set
+	 */
+	public void setBiddingUrl(boolean isBiddingUrl) {
+		this.isBiddingUrl = isBiddingUrl;
+	}
+	// 25791-end
 }

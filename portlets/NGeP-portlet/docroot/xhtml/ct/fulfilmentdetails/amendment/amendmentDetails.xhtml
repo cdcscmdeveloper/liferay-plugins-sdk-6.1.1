@@ -82,7 +82,7 @@
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" >
 					<p:ajax event="change"  update=":form:typesOfAmend, :form:approvingAuthorityPanel" process="@form"
-					     onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
+					     onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onClauseChecked}"/> <!-- Fix #33287 -->
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<h:panelGrid columns="2">
@@ -94,8 +94,8 @@
 			
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
-					<p:ajax event="change" update=":form" process="@form"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" ><!-- #33287 -->
+					<p:ajax event="change" update=":form, approverAuthorityReq" process="@form"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onChangeValueByGstChecked}" /> 
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
@@ -329,6 +329,7 @@
 			<f:verbatim rendered="#{amendmentBackingBean.getAmendValue(3)}" />
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
 				<p:selectBooleanCheckbox
+					id ="approverAuthorityReq"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
 					disabled="#{!amendmentBackingBean.isContractAmountAmend() or ctBackingBean.managedBean.viewSCL}" />
 				<p:spacer width="2" />

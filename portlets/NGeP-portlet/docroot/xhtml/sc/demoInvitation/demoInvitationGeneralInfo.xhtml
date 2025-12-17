@@ -1,0 +1,557 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<ui:param name="scQt" value="#{demoInvBB.managedBean.qt}" />
+	<!-- Reopen #25726 note 187 - issue 6 -->
+	<ui:param name="isContractTypeAsCentral"
+		value="#{scQt.contractType.parameterCode == ParameterConst.contractTypeCentral}" />
+	
+
+	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
+		toggleable="true">
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.qt.instruction']}" escape="false" />
+		<br />
+
+		<table style="width: 100%;">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+
+				<td colspan="3">
+					<table>
+						<tr>
+							<td><p:inputText id="isPanelTxt"
+									value="#{demoInvBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.panel))}"
+									style="width:195px;" disabled="true" /></td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+			<h:panelGroup id="panelInfoId">
+				<ui:fragment rendered="#{scQt.panel}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.circular.no']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+
+						<td colspan="3"><p:inputText id="cirPanelTxt"
+								value="#{scQt.circularVer.circularNo}" style="width:653px;"
+								disabled="true" /></td>
+
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.group.item']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td colspan="3"><p:inputText id="groupItemTxt"
+								value="#{scQt.itemGroup.groupName}" style="width:200px;"
+								disabled="true" /></td>
+					</tr>
+				</ui:fragment>
+			</h:panelGroup>
+
+			<tr>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td colspan="3"><p:inputTextarea id="title1"
+						disabled="true"
+						label="#{lbl['lbl.sc.title']}"
+						required="#{empty param['skipvalidation']}"
+						value="#{scQt.qtTitle}" cols="110" rows="3"
+						valueChangeListener="#{createQtBB.qtTitleValueChanged}"
+						onkeyup="limitTextArea(this,500);"
+						onkeydown="limitTextArea(this,500);"
+						onmouseout="limitTextArea(this,500);"
+						style=" margin-bottom:5px; width: 714px;" maxlength="500">
+						<f:ajax></f:ajax>
+					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
+			</tr>
+	
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.prepare.for.ptj']}" /></td>
+				<td colspan="3"><p:inputText
+						value="#{qTDetailBB.retrievePTJByOrgProfileId(demoInvBB.managedBean.qt.pmOrgProfile.orgProfileId,
+							qTDetailBB.isQTStatusPublished(demoInvBB.managedBean.currentStatusId)?demoInvBB.managedBean.qt.publishDate : 
+							demoInvBB.managedBean.qt.createdDate)}"
+						disabled="true" readonly="true" style="width:653px;" /></td>
+			</tr>
+
+			<tr>
+				<td style="width: 270px;"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td colspan="3"><p:inputText id="fileno"
+						label="#{lbl['lbl.sc.qt.fileno']}"
+						required="#{empty param['skipvalidation']}" value="#{scQt.fileNo}"
+						style="width:653px;" maxlength="50"
+						disabled="true">
+						<p:ajax event="blur" partialSubmit="true" update="@this"
+							listener="#{createQtBB.setFileNo(scQt)}"></p:ajax>
+					</p:inputText> <p:message id="filenoMsg" for="fileno" display="icon" /></td>
+			</tr>
+			<tr>
+				<td style="width: 260px;"><p:outputLabel
+						value="#{lbl['lbl.sc.created.date']}" /></td>
+				<td colspan="3"><p:inputText value="#{scQt.createdDate}"
+						disabled="true" style="width:195px;">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" /></td>
+				<td><p:inputText id="estprice"
+						style="text-align:right; width:195px;"
+						value="#{scQt.estimatedAmount}" disabled="true">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.spec.expected.intended.price']}" /></td>
+				<td><table>
+						<tr>
+							<td><p:inputText id="expIntendedPrice"
+									style="text-align:right; width:200px;"
+									value="#{scQt.tmpExpectedIntendedPrice}" disabled="true">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</p:inputText></td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+									value="#{lbl['lbl.sc.spec.expected.intended.price.tooltip']}" /></td>
+						</tr>
+					</table></td>
+
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" />
+					<p:outputLabel value="*" styleClass="mandatory"
+						rendered="#{createQtBB.managedBean.procMethodDropdownPresent}" /></td>
+				<td colspan="3"><p:inputText
+						value="#{demoInvBB.getParameterDesc(scQt.procurementMode)}"
+						disabled="true" style="width:200px;" readonly="true" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qttentype']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" rendered="#{!scQt.panel}" /></td>
+
+				<td><p:inputText id="qtTypeTxt"
+						value="#{demoInvBB.getParameterDesc(ParameterTypeConst.quotationTenderType, scQt.qtType)}"
+						style="width:195px;" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.open.for']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" rendered="#{!scQt.panel}" /></td>
+				<td><p:inputText id="openForTxt"
+						value="#{demoInvBB.getParameterDesc(ParameterTypeConst.scOpenFor, scQt.openFor)}"
+						style="width:200px;" disabled="true" /></td>
+			</tr>
+
+			<tr>
+				<td colspan="2"></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.demo']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="demoId"
+									value="#{demoInvBB.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+								fn:toUpperCase(scQt.demoRequired))}"
+									style="width:200px;" disabled="true" /></td>
+							<td><ac:iconTooltip value="#{lbl['lbl.sc.qt.demo.tooltip']}" /></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="zoneTxt"
+									value="#{demoInvBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.zonal))}"
+									style="width:195px;" disabled="true" /></td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
+						</tr>
+					</table>
+				</td>
+				<!-- 4ser
+				<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="partialTxt"
+									value="#{demoInvBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.partial))}"
+									style="width:195px;" disabled="true" /></td>
+							<td><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.partiallyoffer.tooltip']}" /></td>
+						</tr>
+					</table>
+				</td>
+			<tr>
+				<td colspan="3"></td>
+				<td>
+					<table>
+						<tr>
+							<td style="width: 255px; float: left;"><h:outputText
+									styleClass="instruction"
+									value="#{lbl['lbl.sc.spec.partial.info']}" escape="false" /></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+				4ser -->
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="procTypeCatTxt"
+						value="#{demoInvBB.getParameterDesc(scQt.procurementTypeCatId)}"
+						style="width:195px;" disabled="true" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurement.category']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="procCatTxt"
+						value="#{demoInvBB.getParameterDesc(scQt.pmProcurementCategory)}"
+						style="width:200px;" disabled="true" /></td>
+
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
+					<p:outputLabel value="*" styleClass="mandatory"
+						rendered="#{scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+				</td>
+				<td><p:inputText id="evalTypeTxt"
+						value="#{demoInvBB.getParameterDesc(ParameterTypeConst.scEvaluationType, scQt.evaluationType)}"
+						style="width:195px;" disabled="true" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.cont.type']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="contractTypeTxt"
+						value="#{demoInvBB.getParameterDesc(scQt.contractType)}"
+						style="width:195px;" disabled="true" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.existing.contract.no']}" /></td>
+				<td><p:inputText id="extContractTxt"
+						value="#{scQt.existingContractNo}" style="width:200px;"
+						disabled="true" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
+					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+				<!-- Reopen #25726 note 187 - issue 6 -->
+				<td>
+				<table>
+				<tr>
+				<td><p:inputText id="fulfilTypeTxt"
+						rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
+						value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
+						style="width:195px;" disabled="true" /> <p:selectOneMenu
+						required="#{empty param['skipvalidation']}" id="fulfilId"
+						rendered="#{specificationBackingBean.managedBean.isGenInfo()}"
+						disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
+						label="#{lbl['lbl.sc.fullfillent.type']}"
+						value="#{scQt.fulfilmentType.parameterId}"
+						style="width: 205px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@form" listener="#{createQtBB.fulfilmentChange}"></p:ajax>
+					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon" />
+				</td>	
+				<!-- Reopen #25726 note 187 - issue 6 -->	
+				<td style="margin-top: -3px">
+					<ac:iconTooltip  rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+				</td>
+				</tr></table></td>	
+				<td style="white-space: nowrap;"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
+						value="*" styleClass="mandatory"
+						rendered="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}" />
+				</td>
+				<td><p:inputText label="#{lbl['lbl.sc.spec.complete.period']}"
+						value="#{scQt.contractDuration}"
+						rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
+						style="text-align:right;margin-bottom:5px; width:200px;"
+						required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}"
+						disabled="true">
+					</p:inputText> <p:inputText id="contractBo" maxlength="3"
+						label="#{lbl['lbl.sc.spec.complete.period']}"
+						value="#{scQt.contractDuration}"
+						rendered="#{specificationBackingBean.managedBean.isGenInfo()}"
+						style="text-align:right;margin-bottom:5px; width:200px;"
+						required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@this" />
+					</p:inputText></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.publishing.period']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputMask id="publishperiod" mask="9?99"
+									maxlength="3" placeHolder=""
+									label="#{lbl['lbl.sc.qt.publishing.period']}"
+									required="#{empty param['skipvalidation']}"
+									value="#{scQt.publishPeriod}"
+									disabled="true"
+									valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
+									style="text-align:right; width:195px;">
+									<p:ajax event="blur" process="@this" partialSubmit="true"
+										update="@this, @(.amendButton)"
+										listener="#{createQtBB.handlePublishClosingDate}" />
+								</p:inputMask></td>
+							<td><p:message id="publishperiodMsg" for="publishperiod"
+									display="icon" /></td>
+							<td colspan="2"><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}#{createQtBB.publishingPeriodDaysToolTip}" /></td>
+						</tr>
+					</table>
+				</td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.proposal.validity']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputMask id="proposalvalidity" mask="9?9999"
+									maxlength="5" placeHolder=""
+									label="#{lbl['lbl.sc.qt.proposal.validity']}"
+									required="#{empty param['skipvalidation']}"
+									value="#{scQt.qtValidityPeriod}"
+									disabled="true"
+									valueChangeListener="#{createQtBB.proposalValidityChanged}"
+									style="text-align:right; width:200px;">
+									<p:ajax event="blur" process="@this" partialSubmit="true"
+										update="@this, @(.amendButton)"
+										listener="#{createQtBB.handleProposalValidityDate}" />
+								</p:inputMask></td>
+							<td><p:message id="proposalvalidityMsg"
+									for="proposalvalidity" display="icon" /></td>
+							<td colspan="2"><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.proposal.validity.tooltip']}" /></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<!-- 21692
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qt.response.period']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="responsePeriod"
+									value="#{scQt.responsePeriod}"
+									style="width:200px;" disabled="true" /></td>
+							<td colspan="2">
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
+				</td>
+				<td>
+				<c:if test="#{qtExtensionResponseDueDate != null}">
+					<p:inputText value="#{qtExtensionResponseDueDate}" style="width:200px;" disabled="true" >
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+					</p:inputText>
+				</c:if>
+				<c:if test="#{qtExtensionResponseDueDate == null}">
+					<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
+					</p:inputText>
+				</c:if>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><h:outputText
+						value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date.desc']}"
+						style="float:left; color: #0054a6; font-size: 12px; font-family: Arial, helvetica, sans-serif; font-weight: normal; font-style: italic; margin-left: 10px;" />
+				</td>
+			</tr>
+			21692 -->
+
+			<tr>
+				<td style="width: 100%;"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.req.approval.specification']}?"
+						style="white-space: nowrap" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td><p:inputText id="specAppReqTxt"
+						value="#{demoInvBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.specApprovalReq))}"
+						style="width:195px;" disabled="true" /></td>
+				<td><h:panelGroup id="approvalSpeclbl">
+						<h:panelGroup
+							rendered="#{scQt.specApprovalReq ne null and scQt.specApprovalReq ne '0'}">
+							<p:outputLabel value="#{lbl['lbl.sc.ministry.spec.secretary']}" />
+							<p:outputLabel value="*" styleClass="mandatory" valign="top" />
+						</h:panelGroup>
+					</h:panelGroup></td>
+				<td><p:inputTextarea id="specAppUserTxt" rows="2" cols="30"
+						value="#{scQt.ministrySpecSecrataryId.userName}"
+						style="width:200px;" disabled="true"
+						rendered="#{scQt.specApprovalReq ne null and scQt.specApprovalReq ne '0'}" />
+
+				</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.spec.justification.procurement.value']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+
+
+				<td><p:inputTextarea id="justificationProcValueId_2"
+						style="margin-bottom:5px; width: 250px;" maxlength="100"
+						value="#{scQt.justificationProcValue}"
+						label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
+						readonly="true" cols="110" rows="3" disabled="true">
+					</p:inputTextarea> <p:message id="title2Msg_2" for="justificationProcValueId_2"
+						display="icon" /></td>
+
+				<td style="margin-top: -3px"><ac:iconTooltip
+						value="#{lbl['lbl.sc.spec.justification.procurement.value.tooltip']}" />
+				</td>
+			</tr>
+			<tr>
+				<h:panelGroup id="QuotationtenderGeneralSample">
+					<ui:fragment
+						rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">
+						<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneRadio value="#{scQt.sampleReq}"
+								disabled="true">
+								<f:selectItems
+									value="#{demoInvBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								<p:ajax event="change" partialSubmit="true"
+									listener="#{createQtBB.sampleChange}" update="@form"
+									process="@this"></p:ajax>
+							</p:selectOneRadio></td>
+						<td style="margin-top: -3px"><ac:iconTooltip
+								value="#{lbl['lbl.sc.qt.sampel.instructions']}" /></td>
+					</ui:fragment>
+				</h:panelGroup>
+			</tr>
+		</table>
+
+		<p:panel id="cancelRemark" header="#{lbl['lbl.sc.qt.remarks']}"
+			toggleable="true">
+			<table style="width: 100%">
+				<tr>
+					<td class="TableFieldLeft" width="10%"><p:outputLabel
+							value="#{lbl['lbl.sc.qt.remark']}" /></td>
+					<td class="TableFieldRight"><p:dataGrid
+							value="#{qTDetailBB.managedBean.qt.scQtRemarks}" var="remarkVar"
+							rowIndexVar="remarkIndex" columns="1"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+							<table>
+								<tr>
+									<td rowspan="2" valign="top"><h:graphicImage
+											value="#{qTDetailBB.userImagePath(remarkVar.createdUser.loginId)}"
+											height="30" width="30" /></td>
+									<td width="5"></td>
+									<td><h:outputText
+											value="#{remarkVar.createdUser.userName}" />, <h:outputText
+											id="remarkDates" value="#{remarkVar.changedDate}">
+											<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+										</h:outputText></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
+											label="#{lbl['lbl.sc.qt.remark']}" id="scRemarkId"
+											required="true and !scQt.cloned"
+											validatorMessage="Remark required"
+											readonly="${qTDetailBB.managedBean.maintanceFlow}" /> <p:message
+											id="scRemarkMsgId" for="scRemarkId" display="icon" /></td>
+								</tr>
+							</table>
+						</p:dataGrid></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}"
+			id="quotationTndrorspecCommitteezonesPanel" toggleable="true"
+			rendered="#{(scQt.zonal !='false' and scQt.qtType eq ParameterConst.quotationTenderTypeOpen and !scQt.panel) || (scQt.zonal eq 'true' and scQt.panel eq 'true')}">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 270px"><p:outputLabel
+							value="#{lbl['lbl.sc.zone.location.level']}" /> <p:outputLabel
+							value="*" styleClass="mandatory"></p:outputLabel></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:inputText id="locLvlTxt"
+										value="#{createQtBB.getParameterDesc(scQt.zoneLocationLevel)}"
+										style="width:195px" disabled="true" /></td>
+								<td style="margin-top: -3px"><ac:iconTooltip
+										value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /></td>
+							</tr>
+						</table>
+					</td>
+
+				</tr>
+			</table>
+			<h:panelGroup rendered="#{scQt.zonal !='false'}">
+				<h:panelGrid width="100%">
+					<p:dataTable id="zoneGeneralDataTable" rows="10"
+						value="#{demoInvBB.managedBean.zoneGeneralTrees}" var="zoneTree"
+						style="width:100%" rowIndexVar="index"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						rowKey="#{zoneTree}" disabled="true">
+						<ac:paginator for="zoneGeneralDataTable" />
+						<p:column style="width:250%;">
+							<f:facet name="header">
+								<h:outputText value="* " styleClass="mandatory" />
+								<h:outputText value="#{lbl['lbl.sc.zone.location']}" />
+							</f:facet>
+							<p:tree value="#{zoneTree}" var="location" selectionMode="null"
+								style="width:500px;">
+								<p:treeNode type="zone">
+									<h:outputText value="#{location.zoneName}" />
+								</p:treeNode>
+
+								<p:treeNode type="state">
+									<h:outputText value="#{location.pmState.stateName}" />
+								</p:treeNode>
+								<p:treeNode type="division">
+									<h:outputText value="#{location.pmDivision.divisionName}" />
+								</p:treeNode>
+								<p:treeNode type="district">
+									<h:outputText value="#{location.pmDistrict.districtName}" />
+								</p:treeNode>
+							</p:tree>
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</h:panelGroup>
+		</p:panel>
+	</p:panel>
+</ui:composition>

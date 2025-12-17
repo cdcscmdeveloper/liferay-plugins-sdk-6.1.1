@@ -609,6 +609,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
+	//13362
+	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
 	
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
@@ -4582,6 +4584,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.displayBranches = displayBranches;
 	}
 	//#34135 END
+		//13362 START
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
+		return overlapCategoryListMalay;
+	}
+
+	public void setOverlapCategoryListMalay(List<SmBulkApplOverlapCatVO> overlapCategoryListMalay) {
+		this.overlapCategoryListMalay = overlapCategoryListMalay;
+	}
+	//13362 END
 	
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {

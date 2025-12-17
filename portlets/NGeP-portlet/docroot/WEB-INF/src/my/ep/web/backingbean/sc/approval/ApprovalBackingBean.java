@@ -63,6 +63,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.DemoResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -111,6 +112,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.demoInvitation.DemoInvitationBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTScheduleDetailBackingBean;
@@ -682,6 +684,61 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				workFlowStatusSO = null;
 			}
 		}
+		// #28784 - Start
+		else if (SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)) {
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
+
+			getManagedBean().setPayLoad(dataType);
+
+			qtId = Long.valueOf(dataType.getQtId());
+
+			List<String> fc = new ArrayList<String>();
+			fc.add(ParameterConst.APPROVAL_REQUEST_CANCELATITION_QT);
+
+			paramTypes = fc;
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
+					ParameterConst.APPROVAL_REQUEST_CANCELATITION_QT, paramTypes, null);
+
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
+
+			docType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+
+			IScWorkFlowStatusSO workFlowStatusSO;
+
+			try {
+				workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IScWorkFlowStatusSO.class);
+				ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+
+				reqDTO.setDocType(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+				reqDTO.setDocId(qtId);
+
+				currentStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+
+				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+				qtBackingBean.retrieveQuationTenderDetails(qtId);
+
+				ScQt scQt = qtBackingBean.getManagedBean().getQt();
+				this.getManagedBean().setQt(scQt);
+
+				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+				QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+				quationTenderReqDTO.setQtId(scQt.getQtId());
+				quationTenderReqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+
+				QuationTenderResDTO resDTO = detailSO.retrieveApprovalsByQtIdNType(quationTenderReqDTO);
+				this.getManagedBean().setQt(resDTO.getQtDetail());
+
+				ScQtApproval qtApproval = resDTO.getQtApproval();
+				this.getManagedBean().setScQtApproval(qtApproval);
+			} catch(Exception e) {
+				SLAUtils.getInstance().logSLAError("QT", "preRenderView", getManagedBean().getQt().getQtNo(), "preRenderView", getUserIdSessionFromLoginId(), e);
+			}
+		}
+		// #28784 - End
 		
 		if (currentStatus == null) {
 			currentStatus = getManagedBean().getQt().getCurrentWorkFlowStatus();
@@ -1265,7 +1322,26 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
-			} else {
+			}
+			//#28784 - Start
+			else if (SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)) {
+				DemoResDTO resDTO = new DemoResDTO();
+				DemoInvitationBackingBean demoBB = new DemoInvitationBackingBean();
+				
+				resDTO.setScQt(qt);
+				resDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				resDTO.setOutcome(BpmOutcomeConst.BPM_APPROVE);
+				resDTO.setPayLoad(this.getManagedBean().getPayLoad());
+				resDTO.setTaskName(taskName);
+				resDTO.setTaskId(this.getManagedBean().getTaskId());
+				
+				resDTO = demoBB.demoUpdateBpmTask(resDTO, outcome);
+				
+				tenderResDTO.setSuccessful(resDTO.isSuccessful());
+				tenderResDTO.setQtDetail(qt);
+			} 
+			//#28784 - End
+			else {
 				boolean isFinalApproval = false;
 				boolean bpkRevise = false;
 				List<String> approvalTypes = null;

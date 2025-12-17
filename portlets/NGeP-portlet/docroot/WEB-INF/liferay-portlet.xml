@@ -3412,6 +3412,20 @@
 		<css-class-wrapper>cancelLoaApproval-portlet</css-class-wrapper>
 	</portlet>
 	
+	<!-- Enhancement 28784-start- -->
+	<portlet>
+		<portlet-name>demoInvitation</portlet-name>
+		<icon>/icon.png</icon>
+		<use-default-template>true</use-default-template>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>demoInvitation-portlet</css-class-wrapper>
+	</portlet>
+	<!-- Enhancement 28784-end- -->
+	
 	<!-- Enhancement 25627-start- -->
 	<portlet>
 		<portlet-name>deskOfficerMaintenance</portlet-name>

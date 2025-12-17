@@ -29,6 +29,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemo;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoByItemScore;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
+import my.ep.persistence.entity.sc.quationtender.ScQtDemoTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
@@ -521,6 +525,360 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean noProposalSubmitted;
 	private boolean supplierRejected;
 	// 6906 - end
+
+	// #28784 - Start
+	private boolean evalStatusComp;
+	private boolean afterDemoInv;;
+	private Long demoSupplierNo;
+	private BigDecimal demoTotalScore;
+	private List<ScQtCheckList> scQtCheckSt2techProposal;
+	private int technicalTableRow;
+	private List<ScQtCheckList> s2TechSelect;
+	private List<ScQtDemoByItemScore> byItemDemoList;
+	private ScQtDemo scQtDemo;
+	private ScQtDemoSupplier scQtDemoSupplier;
+	private String demoScore;
+	private BigDecimal otherScore;
+	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
+	private boolean demoWip; // WIP @idham
+	private int retainPageNumber;
+	private String otherchecklistScore;
+	private BigDecimal maxPackageTsScore;
+	private BigDecimal maxPackageOtherElementsScore;
+	private BigDecimal maxItemAllOtherElementsScore;
+	private BigDecimal maxItemOtherElementsScore;
+	private String maxDemoScore;
+	private BigDecimal demoWeightage;
+	private BigDecimal maxItemTsPercentage;
+	private BigDecimal maxItemAllOtherElementsPercentage;
+	private BigDecimal itemTsPercentage;
+	private BigDecimal itemAllOtherElementsPercentage;
+	private BigDecimal maxItemTsScore;
+	// #28784 - End
+
+	// #28784 - Start
+	public boolean isEvalStatusComp() {
+		return evalStatusComp;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setEvalStatusComp(boolean evalStatusComp) {
+		this.evalStatusComp = evalStatusComp;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public boolean isAfterDemoInv() {
+		return afterDemoInv;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setAfterDemoInv(boolean afterDemoInv) {
+		this.afterDemoInv = afterDemoInv;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public Long getDemoSupplierNo() {
+		return demoSupplierNo;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setDemoSupplierNo(Long demoSupplierNo) {
+		this.demoSupplierNo = demoSupplierNo;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getDemoTotalScore() {
+		return demoTotalScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setDemoTotalScore(BigDecimal demoTotalScore) {
+		this.demoTotalScore = demoTotalScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public List<ScQtCheckList> getScQtCheckSt2techProposal() {
+		return scQtCheckSt2techProposal;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setScQtCheckSt2techProposal(List<ScQtCheckList> scQtCheckSt2techProposal) {
+		this.scQtCheckSt2techProposal = scQtCheckSt2techProposal;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public int getTechnicalTableRow() {
+		return technicalTableRow;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setTechnicalTableRow(int technicalTableRow) {
+		this.technicalTableRow = technicalTableRow;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public List<ScQtCheckList> getS2TechSelect() {
+		return s2TechSelect;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setS2TechSelect(List<ScQtCheckList> s2TechSelect) {
+		this.s2TechSelect = s2TechSelect;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public List<ScQtDemoByItemScore> getByItemDemoList() {
+		return byItemDemoList;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setByItemDemoList(List<ScQtDemoByItemScore> byItemDemoList) {
+		this.byItemDemoList = byItemDemoList;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public ScQtDemo getScQtDemo() {
+		return scQtDemo;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setScQtDemo(ScQtDemo scQtDemo) {
+		this.scQtDemo = scQtDemo;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public ScQtDemoSupplier getScQtDemoSupplier() {
+		return scQtDemoSupplier;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setScQtDemoSupplier(ScQtDemoSupplier scQtDemoSupplier) {
+		this.scQtDemoSupplier = scQtDemoSupplier;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public String getDemoScore() {
+		return demoScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setDemoScore(String demoScore) {
+		this.demoScore = demoScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getOtherScore() {
+		return otherScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setOtherScore(BigDecimal otherScore) {
+		this.otherScore = otherScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public List<ScQtDemoTechnicalCommitteeRemark> getDemoTechnicalCommitteeRemark() {
+		return demoTechnicalCommitteeRemark;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setDemoTechnicalCommitteeRemark(List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark) {
+		this.demoTechnicalCommitteeRemark = demoTechnicalCommitteeRemark;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public boolean isDemoWip() {
+		return demoWip;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setDemoWip(boolean demoWip) {
+		this.demoWip = demoWip;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public String getOtherchecklistScore() {
+		return otherchecklistScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setOtherchecklistScore(String otherchecklistScore) {
+		this.otherchecklistScore = otherchecklistScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getMaxPackageTsScore() {
+		return maxPackageTsScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setMaxPackageTsScore(BigDecimal maxPackageTsScore) {
+		this.maxPackageTsScore = maxPackageTsScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getMaxPackageOtherElementsScore() {
+		return maxPackageOtherElementsScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setMaxPackageOtherElementsScore(BigDecimal maxPackageOtherElementsScore) {
+		this.maxPackageOtherElementsScore = maxPackageOtherElementsScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getMaxItemAllOtherElementsScore() {
+		return maxItemAllOtherElementsScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setMaxItemAllOtherElementsScore(BigDecimal maxItemAllOtherElementsScore) {
+		this.maxItemAllOtherElementsScore = maxItemAllOtherElementsScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getMaxItemOtherElementsScore() {
+		return maxItemOtherElementsScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setMaxItemOtherElementsScore(BigDecimal maxItemOtherElementsScore) {
+		this.maxItemOtherElementsScore = maxItemOtherElementsScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public String getMaxDemoScore() {
+		return maxDemoScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setMaxDemoScore(String maxDemoScore) {
+		this.maxDemoScore = maxDemoScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getDemoWeightage() {
+		return demoWeightage;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setDemoWeightage(BigDecimal demoWeightage) {
+		this.demoWeightage = demoWeightage;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getMaxItemTsPercentage() {
+		return maxItemTsPercentage;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setMaxItemTsPercentage(BigDecimal maxItemTsPercentage) {
+		this.maxItemTsPercentage = maxItemTsPercentage;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getMaxItemAllOtherElementsPercentage() {
+		return maxItemAllOtherElementsPercentage;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setMaxItemAllOtherElementsPercentage(BigDecimal maxItemAllOtherElementsPercentage) {
+		this.maxItemAllOtherElementsPercentage = maxItemAllOtherElementsPercentage;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getItemTsPercentage() {
+		return itemTsPercentage;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setItemTsPercentage(BigDecimal itemTsPercentage) {
+		this.itemTsPercentage = itemTsPercentage;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getItemAllOtherElementsPercentage() {
+		return itemAllOtherElementsPercentage;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setItemAllOtherElementsPercentage(BigDecimal itemAllOtherElementsPercentage) {
+		this.itemAllOtherElementsPercentage = itemAllOtherElementsPercentage;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public BigDecimal getMaxItemTsScore() {
+		return maxItemTsScore;
+	}
+	// #28784 - End
+
+	// #28784 - Start
+	public void setMaxItemTsScore(BigDecimal maxItemTsScore) {
+		this.maxItemTsScore = maxItemTsScore;
+	}
+	// #28784 - End
 
 	/**
 	 * Gets the today.

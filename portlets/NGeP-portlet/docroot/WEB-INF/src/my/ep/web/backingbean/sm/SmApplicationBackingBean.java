@@ -1,7 +1,10 @@
 package my.ep.web.backingbean.sm;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -37,7 +40,9 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -69,6 +74,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -210,6 +216,22 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
@@ -218,6 +240,7 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "backingBean")
 @RequestScoped
@@ -387,6 +410,207 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				"overlapCategoryDialog.show();");
 	}
 
+	//13362 START
+	public CellStyle columnStyle(Workbook wb, 
+			CreationHelper createHelper,
+			Boolean isCellListHeader,
+			Boolean isBold, 
+			Boolean isHAlignCenter,
+			Boolean isFormatDate,
+			Boolean isWrapTxt
+			){
+		
+		Font contentFont = wb.createFont();
+		contentFont.setFontHeightInPoints((short)10);  
+		contentFont.setFontName("Arial"); 
+		if(isBold)contentFont.setBold(true);
+		else contentFont.setBold(false);
+		
+		CellStyle cellStyle = wb.createCellStyle();
+		if(isCellListHeader){
+			cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());  
+			cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		}
+		if(isHAlignCenter)cellStyle.setAlignment(HorizontalAlignment.CENTER);
+		if(isFormatDate)cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy"));
+		if(isWrapTxt)cellStyle.setWrapText(true);
+		cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
+	
+		cellStyle.setFont(contentFont);
+		cellStyle.setBorderTop(BorderStyle.THIN);
+		cellStyle.setBorderBottom(BorderStyle.THIN);
+		cellStyle.setBorderLeft(BorderStyle.THIN);
+		cellStyle.setBorderRight(BorderStyle.THIN);
+		
+		return cellStyle;
+}
+
+	public void generateAndDownloadOverlapCategoryDetailsExcel()throws FileNotFoundException, IOException,
+		EncryptedDocumentException, InvalidFormatException {
+		
+		//START: Generate Report In Excel
+		String[] colHeaderReportList = {
+					SmCommonUtil.getMessageMalay("lbl.sm.userprofile.num", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.name", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.idno", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.rolename", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.compname", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.mofno", null),  
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.expdate", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.regno", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.applno", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.application.status", null)
+		};
+		
+		//CREATE WORKBOOK
+		Workbook wb = new XSSFWorkbook();
+	
+		//OPTIONAL - Set font
+		Font contentFont = wb.createFont();
+		contentFont.setBold(true);
+		contentFont.setFontHeightInPoints((short)10); 
+		contentFont.setFontName("Arial");
+			
+		//OPTIONAL - Set cell style (cell alignment/Cell format/etc ...)
+		CreationHelper createHelper = wb.getCreationHelper();
+		CellStyle titleStyle = wb.createCellStyle(); 
+		titleStyle.setFont(contentFont);
+		
+		CellStyle columnHeaderStyle = columnStyle(wb,createHelper,true,true,true,false,false);
+		CellStyle colStyleDate = columnStyle(wb,createHelper,false,false,true,true,false);
+		CellStyle colStyleString = columnStyle(wb,createHelper,false,false,false,false,true);
+		CellStyle colStyleBil = columnStyle(wb,createHelper,false,false,true,false,true);
+		//END CELL STYLE
+		
+		//CREATE SHEET
+		Sheet sheetLaporan = wb.createSheet("Sheet1");	
+	
+		//CREATE ROW & CELL(COLUMN) - MAKLUMAT PERTINDIHAN BIDANG
+		Row titleRow = sheetLaporan.createRow(0); //Create Row
+		Cell cellTitleRow = titleRow.createCell(0);//Create Cell (Column)
+		cellTitleRow.setCellValue(StringUtils.upperCase(SmCommonUtil.getMessageMalay("lbl.sm.overlapping.category", null))); // Set Column Value
+		cellTitleRow.setCellStyle(titleStyle);  
+		sheetLaporan.addMergedRegionUnsafe(new CellRangeAddress(0,0,0,9)); //to merge cell in selected row
+		
+		List<SmBulkApplOverlapCatVO> overlapCategoryList = SmApplicationUtil.checkOverLappingCategoriesMalay(getManagedBean());
+		
+		if(overlapCategoryList != null){
+			log.info("OVERLAP CATEGORY SIZE ---->"+ overlapCategoryList.size());
+			for(int x=0; x<overlapCategoryList.size(); x++){
+				//Create Group Title Row & Cell by Category Code
+				int addRowIndexGroupTitle = sheetLaporan.getLastRowNum()+2;
+				Row subTitleRow = sheetLaporan.createRow(addRowIndexGroupTitle);
+				Cell cellSubTitleRow = subTitleRow.createCell(0); 
+				cellSubTitleRow.setCellValue(overlapCategoryList.get(x).getCategoryCode()+" "+overlapCategoryList.get(x).getCategoryName());
+				cellSubTitleRow.setCellStyle(titleStyle); 	
+				sheetLaporan.addMergedRegionUnsafe(new CellRangeAddress(addRowIndexGroupTitle,addRowIndexGroupTitle,0,9));//to merge cell in selected row
+			
+				if(overlapCategoryList.get(x).getOverlapInfoList() != null){
+					//Create Row & Cell Title Header
+					Row headerRowList = sheetLaporan.createRow(addRowIndexGroupTitle+2);
+					for(int i = 0; i < colHeaderReportList.length; i++) {
+						Cell cell = headerRowList.createCell(i);
+						cell.setCellValue(colHeaderReportList[i]);
+						cell.setCellStyle(columnHeaderStyle);
+					}
+					
+					//Create Row - Populate Data from resultSet List
+					int rowid = headerRowList.getRowNum()+1; //To get Header Row Number/Index In Excel
+					int countRow = 1; //Initialize to count number of record (populate Cell No. value)
+					for(int y=0; y<overlapCategoryList.get(x).getOverlapInfoList().size(); y++){
+						//Start Populate data for each cell.
+						Row rowDtl = sheetLaporan.createRow(rowid++);
+						Cell cellBil = rowDtl.createCell(0); //CELL : No
+						cellBil.setCellValue(countRow);
+						cellBil.setCellStyle(colStyleBil);
+						
+						Cell cellPersonnelName = rowDtl.createCell(1); //CELL : Nama Personnel
+						cellPersonnelName.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getPersonnelName());
+						cellPersonnelName.setCellStyle(colStyleString);
+						
+						Cell cellIdNo = rowDtl.createCell(2); //CELL : Identification No
+						cellIdNo.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getIdentificationNo());
+						cellIdNo.setCellStyle(colStyleString);
+						
+						Cell cellRole = rowDtl.createCell(3); //CELL : Role In Company
+						cellRole.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getRole());
+						cellRole.setCellStyle(colStyleString);
+						
+						Cell cellCompanyName = rowDtl.createCell(4); //CELL : Company Name
+						cellCompanyName.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getCompanyName());
+						cellCompanyName.setCellStyle(colStyleString);
+						
+						Cell cellMofNo = rowDtl.createCell(5); //CELL : MOF NO.
+						cellMofNo.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getMofNo());
+						cellMofNo.setCellStyle(colStyleString);
+						
+						Cell cellExpDate = rowDtl.createCell(6); //CELL : Tarikh Luput
+						cellExpDate.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getExpDate());
+						cellExpDate.setCellStyle(colStyleString);
+						
+						Cell cellRegNo = rowDtl.createCell(7); //CELL : Business Registration No
+						cellRegNo.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getRegNo());
+						cellRegNo.setCellStyle(colStyleString);
+						
+						Cell cellApplNo = rowDtl.createCell(8); //CELL : Application No.
+						cellApplNo.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getApplNo());
+						cellApplNo.setCellStyle(colStyleString);
+						
+						Cell cellStatus = rowDtl.createCell(9); //CELL : Application Status
+						cellStatus.setCellValue(overlapCategoryList.get(x).getOverlapInfoList().get(y).getApplStatus());
+						cellStatus.setCellStyle(colStyleString);
+						
+						countRow++;
+					}
+				}
+			}
+		}else{
+			log.info("Overlap is null !!!! ");
+		}
+		
+		// Resize all columns to fit the content size
+		for(int i = 0; i < colHeaderReportList.length; i++) {   
+			if(i==0)sheetLaporan.setColumnWidth(i, 8*256);//Col : Bil
+			else if(i==1)sheetLaporan.setColumnWidth(i, 52*256); //Col : Personnel Name
+			else if(i==2)sheetLaporan.setColumnWidth(i, 21*256); //Col : No. Pengenalan
+			else if(i==3)sheetLaporan.setColumnWidth(i, 52*256); //Col : Role
+			else if(i==4)sheetLaporan.setColumnWidth(i, 52*256); //Col : Company Name
+			else if(i==5)sheetLaporan.setColumnWidth(i, 20*256); //Col : Mof. No			
+			else if(i==6)sheetLaporan.setColumnWidth(i, 13*256); //Col : Tarikh
+			else if(i==7)sheetLaporan.setColumnWidth(i, 27*256); //Col : Reg. No
+			else if(i==8)sheetLaporan.setColumnWidth(i, 20*256); //Col : Application No.
+			else if(i==9)sheetLaporan.setColumnWidth(i, 25*256); //Col : Status
+		}
+				
+		//END - Generate Report In EXCEL
+	
+		//START: Download 
+		PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+		
+		response.setContentType("application/ms-excel");
+		response.setHeader("Expires:", "0"); // eliminates browser caching
+		response.setHeader("Content-Disposition", "attachment; filename=\"SM_OverlappingDetails.xlsx\"");
+		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.flushBuffer();
+		
+		OutputStream outStream = response.getOutputStream();
+		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		wb.write(outByteStream);//Write into file
+		byte [] outArray = outByteStream.toByteArray();					
+		
+		outStream.write(outArray);
+		outStream.flush();
+		outStream.close();
+		wb.close();//Close Workbook
+		
+		//END: Download
+	}
+
+	//13362 END
+	/**
+	 * Change business type & display comfirmation dialog
+	 */
 	public void onChangeBussType() {
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
 		RequestContext.getCurrentInstance().execute(
@@ -965,6 +1189,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		alreadyExecute = false;//avoid duplicate execute function setDefaultApproverReviewSection() && setDefaultPoReviewSection()
 		getManagedBean().setRedirectToPersonPage(false);
 		assignValReqdToFalse();
+		getManagedBean().setMofNumber(null); //#39076
 		if (!applicationType
 				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 
@@ -1656,13 +1881,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		List<SmMofAccount> accounts = getManagedBean().getSmSupplier()
 				.getSmMofAccounts();
+		//#39076
+		Collections.sort(accounts, new Comparator<SmMofAccount>() {
+			@Override
+			public int compare(SmMofAccount o1, SmMofAccount o2) {
+				if (o1.getCreatedDate() == null || o2.getCreatedDate() == null)
+					return 0;
+				return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+			}
+		});
 		if (!EntityHelper.isCollectionEmpty(accounts)) {
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
 						getManagedBean().getSmSupplier().getSmAppl()
 								.getSupplierType())
-						&& account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
+						&& !account.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 					getManagedBean().setMofNumber(account.getMofNo());
 				}
 			}
@@ -4030,6 +4263,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			}
 			break;
+		//#38991 -START
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH:
+			if (!getManagedBean().getSmAppl().getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				if (getManagedBean().isSupplierUser()){
+					validSave = SmApplicationUtil.validateComExpProjectBeforeSave(
+							validSave, getManagedBean(), currentTab);
+					}
+				}
+			break;				
+		//#38991 -END
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
 			if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
@@ -4156,6 +4400,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			}
 		}
+		//#38991 -START
+		// validate company experience 
+		SmApplicationUtil.validateComExpProjectBeforeSave(true, 
+				getManagedBean(), -1);
+		//#38991 -END
 
 		// validate personnel
 		SmApplicationUtil.validatePersonnelBeforeSave(true, -1,
@@ -5359,6 +5608,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
 				.getSelectedCompanyExperience());
+		//#28175
+		if(getManagedBean().getSmAppl().isActiveAppl()){
+			updateCompanyExpCatNames(getManagedBean().getSelectedCompanyExperience());
+		}
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedCompanyExperience(), getManagedBean().getSmAppl()
 				.getSmCompanyExperiences());
@@ -9810,6 +10063,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		boolean valid = true;
 		try {
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
+			// #28175
+			updateCategoryCodeNames();
 			String outcome = "CANCEL";
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					outcome, SupplierManagementConst.SUPP_SUBMIT_DELDRFT_APPL);
@@ -10055,7 +10310,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		//#12483 - END
 		//Bug #26705
-		getlatestPoOverlappingRemarks();
+		// #39422 - Start - Comment method
+		// getlatestPoOverlappingRemarks();
+		// #39422 - End
 		
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
@@ -10843,6 +11100,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				//+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 		validSiteVisit = testSmAppl(getManagedBean().getSmAppl().getApplType(),
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
+		//#28175
+		updateCategoryCodeNames();
 		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 		}
 		if (validSiteVisit) {
@@ -15331,6 +15590,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void validateRole(SmPersonnel personnel){
 		if(personnel.isEquityOwner() || personnel.isDirector() || personnel.isDirOrHghrMngmt()){
 			personnel.setClerical(false);
+			personnel.setSemiProf(false);//#38610
 		}
 	}
 	public BigDecimal calPercentage(BigDecimal totalCapitalCompany,BigDecimal shareAmt){
@@ -16608,6 +16868,94 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return sb.toString();
 	}
 	//#32008 - END
+	//#28175 - start
+	/**
+	 * @param cat
+	 * @return latest or old category code description
+	 */
+	public String getCompanyExpCatName(PmCategoryL1 cat){
+		if(cat == null){
+			return null;
+		}
+		if(getManagedBean().getSmAppl().isActiveAppl() || EntityHelper.isCollectionEmpty(
+						getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats())){
+			return cat.getCategoryName();
+		}
+		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.
+				getEntityBySinglePropertyFromList(cat.getCategoryL1Id(), 
+				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL1");
+		
+		return expCat != null ? expCat.getCategoryL1Name() : cat.getCategoryName();
+	}
+	
+	/**
+	 * @param cat
+	 * @return latest or old category code description
+	 */
+	public String getCompanyExpCatName(PmCategoryL2 cat){
+		if(cat == null){
+			return null;
+		}
+		if(getManagedBean().getSmAppl().isActiveAppl() || EntityHelper.isCollectionEmpty(
+						getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats())){
+			return cat.getCategoryName();
+		}
+		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.
+				getEntityBySinglePropertyFromList(cat.getCategoryL2Id(), 
+				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL2");
+		
+		return expCat != null ? expCat.getCategoryL2Name() : cat.getCategoryName();
+	}
+	
+	/**
+	 * @param cat
+	 * @return latest or old category code description
+	 */
+	public String getCompanyExpCatName(PmCategoryL3 cat){
+		if(cat == null){
+			return null;
+		}
+		if(getManagedBean().getSmAppl().isActiveAppl() || EntityHelper.isCollectionEmpty(
+						getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats())){
+			return cat.getCategoryName();
+		}
+		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.
+				getEntityBySinglePropertyFromList(cat.getCategoryL3Id(), 
+				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL3");
+		
+		return expCat != null ? expCat.getCategoryL3Name() : cat.getCategoryName();
+	}
+	
+	private void updateCategoryCodeNames(){
+		if(!getManagedBean().getSmAppl().isActiveAppl()){
+			return;
+		}
+		SmAppl appl = getManagedBean().getSmAppl();
+		if(!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
+			for(SmSupplierCategory cat : appl.getSmSupplierCategories()){
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+			}
+		}
+		if(!EntityHelper.isCollectionEmpty(appl.getSmCompanyExperiences())){
+			for(SmCompanyExperience exp : appl.getSmCompanyExperiences()){
+				updateCompanyExpCatNames(exp);
+			}
+		}
+	}
+	
+	private void updateCompanyExpCatNames(SmCompanyExperience exp){
+		if(EntityHelper.isCollectionEmpty(exp.getSmCompanyExperienceCats())){
+			return;
+		}
+		for(SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()){
+			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+		}
+	}
+	//#28175 - end
 	
 	//#35145 - start
 	/**
