@@ -435,17 +435,17 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 				
 				
 				if(oldPmUserRole != null){
-					if(!oldPmUserRole.getRecordStatusFlg().equals(newPmUserRole.getRecordStatusFlg())){
-						detailObj(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID, statusCheck(oldPmUserRole.getRecordStatusFlg()), 
-								statusCheck(newPmUserRole.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
-					}
-					
 					if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ)){
-						if((oldPmUserRole.getApprovalLimit() != null && oldPmUserRole.getApprovalLimit() != null)
+						if((oldPmUserRole.getApprovalLimit() != null && newPmUserRole.getApprovalLimit() != null)
 								&& (!oldPmUserRole.getApprovalLimit().setScale(2).equals(newPmUserRole.getApprovalLimit().setScale(2)))) {
 							detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, oldPmUserRole.getApprovalLimit().setScale(2).toString(), 
 									newPmUserRole.getApprovalLimit().setScale(2).toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 						}
+					}
+					
+					if(!oldPmUserRole.getRecordStatusFlg().equals(newPmUserRole.getRecordStatusFlg())){
+						detailObj(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID, statusCheck(oldPmUserRole.getRecordStatusFlg()), 
+								statusCheck(newPmUserRole.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 					}
 					
 				} else {

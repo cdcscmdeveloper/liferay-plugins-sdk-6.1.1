@@ -2703,6 +2703,13 @@ public class LOIDetailBackingBean extends
 			}
 			scLoi.setScLoiRemarks(finalScLoiRemarks);
 			// remove empty remark - end
+			
+			//#21692 - Start
+			if (QTStatusConst.LOI_PENDING_NEGOTIATION
+					.equals(statusId)) {
+				awardDataType = addLastDocumentPayload(scLoi, awardDataType);
+			}
+			//#21692 - End
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
@@ -3029,7 +3036,6 @@ public class LOIDetailBackingBean extends
 			checkSupplierAwardedRejectValidityExtension();
 		}
 		//#21692 - End
-		checkNeedSupplierIfHaveBranchDeleted(outcome);// #28777&#29729
 				
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
@@ -6996,55 +7002,6 @@ public class LOIDetailBackingBean extends
 
 	// #28777 & #29729 - End
 	
-	// #28777 & #29729 - Start
-	/**
-	 * Method to check outcome endorse/sign off and get recommend details
-	 * 
-	 * @param outcome
-	 * 
-	 **/
-	private void checkNeedSupplierIfHaveBranchDeleted(String outcome) {
-		if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
-			List<ScQtRecommend> recommendList = getManagedBean().getRecommendList();
-			for (ScQtRecommend scQtRecommend : recommendList) {
-				String itemName = scQtRecommend.getRequestItem().getItemName();
-				List<ScQtEvaluationResultDtl> recommendedSuppplierList = scQtRecommend.getAwardSupplierList();
-				validationNeedSupplierIfHaveBranchDeleted(itemName, recommendedSuppplierList);
-			}
-		}
-	}
-
-	// #28777 & #29729 - End
-	
-	// #28777 & #29729 - Start
-	/**
-	 * Method to throw validation if no selected any suppliers
-	 * 
-	 * @param itemName
-	 * @param recommendedSuppplierList
-	 * 
-	 **/
-	private void validationNeedSupplierIfHaveBranchDeleted(String itemName,
-			List<ScQtEvaluationResultDtl> recommendedSuppplierList) {
-
-		int countNotSelectedSupplier = 0;
-		if (CollectionUtils.isNotEmpty(recommendedSuppplierList)) {
-			for (ScQtEvaluationResultDtl recommendedSupplier : recommendedSuppplierList) {
-				if (recommendedSupplier.getScQtRecommendDtl().get(0).getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-					countNotSelectedSupplier++;
-				}
-			}
-		}
-
-		Long qtId = getManagedBean().getScQt().getQtId();
-		if (recommendedSuppplierList.size() == countNotSelectedSupplier
-				&& checkListDisqualifiedSupplierBranchDeleted(qtId)) {
-			throw new EpException(MessageConst.ERROR_760622, new String[] { itemName });
-		}
-	}
-
-	// #28777 & #29729 - End
-	
 	// #37831 - #29007 Start Vinod 23/04/2025
 	/**
 	 * This method will update the selected term for nwe row after adding to the
@@ -7304,6 +7261,15 @@ public class LOIDetailBackingBean extends
 			SLAUtils.getInstance().logSLAError("LOI", "cancelLOIWIP", getManagedBean().getScLoi().getLoiNo(),
 					"cancelLOIWIP", getUserIdSessionFromLoginId(), e);
 		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private SCAwardSupplierDataType addLastDocumentPayload(ScLoi scLoi, SCAwardSupplierDataType awardDataType) {
+		if (scLoi.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+			awardDataType.setLastDocument(getQtAwardSO().isLastDocumentLOI(scLoi.getScLoiLoa().getDocId()));
+		}		
+		return awardDataType;
 	}
 	//#21692 - End
 }

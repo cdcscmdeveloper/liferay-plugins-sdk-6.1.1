@@ -3961,10 +3961,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				epvObj.put(CommonConstants.OBJ_MINISTRY_NAME, pmOrgProfile.getPmOrgValidity().getOrgName());
 			}
 			
-			String userRemark = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks().get(0).getRemark();
+			String userRemark = null;
 			if (this.getManagedBean().isNullEPVRemark()) {
 				userRemark = ResourceBundleUtils.getMessage(SourcingConstants.NOT_AVAILABLE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale());
+			} else {
+				userRemark = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks().get(0).getRemark();
 			}
 			epvObj.put(CommonConstants.REMARK, userRemark);
 			

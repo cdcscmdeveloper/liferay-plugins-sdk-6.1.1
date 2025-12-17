@@ -85,6 +85,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
 	private final String cancelUrl = SmCommonUtil.getBasePortalUrl() + "/web/epapp/task-list";
 	
+	//#38377
+	private final String responseUrl = SmCommonUtil.getBasePortalUrl() + EpPropertiesUtils.getInstance().getProperty("payment.response.path");
+	
+	//#38377
+	private final String callbackUrl = SmCommonUtil.getBasePortalUrl() + EpPropertiesUtils.getInstance().getProperty("payment.callback.path");
+	
 	// #38377
 	private final String paymentGatewayEpOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.ep.onoff");
 
@@ -362,7 +368,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			PaymentResDTO resDTO = new PaymentResDTO();
 			resDTO = reqSO.createPayment(reqDTO);
 
-			log.info("******Payment ID********"
+			log.info("******Payment ID*********"
 					+ resDTO.getPyBill().getPyPayments().get(0).getPaymentId());
 
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -402,6 +408,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			log.info("******VKey********" + vKey);
 			log.info("******VC********" + vc);
 			log.info("****cancelUrl******" + cancelUrl);
+			log.info("****callbackUrl******" + callbackUrl);
+			log.info("****responseUrl******" + responseUrl);
 			BigDecimal ttlAmt = resDTO.getPyBill().getPyPayments().get(0)
 					.getPaymentAmt();
 			this.setvCode(vc);
@@ -410,17 +418,18 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
 			
 			//#38377
-			this.getManagedBean()
-					.setPayLoad(
-							PaymentUtil.constructJsonPayload(merchantId, vKey,
-									this.getManagedBean().getOrderId(), this
-											.getManagedBean().getTotalAmount(),
-									this.getManagedBean().getBillName(), this
-											.getManagedBean().getBillEmail(),
-									this.getManagedBean().getBillMobile(), this
-											.getManagedBean().getBillDesc(),
-									this.getManagedBean().getCountry(), this
-											.getCancelUrl()));
+			this.getManagedBean().setPayLoad(
+					PaymentUtil.constructJsonPayload(merchantId, vKey, this
+							.getManagedBean().getOrderId(), this
+							.getManagedBean().getTotalAmount(), this
+							.getManagedBean().getBillName(), this
+							.getManagedBean().getBillEmail(), this
+							.getManagedBean().getBillMobile(), this
+							.getManagedBean().getBillDesc(), this
+							.getManagedBean().getCountry(),
+							this.getCancelUrl(), this.responseUrl,
+							this.callbackUrl));
+			log.info("#38377##########"+this.getManagedBean().getPayLoad());
 			
 			return "paymentRequestSubmission";
 
@@ -1083,8 +1092,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		if (billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
 			return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";// + EpPropertiesUtils.getInstance().getProperty("molpay.cdc.url.exts");	//temp add ext	for testing purpose.. do not merge to prd
 		}else{
-			// #26307 - payment gateway change 
-			return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.gov.url.ext");
+			// #38377
+			if (isCdcPaymentGateway(billType)) {
+				return EpPropertiesUtils.getInstance().getProperty("payment.url");
+			} else {
+				// #26307 - payment gateway change
+				return EpPropertiesUtils.getInstance().getProperty("molpay.gov.url") + merchantId
+						+ EpPropertiesUtils.getInstance().getProperty("molpay.gov.url.ext");
+			}
 		}		
 		
 	}
