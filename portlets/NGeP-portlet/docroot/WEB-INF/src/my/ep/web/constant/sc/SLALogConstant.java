@@ -125,9 +125,14 @@ public class SLALogConstant {
 	public static final String RETRIEVE_SUPP_MAP_REPORT = "retrieveSuppLoiLoaMapForReport";
 	public static final String COMP_EXP_SUPP_PAGING_DATA_MODEL = "ViewSupplierCompExpDtlsPagingDataModel";
 	public static final String RETRIEVE_CONTRACT_STATUS_COUNT = "retrieveContractStatusValueCount";
-	public static final String COMP_EXP_ERROR = "COMP_EXP";
+	
 
 	// 29661 -end-
+	
+	// #27868 - start
+	public static final String DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM  = "getRadioButtonCodeValuesCombineWIPParameter";
+	public static final String DP_GET_RADIOBUTTON_CODEVALUES = "getReasonCodeDropdownValues";
+	// #27868 - end
 	
 	private SLALogConstant(){
 		

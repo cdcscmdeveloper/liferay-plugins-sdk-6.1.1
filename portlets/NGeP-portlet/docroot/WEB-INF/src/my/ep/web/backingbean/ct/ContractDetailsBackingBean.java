@@ -59,6 +59,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper; //Fix - #30045
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -90,6 +91,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;//24333
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote; //Fix - #30045
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -104,6 +106,7 @@ import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.ct.ContractHashSetConst; //#35238
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -698,15 +701,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setNewPk7(false);
 				}
 			} else {
-				//#27551 - add null checking
-				if (ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-						getRequestNote() != null &&
-						ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-						getRequestNote().getRequestNoteDtls().get(0).getProcurementType().getParameterType().equalsIgnoreCase(
-						ParameterTypeConst.PROCUREMENT_TYPE) && ctBB.newJustification()!= null) {
-					ctBB.getManagedBean().setNewPk7(true);
-				} else {
-					ctBB.getManagedBean().setNewPk7(false);
+				// Start Fix - #30045 || #27551 - add null checking
+				ScRequestNote scRequestNote = (ScRequestNote) EntityHelper.getNestedProperty(ctBB.getManagedBean(),
+						"contractVer.ctContractItems[0].scRequestItem.requestNote");
+				if (scRequestNote != null) {
+					String procType = EntityHelper
+							.getStringNestedProperty(ctBB.getManagedBean(),
+									"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType");
+					if ((procType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)
+							|| procType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) // End Fix - #30045
+							&& ctBB.newJustification() != null) {
+						ctBB.getManagedBean().setNewPk7(true);
+					} else {
+						ctBB.getManagedBean().setNewPk7(false);
+					}
 				}
 			}
 			
@@ -1758,7 +1766,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					throwExceptions(MessageConst.ERROR_100022, "lbl.ct.deduction.type");
 				}
 
-				ctBB.validateDeductionType(deduction);
+				ctBB.validateDeductionType(deduction, action); //#35506
 				if(deduction.getCtDeductionClauses() != null && deduction.getCtDeductionClauses().size() > 0){
 					for(CtDeductionClause ctDeductionClauses : deduction.getCtDeductionClauses()){
 						if(ctDeductionClauses.getClauseDescription().isEmpty()){
@@ -3834,7 +3842,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * profile id and PTJ profile id
 	 */
 	private void defaultMinistryPtjSearchValue() {
-		if (hasRoleUserToResetSearch()) {
+		if (hasAnyRoleUser(ContractHashSetConst.ROLE_USER_TO_RESET_SEARCH)) {
 			this.getManagedBean().setSearchMinistryProfile(null);
 			this.getManagedBean().setSearchPtjGroupProfile(null);
 			this.getManagedBean().setSearchPtjProfile(null);
@@ -4868,7 +4876,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			this.getManagedBean().setSearchMinistryProfile(orgProfile);
 			this.getManagedBean().setSearchPtjGroupProfile(null);
 			this.getManagedBean().setSearchPtjProfile(null);
-		} else if (hasRoleUserToSearch() || hasPBQCRole()) {//Enhancement 29418 - shaqimi 21/10/2022
+		} else if (hasAnyRoleUser(ContractHashSetConst.ROLE_USER_TO_SEARCH) 
+				|| hasAnyRoleUser(ContractHashSetConst.PBQC_ROLES)) {//Enhancement 29418 - shaqimi 21/10/2022
 			this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 			this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
 			if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {
@@ -4876,85 +4885,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			this.getManagedBean().setSearchPtjProfile(orgProfile);
 		}
-	}
-	
-	/**
-	 * Checks if the user has roles related.
-	 * 
-	 * @return true if has any role related.
-	 */
-	private boolean hasRoleUserToResetSearch() {
-		Set<String> roleUserToResetSearch = new HashSet<>();
-		roleUserToResetSearch.add(RoleCode.AUDITOR_GENERAL.value());
-		roleUserToResetSearch.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
-		roleUserToResetSearch.add(RoleCode.BASIC_SUPPLIER_USER.value());
-		roleUserToResetSearch.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
-		roleUserToResetSearch.add(RoleCode.MOF_SUPPLIER_USER.value());
-		roleUserToResetSearch.add(RoleCode.BPK_AUDITOR.value());
-		roleUserToResetSearch.add(RoleCode.BPK_APPROVER.value());
-		
-		return hasAnyRoleUser(roleUserToResetSearch);
-	}
-	
-	/**
-	 * Checks if the user has roles related.
-	 * 
-	 * @return true if has any role related.
-	 */
-	private boolean hasRoleUserToSearch() {
-		Set<String> roleUserToSearch = new HashSet<>();
-		roleUserToSearch.add(RoleCode.MIN_CONTRACT_ADMIN.value());
-		roleUserToSearch.add(RoleCode.BPK_CCA.value());
-		roleUserToSearch.add(RoleCode.CT_APPROVER.value());
-		roleUserToSearch.add(RoleCode.BPK_CC_APPROVER.value());
-		
-		return hasAnyRoleUser(roleUserToSearch);
-	}
-	
-	/**
-	 * Checks if the user has any PBQC-related (committee) roles.
-	 * 
-	 * @return true if has any role related.
-	 */
-	private boolean hasPBQCRole() {
-		Set<String> pbqcRole = new HashSet<>();
-		pbqcRole.add(RoleCode.QCA_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.QCA_MEMBER.value());
-		pbqcRole.add(RoleCode.QCA_SECRETARY.value());
-		pbqcRole.add(RoleCode.QCB_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.QCB_MEMBER.value());
-		pbqcRole.add(RoleCode.QCB_SECRETARY.value());
-		pbqcRole.add(RoleCode.QQC_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.QQC_MEMBER.value());
-		pbqcRole.add(RoleCode.QQC_SECRETARY.value());
-		pbqcRole.add(RoleCode.PBA_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.PBA_MEMBER.value());
-		pbqcRole.add(RoleCode.PBA_SECRETARY.value());
-		pbqcRole.add(RoleCode.PBB_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.PBB_MEMBER.value());
-		pbqcRole.add(RoleCode.PBB_SECRETARY.value());
-		pbqcRole.add(RoleCode.PPB_CHAIRPERSON.value());
-		pbqcRole.add(RoleCode.PPB_MEMBER.value());
-		pbqcRole.add(RoleCode.PPB_SECRETARY.value());
-		
-		return hasAnyRoleUser(pbqcRole);
-	}
-	
-	/**
-	 * Common utility method to check if user has any role from the given set.
-	 * 
-	 * @return true if user has any role in the given set.
-	 */
-	private boolean hasAnyRoleUser(Set<String> roles) {
-	    if (roles == null || roles.isEmpty()) {
-	        return false;
-	    }
-	    for (String role : roles) {
-	        if (getFacesScopes().hasRoleUser(role)) {
-	            return true;
-	        }
-	    }
-	    return false;
 	}
 	//#35238 end
 }

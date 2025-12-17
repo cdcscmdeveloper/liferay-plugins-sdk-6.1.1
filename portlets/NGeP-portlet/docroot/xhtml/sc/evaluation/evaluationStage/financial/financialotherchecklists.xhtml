@@ -109,12 +109,14 @@
 					value="#{not empty evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierRejectionRemark}"></ui:param>
 				<ui:remove><!-- 6906 End --></ui:remove>
 				
+				
 				<ui:remove>#29661 -start-</ui:remove>
 				<ui:fragment
 					rendered="#{SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE ne docDefinationKey  and  SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE ne docDefinationKey}">
 					<ui:include src="#{evaluationBackingBean.managedBean.proposalPage}"></ui:include>
 				</ui:fragment>
 				<ui:remove>#29661 -end-</ui:remove>
+				
 				
 				<p:spacer height="25"></p:spacer>
 				<c:if test="#{'SD' ne docDefinationKey}">
@@ -126,10 +128,10 @@
 			</h:panelGroup>
 		</h:panelGroup>
 		
-		<ui:remove>#29661 -start-</ui:remove>
+		 <ui:remove>#29661 -start-</ui:remove>
 		<ui:include
 			src="/xhtml/sc/evaluation/evaluationStage/financial/evaContractTermPopUp.xhtml" /> 
-			<ui:remove>#29661 -end-</ui:remove>
+			<ui:remove>#29661 -end-</ui:remove> 
 			
 	</ui:define>
 </ui:composition>

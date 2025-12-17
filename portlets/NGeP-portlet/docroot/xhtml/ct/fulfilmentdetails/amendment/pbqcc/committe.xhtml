@@ -9,7 +9,7 @@
      <p:panel id="committePanel" header="#{lbl['lbl.ct.panel.committee.member']}" toggleable="true"  toggleSpeed="500">
             <p:dataTable id="committeTable" var="ctCommitteeVar" widgetVar="committeTableWidget"
             	rowIndexVar="index" rowKey="#{ctCommitteeVar}"
-                value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}" filteredValue="#{amendmentBackingBean.getFilteredOriginalCommitteeMembers()}" ><!-- 26753 -->
+                value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}" filteredValue="#{amendmentBackingBean.getFilteredCommitteeMembers()}" ><!-- 35238 -->
                 <ac:paginator for="committeTable" />
                   <p:column  style="width:2%;" rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}">
 			      <f:facet name="header">

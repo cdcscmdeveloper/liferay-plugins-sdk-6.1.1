@@ -275,6 +275,8 @@ public class CommitteManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> latestMembers;
 	
 	private Paginator memberPaginator;
+	
+	private boolean refreshFCMaintenancePage = Boolean.FALSE;
 	//35320 - END
 	
 	
@@ -1526,6 +1528,14 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	public void setMemberPaginator(Paginator memberPaginator) {
 		this.memberPaginator = memberPaginator;
+	}
+
+	public boolean isRefreshFCMaintenancePage() {
+		return refreshFCMaintenancePage;
+	}
+
+	public void setRefreshFCMaintenancePage(boolean refreshFCMaintenancePage) {
+		this.refreshFCMaintenancePage = refreshFCMaintenancePage;
 	}
 	//#35320 - END
 }

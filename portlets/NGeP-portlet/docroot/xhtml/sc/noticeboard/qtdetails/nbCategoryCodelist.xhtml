@@ -40,14 +40,15 @@
 								value="#{lbl['lbl.sc.main.category.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
-					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-										(scQtCategory.pmCategoryL1.changedDate ne scQtCategory.pmCategoryL1.createdDate)}"
-						style="color: red;font-weight:bold">
+					<p:outputPanel rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges
+					and scQtCategory.flagDisplayNb}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
-							escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}"/>
+							rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL1flag}"
+							escape="false"/>
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL1.changedDate)}&#41;" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL1.changedDate)}&#41;"
+						rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL1flag}">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
@@ -69,14 +70,15 @@
 								value="#{lbl['lbl.sc.sub.category.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
-					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-										(scQtCategory.pmCategoryL2.changedDate ne scQtCategory.pmCategoryL2.createdDate)}"
-						style="color: red;font-weight:bold">
+					<p:outputPanel rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges
+					and scQtCategory.flagDisplayNb}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
-							escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}" />
+							rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL2flag}"
+							escape="false" />
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL2.changedDate)}&#41;" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL2.changedDate)}&#41;"
+						rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL2flag}">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
@@ -98,14 +100,15 @@
 								value="#{lbl['lbl.sc.sub.category.division.icon.tooltip']}" />
 						</p:tooltip>
 					</p:commandLink>
-					<p:outputPanel rendered="#{(noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges) and
-										(scQtCategory.pmCategoryL3.changedDate ne scQtCategory.pmCategoryL3.createdDate)}"
-						style="color: red;font-weight:bold">
+					<p:outputPanel rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges
+					and scQtCategory.flagDisplayNb}" style="color: red;font-weight:bold">
 						<h:outputText
 							value="&#60;br/&#62;&#40;#{lbl['lbl.sc.category.history.updated.on']}&#160;"
-							escape="false" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}"/>
+							rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL3flag}"
+							escape="false"/>
 						<!-- #29732 - fix Reopen -->	
-						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL3.changedDate)}&#41;" rendered="#{noticeBoardBackingBean.managedBean.flagUpdateCatInPmDisplay}">
+						<h:outputText value="#{noticeBoardBackingBean.toDate(scQtCategory.pmCategoryL3.changedDate)}&#41;"
+						rendered ="#{noticeBoardBackingBean.managedBean.displayAfterPublish and noticeBoardBackingBean.managedBean.pmCatL3flag}">
 						</h:outputText>
 					</p:outputPanel>
 					<!-- #29732 End -->
@@ -118,8 +121,4 @@
 				historyList="#{noticeBoardBackingBean.managedBean.historyList}"
 				widget="hisPopup" />
 	<!-- #29732 End -->
-			
-			
-			
-	
 </ui:composition>
