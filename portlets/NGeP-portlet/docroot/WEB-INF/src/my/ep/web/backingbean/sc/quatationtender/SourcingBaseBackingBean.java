@@ -4084,7 +4084,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						}
 						boolean isDemoRequired = report.getTitle().equalsIgnoreCase(
 								SourcingConstants.DEMO_EVALUATION_REPORT)
-								&& !checkDemoWIP(scQt);//#28784
+								&& checkDemoUploadFileExist(scQt);//#28784
 
 						// #28784 -start-
 						if (null != report.getPmDocument() || isDemoRequired)
@@ -7272,18 +7272,27 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	//#28784 - End
 	
 	//#28784 - Start
-	private boolean checkDemoWIP(ScQt scQt) {
+	private boolean checkDemoUploadFileExist(ScQt scQt) {
 		try {
 			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
-			return evaluationSO.checkDemoWip(reqDTO);
+			reqDTO.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
+			EvaluationResDTO resDTO = evaluationSO.retrievePresentationDemoCheckList(reqDTO);
+			if (null != resDTO
+					&& null != resDTO.getCheckListResultBean().getResultList()
+					&& !resDTO.getCheckListResultBean().getResultList()
+							.isEmpty()) {
+				return resDTO.getCheckListResultBean().getResultList().get(0).getScQtCheckListAttachment() != null;
+			} else {
+				return Boolean.FALSE;
+			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkDemoWIP",
-					scQt.getQtNo(), "checkDemoWIP", getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkDemoUploadFileExist",
+					scQt.getQtNo(), "checkDemoUploadFileExist", getUserIdSessionFromLoginId(), e);
 		}
-		return true;
+		return Boolean.FALSE;
 	}
 	//#28784 - End
 }
