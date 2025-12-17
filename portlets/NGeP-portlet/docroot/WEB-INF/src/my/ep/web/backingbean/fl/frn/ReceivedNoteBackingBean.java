@@ -2140,7 +2140,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		BigDecimal totalReceivedAmount = getTotalReceivedAmount(reqDTO);
 
 		FulfilmentResDTO resDTOPanel = fulfilmentRequestSO.getPanelFlagByFlRequestId(reqDTO);
-		int isPanel = resDTOPanel.isPanel();
+		boolean isPanel = resDTOPanel.isPanel();
 		PmParameter procurementType = getManagedBean().getFulfilmentRequest().getProcurementType();
 
 		reqDTO.setPanel(isPanel);
@@ -2177,37 +2177,29 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * @param limitAmount     
 	 * @param procurementType 
 	 */
-	private void setMessageForPOExceedLimit(int isPanel, String supplierTypeId, BigDecimal limitAmount,
+	private void setMessageForPOExceedLimit(boolean isPanel, String supplierTypeId, BigDecimal limitAmount,
 			PmParameter procurementType) {
+
 		String procurementTypeDesc = this.getParameterDesc(procurementType);
 
 		if (procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
-			if (isPanel == 1) {
-				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.PANEL + ")";
-			} else {
-				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.NON_PANEL + ")";
-			}
+			procurementTypeDesc = procurementTypeDesc + " ("
+					+ (isPanel ? ParameterConst.PANEL : ParameterConst.NON_PANEL) + ")";
 		}
 
-		if (isPanel == 0 && supplierTypeId != null) {
-
+		String msg;
+		if (!isPanel && supplierTypeId != null) {
 			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, supplierTypeId);
-
-			String msg = MessageUtils.getMessage(MessageConst.INFO_745097, new String[] { limitAmount.toString(),
+			msg = MessageUtils.getMessage(MessageConst.INFO_745097, new String[] { limitAmount.toString(),
 					procurementTypeDesc, suppAccTypeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale());
-
-			getManagedBean().setLimitExceededMessage(msg);
-			getManagedBean().setShowLimitExceededDialog(true);
-
 		} else {
-			String msg = MessageUtils.getMessage(MessageConst.INFO_745096, new String[] { limitAmount.toString(),
+			msg = MessageUtils.getMessage(MessageConst.INFO_745096, new String[] { limitAmount.toString(),
 					procurementTypeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-
-			getManagedBean().setLimitExceededMessage(msg);
-			getManagedBean().setShowLimitExceededDialog(true);
-
 		}
+
+		getManagedBean().setLimitExceededMessage(msg);
+		getManagedBean().setShowLimitExceededDialog(true);
 	}
 	
 	
