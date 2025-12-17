@@ -65,15 +65,6 @@
 								value="#{criteriaBackingBean.getStatusList()}" />
 						</p:selectOneMenu></td>
 				</tr>
-	    <tr>
-					<td>
-					<p:dataTable id="dtCriteriaDesc1" styleClass="criteriaDescList"
-							var="criteriaDesc1"
-							value="#{criteriaBackingBean.managedBean.selectedCriteria.pmCriteriaDescs}">
-					<p:outputLabel value="#{criteriaDesc1.pmLanguage.languageName}" />
-					<p:outputLabel value="#{criteriaDesc1.criteria}" />
-							</p:dataTable></td>
-				</tr>
 	</table>
    </p:panel>	
    </ui:composition>
