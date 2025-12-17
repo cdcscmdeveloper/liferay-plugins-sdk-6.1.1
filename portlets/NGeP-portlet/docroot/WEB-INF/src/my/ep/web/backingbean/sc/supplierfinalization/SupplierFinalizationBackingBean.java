@@ -11557,7 +11557,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		Map<Long, ScQtRecommend> recommendMap = new HashMap<>();
 		Map<Long, Boolean> identifierMap = new HashMap<>();
 		boolean isItemized = this.getManagedBean().isItemize();
-		boolean isBranchDeleted = false;
 
 		for (ScQtRecommend recommend : recommendedItems) {
 			Long recommendId = recommend.getQtRecommendId();
@@ -11573,15 +11572,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				if (checkFlagIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId)
 						&& identifierMap.containsKey(recommendId)) {
 					identifierMap.put(recommendId, true);
-					isBranchDeleted = true;
 				}
 			}
 		}
 
 		if (isItemized) {
-			validationItemizedSupplier(recommendMap, identifierMap, scQt, isBranchDeleted);
+			validationItemizedSupplier(recommendMap, identifierMap, scQt);
 		} else {
-			validationPackageSupplier(recommendMap, identifierMap, scQt, isBranchDeleted);
+			validationPackageSupplier(recommendMap, identifierMap, scQt);
 		}
 	}
 	
@@ -11705,7 +11703,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * 
 	 **/
 	private void validationItemizedSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
-			ScQt scQt, boolean isBranchDeleted) {
+			ScQt scQt) {
 
 		boolean foundFalse = false;
 		Long falseKey = null;
@@ -11718,7 +11716,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 		}
 
-		if (foundFalse && isBranchDeleted) {
+		if (foundFalse) {
 			ScQtRecommend recommend = recommendMap.get(falseKey);
 			if (scQt.isZonal()) {
 				throw new EpException(MessageConst.ERROR_760623, new String[] {
@@ -11742,10 +11740,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * 
 	 **/
 	private void validationPackageSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
-			ScQt scQt, boolean isBranchDeleted) {
+			ScQt scQt) {
 
 		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
-			if (!entry.getValue() && isBranchDeleted) {
+			if (!entry.getValue()) {
 				ScQtRecommend recommend = recommendMap.get(entry.getKey());
 				if (scQt.isZonal()) {
 					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()

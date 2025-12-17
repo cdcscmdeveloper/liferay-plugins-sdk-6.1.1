@@ -14,27 +14,21 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.constant.report.DpReportConst;
-import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.managedbean.report.dp.ItemExceedThresholdRptManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -123,7 +117,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		addIfNotNull(map, DpReportConst.PARAM_KEY_MINISTRY, getManagedBean().getSelectedMinistry());
 		addIfNotNull(map, DpReportConst.PARAM_KEY_KUMPULAN_PTJ, getManagedBean().getSelectedKumpulanPTJ());
 		addIfNotNull(map, DpReportConst.PARAM_KEY_PTJ, getManagedBean().getSelectedPTJ());
-		addIfNotNull(map, DpReportConst.PARAM_KEY_CENTRAL_PANEL_CONTRACT, getManagedBean().getCentralPanelContract());
+		addIfNotEmpty(map, DpReportConst.PARAM_KEY_CENTRAL_PANEL_CONTRACT, getManagedBean().getCentralPanelContract());
 		addIfNotEmpty(map, DpReportConst.PARAM_KEY_CIRCULAR_NO, getManagedBean().getCircularNo());
 		addIfNotNull(map, DpReportConst.PARAM_KEY_STATUS, getManagedBean().getStatus());
 		addIfNotEmpty(map, DpReportConst.PARAM_KEY_ITEM_CODE, getManagedBean().getItemCode());
@@ -136,19 +130,6 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 
 		if (MapUtils.isNotEmpty(map)) {
 			// mandatory map values
-			if (getManagedBean().getCentralPanelContract() == null){
-				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-						"lbl.rpt.drpdown.panel", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()) });
-			}
-			if (getManagedBean().getCentralPanelContract()){
-				//panel
-				this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_PANEL);
-			}else {
-				// non panel
-				this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_NON_PANEL);
-			}
-
 			map.put(DpReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
 			map.put(DpReportConst.PARAM_KEY_REPORT_ID, getManagedBean().getReportCode());
 			map.put(DpReportConst.PARAM_KEY_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
@@ -294,11 +275,16 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 * @return the procurement mode dropdown values
 	 */
 	public SelectItem[] getProcurementModeDropdownValues() {
+		Long paramCodeG2g = 1013L;
 		SelectItem[] items = getDropdownValuesBySearchBean("RPT", null);
 
 		List<SelectItem> list = new ArrayList<>();
 		for (SelectItem item : items) {
-			filterProcurementTypeForPanelAndNonPanel(list, item);
+
+			if (item.getValue() == null || !item.getValue().equals(paramCodeG2g)) {
+				list.add(item);
+			}
+
 		}
 
 		SelectItem[] filtered = list.toArray(new SelectItem[list.size()]);
@@ -309,26 +295,6 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		}
 		return filtered;
 	}
-
-	/**
-	 * @param list
-	 * @param item
-	 */
-	private void filterProcurementTypeForPanelAndNonPanel(List<SelectItem> list, SelectItem item) {
-	    Boolean central = getManagedBean().getCentralPanelContract();
-	    boolean isCentral = Boolean.TRUE.equals(central);  
-
-	    if (!isCentral) {
-	        if (item.getValue() == null || !DPConstants.FULFILMENT_TYPE_G2G.equals(item.getLabel())) {
-	            list.add(item);
-	        }
-	    } else {
-	        if (item.getValue() == null || DPConstants.FULFILMENT_TYPE_NORMAL.equals(item.getLabel())) {
-	            list.add(item);
-	        }
-	    }
-	}
-
 
 	/**
 	 * Listener method triggered when the Financial Year dropdown value changes
@@ -410,12 +376,15 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 * changes in the JSF view.
 	 */
 	public void onCentralPanelChange() {
-		if (getManagedBean().getCentralPanelContract() == null || !getManagedBean().getCentralPanelContract()){
+		String centralPanelNo = "0";
+		String centralPanelYes = "1";
+
+		if (getManagedBean().getCentralPanelContract() == null
+				|| getManagedBean().getCentralPanelContract().equalsIgnoreCase(centralPanelNo)) {
 			getManagedBean().setCentralPanelContractSelected(false);
-		}else if (getManagedBean().getCentralPanelContract()){
+		} else if (getManagedBean().getCentralPanelContract().equalsIgnoreCase(centralPanelYes)) {
 			getManagedBean().setCentralPanelContractSelected(true);
 		}
-		getProcurementModeDropdownValues();
 	}
 
 	/**
@@ -512,79 +481,5 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		FacesContext.getCurrentInstance().validationFailed();
 	}
-	
-	/**
-	 * Listener method that populate status for dropdown in JSF.
-	 */
-	public SelectItem[] getStatusDropdown() {
 
-	    SelectItem[] items = getStatusValuesBySearchBean(
-	            ModuleCodeConst.SUPPLIER_SELECTION,
-	            ParameterConst.REQUEST_NOTE_RN,
-	            null
-	    );
-
-	    // Always treat null as empty
-	    if (items == null || items.length == 0) {
-	        return new SelectItem[0];
-	    }
-
-	    // Replace first entry’s label with "All" for this specific dropdown use-case
-	    items[0] = new SelectItem(
-	            null,
-	            ResourceBundleUtils.getMessage(
-	                    "lbl.sc.rpt.status.all",
-	                    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-	                    getFacesScopes().getUserLocale()
-	            )
-	    );
-
-	    return items;
-	}
-	
-	/**
-	 * @param moduleCode
-	 * @param docType
-	 * @param searchBean
-	 * @return
-	 */
-	public SelectItem[] getStatusValuesBySearchBean(String moduleCode, String docType,
-			SearchBean<PmStatusDesc> searchBean) {
-
-		FacesScopes face = new FacesScopes();
-
-		try {
-			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(moduleCode, docType,
-					searchBean);
-
-			List<SelectItem> items = new ArrayList<>();
-
-			// First item is a generic "all" label – data-level default
-			items.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.sc.rpt.status.all",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
-
-			for (PmStatusDesc desc : statusDescs) {
-				if (desc.getPmStatus() != null
-						&& DPConstants.STATUS_ITEM_EXCEED_THRESHOLD_REPORT.contains(desc.getPmStatus()
-								.getStatusId())) {
-
-					items.add(new SelectItem(desc.getPmStatus().getStatusId(), desc.getStatusName()));
-				}
-			}
-
-			return items.toArray(new SelectItem[0]);
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "populate SelectItem[]", null, "getStatusValuesBySearchBean", 0L, e);
-			return new SelectItem[0];
-		}
-	}
-
-	
-	/**
-	 * Listener method triggered when the Status dropdown value changes in the
-	 * JSF view.
-	 */
-	public void onChangeStatus(){
-		getManagedBean().setStatus(getManagedBean().getStatus());
-	}
 }

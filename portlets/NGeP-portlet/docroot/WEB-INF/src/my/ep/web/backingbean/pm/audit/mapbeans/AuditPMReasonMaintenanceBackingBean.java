@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmReasonRestr;
 import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.type.pm.ReasonParameterLevel;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
@@ -88,14 +86,6 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				setNewSRRDetails(savedReason);
 			}
 
-			// 28962-Audit START
-			// create new PK7W SIT
-			if (parameterCode.equalsIgnoreCase(ParameterConst.WIP_ITEM_PK7)
-					|| parameterCode.equalsIgnoreCase(ParameterConst.SPECIAL_ITEM_WITH_APPROVAL)) {
-				setNewPK7WandSIT(savedReason);
-			}
-			// 28962-Audit END
-
 			AuditPMSPDTO detailStatus = new AuditPMSPDTO();
 			detailStatus.setRoleCode(roleCode);
 			detailStatus.setDocType(docType);
@@ -105,7 +95,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			detailStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
 			detailStatus.setLvlCode3(parameterCode);
-			detailStatus.setDocId(BigInteger.valueOf(savedReason.getReasonId())); // 28962-Audit
+			detailStatus.setDocId(docId);
 			detailStatus.setFieldLabelCode(AuditConst.PM_AUD_RC_STATUS_FIELDLABELCODE);
 			detailStatus.setNewValue(reason.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
@@ -131,13 +121,6 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				deleteRestrictionDetail();
 			}
 
-			// 28962-Audit START
-			if (parameterCode.equalsIgnoreCase(ParameterConst.WIP_ITEM_PK7)
-					|| parameterCode.equalsIgnoreCase(ParameterConst.SPECIAL_ITEM_WITH_APPROVAL)) {
-				updatePK7WandSIT(oldReason, existingReason);
-			}
-			// 28962-Audit END
-
 			if (!oldReason.getRecordStatusFlg().equals(existingReason.getRecordStatusFlg())) {
 
 				AuditPMSPDTO detailStatus = new AuditPMSPDTO();
@@ -149,7 +132,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				detailStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 				detailStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
 				detailStatus.setLvlCode3(parameterCode);
-				detailStatus.setDocId(BigInteger.valueOf(existingReason.getReasonId())); // 28962-Audit
+				detailStatus.setDocId(docId);
 				detailStatus.setFieldLabelCode(AuditConst.PM_AUD_RC_STATUS_FIELDLABELCODE);
 				detailStatus.setOldValue(oldReason.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 						: AuditConst.PM_AUD_INACTIVE);
@@ -171,14 +154,6 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		managedBeans.setAuditDeleteAppRestrictions(null);
 		managedBeans.setAuditDeleteComRestrictions(null);
 		managedBeans.setAuditDeleteSuppRestrictions(null);
-		// 28962-Audit START
-		managedBeans.setAuditAddSupplAcctType(null);
-		managedBeans.setAuditUpdateSupplAcctType(null);
-		managedBeans.setAuditDeleteSupplAcctType(null);
-		managedBeans.setAuditAddAgency(null);
-		managedBeans.setAuditDeleteAgency(null);
-		// 28962-Audit END
-
 		return auditPMReqDTO;
 	}
 
@@ -392,17 +367,14 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			restrictionSuppType.setDocType(docType);
 			restrictionSuppType.setDocNo(existingReason.getReasonCode());
 			restrictionSuppType.setDocGroupId(docGroupId);
-			restrictionSuppType
-					.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value()));
+			restrictionSuppType.setPmParameterLvlId(new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value()));
 			restrictionSuppType.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			restrictionSuppType.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
 			restrictionSuppType.setLvlCode3(parameterCode);
 			restrictionSuppType.setDocId(BigInteger.valueOf(existingReason.getReasonId()));
 			restrictionSuppType.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_SUPPL_TYPE_FIELDLABELCODE);
-			restrictionSuppType
-					.setOldValue(oldReason.isBySupplierType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-			restrictionSuppType.setNewValue(existingReason.isBySupplierType() ? AuditConst.PM_AUD_YES
-					: AuditConst.PM_AUD_NO);
+			restrictionSuppType.setOldValue(oldReason.isBySupplierType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
+			restrictionSuppType.setNewValue(existingReason.isBySupplierType() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 			restrictionSuppType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			objList.add(restrictionSuppType);
 		}
@@ -470,7 +442,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				restrictionDetails.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 				restrictionDetails.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
 				restrictionDetails.setLvlCode3(parameterCode);
-
+				
 				// ST / AT / SBT
 				restrictionDetails.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_DTL_SUPPL_TYPE_FIELDLABELCODE);
 				restrictionDetails.setOldValue(checkPmParameterDesc(suppReason.getRestrType()));
@@ -480,6 +452,17 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			}
 		}
 	}
+
+	/**
+	 * private BigInteger checkLabelCode(String parameterCode) {
+	 * return parameterCode.equalsIgnoreCase(AuditConst.PM_AUD_RC_APP_TYPE) ? AuditConst.PM_AUD_RC_RES_DTL_APP_TYPE_FIELDLABELCODE
+				: parameterCode.equalsIgnoreCase(AuditConst.PM_AUD_RC_BUSS_TYPE) ? AuditConst.PM_AUD_RC_RES_DTL_BUSS_TYPE_FIELDLABELCODE
+						: parameterCode.equalsIgnoreCase(AuditConst.PM_AUD_RC_SUPPL_TYPE) ? AuditConst.PM_AUD_RC_RES_DTL_SUPPL_TYPE_FIELDLABELCODE
+								: null;
+
+	}
+	 */
+		
 
 	private void addRestriction() {
 		if (CollectionUtils.isNotEmpty(managedBeans.getAuditAddAppTypeRestrictions())) {
@@ -678,8 +661,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	}
 
 	private BigInteger checkDocIdSupplierReason(Long pmParameterId) {
-		PmReason pmReason = managedBeans.getNewPmReason() == null ? managedBeans.getSelectedReason() : managedBeans
-				.getNewPmReason();
+		PmReason pmReason = managedBeans.getNewPmReason() == null ? managedBeans.getSelectedReason() : managedBeans.getNewPmReason();
 		BigInteger docId = null;
 
 		for (PmSupplierReason pmSupplierReason : pmReason.getPmSupplierReasons()) {
@@ -720,169 +702,4 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		objList.add(dtlObj);
 		return objList;
 	}
-
-	// 28962-audit start
-	private void setNewPK7WandSIT(PmReason reason) {
-		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-		this.docId = BigInteger.valueOf(reason.getReasonId());
-
-		// handle null
-		if (reason.getDpThreshold() != null) {
-			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, null, String.valueOf(reason.getDpThreshold()));
-		}
-
-		if (reason.getPrThreshold() != null) {
-			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, null, String.valueOf(reason.getPrThreshold()));
-		}
-
-		setNewSupplAcctType(managedBeans.getAuditAddSupplAcctType());
-
-		// if SIT handle agency
-		addAgency();
-
-	}
-
-	private void setNewSupplAcctType(List<PmReasonRestr> pmReasonRestrs) {
-		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-
-		if (CollectionUtils.isNotEmpty(pmReasonRestrs)) {
-			for (PmReasonRestr tempReason : pmReasonRestrs) {
-				// belum add doc id
-				// this.docId = BigInteger.valueOf(tempReason.getReasonRestrId());
-				detailObj(AuditConst.PM_AUD_RC_SUPPLIER_ACCT_FIELDLABELCODE, null,
-						checkPmParameterDesc(tempReason.getSupplAcctTypeId()));
-			}
-		}
-	}
-
-	// modify SupplAcctType
-	private void updateSupplAcctType(List<PmReasonRestr> pmReasonRestrs, List<PmReasonRestr> oldPmReasonRestrs) {
-		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-
-		if (CollectionUtils.isNotEmpty(pmReasonRestrs)) {
-			for (PmReasonRestr temp : pmReasonRestrs) {
-				for (PmReasonRestr old : oldPmReasonRestrs) {
-					if (temp.getReasonRestrId().equals(old.getReasonRestrId())
-							&& !temp.getSupplAcctTypeId().getParameterId()
-									.equals(old.getSupplAcctTypeId().getParameterId())) {
-						this.docId = BigInteger.valueOf(temp.getReasonRestrId());
-						detailObj(AuditConst.PM_AUD_RC_SUPPLIER_ACCT_FIELDLABELCODE,
-								checkPmParameterDesc(old.getSupplAcctTypeId()),
-								checkPmParameterDesc(temp.getSupplAcctTypeId()));
-
-						break;
-					}
-				}
-
-			}
-		}
-	}
-
-	// delete SupplAcctType
-	private void deleteSupplAcctType(List<PmReasonRestr> pmReasonRestrs) {
-		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_DEL;
-
-		if (CollectionUtils.isNotEmpty(pmReasonRestrs)) {
-			for (PmReasonRestr deleteSuppAcctType : pmReasonRestrs) {
-				this.docId = BigInteger.valueOf(deleteSuppAcctType.getReasonRestrId());
-				detailObj(AuditConst.PM_AUD_RC_SUPPLIER_ACCT_FIELDLABELCODE,
-						checkPmParameterDesc(deleteSuppAcctType.getSupplAcctTypeId()), null);
-			}
-		}
-	}
-
-	private void updatePK7WandSIT(PmReason oldReason, PmReason existingReason) {
-
-		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-		this.docId = BigInteger.valueOf(existingReason.getReasonId());
-		DecimalFormat formatter = new DecimalFormat("#,##0.00");
-
-		// handle null when compare dgn null value
-		if (existingReason.getDpThreshold() == null
-				&& !oldReason.getDpThreshold().equals(existingReason.getDpThreshold())) {
-			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE,
-					formatter.format(oldReason.getDpThreshold().setScale(2)), null);
-		} else if (oldReason.getDpThreshold() == null
-				&& !existingReason.getDpThreshold().equals(oldReason.getDpThreshold())) {
-			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, null,
-					formatter.format(existingReason.getDpThreshold().setScale(2)));
-		} else if (existingReason.getDpThreshold() != null && oldReason.getDpThreshold() != null
-				&& !oldReason.getDpThreshold().equals(existingReason.getDpThreshold())) {
-			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE,
-					formatter.format(oldReason.getDpThreshold().setScale(2)),
-					formatter.format(existingReason.getDpThreshold().setScale(2)));
-		}
-
-		// PR threshold
-		if (existingReason.getPrThreshold() == null
-				&& !oldReason.getPrThreshold().equals(existingReason.getPrThreshold())) {
-			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE,
-					formatter.format(oldReason.getDpThreshold().setScale(2)), null);
-		} else if (oldReason.getPrThreshold() == null
-				&& !existingReason.getPrThreshold().equals(oldReason.getPrThreshold())) {
-			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, null,
-					formatter.format(existingReason.getDpThreshold().setScale(2)));
-		} else if (existingReason.getDpThreshold() != null && oldReason.getDpThreshold() != null
-				&& !oldReason.getDpThreshold().equals(existingReason.getDpThreshold())) {
-			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE,
-					formatter.format(oldReason.getDpThreshold().setScale(2)),
-					formatter.format(existingReason.getDpThreshold().setScale(2)));
-		}
-
-		setNewSupplAcctType(managedBeans.getAuditAddSupplAcctType());
-		updateSupplAcctType(managedBeans.getAuditUpdateSupplAcctType(), oldReason.getPmReasonRestr());
-		deleteSupplAcctType(managedBeans.getAuditDeleteSupplAcctType());
-
-		// if Special item
-		addAgency();
-		deleteAgency();
-
-	}
-
-	private static final String DASH_STRING = " - ";
-
-	private void deleteAgency() {
-		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_DEL;
-
-		if (CollectionUtils.isNotEmpty(managedBeans.getAuditDeleteAgency())) {
-			for (PmReasonRestr deletedAgency : managedBeans.getAuditDeleteAgency()) {
-				this.docId = BigInteger.valueOf(deletedAgency.getReasonRestrId());
-				detailObj(AuditConst.PM_AUD_RC_MINISTRY_FIELDLABELCODE, deletedAgency.getMinistryId()
-						.getPmOrgValidity().getOrgCode()
-						+ DASH_STRING + deletedAgency.getMinistryId().getPmOrgValidity().getOrgName(), null);
-
-				detailObj(AuditConst.PM_AUD_RC_PTJ_GROUP_FIELDLABELCODE, deletedAgency.getKumpPtjId()
-						.getPmOrgValidity().getOrgCode()
-						+ DASH_STRING + deletedAgency.getKumpPtjId().getPmOrgValidity().getOrgName(), null);
-
-				detailObj(AuditConst.PM_AUD_RC_PTJ_FIELDLABELCODE, deletedAgency.getAgencyId().getPmOrgValidity()
-						.getOrgCode()
-						+ DASH_STRING + deletedAgency.getAgencyId().getPmOrgValidity().getOrgName(), null);
-			}
-		}
-	}
-
-	private void addAgency() {
-		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-		this.docId = docGroupId;
-
-		if (CollectionUtils.isNotEmpty(managedBeans.getAuditAddAgency())) {
-			for (PmReasonRestr addAgency : managedBeans.getAuditAddAgency()) {
-
-				detailObj(AuditConst.PM_AUD_RC_MINISTRY_FIELDLABELCODE, null, addAgency.getMinistryId()
-						.getPmOrgValidity().getOrgCode()
-						+ DASH_STRING + addAgency.getMinistryId().getPmOrgValidity().getOrgName());
-
-				detailObj(AuditConst.PM_AUD_RC_PTJ_GROUP_FIELDLABELCODE, null, addAgency.getKumpPtjId()
-						.getPmOrgValidity().getOrgCode()
-						+ DASH_STRING + addAgency.getKumpPtjId().getPmOrgValidity().getOrgName());
-
-				detailObj(AuditConst.PM_AUD_RC_PTJ_FIELDLABELCODE, null, addAgency.getAgencyId().getPmOrgValidity()
-						.getOrgCode()
-						+ DASH_STRING + addAgency.getAgencyId().getPmOrgValidity().getOrgName());
-			}
-		}
-	}
-	// 28962-audit END
-
 }

@@ -2041,7 +2041,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if (order != null && order.getDocType() != null
 				&& order.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 			validateContractOrderLimit();
-		} else {
+		}else{
 			validatePurchaseOrderLimit();
 		}
 	}
@@ -2181,15 +2181,15 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			PmParameter procurementType) {
 		String procurementTypeDesc = this.getParameterDesc(procurementType);
 
-		if (procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
-			if (isPanel == 1) {
+		if(procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)){
+			if (isPanel==1) {
 				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.PANEL + ")";
 			} else {
 				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.NON_PANEL + ")";
 			}
 		}
 
-		if (isPanel == 0 && supplierTypeId != null) {
+		if (isPanel==0 && supplierTypeId != null) {
 
 			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, supplierTypeId);
 

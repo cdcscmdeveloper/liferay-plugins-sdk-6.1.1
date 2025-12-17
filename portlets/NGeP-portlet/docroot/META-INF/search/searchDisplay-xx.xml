@@ -2198,21 +2198,20 @@
 					<property name="bundleKey" value="lbl.sm.epno" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
-				<!-- 35321 - start -->
-				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="mofNo" />
-					<property name="bundleFile"
-						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.sc.suppAccType.mofNo" />
-					<property name="searchable" value="false" />
-				</bean>
-				<!-- 35321 - end -->
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="regNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.businessregno" />
 					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smMofAccounts.mofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.mofno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="viewable" value="false" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="smGstSupplier.gstRegNo" />

@@ -12916,8 +12916,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * Process documents with OCR
 	 */
 	public void processAI(){
-		SmAIDocBackingBean aiBB = new SmAIDocBackingBean();
-		aiBB.processBankStatement(getManagedBean().getSmAppl(),
+		SmAIDocBackingBean.processBankStatement(getManagedBean().getSmAppl(),
 				getManagedBean().getSupportDoc());
 	}
 
@@ -14728,10 +14727,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			
 		}
-		//#38890 - start
-		SmAIDocBackingBean aiBB = new SmAIDocBackingBean();
-		aiBB.validateBank(getManagedBean().getSmAppl());
-		//#38890 - end
+		//#38890
+		SmAIDocBackingBean.validateBank(getManagedBean().getSmAppl());
 	}
 	
 	//3460 - Start
@@ -19026,22 +19023,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			return;
 		}
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
-		fac.setRentalRate(te.getMonthlyRental());
-		fac.setOwnerName(te.getLandlordsName());
+		fac.setRentalRate(te.monthlyRental);
+		fac.setOwnerName(te.landlordsName);
 		
 		SmAddress addr = fac.getSmAddress();
-		PmCity city = te.getPmCity();
-		if (city != null){
-			addr.setStateId(city.getPmDistrict().getPmState().getStateId());
+		if (te.pmCity != null){
+			addr.setStateId(te.pmCity.getPmDistrict().getPmState().getStateId());
 			onChangeState(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
-			addr.setDistrictId(city.getPmDistrict().getDistrictId());
+			addr.setDistrictId(te.pmCity.getPmDistrict().getDistrictId());
 			onChangeDistrict(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
-			addr.setCityId(city.getCityId());
+			addr.setCityId(te.pmCity.getCityId());
 			onChangeCity(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		}
-		addr.setPostcode(te.getPostcode());
-		addr.setAddress1(te.getAddr1());
-		addr.setAddress2(te.getAddr2());
+		addr.setPostcode(te.postcode);
+		addr.setAddress1(te.normalizedAddress);
+		addr.setAddress2("");
 		addr.setAddress3("");
 	}
 	//#38927 START

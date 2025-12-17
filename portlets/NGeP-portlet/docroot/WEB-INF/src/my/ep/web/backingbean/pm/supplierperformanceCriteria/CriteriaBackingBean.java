@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -383,11 +382,6 @@ public class CriteriaBackingBean extends
 					}
 				}
 				}
-				//39577 - shaqimi start
-				if(pmCriteria.getPmCriteriaDescs().get(0).getPmLanguage().getLanguageCode().equals(CommonConstants.DEFAULT_LANGUAGE_CODE)){
-					Collections.swap(pmCriteria.getPmCriteriaDescs(), 0, 1);
-				}
-				//39577 - shaqimi end
 				this.getManagedBean().setSelectedCriteria(pmCriteria);
 				
 				
@@ -552,12 +546,6 @@ public class CriteriaBackingBean extends
 								pmCriteria.addPmCriteriaDescs(criteriaDesc);
 			
 						}
-					
-					//39577 - shaqimi start
-					if(pmCriteria.getPmCriteriaDescs().get(0).getPmLanguage().getLanguageCode().equals(CommonConstants.DEFAULT_LANGUAGE_CODE)){
-						Collections.swap(pmCriteria.getPmCriteriaDescs(), 0, 1);
-					}
-					//39577 - shaqimi end
 	
 				this.getManagedBean().setSelectedCriteria(pmCriteria);
 				

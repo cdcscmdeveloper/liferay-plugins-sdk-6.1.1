@@ -10261,18 +10261,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public void setPk7DropDownValues() {
 		// #29766 Start Vinod
-		// Replaced JUSTIFICATION_PK7 with JUSTIFICATION_PK7W as the old reason
+		// Replaced JUSTIFICATION_PK7 with JUSTIFICATION_SI as the old reason
 		// codes are inactive from PM.
-	    getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+	    getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SI.value()));
 	    // #29766 End Vinod
 	}
 	
 	public void reasonChanged(String reasonCode) {
 		// #29766 Start Vinod
-		// Replaced JUSTIFICATION_PK7 with JUSTIFICATION_PK7W as the old reason
+		// Replaced JUSTIFICATION_PK7 with JUSTIFICATION_SI as the old reason
 		// codes are inactive from PM.
 		getManagedBean().getScLoa().setJustificationType(getReasonByCategoryAndCode(
-				ReasonCategory.JUSTIFICATION_PK7W.value(), reasonCode));
+				ReasonCategory.JUSTIFICATION_SI.value(), reasonCode));
 		// #29766 End Vinod
 	}
 	
@@ -10289,7 +10289,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
 		String reasonCategory = isQTtypeOldPK7 ? ReasonCategory.JUSTIFICATION_PK7.value()
-				: ReasonCategory.JUSTIFICATION_PK7W.value();
+				: ReasonCategory.JUSTIFICATION_SI.value();
 		PmReason reason = getReasonByCategoryAndCode(reasonCategory, reasonCode);
 		// #29766 End Vinod
 		String reasonDesc = getReasonDesc(reason);

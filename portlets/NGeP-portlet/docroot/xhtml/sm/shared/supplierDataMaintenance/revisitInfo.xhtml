@@ -97,7 +97,9 @@
 					<td
 						style="width: 75%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
 						<h:outputText
-							value="#{viewSmApplBackingBean.getRemarks(viewSmApplBackingBean.managedBean.currentSmRevisit)}"
+							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitRemark}" />
+						<h:outputText
+							value="#{viewSmApplBackingBean.getExtendedRemarks(viewSmApplBackingBean.managedBean.currentSmRevisit)}"
 							escape="false" />
 					</td>
 				</p:outputPanel>

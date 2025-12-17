@@ -5342,11 +5342,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							List<ScQtFinalizationReport> erList = new ArrayList<>();
 							getManagedBean().setEvaluationReportList(erList);
 						}
-						boolean isDemoRequired = report.getTitle().equalsIgnoreCase(
-								SourcingConstants.DEMO_EVALUATION_REPORT)
-								&& !checkDemoWIP(scQt);//#28784
 						// 18685 - START.                                     //#28784
-						if (null != report.getPmDocument() || isDemoRequired) {
+						if (null != report.getPmDocument() || report.getTitle().equalsIgnoreCase(SourcingConstants.DEMO_EVALUATION_REPORT)) {
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
@@ -8286,20 +8283,4 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 29661 -end-
-	
-	//#28784 - Start
-	private boolean checkDemoWIP(ScQt scQt) {
-		try {
-			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			return evaluationSO.checkDemoWip(reqDTO);
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkDemoWIP",
-					scQt.getQtNo(), "checkDemoWIP", getUserIdSessionFromLoginId(), e);
-		}
-		return true;
-	}
-	//#28784 - End
 }

@@ -19,7 +19,7 @@ public class ItemExceedThresholdRptManagedBean extends DpReportManagedBean {
 	private PmOrgProfile selectedMinistry;
 	private PmOrgProfile selectedKumpulanPTJ;
 	private PmOrgProfile selectedPTJ;
-	private Boolean centralPanelContract = null;;
+	private String centralPanelContract;
 	private String circularNo;
 	private String itemCode;
 	private Long procurementType;
@@ -101,13 +101,13 @@ public class ItemExceedThresholdRptManagedBean extends DpReportManagedBean {
 	/**
 	 * @return the centralPanelContract
 	 */
-	public Boolean getCentralPanelContract() {
+	public String getCentralPanelContract() {
 		return centralPanelContract;
 	}
 	/**
 	 * @param centralPanelContract the centralPanelContract to set
 	 */
-	public void setCentralPanelContract(Boolean centralPanelContract) {
+	public void setCentralPanelContract(String centralPanelContract) {
 		this.centralPanelContract = centralPanelContract;
 	}
 	/**

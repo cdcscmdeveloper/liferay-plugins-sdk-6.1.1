@@ -2791,6 +2791,7 @@ public class CommitteBackingBean extends
 	 * Method to retrieve Committee Type detail based on the tab id
 	 */
 	public void getTabInfo() {
+		debugLogger("getTabInfo");
 
 		FacesScopes facesScopes = new FacesScopes();
 		Long loggedInUserId = facesScopes.getUserSessionBean().getUserId();
@@ -2814,7 +2815,11 @@ public class CommitteBackingBean extends
 
 				boolean isScQtCommitteeExist = isScQtCommiteeExist(newCommittee);
 
-				displayCommittee = getDisplayCommittee(isScQtCommitteeExist, newCommittee, reqDto);
+				if (isScQtCommitteeExist) {
+					displayCommittee = createNewCommittee(newCommittee, reqDto);
+				} else {
+					displayCommittee = newCommittee;
+				}
 
 				this.getManagedBean().setCommitteMap(committeeMap);
 				int activeIndex;
@@ -2841,7 +2846,7 @@ public class CommitteBackingBean extends
 			ScCommittee scCommittee = resDto.getCommittee();
 			ScCommitteeMember loggedInMember = getSecretaryMember(latestCommittee);
 			this.getManagedBean().setCommitteMember(loggedInMember);
-			if (null != getManagedBean().getCommitteMember()) {
+			if (null != getManagedBean().getCommitteMember() && null != reqDto) {
 				retriveUserDetails(loggedInUserId);
 			}
 
@@ -2859,13 +2864,27 @@ public class CommitteBackingBean extends
 			this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 			this.getManagedBean().setLatestMembers(latestCommittee);
 
-			setHeaderTitle(scCommittee);
+			if (null != scCommittee) {
+				this.getManagedBean().setHeaderTitle(
+						ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
+								scCommittee.getCommitteeType().getParameterCode()));
+			} else {
+				this.getManagedBean().setHeaderTitle("");
+			}
+
 			onSelectCommitteeHistory();
 		} catch (Exception ex) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, null, null,
 					"CommitteBackingBean.getTabInfo", null, ex);
 		}
-		getTheEndTabProcess();
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if (!getManagedBean().isRefreshFCMaintenancePage()) {
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, NAV_TO_COMMITTEE_MAINTENANCE + "?faces-redirect=true");
+		} else {
+			getManagedBean().setRefreshFCMaintenancePage(Boolean.FALSE);
+		}
 	}
 	// #35320 - END
 
@@ -3230,7 +3249,7 @@ public class CommitteBackingBean extends
 	@SuppressWarnings("unchecked")
 	public void onSelectCommitteeHistory() throws IOException {
 		ScCommitteeMemberHistory history = this.getManagedBean().getSelectedCommitteeHistory();
-		List<QtCommitteeMemberBean> list;
+		List<QtCommitteeMemberBean> list = null;
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 
 		if (null != history) {
@@ -3250,42 +3269,6 @@ public class CommitteBackingBean extends
 			if (null != history) {
 				history.setScCommittee(resDTO.getCommittee());
 			}
-		}
-	}
-	// #35320 - END
-	
-	// #35320 - START
-	private ScCommittee getDisplayCommittee(boolean isScQtCommitteeExist, ScCommittee newCommittee, CommitteReqDTO reqDto){
-		ScCommittee displayCommittee;
-		if (isScQtCommitteeExist) {
-			displayCommittee = createNewCommittee(newCommittee, reqDto);
-		} else {
-			displayCommittee = newCommittee;
-		}
-		return displayCommittee;
-	}
-	// #35320 - END
-	
-	// #35320 - START
-	private void setHeaderTitle(ScCommittee scCommittee){
-		if (null != scCommittee) {
-			this.getManagedBean().setHeaderTitle(
-					ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
-							scCommittee.getCommitteeType().getParameterCode()));
-		} else {
-			this.getManagedBean().setHeaderTitle("");
-		}
-	}
-	// #35320 - END
-	
-	// #35320 - START
-	private void getTheEndTabProcess(){
-		FacesContext fc = FacesContext.getCurrentInstance();
-		if (!getManagedBean().isRefreshFCMaintenancePage()) {
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, NAV_TO_COMMITTEE_MAINTENANCE + "?faces-redirect=true");
-		} else {
-			getManagedBean().setRefreshFCMaintenancePage(Boolean.FALSE);
 		}
 	}
 	// #35320 - END
