@@ -203,7 +203,7 @@
 								<!-- #38890 -->
 								<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'
 									and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}">
-									<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" styleClass="ai-assistant-btn" onclick="tenancyAI.show()" immediate="true">
+									<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" style="width: 150px;" styleClass="ai-assistant-btn" onclick="tenancyAI.show()" immediate="true">
 										<p:ajax partialSubmit="true" process="@this" />
 									</p:commandButton>
 									<p:graphicImage id="tttenancyAI" value="/css/images/design/tooltips.png" style="margin-left: 5px; vertical-align: middle;" />
