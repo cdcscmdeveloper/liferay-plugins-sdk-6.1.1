@@ -2217,7 +2217,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		BigDecimal sumReceivedAmt = BigDecimal.ZERO;
 
 		// get accumulative FRN exclude this FRN amount
-		FulfilmentResDTO resDTOsum = receivedNoteSO.retriveAccumulatedReceivedAmt(reqDTO);
+		FulfilmentResDTO resDTOsum = receivedNoteSO.retrieveAccumulatedReceivedAmt(reqDTO);
 		if (resDTOsum != null && resDTOsum.getAccumulativeProcuValue() != null) {
 			sumReceivedAmt = resDTOsum.getAccumulativeProcuValue();
 		}
