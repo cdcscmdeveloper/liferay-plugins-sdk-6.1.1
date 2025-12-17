@@ -2140,7 +2140,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		BigDecimal totalReceivedAmount = getTotalReceivedAmount(reqDTO);
 
 		FulfilmentResDTO resDTOPanel = fulfilmentRequestSO.getPanelFlagByFlRequestId(reqDTO);
-		int isPanel = resDTOPanel.isPanel();
+		boolean isPanel = resDTOPanel.isPanel();
 		PmParameter procurementType = getManagedBean().getFulfilmentRequest().getProcurementType();
 
 		reqDTO.setPanel(isPanel);
@@ -2177,19 +2177,19 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * @param limitAmount     
 	 * @param procurementType 
 	 */
-	private void setMessageForPOExceedLimit(int isPanel, String supplierTypeId, BigDecimal limitAmount,
+	private void setMessageForPOExceedLimit(boolean isPanel, String supplierTypeId, BigDecimal limitAmount,
 			PmParameter procurementType) {
 		String procurementTypeDesc = this.getParameterDesc(procurementType);
 
 		if (procurementType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
-			if (isPanel == 1) {
+			if (isPanel) {
 				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.PANEL + ")";
 			} else {
 				procurementTypeDesc = procurementTypeDesc + " (" + ParameterConst.NON_PANEL + ")";
 			}
 		}
 
-		if (isPanel == 0 && supplierTypeId != null) {
+		if (!isPanel && supplierTypeId != null) {
 
 			String suppAccTypeDesc = getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, supplierTypeId);
 
