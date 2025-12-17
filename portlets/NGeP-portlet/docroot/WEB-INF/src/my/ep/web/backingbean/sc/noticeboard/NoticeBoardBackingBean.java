@@ -1159,13 +1159,7 @@ public class NoticeBoardBackingBean extends
 					}
 				}
 			}
-			
-			// #26247 -start-
-			if (getManagedBean().isQualified()) {
-				checkDisciplinaryActionExists(supplier);
-			}
-			// #26247 -end-
-			
+
 			// construct the proposal/update url
 			if (QTStatusConst.QT_PROPOSAL_PREPARATION
 					.equals(currentStatus) && isValidSupplier ) {
@@ -1182,83 +1176,6 @@ public class NoticeBoardBackingBean extends
 		}
 
 	}
-
-	// #26247 -start-
-	/**
-	 * @param supplier
-	 * 
-	 */
-	private void checkDisciplinaryActionExists(SmSupplier supplier) {
-		SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
-		FacesScopes facesScopes = new FacesScopes();
-		PmUser sUsers = facesScopes.getUserSessionBean();
-		IQTNoticeBoardSO qtNoticeBoardSO = null;
-		List<String> categoryCodes = null;
-
-		if (sUsers != null && sUsers.getPreferredLanguage() != null) {
-			supplierDataMaintenanceReqDTO.setLanguage(sUsers.getPreferredLanguage());
-		}
-
-		supplierDataMaintenanceReqDTO.setSupplier(supplier);
-		
-		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-		SupplierDataMaintenanceResDTO supplierDataMaintenanceResDTO = null;
-
-		ISearchBean<ScQtCategory> searchBean = new SearchBean<>();
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("scQt.qtId", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getQtId()));
-
-		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL1.categoryL1Code"));
-		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL2.categoryL2Code"));
-		searchBean.getSortColumns().add(new SearchOrderBean("pmCategoryL3.categoryL3Code"));
-
-		try {
-			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTNoticeBoardSO.class);
-			
-			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
-			reqDTO.setQtCategorySearchBean(searchBean);
-			
-			NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
-			
-			if (null != resDTO && null != resDTO.getCategoryResultBean()) {
-				ISearchResultBean<ScQtCategory> resultBean = resDTO.getCategoryResultBean();
-				List<ScQtCategory> categories = resultBean.getResultList();
-				
-				if (CollectionUtils.isNotEmpty(categories)) {
-					categoryCodes = new ArrayList<>();
-					
-					for (ScQtCategory qtCategory : categories) {
-						categoryCodes.add(qtCategory.getPmCategoryL1().getCategoryL1Code()
-								+ qtCategory.getPmCategoryL2().getCategoryL2Code()
-								+ qtCategory.getPmCategoryL3().getCategoryL3Code());
-					}
-				}
-			}
-		} finally {
-			qtNoticeBoardSO = null;
-		}
-
-		if (null != suppDataSO) {
-			log.info(this.getClass().getName()
-					+ ".checkDisciplinaryActionExists() :  Checking Active Disciplinary Action for supplier ID: "
-					+ supplier.getSupplierId());
-			supplierDataMaintenanceResDTO = suppDataSO.getDisciplinaryActionMsg(supplierDataMaintenanceReqDTO,
-					categoryCodes);
-			
-			if (null != supplierDataMaintenanceResDTO
-					&& StringUtils.isNotEmpty(supplierDataMaintenanceResDTO.getErrorMessage())
-					&& (supplierDataMaintenanceResDTO.getErrorMessage().contains("Disciplinary Action") || supplierDataMaintenanceResDTO
-							.getErrorMessage().contains("Tindakan Tatatertib"))) {
-				log.info(this.getClass().getName()
-						+ ".checkDisciplinaryActionExists() :  Active Disciplinary Action exist for supplier ID: "
-						+ supplier.getSupplierId());
-				this.getManagedBean().setQualified(false);
-			}
-		}
-	}
-	// #26247 -end-
 
 	/**
 	 * Handle Department drop down changed - reset selected ptj profile and
@@ -2868,27 +2785,56 @@ public class NoticeBoardBackingBean extends
 				reqDTO.setQtCategorySearchBean(searchBean);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
 				//#29732
-				String catCodeL1 = "";
-				String catCodeL2 = "";
-				String catCodeL3 = "";
-				String catCodeLevel = null;
-				String catCode = null;
-				
-				for(ScQtCategory checkCategoryUpdated : resDTO.getCategoryResultBean().getResultList()){
-					if(null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()){
-						 catCodeL1 = checkCategoryUpdated.getPmCategoryL1().getCategoryL1Id().toString();
-						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
-					} 
-					if (null != checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code()){
-						 catCodeL2 = checkCategoryUpdated.getPmCategoryL2().getCategoryL2Id().toString();
-						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
+				String selectedTab = getManagedBean().getSelectedTab();
+				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES
+						.equals(selectedTab)) {
+					String catCodeL1 = "";
+					String catCodeL2 = "";
+					String catCodeL3 = "";
+					String catCodeLevel = null;
+					String catCode = null;
+					Date publishDate = getManagedBean().getScQt().getPublishDate();
+					Timestamp publishTimestamp = new Timestamp(publishDate.getTime());
+					Date qtCatCreatedDate = null;
+					Date pmChangeDateL1 = null;
+					Date pmChangeDateL2 = null;
+					Date pmChangeDateL3 = null;
+					getManagedBean().setDisplayAfterPublish(false);//reset if user change task
+					
+					for (ScQtCategory checkCategoryUpdated : resDTO.getCategoryResultBean().getResultList()) {
+
+						qtCatCreatedDate = checkCategoryUpdated.getCreatedDate();
+						pmChangeDateL1 = checkCategoryUpdated.getPmCategoryL1().getChangedDate();
+						pmChangeDateL2 = checkCategoryUpdated.getPmCategoryL2().getChangedDate();
+						pmChangeDateL3 = checkCategoryUpdated.getPmCategoryL3().getChangedDate();
+						boolean resultL1 = pmChangeDateL1.after(qtCatCreatedDate);
+						boolean resultL2 = pmChangeDateL2.after(qtCatCreatedDate);
+						boolean resultL3 = pmChangeDateL3.after(qtCatCreatedDate);
+						boolean resultL1vsPublish = pmChangeDateL1.after(publishTimestamp);
+						boolean resultL2vsPublish = pmChangeDateL2.after(publishTimestamp);
+						boolean resultL3vsPublish = pmChangeDateL3.after(publishTimestamp);
+
+						if ((resultL1vsPublish ||resultL2vsPublish ||resultL3vsPublish) && (resultL1 || resultL2 || resultL3)) {
+							getManagedBean().setPmCatL1flag(resultL1vsPublish);
+							getManagedBean().setPmCatL2flag(resultL2vsPublish);
+							getManagedBean().setPmCatL3flag(resultL3vsPublish);
+							getManagedBean().setDisplayAfterPublish(true);
+						}
+						if (null != checkCategoryUpdated.getPmCategoryL1().getCategoryL1Code()) {
+							catCodeL1 = checkCategoryUpdated.getPmCategoryL1().getCategoryL1Id().toString();
+							getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
+						}
+						if (null != checkCategoryUpdated.getPmCategoryL2().getCategoryL2Code()) {
+							catCodeL2 = checkCategoryUpdated.getPmCategoryL2().getCategoryL2Id().toString();
+							getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
+						}
+						if (null != checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code()) {
+							catCodeL3 = checkCategoryUpdated.getPmCategoryL3().getCategoryL3Id().toString();
+							getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
+						}
+						flagHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel, catCode, resDTO);
+						checkCategoryUpdated.setFlagDisplayNb(getManagedBean().getFlagUpdateCatInPmDisplay());
 					}
-					if (null != checkCategoryUpdated.getPmCategoryL3().getCategoryL3Code()){
-						 catCodeL3 = checkCategoryUpdated.getPmCategoryL3().getCategoryL3Id().toString();
-						 getManagedBean().setCatCodeQtUpdateDesc(checkCategoryUpdated.getUpdateCatDesc());
-					}
-					flagHistoryPmCatCode(catCodeL1, catCodeL2, catCodeL3, catCodeLevel, catCode,resDTO);
-					checkCategoryUpdated.setFlagDisplayNb(getManagedBean().getFlagUpdateCatInPmDisplay());
 				}
 				//#29732
 				return resDTO.getCategoryResultBean();
@@ -3499,17 +3445,14 @@ public class NoticeBoardBackingBean extends
 			}
 		}
 		
-		if(this.getManagedBean().getFlagUpdateCatInPmDisplay() && !flagCategoryUpdate){
-			List<PmRemarkCategory> listCategoryDB = new ArrayList();
-			int i=0;
-			for(PmRemarkCategory removeIndex : getManagedBean().getHistoryList()){
-				if (i > 0 && null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
-				    listCategoryDB.add(removeIndex);
-				}
-				 i++;
+		List<PmRemarkCategory> listCategoryDB = new ArrayList();
+		for (PmRemarkCategory removeIndex : getManagedBean().getHistoryList()) {
+			if (null != createdDateQt && removeIndex.getChangedDate().after(createdDateQt)) {
+				listCategoryDB.add(removeIndex);
 			}
-			getManagedBean().setHistoryList(listCategoryDB);
 		}
+		getManagedBean().setHistoryList(listCategoryDB);
+
 		RequestContext.getCurrentInstance().execute("hisPopup.show()");
 	}
 	// #29732 -end-

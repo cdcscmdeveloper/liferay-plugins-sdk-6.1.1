@@ -1053,9 +1053,9 @@ public class PurchaseInquiryBackingBean extends
 	 */
 	public String requisitionerAction(String action) {
 		log.info("requisitionerAction");
+
 		ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 		if(StringUtils.equalsIgnoreCase("PROCESSED", action)) {
-
 			// get RequestNote Backing bean and manage bean and set Request Note
 			// to RequestNote manage bean
 			PortletSession portletSession = (PortletSession) FacesContext
@@ -1232,6 +1232,7 @@ public class PurchaseInquiryBackingBean extends
 
 					reqNoteBackingBean.getCurrentStatus(getPmStatusByStatusId(rnStatusId));
 					
+					reqNoteBackingBean.getManagedBean().setDocStatus(getStatusDescById(rnStatusId)); //#38538																		  
 					requestNote.setRemarks(initializeRemarks(requestNote,
 							requestNote.getCurrentStatus(),
 							requestNote.getRemarks(), ScRequestNoteRemark.class));
