@@ -257,7 +257,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			String content = getFakeData(filepath, filename);
 			return new JsonWrapper(System.currentTimeMillis(), content, docType);
 		}
-		if (!filename.contains("ai_demo.pdf")){
+		if (!filename.contains("ai_demo")){
 			return null;
 		}
 		///temporary demo filter - end
