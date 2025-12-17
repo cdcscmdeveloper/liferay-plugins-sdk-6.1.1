@@ -3372,7 +3372,7 @@ public class LOIDetailBackingBean extends
 			// 26247 - end
 			
 			// #28777 & #29729 - Start
-			if(checkFlagForSupplierBranchDeleted()) {
+			if(checkFlagForSupplierBranchDeleted(outcome)) {
 				checkNeedSupplierIfHaveBranchDeleted(outcome);
 			}
 			// #28777 & #29729 - End
@@ -3428,7 +3428,7 @@ public class LOIDetailBackingBean extends
 		catch (EpException e) {
 			String taskName = this.getManagedBean().getTaskName();
 			// #28777 & #29729 - Start
-			if(checkFlagForSupplierBranchDeleted()) {
+			if(checkFlagForSupplierBranchDeleted(outcome)) {
 				checkNeedSupplierIfHaveBranchDeleted(outcome);
 			}else 
 			// #28777 & #29729 - End
@@ -7336,12 +7336,40 @@ public class LOIDetailBackingBean extends
 	/**
 	 * Method to check if have supplier branch deleted
 	 * 
+	 * @param outcome
+	 * 
 	 **/
-	private Boolean checkFlagForSupplierBranchDeleted() {
+	private Boolean checkFlagForSupplierBranchDeleted(String outcome) {
+
+		boolean isEndorseOrSignOff = false;
+		if (outcome != null
+				&& (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF))) {
+			isEndorseOrSignOff = true;
+		}
+
 		ScQt scqt = this.getManagedBean().getScQt();
 		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
-		
+
+		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)
+				&& checkDetailForSupplierBranchDeleted(recommendedItems, scqt)) {
+			return true;
+		}
+		return false;
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check details if have supplier branch deleted
+	 * 
+	 * @param recommendedItems
+	 * @param scQt
+	 * 
+	 **/
+	private Boolean checkDetailForSupplierBranchDeleted(List<ScQtRecommend> recommendedItems, ScQt scqt) {
+
 		for (ScQtRecommend recommend : recommendedItems) {
 			TplSpecZoneDtl tplSpecZoneDtl = recommend.getTplSpecZoneDtl();
 			if (tplSpecZoneDtl != null) {
