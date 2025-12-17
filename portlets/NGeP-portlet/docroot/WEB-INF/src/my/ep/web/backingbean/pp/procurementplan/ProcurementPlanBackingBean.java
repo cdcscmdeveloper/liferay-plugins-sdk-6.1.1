@@ -1527,7 +1527,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		AuditProcurementPlanBackingBeanTemplate auTemplate = new AuditProcurementPlanBackingBeanTemplate();
 		auTemplate.saveAuditData(action, isNeedAudit);
 	}
-
 	//#35502 End - For Audit Trail required
 
 	/**
@@ -4857,7 +4856,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
 		}
 		//#35502 Fix as-is bug End
-
+		
 		//add deleted item to list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
 			//log.info("[SIR#12802] - Procurement item delete status:" + procurementItem.isDeleted());
