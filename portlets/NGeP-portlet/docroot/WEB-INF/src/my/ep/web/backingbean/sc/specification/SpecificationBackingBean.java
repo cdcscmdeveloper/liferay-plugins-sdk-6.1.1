@@ -11249,6 +11249,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					&& (SCProcessNameConst.ENDORSE_SCORING.equals(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_SCORING
 							.equals(this.getManagedBean().getTaskName()))) {
 				this.getManagedBean().setCheckUserCanRevise(true);
+				this.getManagedBean().setResetHistoryCatCode(true);
 
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -11262,6 +11263,7 @@ if (null != checklist && !checklist.isEmpty()) {
 								new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale())));
 			} else {
+				this.getManagedBean().setResetHistoryCatCode(true);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
@@ -11875,13 +11877,10 @@ if (null != checklist && !checklist.isEmpty()) {
 			
 			scoreSetting.add(financialItemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
-// #21695 farid, if partial set weightage to false			
-			// #21695 farid, if partial set weightage to false
-			if (this.getManagedBean().getQt().isPartial() == true) {
-				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
-			} else if (!this.getManagedBean().isWeightage35384WIP() && !this.getManagedBean().getQt().isPartial()) {
-				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true); // #38151 set to weightage
-			}// #38151 if not wip, set to true without partial offer
+			// #21695 farid, if partial set weightage to true #38679			
+			if (this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
+			}
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 				.getRecommendationPackageScore();
@@ -12640,6 +12639,12 @@ if (null != checklist && !checklist.isEmpty()) {
 	public void specCommitteBpmTask(String action) {
 		// #39062 Start Vinod 23/09/2025
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			//#29732 start -set weightage to true, since requirement is mandatory to select financial weightage.
+			if(this.getManagedBean().getWipStatusMax()>=SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
+					&& null != this.getManagedBean().getFinancialScoreSetting()){
+					this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
+				}
+			//#29732 end
 			updateEstimatedAmount();
 		}
 		// #39062 End Vinod 23/09/2025
@@ -21812,7 +21817,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 								&& null != templateresDTO.getSpecMaster().getCtPanelItem()) {
 							panelItem = true;
 						}
-						if (panelItem) {
+						if (!panelItem) {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC);
 						} else {
 							this.getManagedBean().setPanelItemCategory(ParameterConst.ITEM_CATEGORY_TYPE_GENERAL);
@@ -23602,32 +23607,26 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 * @param checkList
 	 * 
-	 * @param index
-	 * 
 	 * @return
 	 */
-	public void updateSelectedTechnicalChecklistPreviewIndx(ScQtCheckList checkList, int index) {
-		if (checkList.isSelected()) {
-			checkList.setIndex(index);
-		} else {
-			checkList.setIndex(-1);
-		}
-		int checklistPreviewCount = 0;
+	public void updateSelectedTechnicalChecklistPreviewIndex(ScQtCheckList checkList) {
 		for (ScQtCheckList scQtCheckList : this.getManagedBean().getTechChecklistPreview()) {
-			if (null != scQtCheckList.getPmDocument() && null != checkList.getPmDocument()
-					&& index != checklistPreviewCount
-					&& checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()) {
-				if (this.getManagedBean().getTechChecklistPreview().get(checklistPreviewCount).isSelected()) {
-					this.getManagedBean().getTechChecklistPreview().get(checklistPreviewCount).setSelected(false);
-					this.getManagedBean().getTechChecklistPreview().get(checklistPreviewCount).setIndex(-1);
+			if (scQtCheckList.getQtChecklistId().equals(checkList.getQtChecklistId())) {
+				if (checkList.isSelected()) {
+					scQtCheckList.setSelected(true);
 				} else {
-					this.getManagedBean().getTechChecklistPreview().get(checklistPreviewCount).setSelected(true);
-					this.getManagedBean().getTechChecklistPreview().get(checklistPreviewCount)
-							.setIndex(checklistPreviewCount);
+					scQtCheckList.setSelected(false);
 				}
 			}
-			checklistPreviewCount++;
 		}
+
+		for (ScQtCheckList scQtCheckList : this.getManagedBean().getTechChecklistPreview()) {
+			if (!scQtCheckList.isSelected()) {
+				this.getManagedBean().setSelectAllTechPreview(false);
+				return;
+			}
+		}
+		this.getManagedBean().setSelectAllTechPreview(true);
 	}
 
 	// #10141 End Vinod
@@ -23638,32 +23637,26 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 * @param checkList
 	 * 
-	 * @param index
-	 * 
 	 * @return
 	 */
-	public void updateSelectedFinancialChecklistPreviewIndx(ScQtCheckList checkList, int index) {
-		if (checkList.isSelected()) {
-			checkList.setIndex(index);
-		} else {
-			checkList.setIndex(-1);
-		}
-		int checklistPreviewCount = 0;
+	public void updateSelectedFinancialChecklistPreviewIndex(ScQtCheckList checkList) {
 		for (ScQtCheckList scQtCheckList : this.getManagedBean().getFinChecklistPreview()) {
-			if (null != scQtCheckList.getPmDocument() && null != checkList.getPmDocument()
-					&& index != checklistPreviewCount
-					&& checkList.getPmDocument().getDocGroupId() == scQtCheckList.getPmDocument().getDocGroupId()) {
-				if (this.getManagedBean().getFinChecklistPreview().get(checklistPreviewCount).isSelected()) {
-					this.getManagedBean().getFinChecklistPreview().get(checklistPreviewCount).setSelected(false);
-					this.getManagedBean().getFinChecklistPreview().get(checklistPreviewCount).setIndex(-1);
+			if (scQtCheckList.getQtChecklistId().equals(checkList.getQtChecklistId())) {
+				if (checkList.isSelected()) {
+					scQtCheckList.setSelected(true);
 				} else {
-					this.getManagedBean().getFinChecklistPreview().get(checklistPreviewCount).setSelected(true);
-					this.getManagedBean().getFinChecklistPreview().get(checklistPreviewCount)
-							.setIndex(checklistPreviewCount);
+					scQtCheckList.setSelected(false);
 				}
 			}
-			checklistPreviewCount++;
 		}
+
+		for (ScQtCheckList scQtCheckList : this.getManagedBean().getFinChecklistPreview()) {
+			if (!scQtCheckList.isSelected()) {
+				this.getManagedBean().setSelectAllFinPreview(false);
+				return;
+			}
+		}
+		this.getManagedBean().setSelectAllFinPreview(true);
 	}
 
 	// #10141 End Vinod
@@ -23987,10 +23980,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		for (ScQtCheckList scQtCheckList : scQtChecklistListLocal) {
 			Long checklistStatus = scQtCheckList.getPmStatus().getStatusId();
-			if(checklistStatus.equals(QTStatusConst.TS_PENDING_SUBMISSION)){
+			if (scQtCheckList.isSelected() && checklistStatus.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
 				return;
-			}
-			if (scQtCheckList.isSelected()) {
+			} else if (scQtCheckList.isSelected() && checklistStatus.equals(QTStatusConst.TS_COMPLETED)) {
 				selectedCount++;
 			}
 		}
@@ -24031,7 +24023,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String reportName = ReportConst.SC_PVW_TECH_CHECKLIST_SUMMARY_JSP;
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
-				.getTechChecklistPreview(), true);
+				.getScQtCheckSt2techProposal(), true);
 	}
 
 	// #10141 End Vinod
@@ -24097,7 +24089,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String reportName = ReportConst.SC_PVW_FIN_CHECKLIST_SUMMARY_JSP;
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
-				.getFinChecklistPreview(), true);
+				.getScQtCheckSt2financeProposalList(), true);
 	}
 
 	// #10141 End Vinod

@@ -1916,10 +1916,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<String, String> committeeMembersTypeMap; 
 	//12471 - end
 
-	//#29732
+	//#29732 start
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
-
+	private boolean updateCatDesc; 
+	private boolean updateCatInPm; 
+	private boolean resetHistoryCatCode;
+	//#29732 end
 	private boolean isSampleShowHide;// 11104wip
 
 	// 25791-start
@@ -1953,9 +1956,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean auditViewRole;
 	//#28895 - 35500 end
-	private boolean updateCatDesc; //#29732
-	private boolean updateCatInPm; //#29732
-
 	private boolean zoneQtyHasZeroVal;//#38679
 	
 	//#35320 - Start
@@ -12461,6 +12461,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setUpdateCatInPm(boolean updateCatInPm) {
 		this.updateCatInPm = updateCatInPm;
+	}
+	
+	public boolean getResetHistoryCatCode() {
+		return resetHistoryCatCode;
+	}
+
+	public void setResetHistoryCatCode(boolean resetHistoryCatCode) {
+		this.resetHistoryCatCode = resetHistoryCatCode;
 	}
 	//#29732
 	

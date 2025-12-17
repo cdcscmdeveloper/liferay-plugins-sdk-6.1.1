@@ -889,20 +889,29 @@ public class SupplierFinalizationMeetingBackingBean extends
 			List<ScCommitteeMember> localList=new ArrayList<ScCommitteeMember>();
 			List<ScCommitteeMember> newCommitteeMember = this.getManagedBean().getNewCommitteeAuditTrailList() != null
 					? this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>() ;//28895-35500
+			List<ScCommitteeMember> deletedCommitteeMember = this.getManagedBean().getRemoveCommitteeAuditTrailList() != null ? this
+					.getManagedBean().getRemoveCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();//#35500 Fix Reopen 27th Nov
 			
 			if (CollectionUtils.isNotEmpty(currentCommitteeMemList)) {
 				
 				for(ScCommitteeMember committeemember:currentCommitteeMemList){
 					if(committeemember.isSelected()){
 						localList.add(committeemember);
-						newCommitteeMember.remove(committeemember);//28895-35500
+						if (CollectionUtils.isNotEmpty(deletedCommitteeMember) && !deletedCommitteeMember.contains(committeemember)){//#35500 Fix Reopen 27th Nov
+							deletedCommitteeMember.add(committeemember);
+						}else if (CollectionUtils.isEmpty(deletedCommitteeMember)) {
+							deletedCommitteeMember.add(committeemember);
+						}
+						if (!(newCommitteeMember == null || newCommitteeMember.isEmpty())) {
+							newCommitteeMember.remove(committeemember);
+						}
 					}				
 				}
 				if(CollectionUtils.isNotEmpty(localList)){
 				
 				currentCommitteeMemList.removeAll(localList);
 				//28895-35500 Start
-				this.getManagedBean().setRemoveCommitteeAuditTrailList(localList);
+				this.getManagedBean().setRemoveCommitteeAuditTrailList(deletedCommitteeMember);
 				this.getManagedBean().setNewCommitteeAuditTrailList(newCommitteeMember);
 				//28895-35500 End
 				}
@@ -1558,12 +1567,14 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			renewSessionAndRetrieve();
 			
-			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
-								ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
-			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
+			//#35320 - Start
+			String committeeType = this.getManagedBean().getCommitteeType();			
+			String variable2 = getMessageCommon(getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
+			
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{variable1, variable2}, 
-						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{getManagedBean().getScQt().getQtNo(), variable2}, 
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 	
+			//#35320 - Start 				  
 		} finally {
 			qtMeetingSO = null;
 		}
@@ -2374,7 +2385,9 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
+					this.getManagedBean().getCurrentStatusId() : 
+					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
@@ -2420,7 +2433,9 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
+					this.getManagedBean().getCurrentStatusId() : 
+					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
