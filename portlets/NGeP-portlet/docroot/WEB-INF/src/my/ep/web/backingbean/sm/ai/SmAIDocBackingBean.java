@@ -90,7 +90,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private String docType;
 	private SmAppl smAppl;
 	
-	private static final String tempGoogleUrl = "http://192.168.62.17:5000/process";
+	private static final String TEMP_GOOGLE_URL = "http://192.168.62.17:5000/process";
 	//172.23.114.72, 192.168.62.17 (dev)"
 	
 	private SmAppl testAppl;
@@ -231,7 +231,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				processEPF(jsonWrappers, appl);
 				
 			} else if (TYPE_TENANCY.equals(docType) && !hasError){
-				processTenancyAgreement(jsonWrappers);
+				processTenancyAgreement(jsonWrappers, appl);
 				
 			} else {
 				processBank(jsonWrappers);
@@ -617,9 +617,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	/**
 	 * @param entities
-	 * @param docType
+	 * @param appl
 	 */
-	public void processTenancyAgreement(List<JsonWrapper> entities){
+	public void processTenancyAgreement(List<JsonWrapper> entities, SmAppl appl){
 		if (EntityHelper.isCollectionEmpty(entities)){
 			return;
 		}
@@ -628,6 +628,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			TenancyEntity te = new TenancyEntity(entityWrapper.entities);
 			tes.add(te);
 			tenancy = te;
+		}
+		if (tenancy == null){
+			return;
+		}
+		String companyName = "";
+		if (appl != null && appl.getSmSupplier() != null){
+			companyName = appl.getSmSupplier().getCompanyName();
+		}
+		double score = fuzzyMatchJaroWinkler(companyName, tenancy.tenantsName);
+		if (score < MIN_FUZZY_SCORE){
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+					"The company name in your Tenancy Agreement(s) does not match with the registered Business/Company Name" +
+					" in Company Information section.");
+			FacesContext.getCurrentInstance().addMessage("ai", msg);
 		}
 	}
 
@@ -802,7 +816,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			throws IOException {
 		
 		if (StringUtils.isEmpty(googleUrl)) {
-			googleUrl = tempGoogleUrl;
+			googleUrl = TEMP_GOOGLE_URL;
 		}
 		log.info("use google url: " + googleUrl);
 		
@@ -1313,6 +1327,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 */
 	public static class TenancyEntity {
 		private String landlordsName;
+		private String tenantsName;
 		private BigDecimal monthlyRental;
 		private String premisesAddress;
 		private String postcode;
@@ -1345,6 +1360,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					switch (type) {
 					case "landlords_name":
 						this.landlordsName = value;
+						break;
+					case "tenants_name":
+						this.tenantsName = value;
 						break;
 					case "monthly_rental":
 						this.monthlyRental = new BigDecimal(value);
@@ -1381,15 +1399,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
          * @return the truncated address
          */
 		private String truncateAddressAtPostcode(String addr, String postcode) {
+			this.addr2 = "";
 			if (StringUtils.isEmpty(addr) || StringUtils.isEmpty(postcode)) {
 				this.addr1 = addr;
-				this.addr2 = "";
 				return addr;
     		}
 			int postcodeIndex = addr.indexOf(postcode);
 			if (postcodeIndex == -1) {
 				this.addr1 = addr;
-				this.addr2 = "";
 				return addr;
 			}
 			String truncated = addr.substring(0, postcodeIndex).trim();
@@ -1398,16 +1415,19 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			int firstComma = result.indexOf(',');
 			if (firstComma != -1) {
 				this.addr1 = result.substring(0, firstComma);
-				this.addr2 = result.substring(firstComma + 1);
+				this.addr2 = result.substring(firstComma + 1).trim();
 			} else {
 				this.addr1 = result;
-				this.addr2 = "";
 			}
 			return result;
         }
 
 		public String getLandlordsName(){
 			return this.landlordsName;
+		}
+		
+		public String getTenantsName(){
+			return this.tenantsName;
 		}
 		
 		public BigDecimal getMonthlyRental(){
