@@ -200,12 +200,6 @@
 								<p:ajax partialSubmit="true" process="@this" />
 							</p:inputText>
 								
-								<ac:smFieldChangeAlert 
-									isShow="#{backingBean.managedBean.showFieldChanges}"
-									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}" 
-									currValue="#{backingBean.managedBean.basicCompanyFacility.ownerName}" 
-									alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
-									
 								<!-- #38890 -->
 								<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'
 									and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}">
@@ -219,6 +213,12 @@
 								</p:outputPanel>
 								<!-- #38890 - end -->
 								
+								<ac:smFieldChangeAlert 
+									isShow="#{backingBean.managedBean.showFieldChanges}"
+									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}" 
+									currValue="#{backingBean.managedBean.basicCompanyFacility.ownerName}" 
+									alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
+									
 								<p:message id="fcltyOwnerNameMsg"
 								for="fcltyOwnerName" showSummary="true" showDetail="false"
 								display="icon" /></td>
