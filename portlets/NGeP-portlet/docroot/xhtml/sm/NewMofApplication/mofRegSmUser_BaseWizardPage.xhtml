@@ -106,7 +106,8 @@
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 1}"
 											styleClass="#{backingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}">
 											<f:param name="disableValidation" value="true" />
-										</p:commandLink></li>
+										</p:commandLink>
+									</li>
 
 									<li><h:outputText
 											value="#{lbl['lbl.sm.wizard.personStepLbl']}"
@@ -287,6 +288,7 @@
 													<f:param name="disableValidation" value="true" />
 												</p:commandLink></li>
 											<!-- #39097 & #34159 - End -->
+
 										</c:otherwise>
 									</c:choose>
 
