@@ -700,11 +700,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			} else {
 				//#27551 - add null checking
-				if (ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-						getRequestNote() != null &&
-						ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-						getRequestNote().getRequestNoteDtls().get(0).getProcurementType().getParameterType().equalsIgnoreCase(
-						ParameterTypeConst.PROCUREMENT_TYPE) && ctBB.newJustification()!= null) {
+				if (ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null
+						&& (ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem()
+								.getRequestNote().getRequestNoteDtls().get(0).getProcurementType().getParameterType()
+								.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE) || ctBB.getManagedBean()
+								.getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote()
+								.getRequestNoteDtls().get(0).getProcurementType().getParameterType()
+								.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) //Fix - #30045
+						&& ctBB.newJustification() != null) {
 					ctBB.getManagedBean().setNewPk7(true);
 				} else {
 					ctBB.getManagedBean().setNewPk7(false);
