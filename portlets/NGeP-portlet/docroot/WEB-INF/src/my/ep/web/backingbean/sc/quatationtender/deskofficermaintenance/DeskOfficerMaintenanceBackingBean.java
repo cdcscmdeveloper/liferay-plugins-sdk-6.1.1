@@ -1372,7 +1372,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				IAuditTrailSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 				if ((BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome))
-						&& auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {//#35500 Fix Reopen 10th Dec for the fixes
+						&& auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {//#35500 Fix Reopen 12th Dec
 					prepareAuditTrailDeskOfficer(qtAuditTrailSO,outcome);
 				}
 				//#28895-35500 end
