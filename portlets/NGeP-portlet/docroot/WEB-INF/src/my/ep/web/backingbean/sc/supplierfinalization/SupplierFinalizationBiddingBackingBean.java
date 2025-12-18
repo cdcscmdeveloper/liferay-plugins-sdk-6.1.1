@@ -3503,6 +3503,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		Map<Long, ScQtRecommend> recommendMap = new HashMap<>();
 		Map<Long, Boolean> identifierMap = new HashMap<>();
 		boolean isItemized = this.getManagedBean().isItemized();
+		boolean isBranchDeleted = false;
 
 		for (ScQtRecommend recommend : recommendedItems) {
 			Long recommendId = recommend.getQtRecommendId();
@@ -3518,14 +3519,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 				if (checkFlagIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId)
 						&& identifierMap.containsKey(recommendId)) {
 					identifierMap.put(recommendId, true);
+					isBranchDeleted = true;
 				}
 			}
 		}
 
 		if (isItemized) {
-			validationItemizedSupplier(recommendMap, identifierMap, scQt);
+			validationItemizedSupplier(recommendMap, identifierMap, scQt, isBranchDeleted);
 		} else {
-			validationPackageSupplier(recommendMap, identifierMap, scQt);
+			validationPackageSupplier(recommendMap, identifierMap, scQt, isBranchDeleted);
 		}
 	}
 
@@ -3550,7 +3552,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 					specZoneId);
 			for (Long qualifiedZoneSupplier : qualifiedZoneSupplierList) {
 				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
-						qualifiedZoneSupplier) || checkBiddingSupplierDeactivated(scQt.getQtId())) {
+						qualifiedZoneSupplier) || checkDetailIdentifierForSupplierDeactivated(recommendDtl, scQt, supplierId,
+								qualifiedZoneSupplier)) {
 					return true;
 				}
 			}
@@ -3560,7 +3563,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 			List<Long> qualifiedSupplierList = retrieveSuppliersIdsByQtId(true, scQt.getQtId());
 			for (Long qualifiedSupplier : qualifiedSupplierList) {
 				if (checkDetailIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId,
-						qualifiedSupplier) || checkBiddingSupplierDeactivated(scQt.getQtId())) {
+						qualifiedSupplier) || checkDetailIdentifierForSupplierDeactivated(recommendDtl, scQt, supplierId,
+								qualifiedSupplier)) {
 					return true;
 				}
 			}
@@ -3569,6 +3573,28 @@ public class SupplierFinalizationBiddingBackingBean extends
 		return false;
 	}
 	
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check detail identifier if have supplier deactivated
+	 * 
+	 * @param recommendDtl
+	 * @param scQt
+	 * @param supplierId
+	 * @param qualifiedSupplier
+	 * 
+	 **/
+	private Boolean checkDetailIdentifierForSupplierDeactivated(ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId, Long qualifiedSupplier) {
+		int recordStatusFlg = recommendDtl.getRecordStatusFlg().intValue();
+
+		if (checkBiddingSupplierDeactivated(scQt.getQtId())
+				&& recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE && qualifiedSupplier.equals(supplierId)) {
+			return true;
+		}
+		return false;
+	}
+
 	// #28777 & #29729 - End
 	
 	// #28777 & #29729 - Start
@@ -3648,7 +3674,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * 
 	 **/
 	private void validationItemizedSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
-			ScQt scQt) {
+			ScQt scQt, boolean isBranchDeleted) {
 
 		boolean foundFalse = false;
 		Long falseKey = null;
@@ -3661,7 +3687,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			}
 		}
 
-		if (foundFalse) {
+		if (foundFalse && isBranchDeleted) {
 			ScQtRecommend recommend = recommendMap.get(falseKey);
 			if (scQt.isZonal()) {
 				throw new EpException(MessageConst.ERROR_760623, new String[] {
@@ -3685,10 +3711,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * 
 	 **/
 	private void validationPackageSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
-			ScQt scQt) {
+			ScQt scQt, boolean isBranchDeleted) {
 
 		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
-			if (!entry.getValue()) {
+			if (!entry.getValue() && isBranchDeleted) {
 				ScQtRecommend recommend = recommendMap.get(entry.getKey());
 				if (scQt.isZonal()) {
 					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()

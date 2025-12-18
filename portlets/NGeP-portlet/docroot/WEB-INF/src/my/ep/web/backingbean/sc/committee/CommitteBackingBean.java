@@ -2819,11 +2819,7 @@ public class CommitteBackingBean extends
 
 				boolean isScQtCommitteeExist = isScQtCommiteeExist(newCommittee);
 
-				if (isScQtCommitteeExist) {
-					displayCommittee = createNewCommittee(newCommittee, reqDto);
-				} else {
-					displayCommittee = newCommittee;
-				}
+				displayCommittee = getDisplayCommittee(isScQtCommitteeExist, newCommittee, reqDto);
 
 				this.getManagedBean().setCommitteMap(committeeMap);
 				int activeIndex;
@@ -2841,16 +2837,22 @@ public class CommitteBackingBean extends
 
 			CommitteResDTO resDto = this.getCommitteeSO()
 					.getCommitteeMergedHistory(reqDto);
-			List<ScCommitteeMemberHistory> histories = resDto
-					.getMemberHistory();
-			List<ScCommitteeMember> latestCommittee = resDto.getMemberList();
-			Collections.sort(latestCommittee, new MemberRoleComparator());
-			ScCommittee scCommittee = resDto.getCommittee();
+			List<ScCommitteeMemberHistory> histories = new ArrayList<>();
+			if (null != resDto.getMemberHistory()) {
+				histories = resDto.getMemberHistory();
+			}
 
+			List<ScCommitteeMember> latestCommittee = resDto.getMemberList();
+			if (null != latestCommittee) {
+				Collections.sort(latestCommittee, new MemberRoleComparator());
+			}
+
+			ScCommittee scCommittee = resDto.getCommittee();
 			ScCommitteeMember loggedInMember = getSecretaryMember(latestCommittee);
 			this.getManagedBean().setCommitteMember(loggedInMember);
-
-			retriveUserDetails(loggedInUserId);
+			if (null != getManagedBean().getCommitteMember()) {
+				retriveUserDetails(loggedInUserId);
+			}
 
 			Paginator historyPaginator = new Paginator(histories);
 			List<?> historyModel = historyPaginator.getModel();
@@ -2868,30 +2870,15 @@ public class CommitteBackingBean extends
 							.getCommitteeType().getParameterCode() : null);
 			this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 			this.getManagedBean().setLatestMembers(latestCommittee);
-			this.getManagedBean().setHeaderTitle(
-					ParameterHelper.getInstance().getParameterDesc(
-							ParameterTypeConst.SC_COMMITTEE_TYPE,
-							scCommittee.getCommitteeType().getParameterCode()));
 
+			setHeaderTitle(scCommittee);
 			onSelectCommitteeHistory();
 		} catch (Exception ex) {
 			SLAUtils.getInstance().logSLAError(
 					ModuleCodeConst.SUPPLIER_SELECTION, null, null,
 					"CommitteBackingBean.getTabInfo", null, ex);
 		}
-
-		FacesContext fc = FacesContext.getCurrentInstance();
-		if (!getManagedBean().isRefreshFCMaintenancePage()) {
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(
-							fc,
-							null,
-							NAV_TO_COMMITTEE_MAINTENANCE
-									+ "?faces-redirect=true");
-		} else {
-			getManagedBean().setRefreshFCMaintenancePage(Boolean.FALSE);
-		}
+		getTheEndTabProcess();
 	}
 	// #35320 - END
 
@@ -3295,7 +3282,7 @@ public class CommitteBackingBean extends
 	public void onSelectCommitteeHistory() throws IOException {
 		ScCommitteeMemberHistory history = this.getManagedBean()
 				.getSelectedCommitteeHistory();
-		List<QtCommitteeMemberBean> list = null;
+		List<QtCommitteeMemberBean> list;
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 
 		if (null != history) {
@@ -3307,14 +3294,54 @@ public class CommitteBackingBean extends
 					.setMemberHistoryPaginator(new Paginator(list));
 			reqDTO.setScCommitteeId(history.getScCommittee().getCommitteeId());
 		} else {
-			reqDTO.setScCommitteeId(this.getManagedBean().getScCommittee()
-					.getCommitteeId());
+			if (null != this.getManagedBean().getScCommittee()) {
+				reqDTO.setScCommitteeId(this.getManagedBean().getScCommittee()
+						.getCommitteeId());
+			}
 		}
 
-		CommitteResDTO resDTO = this.getCommitteeSO()
-				.retrieveCommitteDtlByCommitteeId(reqDTO);
-		if (null != history) {
-			history.setScCommittee(resDTO.getCommittee());
+		if (null != reqDTO.getScCommitteeId()) {
+			CommitteResDTO resDTO = this.getCommitteeSO()
+					.retrieveCommitteDtlByCommitteeId(reqDTO);
+			if (null != history) {
+				history.setScCommittee(resDTO.getCommittee());
+			}
+		}
+	}
+	// #35320 - END
+	
+	// #35320 - START
+	private ScCommittee getDisplayCommittee(boolean isScQtCommitteeExist, ScCommittee newCommittee, CommitteReqDTO reqDto){
+		ScCommittee displayCommittee;
+		if (isScQtCommitteeExist) {
+			displayCommittee = createNewCommittee(newCommittee, reqDto);
+		} else {
+			displayCommittee = newCommittee;
+		}
+		return displayCommittee;
+	}
+	// #35320 - END
+	
+	// #35320 - START
+	private void setHeaderTitle(ScCommittee scCommittee){
+		if (null != scCommittee) {
+			this.getManagedBean().setHeaderTitle(
+					ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
+							scCommittee.getCommitteeType().getParameterCode()));
+		} else {
+			this.getManagedBean().setHeaderTitle("");
+		}
+	}
+	// #35320 - END
+	
+	// #35320 - START
+	private void getTheEndTabProcess(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if (!getManagedBean().isRefreshFCMaintenancePage()) {
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, NAV_TO_COMMITTEE_MAINTENANCE + "?faces-redirect=true");
+		} else {
+			getManagedBean().setRefreshFCMaintenancePage(Boolean.FALSE);
 		}
 	}
 	// #35320 - END
