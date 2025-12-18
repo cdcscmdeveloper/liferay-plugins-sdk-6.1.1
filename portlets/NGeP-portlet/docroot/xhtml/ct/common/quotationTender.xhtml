@@ -93,8 +93,8 @@
 						              ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode != ParameterConst.contractTypeCentral)}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.qt.tender.type']}" />
 							</td>
-							<td><p:inputText style="width:210px;" disabled="true"
-									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.qtType)}" />
+							<td><p:inputTextarea autoResize="false" maxlength="1000" rows="2" style="width:210px;" disabled="true"
+									value="#{ctBackingBean.getParameterDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.qtType)}" /> <!-- #30045 -->
 							</td>
 						</h:panelGroup>					
 						<td><p:outputLabel value="#{lbl['lbl.ct.pub.date']}"
@@ -115,8 +115,8 @@
 							and ctBackingBean.newProcurement()!= null }">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.type']}" />
 							</td>
-							<td><p:inputText style="width:170px;" disabled="true"
-							value="#{ctBackingBean.newProcurement()}" />			
+							<td><p:inputTextarea autoResize="false" maxlength="1000" rows="2" style="width:170px;" disabled="true"
+							value="#{ctBackingBean.newProcurement()}" /> <!-- #30045 -->			
 							</td>
 						</h:panelGroup>	
 					</tr>			
