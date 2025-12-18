@@ -77,14 +77,16 @@
 					<c:if test='#{receivedNoteBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
 					<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 						<ui:define name="outComeSection">
+							<ui:remove>#30753 start</ui:remove>
 							<ui:repeat 
 							var="bpmAction"
 							value="#{receivedNoteBackingBean.managedBean.outComes}">
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form" styleClass="ui-button" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{receivedNoteBackingBean.gpkiSignAction(bpmAction)}"/>
+							action="#{receivedNoteBackingBean.checkLimitBeforeSubmit(bpmAction)}"/>
 							</ui:repeat>
+							<ui:remove>#30753 end</ui:remove>
 						</ui:define>
 					</ui:decorate>
 					</c:if>
@@ -184,6 +186,22 @@
 					onclick="cancelConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>	
+		<ui:remove>#30753 start</ui:remove>
+		<p:confirmDialog
+			message="#{receivedNoteBackingBean.managedBean.limitExceededMessage}"
+			severity="alert" widgetVar="limitConfirmDlg" closable="true"
+			header="#{lbl['lbl.frn.amount.exceeded.threshold']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
+					action="#{receivedNoteBackingBean.gpkiSignAction(receivedNoteBackingBean.managedBean.buttonAction)}"
+					onstart="limitConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="limitConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<ui:remove>#30753 start</ui:remove>
 		<!--#26279 Start-->
 		<ac:disciplinaryActionHistory voList="#{receivedNoteBackingBean.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />

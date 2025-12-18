@@ -147,6 +147,12 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private String originalSupplierDoRef;
 	//#35508 end
 	private String backToNtf;//36519
+	
+	// 30753-Start
+	private boolean showLimitExceededDialog;
+	private String limitExceededMessage;
+
+	// 30753-end
 
 	/**
 	 * Gets the item selected for cal.
@@ -1393,5 +1399,23 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.backToNtf = backToNtf;
 	}
 	// 36519-End
+	
+	// 30753-Start
+	public boolean isShowLimitExceededDialog() {
+		return showLimitExceededDialog;
+	}
+
+	public void setShowLimitExceededDialog(boolean showLimitExceededDialog) {
+		this.showLimitExceededDialog = showLimitExceededDialog;
+	}
+
+	public String getLimitExceededMessage() {
+		return limitExceededMessage;
+	}
+
+	public void setLimitExceededMessage(String limitExceededMessage) {
+		this.limitExceededMessage = limitExceededMessage;
+	}
+	// 30753-end
 
 }

@@ -50,6 +50,7 @@ import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.bean.application.NgepApplicationBean; //#27868
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -207,6 +208,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.ReasonCategory; //#27868
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.CustomUtils;
@@ -216,6 +218,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.sc.DisciplinaryActionUtils;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -224,6 +227,7 @@ import my.ep.web.bean.sc.common.ZonesBean;	// Bug #36730@Syazani 07/01/2025
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.DPConstants; //#27868
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
@@ -3169,19 +3173,40 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	/**
 	 * Gets the procurement type tool tip.
-	 *
+	 * 
+	 * @param date
 	 * @return the procurement type tool tip
 	 */
-	public String getProcurementTypeToolTip(){
+	public String getProcurementTypeToolTip(Date date) {
 		// MaxProcurementAmt
-		BigDecimal maxProcurementAmt = getPRThresholdAmount();
+		BigDecimal zeroAmt = new BigDecimal(0); //#27868
+		BigDecimal maxProcurementAmt = getToolTipsPRThresholdAmount(); //#27868
 		DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
 				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
-		String message = ResourceBundleUtils.getMessage(
-				"lbl.sc.procurementtype.tooltip", new String[] {amountDF.format(maxProcurementAmt)}, 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale());
+		// 27868 - start
+		String parameterType = validateProcurementTypeisRPT(date);
+		String message;
+		if (parameterType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) {
+			message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip.rpt", null,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			
+			if (zeroAmt.compareTo(maxProcurementAmt) > 0) {
+				String notAvailable = ResourceBundleUtils.getMessage("lbl.txt.na ",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+
+				message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip",
+						new String[] { notAvailable }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+			} else {
+				message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip",
+						new String[] { amountDF.format(maxProcurementAmt) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+			}
+		}
+
+		// 27868 - end
 		return message;
 	}
 	
@@ -3817,13 +3842,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-				//Bug #39043 start
+				//Bug #39043 #39512 start
 				if (null != suppAns.getSupplierId()
 						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   
-						//&& null != tplSpecAnswer.getAnswerRemark()){ Bug #39043 end				
-					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+					String remark = tplSpecAnswer.getAnswerRemark();
+					answerRemarkList.add(remark != null ? remark : SSTConstant.TB);
 					break;
 				}
+				//Bug #39043 #39512 end
 			}
 		}
 	}
@@ -3971,7 +3997,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 				        if (tempRemark == null) {
 				            tempRemark = SSTConstant.TB;
-				        } //else { Bug #39043
+				        } //else { Bug #39043 #39512
 				            if (tempSpecZoneQty > 0) {
 				            	//[Start] - #36326- Sqube DP Code Smell Major G100
 				            	if (tempRemarkIndex >= tempSpecZoneQty && (indexRemarkStore == 0 || tempRemarkIndex > indexRemarkStore)) {
@@ -3988,7 +4014,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				                }
 				            }
 				            tempRemarkIndex++;
-				        //} Bug #39043
+				        //} Bug #39043 #39512
 
 				        if (shouldBreak) {
 				            break;
@@ -5316,8 +5342,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							List<ScQtFinalizationReport> erList = new ArrayList<>();
 							getManagedBean().setEvaluationReportList(erList);
 						}
+						boolean isDemoRequired = report.getTitle().equalsIgnoreCase(
+								SourcingConstants.DEMO_EVALUATION_REPORT)
+								&& !checkDemoWIP(scQt);//#28784
 						// 18685 - START.                                     //#28784
-						if (null != report.getPmDocument() || report.getTitle().equalsIgnoreCase(SourcingConstants.DEMO_EVALUATION_REPORT)) {
+						if (null != report.getPmDocument() || isDemoRequired) {
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
@@ -7499,40 +7528,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	// 26247 - start
 	/**
 	 * Evaluate if qt is disabled for futher action for non/disciplinary action scenario
-	 * @param scQt
 	 * @param supplier
 	 * @return
 	 */
 	public boolean disabledQTProcess(SmSupplier supplier) {
-		if (null == supplier || null == supplier.getScQt()) {
-			return false;
-		}
-		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
-		boolean isDirectDiciplinaryAction = false;
-		if (CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
-			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
-			isDirectDiciplinaryAction = Arrays.asList(disciplinaryAction.isBlacklistOwner(),
-					disciplinaryAction.isCancelRegistration(), disciplinaryAction.isSuspendRegistration()).contains(
-					true);
-		}
-		
-		boolean isDisciplinaryAction = isDirectDiciplinaryAction && supplier.isDisciplinaryActions() && !supplier.isWarningDA();
-		boolean isCancelledOrBlacklisted = viewSuppProfileBean.evaluateCancellationBlacklist(supplier);
-		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
-		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
-				&& !supplier.isBumi();
-
-		List<String> cancelledCategoryCodes = new ArrayList<>();
-		cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
-		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
-		boolean hasCancelledCategories = CollectionUtils.isNotEmpty(cancelledCategoryCodes);
-
-		boolean isSuspendRegistration = viewSuppProfileBean.evaluateSuspendRegistration(supplier);
-
-		return Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction,
-				isSuspendRegistration).contains(true)
-				|| !Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_EXPIRED).contains(
-						mofRecordStatus);
+		return DisciplinaryActionUtils.disabledQTProcess(supplier);
 	}
 	// 26247 - end
 	// #33787 Start Vinod
@@ -7554,8 +7554,139 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	// #33787 End Vinod
+	// 27868 - start
 
+	/**
+	 * Determines whether a procurement type is RPT or standard based on creation date.
+	 *
+	 * @param dataCreatedDate the creation date of the record
+	 * @return RPT type if after effective date; otherwise, standard procurement type
+	 */
+	public static String validateProcurementTypeisRPT(Date dataCreatedDate) {
+		// call from pm app version check current date
+		Date datefromPmAppVersion = NgepApplicationBean.getRPTEffectiveDateForDP();
+		if (dataCreatedDate.after(datefromPmAppVersion)) {
+			return ParameterTypeConst.PROCUREMENT_TYPE_RPT;
+		} else {
+			return ParameterTypeConst.PROCUREMENT_TYPE;
+		}
+	}
+		
+	/**
+	 * Get purchase request threshold amount for tool tips
+	 * 
+	 * @return the purchase request threshold amount for tool tips
+	 */
+	protected BigDecimal getToolTipsPRThresholdAmount() {
+		BigDecimal maxProcurementAmt = BigDecimal.ZERO;
 
+		IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IRuleSO.class);
+
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
+		RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+
+		if (ruleResDTO.isSuccessful()) {
+			if (ruleResDTO.getRuleValueList() != null && !ruleResDTO.getRuleValueList().isEmpty()) {
+				maxProcurementAmt = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
+			} else {
+				maxProcurementAmt = BigDecimal.valueOf(-1);
+			}
+		}
+
+		return maxProcurementAmt;
+	}
+		
+	/**
+	 * Displays info message for PK7 or Special Item procurement types.
+	 *
+	 * @param param the procurement parameter to evaluate and display related messages
+	 */
+	public void getSpecialItemAndPK7InfoMessage(PmParameter param) {
+		String parameterCode = StringUtils.EMPTY;
+		String parameterType = StringUtils.EMPTY;
+
+		if (param.getParameterCode() != null) {
+			parameterCode = param.getParameterCode();
+		}
+
+		if (param.getParameterType() != null) {
+			parameterType = param.getParameterType();
+		}
+
+		if (param.getParameterType() != null
+				&& param.getParameterType().equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) {
+			if (param.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_760441,
+								new String[] { getParameterDesc(parameterType, parameterCode) },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+			}
+			if (parameterCode.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_760442, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+		} else if ((param.getParameterType() != null && param.getParameterType().equalsIgnoreCase(
+				ParameterTypeConst.PROCUREMENT_TYPE))
+				&& parameterCode.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_760441, new String[] { getParameterDesc(parameterType, parameterCode) },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+	}
+
+	/**
+	 * Returns the PK7 justification code based on procurement type.
+	 *
+	 * @param dataCreatedDate the date used to determine procurement type
+	 * @return justification code for PK7 or PK7W based on type
+	 */
+	public String getParameterCodeForPK7(Date dataCreatedDate) {
+		String parameterType = validateProcurementTypeisRPT(dataCreatedDate);
+		if (parameterType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) {
+			return ReasonCategory.JUSTIFICATION_PK7W.value();
+		} else {
+			return ReasonCategory.JUSTIFICATION_PK7.value();
+		}
+	}
+
+	/**
+	 * Identifies supplier account type parameter code based on supplier account category.
+	 *
+	 * @param suppAccType supplier account type string (e.g., consultant, contractor, basic, G2G)
+	 * @return corresponding parameter code; empty string if type is blank or unknown
+	 */
+	public String identifySupplierAccTypeFromSmAppl(String suppAccType) {
+		if (StringUtils.isBlank(suppAccType)) {
+			return StringUtils.EMPTY;
+		}
+
+		// Normalize input to ignore case
+		if (suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_CONSULTANT)
+				|| suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_CONTRACTOR)) {
+			return DPConstants.PARAMETER_CODE_MOF_ACCOUNT;
+		} else if (suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_BASIC)) {
+			return DPConstants.PARAMETER_CODE_BASIC_ACCOUNT;
+		} else if (suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_G2G)
+				|| suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_GOVT_SELLER)) {
+			return DPConstants.PARAMETER_CODE_G2G_ACCOUNT;
+		}
+
+		return StringUtils.EMPTY;
+	}
+
+	// 27868 - end
 	// 29661 -start-
 	/**
 	 * set all details to requDTO.
@@ -8155,5 +8286,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 29661 -end-
-
+	
+	//#28784 - Start
+	private boolean checkDemoWIP(ScQt scQt) {
+		try {
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			return evaluationSO.checkDemoWip(reqDTO);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkDemoWIP",
+					scQt.getQtNo(), "checkDemoWIP", getUserIdSessionFromLoginId(), e);
+		}
+		return true;
+	}
+	//#28784 - End
 }
