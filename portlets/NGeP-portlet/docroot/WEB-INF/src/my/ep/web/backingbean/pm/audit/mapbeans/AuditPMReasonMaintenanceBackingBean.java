@@ -735,7 +735,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, null, String.valueOf(reason.getPrThreshold()));
 		}
 
-		// if SIT handle agency
+		// if Special item
 		addAgency();
 				
 		setNewSupplAcctType(managedBeans.getAuditAddSupplAcctType());
