@@ -688,7 +688,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		getManagedBean().setEstimatedCost(estimatedCost);
 		
 		// #31101, #26247 -start-
-		// getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
+		getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
 		
 		/*
 		 * 31101 - Shafful 
@@ -987,11 +987,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 									.getQtEvaluationResult().getScQtProposal());
 							itemBean.setShortlistedSupplier(shortlistedSupplier);
 						}
-						/*
-						 * 31101, 26247 - Added Disciplinary Action Validation -start-
-						 */
-						if (smSupplier.getSupplierId().equals(awardedSupplierId) && !itemBean.getSupplier().isDisciplinaryActions()) {
-							// 31101, 26247 -end-
+						// 26247, 31101 - start
+						SmSupplier supplier = itemBean.getSupplier();
+						if (smSupplier.getSupplierId().equals(awardedSupplierId) && !this.disabledQTProcess(supplier)) {
+						// 26247, 31101 - end
+
 							getManagedBean().setSelectedBidItemBean(itemBean);
 							selectedItemBeans.put(bidItem.getBidItemId(), itemBean);
 						}
