@@ -314,6 +314,13 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//29555 start
     private String preparedBy;
     //29555 end
+    
+	// #27476 start
+    private String reason;
+    private String justification;
+    private boolean isPRExceedThreshold;
+    private List<String> itemNameExceedThresholdList;
+	// #27476 end
 
 /**
  * Gets the charge line item root.
@@ -3426,5 +3433,61 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.preparedBy = preparedBy;
 	}
 	// 29555-End
+
+	/**
+	 * @return the reason
+	 */
+	public String getReason() {
+		return reason;
+	}
+
+	/**
+	 * @param reason the reason to set
+	 */
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	/**
+	 * @return the justification
+	 */
+	public String getJustification() {
+		return justification;
+	}
+
+	/**
+	 * @param justification the justification to set
+	 */
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+
+	/**
+	 * @return the isPRExceedThreshold
+	 */
+	public boolean isPRExceedThreshold() {
+		return isPRExceedThreshold;
+	}
+
+	/**
+	 * @param isPRExceedThreshold the isPRExceedThreshold to set
+	 */
+	public void setPRExceedThreshold(boolean isPRExceedThreshold) {
+		this.isPRExceedThreshold = isPRExceedThreshold;
+	}
+
+	/**
+	 * @return the itemNameExceedThresholdList
+	 */
+	public List<String> getItemNameExceedThresholdList() {
+		return itemNameExceedThresholdList;
+	}
+
+	/**
+	 * @param itemNameExceedThresholdList the itemNameExceedThresholdList to set
+	 */
+	public void setItemNameExceedThresholdList(List<String> itemNameExceedThresholdList) {
+		this.itemNameExceedThresholdList = itemNameExceedThresholdList;
+	}
 
 }

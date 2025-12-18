@@ -71,19 +71,19 @@
 			
 			<c:if test="#{isZonal and isSpecTypeFinancial and evaluationBackingBean.managedBean.speczonedtlReq}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
-								rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+								rendered="#{!isWeightageNot35384WIP and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 				</h:outputText>
 			</c:if>
 			<c:if test="#{isZonal and isSpecTypeFinancial and !evaluationBackingBean.managedBean.speczonedtlReq}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecZoneQty.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
-								rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+								rendered="#{!isWeightageNot35384WIP and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 				</h:outputText>
 			</c:if>
 			<c:if test="#{!isZonal and isSpecTypeFinancial}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore* (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
-								rendered="#{tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
+								rendered="#{!isWeightageNot35384WIP and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 				</h:outputText>
 			</c:if>
@@ -124,7 +124,7 @@
 			<ui:remove>#29187 Start Vinod Added Compliance checking in disable and removed required</ui:remove>
 			<ui:remove>#35293 - Change the width size based on length maxvalue</ui:remove>
 			<p:inputText id="userScore" style="min-width:0px !important; text-align:right; width: #{empty tplSpecAnswer.tplSpecQuestion.maxScore ? 30 : ((tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString().length() * 8)}px;"
-				value="#{tplSpecAnswer.userScore}"
+				value="#{tplSpecAnswer.userScore * (isWeightageNot35384WIP ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 				maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
 				rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification)}"
@@ -159,20 +159,20 @@
 			<!-- #25138 - start -->
 			<c:if test="#{isZonal and isSpecTypeFinancial and evaluationBackingBean.managedBean.speczonedtlReq}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
-								rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+								rendered="#{!isWeightageNot35384WIP and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 				</h:outputText>
 			</c:if>
 			<c:if test="#{isZonal and isSpecTypeFinancial and !evaluationBackingBean.managedBean.speczonedtlReq}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecZoneQty.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
-								rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+								rendered="#{!isWeightageNot35384WIP and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 				</h:outputText>
 			</c:if>
 			<!-- #25138 - end -->
 			<c:if test="#{!isZonal and isSpecTypeFinancial}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
-								rendered="#{tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
+								rendered="#{!isWeightageNot35384WIP and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
 				</h:outputText>
 			</c:if>
