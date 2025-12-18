@@ -436,6 +436,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<SmSupplierBranch> supplierBranchList;
 	private List<ScQtEvaluationResultDtl> disqualifiedSupplierList;
 	private List<ScQtRecommend> disqualifiedRecommendList;
+	private boolean flagBranchDeleted = false;
 	// #28777 & #29729 - End
 
 	//#21692 - Start
@@ -2428,6 +2429,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setDisqualifiedRecommendList(List<ScQtRecommend> disqualifiedRecommendList) {
 		this.disqualifiedRecommendList = disqualifiedRecommendList;
 	}
+	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
+	}
 	//#28777 & #29729 - End
 	
 	//#30008 - Start
@@ -2596,4 +2605,5 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.weightage35384WIP = weightage35384WIP;
 	}
 	//#38151 - End
+
 }
