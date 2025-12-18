@@ -580,7 +580,7 @@
 		<p:panel header="#{lbl['lbl.sm.person.composition.listDtHdr']}"
 			toggleable="true" id="smPersonnelParentPan">
 			<!-- #38890 - start -->
-			<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" styleClass="ai-assistant-btn" onclick="epfAI.show()" immediate="true">
+			<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" styleClass="ai-assistant-btn" style="width: 150px;" onclick="epfAI.show()" immediate="true">
 				<p:ajax partialSubmit="true" process="@this" />
 			</p:commandButton>
 			<p:graphicImage id="ttepfAI" value="/css/images/design/tooltips.png" />
