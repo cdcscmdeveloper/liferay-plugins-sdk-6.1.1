@@ -735,10 +735,10 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, null, String.valueOf(reason.getPrThreshold()));
 		}
 
-		setNewSupplAcctType(managedBeans.getAuditAddSupplAcctType());
-
 		// if SIT handle agency
 		addAgency();
+				
+		setNewSupplAcctType(managedBeans.getAuditAddSupplAcctType());
 
 	}
 
@@ -796,7 +796,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 		this.docId = BigInteger.valueOf(existingReason.getReasonId());
 		DecimalFormat formatter = new DecimalFormat("#,##0.00");
-
+		
 		// handle null when compare dgn null value
 		if (existingReason.getDpThreshold() == null
 				&& !oldReason.getDpThreshold().equals(existingReason.getDpThreshold())) {
@@ -817,25 +817,25 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		if (existingReason.getPrThreshold() == null
 				&& !oldReason.getPrThreshold().equals(existingReason.getPrThreshold())) {
 			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE,
-					formatter.format(oldReason.getDpThreshold().setScale(2)), null);
+					formatter.format(oldReason.getPrThreshold().setScale(2)), null);
 		} else if (oldReason.getPrThreshold() == null
 				&& !existingReason.getPrThreshold().equals(oldReason.getPrThreshold())) {
 			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, null,
-					formatter.format(existingReason.getDpThreshold().setScale(2)));
-		} else if (existingReason.getDpThreshold() != null && oldReason.getDpThreshold() != null
-				&& !oldReason.getDpThreshold().equals(existingReason.getDpThreshold())) {
+					formatter.format(existingReason.getPrThreshold().setScale(2)));
+		} else if (existingReason.getPrThreshold() != null && oldReason.getPrThreshold() != null
+				&& !oldReason.getPrThreshold().equals(existingReason.getPrThreshold())) {
 			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE,
-					formatter.format(oldReason.getDpThreshold().setScale(2)),
-					formatter.format(existingReason.getDpThreshold().setScale(2)));
+					formatter.format(oldReason.getPrThreshold().setScale(2)),
+					formatter.format(existingReason.getPrThreshold().setScale(2)));
 		}
+		
+		// if Special item
+		addAgency();
+		deleteAgency();
 
 		setNewSupplAcctType(managedBeans.getAuditAddSupplAcctType());
 		updateSupplAcctType(managedBeans.getAuditUpdateSupplAcctType(), oldReason.getPmReasonRestr());
 		deleteSupplAcctType(managedBeans.getAuditDeleteSupplAcctType());
-
-		// if Special item
-		addAgency();
-		deleteAgency();
 
 	}
 
