@@ -133,26 +133,41 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/>	
 				</td>
 			</tr>
+			<ui:remove>#27476 start</ui:remove>
 			<tr>
-				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
-				<td><p:inputText size="25"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.financialYear}"
-						disabled="true" /></td>
+				<td colspan="2"><p:outputLabel
+						value="#{lbl['lbl.fl.pr.reason']}" /></td>
+				<td><p:inputTextarea rows="1" cols="27" readonly="true"
+						autoResize="false" style="margin-bottom:5px;"
+						value="#{purchaseRequestBackingBean.managedBean.reason == null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.managedBean.reason}"
+						disabled="true"></p:inputTextarea></td>
 			</tr>
-			<tr>
-				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
-				<td><p:inputText size="25" disabled="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.date']}"/>	
-				</td>
-			</tr>
+			<c:choose>
+				<c:when
+					test="#{purchaseRequestBackingBean.managedBean.justification != null}">
+					<td colspan="2"><p:outputLabel
+							value="#{lbl['lbl.fl.pr.justification']}" /></td>
+					<td><p:inputTextarea rows="1" cols="27" readonly="true"
+							autoResize="false" style="margin-bottom:5px;"
+							value="#{purchaseRequestBackingBean.managedBean.justification}"
+							disabled="true"></p:inputTextarea></td>
+				</c:when>
+				<c:otherwise>
+					<td colspan="2"></td>
+					<td></td>
+				</c:otherwise>
+			</c:choose>
+			<ui:remove>#27476 end</ui:remove>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
 				<td><p:inputText size="30" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory)}" /></td>
+				<ui:remove>#27476 start</ui:remove>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
+				<td><p:inputText size="25"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.financialYear}"
+						disabled="true" /></td>
+				<ui:remove>#27476 end</ui:remove>
 			</tr>
 			
 			<tr>
@@ -172,16 +187,31 @@
 							</ui:remove>
 						</tr>
 					</table></td>
-				<td colspan="2"><p:outputLabel rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}"
-						value="#{lbl['lbl.fl.submission.date']}" /></td>
-				<td>	
-				<p:inputText size="25" disabled="true" rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}"
-					value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate}">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}" rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}"/></td>
+				<ui:remove>#27476 start</ui:remove>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.date']}" />
+				</td>
+				<ui:remove>#27476 end</ui:remove>
 			</tr>
+			<ui:remove>#27476 start</ui:remove>
+			<tr>
+				<td colspan="4"><p:outputLabel
+						rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}"
+						value="#{lbl['lbl.fl.submission.date']}" /></td>
+				<td><p:inputText size="25" disabled="true"
+						rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText> <ac:iconTooltip
+						value="#{lbl['lbl.fl.tooltip.pr.submission.date']}"
+						rendered="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate != null}" /></td>
+			</tr>
+			<ui:remove>#27476 end</ui:remove>
 			<!--#17087 icon tooltip -->
 			<c:if test="#{purchaseRequestBackingBean.zonalTest ne '298'}">
 

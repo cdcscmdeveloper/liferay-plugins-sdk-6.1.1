@@ -5416,8 +5416,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} 
 		if (null != revisit.getUpdatedRvCatCodes() && !revisit.getUpdatedRvCatCodes().isEmpty()) { 
 			for (SmRvCatCode updatedRvCatCode : revisit.getUpdatedRvCatCodes()) {
-				remark.append("<br />");
 				updatedRvCatCodes(updatedRvCatCode, remark, index);
+				remark.append("<br />");
 				index++; 
 			} 
 		} 
