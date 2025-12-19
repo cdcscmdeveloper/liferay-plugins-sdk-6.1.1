@@ -5114,7 +5114,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm, ParameterConst.DELIVERY_TERM_MONTHS));
 		}
 	}
-
 	// 34555-End
 		
 	// #39192 - Start
