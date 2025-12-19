@@ -27,16 +27,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.bean.application.NgepApplicationBean; // #12177 Refactor
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -131,7 +121,6 @@ import my.ep.jaxb.fl.common.user.FLUserDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
-import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlActor;
@@ -163,7 +152,6 @@ import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.common.VPmDo;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
@@ -197,6 +185,16 @@ import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.FLSupplierItemVO;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Create Purchase Order.
@@ -4982,140 +4980,140 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	//12183 - End
 	
 	//29401-start
-		private void validateDeliveryAddress(String outcome) {
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				int checkDelAddr = 1;
-				IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
-				AddressReqDTO reqDTO = new AddressReqDTO();
-				for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
-					if(flDeliveryAddress.getPmAddressId()!=null){
-						reqDTO.setPmOrgProfile(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
-						reqDTO.setAddressId(flDeliveryAddress.getPmAddressId());
-						AddressResDTO resDTO = addressSO.ValidateDeliveryAddrByOrgProfileIdAndAddressID(reqDTO);
-						checkDelAddr = resDTO.getCheckDelAddr();
-			    		if(checkDelAddr==0){
-			    			throw new EpException(MessageConst.ERROR_740068);
-			    		}					
-					}
-					
+	private void validateDeliveryAddress(String outcome) {
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			int checkDelAddr = 1;
+			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+				if(flDeliveryAddress.getPmAddressId()!=null){
+					reqDTO.setPmOrgProfile(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
+					reqDTO.setAddressId(flDeliveryAddress.getPmAddressId());
+					AddressResDTO resDTO = addressSO.ValidateDeliveryAddrByOrgProfileIdAndAddressID(reqDTO);
+					checkDelAddr = resDTO.getCheckDelAddr();
+		    		if(checkDelAddr==0){
+		    			throw new EpException(MessageConst.ERROR_740068);
+		    		}					
 				}
+				
 			}
 		}
-		//29401-end
-		
-		//#28718 - Start
-		private boolean checkTriggeredNewPR() {
-			Long currentStatusId;
+	}
+	//29401-end
+	
+	//#28718 - Start
+	private boolean checkTriggeredNewPR() {
+		Long currentStatusId;
 
-			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
+		FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
 
-			currentStatusId = flFulfilmentRequest.getFlWorkflowStatus().getPmStatus().getStatusId();
+		currentStatusId = flFulfilmentRequest.getFlWorkflowStatus().getPmStatus().getStatusId();
 
-			if (currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
-					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
-					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
-					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
-					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)) {
+		if (currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)) {
 
-				boolean isVotSOrAmanahExist = false;
-				boolean isVotBOrTExist = false;
-				boolean isVotPExist = false;
+			boolean isVotSOrAmanahExist = false;
+			boolean isVotBOrTExist = false;
+			boolean isVotPExist = false;
 
-				String votFundType;
-				for (FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
-					for (FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()) {
-						if (itemAddress.getPmVotFund() != null) {
-							if (null == votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())) {
-								votFundType = itemAddress.getPmVotFund().getVotFundType();
-							} else {
-								votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())
-										.getVotFundType();
-							}
+			String votFundType;
+			for (FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+				for (FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()) {
+					if (itemAddress.getPmVotFund() != null) {
+						if (null == votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())) {
+							votFundType = itemAddress.getPmVotFund().getVotFundType();
+						} else {
+							votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())
+									.getVotFundType();
+						}
 
-							if (votFundType.equalsIgnoreCase(VotFundType.SETIA.value())
-									|| votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
-								isVotSOrAmanahExist = true;
-							} else if (votFundType.equalsIgnoreCase(VotFundType.BEKALAN.value())
-									|| votFundType.equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
-								isVotBOrTExist = true;
-							} else if (votFundType.equalsIgnoreCase(VotFundType.PEMBANGUNAN.value())) {
-								isVotPExist = true;
-							}
+						if (votFundType.equalsIgnoreCase(VotFundType.SETIA.value())
+								|| votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
+							isVotSOrAmanahExist = true;
+						} else if (votFundType.equalsIgnoreCase(VotFundType.BEKALAN.value())
+								|| votFundType.equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
+							isVotBOrTExist = true;
+						} else if (votFundType.equalsIgnoreCase(VotFundType.PEMBANGUNAN.value())) {
+							isVotPExist = true;
 						}
 					}
-					if((isVotSOrAmanahExist && isVotBOrTExist) || (isVotSOrAmanahExist && isVotPExist) 
-							|| (isVotBOrTExist && isVotPExist)){
-						return true;
-					}
+				}
+				if((isVotSOrAmanahExist && isVotBOrTExist) || (isVotSOrAmanahExist && isVotPExist) 
+						|| (isVotBOrTExist && isVotPExist)){
+					return true;
 				}
 			}
-			return false;
 		}
+		return false;
+	}
 
-		/**
-		 * Separate PR that according to the correct combination of charge lines code
-		 * @throws Exception
-		 */
-		public void triggeredNewPR() throws Exception{
-			fulfillmentRequestAction(BpmOutcomeConst.BPM_SAVE);
-			IFulfilmentRequestSO fulfilmentRequestSO;
-					
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
-			fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
-			reqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());
-			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-			reqDTO.setToken(token);
-			if(getManagedBean().getFulfilmentRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION.longValue()) {
-				reqDTO.setOutcome(BpmOutcomeConst.BPM_DRAFT);
-			} else {
-				reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
-				if(getManagedBean().getSelectedApprover() != null){
-					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
-					if(groupUser!=null) {
-						List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
-						reqDTO.setApproverUserList(approverUserList);
-						reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
-					}
-				}
-				if(reqDTO.getApproverUserList() == null || reqDTO.getApproverUserList().isEmpty()){
-					reqDTO.setBpmApproverList(getManagedBean().getBpmApproverList());
+	/**
+	 * Separate PR that according to the correct combination of charge lines code
+	 * @throws Exception
+	 */
+	public void triggeredNewPR() throws Exception{
+		fulfillmentRequestAction(BpmOutcomeConst.BPM_SAVE);
+		IFulfilmentRequestSO fulfilmentRequestSO;
+				
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
+		fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
+		reqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());
+		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
+		reqDTO.setToken(token);
+		if(getManagedBean().getFulfilmentRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION.longValue()) {
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_DRAFT);
+		} else {
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+			if(getManagedBean().getSelectedApprover() != null){
+				PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
+				if(groupUser!=null) {
+					List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+					reqDTO.setApproverUserList(approverUserList);
+					reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
 				}
 			}
-			reqDTO.setS1DocNo(flFulfilmentRequest.getScPurchaseRequest().getRequestNote().getRequestNoteNo());
-			reqDTO.setScRequestNoteDtlList(getManagedBean().getRequestNoteWithDtlsList());
-			reqDTO.setClone(Boolean.TRUE);
-			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			reqDTO.setRequisitioner(isFlFulfilmentRequisitioner());
-			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			fulfilmentRequestSO.triggerNewPurchaseRequest(reqDTO);
-
-			String[] param = null;
-			successMessage(MessageConst.INFO_745088, param, true);
+			if(reqDTO.getApproverUserList() == null || reqDTO.getApproverUserList().isEmpty()){
+				reqDTO.setBpmApproverList(getManagedBean().getBpmApproverList());
+			}
 		}
-		//#28718 - End
+		reqDTO.setS1DocNo(flFulfilmentRequest.getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+		reqDTO.setScRequestNoteDtlList(getManagedBean().getRequestNoteWithDtlsList());
+		reqDTO.setClone(Boolean.TRUE);
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		reqDTO.setRequisitioner(isFlFulfilmentRequisitioner());
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		fulfilmentRequestSO.triggerNewPurchaseRequest(reqDTO);
+
+		String[] param = null;
+		successMessage(MessageConst.INFO_745088, param, true);
+	}
+	//#28718 - End
+	
+	//34555-start
+	/**
+	 * Update delivery date based on delivery Term and uomCode.
+	 */
+	public void updateMaxDeliveryDate() {
+		Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
+		int deliveryTerm = 0;
+		String uomCode = "";
+		deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
+		uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
 		
-		//34555-start
-		/**
-		 * Update delivery date based on delivery Term and uomCode.
-		 */
-		public void updateMaxDeliveryDate() {
-			Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
-			int deliveryTerm = 0;
-			String uomCode = "";
-			deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
-			uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
-			
-			if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
-			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
-			}
+		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 		}
-		//34555-End
+	}
+	//34555-End
 		
 	// #39192 - Start
 	/**
