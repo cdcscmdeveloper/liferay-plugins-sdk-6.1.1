@@ -3,18 +3,18 @@ package my.ep.web.constant.report;
 import java.io.Serializable;
 
 public class FlReportConst implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	public static final String PARAM_FL_SUPP_ZONE_EQ = "PSUPPZONE";
 	public static final String PARAM_FL_SUPP_PROFILE_STATUS_EQ = "PPRSTAT";
 	public static final String PARAM_FL_USER_ID_EQ = "PUSER";
 	public static final String PARAM_FL_REPORT_ID_EQ = "PREPORTID";
-	
+
 	// Report Parameter Key
 	public static final String PARAM_KEY_REPORT = "report";
 	public static final String PARAM_USER_ID = "PUSER";
-	
+
 	// Ministry Const
 	public static final String FL_001_CONTRACT_REQUEST = "FL_001";
 	public static final String FL_002_PURCHASE_ORDER = "FL_002";
@@ -31,7 +31,7 @@ public class FlReportConst implements Serializable {
 	public static final String FL_016_INVOICE_CANCELLATION = "FL_016";
 	public static final String FL_050_STOP_INSTRUCTION_INITIATED_BY_PTJ = "FL_050";
 	public static final String FL_053_STOP_INSTRUCTION_INITIATED_BY_SUPPLIER = "FL_053";
-	
+
 	// Central Contract Const
 	public static final String FL_018_CONTRACT_REQ = "FL_018";
 	public static final String FL_019_PURCHASE_ORDER = "FL_019";
@@ -48,9 +48,9 @@ public class FlReportConst implements Serializable {
 	public static final String FL_051_STOP_INST_BY_PTJ = "FL_051";
 	public static final String FL_054_STOP_INST_BY_SUPPLIER = "FL_054";
 	public static final String FL_066_DEDUCTION = "FL_066";
-	
+
 	// Purchase Order Const
-	
+
 	public static final String FL_034_PURCHASE_REQUEST = "FL_034";
 	public static final String FL_035_PURCHASE_ORDER = "FL_035";
 	public static final String FL_038_PURCHASE_DELIVERY = "FL_038";
@@ -65,19 +65,28 @@ public class FlReportConst implements Serializable {
 	public static final String FL_049_PURCHASE_INVOICE_CANCEL = "FL_049";
 	public static final String FL_052_PURCHASE_STOP_INSTR_PTJ = "FL_052";
 	public static final String FL_055_PURCHASE_STOP_INSTR_SUPP = "FL_055";
-	
+
 	// Panel Const
 	public static final String FL_033_SUMMARY = "FL_033";
-	
-	//28379 Year End Report Const
+
+	// 28379 Year End Report Const
 	public static final String FL_067_YEAR_END_REPORT = "FL_067";
-	
+
+	/* 29554 - Beginning - Logan */
+	// Service Report Const
+	public static final String FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE = "FL_071";
+	public static final String FL_072_ACCUMULATED_SERVICE_FEE_REPORT = "FL_072";
+	// end 29554
+
 	public static final String FL_RPT_FROM_DATE = "PFROMDATE";
 	public static final String FL_RPT_TO_DATE = "PTODATE";
 	public static final String FL_RPT_COTRACT_ORDER = "PCONO";
 	public static final String FL_RPT_COTRACT_REQUEST = "PCRNO";
 	public static final String FL_RPT_PURCHASE_ORDER = "PPONO";
-	public static final String FL_RPT_TREASURY_CIRCULAR = "PPKPNO";//Physical Treasury Circular (1PP) No.
+	public static final String FL_RPT_TREASURY_CIRCULAR = "PPKPNO";// Physical
+																	// Treasury
+																	// Circular
+																	// (1PP) No.
 	public static final String FL_RPT_FULLFILLEMENT_RECEIVE = "FRNNO";
 	public static final String FL_RPT_COTRACT_TYPE = "PCONTYPE";
 	public static final String FL_RPT_DELI_ADDR = "PDOADD";
@@ -93,15 +102,15 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_PAYMENT_NAME = "PPAYOFF";
 	public static final String FL_RPT_PHY_CONTRACT_NO = "PPHYCON";
 	public static final String FL_RPT_PHY_LOA_NO = "PPHYLOA";
-	public static final String FL_RPT_CONTRACT_NO = "PCONTRACTNO";	
+	public static final String FL_RPT_CONTRACT_NO = "PCONTRACTNO";
 	public static final String FL_RPT_SUPPL_NAME = "PSUPP";
 	public static final String FL_RPT_MINISTRY = "PMINIS";
 	public static final String FL_RPT_PEGAWAI_PENGAWAI = "PFPP";
 	public static final String FL_RPT_KUMPULAN = "PFJA";
 	public static final String FL_RPT_PTJ_NAME = "PPTJ";
-	public static final String FL_RPT_SST_NO = "PLOA";//loa no
+	public static final String FL_RPT_SST_NO = "PLOA";// loa no
 	public static final String FL_RPT_CONTRACT_REQ_NO = "PCRNO";
-	public static final String FL_RPT_CC_PANEL_NAME = "PPKPNAME";//panel name
+	public static final String FL_RPT_CC_PANEL_NAME = "PPKPNAME";// panel name
 	public static final String FL_RPT_REPORT_ID = "PREPORTID";
 	public static final String FL_RPT_USER_ID = "PUSER";
 	public static final String FL_RPT_STOP_INSTR_NO = "PSINO";
@@ -110,9 +119,9 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_PAYMENT_ADV_NO = "PPANO";
 	public static final String FL_RPT_ITM_NAME = "PITEM";
 	public static final String FL_RPT_DOC_TYPE = "PDOCTYPE";
-	public static final String FL_RPT_GROUP_BY = "PGROUP"; 
+	public static final String FL_RPT_GROUP_BY = "PGROUP";
 	public static final String FL_RPT_PURCHASE_REQUEST = "PPRNO";
-	//29088
+	// 29088
 	public static final String FL_RPT_PO_STATUS = "PSTATUS";
 	public static final String FL_RPT_BC_NAME = "PSUPP";
 	public static final String FL_RPT_PO_TITLE = "PTITLE";
@@ -124,8 +133,18 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_REF_NO = "PREFNO";
 	public static final String FL_RPT_CT_FROM_DATE = "PCTFRDATE";
 	public static final String FL_RPT_CT_TO_DATE = "PCTTODATE";
-	
-	public FlReportConst(){}
+
+	// 29554 start
+	public static final String FL_RPT_TRANSACTION_FROM_DATE = "PFROMDATE";
+	public static final String FL_RPT_TRANSACTION_TO_DATE = "PTODATE";
+	public static final String FL_RPT_AG_OFFICE = "POFFICECODE";
+	public static final String FL_RPT_PSF_ONE_OFF = "PSFONEOFF";
+	public static final String FL_RPT_PSF_PERIOD = "PSFPERIOD";
+
+	// 29554 end
+
+	public FlReportConst() {
+	}
 
 	public String getFl001ContractRequest() {
 		return FL_001_CONTRACT_REQUEST;
@@ -134,62 +153,63 @@ public class FlReportConst implements Serializable {
 	public String getFl002PurchaseOrder() {
 		return FL_002_PURCHASE_ORDER;
 	}
-	
+
 	public String getFl003DeliveryOrder() {
 		return FL_003_DELIVERY_ORDER;
 	}
-	
+
 	public String getFl004FullfillmentReceivedNote() {
 		return FL_004_FULLFILLMENT_RECEIVED_NOTE;
 	}
-	
-	public String getFl005LateDelivery(){
+
+	public String getFl005LateDelivery() {
 		return FL_005_LATE_DELIVERY;
 	}
-	
-	public String getFl009Invoice(){
+
+	public String getFl009Invoice() {
 		return FL_009_INVOICE;
 	}
-	
-	public String getFl010PaymentMatch(){
+
+	public String getFl010PaymentMatch() {
 		return FL_010_PAYMENT_MATCH;
 	}
-	
-	public String getFl011Deduction(){
+
+	public String getFl011Deduction() {
 		return FL_011_DEDUCTION;
 	}
-	public String getFl066Deduction(){
+
+	public String getFl066Deduction() {
 		return FL_066_DEDUCTION;
 	}
-	
-	public String getFl012ContractRequestRejection(){
+
+	public String getFl012ContractRequestRejection() {
 		return FL_012_CONTRACT_REQUEST_REJECTION;
 	}
-	
-	public String getFl013PurchaseOrderCancellation(){
+
+	public String getFl013PurchaseOrderCancellation() {
 		return FL_013_PURCHASE_ORDER_CANCELLATION;
 	}
-	
-	public String getFl014DeliveryOrderCancellation(){
+
+	public String getFl014DeliveryOrderCancellation() {
 		return FL_014_DELIVERY_ORDER_CANCELLATION;
 	}
-	
-	public String getFl015FullfillmentReceivedNoteCancellation(){
+
+	public String getFl015FullfillmentReceivedNoteCancellation() {
 		return FL_015_FULLFILLMENT_RECEIVED_NOTE_CANCELLATION;
 	}
-	
-	public String getFl016InvoiceCancellation(){
+
+	public String getFl016InvoiceCancellation() {
 		return FL_016_INVOICE_CANCELLATION;
 	}
-	
-	public String getFl050StopInstructionInitiatedByPtj(){
+
+	public String getFl050StopInstructionInitiatedByPtj() {
 		return FL_050_STOP_INSTRUCTION_INITIATED_BY_PTJ;
 	}
-	
-	public String getFl053StopInstructionInitiatedBySupplier(){
+
+	public String getFl053StopInstructionInitiatedBySupplier() {
 		return FL_053_STOP_INSTRUCTION_INITIATED_BY_SUPPLIER;
 	}
-	
+
 	public String getFl018ContractReq() {
 		return FL_018_CONTRACT_REQ;
 	}
@@ -245,7 +265,7 @@ public class FlReportConst implements Serializable {
 	public String getFl054StopInstBySupplier() {
 		return FL_054_STOP_INST_BY_SUPPLIER;
 	}
-		
+
 	public String getFl034PurchaseRequest() {
 		return FL_034_PURCHASE_REQUEST;
 	}
@@ -305,8 +325,18 @@ public class FlReportConst implements Serializable {
 	public String getFl033Summary() {
 		return FL_033_SUMMARY;
 	}
-	
+
 	public String getFl067YearEndReport() {
 		return FL_067_YEAR_END_REPORT;
 	}
- }
+
+	/* 29554 - Logan - Beginning */
+	public String getFl071ServiceFeeReportBasedOfAccountingOffice() {
+		return FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE;
+	}
+
+	public String getFl072AccumulatedServiceFeeReport() {
+		return FL_072_ACCUMULATED_SERVICE_FEE_REPORT;
+	}
+	/* Ends 29554 */
+}
