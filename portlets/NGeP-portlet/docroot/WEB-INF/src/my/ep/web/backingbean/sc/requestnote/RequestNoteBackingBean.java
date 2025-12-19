@@ -7668,9 +7668,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 *
 	 * @param rnDtl        the request note detail containing justification and reason info
 	 * @param supplierItem the supplier item associated with the request
+	 * @param isFromATC {@code true} if the validation is triggered from ATC,{@code false} otherwise, which may affect how the error message is displayed
 	 */
 	public void compareSupplierAccountTypeForPK7AndSpecialItem(ScRequestNoteDtl rnDtl,
-			ScRequestSupplierItem supplierItem) {
+			ScRequestSupplierItem supplierItem, boolean isFromATC) {
 		boolean isSupplierAccTypeMatch = false;
 		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
@@ -7687,7 +7688,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			isSupplierAccTypeMatch = initializeReasonRestr(listReasonRestr, isSupplierAccTypeMatch, suppAccTypeSb, suppAccType);
 			
 			if (!isSupplierAccTypeMatch){
-				getSupplierTypeErrorMessage(rnDtl,suppAccTypeSb.toString());
+				getSupplierTypeErrorMessage(rnDtl,suppAccTypeSb.toString(),isFromATC);
 			}
 		}
 	}
@@ -7789,7 +7790,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
 					// retrieve from pm_reason_restr and compare with suppler
 					// acc type
-					compareSupplierAccountTypeForPK7AndSpecialItem(rnDtl, supplierItem);
+					compareSupplierAccountTypeForPK7AndSpecialItem(rnDtl, supplierItem, false);
 				}
 			}
 		}
@@ -7810,7 +7811,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				|| scRequestNoteDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
 						.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
 			compareSupplierAccountTypeForPK7AndSpecialItem(scRequestNoteDtl,
-					scRequestNoteDtl.getScRequestSupplierItem());
+					scRequestNoteDtl.getScRequestSupplierItem(), true);
 		}
 	}
 	
@@ -7823,10 +7824,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 *
 	 * @param rnDtl the {@link ScRequestNoteDtl} containing the justification and procurement type
 	 * @param suppAccTypeSb a comma-separated string of supplier account type descriptions
-	 * @param listReasonRestr the list of {@link PmReasonRestr} restrictions to consider
+	 * @param isFromATC {@code true} if the validation is triggered from ATC,{@code false} otherwise, which may affect how the error message is displayed
 	 * @throws EpException when the supplier account type does not meet the required restrictions
 	 */
-	public void getSupplierTypeErrorMessage(ScRequestNoteDtl rnDtl, String suppAccTypeSb) {
+	public void getSupplierTypeErrorMessage(ScRequestNoteDtl rnDtl, String suppAccTypeSb, boolean isFromATC) {
 		int appendedCount = 0;
 
 		if (suppAccTypeSb.length() > 0) {
@@ -7841,16 +7842,32 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			} else {
 				isOrAre = DPConstants.IS_STRING;
 			}
-			throw new EpException(MessageConst.ERROR_760717, new String[] {
-					rnDtl.getScRequestSupplierItem().getSupplierName(),
-					getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
-							.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), isOrAre, suppAccTypeSb });
+			
+			if (isFromATC) {
+				throw new EpException(MessageConst.ERROR_760709, new String[] {
+						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), isOrAre,
+						suppAccTypeSb });
+			} else {
+				throw new EpException(MessageConst.ERROR_760717, new String[] {
+						rnDtl.getScRequestSupplierItem().getSupplierName(),
+						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), isOrAre,
+						suppAccTypeSb });
+			}
+			
 		} else {
 			// for MY
-			throw new EpException(MessageConst.ERROR_760717, new String[] {
-					rnDtl.getScRequestSupplierItem().getSupplierName(),
-					getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
-							.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), suppAccTypeSb });
+			if (isFromATC) {
+				throw new EpException(MessageConst.ERROR_760709, new String[] {
+						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), suppAccTypeSb });
+			} else {
+				throw new EpException(MessageConst.ERROR_760717, new String[] {
+						rnDtl.getScRequestSupplierItem().getSupplierName(),
+						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), suppAccTypeSb });
+			}
 		}
 	}
 	
