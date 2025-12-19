@@ -5415,11 +5415,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			index++; 
 		} 
 		if (null != revisit.getUpdatedRvCatCodes() && !revisit.getUpdatedRvCatCodes().isEmpty()) { 
-			for (SmRvCatCode updatedRvCatCode : revisit.getUpdatedRvCatCodes()) {
-				updatedRvCatCodes(updatedRvCatCode, remark, index);
-				remark.append("<br />");
-				index++; 
-			} 
+			// #34031#note-128 - Start
+			int i = 0;
+			for (SmRvCatCode updatedRvCatCode : revisit.getUpdatedRvCatCodes()) { 
+				updatedRvCatCodes(updatedRvCatCode, remark, index); 
+				if (i++ != revisit.getUpdatedRvCatCodes().size() - 1) {
+					remark.append("<br />");
+				}
+				index++;
+			}
+			// #34031#note-128 - End
 		} 
 		return remark.toString();
 	} 
