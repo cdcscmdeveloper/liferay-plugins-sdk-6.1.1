@@ -295,10 +295,26 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 */
 	public SelectItem[] getProcurementModeDropdownValues() {
 		SelectItem[] items = getDropdownValuesBySearchBean("RPT", null);
+		SelectItem[] filtered;
+		
+		if (getManagedBean().getCentralPanelContract() == null || !getManagedBean().getCentralPanelContract()){
+			filtered = constructNonPanelProcurementDropdown(items);
+		}else {
+			filtered = constructPanelProcurementDropdown(items);
+		}
+		return filtered;
+	}
 
+	/**
+	 * @param items
+	 * @return
+	 */
+	private SelectItem[] constructNonPanelProcurementDropdown(SelectItem[] items) {
 		List<SelectItem> list = new ArrayList<>();
 		for (SelectItem item : items) {
-			filterProcurementTypeForPanelAndNonPanel(list, item);
+			if (item.getValue() == null || !DPConstants.FULFILMENT_TYPE_G2G.equals(item.getLabel())) {
+	            list.add(item);
+	        }
 		}
 
 		SelectItem[] filtered = list.toArray(new SelectItem[list.size()]);
@@ -309,26 +325,20 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		}
 		return filtered;
 	}
-
+	
 	/**
-	 * @param list
-	 * @param item
+	 * @param items
+	 * @return
 	 */
-	private void filterProcurementTypeForPanelAndNonPanel(List<SelectItem> list, SelectItem item) {
-	    Boolean central = getManagedBean().getCentralPanelContract();
-	    boolean isCentral = Boolean.TRUE.equals(central);  
-
-	    if (!isCentral) {
-	        if (item.getValue() == null || !DPConstants.FULFILMENT_TYPE_G2G.equals(item.getLabel())) {
+	private SelectItem[] constructPanelProcurementDropdown(SelectItem[] items) {
+		List<SelectItem> list = new ArrayList<>();
+		for (SelectItem item : items) {
+			if (DPConstants.FULFILMENT_TYPE_NORMAL.equals(item.getLabel())) {
 	            list.add(item);
 	        }
-	    } else {
-	        if (item.getValue() == null || DPConstants.FULFILMENT_TYPE_NORMAL.equals(item.getLabel())) {
-	            list.add(item);
-	        }
-	    }
+		}
+		return list.toArray(new SelectItem[list.size()]);
 	}
-
 
 	/**
 	 * Listener method triggered when the Financial Year dropdown value changes
