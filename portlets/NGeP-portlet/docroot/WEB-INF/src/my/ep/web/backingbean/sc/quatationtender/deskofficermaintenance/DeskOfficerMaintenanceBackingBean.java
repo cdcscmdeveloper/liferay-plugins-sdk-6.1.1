@@ -1371,7 +1371,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 				IAuditTrailSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.AUDIT, IAuditTrailSO.class);
-				if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+				if ((BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome))
+						&& auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {//#35500 Fix Reopen 12th Dec
 					prepareAuditTrailDeskOfficer(qtAuditTrailSO,outcome);
 				}
 				//#28895-35500 end
@@ -1542,7 +1543,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		auditResDTO.setDocTypeId(this.getManagedBean().getCurrentApproval().getScQt().getProcurementMode().getParameterId());
 		auditResDTO.setDocNo(this.getManagedBean().getCurrentApproval().getScQt().getQtNo());
 		auditResDTO.setDocId(this.getManagedBean().getCurrentApproval().getScQt().getQtId());
-		auditResDTO.setStatusId(QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED);
+		auditResDTO.setStatusId(BpmOutcomeConst.BPM_APPROVE.equals(outcome) ? QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED:QTStatusConst.DESK_OFFICER_MAINTENANCE_REJECTED);
 		auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
 		auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DO_NEW_ASSIGNED_DESK_OFFICER);
 		auditResDTO.setOldValue(this.getManagedBean().getOriginalDeskOfficer().getUserName());
