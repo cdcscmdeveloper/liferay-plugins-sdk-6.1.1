@@ -3569,6 +3569,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 	/**
 	 * Method to check if have supplier branch deleted
 	 * 
+	 * @param outcome
+	 * @return true or false
+	 * 
 	 **/
 	private Boolean checkFlagForSupplierBranchDeleted(String outcome) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
