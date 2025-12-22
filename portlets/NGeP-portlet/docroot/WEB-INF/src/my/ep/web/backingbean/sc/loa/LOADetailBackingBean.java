@@ -12779,5 +12779,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	}
 
+	//#21692 - Start
+	private void addLastDocumentPayLoad(ScLoa scLoa) {
+		if (scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+			SCAwardSupplierDataType awardSupplierDataType = (SCAwardSupplierDataType) getManagedBean().getPayLoad();
+			awardSupplierDataType.setLastDocument(getQtAwardSO().isLastDocumentLOA(scLoa.getScLoiLoa().getDocId()));
+			getManagedBean().setPayLoad(awardSupplierDataType);
+		}
+	}
+	//#21692 - End
+
 }
 

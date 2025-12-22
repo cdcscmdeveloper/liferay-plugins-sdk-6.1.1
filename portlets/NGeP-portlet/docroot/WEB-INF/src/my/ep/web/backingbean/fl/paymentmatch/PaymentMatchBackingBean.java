@@ -257,6 +257,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			//32678-End
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			//start 21229
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			
 			//START 28246 NEW implementation: IF SentIddCre = 1 , ACTION CODE CRE already sent and next action must ADJ
 			if(getManagedBean().getPaymentAdvice().getFlInvoice() !=null){				
@@ -507,14 +508,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 
 		checkSupplierUserActive();
 		//28221 end
-		
-		//24956 start
-		if (getManagedBean().getFulfilmentRequest().getCtContract() != null 
-				&& getManagedBean().getFulfilmentRequest().getCtContract().getContractType().
-				getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-			getManagedBean().setCtTypeMinistry(true);
-		}
-		//24956 end
 	}
 	
 	// 26279 - start
@@ -1949,16 +1942,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 					invBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);
 				}
-			}
-			
-			//24956 start
-			if (invBB.getManagedBean().getInvoice().getFlRequest().getCtContract() != null 
-					&& invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getContractType().
-					getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				invBB.getManagedBean().setCtTypeMinistry(true);
-			}
-			//24956 end
-			
+			}			
 			return NAV_INVOICE;
 		}if(docType.equalsIgnoreCase(ParameterConst.CONTRACT)){
 			ContractDetailsBackingBean ctDetBB = new ContractDetailsBackingBean();

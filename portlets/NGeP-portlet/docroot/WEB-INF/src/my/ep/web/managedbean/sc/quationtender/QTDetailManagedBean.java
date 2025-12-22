@@ -1832,6 +1832,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean categoryDescriptionChange;//#29732 flag to check category has change
 	private boolean updateCatDesc; //#29732
 	private boolean updateCatInPm; //#29732
+	private boolean resetHistoryCatCode; //#29732
 
 	// #29732 End
 	
@@ -12234,6 +12235,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setUpdateCatInPm(boolean updateCatInPm) {
 		this.updateCatInPm = updateCatInPm;
+	}
+	
+	public boolean getResetHistoryCatCode() {
+		return resetHistoryCatCode;
+	}
+
+	public void setResetHistoryCatCode(boolean resetHistoryCatCode) {
+		this.resetHistoryCatCode = resetHistoryCatCode;
 	}
 	//#29732
 	
