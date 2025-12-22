@@ -488,6 +488,7 @@
 											<p:ajax partialSubmit="true" process="@this" />
 										</p:inputText>
 										<!-- #39097 & #36718 - End  -->
+
 										<ac:smFieldChangeAlert
 											isShow="#{backingBean.managedBean.showFieldChanges}"
 											oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}"
@@ -526,6 +527,7 @@
 								      	return address;
 								      }
 									</script>
+
 									<!-- #39097 & #36718 - change value coordinate -->
 									<ac:gmap id="acgmap2" address="getAddress2()"
 										locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
