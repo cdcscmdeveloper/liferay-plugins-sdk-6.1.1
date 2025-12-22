@@ -7672,9 +7672,11 @@ public class LOIDetailBackingBean extends
 		if (foundFalse) {
 			ScQtRecommend recommend = recommendMap.get(falseKey);
 			if (scQt.isZonal()) {
+				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
 				throw new EpException(MessageConst.ERROR_760623, new String[] {
 						recommend.getTplSpecZoneDtl().getZoneName(), recommend.getRequestItem().getItemName() });
 			} else {
+				tabMenuListener(3);
 				throw new EpException(MessageConst.ERROR_760622, new String[] { recommend.getRequestItem()
 						.getItemName() });
 			}
@@ -7699,9 +7701,11 @@ public class LOIDetailBackingBean extends
 			if (!entry.getValue()) {
 				ScQtRecommend recommend = recommendMap.get(entry.getKey());
 				if (scQt.isZonal()) {
+					setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
 					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
 							.getZoneName() });
 				} else {
+					tabMenuListener(3);
 					throw new EpException(MessageConst.ERROR_760624);
 				}
 			}
@@ -7709,6 +7713,34 @@ public class LOIDetailBackingBean extends
 	}
 
 	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to redirect to any zones tab after validation
+	 * 
+	 * @param tplSpecZoneDtl
+	 **/
+	private void setZoneAndTabIndexOnException(TplSpecZoneDtl tplSpecZoneDtl) {
+		List<TplSpecZoneDtl> specZoneDtls = this.getManagedBean().getMultiLOIZoneDetails();
+		if (tplSpecZoneDtl != null && CollectionUtils.isNotEmpty(specZoneDtls)) {
+			TplSpecZoneDtl zoneDtl = getManagedBean().getZoneMap().get(tplSpecZoneDtl.getSpecZoneId());
+			this.getManagedBean().setZoneActiveIndex(zoneDtl.getZoneTabIndex());
+			onZoneTabChangeAction(getManagedBean().getZoneMap().get(zoneDtl.getSpecZoneId()));
+		}
+	}
+
+	/**
+	 * Method to redirect to tab recommendation after validation
+	 * 
+	 * @param tplSpecZoneDtl
+	 **/
+	private void onZoneTabChangeAction(TplSpecZoneDtl tplSpecZoneDtl) {
+		this.getManagedBean().setSelectedZone(tplSpecZoneDtl);
+		this.getManagedBean().setZoneActiveIndex(tplSpecZoneDtl.getZoneTabIndex());
+		tabMenuListener(3);
+	}
+	
+	// #28777 & #29729 - Start
 	
 	/**
 	 * #30008 - Validate LOI Negotiation result before submit
