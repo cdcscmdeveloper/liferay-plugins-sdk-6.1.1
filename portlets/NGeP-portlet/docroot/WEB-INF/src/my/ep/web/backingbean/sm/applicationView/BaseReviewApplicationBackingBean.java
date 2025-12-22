@@ -5415,7 +5415,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			index++; 
 		} 
 		if (null != revisit.getUpdatedRvCatCodes() && !revisit.getUpdatedRvCatCodes().isEmpty()) { 
-			// #34031#note-128 - Start
+			// 34031#note-128 Issue 23 - Start
 			int i = 0;
 			for (SmRvCatCode updatedRvCatCode : revisit.getUpdatedRvCatCodes()) { 
 				updatedRvCatCodes(updatedRvCatCode, remark, index); 
