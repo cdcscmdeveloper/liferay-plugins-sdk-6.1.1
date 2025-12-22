@@ -5409,6 +5409,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 		Map<Long, ScRequestItem> requestItemMap = new HashMap<>();
 		Map<Long, BigDecimal> itemAmtMap = new HashMap<>();
+		//31344 - Map the total item quantity filled
+		Map<Long,BigDecimal> itemQuantityMap = new HashMap<>();
 		for (FlDeliveryAddress delAddr : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
 			for (FlFulfilmentItemAddr item : delAddr.getFlFulfilmentItemAddr()) {
 				if (itemAmtMap.containsKey(item.getScRequestItem().getRequestNoteItemId())) {
@@ -5426,6 +5428,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							BigDecimal.valueOf(item.getUnitPrice().doubleValue() * item.getOrderedQty().doubleValue()));
 					requestItemMap.put(item.getScRequestItem().getRequestNoteItemId(), item.getScRequestItem());
 				}
+				
+				//31344 - Map the total item quantity filled
+				BigDecimal currentQty = itemQuantityMap.get(item.getScRequestItem().getRequestNoteItemId());
+		        if (currentQty == null) {
+		            itemQuantityMap.put(item.getScRequestItem().getRequestNoteItemId(), item.getOrderedQty());
+		        } else {
+		            itemQuantityMap.put(item.getScRequestItem().getRequestNoteItemId(), currentQty.add(item.getOrderedQty()));
+		        }
+
 			}
 		}
 		double thresoldAmt;
@@ -5459,10 +5470,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
 				if (sumAmt.doubleValue() > thresoldAmt) {
-					isExceedThreshold = true;
+					//#31344 - Get Sc Request Note Dtl by Request Item
+					ScRequestNoteDtl scRequestNoteDtl = getScRequestNoteDtl(requestItemMap.get(map.getKey()).getRequestNoteItemId());
+					if(isBpkApproved(scRequestNoteDtl)){
+						if(itemAmtMap.get(map.getKey()).compareTo(requestItemMap.get(map.getKey()).getQuantity()) > 0){
+							log.info("Item Exceed BPK Approval");
+						}
+					} else {
+						isExceedThreshold = true;
 
-					itemNameList.add(CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc
-							.getUnspscTitleEng() : cmUnspsc.getUnspscTitle());
+						itemNameList.add(CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc
+								.getUnspscTitleEng() : cmUnspsc.getUnspscTitle());
+					}
 				}
 			}
 		}
@@ -5762,4 +5781,16 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 	}
 	// #27476 end
+	
+	//#31344 start
+	private boolean isBpkApproved(ScRequestNoteDtl noteDtl){
+		return FulfilmentConst.BPK_APPROVED.equalsIgnoreCase(noteDtl.getBpkThresholdDecision());
+	}
+	
+	private ScRequestNoteDtl getScRequestNoteDtl(Long requestItemId){
+		IPurchaseRequestSO purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);	
+		PurchaseRequestReqDTO purchaseRequestReqDTO = new PurchaseRequestReqDTO();
+		purchaseRequestReqDTO.setRequestItemId(requestItemId);
+		return purchaseRequestSO.retrieveScRequestNoteDetailByRequestItemId(purchaseRequestReqDTO);
+	}
 }
