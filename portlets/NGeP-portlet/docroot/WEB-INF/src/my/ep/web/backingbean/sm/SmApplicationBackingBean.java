@@ -4354,7 +4354,7 @@ public class SmApplicationBackingBean extends
 				}
 			break;				
 		//#38991 -END
-			
+
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
 			if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
@@ -10410,7 +10410,9 @@ public class SmApplicationBackingBean extends
 		}
 		//#12483 - END
 		//Bug #26705
-		getlatestPoOverlappingRemarks();
+		// #39422 - Start - Comment method
+		// getlatestPoOverlappingRemarks();
+		// #39422 - End
 		
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
@@ -17371,6 +17373,7 @@ public class SmApplicationBackingBean extends
 	    }
 	}
 	//#38927 END
+	
 	//#39282
 	/**
 	 * To generate unique file name yyyyMMdd_HHmmss

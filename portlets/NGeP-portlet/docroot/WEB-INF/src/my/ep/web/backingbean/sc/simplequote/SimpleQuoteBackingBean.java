@@ -8117,14 +8117,16 @@ public class SimpleQuoteBackingBean extends
 		// Calculate for Product
 		List<TplSpecAnswer> calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
 		if (calcSpecAnswersProduct != null) {
-			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(getManagedBean().getProductTemplateSpecBean());
+			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(
+					getManagedBean().getProductTemplateSpecBean());
 			calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();		
 		}
 
 		// Calculate for Service
 		List<TplSpecAnswer> calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
 		if (calcSpecAnswersService != null) {			
-			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(getManagedBean().getServiceTemplateSpecBean());
+			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(
+					getManagedBean().getServiceTemplateSpecBean());
 			calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
 		}
 	}
