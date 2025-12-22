@@ -17,15 +17,14 @@
 				<p:outputLabel value="#{lbl['lbl.fl.ministry']}" />
 			</td>
 			<td colspan="3">
-				<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="131" readonly="true" 
-						headerText="#{lbl['lbl.fl.ministry']}" 
-						disabled="#{itemThRptBB.disableMinistryLov()}"
-						value="#{itemThRptBB.managedBean.ministry.orgName}"
-						postUpdateListener="itemThRptBB.resetPtjGroupProfile()"
-						update=":form:searchPtj,:form"
-						saveObject="itemThRptBB.managedBean.ministry"
-						conditionField="#{itemThRptBB.getMinistryCondition()}"
-						>
+				<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY"
+					size="131" readonly="true" headerText="#{lbl['lbl.fl.ministry']}"
+					disabled="#{itemThRptBB.disableMinistryLov()}"
+					value="#{itemThRptBB.managedBean.ministry.orgName}"
+					postUpdateListener="itemThRptBB.resetPtjGroupProfile()"
+					update=":form:searchPtj,:form"
+					saveObject="itemThRptBB.managedBean.ministry"
+					conditionField="#{itemThRptBB.getMinistryCondition()}">
 				</ac:lov>
 			</td>
 		</tr>
@@ -34,15 +33,14 @@
 				<p:outputLabel value="#{lbl['lbl.fl.jabatan']}" />
 			</td>
 			<td colspan="3">
-				<ac:lov id="searchJabatan" lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true" 
-					headerText="#{lbl['lbl.fl.jabatan']}" 
-					disabled="#{itemThRptBB.disablePtjGroupLov()}"
+				<ac:lov id="searchJabatan" lovId="PM_ORG_PROFILE_PTJ_GROUP"
+					size="131" readonly="true" headerText="#{lbl['lbl.fl.jabatan']}"
+					disabled="#{itemThRptBB.disablePtjGroupLovThresholdReport()}"
 					value="#{itemThRptBB.managedBean.ptjGroup.orgName}"
-					postUpdateListener="poPurRptBB.resetPtjProfile()"
+					postUpdateListener="itemThRptBB.resetPtjProfile()"
 					update=":form:searchPtj,:form"
 					saveObject="itemThRptBB.managedBean.ptjGroup"
-					conditionField="#{itemThRptBB.constuctConditionFieldsForPTJGroup()}"
-					>
+					conditionField="#{itemThRptBB.constructConditionForPTJGroupByRole()}">
 				</ac:lov>
 			</td>
 
@@ -52,14 +50,13 @@
 				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}" />
 			</td>
 			<td colspan="3">
-				<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true" 
-					headerText="#{lbl['lbl.fl.ptj']}"
-					disabled="#{itemThRptBB.disablePtjLov()}"
+				<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="131"
+					readonly="true" headerText="#{lbl['lbl.fl.ptj']}"
+					disabled="#{itemThRptBB.disablePtjLovThresholdReport()}"
 					value="#{itemThRptBB.managedBean.ptj.orgName}"
-					saveObject="itemThRptBB.managedBean.ptj"	
-					conditionField="#{itemThRptBB.getPTJCondition()}"
-					update=":form"
-					>			
+					saveObject="itemThRptBB.managedBean.ptj"
+					conditionField="#{itemThRptBB.constructConditionForPTJByRole()}"
+					update=":form">
 				</ac:lov>
 			</td>
 		</tr>
@@ -76,9 +73,9 @@
 				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
 			</td>
 			<td>
-				<p:selectOneMenu value="#{itemThRptBB.managedBean.statusDescId}" >
-					<f:selectItems value="#{itemThRptBB.getStatusDropdownValuesForItemThreshold('PO')}" />
-					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="0" />
+				<p:selectOneMenu value="#{itemThRptBB.managedBean.statusDescId}">
+					<f:selectItems
+						value="#{itemThRptBB.getStatusDropdownValuesForItemThreshold('PO')}" />
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
@@ -89,9 +86,12 @@
 			</td>
 			<td>
 				<p:selectOneMenu value="#{itemThRptBB.managedBean.group}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}" />
-					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}" itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
-					<f:selectItem itemLabel="#{lbl['lbl.fl.fulfilment.type']}" itemValue="#{lbl['lbl.fl.fulfilment.type']}" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+						itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
+						itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
+					<f:selectItem itemLabel="#{lbl['lbl.fl.fulfilment.type']}"
+						itemValue="#{lbl['lbl.fl.fulfilment.type']}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
@@ -99,15 +99,16 @@
 				<p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" />
 			</td>
 			<td>
-				<p:selectOneMenu value="#{itemThRptBB.managedBean.procurementTypeCode}">
-                    <f:selectItems value="#{itemThRptBB.getDropdownValuesProcurementType()}" />
-                    <f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="0" />
+				<p:selectOneMenu
+					value="#{itemThRptBB.managedBean.procurementTypeCode}"
+					style="width: 100px;">
+					<f:selectItems
+						value="#{itemThRptBB.getDropdownValuesProcurementType()}" />
 
-                    <p:ajax event="change"
-                            process="@this"
-                            listener="#{itemThRptBB.onProcurementTypeChange}"
-                            update=":form:reasonLabelPanel, :form:reasonValuePanel" />
-                </p:selectOneMenu>
+					<p:ajax event="change" process="@this"
+						listener="#{itemThRptBB.onProcurementTypeChange}"
+						update=":form:reasonLabelPanel, :form:reasonValuePanel" />
+				</p:selectOneMenu>
 			</td>
 		</tr>
 		<tr>
@@ -129,12 +130,12 @@
 			</td>
 			<td>
 				<h:panelGroup id="reasonValuePanel">
-                    <p:selectOneMenu style="margin-bottom: 5px; width: 225px;"
-							    	 panelStyle="overflow-y: scroll; width:400px; height:100px;" 
-							    	 rendered="#{itemThRptBB.managedBean.reasonFlag}"
-                                     value="#{itemThRptBB.managedBean.reasonCode}">
-                        <f:selectItems value="#{itemThRptBB.managedBean.reasonDropdown}" />
-                    </p:selectOneMenu>
+					<p:selectOneMenu style="margin-bottom: 5px; width: 225px;"
+						panelStyle="overflow-y: scroll; width:400px; height:100px;"
+						rendered="#{itemThRptBB.managedBean.reasonFlag}"
+						value="#{itemThRptBB.managedBean.reasonCode}">
+						<f:selectItems value="#{itemThRptBB.managedBean.reasonDropdown}" />
+					</p:selectOneMenu>
 				</h:panelGroup>
 			</td>
 		</tr>
@@ -158,11 +159,13 @@
 		<div style="float:right;">
 			<table style="width:100%">
 				<tr>
-					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
-							onclick="confirmationId.hide();" />
+					<td>
+						<p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+							onclick="confirmationId.hide();" /> 
 						<p:commandButton value="#{lbl['lbl.rpt.btn.viewreport']}"
 							action="#{itemThRptBB.redirect()}">
-						</p:commandButton></td>
+						</p:commandButton>
+					</td>
 				</tr>
 			</table>
 		</div>

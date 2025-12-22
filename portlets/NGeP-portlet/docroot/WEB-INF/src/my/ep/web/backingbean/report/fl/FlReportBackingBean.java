@@ -21,6 +21,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjReorgSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
@@ -31,6 +32,8 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.SLALogFulfilmentConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -2029,5 +2032,136 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	
 	//Enhancement 29550 - end
+	
+	//#31344 start
+	/**
+	 * Construct condition field for PTJ and Approve Other PTJ
+	 * 
+	 * @return
+	 */
+	public String getPTJWithApproveOtherPTJCondition() {
+		String condition = "";
+		if (getManagedBean().getPtjGroup() != null) {
+			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()) + "^"
+					+ this.getManagedBean().getPtjGroup().getOrgProfileId();
+		}
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPtjReorgSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		PmOrgProfile orgProfile = null;
+		if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
+			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+		}
+		String ptjList = orgProfile.getOrgProfileId() + "";
+		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+		ptjReqDTO.setDeepLevel(true);
+		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+
+		for (PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+			ptjList = ptjList + "," + pmPtjReorg.getOldPtjId();
+		}
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(reqDTO);
+		for (Long pmProfileGroup : resDTO.getOrgProfileIdList()) {
+			if (!pmProfileGroup.equals(orgProfile.getOrgProfileId())) {
+				ptjList = ptjList + "," + pmProfileGroup;
+			}
+		}
+		condition = condition + "|orgProfileId^" + ptjList + "^9";
+
+		return condition;
+	}
+
+	/**
+	 * Construct condition field for PTJ Group and Approve Other PTJ
+	 * 
+	 * @return
+	 */
+	public String getPTJGroupWithApproveOtherPTJCondition() {
+		String condition = "";
+		if (getManagedBean().getMinistry() != null) {
+			condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),
+					OrganizationType.MINISTRY.value()) + "^" + this.getManagedBean().getMinistry().getOrgProfileId();
+		}
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPtjReorgSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		PmOrgProfile orgProfile = null;
+		if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
+			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+		}
+		String kumpulanPtjList = retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId() + "";
+		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+		ptjReqDTO.setDeepLevel(true);
+		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+		PmOrgProfile kumpulanPtj = null;
+		for (PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+			kumpulanPtj = retrieveJabatanOrgProfile(pmPtjReorg.getOldPtjId());
+			if (kumpulanPtj != null) {
+				kumpulanPtjList = kumpulanPtjList + "," + kumpulanPtj.getOrgProfileId();
+			}
+		}
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(reqDTO);
+		for (Long pmProfileGroup : resDTO.getOrgProfileIdList()) {
+			if (!pmProfileGroup.equals(orgProfile.getOrgProfileId())) {
+				kumpulanPtjList = kumpulanPtjList + "," + retrieveJabatanOrgProfile(pmProfileGroup).getOrgProfileId();
+			}
+		}
+		condition = condition + "|orgProfileId^" + kumpulanPtjList + "^9";
+
+		return condition;
+	}
+
+	/**
+	 * Get condition field for PTJ - Internal Auditor
+	 * 
+	 * @return
+	 */
+	public String getPTJInternalAuditorCondition() {
+		String condition = "";
+		if (getManagedBean().getPtjGroup() != null) {
+			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()) + "^"
+					+ this.getManagedBean().getPtjGroup().getOrgProfileId();
+		}
+
+		return condition;
+	}
+
+	/**
+	 * Get condition field for PTJ Group - Internal Auditor
+	 * 
+	 * @return
+	 */
+	public String getPTJGroupInternalAuditorCondition() {
+		String condition = "";
+		if (getManagedBean().getMinistry() != null) {
+			condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),
+					OrganizationType.MINISTRY.value()) + "^" + this.getManagedBean().getMinistry().getOrgProfileId();
+		}
+
+		return condition;
+	}
+	//#31344 end
 
 }

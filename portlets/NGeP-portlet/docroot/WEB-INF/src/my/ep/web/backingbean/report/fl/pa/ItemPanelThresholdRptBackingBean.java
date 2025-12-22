@@ -21,6 +21,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.backingbean.report.fl.po.ItemThresholdRptBackingBean;
@@ -31,80 +32,108 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 /**
- * Backing Bean for Item Panel Threshold
+ * Backing Bean for Item Panel Threshold - 31344
  * 
  * @author luqmanhakim
  * @since 13/10/2025
- *
+ * 
  */
 @ManagedBean(name = "itemPanelThrRptBB")
 @SessionScoped
 public class ItemPanelThresholdRptBackingBean extends FlReportBackingBean<ItemPanelThresholdRptManagedBean> {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final Logger log = EpLogger.getLogger(ItemThresholdRptBackingBean.class);
-	
+
 	public ItemPanelThresholdRptBackingBean() {
-		if(getManagedBean().getMinistry() == null){
+		if (getManagedBean().getMinistry() == null) {
 			defaultPtjAndMinistryValues();
 		}
 	}
-	
+
+	/**
+	 * Get select item for procurement type
+	 * 
+	 * @return
+	 */
 	public SelectItem[] getDropdownValuesProcurementType() {
 		SelectItem[] items = null;
 		String parameterType = FlReportConst.FL_PARAMETER_TYPE_RPT;
-		FacesScopes face = new FacesScopes();
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(parameterType, null);
-			
-	        List<SelectItem> itemList = new ArrayList<SelectItem>();
-	        itemList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-	            ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
-	
-	        if (parameterDescs != null) {
-	            for (PmParameterDesc parameterDesc : parameterDescs) {
-	                if (parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
-	                    itemList.add(new SelectItem(parameterDesc.getPmParameter().getParameterCode(),
-	                        parameterDesc.getCodeName()));
-	                }
-	            }
-	        }
-	        items = itemList.toArray(new SelectItem[itemList.size()]);
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					parameterType, null);
+
+			List<SelectItem> itemList = new ArrayList<>();
+
+			if (parameterDescs != null) {
+				for (PmParameterDesc parameterDesc : parameterDescs) {
+					if (ParameterConst.PROC_TYPE_NORMAL.equalsIgnoreCase(parameterDesc.getPmParameter()
+							.getParameterCode())) {
+
+						itemList.add(new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc
+								.getCodeName()));
+					}
+				}
+			}
+			items = itemList.toArray(new SelectItem[itemList.size()]);
 		} catch (Exception e) {
 			log.error(e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
 	}
-	
+
+	/**
+	 * Construct financial year list
+	 * 
+	 * @return List of select item for financial year
+	 */
 	public static List<SelectItem> getFinancialYearOpt() {
 		List<SelectItem> financialYearOpt = new ArrayList<SelectItem>();
-	    Calendar cal = Calendar.getInstance();
-	    cal.setTime(new Date());
-	    
-	    int currentYear = cal.get(Calendar.YEAR);
-	    int startYear = 2018;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
 
-	    for (int year = currentYear ; year >= startYear ; year--) {
-	        financialYearOpt.add(new SelectItem(year, Integer.toString(year)));
-	    }
+		int currentYear = cal.get(Calendar.YEAR);
+		int startYear = 2018;
 
-	    return financialYearOpt;
+		for (int year = currentYear; year >= startYear; year--) {
+			financialYearOpt.add(new SelectItem(year, Integer.toString(year)));
+		}
+
+		return financialYearOpt;
 	}
-	
-	public void resetAction(){
+
+	/**
+	 * Reset the search form value
+	 */
+	public void resetAction() {
+		if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		} else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			defaultPtjAndMinistryValues();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+		}
 		getManagedBean().setFinancialYear(null);
 		getManagedBean().setProcurementTypeCode(null);
 		resetSearchCriteriaValues();
 	}
-	
-	public void generateReport(){
-		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
+
+	/**
+	 * Generate report
+	 */
+	public void generateReport() {
+		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		log.info("********Report Code*************" + getManagedBean().getReportCode());
 		retrieveReportValueFromDb();
-		if(getManagedBean().getMinistry() != null){
+		if (getManagedBean().getMinistry() != null) {
 			params.put(FlReportConst.FL_RPT_MINISTRY, getManagedBean().getMinistry().getOrgProfileId().toString());
 		}
 		if (getManagedBean().getPtjGroup() != null) {
@@ -125,57 +154,125 @@ public class ItemPanelThresholdRptBackingBean extends FlReportBackingBean<ItemPa
 		if (StringUtils.isNotBlank(getManagedBean().getFinancialYear())) {
 			params.put(FlReportConst.FL_RPT_FN_YEAR, getManagedBean().getFinancialYear());
 		}
-		if(getManagedBean().getStatusDescId() != null){
+		if (getManagedBean().getStatusDescId() != null) {
 			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
 		}
-		if(getManagedBean().getProcurementTypeCode() != null){
+		if (getManagedBean().getProcurementTypeCode() != null) {
 			params.put(FlReportConst.FL_RPT_PROCUREMENT_TYPE, getManagedBean().getProcurementTypeCode().toString());
-		} 
-		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
+		}
+		if (StringUtils.isNotBlank(getManagedBean().getGroup())) {
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}
-		
-		generateFlReport(params);
-		
-	}
-	
-	public SelectItem[] getStatusDropdownValuesForItemThreshold(String docType) {
-		log.info("**getStatusDropdownValuesForItemThreshold**");
 
+		generateFlReport(params);
+
+	}
+
+	/**
+	 * Get select item for document status by doctype
+	 * 
+	 * @param docType
+	 * @return
+	 */
+	public SelectItem[] getStatusDropdownValuesForItemThreshold(String docType) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 
 		try {
-			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
-					.getStatusDescList(ModuleCodeConst.ORDER_FULFILLMENT, docType, null);
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(
+					ModuleCodeConst.ORDER_FULFILLMENT, docType, null);
 			List<PmStatusDesc> statusDescsItemThreshold = new ArrayList<PmStatusDesc>();
 
 			for (PmStatusDesc statusDesc : statusDescs) {
-				if(statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT)
-					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CLOSED)
-					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CLOSED_MANUAL_PAYMENT_1GFMAS)){
+				if (statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT)
+						|| statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CLOSED)
+						|| statusDesc.getPmStatus().getStatusId()
+								.equals(FulfilmentStatusConst.PO_CLOSED_MANUAL_PAYMENT_1GFMAS)) {
 					statusDescsItemThreshold.add(statusDesc);
 				}
 			}
-				
+
 			items = new SelectItem[statusDescsItemThreshold.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
+			items[0] = new SelectItem(0L, ResourceBundleUtils.getMessage("lbl.txt.all",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (PmStatusDesc statusDescYep : statusDescsItemThreshold) {
-					items[i++] = new SelectItem(statusDescYep.getPmStatus()
-							.getStatusId(), statusDescYep.getStatusName());
+				items[i++] = new SelectItem(statusDescYep.getPmStatus().getStatusId(), statusDescYep.getStatusName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
+	}
+
+	/**
+	 * Construct condition field for PTJ by user role code
+	 * 
+	 * @return
+	 */
+	public String constructConditionForPTJByRole() {
+		String condition = "";
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			condition = getPTJWithApproveOtherPTJCondition();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			condition = getPTJInternalAuditorCondition();
+		} else {
+			condition = getPTJCondition();
+		}
+		return condition;
+	}
+
+	/**
+	 * Construct condition field for PTJ Group by user role code
+	 * 
+	 * @return
+	 */
+	public String constructConditionForPTJGroupByRole() {
+		String condition = "";
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			condition = getPTJGroupWithApproveOtherPTJCondition();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			condition = getPTJGroupInternalAuditorCondition();
+		} else {
+			condition = constuctConditionFieldsForPTJGroup();
+		}
+		return condition;
+	}
+
+	/**
+	 * Disable PTJ Group lov by user role code
+	 * 
+	 * @return
+	 */
+	public boolean disablePtjGroupLovThresholdReport() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			return false;
+		} else {
+			return disablePtjGroupLov();
+		}
+	}
+
+	/**
+	 * Disable PTJ lov by user role code
+	 * 
+	 * @return
+	 */
+	public boolean disablePtjLovThresholdReport() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			return false;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			if (getManagedBean().getPtjGroup() == null) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return disablePtjLov();
+		}
 	}
 
 }
