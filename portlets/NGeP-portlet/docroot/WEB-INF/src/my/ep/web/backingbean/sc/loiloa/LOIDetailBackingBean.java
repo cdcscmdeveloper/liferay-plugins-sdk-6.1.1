@@ -3197,6 +3197,11 @@ public class LOIDetailBackingBean extends
 		// 26247 - start
 		catch (EpException e) {
 			String taskName = this.getManagedBean().getTaskName();
+			// #28777 & #29729 - Start
+			if(checkFlagForSupplierBranchDeleted(outcome)) {
+				checkNeedSupplierIfHaveBranchDeleted(outcome);
+			}else 
+			// #28777 & #29729 - End
 			if (Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION, SCProcessNameConst.SIGNOFF_FC_SELECTION)
 					.contains(taskName)) {
 				Locale userLocale = new FacesScopes().getUserLocale();
