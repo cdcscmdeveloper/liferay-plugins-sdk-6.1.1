@@ -2454,8 +2454,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 		//#21692 - End
 		
 		//#28777#29729 - Start
-		if(checkFlagForSupplierBranchDeleted(outcome)){
-		    checkNeedSupplierIfHaveBranchDeleted(outcome);
+		if(checkFlagForSupplierBranchDeleted(outCome)){
+		    checkNeedSupplierIfHaveBranchDeleted(outCome);
 		}
 		//#28777#29729 - End
 		
