@@ -3682,8 +3682,7 @@ public class SmApplicationUtil {
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
 		//13362
 		// #39422 - Start - Add checking
-		if (managedBean.getApplnOverLapRemarks() == null
-				|| managedBean.getApplnOverLapRemarks().isEmpty()) {
+		if (managedBean.getApplnOverLapRemarks() == null || managedBean.getApplnOverLapRemarks().isEmpty()) {
 			managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
 		}
 		// #39422 - End
@@ -3700,8 +3699,7 @@ public class SmApplicationUtil {
 			//13362
 			// #39422 - Start - Add checking
 			if (managedBean.getApplnOverLapRemarks().isEmpty()) {
-				managedBean.setApplnOverLapRemarks(overlapCategoryVO
-						.getApplnOverLapRemarks());
+				managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
 			}
 			// #39422 - End
 			managedBean.setOverLappedCategoryExists(true); //#31018
