@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -3262,10 +3263,7 @@ public class CommitteBackingBean extends
 		List<String> commList = new ArrayList<>();
 		for (ScCommittee committee : committeeList) {
 			String paramCode = committee.getCommitteeType().getParameterCode();
-
-			if (CollectionUtils.isNotEmpty(committee.getScCommitteeMemberHistories())) {
-				commList.add(paramCode);
-			}
+			commList.add(paramCode);
 		}
 		return commList;
 	}
