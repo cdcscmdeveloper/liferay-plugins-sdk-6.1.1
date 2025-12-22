@@ -173,6 +173,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> itemNotShortlistedSuppliersByZone;
 	private Map<Long, List<ScBidSchedule>> bidDisSchedulesByZone;
 	private Map<Long, List<BidPackageBean>> bidDisPackageBeansByZone;
+	private boolean flagBranchDeleted = false;
 
 	// #28777 & #29729 - End
 	
@@ -1387,6 +1388,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 
 	public void setBidDisPackageBeansByZone(Map<Long, List<BidPackageBean>> bidDisPackageBeansByZone) {
 		this.bidDisPackageBeansByZone = bidDisPackageBeansByZone;
+	}
+	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
 	}
 	// #28777 & #29729 - End
 
