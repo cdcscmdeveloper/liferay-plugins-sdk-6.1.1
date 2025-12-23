@@ -201,6 +201,7 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
+import my.ep.util.LoggerUtils;
 
 /**
  * Backing Bean For Contract Amendment Details
@@ -212,6 +213,8 @@ import com.liferay.portal.util.PortalUtil;
 @ViewScoped
 public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManagedBean> {
 
+	private transient LoggerUtils logger = LoggerUtils.getInstance();
+	
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true"; // #15851
@@ -238,9 +241,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public static final boolean REDUCTION_OF_CONTRACT_VALUE = true;
 	
 	// Gets the service that handles contract amendment logic.
-	private IContractAmendmentSO getIContractAmendmentSO() {
+	public IContractAmendmentSO getIContractAmendmentSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 	}
+	
+	// Test seam for unit testing
+	public ParameterHelper getParameterHelper() {
+	    return ParameterHelper.getInstance();
+	}
+	
 	//#24336 - End
 	
 	
@@ -10410,15 +10419,29 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * Handle changes when the contract value type (addition/reduction) is selected.
 	 */
 	public void handleContractValueTypeChange() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
-			ctBackingBean.getManagedBean().setDisableReductionContractAmount(false);
-			ctBackingBean.getManagedBean().setDisableAdditionContractAmount(true);
-		} else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);
-			ctBackingBean.getManagedBean().setDisableReductionContractAmount(true);
-			ctBackingBean.getManagedBean().setDisableAdditionContractAmount(false);
-		}
+		
+		ContractManagedBean managedBean = ctBackingBean.getManagedBean();
+	    CtAmendment amendment = managedBean.getContractVer().getCtAmendment();
+
+	    // Test Case 1
+	    if (amendment.isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
+	        amendment.setAdditionalAmount(BigDecimal.ZERO);
+	        managedBean.setDisableReductionContractAmount(false);
+	        managedBean.setDisableAdditionContractAmount(true);
+
+			logger.logCodeCoverage("Test Case 1: isReduction flag true, additionalAmount set to 0.00, \n"
+					+ "disableReductionContractAmount set to false and disableAdditionContractAmount set to true");
+	    } 
+	    
+	    // Test Case 2
+	    else {
+	        amendment.setReductionAmt(BigDecimal.ZERO);
+	        managedBean.setDisableReductionContractAmount(true);
+	        managedBean.setDisableAdditionContractAmount(false);
+	        
+			logger.logCodeCoverage("Test Case 2: isReduction flag false, reductionAmt set to 0.00, \n"
+					+ "disableReductionContractAmount set to true while disableAdditionContractAmount set to false");
+	    }
 	}
 	
 	/**
@@ -10438,9 +10461,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public BigDecimal getMaxAdditionalValue() {
 		BigDecimal maxAdditionalValue = BigDecimal.ZERO;
 		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
-		if (ctAmount != null && ctAmount.compareTo(BigDecimal.ZERO) > 0) {
-			maxAdditionalValue = ctAmount.multiply(new BigDecimal("0.5"));
-		}
+		
+		// Test Case 1
+	    if (ctAmount != null && ctAmount.compareTo(BigDecimal.ZERO) > 0) {
+	        maxAdditionalValue = ctAmount.multiply(new BigDecimal("0.5")).setScale(2, RoundingMode.HALF_UP);
+
+	        logger.logCodeCoverage(
+	            "Test Case 1: ctAmount greater than 0, maxAdditionalValue calculated as ctAmount multiplied by 0.5"
+	        );
+	    }
+	    // Test Case 2 & 3
+	    else {
+	        logger.logCodeCoverage(
+	            "Test Case 2 & 3: ctAmount is null or not greater than zero, maxAdditionalValue returned as 0.00"
+	        );
+	    }
 		return maxAdditionalValue;
 	}
 	
@@ -10452,11 +10487,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		BigDecimal additionalPercentage = BigDecimal.ZERO;
 		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
 		BigDecimal addition = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount();
-		if (ctAmount != null && addition != null && ctAmount.compareTo(BigDecimal.ZERO) != 0) {
+		
+		// Test Case 1
+	    if (ctAmount != null && addition != null && ctAmount.compareTo(BigDecimal.ZERO) != 0) {
 	        additionalPercentage = addition
 	                .divide(ctAmount, 4, RoundingMode.HALF_UP)
 	                .multiply(new BigDecimal("100"));
+
+	        logger.logCodeCoverage("Test Case 1: ctAmount and addition not null and ctAmount not zero, \n" +
+	        		"additionalPercentage calculated as (addition / ctAmount) * 100");
 	    }
+	    
+	    // Test Case 2 & 3
+	    else {
+	        logger.logCodeCoverage("Test Case 2 & 3: ctAmount is 0 or input values are null, additionalPercentage returned as 0.00");
+	    }
+	    
 		return additionalPercentage;
 	}
 
@@ -10469,23 +10515,40 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Date newAmtEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewAmtEffDate();
 		
 		// new overall contract amount is different from overall contact amount
+		// Test Case 1 & 2
 		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
 			
-			if(newAmtEffDate == null){
-				newAmtEffDate = new Date();
-			}
+			// Test Case 1
+	        if (newAmtEffDate == null) {
+	            newAmtEffDate = new Date();
+
+	            logger.logCodeCoverage("Test Case 1: newOverallCtAmount differs and newAmtEffDate is null, newAmtEffDate set to current date");
+	        }
+	        // Test Case 2
+	        else {
+	            logger.logCodeCoverage("Test Case 2: newOverallCtAmount differs and newAmtEffDate already exists, existing date retained");
+	        }
 			
 			// Enable date input
 			ctBackingBean.getManagedBean().setDisableNewCtAmountEffDate(false);
+			
+			logger.logCodeCoverage("Test Case 1 & 2: newOverallCtAmount differs, disableNewCtAmountEffDate flag set to false");
 		
-		// same as overall contract amount	
-		}else{
+		}
+		
+		// same as overall contract amount
+		// Test Case 3
+		else{
 			
 			newAmtEffDate = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getEffDate();
 			
 			// Disable date input
 			ctBackingBean.getManagedBean().setDisableNewCtAmountEffDate(true);
+			
+			logger.logCodeCoverage("Test Case 3: newOverallCtAmount same as currentCtAmount, \n" +
+					"newAmtEffDate set to contract effective date and disableNewCtAmountEffDate flag set to true");
 		}
+		
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewAmtEffDate(newAmtEffDate);
 	}
 	
@@ -10541,6 +10604,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal getReducibleContractAmount() {
 		BigDecimal amount;
+		
+		// Test Case 1
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
 			BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
 		    BigDecimal pendingAmount = getPendingTransactionAmount();
@@ -10548,31 +10613,63 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		    BigDecimal totalAmount = pendingAmount.add(prePaymentAmount);
 		    amount = ctAmount.subtract(totalAmount);
-		}else{
+		    
+		    logger.logCodeCoverage("Test Case 1: isReduction flag true, reducible contract amount calculated as \n" +
+		    		"ctAmount minus total of pendingAmount plus prePaymentAmount");
+		}
+		
+		// Test Case 2
+		else{
 			amount = BigDecimal.ZERO;
+			
+			logger.logCodeCoverage("Test Case 2: isReduction flag false, reducible contract amount returned as 0.00");
 		}
 	    return amount;
 	}
 	
 	// Validate reduction amount does not exceed the allowed contract limit
-	private void validateReductionAmount(){
+	public void validateReductionAmount(){
+		
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
 			BigDecimal reducibleCtAmount = getReducibleContractAmount();
 			BigDecimal reductionAmount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getReductionAmt();
 			
+			// Test Case 1
 			if (reductionAmount.compareTo(reducibleCtAmount) > 0) {
+				
+				logger.logCodeCoverage("Test Case 1: isReduction flag true and reductionAmount greater than reducibleCtAmount, \n" +
+						"validation failed and exception will be thrown");
+				
 				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
 				throw new EpException(MessageConst.ERROR_750092);
 			}
+			
+			// Test Case 2 (implicit pass)
+	        logger.logCodeCoverage("Test Case 2: isReduction flag true and reductionAmount less than or equal to reducibleCtAmount, \n" +
+	        		"validation passed");
+	        
+		}
+		
+		// Test Case 3
+		else {
+	        logger.logCodeCoverage(
+	            "Test Case 3: isReduction flag false, reduction amount validation skipped"
+	        );
 		}
 	}
 	
 	// Ensure the new amount effective date is provided
-	private void validateNewAmtEffDate(){
+	public void validateNewAmtEffDate(){
 		boolean isDisableNewCtAmountEffDate = ctBackingBean.getManagedBean().isDisableNewCtAmountEffDate();
+		
+		// Test Case 1
 		if (!isDisableNewCtAmountEffDate && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewAmtEffDate() == null) {
-
+			
+			logger.logCodeCoverage("Test Case 1: new contract amount effective date input enabled and newAmtEffDate is null, \n" +
+					"validation failed and exception will be thrown");
+			
 			getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			
@@ -10580,10 +10677,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					new String[]{ResourceBundleUtils.getMessage(ContractConst.NEW_AMOUNT_EFFECTIVE_DATE_LABEL, 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
+		
+		// Test Case 2 & 3 (implicit pass / skip)
+	    logger.logCodeCoverage("Test Case 2 & 3: new contract amount effective date input disabled \n" +
+	    		"or newAmtEffDate has value, validation skipped or passed");
 	}
 	
 	// Validate all required amendment checklist items are completed
-	private void validateAmendmentChecklist(){
+	public void validateAmendmentChecklist(){
 		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 		ContractManagedBean bean = ctBackingBean.getManagedBean();
 		
@@ -10609,6 +10710,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    for (int i = 0; i < amendmentFlags.length; i++) {
 	        if (amendmentFlags[i] && !checklistFlags[i]) {
 	            isError = true;
+	            
+	            // Test Case 1
+	            logger.logCodeCoverage("Test Case 1: amendment flag true while corresponding checklist flag false, checklist validation failed");
+	            
 	            break;
 	        }
 	    }
@@ -10618,14 +10723,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			throw new EpException(MessageConst.ERROR_750093);
 		}
+		
+		// Test Case 2 & 3 (implicit pass)
+	    logger.logCodeCoverage("Test Case 2 & 3: all amendment flags matched with checklist flags or \n" +
+	    		"no amendment selected, checklist validation passed");
+	    
 	}
 	
 	// Loads the correct checklist options based on data
-	private void handleSelectedAmendmentChecklistValue() {
+	public void handleSelectedAmendmentChecklistValue() {
 	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 	    ContractManagedBean bean = ctBackingBean.getManagedBean();
-
+	    
+	    // Test Case 1
 	    if (isCtApproverSetting()) {
+	    	
+	    	logger.logCodeCoverage("Test Case 1: user is contract approver with task in Review FA state, \n" +
+	    			"checklist values are set directly based on amendment flags.");
+	    	
 	        bean.setContractExtendChecklist(amendment.isContractExtend());
 	        bean.setItemPriceChangeChecklist(amendment.isItemPriceChange());
 	        bean.setQuantityChangeChecklist(amendment.isQuantityChange());
@@ -10633,7 +10748,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        bean.setClauseChangeChecklist(amendment.isClauseChange());
 	        bean.setValueChangeByGstChecklist(amendment.isValueChangeByGst());
 	        bean.setOtherChangeChecklist(amendment.isOtherChange());
-	    } else {
+	    } 
+	    
+	    // Test Case 2
+	    else {
+	    	
+	    	logger.logCodeCoverage("Test Case 2: user is not contract approver or task is not in Review FA state, \n" +
+	    			"clears unchecked checklist options based on amendment flags");
+	    	
 	        updateChecklist(bean, amendment);
 	    }
 	}
@@ -10710,10 +10832,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        );
 	        SearchBean<PmParameterDesc> searchBean = new SearchBean<>();
 	        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), codes));
-	        List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterConst.COMMITTE_TYPE, searchBean);
-	        
+	        List<PmParameterDesc> parameterDescs = getParameterHelper().getParameterDescListBySearchBean(ParameterConst.COMMITTE_TYPE, searchBean);
         	IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
     		String stateCode = iContractAmendmentSO.getPtjContractOwnerStateCode(ctBackingBean.getManagedBean().getContractVer());
+    		
+    		logger.logCodeCoverage("Test Case 1, 2, 3: committee type parameters retrieved and PTJ contract owner state code resolved");
     		
 	        for (PmParameterDesc desc : parameterDescs) {
 	        	String code = desc.getPmParameter().getParameterCode();
@@ -10723,18 +10846,25 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        	boolean hide;
 	        	if (ContractConst.STATE_CODE_SABAH.equals(stateCode)) {
 	        		hide = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(code);
-	            } else if (ContractConst.STATE_CODE_SARAWAK.equals(stateCode)) {
+	            
+	        		logger.logCodeCoverage("Test Case 1: PTJ state Sabah, Sarawak Federal Procurement Board committee type filtered");
+	        	} else if (ContractConst.STATE_CODE_SARAWAK.equals(stateCode)) {
 	            	hide = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(code);
-	            } else {
+	            
+	            	logger.logCodeCoverage("Test Case 2: PTJ state Sarawak, Sabah Federal Procurement Board committee type filtered");
+	        	} else {
 	            	hide = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(code)
 	                       || ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(code);
-	            }
+	            
+	            	logger.logCodeCoverage("Test Case 3: PTJ state not Sabah or Sarawak, both Federal Procurement Board committee types filtered");
+	        	}
 	        	
 	        	if (!hide){
 	        		items.add(item);
 	        	}
 	        }
 	    } catch (Exception e) {
+	    	logger.logCodeCoverage("Test Case 4: exception occurred during committee type retrieval, SLA error logged and empty list returned");
 	        SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getCommitteeTypeItems",
 	            ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "getCommitteeTypeItems", getUserIdSessionFromLoginId(), e);
 	    }
@@ -10745,21 +10875,42 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private void setCommitteeTypeValue() {
 
 	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-
+	    
+	    // Test Case 1
 	    if (!amendment.isPbqcAuthorityReq()) {
+	    	
+	    	logger.logCodeCoverage("Test Case 1: isPbqcAuthorityReq flag is false, committeeType is set to null and processing is terminated.");
+	    	
 	        amendment.setCommitteeType(null);
 	        return;
 	    }
 
 	    String committeeType = getManagedBean().getCommitteeType();
+	    
+	    // Test Case 2
 	    if (committeeType == null) {
+	    	
+	    	logger.logCodeCoverage("Test Case 2: isPbqcAuthorityReq flag is true and committeeType is null, no parameter lookup is performed.");
+	    	
 	        return;
 	    }
 
-	    PmParameter pm = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, committeeType);
-
+	    PmParameter pm = getParameterHelper().getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, committeeType);
+	    
 	    if (pm != null) {
+	    	
+	    	// Test Case 3
+	        logger.logCodeCoverage(
+	            "Test Case 3: isPbqcAuthorityReq flag is true and committeeType is resolved, committeeType is set using parameter helper result."
+	        );
+	    	
 	        amendment.setCommitteeType(pm);
+	    }
+	    
+	    // Test Case 4
+	    else{
+	    	logger.logCodeCoverage("Test Case 4: isPbqcAuthorityReq flag is true and committeeType is provided but parameter lookup returns null.");
+	    	return;
 	    }
 	}
 	
