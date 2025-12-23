@@ -1680,21 +1680,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId()) ||
 					ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {	 //#26688
 				copyCommitteeMember();
+				
 				getManagedBean().setHasChanges(Boolean.FALSE);
 				getManagedBean().setFilteredUpdatedCommitteeMembers(new ArrayList<CtCommitteeMember>());
-				for(CtCommitteeMember newMember: getManagedBean().getUpdatedCommitteeMembers()) {
-					//#35238 start
-					if (newMember.getMemberRole() != null
-							&& newMember.getMemberRole().getParameterCode() != null
-							&& newMember.getMemberRole().getParameterCode()
-									.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-						newMember.setAttended(true);
-					}
-					if(newMember.getUpdateType() != null) {
-						getManagedBean().setHasChanges(Boolean.TRUE);
-					}
-					//#35238 end
-				}
+				
 				//#29549 start
 				sortCTCommitteeMemberRole(getManagedBean().getUpdatedCommitteeMembers());
 				//#29549 end
@@ -8209,6 +8198,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				.clone((Serializable) ctBackingBean.getManagedBean().getContractVer().getCtAmendment()
 						.getCtCommitteeMembers());
 		getManagedBean().setUpdatedCommitteeMembers(copyMember);
+		setUpdatedCommitteeMemberAttended();
 	}
 	// #29403 end
 
@@ -10194,6 +10184,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				.getCommitteeType());
 
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setCommitteeType(pmParameter);
+	}
+	
+	/**
+	 * Method to set attended for secretary only for updated committee.
+	 */
+	private void setUpdatedCommitteeMemberAttended(){
+		for(CtCommitteeMember newMember: getManagedBean().getUpdatedCommitteeMembers()) {
+			if (newMember.getMemberRole() != null
+					&& newMember.getMemberRole().getParameterCode() != null
+					&& newMember.getMemberRole().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+				newMember.setAttended(true);
+			}
+			if(newMember.getUpdateType() != null) {
+				getManagedBean().setHasChanges(Boolean.TRUE);
+			}
+		}
 	}
 	//#35238 end
 	
