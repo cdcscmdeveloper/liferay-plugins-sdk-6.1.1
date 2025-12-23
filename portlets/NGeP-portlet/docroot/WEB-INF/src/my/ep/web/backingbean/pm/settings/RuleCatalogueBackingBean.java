@@ -6549,9 +6549,15 @@ public class RuleCatalogueBackingBean extends
 	 * #36738 Reset search value on tab change
 	 */
 	public void onAnyTabChange() {
+		int activeIndex = this.getManagedBean().getTabActiveIndex();
 		resetRuleType();
 		resetRuleValue();
 		resetQtValues();
+		if (Integer.valueOf(0).equals(activeIndex)) {
+			List<PmConfigRuleDesc> list = retriveConfigRuleDescFromDB();
+			getManagedBean().setConfigRuleDescList(list);
+			getManagedBean().setSelectedRuleDescType(list.get(0));
+		}
 		this.getManagedBean().setCollapsePanel(true);
 	}
 	// #36738 End
