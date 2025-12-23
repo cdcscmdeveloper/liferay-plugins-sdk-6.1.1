@@ -1751,9 +1751,7 @@ public class FinancialOrgBackingBean extends
 					}
 				}
 			}
-
 		}
-
 	}
 	/* Factoring Bank - END */
 	
