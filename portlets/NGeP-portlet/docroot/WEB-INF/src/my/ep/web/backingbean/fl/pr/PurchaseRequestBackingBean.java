@@ -1528,26 +1528,26 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		log.info("start - 20011");
 		//Redmine #20011
 		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFulfilmentRequest()));
-		if (!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-			checkPRThresholdPerItem();
-		} else if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-			// #27476 start
-			if (getManagedBean().getTaskId() != null) {
-				if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterType()
-						.equalsIgnoreCase(FulfilmentConst.PROC_PARAM_TYPE_PR)) {
-					validateThresholdPK7AndSpecialItem();
-				} else {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-									MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
-									getFacesScopes().getUserLocale())));
-				}
+		// #27476 start
+		if (getManagedBean().getTaskId() != null) {
+			if (isThresholdPK7Required()) {
+				validateThresholdPK7AndSpecialItem();
+			} else if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+					&& getManagedBean().getFulfilmentRequest().getProcurementType().getParameterType()
+							.equalsIgnoreCase(ParameterConst.PO_ROLE_TASK_PARAM_CODE)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
+										.getUserLocale())));
+
+			} else {
+				checkPRThresholdPerItem();
 			}
-			// #27476 end
 		}
+		// #27476 end
+		
 		log.info("end - 20011");
 		log.info("start - addButton");
 		//Redmine Enhancement #12177
