@@ -8178,9 +8178,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/**
 	 * the method will retrieve the disciplinary action info from supplier module.
-	 * If supplier type of punishment is �Suspend Registration� or �Cancel Registration� 
-	 * or �Blacklist Owner / Director of Company� or �Cancellation of Bumiputera Status� 
-	 * or �Cancellation of Manufacturer Status�, this Amendment With Supplemental process not able to proceed
+	 * If supplier type of punishment is "Suspend Registration" or "Cancel Registration" 
+	 * or "Blacklist Owner / Director of Company" or "Cancellation of Bumiputera Status" 
+	 * or "Cancellation of Manufacturer Status", this Amendment With Supplemental process not able to proceed
 	**/
 	private void retrieveDA() { // #32712
 		SmSupplier currentSupplier = getSupplier(); // #34097
