@@ -131,6 +131,12 @@ public final class ContractHashSetConst {
 			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE
     )));
 	
+	public static final Set<String> COMMITTEE_TYPE_QUOTATION_A_C = 
+			Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A,
+			ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE
+    )));
+	
 	public static final Set<String> QUOTATION_MEMBER_ROLES = 
 		Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             RoleCode.QCA_MEMBER.value(),
