@@ -5980,13 +5980,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-				//Bug #39043 start
+				
+				//Bug #39043 #39512 start
 				if (null != suppAns.getSupplierId()
-						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   
-						//&& null != tplSpecAnswer.getAnswerRemark()){ //Bug #39043 end				
-					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){
+					String remark = tplSpecAnswer.getAnswerRemark();
+					answerRemarkList.add(remark != null ? remark : getDefaultValue());
 					break;
 				}
+				//Bug #39043 #39512 end
 			}
 		}
 	}
@@ -6141,7 +6143,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 						if (tempRemark == null) {
 							tempRemark = getDefaultValue();
-						} //else { Bug #39043
+						} //else { Bug #39043 #39512
 							if (tempSpecZoneQty > 0) {
 								if (tempRemarkIndex >= tempSpecZoneQty) {
 									if (indexRemarkStore == 0) {
@@ -6166,7 +6168,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 								tempRemarkIndex++;
 							}
-						//} Bug #39043
+						//} Bug #39043 #39512
 
 					}
 
