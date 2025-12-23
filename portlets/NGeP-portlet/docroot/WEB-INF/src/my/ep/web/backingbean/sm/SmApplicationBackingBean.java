@@ -18608,6 +18608,72 @@ public class SmApplicationBackingBean extends
 	}
 	// #36718 - End
 	
+	// 36504 - START
+	public void otherDescriptionHistory() {
+		RequestContext.getCurrentInstance().execute(
+				"otherDescriptionHistoryDlg.show();");
+	}
+
+	public void otherDescriptionEdit(SmSupplierCategory smSupCat) {
+
+		getManagedBean().setSelectedCategory(smSupCat);
+		getManagedBean().setOtherDescEdited(smSupCat.getOtherDesc());
+		getManagedBean().setUpdateRecordTC(false);
+		RequestContext.getCurrentInstance().execute(
+				"otherDescriptionEditDlg.show();");
+	}
+
+	public void resetOtherDescriptionEdit() {
+		getManagedBean().setOtherDescEdited(
+				getManagedBean().getSelectedCategory().getOtherDesc());
+	}
+
+	public void saveOtherDescriptionEdit() {
+		try {
+			SmSuppCatOtherDescHistory smSuppCatOtherDescHistory = new SmSuppCatOtherDescHistory();
+			smSuppCatOtherDescHistory.setOtherDesc(getManagedBean()
+					.getSelectedCategory().getOtherDesc());
+			smSuppCatOtherDescHistory.setSmAppl(getManagedBean()
+					.getSelectedCategory().getSmAppl());
+			smSuppCatOtherDescHistory.setSmSupplierCategory(getManagedBean()
+					.getSelectedCategory());
+
+			if (getManagedBean().isPoUser()) {
+				smSuppCatOtherDescHistory
+						.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
+			} else if (getManagedBean().isApproverUser()) {
+				smSuppCatOtherDescHistory
+						.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+			}
+
+			SmServiceLookup.getMofRegistrationSO()
+					.updateSmSuppCatOtherDescHistory(smSuppCatOtherDescHistory);
+
+			getManagedBean().getSelectedCategory().setOtherDesc(
+					getManagedBean().getOtherDescEdited());
+			SmServiceLookup.getMofRegistrationSO().updateSmSupplierCategory(
+					getManagedBean().getSelectedCategory());
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_721228,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			SmApplicationUtil
+					.assignActiveAndApprovedCategoryList(getManagedBean());
+			RequestContext.getCurrentInstance().execute(
+					"otherDescriptionEditDlg.hide();");
+		}
+	}
+
+	// 36504 - END
+		
 //	#37925 START
 	private void showRegistrationDecisionUI() {
 	    clearRegistrationStatusDisplay();

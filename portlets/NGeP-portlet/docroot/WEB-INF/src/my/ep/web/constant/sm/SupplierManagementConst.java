@@ -1550,6 +1550,16 @@ public class SupplierManagementConst {
 	}
 	// #28895_35501 End
 	
+	// 36504 - START
+	public String getSECTION_REV_ROLE_PO() {
+		return SECTION_REV_ROLE_PO;
+	}
+
+	public String getSECTION_REV_ROLE_APP() {
+		return SECTION_REV_ROLE_APP;
+	}
+	// 36504 - END
+	
 //	#37925 START
 	public String getApplTypeBumi() {
 		return APPL_TYPE_BUMI;
