@@ -3180,7 +3180,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public String getProcurementTypeToolTip(Date date) {
 		// MaxProcurementAmt
 		BigDecimal zeroAmt = new BigDecimal(0); //#27868
-		BigDecimal maxProcurementAmt = getToolTipsPRThresholdAmount(); //#27868
 		DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
 				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
@@ -3191,6 +3190,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip.rpt", null,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		} else {
+			BigDecimal maxProcurementAmt = getToolTipsPRThresholdAmount(); //#27868
 			
 			if (zeroAmt.compareTo(maxProcurementAmt) > 0) {
 				String notAvailable = ResourceBundleUtils.getMessage("lbl.txt.na ",
