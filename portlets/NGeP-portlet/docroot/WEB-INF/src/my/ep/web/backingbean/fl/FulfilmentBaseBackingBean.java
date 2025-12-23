@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
@@ -60,6 +61,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -934,6 +936,51 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
         cdbb.getManagedBean().setSegmentCode(segmentCode);
         cdbb.getManagedBean().setFamilyTitle(familyTitle);
     }
+	
+	public String filterNARequestItemName(Long scRequestItemId){
+
+	    if (scRequestItemId == null) {
+	        return null;
+	    }
+
+	    ScRequestItem scRequestItem =
+	        getRequestItemSO().getRequestItemAndCmItemByRequestItemId(scRequestItemId);
+
+	    if (scRequestItem == null || scRequestItem.getItemName() == null) {
+	        return null;
+	    }
+
+	    CmItem cmItem = scRequestItem.getCmItem();
+
+	    CommonUtils common = new CommonUtils();
+
+	    if (isNACmItem(cmItem)) {
+	        return common.removeItemNameNA(scRequestItem.getItemName());
+	    }
+
+	    return common.filterItemNameNA(scRequestItem.getItemName());
+	}
+	
+	private boolean isNACmItem(CmItem item) {
+
+	    if (item == null) {
+	        return false;
+	    }
+
+	    return isNA(item.getCmType() != null ? item.getCmType().getTypeName() : null)
+	        || isNA(item.getCmBrand() != null ? item.getCmBrand().getBrandName() : null)
+	        || isNA(item.getCmColor() != null ? item.getCmColor().getColorName() : null)
+	        || isNA(item.getCmMeasurement() != null ? item.getCmMeasurement().getMeasurementName() : null);
+	}
+
+	private boolean isNA(String value) {
+	    return value != null && value.equalsIgnoreCase("NA");
+	}
+	
+	private IRequestItemSO getRequestItemSO() {
+		return BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+	}
 		
 	// #31344 -end-
 }
