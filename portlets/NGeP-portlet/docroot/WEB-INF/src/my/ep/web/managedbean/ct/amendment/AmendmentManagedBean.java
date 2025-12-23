@@ -1689,4 +1689,19 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.backToNtf = backToNtf;
 	}
 	//#25956 - End
+	
+	//#35238 start
+	/**
+	 * @return the committeeQCBSecretaryWIP
+	 */
+	public boolean isCommitteeQCBSecretaryWIP() {
+		return committeeQCBSecretaryWIP;
+	}
+	/**
+	 * @param committeeQCBSecretaryWIP the committeeQCBSecretaryWIP to set
+	 */
+	public void setCommitteeQCBSecretaryWIP(boolean committeeQCBSecretaryWIP) {
+		this.committeeQCBSecretaryWIP = committeeQCBSecretaryWIP;
+	}
+	//#35238 end
 }
