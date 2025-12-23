@@ -1529,20 +1529,22 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//Redmine #20011
 		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFulfilmentRequest()));
 		// #27476 start
-		if (isThresholdPK7Required()) {
-			validateThresholdPK7AndSpecialItem();
-		} else if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
-				&& getManagedBean().getFulfilmentRequest().getProcurementType().getParameterType()
-						.equalsIgnoreCase(ParameterConst.PO_ROLE_TASK_PARAM_CODE)) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-							MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
-									.getUserLocale())));
+		if (getManagedBean().getTaskId() != null) {
+			if (isThresholdPK7Required()) {
+				validateThresholdPK7AndSpecialItem();
+			} else if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+					&& getManagedBean().getFulfilmentRequest().getProcurementType().getParameterType()
+							.equalsIgnoreCase(ParameterConst.PO_ROLE_TASK_PARAM_CODE)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
+										.getUserLocale())));
 
-		} else {
-			checkPRThresholdPerItem();
+			} else {
+				checkPRThresholdPerItem();
+			}
 		}
 		// #27476 end
 		
