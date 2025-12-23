@@ -3262,10 +3262,7 @@ public class CommitteBackingBean extends
 		List<String> commList = new ArrayList<>();
 		for (ScCommittee committee : committeeList) {
 			String paramCode = committee.getCommitteeType().getParameterCode();
-
-			if (CollectionUtils.isNotEmpty(committee.getScCommitteeMemberHistories())) {
-				commList.add(paramCode);
-			}
+			commList.add(paramCode);
 		}
 		return commList;
 	}
