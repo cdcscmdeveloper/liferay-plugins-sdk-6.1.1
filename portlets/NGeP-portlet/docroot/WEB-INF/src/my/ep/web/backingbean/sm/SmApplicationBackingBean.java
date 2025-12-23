@@ -18646,6 +18646,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(smSuppCatOtherDescHistory);
 			
 			getManagedBean().getSelectedCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
+			getManagedBean().setSmAppl(smSuppCatOtherDescHistory.getSmAppl());
 	        SmServiceLookup.getMofRegistrationSO().updateSmSupplierCategory(getManagedBean().getSelectedCategory());
 	        
 			FacesContext.getCurrentInstance().addMessage(

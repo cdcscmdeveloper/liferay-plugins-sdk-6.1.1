@@ -102,8 +102,6 @@
 						selection="#{ai.selectedEmployees}"
 						style="width:100%">
 						<ac:paginator for="dt#{cc.attrs.aiDlg}" />
-						<p:ajax event="rowSelect" update="@([id$=submitBtnAI])" />
-						<p:ajax event="rowUnselect" update="@([id$=submitBtnAI])" />
 						<p:column selectionMode="multiple" style="width:5%" />
 						<p:column headerText="#{lbl['lbl.sm.person.name']}">
 							<h:outputText value="#{emp.employeeName}" />
@@ -123,6 +121,9 @@
 					<br/><br/>
 					<h:outputText value="#{lbl['lbl.sm.facility.landLordName']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.landlordsName}" />
+					<br/>
+					<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}: " style="font-weight:bold;" />
+					<h:outputText value="#{ai.tenancy.tenantsName}" />
 					<br/>
 					<h:outputText value="#{lbl['lbl.sm.facility.monthRent']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.monthlyRental}" />
@@ -153,7 +154,7 @@
 					onclick="#{cc.attrs.aiDlg}.hide();"
 					onstart="block#{cc.attrs.aiDlg}.show()"
 					oncomplete="block#{cc.attrs.aiDlg}.hide();"
-					disabled="#{empty ai.docs or (cc.attrs.docType eq 'epf' and empty ai.selectedEmployees)}"/>
+					disabled="#{empty ai.docs}"/>
 					
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
 			</div>

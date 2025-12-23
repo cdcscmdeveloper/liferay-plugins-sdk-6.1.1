@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.managedbean.ct.amendment;
 
@@ -187,6 +187,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 //	private boolean isFromViewPage = false; // Fix - #34110
 	
+	private boolean committeeQCBSecretaryWIP; //#35238
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1688,5 +1689,4 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.backToNtf = backToNtf;
 	}
 	//#25956 - End
-	
 }

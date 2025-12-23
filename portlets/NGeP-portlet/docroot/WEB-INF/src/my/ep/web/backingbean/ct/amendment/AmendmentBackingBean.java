@@ -50,6 +50,7 @@ import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.bank.IChangeBankAccSO; // Fix - #33674
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.role.IRoleSO; //#35238
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -81,6 +82,8 @@ import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.role.RoleReqDTO; //#35238
+import my.ep.dto.pm.authorization.role.RoleResDTO; //#35238
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -125,6 +128,8 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg; //#35238
+import my.ep.persistence.entity.pm.authorization.PmUserRole; //#35238
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
@@ -1271,6 +1276,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
 				getManagedBean().setSecretaryId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
+				checkQCBSecretaryWIP(); //#35238
 			}
 
 			//Enhancement 15851 - Prefix for supplemental contract letter
@@ -2035,6 +2041,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#30014 - End
 			
+			checkQCBSecretaryWIP();//#35238
+
 			reqDTO.setCtContract(ctBackingBean.getManagedBean().getContractVer().getCtContract());
 			reqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -6570,13 +6578,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					Set<PmUser> set = new LinkedHashSet<PmUser>(userList);
 					userList.clear();
 					userList.addAll(set);
-
+					checkForQCBCommitteeDeskOfficerWIP(userList); //#35238
+					
 					items = new SelectItem[userList.size() + 1];
 					//Bug #29740 - end
 					
 					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-
+					
 					for (PmUser user : userList) {//Bug #29740
 						// #24336 (display name with ic) - Start
 						String nameWithIcNo = user.getUserName() + " - " + user.getIdentificationNo();
@@ -6804,7 +6813,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
 
 			// QCA/QCB, need to be same PTJ
-			if (isQuotationCommitteeType()) { //#35238
+			if (isQuotationCommitteeTypeAC() || isQCBCommitteeWIP()) { //#35238
 				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ownerOrgProfileId: "+ ctOwnerOrgProfileId);
 				
 				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
@@ -10145,13 +10154,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * Checks if the given committee type is a quotation committee type.
+	 * Checks if the given committee type is a quotation committee type QCA,QCB or QC.
 	 *
 	 * @return true if it matches any quotation committee type, false otherwise
 	 */
 	public boolean isQuotationCommitteeType() {
 		return getManagedBean().getCommitteeType() != null
 				&& ContractHashSetConst.COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType());
+	}
+	
+	/**
+	 * Checks if the given committee type is a quotation committee type QCA and QC.
+	 *
+	 * @return true if it matches any quotation committee type, false otherwise
+	 */
+	public boolean isQuotationCommitteeTypeAC() {
+		return getManagedBean().getCommitteeType() != null
+				&& ContractHashSetConst.COMMITTEE_TYPE_QUOTATION_A_C.contains(getManagedBean().getCommitteeType());
 	}
 	
 	/**
@@ -10162,6 +10181,177 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	private Long getParameterId(PmParameter pmParameter) {
 	    return pmParameter != null ? pmParameter.getParameterId() : null;
+	}
+	
+	/**
+	 * Checks if the given committee type is a quotation committee type QCB.
+	 * 
+	 * @return true if current committee is WIP QCB
+	 */
+	public boolean isQCBCommitteeWIP() {
+		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B);
+	}
+	
+	/**
+	 * Method to check for WIP QCB Committee Desk Officer. QCA/QCB has been replaced with
+	 * QQC. For data that has been saved previously with QCB secretary will be
+	 * treated as WIP QCB Committee. For the new version, QCB secretary will be
+	 * excluded from desk officer drop down, thus to cater the WIP issue, this
+	 * method will add back the selected QCB secretary into the dropdown.
+	 * 
+	 * @param userList
+	 *            the list of Desk Officer
+	 */
+	private void checkForQCBCommitteeDeskOfficerWIP(List<PmUser> userList) {
+		if (checkStatusTaskForQCBCommitteeWIP() && checkSecretaryExistWIP() && loaAmountQCBCommitteeWIP()) {
+			checkQCBSecretaryInList(userList);
+		}
+	}
+
+	/**
+	 * Method to check the current status for QCB Secretary dropdown list.
+	 * 
+	 * @return true if all condition met, otherwise false.
+	 */
+	private boolean checkStatusTaskForQCBCommitteeWIP() {
+		return getManagedBean().getTaskName() != null
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME));
+	}
+
+	/**
+	 * Method to check whether secretary not null and has been saved previously
+	 * 
+	 * @return true if all condition met, otherwise false.
+	 */
+	private boolean checkSecretaryExistWIP() {
+		return getManagedBean().getSecretaryId() != null && getManagedBean().isCommitteeQCBSecretaryWIP();
+	}
+
+	/**
+	 * Method to check amount loa for WIP QCB committee
+	 * 
+	 * @return true if all condition met, otherwise false.
+	 */
+	private boolean loaAmountQCBCommitteeWIP() {
+		long loaAmt = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt().longValue();
+		return loaAmt >= 20000L && loaAmt <= 50000L;
+	}
+
+	/**
+	 * Method to check the current save secretary is in the desk officer list.
+	 * 
+	 * @param userList
+	 *            the list of Desk Officer
+	 */
+	private void checkQCBSecretaryInList(List<PmUser> userList) {
+		boolean isFound = false;
+		for (PmUser user : userList) {
+			if (user.getUserId().equals(getManagedBean().getSecretaryId())) {
+				isFound = true;
+				break;
+			}
+		}
+		if (!isFound) {
+			checkAndAddQCBSecretaryWIP(userList);
+		}
+	}
+	
+	/**
+	 * Checks the current contract status within the allowed status and the
+	 * amount of the loa for QCB Committee. Checks whether the configured
+	 * secretary user has QCB Secretary role and marks the committee QCB
+	 * Secretary as work-in-progress.
+	 */
+	private void checkQCBSecretaryWIP() {
+		if (checkStatusTaskForQCBCommitteeWIP() && loaAmountQCBCommitteeWIP()) {
+			PmUser pmUser = retrieveSecretaryByUserId();
+
+			if (pmUser == null) {
+				return;
+			}
+
+			if (hasQCBSecretaryRole(pmUser)) {
+				getManagedBean().setCommitteeQCBSecretaryWIP(true);
+				setQuotationCommitteeType();
+			}
+
+		}
+	}
+
+	/**
+	 * Method to check the save secretary is QCB. If yes, will insert into list.
+	 * 
+	 * @param userList the list of Desk Officer
+	 */
+	private void checkAndAddQCBSecretaryWIP(List<PmUser> userList) {
+		PmUser pmUser = retrieveSecretaryByUserId();
+
+		if (pmUser == null || userList == null) {
+			return;
+		}
+
+		userList.add(pmUser);
+		setQuotationCommitteeType();
+	}
+	
+	/**
+	 * Retrieves the secretary user based on secretary ID from managed bean.
+	 * 
+	 * @return PmUser if found, otherwise null
+	 */
+	private PmUser retrieveSecretaryByUserId() {
+		if (getManagedBean().getSecretaryId() == null) {
+			return null;
+		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(getManagedBean().getSecretaryId());
+
+		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+		return resDTO != null ? resDTO.getPmUser() : null;
+	}
+	
+	/**
+	 * Determines whether the given user has QCB Secretary role.
+	 * 
+	 * @param pmUser user to be checked
+	 * @return true if user has QCB Secretary role, otherwise false
+	 */
+	private boolean hasQCBSecretaryRole(PmUser pmUser) {
+		if (pmUser.getPmUserOrgs() == null) {
+			return false;
+		}
+
+		for (PmUserOrg userOrg : pmUser.getPmUserOrgs()) {
+			if (userOrg.getPmUserRoles() == null) {
+				continue;
+			}
+
+			for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+				if (userRole.getPmRole() != null && userRole.getPmRole().getRoleCode() != null
+						&& RoleCode.QCB_SECRETARY.value().equalsIgnoreCase(userRole.getPmRole().getRoleCode())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Sets the committee type to Quotation Committee B for the current
+	 * amendment.
+	 */
+	private void setQuotationCommitteeType() {
+		PmParameter pmParameter = getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE,
+				ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B);
+
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setCommitteeType(pmParameter);
 	}
 	//#35238 end
 	
