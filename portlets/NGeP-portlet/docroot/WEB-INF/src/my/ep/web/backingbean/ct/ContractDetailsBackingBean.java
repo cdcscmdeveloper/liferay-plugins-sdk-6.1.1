@@ -2499,8 +2499,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		/*Set value true if contract is schedule*/
 		if(ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().
-				getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().
-				getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
+				getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 			typeSchedule = true;
 		}
 		
