@@ -4322,8 +4322,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal newContractAmt() {
 		//Bug 33096 - shaqimi start
-		BigDecimal ctAmt = null;
+		BigDecimal ctAmt;
+		
+		// Test Case 1
 		if(ctBackingBean.getManagedBean().isViewSCL()){
+			logger.logCodeCoverage("Test Case 1: isViewSCL flag enabled, base contract amount \n" +
+					"returned without applying addition or reduction");
 			ctAmt = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
 		} else {
 			
@@ -4333,10 +4337,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			BigDecimal addAmt = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount();
 			BigDecimal reduceAmt = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getReductionAmt();
 
+			// Test Case 2
 			if (addAmt != null) {
+				logger.logCodeCoverage("Test Case 2: isViewSCL flag disabled and additional amount provided, \n" +
+						"base amount increased by additional amount");
 				baseAmt = baseAmt.add(addAmt);
 			}
+			
+			// Test Case 3
 			if (reduceAmt != null) {
+				logger.logCodeCoverage("Test Case 3: isViewSCL flag disabled and reduction amount provided, \n" +
+						"base amount reduced by reduction amount");
 				baseAmt = baseAmt.subtract(reduceAmt);
 			}
 
@@ -10872,14 +10883,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	// Convert committee type code to reference object for saving.
-	private void setCommitteeTypeValue() {
+	public void setCommitteeTypeValue() {
 
 	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 	    
 	    // Test Case 1
 	    if (!amendment.isPbqcAuthorityReq()) {
 	    	
-	    	logger.logCodeCoverage("Test Case 1: isPbqcAuthorityReq flag is false, committeeType is set to null and processing is terminated.");
+	    	logger.logCodeCoverage("Test Case 1: isPbqcAuthorityReq flag is false, \n" +
+	    			"committeeType is set to null and processing is terminated.");
 	    	
 	        amendment.setCommitteeType(null);
 	        return;
@@ -10890,7 +10902,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    // Test Case 2
 	    if (committeeType == null) {
 	    	
-	    	logger.logCodeCoverage("Test Case 2: isPbqcAuthorityReq flag is true and committeeType is null, no parameter lookup is performed.");
+	    	logger.logCodeCoverage("Test Case 2: isPbqcAuthorityReq flag is true and committeeType is null, \n" +
+	    			"no parameter lookup is performed.");
 	    	
 	        return;
 	    }
@@ -10901,7 +10914,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    	
 	    	// Test Case 3
 	        logger.logCodeCoverage(
-	            "Test Case 3: isPbqcAuthorityReq flag is true and committeeType is resolved, committeeType is set using parameter helper result."
+	            "Test Case 3: isPbqcAuthorityReq flag is true and committeeType is resolved, \n" +
+	            "committeeType is set using parameter helper result."
 	        );
 	    	
 	        amendment.setCommitteeType(pm);
@@ -10909,7 +10923,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    
 	    // Test Case 4
 	    else{
-	    	logger.logCodeCoverage("Test Case 4: isPbqcAuthorityReq flag is true and committeeType is provided but parameter lookup returns null.");
+	    	logger.logCodeCoverage("Test Case 4: isPbqcAuthorityReq flag is true and committeeType is provided \n" +
+	    			"but parameter lookup returns null.");
 	    	return;
 	    }
 	}
@@ -10925,14 +10940,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	// Sets default desk officer committee if no saved value.
-	private void handleOriginalDeskOfficerCommitteeQT(){
+	public void handleOriginalDeskOfficerCommitteeQT(){
+		
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
 			IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
-			
 			ScQt scQt = ctBackingBean.getManagedBean().getContractVer().getCtContract().getQuotationTender();
 			if(scQt != null){
 				CommitteeMemberInfoResDTO cmiRes = iContractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId(), SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
+				
+				// Test Case 4
 				if(cmiRes != null){
+					
+					logger.logCodeCoverage("Test Case 4: secretary is not assigned and QT record exists, desk officer \n" +
+							"retrieved and PBQC checkbox selected with committee type and secretary populated");
 					
 					// tick checkbox Committee Type
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setPbqcAuthorityReq(true);
@@ -10945,8 +10965,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					
 					// set secretary
 					getManagedBean().setSecretaryId(cmiRes.getUserId());
+				} 
+				
+				// Test Case 3
+				else {
+					logger.logCodeCoverage("Test Case 3: secretary is not assigned and QT record exists \n" +
+							"but desk officer not found");
 				}
 			}
+			
+			// Test Case 2
+			else {
+				logger.logCodeCoverage(
+	                "Test Case 2: secretary is not assigned but QT record is null, desk officer lookup skipped"
+	            );
+			}
+		} 
+		
+		// Test Case 1
+		else {
+			logger.logCodeCoverage("Test Case 1: secretary already assigned, original desk officer committee handling skipped");
 		}
 	}
 
