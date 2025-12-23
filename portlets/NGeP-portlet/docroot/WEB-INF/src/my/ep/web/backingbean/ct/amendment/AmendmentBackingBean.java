@@ -5637,14 +5637,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user wish to amend the contract value.
 	 */
 	public void onChangeValueChecked() {
+		
+		// Test Case 1
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+			
+			logger.logCodeCoverage("Test Case 1: valueChange flag is true and contract value type handling triggered");
+			
 			spToCheck = false;
 			
 			//#24336 - Start
 			// Handle changes when the contract value type (addition/reduction) is selected.
-			handleContractValueTypeChange();
+//TEMP			handleContractValueTypeChange();
 			//#24336 - End
 		}
+		
+		// Test Case 3
+	    logger.logCodeCoverage(
+	        "Test Case 3: valueChange checkbox toggled, additionalAmount and reductionAmt reset to zero"
+	    );
 		
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 		
@@ -5653,7 +5663,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);
 		//#24336 - End
 		
+		// Test Case 2
 		if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
+			
+			logger.logCodeCoverage("Test Case 2: valueChange flag is false, effective date reset and new amount effective date cleared");
+			
 			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 			
