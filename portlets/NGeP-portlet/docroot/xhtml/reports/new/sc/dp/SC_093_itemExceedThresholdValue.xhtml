@@ -102,9 +102,9 @@
 					<td>
 						<p:selectOneMenu id="groupByCc" value="#{itemExceedThresholdRptBb.managedBean.groupBy}" style="width:300px">
 							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.none']}" itemValue="#{null}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.ppNo']}" itemValue="1"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.doc.status']}" itemValue="2"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.proc.type']}" itemValue="3"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.ppNo']}" itemValue="3"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.doc.status']}" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.proc.type']}" itemValue="2"></f:selectItem>
 							<p:ajax event="change" partialSubmit="true" />
 						</p:selectOneMenu>		
 						<ac:iconTooltip id="groupByTooltipCc" value="#{lbl['lbl.sc.rpt.group.tooltip']}" />
