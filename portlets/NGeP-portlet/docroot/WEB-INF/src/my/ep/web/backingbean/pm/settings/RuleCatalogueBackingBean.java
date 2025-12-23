@@ -6553,7 +6553,7 @@ public class RuleCatalogueBackingBean extends
 		resetRuleType();
 		resetRuleValue();
 		resetQtValues();
-		if (Integer.valueOf(0).equals(activeIndex)) {
+		if (activeIndex == 0) {
 			List<PmConfigRuleDesc> list = retriveConfigRuleDescFromDB();
 			getManagedBean().setConfigRuleDescList(list);
 			getManagedBean().setSelectedRuleDescType(list.get(0));
