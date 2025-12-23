@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1666,9 +1668,27 @@ public class FinancialOrgBackingBean extends
 			if (pmFinancialAccList == null) {
 				pmFinancialAccList = new ArrayList<PmFinancialAcc>();
 			}
+			//#34445, Fix as-is bug: #39508 START
+			int listSize = 0;
+			if (pmFinancialAccList.size() > 0) {
+				Collections.sort(pmFinancialAccList, new Comparator<PmFinancialAcc>() {
+					@Override
+					public int compare(PmFinancialAcc acc1, PmFinancialAcc acc2) {
+						return Integer.compare(acc2.getSequence(), acc1.getSequence());
+					}
+				});
+
+				PmFinancialAcc latestAcc = pmFinancialAccList.get(0);
+				listSize = latestAcc.getSequence();
+			}
+			//#34445, Fix as-is bug: #39508 END
+			
 			PmFinancialAcc finAcc = new PmFinancialAcc();
 			finAcc.setEffDate(new Date());
 			finAcc.setPmPaymentBankOrg(new PmFinancialOrg());
+			//#34445, Fix as-is bug: #39508 START
+			finAcc.setSequence(listSize + 1);
+			//#34445, Fix as-is bug: #39508 END
 			pmFinancialAccList.add(finAcc);
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
@@ -1707,32 +1727,33 @@ public class FinancialOrgBackingBean extends
 			return true;
 		}
 	}
-	public void getBankCode(Long financialOrgId){
-		
-		log.info("Org ProfileID-------->"+financialOrgId);
+
+	public void getBankCode(Long financialOrgId) {
+
+		log.info("Org ProfileID-------->" + financialOrgId);
 		IFinancialOrgSO financialOrgSO = null;
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 		reqDTO.setFinancialOrgId(financialOrgId);
-		financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IFinancialOrgSO.class);
-		FinancialOrgResDTO resDTO  = financialOrgSO
-				.retrieveFinancialSvcByFinancialOrgId(reqDTO);
+		financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+		FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialSvcByFinancialOrgId(reqDTO);
 
 		PmFinancialSvc pmFinancialSvc = resDTO.getPmFinancialSvc();
-		if(resDTO.isSuccessful()){
-			if(null!=pmFinancialSvc){
-			log.info("BANK CODE"+pmFinancialSvc.getBankCode()
-					 + "|" + pmFinancialSvc.getFinancialSvcId());
-			for(PmFinancialAcc financialAcc:getManagedBean().getFinancialOrg().getPmFinancialAccs()){
-			    if(financialAcc.isBrandNew()){
-			     financialAcc.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());			   
-			     financialAcc.setBankCode(pmFinancialSvc.getBankCode());
-			    }
-			   }
+		if (resDTO.isSuccessful()) {
+			if (null != pmFinancialSvc) {
+				log.info("BANK CODE" + pmFinancialSvc.getBankCode() + "|" + pmFinancialSvc.getFinancialSvcId());
+				for (PmFinancialAcc financialAcc : getManagedBean().getFinancialOrg().getPmFinancialAccs()) {
+					//#34445, Fix as-is bug: #39508 START
+					if (financialAcc.isBrandNew() && StringUtils.isEmpty(financialAcc.getBankCode())) {
+					//#34445, Fix as-is bug: #39508 END
+						financialAcc.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());
+						financialAcc.setBankCode(pmFinancialSvc.getBankCode());
+					}
+				}
+			}
+
 		}
-		
-		}
-		
+
 	}
 	/* Factoring Bank - END */
 	
@@ -2121,5 +2142,19 @@ public class FinancialOrgBackingBean extends
 	}
 	//20201210@Jacky - Enhancement#28836 - End
 	
+	// #34445, Fix as-is bug: #39508 START
+	public void setAccountNo(AjaxBehaviorEvent event) {
+		String bankCode = (String) event.getComponent().getAttributes().get("bankCode");
+		String accNo = (String) event.getComponent().getAttributes().get("value");
+		Integer sequence = (Integer) event.getComponent().getAttributes().get("sequence");
+
+		List<PmFinancialAcc> finAccList = this.getManagedBean().getFinancialOrg().getPmFinancialAccs();
+		for (PmFinancialAcc finAcc : finAccList) {
+			if (finAcc.getBankCode().equals(bankCode) && finAcc.getSequence() == sequence) {
+				finAcc.setAccountNo(accNo);
+			}
+		}
+	}
+	// #34445, Fix as-is bug: #39508 END
 
 }
