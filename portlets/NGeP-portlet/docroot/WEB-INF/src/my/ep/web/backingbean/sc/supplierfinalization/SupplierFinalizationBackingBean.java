@@ -2614,6 +2614,12 @@ public class SupplierFinalizationBackingBean extends
 		if (isRecommendByAward() && recommendedSupplier != null) {
 			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
 		}// #39620 - End
+		
+		//#28777#29729 - Start
+		if(checkFlagForSupplierBranchDeleted()){
+		    checkNeedSupplierIfHaveBranchDeleted();
+		}
+		//#28777#29729 - End
 
 		//25638 - Start
 		if (revise.length == 0 && BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
