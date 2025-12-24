@@ -882,6 +882,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return Boolean.TRUE;
 	}
 	//36386 -End
+	
 	// #31344 -start-
 	/**
 	 * Show Details Items in popup
@@ -937,6 +938,11 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
         cdbb.getManagedBean().setFamilyTitle(familyTitle);
     }
 	
+	/**
+	 * Filter sc request item name by check the extension value in cm item
+	 * @param scRequestItemId
+	 * @return
+	 */
 	public String filterNARequestItemName(Long scRequestItemId){
 
 	    if (scRequestItemId == null) {
@@ -961,6 +967,11 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	    return common.filterItemNameNA(scRequestItem.getItemName());
 	}
 	
+	/**
+	 * Check cm item extension contain NA
+	 * @param item
+	 * @return
+	 */
 	private boolean isNACmItem(CmItem item) {
 
 	    if (item == null) {
@@ -973,10 +984,19 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	        || isNA(item.getCmMeasurement() != null ? item.getCmMeasurement().getMeasurementName() : null);
 	}
 
+	/**
+	 * Check cm item extension null value and contain NA
+	 * @param value
+	 * @return
+	 */
 	private boolean isNA(String value) {
 	    return value != null && value.equalsIgnoreCase("NA");
 	}
 	
+	/**
+	 * Request item service
+	 * @return
+	 */
 	private IRequestItemSO getRequestItemSO() {
 		return BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
