@@ -6244,7 +6244,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			SelectItem[] items = null;
 			ICommitteSO committeSO = null;
 			ISearchResultBean<PmUser> userResultList = null;
-			ISearchResultBean<PmUser> userListDO = null; //Bug #29740
+			//Bug #29740
+			ISearchResultBean<PmUser> userListDO = null;
+			List<PmUser> userList = new ArrayList<PmUser>();
 			try {
 
 				int i = 1;
@@ -6273,32 +6275,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} else {
 					committeReqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
 				}
-				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();			
-
+				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();	
+				//Bug #29740
+				userList = new ArrayList<PmUser>(userResultList.getResultList());
+				
 				if (userResultList != null && userResultList.getResultList() != null) {
-					//Bug #29740
+					//Bug #29740 - start
 					if(userListDO != null && userListDO.getResultList() != null) {
-						items = new SelectItem[userResultList.getResultList().size() + userListDO.getResultList().size() + 1];
-					} else {
-						items = new SelectItem[userResultList.getResultList().size() + 1];
+						userList.addAll(userListDO.getResultList());
 					}
 					
-					checkForQCBCommitteeDeskOfficerWIP(userListDO.getResultList()); //#35238
+					Set<PmUser> set = new LinkedHashSet<PmUser>(userList);
+					userList.clear();
+					userList.addAll(set);
+					checkForQCBCommitteeDeskOfficerWIP(userList); //#35238
+					
+					items = new SelectItem[userList.size() + 1];
+					//Bug #29740 - end
 					
 					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-
-					for (PmUser user : userResultList.getResultList()) {
+					
+					for (PmUser user : userList) {//Bug #29740
 						items[i++] = new SelectItem(user.getUserId(), user.getUserName());
 					}
-					
-					//Bug #29740
-					if(userListDO != null && userListDO.getResultList() != null) {
-						for (PmUser userDO : userListDO.getResultList()) {
-							items[i++] = new SelectItem(userDO.getUserId(), userDO.getUserName());
-						}
-					}
-					//Bug #29740 - End
 					
 					// Default the secretary if selection list only have one secretary
 					if (items != null && items.length == 2) {
