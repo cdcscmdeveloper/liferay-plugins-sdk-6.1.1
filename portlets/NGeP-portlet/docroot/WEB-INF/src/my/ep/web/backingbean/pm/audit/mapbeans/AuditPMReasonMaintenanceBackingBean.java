@@ -798,11 +798,11 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		DecimalFormat formatter = new DecimalFormat("#,##0.00");
 		
 		// handle null when compare dgn null value
-		if (existingReason.getDpThreshold() == null
+		if (existingReason.getDpThreshold() == null && oldReason.getDpThreshold() != null
 				&& !oldReason.getDpThreshold().equals(existingReason.getDpThreshold())) {
 			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE,
 					formatter.format(oldReason.getDpThreshold().setScale(2)), null);
-		} else if (oldReason.getDpThreshold() == null
+		} else if (oldReason.getDpThreshold() == null && existingReason.getDpThreshold() != null
 				&& !existingReason.getDpThreshold().equals(oldReason.getDpThreshold())) {
 			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, null,
 					formatter.format(existingReason.getDpThreshold().setScale(2)));
@@ -814,11 +814,11 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		}
 
 		// PR threshold
-		if (existingReason.getPrThreshold() == null
+		if (existingReason.getPrThreshold() == null && oldReason.getPrThreshold() != null
 				&& !oldReason.getPrThreshold().equals(existingReason.getPrThreshold())) {
 			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE,
 					formatter.format(oldReason.getPrThreshold().setScale(2)), null);
-		} else if (oldReason.getPrThreshold() == null
+		} else if (oldReason.getPrThreshold() == null && existingReason.getPrThreshold() != null
 				&& !existingReason.getPrThreshold().equals(oldReason.getPrThreshold())) {
 			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, null,
 					formatter.format(existingReason.getPrThreshold().setScale(2)));
