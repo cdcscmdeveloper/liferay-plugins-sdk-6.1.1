@@ -5919,7 +5919,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return
 	 */
 	private CmUnspsc getUnspscItem(Long cmItemId) {
-		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject(
+		ICodificationSO unspscSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		reqDTO.setItemId(cmItemId);
