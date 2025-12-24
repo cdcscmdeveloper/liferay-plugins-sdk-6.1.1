@@ -157,6 +157,12 @@ public final class ContractHashSetConst {
 	            RoleCode.QCB_CHAIRPERSON.value(),
 	            RoleCode.QQC_CHAIRPERSON.value()
 	)));
+	
+	public static final Set<String> QUOTATION_CHAIRPERSON_ROLES_A_C = 
+			Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+		            RoleCode.QCA_CHAIRPERSON.value(),
+		            RoleCode.QQC_CHAIRPERSON.value()
+	)));
 	//#35238 end
 	
 	// Private constructor to prevent instantiation
