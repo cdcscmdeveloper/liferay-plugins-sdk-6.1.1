@@ -3385,8 +3385,6 @@ return scQt;
 
 		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<>();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
-			//Validate first
-			checkValidityDateAndSupplierResponseDate();
 			PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
 					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecisionType().getParameterCode());
 			approvalRequest.setApproverAction(pmParameter);
@@ -3405,6 +3403,7 @@ return scQt;
 				approvalRequest.setMofDate(null);
 			}
 			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
+			checkValidityDateAndSupplierResponseDate();
 			//add data for report/history usage - End
 
 			//To remove attachments R1, R2, R3
@@ -3997,6 +3996,7 @@ return scQt;
 		if (date.after(this.getManagedBean().getScQtApprovalRequestList().get(0).getProposalValidityEndDateNew())
 				&& (QTStatusConst.PCB_RQ1_APPROVED.longValue() == request.getDecisionType().getParameterId() || QTStatusConst.PCB_RQ3_APPROVED
 						.longValue() == request.getDecisionType().getParameterId())) {
+			request.setApproverAction(null);
 			throw new EpException(MessageConst.ERROR_770405);
 		}
 	}
