@@ -1399,6 +1399,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		getManagedBean().setSupplierRemarks(supplierRemarks);
 		// #11134 - end
 		
+		//check Agreement
+		checkAgreementMandatory();
+		
 		// check performance bond		
 		//Bug #29885 start isPendingSubmissionStatus or isPendingRevisionStatus
 		//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
@@ -6443,20 +6446,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
 
 		boolean isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType);
-		
-		boolean isPeriodic = (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType))||(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentType));
-		
-		if(getManagedBean().getScLoa().getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-			if(isOneOffFulfilment) {
-				isAgreementMandatory = false;
-				loa.setAgreementReq(isAgreementMandatory);
-			} else if (isPeriodic){
-				//Bug #24065
-				//isAgreementMandatory = false;
-				isAgreementMandatory = true;
-				loa.setAgreementReq(isAgreementMandatory);
-			}
-		}	
+		if(!isOneOffFulfilment) {
+			isAgreementMandatory = true;
+			loa.setAgreementReq(isAgreementMandatory);
+		} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)){
+			//Bug #24065
+			//isAgreementMandatory = false;
+			isAgreementMandatory = true;
+			loa.setAgreementReq(isAgreementMandatory);
+		}
 
 		getManagedBean().setAgreementMandatory(isAgreementMandatory);
 	}
