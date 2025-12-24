@@ -13,8 +13,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+//#34445, Fix as-is bug: #39508 START
 import java.util.Collections;
 import java.util.Comparator;
+//#34445, Fix as-is bug: #39508 END
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1670,16 +1672,20 @@ public class FinancialOrgBackingBean extends
 			}
 			//#34445, Fix as-is bug: #39508 START
 			int listSize = 0;
-			if (pmFinancialAccList.size() > 0) {
-				Collections.sort(pmFinancialAccList, new Comparator<PmFinancialAcc>() {
-					@Override
-					public int compare(PmFinancialAcc acc1, PmFinancialAcc acc2) {
-						return Integer.compare(acc2.getSequence(), acc1.getSequence());
-					}
-				});
-
-				PmFinancialAcc latestAcc = pmFinancialAccList.get(0);
-				listSize = latestAcc.getSequence();
+			if (!pmFinancialAccList.isEmpty()) {
+				Boolean sequenceExist = isSequenceExist(pmFinancialAccList);
+				if (sequenceExist) {
+					Collections.sort(pmFinancialAccList, new Comparator<PmFinancialAcc>() {
+						@Override
+						public int compare(PmFinancialAcc acc1, PmFinancialAcc acc2) {
+							return Integer.compare(acc2.getSequence(), acc1.getSequence());
+						}
+					});
+					PmFinancialAcc latestAcc = pmFinancialAccList.get(0);
+					listSize = latestAcc.getSequence();
+				} else {
+					listSize = setFinancialAccountSequence(pmFinancialAccList, listSize);
+				}
 			}
 			//#34445, Fix as-is bug: #39508 END
 			
@@ -2154,5 +2160,27 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 	// #34445, Fix as-is bug: #39508 END
-
+	
+	// #34445, Fix as-is bug: #39508 START
+	private Boolean isSequenceExist(List<PmFinancialAcc> pmFinancialAccList) {
+		Boolean sequenceExist = Boolean.FALSE;
+		for (PmFinancialAcc acc : pmFinancialAccList) {
+			if (acc.getSequence() != null) {
+				sequenceExist = Boolean.TRUE;
+			}
+		}
+		return sequenceExist;
+	}
+	// #34445, Fix as-is bug: #39508 END
+	
+	// #34445, Fix as-is bug: #39508 START
+	private Integer setFinancialAccountSequence(List<PmFinancialAcc> pmFinancialAccList, Integer listSize){
+		Integer newSize = listSize;
+		for (PmFinancialAcc acc : pmFinancialAccList) {
+			newSize = newSize + 1;
+			acc.setSequence(newSize);
+		}
+		return newSize;
+	}
+	// #34445, Fix as-is bug: #39508 END
 }
