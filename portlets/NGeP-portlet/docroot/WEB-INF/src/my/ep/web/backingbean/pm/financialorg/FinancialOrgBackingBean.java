@@ -13,10 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-//#34445, Fix as-is bug: #39508 START
-import java.util.Collections;
-import java.util.Comparator;
-//#34445, Fix as-is bug: #39508 END
+import java.util.Collections; //#34445, Fix as-is bug: #39508
+import java.util.Comparator; //#34445, Fix as-is bug: #39508
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1670,6 +1668,7 @@ public class FinancialOrgBackingBean extends
 			if (pmFinancialAccList == null) {
 				pmFinancialAccList = new ArrayList<PmFinancialAcc>();
 			}
+			
 			//#34445, Fix as-is bug: #39508 START
 			int listSize = 0;
 			if (!pmFinancialAccList.isEmpty()) {
@@ -1692,9 +1691,7 @@ public class FinancialOrgBackingBean extends
 			PmFinancialAcc finAcc = new PmFinancialAcc();
 			finAcc.setEffDate(new Date());
 			finAcc.setPmPaymentBankOrg(new PmFinancialOrg());
-			//#34445, Fix as-is bug: #39508 START
-			finAcc.setSequence(listSize + 1);
-			//#34445, Fix as-is bug: #39508 END
+			finAcc.setSequence(listSize + 1); //#34445, Fix as-is bug: #39508
 			pmFinancialAccList.add(finAcc);
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
@@ -1735,7 +1732,6 @@ public class FinancialOrgBackingBean extends
 	}
 
 	public void getBankCode(Long financialOrgId) {
-
 		log.info("Org ProfileID-------->" + financialOrgId);
 		IFinancialOrgSO financialOrgSO = null;
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
