@@ -60,6 +60,16 @@
 							</td>
 						</tr>
 					</p:outputPanel>
+					<!-- #37925 START -->
+					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne SupplierManagementConst.applTypeBumi}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
+							<td>
+								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" />
+							</td>
+						</tr>
+					</p:outputPanel>
+					
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.panHdr.offFacility']}" /></td>
 						<td>
@@ -69,20 +79,6 @@
 								rendered="#{cc.attrs.facilityType eq 'B'}" />
 						</td>
 					</tr>
-					<!-- #37925 START -->
-					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne SupplierManagementConst.applTypeBumi 
-						and cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD
-						or cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD
-						or cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG
-						or cc.attrs.smAppl.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG}">
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
-							<td>
-								<h:outputText rendered="#{cc.attrs.bean.displayLabelCountryOriginLocal}" value="#{lbl['lbl.sm.approver.country.of.origin.local']}" />
-								<h:outputText rendered="#{cc.attrs.bean.displayLabelCountryOriginForeign}" value="#{lbl['lbl.sm.approver.country.of.origin.foreign']}" />
-							</td>
-						</tr>
-					</p:outputPanel>
 					
 					<p:outputPanel rendered="#{cc.attrs.bean.displayCheckboxChangeCurrentStatus}">
 					<!-- #37925 END -->
@@ -342,6 +338,9 @@
 								label="#{lbl['lbl.sm.remarks.overLapping']}"
 								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 								required="false">
+								<!-- 39422 START -->
+								<p:ajax event="blur" process="@this" update="@this"/>
+								<!-- 39422 End -->
 								<f:validateLength maximum="2500" />
 							</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
 								for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"

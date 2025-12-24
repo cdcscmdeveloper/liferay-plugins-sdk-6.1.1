@@ -403,13 +403,13 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		docId = managedBean.getNewProfileId() != null ? managedBean.getNewProfileId() : orgProfile.getOrgProfileId();
 		
 		if (orgProfile.getEpPtj() != oldOrgProfile.getEpPtj()) {
-			detailObj(AuditConst.PM_AUD_OPM_PTJ_IDENTIFIED_FIELDLABELCODE, null,
+			detailObj(AuditConst.PM_AUD_OPM_PTJ_IDENTIFIED_FIELDLABELCODE, oldOrgProfile.getEpPtj() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO,
 					orgProfile.getEpPtj() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 		}
 		
 		if (orgProfile.isGovtSeller() != oldOrgProfile.isGovtSeller()) {
-			detailObj(AuditConst.PM_AUD_OPM_G2G_FIELDLABELCODE, null, orgProfile.isGovtSeller() ? AuditConst.PM_AUD_YES
-					: AuditConst.PM_AUD_NO);
+			detailObj(AuditConst.PM_AUD_OPM_G2G_FIELDLABELCODE, oldOrgProfile.isGovtSeller() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, 
+					orgProfile.isGovtSeller() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 		}
 
 		setGroupOrgType();

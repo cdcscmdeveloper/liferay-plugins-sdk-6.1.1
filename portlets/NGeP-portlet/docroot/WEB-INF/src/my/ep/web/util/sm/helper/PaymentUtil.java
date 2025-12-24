@@ -256,10 +256,12 @@ public class PaymentUtil {
         return new String(decryptedBytes, StandardCharsets.UTF_8);
     }
 
-	public static String constructJsonPayload(String merchantCode,
+    public static String constructJsonPayload(String merchantCode,
 			String clientKey, Long orderId, BigDecimal amount, String billName,
 			String email, String mobile, String billDesc, String country,
-			String cancelUrl) {
+			String cancelUrl,String responseUrl,String callbackUrl) {
+		log.info("#38377--responseUrl:"+responseUrl);
+		log.info("#38377--callbackUrl:"+callbackUrl);
 		String payload = null;
 		StringBuilder sb = new StringBuilder();
 		sb.append("{").append("\"orderId\":\"").append(orderId.toString())
@@ -267,7 +269,9 @@ public class PaymentUtil {
 				.append("\",").append("\"billDesc\":\"").append(billDesc)
 				.append("\",").append("\"billEmail\":\"").append(email)
 				.append("\",").append("\"billMobile\":\"").append(mobile)
-				.append("\",").append("\"cancelurl\":\"").append(cancelUrl)
+				.append("\",").append("\"responseUrl\":\"").append(responseUrl)
+				.append("\",").append("\"callbackUrl\":\"").append(callbackUrl)
+				.append("\",").append("\"cancelUrl\":\"").append(cancelUrl)
 				.append("\",").append("\"merchantCode\":\"")
 				.append(merchantCode).append("\",");
 		try {
@@ -338,17 +342,18 @@ public class PaymentUtil {
 	}
 
 	public static JSONObject getPaymentGatewayJson(String payload) {
+		log.info("#38377#####inside getPaymentGatewayJson:"+payload);
 		JSONObject jsonObject = null;
 		if (!StringUtils.isBlank(payload)) {
 			try {
-				log.info("encrypted payload:" + payload);
+				log.info("#38377 encrypted payload:" + payload);
 				payload = decrypt(payload, PasswordUtils
 						.decrypt(EpPropertiesUtils.getInstance().getProperty(
 								"payment.gov.vkey")));
-				log.info("decrypted payload:" + payload);
+				log.info("#38377 decrypted payload:" + payload);
 				jsonObject = new JSONObject(payload);
 			} catch (Exception e1) {
-				log.error("error decrypted payload due to ", e1);
+				log.info("#38377 error decrypted payload:" + e1.getMessage());
 			}
 		}
 		return jsonObject;
