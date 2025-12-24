@@ -3403,7 +3403,6 @@ return scQt;
 				approvalRequest.setMofDate(null);
 			}
 			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
-			//Validate first
 			checkValidityDateAndSupplierResponseDate();
 			//add data for report/history usage - End
 
