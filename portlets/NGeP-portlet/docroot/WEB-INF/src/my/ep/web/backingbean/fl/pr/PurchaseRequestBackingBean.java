@@ -5500,10 +5500,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 		if (!getManagedBean().getItemNameExceedThresholdList().isEmpty()) {
 			List<String> itemNameList = getManagedBean().getItemNameExceedThresholdList();
-			numberedList.append("<br>");
-			for (int i = 0; i < itemNameList.size(); i++) {
-				numberedList.append(i + 1).append(". ").append(itemNameList.get(i)).append("<br>");
+			if (itemNameList.size() == 1) {
+				numberedList.append(itemNameList.get(0)); //if 1 item, item name display in 1 line
+			} else {
+				numberedList.append("<br>");
+				for (int i = 0; i < itemNameList.size(); i++) {
+					numberedList.append(i + 1).append(". ").append(itemNameList.get(i)).append("<br>");
+				}
 			}
+
 			if (isShowErrorMsgForPRThreshold) {
 				throw new EpException(MessageConst.ERROR_740077, new String[] { numberedList.toString(),
 						String.valueOf(getThresholdForPK7()),
