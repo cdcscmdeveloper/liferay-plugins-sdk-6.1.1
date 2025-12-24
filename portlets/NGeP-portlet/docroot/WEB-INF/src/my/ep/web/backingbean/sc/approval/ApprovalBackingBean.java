@@ -1138,7 +1138,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
 		Boolean supplierApprove = true;//#35500 fix issue 1
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
-			//Validate first
 			PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
 					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecessionType().getParameterCode());
 			approvalRequest.setApproverAction(pmParameter);
