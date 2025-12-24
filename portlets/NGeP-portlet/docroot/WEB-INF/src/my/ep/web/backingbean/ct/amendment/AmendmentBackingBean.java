@@ -73,6 +73,7 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.FlPendingPaymentDTO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.ct.committee.CommitteeMemberInfoResDTO;
@@ -10532,8 +10533,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal getPendingTransactionAmount(){
 		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
-		IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
-		return iContractAmendmentSO.getTransactionWithPendingPayment(contractId);
+		FlPendingPaymentDTO flPendingPaymentDTO = getIContractAmendmentSO().getFlPendingPayment(contractId);
+		if (flPendingPaymentDTO == null || flPendingPaymentDTO.getPendingPayment() == null) {
+	        return BigDecimal.ZERO;
+	    }
+		return flPendingPaymentDTO.getPendingPayment();
 	}
 	
 	/**
@@ -10542,8 +10546,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal getAmountBeforePendingPayment(){
 		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
-		IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
-		return iContractAmendmentSO.getTotalUsageBeforePendingPayment(contractId);
+		FlPendingPaymentDTO flPendingPaymentDTO = getIContractAmendmentSO().getFlPendingPayment(contractId);
+		if (flPendingPaymentDTO == null || flPendingPaymentDTO.getBeforePendingPayment() == null) {
+	        return BigDecimal.ZERO;
+	    }
+		return flPendingPaymentDTO.getBeforePendingPayment();
 	}
 	
 	/**
