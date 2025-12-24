@@ -3385,8 +3385,6 @@ return scQt;
 
 		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<>();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
-			//Validate first
-			checkValidityDateAndSupplierResponseDate();
 			PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
 					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecisionType().getParameterCode());
 			approvalRequest.setApproverAction(pmParameter);
@@ -3405,6 +3403,8 @@ return scQt;
 				approvalRequest.setMofDate(null);
 			}
 			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
+			//Validate first
+			checkValidityDateAndSupplierResponseDate();
 			//add data for report/history usage - End
 
 			//To remove attachments R1, R2, R3
