@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<style>
+	/* =========================
+	   DIALOG SIZE CONTROL
+	   ========================= */
+	.ui-dialog {
+		max-width: 420px !important;
+	}
+
+	.ui-dialog-content {
+		overflow: hidden !important;
+	}
+
+	/* =========================
+	   PANEL GRID CLEANUP
+	   ========================= */
+	.supp-acc-grid,
+	.supp-acc-grid table,
+	.supp-acc-grid tr,
+	.supp-acc-grid td {
+		border: none !important;
+		border-collapse: collapse !important;
+		background: transparent !important;
+	}
+
+	/* Remove PrimeFaces theme borders */
+	.ui-panelgrid .ui-panelgrid-cell {
+		border: none !important;
+	}
+
+	/* Control spacing only */
+	.supp-acc-grid td {
+		padding: 4px 6px !important;
+		vertical-align: top !important;
+	}
+
+	/* =========================
+	   COLUMN WIDTHS
+	   ========================= */
+	.all-col {
+		width: 40%;
+	}
+
+	.right-col {
+		width: 60%;
+	}
+
+	/* =========================
+	   ALL CHECKBOX (LEFT)
+	   ========================= */
+	.all-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		margin-top: 2px; /* align with Basic */
+	}
+
+	/* =========================
+	   BASIC / MOF / G2G (RIGHT)
+	   ========================= */
+	.right-col .ui-selectmanycheckbox {
+		display: block;
+	}
+
+	.right-col .ui-selectmanycheckbox table td {
+		padding: 4px 0 !important;
+	}
+
+	.right-col .ui-selectmanycheckbox label {
+		margin-left: 6px !important;
+	}
+
+	/* =========================
+	   FOOTER ALIGN RIGHT
+	   ========================= */
+	.dialog-footer-right {
+		width: 100%;
+		text-align: right;
+		padding-right: 10px;
+	}
+	</style>
+
+	<p:dialog id="accTypeDlg"
+		widgetVar="accTypeDlg"
+		header="#{lbl['lbl.pm.rule.supp.acc.type']}"
+		modal="true"
+		resizable="false"
+		draggable="false"
+		width="380"
+		height="auto"
+		responsive="true">
+
+		<p:panelGrid columns="2"
+			columnClasses="all-col,right-col"
+			styleClass="supp-acc-grid">
+
+			<!-- ======================
+			     ALL CHECKBOX
+			     ====================== -->
+			<h:panelGroup styleClass="all-wrapper">
+				<p:selectBooleanCheckbox id="allChk"
+					value="#{ruleCatalogueBackingBean.managedBean.selectedAllSuppAccountType}">
+					<p:ajax
+						listener="#{ruleCatalogueBackingBean.toggleAllSuppAccountTypes}"
+						update="types" />
+				</p:selectBooleanCheckbox>
+				<h:outputText value="#{lbl['lbl.pm.rule.all.value']}" />
+			</h:panelGroup>
+
+			<!-- ======================
+			     BASIC / MOF / G2G
+			     ====================== -->
+			<p:selectManyCheckbox id="types"
+				value="#{ruleCatalogueBackingBean.managedBean.selectedSuppAccountType}"
+				layout="pageDirection">
+				<f:selectItems
+					value="#{ruleCatalogueBackingBean.reasonSuppAccTypeDropDown()}" />
+				<f:converter converterId="javax.faces.Long" />
+			</p:selectManyCheckbox>
+
+		</p:panelGrid>
+
+		<!-- ======================
+		     FOOTER
+		     ====================== -->
+		<f:facet name="footer">
+			<h:panelGroup layout="block" styleClass="dialog-footer-right">
+				<p:commandButton id="satOkbtn"
+					value="#{lbl['lbl.btn.ok']}"
+					action="#{ruleCatalogueBackingBean.addSupplierTypeAcc()}"
+					update="@([id$=supplAccTypeId])"
+					oncomplete="accTypeDlg.hide();"
+					partialSubmit="true" />
+				<p:commandButton id="satCancelbtn"
+					value="#{lbl['lbl.btn.cancel']}"
+					onclick="accTypeDlg.hide();" />
+			</h:panelGroup>
+		</f:facet>
+
+	</p:dialog>
+
+</ui:composition>
