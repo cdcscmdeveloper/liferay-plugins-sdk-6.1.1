@@ -7830,18 +7830,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void getSupplierTypeErrorMessage(ScRequestNoteDtl rnDtl, String suppAccTypeSb, boolean isFromATC) {
 		int appendedCount = 0;
 
-		if (suppAccTypeSb.length() > 0) {
-			appendedCount = suppAccTypeSb.split(",").length;
-		}
+		appendedCount = countSupplementaryAccountTypes(suppAccTypeSb, appendedCount);
 
 		if (DPConstants.LANGUAGE_CODE_EN.equalsIgnoreCase(new FacesScopes().getUserLocale().getLanguage())) {
 			String isOrAre;
 
-			if (appendedCount > 1) {
-				isOrAre = DPConstants.ARE_STRING;
-			} else {
-				isOrAre = DPConstants.IS_STRING;
-			}
+			isOrAre = resolveIsOrAre(appendedCount);
 			
 			if (isFromATC) {
 				throw new EpException(MessageConst.ERROR_760709, new String[] {
@@ -7862,6 +7856,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				throw new EpException(MessageConst.ERROR_760709, new String[] {
 						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
 								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), suppAccTypeSb });
+
 			} else {
 				throw new EpException(MessageConst.ERROR_760717, new String[] {
 						rnDtl.getScRequestSupplierItem().getSupplierName(),
@@ -7869,6 +7864,41 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), suppAccTypeSb });
 			}
 		}
+	}
+
+
+	
+	/**
+	 * Counts the number of supplementary account types based on a comma-separated string.
+	 * <p>
+	 * If the input string is empty, the existing appended count will be returned.
+	 *
+	 * @param suppAccTypeSb a comma-separated string of supplementary account types
+	 * @param appendedCount the existing count to be used when the string is empty
+	 * @return the total number of supplementary account types
+	 */
+	protected int countSupplementaryAccountTypes(String suppAccTypeSb, int appendedCount) {
+	    return (suppAccTypeSb.length() > 0)
+	            ? suppAccTypeSb.split(",").length
+	            : appendedCount;
+	}
+
+	
+	/**
+	 * Determines whether to use "is" or "are" based on the given count.
+	 *
+	 * @param count the number of items
+	 * @return {@link DPConstants#ARE_STRING} if count is greater than one,
+	 *         otherwise {@link DPConstants#IS_STRING}
+	 */
+	protected String resolveIsOrAre(int appendedCount) {
+		String isOrAre;
+		if (appendedCount > 1) {
+			isOrAre = DPConstants.ARE_STRING;
+		} else {
+			isOrAre = DPConstants.IS_STRING;
+		}
+		return isOrAre;
 	}
 	
 	/**
