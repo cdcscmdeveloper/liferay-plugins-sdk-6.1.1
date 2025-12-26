@@ -5366,14 +5366,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return thresholdAmount
 	 */
 	private BigDecimal getThresholdForPK7() {
-		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-		
 		BigDecimal thresholdAmount = null;
 
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
-		
-		thresholdAmount = fulfilmentRequestSO.retrievePRThresholdByFlRequestId(reqDTO).getPrThresholdAmt();
+		if (!getManagedBean().getRequestNoteWithDtlsList().isEmpty()) {
+			for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
+				if (purchaseItem.getJustificationType().getDpThreshold() != null) {
+					thresholdAmount = purchaseItem.getJustificationType().getDpThreshold();
+				}
+			}
+		}
 
 		return thresholdAmount;
 	}
