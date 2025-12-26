@@ -6441,7 +6441,6 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	private List<Long> splitIds(String ids) {
-
 		List<Long> result = new ArrayList<>();
 
 		if (ids == null || ids.trim().isEmpty()) {
@@ -6465,7 +6464,6 @@ public class RuleCatalogueBackingBean extends
 	}
 	
 	private void validateRuleValue(PmConfigRuleDesc ruleTypeDesc, PmConfigRuleValue ruleTypeValue) {
-
 		if (isNonPRWithMissingValue(ruleTypeDesc, ruleTypeValue)) {
 			throw new EpException(MessageConst.ERROR_770133, new String[] { ruleTypeDesc.getRuleDesc() });
 		}
@@ -6484,12 +6482,10 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	private boolean isNonPRWithMissingValue(PmConfigRuleDesc desc, PmConfigRuleValue value) {
-
 		return !isPR(desc) && value.getRuleValue() == null;
 	}
 
 	private boolean isPRWithMissingFromValue(PmConfigRuleDesc desc, PmConfigRuleValue value) {
-
 		return isPR(desc) && value.getFromValue() == null;
 	}
 
