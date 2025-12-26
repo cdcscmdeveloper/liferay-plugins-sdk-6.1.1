@@ -1191,8 +1191,8 @@ public class RuleCatalogueBackingBean extends
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
 					validateRuleValue(ruleTypeDesc, ruleTypeValue);
 				}
+				//#35323 and sonarLint fixing - End
 			}
-			//#35323 and sonarLint fixing - End
 
 			// 29669,29641,30672 end
 			// 29650 start
@@ -1366,7 +1366,6 @@ public class RuleCatalogueBackingBean extends
 			
 			// #35323 - Start
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())) {
-				log.info("Purchase Request Masuk");
 				setupPurchaseRequestRule();
 			}
 			// #35323 - End
@@ -2914,11 +2913,11 @@ public class RuleCatalogueBackingBean extends
 				.getExpDate());
 		ruleValue.setShowFlag(false);
 		
-		 //#35323 - Start
+		//#35323 - Start
 		if (configRuleType.getRuleType().equalsIgnoreCase(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD)){
 			ruleValue.setSupplAcctTypeIds(null);
 		}
-		 //#35323 - End
+		//#35323 - End
 
 		ruleValue.setGroupValueId(configRuleType.getConfigRuleValues()
 				.get(index).getGroupValueId());
@@ -2927,7 +2926,7 @@ public class RuleCatalogueBackingBean extends
 				configRuleType.getConfigRuleValues(), configRuleType
 						.getConfigRuleValues().get(index).getGroupValueId());
 
-		 //#35323 - Start
+		//#35323 - Start
 		if (!configRuleType.getRuleType().equalsIgnoreCase(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD)) {
 			if (configRuleType.getConfigRuleValues().get(markIndex).getRuleValue() == null
 					|| configRuleType.getConfigRuleValues().get(markIndex).getRuleValue().isEmpty()) {
@@ -6175,7 +6174,6 @@ public class RuleCatalogueBackingBean extends
 
 	    return sb.toString();
 	}
-
 	
 	/**
 	 *  open the popup for selected Supplier Acc Type
@@ -6296,8 +6294,7 @@ public class RuleCatalogueBackingBean extends
 
 		return list;
 	}
-	
-	
+		
 	private List<Long> parseLongList(Object raw) {
 	    List<Long> result = new ArrayList<>();
 	    if (raw == null){
@@ -6559,7 +6556,6 @@ public class RuleCatalogueBackingBean extends
 	 * Sorts list safely by CodeName.
 	 */
 	private void sortByCodeName(List<PmParameterDesc> list) {
-
 	    Collections.sort(list, new Comparator<PmParameterDesc>() {
 	        @Override
 	        public int compare(PmParameterDesc o1, PmParameterDesc o2) {

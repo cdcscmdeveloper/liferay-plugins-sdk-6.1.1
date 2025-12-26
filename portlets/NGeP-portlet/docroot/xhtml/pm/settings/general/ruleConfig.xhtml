@@ -369,7 +369,7 @@
 
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory"/>	
-				                 	#{lbl['lbl.pm.rule.from.value.RM']}
+				    #{lbl['lbl.pm.rule.from.value.RM']}
 				</f:facet>
 				<p:inputText id="PRfromValueId" value="#{typeValueObj.fromValue}"
 					label="#{lbl['lbl.pm.rule.from.value']}" 
@@ -421,7 +421,7 @@
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR')}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />			
-				                 	#{lbl['lbl.pm.rule.supp.acc.type']}
+				    #{lbl['lbl.pm.rule.supp.acc.type']}
 				</f:facet>
 				<p:inputText id="supplAccTypeId"
 					value="#{ruleCatalogueBackingBean.displaySupplAccTypes(typeValueObj.supplAcctTypeIds)}"
@@ -734,7 +734,7 @@
 		</p:dialog>
 		<!-- #35323 - End -->
 		<div class="clear"></div>
-	</p:panel>	
+	</p:panel>
 	<ac:lovPopup />
 	<ui:include src="/xhtml/pm/settings/general/common/supplierAccountTypePopUp.xhtml" /> <!-- #35323 -->
 </ui:composition>
