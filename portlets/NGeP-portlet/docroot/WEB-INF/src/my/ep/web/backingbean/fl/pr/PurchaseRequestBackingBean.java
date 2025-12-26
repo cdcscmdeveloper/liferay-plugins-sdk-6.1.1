@@ -5880,17 +5880,36 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private String formatItemList(List<ScRequestItem> scRequestItemList) {
 		StringBuilder itemList = new StringBuilder();
 		int i = 0;
-		for (ScRequestItem item : scRequestItemList) {
-			CmUnspsc cmUnspsc = getUnspscItem(item.getCmItem().getItemId());
-			String languageCode = new FacesScopes().getUserLocale().getLanguage();
-			itemList.append("<br>")
-					.append(i + 1)
-					.append(". ")
-					.append(CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc.getUnspscTitleEng()
-							: cmUnspsc.getUnspscTitle());
-			i++;
+		if(scRequestItemList.size() > 1){
+			for (ScRequestItem item : scRequestItemList) {
+				itemList.append("<br>")
+						.append(i + 1)
+						.append(". ")
+						.append(getUnspscTitle(item));
+				i++;
+			}
+			itemList.append("<br>");
+		} else {
+			itemList.append(getUnspscTitle(scRequestItemList.get(0)));
 		}
+		
 		return itemList.toString();
+	}
+	
+	/**
+	 * Construct unspsc title by default language
+	 * @param scRequestItem
+	 * @return
+	 */
+	private String getUnspscTitle(ScRequestItem scRequestItem) {
+		ICodificationSO unspscSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		reqDTO.setItemId(scRequestItem.getCmItem().getItemId());
+		CmUnspsc cmUnspsc = unspscSO.findUnspcObj(reqDTO).getUnspscObj();
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		return CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc.getUnspscTitleEng() : cmUnspsc
+				.getUnspscTitle();
 	}
 
 	/**
@@ -5911,20 +5930,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 		}
 		return totalAmount;
-	}
-
-	/**
-	 * Get cm unspsc by cm item id
-	 * @param cmItemId
-	 * @return
-	 */
-	private CmUnspsc getUnspscItem(Long cmItemId) {
-		ICodificationSO unspscSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
-		CodificationReqDTO reqDTO = new CodificationReqDTO();
-		reqDTO.setItemId(cmItemId);
-		CodificationResDTO cResDTO = unspscSO.findUnspcObj(reqDTO);
-		return cResDTO.getUnspscObj();
 	}
 	
 	/**
@@ -5971,7 +5976,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 								MessageConst.ERROR_740086, new String[] {
 										formatItemList(getManagedBean().getItemExceedItemPanelThreshold()),
-										getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
+						    				getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName(),
 										amountDF.format(thresholdAmount) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 			}
