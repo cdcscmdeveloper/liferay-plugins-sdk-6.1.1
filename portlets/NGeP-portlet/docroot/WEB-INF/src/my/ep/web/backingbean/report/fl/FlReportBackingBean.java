@@ -31,6 +31,7 @@ import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.fl.SLALogFulfilmentConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -47,6 +48,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
@@ -64,6 +66,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -2161,6 +2164,113 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		}
 
 		return condition;
+	}
+	
+	/**
+	 * Construct condition field for PTJ by user role code
+	 * 
+	 * @return
+	 */
+	public String constructConditionForPTJByRole() {
+		String condition = "";
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			condition = getPTJWithApproveOtherPTJCondition();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			condition = getPTJInternalAuditorCondition();
+		} else {
+			condition = getPTJCondition();
+		}
+		return condition;
+	}
+
+	/**
+	 * Construct condition field for PTJ Group by user role code
+	 * 
+	 * @return
+	 */
+	public String constructConditionForPTJGroupByRole() {
+		String condition = "";
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			condition = getPTJGroupWithApproveOtherPTJCondition();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			condition = getPTJGroupInternalAuditorCondition();
+		} else {
+			condition = constuctConditionFieldsForPTJGroup();
+		}
+		return condition;
+	}
+
+	/**
+	 * Disable PTJ Group lov by user role code
+	 * 
+	 * @return
+	 */
+	public boolean disablePtjGroupLovThresholdReport() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			return false;
+		} else {
+			return disablePtjGroupLov();
+		}
+	}
+
+	/**
+	 * Disable PTJ lov by user role code
+	 * 
+	 * @return
+	 */
+	public boolean disablePtjLovThresholdReport() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			return false;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			if (getManagedBean().getPtjGroup() == null) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return disablePtjLov();
+		}
+	}
+	
+	/**
+	 * Get select item for document status by doctype
+	 * 
+	 * @param docType
+	 * @return
+	 */
+	public SelectItem[] getStatusDropdownValuesForItemThreshold(String docType) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(
+					ModuleCodeConst.ORDER_FULFILLMENT, docType, null);
+			List<PmStatusDesc> statusDescsItemThreshold = new ArrayList<PmStatusDesc>();
+
+			for (PmStatusDesc statusDesc : statusDescs) {
+				if (statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT)
+						|| statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CLOSED)
+						|| statusDesc.getPmStatus().getStatusId()
+								.equals(FulfilmentStatusConst.PO_CLOSED_MANUAL_PAYMENT_1GFMAS)) {
+					statusDescsItemThreshold.add(statusDesc);
+				}
+			}
+
+			items = new SelectItem[statusDescsItemThreshold.size() + 1];
+			items[0] = new SelectItem(0L, ResourceBundleUtils.getMessage("lbl.txt.all",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			for (PmStatusDesc statusDescYep : statusDescsItemThreshold) {
+				items[i++] = new SelectItem(statusDescYep.getPmStatus().getStatusId(), statusDescYep.getStatusName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
 	}
 	//#31344 end
 

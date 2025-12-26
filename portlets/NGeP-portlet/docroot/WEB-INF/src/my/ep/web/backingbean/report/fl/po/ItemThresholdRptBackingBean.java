@@ -52,6 +52,9 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 
 	private static final Logger log = EpLogger.getLogger(ItemThresholdRptBackingBean.class);
 
+	/**
+	 * Initialize backing bean
+	 */
 	public ItemThresholdRptBackingBean() {
 		if (getManagedBean().getMinistry() == null) {
 			defaultPtjAndMinistryValues();
@@ -105,7 +108,7 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 	 * @return List of select item for financial year
 	 */
 	public static List<SelectItem> getFinancialYearOpt() {
-		List<SelectItem> financialYearOpt = new ArrayList<SelectItem>();
+		List<SelectItem> financialYearOpt = new ArrayList<>();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 
@@ -215,112 +218,5 @@ public class ItemThresholdRptBackingBean extends FlReportBackingBean<ItemThresho
 		getManagedBean().setProcurementTypeCode(null);
 		getManagedBean().setReasonCode(null);
 
-	}
-
-	/**
-	 * Get select item for document status by doctype
-	 * 
-	 * @param docType
-	 * @return
-	 */
-	public SelectItem[] getStatusDropdownValuesForItemThreshold(String docType) {
-		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
-
-		try {
-			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(
-					ModuleCodeConst.ORDER_FULFILLMENT, docType, null);
-			List<PmStatusDesc> statusDescsItemThreshold = new ArrayList<PmStatusDesc>();
-
-			for (PmStatusDesc statusDesc : statusDescs) {
-				if (statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT)
-						|| statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CLOSED)
-						|| statusDesc.getPmStatus().getStatusId()
-								.equals(FulfilmentStatusConst.PO_CLOSED_MANUAL_PAYMENT_1GFMAS)) {
-					statusDescsItemThreshold.add(statusDesc);
-				}
-			}
-
-			items = new SelectItem[statusDescsItemThreshold.size() + 1];
-			items[0] = new SelectItem(0L, ResourceBundleUtils.getMessage("lbl.txt.all",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			int i = 1;
-			for (PmStatusDesc statusDescYep : statusDescsItemThreshold) {
-				items[i++] = new SelectItem(statusDescYep.getPmStatus().getStatusId(), statusDescYep.getStatusName());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		}
-
-		return items;
-	}
-
-	/**
-	 * Construct condition field for PTJ by user role code
-	 * 
-	 * @return
-	 */
-	public String constructConditionForPTJByRole() {
-		String condition = "";
-		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
-			condition = getPTJWithApproveOtherPTJCondition();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-			condition = getPTJInternalAuditorCondition();
-		} else {
-			condition = getPTJCondition();
-		}
-		return condition;
-	}
-
-	/**
-	 * Construct condition field for PTJ Group by user role code
-	 * 
-	 * @return
-	 */
-	public String constructConditionForPTJGroupByRole() {
-		String condition = "";
-		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
-			condition = getPTJGroupWithApproveOtherPTJCondition();
-		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-			condition = getPTJGroupInternalAuditorCondition();
-		} else {
-			condition = constuctConditionFieldsForPTJGroup();
-		}
-		return condition;
-	}
-
-	/**
-	 * Disable PTJ Group lov by user role code
-	 * 
-	 * @return
-	 */
-	public boolean disablePtjGroupLovThresholdReport() {
-		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-			return false;
-		} else {
-			return disablePtjGroupLov();
-		}
-	}
-
-	/**
-	 * Disable PTJ lov by user role code
-	 * 
-	 * @return
-	 */
-	public boolean disablePtjLovThresholdReport() {
-		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
-			return false;
-		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-			if (getManagedBean().getPtjGroup() == null) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return disablePtjLov();
-		}
 	}
 }

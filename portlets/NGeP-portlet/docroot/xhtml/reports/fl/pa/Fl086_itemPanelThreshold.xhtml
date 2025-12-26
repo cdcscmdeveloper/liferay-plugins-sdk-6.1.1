@@ -156,7 +156,9 @@
 		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
 			process="@form" update="@form"
 			action="#{itemPanelThrRptBB.generateReport()}">
-			<f:setPropertyActionListener target="#{itemPanelThrRptBB.managedBean.reportCode}" value="#{flReportBB.managedBean.reportCode}" />
+			<f:setPropertyActionListener
+				target="#{itemPanelThrRptBB.managedBean.reportCode}"
+				value="#{flReportBB.managedBean.reportCode}" />
 		</p:commandButton>
 		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
 			process="@this" update="@form" action="#{itemPanelThrRptBB.resetAction()}">
