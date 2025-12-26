@@ -3731,6 +3731,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (date.after(this.getManagedBean().getScQtApprovalRequestList().get(0).getProposalValidityEndDateNew())
 				&& (QTStatusConst.PCB_RQ1_APPROVED.longValue() == request.getDecessionType().getParameterId()
 						|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == request.getDecessionType().getParameterId())) {
+			request.setApproverAction(null);
 			throw new EpException(MessageConst.ERROR_770405);
 		}
 	}
