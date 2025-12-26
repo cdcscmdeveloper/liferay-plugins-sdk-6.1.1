@@ -5989,12 +5989,12 @@ public class RuleCatalogueBackingBean extends
 	 */
 	public void onAnyTabChange() {
 		int activeIndex = this.getManagedBean().getTabActiveIndex();
-		resetRuleType();
-		resetRuleValue();
-		resetQtValues();
 		if (activeIndex == 0) {
 			initConfigRule();
 		}
+		resetRuleType();
+		resetRuleValue();
+		resetQtValues();		
 		this.getManagedBean().setCollapsePanel(true);
 	}
 	//#36738 End
