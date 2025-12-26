@@ -182,6 +182,13 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String auditLevelCode;
 	private String auditFeeExemptionType;
 	
+	// #35323 - Start
+	private boolean selectedAllSuppAccountType;
+	private List<Long>  selectedSuppAccountType;
+	private List<PmParameterDesc> supplierType;
+	private Integer index;
+	// #35323 - End
+
 	//#36738 Start
 	private List<PmConfigRuleDesc> originalConfigRuleDescList;
 	private List<PmConfigRuleValue> originalConfigRuleValueList;
@@ -199,14 +206,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	//#36738 End
 
 	/************ AUDIT #28895_35509 *************/
-	
-	// #35323 - Start
-	private boolean selectedAllSuppAccountType;
-	private List<Long>  selectedSuppAccountType;
-	/** The supplier type. */
-	private List<PmParameterDesc> supplierType;
-	private Integer index;
-	// #35323 - End
 
 	public RuleCatalogueManageBean() {
 
@@ -2057,6 +2056,5 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setIndex(Integer index) {
 		this.index = index;
 	}
-
 	// #35323 - End
 }
