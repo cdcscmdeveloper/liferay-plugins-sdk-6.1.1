@@ -4152,7 +4152,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				initBusinessPremise();
 
 			}
-//			assignValReqdToFalse(); #37925
+			assignValReqdToFalse();
 		}
 		return valid;
 	}
@@ -10920,8 +10920,85 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		setReasonIdList();
 		//30974 - end
 		
+		handleApproverChangeCurrentStatus(); //#37925
+		
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
+	
+	// #37925 START
+	/**
+	 * Handles approver change of current registration status based on the
+	 * latest PO section review.
+	 */
+	public void handleApproverChangeCurrentStatus() {
+		if (!getManagedBean().isDisplayCheckboxChangeCurrentStatus()) {
+			return;
+		}
+
+		assignValReqdToTrue();
+
+		if (!isEligibleApprover()) {
+			return;
+		}
+
+		SmApplSectionReview latestPOChange = findLatestPOSectionReview();
+		if (latestPOChange == null || latestPOChange.getPmRegStatus() == null || latestPOChange.getPmRegStatus().getPmStatus() == null) {
+			return;
+		}
+
+		getManagedBean().setChangeCurrRegStatus(true);
+		getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
+	}
+
+	/**
+	 * Determines whether the current user is eligible to approve a change in
+	 * registration status.
+	 * 
+	 * @return true if the user is an approver and has a PO recommendation
+	 */
+	private boolean isEligibleApprover() {
+		return getManagedBean().isApproverUser() && getManagedBean().getPoRecommendStatusId() != null;
+	}
+
+	/**
+	 * Finds the most recent section review with role type "P".
+	 * 
+	 * @return the latest PO section review, or null if none found
+	 */
+	private SmApplSectionReview findLatestPOSectionReview() {
+		SmApplSectionReview latest = null;
+
+		if (getManagedBean().getSmAppl() == null || getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
+			return null;
+		}
+
+		for (SmApplSectionReview review : getManagedBean().getSmAppl().getSmApplSectionReviews()) {
+
+			if (!isValidPOReview(review)) {
+				continue;
+			}
+
+			if (latest == null || review.getCreatedDate().after(latest.getCreatedDate())) {
+				latest = review;
+			}
+		}
+
+		return latest;
+	}
+
+	/**
+	 * Validates whether a section review is a PO review with required fields
+	 * populated.
+	 * 
+	 * @param review
+	 *            the section review to validate
+	 * @return true if valid
+	 */
+	private boolean isValidPOReview(SmApplSectionReview review) {
+		return review != null && SupplierManagementConst.SECTION_REV_ROLE_PO.equals(review.getRoleType()) && review.getCreatedDate() != null;
+	}
+
+	// #37925 END
 
 	/**
 	 * Approver select to Approve or reject mof cancellation.

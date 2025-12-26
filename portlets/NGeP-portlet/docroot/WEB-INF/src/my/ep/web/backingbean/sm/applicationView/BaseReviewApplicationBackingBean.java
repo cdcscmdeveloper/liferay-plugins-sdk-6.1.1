@@ -5403,9 +5403,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			remark.append("<br /><br />");
 			getRegStatus(revisit, remark, index);
 			index++; 
+			remark.append("<br />");
 		} 
 		if (null != revisit.getDeletedRvCatCodes() && !revisit.getDeletedRvCatCodes().isEmpty()) { 
-			remark.append("<br /><br />");
+			remark.append("<br />");
 			getDeletedRvCatCodes(revisit, remark, index);
 			index++; 
 		} 
@@ -5415,11 +5416,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			index++; 
 		} 
 		if (null != revisit.getUpdatedRvCatCodes() && !revisit.getUpdatedRvCatCodes().isEmpty()) { 
-			for (SmRvCatCode updatedRvCatCode : revisit.getUpdatedRvCatCodes()) {
-				updatedRvCatCodes(updatedRvCatCode, remark, index);
-				remark.append("<br />");
-				index++; 
-			} 
+			// 34031#note-128 Issue 23 - Start
+			int i = 0;
+			for (SmRvCatCode updatedRvCatCode : revisit.getUpdatedRvCatCodes()) { 
+				updatedRvCatCodes(updatedRvCatCode, remark, index); 
+				if (i++ != revisit.getUpdatedRvCatCodes().size() - 1) {
+					remark.append("<br />");
+				}
+				index++;
+			}
+			// #34031#note-128 - End
 		} 
 		return remark.toString();
 	} 
