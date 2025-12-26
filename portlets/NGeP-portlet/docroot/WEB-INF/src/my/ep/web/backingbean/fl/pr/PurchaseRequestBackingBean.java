@@ -5366,15 +5366,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return thresholdAmount
 	 */
 	private BigDecimal getThresholdForPK7() {
+		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		
 		BigDecimal thresholdAmount = null;
 
-		if (!getManagedBean().getRequestNoteWithDtlsList().isEmpty()) {
-			for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
-				if (purchaseItem.getJustificationType().getDpThreshold() != null) {
-					thresholdAmount = purchaseItem.getJustificationType().getDpThreshold();
-				}
-			}
-		}
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+		
+		thresholdAmount = fulfilmentRequestSO.retrievePRThresholdByFlRequestId(reqDTO).getPrThresholdAmt();
 
 		return thresholdAmount;
 	}
@@ -5501,10 +5500,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 		if (!getManagedBean().getItemNameExceedThresholdList().isEmpty()) {
 			List<String> itemNameList = getManagedBean().getItemNameExceedThresholdList();
-			numberedList.append("<br>");
-			for (int i = 0; i < itemNameList.size(); i++) {
-				numberedList.append(i + 1).append(". ").append(itemNameList.get(i)).append("<br>");
+			if (itemNameList.size() == 1) {
+				numberedList.append(itemNameList.get(0)); //if 1 item, item name display in 1 line
+			} else {
+				numberedList.append("<br>");
+				for (int i = 0; i < itemNameList.size(); i++) {
+					numberedList.append(i + 1).append(". ").append(itemNameList.get(i)).append("<br>");
+				}
 			}
+
 			if (isShowErrorMsgForPRThreshold) {
 				throw new EpException(MessageConst.ERROR_740077, new String[] { numberedList.toString(),
 						String.valueOf(getThresholdForPK7()),
@@ -5530,7 +5534,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param action
 	 */
 	private void validatePK7forPRAction(String action) {
-		// check for reason(pm_reason) active
 		if (getManagedBean().getReason() != null) {
 			Set<String> outcomeCheckReason = new HashSet<>();
 
@@ -5564,7 +5567,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * 
 	 */
 	public void validatePRSupplierAccType() {
-
 		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IReasonSO.class);
 
@@ -5676,7 +5678,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return suppAccType supplier account type
 	 */
 	private String getSuppAccType() {
-
 		if(getManagedBean().getFulfilmentRequest().getSmSupplier().getSmAppl().getSupplierType().equals(FulfilmentConst.SM_SUPP_ACC_CODE_G2G)){
 			return FulfilmentConst.SM_SUPP_ACC_CODE_G2G;
 		}
@@ -5699,7 +5700,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * 1B
 	 */
 	private void buildErrorMessageSupplierAccountTypeNonActive() {
-
 		throw new EpException(MessageConst.ERROR_740083, new String[] {
 				getParameterDesc(FulfilmentConst.PM_SUPPLIER_ACC_PARAM_TYPE, getSuppAccType()),
 				getManagedBean().getFulfilmentRequest().getSmSupplier().getCompanyName(),
@@ -5714,7 +5714,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * 1A
 	 */
 	private void buildErrorMessageSupplierAccountTypeNonApplicable() {
-
 		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IReasonSO.class);
 
