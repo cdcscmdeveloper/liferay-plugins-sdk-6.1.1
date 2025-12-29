@@ -6088,8 +6088,9 @@ public class RuleCatalogueBackingBean extends
 		resetRuleType();
 		resetRuleValue();
 		resetQtValues();
-		this.getManagedBean().setCollapsePanel(true);
+		this.getManagedBean().setRuleValueCollapsePanel(true);
 		this.getManagedBean().setRuleTypeCollapsePanel(true);
+		this.getManagedBean().setQtValueCollapsePanel(true);
 	}
 	
 	public void onRuleTypeSearchToggle(ToggleEvent event) {
