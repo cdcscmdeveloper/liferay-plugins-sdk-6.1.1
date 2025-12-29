@@ -883,7 +883,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	 */
 	public List<CtCircularPidReason> getCtCircularPidReasons() {
 		if (ctCircularPidReasons == null) {
-			ctCircularPidReasons = new ArrayList<CtCircularPidReason>();
+			ctCircularPidReasons = new ArrayList<>(); //#39594
 		}
 		return ctCircularPidReasons;
 	}
