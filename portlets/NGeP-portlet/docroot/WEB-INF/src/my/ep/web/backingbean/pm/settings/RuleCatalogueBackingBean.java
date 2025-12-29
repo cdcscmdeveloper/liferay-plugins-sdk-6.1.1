@@ -402,7 +402,10 @@ public class RuleCatalogueBackingBean extends
 			/* 27827 - START */
 			retrievePmZoneList();
 			/* 27827 - END */
-			getManagedBean().setOriginalConfigRuleDescList(list);//36738
+			//#36738 Start
+			getManagedBean().setOriginalConfigRuleDescList(list);
+			getManagedBean().setOriginalConfigRuleValueList(getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+			//#36738 End
 		} finally {
 			cgeneralSO = null;
 		}
