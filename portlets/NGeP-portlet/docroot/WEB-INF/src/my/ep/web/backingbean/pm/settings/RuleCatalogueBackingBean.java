@@ -376,7 +376,7 @@ public class RuleCatalogueBackingBean extends
 		setCurrentActiveOrg();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
-			initConfigRule();
+			//initConfigRule();//#36738
 			initFeeSettings();
 			initOperationThreshold();
 			initGst();
@@ -436,7 +436,10 @@ public class RuleCatalogueBackingBean extends
 			/* 27827 - START */
 			retrievePmZoneList();
 			/* 27827 - END */
-			getManagedBean().setOriginalConfigRuleDescList(list);//36738
+			//#36738 Start
+			getManagedBean().setOriginalConfigRuleDescList(list);
+			getManagedBean().setOriginalConfigRuleValueList(getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+			//#36738 End
 		} finally {
 			cgeneralSO = null;
 		}
@@ -5697,7 +5700,8 @@ public class RuleCatalogueBackingBean extends
 		Long searchRuleZone = this.getManagedBean().getSearchRuleDataTypeZone();
 		String ruleDataType = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleDataTypeId().getParameterCode();
 
-		List<PmConfigRuleValue> originalList = this.getManagedBean().getOriginalConfigRuleValueList();
+		List<PmConfigRuleValue> originalList = this.getManagedBean().getOriginalConfigRuleValueList() != null ?
+				 this.getManagedBean().getOriginalConfigRuleValueList() : this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues();
 		List<PmConfigRuleValue> resultList = new ArrayList<>(originalList);
 
 		// search via value	
@@ -6076,14 +6080,12 @@ public class RuleCatalogueBackingBean extends
 	 */
 	public void onAnyTabChange() {
 		int activeIndex = this.getManagedBean().getTabActiveIndex();
+		if (activeIndex == 0) {
+			initConfigRule();
+		}
 		resetRuleType();
 		resetRuleValue();
 		resetQtValues();
-		if (activeIndex == 0) {
-			List<PmConfigRuleDesc> list = retriveConfigRuleDescFromDB();
-			getManagedBean().setConfigRuleDescList(list);
-			getManagedBean().setSelectedRuleDescType(list.get(0));
-		}
 		this.getManagedBean().setCollapsePanel(true);
 	}
 	//#36738 End
