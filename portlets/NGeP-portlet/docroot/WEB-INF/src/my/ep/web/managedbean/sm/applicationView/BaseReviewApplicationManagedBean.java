@@ -351,7 +351,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	//#3460
 	private String sdoRemark;
-	private boolean activeDisciplinary; // 39636
 
 	public String getSupportingDocMode() {
 		return supportingDocMode;
@@ -2600,13 +2599,4 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 	// #38856 End
 	
-	// 39636 - START
-	public boolean isActiveDisciplinary() {
-		return activeDisciplinary;
-	}
-
-	public void setActiveDisciplinary(boolean activeDisciplinary) {
-		this.activeDisciplinary = activeDisciplinary;
-	}
-	// 39636 - END
 }
