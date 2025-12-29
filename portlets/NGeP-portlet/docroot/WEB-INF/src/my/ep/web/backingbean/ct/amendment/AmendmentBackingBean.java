@@ -9922,7 +9922,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * Sets the committee type for ctAmendment
+	 * Sets the committee type for ctAmendment during save/reject
 	 */
 	private void setAmendmentCommitteeType() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
@@ -9963,19 +9963,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	private boolean determineChairpersonAccessForQuotationCommmittee(Long orgProfileId, Long ctOwnerOrgProfileId,
 			UserResDTO userResDTO, boolean allowChairpersonRole) {
-		
-		// Only proceed if the user's organisation matches the contract owner organisation
-		if (!orgProfileId.equals(ctOwnerOrgProfileId)) {
-			return allowChairpersonRole;
-		}
-
-		boolean allow = false;
+		boolean allow = allowChairpersonRole;
 		for (PmRoleDesc pmRoleDesc : userResDTO.getRoleDescList()) {
 			String roleCode = pmRoleDesc.getPmRole().getRoleCode();
 			if ((isQuotationCommitteeTypeAC() && isTypeAChairperson(roleCode))
-					||(isQCBCommitteeWIP() && RoleCode.QCB_CHAIRPERSON.value().equalsIgnoreCase(roleCode))) {
-				allow = true;
-				break;
+					|| (isQCBCommitteeWIP() && RoleCode.QCB_CHAIRPERSON.value().equalsIgnoreCase(roleCode))) {
+				allow = false;
+				if (orgProfileId.equals(ctOwnerOrgProfileId)) {
+					allow = true;
+					break;
+				}
 			}
 		}
 		return allow;
