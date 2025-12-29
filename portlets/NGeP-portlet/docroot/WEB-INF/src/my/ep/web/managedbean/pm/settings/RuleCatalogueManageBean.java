@@ -1977,20 +1977,20 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
 	}
 
-	public Boolean getRuleValueCollapsePanel() {
-		return ruleValueCollapsePanel;
-	}
-
-	public void setRuleValueCollapsePanel(Boolean ruleValueCollapsePanel) {
-		this.ruleValueCollapsePanel = ruleValueCollapsePanel;
-	}
-	
 	public Boolean getRuleTypeCollapsePanel() {
 		return ruleTypeCollapsePanel;
 	}
 	
 	public void setRuleTypeCollapsePanel(Boolean ruleTypeCollapsePanel) {
 		this.ruleTypeCollapsePanel = ruleTypeCollapsePanel;
+	}
+	
+	public Boolean getRuleValueCollapsePanel() {
+		return ruleValueCollapsePanel;
+	}
+
+	public void setRuleValueCollapsePanel(Boolean ruleValueCollapsePanel) {
+		this.ruleValueCollapsePanel = ruleValueCollapsePanel;
 	}
 
 	public Boolean getQtValueCollapsePanel() {
@@ -2073,5 +2073,5 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setIndex(Integer index) {
 		this.index = index;
 	}
-	// #35323 - End	
+	// #35323 - End
 }
