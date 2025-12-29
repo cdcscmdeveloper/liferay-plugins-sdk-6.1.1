@@ -886,7 +886,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	// #31344 -start-
 	/**
 	 * Show Details Items in popup
-	 * 
 	 * @param cmItemId
 	 * @return void
 	 */
@@ -910,7 +909,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 
     /**
      * Populate the item description for pop up
-     * 
      * @param item
      * @return void
      */
@@ -939,67 +937,59 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
     }
 	
 	/**
-	 * Filter sc request item name by check the extension value in cm item
+	 * Filter item contain NA, N A, N/A
 	 * @param scRequestItemId
 	 * @return
 	 */
-	public String filterNARequestItemName(Long scRequestItemId){
+	public String filterNARequestItemName(Long scRequestItemId) {
 
 	    if (scRequestItemId == null) {
 	        return null;
 	    }
 
 	    ScRequestItem scRequestItem =
-	        getRequestItemSO().getRequestItemAndCmItemByRequestItemId(scRequestItemId);
+	            getRequestItemSO().getRequestItemAndCmItemByRequestItemId(scRequestItemId);
 
 	    if (scRequestItem == null || scRequestItem.getItemName() == null) {
 	        return null;
 	    }
 
-	    CmItem cmItem = scRequestItem.getCmItem();
+	    CommonUtils commonUtils = new CommonUtils();
+	    String itemName = scRequestItem.getItemName();
 
-	    CommonUtils common = new CommonUtils();
-
-	    if (isNACmItem(cmItem)) {
-	        return common.removeItemNameNA(scRequestItem.getItemName());
-	    }
-
-	    return common.filterItemNameNA(scRequestItem.getItemName());
+	    return containsNAExtension(scRequestItem.getCmItem())
+	            ? commonUtils.removeItemNameNA(itemName)
+	            : commonUtils.filterItemNameNA(itemName);
 	}
-	
+
 	/**
-	 * Check cm item extension contain NA
-	 * @param item
+	 * Check cm item extension NA, N A, N/A
+	 * @param cmItem
 	 * @return
 	 */
-	private boolean isNACmItem(CmItem item) {
-
-	    if (item == null) {
-	        return false;
-	    }
-
-	    return isNA(item.getCmType() != null ? item.getCmType().getTypeName() : null)
-	        || isNA(item.getCmBrand() != null ? item.getCmBrand().getBrandName() : null)
-	        || isNA(item.getCmColor() != null ? item.getCmColor().getColorName() : null)
-	        || isNA(item.getCmMeasurement() != null ? item.getCmMeasurement().getMeasurementName() : null);
+	private boolean containsNAExtension(CmItem cmItem) {
+	    return isNAValue(cmItem.getCmType().getTypeName())
+	            || isNAValue(cmItem.getCmBrand().getBrandName())
+	            || isNAValue(cmItem.getCmColor().getColorName())
+	            || isNAValue(cmItem.getCmMeasurement().getMeasurementName());
 	}
 
 	/**
-	 * Check cm item extension null value and contain NA
+	 * Check NA value
 	 * @param value
 	 * @return
 	 */
-	private boolean isNA(String value) {
-	    return value != null && value.equalsIgnoreCase("NA");
+	private boolean isNAValue(String value) {
+	    return "NA".equalsIgnoreCase(value);
 	}
-	
+
 	/**
-	 * Request item service
+	 * Request Item Service.
 	 * @return
 	 */
 	private IRequestItemSO getRequestItemSO() {
-		return BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+	    return BusinessDelegate.getInstance()
+	            .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
 	}
 		
 	// #31344 -end-
