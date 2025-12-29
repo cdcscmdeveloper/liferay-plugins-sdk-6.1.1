@@ -192,6 +192,15 @@ public class RuleCatalogueBackingBean extends
 	    m.put(RuleTypeConst.G2G,   "lbl.pm.rule.supp.acc.type.g2g");
 	    ACC_TYPE_KEYS = Collections.unmodifiableMap(m);
 	}
+	
+	private static final Map<Long, Integer> SUPPLIER_PRIORITY;
+	static {
+	    Map<Long, Integer> map = new HashMap<Long, Integer>();
+	    map.put(RuleTypeConst.BASIC, 1);
+	    map.put(RuleTypeConst.MOF, 2);
+	    map.put(RuleTypeConst.G2G, 3);
+	    SUPPLIER_PRIORITY = Collections.unmodifiableMap(map);
+	}
     //#35323 - End
 
 	public String getDupplicateOrgTypeName() {
@@ -1366,15 +1375,18 @@ public class RuleCatalogueBackingBean extends
 			
 			// #35323 - Start
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())) {
-				setupPurchaseRequestRule();
+				setupPurchaseRequestRule(this.getManagedBean().getSelectedRuleDescType().getRuleType());
 			}
 			// #35323 - End
 			setupTrackingDiaryVal(reqDTO);
 			
-			List<PmConfigRule> ruleTypeList = new ArrayList<PmConfigRule>();
+			List<PmConfigRule> ruleTypeList = new ArrayList<>(); //#35323 and sonarlint Fixing
 			for (PmConfigRuleDesc desc : getManagedBean()
 					.getConfigRuleDescList()) {
 				if (desc.getRuleType() != null) {
+					//#35323 - Start
+					validateValueForPR(desc.getRuleType());
+					//#35323 - End
 					ruleTypeList.add(desc.getRuleType());
 				}
 			}
@@ -1534,7 +1546,7 @@ public class RuleCatalogueBackingBean extends
 					//#35323 - Start
 					if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(ruleTypeDesc.getRuleType().getRuleType())) {
 						String parameterCode = ruleTypeValue.getSupplAcctTypeId().getParameterCode();
-						String supplCodeTypeName = ParameterConst.MOF_PARAM_CODE.equalsIgnoreCase(parameterCode) ? ParameterConst.ASAS : ParameterConst.MOF_PARAM_CODE
+						String supplCodeTypeName = ParameterConst.BASIC_PARAM_CODE.equalsIgnoreCase(parameterCode) ? ParameterConst.ASAS : ParameterConst.MOF_PARAM_CODE
 								.equalsIgnoreCase(parameterCode) ? ParameterConst.MOF : ParameterConst.G2G;
 						
 						msgParam = new String[] {
@@ -6339,12 +6351,12 @@ public class RuleCatalogueBackingBean extends
 		newRuleValue.setFromValue(BigDecimal.ONE);
 	}
 
-	private void setupPurchaseRequestRule() {
+	private void setupPurchaseRequestRule(PmConfigRule descRuleType) {
 	    IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 
 	    ParameterReqDTO reqDTO = new ParameterReqDTO();
 
-	    PmConfigRule ruleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+	    PmConfigRule ruleType = descRuleType;
 
 	    List<PmConfigRuleValue> original = new ArrayList<>(ruleType.getConfigRuleValues());
 
@@ -6363,7 +6375,6 @@ public class RuleCatalogueBackingBean extends
 		boolean first = true;
 
 		for (int i = 0; i < supplierTypeIds.size(); i++) {
-			log.info("merged=" + merged.getRuleValueId());
 			PmConfigRuleValue value = buildRuleValue(merged, supplierTypeIds, configValueIds, i, first, parameterSO, reqDTO);
 
 			if (value.isShowFlag() && first) {
@@ -6421,14 +6432,8 @@ public class RuleCatalogueBackingBean extends
 
 		PmConfigRuleValue value = ruleSO.getRuleValueByRuleValueId(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD,
 				configValueId);
-		
-		value.setFromValue(merged.getFromValue());
-		value.setToValue(merged.getToValue());
-		value.setEffDate(merged.getEffDate());
-		value.setExpDate(merged.getExpDate());
 
-		reqDTO.setParameterId(supplAcctTypeId);
-		value.setSupplAcctTypeId(parameterSO.retrieveParameterById(reqDTO).getPmParameter());
+		value.setExpDate(merged.getExpDate());
 
 		return value;
 	}
@@ -6552,40 +6557,29 @@ public class RuleCatalogueBackingBean extends
 	 * Sorts list safely by CodeName.
 	 */
 	private void sortByCodeName(List<PmParameterDesc> list) {
+	    if (list == null || list.size() <= 1) {
+	        return;
+	    }
+
 	    Collections.sort(list, new Comparator<PmParameterDesc>() {
 	        @Override
 	        public int compare(PmParameterDesc o1, PmParameterDesc o2) {
-
-	            Long id1 = getId(o1);
-	            Long id2 = getId(o2);
-
-	            int p1 = getPriority(id1);
-	            int p2 = getPriority(id2);
-
-	            return p1 - p2;
-	        }
-
-	        private Long getId(PmParameterDesc pd) {
-	            if (pd == null || pd.getPmParameter() == null || pd.getPmParameter().getParameterId() == null)
-	                return 0L;
-	            return pd.getPmParameter().getParameterId();
-	        }
-
-	        private int getPriority(Long id) {
-	            if (id == 1019L){
-	            	return 1; // BASIC /(ASAS)
-	            }
-	            if (id == 1018L) {
-	            	return 2; // MOF
-	            }
-	            if (id == 1020L) {
-	            	return 3; // G2G
-	            }
-				return 0;
+	            return resolvePriority(o1) - resolvePriority(o2);
 	        }
 	    });
 	}
+	
+	private int resolvePriority(PmParameterDesc pd) {
+	    if (!isValid(pd)) {
+	        return 0;
+	    }
 
+	    Long id = pd.getPmParameter().getParameterId();
+	    Integer priority = SUPPLIER_PRIORITY.get(id);
+
+	    return priority != null ? priority.intValue() : 0;
+	}
+	
 	/**
 	 * Validates parameter description entry.
 	 */
@@ -6605,6 +6599,15 @@ public class RuleCatalogueBackingBean extends
 	    }
 
 	    return true;
+	}
+
+	private void validateValueForPR(PmConfigRule descRuleType){
+		if (!RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean()
+				.getSelectedRuleDescType().getRuleType().getRuleType())
+				&& RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(descRuleType.getRuleType())
+				&& descRuleType.getConfigRuleValues().get(0).getRuleValueId() == 0L) {
+			setupPurchaseRequestRule(descRuleType);
+		}
 	}
 	// #35323 - End
 }
