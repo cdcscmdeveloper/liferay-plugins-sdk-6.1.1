@@ -197,6 +197,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String searchPtjName;
 	private BigDecimal searchQtValueLimit;
 	private Boolean collapsePanel;
+	private Boolean ruleTypeCollapsePanel;
 	//#36738 End
 
 	// #35323 - Start
@@ -1982,6 +1983,14 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setCollapsePanel(Boolean collapsePanel) {
 		this.collapsePanel = collapsePanel;
 	}
+	
+	public Boolean getRuleTypeCollapsePanel() {
+		return ruleTypeCollapsePanel;
+	}
+	
+	public void setRuleTypeCollapsePanel(Boolean ruleTypeCollapsePanel) {
+		this.ruleTypeCollapsePanel = ruleTypeCollapsePanel;
+	}
 	//#36738 End
 	
 	//#35323 - Start
@@ -2055,5 +2064,5 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setIndex(Integer index) {
 		this.index = index;
 	}
-	// #35323 - End
+	// #35323 - End	
 }

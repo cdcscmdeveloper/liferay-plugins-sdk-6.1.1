@@ -140,6 +140,8 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.model.Visibility;
 
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
@@ -6087,6 +6089,11 @@ public class RuleCatalogueBackingBean extends
 		resetRuleValue();
 		resetQtValues();
 		this.getManagedBean().setCollapsePanel(true);
+		this.getManagedBean().setRuleTypeCollapsePanel(true);
+	}
+	
+	public void onRuleTypeSearchToggle(ToggleEvent event) {
+	    this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
 	}
 	//#36738 End
 	
