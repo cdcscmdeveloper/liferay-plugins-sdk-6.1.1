@@ -10913,6 +10913,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterConst.COMMITTE_TYPE, searchBean);
     		String stateCode = getIContractAmendmentSO().getPtjContractOwnerStateCode(ctBackingBean.getManagedBean().getContractVer());
     		
+    		logger.logCodeCoverage("Test Case 1, 2, 3: committee type parameters retrieved and PTJ contract owner state code resolved");
+    		
     		// Sort codes
     		if (parameterDescs != null && !parameterDescs.isEmpty()) {
 	    		Collections.sort(parameterDescs, new Comparator<PmParameterDesc>() {
