@@ -52,6 +52,9 @@ public class PaymentReceiptBackingBean extends BaseBackingBean<PaymentReceiptMan
 		
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_PAYMENT_ID, paymentId + "");
+		//#38977 - Start
+		paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT, ReportConst.PARAM_PAYMENT_PREPRINT_SALINAN);
+		//#38977 - End
 		
 		//Enhancement #19056 To replace Receipt document format for SPKI purchase to Tax Invoice format
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
