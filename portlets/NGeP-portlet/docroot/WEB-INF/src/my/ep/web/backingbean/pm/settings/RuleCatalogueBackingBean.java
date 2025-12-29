@@ -1380,7 +1380,7 @@ public class RuleCatalogueBackingBean extends
 			// #35323 - End
 			setupTrackingDiaryVal(reqDTO);
 			
-			List<PmConfigRule> ruleTypeList = new ArrayList<>();
+			List<PmConfigRule> ruleTypeList = new ArrayList<>(); //#35323 and sonarlint Fixing
 			for (PmConfigRuleDesc desc : getManagedBean()
 					.getConfigRuleDescList()) {
 				if (desc.getRuleType() != null) {
