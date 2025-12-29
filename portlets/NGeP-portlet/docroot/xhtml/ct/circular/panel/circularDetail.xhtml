@@ -17,6 +17,7 @@
 	<h:panelGroup id="groupPaneId">	      
 	      <p:panel rendered="#{panelBackingBean.managedBean.circularVer.pid}" 
 	                id="purchaseInDefault"  header="#{lbl['lbl.ct.pid.panel.name']}" toggleable="true" toggleSpeed="500" >
+	                <!-- #39594 Start-->
 	                <p:dataTable id="pidTableId" var="pidObj" widgetVar="PidReasonObj"
 	                        value="#{panelBackingBean.managedBean.ctCircularPidReasons}" rowKey="#{pidObj}"
 	                        rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedPidReason}">
