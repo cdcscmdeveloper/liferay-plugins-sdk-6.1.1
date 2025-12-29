@@ -10754,18 +10754,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public List<SelectItem> getCommitteeTypeItems() {
 		List<SelectItem> items = new ArrayList<>();
 	    try {
-	        List<String> codes = Arrays.asList(
+	        final List<String> codes = Arrays.asList(
 	            ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE,
 	            ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD,
 	            ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH,
 	            ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
 	        );
+	        
 	        SearchBean<PmParameterDesc> searchBean = new SearchBean<>();
 	        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), codes));
 	        List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterConst.COMMITTE_TYPE, searchBean);
-	        
-        	IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
-    		String stateCode = iContractAmendmentSO.getPtjContractOwnerStateCode(ctBackingBean.getManagedBean().getContractVer());
+    		String stateCode = getIContractAmendmentSO().getPtjContractOwnerStateCode(ctBackingBean.getManagedBean().getContractVer());
+    		
+    		// Sort codes
+    		if (parameterDescs != null && !parameterDescs.isEmpty()) {
+	    		Collections.sort(parameterDescs, new Comparator<PmParameterDesc>() {
+	    		    @Override
+	    		    public int compare(PmParameterDesc o1, PmParameterDesc o2) {
+	    		        return codes.indexOf(o1.getPmParameter().getParameterCode())
+	    		             - codes.indexOf(o2.getPmParameter().getParameterCode());
+	    		    }
+	    		});
+    		}
     		
 	        for (PmParameterDesc desc : parameterDescs) {
 	        	String code = desc.getPmParameter().getParameterCode();
