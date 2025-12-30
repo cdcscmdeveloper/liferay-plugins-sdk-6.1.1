@@ -1984,24 +1984,6 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
 			// 27815 - add disable button delete if edit DA - End
 			
-			// 39636 - START
-			try {
-				DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-				Date today = formatter.parse(formatter.format(new Date()));
-				Date startDate = formatter.parse(formatter.format(disc.getStartDate()));
-				Date endDate = formatter.parse(formatter.format(disc.getEndDate()));
-
-				if (startDate.compareTo(today) <= 0 && endDate.compareTo(today) >= 0) {
-					getManagedBean().setActiveDisciplinary(true);
-				} else {
-					getManagedBean().setActiveDisciplinary(false);
-				}
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// 39636 - END
-					
 			getManagedBean().setBlacklistOwnerOrDirector(disc.isBlacklistOwner());
 			getManagedBean().setBlacklistOwnerOrDirectorExist(true);
 			
