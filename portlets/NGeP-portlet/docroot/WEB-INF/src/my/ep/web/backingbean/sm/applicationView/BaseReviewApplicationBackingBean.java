@@ -5353,9 +5353,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			remark.append("<br /><br />");
 			getRegStatus(revisit, remark, index);
 			index++; 
+			remark.append("<br />");
 		} 
 		if (null != revisit.getDeletedRvCatCodes() && !revisit.getDeletedRvCatCodes().isEmpty()) { 
-			remark.append("<br /><br />");
+			remark.append("<br />");
 			getDeletedRvCatCodes(revisit, remark, index);
 			index++; 
 		} 
