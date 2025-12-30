@@ -26,7 +26,8 @@
 		
 		<!-- 36738 Start -->
 		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
-			id="ruleTypeSearch" collapsed="#{ruleCatalogueBackingBean.managedBean.collapsePanel}">
+			id="ruleTypeSearch" collapsed="#{ruleCatalogueBackingBean.managedBean.ruleTypeCollapsePanel}">
+			 <p:ajax event="toggle" listener="#{ruleCatalogueBackingBean.onRuleTypeSearchToggle}" />
 			<h:panelGrid id="ruleTypePanelGrid" columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.rule.type']}" />
 				<p:inputText
@@ -97,8 +98,7 @@
 		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
          	style="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'C') or
                  	(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC') ? '' : 'display:none'}"
-         	id="ruleTypeValueSearch"
-         	collapsed="#{ruleCatalogueBackingBean.managedBean.collapsePanel}">
+         	id="ruleTypeValueSearch" collapsed="#{ruleCatalogueBackingBean.managedBean.ruleValueCollapsePanel}">
 
 			<h:panelGrid id="ruleTypeValuePanelGrid" columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.value']}" />
