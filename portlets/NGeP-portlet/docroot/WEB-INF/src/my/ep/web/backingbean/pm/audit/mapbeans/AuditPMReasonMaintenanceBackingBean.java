@@ -36,6 +36,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final String DASH_STRING = " - ";
 
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 
@@ -838,8 +839,6 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		deleteSupplAcctType(managedBeans.getAuditDeleteSupplAcctType());
 
 	}
-
-	private static final String DASH_STRING = " - ";
 
 	private void deleteAgency() {
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_DEL;
