@@ -27,8 +27,7 @@
 		<!-- 36738 Start -->
 		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
 			id="ruleTypeSearch" collapsed="#{ruleCatalogueBackingBean.managedBean.ruleTypeCollapsePanel}">
-			 <p:ajax event="toggle" listener="#{ruleCatalogueBackingBean.onRuleTypeSearchToggle}" />
-			
+			 <p:ajax event="toggle" listener="#{ruleCatalogueBackingBean.onRuleTypeSearchToggle}" />			
 			<h:panelGrid id="ruleTypePanelGrid" columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.rule.type']}" />
 				<p:inputText
