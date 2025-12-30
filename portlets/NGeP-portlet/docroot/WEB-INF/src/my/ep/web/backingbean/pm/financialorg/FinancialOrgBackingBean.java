@@ -1665,28 +1665,24 @@ public class FinancialOrgBackingBean extends
 				pmFinancialAccList = new ArrayList<PmFinancialAcc>();
 			}
 			
-			// #34445, Fix as-is bug: #39508 START
+			//#34445, Fix as-is bug: #39508 START
 			int listSize = 0;
 			if (!pmFinancialAccList.isEmpty()) {
 				Boolean sequenceExist = isSequenceExist(pmFinancialAccList);
 				if (sequenceExist) {
-					Collections.sort(pmFinancialAccList,
-							new Comparator<PmFinancialAcc>() {
-								@Override
-								public int compare(PmFinancialAcc acc1,
-										PmFinancialAcc acc2) {
-									return Integer.compare(acc2.getSequence(),
-											acc1.getSequence());
-								}
-							});
+					Collections.sort(pmFinancialAccList, new Comparator<PmFinancialAcc>() {
+						@Override
+						public int compare(PmFinancialAcc acc1, PmFinancialAcc acc2) {
+							return Integer.compare(acc2.getSequence(), acc1.getSequence());
+						}
+					});
 					PmFinancialAcc latestAcc = pmFinancialAccList.get(0);
 					listSize = latestAcc.getSequence();
 				} else {
-					listSize = setFinancialAccountSequence(pmFinancialAccList,
-							listSize);
+					listSize = setFinancialAccountSequence(pmFinancialAccList, listSize);
 				}
 			}
-			// #34445, Fix as-is bug: #39508 END
+			//#34445, Fix as-is bug: #39508 END
 
 			PmFinancialAcc finAcc = new PmFinancialAcc();
 			finAcc.setEffDate(new Date());
@@ -1737,25 +1733,19 @@ public class FinancialOrgBackingBean extends
 		IFinancialOrgSO financialOrgSO = null;
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 		reqDTO.setFinancialOrgId(financialOrgId);
-		financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IFinancialOrgSO.class);
-		FinancialOrgResDTO resDTO = financialOrgSO
-				.retrieveFinancialSvcByFinancialOrgId(reqDTO);
+		financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
+		FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialSvcByFinancialOrgId(reqDTO);
 
 		PmFinancialSvc pmFinancialSvc = resDTO.getPmFinancialSvc();
 		if (resDTO.isSuccessful()) {
 			if (null != pmFinancialSvc) {
-				log.info("BANK CODE" + pmFinancialSvc.getBankCode() + "|"
-						+ pmFinancialSvc.getFinancialSvcId());
-				for (PmFinancialAcc financialAcc : getManagedBean()
-						.getFinancialOrg().getPmFinancialAccs()) {
-					// #34445, Fix as-is bug: #39508 START
-					if (financialAcc.isBrandNew()
-							&& StringUtils.isEmpty(financialAcc.getBankCode())) {
-					// #34445, Fix as-is bug: #39508 END
-						financialAcc.setPmFinancialOrg(this.getManagedBean()
-								.getFinancialOrg());
+				log.info("BANK CODE" + pmFinancialSvc.getBankCode() + "|" + pmFinancialSvc.getFinancialSvcId());
+				for (PmFinancialAcc financialAcc : getManagedBean().getFinancialOrg().getPmFinancialAccs()) {
+					//#34445, Fix as-is bug: #39508 START
+					if (financialAcc.isBrandNew() && StringUtils.isEmpty(financialAcc.getBankCode())) {
+					//#34445, Fix as-is bug: #39508 END
+						financialAcc.setPmFinancialOrg(this.getManagedBean().getFinancialOrg());
 						financialAcc.setBankCode(pmFinancialSvc.getBankCode());
 					}
 				}
@@ -2149,27 +2139,22 @@ public class FinancialOrgBackingBean extends
 	}
 	//20201210@Jacky - Enhancement#28836 - End
 	
-	//#34445, Fix as-is bug: #39508 START
+	// #34445, Fix as-is bug: #39508 START
 	public void setAccountNo(AjaxBehaviorEvent event) {
-		String bankCode = (String) event.getComponent().getAttributes()
-				.get("bankCode");
-		String accNo = (String) event.getComponent().getAttributes()
-				.get("value");
-		Integer sequence = (Integer) event.getComponent().getAttributes()
-				.get("sequence");
+		String bankCode = (String) event.getComponent().getAttributes().get("bankCode");
+		String accNo = (String) event.getComponent().getAttributes().get("value");
+		Integer sequence = (Integer) event.getComponent().getAttributes().get("sequence");
 
-		List<PmFinancialAcc> finAccList = this.getManagedBean()
-				.getFinancialOrg().getPmFinancialAccs();
+		List<PmFinancialAcc> finAccList = this.getManagedBean().getFinancialOrg().getPmFinancialAccs();
 		for (PmFinancialAcc finAcc : finAccList) {
-			if (finAcc.getBankCode().equals(bankCode)
-					&& finAcc.getSequence() == sequence) {
+			if (finAcc.getBankCode().equals(bankCode) && finAcc.getSequence() == sequence) {
 				finAcc.setAccountNo(accNo);
 			}
 		}
 	}
-	//#34445, Fix as-is bug: #39508 END
+	// #34445, Fix as-is bug: #39508 END
 	
-	//#34445, Fix as-is bug: #39508 START
+	// #34445, Fix as-is bug: #39508 START
 	private Boolean isSequenceExist(List<PmFinancialAcc> pmFinancialAccList) {
 		Boolean sequenceExist = Boolean.FALSE;
 		for (PmFinancialAcc acc : pmFinancialAccList) {
@@ -2179,11 +2164,10 @@ public class FinancialOrgBackingBean extends
 		}
 		return sequenceExist;
 	}
-	//#34445, Fix as-is bug: #39508 END
+	// #34445, Fix as-is bug: #39508 END
 	
-	//#34445, Fix as-is bug: #39508 START
-	private Integer setFinancialAccountSequence(
-			List<PmFinancialAcc> pmFinancialAccList, Integer listSize) {
+	// #34445, Fix as-is bug: #39508 START
+	private Integer setFinancialAccountSequence(List<PmFinancialAcc> pmFinancialAccList, Integer listSize){
 		Integer newSize = listSize;
 		for (PmFinancialAcc acc : pmFinancialAccList) {
 			newSize = newSize + 1;
@@ -2191,6 +2175,6 @@ public class FinancialOrgBackingBean extends
 		}
 		return newSize;
 	}
-	//#34445, Fix as-is bug: #39508 END
+	// #34445, Fix as-is bug: #39508 END
 
 }
