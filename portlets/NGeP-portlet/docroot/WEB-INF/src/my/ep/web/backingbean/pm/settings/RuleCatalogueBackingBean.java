@@ -140,10 +140,10 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
-//#36738 Start
+//#36738 start
 import org.primefaces.event.ToggleEvent;
 import org.primefaces.model.Visibility;
-//#36738 End
+//#36738 end
 
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
