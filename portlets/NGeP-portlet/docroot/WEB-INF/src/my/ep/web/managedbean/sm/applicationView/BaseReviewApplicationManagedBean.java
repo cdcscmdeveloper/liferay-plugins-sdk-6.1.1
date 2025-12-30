@@ -2637,4 +2637,5 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.currRegStatusId = currRegStatusId;
 	}
 	// #38856 End
+	
 }
