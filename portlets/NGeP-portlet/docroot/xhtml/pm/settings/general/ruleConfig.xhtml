@@ -98,7 +98,7 @@
 		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
          	style="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'C') or
                  	(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC') ? '' : 'display:none'}"
-         	id="ruleTypeValueSearch" 
+         	id="ruleTypeValueSearch"
          	collapsed="#{ruleCatalogueBackingBean.managedBean.ruleValueCollapsePanel}">
 			<h:panelGrid id="ruleTypeValuePanelGrid" columns="2" cellpadding="5">
 				<p:outputLabel value="#{lbl['lbl.pm.value']}" />
