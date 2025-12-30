@@ -356,7 +356,6 @@ public class RuleCatalogueBackingBean extends
 		// resetErrorDialog();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
-//			initConfigRule();//#36738
 			initFeeSettings();
 			initOperationThreshold();
 			initGst();
