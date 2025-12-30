@@ -88,6 +88,14 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private String ministryCodeName;
 	private String kumpPtjCodeName;
 	//#28962 - End
+	
+	// #28962 - Start
+	private List <PmReasonRestr> auditAddSupplAcctType;
+	private List <PmReasonRestr> auditUpdateSupplAcctType;
+	private List <PmReasonRestr> auditDeleteSupplAcctType;
+	private List <PmReasonRestr> auditAddAgency;
+	private List <PmReasonRestr> auditDeleteAgency;
+	// #28962 - End
 
 	public RejectionReasonManagedBean(){}
 
@@ -726,5 +734,48 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 		this.kumpPtjCodeName = kumpPtjCodeName;
 	}
 	//#28962 - End
+
+	//#28962-Audit - Start
+	public List <PmReasonRestr> getAuditAddSupplAcctType() {
+		return auditAddSupplAcctType;
+	}
+
+	public void setAuditAddSupplAcctType(List <PmReasonRestr> auditAddSupplAcctType) {
+		this.auditAddSupplAcctType = auditAddSupplAcctType;
+	}
+	
+	public List <PmReasonRestr> getAuditUpdateSupplAcctType() {
+		return auditUpdateSupplAcctType;
+	}
+
+	public void setAuditUpdateSupplAcctType(List <PmReasonRestr> auditUpdateSupplAcctType) {
+		this.auditUpdateSupplAcctType = auditUpdateSupplAcctType;
+	}
+
+	public List<PmReasonRestr> getAuditDeleteSupplAcctType() {
+		return auditDeleteSupplAcctType;
+	}
+
+	public void setAuditDeleteSupplAcctType(List<PmReasonRestr> auditDeleteSupplAcctType) {
+		this.auditDeleteSupplAcctType = auditDeleteSupplAcctType;
+	}
+
+	public List<PmReasonRestr> getAuditAddAgency() {
+		return auditAddAgency;
+	}
+
+	public void setAuditAddAgency(List<PmReasonRestr> auditAddAgency) {
+		this.auditAddAgency = auditAddAgency;
+	}
+
+	public List<PmReasonRestr> getAuditDeleteAgency() {
+		return auditDeleteAgency;
+	}
+
+	public void setAuditDeleteAgency(List<PmReasonRestr> auditDeleteAgency) {
+		this.auditDeleteAgency = auditDeleteAgency;
+	}
+	
+	//#28962-Audit - End
 
 }

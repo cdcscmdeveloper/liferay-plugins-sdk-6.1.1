@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
+ * Copyright Â© 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.managedbean.pm.settings;
 
@@ -29,6 +29,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
+import my.ep.persistence.entity.pm.common.PmParameterDesc; //#35323
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
@@ -180,6 +181,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	private String auditLevelCode;
 	private String auditFeeExemptionType;
+	/************ AUDIT #28895_35509 *************/
 	
 	//#36738 Start
 	private List<PmConfigRuleDesc> originalConfigRuleDescList;
@@ -194,9 +196,15 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String searchPtjCode;
 	private String searchPtjName;
 	private BigDecimal searchQtValueLimit;
+	private Boolean collapsePanel;
 	//#36738 End
 
-	/************ AUDIT #28895_35509 *************/
+	// #35323 - Start
+	private boolean selectedAllSuppAccountType;
+	private List<Long>  selectedSuppAccountType;
+	private List<PmParameterDesc> supplierType;
+	private Integer index;
+	// #35323 - End
 
 	public RuleCatalogueManageBean() {
 
@@ -1958,11 +1966,94 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSearchQtValueLimit(BigDecimal searchQtValueLimit) {
 		this.searchQtValueLimit = searchQtValueLimit;
 	}
+
 	public List<PmPtjSpecialApproval> getOriginalPtjSpecialApprovalList() {
 		return originalPtjSpecialApprovalList;
 	}
+
 	public void setOriginalPtjSpecialApprovalList(List<PmPtjSpecialApproval> originalPtjSpecialApprovalList) {
 		this.originalPtjSpecialApprovalList = originalPtjSpecialApprovalList;
 	}
+
+	public Boolean getCollapsePanel() {
+		return collapsePanel;
+	}
+
+	public void setCollapsePanel(Boolean collapsePanel) {
+		this.collapsePanel = collapsePanel;
+	}
 	//#36738 End
+	
+	//#35323 - Start
+	/**
+	 * selectedAllSuppAccountType
+	 * 
+	 * @return the selectedAllSuppAccountType
+	 */
+	public boolean isSelectedAllSuppAccountType() {
+		return selectedAllSuppAccountType;
+	}
+
+	/**
+	 * @param selectedAllSuppAccountType
+	 *            the selectedAllSuppAccountType to set
+	 */
+	public void setSelectedAllSuppAccountType(boolean selectedAllSuppAccountType) {
+		this.selectedAllSuppAccountType = selectedAllSuppAccountType;
+	}
+
+	/**
+	 * selectedSuppAccountType
+	 * 
+	 * @return the selectedSuppAccountType
+	 */
+	public List<Long> getSelectedSuppAccountType() {
+		if (selectedSuppAccountType == null) {
+			selectedSuppAccountType = new ArrayList<Long>();
+		}
+		return selectedSuppAccountType;
+	}
+
+	/**
+	 * @param selectedSuppAccountType
+	 *            the selectedSuppAccountType to set
+	 */
+	public void setSelectedSuppAccountType(List<Long> selectedSuppAccountType) {
+		this.selectedSuppAccountType = selectedSuppAccountType;
+	}
+
+	/**
+	 * Gets the supplier type.
+	 * 
+	 * @return the supplier type
+	 */
+	public List<PmParameterDesc> getSupplierType() {
+		return supplierType;
+	}
+
+	/**
+	 * Sets the supplier type.
+	 * 
+	 * @param supplierType
+	 *            the new supplier type
+	 */
+	public void setSupplierType(List<PmParameterDesc> supplierType) {
+		this.supplierType = supplierType;
+	}
+
+	/**
+	 * @return the index
+	 */
+	public Integer getIndex() {
+		return index;
+	}
+
+	/**
+	 * @param index
+	 *            the index to set
+	 */
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
+	// #35323 - End
 }

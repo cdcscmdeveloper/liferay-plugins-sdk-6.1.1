@@ -397,6 +397,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				Long currentstatusID = this.getManagedBean().getCurrentStatusId();//33310
 				SCAwardSupplierDataType awardSupplierDataType = (SCAwardSupplierDataType) this
 						.getManagedBean().getPayLoad();
+				//#29661 Start
+				List<SmSupplierCategory> supplierCategoryList = this.getManagedBean().getSupplierCategoryList() != null ?
+						this.getManagedBean().getSupplierCategoryList() : new ArrayList<SmSupplierCategory>();
+				List<SmSupplierCategory> procurementRelatedCategoryList = this.getManagedBean().getProcurementRelatedCategoryList() != null ?
+						this.getManagedBean().getProcurementRelatedCategoryList() : new ArrayList<SmSupplierCategory>();
+				//#29661 End
 				renewSesionObject();
 				this.getManagedBean().setTaskId(taskId);
 				this.getManagedBean().setOutComes(outComes);
@@ -405,6 +411,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setValidatewitness(validateWitness); //#17376
 				this.getManagedBean().setIconForDL(directLoa);//29007
 				this.getManagedBean().setCurrentStatusId(currentstatusID);//33310
+				//#29661 Start
+				this.getManagedBean().setSupplierCategoryList(supplierCategoryList);
+				this.getManagedBean().setProcurementRelatedCategoryList(procurementRelatedCategoryList);
+				//#29661 End
 				// Bug #38049@Syazani 29/04/2025 -- Start
 				if (null != selectedOrgType) {
 					this.getManagedBean().setSelectedOrgType(selectedOrgType);
@@ -433,7 +443,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// #29007 Start Vinod
 			this.getManagedBean().setBpmVersionNo(bpmVersionNo);
 			// #29007 End Vinod
-
 		} finally {
 			// qtAwardSO = null;
 		}
@@ -10252,18 +10261,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public void setPk7DropDownValues() {
 		// #29766 Start Vinod
-		// Replaced JUSTIFICATION_PK7 with JUSTIFICATION_SI as the old reason
+		// Replaced JUSTIFICATION_PK7 with JUSTIFICATION_PK7W as the old reason
 		// codes are inactive from PM.
-	    getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SI.value()));
+	    getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
 	    // #29766 End Vinod
 	}
 	
 	public void reasonChanged(String reasonCode) {
 		// #29766 Start Vinod
-		// Replaced JUSTIFICATION_PK7 with JUSTIFICATION_SI as the old reason
+		// Replaced JUSTIFICATION_PK7 with JUSTIFICATION_PK7W as the old reason
 		// codes are inactive from PM.
 		getManagedBean().getScLoa().setJustificationType(getReasonByCategoryAndCode(
-				ReasonCategory.JUSTIFICATION_SI.value(), reasonCode));
+				ReasonCategory.JUSTIFICATION_PK7W.value(), reasonCode));
 		// #29766 End Vinod
 	}
 	
@@ -10280,7 +10289,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
 		String reasonCategory = isQTtypeOldPK7 ? ReasonCategory.JUSTIFICATION_PK7.value()
-				: ReasonCategory.JUSTIFICATION_SI.value();
+				: ReasonCategory.JUSTIFICATION_PK7W.value();
 		PmReason reason = getReasonByCategoryAndCode(reasonCategory, reasonCode);
 		// #29766 End Vinod
 		String reasonDesc = getReasonDesc(reason);
