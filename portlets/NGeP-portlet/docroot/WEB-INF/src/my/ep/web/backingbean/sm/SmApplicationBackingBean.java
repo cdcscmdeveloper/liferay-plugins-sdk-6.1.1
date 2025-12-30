@@ -18729,6 +18729,7 @@ public class SmApplicationBackingBean extends
 
 			getManagedBean().getSelectedCategory().setOtherDesc(
 					getManagedBean().getOtherDescEdited());
+			getManagedBean().setSmAppl(smSuppCatOtherDescHistory.getSmAppl());
 			SmServiceLookup.getMofRegistrationSO().updateSmSupplierCategory(
 					getManagedBean().getSelectedCategory());
 
