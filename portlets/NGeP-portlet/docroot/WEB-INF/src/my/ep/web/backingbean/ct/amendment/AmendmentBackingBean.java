@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder; //#33817
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -5844,6 +5845,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		if (filePath != null) {
 			filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
+			filePath = URLEncoder.encode(filePath, "UTF-8"); //#33817
 		}
 		return filePath;
 	}
