@@ -521,7 +521,10 @@
 		update="@form"/>
 		
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory categoryCodeList="#{backingBean.managedBean.activeCategoryList}" applNo="#{backingBean.managedBean.smAppl.applNo}" />
+	<ac:otherDescriptionHistory
+		categoryCodeList="#{backingBean.managedBean.activeCategoryList}"
+		applNo="#{backingBean.managedBean.smAppl.applNo}"
+		otherDescChange="#{backingBean.managedBean.otherDescChange}" />
 	<ac:otherDescriptionEdit />
     <!-- 36504 - END -->
 </ui:composition>

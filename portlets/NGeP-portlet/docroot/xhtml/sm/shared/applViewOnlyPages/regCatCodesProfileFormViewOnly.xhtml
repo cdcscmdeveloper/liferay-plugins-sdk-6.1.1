@@ -264,6 +264,9 @@
 	</p:outputPanel>
 	
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory categoryCodeList="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}" applNo="#{viewSmApplBackingBean.managedBean.smAppl.applNo}" />
+	<ac:otherDescriptionHistory
+		categoryCodeList="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}"
+		applNo="#{viewSmApplBackingBean.managedBean.smAppl.applNo}"
+		otherDescChange="#{viewSmApplBackingBean.managedBean.otherDescChange}" />
 	<!-- 36504 - END -->
 </ui:composition>
