@@ -5674,6 +5674,7 @@ public class RuleCatalogueBackingBean extends
 		if (CollectionUtils.isNotEmpty(searchRuleDescList)) {
 			this.getManagedBean().setConfigRuleDescList(searchRuleDescList);
 			this.getManagedBean().setSelectedRuleDescType(searchRuleDescList.get(0));
+			this.getManagedBean().setOriginalConfigRuleValueList(searchRuleDescList.get(0).getRuleType().getConfigRuleValues());
 		}else{
 			this.getManagedBean().setConfigRuleDescList(null);
 			this.getManagedBean().setSelectedRuleDescType(null);
