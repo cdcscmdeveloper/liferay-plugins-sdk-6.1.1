@@ -4,14 +4,6 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<style>
-		.columnWidth320 {
-			width: 320px;
-			vertical-align: top;
-			text-align: right;
-		}
-	</style>
-
 	<p:panel id="contractValuePanel" rendered="#{amendmentBackingBean.getAmendValue(1) || ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" 
 		header="#{lbl['lbl.ct.menu.contract.value']}" toggleable="true" toggleSpeed="500">
 	
@@ -19,8 +11,7 @@
 			
 			<p:outputLabel value="#{lbl['lbl.ct.overall.contract.amount']}" />
 			<h:panelGrid columns="4">
-
-				<p:inputText id="overallAmount" styleClass="ppRightBtn" style="width:110px;"
+				<p:inputText id="overallAmount" styleClass="ppRightBtn change-contract-value-inputtext"
 					value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"
 					disabled="true">
 					<f:convertNumber
@@ -36,7 +27,8 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.type.change.contract.value']}" styleClass="required" />
 			<h:panelGrid columns="4">
-				<p:selectOneRadio id="reduction" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reduction}" layout="pageDirection"
+				<p:selectOneRadio id="reduction" styleClass="reduction-type-radio" 
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reduction}" layout="pageDirection"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"> 
 					<f:selectItem itemLabel="#{lbl['lbl.ct.radio.reduction']}" itemValue="true" />
 					<f:selectItem itemLabel="#{lbl['lbl.ct.radio.addition']}" itemValue="false" />
@@ -53,7 +45,7 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.usage.with']}" />
 			<h:panelGrid columns="4">
-				<p:inputText id="usageWith" styleClass="ppRightBtn" style="width:110px;" disabled="true" value="#{amendmentBackingBean.getPendingTransactionAmount()}">
+				<p:inputText id="usageWith" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true" value="#{amendmentBackingBean.getPendingTransactionAmount()}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -65,7 +57,7 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.usage.before']}" />
 			<h:panelGrid columns="4">
-				<p:inputText id="usageBefore" styleClass="ppRightBtn" style="width:110px;" disabled="true" value="#{amendmentBackingBean.getAmountBeforePendingPayment()}">
+				<p:inputText id="usageBefore" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true" value="#{amendmentBackingBean.getAmountBeforePendingPayment()}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -77,7 +69,7 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.contract.reduced']}" />
 			<h:panelGrid columns="4">
-				<p:inputText id="contractReduced" styleClass="ppRightBtn" style="width:110px;" disabled="true" value="#{amendmentBackingBean.getReducibleContractAmount()}">
+				<p:inputText id="contractReduced" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true" value="#{amendmentBackingBean.getReducibleContractAmount()}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -89,7 +81,7 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.maximum.additional']}" />
 			<h:panelGrid columns="4">
-				<p:inputText id="maxAdditional" styleClass="ppRightBtn" style="width:110px;" disabled="true"
+				<p:inputText id="maxAdditional" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true"
 					value="#{amendmentBackingBean.getMaxAdditionalValue()}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -108,7 +100,7 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.reduction.contract.amt']}" />
 			<h:panelGrid columns="4">
-				<p:inputText id="reductionAmt" styleClass="ppRightBtn" style="width:110px;"
+				<p:inputText id="reductionAmt" styleClass="ppRightBtn change-contract-value-inputtext"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reductionAmt}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableReductionContractAmount}"
 					onblur="this.value = this.value.replace(/-/g, '');">
@@ -126,7 +118,7 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.total.additional.contract.amt']}" />
 			<h:panelGrid columns="4">
-				<p:inputText id="addValueTxt" styleClass="ppRightBtn" style="width:110px;"
+				<p:inputText id="addValueTxt" styleClass="ppRightBtn change-contract-value-inputtext"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableAdditionContractAmount}" 
 					onblur="this.value = this.value.replace(/-/g, '');">
@@ -145,7 +137,7 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.additional.percentage']}" />
 			<h:panelGrid columns="4">
-				<p:inputText id="addPercentage" styleClass="ppRightBtn" style="width:110px;" disabled="true"
+				<p:inputText id="addPercentage" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true"
 					value="#{amendmentBackingBean.getAdditionalPercentage()}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -171,7 +163,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.new.gst.amt']}" />
 			<h:panelGrid columns="5">
 
-				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn" maxlength="18" style="width:110px;"
+				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn change-contract-value-inputtext" maxlength="18"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
 					or ctBackingBean.managedBean.disableGstAmount}" rendered="#{ctBackingBean.managedBean.gstCheckingGUI}">
@@ -182,7 +174,7 @@
 						oncomplete="blockWidget.hide();" listener="#{amendmentBackingBean.changeGstValue}" />
 				</p:inputText>
 				<p:message for="newGstAmtTxt" display="icon" />
-				<p:inputText styleClass="ppRightBtn" style="width:110px;" disabled="true"
+				<p:inputText styleClass="ppRightBtn change-contract-value-inputtext" disabled="true"
 					rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.txt.na']}">
 				</p:inputText>
 				<p:spacer width="1" />
@@ -192,7 +184,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.new.stax.amt']}" />
 			<h:panelGrid columns="5">
 
-				<p:inputText id="newStaxAmtTxt" styleClass="ppRightBtn" maxlength="18" style="width:110px;" 
+				<p:inputText id="newStaxAmtTxt" styleClass="ppRightBtn change-contract-value-inputtext" maxlength="18"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
 					or ctBackingBean.managedBean.disableStaxAmount}" rendered="#{ctBackingBean.managedBean.staxCheckingGUI}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}">
@@ -219,7 +211,7 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}" />
 			<h:panelGrid columns="4">
-				<p:inputText id="addValue" styleClass="ppRightBtn" style="width:110px;" disabled="true"
+				<p:inputText id="addValue" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true"
 					value="#{amendmentBackingBean.newContractAmt()}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -230,7 +222,7 @@
 
 			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}"/>
 			<h:panelGrid columns="4">
-				<p:inputText id="overallAmt" styleClass="ppRightBtn" style="width:110px;" disabled="true"
+				<p:inputText id="overallAmt" styleClass="ppRightBtn change-contract-value-inputtext" disabled="true"
 					value="#{amendmentBackingBean.newOverallContractAmount()}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -240,18 +232,19 @@
 			</h:panelGrid>
 			
 			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt.eff.date']}" />
-			<h:panelGrid columns="4">
-				<p:calendar style="width:80px;" id="newAmtEffDate" showOn="button" readonlyInput="true" navigator="true"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableNewCtAmountEffDate}"
+			<h:panelGrid columns="5" styleClass="top-aligned-columns">
+				<p:calendar id="newAmtEffDate" showOn="button" readonlyInput="true"
+					styleClass="calanderWidth85"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL 
+								or ctBackingBean.managedBean.disableNewCtAmountEffDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-					label="#{lbl['lbl.ct.new.contract.amt.eff.date']}" 
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newAmtEffDate}"
 					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}">
 					<p:ajax event="dateSelect" update="newAmtEffDate" process="@this" listener="#{amendmentBackingBean.handleNewAmtEffDate()}" />
 				</p:calendar>
-				<p:spacer width="1" />
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
+				<p:spacer width="2" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" style="margin-top:6px;" />
 				<p:spacer width="1" />
 				<p:message for="newAmtEffDate" display="icon"/>
 			</h:panelGrid>
