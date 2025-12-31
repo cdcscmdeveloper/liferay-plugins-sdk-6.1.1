@@ -12136,6 +12136,8 @@ public class SmApplicationBackingBean extends
 					SmApplDocFile file = new SmApplDocFile();
 					file.setFileName(StringUtils.replace(event.getFile()
 							.getFileName(), " ", "-"));
+					String uniqueName = generateUniqueFilename(file.getFileName()); //#39282
+					file.setFileName(uniqueName);
 					String filePath = Calendar.getInstance().get(Calendar.YEAR)
 							+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
 							+ "/SD/";
@@ -12149,7 +12151,7 @@ public class SmApplicationBackingBean extends
 					doc.getNewAddedFiles().add(file);
 					//#34392 - end
 					//#34552 - end
-					commonUploadFile(event, filePath);
+					SmCommonUtil.processUpload(filePath, event, file.getFileName()); //#39282
 				}
 			}
 		}
@@ -12181,6 +12183,8 @@ public class SmApplicationBackingBean extends
 				//#28807 - START
 				SmApplDocFile aaa = new SmApplDocFile();
 				aaa.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
+				String uniqueName = generateUniqueFilename(aaa.getFileName()); //#39282
+				aaa.setFileName(uniqueName);
 				aaa.setSmApplSupportDoc(doc);
 				aaa.setFilePath(filePath);
 				doc.getSmApplDocFiles().add(aaa);
@@ -12193,7 +12197,7 @@ public class SmApplicationBackingBean extends
 					//log.info(i+". NAME -> " + doc.getSmApplDocFiles().get(i).getFileName());
 				}
 				//#28807 - END
-				doc.getSmApplDocFiles().get(0).setFilePath(filePath);
+				//doc.getSmApplDocFiles().get(0).setFilePath(filePath); //#39282
 
 				getManagedBean()
 						.getSmAppl()
@@ -12203,7 +12207,7 @@ public class SmApplicationBackingBean extends
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
 
-				commonUploadFile(event, filePath);
+				SmCommonUtil.processUpload(filePath, event, aaa.getFileName()); //#39282
 			}
 		}
 
@@ -17237,4 +17241,22 @@ public class SmApplicationBackingBean extends
 	    }
 	}
 	//#38927 END
+	//#39282
+	/**
+	 * To generate unique file name yyyyMMdd_HHmmss
+	 *
+	 * @param String  the StringBuilder accumulating the messages
+	 */
+	private String generateUniqueFilename(String originalFilename) {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String oriFilename = "";
+        String extension = "";
+        int dotIndex = originalFilename.lastIndexOf('.');
+        if (dotIndex > 0) {
+            extension = originalFilename.substring(dotIndex);
+            oriFilename = originalFilename.substring(0, dotIndex);
+        }
+
+        return oriFilename + "_" + timestamp + extension;
+    }
 }
