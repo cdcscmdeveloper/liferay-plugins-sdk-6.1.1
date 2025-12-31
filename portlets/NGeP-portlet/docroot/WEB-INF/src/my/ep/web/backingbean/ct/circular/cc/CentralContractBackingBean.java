@@ -1983,7 +1983,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 						pidReasonIterator.remove();
 					}
 				}
-				getManagedBean().setCtCircularPidReasons(null);
+				getManagedBean().setSelectedPidReason(null); // #39594
 			} else if(tableType.equalsIgnoreCase("PERSON")){
 				Iterator<CtContactPerson> contactPersonIterator = getManagedBean().getCircularVer().getCtContactPersons().iterator();
 				while(contactPersonIterator.hasNext()){
