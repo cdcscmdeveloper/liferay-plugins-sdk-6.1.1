@@ -165,6 +165,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -11013,8 +11014,85 @@ public class SmApplicationBackingBean extends
 		setReasonIdList();
 		//30974 - end
 		
+		handleApproverChangeCurrentStatus(); //#37925
+		
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
+	
+	// #37925 START
+	/**
+	 * Handles approver change of current registration status based on the
+	 * latest PO section review.
+	 */
+	public void handleApproverChangeCurrentStatus() {
+		if (!getManagedBean().isDisplayCheckboxChangeCurrentStatus()) {
+			return;
+		}
+
+		assignValReqdToTrue();
+
+		if (!isEligibleApprover()) {
+			return;
+		}
+
+		SmApplSectionReview latestPOChange = findLatestPOSectionReview();
+		if (latestPOChange == null || latestPOChange.getPmRegStatus() == null || latestPOChange.getPmRegStatus().getPmStatus() == null) {
+			return;
+		}
+
+		getManagedBean().setChangeCurrRegStatus(true);
+		getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
+	}
+
+	/**
+	 * Determines whether the current user is eligible to approve a change in
+	 * registration status.
+	 * 
+	 * @return true if the user is an approver and has a PO recommendation
+	 */
+	private boolean isEligibleApprover() {
+		return getManagedBean().isApproverUser() && getManagedBean().getPoRecommendStatusId() != null;
+	}
+
+	/**
+	 * Finds the most recent section review with role type "P".
+	 * 
+	 * @return the latest PO section review, or null if none found
+	 */
+	private SmApplSectionReview findLatestPOSectionReview() {
+		SmApplSectionReview latest = null;
+
+		if (getManagedBean().getSmAppl() == null || getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
+			return null;
+		}
+
+		for (SmApplSectionReview review : getManagedBean().getSmAppl().getSmApplSectionReviews()) {
+
+			if (!isValidPOReview(review)) {
+				continue;
+			}
+
+			if (latest == null || review.getCreatedDate().after(latest.getCreatedDate())) {
+				latest = review;
+			}
+		}
+
+		return latest;
+	}
+
+	/**
+	 * Validates whether a section review is a PO review with required fields
+	 * populated.
+	 * 
+	 * @param review
+	 *            the section review to validate
+	 * @return true if valid
+	 */
+	private boolean isValidPOReview(SmApplSectionReview review) {
+		return review != null && SupplierManagementConst.SECTION_REV_ROLE_PO.equals(review.getRoleType()) && review.getCreatedDate() != null;
+	}
+
+	// #37925 END
 
 	/**
 	 * Approver select to Approve or reject mof cancellation.
@@ -18608,6 +18686,73 @@ public class SmApplicationBackingBean extends
 	}
 	// #36718 - End
 	
+	// 36504 - START
+	public void otherDescriptionHistory() {
+		RequestContext.getCurrentInstance().execute(
+				"otherDescriptionHistoryDlg.show();");
+	}
+
+	public void otherDescriptionEdit(SmSupplierCategory smSupCat) {
+
+		getManagedBean().setSelectedCategory(smSupCat);
+		getManagedBean().setOtherDescEdited(smSupCat.getOtherDesc());
+		getManagedBean().setUpdateRecordTC(false);
+		RequestContext.getCurrentInstance().execute(
+				"otherDescriptionEditDlg.show();");
+	}
+
+	public void resetOtherDescriptionEdit() {
+		getManagedBean().setOtherDescEdited(
+				getManagedBean().getSelectedCategory().getOtherDesc());
+	}
+
+	public void saveOtherDescriptionEdit() {
+		try {
+			SmSuppCatOtherDescHistory smSuppCatOtherDescHistory = new SmSuppCatOtherDescHistory();
+			smSuppCatOtherDescHistory.setOtherDesc(getManagedBean()
+					.getSelectedCategory().getOtherDesc());
+			smSuppCatOtherDescHistory.setSmAppl(getManagedBean()
+					.getSelectedCategory().getSmAppl());
+			smSuppCatOtherDescHistory.setSmSupplierCategory(getManagedBean()
+					.getSelectedCategory());
+
+			if (getManagedBean().isPoUser()) {
+				smSuppCatOtherDescHistory
+						.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
+			} else if (getManagedBean().isApproverUser()) {
+				smSuppCatOtherDescHistory
+						.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
+			}
+
+			SmServiceLookup.getMofRegistrationSO()
+					.updateSmSuppCatOtherDescHistory(smSuppCatOtherDescHistory);
+
+			getManagedBean().getSelectedCategory().setOtherDesc(
+					getManagedBean().getOtherDescEdited());
+			getManagedBean().setSmAppl(smSuppCatOtherDescHistory.getSmAppl());
+			SmServiceLookup.getMofRegistrationSO().updateSmSupplierCategory(
+					getManagedBean().getSelectedCategory());
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_721228,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			SmApplicationUtil
+					.assignActiveAndApprovedCategoryList(getManagedBean());
+			RequestContext.getCurrentInstance().execute(
+					"otherDescriptionEditDlg.hide();");
+		}
+	}
+
+	// 36504 - END
+		
 //	#37925 START
 	private void showRegistrationDecisionUI() {
 	    clearRegistrationStatusDisplay();

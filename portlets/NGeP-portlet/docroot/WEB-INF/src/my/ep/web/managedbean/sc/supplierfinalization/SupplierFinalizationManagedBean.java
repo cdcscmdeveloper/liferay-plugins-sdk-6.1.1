@@ -214,6 +214,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean hasSupplierQualifiedForCurrentSelection;//6906 note 202
 	//6906 note 117 - end
 	private ScQtRecommend lastSelectedItem;//35157
+	
+	private ScQtEvaluationResultDtl tempRecommendedSupplier;//#39620 
 
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -2671,6 +2673,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setSelectedSupplierOfferedPrice(String selectedSupplierOfferedPrice) {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
 	}// #35320 - End
+
+	public ScQtEvaluationResultDtl getTempRecommendedSupplier() {
+		return tempRecommendedSupplier;
+	}
+
+	public void setTempRecommendedSupplier(ScQtEvaluationResultDtl tempRecommendedSupplier) {
+		this.tempRecommendedSupplier = tempRecommendedSupplier;
+	}
 	
 }
 // ***25201

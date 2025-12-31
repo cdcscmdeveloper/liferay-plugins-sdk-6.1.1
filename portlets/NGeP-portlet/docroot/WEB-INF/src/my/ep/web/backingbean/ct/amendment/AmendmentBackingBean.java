@@ -6244,7 +6244,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			SelectItem[] items = null;
 			ICommitteSO committeSO = null;
 			ISearchResultBean<PmUser> userResultList = null;
-			ISearchResultBean<PmUser> userListDO = null; //Bug #29740
+			//Bug #29740
+			ISearchResultBean<PmUser> userListDO = null;
+			List<PmUser> userList = new ArrayList<PmUser>();
 			try {
 
 				int i = 1;
@@ -6273,32 +6275,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} else {
 					committeReqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
 				}
-				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();			
-
+				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();	
+				//Bug #29740
+				userList = new ArrayList<PmUser>(userResultList.getResultList());
+				
 				if (userResultList != null && userResultList.getResultList() != null) {
-					//Bug #29740
+					//Bug #29740 - start
 					if(userListDO != null && userListDO.getResultList() != null) {
-						items = new SelectItem[userResultList.getResultList().size() + userListDO.getResultList().size() + 1];
-					} else {
-						items = new SelectItem[userResultList.getResultList().size() + 1];
+						userList.addAll(userListDO.getResultList());
 					}
 					
-					checkForQCBCommitteeDeskOfficerWIP(userListDO.getResultList()); //#35238
+					Set<PmUser> set = new LinkedHashSet<PmUser>(userList);
+					userList.clear();
+					userList.addAll(set);
+					checkForQCBCommitteeDeskOfficerWIP(userList); //#35238
+					
+					items = new SelectItem[userList.size() + 1];
+					//Bug #29740 - end
 					
 					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-
-					for (PmUser user : userResultList.getResultList()) {
+					
+					for (PmUser user : userList) {//Bug #29740
 						items[i++] = new SelectItem(user.getUserId(), user.getUserName());
 					}
-					
-					//Bug #29740
-					if(userListDO != null && userListDO.getResultList() != null) {
-						for (PmUser userDO : userListDO.getResultList()) {
-							items[i++] = new SelectItem(userDO.getUserId(), userDO.getUserName());
-						}
-					}
-					//Bug #29740 - End
 					
 					// Default the secretary if selection list only have one secretary
 					if (items != null && items.length == 2) {
@@ -6499,15 +6499,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
 
 			// QCA/QCB, need to be same PTJ
-			if (isQuotationCommitteeTypeAC() || isQCBCommitteeWIP()) { //#35238
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ownerOrgProfileId: "+ ctOwnerOrgProfileId);
-				
-				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
-					allowChairpersonRole = true;
-				} else {
-					allowChairpersonRole = false;
-				}
-			}
+			allowChairpersonRole = determineChairpersonAccessForQuotationCommmittee(orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole); //#35238
 			
 			//Bug #26520 - start
 			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
@@ -9930,7 +9922,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * Sets the committee type for ctAmendment
+	 * Sets the committee type for ctAmendment during save/reject
 	 */
 	private void setAmendmentCommitteeType() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
@@ -9957,6 +9949,45 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setHasChanges(Boolean.TRUE);
 			}
 		}
+	}
+	
+	/**
+	 * Check whether the user is allowed to act as Chairperson based on role and
+	 * committee type
+	 * 
+	 * @param orgProfileId id for ministry committee
+	 * @param ctOwnerOrgProfileId  contract ministry id 
+	 * @param userResDTO the user to be checked
+	 * @param allowChairpersonRole previous true false for allow chairperson
+	 * @return return true if all condition met, otherwise false.
+	 */
+	private boolean determineChairpersonAccessForQuotationCommmittee(Long orgProfileId, Long ctOwnerOrgProfileId,
+			UserResDTO userResDTO, boolean allowChairpersonRole) {
+		boolean allow = allowChairpersonRole;
+		for (PmRoleDesc pmRoleDesc : userResDTO.getRoleDescList()) {
+			String roleCode = pmRoleDesc.getPmRole().getRoleCode();
+			if ((isQuotationCommitteeTypeAC() && isTypeAChairperson(roleCode))
+					|| (isQCBCommitteeWIP() && RoleCode.QCB_CHAIRPERSON.value().equalsIgnoreCase(roleCode))) {
+				allow = false;
+				if (orgProfileId.equals(ctOwnerOrgProfileId)) {
+					allow = true;
+					break;
+				}
+			}
+		}
+		return allow;
+	}
+	
+	/**
+	 * Check if the role belongs to a valid Chairperson role for Committee Type
+	 * QCA and QC
+	 * 
+	 * @param roleCode user role code
+	 * @return true if all condition met, otherwise false.
+	 */
+	private boolean isTypeAChairperson(String roleCode) {
+		return RoleCode.QCA_CHAIRPERSON.value().equalsIgnoreCase(roleCode)
+				|| RoleCode.QQC_CHAIRPERSON.value().equalsIgnoreCase(roleCode);
 	}
 	//#35238 end
 	
