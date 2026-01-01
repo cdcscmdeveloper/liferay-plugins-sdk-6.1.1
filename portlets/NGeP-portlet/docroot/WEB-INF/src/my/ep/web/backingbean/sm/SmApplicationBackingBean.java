@@ -18713,9 +18713,12 @@ public class SmApplicationBackingBean extends
 					.getSelectedCategory().getOtherDesc());
 			smSuppCatOtherDescHistory.setSmAppl(getManagedBean()
 					.getSelectedCategory().getSmAppl());
-			smSuppCatOtherDescHistory.setSmSupplierCategory(getManagedBean()
-					.getSelectedCategory());
-
+			SmSupplierCategory smSupplierCategory = SmServiceLookup
+					.getMofRegistrationSO()
+					.findActiveCategoryBySupplierCategoryId(getManagedBean().getSelectedCategory()); // optimistic lock
+			smSuppCatOtherDescHistory.setSmSupplierCategory(smSupplierCategory);
+			getManagedBean().setSelectedCategory(smSupplierCategory);
+			
 			if (getManagedBean().isPoUser()) {
 				smSuppCatOtherDescHistory
 						.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);

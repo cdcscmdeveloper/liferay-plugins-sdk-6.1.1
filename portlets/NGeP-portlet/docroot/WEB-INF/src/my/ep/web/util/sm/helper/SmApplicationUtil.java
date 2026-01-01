@@ -1554,7 +1554,9 @@ public class SmApplicationUtil {
 			Map<Long, SmSupplierCategory> newCat = buildCategoryMap(managedBean.getActiveCategoryList());
 
 		    for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-		        updateCategoryDescription(cat, newCat);
+				cat = SmServiceLookup.getMofRegistrationSO()
+						.findActiveCategoryBySupplierCategoryId(cat); // 36504 - optimistic lock
+				updateCategoryDescription(cat, newCat);
 		        
 		        if (cat.isSpecialCategory()) {
 		            validateAndCleanCategory(cat);
