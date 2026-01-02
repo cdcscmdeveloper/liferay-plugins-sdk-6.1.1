@@ -18717,7 +18717,6 @@ public class SmApplicationBackingBean extends
 					.getMofRegistrationSO()
 					.findActiveCategoryBySupplierCategoryId(getManagedBean().getSelectedCategory()); // optimistic lock
 			smSuppCatOtherDescHistory.setSmSupplierCategory(smSupplierCategory);
-			getManagedBean().setSelectedCategory(smSupplierCategory);
 			
 			if (getManagedBean().isPoUser()) {
 				smSuppCatOtherDescHistory
