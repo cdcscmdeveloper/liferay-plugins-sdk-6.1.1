@@ -42,8 +42,8 @@
 					value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+			<ui:remove><!-- #38151 Start (header text)--></ui:remove>
+			<p:column headerText="#{suppFinalizationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 				style="width:5%; text-align:right;">
 				<h:outputText value="#{qualifiedSupp.totalScore}">
 					<f:convertNumber

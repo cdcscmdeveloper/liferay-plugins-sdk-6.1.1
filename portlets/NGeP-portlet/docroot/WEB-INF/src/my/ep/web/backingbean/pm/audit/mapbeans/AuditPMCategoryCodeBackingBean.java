@@ -195,9 +195,6 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 
 			detailObj(AuditConst.PM_AUD_CCR_SUPPLIER_TYPE_FIELDLABELCODE, null, checkPmParameterDesc(pmCategoryL3.getSupplierTypeCode()), null, null);
 
-			detailObj(AuditConst.PM_AUD_CCR_SUB_DIVISION_STATUS_FIELDLABELCODE, null,
-					pmCategoryL3.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE, null, null);
-
 			detailObj(AuditConst.PM_AUD_CCR_REQUIRE_OTHER_CAT_FIELDLABELCODE, null,
 					pmCategoryL3.getBasicCategoryReq() == 1 ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, null, null);
 
@@ -206,6 +203,9 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 
 			detailObj(AuditConst.PM_AUD_CCR_OPERATE_FROM_HOME_FIELDLABELCODE, null,
 					pmCategoryL3.getHomeOperated() == 1 ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, null, null);
+			
+			detailObj(AuditConst.PM_AUD_CCR_SUB_DIVISION_STATUS_FIELDLABELCODE, null,
+					pmCategoryL3.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE, null, null);
 
 		} else {
 			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
@@ -232,18 +232,20 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				statusL3.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(statusL3);
 			}
-			
-			// check for update machine
-			updateSpecialEquipment(managedBean);
-			
 		}
 
-		deleteRequiredCategory(managedBean);
-		deleteBusinessComType(managedBean);
-
 		addRequiredCategory(managedBean);
+		deleteRequiredCategory(managedBean);
+		
 		addBusinessComType(managedBean);
+		deleteBusinessComType(managedBean);
+		
 		addSpecialEquipment(managedBean);
+		// check for update machine
+		if (!managedBean.isNewCategory()) {
+			updateSpecialEquipment(managedBean);
+		}
+					
 		auditPMReqDTO.setObjList(objList);
 	}
 
@@ -652,22 +654,16 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			for (PmMachineCategory savedPmMachine : savedPmMachines) {
 				for (PmMachineCategory oldPmMachine : oldPmMachines) {
 					this.docId = BigInteger.valueOf(savedPmMachine.getMachineCategoryId());
-					// check site visit
-					String typeCode = pmCategoryL3.getCategoryTypeCode().getParameterCode();
-					updateSiteVisit(oldPmMachine, savedPmMachine, typeCode);
-					
-					if (!savedPmMachine.getDisplaySeq().equals(oldPmMachine.getDisplaySeq())) {
-						detailObj(AuditConst.PM_AUD_CCR_DISP_SEQ_FIELDLABELCODE,
-								String.valueOf(oldPmMachine.getDisplaySeq()),
-								String.valueOf(savedPmMachine.getDisplaySeq()), null, null);
-						
+					// check site visit && display sequence
+					if(savedPmMachine.getMachineCategoryId().equals(oldPmMachine.getMachineCategoryId())){
+						String typeCode = pmCategoryL3.getCategoryTypeCode().getParameterCode();
+						updateSiteVisit(oldPmMachine, savedPmMachine, typeCode);
 						
 						break;
 					}
 				}
 			}
 		}
-		
 	}
 	
 	private void updateSiteVisit(PmMachineCategory oldPmMachine, PmMachineCategory savedPmMachine, String categoryTypeCode) {
@@ -695,6 +691,12 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		        oldPmMachine.getPrintingSiteVisit(),
 		        AuditConst.PM_AUD_CCR_SITE_VISIT_ACCESSORIES_FIELDLABELCODE
 		    );
+		}
+		
+		if (!savedPmMachine.getDisplaySeq().equals(oldPmMachine.getDisplaySeq())) {
+			detailObj(AuditConst.PM_AUD_CCR_DISP_SEQ_FIELDLABELCODE,
+					String.valueOf(oldPmMachine.getDisplaySeq()),
+					String.valueOf(savedPmMachine.getDisplaySeq()), null, null);
 		}
 
 	}

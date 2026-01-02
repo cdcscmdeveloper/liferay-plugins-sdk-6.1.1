@@ -3,12 +3,11 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<table class="ppTwoTable">
 		<tr>
 			<th width="22%"><p:outputLabel
-					value="#{lbl['lbl.pm.organisation.orgCode']}" /></th>
+					value="#{lbl['lbl.pm.audit.profileOrg.orgCode']}" /></th>
 			<td><p:inputText id="orgCodeId" styleClass="ppDisplayTextM"
 					maxlength="10" size="36"
 					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel4}" /></td>
@@ -17,7 +16,7 @@
 		</tr>
 		<tr>
 			<th width="22%"><p:outputLabel
-					value="#{lbl['lbl.pm.organisation.orgName']}" /></th>
+					value="#{lbl['lbl.pm.audit.profileOrg.orgName']}" /></th>
 			<td><p:inputText id="orgNameId" styleClass="ppDisplayTextM"
 					size="36"
 					value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel5}"

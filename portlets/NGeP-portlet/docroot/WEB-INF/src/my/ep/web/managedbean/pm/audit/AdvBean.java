@@ -8,17 +8,17 @@ import java.util.List;
 
 /**
  * AdvBean
- * 
- * @author venugopal
- * @since 15/08/2014
+ * #35509
+ * @author normuliana
  * 
  */
-public class AdvBean implements Serializable{
+public class AdvBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private List<AdvColumnBean> columns;
 
-	public AdvBean(){}
+	public AdvBean() {
+	}
 
 	/**
 	 * @return the columns
@@ -28,11 +28,11 @@ public class AdvBean implements Serializable{
 	}
 
 	/**
-	 * @param columns the columns to set
+	 * @param columns
+	 *            the columns to set
 	 */
 	public void setColumns(List<AdvColumnBean> columns) {
 		this.columns = columns;
 	}
-	
 
 }

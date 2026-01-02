@@ -23,6 +23,28 @@
 				</td>
 			</tr>
 		</table>
+
+		<!-- 36738 Start -->
+		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
+			id="ruleTypeSearch" collapsed="#{ruleCatalogueBackingBean.managedBean.ruleTypeCollapsePanel}">
+			<p:ajax event="toggle" listener="#{ruleCatalogueBackingBean.onRuleTypeSearchToggle}" />
+			<h:panelGrid id="ruleTypePanelGrid" columns="2" cellpadding="5">
+				<p:outputLabel value="#{lbl['lbl.pm.rule.type']}" />
+				<p:inputText
+					value="#{ruleCatalogueBackingBean.managedBean.searchRuleType}" maxlength="100" style="width:250px;"/>
+			</h:panelGrid>
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{ruleCatalogueBackingBean.searchRuleType}"
+					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch"/>
+				&#160;
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{ruleCatalogueBackingBean.resetRuleType}" process="@this"
+					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch ruleTypePanelGrid" />
+			</div>
+		</p:panel>
+		<!-- 36738 End -->
 		
 		<!-- 34445 start -->
 		<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
@@ -42,12 +64,12 @@
 			rowKey="#{ruleTypeDescObj}" rowIndexVar="rowIndex" selectionMode="single">
 			<ac:paginator for="ruleTypeTableID" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				listener="#{ruleCatalogueBackingBean.onRuleType}" 
-				update=":form:settingTabId:ruleConfigId" />
+				listener="#{ruleCatalogueBackingBean.onRuleType}"
+				update=":form:settingTabId:ruleConfigId :form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch" /><!-- 36738, #35323 -->
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"				
-				update=":form:settingTabId:ruleConfigId" />
+				update=":form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch" /><!-- 36738 -->
 			 <p:ajax event="page" process="@this"				
-				update=":form:settingTabId:ruleTypeValueTableID"/>
+				update=":form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch"/><!-- 36738 -->
 			<p:column>
 				<f:facet name="header">
 					               #{lbl['lbl.pm.rule.type']}
@@ -71,6 +93,64 @@
 		<br/>
 		<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.pm.ruleconfig.tooltip']}" />
+
+		<!-- 36738 Start -->
+		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
+         	style="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'C') or
+                 	(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC') ? '' : 'display:none'}"
+         	id="ruleTypeValueSearch"
+         	collapsed="#{ruleCatalogueBackingBean.managedBean.ruleValueCollapsePanel}">
+
+			<h:panelGrid id="ruleTypeValuePanelGrid" columns="2" cellpadding="5">
+				<p:outputLabel value="#{lbl['lbl.pm.value']}" />
+				<p:inputText value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeValues}" maxlength="20" style="width:250px;"/>
+
+				<p:outputLabel value="#{lbl['lbl.pm.desc']}" />
+				<p:inputText value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeDesc}" maxlength="255" style="width:250px;"/>
+
+				<p:outputLabel value="#{lbl['lbl.pm.zone']}"
+					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC'}" />
+				<p:selectOneMenu
+					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeZone}" style="width:250px;" panelStyle="width:250px"
+					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode eq 'PC'}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" />
+					<f:selectItem itemLabel="#{lbl['lbl.pm.zone.semenanjung']}" itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.pm.zone.sabah']}" itemValue="2" />
+					<f:selectItem itemLabel="#{lbl['lbl.pm.zone.sarawak']}" itemValue="3" />
+				</p:selectOneMenu>
+
+				<h:outputLabel value="#{lbl['lbl.pm.as.effdate']}" />
+				<p:calendar navigator="true"
+					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeEffectiveDate}"
+					id="pbdateFrom" showOn="button" readonlyInput="true" style="width:250px;"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" update="pbdateTo" process="@this"/>
+				</p:calendar>
+				
+				<h:outputLabel value="#{lbl['lbl.pm.as.expdate']}" />
+				<p:calendar navigator="true"
+					id="pbdateTo" showOn="button" style="width:250px;"
+					value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeExpiryDate}"
+					mindate="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeEffectiveDate}"
+					readonlyInput="true"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<f:attribute name="startDate" value="#{ruleCatalogueBackingBean.managedBean.searchRuleDataTypeEffectiveDate}" />
+					<f:validator validatorId="dateRangeValidator" />
+				</p:calendar>
+			</h:panelGrid>
+			
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{ruleCatalogueBackingBean.searchRuleValue}"
+					update="ruleTypeValueTableID" />
+				&#160;
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					action="#{ruleCatalogueBackingBean.resetRuleValue}" process="@this"
+					update="ruleTypeValueTableID ruleTypeValuePanelGrid" />
+			</div>
+		</p:panel>
+		<!-- 36738 End -->
+		
 		<p:dataTable id="ruleTypeValueTableID" widgetVar="ruleValueTblWidget"
 			rows="5"
 			value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.configRuleValues}"
@@ -78,7 +158,8 @@
 
 			<ac:paginator for="ruleTypeValueTableID" />
 			<p:column
-				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode== 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 2)}">
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode== 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 2)
+				and (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'PR')}"> <!-- #35323 -->
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					    #{lbl['lbl.pm.value']}
@@ -282,6 +363,88 @@
 				<p:message id="numberToValueMsg" for="numberToValueId" display="icon" />
 			</p:column>
 			<!-- 29650 - END -->
+			
+			<!-- #35323 - Start  -->
+			<p:column width="15%" id="PRfromValueColumnId"
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR')}">
+
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory"/>	
+				    #{lbl['lbl.pm.rule.from.value.RM']}
+				</f:facet>
+				<p:inputText id="PRfromValueId" value="#{typeValueObj.fromValue}"
+					label="#{lbl['lbl.pm.rule.from.value']}" 
+					size="17" maxlength="12" 
+					style="text-align:right"
+					required="#{!empty param['disableValidation']}"
+					onchange="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
+					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
+					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR' and !typeValueObj.showFlag)}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:attribute name="max" value="99999999999.99" />
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+					<p:ajax partialSubmit="true" process="@this" update="@this, @([id$=cloneLink]), PRfromValueMsg, :form:settingTabId:errorDialog" />
+				</p:inputText>
+				<p:message id="PRfromValueMsg" for="PRfromValueId" display="icon" />
+			</p:column>
+
+			<p:column width="15%" id="PRtoValueColumnId"
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR')}">
+				<f:facet name="header">
+					#{lbl['lbl.pm.rule.to.value.RM']}
+				</f:facet>
+				<p:inputText id="PRtoValueId" value="#{typeValueObj.toValue}" size="15"
+					label="#{lbl['lbl.pm.rule.to.value']}" maxlength="17"
+					style="text-align:right"
+					disabled="#{!(typeValueObj.brandNew)}">
+					<p:ajax partialSubmit="true" process="@this" update="@this, @([id$=cloneLink])" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:attribute name="max" value="99999999999.99" />
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						listener="#{ruleCatalogueBackingBean.updateToValue(index)}"
+						update=":form:settingTabId:ruleTypeValueTableID, :form:settingTabId:errorDialog" />
+				</p:inputText>
+				<h:panelGroup id="PRtoErrorLink">
+					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
+						partialSubmit="true" id="PRtoErrorRequired"
+						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
+						oncomplete="errorDialog.show();"
+						rendered="#{typeValueObj.errorToRequired}">
+						<f:param name="index" value="#{index}"></f:param>
+						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+					</p:commandLink>
+				</h:panelGroup>
+				<p:message id="PRtoValueMsg" for="PRtoValueId" display="icon" />
+			</p:column>
+
+			<p:column width="15%"
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR')}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />			
+				    #{lbl['lbl.pm.rule.supp.acc.type']}
+				</f:facet>
+				<p:inputText id="supplAccTypeId"
+					value="#{ruleCatalogueBackingBean.displaySupplAccTypes(typeValueObj.supplAcctTypeIds)}"
+					label="#{lbl['lbl.pm.rule.supp.acc.type']}" 
+					style="text-align:right"
+					readonly="true"
+					required="#{!empty param['disableValidation']}">
+				</p:inputText>
+				<p:spacer width="5px" />
+				<p:commandLink
+					id="suppAccType" 
+					process="@this"
+					readonly="true"
+					disabled="#{!(typeValueObj.brandNew)}"
+					action="#{ruleCatalogueBackingBean.initSupplAccTypePopup(index, typeValueObj.supplAcctTypeIds)}"
+					update="@([id$=accTypeDlg])"
+					oncomplete="accTypeDlg.show();">
+					<p:graphicImage value="/css/images/design/ico-edit.png"></p:graphicImage>
+				</p:commandLink>
+				<p:message id="supplAccTypeMsg" for="supplAccTypeId" display="icon" />
+			</p:column>
+			<!-- #35323 - End -->
 
 			<p:column width="35%" style="white-space:normal"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C')}">
@@ -322,6 +485,7 @@
 			</p:column>
 			<!-- 27827, #34397, #34398 - END -->
 
+            <!-- #35323 - Start -->
 			<p:column width="16%" id="effDateColumnId">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
@@ -330,7 +494,9 @@
 
 				<p:calendar  navigator="true"
 					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR' and typeValueObj.showFlag)
+					or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'PR' and (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1))
+					or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleValeffDateId"
 					mindate="#{ruleCatalogueBackingBean.managedBean.tomorrow}"
@@ -356,8 +522,10 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 				 <p:calendar  navigator="true"
-					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.expDate)}"	
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
+					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.expDate)}"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR' and typeValueObj.showFlag)
+					or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'PR' and (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1))
+					or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.expDate lt DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleConfigexpDateId"
 					mindate="#{ruleCatalogueBackingBean.managedBean.today}"
@@ -382,6 +550,7 @@
                     
 				</p:calendar>
 			</p:column>
+			<!-- #35323 - End -->
 
 			<ui:remove>
 			<p:column width="10%">
@@ -408,9 +577,14 @@
 				<f:facet name="header">
                      #{lbl['lbl.pm.action']}
 				</f:facet>
+				<!-- #35323 - Start -->
 				<p:commandLink id="cloneLink" title="#{lbl['lbl.cm.clone']}"
-					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag}"
-					disabled="#{!typeValueObj.brandNew or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue >=typeValueObj.toValue or typeValueObj.effDate eq null }"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR' and typeValueObj.showFlag) or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag}"
+					disabled="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'PR'
+					and !typeValueObj.brandNew or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue >= typeValueObj.toValue or typeValueObj.effDate eq null)
+					or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR'
+					and fn:length(typeValueObj.supplAcctTypeIds) eq 0 or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue >= typeValueObj.toValue or typeValueObj.effDate eq null
+					or typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 					action="#{ruleCatalogueBackingBean.cloneRuleTypeValue(index)}"
 					partialSubmit="true" process="@this"
 					update=":form:settingTabId:ruleTypeValueTableID">
@@ -418,7 +592,9 @@
 				</p:commandLink>
 				<p:commandLink
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
-					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR' and typeValueObj.showFlag) 
+					or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'PR' and (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1)) 
+					or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
 					id="deleteValue" partialSubmit="true" process="@this"
 					oncomplete="ruleValueDeletePopUp.show();"
 					update="@([id$=#{ruleValueDeleteId}])">
@@ -433,11 +609,12 @@
 						actionListener="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
 						oncomplete="errorDialog.show();"
-						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 2) and typeValueObj.fromValue >= typeValueObj.toValue and typeValueObj.fromValue != null}">
+						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 2 or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR') and typeValueObj.fromValue >= typeValueObj.toValue and typeValueObj.fromValue != null}">
 						<f:param name="index" value="#{index}"></f:param>
 						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
 					</p:commandLink>
 					<!-- 29669 - END -->
+				<!-- #35323 - End -->
 				</h:panelGroup>
 
 			</p:column>
@@ -453,14 +630,27 @@
 				oncomplete="catCodePopup.show();"
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}">
 			</p:commandButton>
+
+			<!-- #35323 - Start -->
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{!(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C') and
-						    !(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}"
+						    !(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC') and
+						    !(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR')}"
 				id="addTypeValueButton" style="float:right;"
 				action="#{ruleCatalogueBackingBean.addNewRuleTypeValue}"
 				partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
-			
+
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			    rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR')}"
+				id="addTypePRValueButton" style="float:right;"
+				oncomplete="ruleValueAddPopUp.show();"
+				update="@([id$=addDialog])"
+				partialSubmit="true"
+				process="@this">
+			</p:commandButton>
+			<!-- #35323 - End -->
+
 			<!-- 27827 - START -->
 			<p:commandButton value="#{lbl['lbl.btn.add']}" id="ptjAddBtn"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}"
@@ -523,8 +713,29 @@
 					onclick="errorDialog.hide();" />
 			</div>
 		</p:dialog>
+
+		<!-- #35323 - Start -->
+		<p:dialog id="addDialog" header="#{lbl['lbl.msg.confirm.add.header']}"
+			widgetVar="ruleValueAddPopUp" modal="true" width="500" height="100">
+			<table>
+				<tr>
+					<td align="center"><h:outputText
+					  	value="#{lbl['lbl.msg.confirm.add']}"></h:outputText></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}"
+					partialSubmit="true" process="@this"
+					style="float:right;"
+					action="#{ruleCatalogueBackingBean.addNewRuleTypeValue()}"
+					oncomplete="ruleValueAddPopUp.hide();"
+					update=":form:settingTabId:ruleTypeValueTableID" />
+			</div>
+		</p:dialog>
+		<!-- #35323 - End -->
 		<div class="clear"></div>
-
-
 	</p:panel>
+	<ac:lovPopup />
+	<ui:include src="/xhtml/pm/settings/general/common/supplierAccountTypePopUp.xhtml" /> <!-- #35323 -->
 </ui:composition>

@@ -3,16 +3,15 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
 	<p:blockUI widgetVar="blkPanelSearchTable" block=":form"
 		trigger="panelSearchId">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	<p:remoteCommand name="selectTypeAutoRun" id="remoteId"
 		update="userOrgAuditPMSearchPanel"
-		actionListener="#{searchPMUserOrgAuditBackingBean.autoSelectOrgType()}"
-		autoRun="true" />
+		actionListener="#{searchPMUserOrgAuditBackingBean.autoSelectOrgType()}" />
 	<p:panel id="userOrgAuditPMSearchPanel"
 		header="#{lbl['lbl.pm.search.location']}" toggleable="true">
 		<p:outputPanel>
@@ -36,7 +35,8 @@
 							var="lvlType" itemLabel="#{lvlType.codeName}"
 							itemValue="#{lvlType.levelCode}" />
 						<p:ajax onstart="blkPanelSearchTable.show()"
-							oncomplete="blkPanelSearchTable.hide()" event="change"
+							oncomplete="blkPanelSearchTable.hide(); setTimeout(function() { selectTypeAutoRun(); }, 100);"
+							event="change"
 							listener="#{searchPMUserOrgAuditBackingBean.resetOrganisationSearchBean}"
 							process="@this"
 							update="userOrgAuditPMSearchPanel,:form:searchMasters" />
@@ -45,23 +45,23 @@
 						id="dropdownMainOrgUserMsg" display="icon" /></td>
 				<td>&#160;</td>
 			</tr>
-			<c:if
-				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSR' or searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM' }">
-				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOrgType.xhtml" />
-			</c:if>
+			<h:panelGroup
+				rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OUSR' or searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM'}">
+				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOrgType.xhtml"></ui:include>
+			</h:panelGroup>
 
 			<!-- *** OFO START - FINANCIAL ORGANIZATION *** -->
-			<c:if
-				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OFO'}">
+			<h:panelGroup
+				rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OFO'}">
 				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOFO.xhtml" />
-			</c:if>
+			</h:panelGroup>
 			<!-- *** OFO END *** -->
 
 			<!-- *** OUSRG START - USER GROUP *** -->
-			<c:if
-				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSRG'}">
+			<h:panelGroup
+				rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 == 'OUSRG'}">
 				<ui:include src="/xhtml/audit/pm/userOrgAuditSearchOUSRG.xhtml" />
-			</c:if>
+			</h:panelGroup>
 			<!-- *** OUSRG END *** -->
 
 			<ui:include src="/xhtml/audit/pm/userOrgAuditSearchCommon.xhtml" />

@@ -126,6 +126,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		//#30918 - start
 		ContractManagementReportBackingBean ctManagementReportBB = new ContractManagementReportBackingBean();
 		//#30918 - end
+		ContractItemUsageMonitoringDtlsBackingBean ccContractItemUsageMonitoringDtlsBackingBean = new ContractItemUsageMonitoringDtlsBackingBean(); //#34889 
+
 		
 		// reset common search criteria
 		resetSearch();
@@ -143,6 +145,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		//#30918 -start
 		ctManagementReportBB.resetSearch();
 		//#30918 - end
+		ccContractItemUsageMonitoringDtlsBackingBean.resetSearch(); //#34889
 	}
 	
 	/**
@@ -295,10 +298,10 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
 					//cc
 					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableMinistryField(true);
-					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));
 					//mc
 					getManagedBean().setDisableMinistryField(true);
-					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));//Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));
 				} else if (isNoDefaultValues()) {
 					// cc
 					ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setDisableMinistryField(false);
@@ -663,7 +666,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	        RoleCode.BPK_AUDITOR.value(),
 	        RoleCode.MIN_CONTRACT_ADMIN.value(),
 	        RoleCode.CT_APPROVER.value(),
-	        RoleCode.SYS_ADMIN.value(),
+	        RoleCode.EP_ADMIN.value(),
 	        RoleCode.BPK_CCA.value(),
 	        RoleCode.BPK_CC_APPROVER.value(),
 	        RoleCode.BPK_CQ_APPROVER.value()

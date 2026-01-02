@@ -15,7 +15,8 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 
 /**
- * Search Bean for AuditPMUserOrgSearchBean
+ * #35509
+ * @author normuliana
  * 
  */
 public class AuditPMUserOrgSearchBean implements Serializable {
@@ -89,11 +90,12 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	private String pLvl5OldVal;
 	private String pLvl6OldVal;
 	private String pLvl7OldVal;
+	private String pLvl8OldVal;
 	private Long selectedOrgType;
 	private PmParameterDesc pmParameterDescOrgType;
 
 	public AuditPMUserOrgSearchBean() {
-		/*Empty Constructor*/
+		/* Empty Constructor */
 	}
 
 	/**
@@ -442,7 +444,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	}
 
 	public String getMasterLabel2() {
-		return masterLabel2;
+		return masterLabel2 != null ? masterLabel2.trim() : null;
 	}
 
 	public void setMasterLabel2(String masterLabel2) {
@@ -643,6 +645,14 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 
 	public void setpUserOrgProfileId(BigDecimal pUserOrgProfileId) {
 		this.pUserOrgProfileId = pUserOrgProfileId;
+	}
+
+	public String getpLvl8OldVal() {
+		return pLvl8OldVal;
+	}
+
+	public void setpLvl8OldVal(String pLvl8OldVal) {
+		this.pLvl8OldVal = pLvl8OldVal;
 	}
 
 }

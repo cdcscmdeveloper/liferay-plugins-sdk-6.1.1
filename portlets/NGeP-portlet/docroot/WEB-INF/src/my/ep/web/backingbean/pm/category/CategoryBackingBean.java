@@ -152,6 +152,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	private Integer tabIndexActive; // tab 0,1,2
 	//End #29665
 	
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/category/categoryl1.xhtml"; //#34445
 	
 	/**
 	 * Instantiates a new category backing bean.
@@ -1355,6 +1356,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			}
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			throw(e);
 		} finally {

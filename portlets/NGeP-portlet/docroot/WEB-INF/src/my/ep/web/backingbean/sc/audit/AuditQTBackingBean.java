@@ -38,6 +38,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.rpt.excel.ExcelCellStyleBuilder;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -311,7 +312,6 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 
 			// Section - Setting Cell Style for No Records Found message.
 			noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
-
 			// Cell Format: String
 			cellStyleString = new ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE).buildDataCellStyleString();
 
@@ -351,11 +351,12 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 					cellTitleRow = titleRptRow.createCell(1);// Create
 																// Cell(Column)
 					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE);
-
+					cellTitleRow.setCellStyle(cellStyleTitleRpt);//#35500 fix issue 3
+					
 					titleRptRow = sheetRptAudit.createRow(3); // Create Row
 					cellTitleRow = titleRptRow.createCell(1);
 					cellTitleRow.setCellValue(getCurrentReportTab(rpt.getGroupSectionId().longValue(), titleHeader));
-
+					
 					cellTitleRow.setCellStyle(cellStyleTitleRpt);
 					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
 																						// Cell
@@ -371,6 +372,8 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 
 				if (rpt.getDocNo() == null && rpt.getActionBy() == null) {
 					createNotFoundRecord(sheetRptAudit, rowIndex, colHeaderDataTableRpt.length, noRecordsStyle);
+					// Set column width
+					setExlSheetColumnWidth(colHeaderDataTableRpt.length, sheetRptAudit);//#35500 fix issue 4
 				} else {
 					Row currRow = sheetRptAudit.createRow(rowIndex++);
 
@@ -471,7 +474,7 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		map.put(QTAuditConstant.AU_SECTION_SL, new TabHeaderPair(ReportExcelAuditConstant.TAB_SUPPLIER_LIST,
 				ReportExcelAuditConstant.TAB_SUPPLIER_LIST));
 		map.put(QTAuditConstant.AU_SECTION_DOA, new TabHeaderPair(ReportExcelAuditConstant.TAB_DESK_OFFICER_ASSISTANT,
-				ReportExcelAuditConstant.TAB_SUPPLIER_LIST));
+				ReportExcelAuditConstant.TAB_DESK_OFFICER_ASSISTANT));
 		map.put(QTAuditConstant.AU_SECTION_DO, new TabHeaderPair(ReportExcelAuditConstant.TAB_DESK_OFFICER,
 				ReportExcelAuditConstant.TAB_DESK_OFFICER));
 		map.put(QTAuditConstant.AU_SECTION_SC, new TabHeaderPair(
@@ -555,11 +558,27 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	 * @param noRecordsStyle
 	 */
 	private void createNotFoundRecord(Sheet sheet, int rowIndex, int totalCell, CellStyle noRecordsStyle) {
+		//#35500 fix issue 3 start
+		Workbook workbook = sheet.getWorkbook();
+		CellStyle borderStyle = workbook.createCellStyle();
+		borderStyle.cloneStyleFrom(noRecordsStyle);
+		borderStyle.setBorderTop(BorderStyle.THIN);
+		borderStyle.setBorderBottom(BorderStyle.THIN);
+		borderStyle.setBorderLeft(BorderStyle.THIN);
+		borderStyle.setBorderRight(BorderStyle.THIN);
+
 		Row noRecordRow = sheet.createRow(rowIndex);
-		Cell cellNoRecord = noRecordRow.createCell(1);
-		cellNoRecord.setCellValue(ReportExcelAuditConstant.RPT_NO_RECORDS);
-		cellNoRecord.setCellStyle(noRecordsStyle);
-		sheet.addMergedRegion(new CellRangeAddress(sheet.getLastRowNum(), sheet.getLastRowNum(), 1, totalCell));
+
+		for (int i = 1; i <= totalCell; i++) {
+			Cell cell = noRecordRow.createCell(i);
+			cell.setCellStyle(borderStyle);
+			if (i == 1) {
+				cell.setCellValue(ReportExcelAuditConstant.RPT_NO_RECORDS);
+			}
+		}
+
+		sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 1, totalCell));
+		//#35500 fix issue 3 end
 	}
 
 	/**

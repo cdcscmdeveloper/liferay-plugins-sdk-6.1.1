@@ -78,6 +78,11 @@
 					action="#{lOIDetailBackingBean.validateBeforePopup(false)}"
 					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOIWithoutBPM}"
 					process="@form" update="@form" /><ui:remove>36339, 21692</ui:remove>
+	
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					action="#{lOIDetailBackingBean.validateBeforePopupWIP()}"
+					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelWIP}"
+					process="@form" update="@form" /><ui:remove>21692</ui:remove>
 
 				<c:choose>
 					<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
@@ -148,6 +153,28 @@
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" onclick="blockWidget.show();"
 					action="#{lOIDetailBackingBean.cancelLOIWithoutBPM()}"
 					oncomplete="cancelPopup2.hide();"  update="@form">
+				</p:commandButton>
+
+			</div>
+			</p:dialog>
+			<ui:remove>#21692 - end</ui:remove>
+			<ui:remove>#21692 - start</ui:remove>
+			<p:dialog id="submissionPopupId3" widgetVar="cancelPopup3"
+			header="#{lbl['lbl.sc.cancel.confirm']}"
+			resizable="false" width="325" height="100" closable="false"
+			modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.qt.pending.qt.loi.cancel']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" onclick="blockWidget.show();"
+					action="#{lOIDetailBackingBean.cancelLOIWIP()}"
+					oncomplete="cancelPopup3.hide();"  update="@form">
 				</p:commandButton>
 
 			</div>

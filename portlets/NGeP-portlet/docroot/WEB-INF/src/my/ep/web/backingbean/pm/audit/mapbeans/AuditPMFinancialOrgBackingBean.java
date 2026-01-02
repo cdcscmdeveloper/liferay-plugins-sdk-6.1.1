@@ -10,6 +10,7 @@ import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
@@ -68,12 +69,12 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		managedBean = (FinancialOrgManagedBean) manageBean;
 		PmFinancialOrg financialOrg = managedBean.getFinancialOrg();
-		String serviceType = managedBean.getServiceTypes().get(0);
-		checkLevelCode3(serviceType);
 		this.roleCode = roleCode;
 		docNo = financialOrg.getBizRegNumber();
 		docType = financialOrg.getFinOrgName();
-		retrieveServiceTypeMap();
+		levelCode3 = AuditConst.PM_LVL_CODE_3_OFO_OFOFFC;
+		parameterLvlId = AuditConst.PM_AUD_OFOFFC_PMPARAMETERLVLID;
+		
 		PmFinancialOrg savedFinancialOrg = managedBean.getSavedFinancialOrg();
 		
 		if(financialOrg.isBrandNew()){
@@ -88,11 +89,11 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			
 			detailObj(AuditConst.PM_AUD_OFO_FINANCIAL_ORG_FIELDLABELID, null, financialOrg.getFinOrgName());
 			
-			detailObj(AuditConst.PM_AUD_OFO_BANK_IDENTIFIED_FIELDLABELID, null, financialOrg.isForEp()? AuditConst.PM_AUD_YES
-					: AuditConst.PM_AUD_NO);
-			
 			detailObj(AuditConst.PM_AUD_OFO_STATUS_FIELDLABELID, null, financialOrg.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
+			
+			detailObj(AuditConst.PM_AUD_OFO_BANK_IDENTIFIED_FIELDLABELID, null, financialOrg.isForEp()? AuditConst.PM_AUD_YES
+					: AuditConst.PM_AUD_NO);
 		}
 		else{
 			PmFinancialOrg oldFinancialOrg = managedBean.getOldFinancialOrg();
@@ -110,6 +111,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		auditPMReqDTO.setObjList(objList);
 		managedBean.setOldFinancialOrg(null);
 		managedBean.setSavedFinancialOrg(null);
+		managedBean.setOldContactPerson(null);
 		return auditPMReqDTO;
 	}
 	
@@ -122,16 +124,16 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			detailObj(AuditConst.PM_AUD_OFO_FINANCIAL_ORG_FIELDLABELID, oldFinancialOrg.getFinOrgName(), financialOrg.getFinOrgName());
 		}
 		
-		if(financialOrg.isForEp() != oldFinancialOrg.isForEp()){
-			detailObj(AuditConst.PM_AUD_OFO_BANK_IDENTIFIED_FIELDLABELID, oldFinancialOrg.isForEp()? AuditConst.PM_AUD_YES
-					: AuditConst.PM_AUD_NO, financialOrg.isForEp()? AuditConst.PM_AUD_YES
-					: AuditConst.PM_AUD_NO);
-		}
-		
 		if(!financialOrg.getRecordStatusFlg().equals(oldFinancialOrg.getRecordStatusFlg())){
 			detailObj(AuditConst.PM_AUD_OFO_STATUS_FIELDLABELID, oldFinancialOrg.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE, financialOrg.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
+		}
+		
+		if(financialOrg.isForEp() != oldFinancialOrg.isForEp()){
+			detailObj(AuditConst.PM_AUD_OFO_BANK_IDENTIFIED_FIELDLABELID, oldFinancialOrg.isForEp()? AuditConst.PM_AUD_YES
+					: AuditConst.PM_AUD_NO, financialOrg.isForEp()? AuditConst.PM_AUD_YES
+					: AuditConst.PM_AUD_NO);
 		}
 	}
 	
@@ -153,7 +155,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		}
 			
 		if (managedBean.getFinancialOrg().isBrandNew()) {
-			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			
 			if(!address.isEmpty()){
 				
@@ -167,12 +169,15 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 				setNewContactPerson(managedBean.getContactPerson());
 			}
 		} else {
-			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 			
 			if (!address.equals(oldAddressAppend)){
 				detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, oldAddressAppend, address);
 			}
 
+			if (!address.isEmpty())
+				setUpdateAddressDetail(editedAddress, oldPmAddress);
+			
 			setContact(managedBean.getContactPerson(), managedBean.getOldContactPerson());
 		}
 	}
@@ -196,23 +201,27 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	}
 	
 	private void setNewMainAddress(PmAddress editedAddress, String address){
-		
-		detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, null, address);
-		
-		detailObj(AuditConst.PM_AUD_OFO_STATE_FIELDLABELID, null, editedAddress.getPmState().getStateName());
-		detailObj(AuditConst.PM_AUD_OFO_DISTRICT_FIELDLABELID, null, editedAddress.getPmDistrict().getDistrictName());
-		detailObj(AuditConst.PM_AUD_OFO_CITY_FIELDLABELID, null, editedAddress.getPmCity().getCityName());
-		detailObj(AuditConst.PM_AUD_OFO_POSTCODE_FIELDLABELID, null, editedAddress.getPostcode());
+
 		detailObj(AuditConst.PM_AUD_OFO_COUNTRY_FIELDLABELID, null, editedAddress.getPmCountry().getCountryName());
-		
-		if(!editedAddress.getPhoneNo().isEmpty()){
-		detailObj(AuditConst.PM_AUD_OFO_PHONE_FIELDLABELID, null, 
-				editedAddress.getPhoneCountry() + editedAddress.getPhoneArea() + editedAddress.getPhoneNo());
-		}
-		
+		detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, null, address);
+		detailObj(AuditConst.PM_AUD_OFO_STATE_FIELDLABELID, null, editedAddress.getPmState().getStateName());
 		if(editedAddress.getPmDivision() != null){
 			detailObj(AuditConst.PM_AUD_OFO_DIVISION_FIELDLABELID, null, editedAddress.getPmDivision().getDivisionName());
 		}
+		detailObj(AuditConst.PM_AUD_OFO_DISTRICT_FIELDLABELID, null, editedAddress.getPmDistrict().getDistrictName());
+		detailObj(AuditConst.PM_AUD_OFO_CITY_FIELDLABELID, null, editedAddress.getPmCity().getCityName());
+		detailObj(AuditConst.PM_AUD_OFO_POSTCODE_FIELDLABELID, null, editedAddress.getPostcode());
+		
+		if(!editedAddress.getPhoneNo().isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_PHONE_FIELDLABELID, null, 
+					editedAddress.getPhoneCountry() + editedAddress.getPhoneArea() + editedAddress.getPhoneNo());
+		}
+		
+		if(!editedAddress.getFaxNo().isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_FAX_FIELDLABELID, null, 
+					editedAddress.getFaxCountry() + editedAddress.getFaxArea() + editedAddress.getFaxNo());
+		}
+		
 	}
 
 	/**
@@ -222,22 +231,85 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	private void setNewContactPerson(PmContact pmContact){
 		String officePhoneNo = pmContact.getPhoneNo() != null && !pmContact.getPhoneNo().isEmpty() ? 
 				pmContact.getPhoneCountry() + pmContact.getPhoneArea() + pmContact.getPhoneNo() : EMPTY_STRING;
+				
 		String officeMobileNo = pmContact.getMobileNo() != null && !pmContact.getMobileNo().isEmpty() ? 
 				pmContact.getMobileCountry() + pmContact.getMobileArea() + pmContact.getMobileNo() : EMPTY_STRING;
 
-		
-		if(pmContact.getContactName() != null && !pmContact.getContactName().isEmpty())
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, null, pmContact.getContactName());
+		if(!EntityHelper.getStringNestedProperty(pmContact, "contactName").isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, null, EntityHelper.getStringNestedProperty(pmContact, "contactName"));
+		}
 			
-		if(pmContact.getEmail() != null && !pmContact.getEmail().isEmpty())
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, null, pmContact.getEmail());
+		if(!EntityHelper.getStringNestedProperty(pmContact, "email").isEmpty()){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, null, EntityHelper.getStringNestedProperty(pmContact, "email"));
+		}
 		
 		if(!officePhoneNo.isEmpty()){
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_TELEPHONE_FIELDLABELID, null, officePhoneNo);
 		}
+		
 		if(!officeMobileNo.isEmpty()){
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_MOBILE_FIELDLABELID, null, officeMobileNo);
 		}
+	}
+	
+	private void setUpdateAddressDetail(PmAddress editedAddress, PmAddress oldPmAddress){
+		
+		if(!editedAddress.getPmState().getStateName().equals(oldPmAddress.getPmState().getStateName())){
+			detailObj(AuditConst.PM_AUD_OFO_STATE_FIELDLABELID, oldPmAddress.getPmState().getStateName(), editedAddress.getPmState().getStateName());
+		}
+		
+		if (editedAddress.getPmDivision() != null
+				&& !editedAddress.getPmDivision().equals(oldPmAddress.getPmDivision())) {
+			detailObj(AuditConst.PM_AUD_OFO_DIVISION_FIELDLABELID, 
+					oldPmAddress.getPmDivision().getDivisionName(), 
+					editedAddress.getPmDivision().getDivisionName());
+		}
+		
+		if(!editedAddress.getPmDistrict().getDistrictName().equals(oldPmAddress.getPmDistrict().getDistrictName())){
+			detailObj(AuditConst.PM_AUD_OFO_DISTRICT_FIELDLABELID, oldPmAddress.getPmDistrict().getDistrictName(), editedAddress.getPmDistrict().getDistrictName());
+		}
+		
+		if(!editedAddress.getPmCity().getCityName().equals(oldPmAddress.getPmCity().getCityName())){
+			detailObj(AuditConst.PM_AUD_OFO_CITY_FIELDLABELID, oldPmAddress.getPmCity().getCityName(), editedAddress.getPmCity().getCityName());
+		}
+		
+		if(!editedAddress.getPostcode().equals(oldPmAddress.getPostcode())){
+			detailObj(AuditConst.PM_AUD_OFO_POSTCODE_FIELDLABELID, oldPmAddress.getPostcode(), editedAddress.getPostcode());
+		}
+		
+		String newPhone = checkEmptyString(editedAddress.getPhoneCountry()) +
+				checkEmptyString(editedAddress.getPhoneArea()) +
+                checkEmptyString(editedAddress.getPhoneNo());
+
+		String oldPhone = checkEmptyString(oldPmAddress.getPhoneCountry()) +
+				checkEmptyString(oldPmAddress.getPhoneArea()) +
+                checkEmptyString(oldPmAddress.getPhoneNo());
+		
+		if (!newPhone.isEmpty() && !newPhone.equals(oldPhone)) {
+		    detailObj(AuditConst.PM_AUD_OFO_PHONE_FIELDLABELID,
+		              oldPhone.isEmpty() ? EMPTY_STRING : oldPhone,
+		              newPhone);
+		}
+		
+		String newFax = checkEmptyString(editedAddress.getFaxCountry()) +
+				checkEmptyString(editedAddress.getFaxArea()) +
+                checkEmptyString(editedAddress.getFaxNo());
+
+		String oldFax = checkEmptyString(oldPmAddress.getFaxCountry()) +
+				checkEmptyString(oldPmAddress.getFaxArea()) +
+                checkEmptyString(oldPmAddress.getFaxNo());
+		
+		if (!newFax.isEmpty() && !newFax.equals(oldFax)) {
+		    detailObj(AuditConst.PM_AUD_OFO_FAX_FIELDLABELID,
+		    		oldFax.isEmpty() ? EMPTY_STRING : oldFax,
+		    				newFax);
+		}
+		
+	}
+	
+
+	private String checkEmptyString(String value) {
+	    return value == null ? "" : value;
 	}
 	
 	/**
@@ -250,11 +322,25 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		String officeMobileNo = EMPTY_STRING;
 		String auditPhoneNo = EMPTY_STRING;
 		String auditMobileNo = EMPTY_STRING;
+		
+		String currContactName = EntityHelper.getStringNestedProperty(editedtContactPerson, "contactName");
+		String oldContactName = EntityHelper.getStringNestedProperty(oldContactPerson, "contactName");
+		String currContactEmail = EntityHelper.getStringNestedProperty(editedtContactPerson, "email");
+		String oldContactEmail = EntityHelper.getStringNestedProperty(oldContactPerson, "email");
+
+		if(!currContactName.equals(oldContactName)){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, oldContactName, currContactName);					
+		}
+
+		if(!currContactEmail.equals(oldContactEmail)){
+			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, oldContactEmail, currContactEmail);					
+		}
 
 		if(oldContactPerson.getPhoneNo() != null && !oldContactPerson.getPhoneNo().isEmpty()){
 			auditPhoneNo = oldContactPerson.getPhoneCountry() + oldContactPerson.getPhoneArea() + 
 					oldContactPerson.getPhoneNo();
 		}
+		
 		if(oldContactPerson.getMobileNo() != null && !oldContactPerson.getMobileNo().isEmpty()){
 			auditMobileNo = oldContactPerson.getMobileCountry() + oldContactPerson.getMobileArea() + 
 					oldContactPerson.getMobileNo();
@@ -269,20 +355,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			officeMobileNo = editedtContactPerson.getMobileCountry() + editedtContactPerson.getMobileArea() + 
 					editedtContactPerson.getMobileNo();
 		}
-
-		if(!editedtContactPerson.getContactName().equals(oldContactPerson.getContactName())){
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, 
-					oldContactPerson.getContactName(), editedtContactPerson.getContactName());					
-		}
 		
 		if(!officePhoneNo.equals(auditPhoneNo)){
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_TELEPHONE_FIELDLABELID, 
 					auditPhoneNo, officePhoneNo);					
-		}
-		
-		if(!editedtContactPerson.getEmail().equals(oldContactPerson.getEmail())){
-			detailObj(AuditConst.PM_AUD_OFO_CONTACT_EMAIL_FIELDLABELID, 
-					oldContactPerson.getEmail(), editedtContactPerson.getEmail());					
 		}
 		
 		if(!officeMobileNo.equals(auditMobileNo)){
@@ -341,10 +417,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		retrieveServiceType();
 		
 		if(managedBean.getFinancialOrg().isBrandNew()){
-			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			newFinancialService(bankServicesList);
 		} else {
-			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 			editedFinancialService(bankServicesList,oldBankServicesList);
 		}
 		
@@ -378,17 +454,6 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	}
 	
 	/**
-	 * retrieve service type into mapper
-	 */
-	private void retrieveServiceTypeMap(){
-		List<PmParameterDesc> parameterDescs = managedBean.getBankServicesList();
-		serviceTypeMapper = new HashMap<>();
-		for(PmParameterDesc pmDesc: parameterDescs){
-			serviceTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
-		}
-	}
-	
-	/**
 	 * retrieve service type into map
 	 */
 	private void retrieveServiceType(){
@@ -397,44 +462,17 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		for(PmParameterDesc pmDesc: parameterDescs){
 			if(pmDesc.getPmParameter().getParameterCode().equals(ParameterConst.BANK_SERVICES_FACTORING_COMPANY)){
 				serviceTypeMap.put(pmDesc.getPmParameter().getParameterId(), AuditConst.PM_AUD_OFO_FINANCE_FACTORING_FIELDLABELID);
-			} else if(pmDesc.getPmParameter().getParameterCode().equals(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND)){
-				serviceTypeMap.put(pmDesc.getPmParameter().getParameterId(), AuditConst.PM_AUD_OFO_FINANCE_PBOND_FIELDLABELID);
 			} else if(pmDesc.getPmParameter().getParameterCode().equals(ParameterConst.BANK_SERVICES_PAYMENT_BANK)){
 				serviceTypeMap.put(pmDesc.getPmParameter().getParameterId(), AuditConst.PM_AUD_OFO_FINANCE_PAYMENT_FIELDLABELID);
+			} else if(pmDesc.getPmParameter().getParameterCode().equals(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND)){
+				serviceTypeMap.put(pmDesc.getPmParameter().getParameterId(), AuditConst.PM_AUD_OFO_FINANCE_PBOND_FIELDLABELID);
 			} else if(pmDesc.getPmParameter().getParameterCode().equals(ParameterConst.BANK_SERVICES_REGISTRATION)){
 				serviceTypeMap.put(pmDesc.getPmParameter().getParameterId(), AuditConst.PM_AUD_OFO_FINANCE_REG_FIELDLABELID);
 			} 
 		}
 	}
 	
-	private void checkLevelCode3(String type){
-		
-		switch (type){
-		
-		case ParameterConst.BANK_SERVICES_FACTORING_COMPANY :
-			levelCode3 = AuditConst.PM_LVL_CODE_3_OFO_OFOFFC;
-			parameterLvlId = AuditConst.PM_AUD_OFOFFC_PMPARAMETERLVLID;
-			break;
-			
-		case ParameterConst.BANK_SERVICES_PAYMENT_BANK :
-			levelCode3 = AuditConst.PM_LVL_CODE_3_OFO_OFOPBANK;
-			parameterLvlId = AuditConst.PM_AUD_OFOPBANK_PMPARAMETERLVLID;
-			break;
-			
-		case ParameterConst.BANK_SERVICES_PERFORMANCE_BOND :
-			levelCode3 = AuditConst.PM_LVL_CODE_3_OFO_OFOPBOND;
-			parameterLvlId = AuditConst.PM_AUD_OFOPBOND_PMPARAMETERLVLID;
-			break;
-			
-		case ParameterConst.BANK_SERVICES_REGISTRATION :
-			levelCode3 = AuditConst.PM_LVL_CODE_3_OFO_OFOREGBANK;
-			parameterLvlId = AuditConst.PM_AUD_OFOREGBANK_PMPARAMETERLVLID;
-			break;
-			
-		default :
-			break;
-		}
-	}
+
 	private ArrayList<AuditPMSPDTO> detailObj(BigInteger fieldLabelId, String oldValue, String newValue) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);

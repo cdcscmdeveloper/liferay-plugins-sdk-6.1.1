@@ -230,9 +230,9 @@ public class LovBackingBean implements Serializable {
 					searchBean.setDocNo(ctReportBB.getManagedBean().getContractNo());
 				} else if (ccContractItemMonitoringRptBB.getManagedBean().getContractNo() != null) {
 					searchBean.setDocNo(ccContractItemMonitoringRptBB.getManagedBean().getContractNo());
-				} else if (ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo() != null) {
-					searchBean.setDocNo(ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo());
-				}
+				} else if (ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo() != null) { //#34889
+					searchBean.setDocNo(ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo()); //#34889
+				}// #34889
 
 				if (getLovBeanReset().isResetFlag()) {
 					searchBean.setResetAction(true);
@@ -395,6 +395,25 @@ public class LovBackingBean implements Serializable {
 						valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
 								.createValueExpression(FacesContext.getCurrentInstance().getELContext(),
 										"#{" + column.getMethodName() + "}", Object.class);
+					}else if (column.getColumnName() != null && column.getColumnName().contains(",")){ //Start Fix - #29416, #34889
+					    String[] cols = column.getColumnName().split(",");
+					    String itemCodeExp = cols[0].trim();
+					    String unitExp = cols.length > 1 ? cols[1].trim() : null;
+					    String nameExp = cols.length > 2 ? cols[2].trim() : null;
+					    String expression = "";
+					    if (unitExp != null && nameExp != null) {
+					        expression = String.format(
+					            "#{entity.%s} #{entity.%s}<br/>#{entity.%s}",
+					            itemCodeExp, unitExp, nameExp
+					        );
+					    } else if (unitExp != null) {
+					        expression = String.format("#{entity.%s} #{entity.%s}", itemCodeExp, unitExp);
+					    } else {
+					        expression = String.format("#{entity.%s}", itemCodeExp);
+					    }
+					    valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
+					        .createValueExpression(FacesContext.getCurrentInstance().getELContext(), expression, Object.class);
+					  //End Fix - #29416, #34889
 					} else {
 						valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
 								.createValueExpression(FacesContext.getCurrentInstance().getELContext(),
@@ -425,9 +444,9 @@ public class LovBackingBean implements Serializable {
 				handledError = ctReportBB.validateBeforeExecuteLov(getContractNo());
 			} else if ("ccContractItemMonitoringRptBB".equalsIgnoreCase(backingBean)) {
 				handledError = ccContractItemMonitoringRptBB.validateBeforeExecuteLov(getContractNo());
-			} else if ("ccContractItemUsageMonitoringDtlsReportBB".equals(backingBean)){
-				handledError = ccContractItemUsageMonitoringDtlsReportBB.validateBeforeExecuteLov(getContractNo());
-			}
+			} else if ("ccContractItemUsageMonitoringDtlsReportBB".equals(backingBean)){ //#34889
+				handledError = ccContractItemUsageMonitoringDtlsReportBB.validateBeforeExecuteLov(getContractNo()); //#34889
+			}//#34889
 
 			if (handledError) {
 				// Set a callback parameter to indicate an error
@@ -672,9 +691,16 @@ public class LovBackingBean implements Serializable {
 		this.setSearchOptions(new ArrayList<SelectItem>());
 		if(lovBean.getColumns() != null && lovBean.getColumns().size() > 0) {
 			for(LovColumnBean column : lovBean.getColumns()) {
+				//Start Fix - #29416
+				SelectItem item = new SelectItem();
 				if(column.isSearchable()){
-					SelectItem item = new SelectItem(column.getColumnName(), column.getColumnTitle());
+					if (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
+						item = new SelectItem(column.getSearchColumn(), column.getColumnTitle());
+					}else{
+						item = new SelectItem(column.getColumnName(), column.getColumnTitle());
+					}
 					this.getSearchOptions().add(item);
+				//End Fix - #29416
 				}
 			}
 		}
@@ -725,6 +751,7 @@ public class LovBackingBean implements Serializable {
 		if (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 			ctReportBB.getManagedBean().setLovItemReportNameTriggered(true);
 			ccContractItemMonitoringRptBB.getManagedBean().setLovItemReportNameTriggered(true);
+			ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().setLovItemReportNameTriggered(true); //#34889
 		}
 		// End - #29416
 		if(this.getLovBean().getSelectionMode().equalsIgnoreCase("single")) {
@@ -1105,9 +1132,9 @@ public class LovBackingBean implements Serializable {
 	        contractNo = ctReportBB.getManagedBean().getContractNo();
 	    } else if (ccContractItemMonitoringRptBB != null && ccContractItemMonitoringRptBB.getManagedBean().getContractNo() != null) {
 	        contractNo = ccContractItemMonitoringRptBB.getManagedBean().getContractNo();
-	    } else if (ccContractItemUsageMonitoringDtlsReportBB != null && ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo() != null) {
-	        contractNo = ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo();
-	    }
+	    } else if (ccContractItemUsageMonitoringDtlsReportBB != null && ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo() != null) { //#34889
+	        contractNo = ccContractItemUsageMonitoringDtlsReportBB.getManagedBean().getContractNo(); //#34889
+	    } //#34889
          
 	    return contractNo;
 	}

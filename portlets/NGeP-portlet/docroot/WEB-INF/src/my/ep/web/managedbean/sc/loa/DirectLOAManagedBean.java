@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -36,6 +37,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -382,6 +384,16 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	// #29766 Start Vinod
 	private String alertForInactivePK7;
 	// #29766 End Vinod
+
+	// #29661 start
+	private List<SmSupplierCategory> supplierCategoryList;
+	private List<SmSupplierCategory> selectedCategoryList;
+	private List<SmSupplierCategory> addedCategoryList;
+	private List<SmSupplierCategory> procurementRelatedCategoryList;
+	private List<SmSupplierCategory> deletedCategoryList;
+	private boolean categorySelected;
+	private List<ScQtCategory> qtCategoryList;
+	// #29661 end
 	
 	/**
 	 * Gets the spki backing bean.
@@ -2211,5 +2223,62 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.alertForInactivePK7 = alertForInactivePK7;
 	}
 	// #29766 End Vinod
-	
+
+	//#29661 Start
+	public List<SmSupplierCategory> getSupplierCategoryList() {
+		return supplierCategoryList;
+	}
+
+	public void setSupplierCategoryList(List<SmSupplierCategory> supplierCategoryList) {
+		this.supplierCategoryList = supplierCategoryList;
+	}
+
+	public List<SmSupplierCategory> getSelectedCategoryList() {
+		return selectedCategoryList;
+	}
+
+	public void setSelectedCategoryList(List<SmSupplierCategory> selectedCategoryList) {
+		this.selectedCategoryList = selectedCategoryList;
+	}
+
+	public List<SmSupplierCategory> getProcurementRelatedCategoryList() {
+		return procurementRelatedCategoryList;
+	}
+
+	public void setProcurementRelatedCategoryList(List<SmSupplierCategory> procurementRelatedCategoryList) {
+		this.procurementRelatedCategoryList = procurementRelatedCategoryList;
+	}
+
+	public boolean isCategorySelected() {
+		return categorySelected;
+	}
+
+	public void setCategorySelected(boolean categorySelected) {
+		this.categorySelected = categorySelected;
+	}
+
+	public List<ScQtCategory> getQtCategoryList() {
+		return qtCategoryList;
+	}
+
+	public void setQtCategoryList(List<ScQtCategory> qtCategoryList) {
+		this.qtCategoryList = qtCategoryList;
+	}
+
+	public List<SmSupplierCategory> getDeletedCategoryList() {
+		return deletedCategoryList;
+	}
+
+	public void setDeletedCategoryList(List<SmSupplierCategory> deletedCategoryList) {
+		this.deletedCategoryList = deletedCategoryList;
+	}
+
+	public List<SmSupplierCategory> getAddedCategoryList() {
+		return addedCategoryList;
+	}
+
+	public void setAddedCategoryList(List<SmSupplierCategory> addedCategoryList) {
+		this.addedCategoryList = addedCategoryList;
+	}
+	//#29661 End
 }
