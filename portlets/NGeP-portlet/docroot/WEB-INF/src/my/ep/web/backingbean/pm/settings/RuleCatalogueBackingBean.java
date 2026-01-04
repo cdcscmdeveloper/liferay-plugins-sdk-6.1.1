@@ -373,6 +373,7 @@ public class RuleCatalogueBackingBean extends
 		getManagedBean().setThresholdIndex(0);
 		getManagedBean().setGstIndex(TAXABLE_ITEM_IDX);
 		getManagedBean().setAutoUpdate(true);
+		getManagedBean().setNewPRList(false); //#35323
 		setCurrentActiveOrg();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
@@ -1504,13 +1505,14 @@ public class RuleCatalogueBackingBean extends
 			clearAllAuditBeanVal(getManagedBean());
 			/************ AUDIT #28895_35509 - END **************/
 			//#35323 - Start
+			this.getManagedBean().setNewPRList(false);
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())){
 				loadPRValues();
 			}
 			//#35323 - End
 		} catch (Exception e) {
 			clearAllAuditBeanVal(getManagedBean());
-			throw new EpException(e.getMessage());
+`			throw new EpException(e.getMessage());
 		}
 	}
 	
@@ -6230,13 +6232,14 @@ public class RuleCatalogueBackingBean extends
 
 		List<Object[]> rows = ruleSO.getPRList();
 
-		if (!rows.isEmpty()) {
+		if (!rows.isEmpty() && !this.getManagedBean().isNewPRList()) {
 			List<PmConfigRuleValue> newList = convertToNewPRValues(rows);
 
 			List<PmConfigRuleValue> oldList = this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues();
 
 			oldList.clear();
 			oldList.addAll(newList);
+			this.getManagedBean().setNewPRList(true);
 		}
 	}
 	
