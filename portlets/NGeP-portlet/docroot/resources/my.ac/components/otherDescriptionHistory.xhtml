@@ -29,20 +29,19 @@
                 </h:outputText>
               </p:column>
               <p:column headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-                <h:outputText rendered="#{not empty otherDescBean}" value="#{otherDescBean.otherDesc}" />
-                <h:outputText rendered="#{empty otherDescBean}" value="#{otherDescBean.otherDesc}" />
+                <h:outputText rendered="#{not empty otherDescBean}" value="#{cat.otherDesc}" />
               </p:column>
               <p:column headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-                <h:outputText rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}" value="#{cat.otherDesc}" />
+                <h:outputText rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}" value="#{otherDescBean.otherDesc}" />
               </p:column>
               <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-                <h:outputText rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}" value="#{PmCommonUtil.retriveUserName(otherDescBean.createdBy)}" />
+                <h:outputText rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}" value="#{supplierDataMaintenanceBackingBean.getUserNameByUserId(otherDescBean.createdBy)}" />
               </p:column>
               <p:column headerText="#{lbl['lbl.sm.other.desc.history.update.information.approver']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
                 <h:outputText rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP}" value="#{otherDescBean.otherDesc}" />
               </p:column>
               <p:column headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}" style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-                <h:outputText rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP}" value="#{PmCommonUtil.retriveUserName(otherDescBean.createdBy)}" />
+                <h:outputText rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP}" value="#{supplierDataMaintenanceBackingBean.getUserNameByUserId(otherDescBean.createdBy)}" />
               </p:column>
             </p:dataTable>
             <br />
