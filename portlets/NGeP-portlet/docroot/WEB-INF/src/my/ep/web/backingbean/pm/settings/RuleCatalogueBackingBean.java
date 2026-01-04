@@ -1512,7 +1512,7 @@ public class RuleCatalogueBackingBean extends
 			//#35323 - End
 		} catch (Exception e) {
 			clearAllAuditBeanVal(getManagedBean());
-`			throw new EpException(e.getMessage());
+			throw new EpException(e.getMessage());
 		}
 	}
 	
