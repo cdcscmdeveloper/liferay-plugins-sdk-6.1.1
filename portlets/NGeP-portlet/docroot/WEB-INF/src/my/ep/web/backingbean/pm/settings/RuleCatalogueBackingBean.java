@@ -6210,13 +6210,16 @@ public class RuleCatalogueBackingBean extends
 	 * 
 	 */
 	public void initSupplAccTypePopup(int index, List<Long> ids) {
-		log.info("initSupplAccTypePopup " + ids);
-		
 		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setSelectedSuppAccountType(null);
+		this.getManagedBean().setSelectedAllSuppAccountType(false);
 
-		if (ids != null) {
+		if (ids != null && !ids.isEmpty()) {
 			this.getManagedBean().getSelectedSuppAccountType().addAll(ids);
+
+			if (ids.size() == 3) {
+				this.getManagedBean().setSelectedAllSuppAccountType(true);
+			}
 		}
 	}
 	
