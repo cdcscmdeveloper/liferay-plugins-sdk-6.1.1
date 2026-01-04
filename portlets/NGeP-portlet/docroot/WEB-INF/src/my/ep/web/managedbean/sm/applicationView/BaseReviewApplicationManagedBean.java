@@ -373,8 +373,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String otherDescEdited;
 	// 36504 - END
 		
-	private boolean activeDisciplinary; // 39636
-
 	public String getSupportingDocMode() {
 		return supportingDocMode;
 	}
@@ -2737,14 +2735,4 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 	// 9299 - END
 	
-	
-	// 39636 - START
-	public boolean isActiveDisciplinary() {
-		return activeDisciplinary;
-	}
-
-	public void setActiveDisciplinary(boolean activeDisciplinary) {
-		this.activeDisciplinary = activeDisciplinary;
-	}
-	// 39636 - END
 }
