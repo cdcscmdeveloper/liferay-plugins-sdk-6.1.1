@@ -14844,6 +14844,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#38890 - start
 		SmAIDocBackingBean aiBB = new SmAIDocBackingBean();
 		aiBB.validateBank(getManagedBean().getSmAppl());
+		aiBB.validateTenancy(getManagedBean().getSmAppl());
 		//#38890 - end
 	}
 	
@@ -19156,7 +19157,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		addr.setPostcode(te.getPostcode());
 		addr.setAddress1(te.getAddr1());
 		addr.setAddress2(te.getAddr2());
-		addr.setAddress3("");
+		addr.setAddress3(te.getAddr3());
 	}
 	//#38927 START
 	/**
