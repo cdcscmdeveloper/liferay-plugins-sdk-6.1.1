@@ -1549,7 +1549,6 @@ public class EvaluationMeetingBackingBean extends
 		ScCommitteeMember member = committeeActivity.get(index);
 		if (member.getMemberRoleId() == null){
 			this.roleChangedListener(member);
-			this.chnageMemberRole(index,committeeActivity);//adli
 			return;
 		}
 		
