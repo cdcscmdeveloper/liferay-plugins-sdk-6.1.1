@@ -3982,7 +3982,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				updateContractDetails(scLoa);
 				validateContractDetails(scLoa);
 				// 27868 - start
-				validateReasonStatus(scLoa);
+				if (validateProcurementTypeisRPT(scLoa.getCreatedDate()).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
+					validateReasonStatus(scLoa);
+				}
 				// 27868 - end
 				
 			
