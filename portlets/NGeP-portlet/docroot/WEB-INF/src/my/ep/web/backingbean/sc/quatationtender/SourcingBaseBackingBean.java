@@ -3179,33 +3179,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public String getProcurementTypeToolTip(Date date) {
 		// MaxProcurementAmt
-		BigDecimal zeroAmt = new BigDecimal(0); //#27868
-		DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
 		// 27868 - start
-		String parameterType = validateProcurementTypeisRPT(date);
 		String message;
-		if (parameterType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) {
-			message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip.rpt", null,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else {
-			BigDecimal maxProcurementAmt = getToolTipsPRThresholdAmount(); //#27868
-			
-			if (zeroAmt.compareTo(maxProcurementAmt) > 0) {
-				String notAvailable = ResourceBundleUtils.getMessage("lbl.txt.na ",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-
-				message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip",
-						new String[] { notAvailable }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-			} else {
-				message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip",
-						new String[] { amountDF.format(maxProcurementAmt) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-			}
-		}
-
+		message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip.rpt", null,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		// 27868 - end
 		return message;
 	}
