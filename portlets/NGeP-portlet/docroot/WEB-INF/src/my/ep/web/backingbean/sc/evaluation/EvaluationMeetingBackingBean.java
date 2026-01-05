@@ -1549,6 +1549,7 @@ public class EvaluationMeetingBackingBean extends
 		ScCommitteeMember member = committeeActivity.get(index);
 		if (member.getMemberRoleId() == null){
 			this.roleChangedListener(member);
+			this.chnageMemberRole(index,committeeActivity);//adli
 			return;
 		}
 		
@@ -2432,6 +2433,7 @@ public class EvaluationMeetingBackingBean extends
 			if (!modified) {
 				return;
 			}
+			this.getManagedBean().getEvalBB().getManagedBean().setScQtCommittee(this.getManagedBean().getScQtCommittee());//#39637
 			evalBB.submitCommitteeUpdate();
 		} else {
 			submitMettingDetails(outcome);
