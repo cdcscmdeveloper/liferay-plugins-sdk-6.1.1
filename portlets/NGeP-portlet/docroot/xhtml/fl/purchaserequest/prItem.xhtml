@@ -172,6 +172,11 @@
 					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline2']}" escape="false"  />
 				</c:when>
 			</c:choose>
+			<!-- #31344 add instruction for item -->
+			<br/><br/> 
+			<h:outputText styleClass="instruction" style="color: #009ae5;" value="#{lbl['lbl.fl.instruction.item.list3']}" escape="false"  /><br/>
+			<h:outputText styleClass="instruction" style="color: #009ae5;" value="#{lbl['lbl.fl.instruction.item.list4']}" escape="false"  /><br/>
+			<h:outputText styleClass="instruction" style="color: #009ae5;" value="#{lbl['lbl.fl.instruction.item.list5']}" escape="false"  /><br/><br/>
 			<p:dataTable id="itemDataTable" var="flItem" 
 				rowIndexVar="index"
 				value="#{purchaseRequestBackingBean.managedBean.showAllItemsRows}"
@@ -199,13 +204,24 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.details(a)']}"/>
 				</f:facet>
 				<h:panelGroup style="text-align:left; width:25%">	
-					<h:outputText rendered="#{flItem.scRequestItem.cmItem==null}" value="#{flItem.scRequestItem.tempUnspscCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="text-align:left; float:left;"/>
-					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="text-align:left; float:left;"/>
+					<h:outputText rendered="#{flItem.scRequestItem.cmItem==null}" value="#{flItem.scRequestItem.tempUnspscCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="text-align:left; float:left;"/>				
+					<!-- #31344 display item details in popup -->				
+					<p:commandLink rendered="#{flItem.scRequestItem.cmItem!=null}" 
+						oncomplete="itemDescDialogId.show();" 
+						value="#{flItem.scRequestItem.cmItem.extensionCode}" 
+						title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}"
+						style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
+						action="#{purchaseRequestBackingBean.showItemDescPopup(flItem.scRequestItem.cmItem.itemId)}" 
+						process="@this" 
+						update="@([id$=itemDescDialogId])"/>
 					<span style="white-space:pre-wrap; text-align:left; float:left;">(<h:outputText value="#{flItem.scRequestItem.uom.uomName}" />)</span>
 							<br />
-							<!--#21416 filter item name-->
-					<h:outputText value="#{purchaseRequestBackingBean.filterItemName(flItem.scRequestItem.itemName)}" id="itemDesc" style="white-space:pre-wrap; text-align:left; float:left;" />
-							<br />
+						<!--#31344 filter item name-->
+						<h:outputText
+							value="#{purchaseRequestBackingBean.filterNARequestItemName(flItem.scRequestItem.requestNoteItemId)}"
+							id="itemDesc"
+							style="white-space:pre-wrap; text-align:left; float:left;" />
+						<br />
 <!--#16344 Display SKU-->
 					<h:outputText value="#{purchaseRequestBackingBean.getSkuDescription(flItem.scRequestItem)}"
 					style="white-space:pre-wrap; text-align:left; float:left;" />				
