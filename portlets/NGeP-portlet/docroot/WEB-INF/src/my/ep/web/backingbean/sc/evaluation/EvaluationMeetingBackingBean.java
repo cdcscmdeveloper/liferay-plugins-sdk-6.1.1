@@ -2432,7 +2432,7 @@ public class EvaluationMeetingBackingBean extends
 			if (!modified) {
 				return;
 			}
-			this.getManagedBean().getEvalBB().getManagedBean().setScQtCommittee(this.getManagedBean().getScQtCommittee());//#39637
+			evalBB.getManagedBean().setScQtCommittee(this.getManagedBean().getScQtCommittee());//#39637
 			evalBB.submitCommitteeUpdate();
 		} else {
 			submitMettingDetails(outcome);
