@@ -21,6 +21,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjReorgSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
@@ -30,7 +31,10 @@ import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.fl.SLALogFulfilmentConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -44,6 +48,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
@@ -61,6 +66,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -2029,5 +2035,243 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	
 	//Enhancement 29550 - end
+	
+	//#31344 start
+	/**
+	 * Construct condition field for PTJ and Approve Other PTJ
+	 * 
+	 * @return
+	 */
+	public String getPTJWithApproveOtherPTJCondition() {
+		String condition = "";
+		if (getManagedBean().getPtjGroup() != null) {
+			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()) + "^"
+					+ this.getManagedBean().getPtjGroup().getOrgProfileId();
+		}
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPtjReorgSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		PmOrgProfile orgProfile = null;
+		if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
+			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+		}
+		String ptjList = orgProfile.getOrgProfileId() + "";
+		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+		ptjReqDTO.setDeepLevel(true);
+		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+
+		for (PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+			ptjList = ptjList + "," + pmPtjReorg.getOldPtjId();
+		}
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(reqDTO);
+		for (Long pmProfileGroup : resDTO.getOrgProfileIdList()) {
+			if (!pmProfileGroup.equals(orgProfile.getOrgProfileId())) {
+				ptjList = ptjList + "," + pmProfileGroup;
+			}
+		}
+		condition = condition + "|orgProfileId^" + ptjList + "^9";
+
+		return condition;
+	}
+
+	/**
+	 * Construct condition field for PTJ Group and Approve Other PTJ
+	 * 
+	 * @return
+	 */
+	public String getPTJGroupWithApproveOtherPTJCondition() {
+		String condition = "";
+		if (getManagedBean().getMinistry() != null) {
+			condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),
+					OrganizationType.MINISTRY.value()) + "^" + this.getManagedBean().getMinistry().getOrgProfileId();
+		}
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		IPtjReorgSO ptjReorgSO = (IPtjReorgSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPtjReorgSO.class);
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		PmOrgProfile orgProfile = null;
+		if (userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size() > 0) {
+			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+		}
+		String kumpulanPtjList = retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId() + "";
+		PtjReorgReqDTO ptjReqDTO = new PtjReorgReqDTO();
+		ptjReqDTO.setDeepLevel(true);
+		ptjReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		PtjReorgResDTO ptjResDTO = ptjReorgSO.retrieveOldPtjByNewPtjId(ptjReqDTO);
+		PmOrgProfile kumpulanPtj = null;
+		for (PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
+			kumpulanPtj = retrieveJabatanOrgProfile(pmPtjReorg.getOldPtjId());
+			if (kumpulanPtj != null) {
+				kumpulanPtjList = kumpulanPtjList + "," + kumpulanPtj.getOrgProfileId();
+			}
+		}
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveProfileGroupByMainOrgProfileId(reqDTO);
+		for (Long pmProfileGroup : resDTO.getOrgProfileIdList()) {
+			if (!pmProfileGroup.equals(orgProfile.getOrgProfileId())) {
+				kumpulanPtjList = kumpulanPtjList + "," + retrieveJabatanOrgProfile(pmProfileGroup).getOrgProfileId();
+			}
+		}
+		condition = condition + "|orgProfileId^" + kumpulanPtjList + "^9";
+
+		return condition;
+	}
+
+	/**
+	 * Get condition field for PTJ - Internal Auditor
+	 * 
+	 * @return
+	 */
+	public String getPTJInternalAuditorCondition() {
+		String condition = "";
+		if (getManagedBean().getPtjGroup() != null) {
+			condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()) + "^"
+					+ this.getManagedBean().getPtjGroup().getOrgProfileId();
+		}
+
+		return condition;
+	}
+
+	/**
+	 * Get condition field for PTJ Group - Internal Auditor
+	 * 
+	 * @return
+	 */
+	public String getPTJGroupInternalAuditorCondition() {
+		String condition = "";
+		if (getManagedBean().getMinistry() != null) {
+			condition = OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),
+					OrganizationType.MINISTRY.value()) + "^" + this.getManagedBean().getMinistry().getOrgProfileId();
+		}
+
+		return condition;
+	}
+	
+	/**
+	 * Construct condition field for PTJ by user role code
+	 * 
+	 * @return
+	 */
+	public String constructConditionForPTJByRole() {
+		String condition = "";
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			condition = getPTJWithApproveOtherPTJCondition();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			condition = getPTJInternalAuditorCondition();
+		} else {
+			condition = getPTJCondition();
+		}
+		return condition;
+	}
+
+	/**
+	 * Construct condition field for PTJ Group by user role code
+	 * 
+	 * @return
+	 */
+	public String constructConditionForPTJGroupByRole() {
+		String condition = "";
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			condition = getPTJGroupWithApproveOtherPTJCondition();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			condition = getPTJGroupInternalAuditorCondition();
+		} else {
+			condition = constuctConditionFieldsForPTJGroup();
+		}
+		return condition;
+	}
+
+	/**
+	 * Disable PTJ Group lov by user role code
+	 * 
+	 * @return
+	 */
+	public boolean disablePtjGroupLovThresholdReport() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			return false;
+		} else {
+			return disablePtjGroupLov();
+		}
+	}
+
+	/**
+	 * Disable PTJ lov by user role code
+	 * 
+	 * @return
+	 */
+	public boolean disablePtjLovThresholdReport() {
+		if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			return false;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+			if (getManagedBean().getPtjGroup() == null) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return disablePtjLov();
+		}
+	}
+	
+	/**
+	 * Get select item for document status by doctype
+	 * 
+	 * @param docType
+	 * @return
+	 */
+	public SelectItem[] getStatusDropdownValuesForItemThreshold(String docType) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(
+					ModuleCodeConst.ORDER_FULFILLMENT, docType, null);
+			List<PmStatusDesc> statusDescsItemThreshold = new ArrayList<PmStatusDesc>();
+
+			for (PmStatusDesc statusDesc : statusDescs) {
+				if (statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT)
+						|| statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_CLOSED)
+						|| statusDesc.getPmStatus().getStatusId()
+								.equals(FulfilmentStatusConst.PO_CLOSED_MANUAL_PAYMENT_1GFMAS)) {
+					statusDescsItemThreshold.add(statusDesc);
+				}
+			}
+
+			items = new SelectItem[statusDescsItemThreshold.size() + 1];
+			items[0] = new SelectItem(0L, ResourceBundleUtils.getMessage("lbl.txt.all",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			for (PmStatusDesc statusDescYep : statusDescsItemThreshold) {
+				items[i++] = new SelectItem(statusDescYep.getPmStatus().getStatusId(), statusDescYep.getStatusName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+	//#31344 end
 
 }
