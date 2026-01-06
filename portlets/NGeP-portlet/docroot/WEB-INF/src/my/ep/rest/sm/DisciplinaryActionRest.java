@@ -210,8 +210,8 @@ public class DisciplinaryActionRest {
 							(!da.isPendingCancel() && !da.isPendingBlacklist() )){
 						da.getSmSupplier();
 							
-						// 39104 - START
-						if (da.getStartDate().compareTo(todayWithZeroTime) == 0 && da.isBlacklistOwner()){
+						// 39104 - START, 39653
+						if (da.getStartDate().compareTo(todayWithZeroTime) == 0){
 							da.setFutureImposed(true);
 							}
 						// 39104 - END
