@@ -1141,9 +1141,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)) && scRequestNote != null) {
 		    checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
-			validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
-			validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
-					getManagedBean().getRequestSupplierItem());
+		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
+				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
+				validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
+						getManagedBean().getRequestSupplierItem());
+		    }
 			// 27868 - end
 		}
 		// 26284 - End
