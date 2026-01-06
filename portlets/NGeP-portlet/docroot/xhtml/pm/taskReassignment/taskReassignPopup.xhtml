@@ -73,12 +73,20 @@
 					value="#{taskReassignmentBackingBean.userListDataModel}">
 					<p:ajax event="rowSelect" />
 					<ac:paginator for="dtTaskReassign" />
-					<p:column headerText="#{lbl['lbl.pm.ta.name']}">  
-			    		#{user.userName}
-		        	</p:column>
-		        	<p:column headerText="#{lbl['lbl.pm.ic.no']}">  
-			    		#{user.identificationNo}
-		        	</p:column>
+					<!-- 36053 Start -->
+					<p:column headerText="#{lbl['lbl.pm.ta.name']}">
+						<h:outputText rendered="#{user.userName == null}"
+							value="#{lbl['lbl.pp.no.record.found']}" />
+						<h:outputText rendered="#{user.userName != null}"
+							value="#{user.userName}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.pm.ic.no']}">
+						<h:outputText rendered="#{user.identificationNo == null}"
+							value="#{lbl['lbl.pp.no.record.found']}" />
+						<h:outputText rendered="#{user.identificationNo != null}"
+							value="#{user.identificationNo}" />
+					</p:column>
+					<!-- 36053 End -->
 				</p:dataTable>
 				<table style="width: 100%;">
 					<c:if
@@ -99,12 +107,15 @@
 					<tr>
 						<td colspan="2" style="text-align: right;">
 							<!-- 34445 start -->
+							<!-- 36053 Start -->
 							<p:commandButton
+								rendered="#{taskReassignmentBackingBean.managedBean.enableAssignButton}" 
 								value="#{lbl['lbl.pm.ta.btn.assign']}"
-								oncomplete="if (!args.validationFailed) assignInfoDlg.show()" >
+								oncomplete="if (!args.validationFailed) assignInfoDlg.show()">
 								<f:param name="disableValidation" value="true" />
-							</p:commandButton>
+							</p:commandButton> 
 							<!-- 34445 end -->
+							<!-- 36053 End -->
 							<p:commandButton id="cbCancel"
 								value="#{lbl['lbl.btn.cancel']}" process="@this"
 								oncomplete="dlTaskReassignment.hide()" immediate="true" /></td>

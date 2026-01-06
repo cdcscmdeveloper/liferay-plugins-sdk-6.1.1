@@ -95,6 +95,10 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private boolean fromUserMaintenanceDetails;
 	private PmOrgProfile pmOrgProfile;
 	private PmUser pmUser;
+	
+	//#36053 Start
+	private boolean enableAssignButton;
+	//#36053 End
 
 	public TaskReassignmentManagedBean(){}
 
@@ -708,4 +712,14 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
 	}
+
+	//#36053 Start
+	public boolean isEnableAssignButton() {
+		return enableAssignButton;
+	}
+
+	public void setEnableAssignButton(boolean enableAssignButton) {
+		this.enableAssignButton = enableAssignButton;
+	}
+	//#36053 End
 }
