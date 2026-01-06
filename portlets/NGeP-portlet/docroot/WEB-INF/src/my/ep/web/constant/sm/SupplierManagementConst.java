@@ -236,6 +236,7 @@ public class SupplierManagementConst {
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
+	public static final String SECTION_SUPPLIER = "S";
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
@@ -1557,6 +1558,10 @@ public class SupplierManagementConst {
 
 	public String getSECTION_REV_ROLE_APP() {
 		return SECTION_REV_ROLE_APP;
+	}
+	
+	public String getSECTION_SUPPLIER() {
+		return SECTION_SUPPLIER;
 	}
 	// 36504 - END
 	

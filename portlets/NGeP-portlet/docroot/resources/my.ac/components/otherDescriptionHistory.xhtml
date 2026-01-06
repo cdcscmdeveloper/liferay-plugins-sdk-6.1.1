@@ -3,7 +3,9 @@
     <cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.other.desc.history.header']}" />
     <cc:attribute name="categoryCodeList" type="java.util.List" required="true" />
     <cc:attribute name="applNo" type="java.lang.String" required="true" />
-    <cc:attribute name="otherDescChange" type="boolean" />
+    <cc:attribute name="otherDescChangePO" type="boolean" />
+    <cc:attribute name="otherDescChangeApprover" type="boolean" />
+    <cc:attribute name="otherDescChangeSupplier" type="boolean" />
   </cc:interface>
   <cc:implementation>
 	<p:dialog id="otherDescriptionHistoryDlgId"
@@ -12,7 +14,8 @@
          height="700px">
       <p:outputPanel id="otherDescriptionMsg"
 		style="max-height:700px; overflow-y:auto; display:block;">
-        <ui:repeat var="cat" value="#{cc.attrs.categoryCodeList}" rendered="#{cc.attrs.otherDescChange}">
+        <ui:repeat var="cat" value="#{cc.attrs.categoryCodeList}" rendered="#{cc.attrs.otherDescChangePO or 
+        cc.attrs.otherDescChangeApprover or cc.attrs.otherDescChangeSupplier}">
 				<p:panel rendered="#{not empty cat.smSuppCatOtherDescHistory}">
 				 <h:outputText value="#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
 							 (#{empty cat.categoryL1Name ? cat.pmCategoryL1.categoryName : cat.categoryL1Name}, 
@@ -42,10 +45,11 @@
 							</h:outputText>
 						</p:column>
 						<p:column
-							headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']}"
+							headerText="#{lbl['lbl.sm.other.desc.history.information.supplier']} cat.smSuppCatOtherDescHistory[0].roleType"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
-							<h:outputText rendered="#{not empty otherDescBean}"
-								value="#{cat.otherDesc}" />
+							<h:outputText
+								rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_SUPPLIER}"
+								value="#{otherDescBean.otherDesc}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.update.information.po']}"
@@ -53,6 +57,10 @@
 							<h:outputText
 								rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}"
 								value="#{otherDescBean.otherDesc}" />
+							<h:outputText
+								rendered="#{cat.smSuppCatOtherDescHistory[0].roleType ne SupplierManagementConst.SECTION_REV_ROLE_PO and 
+								cat.smSuppCatOtherDescHistory[0].roleType ne SupplierManagementConst.SECTION_REV_ROLE_APP}"
+								value="#{cat.otherDesc}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}"
@@ -67,6 +75,10 @@
 							<h:outputText
 								rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP}"
 								value="#{otherDescBean.otherDesc}" />
+							<h:outputText
+								rendered="#{cat.smSuppCatOtherDescHistory[0].roleType ne SupplierManagementConst.SECTION_REV_ROLE_PO and 
+								cat.smSuppCatOtherDescHistory[0].roleType ne SupplierManagementConst.SECTION_REV_ROLE_APP}"
+								value="#{cat.otherDesc}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}"
@@ -79,7 +91,7 @@
 					<br />
 				</p:panel>
 			</ui:repeat>
-			<p:panel rendered="#{not cc.attrs.otherDescChange}">
+			<p:panel rendered="#{not cc.attrs.otherDescChangePO and not cc.attrs.otherDescChangeApprover and not cc.attrs.otherDescChangeSupplier}">
 			<p:dataTable id="OtherDescriptionDtId2" var="otherDescBean"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{cat.smSuppCatOtherDescHistory}" rowKey="#{otherDescBean}"

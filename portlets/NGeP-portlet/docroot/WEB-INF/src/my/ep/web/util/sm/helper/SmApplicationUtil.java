@@ -4582,26 +4582,29 @@ public class SmApplicationUtil {
 			List<SmSupplierCategory> catList = new ArrayList<>();
 			List<SmSupplierCategory> apprvList = new ArrayList<>();
 			// 36504 - START
-			managedBean.setOtherDescChange(false);
+			managedBean.setOtherDescChangePO(false);
+			managedBean.setOtherDescChangeApprover(false);
+			managedBean.setOtherDescChangeSupplier(false);
 			// 36504 - END
 			for (SmSupplierCategory cat : managedBean.getSmAppl()
 					.getSmSupplierCategories()) {
 				
 				// 36504 - START
-				String catType = cat.getPmCategoryL3().getCategoryTypeCode()
-						.getParameterCode();
+				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
-				if (catType
-						.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-						|| catType
-								.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
-					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat
-							.getSupplierCategoryId()));
+				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+						cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
 					managedBean.getOtherDescDataModel().reloadData();
-					if (!EntityHelper.isCollectionEmpty(cat
-							.getSmSuppCatOtherDescHistory())
-							&& !managedBean.isOtherDescChange()) {
-						managedBean.setOtherDescChange(true);
+					if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangePO() && managedBean.isPoUser()) {
+						managedBean.setOtherDescChangePO(true);
+					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangeApprover() && managedBean.isApproverUser()) {
+						managedBean.setOtherDescChangeApprover(true);
+					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChangeSupplier() && managedBean.isSupplierUser()) {
+						managedBean.setOtherDescChangeSupplier(true);
 					}
 				}
 				// 36504 - END
@@ -4706,12 +4709,14 @@ public class SmApplicationUtil {
 
 	private static void assignExistingAndAdditionalCategoryList(
 			SmApplicationManagedBean managedBean) {
-		List<SmSupplierCategory> addtnlList = new ArrayList<SmSupplierCategory>();
-		List<SmSupplierCategory> existingList = new ArrayList<SmSupplierCategory>();
+		List<SmSupplierCategory> addtnlList = new ArrayList<>();
+		List<SmSupplierCategory> existingList = new ArrayList<>();
 		//#34209 START - to remove category with deleted status in the list - fix issue active category show in addcat list
-		List<SmSupplierCategory> delCatList = new ArrayList<SmSupplierCategory>();
+		List<SmSupplierCategory> delCatList = new ArrayList<>();
 		// 36504 - START
-		managedBean.setOtherDescChange(false);
+		managedBean.setOtherDescChangePO(false);
+		managedBean.setOtherDescChangeApprover(false);
+		managedBean.setOtherDescChangeSupplier(false);
 		// 36504 - END
 		for(SmSupplierCategory filtCat : managedBean.getSmAppl().getSmSupplier()
 				.getSmAppl().getSmSupplierCategories()){
@@ -4731,16 +4736,18 @@ public class SmApplicationUtil {
 			String catType = cat.getPmCategoryL3().getCategoryTypeCode()
 					.getParameterCode();
 			cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
-			if (catType
-					.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-					|| catType
-							.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
-				cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat
-						.getSupplierCategoryId()));
-				if (!EntityHelper.isCollectionEmpty(cat
-						.getSmSuppCatOtherDescHistory())
-						&& !managedBean.isOtherDescChange()) {
-					managedBean.setOtherDescChange(true);
+			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+				cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+						&& !managedBean.isOtherDescChangePO() && managedBean.isPoUser()) {
+					managedBean.setOtherDescChangePO(true);
+				} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+						&& !managedBean.isOtherDescChangeApprover() && managedBean.isApproverUser()) {
+					managedBean.setOtherDescChangeApprover(true);
+				} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+						&& !managedBean.isOtherDescChangeSupplier() && managedBean.isSupplierUser()) {
+					managedBean.setOtherDescChangeSupplier(true);
 				}
 			}
 			// 36504 - END
