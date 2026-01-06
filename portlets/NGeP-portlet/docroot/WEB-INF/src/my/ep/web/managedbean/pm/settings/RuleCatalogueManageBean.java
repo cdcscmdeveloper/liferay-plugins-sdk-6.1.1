@@ -204,7 +204,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	// #35323 - Start
 	private boolean selectedAllSuppAccountType;
 	private boolean newPRList;
-	private List<Long>  selectedSuppAccountType;
+	private List<Long> selectedSuppAccountType;
 	private List<PmParameterDesc> supplierType;
 	private Integer index;
 	// #35323 - End
