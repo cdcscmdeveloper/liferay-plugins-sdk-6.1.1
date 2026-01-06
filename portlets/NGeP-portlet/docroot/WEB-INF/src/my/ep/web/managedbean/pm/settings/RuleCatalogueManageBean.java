@@ -203,7 +203,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	// #35323 - Start
 	private boolean selectedAllSuppAccountType;
-	private List<Long>  selectedSuppAccountType;
+	private boolean newPRList;
+	private List<Long> selectedSuppAccountType;
 	private List<PmParameterDesc> supplierType;
 	private Integer index;
 	// #35323 - End
@@ -2072,6 +2073,14 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 */
 	public void setIndex(Integer index) {
 		this.index = index;
+	}
+	
+	public boolean isNewPRList() {
+		return newPRList;
+	}
+
+	public void setNewPRList(boolean newPRList) {
+		this.newPRList = newPRList;
 	}
 	// #35323 - End
 }
