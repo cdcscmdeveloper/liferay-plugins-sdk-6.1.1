@@ -109,13 +109,13 @@
 							<!-- 34445 start -->
 							<!-- 36053 Start -->
 							<p:commandButton
-								rendered="#{taskReassignmentBackingBean.managedBean.enableAssignButton}" 
+								disabled="#{!taskReassignmentBackingBean.managedBean.enableAssignButton}"
 								value="#{lbl['lbl.pm.ta.btn.assign']}"
 								oncomplete="if (!args.validationFailed) assignInfoDlg.show()">
 								<f:param name="disableValidation" value="true" />
-							</p:commandButton> 
-							<!-- 34445 end -->
+							</p:commandButton>
 							<!-- 36053 End -->
+							<!-- 34445 end -->
 							<p:commandButton id="cbCancel"
 								value="#{lbl['lbl.btn.cancel']}" process="@this"
 								oncomplete="dlTaskReassignment.hide()" immediate="true" /></td>
