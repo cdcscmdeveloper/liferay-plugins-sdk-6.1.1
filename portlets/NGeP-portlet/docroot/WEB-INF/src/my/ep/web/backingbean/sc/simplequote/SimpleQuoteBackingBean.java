@@ -95,6 +95,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -4055,43 +4056,7 @@ public class SimpleQuoteBackingBean extends
 	public void submitPromptAction() {
 		debugLogger("submitPromptAction");
 		ScQuote quote = getManagedBean().getScQuote();
-		getManagedBean().setAutoUpdate(Boolean.TRUE);
-		
-		// #25725 start
-		if(!quote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){		
-			BigDecimal val = new BigDecimal ("5");
-			int result = 0;		
-			for(TplSpecQuestion tplSpecQuestion : getManagedBean()
-				.getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){		
-						
-				if(tplSpecQuestion.getClDurationMonth()!=null){
-					result =  tplSpecQuestion.getClDurationMonth().compareTo(val);
-				}
-			
-				if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
-				(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) && (result<0 && result != 0))){
-					validateDuration();
-					return;				
-				}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
-				(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && (result<0 && result != 0))){
-					validateDuration();
-					return;				
-				}else if((tplSpecQuestion.getClFulfilmentTypeCode() != null && 
-				tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) && (result>0 || result == 0)){
-					validateDuration();
-					return;			
-				}else if((tplSpecQuestion.getClFulfilmentTypeCode() != null && 
-				tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN))&& (result>0 || result == 0)){
-					validateDuration();
-					return;				
-				}
-			}
-		}
-		//#25725 end		
+		getManagedBean().setAutoUpdate(Boolean.TRUE);		
 		
 		// validate quote
 		validateQuote(quote, true);
@@ -4812,6 +4777,7 @@ public class SimpleQuoteBackingBean extends
 		StringBuilder stateCriteria = new StringBuilder();
 		StringBuilder divCriteria = new StringBuilder();
 		StringBuilder distCriteria = new StringBuilder();
+		StringBuilder recordStatus = new StringBuilder();//#26284 - Start
 
 		// business nature criteria
 		if (getManagedBean().isByBusinessNature()) {
@@ -4947,7 +4913,16 @@ public class SimpleQuoteBackingBean extends
 		}
 		// #28536 - end
 
-		criteria.append("recordStatus^1");
+		// #26284 - Start
+		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_DELETED);
+
+		criteria.append("recordStatus")
+		.append("^").append(recordStatus.toString())
+		.append("^").append(SearchOperator.OPERATOR_IN.value());
+
+		// #26284 - End
 		return criteria.toString();
 	}
 	
@@ -5659,6 +5634,11 @@ public class SimpleQuoteBackingBean extends
 			FacesScopes facesScopes = new FacesScopes();
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
+			
+			//#38916
+			log.info("Recalculation SAVE action");
+			recalculationSpecAnswer();
+			//#38916
 
 			// tpl spec - product
 			List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
@@ -5800,6 +5780,11 @@ public class SimpleQuoteBackingBean extends
 		if (!isServiceContainPrice && !isProdContainPrice) {
 			throw new EpException(MessageConst.ERROR_700105);
 		}
+		
+		//#38916
+		log.info("Recalculation SUBMIT action");
+		recalculationSpecAnswer();
+		//#38916
 		
 		//gpki for only govt seller
 		if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
@@ -8231,22 +8216,6 @@ public class SimpleQuoteBackingBean extends
 		}
 		// #29832 end
 		
-		//#25725 start
-		public void validateDuration() {
-			
-			Locale locale = new FacesScopes().getUserLocale();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
-							.getMessage(
-									ResourceBundleUtils.getMessage("lbl.ct.sq.duration",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));		
-				
-			
-		}
-		//#25725 end
 		
 		//29832 start
 		public String excludeLevelCodeSupplier(){
@@ -8310,4 +8279,56 @@ public class SimpleQuoteBackingBean extends
 
 	}
 	// 36301 - end
+	
+	// #38916 - Start
+	/**
+	 * To recalculate spec answer before submission.
+	 */
+	private void recalculationSpecAnswer() {
+		// Calculate for Product
+		List<TplSpecAnswer> calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
+		if (calcSpecAnswersProduct != null) {
+			log.info("==============================================================");
+			log.info("Bug 38916 Product (set all to null)");
+			for (TplSpecAnswer specAnswerProduct : calcSpecAnswersProduct) {
+				specAnswerProduct.setAnswerNumeric(null);
+				log.info("SpecAnswerId : " + specAnswerProduct.getSpecAnswerId() + " - AnswerNumeric : "
+						+ specAnswerProduct.getAnswerNumeric());
+			}
+
+			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(
+					getManagedBean().getProductTemplateSpecBean());
+			calcSpecAnswersProduct = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
+
+			log.info("Bug 38916 Product (After calculation)");
+			for (TplSpecAnswer specAnswerProduct : calcSpecAnswersProduct) {
+				log.info("SpecAnswerId : " + specAnswerProduct.getSpecAnswerId() + " - AnswerNumeric : "
+						+ specAnswerProduct.getAnswerNumeric());
+			}
+		}
+
+		// Calculate for Service
+		List<TplSpecAnswer> calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+		if (calcSpecAnswersService != null) {
+			log.info("==============================================================");
+			log.info("Bug 38916 Service (set all to null)");
+			for (TplSpecAnswer specAnswerService : calcSpecAnswersService) {
+				specAnswerService.setAnswerNumeric(null);
+				log.info("SpecAnswerId : " + specAnswerService.getSpecAnswerId() + " - AnswerNumeric : "
+						+ specAnswerService.getAnswerNumeric());
+			}
+
+			getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(
+					getManagedBean().getServiceTemplateSpecBean());
+			calcSpecAnswersService = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+
+			log.info("Bug 38916 Service (After calculation)");
+			for (TplSpecAnswer specAnswerService : calcSpecAnswersService) {
+				log.info("SpecAnswerId : " + specAnswerService.getSpecAnswerId() + " - AnswerNumeric : "
+						+ specAnswerService.getAnswerNumeric());
+			}
+			log.info("==============================================================");
+		}
+	}
+	// #38916 - End
 }

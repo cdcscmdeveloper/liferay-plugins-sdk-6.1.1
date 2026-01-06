@@ -13,36 +13,6 @@
 		value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
 	<ui:param name="isContractTypeCentral"
 		value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode eq ParameterConst.contractTypeCentral}" />
-	<!-- #25725 start -->
-	<ui:param name="isPeriodic" value="#{(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen) or
-	(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled)}"></ui:param>
-	<ui:param name="isOneOff" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff}"></ui:param>
-	<ui:param name="isNonPeriodic" value="#{(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen) or
-	(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"></ui:param>
-	<ui:param name="isPK7" value="#{lOADetailBackingBean.isPK7(lOADetailBackingBean.managedBean.scLoa)}"></ui:param><!-- #25725 note 146 -->
-	
-	<c:if test="#{lOADetailBackingBean.managedBean.above500K}">
-		<ui:param name="above500K" value="#{true}"></ui:param>
-	</c:if>
-	<c:if test="#{!lOADetailBackingBean.managedBean.above500K}">
-		<ui:param name="above500K" value="#{false}"></ui:param>
-	</c:if>
-	
-	<!-- #25725 note 146 start -->
-	<ui:param name="reasonPK2"  
-		value="#{lOADetailBackingBean.isReasonPK2(lOADetailBackingBean.managedBean.scLoa)}" />
-	<ui:param name="reasonSpecialItem"  
-		value="#{lOADetailBackingBean.isReasonSpecialItem(lOADetailBackingBean.managedBean.scLoa)}" />	
-	<!-- #25725 note 146 end -->
-	
-	<!-- #25725 end -->	
-	
-	<!-- #25726 start -->
-	<ui:param name="StatusLOASubmission" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
-	<ui:param name="StatusLOAApproval" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_APPROVAL}"></ui:param>
-	<ui:param name="StatusLOARevision" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION}"></ui:param>
-	<ui:param name="StatusLOARevisionApproval" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION_APPROVAL}"></ui:param>
-	<!-- #25726 end -->
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -323,28 +293,7 @@
 				</c:if>
 			</td>
 		</tr>
-		<!-- #25725 start -->
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.request.note.fulfill.type']}" />				
-			</td>
-			<td colspan="3">
-				<p:inputText 
-					value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode)}"
-					disabled="true" size="35"/>
-				<!-- #25726 START -->
-				<c:if test="#{isDocTypeQuotation}">
-					<!-- Reopen #25726 note 221 - issue 12 -->			 
-					<ac:iconTooltip rendered ="#{!isContractTypeCentral}"  value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
-				</c:if>
-				<c:if test="#{!isDocTypeQuotation}">
-					<!-- Reopen #25726 note 221 - issue 12 -->
-					<ac:iconTooltip rendered ="#{!isContractTypeCentral}"  value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
-				</c:if>
-				<!-- #25726 END -->								
-			</td>
-		</tr>
-		<!-- #25725 end -->
+		
 		<!-- Enhncement #24259 #24269 Workaround CJCP (LOA) - QT, DIRECT, DP -->
 		<tr>
 			<td>
@@ -422,12 +371,11 @@
 				<table>
 					<tr>
 						<td>
-						<!-- Reopen #25726 note 221 - issue 11 -->	
 							<p:selectOneRadio id="bondReq" styleClass="commonLabel"
 								value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
 								required="true"
 								label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
-								disabled="true">
+								disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.performanceBondMandatory or lOADetailBackingBean.managedBean.readOnly}">
 								<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax partialSubmit="true" process="@this" update="menuTab" />
 							</p:selectOneRadio>
@@ -628,40 +576,18 @@
 					<table>
 						<tr>
 							<td>
-								<!--#25725 start-->																
-								<h:panelGroup id="agReqID">									
-									<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
-										value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
-										required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-										disabled="#{(!isEditableStatus or lOADetailBackingBean.managedBean.readOnly) or lOADetailBackingBean.disabledButton()}">									
-									<f:selectItems id="agreementReqSelect"
-										value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />																		
-									<!-- #25725 note 146 --><p:ajax event="change" process="@this" update="@([id$=uploadApprovalLetterPg])"
-									listener="#{lOADetailBackingBean.onChangeAgreementReqType}"/>
-									</p:selectOneRadio>
-									<p:message id="agreementReqMsg" for="agreementReq" display="icon" />								
-								</h:panelGroup>								
-							<!--#25725 end-->	
+								<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
+									value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
+									required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+									disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.agreementMandatory or lOADetailBackingBean.managedBean.readOnly}">
+									<f:selectItems
+										value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								</p:selectOneRadio>
+								<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
 							</td>
 							<td style="margin-top: -3px">
-								<!-- #25726 START -->
-								<!-- Reopen #25726 note 221 - issue 13 -->	
-							<c:choose>
-								<c:when test="#{isContractTypeCentral}">
-								  <ac:iconTooltip
-									value="#{lbl['lbl.sc.required.agreement.qt.central.tooltip']}" />
-								</c:when>
-								<c:otherwise>
-							     <c:if test="#{isDocTypeQuotation}">
-									<ac:iconTooltip  value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
-								 </c:if>
-								 <c:if test="#{!isDocTypeQuotation}">
-									<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
-								 </c:if>
-								</c:otherwise>
-							</c:choose>	
-							<!-- #25726 END -->
-							</td>							
+								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
+							</td>
 						</tr>
 					</table>
 				</td>
@@ -676,88 +602,9 @@
 								value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						</p:selectOneRadio> <p:message id="isFollowLOAAmtMsg" for="isFollowLOAAmt"
 							display="icon" /></td>
-				</h:panelGroup>					
-				</tr>				
-				<!-- #25725 start -->
-				<tr>				
-					<td colspan="3">
-						<p:outputPanel id="uploadApprovalLetterPg"> 
-							<!-- #25726 START -->													
-							<!-- #25725 note 165  --><h:panelGroup  rendered="#{isEditableStatus and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and (!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and (!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)))}" 
-							required="true">
-							<!-- #25726 END -->
-								<table>
-									<tr>
-										<td width="300">
-											<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" escape="false"/> 
-											<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-										</td>
-										<td>
-											<p:outputPanel id="uploadedPage">						
-												<p:commandButton 
-												oncomplete="uploadApprovalLetterDlg.show();return false;"
-					 							icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg" 
-					 							rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null and isEditableStatus}"/><!-- #25725 note 165  -->							
-												<p:commandLink
-												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
-												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
-												action="#{lOADetailBackingBean.fileDownload}"
-												styleClass="blue_font"
-												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>
-												<p:commandLink oncomplete="deleteApprovalLetterDlg.show();return false;"
-												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null and !lOADetailBackingBean.disabledButton()}" process="@this" partialSubmit="true"
-												disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}">
-			   										<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-			 	 								</p:commandLink>
-			 	 							</p:outputPanel> 
-			 	 						</td>
-			 	 						<td style="margin-top: -3px">
-											<c:if test="#{isDocTypeQuotation}">
-												<ac:iconTooltip
-													value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" /> <ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
-											</c:if>
-											<c:if test="#{!isDocTypeQuotation}">
-												<ac:iconTooltip
-													value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
-											</c:if>
-										</td>
-			 	 					</tr>
-			 	 				</table>			 	 				
-			 	 			</h:panelGroup>	
-			 	 			<!-- #25725 note 165  --><h:panelGroup rendered="#{!isEditableStatus and !isSupplierAckStatus and !isAckReceiptSupplierActStatus and lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
-			 	 				<table>
-									<tr>
-										<td width="300">
-											<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" escape="false"/>											
-										</td>
-										<td>
-											<p:outputPanel id="uploadedPage2">																			
-												<p:commandLink
-												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
-												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
-												action="#{lOADetailBackingBean.fileDownload}"
-												styleClass="blue_font"
-												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>												
-			 	 							</p:outputPanel> 
-			 	 						</td>
-			 	 						<td style="margin-top: -3px">
-											<c:if test="#{isDocTypeQuotation}">
-												<ac:iconTooltip
-													value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" /> <ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
-											</c:if>
-											<c:if test="#{!isDocTypeQuotation}">
-												<ac:iconTooltip
-													value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
-											</c:if>
-										</td>
-			 	 					</tr>
-			 	 				</table>		
-			 	 			</h:panelGroup>	 							
-						</p:outputPanel>		 	 								
-					</td>
-					<td>
-					</td>
-				</tr>						
+				</h:panelGroup>
+			</tr>
+			
 		</table>
 	</p:panel>
 	<p:outputPanel id="suppRemarksPanel">
@@ -767,48 +614,4 @@
 			readonly="true"
 			rendered="#{not empty lOADetailBackingBean.managedBean.supplierRemarks}" />
 	</p:outputPanel>	
-	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
-		resizable="false" width="700px" height="350px" modal="true" 
-		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-		onShow="singleUploadListener(approvalLetterUploadWV);"
-		rendered="#{isEditableStatus and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and (!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and (!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)))}"> <!-- #38711  -->
-		<p:ajax event="close" />	
-		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
-		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
-			fileUploadListener="#{lOADetailBackingBean.fileUpload}" multiple="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="approvalLetterUploadWV"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}" 
-			update=":form:uploadedPage" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
-		</p:fileUpload>
-		<f:facet name="footer">
-		<div class="ppRightBtn">
-	    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadApprovalLetterDlg.hide();" />
-  		</div>
-  		</f:facet>
-	</p:dialog>
-	
-	
-	<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg"  appendToBody="true" 
-		message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"
-			partialSubmit="true" 
-			action="#{lOADetailBackingBean.fileDelete}"
-			oncomplete="deleteApprovalLetterDlg.hide();"  update="uploadedPage"/>
-			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteApprovalLetterDlg.hide();" />	
-		</div>
-	</p:confirmDialog>
-	
-	<p:confirmDialog id="changeAgreementReqDlg" widgetVar="changeAgreementReqDlg"  appendToBody="true" 
-		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="false">
-		<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="uploadApprovalLetterPg" process="@this"
-				partialSubmit="true" oncomplete="changeAgreementReqDlg.hide();" action="#{lOADetailBackingBean.agreementReqYes}"/>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" update="agReqID" onclick="changeAgreementReqDlg.hide();"
-				process="@this" partialSubmit="true" action="#{lOADetailBackingBean.agreementReqNo}"/>					
-		</div>
-	</p:confirmDialog>		
-	
-	<!-- #25725 end -->		
 </ui:composition>

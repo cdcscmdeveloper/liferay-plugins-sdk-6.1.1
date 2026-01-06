@@ -357,9 +357,7 @@ public interface QTConstants {
 	
 	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
 	
-	// #25726 - reopen note 110
-	public static final String SURAT_SETUJU_TERIMA = "Surat Setuju Terima (Termasuk Lampiran A)";
-	// #25726 end
+
 	
 	//#10542 Start Dayan
 	public static final String COMPLIANCE_DOCUMENT_SUPPLIER_NO = "Supplier ";
@@ -445,6 +443,14 @@ public interface QTConstants {
 	// 6906 - end
 	
 	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
+	// Bug #39065@Syazani 08/10/2025 -- Start
+	public static final int QT_VM_SPLIT_ZONENAME_SERVICE_MAXLENGTH = 5;
+	public static final int QT_VM_SPLIT_ZONENAME_PRODUCT_MAXLENGTH = 17;
+	// Bug #39065@Syazani 08/10/2025 -- End
 
 	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
+	// #39113 Start Vinod 25/09/2025
+	public static final String LBL_SC_REMARK = "lbl.sc.remark";
+	public static final String REMARK_MESSAGE_ID = "remarkMsg";
+	// #39113 End Vinod 25/09/2025
 }

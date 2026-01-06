@@ -898,21 +898,10 @@
 						</c:otherwise>
 					</c:choose>
 					</td>
-					<!-- #25726 start -->
-					 <td style="margin-top: -3px"> <!-- Reopen #25726 note 144 - issue 7 start -->
-						<ac:iconTooltip rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
-							<!-- #29521 - start --><!-- #28784 - start -->
-							<p:spacer width="10" height="5"/>
-								<p:graphicImage id="abc123" rendered="#{qTDetailBB.managedBean.isFulfilmentTypeChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
-								<p:tooltip for="abc123">
-									<p:outputLabel escape="false" value="#{createQtBB.getParameterDesc(qTDetailBB.managedBean.scQtHistory.fulfilmentType)}"  />
-								</p:tooltip>	
-							<!-- #29521 - end --><!-- #28784 - end -->
-					  <!-- Reopen #25726 note 144 - issue 7 end -->
-					 </td>
+
 					</tr></table></td>
-					<!-- #25726 end -->
 										
+
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"

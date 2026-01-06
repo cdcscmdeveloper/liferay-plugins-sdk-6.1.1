@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:dialog id="addMember" position="top" resizable="false"
+		header="#{lbl['lbl.sc.add']} #{committeBackingBean.managedBean.headerTitle}"
+		width="1060" height="600" widgetVar="committeeScreen3" modal="true"
+		styleClass="addQCMember">
+
+		<p:messages id="committeemessagesid" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false"
+			severity="error, info" />
+
+		<h:panelGroup id="newProfile" style="width:100%;margin-top:10px;">
+			<p:panel id="userTblid" header="#{lbl['lbl.btn.search']}"
+				toggleable="true">
+				<table style="width: 100%;">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td colspan="3"><p:inputText label="#{lbl['lbl.sc.name']}"
+								onkeypress="if (event.keyCode == 13) { committeeMaintenanceFcCommitteeAddSearch.jq.click(); return false; }"
+								value="#{committeBackingBean.managedBean.userQCSearchBean.name}"
+								size="64" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.id.type']}" /></td>
+						<td colspan="3"><p:selectOneMenu
+								value="#{committeBackingBean.managedBean.userQCSearchBean.identificationType}"
+								style="width: 178px;margin-bottom: 5px;">
+								<f:selectItems
+									value="#{committeBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" /></td>
+						<td colspan="3"><p:inputText
+								onkeypress="if (event.keyCode == 13) { committeeMaintenanceFcCommitteeAddSearch.jq.click(); return false; }"
+								value="#{committeBackingBean.managedBean.userQCSearchBean.identificationNo}"
+								size="30" /></td>
+					</tr>
+				</table>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
+						styleClass="BtnSpacing"
+						widgetVar="committeeMaintenanceFcCommitteeAddSearch"
+						action="#{committeBackingBean.validateUser}" update="userexistid"
+						process="@parent, userTblid" />
+
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
+						styleClass="BtnSpacing" action="#{committeBackingBean.reset}"
+						update="userTblid" resetValues="true" partialSubmit="true"
+						process="@this" />
+				</div>
+			</p:panel>
+			<p:panel id="committeeMaintenanceFinalizationResultSearch"
+				header="#{lbl['lbl.sc.search.result']}" toggleable="true">
+				<p:dataTable id="userexistid"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{committeBackingBean.managedBean.userSearchQCDataModel}"
+					selection="#{committeBackingBean.managedBean.selectedPmUser}"
+					rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
+					lazy="true" styleClass="committeeResults" style="width : 100%;"
+					rows="10" rowIndexVar="index">
+
+					<ac:paginator for="userexistid" />
+					<p:ajax event="rowSelect"
+						update="@([id$=committeeMaintenanceFinalizationAddOkBtnId])" />
+					<p:ajax event="rowUnselect"
+						update="@([id$=committeeMaintenanceFinalizationAddOkBtnId])" />
+					<p:ajax event="rowSelectCheckbox"
+						update="@([id$=committeeMaintenanceFinalizationAddOkBtnId])" />
+					<p:ajax event="rowUnselectCheckbox"
+						update="@([id$=committeeMaintenanceFinalizationAddOkBtnId])" />
+					<p:ajax event="toggleSelect"
+						update="@([id$=committeeMaintenanceFinalizationAddOkBtnId])" />
+					<p:column selectionMode="multiple" style="width:2%"
+						disabledSelection="#{committeeMember.memberRole.parameterCode eq 
+													ParameterConst.committeeRoleSecretary}" />
+
+					<p:column headerText="#{lbl['lbl.sc.name']}">
+						<h:outputText value="#{existcommitteeuser.userName}"
+							style="white-space: normal;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+						<h:outputText value="#{existcommitteeuser.identificationNo}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.designation']}">
+						<h:outputText value="#{existcommitteeuser.designation}"
+							style="white-space: normal;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.email']}">
+						<h:outputText value="#{existcommitteeuser.email}"
+							style="white-space: normal;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.grade']}">
+						<h:outputText value="#{existcommitteeuser.grade}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+							<ac:iconTooltip id="pnpTT#{index}"
+								value="#{lbl['lbl.sc.pnp.tooltip']}" />
+						</f:facet>
+						<h:outputText
+							value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.role']}">
+						#{committeBackingBean.getRoleDesc(existcommitteeuser)}
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
+				id="committeeMaintenanceFinalizationAddOkBtnId"
+				disabled="#{empty committeBackingBean.managedBean.selectedPmUser}"
+				process="@this, newProfile" update="@(.committeMemberDtls)"
+				actionListener="#{committeBackingBean.okFinalizeCommitteeAction}" />
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+				oncomplete="committeeScreen3.hide();" styleClass="BtnSpacing" />
+		</div>
+	</p:dialog>
+</ui:composition>

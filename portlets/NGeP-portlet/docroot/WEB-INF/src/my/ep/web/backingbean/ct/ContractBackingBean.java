@@ -1228,32 +1228,85 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to validate deduction type.
-	 * User can not selected same type of deduction again.
+	 * Validates the selected deduction type to prevent unsupported duplicates.
+	 * 
+	 * @param selectedDeduction the deduction row currently being edited
+	 * @param action optional context (e.g., from bulk operations); unused in current implementation
 	 */	
-	public void validateDeductionType(CtDeduction deduction)  {
+	public void validateDeductionType(CtDeduction selectedDeduction, String action)  { //#39632
 
-		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
+		if(!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 			int count = 0;
-			String parameterCode;
 			for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
 				PmParameter deductionTypeById = deId.getDeductionType();
-				PmParameter deductionType = deduction.getDeductionType();
+				PmParameter deductionType = selectedDeduction.getDeductionType();
 				if (deductionTypeById == null || deductionType == null)
 					break;
 				if (deductionTypeById.getParameterId() != null && deductionType.getParameterId() != null
 						&& deductionType.getParameterId().intValue() == deductionTypeById.getParameterId().intValue()) {
 					count++;
-					parameterCode =  getParameterCode(deductionTypeById);
-					if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && 
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
-						throw new EpException(MessageConst.ERROR_100046,
-								new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionType().getParameterId()))});
+					resetAndValidateDeduction(selectedDeduction, deductionTypeById, count, action); //#35506,//#39632
 				}
 			}
 		}
 	}
+	
+	// #35506,#39632 (Resetting and validation) - Start
+	/**
+	 * Overloaded method used for Ajax listener calls.
+	 * Delegates to the main method with action = null.
+	 *
+	 * @param deduction the deduction row being validated during user selection
+	 */
+	public void validateDeductionType(CtDeduction deduction) {
+	    validateDeductionType(deduction, null);
+	}
+	
+	/**
+	 * Processes validation and reset rules for deduction types.
+	 */
+	private void resetAndValidateDeduction(CtDeduction selectedDeduction, PmParameter deductionTypeById, int count, String action) { //#39632
+
+	    String parameterCode = getParameterCode(deductionTypeById);
+	    if (parameterCode == null) {
+	        return;
+	    }
+
+	    resetDeductionIfNew(selectedDeduction, action);
+	    validateDuplicateDeductionType(selectedDeduction, parameterCode, count);
+	}
+
+	/**
+	 * Resets amount and description for a new deduction row when no action context is provided.
+	 */
+	private void resetDeductionIfNew(CtDeduction selectedDeduction, String action) {
+	    if (action == null) {
+	        final double zeroAmount = BigDecimal.ZERO.doubleValue();
+	        selectedDeduction.setAmount(zeroAmount);
+	        selectedDeduction.setDeductionDesc(null);
+	    }
+	}
+
+	/**
+	 * Validates that duplicate deduction types are not used (except for allowed types).
+	 */
+	private void validateDuplicateDeductionType(CtDeduction selectedDeduction, String parameterCode, int count) {
+	    boolean isAllowedDuplicate = parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
+	                               || parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
+	                               || parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED);
+
+	    if (!isAllowedDuplicate && count == 2) {
+	    	//Capture the description BEFORE clearing the selection
+	    	String deductionTypeName = getParameterDesc(ParameterHelper.getInstance().getPmParameterById(
+	                selectedDeduction.getDeductionType().getParameterId()));
+	    	
+	    	selectedDeduction.setDeductionType(new PmParameter());
+	    	
+	    	//Now safely throw the error with the saved name
+	    	throw new EpException(MessageConst.ERROR_100046, new String[] { deductionTypeName });
+	    }
+	}
+	// #35506,#39632 (Resetting and validation) - End
 
 	/**
 	 * The method used to add new deduction.
@@ -2439,6 +2492,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			CtBondWaiverDetail bondWaiver = SerializationUtils.clone(defermentLatest);
 			bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 			bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+			bondWaiver.setPrevId(null); //#35506
+			bondWaiver.setCreatedDate(new Timestamp(new Date().getTime())); //#35506
 
 			defermentHistory.add(bondWaiver);
 			Collections.reverse(defermentHistory);
@@ -4648,6 +4703,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
+		
+		//resets the contract days period to 0 because days are not applicable in the LOA process
+		getManagedBean().setContractDaysPeriod(ContractConst.VALUE_OF_0);
 		return String.valueOf(getManagedBean().getCtContractAmount().getContractPeriodBond());
 	}
 	
@@ -4706,6 +4764,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    String docType = contractVer.getDocType();
 	    return docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)
 	            || getManagedBean().isViewContract();
 	}	
 	
@@ -4867,29 +4926,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	//#30428 - End
-	
-	//#25002 - start
-		
-	public List<ScAttachment> getApprovalLetter(){
-		List<ScAttachment> listAttachments = new ArrayList<>();
-		IQTAwardSO awardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		Long loaid = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
-		listAttachments = awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
-		return listAttachments;
-	}
-
-	public void downloadScAttachmentFile(ScAttachment scAttachment){
-		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-		try {
-			loaDetailBackingBean.downloadFile(scAttachment);
-		} catch (IOException e) {
-			//start - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
-			//stop - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
-		}
-	}
-	
-	//#25002 - end
 		
 	//Enhancement 29418 - shaqimi start
 	
@@ -5057,7 +5093,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    }
 
 	    // Skip bond calculation if direct purchase or bond exempted
-	    if (getManagedBean().isDirectPurchase() || getManagedBean().getCtContractAmount().isBondExempted()) {
+	    if ((getManagedBean().isDirectPurchase() && !isPk7FromDp()) || getManagedBean().getCtContractAmount().isBondExempted()) {
 	        return total;
 	    }
 
@@ -5115,6 +5151,59 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return false;
 	}
+	
+	/**
+	 * Determines if the bond panel should be rendered based on contract
+	 * conditions.
+	 * 
+	 * @return true if the panel should be rendered, false otherwise
+	 */
+	public boolean isBondPanelRendered() {
+		if (getManagedBean().getContractVer() == null || getManagedBean().getContractVer().getStatus() == null) {
+			return false;
+		}
+
+		if (!isAlreadyAmendment() || !isContractExtendOrIsBond()) {
+			return false;
+		}
+
+		return isRenderConditionSatisfied();
+	}
+
+	/**
+	 * Checks if any condition that triggers bond panel rendering is satisfied.
+	 */
+	private boolean isRenderConditionSatisfied() {
+
+		if (getManagedBean().isViewContract()) {
+			return true;
+		}
+
+		// View contract with FA_LOA_COMPLETED status
+		boolean isFaLoaCompleted = getManagedBean().getContractVer().getStatus() != null
+				&& getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_LOA_COMPLETED;
+		if (getManagedBean().isViewContract() && isFaLoaCompleted) {
+			return true;
+		}
+
+		// Check Specific by docType
+		return isContractUpdateOrView(getManagedBean().getContractVer());
+	}
 	// 24333 - End
+	
+	//#35506 - Start
+	/**
+	 * Determines if the user has a specific role for audit CT Trail access.
+	 * Only users with designated roles (Auditor General, Auditor Internal, BPK Auditor, or System Admin) are allowed.
+	 *
+	 * @return true if the user has one of the specified roles, false otherwise
+	 */
+	public boolean isAuditRoleCheck() {
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+	//#35506 - End
 
 }

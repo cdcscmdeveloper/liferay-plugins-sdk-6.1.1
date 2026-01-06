@@ -19,8 +19,21 @@
 
 				<td>
 				<!-- #21695 FARID START RENDER SCQT PARTIAL-->
-				<p:selectOneRadio id="finScoreWeight"
-						disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.qt.partial}"
+				<!-- #38679 start. new requirement-->
+				<c:if test="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
+					<p:selectOneRadio id="finScoreWeight"
+						disabled="#{specificationBackingBean.managedBean.qt.partial or !specificationBackingBean.managedBean.qt.partial}"
+						label="#{lbl['lbl.sc.spec.weightage']}" required="true"
+						value="#{true}">
+						<f:selectItems
+							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="financialweightage,finaddpoints"></p:ajax>
+					</p:selectOneRadio> <p:message id="finScoring" for="finScoreWeight" display="icon"></p:message>
+				</c:if>
+				<c:if test="#{specificationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+					<p:selectOneRadio id="finScoreWeight"
+						disabled="#{specificationBackingBean.managedBean.qt.partial}"
 						label="#{lbl['lbl.sc.spec.weightage']}" required="true"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq}">
 						<f:selectItems
@@ -28,6 +41,8 @@
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="financialweightage,finaddpoints"></p:ajax>
 					</p:selectOneRadio> <p:message id="finScoring" for="finScoreWeight" display="icon"></p:message>
+				</c:if>
+				<!-- #38679 end. new requirement-->	
 				</td>
 			</tr>
 		</table>
@@ -91,6 +106,8 @@
 						display="icon"></p:message>
 				</ui:fragment>
 			</p:column>
+			<!-- #38679 start. new requirement-->
+			<c:if test="#{specificationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 			<p:column style="width:20%;text-align:right;"
 				rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
 				<f:facet name="header">
@@ -108,7 +125,25 @@
 						update=":form:finaddpoints" />
 				</p:inputText>
 			</p:column>
+			</c:if>
+			<c:if test="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
+			<p:column style="width:20%;text-align:right;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.spec.weight.weight']}" />
+					<ac:iconTooltip id="financialScoreWeightageScore#{index}SC"
+						value="#{lbl['lbl.sc.spec.weight.weight.tooltip']}" />
+				</f:facet>
+				<p:inputText value="#{finance.qtScoreWeightage.weightage}"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
+					maxlength="3" style="text-align:right">
 
+					<p:ajax event="blur" process="@this"
+						listener="#{specificationBackingBean.finScoringCheckList(finance)}"
+						update=":form:finaddpoints" />
+				</p:inputText>
+			</p:column>
+			</c:if>
+		<!-- #38679 end. new requirement-->
 		</p:dataTable>
 
 		<p:spacer height="15"></p:spacer>
@@ -126,8 +161,9 @@
 							value="#{specificationBackingBean.managedBean.finPoints}" /> <ac:iconTooltip
 							value="#{lbl['lbl.sc.spec.total.points.tooltip']}" /></td>
 				</tr>
-				<ui:fragment
-					rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
+				<!-- #38679 start. new requirement-->
+				<c:if test="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
+				<ui:fragment>
 					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
@@ -138,6 +174,8 @@
 								value="#{lbl['lbl.sc.spec.total.weightage.tooltip']}" /></td>
 					</tr>
 				</ui:fragment>
+				</c:if>
+				<!-- #38679 end. new requirement-->
 			</table>
 		</h:panelGroup>
 	</p:panel>

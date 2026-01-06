@@ -17,10 +17,7 @@
 
 		<ui:remove> #28777#29729 - Start </ui:remove>
 		<ui:param name="isDisqualified"
-			value="#{onlineBiddingBB.checkDisqualifiedSupplierBranchDeleted(onlineBiddingBB.scBidSchedule.scBid.docId, onlineBiddingBB.smSupplier.supplierId)}" />
-			
-		<ui:param name="isZonesDisqualified"
-			value="#{onlineBiddingBB.checkZonesDisqualifiedSupplierBranchDeleted(onlineBiddingBB.scBidSchedule.scBid.docId, onlineBiddingBB.smSupplier.supplierId, onlineBiddingBB.scBidSchedule.tplSpecZoneDtl.specZoneId)}" />
+			value="#{onlineBiddingBB.scBidSchedule.tplSpecZoneDtl ne null ? onlineBiddingBB.checkZonesDisqualifiedSupplierBranchDeleted(onlineBiddingBB.scBidSchedule.scBid.docId, onlineBiddingBB.smSupplier.supplierId, onlineBiddingBB.scBidSchedule.tplSpecZoneDtl.specZoneId) : onlineBiddingBB.checkDisqualifiedSupplierBranchDeleted(onlineBiddingBB.scBidSchedule.scBid.docId, onlineBiddingBB.smSupplier.supplierId)}" />
 		<ui:remove> #28777#29729 - End </ui:remove>
 
 		<h:panelGroup id="pollPanelGroup"
@@ -85,7 +82,7 @@
 							width="30%" style=" text-align:center" />
 
 						<p:column rowspan="2"
-							rendered="#{(onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and (onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and !isDisqualified and !isZonesDisqualified}"
+							rendered="#{(onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and (onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and !isDisqualified}"
 							headerText="#{lbl['lbl.sc.current.ranking']}"
 							style="white-space : normal" width="4%" />
 						<ui:remove> #28777#29729 </ui:remove>
@@ -178,7 +175,7 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
 							update=":form:itemWiseBidListOB"
 							postUpdateListener="onlineBiddingBB.decrementAmountValueChangeListener"
-							disabled="#{isDisqualified or isZonesDisqualified}">
+							disabled="#{isDisqualified}">
 							<ui:remove> #28777#29729 </ui:remove>
 							<f:attribute name="scBidPrice" value="#{bidPriceItem}" />
 						</ac:spinner>
@@ -218,7 +215,7 @@
 					</h:panelGroup>
 				</p:column>
 				<p:column
-					rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified and !isZonesDisqualified}">
+					rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified}">
 					<ui:remove> #28777#29729 </ui:remove>
 					<h:panelGroup id="newRanking">
 						<h:outputText value="#{bidPriceItem.ranking}" />
@@ -276,7 +273,7 @@
 							</f:facet>
 						</p:column>
 						<p:column
-							rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified and !isZonesDisqualified}" />
+							rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified}" />
 						<ui:remove> #28777#29729 </ui:remove>
 					</p:row>
 				</p:columnGroup>
@@ -302,7 +299,7 @@
 		<h:panelGroup id="packageRankingPanelOB" style="width : 100%">
 
 			<h:panelGroup style="width : 100% ; align: right;"
-				rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypePackage) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified and !isZonesDisqualified}">
+				rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypePackage) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified}">
 				<ui:remove> #28777#29729 </ui:remove>
 
 				<div style="align: right">

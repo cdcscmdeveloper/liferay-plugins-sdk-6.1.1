@@ -46,6 +46,7 @@ import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.SLALogFulfilmentConst;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -61,6 +62,7 @@ import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
@@ -792,7 +794,9 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			log.info("29554: start generateFLExcelReport SO");
 			resDTO = rptRequestSO.generateReportInExcel(reqDTO);
 		}catch(Exception e){
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+					SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+					SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e);
 		}
 		
 		switch(reportCode){
@@ -801,7 +805,9 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				log.info("29554: start getServiceFeeBasedOnAccountingReport");
 				getServiceFeeBasedOnAccountingReport(params,resDTO.getRequestId());
 			}catch (Exception e1) {
-				e1.printStackTrace();
+				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+						SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+						SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e1);
 			}
 			break;
 	
@@ -810,7 +816,9 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				log.info("29554: start getAccumulatedServiceFee");
 				getAccumulatedServiceFee(params, resDTO.getRequestId());
 			}catch(Exception e){
-				e.printStackTrace();
+				SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+						SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+						SLALogFulfilmentConst.FL_RPT_GENERATE_FL_EXCEL, getUserIdSessionFromLoginId(), e);
 			}
 			break;
 		}
@@ -1196,7 +1204,9 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	        wb.close();
 	        
 	    }catch(Exception e){
-	    	e.printStackTrace();
+	    	SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+					SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+					SLALogFulfilmentConst.FL_RPT_SVC_FEE_BASED_ACCOUNTING_OFFICE, getUserIdSessionFromLoginId(), e);
 	    }
 	    
 	}
@@ -1655,7 +1665,9 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	        wb.close();
 	        
 	    }catch(Exception e){
-	    	e.printStackTrace();
+	    	SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE,
+					SLALogFulfilmentConst.FL_TRANSACTION_FEE_RPT_BB, "",
+					SLALogFulfilmentConst.FL_RPT_ACCUMULATED_SVC_FEE, getUserIdSessionFromLoginId(), e);
 	    }
 	}
 	

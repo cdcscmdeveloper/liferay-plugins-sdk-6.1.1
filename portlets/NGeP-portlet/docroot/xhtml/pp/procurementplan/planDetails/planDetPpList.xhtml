@@ -243,9 +243,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			<!-- #24975 -->
 			<!-- #25549 - start --> 
 		    <!--24975@20112020azza - start -->
+		    <!-- #35502, Fix as-is bug: #38696 Start -->
 			<p:column style="white-space:nowrap;text-align:center;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">		
 			    <p:commandLink oncomplete="dlUpdateReasonWv.show();" action="#{pPlanBackingBean.retrievePpUpdateReasons(ppItem)}"
-			    	update="@form" immediate="true" id="UpdateReason" 
+			    	update="@form" immediate="true" id="UpdateReason" process="@this" partialSubmit="true"
 			    	disabled="#{ppItem.viewMode or (ppItem.brandNew ? ppItem.brandNew : ppItem.selectable) or (ppItem.disableRow)}">
 					<p:graphicImage value="#{ppItem.changePencilToNote ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					disabled="#{ppItem.viewMode or (pPlanBackingBean.managedBean.modeEditable) or (pPlanBackingBean.managedBean.modeEditable) or !ppItem.reasonForUpdateEnabled}" update="@form" />
@@ -254,6 +255,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				    rendered="#{ppItem.indicator}"
 				    value="#{ppItem.indicator ? '/css/images/design/exclamation.png' : ''}" update="@form" />
 	        </p:column>
+	        <!-- #35502, Fix as-is bug: #38696 End -->
 	        <!--24975@20112020azza - end -->
 	        <!-- #25549 - end --> 
 	        <p:column>

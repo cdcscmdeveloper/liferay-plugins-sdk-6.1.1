@@ -34,7 +34,7 @@
 				</c:if></td>
 			<!-- #35506 Start -->
 			<td style="float: right;">
-			<c:if test='#{ctBackingBean.managedBean.viewContract and contractDetailsBackingBean.isAuditCheck()}'>
+			<c:if test='#{ctBackingBean.managedBean.viewContract and ctBackingBean.isAuditRoleCheck()}'>
 			<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
 						action="#{auditContractBackingBean.redirectToAudittrailView(
                 ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode,

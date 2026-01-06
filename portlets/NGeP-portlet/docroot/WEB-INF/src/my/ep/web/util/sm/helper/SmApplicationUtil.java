@@ -158,6 +158,7 @@ import my.ep.persistence.entity.sm.SmCategoryOverlapDoc;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmEquityCompany;
@@ -177,6 +178,7 @@ import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -196,6 +198,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
+import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.AddressUtils;
@@ -443,17 +446,19 @@ public class SmApplicationUtil {
 		}
 	}
 
+	//#26238 (39072)
 	/**
 	 * Retrieve unverified category codes by PO or Approver
-	 * 
-	 * @param managedBean
+	 * @param catList
+	 * @param applType
 	 * @return
 	 */
-	public static List<String> getUnverifiedCatCodes(List<SmSupplierCategory> catList, String applType,
-			boolean isApprover) {
+	public static List<String> getUnverifiedCatCodes(List<SmSupplierCategory> catList, String applType) {
 
 		List<String> applTypes = Arrays.asList(ParameterConst.NEW_SM_APPLN_FOR_MOF,
 				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES, ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		List<Integer> validStatus = Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, 
+				DbValueConst.RECORD_STATUS_DELETED, DbValueConst.RECORD_STATUS_SUSPENDED);
 		List<String> invalidCatCodes = new ArrayList<>();
 
 		if (applTypes.contains(applType)) {
@@ -463,10 +468,11 @@ public class SmApplicationUtil {
 				// Bug #26031 - filter valid category
 				// //Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
 				//#30766 - START
-				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED && cat.getPoDecFlg() == null) {
+				if (!validStatus.contains(cat.getRecordStatusFlg()) && cat.getPoDecFlg() == null) {
 				//#30766 - END
 					//Enhancement #11765
-					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
+					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()
+							+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
 				}
 			}
 		}
@@ -1548,7 +1554,9 @@ public class SmApplicationUtil {
 			Map<Long, SmSupplierCategory> newCat = buildCategoryMap(managedBean.getActiveCategoryList());
 
 		    for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-		        updateCategoryDescription(cat, newCat);
+				cat = SmServiceLookup.getMofRegistrationSO()
+						.findActiveCategoryBySupplierCategoryId(cat); // 36504 - optimistic lock
+				updateCategoryDescription(cat, newCat);
 		        
 		        if (cat.isSpecialCategory()) {
 		            validateAndCleanCategory(cat);
@@ -3847,7 +3855,11 @@ public class SmApplicationUtil {
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
 		//13362
-		managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
+		//#39422 - Start - Add checking
+		if(managedBean.getApplnOverLapRemarks() == null || managedBean.getApplnOverLapRemarks().isEmpty()){
+			managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);	
+		}
+		//#39422 - End
 
 		if (overlapCategoryVO != null) {
 			managedBean.setOverLappedCategoryExists(overlapCategoryVO
@@ -3859,7 +3871,11 @@ public class SmApplicationUtil {
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
 			//13362
-			managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
+			//#39422 - Start - Add checking
+			if(managedBean.getApplnOverLapRemarks().isEmpty()){
+				managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());	
+			}
+			//#39422 - End
 			managedBean.setOverLappedCategoryExists(true); //#31018
 		}else{
 			managedBean.setOverlapDocs(null);//#31018
@@ -4018,7 +4034,9 @@ public class SmApplicationUtil {
 					if("".equalsIgnoreCase(companyName)){
 						companyName = arrI[4].toString();
 						log.info("MOF NO == "+arrI[5]);
-						mofNo = arrI[5] != null ? arrI[5].toString() : "null";
+						// #39422 - Start - Change null to N/A
+						mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
+						// #39422 - End -
 						catCodeCombine += companyName + ", " +  mofNo + ", " + " (";
 						index ++;
 					}
@@ -4030,8 +4048,9 @@ public class SmApplicationUtil {
 					}else{
 						companyName = arrI[4].toString();
 						log.info("MOF NO == "+arrI[5]);
-						mofNo = arrI[5] != null ? arrI[5].toString() : "null";
-						
+						// #39422 - Start - Change null to N/A
+						mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
+						// #39422 - End -
 						if (index == 1){
 							catCodeCombine = catCodeCombine + "";
 							index++;
@@ -4562,8 +4581,31 @@ public class SmApplicationUtil {
 		} else {
 			List<SmSupplierCategory> catList = new ArrayList<>();
 			List<SmSupplierCategory> apprvList = new ArrayList<>();
+			// 36504 - START
+			managedBean.setOtherDescChange(false);
+			// 36504 - END
 			for (SmSupplierCategory cat : managedBean.getSmAppl()
 					.getSmSupplierCategories()) {
+				
+				// 36504 - START
+				String catType = cat.getPmCategoryL3().getCategoryTypeCode()
+						.getParameterCode();
+				cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+				if (catType
+						.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+						|| catType
+								.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat
+							.getSupplierCategoryId()));
+					managedBean.getOtherDescDataModel().reloadData();
+					if (!EntityHelper.isCollectionEmpty(cat
+							.getSmSuppCatOtherDescHistory())
+							&& !managedBean.isOtherDescChange()) {
+						managedBean.setOtherDescChange(true);
+					}
+				}
+				// 36504 - END
+
 				if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0
 						|| cat.getRecordStatusFlg()
@@ -4668,6 +4710,9 @@ public class SmApplicationUtil {
 		List<SmSupplierCategory> existingList = new ArrayList<SmSupplierCategory>();
 		//#34209 START - to remove category with deleted status in the list - fix issue active category show in addcat list
 		List<SmSupplierCategory> delCatList = new ArrayList<SmSupplierCategory>();
+		// 36504 - START
+		managedBean.setOtherDescChange(false);
+		// 36504 - END
 		for(SmSupplierCategory filtCat : managedBean.getSmAppl().getSmSupplier()
 				.getSmAppl().getSmSupplierCategories()){
 			if(filtCat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
@@ -4681,6 +4726,25 @@ public class SmApplicationUtil {
 				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
+			
+			// 36504 - START
+			String catType = cat.getPmCategoryL3().getCategoryTypeCode()
+					.getParameterCode();
+			cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
+			if (catType
+					.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+					|| catType
+							.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+				cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat
+						.getSupplierCategoryId()));
+				if (!EntityHelper.isCollectionEmpty(cat
+						.getSmSuppCatOtherDescHistory())
+						&& !managedBean.isOtherDescChange()) {
+					managedBean.setOtherDescChange(true);
+				}
+			}
+			// 36504 - END
+
 			if (validStatus.contains(cat.getRecordStatusFlg()) && cat.getPmCategoryL3() != null) {
 
 				SmSupplierCategory tmp = (SmSupplierCategory) EntityHelper
@@ -15741,11 +15805,10 @@ public class SmApplicationUtil {
 				bean.getEditVO().setDisciplinary(false);
 				return;
 			}
+			//39061
 			List<SmDisciplinaryAction> activeDA = EntityHelper.isCollectionEmpty(daList) ?
-					retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier()) : daList;
-			if(EntityHelper.isCollectionEmpty(activeDA)){
-				return;
-			}
+					retrieveActiveSmDisciplinaryActionBySupplierForCMCD(bean.getSmSupplier()) : daList;
+			
 			if(hasCannotLoginDA(activeDA)){
 				bean.getEditVO().setDisciplinary(true);
 				return;
@@ -15758,6 +15821,9 @@ public class SmApplicationUtil {
 	 * @return true if suspend/cancel registration, blacklist owner DA exists
 	 */
 	public static boolean hasCannotLoginDA(List<SmDisciplinaryAction> daList){
+		if(EntityHelper.isCollectionEmpty(daList)){ //#39217
+			return false;
+		}
 		for(SmDisciplinaryAction da : daList){
 			if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
 				return true;
@@ -15893,4 +15959,231 @@ public class SmApplicationUtil {
 		}
 	}
 	// #37784- END
+	
+	//#26282 - Start
+	/**
+	 * 
+	 * @param supplier
+	 * @return resDTO
+	 */
+	public static List<SmDisciplinaryAction> retrieveActiveSmDisciplinaryActionBySupplierForCMCD(SmSupplier supplier) {
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveActiveDisciplinaryActionBySupplierForCMCD(reqDTO);
+
+		return resDTO.getSmDisciplinaryActions();
+	}
+	//#26282 - End
+	
+	// 36504 - START
+	/**
+	 * 
+	 * @param applId
+	 * @return
+	 */
+	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(
+			Long supplierCategoryId) {
+		if (supplierCategoryId == null) {
+			return null;
+		}
+
+		return SmServiceLookup.getMofRegistrationSO()
+				.retrieveActiveOtherDescHistory(supplierCategoryId);
+	}
+	// 36504 - END
+
+//	#37925 START
+	/**
+	 * Retrieves the registration status list based on supplier type and application type.
+	 *
+	 * @param suppType Supplier type (e.g., contractor, consultant)
+	 * @param applType Application type (e.g., new, update, renewal)
+	 * @return List of PmStatusDesc objects matching the criteria
+	 */
+	public List<PmStatusDesc> retrieveRegistrationStatusListBySupplierTypeApplType(String suppType, String applType) {
+	    StatusReqDTO reqDTO = new StatusReqDTO();
+	    reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+
+	    if (!StringUtils.isBlank(applType) && ParameterConst.NEW_SM_APPLN_FOR_BUMI.equals(applType)) {
+	        return SmServiceLookup.getStatusSO().retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
+	    }
+
+	    List<PmStatusDesc> descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
+	    if (EntityHelper.isCollectionEmpty(descList) || StringUtils.isBlank(suppType)) {
+	        return descList;
+	    }
+
+	    List<String> validStatusIds = getValidStatusIds(suppType, applType);
+	    return filterStatusDescList(descList, validStatusIds);
+	}
+
+	/**
+	 * Filters the status description list based on valid status IDs.
+	 *
+	 * @param descList       Original list of status descriptions
+	 * @param validStatusIds List of valid status ID strings
+	 * @return Filtered list of PmStatusDesc
+	 */
+	private List<PmStatusDesc> filterStatusDescList(List<PmStatusDesc> descList, List<String> validStatusIds) {
+	    List<PmStatusDesc> filteredList = new ArrayList<>();
+	    for (PmStatusDesc statDesc : descList) {
+	        if (statDesc != null && statDesc.getPmStatus() != null && statDesc.getPmStatus().getStatusId() != null) {
+	            String statusIdStr = statDesc.getPmStatus().getStatusId().toString();
+	            if (validStatusIds.contains(statusIdStr)) {
+	                filteredList.add(statDesc);
+	            }
+	        }
+	    }
+	    return filteredList;
+	}
+
+	/**
+	 * Determines valid status IDs based on supplier and application type.
+	 *
+	 * @param suppType Supplier type
+	 * @param applType Application type
+	 * @return List of valid status ID strings
+	 */
+	private List<String> getValidStatusIds(String suppType, String applType) {
+	    if (SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType)) {
+	        return getConsultantStatusIds();
+	    }
+
+	    if (!SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType)) {
+	        return new ArrayList<>();
+	    }
+
+	    if (SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(applType)) {
+	        return getContractorStatusIdsForMOF();
+	    }
+
+	    if (isUpdateCategoryOrRenewal(applType)) {
+	        return getContractorStatusIdsForUpdateCategoryRenewal();
+	    }
+
+	    return getDefaultContractorStatusIds();
+	}
+
+	/**
+	 * Checks if the application type is update, category, or renewal.
+	 *
+	 * @param applType Application type
+	 * @return true if it matches update, category, or renewal
+	 */
+	private boolean isUpdateCategoryOrRenewal(String applType) {
+	    return SupplierManagementConst.APPL_TYPE_UPDATE.equalsIgnoreCase(applType)
+	        || SupplierManagementConst.APPL_TYPE_CATEGORY.equalsIgnoreCase(applType)
+	        || SupplierManagementConst.APPL_TYPE_RENEWAL.equalsIgnoreCase(applType);
+	}
+
+	/**
+	 * Returns valid status IDs for consultant supplier type.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getConsultantStatusIds() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN)
+	    );
+	}
+
+	/**
+	 * Returns valid status IDs for contractor with MOF application type.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getContractorStatusIdsForMOF() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN)
+	    );
+	}
+
+	/**
+	 * Returns valid status IDs for contractor with update, category, or renewal application type.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getContractorStatusIdsForUpdateCategoryRenewal() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME)
+	    );
+	}
+
+	/**
+	 * Returns default valid status IDs for contractor.
+	 *
+	 * @return List of status ID strings
+	 */
+	private List<String> getDefaultContractorStatusIds() {
+	    return Arrays.asList(
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA),
+	        String.valueOf(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME)
+	    );
+	}
+
+//	#37925 END
+//#38991 -START
+	/**
+	* Validate sm company experience info before saving the application.
+	* 
+	* @param validSave
+	*            - boolean
+	* @param managedBean
+	*            - SmApplicationManagedBean object
+	* @param currentTab
+	*            - int current tab
+	* @return true, if successful
+	*/		
+	public static boolean validateComExpProjectBeforeSave(boolean validSave,
+			SmApplicationManagedBean managedBean, int currentTab){
+		boolean validCompExperience = true;
+		StringBuilder sbCompExperience = new StringBuilder();
+		sbCompExperience.append("<br/>");
+		int x = 0;
+		SmAppl appl = managedBean.getSmAppl();
+		
+		for (SmCompanyExperience compExperience : appl.getSmCompanyExperiences()){
+			if (compExperience.getClientType() == null) {
+				validCompExperience = false;
+				sbCompExperience.append(++x + ". ");
+				sbCompExperience.append(compExperience.getTitle());
+				sbCompExperience.append("<br/>");
+				}
+			}
+		if (!validCompExperience){
+			if(managedBean.isSupplierUser()){
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+					}
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.project.done.for.not.completed",
+						new String[] { sbCompExperience.toString() }));
+				}		
+			}
+		appl = null;
+		return validSave;
+	}
+     //#38991 -END
+	
+	// 39392 - START
+	/**
+	 * Check Disciplinary Action for suspend reg, blacklisted owners/directors,
+	 * and cancel reg.
+	 * @param smAppl
+	 */
+	public static void checkOwnersDisciplinaryAction(SmAppl smAppl){
+		if (smAppl == null){
+			return;
+		}
+		
+		RegistrationBackingBean.checkBannedOwners(smAppl.getSmSupplier().getSmSupplierOwners());
+	}
+	// 39392 - END
+
 }

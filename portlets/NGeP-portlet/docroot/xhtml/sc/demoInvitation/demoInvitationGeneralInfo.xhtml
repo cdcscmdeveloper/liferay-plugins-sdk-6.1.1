@@ -8,10 +8,6 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:param name="scQt" value="#{demoInvBB.managedBean.qt}" />
-	<!-- Reopen #25726 note 187 - issue 6 -->
-	<ui:param name="isContractTypeAsCentral"
-		value="#{scQt.contractType.parameterCode == ParameterConst.contractTypeCentral}" />
-	
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
 		toggleable="true">
@@ -254,10 +250,6 @@
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
-				<!-- Reopen #25726 note 187 - issue 6 -->
-				<td>
-				<table>
-				<tr>
 				<td><p:inputText id="fulfilTypeTxt"
 						rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
 						value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
@@ -272,13 +264,7 @@
 							value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="@form" listener="#{createQtBB.fulfilmentChange}"></p:ajax>
-					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon" />
-				</td>	
-				<!-- Reopen #25726 note 187 - issue 6 -->	
-				<td style="margin-top: -3px">
-					<ac:iconTooltip  rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
-				</td>
-				</tr></table></td>	
+					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon" /></td>
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"

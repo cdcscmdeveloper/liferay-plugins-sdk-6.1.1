@@ -193,7 +193,7 @@
 				<tr>
 
 					<!--#17087 radio select -->
-					<td colspan="5"> <!--#24956-->
+					<td colspan="15">
 
 						<table>
 							<tr>
@@ -248,12 +248,9 @@
 							update="delEndDate" />
 					</p:calendar>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.start.date']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
-				<td ><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td> <!--#24956-->
-					<td colspan="2"><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType)}">
+				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
+					<td><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType)}">
 					</p:inputText>
-					<!-- 24956 - start -->
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fulfilment.type']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
-				    <!-- 24956 - end -->
 				</td>
 				
 					
@@ -371,8 +368,8 @@
 						<p:ajax event="dateSelect"
 							listener="#{contractRequestBackingBean.updateDeliveryEndDate}" />
 					</p:calendar></td>
-				<td ><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td> <!--#24956-->
-				<td colspan="2"><p:selectBooleanCheckbox disabled="true" style="vertical-align:-4px"
+				<td><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
+				<td><p:selectBooleanCheckbox disabled="true" style="vertical-align:-4px"
 						value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder!=null ? 
 						contractRequestBackingBean.managedBean.flRequest.flFulfilmentOrder.factored : 
 						contractRequestBackingBean.managedBean.factored}" />
@@ -381,16 +378,14 @@
 			<tr>
 				<td></td>
 				<td></td>
-				<td ><p:outputLabel value="#{lbl['lbl.fl.zonal.price']}"  /></td> <!--#24956-->
-				<td colspan="2"><p:selectBooleanCheckbox style="vertical-align:-4px"
+				<td><p:outputLabel value="#{lbl['lbl.fl.zonal.price']}"  /></td>
+				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.zonal.price']}" /></td>
 			</tr>
 			<tr>
-			    <td></td> <!--#24956-->
-				<td></td>
-				<td ><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" rendered="false"/></td>
-				<td colspan="2"><p:selectBooleanCheckbox style="vertical-align:-4px"
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" rendered="false"/></td>
+				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.mto}"
 						disabled="true" rendered="false"/></td>	
 			</tr>
