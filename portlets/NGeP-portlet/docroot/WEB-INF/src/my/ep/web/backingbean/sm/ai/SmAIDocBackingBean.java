@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -40,9 +41,11 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ai.AIApiResponse;
 import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.EpPropertiesUtils;
@@ -152,15 +155,23 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		doc.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
 		doc.setFilePath(filePath);
 		
-		//wip
+		commonUploadFile(event, doc.getFilePath());
 		SmApplSupportDoc suppDoc = getSmApplSupportDoc(docType, smAppl);
-		if (suppDoc.getSmApplDocFiles() == null){
-			suppDoc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+		if (suppDoc != null){
+			if (suppDoc.getSmApplDocFiles() == null){
+				suppDoc.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+			}
+			for(int i=0; i<suppDoc.getSmApplDocFiles().size(); i++){
+				String filename = suppDoc.getSmApplDocFiles().get(i).getFileName();
+				if(filename==null || " ".equalsIgnoreCase(filename)){
+					suppDoc.getSmApplDocFiles().remove(i);
+				}
+			}
+			doc.setSmApplSupportDoc(suppDoc);
+			suppDoc.getSmApplDocFiles().add(doc);
 		}
 		
 		docs.add(doc);
-		commonUploadFile(event, doc.getFilePath());
-		
 		if (docType != null) {
 			processDoc(docType, smAppl);
 			postAI = true;
@@ -177,7 +188,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
 			Long docId = suppDoc.getPmDocument().getDocumentId();
-			if (TYPE_EPF.equals(docType) && docId == 768l){
+			boolean isEpfDoc = docId == 494l || docId == 768l || docId == 864l;
+			if (TYPE_EPF.equals(docType) && isEpfDoc){
 				return suppDoc;
 			}
 			boolean isTenancyDoc = docId == 679l || docId == 662l || docId == 654l;
@@ -432,7 +444,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param appl
 	 */
 	public void validateBank(SmAppl appl){
-		if (appl == null || appl.getSmSupplier() == null){
+		if (appl == null || appl.getSmSupplier() == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
 			return;
 		}
 		//PENYATA AKAUN SEMASA YANG TERKINI ATAS NAMA SYARIKAT / SLIP DEPOSIT (all zones)
@@ -463,6 +475,65 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		SmFieldChangeUtil.setBankFieldChangeStatus(appl);
 		validateBankEntity(appl, bankStatementDoc, entities);
+	}
+	
+	/**
+	 * 
+	 * @param appl
+	 */
+	public void validateTenancy(SmAppl appl){
+		if (appl == null || appl.getSmSupplier() == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
+			return;
+		}
+		
+		SmApplSupportDoc tenancyDoc = null;
+		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
+			Long docId = suppDoc.getPmDocument().getDocumentId();
+			if(docId == 679l || docId == 662l || docId == 654l){
+				tenancyDoc = suppDoc;
+				break;
+			}
+		}
+		if (tenancyDoc == null || EntityHelper.isCollectionEmpty(tenancyDoc.getSmApplDocFiles())){
+			return;
+		}
+		
+		String landlordsNameSupp = "";
+		String companyName = appl.getSmSupplier().getCompanyName();
+		BigDecimal rentalRate = new BigDecimal(0);
+		SmAddress addr = null;
+		if(!EntityHelper.isCollectionEmpty(appl.getSmFacilities())){
+			for(SmFacility fac : appl.getSmFacilities()){
+				if("H".equalsIgnoreCase(fac.getFacilityType())){
+					landlordsNameSupp = fac.getOwnerName();
+					rentalRate = fac.getRentalRate().setScale(2);
+					addr = fac.getSmAddress();
+				}
+			}
+		}
+		
+		for (SmApplDocFile docFile : tenancyDoc.getSmApplDocFiles()){
+			if (docFile.getFileName() == null ||docFile.getFileName().trim().isEmpty()){
+				continue;
+			}
+			AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
+					.getAIApiResponse(docFile.getAiApiResponseId());
+			if (response != null){
+				TenancyEntity te = new TenancyEntity(parseJsonEntities(response.getJsonResponse()));
+				
+				double score = fuzzyMatchJaroWinkler(landlordsNameSupp, te.landlordsName);
+				te.validLandlordsName = score >= MIN_FUZZY_SCORE;
+				
+				score = fuzzyMatchJaroWinkler(companyName, te.tenantsName);
+				te.validTenantsName = score >= MIN_FUZZY_SCORE;
+				
+				te.validMonthlyRental = rentalRate.compareTo(te.monthlyRental.setScale(2)) != 0;
+				te.compareAddress(addr);
+				
+				docFile.setMappedFieldAI(te.getLabel());
+				docFile.setValidatedAI(te.hasError() ? 2 : 1); //1-ok, 2-err
+			}
+		}
 	}
 	
 	private static void validateBankEntity(SmAppl appl, SmApplSupportDoc suppDoc, List<DocEntity> docEntities){
@@ -581,6 +652,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					err = "Please upload a valid Bank Statement for AI data extraction";
 					break;
 				}
+			} else if (statusCode == 500){
+				err = "Please verify you have uploaded the correct document type.";
 				
 			} else if (statusCode >= 400){
 				err = "AI processing is temporarily unavailable. Your document has been uploaded successfully, " +
@@ -1096,13 +1169,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				return "Please upload valid document.";
 			}
 			if (this.bankStatements.size() == 1){
-				return bankStatements.get(0).getLabel().replace("\n", "<br/>");
+				return bankStatements.get(0).getLabel();
 			}
 			for (BankStatementEntity bank : this.bankStatements){
-				sb.append("Bank " + bank.entityId.substring(5)).append(":\n");
-				sb.append(bank.getLabel()).append("\n");
+				sb.append("Bank " + bank.entityId.substring(5)).append(":<br/>");
+				sb.append(bank.getLabel()).append("<br/>");
 			}
-			return sb.toString().replace("\n", "<br/>");
+			return sb.toString();
 		}
 		
 		private boolean hasError() {
@@ -1182,7 +1255,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			String yes = "&#x2713; ";
 			String no = "&#x2717; ";
 			if (accountHolderName != null) {
-				String s = "Company: " + accountHolderName + "\n";
+				String s = "Company: " + accountHolderName + "<br/>";
 				if (!validAccountHolderName){
 					sb.append(err1).append(no).append(s).append(err2);
 				} else {
@@ -1190,7 +1263,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				}
 			}
 			if (bankName != null) {
-				String s = "Bank name: " + bankName + "\n";
+				String s = "Bank name: " + bankName + "<br/>";
 				if (!validBankName){
 					sb.append(err1).append(no).append(s).append(err2);
 				} else {
@@ -1198,7 +1271,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				}
 			}
 			if (accountNo != null) {
-				String s = "Account No.: " + accountNo + "\n";
+				String s = "Account No.: " + accountNo + "<br/>";
 				if (!validAccountNo){
 					sb.append(err1).append(no).append(s).append(err2);
 				} else {
@@ -1333,9 +1406,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		private String postcode;
 		private String addr1;
 		private String addr2;
-		
+		private String addr3;
 		private String codeCity;
 		private PmCity pmCity;
+		private boolean validLandlordsName;
+		private boolean validTenantsName;
+		private boolean validMonthlyRental;
+		private boolean validAddress;
+		private boolean error;
 
 		/**
 		 * 
@@ -1376,6 +1454,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				}
 			} catch (JSONException | NumberFormatException e) {
 				log.error("Error TenancyEntity", e);
+				this.error = true;
 			}
 		}
 		
@@ -1393,35 +1472,108 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		
         /**
-         * Truncates the address string at the postcode
-         * @param normalizedAddress
+         * Truncates the address at the postcode
+         * @param addr
          * @param postcode the postcode
          * @return the truncated address
          */
 		private String truncateAddressAtPostcode(String addr, String postcode) {
+			this.addr1 = addr;
 			this.addr2 = "";
+			this.addr3 = "";
 			if (StringUtils.isEmpty(addr) || StringUtils.isEmpty(postcode)) {
-				this.addr1 = addr;
 				return addr;
     		}
 			int postcodeIndex = addr.indexOf(postcode);
 			if (postcodeIndex == -1) {
-				this.addr1 = addr;
 				return addr;
 			}
 			String truncated = addr.substring(0, postcodeIndex).trim();
 			String result = truncated.replaceAll(",\\s*$", "").trim();
 
-			int firstComma = result.indexOf(',');
-			if (firstComma != -1) {
-				this.addr1 = result.substring(0, firstComma);
-				this.addr2 = result.substring(firstComma + 1).trim();
-			} else {
-				this.addr1 = result;
+			Pattern pattern = Pattern.compile(",|\\s+(?=(?:jalan|jln|taman|tmn|blok|seksyen)\\b)", 
+					Pattern.CASE_INSENSITIVE);
+			String[] parts = pattern.split(result, 3);
+
+			if (parts.length > 0) {
+				this.addr1 = parts[0].trim();
+			}
+			if (parts.length > 1) {
+				this.addr2 = parts[1].trim();
+			}
+			if (parts.length > 2) {
+				this.addr3 = parts[2].trim();
 			}
 			return result;
         }
 
+		public String getLabel(){
+			StringBuilder sb = new StringBuilder();
+			String err1 = "<span style='color: red;'>";
+			String err2 = "</span>";
+			String yes = "&#x2713; ";
+			String no = "&#x2717; ";
+			if (tenantsName != null) {
+				String s = "Company: " + tenantsName + "<br/>";
+				if (!validTenantsName){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			if (landlordsName != null) {
+				String s = "Landlord's Name: " + landlordsName + "<br/>";
+				if (!validLandlordsName){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			if (monthlyRental != null) {
+				String s = "Monthly Rental (RM): " + monthlyRental + "<br/>";
+				if (!validMonthlyRental){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			if (premisesAddress != null) {
+				String s = "Address: " + premisesAddress + "<br/>";
+				if (!validAddress){
+					sb.append(err1).append(no).append(s).append(err2);
+				} else {
+					sb.append(yes).append(s);
+				}
+			}
+			return sb.toString();
+		}
+		
+		private boolean compareAddress(SmAddress addr){
+			this.validAddress = false;
+			if (addr == null || addr.getPmCity() == null || premisesAddress == null || this.pmCity == null){
+				return false;
+			}
+			if (!this.pmCity.getCityId().equals(addr.getPmCity().getCityId())){
+				return false;
+			}
+			if (!this.postcode.equals(addr.getPostcode())){
+				return false;
+			}
+			String suppAddr = addr.getAddress1() + addr.getAddress2() + addr.getAddress3();
+			String jsonAddr = this.addr1 + this.addr2 + this.addr3;
+			double score = fuzzyMatchJaroWinkler(suppAddr, jsonAddr);
+			if (score < MIN_FUZZY_SCORE){
+				return false;
+			}
+			this.validAddress = true;
+			return true;
+		}
+		
+		private boolean hasError(){
+			return this.error || !this.validLandlordsName || !this.validMonthlyRental
+					|| !this.validTenantsName || !this.validAddress;
+		}
+		
 		public String getLandlordsName(){
 			return this.landlordsName;
 		}
@@ -1448,6 +1600,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 		public String getAddr2(){
 			return this.addr2;
+		}
+		
+		public String getAddr3(){
+			return this.addr3;
 		}
 
 		public PmCity getPmCity(){

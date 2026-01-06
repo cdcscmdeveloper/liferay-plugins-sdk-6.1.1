@@ -1312,6 +1312,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	        final double zeroAmount = BigDecimal.ZERO.doubleValue();
 	        selectedDeduction.setAmount(zeroAmount);
 	        selectedDeduction.setDeductionDesc(null);
+	        selectedDeduction.getCtDeductionClauses().clear();
 	    }
 	}
 

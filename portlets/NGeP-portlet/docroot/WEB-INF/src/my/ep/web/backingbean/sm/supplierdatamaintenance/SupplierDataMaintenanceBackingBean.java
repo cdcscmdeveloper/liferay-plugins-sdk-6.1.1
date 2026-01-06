@@ -1,6 +1,9 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1975,12 +1978,12 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (disc == null){
 			return;
 		}
-		//27857: Disciplinary Action - start - 26238
-		if(!getManagedBean().isEditDisciplinaryActionCheckBox()){ //29181: Disciplinary Action - change edit check box variable - 26238
-			
+		// 27857: Disciplinary Action - start - 26238
+		if (!getManagedBean().isEditDisciplinaryActionCheckBox()) { //29181: Disciplinary Action - change edit check box variable - 26238
 			// 27815 - add disable button delete if edit DA - Start
 			getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
 			// 27815 - add disable button delete if edit DA - End
+			
 			getManagedBean().setBlacklistOwnerOrDirector(disc.isBlacklistOwner());
 			getManagedBean().setBlacklistOwnerOrDirectorExist(true);
 			
@@ -1991,7 +1994,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setSuspendRegistrationExist(true);
 			
 			getManagedBean().setWarning(disc.isWarning());
-			if(getManagedBean().isEditDisciplinaryActionCheckBox()){ 
+			if (getManagedBean().isEditDisciplinaryActionCheckBox()) {
 				getManagedBean().setWarningExist(false);
 			} else {
 				getManagedBean().setWarningExist(true);
@@ -2005,22 +2008,22 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			getManagedBean().setManufacturerStatusCancel(disc.isManufacturerCancel());
 			getManagedBean().setManufacturerStatusCancelExist(true);
-		}else{
+		} else {
 			// 27815 - add disable button delete if edit DA - Start
-			if(disc.isCancelCategory() || disc.isBumiputeraCancel() || disc.isManufacturerCancel()){
+			if (disc.isCancelCategory() || disc.isBumiputeraCancel() || disc.isManufacturerCancel()) {
 					getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
 			}
 			// 27815 - add disable button delete if edit DA - End
 					
 			resetDisciplinaryActionSectionExist();
-			getManagedBean().setEditDisciplinaryActionCheckBox(true);//29181: Disciplinary Action - 26238
+			getManagedBean().setEditDisciplinaryActionCheckBox(true);// 29181: Disciplinary Action - 26238
 			getManagedBean().setEditDisciplinaryAction(true);
 		}
-		//27857: Disciplinary Action - end - 26238
-				
-		//28198: Disciplinary Action - start - 26238
+		// 27857: Disciplinary Action - end - 26238
+
+		// 28198: Disciplinary Action - start - 26238
 		discipline.getSmDiscplinaryAction().setRemark(disc.getRemark()); // 39115
-		//28198: Disciplinary Action - end - 26238
+		// 28198: Disciplinary Action - end - 26238
 		discipline.getSmDiscplinaryAction().setStartDate(disc.getStartDate());
 		discipline.getSmDiscplinaryAction().setEndDate(disc.getEndDate());
 		discipline.setSuspend(true);
