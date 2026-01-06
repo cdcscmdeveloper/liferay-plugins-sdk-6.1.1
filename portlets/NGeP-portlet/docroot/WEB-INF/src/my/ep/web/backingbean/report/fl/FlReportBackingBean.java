@@ -895,7 +895,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		String[] rowHeaderItems = {"Pejabat Perakaunan","Kadar Fi Perkhidmatan (%)"};
 		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh", "No. Dokumen",
 				"Kategori Jenis Perolehan", "Kod Kumpulan PTJ", "PTJ Pembayar", "Kadar Fi Perkhidmatan (%)", "Perihal",
-				"Nilai Transaksi Termasuk CBP (RM)", "Nilai Potongan (RM)", "CBP (RM)", "Perkhidmatan Fi (RM)",
+				"Nilai Transaksi Termasuk CBP (RM)", "Nilai Potongan (RM)", "CBP (RM)", "Fi Perkhidmatan (RM)",
 				"Bayaran Kepada Pembekal (RM)", "Status"));
 		ArrayList<String> columnsSummaryList = new ArrayList<>(Arrays.asList("Bil", "Pejabat Perakaunan",
 				"Kadar Fi Perkhidmatan (%)", "Bil. Pesanan Kerajaan", "Nilai Transaksi Termasuk CBP (RM)",
