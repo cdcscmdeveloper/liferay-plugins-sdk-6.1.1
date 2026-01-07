@@ -295,8 +295,8 @@
 						action="#{contractRequestBackingBean.showItemDescPopup(item.scRequestItem.cmItem.itemId)}" 
 						process="@this" 
 						update="@([id$=itemDescDialogId])"/>	
-					<span>(<h:outputText
-							value="#{item.scRequestItem.uom.uomName}" />)
+					<span style="margin-left:4px;"> 
+						(<h:outputText value="#{item.scRequestItem.uom.uomName}" />)
 					</span>
 					<br />
 					<!--#31344 filter item name-->
