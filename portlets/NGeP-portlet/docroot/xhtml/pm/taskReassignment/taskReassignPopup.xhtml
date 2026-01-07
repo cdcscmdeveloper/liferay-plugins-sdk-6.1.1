@@ -73,10 +73,10 @@
 					value="#{taskReassignmentBackingBean.userListDataModel}">
 					<p:ajax event="rowSelect" />
 					<ac:paginator for="dtTaskReassign" />
-					<p:column headerText="#{lbl['lbl.pm.ta.name']}">
+					<p:column headerText="#{lbl['lbl.pm.ta.name']}">  
 						#{user.userName}
 					</p:column>
-					<p:column headerText="#{lbl['lbl.pm.ic.no']}">
+					<p:column headerText="#{lbl['lbl.pm.ic.no']}">  
 						#{user.identificationNo}
 					</p:column>
 				</p:dataTable>
@@ -103,7 +103,7 @@
 							<p:commandButton
 								disabled="#{!taskReassignmentBackingBean.managedBean.enableAssignButton}"
 								value="#{lbl['lbl.pm.ta.btn.assign']}"
-								oncomplete="if (!args.validationFailed) assignInfoDlg.show()">
+								oncomplete="if (!args.validationFailed) assignInfoDlg.show()" >
 								<f:param name="disableValidation" value="true" />
 							</p:commandButton>
 							<!-- 36053 End -->
