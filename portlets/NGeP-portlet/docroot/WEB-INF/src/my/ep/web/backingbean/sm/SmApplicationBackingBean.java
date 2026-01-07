@@ -18703,10 +18703,19 @@ public class SmApplicationBackingBean extends
 	// #36718 - End
 	
 	// 36504 - START
+	/**
+	 * To show history dialog
+	 * 
+	 */
 	public void otherDescriptionHistory() {
 		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlg.show();");
 	}
-
+	
+	/**
+	 * To set data for managed bean and show dialog edit
+	 *  
+	 *  * @param smSupCat
+	 */
 	public void otherDescriptionEdit(SmSupplierCategory smSupCat) {
 
 		getManagedBean().setSelectedCategory(smSupCat);
@@ -18714,11 +18723,19 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setUpdateRecordTC(false);
 		RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.show();");
 	}
-
+	
+	/**
+	 * To reset data
+	 *  
+	 */
 	public void resetOtherDescriptionEdit() {
 		getManagedBean().setOtherDescEdited(getManagedBean().getSelectedCategory().getOtherDesc());
 	}
-
+	
+	/**
+	 * To save data Other Description
+	 *  
+	 */
 	public void saveOtherDescriptionEdit() {
 		try {
 			SmSuppCatOtherDescHistory smSuppCatOtherDescHistory = new SmSuppCatOtherDescHistory();
@@ -18728,7 +18745,9 @@ public class SmApplicationBackingBean extends
 					findActiveCategoryBySupplierCategoryId(getManagedBean().getSelectedCategory()); // optimistic lock
 			smSuppCatOtherDescHistory.setSmSupplierCategory(smSupplierCategory);
 			
-			if (getManagedBean().isPoUser()) {
+			if (getManagedBean().getSelectedCategory().getSmSuppCatOtherDescHistory().isEmpty()) {
+				smSuppCatOtherDescHistory.setRoleType(SupplierManagementConst.SECTION_SUPPLIER);
+			} else if (getManagedBean().isPoUser()) {
 				smSuppCatOtherDescHistory.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
 			} else if (getManagedBean().isApproverUser()) {
 				smSuppCatOtherDescHistory.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
@@ -18738,7 +18757,7 @@ public class SmApplicationBackingBean extends
 			SmServiceLookup.getMofRegistrationSO().updateSmSuppCatOtherDescHistory(smSuppCatOtherDescHistory);
 
 			getManagedBean().getSelectedCategory().setOtherDesc(getManagedBean().getOtherDescEdited());
-			if (getManagedBean().getSmAppl() == null) {
+			if (getManagedBean().getSmAppl().getApplNo() == null) {
 				getManagedBean().setSmAppl(smSuppCatOtherDescHistory.getSmAppl());
 			}
 			

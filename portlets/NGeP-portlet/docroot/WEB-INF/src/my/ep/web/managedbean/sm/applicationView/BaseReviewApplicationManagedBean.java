@@ -360,7 +360,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	// 36504 - START
 	private boolean updateRecordTC;
-	private boolean otherDescChange;
+	private boolean otherDescChangePO;
+	private boolean otherDescChangeApprover;
+	private boolean otherDescChangeSupplier;
 	private String otherDescEdited;
 	// 36504 - END
 	
@@ -2661,21 +2663,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the otherDescChange
-	 */
-	public boolean isOtherDescChange() {
-		return otherDescChange;
-	}
-
-	/**
-	 * @param otherDescChange
-	 *            the otherDescChange to set
-	 */
-	public void setOtherDescChange(boolean otherDescChange) {
-		this.otherDescChange = otherDescChange;
-	}
-
-	/**
 	 * @return the otherDescEdited
 	 */
 	public String getOtherDescEdited() {
@@ -2689,5 +2676,48 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setOtherDescEdited(String otherDescEdited) {
 		this.otherDescEdited = otherDescEdited;
 	}
+
+	/**
+	 * @return the otherDescChangePO
+	 */
+	public boolean isOtherDescChangePO() {
+		return otherDescChangePO;
+	}
+
+	/**
+	 * @param otherDescChangePO the otherDescChangePO to set
+	 */
+	public void setOtherDescChangePO(boolean otherDescChangePO) {
+		this.otherDescChangePO = otherDescChangePO;
+	}
+
+	/**
+	 * @return the otherDescChangeApprover
+	 */
+	public boolean isOtherDescChangeApprover() {
+		return otherDescChangeApprover;
+	}
+
+	/**
+	 * @param otherDescChangeApprover the otherDescChangeApprover to set
+	 */
+	public void setOtherDescChangeApprover(boolean otherDescChangeApprover) {
+		this.otherDescChangeApprover = otherDescChangeApprover;
+	}
+	
+	/**
+	 * @return the otherDescChangeSupplier
+	 */
+	public boolean isOtherDescChangeSupplier() {
+		return otherDescChangeSupplier;
+	}
+
+	/**
+	 * @param otherDescChangeSupplier the otherDescChangeSupplier to set
+	 */
+	public void setOtherDescChangeSupplier(boolean otherDescChangeSupplier) {
+		this.otherDescChangeSupplier = otherDescChangeSupplier;
+	}
 	// 36504 - END
+	
 }

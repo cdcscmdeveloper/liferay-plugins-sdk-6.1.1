@@ -143,7 +143,8 @@
 							update=":form" process="@this"
 							action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
 							rendered="#{(aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
+							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or 
+							backingBean.managedBean.approverUser or backingBean.managedBean.supplierUser)}">
 							<p:graphicImage
 								value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}"
@@ -521,7 +522,9 @@
 	<ac:otherDescriptionHistory
 		categoryCodeList="#{backingBean.managedBean.approvedCategoryList}"
 		applNo="#{backingBean.managedBean.smAppl.applNo}"
-		otherDescChange="#{backingBean.managedBean.otherDescChange}" />
+		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplier}"  />
 	<ac:otherDescriptionEdit />
 	<!-- 36504 - END -->
 

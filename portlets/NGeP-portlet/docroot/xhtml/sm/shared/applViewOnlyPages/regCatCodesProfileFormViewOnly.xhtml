@@ -168,7 +168,7 @@
 			</p:column>
 			<!-- 36504 - START -->
 			<p:column>
-				<p:outputPanel rendered="aprvdCatBean.smSuppCatOtherDescHistory.size() > 0">
+				<p:outputPanel>
 					<h:outputText
 						value="#{aprvdCatBean.otherDesc}"
 						rendered="#{not empty aprvdCatBean.otherDesc and
@@ -267,6 +267,8 @@
 	<ac:otherDescriptionHistory
 		categoryCodeList="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}"
 		applNo="#{viewSmApplBackingBean.managedBean.smAppl.applNo}"
-		otherDescChange="#{viewSmApplBackingBean.managedBean.otherDescChange}" />
+		otherDescChangePO="#{viewSmApplBackingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{viewSmApplBackingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{viewSmApplBackingBean.managedBean.otherDescChangeSupplier}"  />
 	<!-- 36504 - END -->
 </ui:composition>

@@ -677,7 +677,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	// 36504 - START
 	private boolean updateRecordTC;
-	private boolean otherDescChange;
+	private boolean otherDescChangePO;
+	private boolean otherDescChangeApprover;
+	private boolean otherDescChangeSupplier;
 	private String otherDescEdited;
 	private IPagingDataModel<SmSuppCatOtherDescHistory> otherDescDataModel = new OtherDescSearchPagingDataModel();
 	// 36504 - END
@@ -4712,21 +4714,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.otherDescEdited = otherDescEdited;
 	}
 
-	/**
-	 * @return the otherDescChange
-	 */
-	public boolean isOtherDescChange() {
-		return otherDescChange;
-	}
-
-	/**
-	 * @param otherDescChange
-	 *            the otherDescChange to set
-	 */
-	public void setOtherDescChange(boolean otherDescChange) {
-		this.otherDescChange = otherDescChange;
-	}
-
 	public IPagingDataModel<SmSuppCatOtherDescHistory> getOtherDescDataModel() {
 		return otherDescDataModel;
 	}
@@ -4774,6 +4761,48 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void searchOtherDescHistoryDesc() {
 		otherDescDataModel.reloadData();
+	}
+
+	/**
+	 * @return the otherDescChangePO
+	 */
+	public boolean isOtherDescChangePO() {
+		return otherDescChangePO;
+	}
+
+	/**
+	 * @param otherDescChangePO the otherDescChangePO to set
+	 */
+	public void setOtherDescChangePO(boolean otherDescChangePO) {
+		this.otherDescChangePO = otherDescChangePO;
+	}
+
+	/**
+	 * @return the otherDescChangeApprover
+	 */
+	public boolean isOtherDescChangeApprover() {
+		return otherDescChangeApprover;
+	}
+
+	/**
+	 * @param otherDescChangeApprover the otherDescChangeApprover to set
+	 */
+	public void setOtherDescChangeApprover(boolean otherDescChangeApprover) {
+		this.otherDescChangeApprover = otherDescChangeApprover;
+	}
+
+	/**
+	 * @return the otherDescChangeSupplier
+	 */
+	public boolean isOtherDescChangeSupplier() {
+		return otherDescChangeSupplier;
+	}
+
+	/**
+	 * @param otherDescChangeSupplier the otherDescChangeSupplier to set
+	 */
+	public void setOtherDescChangeSupplier(boolean otherDescChangeSupplier) {
+		this.otherDescChangeSupplier = otherDescChangeSupplier;
 	}
 	// 36504 - END
 
