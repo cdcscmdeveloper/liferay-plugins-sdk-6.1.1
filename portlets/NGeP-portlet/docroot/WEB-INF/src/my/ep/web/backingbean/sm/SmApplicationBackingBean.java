@@ -18745,8 +18745,10 @@ public class SmApplicationBackingBean extends
 					findActiveCategoryBySupplierCategoryId(getManagedBean().getSelectedCategory()); // optimistic lock
 			smSuppCatOtherDescHistory.setSmSupplierCategory(smSupplierCategory);
 			
-			if (getManagedBean().getSelectedCategory().getSmSuppCatOtherDescHistory().isEmpty()) {
-				smSuppCatOtherDescHistory.setRoleType(SupplierManagementConst.SECTION_SUPPLIER);
+			if (getManagedBean().getSelectedCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isPoUser()) {
+				smSuppCatOtherDescHistory.setRoleType(SupplierManagementConst.SUPPLIER_PO);
+			} else if (getManagedBean().getSelectedCategory().getSmSuppCatOtherDescHistory().isEmpty() && getManagedBean().isApproverUser()) {
+				smSuppCatOtherDescHistory.setRoleType(SupplierManagementConst.SUPPLIER_APPROVER);
 			} else if (getManagedBean().isPoUser()) {
 				smSuppCatOtherDescHistory.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_PO);
 			} else if (getManagedBean().isApproverUser()) {
