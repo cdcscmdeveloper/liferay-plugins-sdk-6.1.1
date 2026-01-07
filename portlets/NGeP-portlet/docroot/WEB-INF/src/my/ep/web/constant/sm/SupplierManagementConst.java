@@ -1578,35 +1578,35 @@ public class SupplierManagementConst {
 	// 36504 - END
 
 //	#37925 START
-	public static String getApplTypeBumi() {
+	public String getApplTypeBumi() {
 		return APPL_TYPE_BUMI;
 	}
 
-	public static String getApplTypeCategory() {
+	public String getApplTypeCategory() {
 		return APPL_TYPE_CATEGORY;
 	}
 
-	public static String getApplTypeUpdate() {
+	public String getApplTypeUpdate() {
 		return APPL_TYPE_UPDATE;
 	}
 
-	public static String getApplTypeMof() {
+	public String getApplTypeMof() {
 		return APPL_TYPE_MOF;
 	}
 
-	public static String getApplTypeBasic() {
+	public String getApplTypeBasic() {
 		return APPL_TYPE_BASIC;
 	}
 
-	public static String getApplTypeRenewal() {
+	public String getApplTypeRenewal() {
 		return APPL_TYPE_RENEWAL;
 	}
 
-	public static String getSsmCompanyCountryDefault() {
+	public String getSsmCompanyCountryDefault() {
 		return SSM_COMPANY_COUNTRY_DEFAULT;
 	}
 
-	public static String getSsmCompanyCountryMalaysia() {
+	public String getSsmCompanyCountryMalaysia() {
 		return SSM_COMPANY_COUNTRY_MALAYSIA;
 	}
 //	#37925 END

@@ -222,34 +222,34 @@ public class AuthorizedSignatoryBackingBean extends
 	 */
 	private void validationDate(List<PmCertSignatory> certSignatories)throws Exception {
 		debugLogger("validationDate");
-		if(certSignatories==null || certSignatories.isEmpty()){
+		if (certSignatories == null || certSignatories.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770142);
 		}
-		
+
 		//date overlapping
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date endLess = sdf.parse("2099-12-31");
 		for (int index1 = 0; index1 < certSignatories.size(); index1++) {
-			if (certSignatories.get(index1).getRecordStatusFlg() 
+			if (certSignatories.get(index1).getRecordStatusFlg()
 					== DbValueConst.RECORD_STATUS_ACTIVE) {
 				if (certSignatories.size() > 1) {
 					for (int index2 = index1 + 1; index2 < certSignatories.size(); index2++) {
 						if (certSignatories.get(index2).getRecordStatusFlg() 
 								== DbValueConst.RECORD_STATUS_ACTIVE) {
-							// Overlap exists if (StartA <= EndB) and (EndA
-							// >= StartB)
+							// Overlap exists if (StartA <= EndB) and (EndA >= StartB)
 							Date startA = certSignatories.get(index1).getEffDate();
 							Date endA = certSignatories.get(index1).getExpDate();
 							Date startB = certSignatories.get(index2).getEffDate();
 							Date endB = certSignatories.get(index2).getExpDate();
 
 							// not null
-							if(endA==null){
+							if (endA == null) {
 								endA = endLess;
-							}if(endB==null){
+							}
+							if (endB == null) {
 								endB = endLess;
 							}
-							
+
 							boolean isCurrentPairOverlap = false;
 							isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
 
@@ -259,40 +259,44 @@ public class AuthorizedSignatoryBackingBean extends
 							}
 						}
 					}
-				} 
+				}
 			}
 		}
 		// eff date must not be after exp date
 		PmCertSignatory certSignatory = null;
 		Date effDate = null;
-		Date expDate =null;
+		Date expDate = null;
 		for (int i = 0; i < certSignatories.size(); i++) {
 			certSignatory = certSignatories.get(i);
-			if(DbValueConst.RECORD_STATUS_ACTIVE == certSignatory.getRecordStatusFlg()){
-				if(certSignatory.getEffDate()!=null 
-						&& certSignatory.getExpDate()!=null 
-						&& certSignatory.getExpDate().compareTo(certSignatory.getEffDate())<0){
+			if (DbValueConst.RECORD_STATUS_ACTIVE == certSignatory.getRecordStatusFlg()) {
+				if (certSignatory.getEffDate() != null 
+						&& certSignatory.getExpDate() != null
+						&& certSignatory.getExpDate().compareTo(certSignatory.getEffDate()) < 0) {
 					getManagedBean().setValidationError(true);
 					throw new EpException(MessageConst.ERROR_770146);
 				}
 			}
 		}
-		
+
 		//only one active
 		int activeNumber = 0;
-		if(certSignatories!=null){
-			for(PmCertSignatory pmCertSignatory: certSignatories){
-				if(pmCertSignatory.getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE){
-					if(checkEffDate(pmCertSignatory)){
+		if (certSignatories != null) {
+			for (PmCertSignatory pmCertSignatory : certSignatories) {
+				if (pmCertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					if (checkEffDate(pmCertSignatory)) {
 						activeNumber++;
 					}
 				}
 			}
 		}
-		if(activeNumber>1){
+
+		if (activeNumber > 1) {
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770144);
-		}else if(activeNumber==0){
+		} else if (activeNumber == 0) {
+			// #34445, Fix as-is bug: #39354 START
+			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
+			// #34445, Fix as-is bug: #39354 END
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770145);
 		}
@@ -308,13 +312,21 @@ public class AuthorizedSignatoryBackingBean extends
 		log.info("checkEffDate");
 		Date currentDate =  DateUtils.getCurrentDateWithoutTime();
 		boolean isActive = true;
+
+		// #34445, Fix as-is bug: #39354 START. Remove code because its no longer use
 		// effDate after currentDate
-		if(! pmCertSignatory.isBrandNew() && pmCertSignatory.getEffDate().compareTo(currentDate)>0){
+		/*if(! pmCertSignatory.isBrandNew() && pmCertSignatory.getEffDate().compareTo(currentDate)>0){
 			isActive = false;
 		// expDate not null and expDate before currentDate
 		}else if(pmCertSignatory.getExpDate()!=null && pmCertSignatory.getExpDate().compareTo(currentDate)<0){
 			isActive = false;
+		} */
+
+		if(pmCertSignatory.getExpDate()!=null && pmCertSignatory.getExpDate().compareTo(currentDate)<0){
+			isActive = false;
 		}
+		// #34445, Fix as-is bug: #39354 END. Remove code because its no longer use
+
 		return isActive;
 	}
 	

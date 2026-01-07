@@ -259,6 +259,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			//32678-End
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			//start 21229
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			
 			//START 28246 NEW implementation: IF SentIddCre = 1 , ACTION CODE CRE already sent and next action must ADJ
 			if(getManagedBean().getPaymentAdvice().getFlInvoice() !=null){				
@@ -2810,18 +2811,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}		
     }
 	//29551 - end
-	//#21416 start
-	public String filterItemName(String itemName) {
-		if( getManagedBean().getPaymentAdvice() != null ){
-			if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-				String filteredItemName = filterItemNameNA(itemName);
-				return filteredItemName;
-			}
-		}
-		return itemName;		
-	}
-	//#21416 end
-	
 	
 	// 36754 -Start
 	/**

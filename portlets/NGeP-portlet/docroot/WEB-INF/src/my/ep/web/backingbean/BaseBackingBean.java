@@ -153,6 +153,7 @@ import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.SSTConstant; //#27868
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
@@ -632,8 +633,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			items = new SelectItem[parameterDescs.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
+			
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+				
+				SelectItem item = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+				 
+				items[i++] = item;
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -642,6 +647,75 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+
+	// new #25725/25726 - Start
+	
+	
+	/**
+	 * Check for italic if language code = "ms" and parameter code in the list
+	 * @param parameterId
+	 * @return
+	 */
+	public boolean checkItalicCodeNameForMy(Long parameterId) {
+
+		PmParameter newPmParameter = new PmParameter();
+
+		if (parameterId != null) {
+			newPmParameter = ParameterHelper.getInstance().getPmParameterById(parameterId);
+		}
+
+		if (newPmParameter == null) {
+			return false;
+		}
+
+		String paramType = newPmParameter.getParameterType();
+		String paramCode = newPmParameter.getParameterCode();
+
+		Map<String, List<String>> listParameter = new HashMap<>();
+
+		// Store multiple FULFILMENT_TYPE values in a list
+		List<String> fulfilmentTypes = new ArrayList<>();
+		fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+
+		listParameter.put(ParameterTypeConst.FULFILMENT_TYPE, fulfilmentTypes);
+
+		FacesScopes face = new FacesScopes();
+		String language = face.getUserLocale().getLanguage();
+
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParameter.containsKey(paramType)) {
+			List<String> validTypes = listParameter.get(paramType);
+
+			if (validTypes.contains(paramCode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
+	
+	/**
+	 * Get list code names is italic
+	 * @param type
+	 * @return
+	 */
+	public List<String> getItalicCodeNames(String type) {
+		List<String> codeNames = new ArrayList<>();
+
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(type,
+				null);
+		for (PmParameterDesc p : parameterDescs) {
+			Long id = p.getPmParameter().getParameterId();
+
+			if (checkItalicCodeNameForMy(id)) {
+				codeNames.add(p.getCodeName());
+			}
+		}
+		return codeNames;
+	}
+	
+
+	// new #25725/25726 - End
 	
 	/** #21695 FARID START*/	
 	/**
@@ -703,6 +777,122 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return items;
 	}
+	
+	//27868 - start
+	/**
+	 * Retrieves dropdown values for Reason codes based on profile ID and
+	 * category code. If no reasons are found for the given profile ID, it will
+	 * load reasons without profile filtering.
+	 * 
+	 * @param profileId
+	 *            the profile ID used to filter reasons
+	 * @param categoryCode
+	 *            the category code of the reason
+	 * @return an array of SelectItem objects for use in a dropdown list
+	 */
+	public SelectItem[] getReasonCodeDropdownValues(Long profileId, String categoryCode) {
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(profileId, categoryCode);
+
+			List<PmReasonDesc> distinctList = new ArrayList<>();
+			Set<Long> addedReasonIds = new HashSet<>();
+
+			for (PmReasonDesc reasonDesc : reasonDescs) {
+				Long reasonId = reasonDesc.getPmReason().getReasonId();
+				if (!addedReasonIds.contains(reasonId)) {
+					addedReasonIds.add(reasonId);
+					distinctList.add(reasonDesc);
+				}
+			}
+
+			if (distinctList.isEmpty()) {
+				List<PmReasonDesc> reasonDescsWithoutProfileId = ReasonHelper.getInstance().getReasonDescList(
+						categoryCode);
+
+				for (PmReasonDesc reasonDesc : reasonDescsWithoutProfileId) {
+					Long reasonId = reasonDesc.getPmReason().getReasonId();
+					if (!addedReasonIds.contains(reasonId)) {
+						addedReasonIds.add(reasonId);
+						distinctList.add(reasonDesc);
+					}
+				}
+			}
+
+			SelectItem[] items = new SelectItem[distinctList.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+
+			int i = 1;
+			for (PmReasonDesc reasonDesc : distinctList) {
+				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
+			}
+
+			return items;
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					SSTConstant.EMPTY_STRING, SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES,
+					getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return new SelectItem[0];
+	}
+	
+	/**
+	 * Retrieves combined radio button values from new and old parameter types.
+	 * Includes the old parameter only if its code matches the given
+	 * oldParameterCode.
+	 * 
+	 * @param newParameterType
+	 *            the parameter type for new values
+	 * @param oldParameterType
+	 *            the parameter type for old values
+	 * @param oldParameterCode
+	 *            the specific old parameter code to include
+	 * @return an array of SelectItem objects representing the combined radio
+	 *         button options
+	 */
+	public SelectItem[] getRadioButtonCodeValuesCombineWIPParameter(String newParameterType, String oldParameterType,
+			String oldParameterCode) {
+
+		List<SelectItem> items = new ArrayList<>();
+
+		try {
+			List<PmParameterDesc> newParameterDescs = ParameterHelper.getInstance().getParameterDescList(
+					newParameterType);
+
+			for (PmParameterDesc desc : newParameterDescs) {
+				items.add(new SelectItem(desc.getPmParameter().getParameterCode(), desc.getCodeName()));
+			}
+
+			List<PmParameterDesc> oldParameterDescs = ParameterHelper.getInstance().getParameterDescList(
+					oldParameterType);
+
+			for (PmParameterDesc desc : oldParameterDescs) {
+				if (oldParameterCode != null
+						&& oldParameterCode.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(desc.getPmParameter().getParameterCode(), desc.getCodeName()));
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance()
+					.logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, SSTConstant.EMPTY_STRING,
+							SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM,
+							getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items.toArray(new SelectItem[0]);
+	}	
+	//27868 - end
 
 	/**
 	 * Get reason by reason category code and reason code

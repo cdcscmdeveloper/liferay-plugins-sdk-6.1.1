@@ -163,6 +163,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 
 			FulfilmentResDTO resDTO;//36386
@@ -1032,15 +1033,4 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		}	
 	}		
 	//29870-end
-	//#21416 start
-	public String filterItemName(String itemName) {
-		if(this.getManagedBean().getStopInstr() != null){
-			if(this.getManagedBean().getStopInstr().getFlRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
-				String filteredItemName = filterItemNameNA(itemName);
-				return filteredItemName;
-			}
-		}
-		return itemName;		
-	}
-	//#21416 end
 }

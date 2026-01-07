@@ -2734,4 +2734,5 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.masterAllDataModel = masterAllDataModel;
 	}
 	// 9299 - END
+	
 }
