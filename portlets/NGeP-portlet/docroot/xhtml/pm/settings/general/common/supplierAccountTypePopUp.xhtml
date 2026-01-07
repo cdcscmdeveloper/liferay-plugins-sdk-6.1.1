@@ -35,7 +35,7 @@
 
 		/* Control spacing only */
 		.supp-acc-grid td {
-			padding: 4px 6px !important;
+			padding: 2px 2px !important;
 			vertical-align: top !important;
 		}
 
@@ -102,7 +102,8 @@
 			<!-- ======================
 			     BASIC / MOF / G2G
 			     ====================== -->
-			<p:selectManyCheckbox id="types" value="#{ruleCatalogueBackingBean.managedBean.selectedSuppAccountType}" layout="pageDirection">
+			<p:selectManyCheckbox id="types" disabled="#{ruleCatalogueBackingBean.managedBean.selectedAllSuppAccountType}"
+				value="#{ruleCatalogueBackingBean.managedBean.selectedSuppAccountType}" layout="pageDirection">
 				<f:selectItems value="#{ruleCatalogueBackingBean.reasonSuppAccTypeDropDown()}" />
 				<f:converter converterId="javax.faces.Long" />
 			</p:selectManyCheckbox>
@@ -114,11 +115,15 @@
 		<f:facet name="footer">
 			<h:panelGroup layout="block" styleClass="dialog-footer-right">
 				<p:commandButton id="satOkbtn" value="#{lbl['lbl.btn.ok']}"
-					action="#{ruleCatalogueBackingBean.addSupplierTypeAcc()}"
-					update="@([id$=supplAccTypeId])" oncomplete="accTypeDlg.hide();"
-					partialSubmit="true" />
+					action="#{ruleCatalogueBackingBean.addSupplierTypeAcc}"
+					process="@this,@([id$=accTypeDlg])"
+					partialSubmit="true"
+					update="@([id$=ruleTypeValueTableID])"
+					oncomplete="accTypeDlg.hide();" />
 				<p:commandButton id="satCancelbtn" value="#{lbl['lbl.btn.cancel']}"
-					onclick="accTypeDlg.hide();" />
+					onclick="accTypeDlg.hide();"
+					process="@this,@([id$=accTypeDlg])"
+                    partialSubmit="true"/>
 			</h:panelGroup>
 		</f:facet>
 	</p:dialog>

@@ -377,6 +377,7 @@ public class RuleCatalogueBackingBean extends
 		getManagedBean().setThresholdIndex(0);
 		getManagedBean().setGstIndex(TAXABLE_ITEM_IDX);
 		getManagedBean().setAutoUpdate(true);
+		getManagedBean().setNewPRList(false); //#35323
 		setCurrentActiveOrg();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
@@ -1511,6 +1512,7 @@ public class RuleCatalogueBackingBean extends
 			clearAllAuditBeanVal(getManagedBean());
 			/************ AUDIT #28895_35509 - END **************/
 			//#35323 - Start
+			this.getManagedBean().setNewPRList(false);
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())){
 				loadPRValues();
 			}
@@ -5674,6 +5676,7 @@ public class RuleCatalogueBackingBean extends
 		if (CollectionUtils.isNotEmpty(searchRuleDescList)) {
 			this.getManagedBean().setConfigRuleDescList(searchRuleDescList);
 			this.getManagedBean().setSelectedRuleDescType(searchRuleDescList.get(0));
+			this.getManagedBean().setOriginalConfigRuleValueList(searchRuleDescList.get(0).getRuleType().getConfigRuleValues());
 		}else{
 			this.getManagedBean().setConfigRuleDescList(null);
 			this.getManagedBean().setSelectedRuleDescType(null);
@@ -6207,13 +6210,16 @@ public class RuleCatalogueBackingBean extends
 	 * 
 	 */
 	public void initSupplAccTypePopup(int index, List<Long> ids) {
-		log.info("initSupplAccTypePopup " + ids);
-		
 		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setSelectedSuppAccountType(null);
+		this.getManagedBean().setSelectedAllSuppAccountType(false);
 
-		if (ids != null) {
+		if (ids != null && !ids.isEmpty()) {
 			this.getManagedBean().getSelectedSuppAccountType().addAll(ids);
+
+			if (ids.size() == 3) {
+				this.getManagedBean().setSelectedAllSuppAccountType(true);
+			}
 		}
 	}
 	
@@ -6242,13 +6248,14 @@ public class RuleCatalogueBackingBean extends
 
 		List<Object[]> rows = ruleSO.getPRList();
 
-		if (!rows.isEmpty()) {
+		if (!rows.isEmpty() && !this.getManagedBean().isNewPRList()) {
 			List<PmConfigRuleValue> newList = convertToNewPRValues(rows);
 
 			List<PmConfigRuleValue> oldList = this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues();
 
 			oldList.clear();
 			oldList.addAll(newList);
+			this.getManagedBean().setNewPRList(true);
 		}
 	}
 	

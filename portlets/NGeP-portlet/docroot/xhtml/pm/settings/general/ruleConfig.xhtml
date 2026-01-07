@@ -365,7 +365,7 @@
 			<!-- 29650 - END -->
 			
 			<!-- #35323 - Start  -->
-			<p:column width="15%" id="PRfromValueColumnId"
+			<p:column width="20%" id="PRfromValueColumnId"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR')}">
 
 				<f:facet name="header">
@@ -373,13 +373,13 @@
 				    #{lbl['lbl.pm.rule.from.value.RM']}
 				</f:facet>
 				<p:inputText id="PRfromValueId" value="#{typeValueObj.fromValue}"
-					label="#{lbl['lbl.pm.rule.from.value']}" 
-					size="17" maxlength="12" 
+					label="#{lbl['lbl.pm.rule.from.value']}"
+					size="17" maxlength="12"
 					style="text-align:right"
-					required="#{!empty param['disableValidation']}"
+					required="true"
 					onchange="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
-					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR' and !typeValueObj.showFlag)}">
+					disabled="#{!typeValueObj.brandNew or !typeValueObj.showFlag}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<f:attribute name="max" value="99999999999.99" />
 					<f:validator validatorId="quantityDoubleRangeValidator" />
@@ -388,7 +388,7 @@
 				<p:message id="PRfromValueMsg" for="PRfromValueId" display="icon" />
 			</p:column>
 
-			<p:column width="15%" id="PRtoValueColumnId"
+			<p:column width="20%" id="PRtoValueColumnId"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR')}">
 				<f:facet name="header">
 					#{lbl['lbl.pm.rule.to.value.RM']}
@@ -418,24 +418,24 @@
 				<p:message id="PRtoValueMsg" for="PRtoValueId" display="icon" />
 			</p:column>
 
-			<p:column width="15%"
+			<p:column width="23%"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR')}">
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" />			
+					<h:outputText value="*" styleClass="mandatory" />
 				    #{lbl['lbl.pm.rule.supp.acc.type']}
 				</f:facet>
 				<p:inputText id="supplAccTypeId"
 					value="#{ruleCatalogueBackingBean.displaySupplAccTypes(typeValueObj.supplAcctTypeIds)}"
-					label="#{lbl['lbl.pm.rule.supp.acc.type']}" 
-					style="text-align:right"
+					label="#{lbl['lbl.pm.rule.supp.acc.type']}"
+					style="text-align:right;width: 200px;"
 					readonly="true"
-					required="#{!empty param['disableValidation']}">
+					required="true">
 				</p:inputText>
 				<p:spacer width="5px" />
 				<p:commandLink
-					id="suppAccType" 
+					id="suppAccType"
+					partialSubmit="true"
 					process="@this"
-					readonly="true"
 					disabled="#{!(typeValueObj.brandNew)}"
 					action="#{ruleCatalogueBackingBean.initSupplAccTypePopup(index, typeValueObj.supplAcctTypeIds)}"
 					update="@([id$=accTypeDlg])"

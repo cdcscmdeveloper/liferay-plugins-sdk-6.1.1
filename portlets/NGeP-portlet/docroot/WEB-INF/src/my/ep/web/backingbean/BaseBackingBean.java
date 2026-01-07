@@ -791,33 +791,56 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return an array of SelectItem objects for use in a dropdown list
 	 */
 	public SelectItem[] getReasonCodeDropdownValues(Long profileId, String categoryCode) {
-		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
+
 		try {
 			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(profileId, categoryCode);
 
-			items = new SelectItem[reasonDescs.size() + 1];
+			List<PmReasonDesc> distinctList = new ArrayList<>();
+			Set<Long> addedReasonIds = new HashSet<>();
+
+			for (PmReasonDesc reasonDesc : reasonDescs) {
+				Long reasonId = reasonDesc.getPmReason().getReasonId();
+				if (!addedReasonIds.contains(reasonId)) {
+					addedReasonIds.add(reasonId);
+					distinctList.add(reasonDesc);
+				}
+			}
+
+			if (distinctList.isEmpty()) {
+				List<PmReasonDesc> reasonDescsWithoutProfileId = ReasonHelper.getInstance().getReasonDescList(
+						categoryCode);
+
+				for (PmReasonDesc reasonDesc : reasonDescsWithoutProfileId) {
+					Long reasonId = reasonDesc.getPmReason().getReasonId();
+					if (!addedReasonIds.contains(reasonId)) {
+						addedReasonIds.add(reasonId);
+						distinctList.add(reasonDesc);
+					}
+				}
+			}
+
+			SelectItem[] items = new SelectItem[distinctList.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+
 			int i = 1;
-			for (PmReasonDesc reasonDesc : reasonDescs) {
+			for (PmReasonDesc reasonDesc : distinctList) {
 				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
 			}
 
-			if (reasonDescs.isEmpty()) {
-				List<PmReasonDesc> reasonDescsWithoutProfileId = ReasonHelper.getInstance().getReasonDescList(
-						categoryCode);
-				for (PmReasonDesc reasonDesc : reasonDescsWithoutProfileId) {
-					items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
-				}
-			}
+			return items;
+
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
-					SSTConstant.EMPTY_STRING, SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES, getUserIdSessionFromLoginId(), e);
+					SSTConstant.EMPTY_STRING, SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES,
+					getUserIdSessionFromLoginId(), e);
+
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
-		return items;
+
+		return new SelectItem[0];
 	}
 	
 	/**
