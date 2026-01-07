@@ -18712,6 +18712,14 @@ public class SmApplicationBackingBean extends
 	}
 	
 	/**
+	 * To show previous history dialog
+	 * 
+	 */
+	public void otherDescriptionHistoryPrev() {
+		RequestContext.getCurrentInstance().execute("otherDescriptionHistoryDlgPrev.show();");
+	}
+	
+	/**
 	 * To set data for managed bean and show dialog edit
 	 *  
 	 *  * @param smSupCat

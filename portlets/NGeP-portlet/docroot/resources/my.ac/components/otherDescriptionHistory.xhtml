@@ -58,16 +58,13 @@
 							<h:outputText
 								rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}"
 								value="#{otherDescBean.otherDesc}" />
-							<h:outputText
-								rendered="#{otherDescBean.roleType eq SupplierManagementConst.SUPPLIER_PO}"
-								value="#{cat.otherDesc}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.po']}"
 							style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 							<h:outputText
 								rendered="#{otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO or 
-								otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO}"
+								otherDescBean.roleType eq SupplierManagementConst.SUPPLIER_PO}"
 								value="#{supplierDataMaintenanceBackingBean.getUserNameByUserId(otherDescBean.createdBy)}" />
 						</p:column>
 						<p:column
@@ -76,9 +73,6 @@
 							<h:outputText
 								rendered="#{not empty otherDescBean and otherDescBean.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP}"
 								value="#{otherDescBean.otherDesc}" />
-							<h:outputText
-								rendered="#{otherDescBean.roleType eq SupplierManagementConst.SUPPLIER_APPROVER}"
-								value="#{cat.otherDesc}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.other.desc.history.action.by.reg.approver']}"
