@@ -2402,7 +2402,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(getManagedBean().getSmAppl().getSmSupplier());
 		//31480 end
 		// 36504 - START
-		getManagedBean().setOtherDescChange(false);
+		getManagedBean().setOtherDescChangePO(false);
+		getManagedBean().setOtherDescChangeApprover(false);
+		getManagedBean().setOtherDescChangeSupplier(false);
 		// 36504 - END
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
@@ -2417,16 +2419,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			String catType = cat.getPmCategoryL3().getCategoryTypeCode()
 					.getParameterCode();
 			cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
-			if (catType
-					.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
-					|| catType
-							.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
-				cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat
-						.getSupplierCategoryId()));
-				if (!EntityHelper.isCollectionEmpty(cat
-						.getSmSuppCatOtherDescHistory())
-						&& !getManagedBean().isOtherDescChange()) {
-					getManagedBean().setOtherDescChange(true);
+			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
+					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
+					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
+				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+						&& !getManagedBean().isOtherDescChangePO() && getManagedBean().isPoUser()) {
+					getManagedBean().setOtherDescChangePO(true);
+				} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+						&& !getManagedBean().isOtherDescChangeApprover() && getManagedBean().isApproverUser()) {
+					getManagedBean().setOtherDescChangeApprover(true);
+				} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+						&& !getManagedBean().isOtherDescChangeSupplier() && getManagedBean().isSupplierUser()) {
+					getManagedBean().setOtherDescChangeSupplier(true);
 				}
 			}
 			// 36504 - END
