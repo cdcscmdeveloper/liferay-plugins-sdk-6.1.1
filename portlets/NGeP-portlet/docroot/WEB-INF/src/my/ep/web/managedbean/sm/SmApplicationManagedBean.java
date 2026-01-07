@@ -680,7 +680,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangePO;
 	private boolean otherDescChangeApprover;
 	private boolean otherDescChangeSupplier;
+	private boolean otherDescChangeSupPO;
+	private boolean otherDescChangeSupApprover;
 	private String otherDescEdited;
+	private List<SmSupplierCategory> previousCategoryList;
 	private IPagingDataModel<SmSuppCatOtherDescHistory> otherDescDataModel = new OtherDescSearchPagingDataModel();
 	// 36504 - END
 		
@@ -4803,6 +4806,49 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	 */
 	public void setOtherDescChangeSupplier(boolean otherDescChangeSupplier) {
 		this.otherDescChangeSupplier = otherDescChangeSupplier;
+	}
+
+	/**
+	 * @return the previousCategoryList
+	 */
+	public List<SmSupplierCategory> getPreviousCategoryList() {
+		return previousCategoryList;
+	}
+
+	/**
+	 * @param previousCategoryList the previousCategoryList to set
+	 */
+	public void setPreviousCategoryList(
+			List<SmSupplierCategory> previousCategoryList) {
+		this.previousCategoryList = previousCategoryList;
+	}
+
+	/**
+	 * @return the otherDescChangeSupPO
+	 */
+	public boolean isOtherDescChangeSupPO() {
+		return otherDescChangeSupPO;
+	}
+
+	/**
+	 * @param otherDescChangeSupPO the otherDescChangeSupPO to set
+	 */
+	public void setOtherDescChangeSupPO(boolean otherDescChangeSupPO) {
+		this.otherDescChangeSupPO = otherDescChangeSupPO;
+	}
+
+	/**
+	 * @return the otherDescChangeSupApprover
+	 */
+	public boolean isOtherDescChangeSupApprover() {
+		return otherDescChangeSupApprover;
+	}
+
+	/**
+	 * @param otherDescChangeSupApprover the otherDescChangeSupApprover to set
+	 */
+	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
+		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
 	}
 	// 36504 - END
 

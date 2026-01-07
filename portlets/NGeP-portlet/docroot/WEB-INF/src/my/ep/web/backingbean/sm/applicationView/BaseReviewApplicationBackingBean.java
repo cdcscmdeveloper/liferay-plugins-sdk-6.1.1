@@ -2405,6 +2405,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setOtherDescChangePO(false);
 		getManagedBean().setOtherDescChangeApprover(false);
 		getManagedBean().setOtherDescChangeSupplier(false);
+		getManagedBean().setOtherDescChangeSupPO(false);
+		getManagedBean().setOtherDescChangeSupApprover(false);
 		// 36504 - END
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
@@ -2431,8 +2433,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							&& !getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 						getManagedBean().setOtherDescChangeApprover(true);
 					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
-							&& !getManagedBean().isOtherDescChangeSupplier() && (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER) ||
-							history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO))) {
+							&& !getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+						getManagedBean().setOtherDescChangeSupApprover(true);
+						getManagedBean().setOtherDescChangeSupplier(true);
+					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !getManagedBean().isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+						getManagedBean().setOtherDescChangeSupPO(true);
 						getManagedBean().setOtherDescChangeSupplier(true);
 					}
 				}

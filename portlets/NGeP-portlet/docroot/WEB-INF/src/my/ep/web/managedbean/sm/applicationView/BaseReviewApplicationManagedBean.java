@@ -363,6 +363,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangePO;
 	private boolean otherDescChangeApprover;
 	private boolean otherDescChangeSupplier;
+	private boolean otherDescChangeSupPO;
+	private boolean otherDescChangeSupApprover;
 	private String otherDescEdited;
 	// 36504 - END
 	
@@ -2719,5 +2721,33 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.otherDescChangeSupplier = otherDescChangeSupplier;
 	}
 	// 36504 - END
+
+	/**
+	 * @return the otherDescChangeSupPO
+	 */
+	public boolean isOtherDescChangeSupPO() {
+		return otherDescChangeSupPO;
+	}
+
+	/**
+	 * @param otherDescChangeSupPO the otherDescChangeSupPO to set
+	 */
+	public void setOtherDescChangeSupPO(boolean otherDescChangeSupPO) {
+		this.otherDescChangeSupPO = otherDescChangeSupPO;
+	}
+
+	/**
+	 * @return the otherDescChangeSupApprover
+	 */
+	public boolean isOtherDescChangeSupApprover() {
+		return otherDescChangeSupApprover;
+	}
+
+	/**
+	 * @param otherDescChangeSupApprover the otherDescChangeSupApprover to set
+	 */
+	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
+		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
+	}
 	
 }
