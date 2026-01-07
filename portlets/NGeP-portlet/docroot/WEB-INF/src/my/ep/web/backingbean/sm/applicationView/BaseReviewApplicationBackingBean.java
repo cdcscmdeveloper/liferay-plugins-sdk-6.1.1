@@ -2422,15 +2422,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-				if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
-						&& !getManagedBean().isOtherDescChangePO() && getManagedBean().isPoUser()) {
-					getManagedBean().setOtherDescChangePO(true);
-				} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
-						&& !getManagedBean().isOtherDescChangeApprover() && getManagedBean().isApproverUser()) {
-					getManagedBean().setOtherDescChangeApprover(true);
-				} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
-						&& !getManagedBean().isOtherDescChangeSupplier() && getManagedBean().isSupplierUser()) {
-					getManagedBean().setOtherDescChangeSupplier(true);
+				
+				for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
+					if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !getManagedBean().isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+						getManagedBean().setOtherDescChangePO(true);
+					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !getManagedBean().isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+						getManagedBean().setOtherDescChangeApprover(true);
+					} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+							&& !getManagedBean().isOtherDescChangeSupplier() && (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER) ||
+							history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO))) {
+						getManagedBean().setOtherDescChangeSupplier(true);
+					}
 				}
 			}
 			// 36504 - END
