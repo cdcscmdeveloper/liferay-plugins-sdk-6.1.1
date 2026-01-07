@@ -126,6 +126,8 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg; //#35238
+import my.ep.persistence.entity.pm.authorization.PmUserRole; //#35238
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
@@ -1261,6 +1263,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
 				getManagedBean().setSecretaryId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
+				checkQCBSecretaryWIP(); //#35238
 			}
 
 			//Enhancement 15851 - Prefix for supplemental contract letter
@@ -1680,19 +1683,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				copyCommitteeMember();
 				getManagedBean().setHasChanges(Boolean.FALSE);
 				getManagedBean().setFilteredUpdatedCommitteeMembers(new ArrayList<CtCommitteeMember>());
-				for(CtCommitteeMember newMember: getManagedBean().getUpdatedCommitteeMembers()) {
-					//#35238 start
-					if (newMember.getMemberRole() != null
-							&& newMember.getMemberRole().getParameterCode() != null
-							&& newMember.getMemberRole().getParameterCode()
-									.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-						newMember.setAttended(true);
-					}
-					if(newMember.getUpdateType() != null) {
-						getManagedBean().setHasChanges(Boolean.TRUE);
-					}
-					//#35238 end
-				}
 			}
 			//#29403 end
 			
@@ -2742,9 +2732,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			// Start Fix - #33952, #25956			
-			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() && ctBackingBean
-					.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0)
-					&& ctBackingBean.getManagedBean().isContractExpired()){
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendDaysPeriod() == 0)
+					&& ctBackingBean.getManagedBean().isContractExpired()){ //#32418
 				
 				if ((ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION.equals(ctBackingBean.getManagedBean()
 								.getContractVer().getStatus().getStatusId()))
@@ -4075,6 +4066,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}				
 		}
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setSecretary(pmUser);
+		setAmendmentCommitteeType(); //#35238
 	}
 
 	/**
@@ -5288,8 +5280,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Start Fix - #33287
 			isUntickContractExtension = true; 
 			spToCheck = true; 
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime()); 
 			//End Fix - #33287
 		}
 		changeAmendmentEffDate();
@@ -5322,8 +5312,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Start Fix - #33287
 			isUntickItemPrice = true;
 			spToCheck = true;
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			//End Fix - #33287
 		}
 		ConstructTabSideMenu();
@@ -5368,8 +5357,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Start Fix - #33287
 			isUntickItemMaxQty = true;
 			spToCheck = true;
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			//End Fix - #33287
 		}
 		ConstructTabSideMenu();
@@ -5386,8 +5374,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}
 		//End Fix - #33287
@@ -5416,14 +5403,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			//Start Fix - #33287
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
 			isCentralContractTypeCheck();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}
 		//End Fix - #33287
@@ -5477,8 +5462,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 
 		if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		}
 	//End Fix - #33287
@@ -6260,7 +6244,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			SelectItem[] items = null;
 			ICommitteSO committeSO = null;
 			ISearchResultBean<PmUser> userResultList = null;
-			ISearchResultBean<PmUser> userListDO = null; //Bug #29740
+			//Bug #29740
+			ISearchResultBean<PmUser> userListDO = null;
+			List<PmUser> userList = new ArrayList<PmUser>();
 			try {
 
 				int i = 1;
@@ -6289,30 +6275,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} else {
 					committeReqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
 				}
-				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();			
-
+				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();	
+				//Bug #29740
+				userList = new ArrayList<PmUser>(userResultList.getResultList());
+				
 				if (userResultList != null && userResultList.getResultList() != null) {
-					//Bug #29740
+					//Bug #29740 - start
 					if(userListDO != null && userListDO.getResultList() != null) {
-						items = new SelectItem[userResultList.getResultList().size() + userListDO.getResultList().size() + 1];
-					} else {
-						items = new SelectItem[userResultList.getResultList().size() + 1];
-					}
-
-					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-
-					for (PmUser user : userResultList.getResultList()) {
-						items[i++] = new SelectItem(user.getUserId(), user.getUserName());
+						userList.addAll(userListDO.getResultList());
 					}
 					
-					//Bug #29740
-					if(userListDO != null && userListDO.getResultList() != null) {
-						for (PmUser userDO : userListDO.getResultList()) {
-							items[i++] = new SelectItem(userDO.getUserId(), userDO.getUserName());
-						}
+					Set<PmUser> set = new LinkedHashSet<PmUser>(userList);
+					userList.clear();
+					userList.addAll(set);
+					checkForQCBCommitteeDeskOfficerWIP(userList); //#35238
+					
+					items = new SelectItem[userList.size() + 1];
+					//Bug #29740 - end
+					
+					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+					
+					for (PmUser user : userList) {//Bug #29740
+						items[i++] = new SelectItem(user.getUserId(), user.getUserName());
 					}
-					//Bug #29740 - End
 					
 					// Default the secretary if selection list only have one secretary
 					if (items != null && items.length == 2) {
@@ -6513,15 +6499,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
 
 			// QCA/QCB, need to be same PTJ
-			if (isQuotationCommitteeType()) { //#35238
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ownerOrgProfileId: "+ ctOwnerOrgProfileId);
-				
-				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
-					allowChairpersonRole = true;
-				} else {
-					allowChairpersonRole = false;
-				}
-			}
+			allowChairpersonRole = determineChairpersonAccessForQuotationCommmittee(orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole); //#35238
 			
 			//Bug #26520 - start
 			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
@@ -7460,6 +7438,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.onChangeServiceTax();
 		}
 		ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
+		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
+			isUntickOther = true;
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
+			spToCheck = true;
+		}
 	}
 
 	/**
@@ -8048,6 +8031,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				.clone((Serializable) ctBackingBean.getManagedBean().getContractVer().getCtAmendment()
 						.getCtCommitteeMembers());
 		getManagedBean().setUpdatedCommitteeMembers(copyMember);
+		setUpdatedCommitteeMemberAttended();
 	}
 	// #29403 end
 
@@ -9742,13 +9726,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * Checks if the given committee type is a quotation committee type.
+	 * Checks if the given committee type is a quotation committee type QCA,QCB or QC.
 	 *
 	 * @return true if it matches any quotation committee type, false otherwise
 	 */
 	public boolean isQuotationCommitteeType() {
 		return getManagedBean().getCommitteeType() != null
 				&& ContractHashSetConst.COMMITTEE_TYPE_QUOTATION.contains(getManagedBean().getCommitteeType());
+	}
+	
+	/**
+	 * Checks if the given committee type is a quotation committee type QCA and QC.
+	 *
+	 * @return true if it matches any quotation committee type, false otherwise
+	 */
+	public boolean isQuotationCommitteeTypeAC() {
+		return getManagedBean().getCommitteeType() != null
+				&& ContractHashSetConst.COMMITTEE_TYPE_QUOTATION_A_C.contains(getManagedBean().getCommitteeType());
 	}
 	
 	/**
@@ -9760,6 +9754,297 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private Long getParameterId(PmParameter pmParameter) {
 	    return pmParameter != null ? pmParameter.getParameterId() : null;
 	}
+	
+	/**
+	 * Checks if the given committee type is a quotation committee type QCB.
+	 * 
+	 * @return true if current committee is WIP QCB
+	 */
+	public boolean isQCBCommitteeWIP() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null) {
+			return false;
+		}
+		String committeeCode = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType()
+				.getParameterCode();
+
+		return committeeCode != null
+				&& committeeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B);
+	}
+	
+	/**
+	 * Method to check for WIP QCB Committee Desk Officer. QCA/QCB has been replaced with
+	 * QQC. For data that has been saved previously with QCB secretary will be
+	 * treated as WIP QCB Committee. For the new version, QCB secretary will be
+	 * excluded from desk officer drop down, thus to cater the WIP issue, this
+	 * method will add back the selected QCB secretary into the dropdown.
+	 * 
+	 * @param userList
+	 *            the list of Desk Officer
+	 */
+	private void checkForQCBCommitteeDeskOfficerWIP(List<PmUser> userList) {
+		if (checkStatusTaskForQCBCommitteeWIP() && checkSecretaryExistWIP() && loaAmountQCBCommitteeWIP()) {
+			checkQCBSecretaryInList(userList);
+		}
+	}
+
+	/**
+	 * Method to check the current status for QCB Secretary dropdown list.
+	 * 
+	 * @return true if all condition met, otherwise false.
+	 */
+	private boolean checkStatusTaskForQCBCommitteeWIP() {
+		return getManagedBean().getTaskName() != null
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME) || getManagedBean()
+						.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME));
+	}
+
+	/**
+	 * Method to check whether secretary not null and has been saved previously
+	 * 
+	 * @return true if all condition met, otherwise false.
+	 */
+	private boolean checkSecretaryExistWIP() {
+		return getManagedBean().getSecretaryId() != null && getManagedBean().isCommitteeQCBSecretaryWIP()
+				&& isQCBCommitteeWIP();
+	}
+
+	/**
+	 * Method to check amount loa for WIP QCB committee
+	 * 
+	 * @return true if all condition met, otherwise false.
+	 */
+	private boolean loaAmountQCBCommitteeWIP() {
+		long loaAmt = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt().longValue();
+		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
+				&& loaAmt >= 20000L && loaAmt <= 50000L;
+	}
+
+	/**
+	 * Method to check the current save secretary is in the desk officer list dropdown.
+	 * 
+	 * @param userList
+	 *            the list of Desk Officer
+	 */
+	private void checkQCBSecretaryInList(List<PmUser> userList) {
+		boolean isFound = false;
+		for (PmUser user : userList) {
+			if (user.getUserId().equals(getManagedBean().getSecretaryId())) {
+				isFound = true;
+				break;
+			}
+		}
+		if (!isFound) {
+			checkAndAddQCBSecretaryWIP(userList);
+		}
+	}
+	
+	/**
+	 * Checks the current contract status within the allowed status and the
+	 * amount of the loa for QCB Committee. Checks whether the configured
+	 * secretary user has QCB Secretary role and marks the committee QCB
+	 * Secretary as work-in-progress.
+	 */
+	private void checkQCBSecretaryWIP() {
+		if (checkStatusTaskForQCBCommitteeWIP() && loaAmountQCBCommitteeWIP() && isQCBCommitteeWIP()) {
+			PmUser pmUser = retrieveSecretaryByUserId();
+
+			if (pmUser == null) {
+				return;
+			}
+
+			if (hasQCBSecretaryRole(pmUser)) {
+				getManagedBean().setCommitteeQCBSecretaryWIP(true);
+			}
+
+		}
+	}
+
+	/**
+	 * Method to check the save secretary is QCB. If yes, will insert into list.
+	 * 
+	 * @param userList the list of Desk Officer
+	 */
+	private void checkAndAddQCBSecretaryWIP(List<PmUser> userList) {
+		PmUser pmUser = retrieveSecretaryByUserId();
+
+		if (pmUser == null || userList == null) {
+			return;
+		}
+
+		userList.add(pmUser);
+	}
+	
+	/**
+	 * Retrieves the secretary user based on secretary ID from managed bean.
+	 * 
+	 * @return PmUser if found, otherwise null
+	 */
+	private PmUser retrieveSecretaryByUserId() {
+		if (getManagedBean().getSecretaryId() == null) {
+			return null;
+		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(getManagedBean().getSecretaryId());
+
+		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+		return resDTO != null ? resDTO.getPmUser() : null;
+	}
+	
+	/**
+	 * Determines whether the given user has QCB Secretary role.
+	 * 
+	 * @param pmUser user to be checked
+	 * @return true if user has QCB Secretary role, otherwise false
+	 */
+	private boolean hasQCBSecretaryRole(PmUser pmUser) {
+		if (pmUser.getPmUserOrgs() == null) {
+			return false;
+		}
+
+		for (PmUserOrg userOrg : pmUser.getPmUserOrgs()) {
+			if (userOrg.getPmUserRoles() == null) {
+				continue;
+			}
+
+			for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+				if (userRole.getPmRole() != null && userRole.getPmRole().getRoleCode() != null
+						&& RoleCode.QCB_SECRETARY.value().equalsIgnoreCase(userRole.getPmRole().getRoleCode())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Sets the committee type for ctAmendment during save/reject
+	 */
+	private void setAmendmentCommitteeType() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
+			return;
+		}
+		PmParameter pmParameter = getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, getManagedBean()
+				.getCommitteeType());
+
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setCommitteeType(pmParameter);
+	}
+	
+	/**
+	 * Method to set attended for secretary only for updated committee.
+	 */
+	private void setUpdatedCommitteeMemberAttended(){
+		for(CtCommitteeMember newMember: getManagedBean().getUpdatedCommitteeMembers()) {
+			if (newMember.getMemberRole() != null
+					&& newMember.getMemberRole().getParameterCode() != null
+					&& newMember.getMemberRole().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+				newMember.setAttended(true);
+			}
+			if(newMember.getUpdateType() != null) {
+				getManagedBean().setHasChanges(Boolean.TRUE);
+			}
+		}
+	}
+	
+	/**
+	 * Check whether the user is allowed to act as Chairperson based on role and
+	 * committee type
+	 * 
+	 * @param orgProfileId id for ministry committee
+	 * @param ctOwnerOrgProfileId  contract ministry id 
+	 * @param userResDTO the user to be checked
+	 * @param allowChairpersonRole previous true false for allow chairperson
+	 * @return return true if all condition met, otherwise false.
+	 */
+	private boolean determineChairpersonAccessForQuotationCommmittee(Long orgProfileId, Long ctOwnerOrgProfileId,
+			UserResDTO userResDTO, boolean allowChairpersonRole) {
+		boolean allow = allowChairpersonRole;
+		for (PmRoleDesc pmRoleDesc : userResDTO.getRoleDescList()) {
+			String roleCode = pmRoleDesc.getPmRole().getRoleCode();
+			if ((isQuotationCommitteeTypeAC() && isTypeAChairperson(roleCode))
+					|| (isQCBCommitteeWIP() && RoleCode.QCB_CHAIRPERSON.value().equalsIgnoreCase(roleCode))) {
+				allow = false;
+				if (orgProfileId.equals(ctOwnerOrgProfileId)) {
+					allow = true;
+					break;
+				}
+			}
+		}
+		return allow;
+	}
+	
+	/**
+	 * Check if the role belongs to a valid Chairperson role for Committee Type
+	 * QCA and QC
+	 * 
+	 * @param roleCode user role code
+	 * @return true if all condition met, otherwise false.
+	 */
+	private boolean isTypeAChairperson(String roleCode) {
+		return RoleCode.QCA_CHAIRPERSON.value().equalsIgnoreCase(roleCode)
+				|| RoleCode.QQC_CHAIRPERSON.value().equalsIgnoreCase(roleCode);
+	}
 	//#35238 end
+	
+	// Start Fix - #39538
+	/**
+	 * Resets the amendment effective date based on contract and amendment
+	 * conditions.
+	 * 
+	 * <p>
+	 * If the amendment is a contract extension and the contract is already
+	 * expired, the amendment effective date will be set to the extension start
+	 * date. Otherwise, if amendment changes require a reset, a new effective
+	 * date will be calculated and applied.
+	 * </p>
+	 * 
+	 * @param amendment
+	 *            the amendment entity used to determine whether the effective
+	 *            date should be reset
+	 */
+	private void resetEffDate(CtAmendment amendment) {
+		Calendar cal = Calendar.getInstance();
+		boolean shouldResetEffDate = amendmentFlagCheck(amendment, cal);
+
+		if (amendment.isContractExtend() && ctBackingBean.getManagedBean().isContractExpired()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(
+							ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+		} else if (shouldResetEffDate) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(retrieveNewEffDate());
+		}
+	}
+
+	/**
+	 * Determines whether the amendment effective date should be reset.
+	 * 
+	 * <p>
+	 * The effective date should be reset only when:
+	 * <ul>
+	 * <li>The amendment is NOT a contract extension</li>
+	 * <li>There are NO changes to item, value, clause or other attributes</li>
+	 * <li>The current amendment effective date is NOT equal to today's date</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param amendment
+	 *            the amendment being evaluated
+	 * @param cal
+	 *            the current date reference used for comparison
+	 * @return true if the amendment effective date should be reset, otherwise
+	 *         false
+	 */
+	private boolean amendmentFlagCheck(CtAmendment amendment, Calendar cal) {
+		boolean isAmendItemFlag = amendment.isItemPriceChange() || amendment.isQuantityChange();
+		boolean isAmendValueFlag = amendment.isValueChange() || amendment.isValueChangeByGst()|| amendment.isValueChangeByStax();
+		boolean isAmendClauseAndOtherFlag = amendment.isClauseChange() || amendment.isOtherChange();
+		boolean overallChange = isAmendItemFlag || isAmendValueFlag || isAmendClauseAndOtherFlag;
+		return !amendment.isContractExtend() && !overallChange && !amendment.getAmendmentEffDate().equals(cal.getTime());
+	}
+	// End Fix - #39538
 
 }

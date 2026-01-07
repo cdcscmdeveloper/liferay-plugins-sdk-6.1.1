@@ -337,6 +337,12 @@ public class SmSideMenuIconUtil {
 					bean.getSupplierEditVO().setSuppEditCategory(true);
 				}
 				
+				// 36504 - START
+				if (bean.isOtherDescChangeSupplier()) {
+					bean.getEditVO().setSuppEditCategory(true);
+				}
+				// 36504 - END
+				
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCategory(false);
@@ -344,6 +350,16 @@ public class SmSideMenuIconUtil {
 				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(),bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+				
+				// 36504 - START
+				if (bean.isOtherDescChangePO()) {
+					bean.getEditVO().setPoEditCategory(true);
+				}
+				
+				if (bean.isOtherDescChangeSupplier()) {
+					bean.getEditVO().setSuppEditCategory(true);
+				}
+				// 36504 - END
 				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
@@ -358,6 +374,20 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+				
+				// 36504 - START
+				if (bean.isOtherDescChangeApprover()) {
+					bean.getEditVO().setAppEditCategory(true);
+				}
+				if (bean.isOtherDescChangePO()) {
+					bean.getEditVO().setPoEditCategory(true);
+				}
+				
+				if (bean.isOtherDescChangeSupplier()) {
+					bean.getEditVO().setSuppEditCategory(true);
+				}
+				// 36504 - END
+				
 				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {

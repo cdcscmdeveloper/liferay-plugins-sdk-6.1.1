@@ -656,14 +656,8 @@
 						</c:otherwise>
 					</c:choose>
 					</td>
-					<c:if test="#{!scQt.contractType.parameterCode eq ParameterConst.contractTypeCentral}">
-						<!-- #25726 start -->
-						<td style="margin-top: -3px">
-							<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
-						</td>
-					</c:if>
 					</tr></table></td>
-					<!-- #25726 end -->
+					
 										
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel

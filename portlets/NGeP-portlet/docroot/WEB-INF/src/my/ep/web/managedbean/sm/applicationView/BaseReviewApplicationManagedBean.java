@@ -358,6 +358,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	//#3460
 	private String sdoRemark;
 	
+	// 36504 - START
+	private boolean updateRecordTC;
+	private boolean otherDescChangePO;
+	private boolean otherDescChangeApprover;
+	private boolean otherDescChangeSupplier;
+	private String otherDescEdited;
+	// 36504 - END
+	
 	public String getSupportingDocMode() {
 		return supportingDocMode;
 	}
@@ -2637,4 +2645,79 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.currRegStatusId = currRegStatusId;
 	}
 	// #38856 End
+	
+	// 36504 - START
+	/**
+	 * @return the updateRecordTC
+	 */
+	public boolean isUpdateRecordTC() {
+		return updateRecordTC;
+	}
+
+	/**
+	 * @param updateRecordTC
+	 *            the updateRecordTC to set
+	 */
+	public void setUpdateRecordTC(boolean updateRecordTC) {
+		this.updateRecordTC = updateRecordTC;
+	}
+
+	/**
+	 * @return the otherDescEdited
+	 */
+	public String getOtherDescEdited() {
+		return otherDescEdited;
+	}
+
+	/**
+	 * @param otherDescEdited
+	 *            the otherDescEdited to set
+	 */
+	public void setOtherDescEdited(String otherDescEdited) {
+		this.otherDescEdited = otherDescEdited;
+	}
+
+	/**
+	 * @return the otherDescChangePO
+	 */
+	public boolean isOtherDescChangePO() {
+		return otherDescChangePO;
+	}
+
+	/**
+	 * @param otherDescChangePO the otherDescChangePO to set
+	 */
+	public void setOtherDescChangePO(boolean otherDescChangePO) {
+		this.otherDescChangePO = otherDescChangePO;
+	}
+
+	/**
+	 * @return the otherDescChangeApprover
+	 */
+	public boolean isOtherDescChangeApprover() {
+		return otherDescChangeApprover;
+	}
+
+	/**
+	 * @param otherDescChangeApprover the otherDescChangeApprover to set
+	 */
+	public void setOtherDescChangeApprover(boolean otherDescChangeApprover) {
+		this.otherDescChangeApprover = otherDescChangeApprover;
+	}
+	
+	/**
+	 * @return the otherDescChangeSupplier
+	 */
+	public boolean isOtherDescChangeSupplier() {
+		return otherDescChangeSupplier;
+	}
+
+	/**
+	 * @param otherDescChangeSupplier the otherDescChangeSupplier to set
+	 */
+	public void setOtherDescChangeSupplier(boolean otherDescChangeSupplier) {
+		this.otherDescChangeSupplier = otherDescChangeSupplier;
+	}
+	// 36504 - END
+	
 }
