@@ -47,6 +47,7 @@
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableContractAmount}">
+						     		<!-- #35506 -->
 				   			<p:ajax  event="blur" update="@this overAllAmtsCentral" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
@@ -74,6 +75,7 @@
 						     		or ctBackingBean.managedBean.disableGstAmount}"
 			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.gstAmount}" >
+			   				 <!-- #35506 -->
 			   				<p:ajax  event="blur" update="@this overAllAmtsCentral" process="@this"
 				   			   listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -105,6 +107,7 @@
 						     		or ctBackingBean.managedBean.disableStaxAmount}"
 			   				 rendered="#{ctBackingBean.managedBean.staxCheckingGUI}"
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.staxAmount}" >
+			   				 <!-- #35506 -->
 			   				<p:ajax  event="blur" update="@this overAllAmtsCentral" process="@this"
 				   			   listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
