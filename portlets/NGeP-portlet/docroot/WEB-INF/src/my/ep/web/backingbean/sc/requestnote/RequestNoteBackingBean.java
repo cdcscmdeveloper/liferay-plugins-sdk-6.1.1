@@ -1141,9 +1141,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)) && scRequestNote != null) {
 		    checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
-			validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
-			validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
-					getManagedBean().getRequestSupplierItem());
+		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
+				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
+				validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
+						getManagedBean().getRequestSupplierItem());
+		    }
 			// 27868 - end
 		}
 		// 26284 - End
@@ -7688,7 +7690,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			isSupplierAccTypeMatch = initializeReasonRestr(listReasonRestr, isSupplierAccTypeMatch, suppAccTypeSb, suppAccType);
 			
 			if (!isSupplierAccTypeMatch){
-				getSupplierTypeErrorMessage(rnDtl,suppAccTypeSb.toString(),isFromATC,suppAccType);
+				getSupplierTypeErrorMessage(rnDtl,suppAccTypeSb.toString(),isFromATC);
 			}
 		}
 	}
@@ -7825,10 +7827,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param rnDtl the {@link ScRequestNoteDtl} containing the justification and procurement type
 	 * @param suppAccTypeSb a comma-separated string of supplier account type descriptions
 	 * @param isFromATC {@code true} if the validation is triggered from ATC,{@code false} otherwise, which may affect how the error message is displayed
-	 * @param suppAccType the supplier account type 
 	 * @throws EpException when the supplier account type does not meet the required restrictions
 	 */
-	public void getSupplierTypeErrorMessage(ScRequestNoteDtl rnDtl, String suppAccTypeSb, boolean isFromATC, String suppAccType) {
+	public void getSupplierTypeErrorMessage(ScRequestNoteDtl rnDtl, String suppAccTypeSb, boolean isFromATC) {
 		int appendedCount = 0;
 
 		appendedCount = countSupplementaryAccountTypes(suppAccTypeSb, appendedCount);
@@ -7839,12 +7840,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			isOrAre = resolveIsOrAre(appendedCount);
 			
 			if (isFromATC) {
-				if (suppAccType.equalsIgnoreCase(DPConstants.PARAMETER_CODE_G2G_ACCOUNT)) {
-					throw new EpException(MessageConst.ERROR_760709, new String[] {
-							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
-									.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), isOrAre,
-							suppAccTypeSb });
-				}
+				throw new EpException(MessageConst.ERROR_760709, new String[] {
+						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), isOrAre,
+						suppAccTypeSb });
 			} else {
 				throw new EpException(MessageConst.ERROR_760717, new String[] {
 						rnDtl.getScRequestSupplierItem().getSupplierName(),
@@ -7856,11 +7855,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		} else {
 			// for MY
 			if (isFromATC) {
-				if (suppAccType.equalsIgnoreCase(DPConstants.PARAMETER_CODE_G2G_ACCOUNT)) {
-					throw new EpException(MessageConst.ERROR_760709, new String[] {
-							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
-									.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), suppAccTypeSb });
-				}
+				throw new EpException(MessageConst.ERROR_760709, new String[] {
+						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), suppAccTypeSb });
+
 			} else {
 				throw new EpException(MessageConst.ERROR_760717, new String[] {
 						rnDtl.getScRequestSupplierItem().getSupplierName(),
