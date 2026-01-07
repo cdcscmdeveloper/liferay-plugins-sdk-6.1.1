@@ -472,7 +472,6 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	 */
 	public void spFeeAddUpdateDeleteAuditDetail(PmFeeExemption pmfeeMain, BigInteger fieldLabelCode, String oldValue,
 			String newValue, String actionType) {
-//		docId = BigInteger.valueOf(pmfeeMain.getFeeExemptionId());
 		addAuditDetail(fieldLabelCode, oldValue, newValue, actionType);
 	}
 

@@ -236,9 +236,9 @@ public class AuditPMSysParamConstantRulesBackingBean {
 			String ruleValue;
 			String rawRuleValue = newCreatedItem.getRuleValue();
 			if ("TRUE".equalsIgnoreCase(rawRuleValue)) {
-				ruleValue = "Yes";
+				ruleValue = AuditConst.PM_AUD_YES;
 			} else if ("FALSE".equalsIgnoreCase(rawRuleValue)) {
-				ruleValue = "No";
+				ruleValue = AuditConst.PM_AUD_NO;
 			} else {
 				ruleValue = rawRuleValue;
 			}
@@ -258,9 +258,9 @@ public class AuditPMSysParamConstantRulesBackingBean {
 			String ruleValue;
 			String rawRuleValue = deletedItem.getRuleValue();
 			if ("TRUE".equalsIgnoreCase(rawRuleValue)) {
-				ruleValue = "Yes";
+				ruleValue = AuditConst.PM_AUD_YES;
 			} else if ("FALSE".equalsIgnoreCase(rawRuleValue)) {
-				ruleValue = "No";
+				ruleValue = AuditConst.PM_AUD_NO;
 			} else {
 				ruleValue = rawRuleValue;
 			}
