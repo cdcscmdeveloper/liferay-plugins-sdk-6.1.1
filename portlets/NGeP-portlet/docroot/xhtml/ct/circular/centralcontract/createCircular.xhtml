@@ -58,7 +58,9 @@
 		                                        <p:inputText  value="#{pidObj.reasonDesc}" maxlength="255"
 		                                            style="width:350px;float:left;text-align:left;"
 		                                            rendered="#{!centralContractBackingBean.managedBean.viewContract 
-		                                            and centralContractBackingBean.pidPurchaseTypeOther(pidObj.pmReason.reasonId)}"/>
+		                                            and centralContractBackingBean.pidPurchaseTypeOther(pidObj.pmReason.reasonId)}">
+		                                            <p:ajax update="@this" />
+		                                        </p:inputText>
 
 		                                        <h:outputText value="#{pidObj.reasonDesc}"  style="float:left;text-align:left;" 
 		                                        rendered="#{centralContractBackingBean.managedBean.viewContract}"/>

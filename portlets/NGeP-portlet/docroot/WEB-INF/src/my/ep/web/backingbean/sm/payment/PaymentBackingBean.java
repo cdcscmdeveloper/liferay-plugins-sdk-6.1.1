@@ -219,9 +219,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				this.getManagedBean().setApplicationPayment(billDtl);
 			}
 		}
-		log.info("#38377#####inside billDtl ID:"
-				+ this.getManagedBean().getApplicationPayment() != null ? this
-				.getManagedBean().getApplicationPayment().getBillDtlId() : null);
 		if (getManagedBean().isSoftcertPayment()) {
 			setBilledSoftCertPersonnels(pyBillDtlLs);
 		}
