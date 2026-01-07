@@ -73,20 +73,12 @@
 					value="#{taskReassignmentBackingBean.userListDataModel}">
 					<p:ajax event="rowSelect" />
 					<ac:paginator for="dtTaskReassign" />
-					<!-- 36053 Start -->
 					<p:column headerText="#{lbl['lbl.pm.ta.name']}">
-						<h:outputText rendered="#{user.userName == null}"
-							value="#{lbl['lbl.pp.no.record.found']}" />
-						<h:outputText rendered="#{user.userName != null}"
-							value="#{user.userName}" />
+						#{user.userName}
 					</p:column>
 					<p:column headerText="#{lbl['lbl.pm.ic.no']}">
-						<h:outputText rendered="#{user.identificationNo == null}"
-							value="#{lbl['lbl.pp.no.record.found']}" />
-						<h:outputText rendered="#{user.identificationNo != null}"
-							value="#{user.identificationNo}" />
+						#{user.identificationNo}
 					</p:column>
-					<!-- 36053 End -->
 				</p:dataTable>
 				<table style="width: 100%;">
 					<c:if
