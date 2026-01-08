@@ -3314,7 +3314,12 @@ public class LOIDetailBackingBean extends
 			checkSupplierAwardedRejectValidityExtension();//#21692
 		}
 		//#21692 - End
-		checkNeedSupplierIfHaveBranchDeleted(outcome);// #28777&#29729
+		
+		// #28777 & #29729 - Start
+		if(checkFlagForSupplierBranchDeleted(outcome)) {
+			checkNeedSupplierIfHaveBranchDeleted(outcome);
+		}
+		// #28777 & #29729 - End
 				
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
@@ -3420,12 +3425,6 @@ public class LOIDetailBackingBean extends
 			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls(isSubmit);
 			// 26247 - end
 			
-			// #28777 & #29729 - Start
-			if(checkFlagForSupplierBranchDeleted(outcome)) {
-				checkNeedSupplierIfHaveBranchDeleted(outcome);
-			}
-			// #28777 & #29729 - End
-			
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setOutcome(outcome);
 			if (null != digiSign) {
@@ -3476,11 +3475,6 @@ public class LOIDetailBackingBean extends
 		// 26247 - start
 		catch (EpException e) {
 			String taskName = this.getManagedBean().getTaskName();
-			// #28777 & #29729 - Start
-			if(checkFlagForSupplierBranchDeleted(outcome)) {
-				checkNeedSupplierIfHaveBranchDeleted(outcome);
-			}else 
-			// #28777 & #29729 - End
 			if (Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION, SCProcessNameConst.SIGNOFF_FC_SELECTION)
 					.contains(taskName)) {
 				Locale userLocale = new FacesScopes().getUserLocale();

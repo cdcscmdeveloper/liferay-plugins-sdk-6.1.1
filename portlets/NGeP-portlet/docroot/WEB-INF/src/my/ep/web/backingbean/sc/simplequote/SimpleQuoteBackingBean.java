@@ -43,6 +43,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;//#27868
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.pm.map.IPmPK7MapSO;//#27868
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886 
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
@@ -110,6 +111,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;//#27868
+import my.ep.persistence.entity.pm.map.PmPK7Mapping;//#27868
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -457,10 +459,10 @@ public class SimpleQuoteBackingBean extends
 		if (scQuote.getProcurementType() != null) {
 			if (scQuote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 				getManagedBean().setProcurementTypes(
-						getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate), Boolean.TRUE));
+						getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT, Boolean.TRUE));
 			} else {
 				getManagedBean().setProcurementTypes(
-						getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate), Boolean.FALSE));
+						getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT, Boolean.FALSE));
 			}
 		}
 
@@ -468,7 +470,7 @@ public class SimpleQuoteBackingBean extends
 			disableSpecialItemRadioButton();
 		}
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		getManagedBean().setParameterTypeRPT(validateProcurementTypeisRPT(dataCreatedDate));
+		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)
@@ -791,7 +793,7 @@ public class SimpleQuoteBackingBean extends
 			dataCreatedDate = assignActualDate();
 			getManagedBean().setCreatedDate(dataCreatedDate);
 			getManagedBean().setProcurementTypes(
-					getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate)));
+					getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT));
 			if (!isAgencyAllowedForSpecialItem()) {
 				disableSpecialItemRadioButton();
 			}
@@ -925,7 +927,7 @@ public class SimpleQuoteBackingBean extends
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		getManagedBean().setParameterTypeRPT(validateProcurementTypeisRPT(dataCreatedDate));
+		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 		// 27868 - end
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
@@ -1612,8 +1614,7 @@ public class SimpleQuoteBackingBean extends
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
 							.equals(quote.getProcurementType().getParameterCode())
-							|| (ParameterConst.PROC_TYPE_PK7.equals(quote.getProcurementType().getParameterCode()) && getManagedBean()
-									.isNewPK7Code())) {
+							|| (ParameterConst.PROC_TYPE_PK7.equals(quote.getProcurementType().getParameterCode()))) {
 						if (getManagedBean().getGovtSellers() != null) {
 							suppliers.addAll(getManagedBean().getGovtSellers());
 						}
@@ -2180,7 +2181,7 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		getManagedBean().setParameterTypeRPT(validateProcurementTypeisRPT(dataCreatedDate));
+		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 		// 27868 - end
 
 		getManagedBean().setScQuote(scQuote);
@@ -2316,7 +2317,7 @@ public class SimpleQuoteBackingBean extends
 				}
 
 				quote.setJustificationType(getReasonByCategoryAndCode(
-						finalizePK7Code(), quote.getJustificationType().getReasonCode()));
+						ReasonCategory.JUSTIFICATION_PK7W.value(), quote.getJustificationType().getReasonCode()));
 
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
 					validateUserProfileAgency(quote);
@@ -2391,8 +2392,7 @@ public class SimpleQuoteBackingBean extends
 					// 27868 - start
 					else if (ParameterConst.PROC_TYPE_SPECIAL_ITEM
 							.equals(quote.getProcurementType().getParameterCode())
-							|| (ParameterConst.PROC_TYPE_PK7.equals(quote.getProcurementType().getParameterCode()) && getManagedBean()
-									.isNewPK7Code())) {
+							|| (ParameterConst.PROC_TYPE_PK7.equals(quote.getProcurementType().getParameterCode()))) {
 						if (getManagedBean().getGovtSellers() != null) {
 							suppliers.addAll(getManagedBean().getGovtSellers());
 						}
@@ -2843,9 +2843,13 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 			// 27868 - start
-			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(getParameterCodeForPK7(dataCreatedDate)));
-			finalizePK7Dropdown(dataCreatedDate);
-			inactiveReasonChecking();
+			if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+				finalizeWIPDropdownPK7();
+			}
+			else{
+				getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+				inactiveReasonChecking();
+			}	
 			// 27868 - end
 		    getManagedBean().getScQuote().setJustificationRemark("");
 		    getManagedBean().getScQuote().setJustificationType(null);
@@ -2933,10 +2937,20 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 			//27868 - start
-			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(getParameterCodeForPK7(dataCreatedDate)));
-			finalizePK7Dropdown(dataCreatedDate);
-			inactiveReasonChecking();
-			if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())) {
+			if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+				finalizeWIPDropdownPK7();
+				if (getManagedBean().getWipReasonCategory().equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+					controlSupplierList(ReasonCategory.JUSTIFICATION_SIT.value());
+				} else if (getManagedBean().getWipReasonCategory().equalsIgnoreCase(
+						ReasonCategory.JUSTIFICATION_PK7W.value())) {
+					controlSupplierList(ReasonCategory.JUSTIFICATION_PK7W.value());
+				} else {
+					controlSupplierList(ReasonCategory.JUSTIFICATION_PK7.value());
+				}
+			} else {
+				getManagedBean()
+						.setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+				inactiveReasonChecking();
 				controlSupplierList(ReasonCategory.JUSTIFICATION_PK7W.value());
 			}
 			//27868 - end
@@ -5293,7 +5307,7 @@ public class SimpleQuoteBackingBean extends
 			dataCreatedDate = assignActualDate();
 			getManagedBean().setCreatedDate(dataCreatedDate);
 			getManagedBean().setProcurementTypes(
-					getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate)));
+					getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT));
 			if (!isAgencyAllowedForSpecialItem()) {
 				disableSpecialItemRadioButton();
 			}
@@ -5397,7 +5411,7 @@ public class SimpleQuoteBackingBean extends
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
 		getManagedBean().setCreatedDate(dataCreatedDate);
-		getManagedBean().setParameterTypeRPT(validateProcurementTypeisRPT(dataCreatedDate));
+		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 		// 27868 - end
 
 		// page navigation to simple quote
@@ -6600,7 +6614,7 @@ public class SimpleQuoteBackingBean extends
 		dataCreatedDate = assignActualDate();
 		// 27868 - end
 		getManagedBean().setProcurementTypes(
-				getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate)));//27868
+				getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT));//27868
 		if(!isAgencyAllowedForSpecialItem()){
 			disableSpecialItemRadioButton();
 		}
@@ -7319,7 +7333,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setCreatedDate(dataCreatedDate);
 
 			getManagedBean().setProcurementTypes(
-					getRadioButtonCodeValues(validateProcurementTypeisRPT(dataCreatedDate)));
+					getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE_RPT));
 			if (!isAgencyAllowedForSpecialItem()) {
 				disableSpecialItemRadioButton();
 			}
@@ -8750,21 +8764,45 @@ public class SimpleQuoteBackingBean extends
 	}
 
 	/**
-	 * Finalizes the PK7 dropdown selection based on the PK7 parameter code and updates the managed bean accordingly.
-	 * <p>
-	 * Sets new PK7 code flag and resets related procurement and justification fields if the current selection exists in WIP PK7 list.
-	 *
-	 * @param dataCreatedDate the date used to determine the PK7 parameter code
+	 * Finalize PK7 justification dropdown by resolving old-to-new reason mapping,
+	 * handling special item cases, and filtering inactive justification reasons.
 	 */
-	private void finalizePK7Dropdown(Date dataCreatedDate) {
-		if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())) {
-			getManagedBean().setNewPK7Code(Boolean.TRUE);
-			SelectItem[] wipPK7 = getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value());
-
-			if (wipPK7 != null && wipPK7.length > 0) {
-				List<SelectItem> wipPK7List = new ArrayList<>(Arrays.asList(wipPK7));
-				resetQuotationForMatchingPK7Reason(wipPK7List);
+	private void finalizeWIPDropdownPK7() {
+		if (getManagedBean().getScQuote().getJustificationType() != null) {
+			IPmPK7MapSO pk7MapSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IPmPK7MapSO.class);
+			
+			PmPK7Mapping pmPK7Mapping = pk7MapSO.findByOldReasonId(getManagedBean().getScQuote().getJustificationType().getReasonId());
+			
+			if (pmPK7Mapping == null){
+				getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+				inactiveReasonChecking();
+				getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_PK7.value());
+			}else{
+				if(pmPK7Mapping.getNewReason() == null){
+					//Special Item
+					PmParameter pmParameter = new PmParameter();
+					pmParameter.setParameterCode(ParameterConst.PROC_TYPE_SPECIAL_ITEM);
+					getManagedBean().getScQuote().setProcurementType(pmParameter);
+					getManagedBean().getScQuote().setJustificationType(null);
+					getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SIT.value()));
+					inactiveReasonChecking();
+					getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_SIT.value());
+				}
+				else{
+					//PK7 New
+					getManagedBean().getScQuote().setProcurementType(pmPK7Mapping.getNewProcurementType());
+					getManagedBean().getScQuote().setJustificationType(pmPK7Mapping.getNewReason());
+					getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+					inactiveReasonChecking();
+					getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_PK7W.value());
+				}
 			}
+			
+		}
+		else{
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+			getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_PK7W.value());
 		}
 	}
 
@@ -8793,21 +8831,6 @@ public class SimpleQuoteBackingBean extends
 				getManagedBean().getScQuote().setJustificationType(new PmReason());
 			}
 		}
-	}
-	
-	/**
-	 * Returns the appropriate PK7 justification code.
-	 * <p>
-	 * Returns JUSTIFICATION_PK7W if it's a new PK7 code, otherwise returns JUSTIFICATION_PK7.
-	 *
-	 * @return the PK7 justification code
-	 */
-	private String finalizePK7Code() {
-		if (getManagedBean().isNewPK7Code()) {
-			return ReasonCategory.JUSTIFICATION_PK7W.value();
-		}
-
-		return ReasonCategory.JUSTIFICATION_PK7.value();
 	}
 	
 	/**
@@ -9168,21 +9191,11 @@ public class SimpleQuoteBackingBean extends
 	 * @return true if at least one active restriction exists, false otherwise
 	 */
 	public boolean isAgencyAllowedForSpecialItem() {
-		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IReasonSO.class);
 		PmOrgProfile pmOrgProfile = retrievePmOrgProfile();
-		if (pmOrgProfile != null) {
-			ReasonReqDTO reqDTO = new ReasonReqDTO();
-			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-			List<PmReasonRestr> listReasonRestr = reqSO.retrieveReasonRestrListByParam(reqDTO).getReasonRestrList();
 
-			for (PmReasonRestr pmReasonRestr : listReasonRestr) {
-				if (pmReasonRestr.getPmReason().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return pmOrgProfile != null ? getReasonCodeDropdownValues(pmOrgProfile.getOrgProfileId(),
+				ReasonCategory.JUSTIFICATION_SIT.value()).length > 1
+				: getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SIT.value()).length > 1;
 	}
 	
 	/**
