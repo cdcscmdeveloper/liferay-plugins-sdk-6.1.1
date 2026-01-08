@@ -79,7 +79,7 @@
 					oncomplete="itemDescDialogId.show();" 
 					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" 
 					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left; "
-					action="#{purchaseRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem)}" 
+					action="#{purchaseRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem.cmItem.itemId)}" 
 					process="@this" 
 					update="@([id$=itemDescDialogId])"/>
 				<h:outputText value="(" rendered="#{chargeLineNode.parent == 'true'}" />
@@ -108,7 +108,7 @@
 					oncomplete="itemDescDialogId.show();" 
 					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" 
 					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left; "
-					action="#{purchaseRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem)}" 
+					action="#{purchaseRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem.cmItem.itemId)}" 
 					process="@this" 
 					update="@([id$=itemDescDialogId])"/>		
 			</p:column>

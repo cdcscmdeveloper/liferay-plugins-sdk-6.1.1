@@ -109,7 +109,7 @@
 							oncomplete="itemDescDialogId.show();" 
 							value="#{newItems.scRequestItem.cmItem.extensionCode}" 
 							style="color: #009ae5; font-size:12px; font-style:italic; float:right;"
-							action="#{contractRequestBackingBean.showItemDescPopup(newItems.scRequestItem)}" 
+							action="#{contractRequestBackingBean.showItemDescPopup(newItems.scRequestItem.cmItem.itemId)}" 
 							process="@this" 
 							update="@([id$=itemDescDialogId])"/>		
 					</p:column>

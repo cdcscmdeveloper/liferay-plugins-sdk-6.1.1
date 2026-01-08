@@ -206,7 +206,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String itemCodeDesc;
 	private Object[] objSelected;
 	private boolean renderButtonAssignCode;
-	private boolean isItemTypeService;
+	private boolean isItemTypeService = true;
 	// #31503 - End
 	
 	//35503 Start

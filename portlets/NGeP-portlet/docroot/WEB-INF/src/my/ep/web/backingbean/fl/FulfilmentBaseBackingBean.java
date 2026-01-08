@@ -30,7 +30,6 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -890,13 +889,13 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @param cmItemId
 	 * @return void
 	 */
-	public void showItemDescPopup(ScRequestItem reqItem) {
-        if ( reqItem.getCmItem() == null || reqItem.getCmItem().getItemId() == null) {
+	public void showItemDescPopup(Long cmItemId) {
+        if (cmItemId == null) {
             return;
         }
         
         CodificationReqDTO cReqDTO = new CodificationReqDTO();
-        cReqDTO.setItemId(reqItem.getCmItem().getItemId());
+        cReqDTO.setItemId(cmItemId);
         ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
                 ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
         CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
@@ -905,9 +904,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
         }
 
         CmItem item = codificationResDTO.getCmItem();
-        CodificationBackingBean cdbb = new CodificationBackingBean();
-		cdbb.getManagedBean().setItemTypeService(reqItem.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE));
-        populateItemDescPopup(cdbb,item);
+        populateItemDescPopup(item);
     }
 
     /**
@@ -915,9 +912,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
      * @param item
      * @return void
      */
-	private void populateItemDescPopup( CodificationBackingBean cdbb, CmItem item) {
+	private void populateItemDescPopup(CmItem item) {
         CommonUtils common = new CommonUtils();
-       
+        CodificationBackingBean cdbb = new CodificationBackingBean();
         
         String segmentTitle = common.removeItemNameNA(item.getCmType().getTypeName()) + " " +
         		common.removeItemNameNA(item.getCmBrand().getBrandName()) + " " +
