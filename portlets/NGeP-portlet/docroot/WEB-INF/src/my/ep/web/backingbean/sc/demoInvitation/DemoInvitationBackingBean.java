@@ -1644,7 +1644,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 	private void validateStartDemoDateAllItem(ScQtDemoSupplier supplier) {
 		ScQtDemoSchedule schedule = supplier.getScQtDemoSchedule();
 		if (schedule != null && schedule.getDemoStartDate() != null && schedule.getDemoStartDate().before(new Date())) {
-			throw new EpException(MessageConst.ERROR_760547, new String[] { supplier.getDemoNo() });
+			action = null;
+			throw new EpException(MessageConst.ERROR_760554, new String[] { supplier.getDemoNo() });
 		}
 	}
 	
@@ -1657,7 +1658,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		ScQtDemoSchedule schedule = supplier.getScQtDemoSchedule();
 		if (schedule != null && schedule.getDemoStartDate() != null && schedule.getDemoEndDate() != null
 				&& (schedule.getDemoEndDate().before(schedule.getDemoStartDate())) || schedule.getDemoEndDate().equals(schedule.getDemoStartDate())) {
-			throw new EpException(MessageConst.ERROR_760547,
+			action = null;
+			throw new EpException(MessageConst.ERROR_760554,
 					new String[] { schedule.getScQtDemoSupplier().getDemoNo() });
 		}
 	}
@@ -1670,7 +1672,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 	private void validateStartDemoDateByItem(ScQtDemoByItemScore score) {
 		ScQtDemoSchedule schedule = score.getScQtDemoSchedule();
 		if (schedule != null && schedule.getDemoStartDate() != null && schedule.getDemoStartDate().before(new Date())) {
-			throw new EpException(MessageConst.ERROR_760547, new String[] { score.getScQtDemoSupplier().getDemoNo() });
+			action = null;
+			throw new EpException(MessageConst.ERROR_760554, new String[] { score.getScQtDemoSupplier().getDemoNo() });
 		}
 	}
 	
@@ -1683,7 +1686,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		ScQtDemoSchedule schedule = score.getScQtDemoSchedule();
 		if (schedule != null && schedule.getDemoStartDate() != null && schedule.getDemoEndDate() != null
 				&& (schedule.getDemoEndDate().before(schedule.getDemoStartDate())) || schedule.getDemoEndDate().equals(schedule.getDemoStartDate())) {
-			throw new EpException(MessageConst.ERROR_760547, new String[] { score.getScQtDemoSupplier().getDemoNo() });
+			action = null;
+			throw new EpException(MessageConst.ERROR_760554, new String[] { score.getScQtDemoSupplier().getDemoNo() });
 		}
 	}
 }
