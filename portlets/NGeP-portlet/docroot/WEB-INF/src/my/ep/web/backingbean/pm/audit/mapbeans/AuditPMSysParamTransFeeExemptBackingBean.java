@@ -158,16 +158,19 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		for (PmFeeExemption updateVal : update) {
 			PmFeeExemption matchingIdUpdated = findMatchingSPFee(pmfeeMain, updateVal);
 			if (matchingIdUpdated != null) {
+				docId = BigInteger.valueOf(updateVal.getFeeExemptionId());
 				processSPFeeByOrgTypeUpdate(matchingIdUpdated, updateVal);
 			}
 		}
 		if (CollectionUtils.isNotEmpty(deletedItem)) { // orgId/smSupplier/supplierName
 			for (PmFeeExemption deleted : deletedItem) {
+				docId = BigInteger.valueOf(deleted.getFeeExemptionId());
 				processSPTFeeCreateDeleted(null, deleted);
 			}
 		}
 		if (CollectionUtils.isNotEmpty(newCreatedItem)) {
 			for (PmFeeExemption newCreate : newCreatedItem) {
+				docId = BigInteger.valueOf(newCreate.getFeeExemptionId());
 				processSPTFeeCreateDeleted(newCreate, null);
 			}
 		}
@@ -469,7 +472,6 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	 */
 	public void spFeeAddUpdateDeleteAuditDetail(PmFeeExemption pmfeeMain, BigInteger fieldLabelCode, String oldValue,
 			String newValue, String actionType) {
-		docId = BigInteger.valueOf(pmfeeMain.getFeeExemptionId());
 		addAuditDetail(fieldLabelCode, oldValue, newValue, actionType);
 	}
 
