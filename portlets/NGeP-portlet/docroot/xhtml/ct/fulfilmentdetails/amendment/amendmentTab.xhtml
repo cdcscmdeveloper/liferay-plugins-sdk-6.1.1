@@ -17,14 +17,6 @@
 	       width:75px;
 		   margin-bottom: 5px;
 	   	}
-		.calanderWidth85 input { /* 24336 */
-	       width:85px; 
-		   margin-bottom: 5px; 
-		   vertical-align: top;
-	   	}
-		.top-aligned-columns td {
-			vertical-align: top;
-		}
 		.column-align-right {
 			text-align: right !important;
 		}
@@ -48,11 +40,6 @@
 	        vertical-align: top;
 	        text-align: right;
          }
-		.columnWidth320 { /* 24336 */
-			width: 320px;
-			vertical-align: top;
-			text-align: right;
-		}
          .confirmation-message-box {
          	border: 1px solid #cecece;
 			font-family: Arial;
@@ -64,13 +51,35 @@
 			border: none;
 			padding: 4px 3px;
 		}
-		.reduction-type-radio label { /* 24336 */
+		/* 24336 Start*/
+		.columnWidth320 {
+			width: 320px;
+			vertical-align: top;
+			text-align: right;
+		}
+		.calanderWidth86 input { 
+	       width:86px; 
+		   margin-bottom: 5px; 
+		   vertical-align: top;
+	   	}
+		.calanderWidth86 input.ui-state-disabled {
+			width: 110px;
+		}
+		.top-aligned-columns td {
+			vertical-align: top;
+		}
+		.reduction-type-radio label {
 			float: left;
 			margin-left: 10px;
 		}
-		.change-contract-value-inputtext { /* 24336 */
+		.change-contract-value-inputtext {
 			width: 110px;
 		}	
+		.committee-type-radio label {
+			float: left;
+			margin-left: 10px;
+		}
+		/* 24336 End*/
 		</style>
 
 		<script type="text/javascript">  
@@ -309,7 +318,8 @@
 					<ui:include src="pbqcc/signOffMember.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.approver.setting.amendment.checklist'] }">
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) 
+											== lbl['lbl.ct.menu.approver.setting.amendment.checklist'] }">
 					<!-- #24336 start -->
 					<ui:include	src="amendmentChecklist.xhtml" />
 					<!-- #24336 end -->
