@@ -132,6 +132,10 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
+//#36738 Start
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.model.Visibility;
+//#36738 End
 
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
@@ -352,7 +356,6 @@ public class RuleCatalogueBackingBean extends
 		// resetErrorDialog();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
-			initConfigRule();
 			initFeeSettings();
 			initOperationThreshold();
 			initGst();
@@ -426,8 +429,11 @@ public class RuleCatalogueBackingBean extends
 			// List<PmConfigRule> list = retriveConfigRuleFromDB();
 			// this.getManagedBean().setConfigRuleList(list);
 			// this.getManagedBean().setSelectedRuleType(list.get(0));
-			getManagedBean().setOriginalConfigRuleDescList(list);//36738
-		} finally {
+			//#36738 Start
+			getManagedBean().setOriginalConfigRuleDescList(list);
+			getManagedBean().setOriginalConfigRuleValueList(getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+			//#36738 End
+			} finally {
 			cgeneralSO = null;
 		}
 	}
@@ -6141,6 +6147,7 @@ public class RuleCatalogueBackingBean extends
 		if (CollectionUtils.isNotEmpty(searchRuleDescList)) {
 			this.getManagedBean().setConfigRuleDescList(searchRuleDescList);
 			this.getManagedBean().setSelectedRuleDescType(searchRuleDescList.get(0));
+			this.getManagedBean().setOriginalConfigRuleValueList(searchRuleDescList.get(0).getRuleType().getConfigRuleValues());
 		} else {
 			this.getManagedBean().setConfigRuleDescList(null);
 			this.getManagedBean().setSelectedRuleDescType(null);
@@ -6170,7 +6177,8 @@ public class RuleCatalogueBackingBean extends
 		String ruleDataType = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleDataTypeId()
 				.getParameterCode();
 
-		List<PmConfigRuleValue> originalList = this.getManagedBean().getOriginalConfigRuleValueList();
+		List<PmConfigRuleValue> originalList = this.getManagedBean().getOriginalConfigRuleValueList() != null ? 
+				 this.getManagedBean().getOriginalConfigRuleValueList() : this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues();
 		List<PmConfigRuleValue> resultList = new ArrayList<>(originalList);
 
 		// search via value
@@ -6549,10 +6557,20 @@ public class RuleCatalogueBackingBean extends
 	 * #36738 Reset search value on tab change
 	 */
 	public void onAnyTabChange() {
+		int activeIndex = this.getManagedBean().getTabActiveIndex();
+		if (activeIndex == 0) {
+			initConfigRule();
+		}
 		resetRuleType();
 		resetRuleValue();
 		resetQtValues();
-		this.getManagedBean().setCollapsePanel(true);
+		this.getManagedBean().setRuleTypeCollapsePanel(true);
+		this.getManagedBean().setRuleValueCollapsePanel(true);
+		this.getManagedBean().setQtValueCollapsePanel(true);
+	}
+	
+	public void onRuleTypeSearchToggle(ToggleEvent event) {
+	    this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
 	}
 	// #36738 End
 }
