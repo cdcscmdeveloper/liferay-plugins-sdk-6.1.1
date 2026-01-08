@@ -3124,27 +3124,45 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 			for(SmFacility fac : getManagedBean().getSmAppl().getSmFacilities()){
 				if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
-					fac.getSmAddress().setMapLatitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
-					fac.getSmAddress().setMapLongitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
-					getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLatitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
-					getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLongitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+					//#39529 START
+					SmAddress sourceAddr = getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
+					SmAddress targetAddr = getManagedBean() .getBasicCompanyFacility().getSmAddress();
 					
-					getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress1(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress1());
-					getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress2(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress2());
-					getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress3(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress3());
-					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCountry().setCountryId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId());
-					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().setStateId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateId());
-					if(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision() != null && getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId() != null){
+					fac.getSmAddress().setMapLatitude(sourceAddr.getMapLatitude());
+					fac.getSmAddress().setMapLongitude(sourceAddr.getMapLongitude());
+					targetAddr.setMapLatitude(sourceAddr.getMapLatitude());
+					targetAddr.setMapLongitude(sourceAddr.getMapLongitude());
+					
+					targetAddr.setAddress1(sourceAddr.getAddress1());
+					targetAddr.setAddress2(sourceAddr.getAddress2());
+					targetAddr.setAddress3(sourceAddr.getAddress3());
+					targetAddr.getPmCountry().setCountryId(sourceAddr.getPmCountry().getCountryId());
+					targetAddr.getPmState().setStateId(sourceAddr.getPmState().getStateId());
+					
+					PmDivision sourceDivision = sourceAddr.getPmDivision();
+					if(sourceDivision != null && sourceDivision.getDivisionId() != null){
 						//#36718 - START
-						if(getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision()== null){
-							getManagedBean().getBasicCompanyFacility().getSmAddress().setPmDivision(new PmDivision());
+						if(targetAddr.getPmDivision() == null){
+							targetAddr.setPmDivision(sourceDivision);
 						}
 						//#36718 - END	
-						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision().setDivisionId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId());
+						targetAddr.getPmDivision().setDivisionId(sourceDivision.getDivisionId());
 					}					
-					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().setDistrictId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId());
-					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCity().setCityId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCity().getCityId());
-					getManagedBean().getBasicCompanyFacility().getSmAddress().setPostcode(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPostcode());
+					
+					PmDistrict sourceDistrict = sourceAddr.getPmDistrict();
+					if (sourceDistrict != null && sourceDistrict.getDistrictId() != null) {
+					    targetAddr.getPmDistrict().setDistrictId(sourceDistrict.getDistrictId());
+					}
+					
+					PmCity sourceCity = sourceAddr.getPmCity();
+					if (sourceCity != null && sourceCity.getCityId() != null) {
+					    targetAddr.getPmCity().setCityId(sourceCity.getCityId());
+					}
+					targetAddr.setPostcode(sourceAddr.getPostcode());
+					
+					if(fac.getSmAddress().getPmState().getStateId() != fac.getSmAddress().getStateId()){ 
+						fac.getSmAddress().setStateId(fac.getSmAddress().getPmState().getStateId());
+					}//#39529 END
 				}
 			}
 		}
@@ -10598,27 +10616,44 @@ public class SmApplicationBackingBean extends
 					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 				for(SmFacility fac : reqDTO.getSmAppl().getSmFacilities()){
 					if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
+						//#39529 START
+						SmAddress sourceAddr = getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
+						SmAddress targetAddr = getManagedBean().getBasicCompanyFacility().getSmAddress();
+						
 						fac.getSmAddress().setMapLatitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
 						fac.getSmAddress().setMapLongitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
-						getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLatitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
-						getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLongitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+						targetAddr.setMapLatitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+						targetAddr.setMapLongitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
 						
-						getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress1(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress1());
-						getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress2(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress2());
-						getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress3(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress3());
-						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCountry().setCountryId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId());
-						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().setStateId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateId());
-						if(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision() != null && getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId() != null){
+						targetAddr.setAddress1(sourceAddr.getAddress1());
+						targetAddr.setAddress2(sourceAddr.getAddress2());
+						targetAddr.setAddress3(sourceAddr.getAddress3());
+						targetAddr.getPmCountry().setCountryId(sourceAddr.getPmCountry().getCountryId());
+						targetAddr.getPmState().setStateId(sourceAddr.getPmState().getStateId());
+						
+						PmDivision sourceDivision = sourceAddr.getPmDivision();
+						if(sourceDivision != null && sourceDivision.getDivisionId() != null){
 							//#36718 - START
-							if(getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision()== null){
-								getManagedBean().getBasicCompanyFacility().getSmAddress().setPmDivision(new PmDivision());
+							if(targetAddr.getPmDivision() == null){ 
+								targetAddr.setPmDivision(sourceDivision);
 							}
 							//#36718 - END	
-							getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision().setDivisionId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId());
+							targetAddr.getPmDivision().setDivisionId(sourceDivision.getDivisionId());
 						}
-						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().setDistrictId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId());
-						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCity().setCityId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCity().getCityId());
-						getManagedBean().getBasicCompanyFacility().getSmAddress().setPostcode(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPostcode());
+						
+						PmDistrict sourceDistrict = sourceAddr.getPmDistrict();
+						if (sourceDistrict != null && sourceDistrict.getDistrictId() != null) {
+						    targetAddr.getPmDistrict().setDistrictId(sourceDistrict.getDistrictId());
+						}
+						
+						PmCity sourceCity = sourceAddr.getPmCity();
+						if (sourceCity != null && sourceCity.getCityId() != null) {
+						    targetAddr.getPmCity().setCityId(sourceCity.getCityId());
+						}
+						targetAddr.setPostcode(sourceAddr.getPostcode());
+						if(fac.getSmAddress().getPmState().getStateId() != fac.getSmAddress().getStateId()){ 
+							fac.getSmAddress().setStateId(fac.getSmAddress().getPmState().getStateId());
+						}//#39529 END
 					}
 				}
 			}
