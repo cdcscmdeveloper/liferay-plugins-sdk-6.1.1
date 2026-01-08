@@ -100,6 +100,8 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	public void onChangeZone() {
 		this.getManagedBean().setRevisitOfficer(null);
 		getConditionFieldsSVO();
+		// #34031#note-136
+		getConditionFieldsCompName();
 		RequestContext.getCurrentInstance().update(":form");
 	}
 	// #34031#note-136 Start
