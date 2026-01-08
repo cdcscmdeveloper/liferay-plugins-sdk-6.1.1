@@ -79,7 +79,7 @@
 					oncomplete="itemDescDialogId.show();" 
 					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" 
 					style="color: #009ae5; font-size:12px; font-style:italic; float:right;"
-					action="#{contractRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem.cmItem.itemId)}" 
+					action="#{contractRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem)}" 
 					process="@this" 
 					update="@([id$=itemDescDialogId])"/>
 				<h:outputText value="(" rendered="#{chargeLineNode.parent == 'true'}" />
@@ -109,7 +109,7 @@
 					oncomplete="itemDescDialogId.show();" 
 					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" 
 					style="color: #009ae5; font-size:12px; font-style:italic; float:right;"
-					action="#{contractRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem.cmItem.itemId)}" 
+					action="#{contractRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem)}" 
 					process="@this" 
 					update="@([id$=itemDescDialogId])"/>
 				<h:outputText

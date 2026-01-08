@@ -206,6 +206,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String itemCodeDesc;
 	private Object[] objSelected;
 	private boolean renderButtonAssignCode;
+	private boolean isItemTypeService;
 	// #31503 - End
 	
 	//35503 Start
@@ -1551,6 +1552,21 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
 		this.renderButtonAssignCode = renderButtonAssignCode;
 	}
+	
+	/**
+	 * @return the isItemTypeService
+	 */
+	public boolean isItemTypeService() {
+		return isItemTypeService;
+	}
+
+	/**
+	 * @param isItemTypeService the isItemTypeService to set
+	 */
+	public void setItemTypeService(boolean isItemTypeService) {
+		this.isItemTypeService = isItemTypeService;
+	}
+	
 	// #31503 -end-
 
 	//35503 Start
@@ -1586,4 +1602,6 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.commodityTitleEng = commodityTitleEng;
 	}
 	//35503 End
+
+	
 }

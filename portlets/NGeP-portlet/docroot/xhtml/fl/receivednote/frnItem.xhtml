@@ -48,7 +48,7 @@
 					oncomplete="itemDescDialogId.show();" 
 					value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.cmItem.extensionCode}" 
 					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
-					action="#{receivedNoteBackingBean.showItemDescPopup(item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.cmItem.itemId)}" 
+					action="#{receivedNoteBackingBean.showItemDescPopup(item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem)}" 
 					process="@this" 
 					update="@([id$=itemDescDialogId])"/>
         	</p:column>

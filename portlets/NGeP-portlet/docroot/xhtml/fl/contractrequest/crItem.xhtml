@@ -292,7 +292,7 @@
 						oncomplete="itemDescDialogId.show();" 
 						value="#{item.scRequestItem.cmItem.extensionCode}" 
 						style="color: #009ae5; font-size:12px; font-style:italic;"
-						action="#{contractRequestBackingBean.showItemDescPopup(item.scRequestItem.cmItem.itemId)}" 
+						action="#{contractRequestBackingBean.showItemDescPopup(item.scRequestItem)}" 
 						process="@this" 
 						update="@([id$=itemDescDialogId])"/>	
 					<span>(<h:outputText
@@ -1035,7 +1035,7 @@
 						oncomplete="itemDescDialogId.show();" 
 						value="#{item.scRequestItem.cmItem.extensionCode}" 
 						style="color: #009ae5; font-size:12px; font-style:italic;"
-						action="#{contractRequestBackingBean.showItemDescPopup(item.scRequestItem.cmItem.itemId)}" 
+						action="#{contractRequestBackingBean.showItemDescPopup(item.scRequestItem)}" 
 						process="@this" 
 						update="@([id$=itemDescDialogId])"/>	
 					<span>(<h:outputText

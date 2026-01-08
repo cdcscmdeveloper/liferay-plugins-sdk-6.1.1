@@ -25,7 +25,7 @@
 					oncomplete="itemDescDialogId.show();" 
 					value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.cmItem.extensionCode}" 
 					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
-					action="#{stopInstrBB.showItemDescPopup(chargeLineNode.flFulfilmentItemAddr.scRequestItem.cmItem.itemId)}" 
+					action="#{stopInstrBB.showItemDescPopup(chargeLineNode.flFulfilmentItemAddr.scRequestItem)}" 
 					process="@this" 
 					update="@([id$=itemDescDialogId])"/>
 				<h:outputText value="(" rendered="#{chargeLineNode.parent == 'true'}" />
@@ -51,7 +51,7 @@
 					oncomplete="itemDescDialogId.show();" 
 					value="#{chargeLineNode.flFulfilmentItemAddr.itemCode}" 
 					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
-					action="#{stopInstrBB.showItemDescPopup(chargeLineNode.flFulfilmentItemAddr.scRequestItem.cmItem.itemId)}" 
+					action="#{stopInstrBB.showItemDescPopup(chargeLineNode.flFulfilmentItemAddr.scRequestItem)}" 
 					process="@this" 
 					update="@([id$=itemDescDialogId])"/>
 			</p:column>

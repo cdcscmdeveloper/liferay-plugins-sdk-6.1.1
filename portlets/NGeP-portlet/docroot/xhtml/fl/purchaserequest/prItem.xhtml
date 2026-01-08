@@ -211,7 +211,7 @@
 						value="#{flItem.scRequestItem.cmItem.extensionCode}" 
 						title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}"
 						style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
-						action="#{purchaseRequestBackingBean.showItemDescPopup(flItem.scRequestItem.cmItem.itemId)}" 
+						action="#{purchaseRequestBackingBean.showItemDescPopup(flItem.scRequestItem)}" 
 						process="@this" 
 						update="@([id$=itemDescDialogId])"/>
 					<span style="white-space:pre-wrap; text-align:left; float:left;">(<h:outputText value="#{flItem.scRequestItem.uom.uomName}" />)</span>

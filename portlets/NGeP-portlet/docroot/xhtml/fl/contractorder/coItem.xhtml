@@ -113,7 +113,7 @@
 						<p:commandLink oncomplete="itemDescDialogId.show();" 
 							value="#{newItems.scRequestItem.cmItem.extensionCode}" 
 							style="color: #009ae5; font-size:12px; font-style:italic; float:right;"
-							action="#{flOrderBB.showItemDescPopup(newItems.scRequestItem.cmItem.itemId)}" 
+							action="#{flOrderBB.showItemDescPopup(newItems.scRequestItem)}" 
 							process="@this" 
 							update="@([id$=itemDescDialogId])"/>
 					</p:column>
