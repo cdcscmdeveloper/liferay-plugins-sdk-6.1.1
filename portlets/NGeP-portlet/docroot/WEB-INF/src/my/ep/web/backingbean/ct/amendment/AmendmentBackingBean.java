@@ -6499,15 +6499,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
 
 			// QCA/QCB, need to be same PTJ
-			if (isQuotationCommitteeTypeAC() || isQCBCommitteeWIP()) { //#35238
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ownerOrgProfileId: "+ ctOwnerOrgProfileId);
-				
-				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
-					allowChairpersonRole = true;
-				} else {
-					allowChairpersonRole = false;
-				}
-			}
+			allowChairpersonRole = determineChairpersonAccessForQuotationCommmittee(orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole); //#35238
 			
 			//Bug #26520 - start
 			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
@@ -9930,7 +9922,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * Sets the committee type for ctAmendment
+	 * Sets the committee type for ctAmendment during save/reject
 	 */
 	private void setAmendmentCommitteeType() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
@@ -9957,6 +9949,45 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setHasChanges(Boolean.TRUE);
 			}
 		}
+	}
+	
+	/**
+	 * Check whether the user is allowed to act as Chairperson based on role and
+	 * committee type
+	 * 
+	 * @param orgProfileId id for ministry committee
+	 * @param ctOwnerOrgProfileId  contract ministry id 
+	 * @param userResDTO the user to be checked
+	 * @param allowChairpersonRole previous true false for allow chairperson
+	 * @return return true if all condition met, otherwise false.
+	 */
+	private boolean determineChairpersonAccessForQuotationCommmittee(Long orgProfileId, Long ctOwnerOrgProfileId,
+			UserResDTO userResDTO, boolean allowChairpersonRole) {
+		boolean allow = allowChairpersonRole;
+		for (PmRoleDesc pmRoleDesc : userResDTO.getRoleDescList()) {
+			String roleCode = pmRoleDesc.getPmRole().getRoleCode();
+			if ((isQuotationCommitteeTypeAC() && isTypeAChairperson(roleCode))
+					|| (isQCBCommitteeWIP() && RoleCode.QCB_CHAIRPERSON.value().equalsIgnoreCase(roleCode))) {
+				allow = false;
+				if (orgProfileId.equals(ctOwnerOrgProfileId)) {
+					allow = true;
+					break;
+				}
+			}
+		}
+		return allow;
+	}
+	
+	/**
+	 * Check if the role belongs to a valid Chairperson role for Committee Type
+	 * QCA and QC
+	 * 
+	 * @param roleCode user role code
+	 * @return true if all condition met, otherwise false.
+	 */
+	private boolean isTypeAChairperson(String roleCode) {
+		return RoleCode.QCA_CHAIRPERSON.value().equalsIgnoreCase(roleCode)
+				|| RoleCode.QQC_CHAIRPERSON.value().equalsIgnoreCase(roleCode);
 	}
 	//#35238 end
 	
