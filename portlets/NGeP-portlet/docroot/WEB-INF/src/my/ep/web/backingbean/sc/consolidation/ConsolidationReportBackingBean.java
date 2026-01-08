@@ -3080,7 +3080,7 @@ public class ConsolidationReportBackingBean extends
 //			recommendationTotalScore = qualifiedSuppDM.getTotalScore();
 			qualifiedSuppDM.getQtEvaluationResult().getEvaluationResultDtls();
 			if (null != this.getManagedBean().getSelectedItem()) {
-				this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
+				requestNoteItemId = this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 			}
 			if (null != this.getManagedBean().getSelectedZone()) {
 				selectedZoneId = this.getManagedBean().getSelectedZone().getSpecZoneId();
