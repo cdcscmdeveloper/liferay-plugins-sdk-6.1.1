@@ -3058,7 +3058,6 @@ public class ConsolidationReportBackingBean extends
 		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSuppFinalizationSO.class);
 		retrieveQualifiedSuppliersInfoByEvalStage("1");
-		log.info("===========================================" + supplierId);
 		this.getManagedBean().getQualifiedSuppliersDataModel().getList();
 		BigDecimal totalScoreTecEval = null;
 		BigDecimal totalScoreFinEval = null;
