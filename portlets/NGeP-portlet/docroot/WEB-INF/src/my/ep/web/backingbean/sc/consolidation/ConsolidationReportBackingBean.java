@@ -672,7 +672,9 @@ public class ConsolidationReportBackingBean extends
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
-			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
+			//#28784 - Start
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
+			//#28784 - End
 		}
 	}
 	
@@ -3056,7 +3058,6 @@ public class ConsolidationReportBackingBean extends
 		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSuppFinalizationSO.class);
 		retrieveQualifiedSuppliersInfoByEvalStage("1");
-		log.info("===========================================" + supplierId);
 		this.getManagedBean().getQualifiedSuppliersDataModel().getList();
 		BigDecimal totalScoreTecEval = null;
 		BigDecimal totalScoreFinEval = null;
@@ -3078,7 +3079,7 @@ public class ConsolidationReportBackingBean extends
 //			recommendationTotalScore = qualifiedSuppDM.getTotalScore();
 			qualifiedSuppDM.getQtEvaluationResult().getEvaluationResultDtls();
 			if (null != this.getManagedBean().getSelectedItem()) {
-				this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
+				requestNoteItemId = this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 			}
 			if (null != this.getManagedBean().getSelectedZone()) {
 				selectedZoneId = this.getManagedBean().getSelectedZone().getSpecZoneId();

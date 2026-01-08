@@ -1492,6 +1492,11 @@ public class RuleCatalogueBackingBean extends
 					break;
 				}
 			}
+			
+			/************ AUDIT #28895_35509 - START **************/
+			boolean auditConstRule = false;
+			/************ AUDIT #28895_35509 - END **************/
+			
 			/* 27827 - START */
 			if (resDTO.isSuccessful() && orgProfResDTO.isSuccessful()) {
 			/* 27827 - END */
@@ -1500,23 +1505,30 @@ public class RuleCatalogueBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_770009,
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				
 				/************ AUDIT #28895_35509 - START **************/
-				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IAuditPMSO.class);
-				AuditPMBackingBeanTemplate auTemplate = new AuditPMSysParamBackingBean();
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SYSTEMPARAMETERS)) {
-					getManagedBean().setAuditLevelCode(AuditConst.PM_LVL_CODE_2_SPCONSTANTRULE);
-					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SYSPARAMETER);
-				}
+				auditConstRule = true;
+				/************ AUDIT #28895_35509 - END **************/
 			}
-			clearAllAuditBeanVal(getManagedBean());
-			/************ AUDIT #28895_35509 - END **************/
 			//#35323 - Start
 			this.getManagedBean().setNewPRList(false);
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())){
 				loadPRValues();
 			}
 			//#35323 - End
+			
+			/************ AUDIT #28895_35509 - START **************/
+			if (auditConstRule) {
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMSysParamBackingBean();
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SYSTEMPARAMETERS)) {
+					getManagedBean().setAuditLevelCode(AuditConst.PM_LVL_CODE_2_SPCONSTANTRULE);
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SYSPARAMETER);
+				}
+				clearAllAuditBeanVal(getManagedBean());
+			}
+			/************ AUDIT #28895_35509 - END **************/
 		} catch (Exception e) {
 			clearAllAuditBeanVal(getManagedBean());
 			throw new EpException(e.getMessage());
