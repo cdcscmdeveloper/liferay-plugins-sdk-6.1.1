@@ -78,18 +78,20 @@
 				<p:commandLink rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" 
 					oncomplete="itemDescDialogId.show();" 
 					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" 
-					style="color: #009ae5; font-size:12px; font-style:italic;"
+					style="color: #009ae5; font-size:12px; font-style:italic; float:right;"
 					action="#{contractRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem.cmItem.itemId)}" 
 					process="@this" 
 					update="@([id$=itemDescDialogId])"/>
-				<span rendered="#{chargeLineNode.parent == 'true'}"> 
-					(<h:outputText value="#{chargeLineNode.scRequestItem.uom.uomName}" />)
-				</span>
+				<h:outputText value="(" rendered="#{chargeLineNode.parent == 'true'}" />
+					<h:outputText value="#{chargeLineNode.scRequestItem.uom.uomName}" 
+					rendered="#{chargeLineNode.parent == 'true'}" style="white-space:normal;"/>
+					<h:outputText value=")" rendered="#{chargeLineNode.parent == 'true'}" />	
 				<br />
 				<!--#31344 filter item name-->
 				<h:outputText
 					value="#{contractRequestBackingBean.filterNARequestItemName(chargeLineNode.scRequestItem.requestNoteItemId)}"
 					id="itemDesc"
+					style="text-align:left; float:left; white-space: normal;"
 					title="#{chargeLineNode.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.scRequestItem.itemDesc}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
