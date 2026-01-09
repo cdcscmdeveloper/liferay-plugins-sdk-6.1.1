@@ -4307,7 +4307,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal newContractAmt() {
 		//Bug 33096 - shaqimi start
-		BigDecimal ctAmt = null;
+		BigDecimal ctAmt;
 		if(ctBackingBean.getManagedBean().isViewSCL()){
 			ctAmt = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
 		} else {
@@ -10513,31 +10513,29 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * Updates the new contract amount effective date based on certain business rules.
 	 */
 	public void handleNewAmtEffDate() {
-		
 		BigDecimal newOverallCtAmount = newOverallContractAmount().setScale(2, RoundingMode.HALF_UP);
 		Date newAmtEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewAmtEffDate();
-		
 		// new overall contract amount is different from overall contact amount
 		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
-			
 			if(newAmtEffDate == null){
 				newAmtEffDate = new Date();
 			}
-			
 			// Enable date input
 			ctBackingBean.getManagedBean().setDisableNewCtAmountEffDate(false);
-		
+			
 		// same as overall contract amount	
 		}else{
-			
 			newAmtEffDate = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getEffDate();
-			
 			// Disable date input
 			ctBackingBean.getManagedBean().setDisableNewCtAmountEffDate(true);
 		}
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewAmtEffDate(newAmtEffDate);
 	}
 	
+	/**
+	 * Checks whether the new overall contract amount is different
+	 * from the currently stored contract amount.
+	 */
 	private boolean isNewOverallCtAmountDifferent(BigDecimal newOverallCtAmount) {
 		BigDecimal currentCtAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
 		if (currentCtAmount != null) {
@@ -10609,7 +10607,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    return amount;
 	}
 	
-	// Validate reduction amount does not exceed the allowed contract limit
+	/** Validate reduction amount does not exceed the allowed contract limit */
 	private void validateReductionAmount(){
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
 			BigDecimal reducibleCtAmount = getReducibleContractAmount();
@@ -10623,7 +10621,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	
-	// Ensure the new amount effective date is provided
+	/** Ensure the new amount effective date is provided */
 	private void validateNewAmtEffDate(){
 		boolean isDisableNewCtAmountEffDate = ctBackingBean.getManagedBean().isDisableNewCtAmountEffDate();
 		if (!isDisableNewCtAmountEffDate && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewAmtEffDate() == null) {
@@ -10637,7 +10635,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	
-	// Validate all required amendment checklist items are completed
+	/** Validate all required amendment checklist items are completed */
 	private void validateAmendmentChecklist(){
 		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 		ContractManagedBean bean = ctBackingBean.getManagedBean();
@@ -10675,7 +10673,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	
-	// Clears unchecked checklist options based on amendment flags
+	/** Clears unchecked checklist options based on amendment flags */
 	private void updateChecklist(ContractManagedBean contractManagedBean, CtAmendment ctAmendment) {
 	    if (!ctAmendment.isContractExtend()) {
 	    	contractManagedBean.setContractExtendChecklist(false);
@@ -10700,7 +10698,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    }
 	}
 	
-	// Checks whether the current user is the Contract Approver and is currently handling the Review FA status
+	/** Checks whether the current user is the Contract Approver and is currently handling the Review FA status */
 	public boolean isCtApproverSetting() {
 		String taskName = getManagedBean().getTaskName();
 	    return taskName != null 
@@ -10708,7 +10706,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        && taskName.equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME);
 	}
 	
-	// Checks whether the current user is the Contract Approver
+	/** Checks whether the current user is the Contract Approver */
 	private boolean isCtApprover() {
 		return getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value());
 	}
@@ -10735,7 +10733,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		handleNewAmtEffDate();
 	}
 	
-	// Gets committee type options and hides the ones not allowed based on the contract owner's state.
+	/** Gets committee type options and hides the ones not allowed based on the contract owner's state. */
 	public List<SelectItem> getCommitteeTypeItems() {
 		List<SelectItem> items = new ArrayList<>();
 	    try {
@@ -10788,11 +10786,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    return items;
 	}
 	
-	// Convert committee type code to reference object for saving.
+	/** Sets the committee type reference for saving. */
 	private void setCommitteeTypeValue() {
 
 	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-
 	    if (!amendment.isPbqcAuthorityReq()) {
 	        amendment.setCommitteeType(null);
 	        return;
@@ -10804,13 +10801,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    }
 
 	    PmParameter pm = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, committeeType);
-
 	    if (pm != null) {
 	        amendment.setCommitteeType(pm);
 	    }
 	}
 	
-	// Ensure a committee type is selected, otherwise trigger validation error
+	/** Ensure a committee type is selected, otherwise trigger validation error */
 	private void validateCommitteeTypeOption(){
 		getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.AMENDMENT_MENU_LABEL, 
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
@@ -10820,12 +10816,48 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 	}
 	
-	// Sets default desk officer committee if no saved value.
+	/** Normalizes legacy committee codes for UI display. */
+	private String normalizeCommitteeCode(String code) {
+	    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
+	        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
+	        return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+	    }
+
+	    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
+	        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
+	        return ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
+	    }
+	    return code;
+	}
+	
+	/** Performs initial page setup. */
+	private void initializePage() {
+	    initCommitteeType();
+	    // Loads the correct checklist options based on data.
+	    handleSelectedAmendmentChecklistValue();
+	    // Updates values when amendment type changes.
+	    handleAmendmentTypeValueChange();
+	    // Mark page initialization completed to avoid repeating setup
+	    ctBackingBean.getManagedBean().setInitPage(true);
+	}
+	
+	/** Initializes the committee type during page first load. */
+	private void initCommitteeType() {
+	    if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null) {
+	    	// Sets default desk officer committee from QT
+	        handleOriginalDeskOfficerCommitteeQT();
+	    }else{
+	    	// Sets saved committee type into the bean
+	    	mapCommitteeType();
+	    }
+	}
+	
+	/** Sets default desk officer committee if no saved value. */
 	private void handleOriginalDeskOfficerCommitteeQT(){
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
 			IContractAmendmentSO iContractAmendmentSO = getIContractAmendmentSO();
-			
 			ScQt scQt = ctBackingBean.getManagedBean().getContractVer().getCtContract().getQuotationTender();
+			
 			if(scQt != null){
 				CommitteeMemberInfoResDTO cmiRes = iContractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId(), SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
 				if(cmiRes != null){
@@ -10845,54 +10877,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 	}
-
-	private String normalizeCommitteeCode(String code) {
-	    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
-	        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
-	        return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
-	    }
-
-	    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
-	        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
-	        return ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
-	    }
-	    return code;
-	}
 	
-	// Sets saved committee type into the bean
+	/** Sets saved committee type into the bean */
 	private void mapCommitteeType() {
 		PmParameter committeeType = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType();
 		if (committeeType != null) {
-			
 			// Handle WIP data:
 			// If committee type is QCA or QCB, normalize it to QQC for display
 			String code = normalizeCommitteeCode(committeeType.getParameterCode());
-			
 			getManagedBean().setCommitteeType(code);
 		}
 	}
 	
-	private void initializePage() {
-	    initCommitteeType();
-	    // Loads the correct checklist options based on data.
-	    handleSelectedAmendmentChecklistValue();
-	    // Updates values when amendment type changes.
-	    handleAmendmentTypeValueChange();
-	    // Mark page initialization completed to avoid repeating setup
-	    ctBackingBean.getManagedBean().setInitPage(true);
-	}
-	
-	private void initCommitteeType() {
-	    if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() == null) {
-	    	// Sets default desk officer committee from QT
-	        handleOriginalDeskOfficerCommitteeQT();
-	    }else{
-	    	// Sets saved committee type into the bean
-	    	mapCommitteeType();
-	    }
-	}
-	
-	// Loads the correct checklist options based on data
+	/** Loads the correct checklist options based on data */
 	private void handleSelectedAmendmentChecklistValue() {
 	    CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 	    ContractManagedBean bean = ctBackingBean.getManagedBean();
@@ -10910,7 +10907,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    }
 	}
 	
-	// Updates values when amendment type changes.
+	/** Updates values when amendment type changes. */
 	private void handleAmendmentTypeValueChange() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
 			handleContractValueTypeChange();
