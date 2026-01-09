@@ -4376,6 +4376,7 @@ public class TaskReassignmentBackingBean extends
 		Long userGroupId = null;
 		Long addressId = null;
 		Integer subReassignType = null;
+		getManagedBean().setEnableAssignButton(true); //#36053
 		
 		log.info(":::generateUserResultBean() userId: "+ userId +", orgProfileId: "+ orgProfileId +", reassignType: "+ reassignType +".");
 		
@@ -4441,6 +4442,12 @@ public class TaskReassignmentBackingBean extends
 			//Bug #25021
 			
 			getManagedBean().setCommitteeUpdate(true);		
+			
+			//#36053 Start
+			if (resultBean == null) {
+				getManagedBean().setEnableAssignButton(false);
+			}
+			//#36053 End
 					
 			isSearched = true;
 			break;
