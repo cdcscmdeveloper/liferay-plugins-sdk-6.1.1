@@ -4606,8 +4606,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Start Fix - #33287
 			isUntickContractExtension = true; 
 			spToCheck = true; 
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime()); 
 			//End Fix - #33287
 		}
 		changeAmendmentEffDate();
