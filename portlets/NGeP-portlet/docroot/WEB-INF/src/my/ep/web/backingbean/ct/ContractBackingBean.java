@@ -1228,66 +1228,91 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to validate deduction type.
-	 * User can not selected same type of deduction again.
+	 * Validates the selected deduction type to prevent unsupported duplicates.
+	 * 
+	 * @param selectedDeduction the deduction row currently being edited
+	 * @param action optional context (e.g., from bulk operations); unused in current implementation
 	 */	
-	public void validateDeductionType(CtDeduction deduction, String action)  { //#35506
+	public void validateDeductionType(CtDeduction selectedDeduction, String action)  { //#39632
 
-		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
+		if(!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 			int count = 0;
 			for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
 				PmParameter deductionTypeById = deId.getDeductionType();
-				PmParameter deductionType = deduction.getDeductionType();
+				PmParameter deductionType = selectedDeduction.getDeductionType();
 				if (deductionTypeById == null || deductionType == null)
 					break;
 				if (deductionTypeById.getParameterId() != null && deductionType.getParameterId() != null
 						&& deductionType.getParameterId().intValue() == deductionTypeById.getParameterId().intValue()) {
 					count++;
-					resetAndValidateDeduction(deId, deduction, deductionTypeById, count, action); //#35506
+					resetAndValidateDeduction(selectedDeduction, deductionTypeById, count, action); //#35506,//#39632
 				}
 			}
 		}
 	}
 	
-	// #35506 (Resetting and validation) - Start
+	// #35506,#39632 (Resetting and validation) - Start
 	/**
-	 * Overloaded method used for Ajax listener calls. Delegates to the main
-	 * method with action = null.
+	 * Overloaded method used for Ajax listener calls.
+	 * Delegates to the main method with action = null.
+	 *
+	 * @param deduction the deduction row being validated during user selection
 	 */
 	public void validateDeductionType(CtDeduction deduction) {
-		validateDeductionType(deduction, null);
+	    validateDeductionType(deduction, null);
+	}
+	
+	/**
+	 * Processes validation and reset rules for deduction types.
+	 */
+	private void resetAndValidateDeduction(CtDeduction selectedDeduction, PmParameter deductionTypeById, int count, String action) { //#39632
+
+	    String parameterCode = getParameterCode(deductionTypeById);
+	    if (parameterCode == null) {
+	        return;
+	    }
+
+	    resetDeductionIfNew(selectedDeduction, action);
+	    validateDuplicateDeductionType(selectedDeduction, parameterCode, count);
 	}
 
 	/**
-	 * Processes validation and reset rules for deduction types. Combines
-	 * comparison, resetting, and duplicate validation logic.
+	 * Resets amount and description for a new deduction row when no action context is provided.
 	 */
-	private void resetAndValidateDeduction(CtDeduction deId, CtDeduction deduction, PmParameter deductionTypeById,
-			int count, String action) {
-
-		String parameterCode = getParameterCode(deductionTypeById);
-		if (parameterCode == null) {
-			return;
-		}
-
-		// --- Reset section ---
-		if (action == null) {
-			final double zeroAmount = BigDecimal.ZERO.doubleValue();
-			deId.setAmount(zeroAmount);
-			deId.setDeductionDesc(null);
-		}
-
-		// --- Duplicate validation section ---
-		if (!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
-				&& !parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
-				&& !parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2) {
-
-			throw new EpException(MessageConst.ERROR_100046, new String[] { getParameterDesc(ParameterHelper
-					.getInstance().getPmParameterById(deduction.getDeductionType().getParameterId())) });
-		}
+	private void resetDeductionIfNew(CtDeduction selectedDeduction, String action) {
+	    if (action == null) {
+	        final double zeroAmount = BigDecimal.ZERO.doubleValue();
+	        selectedDeduction.setAmount(zeroAmount);
+	        selectedDeduction.setDeductionDesc(null);
+	        
+	     // Safely clear deduction clauses if the list is not null
+	        List<CtDeductionClause> clauses = selectedDeduction.getCtDeductionClauses();
+	        if (clauses != null) {
+	            clauses.clear();
+	        }
+	    }
 	}
 
-	// #35506 (Resetting and validation) - End
+	/**
+	 * Validates that duplicate deduction types are not used (except for allowed types).
+	 */
+	private void validateDuplicateDeductionType(CtDeduction selectedDeduction, String parameterCode, int count) {
+	    boolean isAllowedDuplicate = parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
+	                               || parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
+	                               || parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED);
+
+	    if (!isAllowedDuplicate && count == 2) {
+	    	//Capture the description BEFORE clearing the selection
+	    	String deductionTypeName = getParameterDesc(ParameterHelper.getInstance().getPmParameterById(
+	                selectedDeduction.getDeductionType().getParameterId()));
+	    	
+	    	selectedDeduction.setDeductionType(new PmParameter());
+	    	
+	    	//Now safely throw the error with the saved name
+	    	throw new EpException(MessageConst.ERROR_100046, new String[] { deductionTypeName });
+	    }
+	}
+	// #35506,#39632 (Resetting and validation) - End
 
 	/**
 	 * The method used to add new deduction.
