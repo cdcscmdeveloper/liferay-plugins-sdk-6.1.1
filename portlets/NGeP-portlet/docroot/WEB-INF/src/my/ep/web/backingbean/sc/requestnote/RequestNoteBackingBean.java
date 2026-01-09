@@ -1141,9 +1141,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)) && scRequestNote != null) {
 		    checkSupplierDisciplinaryAction(scRequestNote);
 			// 27868 - start
-			validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
-			validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
-					getManagedBean().getRequestSupplierItem());
+		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
+				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
+				validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
+						getManagedBean().getRequestSupplierItem());
+		    }
 			// 27868 - end
 		}
 		// 26284 - End
@@ -7725,21 +7727,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return {@code true} if the user's agency is allowed for Special Item; {@code false} otherwise
 	 */
 	public boolean isAgencyAllowedForSpecialItem() {
-		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IReasonSO.class);
 		PmOrgProfile pmOrgProfile = retrievePmOrgProfile();
-		if (pmOrgProfile != null) {
-			ReasonReqDTO reqDTO = new ReasonReqDTO();
-			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-			List<PmReasonRestr> listReasonRestr = reqSO.retrieveReasonRestrListByParam(reqDTO).getReasonRestrList();
 
-			for (PmReasonRestr pmReasonRestr : listReasonRestr) {
-				if (pmReasonRestr.getPmReason().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return pmOrgProfile != null ? getReasonCodeDropdownValues(pmOrgProfile.getOrgProfileId(),
+				ReasonCategory.JUSTIFICATION_SIT.value()).length > 1
+				: getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SIT.value()).length > 1;
 	}
 	
 	/**

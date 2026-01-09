@@ -3926,6 +3926,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			this.getManagedBean().setSegmentCode(newItem.getExtensionCode());
 			this.getManagedBean().setSegmentTitle(newItem.getItemName());
 			this.getManagedBean().setFamilyTitle(completeItemName);
+			this.getManagedBean().setItemTypeService(question.getTplSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE));
 
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "showItemDescPopup", "showItemDescPopup", null,

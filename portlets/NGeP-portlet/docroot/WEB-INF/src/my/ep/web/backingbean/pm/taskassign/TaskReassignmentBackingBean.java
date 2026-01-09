@@ -4376,6 +4376,7 @@ public class TaskReassignmentBackingBean extends
 		Long userGroupId = null;
 		Long addressId = null;
 		Integer subReassignType = null;
+		getManagedBean().setEnableAssignButton(true); //#36053
 		
 		log.info(":::generateUserResultBean() userId: "+ userId +", orgProfileId: "+ orgProfileId +", reassignType: "+ reassignType +".");
 		
@@ -4437,10 +4438,16 @@ public class TaskReassignmentBackingBean extends
 			log.info(":::generateUserResultBean() userId: "+ userId +", vo.getDocId(): "+ vo.getDocId() 
 					+", vo.getDocType(): "+ vo.getDocType() +", vo.getRoleList(): "+ vo.getRoleList() +".");	
 			
-			resultBean = generateCommitteAssigneesForCT(searchBean, vo.getDocId(), vo.getDocType(), roleList, orgProfileId);
+			resultBean = generateCommitteAssigneesForCT(searchBean, vo.getDocId(), vo.getDocType(), vo.getDocNo(), roleList, orgProfileId, task.getDocStatus()); //#36053
 			//Bug #25021
 			
 			getManagedBean().setCommitteeUpdate(true);		
+			
+			//#36053 Start
+			if (resultBean == null) {
+				getManagedBean().setEnableAssignButton(false);
+			}
+			//#36053 End
 					
 			isSearched = true;
 			break;
@@ -4749,7 +4756,7 @@ public class TaskReassignmentBackingBean extends
 	
 	
 	private ISearchResultBean<PmUser> generateCommitteAssigneesForCT(ISearchBean<PmUser> searchBean,
-			Long docId, String docType, List<String> roleCodeList, Long orgProfileId){
+			Long docId, String docType, String docNo, List<String> roleCodeList, Long orgProfileId, int task){ //#36053
 		ICommitteSO committeSO;
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4757,6 +4764,10 @@ public class TaskReassignmentBackingBean extends
 			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 			committeReqDTO.setDocId(docId);
 			committeReqDTO.setDocType(docType);
+			//#36053 - Start
+			committeReqDTO.setDocNo(docNo);
+			committeReqDTO.setTask(task);
+			//#36053 - End
 			committeReqDTO.setRoleCode(roleCodeList != null && !roleCodeList.isEmpty() ? roleCodeList.get(0) : "");
 			committeReqDTO.setUserSearchBean(searchBean);
 			//Bug #25021

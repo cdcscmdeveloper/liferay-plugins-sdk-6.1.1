@@ -140,6 +140,10 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
+//#36738 start
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.model.Visibility;
+//#36738 end
 
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
@@ -373,6 +377,7 @@ public class RuleCatalogueBackingBean extends
 		getManagedBean().setThresholdIndex(0);
 		getManagedBean().setGstIndex(TAXABLE_ITEM_IDX);
 		getManagedBean().setAutoUpdate(true);
+		getManagedBean().setNewPRList(false); //#35323
 		setCurrentActiveOrg();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
@@ -1487,6 +1492,11 @@ public class RuleCatalogueBackingBean extends
 					break;
 				}
 			}
+			
+			/************ AUDIT #28895_35509 - START **************/
+			boolean auditConstRule = false;
+			/************ AUDIT #28895_35509 - END **************/
+			
 			/* 27827 - START */
 			if (resDTO.isSuccessful() && orgProfResDTO.isSuccessful()) {
 			/* 27827 - END */
@@ -1495,22 +1505,30 @@ public class RuleCatalogueBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_770009,
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				
 				/************ AUDIT #28895_35509 - START **************/
-				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IAuditPMSO.class);
+				auditConstRule = true;
+				/************ AUDIT #28895_35509 - END **************/
+			}
+			//#35323 - Start
+			this.getManagedBean().setNewPRList(false);
+			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())){
+				loadPRValues();
+			}
+			//#35323 - End
+			
+			/************ AUDIT #28895_35509 - START **************/
+			if (auditConstRule) {
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
 				AuditPMBackingBeanTemplate auTemplate = new AuditPMSysParamBackingBean();
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SYSTEMPARAMETERS)) {
 					getManagedBean().setAuditLevelCode(AuditConst.PM_LVL_CODE_2_SPCONSTANTRULE);
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SYSPARAMETER);
 				}
+				clearAllAuditBeanVal(getManagedBean());
 			}
-			clearAllAuditBeanVal(getManagedBean());
 			/************ AUDIT #28895_35509 - END **************/
-			//#35323 - Start
-			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())){
-				loadPRValues();
-			}
-			//#35323 - End
 		} catch (Exception e) {
 			clearAllAuditBeanVal(getManagedBean());
 			throw new EpException(e.getMessage());
@@ -5670,6 +5688,7 @@ public class RuleCatalogueBackingBean extends
 		if (CollectionUtils.isNotEmpty(searchRuleDescList)) {
 			this.getManagedBean().setConfigRuleDescList(searchRuleDescList);
 			this.getManagedBean().setSelectedRuleDescType(searchRuleDescList.get(0));
+			this.getManagedBean().setOriginalConfigRuleValueList(searchRuleDescList.get(0).getRuleType().getConfigRuleValues());
 		}else{
 			this.getManagedBean().setConfigRuleDescList(null);
 			this.getManagedBean().setSelectedRuleDescType(null);
@@ -6086,7 +6105,13 @@ public class RuleCatalogueBackingBean extends
 		resetRuleType();
 		resetRuleValue();
 		resetQtValues();
-		this.getManagedBean().setCollapsePanel(true);
+		this.getManagedBean().setRuleTypeCollapsePanel(true);
+		this.getManagedBean().setRuleValueCollapsePanel(true);
+		this.getManagedBean().setQtValueCollapsePanel(true);
+	}
+	
+	public void onRuleTypeSearchToggle(ToggleEvent event) {
+	    this.getManagedBean().setRuleTypeCollapsePanel(event.getVisibility() == Visibility.HIDDEN);
 	}
 	//#36738 End
 	
@@ -6197,13 +6222,16 @@ public class RuleCatalogueBackingBean extends
 	 * 
 	 */
 	public void initSupplAccTypePopup(int index, List<Long> ids) {
-		log.info("initSupplAccTypePopup " + ids);
-		
 		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setSelectedSuppAccountType(null);
+		this.getManagedBean().setSelectedAllSuppAccountType(false);
 
-		if (ids != null) {
+		if (ids != null && !ids.isEmpty()) {
 			this.getManagedBean().getSelectedSuppAccountType().addAll(ids);
+
+			if (ids.size() == 3) {
+				this.getManagedBean().setSelectedAllSuppAccountType(true);
+			}
 		}
 	}
 	
@@ -6232,13 +6260,14 @@ public class RuleCatalogueBackingBean extends
 
 		List<Object[]> rows = ruleSO.getPRList();
 
-		if (!rows.isEmpty()) {
+		if (!rows.isEmpty() && !this.getManagedBean().isNewPRList()) {
 			List<PmConfigRuleValue> newList = convertToNewPRValues(rows);
 
 			List<PmConfigRuleValue> oldList = this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues();
 
 			oldList.clear();
 			oldList.addAll(newList);
+			this.getManagedBean().setNewPRList(true);
 		}
 	}
 	
