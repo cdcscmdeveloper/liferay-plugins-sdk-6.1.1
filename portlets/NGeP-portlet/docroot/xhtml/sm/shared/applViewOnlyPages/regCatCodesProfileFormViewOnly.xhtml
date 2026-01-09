@@ -168,14 +168,12 @@
 			</p:column>
 			<!-- 36504 - START -->
 			<p:column>
-				<p:outputPanel rendered="aprvdCatBean.smSuppCatOtherDescHistory.size() > 0">
+				<p:outputPanel>
 					<h:outputText
 						value="#{aprvdCatBean.otherDesc}"
 						rendered="#{not empty aprvdCatBean.otherDesc and
 						    (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-						     aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING
-						    ) and (aprvdCatBean.smSuppCatOtherDescHistory.roleType eq SupplierManagementConst.SECTION_REV_ROLE_APP or  
-						    aprvdCatBean.smSuppCatOtherDescHistory.roleType eq SupplierManagementConst.SECTION_REV_ROLE_PO )}" />
+						     aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING)}" />
 				</p:outputPanel>
 			</p:column>
 			<!-- 36504 - END -->
@@ -267,6 +265,8 @@
 	<ac:otherDescriptionHistory
 		categoryCodeList="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}"
 		applNo="#{viewSmApplBackingBean.managedBean.smAppl.applNo}"
-		otherDescChange="#{viewSmApplBackingBean.managedBean.otherDescChange}" />
+		otherDescChangePO="#{viewSmApplBackingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{viewSmApplBackingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{viewSmApplBackingBean.managedBean.otherDescChangeSupplier}"  />
 	<!-- 36504 - END -->
 </ui:composition>
