@@ -3698,7 +3698,7 @@ public class SmApplicationUtil {
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
 			//13362
-			
+
 			// #39422 - Start - Add checking
 			if (managedBean.getApplnOverLapRemarks().isEmpty()) {
 				managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
@@ -3860,6 +3860,7 @@ public class SmApplicationUtil {
 					if("".equalsIgnoreCase(companyName)){
 						companyName = arrI[4].toString();
 						log.info("MOF NO == "+arrI[5]);
+
 
 						// #39422 - Start - Change null to N/A
 						mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
