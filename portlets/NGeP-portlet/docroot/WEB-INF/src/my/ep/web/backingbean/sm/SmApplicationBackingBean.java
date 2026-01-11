@@ -19276,6 +19276,24 @@ public class SmApplicationBackingBean extends
 	            ? getManagedBean().getSmSupplier()
 	            : null;
 	}
+	
+	/**
+	 * Updates the approved registration status ID for an approver user.
+	 */
+	public void updateApproverRegistrationStatusValue() {
+		if (getManagedBean() == null || !getManagedBean().isApproverUser()) {
+			return;
+		}
+
+		Long approvedStatusId;
+		if (getManagedBean().isChangeCurrRegStatus()) {
+			approvedStatusId = findLatestPOSectionReview().getPmRegStatus().getPmStatus().getStatusId();
+		} else {
+			approvedStatusId = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId();
+		}
+
+		getManagedBean().setApprovedStatusId(approvedStatusId);
+	}
 //	#37925 END
 	//#38927 START
 	/**
