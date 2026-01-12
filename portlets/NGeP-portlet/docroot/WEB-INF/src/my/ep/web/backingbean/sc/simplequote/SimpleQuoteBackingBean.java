@@ -4056,7 +4056,8 @@ public class SimpleQuoteBackingBean extends
 	public void submitPromptAction() {
 		debugLogger("submitPromptAction");
 		ScQuote quote = getManagedBean().getScQuote();
-		getManagedBean().setAutoUpdate(Boolean.TRUE);		
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+				
 		
 		// validate quote
 		validateQuote(quote, true);
@@ -8215,7 +8216,6 @@ public class SimpleQuoteBackingBean extends
 			return getManagedBean();
 		}
 		// #29832 end
-		
 		
 		//29832 start
 		public String excludeLevelCodeSupplier(){
