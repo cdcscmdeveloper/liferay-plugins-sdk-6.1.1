@@ -12,7 +12,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
-import java.text.DateFormat; //#24333
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.text.DecimalFormatSymbols; //24333
@@ -23,7 +22,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -126,8 +124,6 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg; //#35238
-import my.ep.persistence.entity.pm.authorization.PmUserRole; //#35238
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
@@ -185,7 +181,6 @@ import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.DisciplinaryActionVO;
-import my.ep.web.util.NumberWordUtil; //#24333
 import my.ep.web.util.NumberWordUtilEn; //#24333
 
 import org.apache.commons.collections.CollectionUtils;
