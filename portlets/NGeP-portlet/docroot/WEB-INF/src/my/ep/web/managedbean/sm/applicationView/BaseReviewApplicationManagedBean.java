@@ -2720,7 +2720,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setOtherDescChangeSupplier(boolean otherDescChangeSupplier) {
 		this.otherDescChangeSupplier = otherDescChangeSupplier;
 	}
-	// 36504 - END
 
 	/**
 	 * @return the otherDescChangeSupPO
@@ -2749,5 +2748,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
 		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
 	}
+	// 36504 - END
 	
 }

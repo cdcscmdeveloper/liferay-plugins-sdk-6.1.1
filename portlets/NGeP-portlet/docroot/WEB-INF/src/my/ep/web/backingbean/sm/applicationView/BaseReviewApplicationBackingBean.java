@@ -2418,8 +2418,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 			
 			// 36504 - START
-			String catType = cat.getPmCategoryL3().getCategoryTypeCode()
-					.getParameterCode();
+			String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 			cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
@@ -5519,16 +5518,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * 
 	 * @param applId
-	 * @return
+	 * @return supplierCategoryId
 	 */
-	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(
-			Long supplierCategoryId) {
+	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(Long supplierCategoryId) {
 		if (supplierCategoryId == null) {
 			return null;
 		}
-
-		return SmServiceLookup.getMofRegistrationSO()
-				.retrieveActiveOtherDescHistory(supplierCategoryId);
-	}
+		
+		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistory(supplierCategoryId);
+	}  
 	// 36504 - END
 }
