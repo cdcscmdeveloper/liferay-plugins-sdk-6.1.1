@@ -5536,7 +5536,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * 
 	 * @param applId
-	 * @return
+	 * @return supplierCategoryId
 	 */
 	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(Long supplierCategoryId) {
 	    if (supplierCategoryId == null) {
