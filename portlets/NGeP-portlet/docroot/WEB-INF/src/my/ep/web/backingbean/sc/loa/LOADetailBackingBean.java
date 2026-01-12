@@ -12713,6 +12713,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			cdbb.getManagedBean().setSegmentCode(newItem.getExtensionCode());
 			cdbb.getManagedBean().setSegmentTitle(newItem.getItemName());
 			cdbb.getManagedBean().setFamilyTitle(completeItemName);
+			cdbb.getManagedBean().setItemTypeService(reqItem.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE));
 
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "showItemDescPopup", "showItemDescPopup", null,
