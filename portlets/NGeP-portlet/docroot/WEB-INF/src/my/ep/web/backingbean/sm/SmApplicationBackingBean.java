@@ -18772,7 +18772,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	/**
 	 * To reset data
-	 *  
+	 * 
 	 */
 	public void resetOtherDescriptionEdit() {
 		getManagedBean().setOtherDescEdited(getManagedBean().getSelectedCategory().getOtherDesc());
