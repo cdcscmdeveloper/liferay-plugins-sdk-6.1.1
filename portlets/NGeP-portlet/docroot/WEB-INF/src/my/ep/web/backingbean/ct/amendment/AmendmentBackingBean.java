@@ -3406,6 +3406,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuSchedule);
 			}
+			
+			//#25002 - add new rules for schedule - start
+			if(ctContractVer.getCtAmendment().isOtherChange() && 
+					ctContractVer.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+					&& ctContractVer.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuSchedule);
+			}
+			//#25002 - end
+			
 			//Enhancement 15851 - shaqimi start
 			if (getManagedBean().isPrepareLOA() || ctBackingBean.getManagedBean().isViewSCL()) {
 			//Enhancement 15851 - shaqimi end

@@ -24,7 +24,7 @@
 							escape="false" />
 						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{backingBean.otherDescriptionHistory}" process="@this"
+							action="#{backingBean.otherDescriptionHistoryPrev}" process="@this"
 							partialSubmit="true" update="@form">
 							<u><h:outputText
 									value="#{lbl['lbl.sm.other.desc.history.here']}"
@@ -372,7 +372,15 @@
 	<ac:otherDescriptionHistory
 		categoryCodeList="#{backingBean.managedBean.approvedCategoryList}"
 		applNo="#{backingBean.managedBean.smAppl.applNo}"
-		otherDescChange="#{backingBean.managedBean.otherDescChange}" />
+		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplier}"  />
+	<ac:otherDescriptionHistoryPrev
+		categoryCodeList="#{backingBean.managedBean.previousCategoryList}"
+		applNo="#{backingBean.managedBean.smAppl.smSupplier.smAppl.applNo}"
+		otherDescChangePO="#{backingBean.managedBean.otherDescChangePOPrev}"
+		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApproverPrev}"
+		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplierPrev}"  />
 	<ac:otherDescriptionEdit />
 	<!-- 36504 - END -->
 
