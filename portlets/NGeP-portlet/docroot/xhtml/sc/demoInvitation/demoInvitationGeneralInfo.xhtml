@@ -226,6 +226,7 @@
 						</tr>
 					</table>
 				</td>
+			</tr>
 			<tr>
 				<td colspan="3"></td>
 				<td>
@@ -237,7 +238,6 @@
 						</tr>
 					</table>
 				</td>
-			</tr>
 			</tr>
 
 			<tr>
@@ -291,7 +291,6 @@
 				<td><p:inputText id="fulfilTypeTxt"
 						rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
 						value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
-						style="width:195px;" disabled="true" 
 						style="width:195px;" disabled="true" 
 						styleClass="#{createQtBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"/> <p:selectOneMenu
 						required="#{empty param['skipvalidation']}" id="fulfilId"
