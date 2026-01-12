@@ -1733,6 +1733,11 @@ public class RuleCatalogueBackingBean extends
 					break;
 				}
 			}
+			
+			/************ AUDIT #28895_35509 - START **************/
+			boolean auditConstRule = false;
+			/************ AUDIT #28895_35509 - END **************/
+			
 			/* 27827 - START */
 			if (resDTO.isSuccessful() && orgProfResDTO.isSuccessful()) {
 			/* 27827 - END */
@@ -1744,17 +1749,24 @@ public class RuleCatalogueBackingBean extends
 										MessageConst.INFO_770009,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				
 				/************ AUDIT #28895_35509 - START **************/
-				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IAuditPMSO.class);
+				auditConstRule = true;
+				/************ AUDIT #28895_35509 - END **************/
+			}
+			
+			/************ AUDIT #28895_35509 - START **************/
+			if (auditConstRule) {
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
 				AuditPMBackingBeanTemplate auTemplate = new AuditPMSysParamBackingBean();
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SYSTEMPARAMETERS)) {
 					getManagedBean().setAuditLevelCode(AuditConst.PM_LVL_CODE_2_SPCONSTANTRULE);
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SYSPARAMETER);
 				}
+				clearAllAuditBeanVal(getManagedBean());
 			}
-			clearAllAuditBeanVal(getManagedBean());
-			/************ AUDIT #28895_35509 - END **************/
+			/************ AUDIT #28895_35509 - END **************/			
 		} catch (Exception e) {
 			clearAllAuditBeanVal(getManagedBean());//#35509
 			throw new EpException(e.getMessage());
