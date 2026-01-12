@@ -206,7 +206,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String itemCodeDesc;
 	private Object[] objSelected;
 	private boolean renderButtonAssignCode;
-	private boolean isItemTypeService = true;
+	private boolean isHideExtension;
 	// #31503 - End
 	
 	//35503 Start
@@ -1554,19 +1554,18 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the isItemTypeService
+	 * @return the isHideExtension
 	 */
-	public boolean isItemTypeService() {
-		return isItemTypeService;
+	public boolean isHideExtension() {
+		return isHideExtension;
 	}
 
 	/**
-	 * @param isItemTypeService the isItemTypeService to set
+	 * @param isHideExtension the isHideExtension to set
 	 */
-	public void setItemTypeService(boolean isItemTypeService) {
-		this.isItemTypeService = isItemTypeService;
+	public void setHideExtension(boolean isHideExtension) {
+		this.isHideExtension = isHideExtension;
 	}
-	
 	// #31503 -end-
 
 	//35503 Start
@@ -1602,6 +1601,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.commodityTitleEng = commodityTitleEng;
 	}
 	//35503 End
+
+	
 
 	
 }
