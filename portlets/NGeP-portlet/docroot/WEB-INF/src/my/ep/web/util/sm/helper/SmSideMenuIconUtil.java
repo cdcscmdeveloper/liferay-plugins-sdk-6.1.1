@@ -337,12 +337,6 @@ public class SmSideMenuIconUtil {
 					bean.getSupplierEditVO().setSuppEditCategory(true);
 				}
 				
-				// 36504 - START
-				if (bean.isOtherDescChangeSupplier()) {
-					bean.getEditVO().setSuppEditCategory(true);
-				}
-				// 36504 - END
-				
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCategory(false);
@@ -352,12 +346,8 @@ public class SmSideMenuIconUtil {
 				}
 				
 				// 36504 - START
-				if (bean.isOtherDescChangePO()) {
+				if (bean.isOtherDescChangePO() || bean.isOtherDescChangeSupPO()) {
 					bean.getEditVO().setPoEditCategory(true);
-				}
-				
-				if (bean.isOtherDescChangeSupplier()) {
-					bean.getEditVO().setSuppEditCategory(true);
 				}
 				// 36504 - END
 				/*//#32008
@@ -376,15 +366,12 @@ public class SmSideMenuIconUtil {
 				}
 				
 				// 36504 - START
-				if (bean.isOtherDescChangeApprover()) {
+				if (bean.isOtherDescChangeApprover() || bean.isOtherDescChangeSupApprover()) {
 					bean.getEditVO().setAppEditCategory(true);
 				}
-				if (bean.isOtherDescChangePO()) {
-					bean.getEditVO().setPoEditCategory(true);
-				}
 				
-				if (bean.isOtherDescChangeSupplier()) {
-					bean.getEditVO().setSuppEditCategory(true);
+				if (bean.isOtherDescChangePO() || bean.isOtherDescChangeSupPO()) {
+					bean.getEditVO().setPoEditCategory(true);
 				}
 				// 36504 - END
 				
