@@ -30,17 +30,18 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import java.util.HashSet; //Bug #33988@Syazani - 27/09/2022
-import java.util.Set; //Bug #33988@Syazani - 27/09/2022
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -50,12 +51,15 @@ import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.bean.application.NgepApplicationBean; //#27868
+import my.ep.bean.application.NgepApplicationBean;
+import my.ep.biz.bean.sc.CompanyExpBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
+import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -69,6 +73,7 @@ import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
@@ -86,6 +91,7 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -102,6 +108,8 @@ import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.constants.UnicodeCharacterConstant;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -123,6 +131,8 @@ import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -142,8 +152,10 @@ import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
+import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -163,7 +175,9 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -188,18 +202,19 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.tpl.comm.TplCommMember;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -209,7 +224,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.ReasonCategory; //#27868
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.CustomUtils;
@@ -223,21 +238,25 @@ import my.ep.util.sc.DisciplinaryActionUtils;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
-import my.ep.web.bean.sc.common.ZonesBean;	// Bug #36730@Syazani 07/01/2025
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
+import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.constant.sc.DPConstants; //#27868
+import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;	// Bug #36730@Syazani 07/01/2025
+import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.type.sc.quationtender.ApprovalStatus;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -249,7 +268,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.output.CountingOutputStream;	// Bug #35485@Syazani 08/02/2024
+import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -273,30 +292,15 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
-
+//Bug #33988@Syazani - 27/09/2022
+//Bug #33988@Syazani - 27/09/2022
+//#27868
+//#27868
+// Bug #36730@Syazani 07/01/2025
+//#27868
+// Bug #36730@Syazani 07/01/2025
+// Bug #35485@Syazani 08/02/2024
 //29661 -start-
-import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
-import my.ep.biz.bean.sc.CompanyExpBean;
-import my.ep.web.constant.sc.SLALogConstant;
-import my.ep.biz.service.ct.termination.IContractTerminationSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
-import my.ep.dto.ct.ContractReqDTO;
-import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.ct.CtContractVer;
-import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
-import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
-import my.ep.persistence.entity.ct.terminate.CtTermination;
-import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
-import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
-import my.ep.web.util.EpPortletUtil;
-import my.ep.constant.MapKeyEnum;
-import java.util.EnumMap;
 
 //29661 -end-
 
@@ -8280,216 +8284,4 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return true;
 	}
 	//#28784 - End
-	
-	//#28784 - Start
-	/**
-	 * Only used by demo to ensure that demo pdf/file able to be open even within zip file
-	 * 
-	 * @param zos
-	 * @param scAttachments
-	 * @throws IOException
-	 */
-	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFilesAsZipFile(ZipOutputStream zos,
-			List<ATTACHMENT> scAttachments) throws IOException {
-		String demoKey = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);
-
-	    for (ScAttachment scAttachment : scAttachments) {
-
-	    	try {
-		        if (scAttachment == null || StringUtils.isBlank(scAttachment.getFilePath())) {
-		            continue;
-		        }
-
-		        File file = new File(getActualFilePath(scAttachment));
-		        String pdfEntryName = resolvePdfEntryName(scAttachment, demoKey);
-
-		        if (isDemoReport(scAttachment, demoKey)) {
-		            writeInnerZip(zos, file, pdfEntryName);
-		        } else {
-		            writePdfToOuterZip(zos, file, pdfEntryName);
-		        }
-			} catch (FileNotFoundException fnfe) {
-				SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
-						"downloadSFAndRecommendationFilesAsZipFile", "",
-						"downloadSFAndRecommendationFilesAsZipFile", getUserIdSessionFromLoginId(), fnfe);
-				continue;
-	        }
-	    }
-	}
-	//#28784 - End
-
-	//#28784 - Start
-	private String resolvePdfEntryName(ScAttachment attachment, String demoKey) {
-
-	    String extension = FilenameUtils.getExtension(attachment.getFileName());
-
-	    if (StringUtils.isBlank(attachment.getTempFileName())) {
-	        return attachment.getFileName();
-	    }
-
-	    if (attachment.getTempFileName().contains(demoKey)) {
-	        return SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + "." + extension;
-	    }
-
-	    return attachment.getTempFileName() + "." + extension;
-	}
-	//#28784 - End
-
-	//#28784 - Start
-	private boolean isDemoReport(ScAttachment attachment, String demoKey) {
-	    return StringUtils.isNotBlank(attachment.getTempFileName())
-	            && attachment.getTempFileName().contains(demoKey);
-	}
-	//#28784 - End
-
-	//#28784 - Start
-	private void writeInnerZip(
-	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
-
-	    ByteArrayOutputStream innerBaos = new ByteArrayOutputStream();
-
-	    try (ZipOutputStream innerZos = new ZipOutputStream(innerBaos)) {
-	        innerZos.putNextEntry(new ZipEntry(pdfEntryName));
-	        copyFile(file, innerZos);
-	        innerZos.closeEntry();
-	    }
-
-	    zos.putNextEntry(
-	        new ZipEntry(SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + ".zip")
-	    );
-	    zos.write(innerBaos.toByteArray());
-	    zos.closeEntry();
-	}
-	//#28784 - End
-
-	//#28784 - Start
-	private void writePdfToOuterZip(
-	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
-
-	    zos.putNextEntry(new ZipEntry(pdfEntryName));
-	    copyFile(file, zos);
-	    zos.closeEntry();
-	}
-	//#28784 - End
-
-	//#28784 - Start
-	private void copyFile(File file, OutputStream out) throws IOException {
-
-	    try (BufferedInputStream bis =
-	                 new BufferedInputStream(new FileInputStream(file))) {
-
-	        byte[] buffer = new byte[8192];
-	        int len;
-	        while ((len = bis.read(buffer)) > 0) {
-	            out.write(buffer, 0, len);
-	        }
-	    }
-	}
-	//#28784 - End
-	
-	//#28784 - Start
-	/**
-	 * To download multiple files.
-	 * 
-	 * @param zipFileName
-	 * @param scAttachments
-	 * @throws IOException
-	 */
-	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFiles(String zipFileName,
-			List<ATTACHMENT> scAttachments) throws IOException {
-		HttpServletResponse response = null;
-		ZipOutputStream zos = null;
-		try {
-			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
-					.getResponse();
-			response = PortalUtil.getHttpServletResponse(portalresponse);
-			String finalFileName = zipFileName + ".zip";
-			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
-			response.setContentType(getMimeType(finalFileName));
-
-			zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
-
-			downloadSFAndRecommendationFilesAsZipFile(zos, scAttachments);
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} finally {
-			zos.close();
-			response.flushBuffer();
-			FacesContext.getCurrentInstance().responseComplete();
-		}
-	}
-	//#28784 - End
-	
-	//#35320 - START
-	/**
-	 * Set PTJ Org Profile of user for committee member.
-	 * 
-	 * @param tplMember
-	 */
-	public void setTplCommMemberOrgProfile(TplCommMember tplMember) {
-
-		if (tplMember.getPmUser() != null && tplMember.getPmUser().getOrgTypeCode() != null) {
-			String orgTypeCode = tplMember.getPmUser().getOrgTypeCode().getParameterCode();
-			if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)) {
-				tplMember.setPmOrgProfile(getBKPOrgProfileByUserId(tplMember.getPmUser().getUserId()));
-			} else if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)) {
-				tplMember.setPmOrgProfile(getOTHOrgProfileByUserId(tplMember.getPmUser().getUserId()));
-			} else {
-				tplMember.setPmOrgProfile(getPTJOrgProfileByUserId(tplMember.getPmUser().getUserId()));
-			}
-		}
-	}
-	//#35320 - END
-	
-	//#35320 - START
-	/**
-	 * Set Committeemember data.
-	 * 
-	 * @param deletedCommitteeMember
-	 *  @param currentCommitteeMember
-	 */
-	public TplCommMember setTplCommitteeMemberData(TplCommMember deletedCommitteeMember,
-			TplCommMember currentCommitteeMember) {
-
-		deletedCommitteeMember.setDeleted(false);
-		deletedCommitteeMember.setRepresentativeType(currentCommitteeMember.getRepresentativeType());
-		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
-		deletedCommitteeMember.setMemberRoleId(currentCommitteeMember.getMemberRoleId());
-		deletedCommitteeMember.setMemberName(currentCommitteeMember.getMemberName());
-		deletedCommitteeMember.setDesignation(currentCommitteeMember.getDesignation());
-		deletedCommitteeMember.setEmail(currentCommitteeMember.getEmail());
-		deletedCommitteeMember.setGrade(currentCommitteeMember.getGrade());
-		deletedCommitteeMember.setPNP(currentCommitteeMember.isPNP());
-		deletedCommitteeMember.setPmUser(currentCommitteeMember.getPmUser());
-		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
-		deletedCommitteeMember.setAccessRight(currentCommitteeMember.getAccessRight());
-		deletedCommitteeMember.setTplCommittee(currentCommitteeMember.getTplCommittee());
-
-		if (deletedCommitteeMember.getMemberRole() != null) {
-			deletedCommitteeMember.setMemberRoleId(deletedCommitteeMember.getMemberRole().getParameterId());
-		}
-
-		if (deletedCommitteeMember.getRepresentativeType() != null) {
-			deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType()
-					.getParameterId());
-		}
-		return deletedCommitteeMember;
-	}
-	//#35320 - END
-	
-	//#35320 - START
-	/**
-	 * Representive type change.
-	 *
-	 * @param member the member
-	 */
-	public void tplRepresentiveTypeChangedListener(TplCommMember member) {
-		Long paramId = member.getRepresentativeTypeId();
-		if (null != paramId) {
-			member.setRepresentativeType(ParameterHelper.getInstance()
-					.getPmParameterById(paramId));
-		}
-	}
-	//#35320 - END
 }
