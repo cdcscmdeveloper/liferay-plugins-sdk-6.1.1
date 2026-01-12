@@ -50,6 +50,7 @@
 
 				<ac:dateTime id="demoStartDate" label="#{lbl['lbl.sc.start.date']}"
 					disabled="#{disableMeeting}"
+					mindate="#{demoInvBB.handleMinDateForDemo()}"
 					value="#{demoSpecTempList.scQtDemoSchedule.demoStartDate}"
 					update="@([id$=demoStartDate])" rowIndex="#{rowIndex}">
 				</ac:dateTime>
@@ -68,6 +69,7 @@
 				<ac:dateTime id="demoEndDate" label="#{lbl['lbl.sm.end.date']}"
 					demo="true"
 					disabled="#{disableMeeting}"
+					mindate="#{demoInvBB.handleMinDateForDemo()}"
 					value="#{demoSpecTempList.scQtDemoSchedule.demoEndDate}"
 					update="@([id$=demoEndDate])" rowIndex="#{rowIndex}">
 				</ac:dateTime>

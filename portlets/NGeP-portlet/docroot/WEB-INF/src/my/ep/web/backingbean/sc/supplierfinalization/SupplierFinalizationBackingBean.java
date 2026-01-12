@@ -2719,6 +2719,12 @@ public class SupplierFinalizationBackingBean extends
 		}
 		//#21692 - End
 		
+		// #39620 - start
+		ScQtEvaluationResultDtl recommendedSupplier = this.getManagedBean().getTempRecommendedSupplier();
+		if (isRecommendByAward() && recommendedSupplier != null) {
+			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
+		}// #39620 - End
+		
 		//#28777#29729 - Start
 		if(checkFlagForSupplierBranchDeleted()){
 		    checkNeedSupplierIfHaveBranchDeleted();
@@ -2989,6 +2995,13 @@ public class SupplierFinalizationBackingBean extends
 				  .getParameterCode();
 	log.info("decisionTypeCode"+decisionTypeCode);
 		this.checkIfLoggedinUserIsSecretary();
+		
+		// #39620 - start
+		ScQtEvaluationResultDtl recommendedSupplier = this.getManagedBean().getTempRecommendedSupplier();
+		if (isRecommendByAward() && recommendedSupplier != null) {
+			this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
+		}// #39620 - End
+				
 		if (this.getManagedBean().isSecretaryUser()) {
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
 				List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
@@ -9290,6 +9303,7 @@ return	remarksNotFound;
 							if (!disabledSupplier) {
 								if (recommendationBean.isAwarded()) {
 									getManagedBean().setRecommendedSupplier(qualSupplier);
+									getManagedBean().setTempRecommendedSupplier(qualSupplier);//#39620 
 								}
 							} else {
 								if (getManagedBean().getDisabledSupplierIds() == null) {
@@ -10718,7 +10732,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
-			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
+			//#28784 - Start
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
+			//#28784 - End
 		}
 	}
 

@@ -781,9 +781,11 @@ public class PurchaseInquiryBackingBean extends
 							new FacesScopes().getUserLocale()) });
 				}
 				// 27868 - start
-				validateReasonStatus(requestNoteDtls);
-				validateUserProfileAgencyForPK7AndSpecialItem(requestNoteDtls);
-				validateSupplierAccountTypeForPK7AndSpecialItem(requestNoteDtls, scRequestSupplierItem);
+				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
+					validateReasonStatus(requestNoteDtls);
+					validateUserProfileAgencyForSpecialItem(requestNoteDtls);
+					validateSupplierAccountTypeForPK7AndSpecialItem(requestNoteDtls, scRequestSupplierItem);
+				}
 				// 27868 - end
 				// Add selected supplier item.f
 				scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
@@ -834,10 +836,12 @@ public class PurchaseInquiryBackingBean extends
 				requestNote.setRequestNoteDtls(Arrays.asList(requestNoteDtl));
 				
 				// 27868 - start
-				validateReasonStatus(requestNote.getRequestNoteDtls());
-				validateUserProfileAgencyForPK7AndSpecialItem(requestNote.getRequestNoteDtls());
-				validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
-						scRequestSupplierItem);
+				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
+					validateReasonStatus(requestNote.getRequestNoteDtls());
+					validateUserProfileAgencyForSpecialItem(requestNote.getRequestNoteDtls());
+					validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
+							scRequestSupplierItem);
+				}
 				// 27868 - end
 				
 				reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -4125,21 +4129,20 @@ public class PurchaseInquiryBackingBean extends
 	}
 
 	/**
-	 * Validates the user's profile agency for PK7 and Special Item procurement types.
+	 * Validates the user's profile agency for Special Item procurement types.
 	 * <p>
-	 * If the procurement type is PK7 or Special Item and the user's agency profile
+	 * If the procurement type is Special Item and the user's agency profile
 	 * does not match the required criteria, an exception is thrown.
 	 * </p>
 	 *
 	 * @param requestNoteDtls list of {@link ScRequestNoteDtl} details to validate
 	 * @throws EpException if the user profile agency does not match for PK7 or Special Item
 	 */
-	public void validateUserProfileAgencyForPK7AndSpecialItem(List<ScRequestNoteDtl> requestNoteDtls) {
+	public void validateUserProfileAgencyForSpecialItem(List<ScRequestNoteDtl> requestNoteDtls) {
 		if (requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
 			for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
-				if ((rnDtl.getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM) || rnDtl.getProcurementType()
-						.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7))
+				if (rnDtl.getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)
 						&& !compareUserProfileAgencyForSpecialItem(rnDtl)) {
 					throw new EpException(MessageConst.ERROR_760715, new String[] {
 							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
@@ -4518,23 +4521,12 @@ public class PurchaseInquiryBackingBean extends
 	 * @return true if at least one active reason restriction exists for the user's agency, false otherwise
 	 */
 	public boolean isAgencyAllowedForSpecialItem() {
-		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IReasonSO.class);
 		PmOrgProfile pmOrgProfile = retrievePmOrgProfile();
-		if (pmOrgProfile != null) {
-			ReasonReqDTO reqDTO = new ReasonReqDTO();
-			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-			List<PmReasonRestr> listReasonRestr = reqSO.retrieveReasonRestrListByParam(reqDTO).getReasonRestrList();
 
-			for (PmReasonRestr pmReasonRestr : listReasonRestr) {
-				if (pmReasonRestr.getPmReason().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return pmOrgProfile != null ? getReasonCodeDropdownValues(pmOrgProfile.getOrgProfileId(),
+				ReasonCategory.JUSTIFICATION_SIT.value()).length > 1
+				: getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SIT.value()).length > 1;
 	}
-	
 	/**
 	 * Removes "Special Item" from the procurement types, effectively disabling its radio button.
 	 */
