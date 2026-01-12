@@ -1554,9 +1554,7 @@ public class SmApplicationUtil {
 			Map<Long, SmSupplierCategory> newCat = buildCategoryMap(managedBean.getActiveCategoryList());
 
 		    for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				cat = SmServiceLookup.getMofRegistrationSO()
-						.findActiveCategoryBySupplierCategoryId(cat); // 36504 - optimistic lock
-				updateCategoryDescription(cat, newCat);
+		        updateCategoryDescription(cat, newCat);
 		        
 		        if (cat.isSpecialCategory()) {
 		            validateAndCleanCategory(cat);
@@ -4610,19 +4608,19 @@ public class SmApplicationUtil {
 						
 						for (SmSuppCatOtherDescHistory history : previouscat.getSmSuppCatOtherDescHistory()) {
 							if (!EntityHelper.isCollectionEmpty(previouscat.getSmSuppCatOtherDescHistory())
-									&& !managedBean.isOtherDescChangePO() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
-								managedBean.setOtherDescChangePO(true);
+									&& !managedBean.isOtherDescChangePOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+								managedBean.setOtherDescChangePOPrev(true);
 							} else if (!EntityHelper.isCollectionEmpty(previouscat.getSmSuppCatOtherDescHistory())
-									&& !managedBean.isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
-								managedBean.setOtherDescChangeApprover(true);
+									&& !managedBean.isOtherDescChangeApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+								managedBean.setOtherDescChangeApproverPrev(true);
 							} else if (!EntityHelper.isCollectionEmpty(previouscat.getSmSuppCatOtherDescHistory())
-									&& !managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
-								managedBean.setOtherDescChangeSupApprover(true);
-								managedBean.setOtherDescChangeSupplier(true);
+									&& !managedBean.isOtherDescChangeSupApproverPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+								managedBean.setOtherDescChangeSupApproverPrev(true);
+								managedBean.setOtherDescChangeSupplierPrev(true);
 							} else if (!EntityHelper.isCollectionEmpty(previouscat.getSmSuppCatOtherDescHistory())
-									&& !managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
-								managedBean.setOtherDescChangeSupPO(true);
-								managedBean.setOtherDescChangeSupplier(true);
+									&& !managedBean.isOtherDescChangeSupPOPrev() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+								managedBean.setOtherDescChangeSupPOPrev(true);
+								managedBean.setOtherDescChangeSupplierPrev(true);
 							}
 						}
 						prevList.add(previouscat);
@@ -4651,8 +4649,12 @@ public class SmApplicationUtil {
 								&& !managedBean.isOtherDescChangeApprover() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 							managedBean.setOtherDescChangeApprover(true);
 						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
-								&& !managedBean.isOtherDescChangeSupplier() && (history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER) ||
-								history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO))) {
+								&& !managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_APPROVER)) {
+							managedBean.setOtherDescChangeSupApprover(true);
+							managedBean.setOtherDescChangeSupplier(true);
+						} else if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
+								&& !managedBean.isOtherDescChangeSupplier() && history.getRoleType().equalsIgnoreCase(SupplierManagementConst.SUPPLIER_PO)) {
+							managedBean.setOtherDescChangeSupPO(true);
 							managedBean.setOtherDescChangeSupplier(true);
 						}
 					}
