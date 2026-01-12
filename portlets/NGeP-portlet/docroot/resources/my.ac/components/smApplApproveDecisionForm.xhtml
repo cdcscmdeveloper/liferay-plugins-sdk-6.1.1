@@ -86,7 +86,7 @@
 							<td style="border-style: none !important;float: right !important;">
 								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" 
 									disabled="#{empty cc.attrs.currRegStatus}">
-									<p:ajax event="change" partialSubmit="true" process="@this"
+									<p:ajax event="change" partialSubmit="true" process="@this" listener="#{cc.attrs.backingBean.updateApproverRegistrationStatusValue()}"
 										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" />
 								</p:selectBooleanCheckbox>
 							</td>
