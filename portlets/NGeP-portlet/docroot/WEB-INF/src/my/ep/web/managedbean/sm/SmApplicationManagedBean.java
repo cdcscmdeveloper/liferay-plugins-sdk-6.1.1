@@ -683,7 +683,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangeSupPO;
 	private boolean otherDescChangeSupApprover;
 	private String otherDescEdited;
+	private boolean otherDescChangePOPrev;
+	private boolean otherDescChangeApproverPrev;
+	private boolean otherDescChangeSupplierPrev;
+	private boolean otherDescChangeSupPOPrev;
+	private boolean otherDescChangeSupApproverPrev;
 	private List<SmSupplierCategory> previousCategoryList;
+	private SmSupplierCategory historySuppCategory;
 	private IPagingDataModel<SmSuppCatOtherDescHistory> otherDescDataModel = new OtherDescSearchPagingDataModel();
 	// 36504 - END
 		
@@ -4850,6 +4856,91 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
 		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
 	}
-	// 36504 - END
 
+	/**
+	 * @return the otherDescChangePOPrev
+	 */
+	public boolean isOtherDescChangePOPrev() {
+		return otherDescChangePOPrev;
+	}
+
+	/**
+	 * @param otherDescChangePOPrev the otherDescChangePOPrev to set
+	 */
+	public void setOtherDescChangePOPrev(boolean otherDescChangePOPrev) {
+		this.otherDescChangePOPrev = otherDescChangePOPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeApproverPrev
+	 */
+	public boolean isOtherDescChangeApproverPrev() {
+		return otherDescChangeApproverPrev;
+	}
+
+	/**
+	 * @param otherDescChangeApproverPrev the otherDescChangeApproverPrev to set
+	 */
+	public void setOtherDescChangeApproverPrev(boolean otherDescChangeApproverPrev) {
+		this.otherDescChangeApproverPrev = otherDescChangeApproverPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeSupplierPrev
+	 */
+	public boolean isOtherDescChangeSupplierPrev() {
+		return otherDescChangeSupplierPrev;
+	}
+
+	/**
+	 * @param otherDescChangeSupplierPrev the otherDescChangeSupplierPrev to set
+	 */
+	public void setOtherDescChangeSupplierPrev(boolean otherDescChangeSupplierPrev) {
+		this.otherDescChangeSupplierPrev = otherDescChangeSupplierPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeSupPOPrev
+	 */
+	public boolean isOtherDescChangeSupPOPrev() {
+		return otherDescChangeSupPOPrev;
+	}
+
+	/**
+	 * @param otherDescChangeSupPOPrev the otherDescChangeSupPOPrev to set
+	 */
+	public void setOtherDescChangeSupPOPrev(boolean otherDescChangeSupPOPrev) {
+		this.otherDescChangeSupPOPrev = otherDescChangeSupPOPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeSupApproverPrev
+	 */
+	public boolean isOtherDescChangeSupApproverPrev() {
+		return otherDescChangeSupApproverPrev;
+	}
+
+	/**
+	 * @param otherDescChangeSupApproverPrev the otherDescChangeSupApproverPrev to set
+	 */
+	public void setOtherDescChangeSupApproverPrev(
+			boolean otherDescChangeSupApproverPrev) {
+		this.otherDescChangeSupApproverPrev = otherDescChangeSupApproverPrev;
+	}
+
+	/**
+	 * @return the historySuppCategory
+	 */
+	public SmSupplierCategory getHistorySuppCategory() {
+		return historySuppCategory;
+	}
+
+	/**
+	 * @param historySuppCategory the historySuppCategory to set
+	 */
+	public void setHistorySuppCategory(SmSupplierCategory historySuppCategory) {
+		this.historySuppCategory = historySuppCategory;
+	}
+	// 36504 - END
+	
 }
