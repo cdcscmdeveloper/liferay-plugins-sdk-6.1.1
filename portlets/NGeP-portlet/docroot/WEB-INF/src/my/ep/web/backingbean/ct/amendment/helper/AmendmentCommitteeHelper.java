@@ -443,11 +443,14 @@ public class AmendmentCommitteeHelper {
 	}
 	
 	/**
-	 * Check whether the user is allowed to act as Chairperson based on role and
-	 * committee type
+	 * Determines whether the user is allowed to access chairperson
+	 * functionality for a quotation committee. When the committee type is QCA
+	 * or QCB (WIP), chairperson access is denied by default and only granted if
+	 * the user has the appropriate chairperson role and belongs to the same
+	 * organization (PTJ) as the contract owner.
 	 * 
-	 * @param orgProfileId id for ministry committee
-	 * @param ctOwnerOrgProfileId  contract ministry id 
+	 * @param orgProfileId  id for ministry committee
+	 * @param ctOwnerOrgProfileId contract ministry id
 	 * @param userResDTO the user to be checked
 	 * @param allowChairpersonRole previous true false for allow chairperson
 	 * @return return true if all condition met, otherwise false.
@@ -455,12 +458,12 @@ public class AmendmentCommitteeHelper {
 	public boolean determineChairpersonAccessForQuotationCommmittee(Long orgProfileId, Long ctOwnerOrgProfileId,
 			UserResDTO userResDTO, boolean allowChairpersonRole) {
 		boolean allow = allowChairpersonRole;
-		for (PmRoleDesc pmRoleDesc : userResDTO.getRoleDescList()) {
-			String roleCode = pmRoleDesc.getPmRole().getRoleCode();
-			if ((isQuotationCommitteeTypeAC() && isTypeAChairperson(roleCode))
-					|| (isQCBCommitteeWIP() && RoleCode.QCB_CHAIRPERSON.value().equalsIgnoreCase(roleCode))) {
-				allow = false;
-				if (orgProfileId.equals(ctOwnerOrgProfileId)) {
+
+		if (isQuotationCommitteeTypeAC() || isQCBCommitteeWIP()) {
+			allow = false;
+			for (PmRoleDesc pmRoleDesc : userResDTO.getRoleDescList()) {
+				String roleCode = pmRoleDesc.getPmRole().getRoleCode();
+				if (isValidChairpersonRole(roleCode) && orgProfileId.equals(ctOwnerOrgProfileId)) {
 					allow = true;
 					break;
 				}
@@ -470,13 +473,26 @@ public class AmendmentCommitteeHelper {
 	}
 	
 	/**
+	 * Validates whether the given role code matches the chairperson role
+	 * based on the active quotation committee type.
+	 *
+	 * @param roleCode the role code to evaluate
+	 * @return true if the role matches the required chairperson role
+	 */
+	private boolean isValidChairpersonRole(String roleCode) {
+	    return (isQuotationCommitteeTypeAC() && isQuotationChairpersonAC(roleCode))
+	            || (isQCBCommitteeWIP()
+	            && RoleCode.QCB_CHAIRPERSON.value().equalsIgnoreCase(roleCode));
+	}
+	
+	/**
 	 * Check if the role belongs to a valid Chairperson role for Committee Type
 	 * QCA and QC
 	 * 
 	 * @param roleCode user role code
 	 * @return true if all condition met, otherwise false.
 	 */
-	private boolean isTypeAChairperson(String roleCode) {
+	private boolean isQuotationChairpersonAC(String roleCode) {
 		return RoleCode.QCA_CHAIRPERSON.value().equalsIgnoreCase(roleCode)
 				|| RoleCode.QQC_CHAIRPERSON.value().equalsIgnoreCase(roleCode);
 	}
