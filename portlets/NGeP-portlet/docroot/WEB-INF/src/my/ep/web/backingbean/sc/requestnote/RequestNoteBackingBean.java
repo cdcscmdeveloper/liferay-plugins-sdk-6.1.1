@@ -7679,6 +7679,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonId(rnDtl.getJustificationType().getReasonId());
 		List<PmReasonRestr> listReasonRestr = reqSO.retrieveReasonRestrListByParam(reqDTO).getReasonRestrList();
+		List<PmReasonRestr> distinctReasonRestrList = new ArrayList<>();
+		distinctSupplierAccType(listReasonRestr, distinctReasonRestrList);
+		
 		StringBuilder suppAccTypeSb = new StringBuilder();
 		String suppAccType = null;
 		if (supplierItem != null && supplierItem.getSmSupplier() != null && supplierItem.getSmSupplier().getSmAppl() != null) {
@@ -7686,13 +7689,49 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			suppAccType = verifyMOFAccount(supplierItem, suppAccType);
 		}
 
-		if ((listReasonRestr != null && !listReasonRestr.isEmpty()) && suppAccType != null) {
-			isSupplierAccTypeMatch = initializeReasonRestr(listReasonRestr, isSupplierAccTypeMatch, suppAccTypeSb, suppAccType);
+		if ((distinctReasonRestrList != null && !distinctReasonRestrList.isEmpty()) && suppAccType != null) {
+			isSupplierAccTypeMatch = initializeReasonRestr(distinctReasonRestrList, isSupplierAccTypeMatch, suppAccTypeSb, suppAccType);
 			
 			if (!isSupplierAccTypeMatch){
 				getSupplierTypeErrorMessage(rnDtl,suppAccTypeSb.toString(),isFromATC);
 			}
 		}
+	}
+	
+	/**
+	 * Builds a distinct list of {@link PmReasonRestr} based on supplier account
+	 * type.
+	 * <p>
+	 * A record is considered duplicate if its {@code supplAcctTypeId} is null
+	 * or has the same {@code parameterCode} (case-insensitive) as an existing
+	 * entry.
+	 * </p>
+	 * 
+	 * @param listReasonRestr
+	 *            source list containing possible duplicates
+	 * @param distinctReasonRestrList
+	 *            target list to store distinct records
+	 */
+	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
+			List<PmReasonRestr> distinctReasonRestrList) {
+		for (PmReasonRestr rr : listReasonRestr) {
+			PmParameter param = rr.getSupplAcctTypeId();
+			boolean exists = false;
+
+			for (PmReasonRestr dr : distinctReasonRestrList) {
+				PmParameter existingParam = dr.getSupplAcctTypeId();
+
+				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+						existingParam != null ? existingParam.getParameterCode() : "")) {
+					exists = true;
+					break;
+				}
+			}
+
+			if (!exists) {
+	            distinctReasonRestrList.add(rr);
+	        }
+	    }
 	}
 
 	/**
