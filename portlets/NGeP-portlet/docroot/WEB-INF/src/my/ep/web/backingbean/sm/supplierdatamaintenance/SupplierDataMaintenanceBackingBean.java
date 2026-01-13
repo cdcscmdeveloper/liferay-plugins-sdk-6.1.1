@@ -89,6 +89,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -1948,59 +1949,80 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (disc == null){
 			return;
 		}
-					//27857: Disciplinary Action - start - 26238
-					if(!getManagedBean().isEditDisciplinaryActionCheckBox()){ //29181: Disciplinary Action - change edit check box variable - 26238
-						
-						// 27815 - add disable button delete if edit DA - Start
-						getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
-						// 27815 - add disable button delete if edit DA - End
+		// 27857: Disciplinary Action - start - 26238
+		if (!getManagedBean().isEditDisciplinaryActionCheckBox()) { //29181: Disciplinary Action - change edit check box variable - 26238
+			// 27815 - add disable button delete if edit DA - Start
+			getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
+			// 27815 - add disable button delete if edit DA - End
+			
 			getManagedBean().setBlacklistOwnerOrDirector(disc.isBlacklistOwner());
-							getManagedBean().setBlacklistOwnerOrDirectorExist(true);
+			getManagedBean().setBlacklistOwnerOrDirectorExist(true);
 							
 			getManagedBean().setCancelCategoryCode(disc.isCancelCategory());
-							getManagedBean().setCancelCategoryCodeExist(true);
-							
-			getManagedBean().setSuspendRegistration(disc.isSuspendRegistration());
-							getManagedBean().setSuspendRegistrationExist(true);
+			getManagedBean().setCancelCategoryCodeExist(true);
 			
+			getManagedBean().setSuspendRegistration(disc.isSuspendRegistration());
+			getManagedBean().setSuspendRegistrationExist(true);
+
 			getManagedBean().setWarning(disc.isWarning());
-			if(getManagedBean().isEditDisciplinaryActionCheckBox()){ 
+			if (getManagedBean().isEditDisciplinaryActionCheckBox()) {
 				getManagedBean().setWarningExist(false);
 			} else {
-							getManagedBean().setWarningExist(true);
-						}
-			
+				getManagedBean().setWarningExist(true);
+			}
+
 			getManagedBean().setCancelRegistration(disc.isCancelRegistration());
-							getManagedBean().setCancelRegistrationExist(true);
-			
+			getManagedBean().setCancelRegistrationExist(true);
+
 			getManagedBean().setBumiputeraStatusCancel(disc.isBumiputeraCancel());
-							getManagedBean().setBumiputeraStatusCancelExist(true);
-			
+			getManagedBean().setBumiputeraStatusCancelExist(true);
+
 			getManagedBean().setManufacturerStatusCancel(disc.isManufacturerCancel());
-							getManagedBean().setManufacturerStatusCancelExist(true);
-					}else{
-						
-						// 27815 - add disable button delete if edit DA - Start
-						if(disc.isCancelCategory() || disc.isBumiputeraCancel() || disc.isManufacturerCancel()){
-								getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
-						}
-						// 27815 - add disable button delete if edit DA - End
-						
-						resetDisciplinaryActionSectionExist();
-						getManagedBean().setEditDisciplinaryActionCheckBox(true);//29181: Disciplinary Action - 26238
-						getManagedBean().setEditDisciplinaryAction(true);
-					}
-					//27857: Disciplinary Action - end - 26238
-					
-					//28198: Disciplinary Action - start - 26238
+			getManagedBean().setManufacturerStatusCancelExist(true);
+		} else {
+
+			// 27815 - add disable button delete if edit DA - Start
+			if (disc.isCancelCategory() || disc.isBumiputeraCancel() || disc.isManufacturerCancel()) {
+				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
+			}
+			// 27815 - add disable button delete if edit DA - End
+
+			resetDisciplinaryActionSectionExist();
+			getManagedBean().setEditDisciplinaryActionCheckBox(true);// 29181: Disciplinary Action - 26238
+			getManagedBean().setEditDisciplinaryAction(true);
+		}
+		// 27857: Disciplinary Action - end - 26238
+		tickFutureImposedPersonnel(disc);
+		// 28198: Disciplinary Action - start - 26238
 		discipline.getSmDiscplinaryAction().setRemark(disc.getRemark()); // 39115
-					//28198: Disciplinary Action - end - 26238
+		// 28198: Disciplinary Action - end - 26238
 		discipline.getSmDiscplinaryAction().setStartDate(disc.getStartDate());
 		discipline.getSmDiscplinaryAction().setEndDate(disc.getEndDate());
-					discipline.setSuspend(true);
+		discipline.setSuspend(true);
 		discipline.getSmDiscplinaryAction().setDisciplinaryActionId(disc.getDisciplinaryActionId());
-					getManagedBean().setHasActiveDA(true); //#34626
+		getManagedBean().setHasActiveDA(true); //#34626
 		getManagedBean().setDisciplineVO(discipline);
+	}
+	
+	//26238 - 39636
+	private void tickFutureImposedPersonnel(SmDisciplinaryAction da){
+		if (da == null || EntityHelper.isCollectionEmpty(getManagedBean().getOwnerAndDirectorList())){
+			return;
+		}
+		if (!da.isPendingBlacklist() && !da.isPendingCancel() && !da.isPendingSuspend()){
+			return;
+		}
+		List<BlacklistOwnerDirectorVO> blacklistVOs = getPersonnelBlacklist(da.getDisciplinaryActionId());
+		if (EntityHelper.isCollectionEmpty(blacklistVOs)){
+			return;
+		}
+		for (SmPersonnel per : getManagedBean().getOwnerAndDirectorList()){
+			for (BlacklistOwnerDirectorVO vo : blacklistVOs){
+				if (per.getIdentificationNo().equals(vo.getIcNo())){
+					per.setFutureDA(true);
+				}
+			}
+		}
 	}
 	
 	/**

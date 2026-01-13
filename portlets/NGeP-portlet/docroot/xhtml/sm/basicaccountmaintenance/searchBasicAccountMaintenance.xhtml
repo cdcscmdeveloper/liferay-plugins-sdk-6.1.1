@@ -837,13 +837,18 @@
 								supplierDataMaintenanceBackingBean.managedBean.cancelRegistration or 
 								supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}"/>
 						</p:column>
-						<!-- 39293 - START -->
+						<!-- 39293, 39636 - START -->
 						<p:column
-						rendered="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector
+						rendered="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector 
 						and supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist}">
-							<h:graphicImage value="/css/images/design/ico-tick-checkbox.png" />
+							<h:graphicImage value="/css/images/design/ico-disabled-chckbx.png" 
+							rendered="#{!person.suspendRegistration and !person.cancelRegistration and !person.blacklisted
+								and !person.futureDA}"/>
+							<h:graphicImage value="/css/images/design/ico-tick-checkbox.png"
+							rendered="#{person.suspendRegistration or person.cancelRegistration or person.blacklisted
+								or person.futureDA}"/>
 						</p:column>
-						<!-- 39293 - END -->
+						<!-- 39293, 39636 - END -->
 						<!-- 28494, 32279 - end-->
 						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
 							<h:outputText value="#{person.name}" />
