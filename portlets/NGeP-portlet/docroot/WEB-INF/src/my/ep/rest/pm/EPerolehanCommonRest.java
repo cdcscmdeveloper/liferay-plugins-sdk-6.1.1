@@ -46,9 +46,16 @@ public class EPerolehanCommonRest {
     private static final String API_KEY_HEADER = "X-API-Key";
     private static final String VALID_API_KEY = "test-api-key-123"; // TODO: Move to properties
     
-    // List of sensitive properties that should be masked in output
-    private static final String[] SENSITIVE_PATTERNS = {
+    // List of sensitive keywords that should block property access
+    // Any property containing these words will be BLOCKED (403 Forbidden)
+    private static final String[] BLOCKED_KEYWORDS = {
         "password", "pwd", "secret", "key", "token", "credential"
+    };
+    
+    // Additional specific properties to block (if needed)
+    private static final String[] BLOCKED_PROPERTIES = {
+        // Add specific property names here if needed
+        // Example: "db.connection.string", "admin.username"
     };
     
     // Whitelist approach: only these properties can be accessed
@@ -56,11 +63,6 @@ public class EPerolehanCommonRest {
     // private static final String[] ALLOWED_PROPERTIES = {
     //     "molpay.url", "app.version", "system.name"
     // };
-    
-    // Blacklist approach: these properties cannot be accessed
-    private static final String[] BLOCKED_PROPERTIES = {
-        "db.password", "admin.password", "encryption.key"
-    };
     
     /**
      * Get a single property value by key
@@ -96,22 +98,14 @@ public class EPerolehanCommonRest {
             String portalNode = getNodeInfo();
             String ejbNode = SmServiceLookup.getConfigGeneralSO().getNodeInfo();
             
-            // Get property values
+            // Get property values (no masking needed since sensitive props are blocked)
             String portalValue = EpPropertiesUtils.getInstance().getProperty(key);
             String ejbValue = SmServiceLookup.getConfigGeneralSO().getPropertyValue(key);
-            
-            // Mask sensitive values
-            boolean isSensitive = isSensitiveProperty(key);
-            if (isSensitive) {
-                portalValue = maskValue(portalValue);
-                ejbValue = maskValue(ejbValue);
-            }
             
             // Build response
             Map<String, Object> response = new HashMap<String, Object>();
             response.put("success", true);
             response.put("key", key);
-            response.put("sensitive", isSensitive);
             
             Map<String, Object> portalInfo = new HashMap<String, Object>();
             portalInfo.put("node", portalNode);
@@ -144,11 +138,10 @@ public class EPerolehanCommonRest {
      * List all properties (with optional filtering)
      * 
      * @param apiKey API key for authentication
-     * @param includeSensitive Include sensitive properties (default: false)
      * @param source Filter by source: portal, ejb, or both (default: both)
      * @return JSON response with all properties
      * 
-     * Example URL: /rest/properties/list?includeSensitive=false&source=portal
+     * Example URL: /rest/properties/list?source=portal
      * Header: X-API-Key: your-api-key
      */
     @GET
@@ -156,7 +149,6 @@ public class EPerolehanCommonRest {
     @Produces(MediaType.APPLICATION_JSON)
     public Response listAllProperties(
             @HeaderParam(API_KEY_HEADER) String apiKey,
-            @QueryParam("includeSensitive") @DefaultValue("false") boolean includeSensitive,
             @QueryParam("source") @DefaultValue("both") String source) {
         
         try {
@@ -165,7 +157,7 @@ public class EPerolehanCommonRest {
                 return createUnauthorizedResponse();
             }
             
-            log.info("List All Properties - Include Sensitive: " + includeSensitive + ", Source: " + source);
+            log.info("List All Properties - Source: " + source);
             
             List<Map<String, Object>> properties = new ArrayList<Map<String, Object>>();
             
@@ -178,16 +170,12 @@ public class EPerolehanCommonRest {
                 Properties portalProps = EpPropertiesUtils.getInstance().getAllProperties();
                 for (String key : portalProps.stringPropertyNames()) {
                     if (!isPropertyAllowed(key)) continue;
-                    if (!includeSensitive && isSensitiveProperty(key)) continue;
                     
                     Map<String, Object> prop = new HashMap<String, Object>();
                     prop.put("key", key);
                     prop.put("source", "portal");
                     prop.put("node", portalNode);
-                    prop.put("value", isSensitiveProperty(key) ? 
-                            maskValue(portalProps.getProperty(key)) : 
-                            portalProps.getProperty(key));
-                    prop.put("sensitive", isSensitiveProperty(key));
+                    prop.put("value", portalProps.getProperty(key));
                     properties.add(prop);
                 }
             }
@@ -197,16 +185,12 @@ public class EPerolehanCommonRest {
                 Properties ejbProps = SmServiceLookup.getConfigGeneralSO().getAllProperties();
                 for (String key : ejbProps.stringPropertyNames()) {
                     if (!isPropertyAllowed(key)) continue;
-                    if (!includeSensitive && isSensitiveProperty(key)) continue;
                     
                     Map<String, Object> prop = new HashMap<String, Object>();
                     prop.put("key", key);
                     prop.put("source", "ejb");
                     prop.put("node", ejbNode);
-                    prop.put("value", isSensitiveProperty(key) ? 
-                            maskValue(ejbProps.getProperty(key)) : 
-                            ejbProps.getProperty(key));
-                    prop.put("sensitive", isSensitiveProperty(key));
+                    prop.put("value", ejbProps.getProperty(key));
                     properties.add(prop);
                 }
             }
@@ -233,10 +217,9 @@ public class EPerolehanCommonRest {
      * 
      * @param pattern Search pattern (SQL LIKE style: % for wildcard)
      * @param apiKey API key for authentication
-     * @param includeSensitive Include sensitive properties (default: false)
      * @return JSON response with matching properties
      * 
-     * Example URL: /rest/properties/search?pattern=molpay%&includeSensitive=false
+     * Example URL: /rest/properties/search?pattern=molpay%
      * Header: X-API-Key: your-api-key
      */
     @GET
@@ -244,8 +227,7 @@ public class EPerolehanCommonRest {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchProperties(
             @QueryParam("pattern") String pattern,
-            @HeaderParam(API_KEY_HEADER) String apiKey,
-            @QueryParam("includeSensitive") @DefaultValue("false") boolean includeSensitive) {
+            @HeaderParam(API_KEY_HEADER) String apiKey) {
         
         try {
             // Validate API key
@@ -257,7 +239,7 @@ public class EPerolehanCommonRest {
                 return createBadRequestResponse("Pattern parameter is required");
             }
             
-            log.info("Search Properties - Pattern: " + pattern + ", Include Sensitive: " + includeSensitive);
+            log.info("Search Properties - Pattern: " + pattern);
             
             // Get node information
             String portalNode = getNodeInfo();
@@ -272,17 +254,13 @@ public class EPerolehanCommonRest {
             Properties portalProps = EpPropertiesUtils.getInstance().getAllProperties();
             for (String key : portalProps.stringPropertyNames()) {
                 if (!isPropertyAllowed(key)) continue;
-                if (!includeSensitive && isSensitiveProperty(key)) continue;
                 
                 if (key.matches(regex)) {
                     Map<String, Object> prop = new HashMap<String, Object>();
                     prop.put("key", key);
                     prop.put("source", "portal");
                     prop.put("node", portalNode);
-                    prop.put("value", isSensitiveProperty(key) ? 
-                            maskValue(portalProps.getProperty(key)) : 
-                            portalProps.getProperty(key));
-                    prop.put("sensitive", isSensitiveProperty(key));
+                    prop.put("value", portalProps.getProperty(key));
                     matchedProperties.add(prop);
                 }
             }
@@ -291,17 +269,13 @@ public class EPerolehanCommonRest {
             Properties ejbProps = SmServiceLookup.getConfigGeneralSO().getAllProperties();
             for (String key : ejbProps.stringPropertyNames()) {
                 if (!isPropertyAllowed(key)) continue;
-                if (!includeSensitive && isSensitiveProperty(key)) continue;
                 
                 if (key.matches(regex)) {
                     Map<String, Object> prop = new HashMap<String, Object>();
                     prop.put("key", key);
                     prop.put("source", "ejb");
                     prop.put("node", ejbNode);
-                    prop.put("value", isSensitiveProperty(key) ? 
-                            maskValue(ejbProps.getProperty(key)) : 
-                            ejbProps.getProperty(key));
-                    prop.put("sensitive", isSensitiveProperty(key));
+                    prop.put("value", ejbProps.getProperty(key));
                     matchedProperties.add(prop);
                 }
             }
@@ -341,7 +315,20 @@ public class EPerolehanCommonRest {
      * Check if property is allowed to be accessed
      */
     private boolean isPropertyAllowed(String key) {
-        // Blacklist check
+        if (key == null || key.trim().isEmpty()) {
+            return false;
+        }
+        
+        String lowerKey = key.toLowerCase();
+        
+        // Check if property contains any blocked keywords
+        for (String keyword : BLOCKED_KEYWORDS) {
+            if (lowerKey.contains(keyword)) {
+                return false;
+            }
+        }
+        
+        // Check specific blocked properties
         for (String blocked : BLOCKED_PROPERTIES) {
             if (key.equalsIgnoreCase(blocked)) {
                 return false;
@@ -359,32 +346,6 @@ public class EPerolehanCommonRest {
         // }
         
         return true;
-    }
-    
-    /**
-     * Check if property contains sensitive information
-     */
-    private boolean isSensitiveProperty(String key) {
-        String lowerKey = key.toLowerCase();
-        for (String pattern : SENSITIVE_PATTERNS) {
-            if (lowerKey.contains(pattern)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * Mask sensitive value
-     */
-    private String maskValue(String value) {
-        if (value == null || value.isEmpty()) {
-            return value;
-        }
-        if (value.length() <= 4) {
-            return "****";
-        }
-        return value.substring(0, 2) + "****" + value.substring(value.length() - 2);
     }
     
     /**
