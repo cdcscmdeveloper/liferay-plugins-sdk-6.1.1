@@ -5980,10 +5980,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-				
+
 				//Bug #39043 #39512 start
 				if (null != suppAns.getSupplierId()
-						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   
 					String remark = tplSpecAnswer.getAnswerRemark();
 					answerRemarkList.add(remark != null ? remark : getDefaultValue());
 					break;
