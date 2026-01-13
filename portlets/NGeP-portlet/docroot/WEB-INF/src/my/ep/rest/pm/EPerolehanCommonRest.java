@@ -24,58 +24,53 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import org.apache.log4j.Logger;
 
 /**
- * REST endpoint for property management with enhanced security and search capabilities.
+ * REST endpoint for system health check and property validation with enhanced security.
  * 
  * Security Features:
  * - API key authentication via header
- * - Property key whitelist/blacklist filtering
- * - Sensitive property masking
+ * - Whitelist-based property access control
+ * - Only registered properties can be accessed
  * 
  * Features:
- * - Get single property value
- * - List all properties
- * - Search properties by pattern (LIKE)
+ * - Get single property value (if whitelisted)
+ * - List all whitelisted properties
+ * - Search properties by pattern (within whitelist)
  * - JSON response format
  */
-@Path("/properties")
+@Path("/health")
 public class EPerolehanCommonRest {
     
     public static Logger log = Logger.getLogger(EPerolehanCommonRest.class);
     
     // Security configuration - should be externalized to properties file
     private static final String API_KEY_HEADER = "X-API-Key";
-    private static final String VALID_API_KEY = "test-api-key-123"; // TODO: Move to properties
+    private static final String VALID_API_KEY = "your-secure-api-key-here"; // TODO: Move to properties
     
-    // List of sensitive keywords that should block property access
-    // Any property containing these words will be BLOCKED (403 Forbidden)
-    private static final String[] BLOCKED_KEYWORDS = {
-        "password", "pwd", "secret", "key", "token", "credential"
+    // Property name in properties file that contains the whitelist
+    // Format: whitelist.prop=prop1,prop2,prop3
+    private static final String WHITELIST_PROPERTY_NAME = "whitelist.prop";
+    
+    // Fallback whitelist if property is not configured
+    // These are the allowed properties that can be accessed via API
+    private static final String[] DEFAULT_WHITELIST = {
+        "mygpki.new.roaming",
+        "sqTimeValidity", 
+        "molpay.gov.merchantid",
+        "mygpki.modeUsed"
     };
-    
-    // Additional specific properties to block (if needed)
-    private static final String[] BLOCKED_PROPERTIES = {
-        // Add specific property names here if needed
-        // Example: "db.connection.string", "admin.username"
-    };
-    
-    // Whitelist approach: only these properties can be accessed
-    // Comment out if you prefer blacklist approach
-    // private static final String[] ALLOWED_PROPERTIES = {
-    //     "molpay.url", "app.version", "system.name"
-    // };
     
     /**
-     * Get a single property value by key
+     * Get a single property value by key (only if whitelisted)
      * 
-     * @param key Property key
+     * @param key Property key (must be in whitelist)
      * @param apiKey API key for authentication (from header)
      * @return JSON response with property information
      * 
-     * Example URL: /rest/properties/single/molpay.url
+     * Example URL: /rest/health/check/molpay.gov.merchantid
      * Header: X-API-Key: your-api-key
      */
     @GET
-    @Path("/single/{key}")
+    @Path("/check/{key}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSingleProperty(
             @PathParam("key") String key,
@@ -92,7 +87,7 @@ public class EPerolehanCommonRest {
                 return createForbiddenResponse(key);
             }
             
-            log.info("Get Single Property - Key: " + key);
+            log.info("Check Property - Key: " + key);
             
             // Get node information
             String portalNode = getNodeInfo();
@@ -122,7 +117,7 @@ public class EPerolehanCommonRest {
                                  (portalValue == null && ejbValue == null);
             response.put("valuesMatch", valuesMatch);
             
-            log.info("End Get Single Property - Key: " + key);
+            log.info("End Check Property - Key: " + key);
             
             return Response.status(200)
                     .entity(toJson(response))
@@ -135,17 +130,17 @@ public class EPerolehanCommonRest {
     }
     
     /**
-     * List all properties (with optional filtering)
+     * List all whitelisted properties
      * 
      * @param apiKey API key for authentication
      * @param source Filter by source: portal, ejb, or both (default: both)
-     * @return JSON response with all properties
+     * @return JSON response with all whitelisted properties
      * 
-     * Example URL: /rest/properties/list?source=portal
+     * Example URL: /rest/health/whitelist?source=portal
      * Header: X-API-Key: your-api-key
      */
     @GET
-    @Path("/list")
+    @Path("/whitelist")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listAllProperties(
             @HeaderParam(API_KEY_HEADER) String apiKey,
@@ -157,7 +152,7 @@ public class EPerolehanCommonRest {
                 return createUnauthorizedResponse();
             }
             
-            log.info("List All Properties - Source: " + source);
+            log.info("List Whitelisted Properties - Source: " + source);
             
             List<Map<String, Object>> properties = new ArrayList<Map<String, Object>>();
             
@@ -165,33 +160,38 @@ public class EPerolehanCommonRest {
             String portalNode = getNodeInfo();
             String ejbNode = SmServiceLookup.getConfigGeneralSO().getNodeInfo();
             
-            // Get all properties from Portal
+            // Get whitelist
+            String[] whitelist = getWhitelist();
+            
+            // Get properties from Portal (only whitelisted)
             if ("portal".equals(source) || "both".equals(source)) {
                 Properties portalProps = EpPropertiesUtils.getInstance().getAllProperties();
-                for (String key : portalProps.stringPropertyNames()) {
-                    if (!isPropertyAllowed(key)) continue;
-                    
-                    Map<String, Object> prop = new HashMap<String, Object>();
-                    prop.put("key", key);
-                    prop.put("source", "portal");
-                    prop.put("node", portalNode);
-                    prop.put("value", portalProps.getProperty(key));
-                    properties.add(prop);
+                for (String key : whitelist) {
+                    String value = portalProps.getProperty(key);
+                    if (value != null) {
+                        Map<String, Object> prop = new HashMap<String, Object>();
+                        prop.put("key", key);
+                        prop.put("source", "portal");
+                        prop.put("node", portalNode);
+                        prop.put("value", value);
+                        properties.add(prop);
+                    }
                 }
             }
             
-            // Get all properties from EJB
+            // Get properties from EJB (only whitelisted)
             if ("ejb".equals(source) || "both".equals(source)) {
                 Properties ejbProps = SmServiceLookup.getConfigGeneralSO().getAllProperties();
-                for (String key : ejbProps.stringPropertyNames()) {
-                    if (!isPropertyAllowed(key)) continue;
-                    
-                    Map<String, Object> prop = new HashMap<String, Object>();
-                    prop.put("key", key);
-                    prop.put("source", "ejb");
-                    prop.put("node", ejbNode);
-                    prop.put("value", ejbProps.getProperty(key));
-                    properties.add(prop);
+                for (String key : whitelist) {
+                    String value = ejbProps.getProperty(key);
+                    if (value != null) {
+                        Map<String, Object> prop = new HashMap<String, Object>();
+                        prop.put("key", key);
+                        prop.put("source", "ejb");
+                        prop.put("node", ejbNode);
+                        prop.put("value", value);
+                        properties.add(prop);
+                    }
                 }
             }
             
@@ -200,7 +200,7 @@ public class EPerolehanCommonRest {
             response.put("count", properties.size());
             response.put("properties", properties);
             
-            log.info("End List All Properties - Count: " + properties.size());
+            log.info("End List Whitelisted Properties - Count: " + properties.size());
             
             return Response.status(200)
                     .entity(toJson(response))
@@ -213,13 +213,13 @@ public class EPerolehanCommonRest {
     }
     
     /**
-     * Search properties using LIKE pattern
+     * Search properties using LIKE pattern (only within whitelist)
      * 
      * @param pattern Search pattern (SQL LIKE style: % for wildcard)
      * @param apiKey API key for authentication
-     * @return JSON response with matching properties
+     * @return JSON response with matching whitelisted properties
      * 
-     * Example URL: /rest/properties/search?pattern=molpay%
+     * Example URL: /rest/health/search?pattern=molpay%
      * Header: X-API-Key: your-api-key
      */
     @GET
@@ -250,33 +250,38 @@ public class EPerolehanCommonRest {
             
             List<Map<String, Object>> matchedProperties = new ArrayList<Map<String, Object>>();
             
-            // Search Portal properties
+            // Get whitelist
+            String[] whitelist = getWhitelist();
+            
+            // Search only within whitelisted properties from Portal
             Properties portalProps = EpPropertiesUtils.getInstance().getAllProperties();
-            for (String key : portalProps.stringPropertyNames()) {
-                if (!isPropertyAllowed(key)) continue;
-                
+            for (String key : whitelist) {
                 if (key.matches(regex)) {
-                    Map<String, Object> prop = new HashMap<String, Object>();
-                    prop.put("key", key);
-                    prop.put("source", "portal");
-                    prop.put("node", portalNode);
-                    prop.put("value", portalProps.getProperty(key));
-                    matchedProperties.add(prop);
+                    String value = portalProps.getProperty(key);
+                    if (value != null) {
+                        Map<String, Object> prop = new HashMap<String, Object>();
+                        prop.put("key", key);
+                        prop.put("source", "portal");
+                        prop.put("node", portalNode);
+                        prop.put("value", value);
+                        matchedProperties.add(prop);
+                    }
                 }
             }
             
-            // Search EJB properties
+            // Search only within whitelisted properties from EJB
             Properties ejbProps = SmServiceLookup.getConfigGeneralSO().getAllProperties();
-            for (String key : ejbProps.stringPropertyNames()) {
-                if (!isPropertyAllowed(key)) continue;
-                
+            for (String key : whitelist) {
                 if (key.matches(regex)) {
-                    Map<String, Object> prop = new HashMap<String, Object>();
-                    prop.put("key", key);
-                    prop.put("source", "ejb");
-                    prop.put("node", ejbNode);
-                    prop.put("value", ejbProps.getProperty(key));
-                    matchedProperties.add(prop);
+                    String value = ejbProps.getProperty(key);
+                    if (value != null) {
+                        Map<String, Object> prop = new HashMap<String, Object>();
+                        prop.put("key", key);
+                        prop.put("source", "ejb");
+                        prop.put("node", ejbNode);
+                        prop.put("value", value);
+                        matchedProperties.add(prop);
+                    }
                 }
             }
             
@@ -312,40 +317,45 @@ public class EPerolehanCommonRest {
     }
     
     /**
-     * Check if property is allowed to be accessed
+     * Get whitelist of allowed properties from properties file or use default
+     */
+    private String[] getWhitelist() {
+        try {
+            String whitelistValue = EpPropertiesUtils.getInstance().getProperty(WHITELIST_PROPERTY_NAME);
+            if (whitelistValue != null && !whitelistValue.trim().isEmpty()) {
+                // Split by comma and trim each entry
+                String[] whitelist = whitelistValue.split(",");
+                for (int i = 0; i < whitelist.length; i++) {
+                    whitelist[i] = whitelist[i].trim();
+                }
+                return whitelist;
+            }
+        } catch (Exception e) {
+            log.warn("Error reading whitelist from properties, using default: " + e.getMessage());
+        }
+        
+        // Return default whitelist if property not configured
+        return DEFAULT_WHITELIST;
+    }
+    
+    /**
+     * Check if property is in the whitelist
      */
     private boolean isPropertyAllowed(String key) {
         if (key == null || key.trim().isEmpty()) {
             return false;
         }
         
-        String lowerKey = key.toLowerCase();
+        String[] whitelist = getWhitelist();
         
-        // Check if property contains any blocked keywords
-        for (String keyword : BLOCKED_KEYWORDS) {
-            if (lowerKey.contains(keyword)) {
-                return false;
+        // Check if property is in whitelist
+        for (String allowedProp : whitelist) {
+            if (key.equalsIgnoreCase(allowedProp)) {
+                return true;
             }
         }
         
-        // Check specific blocked properties
-        for (String blocked : BLOCKED_PROPERTIES) {
-            if (key.equalsIgnoreCase(blocked)) {
-                return false;
-            }
-        }
-        
-        // Whitelist check (uncomment if using whitelist approach)
-        // if (ALLOWED_PROPERTIES != null && ALLOWED_PROPERTIES.length > 0) {
-        //     for (String allowed : ALLOWED_PROPERTIES) {
-        //         if (key.equalsIgnoreCase(allowed)) {
-        //             return true;
-        //         }
-        //     }
-        //     return false;
-        // }
-        
-        return true;
+        return false;
     }
     
     /**
