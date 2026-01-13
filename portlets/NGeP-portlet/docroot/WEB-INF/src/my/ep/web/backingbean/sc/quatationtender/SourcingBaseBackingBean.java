@@ -30,18 +30,17 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import java.util.HashSet; //Bug #33988@Syazani - 27/09/2022
+import java.util.Set; //Bug #33988@Syazani - 27/09/2022
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -51,15 +50,12 @@ import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.bean.application.NgepApplicationBean;
-import my.ep.biz.bean.sc.CompanyExpBean;
+import my.ep.bean.application.NgepApplicationBean; //#27868
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
-import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -73,7 +69,6 @@ import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
@@ -91,7 +86,6 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
-import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -108,8 +102,6 @@ import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.constants.UnicodeCharacterConstant;
-import my.ep.dto.ct.ContractReqDTO;
-import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -131,8 +123,6 @@ import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -152,10 +142,8 @@ import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
-import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
-import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -175,9 +163,7 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -202,16 +188,14 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
-import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
-import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -225,7 +209,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.ReasonCategory;
+import my.ep.type.pm.ReasonCategory; //#27868
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.CustomUtils;
@@ -239,25 +223,21 @@ import my.ep.util.sc.DisciplinaryActionUtils;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
-import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
-import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.sc.common.ZonesBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
+import my.ep.web.bean.sc.common.ZonesBean;	// Bug #36730@Syazani 07/01/2025
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.constant.sc.DPConstants;
+import my.ep.web.constant.sc.DPConstants; //#27868
 import my.ep.web.constant.sc.QTConstants;
-import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;	// Bug #36730@Syazani 07/01/2025
 import my.ep.web.type.sc.quationtender.ApprovalStatus;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
-import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -269,7 +249,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.output.CountingOutputStream;
+import org.apache.commons.io.output.CountingOutputStream;	// Bug #35485@Syazani 08/02/2024
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -293,15 +273,30 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
-//Bug #33988@Syazani - 27/09/2022
-//Bug #33988@Syazani - 27/09/2022
-//#27868
-//#27868
-// Bug #36730@Syazani 07/01/2025
-//#27868
-// Bug #36730@Syazani 07/01/2025
-// Bug #35485@Syazani 08/02/2024
+
 //29661 -start-
+import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
+import my.ep.biz.bean.sc.CompanyExpBean;
+import my.ep.web.constant.sc.SLALogConstant;
+import my.ep.biz.service.ct.termination.IContractTerminationSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
+import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
+import my.ep.persistence.entity.ct.terminate.CtTermination;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.web.util.EpPortletUtil;
+import my.ep.constant.MapKeyEnum;
+import java.util.EnumMap;
 
 //29661 -end-
 
