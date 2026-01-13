@@ -3,9 +3,9 @@
     <cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.other.desc.history.header']}" />
     <cc:attribute name="categoryCodeList" type="java.util.List" required="true" />
     <cc:attribute name="applNo" type="java.lang.String" required="true" />
-    <cc:attribute name="otherDescChangePO" type="boolean" />
-    <cc:attribute name="otherDescChangeApprover" type="boolean" />
-    <cc:attribute name="otherDescChangeSupplier" type="boolean" />
+    <cc:attribute name="otherDescChangePO" type="java.lang.Boolean" />
+    <cc:attribute name="otherDescChangeApprover" type="java.lang.Boolean" />
+    <cc:attribute name="otherDescChangeSupplier" type="java.lang.Boolean" />
   </cc:interface>
   <cc:implementation>
 	<p:dialog id="otherDescriptionHistoryDlgId"
@@ -86,7 +86,7 @@
 					<br />
 				</p:panel>
 			</ui:repeat>
-			<p:panel rendered="#{not cc.attrs.otherDescChangePO and not cc.attrs.otherDescChangeApprover and not cc.attrs.otherDescChangeSupplier}">
+			<p:panel rendered="#{!cc.attrs.otherDescChangePO and !cc.attrs.otherDescChangeApprover and !cc.attrs.otherDescChangeSupplier}">
 			<p:dataTable id="OtherDescriptionDtId2" var="otherDescBean"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{cat.smSuppCatOtherDescHistory}" rowKey="#{otherDescBean}"
