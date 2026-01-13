@@ -493,8 +493,8 @@
 				<p:inputTextarea id="otherDesc2" maxlength="5000"
 					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 					value="#{aprvdCatNBean.otherDesc}" rows="5" cols="80"
-					rendered="#{aprvdCatNBean.pmCategoryL3.otherDescReq eq 1 or ((aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-					aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser))}" 
+					rendered="#{not empty aprvdCatNBean.otherDesc and (aprvdCatNBean.pmCategoryL3.otherDescReq eq 1 or ((aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
+					aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)))}" 
 					autoResize="false" readonly="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" ><!-- #36289, #37605 -->
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(aprvdCatNBean)}"
@@ -503,14 +503,14 @@
 				<p:graphicImage
 						value="/css/images/design/icon_alert.png"
 						style="float:right;"
-						rendered="#{not empty catBean.smSuppCatOtherDescHistory}" />
+						rendered="#{not empty aprvdCatNBean.smSuppCatOtherDescHistory}" />
 				<p:commandLink
 					partialSubmit="true"
 					onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					update=":form" process="@this"
 					action="#{backingBean.otherDescriptionEdit(aprvdCatNBean)}"
-					rendered="#{(aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
+					rendered="#{not empty aprvdCatNBean.otherDesc and (aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
 					aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
 					<p:graphicImage
 						value="/css/images/design/edit.png"
