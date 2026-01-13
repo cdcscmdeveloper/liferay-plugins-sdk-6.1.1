@@ -12716,6 +12716,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			if (newItem.getItemName() == null || newItem.getItemName().trim().isEmpty()) {
 				cdbb.getManagedBean().setHideExtension(true);
+			}else{
+				cdbb.getManagedBean().setHideExtension(false);
 			}
 			
 		} catch (Exception e) {
