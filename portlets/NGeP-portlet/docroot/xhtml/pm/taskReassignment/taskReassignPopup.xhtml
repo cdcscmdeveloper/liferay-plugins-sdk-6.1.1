@@ -99,11 +99,14 @@
 					<tr>
 						<td colspan="2" style="text-align: right;">
 							<!-- 34445 start -->
+							<!-- 36053 Start -->
 							<p:commandButton
+								disabled="#{!taskReassignmentBackingBean.managedBean.enableAssignButton}"
 								value="#{lbl['lbl.pm.ta.btn.assign']}"
 								oncomplete="if (!args.validationFailed) assignInfoDlg.show()" >
 								<f:param name="disableValidation" value="true" />
 							</p:commandButton>
+							<!-- 36053 End -->
 							<!-- 34445 end -->
 							<p:commandButton id="cbCancel"
 								value="#{lbl['lbl.btn.cancel']}" process="@this"

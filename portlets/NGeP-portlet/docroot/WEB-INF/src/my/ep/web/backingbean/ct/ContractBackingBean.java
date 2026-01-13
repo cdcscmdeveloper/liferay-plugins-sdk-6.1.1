@@ -1312,6 +1312,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	        final double zeroAmount = BigDecimal.ZERO.doubleValue();
 	        selectedDeduction.setAmount(zeroAmount);
 	        selectedDeduction.setDeductionDesc(null);
+	        
+	        // Safely clear deduction clauses if the list is not null
+	        List<CtDeductionClause> clauses = selectedDeduction.getCtDeductionClauses();
+	        if (clauses != null) {
+	            clauses.clear();
+	        }
 	    }
 	}
 
@@ -1721,6 +1727,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setButtonHideActive(true);
+		getManagedBean().setDefaultMinistryExist(false); //Fix - #30045
 		agencyDataModel.resetData();
 	}
 
@@ -1809,7 +1816,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				//Start - #30045
 				if(isSpecialItemAgencies()){
 					reqDTO.setSpecialItemReason(true);
-					if(!reasonCode.isEmpty()){
+					if(reasonCode != null && !reasonCode.isEmpty()){
 						reqDTO.setReasonCode(reasonCode);
 					}
 					
@@ -2671,7 +2678,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IReasonSO.class);
 				reasonCode = reasonSO.getReasonCodeAppliedForCt(reasonId);
-				if(!reasonCode.isEmpty()){
+				if(reasonCode != null && !reasonCode.isEmpty()){
 					reqDTO.setReasonCode(reasonCode);
 					List<Long> listAffected = orgProfileSO.retrieveAgencyByReasonCode(reqDTO);
 					reqDTO.setSpecialItemReason(true);
@@ -2684,8 +2691,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			List<PmOrgProfile> list = resDTO.getOrgProfileList();
 			items = new SelectItem[list.size()];
 			for (PmOrgProfile orgProfile : list) {
+				//Start - #30045
+				//Checking if default/user ministry is exist in the list
+				if(orgProfile.getOrgProfileId().equals(getManagedBean().getMinistryProfileId())){
+				   getManagedBean().setDefaultMinistryExist(true);
+				}
+				//End - #30045
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
+			//Start - #30045
+			// To set the first record from the list as a default ministry for getJabatanDropdown()
+			if(!getManagedBean().isDefaultMinistryExist()){
+				getManagedBean().setMinistryProfileId(list.get(0).getOrgProfileId());
+			}
+			//End - #30045
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_CONTRACTBACKINGBEAN, null,
 					"ContractBackingBean.getMinistryDropdown()", null, e);

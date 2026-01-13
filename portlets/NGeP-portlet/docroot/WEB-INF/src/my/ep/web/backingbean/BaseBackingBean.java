@@ -778,7 +778,54 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 	
-	//27868 - start
+	// 27868 - start
+	/**
+	 * Combines current WIP reason into dropdown items if not already present.
+	 * Preserves existing order and keeps "Select" as the first entry.
+	 */
+	public SelectItem[] getReasonCodeDropdownValuesCombineWIPCode(Long currentReasonId, SelectItem[] items) {
+		try {
+			if (items == null || items.length == 0) {
+				return items;
+			}
+
+			PmReasonDesc reasonDesc = getReasonDescByReasonId(currentReasonId);
+			if (reasonDesc == null || reasonDesc.getPmReason() == null) {
+				return items;
+			}
+
+			String currentReasonCode = reasonDesc.getPmReason().getReasonCode();
+
+			// check if WIP reason already exists
+			for (SelectItem item : items) {
+				if (item != null && currentReasonCode.equals(item.getValue())) {
+					return items;
+				}
+			}
+
+			// create new array (+1)
+			SelectItem[] combinedItems = new SelectItem[items.length + 1];
+
+			// keep "Select" at index 0
+			combinedItems[0] = items[0];
+
+			// insert WIP reason as first selectable item
+			combinedItems[1] = new SelectItem(currentReasonCode, reasonDesc.getReasonDesc());
+
+			// copy remaining items
+			System.arraycopy(items, 1, combinedItems, 2, items.length - 1);
+
+			return combinedItems;
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+
 	/**
 	 * Retrieves dropdown values for Reason codes based on profile ID and
 	 * category code. If no reasons are found for the given profile ID, it will
@@ -791,33 +838,56 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return an array of SelectItem objects for use in a dropdown list
 	 */
 	public SelectItem[] getReasonCodeDropdownValues(Long profileId, String categoryCode) {
-		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
+
 		try {
 			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(profileId, categoryCode);
 
-			items = new SelectItem[reasonDescs.size() + 1];
+			List<PmReasonDesc> distinctList = new ArrayList<>();
+			Set<Long> addedReasonIds = new HashSet<>();
+
+			for (PmReasonDesc reasonDesc : reasonDescs) {
+				Long reasonId = reasonDesc.getPmReason().getReasonId();
+				if (!addedReasonIds.contains(reasonId)) {
+					addedReasonIds.add(reasonId);
+					distinctList.add(reasonDesc);
+				}
+			}
+
+			if (distinctList.isEmpty()) {
+				List<PmReasonDesc> reasonDescsWithoutProfileId = ReasonHelper.getInstance().getReasonDescList(
+						categoryCode);
+
+				for (PmReasonDesc reasonDesc : reasonDescsWithoutProfileId) {
+					Long reasonId = reasonDesc.getPmReason().getReasonId();
+					if (!addedReasonIds.contains(reasonId)) {
+						addedReasonIds.add(reasonId);
+						distinctList.add(reasonDesc);
+					}
+				}
+			}
+
+			SelectItem[] items = new SelectItem[distinctList.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+
 			int i = 1;
-			for (PmReasonDesc reasonDesc : reasonDescs) {
+			for (PmReasonDesc reasonDesc : distinctList) {
 				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
 			}
 
-			if (reasonDescs.isEmpty()) {
-				List<PmReasonDesc> reasonDescsWithoutProfileId = ReasonHelper.getInstance().getReasonDescList(
-						categoryCode);
-				for (PmReasonDesc reasonDesc : reasonDescsWithoutProfileId) {
-					items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
-				}
-			}
+			return items;
+
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
-					SSTConstant.EMPTY_STRING, SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES, getUserIdSessionFromLoginId(), e);
+					SSTConstant.EMPTY_STRING, SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES,
+					getUserIdSessionFromLoginId(), e);
+
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
-		return items;
+
+		return new SelectItem[0];
 	}
 	
 	/**

@@ -1,9 +1,6 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -90,6 +87,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -1922,7 +1920,17 @@ public class SupplierDataMaintenanceBackingBean extends
 	private boolean isCancelRegStatus(String mofStatus, SmSupplier supplier) {
 		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector()
 				|| StringUtils.isNotEmpty(checkNonActiveDAWithPending(supplier));
+		// 39666 - START
+		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction() != null){
+			SmDisciplinaryAction action =
+			        getManagedBean().getDisciplineVO().getSmDiscplinaryAction();
 
+			if (action.isRecordStatus() && action.getStartDate().compareTo(new Date()) >= 0) {
+			    return false;
+			}	
+		}
+		// 39666 - START
+		
 		return mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA;
 	}
 	//#39079 - END
@@ -2020,7 +2028,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setEditDisciplinaryAction(true);
 		}
 		// 27857: Disciplinary Action - end - 26238
-
+		tickFutureImposedPersonnel(disc);
 		// 28198: Disciplinary Action - start - 26238
 		discipline.getSmDiscplinaryAction().setRemark(disc.getRemark()); // 39115
 		// 28198: Disciplinary Action - end - 26238
@@ -2030,6 +2038,27 @@ public class SupplierDataMaintenanceBackingBean extends
 		discipline.getSmDiscplinaryAction().setDisciplinaryActionId(disc.getDisciplinaryActionId());
 		getManagedBean().setHasActiveDA(true); //#34626
 		getManagedBean().setDisciplineVO(discipline);
+	}
+	
+	//26238 - 39636
+	private void tickFutureImposedPersonnel(SmDisciplinaryAction da){
+		if (da == null || EntityHelper.isCollectionEmpty(getManagedBean().getOwnerAndDirectorList())){
+			return;
+		}
+		if (!da.isPendingBlacklist() && !da.isPendingCancel() && !da.isPendingSuspend()){
+			return;
+		}
+		List<BlacklistOwnerDirectorVO> blacklistVOs = getPersonnelBlacklist(da.getDisciplinaryActionId());
+		if (EntityHelper.isCollectionEmpty(blacklistVOs)){
+			return;
+		}
+		for (SmPersonnel per : getManagedBean().getOwnerAndDirectorList()){
+			for (BlacklistOwnerDirectorVO vo : blacklistVOs){
+				if (per.getIdentificationNo().equals(vo.getIcNo())){
+					per.setFutureDA(true);
+				}
+			}
+		}
 	}
 	
 	/**
