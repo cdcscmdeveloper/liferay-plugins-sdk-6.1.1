@@ -4651,7 +4651,8 @@ public class PurchaseInquiryBackingBean extends
 	 * @throws NullPointerException if justification type or reason ID is null
 	 */
 	private void inactiveReasonChecking() {
-		if (null != getManagedBean().getRequestNoteDtl().getJustificationType().getReasonId()) {
+		if (null != getManagedBean().getRequestNoteDtl().getJustificationType()
+				&& null != getManagedBean().getRequestNoteDtl().getJustificationType().getReasonId()) {
 			PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
 					.getReasonId());
 
