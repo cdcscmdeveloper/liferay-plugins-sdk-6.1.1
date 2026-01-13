@@ -26,12 +26,12 @@
 						immediate="true" action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-				<!-- #34159 - START - add param disablevalidation, #34400 -->
+				<!-- #34159 - START - add param disablevalidation, #34400, #36718 - add update @all -->
 					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
-						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" >
+						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" update="@all">
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
-				<!-- #34159 - END -->
+				<!-- #34159 & #36718 - END -->
 				</td>
 			</tr>
 		</table>
@@ -545,11 +545,11 @@
 									<td style="float: left;"><p:selectBooleanCheckbox
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											id="addrSame">
-											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
+											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process, #36718 - adding @([id$=MailingAddressInfo]) at process -->
 											<p:ajax
 												event="change"
 												partialSubmit="true"
-												process="@this"
+												process="@this @([id$=MailingAddressInfo])"
 												update="@([id$=MailingAddressInfo])"
 												listener="#{smPersonnelBackingBean.onTickSameAsPermForMail(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}"
 												onstart="blockWidget.show()"
