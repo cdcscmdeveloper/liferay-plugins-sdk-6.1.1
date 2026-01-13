@@ -703,9 +703,9 @@ public class ConsolidationReportBackingBean extends
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
-			// 18685 -start-
-			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
-			// 18685 -end-
+			//#28784 - Start
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
+			//#28784 - End
 		}
 	}
 
