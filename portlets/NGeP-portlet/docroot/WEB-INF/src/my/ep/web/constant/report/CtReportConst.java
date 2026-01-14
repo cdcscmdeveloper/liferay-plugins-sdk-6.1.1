@@ -20,6 +20,11 @@ public class CtReportConst implements Serializable {
 	public static final String CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_CC_VAL = "CT_027";
 	public static final String CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_MC_VAL = "CT_028";
 	
+	// #30918 - start
+	public static final String CT_CONTRACT_MANAGEMENT_RPT_CC_VAL = "CT_036";
+	public static final String CT_CONTRACT_MANAGEMENT_RPT_MC_VAL = "CT_037";
+	// #30918 - end
+	
 	// Report Parameter Key
 	public static final String PARAM_KEY_REPORT = "report";
 	public static final String PARAM_KEY_REPORT_ID = "PREPORTID";
@@ -43,6 +48,8 @@ public class CtReportConst implements Serializable {
 	public static final String PARAM_KEY_CIRCULAR_FROM_DATE = "PCIRCEFFFROMDATE";
 	public static final String PARAM_KEY_CIRCULAR_TO_DATE = "PCIRCEFFTODATE";
 	public static final String PARAM_KEY_ITEM_NAME = "PITEMNAME";
+	public static final String PARAM_KEY_FULFILMENT_TYPE = "PFULFILMENTTYPE";//Fix -#30918
+
 
 	/**
 	 * @return the ctListOfContractMcRptVal
@@ -113,4 +120,19 @@ public class CtReportConst implements Serializable {
 		return CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_MC_VAL;
 	}
 	// End - #29416
+	// #30918 - Start
+	/**
+	 * @return the ctContractManagementRptCcVal
+	 */
+	public String getCtContractManagementRptCcVal() {
+		return CT_CONTRACT_MANAGEMENT_RPT_CC_VAL;
+	}
+
+	/**
+	 * @return the ctContractManagementRptMcVal
+	 */
+	public String getCtContractManagementRptMcVal() {
+		return CT_CONTRACT_MANAGEMENT_RPT_MC_VAL;
+	}
+	// #30918 - End
 }
