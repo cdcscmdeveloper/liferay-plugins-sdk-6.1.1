@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -239,10 +240,16 @@ public class AuditPMSysParamConstantRulesBackingBean {
 				ruleValue = AuditConst.PM_AUD_YES;
 			} else if ("FALSE".equalsIgnoreCase(rawRuleValue)) {
 				ruleValue = AuditConst.PM_AUD_NO;
+			} else if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+				String number = rawRuleValue;
+				double amount = Double.parseDouble(number);
+
+				DecimalFormat formatter = new DecimalFormat("#,###.00");
+
+				ruleValue = formatter.format(amount);
 			} else {
 				ruleValue = rawRuleValue;
 			}
-
 			if (rawRuleValue == null) {
 				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
 						.toString() : null;
@@ -251,7 +258,7 @@ public class AuditPMSysParamConstantRulesBackingBean {
 		}
 		return null;
 	}
-
+	
 	private String ruleNumberValueDeleted(PmConfigRuleValue deletedItem) {
 		if (deletedItem != null && (deletedItem.getRuleValue() != null || deletedItem.getRuleNumberValue() != null)
 				&& (Long.valueOf(deletedItem.getRuleValueId()) != null)) {
