@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -30,6 +31,8 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -894,17 +897,24 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
             return;
         }
         
-        CodificationReqDTO cReqDTO = new CodificationReqDTO();
-        cReqDTO.setItemId(cmItemId);
-        ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
-                ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
-        CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
-        if (codificationResDTO == null || codificationResDTO.getCmItem() == null) {
-            return;
-        }
+        try {
+        	CodificationReqDTO cReqDTO = new CodificationReqDTO();
+            cReqDTO.setItemId(cmItemId);
+            ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+                    ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+            CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
+            if (codificationResDTO == null || codificationResDTO.getCmItem() == null) {
+                return;
+            }
 
-        CmItem item = codificationResDTO.getCmItem();
-        populateItemDescPopup(item);
+            CmItem item = codificationResDTO.getCmItem();
+            populateItemDescPopup(item);
+        } catch (Exception e) {
+        	SLAUtils.getInstance().logSLAError("FL", "showItemDescPopup", "showItemDescPopup", null,
+					getUserIdSessionFromLoginId(), e);
+			return;
+        }
+        
     }
 
     /**
@@ -934,6 +944,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
         cdbb.getManagedBean().setSegmentTitle(segmentTitle);
         cdbb.getManagedBean().setSegmentCode(segmentCode);
         cdbb.getManagedBean().setFamilyTitle(familyTitle);
+        cdbb.getManagedBean().setHideExtension(segmentTitle.trim().isEmpty());
     }
 	
 	/**
@@ -942,24 +953,33 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return
 	 */
 	public String filterNARequestItemName(Long scRequestItemId) {
+		log.info(scRequestItemId);
+		String emptyItemName = "";
 
-	    if (scRequestItemId == null) {
-	        return null;
-	    }
+		if (scRequestItemId == null || scRequestItemId == 0) {
+			return emptyItemName;
+		}
+		
+		try {
+			IRequestItemSO reqItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IRequestItemSO.class);
 
-	    ScRequestItem scRequestItem =
-	            getRequestItemSO().getRequestItemAndCmItemByRequestItemId(scRequestItemId);
+			ScRequestItem scRequestItem = reqItemSO.getRequestItemAndCmItemByRequestItemId(scRequestItemId);
 
-	    if (scRequestItem == null || scRequestItem.getItemName() == null) {
-	        return null;
-	    }
+			if (scRequestItem == null || scRequestItem.getItemName() == null) {
+				return emptyItemName;
+			}
 
-	    CommonUtils commonUtils = new CommonUtils();
-	    String itemName = scRequestItem.getItemName();
+			CommonUtils commonUtils = new CommonUtils();
+			String itemName = scRequestItem.getItemName();
 
-	    return containsNAExtension(scRequestItem.getCmItem())
-	            ? commonUtils.removeItemNameNA(itemName)
-	            : commonUtils.filterItemNameNA(itemName);
+			return containsNAExtension(scRequestItem.getCmItem()) ? commonUtils.removeItemNameNA(itemName) : commonUtils
+					.filterItemNameNA(itemName);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("FL", "filterNARequestItemName", "filterNARequestItemName", null,
+					getUserIdSessionFromLoginId(), e);
+			return emptyItemName;
+		}
 	}
 
 	/**
@@ -968,6 +988,10 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return
 	 */
 	private boolean containsNAExtension(CmItem cmItem) {
+		if(cmItem == null) {
+			return false;
+		}
+		
 	    return isNAValue(cmItem.getCmType().getTypeName())
 	            || isNAValue(cmItem.getCmBrand().getBrandName())
 	            || isNAValue(cmItem.getCmColor().getColorName())
@@ -981,15 +1005,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 */
 	private boolean isNAValue(String value) {
 	    return "NA".equalsIgnoreCase(value);
-	}
-
-	/**
-	 * Request Item Service.
-	 * @return
-	 */
-	private IRequestItemSO getRequestItemSO() {
-	    return BusinessDelegate.getInstance()
-	            .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
 	}
 		
 	// #31344 -end-
