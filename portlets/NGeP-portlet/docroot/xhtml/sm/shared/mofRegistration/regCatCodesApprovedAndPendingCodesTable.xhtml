@@ -487,8 +487,6 @@
 				</p:outputLabel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal;vertical-align: top;">
-				<h:outputText value="#{lbl['lbl.sm.no.available']}"
-					rendered="#{empty aprvdCatNBean.otherDesc}" />
 				<!-- 36504 - START -->
 				<p:inputTextarea id="otherDesc2" maxlength="5000"
 					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
@@ -503,7 +501,7 @@
 				<p:graphicImage
 						value="/css/images/design/icon_alert.png"
 						style="float:right;"
-						rendered="#{not empty catBean.smSuppCatOtherDescHistory}" />
+						rendered="#{not empty aprvdCatNBean.smSuppCatOtherDescHistory}" />
 				<p:commandLink
 					partialSubmit="true"
 					onstart="blockWidget.show()"
