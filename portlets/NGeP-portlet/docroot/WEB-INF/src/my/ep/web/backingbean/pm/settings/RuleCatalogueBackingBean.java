@@ -1377,7 +1377,7 @@ public class RuleCatalogueBackingBean extends
 
 		IRuleSO ruleSO = null;
 		try {
-			ruleSO = BusinessDelegate.getInstance().getServiceObject(
+			ruleSO = BusinessDelegate.getInstance().getServiceObject( //#35323
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			
