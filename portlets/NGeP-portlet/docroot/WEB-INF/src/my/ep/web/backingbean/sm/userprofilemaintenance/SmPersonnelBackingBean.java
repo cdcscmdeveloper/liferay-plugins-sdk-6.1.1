@@ -408,6 +408,9 @@ public class SmPersonnelBackingBean extends
 
 		getManagedBean()
 				.setBasicSmPersonnelMailingAddress(mailPersonnelAddress);
+		// #36718 - Start
+		getManagedBean().setLatestBasicSmPersonnelMailingAddress(null);
+		// #36718 - End
 		getManagedBean().setBasicSmPersonnelPermanentAddress(
 				permPersonnelAddress);
 		smPersonnel
