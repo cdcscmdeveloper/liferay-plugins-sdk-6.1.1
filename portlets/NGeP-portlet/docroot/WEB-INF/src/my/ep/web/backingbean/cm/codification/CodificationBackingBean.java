@@ -3929,6 +3929,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			
 			if (newItem.getItemName() == null || newItem.getItemName().trim().isEmpty()) {
 				this.getManagedBean().setHideExtension(true);
+			}else{
+				this.getManagedBean().setHideExtension(false);
 			}
 						
 		} catch (Exception e) {

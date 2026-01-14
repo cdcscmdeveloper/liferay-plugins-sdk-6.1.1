@@ -1478,13 +1478,17 @@ public class SimpleQuoteBackingBean extends
 			Date dataCreatedDate;
 			dataCreatedDate = assignActualDate();
 			getManagedBean().setCreatedDate(dataCreatedDate);
-			if (quote.getProcurementType() != null
-					&& quote.getProcurementType().getParameterCode() != null
-					&& !ParameterConst.PROC_TYPE_SPECIAL_ITEM.equalsIgnoreCase(quote.getProcurementType()
-							.getParameterCode())
-					&& !ParameterConst.PROC_TYPE_PK7.equalsIgnoreCase(quote.getProcurementType().getParameterCode())) {
-				quote.setProcurementType(getParameterByTypeAndCode(validateProcurementTypeisRPT(dataCreatedDate), quote
-						.getProcurementType().getParameterCode()));
+			if (quote.getProcurementType() != null && quote.getProcurementType().getParameterCode() != null) {
+				if (!ParameterConst.PROC_TYPE_SPECIAL_ITEM.equalsIgnoreCase(quote.getProcurementType()
+						.getParameterCode())
+						&& !ParameterConst.PROC_TYPE_PK7
+								.equalsIgnoreCase(quote.getProcurementType().getParameterCode())) {
+					quote.setProcurementType(getParameterByTypeAndCode(validateProcurementTypeisRPT(dataCreatedDate),
+							quote.getProcurementType().getParameterCode()));
+				} else {
+					quote.setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, quote
+							.getProcurementType().getParameterCode()));
+				}
 
 			}
 			// 27868 - end
