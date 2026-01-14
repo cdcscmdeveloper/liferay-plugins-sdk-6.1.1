@@ -270,6 +270,7 @@ public class EPerolehanCommonRest {
             }
             
             // Search only within whitelisted properties from EJB
+            log.info("Node info="+SmServiceLookup.getConfigGeneralSO().getNodeInfo());
             Properties ejbProps = SmServiceLookup.getConfigGeneralSO().getAllProperties();
             for (String key : whitelist) {
                 if (key.matches(regex)) {
