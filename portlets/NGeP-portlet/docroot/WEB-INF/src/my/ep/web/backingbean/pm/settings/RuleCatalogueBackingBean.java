@@ -2970,8 +2970,7 @@ public class RuleCatalogueBackingBean extends
 			if (configRuleValuesMarkIndex.getToValue() != null
 					&& (configRuleValuesMarkIndex.getRuleValue() != null
 					&& !configRuleValuesMarkIndex.getRuleValue().isEmpty())) {
-				ruleValue.setFromValue(configRuleValuesMarkIndex.getToValue()
-						.add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
+				ruleValue.setFromValue(configRuleValuesMarkIndex.getToValue().add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
 				ruleValue.setRuleType(configRuleType);
 				configRuleType.getConfigRuleValues().add(markIndex + 1, ruleValue);
 			} else {
