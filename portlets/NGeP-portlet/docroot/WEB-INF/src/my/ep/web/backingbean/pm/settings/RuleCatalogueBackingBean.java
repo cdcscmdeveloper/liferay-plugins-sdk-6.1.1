@@ -2968,7 +2968,7 @@ public class RuleCatalogueBackingBean extends
 				throw new EpException(MessageConst.ERROR_770162);
 			}
 			if (configRuleValuesMarkIndex.getToValue() != null
-					&& (configRuleValuesMarkIndex.getRuleValue() != null 
+					&& (configRuleValuesMarkIndex.getRuleValue() != null
 					&& !configRuleValuesMarkIndex.getRuleValue().isEmpty())) {
 				ruleValue.setFromValue(configRuleValuesMarkIndex.getToValue()
 						.add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
