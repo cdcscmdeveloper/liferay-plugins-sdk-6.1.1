@@ -144,7 +144,7 @@
 							action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
 							rendered="#{(aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
 							aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or 
-							backingBean.managedBean.approverUser or backingBean.managedBean.supplierUser)}">
+							backingBean.managedBean.approverUser)}">
 							<p:graphicImage
 								value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}"
