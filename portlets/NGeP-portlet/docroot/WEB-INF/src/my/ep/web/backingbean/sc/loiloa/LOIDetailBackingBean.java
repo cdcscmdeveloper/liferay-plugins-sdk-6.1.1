@@ -3733,7 +3733,7 @@ public class LOIDetailBackingBean extends
 						: recommendedItem.getRecommendDtls()) {
 				if (BooleanUtils.isTrue(
 						recommendDtl.getLoiAwarded()) && 
-							recommendDtl.isRecordStatus()) {
+							recommendDtl.isRecordStatus() && recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {//#28777&#29729
 					++recommendedSupplierCount;
 					break;
 				} else if (BooleanUtils.isFalse(
@@ -3776,7 +3776,7 @@ public class LOIDetailBackingBean extends
 							: scQtRecommend.getRecommendDtls()) {
 					if (BooleanUtils.isTrue(
 							recommendDtl.getLoiAwarded()) &&
-								recommendDtl.isRecordStatus()) {
+								recommendDtl.isRecordStatus() && recommendDtl.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {//#28777&#29729
 						++recommendedSupplierCount;
 					} else if (BooleanUtils.isFalse(
 									recommendDtl.getLoiAwarded()) || 
