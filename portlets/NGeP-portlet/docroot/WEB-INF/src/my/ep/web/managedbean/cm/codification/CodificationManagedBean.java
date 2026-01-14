@@ -206,6 +206,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String itemCodeDesc;
 	private Object[] objSelected;
 	private boolean renderButtonAssignCode;
+	private boolean isHideExtension;
 	// #31503 - End
 	
 	//35503 Start
@@ -1551,6 +1552,20 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
 		this.renderButtonAssignCode = renderButtonAssignCode;
 	}
+	
+	/**
+	 * @return the isHideExtension
+	 */
+	public boolean isHideExtension() {
+		return isHideExtension;
+	}
+
+	/**
+	 * @param isHideExtension the isHideExtension to set
+	 */
+	public void setHideExtension(boolean isHideExtension) {
+		this.isHideExtension = isHideExtension;
+	}
 	// #31503 -end-
 
 	//35503 Start
@@ -1586,4 +1601,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.commodityTitleEng = commodityTitleEng;
 	}
 	//35503 End
+
+	
+
+	
 }

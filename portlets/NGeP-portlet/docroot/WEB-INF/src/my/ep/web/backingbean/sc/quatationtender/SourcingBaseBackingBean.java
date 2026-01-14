@@ -199,6 +199,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.comm.TplCommMember;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -8279,4 +8280,216 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return true;
 	}
 	//#28784 - End
+	
+	//#28784 - Start
+	/**
+	 * Only used by demo to ensure that demo pdf/file able to be open even within zip file
+	 * 
+	 * @param zos
+	 * @param scAttachments
+	 * @throws IOException
+	 */
+	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFilesAsZipFile(ZipOutputStream zos,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		String demoKey = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);
+
+	    for (ScAttachment scAttachment : scAttachments) {
+
+	    	try {
+		        if (scAttachment == null || StringUtils.isBlank(scAttachment.getFilePath())) {
+		            continue;
+		        }
+
+		        File file = new File(getActualFilePath(scAttachment));
+		        String pdfEntryName = resolvePdfEntryName(scAttachment, demoKey);
+
+		        if (isDemoReport(scAttachment, demoKey)) {
+		            writeInnerZip(zos, file, pdfEntryName);
+		        } else {
+		            writePdfToOuterZip(zos, file, pdfEntryName);
+		        }
+			} catch (FileNotFoundException fnfe) {
+				SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+						"downloadSFAndRecommendationFilesAsZipFile", "",
+						"downloadSFAndRecommendationFilesAsZipFile", getUserIdSessionFromLoginId(), fnfe);
+				continue;
+	        }
+	    }
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private String resolvePdfEntryName(ScAttachment attachment, String demoKey) {
+
+	    String extension = FilenameUtils.getExtension(attachment.getFileName());
+
+	    if (StringUtils.isBlank(attachment.getTempFileName())) {
+	        return attachment.getFileName();
+	    }
+
+	    if (attachment.getTempFileName().contains(demoKey)) {
+	        return SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + "." + extension;
+	    }
+
+	    return attachment.getTempFileName() + "." + extension;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private boolean isDemoReport(ScAttachment attachment, String demoKey) {
+	    return StringUtils.isNotBlank(attachment.getTempFileName())
+	            && attachment.getTempFileName().contains(demoKey);
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void writeInnerZip(
+	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
+
+	    ByteArrayOutputStream innerBaos = new ByteArrayOutputStream();
+
+	    try (ZipOutputStream innerZos = new ZipOutputStream(innerBaos)) {
+	        innerZos.putNextEntry(new ZipEntry(pdfEntryName));
+	        copyFile(file, innerZos);
+	        innerZos.closeEntry();
+	    }
+
+	    zos.putNextEntry(
+	        new ZipEntry(SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + ".zip")
+	    );
+	    zos.write(innerBaos.toByteArray());
+	    zos.closeEntry();
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void writePdfToOuterZip(
+	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
+
+	    zos.putNextEntry(new ZipEntry(pdfEntryName));
+	    copyFile(file, zos);
+	    zos.closeEntry();
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void copyFile(File file, OutputStream out) throws IOException {
+
+	    try (BufferedInputStream bis =
+	                 new BufferedInputStream(new FileInputStream(file))) {
+
+	        byte[] buffer = new byte[8192];
+	        int len;
+	        while ((len = bis.read(buffer)) > 0) {
+	            out.write(buffer, 0, len);
+	        }
+	    }
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	/**
+	 * To download multiple files.
+	 * 
+	 * @param zipFileName
+	 * @param scAttachments
+	 * @throws IOException
+	 */
+	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFiles(String zipFileName,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		HttpServletResponse response = null;
+		ZipOutputStream zos = null;
+		try {
+			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response = PortalUtil.getHttpServletResponse(portalresponse);
+			String finalFileName = zipFileName + ".zip";
+			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
+			response.setContentType(getMimeType(finalFileName));
+
+			zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+
+			downloadSFAndRecommendationFilesAsZipFile(zos, scAttachments);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			zos.close();
+			response.flushBuffer();
+			FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
+	//#28784 - End
+	
+	//#35320 - START
+	/**
+	 * Set PTJ Org Profile of user for committee member.
+	 * 
+	 * @param tplMember
+	 */
+	public void setTplCommMemberOrgProfile(TplCommMember tplMember) {
+
+		if (tplMember.getPmUser() != null && tplMember.getPmUser().getOrgTypeCode() != null) {
+			String orgTypeCode = tplMember.getPmUser().getOrgTypeCode().getParameterCode();
+			if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)) {
+				tplMember.setPmOrgProfile(getBKPOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			} else if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)) {
+				tplMember.setPmOrgProfile(getOTHOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			} else {
+				tplMember.setPmOrgProfile(getPTJOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			}
+		}
+	}
+	//#35320 - END
+	
+	//#35320 - START
+	/**
+	 * Set Committeemember data.
+	 * 
+	 * @param deleteScMember
+	 *  @param currentScMember
+	 */
+	public TplCommMember setTplCommitteeMemberData(TplCommMember deletedCommitteeMember,
+			TplCommMember currentCommitteeMember) {
+
+		deletedCommitteeMember.setDeleted(false);
+		deletedCommitteeMember.setRepresentativeType(currentCommitteeMember.getRepresentativeType());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setMemberRoleId(currentCommitteeMember.getMemberRoleId());
+		deletedCommitteeMember.setMemberName(currentCommitteeMember.getMemberName());
+		deletedCommitteeMember.setDesignation(currentCommitteeMember.getDesignation());
+		deletedCommitteeMember.setEmail(currentCommitteeMember.getEmail());
+		deletedCommitteeMember.setGrade(currentCommitteeMember.getGrade());
+		deletedCommitteeMember.setPNP(currentCommitteeMember.isPNP());
+		deletedCommitteeMember.setPmUser(currentCommitteeMember.getPmUser());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setAccessRight(currentCommitteeMember.getAccessRight());
+		deletedCommitteeMember.setTplCommittee(currentCommitteeMember.getTplCommittee());
+
+		if (deletedCommitteeMember.getMemberRole() != null) {
+			deletedCommitteeMember.setMemberRoleId(deletedCommitteeMember.getMemberRole().getParameterId());
+		}
+
+		if (deletedCommitteeMember.getRepresentativeType() != null) {
+			deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType()
+					.getParameterId());
+		}
+		return deletedCommitteeMember;
+	}
+	//#35320 - END
+	
+	//#35320 - START
+	/**
+	 * Representive type change.
+	 *
+	 * @param member the member
+	 */
+	public void tplRepresentiveTypeChangedListener(TplCommMember member) {
+		Long paramId = member.getRepresentativeTypeId();
+		if (null != paramId) {
+			member.setRepresentativeType(ParameterHelper.getInstance()
+					.getPmParameterById(paramId));
+		}
+	}
+	//#35320 - END
 }

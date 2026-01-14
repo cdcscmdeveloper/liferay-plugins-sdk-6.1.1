@@ -778,7 +778,54 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 	
-	//27868 - start
+	// 27868 - start
+	/**
+	 * Combines current WIP reason into dropdown items if not already present.
+	 * Preserves existing order and keeps "Select" as the first entry.
+	 */
+	public SelectItem[] getReasonCodeDropdownValuesCombineWIPCode(Long currentReasonId, SelectItem[] items) {
+		try {
+			if (items == null || items.length == 0) {
+				return items;
+			}
+
+			PmReasonDesc reasonDesc = getReasonDescByReasonId(currentReasonId);
+			if (reasonDesc == null || reasonDesc.getPmReason() == null) {
+				return items;
+			}
+
+			String currentReasonCode = reasonDesc.getPmReason().getReasonCode();
+
+			// check if WIP reason already exists
+			for (SelectItem item : items) {
+				if (item != null && currentReasonCode.equals(item.getValue())) {
+					return items;
+				}
+			}
+
+			// create new array (+1)
+			SelectItem[] combinedItems = new SelectItem[items.length + 1];
+
+			// keep "Select" at index 0
+			combinedItems[0] = items[0];
+
+			// insert WIP reason as first selectable item
+			combinedItems[1] = new SelectItem(currentReasonCode, reasonDesc.getReasonDesc());
+
+			// copy remaining items
+			System.arraycopy(items, 1, combinedItems, 2, items.length - 1);
+
+			return combinedItems;
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+
 	/**
 	 * Retrieves dropdown values for Reason codes based on profile ID and
 	 * category code. If no reasons are found for the given profile ID, it will

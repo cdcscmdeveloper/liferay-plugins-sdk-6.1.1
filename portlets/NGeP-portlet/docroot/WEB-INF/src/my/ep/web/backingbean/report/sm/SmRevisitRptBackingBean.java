@@ -40,8 +40,10 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 		LinkedHashMap<String, String> params = new LinkedHashMap<>();
 		retrieveReportValueFromDb();
 		params.put(SmReportConst.PARAM_ZONE, this.getManagedBean().getZone());
-		if (null != this.getManagedBean().getSelectedOrgProfile()) {
-			params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId()));
+		// #34031#note-148 - Start
+		if (null != this.getManagedBean().getSelectedSupplier()) {
+			params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSelectedSupplier().getSupplierId()));
+			// #34031#note-148 - End
 		}
 		if (null != this.getManagedBean().getRevisitOfficer()) {
 			params.put(SmReportConst.PARAM_SVO_USER, String.valueOf(this.getManagedBean().getRevisitOfficer().getUserId()));
@@ -58,7 +60,8 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	public void resetSearch() {
 		this.getManagedBean().setZone(null);
 		this.getManagedBean().setRevisitOfficer(null);
-		this.getManagedBean().setSelectedOrgProfile(null);
+		// #34031#note-136
+		this.getManagedBean().setSelectedSupplier(null);
 		Calendar fromVisitDate = Calendar.getInstance();
 		fromVisitDate.set(fromVisitDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
 		this.getManagedBean().setVisitDateFrom(fromVisitDate.getTime());
@@ -95,9 +98,37 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	/**
 	 * Zone change listener.
 	 */
+	@Override
 	public void onChangeZone() {
 		this.getManagedBean().setRevisitOfficer(null);
 		getConditionFieldsSVO();
+		// #34031#note-136
+		getConditionFieldsCompName();
 		RequestContext.getCurrentInstance().update(":form");
 	}
+	// #34031#note-136 Start
+	/**
+	 * Construct Company Name search condition.
+	 */
+	public String getConditionFieldsCompName() {
+		StringBuilder sb = new StringBuilder();
+
+		String searchZone = "smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^";
+		String zone = getManagedBean().getZone();
+
+		if (StringUtils.isBlank(zone)) {
+			return sb.toString();
+		}
+
+		if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)) {
+			sb.append(searchZone + "1");
+		} else if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)) {
+			sb.append(searchZone + "2");
+		} else if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)) {
+			sb.append(searchZone + "3");
+		}
+
+		return sb.toString();
+	}
+	// #34031#note-136 End
 }
