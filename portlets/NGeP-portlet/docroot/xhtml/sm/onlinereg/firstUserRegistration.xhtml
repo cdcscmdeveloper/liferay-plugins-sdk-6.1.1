@@ -230,7 +230,7 @@
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
 								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
-								<p:ajax event="change" partialSubmit="true"></p:ajax>
+								<p:ajax event="blur" partialSubmit="true"/><!-- #26238 - 39681 -->
 							</p:inputText>
 						</c:when>
 						
