@@ -2960,15 +2960,17 @@ public class RuleCatalogueBackingBean extends
 						.getConfigRuleValues().get(index).getGroupValueId());
 
 		//#35323 - Start
+		PmConfigRuleValue configRuleValuesMarkIndex = configRuleType.getConfigRuleValues().get(markIndex);
+
 		if (!configRuleType.getRuleType().equalsIgnoreCase(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD)) {
-			if (configRuleType.getConfigRuleValues().get(markIndex).getRuleValue() == null
-					|| configRuleType.getConfigRuleValues().get(markIndex).getRuleValue().isEmpty()) {
+			if (configRuleValuesMarkIndex.getRuleValue() == null
+					|| configRuleValuesMarkIndex.getRuleValue().isEmpty()) {
 				throw new EpException(MessageConst.ERROR_770162);
 			}
-			if (configRuleType.getConfigRuleValues().get(markIndex).getToValue() != null
-					&& (configRuleType.getConfigRuleValues().get(markIndex).getRuleValue() != null && !configRuleType
-							.getConfigRuleValues().get(markIndex).getRuleValue().isEmpty())) {
-				ruleValue.setFromValue(configRuleType.getConfigRuleValues().get(markIndex).getToValue()
+			if (configRuleValuesMarkIndex.getToValue() != null
+					&& (configRuleValuesMarkIndex.getRuleValue() != null 
+					&& !configRuleValuesMarkIndex.getRuleValue().isEmpty())) {
+				ruleValue.setFromValue(configRuleValuesMarkIndex.getToValue()
 						.add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
 				ruleValue.setRuleType(configRuleType);
 				configRuleType.getConfigRuleValues().add(markIndex + 1, ruleValue);
@@ -2976,11 +2978,11 @@ public class RuleCatalogueBackingBean extends
 				throw new EpException(MessageConst.ERROR_770156);
 			}
 		} else {
-			if (configRuleType.getConfigRuleValues().get(markIndex).getToValue() != null
-					&& (configRuleType.getConfigRuleValues().get(markIndex).getSupplAcctTypeId() != null
-					|| configRuleType.getConfigRuleValues().get(markIndex).getSupplAcctTypeIds() != null
-					&& !configRuleType.getConfigRuleValues().get(markIndex).getSupplAcctTypeIds().isEmpty())) {
-				BigDecimal toValue = configRuleType.getConfigRuleValues().get(markIndex).getToValue();
+			if (configRuleValuesMarkIndex.getToValue() != null
+					&& (configRuleValuesMarkIndex.getSupplAcctTypeId() != null
+					|| configRuleValuesMarkIndex.getSupplAcctTypeIds() != null
+					&& !configRuleValuesMarkIndex.getSupplAcctTypeIds().isEmpty())) {
+				BigDecimal toValue = configRuleValuesMarkIndex.getToValue();
 				ruleValue.setFromValue(toValue.add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
 				ruleValue.setRuleType(configRuleType);
 				ruleValue.setSupplAcctTypeIds(null);
