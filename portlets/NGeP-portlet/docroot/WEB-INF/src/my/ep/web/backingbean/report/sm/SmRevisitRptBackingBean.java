@@ -40,8 +40,10 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 		LinkedHashMap<String, String> params = new LinkedHashMap<>();
 		retrieveReportValueFromDb();
 		params.put(SmReportConst.PARAM_ZONE, this.getManagedBean().getZone());
-		if (null != this.getManagedBean().getSelectedOrgProfile()) {
-			params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId()));
+		// #34031#note-148 - Start
+		if (null != this.getManagedBean().getSelectedSupplier()) {
+			params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSelectedSupplier().getSupplierId()));
+			// #34031#note-148 - End
 		}
 		if (null != this.getManagedBean().getRevisitOfficer()) {
 			params.put(SmReportConst.PARAM_SVO_USER, String.valueOf(this.getManagedBean().getRevisitOfficer().getUserId()));
