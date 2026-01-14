@@ -398,6 +398,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			//#28962 - end
 			if(pmReason.getSourceMethod() != null && pmReason.getSourceMethod().getParameterId() != null){
 					this.getManagedBean().setSelectedSourceMethodId(pmReason.getSourceMethod().getParameterId());
+			} else {
+				this.getManagedBean().setSelectedSourceMethodId(null);
 			}
 		
 		}catch (Exception e){
@@ -1298,14 +1300,32 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * To Purchase From Contract Change
 	 */
 	public void purchaseFromContractChange(){
+		
 		if(this.getManagedBean().getSelectedReason().isContractPurchase()){
 			PmParameter paramObj = (PmParameter) souringMethodMapper.get(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 			this.getManagedBean().getSelectedReason().getSourceMethod().setParameterId(paramObj.getParameterId());
+			this.getManagedBean().setSelectedSourceMethodId(paramObj.getParameterId());  // 39618
+			deleteCircularPanel(); // 39618
+			
 		}else{
 			
 			this.getManagedBean().getSelectedReason().setConditionField(new PmParameter());
 		}
 	}
+	
+	// 39618 START
+	public void deleteCircularPanel(){
+
+		if(CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedReason().getPmPIDReasonList())){
+			for( PmPIDReason pIDReason :this.getManagedBean().getSelectedReason().getPmPIDReasonList()){
+				if((ParameterConst.DOCTYPE_PANEL_CIRCULAR).equals(pIDReason.getDocType())){
+					this.getManagedBean().getSelectedReason().getPmPIDReasonList().remove(pIDReason);
+					}
+				}
+			}
+		}
+	// 39618 END
+	
 	/**
 	 * get reason category object by selected id
 	 * @param isSearchBean
