@@ -61,6 +61,7 @@
 							style="width:300px;" disabled="true" /></td>
 				</tr>
 				<tr style="border: hidden !important;">
+				  <h:panelGroup rendered="#{!codificationBackingBean.managedBean.hideExtension}">
 					<td width="15%" style="border: hidden !important; padding: 0;">
 						<p:outputLabel style="font-weight: bold;"
 							value="#{lbl['lbl.sc.qt.extension.code']}" />
@@ -71,18 +72,14 @@
 							style="width:300px;" disabled="true" />
 					</td>
 					<td width="15%" style="border: hidden !important; padding: 0;">
-					  <h:panelGroup rendered="#{!codificationBackingBean.managedBean.hideExtension}">
-							<p:outputLabel style="font-weight: bold;"
-								value="#{lbl['lbl.sc.qt.extension.title']}" />
-					 </h:panelGroup> 
+					    <p:outputLabel style="font-weight: bold;"
+							value="#{lbl['lbl.sc.qt.extension.title']}" />
 					</td>
-					<td>
-					     <h:panelGroup rendered="#{!codificationBackingBean.managedBean.hideExtension}">
-							<p:inputText id="segmentTitleId"
-								value="#{codificationBackingBean.managedBean.segmentTitle}"
-								style="width:300px;" disabled="true" />
-						</h:panelGroup>
+					<td><p:inputText id="segmentTitleId"
+							value="#{codificationBackingBean.managedBean.segmentTitle}"
+							style="width:300px;" disabled="true" />
 					</td>
+ 				  </h:panelGroup> 
 				</tr>
 			</table>
 		</p:panel>
