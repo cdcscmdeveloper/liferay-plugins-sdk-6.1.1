@@ -326,6 +326,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		
 		this.resetAuditBean(); // 35509
 		
+		this.getManagedBean().setSelectedSourceMethodId(null);  // 39618
+		
 		log.info("initialRejectReason - End");
 	}
 	
