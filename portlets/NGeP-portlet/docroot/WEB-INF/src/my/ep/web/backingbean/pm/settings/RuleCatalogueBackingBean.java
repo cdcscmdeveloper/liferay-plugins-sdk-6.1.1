@@ -1377,7 +1377,7 @@ public class RuleCatalogueBackingBean extends
 
 		IRuleSO ruleSO = null;
 		try {
-			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			
@@ -2976,9 +2976,10 @@ public class RuleCatalogueBackingBean extends
 				throw new EpException(MessageConst.ERROR_770156);
 			}
 		} else {
-			if (configRuleType.getConfigRuleValues().get(markIndex).getFromValue() != null
-					&& configRuleType.getConfigRuleValues().get(markIndex).getSupplAcctTypeId() != null
-					|| configRuleType.getConfigRuleValues().get(markIndex).getSupplAcctTypeIds() != null) {
+			if (configRuleType.getConfigRuleValues().get(markIndex).getToValue() != null
+					&& (configRuleType.getConfigRuleValues().get(markIndex).getSupplAcctTypeId() != null
+					|| configRuleType.getConfigRuleValues().get(markIndex).getSupplAcctTypeIds() != null
+					&& !configRuleType.getConfigRuleValues().get(markIndex).getSupplAcctTypeIds().isEmpty())) {
 				BigDecimal toValue = configRuleType.getConfigRuleValues().get(markIndex).getToValue();
 				ruleValue.setFromValue(toValue.add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
 				ruleValue.setRuleType(configRuleType);
@@ -6426,7 +6427,7 @@ public class RuleCatalogueBackingBean extends
 			return createNewRuleValue(merged, supplAcctTypeId, first, parameterSO, reqDTO);
 		}
 
-		return updateExistingRuleValue(merged, supplAcctTypeId, configValueId, parameterSO, reqDTO);
+		return updateExistingRuleValue(merged, configValueId, reqDTO);
 	}
 
 	private PmConfigRuleValue createNewRuleValue(PmConfigRuleValue merged, Long supplAcctTypeId, boolean first,
@@ -6455,8 +6456,7 @@ public class RuleCatalogueBackingBean extends
 		return value;
 	}
 
-	private PmConfigRuleValue updateExistingRuleValue(PmConfigRuleValue merged, Long supplAcctTypeId,
-			Long configValueId, IParameterSO parameterSO, ParameterReqDTO reqDTO) {
+	private PmConfigRuleValue updateExistingRuleValue(PmConfigRuleValue merged, Long configValueId, ParameterReqDTO reqDTO) {
 
 		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IRuleSO.class);
