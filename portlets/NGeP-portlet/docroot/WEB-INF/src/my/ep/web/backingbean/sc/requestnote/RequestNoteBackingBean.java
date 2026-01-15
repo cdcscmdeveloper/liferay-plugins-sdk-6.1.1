@@ -52,6 +52,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO; //#27868
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.pm.map.IPmPK7MapSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
@@ -93,6 +94,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;  //#27868
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
@@ -133,10 +135,12 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg; //#27868
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason; //#27868
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmReasonRestr; //#27868
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.pm.map.PmPK7Mapping;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
@@ -194,6 +198,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.ReasonHelper;
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil; //#26059
@@ -1681,6 +1686,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								+ rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") " + "RnNo ("
 								+ requestNote.getRequestNoteNo() + ")");
 						getManagedBean().setRequestSupplierItem(rnDtl.getScRequestSupplierItem()); //27868
+						// 27868 - start
+						if (getParameterCodeForPK7(assignActualDate()).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+							finalizeWIPCodePK7(rnDtl);
+						}
+						// 27868 - end
 					}
 				}
 			}
@@ -7646,7 +7656,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public String getParameterDescForView(String parameterCode){
 		//27868 - start
-		String parameterType = validateProcurementTypeisRPT(getRequestNoteCreatedDate());
+		String parameterType = ParameterTypeConst.PROCUREMENT_TYPE_RPT;
 		return getParameterDesc(parameterType, parameterCode);
 	}
 	
@@ -7679,6 +7689,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonId(rnDtl.getJustificationType().getReasonId());
 		List<PmReasonRestr> listReasonRestr = reqSO.retrieveReasonRestrListByParam(reqDTO).getReasonRestrList();
+		List<PmReasonRestr> distinctReasonRestrList = new ArrayList<>();
+		distinctSupplierAccType(listReasonRestr, distinctReasonRestrList);
+		
 		StringBuilder suppAccTypeSb = new StringBuilder();
 		String suppAccType = null;
 		if (supplierItem != null && supplierItem.getSmSupplier() != null && supplierItem.getSmSupplier().getSmAppl() != null) {
@@ -7686,13 +7699,49 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			suppAccType = verifyMOFAccount(supplierItem, suppAccType);
 		}
 
-		if ((listReasonRestr != null && !listReasonRestr.isEmpty()) && suppAccType != null) {
-			isSupplierAccTypeMatch = initializeReasonRestr(listReasonRestr, isSupplierAccTypeMatch, suppAccTypeSb, suppAccType);
+		if ((distinctReasonRestrList != null && !distinctReasonRestrList.isEmpty()) && suppAccType != null) {
+			isSupplierAccTypeMatch = initializeReasonRestr(distinctReasonRestrList, isSupplierAccTypeMatch, suppAccTypeSb, suppAccType);
 			
 			if (!isSupplierAccTypeMatch){
 				getSupplierTypeErrorMessage(rnDtl,suppAccTypeSb.toString(),isFromATC);
 			}
 		}
+	}
+	
+	/**
+	 * Builds a distinct list of {@link PmReasonRestr} based on supplier account
+	 * type.
+	 * <p>
+	 * A record is considered duplicate if its {@code supplAcctTypeId} is null
+	 * or has the same {@code parameterCode} (case-insensitive) as an existing
+	 * entry.
+	 * </p>
+	 * 
+	 * @param listReasonRestr
+	 *            source list containing possible duplicates
+	 * @param distinctReasonRestrList
+	 *            target list to store distinct records
+	 */
+	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
+			List<PmReasonRestr> distinctReasonRestrList) {
+		for (PmReasonRestr rr : listReasonRestr) {
+			PmParameter param = rr.getSupplAcctTypeId();
+			boolean exists = false;
+
+			for (PmReasonRestr dr : distinctReasonRestrList) {
+				PmParameter existingParam = dr.getSupplAcctTypeId();
+
+				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+						existingParam != null ? existingParam.getParameterCode() : "")) {
+					exists = true;
+					break;
+				}
+			}
+
+			if (!exists) {
+	            distinctReasonRestrList.add(rr);
+	        }
+	    }
 	}
 
 	/**
@@ -8103,6 +8152,86 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			dataCreatedDate = new Date();
 		}
 		return dataCreatedDate;
+	}
+
+	/**
+	 * Finalize PK7 justification by resolving old-to-new reason mapping,
+	 * handling special item cases, and filtering inactive justification reasons.
+	 */
+	private void finalizeWIPCodePK7(ScRequestNoteDtl rnDtl) {
+		if (rnDtl.getJustificationType() != null && rnDtl.getJustificationType().getReasonId() != null) {
+			IPmPK7MapSO pk7MapSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IPmPK7MapSO.class);
+			
+			PmPK7Mapping pmPK7Mapping = pk7MapSO.findByOldReasonId(rnDtl.getJustificationType().getReasonId());
+
+			if (pmPK7Mapping != null){
+				defaultToPK7W(pmPK7Mapping, rnDtl);
+			}
+			else {
+				defaultToSpecialtem(rnDtl);				
+			}			
+		} else {
+			//set default PK7
+			rnDtl.setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_PK7));
+		}
+	}
+
+	/**
+	 * Defaults quotation to Special Item flow when justification matches SIT list.
+	 * Falls back to PK7W when no matching Special Item is found.
+	 */
+	protected void defaultToSpecialtem(ScRequestNoteDtl rnDtl) {
+		// special item
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(rnDtl.getJustificationType().getReasonId());
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+
+		ReasonResDTO resDTO = reasonSO.retrieveReasonDescById(reqDTO);
+		PmReasonDesc reasonDesc = (resDTO != null) ? resDTO.getReasonDesc() : null;
+		boolean matched = false;
+
+		if (reasonDesc != null && reasonDesc.getReasonDesc() != null) {
+
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(
+					ReasonCategory.JUSTIFICATION_SIT.value());
+
+			for (PmReasonDesc sitReason : reasonDescs) {
+				if (sitReason != null && reasonDesc.getReasonDesc().trim().equalsIgnoreCase(sitReason.getReasonDesc().trim())) {
+					matched = true;
+					// set procurement type = Special Item
+					rnDtl.setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_SPECIAL_ITEM));
+					rnDtl.setJustificationType(sitReason.getPmReason());
+					break;
+				}
+			}
+			
+			if (!matched) {
+				//set default PK7
+				rnDtl.setProcurementType(rnDtl.getProcurementType());
+				rnDtl.setJustificationType(rnDtl.getJustificationType());
+			}
+		}
+	}
+
+	/**
+	 * Applies PK7W defaults based on PK7 mapping.
+	 * Handles inactive old PK7 or mapped PK7W justification.
+	 */
+	protected void defaultToPK7W(PmPK7Mapping pmPK7Mapping, ScRequestNoteDtl rnDtl) {
+		if(pmPK7Mapping.getNewReason() == null){
+			//no PK7 New mapping, basically the old PK7 data already inactive
+			rnDtl.setProcurementType(rnDtl.getProcurementType());
+			rnDtl.setJustificationType(rnDtl.getJustificationType());
+		}
+		else if(pmPK7Mapping.getNewParameterCode().equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())){
+			//PK7 New
+			rnDtl.setProcurementType(pmPK7Mapping.getNewProcurementType());
+			rnDtl.setJustificationType(pmPK7Mapping.getNewReason());		
+		}
 	}
 	//27868 - end
 }
