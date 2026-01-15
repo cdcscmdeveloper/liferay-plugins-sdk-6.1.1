@@ -549,7 +549,7 @@
 											<p:ajax
 												event="change"
 												partialSubmit="true"
-												process="@this @([id$=MailingAddressInfo])"process="@this @([id$=MailingAddressInfo])"
+												process="@this @([id$=MailingAddressInfo])"
 												update="@([id$=MailingAddressInfo])"
 												listener="#{smPersonnelBackingBean.onTickSameAsPermForMail(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}"
 												onstart="blockWidget.show()"
