@@ -73,8 +73,10 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.FlPendingPaymentDTO; //24336
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
+import my.ep.dto.ct.committee.CommitteeMemberInfoResDTO; //24336
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
@@ -9565,56 +9567,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/** Gets committee type options and hides the ones not allowed based on the contract owner's state. */
-	public List<SelectItem> getCommitteeTypeItems() {
-		List<SelectItem> items = new ArrayList<>();
-	    try {
-	        final List<String> codes = Arrays.asList(
-	            ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE,
-	            ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD,
-	            ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH,
-	            ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
-	        );
-	        
-	        SearchBean<PmParameterDesc> searchBean = new SearchBean<>();
-	        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), codes));
-	        List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterConst.COMMITTE_TYPE, searchBean);
-    		String stateCode = getIContractAmendmentSO().getPtjContractOwnerStateCode(ctBackingBean.getManagedBean().getContractVer());
-    		
-    		// Sort codes
-    		if (parameterDescs != null && !parameterDescs.isEmpty()) {
-	    		Collections.sort(parameterDescs, new Comparator<PmParameterDesc>() {
-	    		    @Override
-	    		    public int compare(PmParameterDesc o1, PmParameterDesc o2) {
-	    		        return codes.indexOf(o1.getPmParameter().getParameterCode())
-	    		             - codes.indexOf(o2.getPmParameter().getParameterCode());
-	    		    }
-	    		});
-    		}
-    		
-	        for (PmParameterDesc desc : parameterDescs) {
-	        	String code = desc.getPmParameter().getParameterCode();
-	        	SelectItem item = new SelectItem(code, desc.getCodeName());
-	        	
-	        	// Checking PTJ contract owner location
-	        	boolean hide;
-	        	if (ContractConst.STATE_CODE_SABAH.equals(stateCode)) {
-	        		hide = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(code);
-	            } else if (ContractConst.STATE_CODE_SARAWAK.equals(stateCode)) {
-	            	hide = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(code);
-	            } else {
-	            	hide = ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(code)
-	                       || ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(code);
-	            }
-	        	
-	        	if (!hide){
-	        		items.add(item);
-	        	}
-	        }
-	    } catch (Exception e) {
-	        SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "getCommitteeTypeItems",
-	            ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "getCommitteeTypeItems", getUserIdSessionFromLoginId(), e);
-	    }
-	    return items;
+	public List<SelectItem> getCommitteeTypeSelectItems() {
+		return getAmendmentCommitteeHelper().findCommitteeTypeSelectItems(getUserIdSessionFromLoginId());
 	}
 	
 	/** Sets the committee type reference for saving. */
@@ -9649,16 +9603,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Normalizes legacy committee codes for UI display. */
 	private String normalizeCommitteeCode(String code) {
-	    if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(code) ||
-	        ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(code)) {
-	        return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
-	    }
-
-	    if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(code) ||
-	        ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(code)) {
-	        return ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD;
-	    }
-	    return code;
+		return getAmendmentCommitteeHelper().normalizeCommitteeCode(code);
 	}
 	
 	/** Performs initial page setup. */

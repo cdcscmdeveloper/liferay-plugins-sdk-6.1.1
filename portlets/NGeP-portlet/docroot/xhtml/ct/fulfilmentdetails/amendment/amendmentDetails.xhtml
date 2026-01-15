@@ -306,7 +306,7 @@
 				<h:panelGrid rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}" >
 					<p:selectOneRadio id="committeeType" style="margin-bottom: 8px; margin-left: 25px;" styleClass="committee-type-radio" layout="pageDirection"
 						value="#{amendmentBackingBean.managedBean.committeeType}" disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
-						<f:selectItems value="#{amendmentBackingBean.getCommitteeTypeItems()}" />
+						<f:selectItems value="#{amendmentBackingBean.getCommitteeTypeSelectItems()}" />
 						<p:ajax event="change" update="secretaryId" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 					</p:selectOneRadio>
 				</h:panelGrid>
