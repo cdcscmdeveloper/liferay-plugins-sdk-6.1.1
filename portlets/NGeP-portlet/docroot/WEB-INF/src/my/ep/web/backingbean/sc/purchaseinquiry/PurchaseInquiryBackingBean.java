@@ -4656,19 +4656,29 @@ public class PurchaseInquiryBackingBean extends
 	 * @throws NullPointerException if justification type or reason ID is null
 	 */
 	private void inactiveReasonChecking() {
-		if (null != getManagedBean().getRequestNoteDtl().getJustificationType()
-				&& null != getManagedBean().getRequestNoteDtl().getJustificationType().getReasonId()) {
-			PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
-					.getReasonId());
+		if (getManagedBean().getRequestNoteDtl() == null
+				|| getManagedBean().getRequestNoteDtl().getJustificationType() == null
+				|| getManagedBean().getRequestNoteDtl().getJustificationType().getReasonId() == null) {
+			return;
+		}
 
-			if ((reason != null && !reason.isRecordStatus()) || (reason != null && !isAsIsReasonIncludedInDropdown())) {
-				getManagedBean().setReasonCodeInActive(true);
-				String reasonDesc = getReasonDesc(reason);
-				if (!StringUtils.isEmpty(reasonDesc)) {
-					getManagedBean().setInActiveReasonDesc(reasonDesc);
-				}
+		PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
+				.getReasonId());
+
+		if (reason == null) {
+			return;
+		}
+
+		boolean isInactive = !reason.isRecordStatus();
+		boolean isActiveButMissingAsIs = reason.isRecordStatus() && !isAsIsReasonIncludedInDropdown();
+
+		if (isInactive || isActiveButMissingAsIs) {
+			getManagedBean().setReasonCodeInActive(true);
+
+			String reasonDesc = getReasonDesc(reason);
+			if (StringUtils.isNotEmpty(reasonDesc)) {
+				getManagedBean().setInActiveReasonDesc(reasonDesc);
 			}
-
 		}
 	}
 
