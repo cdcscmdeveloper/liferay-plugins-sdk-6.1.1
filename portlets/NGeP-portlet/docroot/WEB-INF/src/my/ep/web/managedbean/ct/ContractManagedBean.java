@@ -237,6 +237,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean initPage = false;
 	//#24336 - End
 	
+	private boolean isDefaultMinistryExist = false; //Fix - #30045
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1818,4 +1820,13 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.initPage = initPage;
 	}
 	//#24336 - End
+	//Start - #30045
+	public boolean isDefaultMinistryExist() {
+		return isDefaultMinistryExist;
+	}
+
+	public void setDefaultMinistryExist(boolean isDefaultMinistryExist) {
+		this.isDefaultMinistryExist = isDefaultMinistryExist;
+	}
+	//End - #30045
 }

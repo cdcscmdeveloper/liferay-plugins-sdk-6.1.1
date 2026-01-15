@@ -121,6 +121,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;//#27868
 import my.ep.persistence.entity.pm.common.PmReasonRestr;//#27868
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -180,6 +181,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.ReasonHelper;//#27868
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -1476,11 +1478,20 @@ public class SimpleQuoteBackingBean extends
 			Date dataCreatedDate;
 			dataCreatedDate = assignActualDate();
 			getManagedBean().setCreatedDate(dataCreatedDate);
-			// 27868 - end
-			quote.setProcurementType(getParameterByTypeAndCode(
-					validateProcurementTypeisRPT(dataCreatedDate), quote
+			if (quote.getProcurementType() != null && quote.getProcurementType().getParameterCode() != null) {
+				if (!ParameterConst.PROC_TYPE_SPECIAL_ITEM.equalsIgnoreCase(quote.getProcurementType()
+						.getParameterCode())
+						&& !ParameterConst.PROC_TYPE_PK7
+								.equalsIgnoreCase(quote.getProcurementType().getParameterCode())) {
+					quote.setProcurementType(getParameterByTypeAndCode(validateProcurementTypeisRPT(dataCreatedDate),
+							quote.getProcurementType().getParameterCode()));
+				} else {
+					quote.setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, quote
 							.getProcurementType().getParameterCode()));
+				}
 
+			}
+			// 27868 - end
 			// location level
 			if (quote.isZonal()) {
 				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
@@ -1516,7 +1527,7 @@ public class SimpleQuoteBackingBean extends
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 					if (quote.getJustificationType().getReasonCode() != null) {
 						quote.setJustificationType(getReasonByCategoryAndCode(
-								getParameterCodeForPK7(dataCreatedDate), quote
+								 ReasonCategory.JUSTIFICATION_PK7W.value(), quote
 								.getJustificationType().getReasonCode()));//27868 
 	
 					}
@@ -2237,11 +2248,18 @@ public class SimpleQuoteBackingBean extends
 			Date dataCreatedDate;
 			dataCreatedDate = assignActualDate();
 			getManagedBean().setCreatedDate(dataCreatedDate);
+			String procParameterType = validateProcurementTypeisRPT(dataCreatedDate);
+
+			if (ParameterConst.PROC_TYPE_PK7.equalsIgnoreCase(quote.getProcurementType().getParameterCode())
+					|| ParameterConst.PROC_TYPE_SPECIAL_ITEM.equalsIgnoreCase(quote.getProcurementType()
+							.getParameterCode())) {
+				procParameterType = ParameterTypeConst.PROCUREMENT_TYPE_RPT;
+
+			}
+
+			quote.setProcurementType(getParameterByTypeAndCode(procParameterType, getManagedBean().getScQuote()
+					.getProcurementType().getParameterCode()));
 			// 27868 - end
-			quote.setProcurementType(getParameterByTypeAndCode(
-					validateProcurementTypeisRPT(dataCreatedDate), getManagedBean()
-							.getScQuote().getProcurementType()
-							.getParameterCode()));
 
 			// location level
 			if (quote.isZonal()) {
@@ -2320,7 +2338,6 @@ public class SimpleQuoteBackingBean extends
 						ReasonCategory.JUSTIFICATION_PK7W.value(), quote.getJustificationType().getReasonCode()));
 
 				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateUserProfileAgency(quote);
 					validateSupplierAccountType(quote);
 				}
 				
@@ -2843,6 +2860,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 			// 27868 - start
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
 			if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
 				finalizeWIPDropdownPK7();
 			}
@@ -2911,6 +2929,12 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setIncludeMofSupplier(Boolean.FALSE);
 		getManagedBean().setIncludeBasicSupplier(Boolean.FALSE);
 		getManagedBean().setIncludeG2gSupplier(Boolean.FALSE);
+		
+		if (procurementType == null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.procurement.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
 		// 27868 - end
 
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
@@ -2938,14 +2962,14 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
 			//27868 - start
 			if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+				getManagedBean()
+						.setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+				getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_PK7W.value());
 				finalizeWIPDropdownPK7();
-				if (getManagedBean().getWipReasonCategory().equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
-					controlSupplierList(ReasonCategory.JUSTIFICATION_SIT.value());
-				} else if (getManagedBean().getWipReasonCategory().equalsIgnoreCase(
-						ReasonCategory.JUSTIFICATION_PK7W.value())) {
+				if (ReasonCategory.JUSTIFICATION_PK7W.value().equalsIgnoreCase(getManagedBean().getWipReasonCategory())) {
 					controlSupplierList(ReasonCategory.JUSTIFICATION_PK7W.value());
 				} else {
-					controlSupplierList(ReasonCategory.JUSTIFICATION_PK7.value());
+					controlSupplierList(ReasonCategory.JUSTIFICATION_SIT.value());
 				}
 			} else {
 				getManagedBean()
@@ -8768,41 +8792,112 @@ public class SimpleQuoteBackingBean extends
 	 * handling special item cases, and filtering inactive justification reasons.
 	 */
 	private void finalizeWIPDropdownPK7() {
-		if (getManagedBean().getScQuote().getJustificationType() != null) {
+		if (getManagedBean().getScQuote().getJustificationType() != null && getManagedBean().getScQuote().getJustificationType().getReasonId() != null) {
 			IPmPK7MapSO pk7MapSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IPmPK7MapSO.class);
 			
 			PmPK7Mapping pmPK7Mapping = pk7MapSO.findByOldReasonId(getManagedBean().getScQuote().getJustificationType().getReasonId());
-			
-			if (pmPK7Mapping == null){
-				getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
-				inactiveReasonChecking();
-				getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_PK7.value());
-			}else{
-				if(pmPK7Mapping.getNewReason() == null){
-					//Special Item
-					PmParameter pmParameter = new PmParameter();
-					pmParameter.setParameterCode(ParameterConst.PROC_TYPE_SPECIAL_ITEM);
-					getManagedBean().getScQuote().setProcurementType(pmParameter);
-					getManagedBean().getScQuote().setJustificationType(null);
-					getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SIT.value()));
+
+			if (pmPK7Mapping != null){
+				defaultToPK7W(pmPK7Mapping);
+			}
+			else {
+				defaultToSpecialtem();				
+			}			
+		} else {
+			//set default PK7
+			getManagedBean().getScQuote().setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_PK7));
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+			inactiveReasonChecking();
+		}
+	}
+
+	/**
+	 * Defaults quotation to Special Item flow when justification matches SIT list.
+	 * Falls back to PK7W when no matching Special Item is found.
+	 */
+	protected void defaultToSpecialtem() {
+		// special item
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(getManagedBean().getScQuote().getJustificationType().getReasonId());
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+
+		ReasonResDTO resDTO = reasonSO.retrieveReasonDescById(reqDTO);
+		PmReasonDesc reasonDesc = (resDTO != null) ? resDTO.getReasonDesc() : null;
+		boolean matched = false;
+
+		if (reasonDesc != null && reasonDesc.getReasonDesc() != null) {
+
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(
+					ReasonCategory.JUSTIFICATION_SIT.value());
+
+			for (PmReasonDesc sitReason : reasonDescs) {
+				if (sitReason != null && reasonDesc.getReasonDesc().trim().equalsIgnoreCase(sitReason.getReasonDesc().trim())) {
+					matched = true;
+					// set procurement type = Special Item
+					getManagedBean().getScQuote().setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_SPECIAL_ITEM));
+					getManagedBean().getScQuote().setJustificationType(sitReason.getPmReason());
+
+					PmOrgProfile pmOrgProfile = retrievePmOrgProfile();
+
+					finaliseSpecialItemDropDown(pmOrgProfile);
+
 					inactiveReasonChecking();
 					getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_SIT.value());
-				}
-				else{
-					//PK7 New
-					getManagedBean().getScQuote().setProcurementType(pmPK7Mapping.getNewProcurementType());
-					getManagedBean().getScQuote().setJustificationType(pmPK7Mapping.getNewReason());
-					getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
-					inactiveReasonChecking();
-					getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_PK7W.value());
+					break;
 				}
 			}
 			
+			if (!matched) {
+				//set default PK7
+				getManagedBean().getScQuote().setProcurementType(getManagedBean().getScQuote().getProcurementType());
+				getManagedBean().getScQuote().setJustificationType(getManagedBean().getScQuote().getJustificationType());
+				getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+				inactiveReasonChecking();
+			}
 		}
-		else{
+	}
+
+	/**
+	 * Finalises Special Item justification dropdown based on organisation profile.
+	 * Includes current WIP reason when applicable.
+	 */
+	protected void finaliseSpecialItemDropDown(PmOrgProfile pmOrgProfile) {
+		if (pmOrgProfile != null) {
+			getManagedBean().setJustDropdown(
+					getReasonCodeDropdownValuesCombineWIPCode(
+							getManagedBean().getScQuote().getJustificationType().getReasonId(),
+							getReasonCodeDropdownValues(pmOrgProfile.getOrgProfileId(),
+									ReasonCategory.JUSTIFICATION_SIT.value())));
+		} else {
+			getManagedBean().setJustDropdown(
+					getReasonCodeDropdownValuesCombineWIPCode(getManagedBean().getScQuote()
+							.getJustificationType().getReasonId(),
+							getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SIT.value())));
+		}
+	}
+
+	/**
+	 * Applies PK7W defaults based on PK7 mapping.
+	 * Handles inactive old PK7 or mapped PK7W justification.
+	 */
+	protected void defaultToPK7W(PmPK7Mapping pmPK7Mapping) {
+		if(pmPK7Mapping.getNewReason() == null){
+			//no PK7 New mapping, basically the old PK7 data already inactive
+			getManagedBean().getScQuote().setProcurementType(getManagedBean().getScQuote().getProcurementType());
+			getManagedBean().getScQuote().setJustificationType(getManagedBean().getScQuote().getJustificationType());
 			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
-			getManagedBean().setWipReasonCategory(ReasonCategory.JUSTIFICATION_PK7W.value());
+			inactiveReasonChecking();
+		}
+		else if(pmPK7Mapping.getNewParameterCode().equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())){
+			//PK7 New
+			getManagedBean().getScQuote().setProcurementType(pmPK7Mapping.getNewProcurementType());
+			getManagedBean().getScQuote().setJustificationType(pmPK7Mapping.getNewReason());
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+			inactiveReasonChecking();					
 		}
 	}
 
@@ -9048,6 +9143,8 @@ public class SimpleQuoteBackingBean extends
 			if (restr.getAgencyId() != null
 					&& userAgency.getOrgProfileId().equals(restr.getAgencyId().getOrgProfileId())) {
 				return true;
+			} else if (restr.getAgencyId() == null) {
+				return true;
 			}
 		}
 		return false;
@@ -9072,6 +9169,10 @@ public class SimpleQuoteBackingBean extends
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		reqDTO.setReasonId(quote.getJustificationType().getReasonId());
 		List<PmReasonRestr> listReasonRestr = reqSO.retrieveReasonRestrListByParam(reqDTO).getReasonRestrList();
+		List<PmReasonRestr> distinctReasonRestrList = new ArrayList<>();
+
+		distinctSupplierAccType(listReasonRestr, distinctReasonRestrList);
+
 		StringBuilder suppAccTypeSb = new StringBuilder();
 		String suppAccType = null;
 
@@ -9085,8 +9186,8 @@ public class SimpleQuoteBackingBean extends
 						.getSupplierType());
 			}
 
-			if ((listReasonRestr != null && !listReasonRestr.isEmpty()) && suppAccType != null) {
-				isSupplierAccTypeMatch = initializeReasonRestr(listReasonRestr, isSupplierAccTypeMatch,
+			if (distinctReasonRestrList != null && !distinctReasonRestrList.isEmpty() && suppAccType != null) {
+				isSupplierAccTypeMatch = initializeReasonRestr(distinctReasonRestrList, isSupplierAccTypeMatch,
 						suppAccTypeSb, suppAccType);
 
 				if (!isSupplierAccTypeMatch) {
@@ -9094,6 +9195,42 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+	}
+
+	/**
+	 * Builds a distinct list of {@link PmReasonRestr} based on supplier account
+	 * type.
+	 * <p>
+	 * A record is considered duplicate if its {@code supplAcctTypeId} is null
+	 * or has the same {@code parameterCode} (case-insensitive) as an existing
+	 * entry.
+	 * </p>
+	 * 
+	 * @param listReasonRestr
+	 *            source list containing possible duplicates
+	 * @param distinctReasonRestrList
+	 *            target list to store distinct records
+	 */
+	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
+			List<PmReasonRestr> distinctReasonRestrList) {
+		for (PmReasonRestr rr : listReasonRestr) {
+			PmParameter param = rr.getSupplAcctTypeId();
+			boolean exists = false;
+
+			for (PmReasonRestr dr : distinctReasonRestrList) {
+				PmParameter existingParam = dr.getSupplAcctTypeId();
+
+				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+						existingParam != null ? existingParam.getParameterCode() : "")) {
+					exists = true;
+					break;
+				}
+			}
+
+			if (!exists) {
+	            distinctReasonRestrList.add(rr);
+	        }
+	    }
 	}
 	
 	/**
