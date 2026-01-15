@@ -35,6 +35,7 @@ public class AuditPMSysParamConstantRulesBackingBean {
 	BigInteger itemName;
 	String pattern = "dd/MM/yyyy";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+	String amtFormatter = "#,##0.00";
 
 	/**
 	 * @param managedBeans
@@ -244,7 +245,7 @@ public class AuditPMSysParamConstantRulesBackingBean {
 				String number = rawRuleValue;
 				double amount = Double.parseDouble(number);
 
-				DecimalFormat formatter = new DecimalFormat("#,###.00");
+				DecimalFormat formatter = new DecimalFormat(amtFormatter);
 
 				ruleValue = formatter.format(amount);
 			} else {
@@ -305,9 +306,25 @@ public class AuditPMSysParamConstantRulesBackingBean {
 
 	private String fromValueNewCreated(PmConfigRuleValue newCreatedItem) {
 		if (newCreatedItem != null
-				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem.getRuleValueId()) > 0)
-				&& newCreatedItem.getFromValue() != null) {
-			return newCreatedItem.getFromValue().toString();
+				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
+						.getRuleValueId()) > 0) && newCreatedItem.getFromValue() != null) {
+			String ruleValue;
+			String rawValue = newCreatedItem.getFromValue().toString();
+			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+				String number = rawValue;
+				double amount = Double.parseDouble(number);
+
+				DecimalFormat formatter = new DecimalFormat(amtFormatter);
+
+				ruleValue = formatter.format(amount);
+			} else {
+				ruleValue = rawValue;
+			}
+			if (rawValue == null) {
+				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
+						.toString() : null;
+			}
+			return ruleValue;
 		}
 		return null;
 	}
@@ -323,9 +340,25 @@ public class AuditPMSysParamConstantRulesBackingBean {
 
 	private String toValueNewCreated(PmConfigRuleValue newCreatedItem) {
 		if (newCreatedItem != null
-				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem.getRuleValueId()) > 0)
-				&& newCreatedItem.getToValue() != null) {
-			return newCreatedItem.getToValue().toString();
+				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
+						.getRuleValueId()) > 0) && newCreatedItem.getToValue() != null) {
+			String ruleValue;
+			String rawValue = newCreatedItem.getToValue().toString();
+			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+				String number = rawValue;
+				double amount = Double.parseDouble(number);
+
+				DecimalFormat formatter = new DecimalFormat(amtFormatter);
+
+				ruleValue = formatter.format(amount);
+			} else {
+				ruleValue = rawValue;
+			}
+			if (rawValue == null) {
+				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
+						.toString() : null;
+			}
+			return ruleValue;
 		}
 		return null;
 	}
