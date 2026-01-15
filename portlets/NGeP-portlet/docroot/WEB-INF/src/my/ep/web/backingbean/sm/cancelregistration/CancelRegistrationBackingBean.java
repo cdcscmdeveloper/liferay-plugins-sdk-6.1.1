@@ -385,4 +385,30 @@ public class CancelRegistrationBackingBean extends
 		}
 		return null;
 	}
+	//25474
+	public String onClickProceedCancelRegistration() {
+		if (getManagedBean().getAccType() != null) {
+			if (getManagedBean().getAccType().equals(
+					SupplierManagementConst.STYPE_BASIC)) {
+				getManagedBean()
+						.setAccType(SupplierManagementConst.STYPE_BASIC);
+			} else if (getManagedBean().getAccType().equals(
+					SupplierManagementConst.STYPE_CONTRACTOR)) {
+				getManagedBean().setAccType(
+						SupplierManagementConst.STYPE_CONTRACTOR);
+			} else if (getManagedBean().getAccType().equals(
+					SupplierManagementConst.STYPE_CONSULTANT)) {
+				getManagedBean().setAccType(
+						SupplierManagementConst.STYPE_CONSULTANT);
+			} else {
+				getManagedBean().setAccType(
+						SupplierManagementConst.STYPE_GOVT_SELLER);
+				return cancelG2GAccountRegistration;
+			}
+			return cancelBasicMofAccountRegistration;
+
+		}
+
+		return cancelPreRegistration;
+	}
 }
