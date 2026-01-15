@@ -5,18 +5,17 @@ package my.ep.web.managedbean.ct;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import org.primefaces.model.TreeNode;
+
 import my.ep.constant.ct.ContractConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
-import my.ep.persistence.entity.ct.CtBondWaiverDetail;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
@@ -36,6 +35,8 @@ import my.ep.persistence.entity.sm.SmSupplierBank; //Fix - #33674
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+
+import org.primefaces.model.TreeNode;
 
 /**
  * Managed Bean For Contract
@@ -1820,6 +1821,7 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.initPage = initPage;
 	}
 	//#24336 - End
+	
 	//Start - #30045
 	public boolean isDefaultMinistryExist() {
 		return isDefaultMinistryExist;
