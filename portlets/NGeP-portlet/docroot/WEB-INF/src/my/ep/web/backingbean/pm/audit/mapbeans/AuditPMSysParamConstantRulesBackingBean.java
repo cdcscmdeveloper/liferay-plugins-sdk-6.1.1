@@ -310,7 +310,7 @@ public class AuditPMSysParamConstantRulesBackingBean {
 						.getRuleValueId()) > 0) && newCreatedItem.getFromValue() != null) {
 			String ruleValue;
 			String rawValue = newCreatedItem.getFromValue().toString();
-			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+			if (rawValue != null) {
 				String number = rawValue;
 				double amount = Double.parseDouble(number);
 
@@ -318,9 +318,6 @@ public class AuditPMSysParamConstantRulesBackingBean {
 
 				ruleValue = formatter.format(amount);
 			} else {
-				ruleValue = rawValue;
-			}
-			if (rawValue == null) {
 				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
 						.toString() : null;
 			}
@@ -344,7 +341,7 @@ public class AuditPMSysParamConstantRulesBackingBean {
 						.getRuleValueId()) > 0) && newCreatedItem.getToValue() != null) {
 			String ruleValue;
 			String rawValue = newCreatedItem.getToValue().toString();
-			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+			if (rawValue != null) {
 				String number = rawValue;
 				double amount = Double.parseDouble(number);
 
@@ -352,9 +349,6 @@ public class AuditPMSysParamConstantRulesBackingBean {
 
 				ruleValue = formatter.format(amount);
 			} else {
-				ruleValue = rawValue;
-			}
-			if (rawValue == null) {
 				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
 						.toString() : null;
 			}
