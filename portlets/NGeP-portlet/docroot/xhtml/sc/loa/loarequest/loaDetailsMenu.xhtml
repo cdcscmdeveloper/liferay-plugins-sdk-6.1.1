@@ -785,7 +785,7 @@
 		resizable="false" width="700px" height="350px" modal="true" 
 		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
 		onShow="singleUploadListener(approvalLetterUploadWV);"
-		rendered="#{isEditableStatus and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and lOADetailBackingBean.managedBean.above500K and (!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || (((isOneOff) and (!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)))}"> <!-- #38711  -->
+		rendered="#{isEditableStatus}"> 
 		<p:ajax event="close" />	
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
