@@ -941,7 +941,9 @@ public class SmPersonnelBackingBean extends
 	private void validatePostcode(SmAddress srcAddr, SmPersonnelAddress destAddr) {
 		String postcode = srcAddr.getPostcode();
 
-		if (StringUtils.isNotBlank(postcode) && (!StringUtils.isNumeric(postcode) || postcode.length() != 5)) {
+		// For my country
+		if (srcAddr.getPmCountry().getCountryId().equals(getManagedBean().getMyCountryId())
+				&& StringUtils.isNotBlank(postcode) && (!StringUtils.isNumeric(postcode) || postcode.length() != 5)) {
 			destAddr.setSameAsPerm(false);
 			String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
 			throw new EpException(errMsg, null);
