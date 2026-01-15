@@ -1948,7 +1948,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			SmDisciplinaryAction action = getManagedBean().getDisciplineVO()
 					.getSmDiscplinaryAction();
 
-			if (action.isRecordStatus()
+			if (action.getDisciplinaryActionId() != null
+					&& action.isRecordStatus()
 					&& action.getStartDate().compareTo(new Date()) >= 0) {
 				return false;
 			}
