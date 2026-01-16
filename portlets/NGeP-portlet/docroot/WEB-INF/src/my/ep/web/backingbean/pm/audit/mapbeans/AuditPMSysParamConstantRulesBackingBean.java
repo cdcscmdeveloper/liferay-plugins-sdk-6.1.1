@@ -322,8 +322,7 @@ public class AuditPMSysParamConstantRulesBackingBean {
 			handleFieldAuditSPRulesValueType(ruleValueType,
 					AuditConst.PM_AUD_SYSPARAM_SPCONSTANTRULE_SUPPLIER_ACC_TYPE_FIELDLABELID,
 					suppAccTypeNewCreated(newCreatedItem), suppAccTypeDeleted(deletedItem));
-		}
-		
+		}		
 		processing(ruleValueType, newCreatedItem, deletedItem);
 		/*35323 - Audit End*/		
 	}
