@@ -446,11 +446,6 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setNameRequired(true);
 		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 		getSelectionTypes();
-		
-		// #35500 Issue fix 10 start
-		newCommitteeAuditTrailList.add(committeeMember);
-		this.getManagedBean().setNewCommitteeAuditTrailList(newCommitteeAuditTrailList);
-		// #35500 Issue fix 10 end
 
 		searchExistingUser.resetData();
 
@@ -521,6 +516,8 @@ public class EvaluationMeetingBackingBean extends
 
 		List<ScCommitteeMember> committeeActivity = getManagedBean()
 				.getCommitteeMemberActivity();
+		List<ScCommitteeMember>	newCommitteeAuditTrailList = this.getManagedBean().getNewCommitteeAuditTrailList() != null ?
+				this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();//#35500 Fix Reopen 6th Jan issue 3
 		if (null == committeeActivity) {
 			committeeActivity = new ArrayList<ScCommitteeMember>();
 		}
@@ -737,7 +734,7 @@ public class EvaluationMeetingBackingBean extends
 							}
 						}
 					}
-
+					newCommitteeAuditTrailList.add(committeeMember);//#35500 Fix Reopen 6th Jan Issue 3
 				}
 			}
 			// localList.add(activity);
@@ -750,7 +747,7 @@ public class EvaluationMeetingBackingBean extends
 		Collections.sort(committeeActivity);
 		this.getManagedBean().setCommitteeMemberActivity(committeeActivity);
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
-		this.getManagedBean().setNewCommitteeAuditTrailList(localList); //#28895-35500
+		this.getManagedBean().setNewCommitteeAuditTrailList(newCommitteeAuditTrailList); //#28895-35500 issue 3
 		// 25037 - start
 		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeMemberActivity(),
 				QTSearchBeanConst.SEARCH_GETICPASSPORT);
@@ -2514,11 +2511,19 @@ public class EvaluationMeetingBackingBean extends
 	 */
 	public void onChangeRole(int index,
 			List<ScCommitteeMember> committeeActivity){
+		//#35500 Fix Reopen 6th Jan Start
+		List<ScCommitteeMember>	newCommitteeAuditTrailList = this.getManagedBean().getNewCommitteeAuditTrailList() != null ?
+				this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
+				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
 		ScCommitteeMember member = committeeActivity.get(index);
-		if (member.getMemberRoleId() == null){
+		if (member.getMemberRoleId() == null || newCommitteeAuditTrailList.contains(member)){
+			this.chnageMemberRole(index,committeeActivity);
 			this.roleChangedListener(member);
 			return;
 		}
+		//#35500 Fix Reopen 6th Jan End
 		
 		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
 		String changedRole = ParameterHelper.getInstance().getParameterDesc(
@@ -2527,10 +2532,6 @@ public class EvaluationMeetingBackingBean extends
 		String previousRole = ParameterHelper.getInstance().getParameterDesc(
 				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
 				SourcingConstants.MY_LOCALE);
-		
-		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
-				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
-		List<String> userRoles = new ArrayList<>();
 				
 		if (!mapModifiedRole.isEmpty()) {
 			if (mapModifiedRole.containsKey(member.getPmUser())) {
