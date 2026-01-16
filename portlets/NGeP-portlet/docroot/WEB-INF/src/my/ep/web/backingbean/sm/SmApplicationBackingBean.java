@@ -10963,6 +10963,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
+		getManagedBean().setChangeCurrRegStatus(false); //#37925
 		//30974 - start
 
 		getManagedBean().setSearchRecommendRejectReason(null);
