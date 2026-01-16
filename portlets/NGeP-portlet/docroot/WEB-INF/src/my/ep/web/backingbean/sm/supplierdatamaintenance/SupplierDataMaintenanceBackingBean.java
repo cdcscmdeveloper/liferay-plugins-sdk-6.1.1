@@ -1922,13 +1922,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector()
 				|| StringUtils.isNotEmpty(checkNonActiveDAWithPending(supplier));
 		// 39666 - START
-		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction() != null){
-			SmDisciplinaryAction action =
-			        getManagedBean().getDisciplineVO().getSmDiscplinaryAction();
+		if (getManagedBean().getDisciplineVO().getSmDiscplinaryAction() != null) {
+			SmDisciplinaryAction action = getManagedBean().getDisciplineVO().getSmDiscplinaryAction();
 
-			if (action.isRecordStatus() && action.getStartDate().compareTo(new Date()) >= 0) {
-			    return false;
-			}	
+			if (action.getDisciplinaryActionId() != null && action.isRecordStatus()
+					&& action.getStartDate().compareTo(new Date()) >= 0) {
+				return false;
+			}
 		}
 		// 39666 - START
 		
