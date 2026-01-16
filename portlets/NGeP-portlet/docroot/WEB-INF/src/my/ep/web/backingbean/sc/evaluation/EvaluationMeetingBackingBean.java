@@ -2431,7 +2431,7 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setDocNo(this.getManagedBean().getQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
-			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#35500 Flag changes
 			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
@@ -2467,7 +2467,7 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
-			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#35500 Flag changes
 			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 
 			for (Map.Entry<PmUser, List<String>> entry : committeeModifiedRole.entrySet()) {

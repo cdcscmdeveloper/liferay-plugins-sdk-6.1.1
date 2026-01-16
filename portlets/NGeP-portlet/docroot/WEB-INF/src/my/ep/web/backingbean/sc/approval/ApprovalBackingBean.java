@@ -3778,7 +3778,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			auditResDTO.setAuGroupSectionId(groupTabSection);
 			auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
-			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#355500 Flag changes
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
 			if(this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REJECT)){
 				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_REJECT);
 			}else{
@@ -3799,7 +3799,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
 				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 				auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
-				auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+				auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#35500 Flag changes
 				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 				List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
 						: reqDTO.getDeletedDoaaList();
@@ -3845,14 +3845,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_APPROVE)) {
 					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);
-					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#35500 Flag changes
 					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 				} else if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_REVISE)) {//#35500 fix issue 6
 					auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISION);
-					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#35500 Flag changes
 					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 				} else {
-					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);//#355500 Flag changes
+					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);//#35500 Flag changes
 					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);
 					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_REJECT);
 				}
