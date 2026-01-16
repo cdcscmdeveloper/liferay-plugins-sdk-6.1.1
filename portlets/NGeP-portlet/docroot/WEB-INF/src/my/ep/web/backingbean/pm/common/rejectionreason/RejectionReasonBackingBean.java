@@ -398,9 +398,11 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			//#28962 - end
 			if(pmReason.getSourceMethod() != null && pmReason.getSourceMethod().getParameterId() != null){
 					this.getManagedBean().setSelectedSourceMethodId(pmReason.getSourceMethod().getParameterId());
+			// #39618 - Start
 			} else {
 				this.getManagedBean().setSelectedSourceMethodId(null);
 			}
+			// #39618 - end
 		
 		}catch (Exception e){
 			e.printStackTrace();
@@ -1314,16 +1316,27 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 	
 	// 39618 START
-	public void deleteCircularPanel(){
+	/**
+	 * To delete reason applicability when tick purchase from contract
+	 */
+	private void deleteCircularPanel(){
 
+		boolean isPanelCircular = false;
+		int rowIndex = 0;
+		
 		if(CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedReason().getPmPIDReasonList())){
-			for( PmPIDReason pIDReason :this.getManagedBean().getSelectedReason().getPmPIDReasonList()){
+			for(int i =0; i<this.getManagedBean().getSelectedReason().getPmPIDReasonList().size(); i++){
+				PmPIDReason pIDReason = this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(i);
 				if((ParameterConst.DOCTYPE_PANEL_CIRCULAR).equals(pIDReason.getDocType())){
-					this.getManagedBean().getSelectedReason().getPmPIDReasonList().remove(pIDReason);
+					isPanelCircular = true;
+					rowIndex = i;
 					}
 				}
 			}
+		if(isPanelCircular){
+			deleteReasonApplicability(rowIndex);
 		}
+	}
 	// 39618 END
 	
 	/**
