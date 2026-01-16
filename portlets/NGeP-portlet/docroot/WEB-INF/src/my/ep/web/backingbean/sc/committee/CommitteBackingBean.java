@@ -3107,7 +3107,7 @@ public class CommitteBackingBean extends
 	
 	// #35320 - START
 	/**
-	 * Retrive user details.
+	 * Retrieve user details.
 	 *
 	 * @param userid the userid
 	 */
@@ -3216,7 +3216,7 @@ public class CommitteBackingBean extends
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
 
-				mofReqDTO.setOrgName("KEMENTERIAN KEWANGAN MALAYSIA");
+				mofReqDTO.setOrgName(ParameterConst.KEMENTERIAN_KEWANGAN_MALAYSIA);
 				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByName(mofReqDTO);
 				reqDTO.setPmOrgProfile(mofResDTO.getPmOrgProfile());
 			} else {

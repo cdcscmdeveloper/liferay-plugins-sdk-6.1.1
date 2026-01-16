@@ -877,7 +877,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
 		IQTProposalSO proposalSO = null;
 		
-		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true, QTConstants.FINANCIAL_PRIVATE_CODE);	//Bug #39517@Syazani 07/01/2026
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_PRIVATE_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
 		
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1697,7 +1700,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				.getManagedBean().getScQtPRPCreditFacilities();
 		List<List<EncryptDataBean>> encryptCrditFacilitesList = new ArrayList<List<EncryptDataBean>>();
 		
-		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true, QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);	//Bug #39517@Syazani 07/01/2026
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
 		
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1906,7 +1912,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		List<EncryptDataBean> cashOnHandList = new ArrayList<EncryptDataBean>();
 		IQTProposalSO proposalSO = null;
 		
-		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true, QTConstants.FINANCIAL_CASH_ON_HAND_CODE);	//Bug #39517@Syazani 07/01/2026
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_CASH_ON_HAND_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
 		
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1986,7 +1995,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		List<EncryptDataBean> encryptBankStmtList = new ArrayList<EncryptDataBean>();
 		IQTProposalSO proposalSO = null;
 		
-		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true, QTConstants.FINANCIAL_BANK_STMT_CODE);	//Bug #39517@Syazani 07/01/2026
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_BANK_STMT_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
 		
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2062,7 +2074,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getTechnicalQtProposalChecklist();
 		
-		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, false, QTConstants.TECHNICAL_NUMBER_EMPLOYEES);	//Bug #39517@Syazani 07/01/2026
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, false,
+				QTConstants.TECHNICAL_NUMBER_EMPLOYEES);
+		// Bug #39517@Syazani 07/01/2026 -- End
 		
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2135,7 +2150,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				.getTechnicalQtProposalChecklist();
 		IQTProposalSO proposalSO = null;
 		
-		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true, QTConstants.TECHNICAL_PRIVATE_CODE);	//Bug #39517@Syazani 07/01/2026
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.TECHNICAL_PRIVATE_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
 		
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2262,8 +2280,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				.getScQtPRPAssetLiability();
 		IQTProposalSO proposalSO = null;
 		
-		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true, QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);	//Bug #39517@Syazani 07/01/2026
-		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
