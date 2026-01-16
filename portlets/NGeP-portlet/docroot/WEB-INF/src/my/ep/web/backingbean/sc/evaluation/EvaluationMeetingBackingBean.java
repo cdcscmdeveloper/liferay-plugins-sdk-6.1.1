@@ -430,9 +430,6 @@ public class EvaluationMeetingBackingBean extends
 				ParameterHelper.getInstance().getParameterDesc(
 						ParameterTypeConst.SC_COMMITTEE_TYPE,
 						this.getManagedBean().getCommitteeType()));
-		
-		List<ScCommitteeMember> newCommitteeAuditTrailList = this.getManagedBean().getNewCommitteeAuditTrailList() != null ?
-				this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();//#35500 Issue fix 10
 
 		getManagedBean().setName(null);
 		getManagedBean().setIdentificationType(null);
