@@ -1138,8 +1138,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
 		Boolean supplierApprove = true;//#35500 fix issue 1
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
-			//Validate first
-			checkValidityDateAndSupplierResponseDate();
 			PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
 					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecessionType().getParameterCode());
 			approvalRequest.setApproverAction(pmParameter);
@@ -1165,6 +1163,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				approvalRequest.setMofDate(null);
 			}
 			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
+			checkValidityDateAndSupplierResponseDate();
 			// add data for report/history usage - End
 
 			// To remove attachments R1, R2, R3
@@ -3732,6 +3731,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (date.after(this.getManagedBean().getScQtApprovalRequestList().get(0).getProposalValidityEndDateNew())
 				&& (QTStatusConst.PCB_RQ1_APPROVED.longValue() == request.getDecessionType().getParameterId()
 						|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == request.getDecessionType().getParameterId())) {
+			request.setApproverAction(null);
 			throw new EpException(MessageConst.ERROR_770405);
 		}
 	}
