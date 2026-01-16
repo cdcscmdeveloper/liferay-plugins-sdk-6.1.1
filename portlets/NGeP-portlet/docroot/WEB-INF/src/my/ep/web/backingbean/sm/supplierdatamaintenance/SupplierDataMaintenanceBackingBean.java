@@ -1916,6 +1916,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED); //#39424
 		// 38609 - END
 	}
+	
 	//#39079 - START
 	private boolean isCancelRegStatus(String mofStatus, SmSupplier supplier) {
 		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector()
@@ -1934,6 +1935,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		return mofStatus.equals(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG) && basicDA;
 	}
 	//#39079 - END
+	
 	private boolean isActiveWithPendingDA(SmSupplier supplier, String mofStatus) {
 	    return mofStatus.equals(SupplierManagementConst.MOF_STATUS_ACTIVE)
 	        && StringUtils.isNotEmpty(checkNonActiveDAWithPending(supplier));
