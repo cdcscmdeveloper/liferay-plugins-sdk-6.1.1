@@ -2463,10 +2463,18 @@ public class QTCommitteBackingBean extends
 	 * @param member
 	 */
 	public void onChangeRole(ScCommitteeMember member){
-		if (member.getMemberRoleId() == null){
+		//#35500 Fix Reopen 6th Jan Start issue 1
+		List<ScCommitteeMember>	newScCommitteeMemberAuditTrailList = this.getManagedBean().getNewScCommitteeMemberAuditTrailList() != null
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
+				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
+			
+		if (member.getMemberRoleId() == null || newScCommitteeMemberAuditTrailList.contains(member)){
 			this.roleChangedListener(member);
 			return;
 		}
+		//#35500 Fix Reopen 6th Jan End
 		
 		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
 		String changedRole = ParameterHelper.getInstance().getParameterDesc(
@@ -2475,10 +2483,6 @@ public class QTCommitteBackingBean extends
 		String previousRole = ParameterHelper.getInstance().getParameterDesc(
 				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
 				SourcingConstants.MY_LOCALE);
-		
-		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
-				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
-		List<String> userRoles = new ArrayList<>();
 				
 		if (!mapModifiedRole.isEmpty()) {
 			if (mapModifiedRole.containsKey(member.getPmUser())) {
