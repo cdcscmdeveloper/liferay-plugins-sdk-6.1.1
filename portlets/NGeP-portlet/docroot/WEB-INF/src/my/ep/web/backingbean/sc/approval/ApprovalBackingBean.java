@@ -1181,11 +1181,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		checkNullRemark();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 
-			Long decessionType = approvalRequest.getDecessionType().getParameterId();
-
-			//35500 fix issue 1 Start
-			approveValidityPeriodAuditTrail(scQt,supplierApprove);
-			//#35500 fix issue 1 End
+			Long decessionType = approvalRequest.getDecessionType().getParameterId();			
 
 			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decessionType.longValue()
 					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decessionType.longValue()) { // 1834L || 1854L
@@ -1208,6 +1204,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 		}
+		
+		//35500 fix issue 1 Start
+		approveValidityPeriodAuditTrail(scQt,supplierApprove);
+		//#35500 fix issue 1 End
 	}
 	//#21692 - End
 	
@@ -3778,7 +3778,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			auditResDTO.setAuGroupSectionId(groupTabSection);
 			auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
-			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#355500 Flag changes
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
 			if(this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REJECT)){
 				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_REJECT);
 			}else{
@@ -3799,7 +3799,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
 				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 				auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
-				auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+				auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#35500 Flag changes
 				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 				List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
 						: reqDTO.getDeletedDoaaList();
@@ -3845,14 +3845,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_APPROVE)) {
 					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);
-					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#35500 Flag changes
 					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
 				} else if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_REVISE)) {//#35500 fix issue 6
 					auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISION);
-					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#355500 Flag changes
+					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);//#35500 Flag changes
 					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 				} else {
-					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);//#355500 Flag changes
+					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);//#35500 Flag changes
 					auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_DOA);
 					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_REJECT);
 				}
@@ -3881,11 +3881,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
 		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-		auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
 		auditResDTO.setStatusId(supplierApprove? QTStatusConst.EPV_APPROVED : QTStatusConst.EPV_REJECTED);//check and/or change later
 		auditResDTO.setProcessFlag(supplierApprove? QTAuditConstant.PROCESS_FLAG_APPROVE : QTAuditConstant.PROCESS_FLAG_REJECT);
 		auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
-
 		
 		AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 		auditReqList.add(auditReqDTO);
@@ -3898,10 +3896,19 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @param member
 	 */
 	public void onChangeRole(ScCommitteeMember member){
-		if (member.getMemberRoleId() == null){
+		// #35500 Fix Reopen 6th Jan Start issue 1
+		List<ScCommitteeMember> newScCommitteeMemberAuditTrailList = this.getManagedBean().getNewScCommitteeMemberAuditTrailList() != null 
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null 
+				? this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
+
+		if (member.getMemberRoleId() == null || newScCommitteeMemberAuditTrailList.contains(member)) {
+
 			this.roleChangedListener(member);
 			return;
 		}
+		//#35500 Fix Reopen 6th Jan End
 		
 		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
 		String changedRole = ParameterHelper.getInstance().getParameterDesc(
@@ -3911,10 +3918,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
 				SourcingConstants.MY_LOCALE);
 		
-		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
-				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
-		List<String> userRoles = new ArrayList<>();
-				
 		if (!mapModifiedRole.isEmpty()) {
 			if (mapModifiedRole.containsKey(member.getPmUser())) {
 				userRoles = mapModifiedRole.get(member.getPmUser());
