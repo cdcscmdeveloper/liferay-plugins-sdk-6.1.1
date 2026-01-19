@@ -1596,7 +1596,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * 
 	 * @param selectedCategories
 	 */
-	public void deleteSelectedNewCategoryCodes(List<SmSupplierCategory> selectedCategories) {
+	public void deleteSelectedPendingCategoryCodes(List<SmSupplierCategory> selectedCategories) {
 		if (selectedCategories != null && !selectedCategories.isEmpty()) {
 			List<SmSupplierCategory> categories = selectedCategories;
 			deleteCatCodes(categories);

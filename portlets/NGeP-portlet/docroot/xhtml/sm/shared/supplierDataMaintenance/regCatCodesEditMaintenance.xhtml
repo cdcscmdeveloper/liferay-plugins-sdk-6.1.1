@@ -186,7 +186,7 @@
 					id="deletedBtnId"
 					disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories or 
 							!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
-					action="#{supplierDataMaintenanceBackingBean.deleteSelectedNewCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories)}"
+					action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories)}"
 					update=":#{p:component('catCodeInfPan')}" partialSubmit="true"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					process="@this">
