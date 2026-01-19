@@ -41,10 +41,10 @@ public class AuditPMSysParamConstantRulesBackingBean {
 	String feeExemptionContract;
 	BigInteger itemName;
 	String pattern = "dd/MM/yyyy";
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-	PmConfigRuleDesc pmConfigRuleDesc = new PmConfigRuleDesc();
-	/*35323 - Audit Start*/
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);	
+	/*35323 - Audit Start*/	
 	String amtFormatter = "#,##0.00";
+	PmConfigRuleDesc pmConfigRuleDesc = new PmConfigRuleDesc();
 	String suppAccTypeNewValue;
 	/*35323 - Audit End*/
 
@@ -56,8 +56,9 @@ public class AuditPMSysParamConstantRulesBackingBean {
 	public AuditPMReqDTO spRulesValueTypeProcess(RuleCatalogueManageBean managedBeans, String roleCode) {
 		this.roleCode = roleCode;
 		this.lvlCode2 = AuditConst.PM_LVL_CODE_2_SPCONSTANTRULE;
+		/*35323 - Audit Start*/
 		pmConfigRuleDesc = managedBeans.getSelectedRuleDescType();
-
+		/*35323 - Audit End*/
 		getAuditAddedData(managedBeans.getAuditResDTOSelectedRuleValueList(), managedBeans.getAuditAddedSelectedRuleValueList(),
 				managedBeans);
 
