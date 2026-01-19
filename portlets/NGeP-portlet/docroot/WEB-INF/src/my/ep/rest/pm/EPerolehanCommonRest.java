@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -181,7 +179,7 @@ public class EPerolehanCommonRest {
             
             // Get properties from EJB (only whitelisted)
             if ("ejb".equals(source) || "both".equals(source)) {
-                Properties ejbProps = SmServiceLookup.getConfigGeneralSO().getAllProperties();
+                Properties ejbProps = SmServiceLookup.getConfigGeneralSO().getAllPropertiesValue();
                 for (String key : whitelist) {
                     String value = ejbProps.getProperty(key);
                     if (value != null) {
@@ -270,7 +268,8 @@ public class EPerolehanCommonRest {
             }
             
             // Search only within whitelisted properties from EJB
-            Properties ejbProps = SmServiceLookup.getConfigGeneralSO().getAllProperties();
+            log.info("Node info="+SmServiceLookup.getConfigGeneralSO().getNodeInfo());
+            Properties ejbProps = SmServiceLookup.getConfigGeneralSO().getAllPropertiesValue();
             for (String key : whitelist) {
                 if (key.matches(regex)) {
                     String value = ejbProps.getProperty(key);
