@@ -50,11 +50,11 @@
 								process="@this"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<p:commandButton onstart="blockWidget.show()"
-								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
+								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog @([id$=changeRegStatusChk])"
 								value="#{lbl['lbl.sm.button.recommend.to.approve']}"
-								partialSubmit="true" process="@this"
+								partialSubmit="true" process="@this @([id$=changeRegStatusChk])"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #29727 -->
+								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #29727, #37925 -->
 							<!-- Disable for UPS 32008 - START -->
 							<p:commandButton onstart="blockWidget.show()"
 								rendered="#{!backingBean.managedBean.upsCannotEdit}"

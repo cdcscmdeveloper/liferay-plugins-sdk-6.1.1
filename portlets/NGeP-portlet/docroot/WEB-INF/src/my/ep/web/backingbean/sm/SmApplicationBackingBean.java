@@ -166,7 +166,6 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
-import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -10964,6 +10963,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
+		getManagedBean().setChangeCurrRegStatus(false); //#37925
 		//30974 - start
 
 		getManagedBean().setSearchRecommendRejectReason(null);
@@ -18821,7 +18821,8 @@ public class SmApplicationBackingBean extends
 				MessageUtils.getMessage(MessageConst.INFO_721228, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 		} catch (Exception e) {
-			 throw e;
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
 		} finally {
 			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
 			RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.hide();");
