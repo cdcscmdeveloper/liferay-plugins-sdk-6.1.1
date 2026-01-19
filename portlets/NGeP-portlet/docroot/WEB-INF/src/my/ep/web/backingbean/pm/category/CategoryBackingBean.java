@@ -1722,15 +1722,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			validateNewAndDuplicateCategory();
 
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-			categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					ICategoryCodeSO.class);
+			categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 
 			prepareCategoryData();
 			// Basic category and Category Restr data information
 			getBasicCategoryData();
 			getCategoryRestrData();
-			getMachineCategoryData(); // #29665
-
+			getMachineCategoryData(); //#29665
+			
 			// start #29665
 			PmRemarkCategory prc = new PmRemarkCategory();
 			if (!this.remarkDisable && !this.getManagedBean().isNewCategory()) {
@@ -1757,23 +1756,21 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
 			reqDTO.setCategoryLevel(this.getManagedBean().getCatLevel());
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
-			// Bug #37757 - Start
+			//Bug #37757 - Start
 			if (validateSsmExclusive()) {
 				reqDTO.getPmCategoryL3().setSsmExclusive(0);
 			}
-			// Bug #37757 - End
+			//Bug #37757 - End
 
 			PmCategoryL3 pmCategoryL3 = this.getManagedBean().getPmCategoryL3();
-			IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IStatusSO.class);
+			IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
 			trackingDiaryForCreateAndUpdateOfSubDivision(reqDTO, pmCategoryL3, statusSO);
 
-			getAllCategoryDetailsForTracking(reqDTO, this.getManagedBean().getPmCategoryL3().getRecordStatusFlg()
-					.longValue());
+			getAllCategoryDetailsForTracking(reqDTO, this.getManagedBean().getPmCategoryL3().getRecordStatusFlg().longValue());
 
 			/************ AUDIT 35509 *************/
-			AuditPMBackingBeanTemplate auTemplate = new AuditPMCategoryCodeBackingBean();
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMCategoryCodeBackingBean(); 
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 			this.getManagedBean().setAuditLevelCategory(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
@@ -1798,15 +1795,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				reset();
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
-					this.getManagedBean().getPmCategoryL2().getPmCategoryL3s()
-							.add(this.getManagedBean().getPmCategoryL3());
+					this.getManagedBean().getPmCategoryL2().getPmCategoryL3s().add(this.getManagedBean().getPmCategoryL3());
 					reqDTO.setPmCategoryL2(this.getManagedBean().getPmCategoryL2());
 					categoryCodeSO.saveSubCategory(reqDTO);
 				}
 
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setNewCategory(false);
-					returnUrl = "/xhtml/pm/category/search.xhtml"; // #29665
+					returnUrl = "/xhtml/pm/category/search.xhtml"; //#29665
 					result = resDTO.isSuccessful();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
@@ -2583,7 +2579,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			if (!this.getManagedBean().isNewCategory()
 					&& (this.getManagedBean().getPmCategoryL3().getSupplierTypeCode() == null
-							|| this.getManagedBean().getPmCategoryL3().getSupplierTypeCode().getParameterId() == null 
+							|| this.getManagedBean().getPmCategoryL3().getSupplierTypeCode().getParameterId() == null
 							|| this.getManagedBean().getPmCategoryL3().getSupplierTypeCode().getParameterId() == 0)) { //#34445
 				throw new EpException(MessageConst.ERROR_775011);
 			}

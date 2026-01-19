@@ -28,8 +28,8 @@
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" />
 				</td>
 				<!-- Start #29665 remove save button, replace by update and save, change update button behaviour -->
-				<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}">
 				<!-- 34445 Start -->
+				<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}">
 					<p:commandButton
 						value="#{categoryBackingBean.managedBean.newCategory? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}"
 						oncomplete="saveInfoDlg.show();" style="float:right;" />
@@ -142,7 +142,6 @@
 							rendered="#{!categoryBackingBean.managedBean.newCategory}"
 							readonly="true" disabled="true" /></td>
 					<!-- 12852 End -->
-					
 					<td><p:outputLabel value="#{lbl['lbl.pm.special.category']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 
@@ -156,7 +155,7 @@
 								var="specialCategory" itemLabel="#{specialCategory.codeName}"
 								itemValue="#{specialCategory.pmParameter.parameterId}">
 							</f:selectItems>
-						</p:selectOneMenu> 
+						</p:selectOneMenu>
 						<!-- 34445 Start -->
 						<p:selectOneMenu
 							id="specialCatCreateId"
@@ -212,22 +211,20 @@
 						</td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.facility.type']}" />
 						</td>
-					<!-- 34445 Remove required selectOneMenu -->
-					<td><p:selectOneMenu id="facilityTypeId"
-							label="#{lbl['lbl.pm.facility.type']}"
+					<!-- 34445 Start -->
+					<td>
+						<p:selectOneMenu id="facilityTypeId" label="#{lbl['lbl.pm.facility.type']}"
 							disabled="#{!categoryBackingBean.managedBean.facilityTypeChoosable}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.facilityType}">
-							<f:selectItems
-								value="#{categoryBackingBean.getDropdownCodeValuesBySearchBean(ParameterTypeConst.supplierFacilityType , facilityTypeSearchBean)}" />
+							<f:selectItems value="#{categoryBackingBean.getDropdownCodeValuesBySearchBean(ParameterTypeConst.supplierFacilityType , facilityTypeSearchBean)}" />
 							<!-- start #29665 add ajax -->
 							<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
-								<p:ajax event="change" update="remarkFieldId"
-									listener="#{categoryBackingBean.onChangeDescription}"
-									disabled="#{!categoryBackingBean.remarkDisable}" />
+								<p:ajax event="change" update="remarkFieldId" listener="#{categoryBackingBean.onChangeDescription}" disabled="#{!categoryBackingBean.remarkDisable}" />
 							</c:if>
 							<!-- end #29665 add ajax-->
-						</p:selectOneMenu></td>
-
+						</p:selectOneMenu>
+					</td>
+					<!-- 34445 End -->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.special.group']}" /></td>

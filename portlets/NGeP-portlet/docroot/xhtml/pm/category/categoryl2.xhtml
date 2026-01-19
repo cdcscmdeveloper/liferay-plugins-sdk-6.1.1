@@ -35,12 +35,11 @@
 					<p:commandButton value="#{lbl['lbl.btn.update']}"
 						oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
 						style="float:right;width: auto;" /></td>
+				<!-- 34445 Start -->
 				<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}">
-					<!-- 34445 Start -->
-					<p:commandButton value="#{lbl['lbl.btn.save']}" partialSubmit="true"
-							oncomplete="saveInfoDlg.show();" style="float:right;width: auto;" />
-					<!-- 34445 End -->
-				</td> 
+					<p:commandButton value="#{lbl['lbl.btn.save']}" partialSubmit="true" oncomplete="saveInfoDlg.show();" style="float:right;width: auto;" />
+				</td>
+				<!-- 34445 End -->
 				<!-- #29665 - End -->
 				<!-- End #29665 remove save button, replace by update and save, change update button behaviour -->
 								
@@ -260,7 +259,7 @@
 			hasParam="true"
 			width="400" height="100"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-			content="#{lbl['lbl.pm.btn.save.msg']}" 
+			content="#{lbl['lbl.pm.btn.save.msg']}"
 			update=":form"/>
 		<!-- 34445 end -->
 		
