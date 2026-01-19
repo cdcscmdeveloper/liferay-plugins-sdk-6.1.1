@@ -171,17 +171,32 @@
 		<h:panelGrid id="typesOfAmend"  columns="6" style="width:100%" columnClasses="columnWidth170">
 			<h:outputLabel value="#{lbl['lbl.ct.extension.period']}" styleClass="required"
 				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
-			<h:panelGrid columns="3"
-				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
-				<p:inputText style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
+			<!-- #32418 Start -->	
+			<h:panelGrid columns="5" style="width:350px;" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">			
+			<h:panelGrid columns="3">
+				<p:inputText id="extendMonthsId" style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3"
+					onblur="this.value = this.value.trim() == '' ? '0' : this.value;"
+    				onchange="this.value = this.value.trim() == '' ? '0' : this.value;"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="keyup" update="extStartDate, extEndDate, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
+					<p:ajax event="change" update="extStartDate, extEndDate,extendMonthsId, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
 					</p:inputText>
-				<p:spacer width="2" />
+					<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+				</h:panelGrid>
+				<h:panelGrid columns="4">
+				<p:inputText id="extendDaysId" style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendDaysPeriod}" maxlength="2" max="27"
+					onblur="this.value = this.value.trim() == '' ? '0' : this.value;"
+    				onchange="this.value = this.value.trim() == '' ? '0' : this.value;"
+					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
+					<p:ajax event="change" update="extStartDate, extEndDate, extendDaysId, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
+					</p:inputText>
+				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.period.day']}" style="text-align:left"/>
+				</h:panelGrid>
 			</h:panelGrid>
-		
+			<!-- #32418 End -->
 			<p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}"
 				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<p:inputText id="extStartDate" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}" 

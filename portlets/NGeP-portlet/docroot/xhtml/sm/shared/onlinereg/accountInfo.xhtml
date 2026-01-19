@@ -9,20 +9,64 @@
 
 	<p:outputPanel id="indBtnSubmit">
 		<c:if test="#{registrationBackingBean.managedBean.smAppl.brandNew}">
+			<!-- #34400 - Start -->
 			<c:if
 				test="#{registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
 				<div align="right">
-					<p:commandButton value="#{lbl['lbl.btn.submit']}" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
-						action="#{registrationBackingBean.submitRegistration}" update="@([id$=Msg])">
-							<f:param name="disableValidation" value="true" />
+					<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit"
+						onstart="submissionDialog.show();"
+						oncomplete="submissionDialog.hide();"
+						action="#{registrationBackingBean.onCallFirstUserTncDialog}"
+						update="@([id$=Msg], firstUserTncDialog)">
+						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 				</div>
-				
-				<p:dialog widgetVar="submissionDialog" modal="true" draggable="false"
-					closable="false" resizable="false" showHeader="false">
+
+				<p:dialog widgetVar="submissionDialog" modal="true"
+					draggable="false" closable="false" resizable="false"
+					showHeader="false">
 					<p:graphicImage value="/css/images/ajax-loader.gif" />
 				</p:dialog>
+
+				<p:dialog id="firstUserTncDialog"
+					header="#{lbl['lbl.sm.suppadmin.appointment.header']}"
+					widgetVar="firstUserTncDialog" modal="true" width="600px"
+					height="520px">
+					<!-- #34400 -->
+					<h:outputText value="#{lbl['lbl.sm.confirm.supp.register']}" />
+					<p:panel id="firstUserTncPanelId"
+						header="#{lbl['lbl.sm.term.and.condition.header']}">
+
+						<p:scrollPanel style="height:350px;border:0;" mode="native">
+							<h:outputText escape="false"
+								value="#{lbl['lbl.sm.suppadmin.appointment.msg']}"
+								style="white-space : normal !important" />
+						</p:scrollPanel>
+
+						<table>
+							<tr>
+								<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
+										value="#{registrationBackingBean.managedBean.aggreeDeclareAdmin}">
+										<p:ajax event="change" update=":form:basCmdBtn" />
+									</p:selectBooleanCheckbox></td>
+								<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+							</tr>
+						</table>
+
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="basCmdBtn"
+								action="#{registrationBackingBean.submitRegistration}"
+								update="@form" onclick="firstUserTncDialog.hide();"
+								disabled="#{!registrationBackingBean.managedBean.aggreeDeclareAdmin}"
+								onstart="submissionDialog.show()"
+								oncomplete="submissionDialog.hide()" />
+							<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+								onclick="firstUserTncDialog.hide();" />
+						</div>
+					</p:panel>
+				</p:dialog>
 			</c:if>
+			<!-- #34400 - End -->
 		</c:if>
 	</p:outputPanel>
 
@@ -73,7 +117,7 @@
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
 							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@this" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
 						</p:selectOneMenu>
 					</c:when>
 					<c:when test="#{!registrationBackingBean.managedBean.smAppl.brandNew and registrationBackingBean.managedBean.regAccountMaintainance}">
@@ -84,7 +128,7 @@
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
 							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@this" ></p:ajax>
 						</p:selectOneMenu>
 					</c:when>
 					<!-- #36710 START -->
@@ -96,7 +140,7 @@
 							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM) or registrationBackingBean.managedBean.activeDisicplinaryAction}">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/> 
 							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@this" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
 						</p:selectOneMenu> <!-- #36710 END-->
 					</c:when>
 					<c:otherwise>
@@ -107,7 +151,7 @@
 							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM) or registrationBackingBean.managedBean.activeDisicplinaryAction}">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDownAccountInfo()}"/> <!-- #36710 -->
 							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@this" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
 						</p:selectOneMenu>
 					</c:otherwise>
 				</c:choose>
@@ -152,7 +196,7 @@
 				<td class="tdContent">
 					<p:outputPanel id="regNoPanelId">
 					<!--  #16052019 - SSM INTEGRATION CR - Fahmi  -->
-						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="30"
+						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="20"
 							value="#{registrationBackingBean.managedBean.smSupp.regNo}" converter="toUpperCaseConverter"
 							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}"
 							size="40" label="#{lbl['lbl.sm.businessregno']}" >

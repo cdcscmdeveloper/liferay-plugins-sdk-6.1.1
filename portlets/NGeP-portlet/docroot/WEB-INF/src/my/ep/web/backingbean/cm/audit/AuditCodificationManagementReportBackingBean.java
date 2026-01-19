@@ -117,6 +117,7 @@ public class AuditCodificationManagementReportBackingBean extends
 		getManagedBean().setAuditCMSearchBean(auditCMSearchBean);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
+		getManagedBean().setActiveIndex(0);
 		loadCIDetails();
 		loadCEDetails();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, auditCDView);

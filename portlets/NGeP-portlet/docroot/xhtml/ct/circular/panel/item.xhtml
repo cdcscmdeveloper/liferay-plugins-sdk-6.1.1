@@ -345,11 +345,21 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			            <table style="width: 100%">
 				            <tr>
 								<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.ct.location.level']}" /></td>
-								<td><p:selectOneMenu id="locationLevels" style="width:200px;" disabled="#{panelBackingBean.managedBean.viewContract}"
-										value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
-										<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-										<p:ajax event="change" listener="#{panelBackingBean.selectLocation}" process="@this" update=":form:zoneGeneralDataTable"/>
-									</p:selectOneMenu>
+								<td>
+								<p:selectOneMenu id="locationLevels" 
+                  								 style="width:200px;" 
+                  								 disabled="#{panelBackingBean.managedBean.viewContract}"
+                  								 value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
+    
+    							<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" 
+                   							   var="p" itemLabel="#{p.codeName}" itemValue="#{p.parameterId}" />
+
+    							<p:ajax event="change" 
+            							listener="#{panelBackingBean.selectLocation}" 
+            							process="@this" 
+            							immediate="true"
+            							update=":form:zoneGeneralDataTable :form:itemSupplierDt" />
+								</p:selectOneMenu>
 								</td>
 							</tr>
 						</table>

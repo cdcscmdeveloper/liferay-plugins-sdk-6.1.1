@@ -3,7 +3,6 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
@@ -65,14 +64,13 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		/* update UserGroupUsers List */
 		HashMap<Long, Integer> hMap = managedBeans.getHmGroupUserFlagStatDb();
 		if (managedBeans.getUserGroupUpdate() != null && managedBeans.getUserGroupUpdate().getPmUserGroupUsers() != null) {
+			/* update UserGroup */
+			updateUserGroupListStatus(managedBeans.getUserGroupUpdate(), managedBeans.getUserGroupOld());
 			for (PmUserGroupUser groupUser : managedBeans.getUserGroupUpdate().getPmUserGroupUsers()) {
 				if (hMap != null && !(hMap.isEmpty())) {
 					updateUserGroupList(hMap, groupUser);
 				}
 			}
-
-			/* update UserGroup */
-			updateUserGroupListStatus(managedBeans.getUserGroupUpdate(), managedBeans.getUserGroupOld());
 		}
 
 		/* new created UserGroup */
@@ -116,6 +114,7 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		if (getUserGroupUpdate != null && getUserGroupOld != null) {
 			String oldVal = getUserGroupOld.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
 			String newVal = getUserGroupUpdate.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
+			this.docId = BigInteger.valueOf(getUserGroupUpdate.getUserGroupId());
 			if (oldVal != newVal) {
 				this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 				detailObj(AuditConst.PM_AUD_OUSRG_GSTATUS_FIELDLABELID,

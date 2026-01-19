@@ -239,8 +239,11 @@ public class PoJobTypeRatioBackingBean extends BaseBackingBean<PoJobTypeRatioMan
 
 	public String savePoJobRatio() {
 		IPoJobTypeRatioSO jobRatioSO = null;
-		poJobRatioTypeValidation();
+		
+		//#34445 Start
 		try {
+			poJobRatioTypeValidation();
+
 			jobRatioSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IPoJobTypeRatioSO.class);
 			boolean isBrandNew = getManagedBean().getPoJobTypeRatio().isBrandNew();
@@ -280,6 +283,10 @@ public class PoJobTypeRatioBackingBean extends BaseBackingBean<PoJobTypeRatioMan
 					return NAV_TO_DETAILS;
 				}
 			}
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_DETAILS;
+		//#34445 End
 		} catch (Exception e) {
 			throw new EpException(e.getMessage());
 		} finally {

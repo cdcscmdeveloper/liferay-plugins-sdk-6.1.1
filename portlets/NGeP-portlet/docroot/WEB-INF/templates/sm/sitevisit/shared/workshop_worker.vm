@@ -6,7 +6,6 @@
 			<th width="5%">No</th>
 			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.employee.specialization')</th>
 			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.employee.name')</th>
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.employee.idtype')</th>
 			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.worker.icno')</th>
 			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.worker.experience')</th>
 		</tr>
@@ -18,14 +17,13 @@
 				<td>$velocityCount</td>
 				<td>$!worker.expertise</td>
 				<td>$!worker.name</td>
-				<td>$!workerIdMap.get($!worker.identificationType.parameterCode)</td>
 				<td>$!worker.identificationNo</td>
 				<td>$!worker.workExpYear</td>
 			</tr>
 			#end
 		#else
 			<tr>
-				<td colspan="6" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+				<td colspan="5" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 			</tr>
 		#end
 </table>

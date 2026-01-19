@@ -676,11 +676,7 @@ public class TemplateSpecBackingBean extends
 		if(!(getManagedBean().isPidSQ() || getManagedBean().isG2G())){			
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
-			//#25725 start
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
-			filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);		
 		}
-		//#25725 end
 		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);		
 
 		searchBean.getDataFilterBeans().add(
@@ -1687,6 +1683,12 @@ public class TemplateSpecBackingBean extends
 		} else{
 			// update new zone qts when TplSpecAnswers exists
 			if(CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())){
+				// #39210 Start Vinod 3/10/2025
+				List<TplSpecAnswer> specAnswersNew = checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(templateSpecBean);
+				if (CollectionUtils.isNotEmpty(specAnswersNew)) {
+					specQuestion.setTplSpecAnswers(specAnswersNew);
+				}
+				// #39210 End Vinod 3/10/2025
 				for (int i = 0; i < specQuestion.getTplSpecZoneQties().size(); i++) {
 					for (TplSpecZoneQty tplSpecZoneQty : specQuestion.getTplSpecZoneQties()) {
 
@@ -3160,8 +3162,7 @@ public class TemplateSpecBackingBean extends
 			Boolean isItemTypeService, 
 			Boolean isFulfilmentTypeScheduled, 
 			long specZoneId,
-			BigDecimal questionId,
-			Boolean isFulfilmentTypeNonPeriodicScheduled) {
+			BigDecimal questionId) {
 
 			BigDecimal totalIndicativePrice = new BigDecimal("0.00");//Bug #29808
 			BigDecimal zeroChangeTo1 = new BigDecimal("1.00");//Bug #29808
@@ -3193,7 +3194,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(RoundIndicativePrice).setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 			} 
 			else {
-				if (isItemTypeService && !(isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
+				if (isItemTypeService && !(isFulfilmentTypeScheduled ))
 				{		totalIndicativePrice = totalIndicativePrice.add(clQuantity
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
@@ -3201,7 +3202,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(RoundIndicativePrice).setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 				} 
 				else {
-					if (isItemTypeService && (isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
+					if (isItemTypeService && (isFulfilmentTypeScheduled ))
 					{
 						totalIndicativePrice = totalIndicativePrice.add(clQuantity
 								.multiply(contractDuration)
@@ -4045,15 +4046,69 @@ public class TemplateSpecBackingBean extends
 	}
 	//#36248_haziq - End
 	
-	//#38151 Start
+	// #39210 Start Vinod 3/10/2025
+	/**
+	 * This method will check if the zone details are null and create new
+	 * answers if null.
+	 * 
+	 * @param templateSpecBean
+	 * @return List<TplSpecAnswer>
+	 */
+	private List<TplSpecAnswer> checkAndUpdateAnswersForUnitPriceIfZoneDtlsAreNull(
+			TemplateSpecBean templateSpecBean) {
+		TplSpecQuestion specQuestion = templateSpecBean
+				.getSelectedSpecQuestion();
+		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE
+				.equals(specQuestion.getTplSpecMaster().getItemTypeCode()
+						.getParameterCode());
+		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+		List<TplSpecAnswer> specAnswersNew = new ArrayList<>();
+		String priceType = specQuestion.getClPriceTypeCode()
+				.getParameterCode();
+		boolean isPriceTypeZonalStandard = specHelper
+				.isPriceTypeZonalStandard(priceType);
+
+		for (TplSpecAnswer tplSpecAnswer : specQuestion.getTplSpecAnswers()) {
+			if (null == tplSpecAnswer.getTplSpecSuppAnswer()
+					.getTplSpecZoneDtl() && isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion
+						.getTplSpecMaster().getTplSpecZone()
+						.getTplSpecZoneDtls()) {
+					TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
+							templateSpecBean, specQuestion, specZoneDtl, null);
+
+					calcTotalAmount(templateSpecBean, specAnswer,
+							isItemTypeService);
+					specAnswersNew.add(specAnswer);
+
+				}
+			} else if (null == tplSpecAnswer.getTplSpecSuppAnswer()
+					.getTplSpecZoneDtl() && !isPriceTypeZonalStandard) {
+				for (TplSpecZoneDtl specZoneDtl : specQuestion
+						.getTplSpecMaster().getTplSpecZone()
+						.getTplSpecZoneDtls()) {
+					populateTierSpecAnswers(templateSpecBean, specQuestion,
+							specZoneDtl, specAnswersNew);
+				}
+			}
+			
+			if(CollectionUtils.isNotEmpty(specAnswersNew)){
+				break;
+			}
+		}
+
+		return specAnswersNew;
+	}
+	// #39210 End Vinod 3/10/2025
 	
+	// #38151 Start
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		ScQt qt = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt();
 		Date publishDate = qt.getPublishDate();
 		Date createdDate = qt.getCreatedDate();
-		
+
 		if (null == publishDate) {
 			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
@@ -4063,11 +4118,11 @@ public class TemplateSpecBackingBean extends
 
 			Date effDate = appVerDtls.getEffDate();
 			Timestamp effTimestamp = new Timestamp(effDate.getTime());
-			
+
 			if (createdDate.before(effTimestamp)) {
 				this.getManagedBean().setWeightage35384WIP(true);
 			}
-		}else{
+		} else {
 			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
 			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
@@ -4081,6 +4136,6 @@ public class TemplateSpecBackingBean extends
 			}
 		}
 	}
-	//#38151 End
+	// #38151 End
 
 }

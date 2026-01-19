@@ -257,6 +257,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			//32678-End
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			//start 21229
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			
 			//START 28246 NEW implementation: IF SentIddCre = 1 , ACTION CODE CRE already sent and next action must ADJ
 			if(getManagedBean().getPaymentAdvice().getFlInvoice() !=null){				
@@ -508,13 +509,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		checkSupplierUserActive();
 		//28221 end
 		
-		//24956 start
-		if (getManagedBean().getFulfilmentRequest().getCtContract() != null 
-				&& getManagedBean().getFulfilmentRequest().getCtContract().getContractType().
-				getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+		// 24956 start
+		if (getManagedBean().getFulfilmentRequest().getCtContract() != null
+				&& getManagedBean().getFulfilmentRequest().getCtContract().getContractType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 			getManagedBean().setCtTypeMinistry(true);
 		}
-		//24956 end
+		// 24956 end
 	}
 	
 	// 26279 - start
@@ -1141,6 +1142,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	public void onNodeSelect() {
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 		onNodeUnSelect();
+		Long orgProfileId = null; //38898
 		if(null!=selectedNode){
 			InvoiceChargeLineVO treeNode = (InvoiceChargeLineVO)selectedNode.getData();
 			if(treeNode.getLevel() == 1){
@@ -1169,16 +1171,38 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						getManagedBean().setProjectCode(childData.getPmSubSetia().getProjectCode());
 						getManagedBean().setFinancingTypeCode(childData.getPmSubSetia().getFinancingTypeValue());
 					}
-					//24893 - start
-					if(null != childData.getFlFulfilmentItemAddr().get(0).getChargePTJOrg()) {
-						getManagedBean().setChargePTJOrg(childData.getFlFulfilmentItemAddr().get(0).getChargePTJOrg());
-						System.out.println("Item Charge PTJ");
+					//24893 - start || 38898 -Start
+					if (childData.getFlFulfilmentItemAddr() != null && !childData.getFlFulfilmentItemAddr().isEmpty()
+							&& childData.getFlFulfilmentItemAddr().get(0).getChargePTJOrg() != null) {
+
+						orgProfileId = childData.getFlFulfilmentItemAddr().get(0).getChargePTJOrg().getOrgProfileId();
+						log.info("Item Charge PTJ");
+						// 38898 -End
 					} else {
 						getManagedBean().setChargePTJOrg(getManagedBean().getPaymentAdvice().getFlRequest().getChargeOrgProfile());
-						System.out.println("FL Request Charge PTJ");
+						log.info("FL Request Charge PTJ");// 38898
 					}
 					//24893 - end
 				}
+				//38898 -Start
+				if(orgProfileId !=null) {					
+					IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+					reqDTO.setOrgProfileId(orgProfileId);
+					OrgProfileResDTO resDTO = orgProfileSO.getActivePmOrgValidityByOrgProfileId(reqDTO);
+					
+					if (resDTO != null && resDTO.getPmOrgProfile() != null) {
+						getManagedBean().setChargePTJOrg(resDTO.getPmOrgProfile());
+						log.info("Item Charge PTJ");
+					}else{
+						getManagedBean().setChargePTJOrg(getManagedBean().getPaymentAdvice().getFlRequest().getChargeOrgProfile());
+						log.info("FL Request Charge PTJ");
+					}
+
+					
+				}
+				//38898 -End
 			}
 			
 		}
@@ -1928,13 +1952,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				}
 			}
 			
-			//24956 start
-			if (invBB.getManagedBean().getInvoice().getFlRequest().getCtContract() != null 
-					&& invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getContractType().
-					getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			// 24956 start
+			if (invBB.getManagedBean().getInvoice().getFlRequest().getCtContract() != null
+					&& invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getContractType()
+							.getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				invBB.getManagedBean().setCtTypeMinistry(true);
 			}
-			//24956 end
+			// 24956 end
 			
 			return NAV_INVOICE;
 		}if(docType.equalsIgnoreCase(ParameterConst.CONTRACT)){

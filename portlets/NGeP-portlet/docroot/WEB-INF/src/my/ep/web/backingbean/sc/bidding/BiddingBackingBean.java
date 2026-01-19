@@ -72,7 +72,7 @@ import org.primefaces.model.chart.LineChartSeries;
 
 
 //25791 -start-
-import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQt;
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
 
 //25791 -end-
 
@@ -1268,7 +1268,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * @param previousPageUrl
 	 * @return Bidding screen.
 	 */
-	public String bidManagementQuotationTenderAction(ScBidScheduleForQt bid, String previousPageUrl) {//25791 
+	public String bidManagementQuotationTenderAction(ScBidScheduleForQT bid, String previousPageUrl) {//25791 
 		//25791 - remove bidding codes start -
 	
 		//25791 - remove bidding codes end -
@@ -1369,16 +1369,30 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	/**
 	 * Method to check if this supplier disqualified
 	 * 
-	 * @param Long
-	 *            qtId
-	 * @param Long
-	 *            supplierId
+	 * @param qtId
+	 * @param supplierId
 	 * @return true or false
 	 **/
 	public Boolean checkDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId) {
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		return sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(qtId, supplierId);
+	}
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if any zones are disqualified
+	 * 
+	 * @param qtId
+	 * @param supplierId
+	 * @param specZoneId
+	 * @return true or false
+	 **/
+	public Boolean checkZonesDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId, Long specZoneId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.flagZonesBiddingDisqualifiedSupplierBranchDeleted(qtId, supplierId, specZoneId);
 	}
 	// #28777 & #29729 - End
 }

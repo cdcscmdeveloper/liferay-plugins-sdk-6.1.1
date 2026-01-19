@@ -416,12 +416,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<SmSupplierBranch> supplierBranchList;
 	private List<ScQtEvaluationResultDtl> disqualifiedSupplierList;
 	private List<ScQtRecommend> disqualifiedRecommendList;
+	private boolean flagBranchDeleted = false;
 	// #28777 & #29729 - End
 
 	//#21692 - Start
 	private boolean ableToCancelLOI;
 	private boolean ableToCancelLOIWithoutBPM;
 	private boolean ableToSubmitLOI;
+	private boolean ableToCancelWIP;
 	//#21692 - End
 	
 	private List<WeightageScoreBean> weightageScoreBeans;//#38151
@@ -2397,6 +2399,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setDisqualifiedRecommendList(List<ScQtRecommend> disqualifiedRecommendList) {
 		this.disqualifiedRecommendList = disqualifiedRecommendList;
 	}
+	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
+	}
 	//#28777 & #29729 - End
 
 	//#36339, #21692 - Start
@@ -2435,6 +2445,18 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 
+	//#21692 - Start
+	public boolean isAbleToCancelWIP() {
+		return ableToCancelWIP;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelWIP(boolean ableToCancelWIP) {
+		this.ableToCancelWIP = ableToCancelWIP;
+	}
+	//#21692 - End
+	
 	//#38151 - Start
 	public List<WeightageScoreBean> getWeightageScoreBeans() {
 		return weightageScoreBeans;

@@ -1645,10 +1645,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 			
-			//#24956
-			if(scheduleNo==null && (
-					contractResDTO.getContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					|| contractResDTO.getContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED) ) ) {
+			if(scheduleNo==null && contractResDTO.getContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 				if(contractResDTO.getContract().isFrequencySchedule() && contractResDTO.getContract().getLatestContractVer().getCtSchedules()!=null) {
 					for(CtSchedule ctSchedule : contractResDTO.getContract().getLatestContractVer().getCtSchedules()) {
 						scheduleNo = ctSchedule.getScheduleNo().toString();
@@ -1763,12 +1760,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crBasePage.xhtml");
 		
-		//24956 - start
-		if (getManagedBean().getFlRequest().getCtContract().getContractType().
-				getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+		// 24956 - start
+		if (getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 			getManagedBean().setCtTypeMinistry(true);
 		}
-		//24956 - end
+		// 24956 - end
 		
 	}
 	
@@ -5127,9 +5124,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}
 		
-		//#24956
-		if(flRequest.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) ||
-				flRequest.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
+		if(flRequest.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 			ContractIntegrationReqDTO integrationReqDTO = new ContractIntegrationReqDTO();
 			integrationReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 			integrationReqDTO.setScheduleNo(flRequest.getScheduleNo());
@@ -5193,49 +5188,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 				
-				//Bond Waiver Checking upon Contract Request Submission and/or Approval
-				
-				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				ContractReqDTO contractReqDTO = new ContractReqDTO();
-				contractReqDTO.setContractId(flRequest.getCtContract().getContractId());
-				contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
-				contractReqDTO.setAsAtDate(new Date());
-				contractReqDTO.setScLoa(flRequest.getCtContract().getLoa());//#25296
-				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
-					
-					if(ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
-						if(!ctContractAmount.isBondWaived()){
-							ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);//25296 - asyraf - move to new line
-							if(!contractResp.isBondComplete()){
-								if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-									throw new EpException(MessageConst.ERROR_740051);
-								}else{
-									throw new EpException(MessageConst.ERROR_740052);
-								}
-							}
-						}else{//#25296
-							ContractResDTO contractBondWaiver=contractSO.validateBondWaiverPeriod(contractReqDTO);//25296 - asyraf - move to new line
-							if(!contractBondWaiver.isBondWaiverPeriod()){
-								ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);//25296 - asyraf - move to new line
-								if(!contractResp.isBondComplete()){
-									//25296 - asyraf - to handle WIP transaction
-									if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-										if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
-											throw new EpException(MessageConst.ERROR_740066);
-										} else {
-											throw new EpException(MessageConst.ERROR_740051);
-										}									
-									}else{
-										if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
-											throw new EpException(MessageConst.ERROR_740067);
-										} else {
-											throw new EpException(MessageConst.ERROR_740052);
-										}//25296 - end - asyraf									
-									}
-								}
-							}													
-						}// end #25296
-					}
+				validateBondRequirement(flRequest, action);//25296
 				validateSuspensionItems(action);
 				validateChargelineLimit(action);
 				validateDeliveryAddress(action);//29401
@@ -6573,8 +6526,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				searchTypesList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
 				searchTypesList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 				searchTypesList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-				searchTypesList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN); //#24956
-				searchTypesList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED); //#24956
 			}else{
 				searchTypesList.add(ParameterConst.CONTRACT_TYPE_CENTRAL);
 				searchTypesList.add(ParameterConst.CONTRACT_TYPE_MINISTRY);
@@ -7292,7 +7243,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO; //28719
 		
-		if(getManagedBean().getFlRequest().getCtContract().getContractId() != null){
+		if (getManagedBean().getFlRequest().getCtContract() != null
+				&& getManagedBean().getFlRequest().getCtContract().getContractId() != null
+				&& getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {// 24956  blocking rules for CC
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());		
 			
 			BigDecimal sumOrderedAmt; //28719
@@ -7374,7 +7328,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	//35024-Start
 	/**
-	 * validate Bond for Fulfilment type One-Off whether Bond is Complete or Not
+	 * validate Bond for Fulfilment type One-Off whether Bond is Complete or Not 
+	 * message show while pre render
 	 * @param flRequest
 	 */
 	private void validateBondComplete(FlFulfilmentRequest flRequest){
@@ -7514,4 +7469,93 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		return flItemAddr;
 	}
 	// 36468 end
+	
+	//25296 - Start
+	/**
+	 * Bond Waiver Checking upon Contract Request Submission and/or Approval
+	 *
+	 * @param flRequest 
+	 * @param action 
+	 */
+	private void validateBondRequirement(FlFulfilmentRequest flRequest, String action) {
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+				IContractSO.class);
+		ContractReqDTO contractReqDTO = new ContractReqDTO();
+		contractReqDTO.setContractId(flRequest.getCtContract().getContractId());
+		contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
+		contractReqDTO.setAsAtDate(new Date());
+		contractReqDTO.setScLoa(flRequest.getCtContract().getLoa());// #25296
+		CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+
+		if (ctContractAmount != null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()) {
+			if (!ctContractAmount.isBondWaived()) {
+				validateBondWithoutWaiver(action, contractReqDTO);
+			} else {
+				validateBondWithWaiver(action, contractReqDTO);
+			}
+		}
+	}
+	
+	/**
+	 * Validates whether the bond (without bond waiver) is complete.
+	 * Throws an exception if the bond is not complete based on the action.
+	 *
+	 * @param action 
+	 * @param contractReqDTO 
+	 */
+	private void validateBondWithoutWaiver (String action, ContractReqDTO contractReqDTO){
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+		ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);//25296 - asyraf - move to new line
+		if(!contractResp.isBondComplete()){
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+				throw new EpException(MessageConst.ERROR_740051);
+			}else{
+				throw new EpException(MessageConst.ERROR_740052);
+			}
+		}
+	}
+	
+	/**
+	 * Validates the bond waiver period if the bond is waived.
+	 * Performs additional checks if the waiver period is invalid and the bond is incomplete.
+	 *
+	 * @param action
+	 * @param contractReqDTO
+	 */
+	private void validateBondWithWaiver(String action, ContractReqDTO contractReqDTO){
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+		ContractResDTO contractBondWaiver=contractSO.validateBondWaiverPeriod(contractReqDTO);//25296 - asyraf - move to new line
+		if(!contractBondWaiver.isBondWaiverPeriod()){
+			ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
+			if(!contractResp.isBondComplete()){
+				displayBondWaiverValidationError(action, contractBondWaiver);
+			}
+		}
+	}
+	
+	/**
+	 * Handles errors when the bond is incomplete and the waiver is also invalid, 
+	 * depending on the waiver details and the action taken.
+	 *
+	 * @param action 
+	 * @param contractBondWaiver
+	 */
+	private void displayBondWaiverValidationError(String action, ContractResDTO contractBondWaiver) {
+		//25296 - asyraf - to handle WIP transaction
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+			if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_740066);
+			} else {
+				throw new EpException(MessageConst.ERROR_740051);
+			}									
+		}else{
+			if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_740067);
+			} else {
+				throw new EpException(MessageConst.ERROR_740052);
+			}//25296 - end - asyraf									
+		}
+	}
+	
+	//25296 - End
 }

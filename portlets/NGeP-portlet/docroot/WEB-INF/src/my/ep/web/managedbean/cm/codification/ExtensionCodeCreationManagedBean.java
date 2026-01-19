@@ -1126,7 +1126,7 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		System.out.println("segmentCode " + segmentCode);
 		
 		//#25551 01062020 - azza - start
-		if (Integer.parseInt(segmentCode) > 60) {
+		if (Integer.parseInt(segmentCode) > 69) { //#35503, Fix as-is bug: #38632
 			flag = true;
 		//#25551 01062020 - azza - end
 		}

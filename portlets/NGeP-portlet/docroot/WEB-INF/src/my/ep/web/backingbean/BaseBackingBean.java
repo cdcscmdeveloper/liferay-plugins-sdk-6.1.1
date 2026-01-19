@@ -32,10 +32,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set; //#35238
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -737,6 +739,77 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+	
+	// new #25725/25726 - Start
+	
+	
+	/**
+	 * Check for italic if language code = "ms" and parameter code in the list
+	 * @param parameterId
+	 * @return
+	 */
+	public boolean checkItalicCodeNameForMy(Long parameterId) {
+
+		PmParameter newPmParameter = new PmParameter();
+
+		if (parameterId != null) {
+			newPmParameter = ParameterHelper.getInstance().getPmParameterById(parameterId);
+		}
+
+		if (newPmParameter == null) {
+			return false;
+		}
+
+		String paramType = newPmParameter.getParameterType();
+		String paramCode = newPmParameter.getParameterCode();
+
+		Map<String, List<String>> listParameter = new HashMap<>();
+
+		// Store multiple FULFILMENT_TYPE values in a list
+		List<String> fulfilmentTypes = new ArrayList<>();
+		fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+
+		listParameter.put(ParameterTypeConst.FULFILMENT_TYPE, fulfilmentTypes);
+
+		FacesScopes face = new FacesScopes();
+		String language = face.getUserLocale().getLanguage();
+
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParameter.containsKey(paramType)) {
+			List<String> validTypes = listParameter.get(paramType);
+
+			if (validTypes.contains(paramCode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
+	
+	/**
+	 * Get list code names is italic
+	 * @param type
+	 * @return
+	 */
+	public List<String> getItalicCodeNames(String type) {
+		List<String> codeNames = new ArrayList<>();
+
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(type,
+				null);
+		for (PmParameterDesc p : parameterDescs) {
+			Long id = p.getPmParameter().getParameterId();
+
+			if (checkItalicCodeNameForMy(id)) {
+				codeNames.add(p.getCodeName());
+			}
+		}
+		return codeNames;
+	}
+	
+
+	// new #25725/25726 - End
+
+	
 /** #21695 FARID START*/	
 	/**
 	 * Get parameter id select items by parameter type and search bean for
@@ -4379,4 +4452,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	} 
 	//26238 - END
+	
+	//#35238 start
+	/**
+	 * Common utility method to check if user has any role from the given set.
+	 * 
+	 * @param roles Array of roles
+	 * @return true if user has any role in the given set.
+	 */
+	public boolean hasAnyRoleUser(Set<String> roles) {
+		FacesScopes facesScopes = new FacesScopes();
+	    if (roles == null || roles.isEmpty()) {
+	        return false;
+	    }
+	    for (String role : roles) {
+	        if (facesScopes.hasRoleUser(role)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	//#35238 end
 }

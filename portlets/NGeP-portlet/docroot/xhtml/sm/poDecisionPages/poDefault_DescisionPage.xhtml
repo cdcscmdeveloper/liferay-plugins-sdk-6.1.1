@@ -50,11 +50,11 @@
 								process="@this"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<p:commandButton onstart="blockWidget.show()"
-								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
+								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog @([id$=changeRegStatusChk])"
 								value="#{lbl['lbl.sm.button.recommend.to.approve']}"
-								partialSubmit="true" process="@this"
+								partialSubmit="true" process="@this @([id$=changeRegStatusChk])"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #29727 -->
+								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #29727, #37925 -->
 							<!-- Disable for UPS 32008 - START -->
 							<p:commandButton onstart="blockWidget.show()"
 								rendered="#{!backingBean.managedBean.upsCannotEdit}"
@@ -72,7 +72,9 @@
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<c:if
-									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S' 
+											or backingBean.managedBean.specialCategoryRechecked}">
+											<!-- #26671 - Site Visit Grouping Enhancement -28775 -->
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
@@ -114,9 +116,9 @@
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<p:commandButton value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									partialSubmit="true" process="@this @([id$=changeRegStatusChk])" update=":form:tt:submitApprvrDialog @([id$=changeRegStatusChk])"
 									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #27297 -->
+									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #27297, #37925 -->
 							</c:if>
 
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
@@ -153,9 +155,9 @@
 								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
 									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									partialSubmit="true" process="@this @([id$=changeRegStatusChk])" update=":form:tt:submitApprvrDialog @([id$=changeRegStatusChk])"
 									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- 29727 -->
+									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- 29727, #37925 -->
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton and !backingBean.managedBean.upsCannotEdit}"
@@ -167,7 +169,9 @@
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 							<!-- Disable for UPS 32008 - END -->
 								<c:if
-									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'
+											or backingBean.managedBean.specialCategoryRechecked}">
+											<!-- #26671 - Site Visit Grouping Enhancement -28775 -->
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
@@ -266,12 +270,13 @@
 															styleClass="splNotesFonts" escape="false" /></td>
 												</tr>
 												<tr>
-													<td>
-														<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-															<c:if test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
-																<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
-																	<h:outputText value="#{lbl['lbl.sm.po.splNotes1.siteVisit']}" styleClass="splNotesFonts" />
-																</c:if>
+													<td><!-- #26671 - Site Visit Grouping Enhancement -28775 -->
+														<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C' 
+																	and !backingBean.managedBean.reviewSiteVisit}">
+															<c:if test="#{backingBean.managedBean.smAppl.applType eq 'B' 
+																or backingBean.managedBean.smAppl.applCategoryType eq 'S'
+																or backingBean.managedBean.specialCategoryRechecked}">
+															<h:outputText value="#{lbl['lbl.sm.po.splNotes1.siteVisit']}" styleClass="splNotesFonts" />
 															</c:if>
 														</c:if>
 													</td>
@@ -407,7 +412,6 @@
 		height="400px" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
 		<ac:smSearchRejectReasons>
-		<div align="right">
 			<!-- #34400 -->
 			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="rejectBlockPanelWidget.show()"
 					oncomplete="rejectBlockPanelWidget.hide(); confirmRejectDlg.show();"
@@ -417,7 +421,7 @@
 					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
 					action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"
 					partialSubmit="true" process="@this" />
-		</div>
+
 		</ac:smSearchRejectReasons>
 	</p:dialog>
 	<!-- 13362 START -->

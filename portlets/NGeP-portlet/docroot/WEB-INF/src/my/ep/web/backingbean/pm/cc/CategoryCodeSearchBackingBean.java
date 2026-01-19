@@ -5,14 +5,12 @@ package my.ep.web.backingbean.pm.cc;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
@@ -22,16 +20,12 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
-import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.search.SupplierCategoryReqDTO;
-import my.ep.dto.sm.search.SupplierCategoryResDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
@@ -56,7 +50,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -742,66 +735,17 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			//27738 end 
 		} else { 
 			//27859,30720 Start - 3rd level category didnot appear
-				// #33387 - START
-				List<SmSupplierCategory> apprvList = new ArrayList<>();
-
-				getManagedBean().setSmAppl(SmApplicationUtil.getLatestApplBySupplierId(supplierId));
-				ISupplierCategorySO supplierCategorySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
-
-				SupplierCategoryReqDTO suppCatReqDTO = new SupplierCategoryReqDTO();
-				SupplierCategoryResDTO suppCatResDTO;
-				suppCatReqDTO.setSupplierId(supplierId);
-				suppCatResDTO = supplierCategorySO.retrieveCategoryBySupplierId(suppCatReqDTO);
-
-				List<Object[]> catList = null;
-
-				if (null != suppCatResDTO) {
-					catList = suppCatResDTO.getResultList();
-				}
-
-				for (Object[] arr : catList) {
-					SmSupplierCategory cat = new SmSupplierCategory();
-
-					PmCategoryL1 pmCategoryL1 = new PmCategoryL1();
-					PmCategoryL2 pmCategoryL2 = new PmCategoryL2();
-					PmCategoryL3 pmCategoryL3 = new PmCategoryL3();
-
-					pmCategoryL1.setCategoryL1Code((String) arr[3]);
-					pmCategoryL2.setCategoryL2Code((String) arr[4]);
-					pmCategoryL3.setCategoryL3Code((String) arr[5]);
-
-					cat.setPmCategoryL1(pmCategoryL1);
-					cat.setPmCategoryL2(pmCategoryL2);
-					cat.setPmCategoryL3(pmCategoryL3);
-
-					BigDecimal recordStatus = (BigDecimal) arr[7];
-					if (recordStatus.compareTo(BigDecimal.ONE) == 0) {
-						cat.setRecordStatus(true);
-					} else if (recordStatus.compareTo(BigDecimal.ZERO) == 0) {
-						cat.setRecordStatus(false);
-					}
-
-					if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-						// 28327: Disciplinary Action - start - <28327>
-						apprvList.add(cat);
-						// 28327: Disciplinary Action - start - <28327>
-					}
-				}
-
-				// #33387 - Add null checking
-				if (activeCategoryList != null) {
-					apprvList.addAll(activeCategoryList);
-					SmApplicationUtil.sortSupplierCategory(apprvList);
-					getManagedBean().setApprovedCategoryList(apprvList);
-					
-					// #33387 - Add null checking
-				}
-				List<SmDisciplinaryAction> activeDAs = SmServiceLookup.getSupplierDataMaintenanceSO()
+			// #33387, #38864 - START
+			if (activeCategoryList != null) {
+				SmApplicationUtil.sortSupplierCategory(activeCategoryList);
+				getManagedBean().setApprovedCategoryList(activeCategoryList);
+			}
+			List<SmDisciplinaryAction> activeDAs = SmServiceLookup.getSupplierDataMaintenanceSO()
 						.retrieveActiveDisciplinaryActionBySupplierId(supplierId).getSmDisciplinaryActions();
 				
-				selectItems = getSelectItems(resDTO.getCategoryL3List(), activeDAs, null);
+			selectItems = getSelectItems(resDTO.getCategoryL3List(), activeDAs, supplierId);
 			//27859,30720 end - 3rd level category didnot appear
-			//#33387 - END
+			//#33387, #38864 - END
 		}
 		//27438, 27613, 27673: Disciplinary Action - end
 		
@@ -900,22 +844,34 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		return false;
 	}
 	
+	//#26238 - 38864
 	private boolean hasAllBasicMTOCodes(List<SmSupplierCategory> catList){
 		if (EntityHelper.isCollectionEmpty(catList)){
 			return false;
 		}
-		int checkBasic = 0;
-		List<String> basicMTO = Arrays.asList(SupplierManagementConst.MTO_CODE_04, SupplierManagementConst.MTO_CODE_05, SupplierManagementConst.MTO_CODE_06);
+		boolean hasMTO4 = false;
+		boolean hasMTO5 = false;
+		boolean hasMTO6 = false;
 		
 		for(SmSupplierCategory cat : catList){
-			boolean isSubCategoryMTO = cat.getPmCategoryL1() != null && (SupplierManagementConst.CAT_L1_22).equals(cat.getPmCategoryL1().getCategoryL1Code())
-					&& cat.getPmCategoryL2() != null && (SupplierManagementConst.CAT_L2_17).equals(cat.getPmCategoryL2().getCategoryL2Code());
+			boolean isSubCategoryMTO = cat.getPmCategoryL1() != null 
+					&& (SupplierManagementConst.CAT_L1_22).equals(cat.getPmCategoryL1().getCategoryL1Code())
+					&& cat.getPmCategoryL2() != null 
+					&& (SupplierManagementConst.CAT_L2_17).equals(cat.getPmCategoryL2().getCategoryL2Code());
 			
-			if(isSubCategoryMTO && cat.getPmCategoryL3() != null && basicMTO.contains(cat.getPmCategoryL3().getCategoryL3Code())){
-				checkBasic++;
+			if (!isSubCategoryMTO || cat.getPmCategoryL3() == null){
+				continue;
+			}
+			String codeL3 = cat.getPmCategoryL3().getCategoryL3Code();
+			if (SupplierManagementConst.MTO_CODE_04.equals(codeL3)){
+				hasMTO4 = true;
+			} else if (SupplierManagementConst.MTO_CODE_05.equals(codeL3)){
+				hasMTO5 = true;
+			} else if (SupplierManagementConst.MTO_CODE_06.equals(codeL3)){
+				hasMTO6 = true;
 			}
 		}
-		return checkBasic == basicMTO.size();
+		return hasMTO4 && hasMTO5 && hasMTO6;
 	}
 	//26238 - approver cannot add imposed category code - end
  

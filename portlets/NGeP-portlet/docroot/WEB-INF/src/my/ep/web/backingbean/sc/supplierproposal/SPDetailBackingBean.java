@@ -865,6 +865,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				.getScQtPRPExperiences();
 		List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_PRIVATE_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1079,39 +1085,18 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
-		//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
-		ScQtProposalChecklist completedFinSpec = null;
-		for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-					.equals(finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()) &&
-					finProposalChecklist.isSubmitted() &&
-					!finProposalChecklist.equals(scQtProposalChecklist)) {
-				completedFinSpec = finProposalChecklist;
-				break;
-			}
-		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
 			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
 				if (finProposalChecklist.getScQtCheckList().getTitle()
 						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
 						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION) && null != completedFinSpec) {
-					//#34726 start - flag to define process from technical, 
-					//save technical spec proposal is sending financialproposalchecklist(preparefinancialaction)
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
 					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
-					//#34726 start
-					prepareFinancialAction(finProposalChecklist);
-					saveFinancialSpecificationAction(false, true);
-					//#34726 start
-					//need to setback to false, because at financial proposal prepare button is trigger prepare financialaction
-					// this flag is needed in prepareFinancialAction during save technical proposal spec or click prepare at financial proposal
-					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(false);
-					//#34726 end
+					finProposalChecklist.setSubmitted(false);
 					break;
 				}
 			}
 		}
-		//#21695 - End - fix completed financial proposal still ticked after technical proposal updated
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
@@ -1312,13 +1297,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 									answers.add(specAnswer);
 								
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
-												.getProcurementMode().getParameterCode())) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
-												.getProcurementMode().getParameterCode())) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
@@ -1691,6 +1674,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		List<ScQtPRPCreditFacility> creditFacilitiesList = this
 				.getManagedBean().getScQtPRPCreditFacilities();
 		List<List<EncryptDataBean>> encryptCrditFacilitesList = new ArrayList<List<EncryptDataBean>>();
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1897,6 +1886,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				.getScQtPRPCashOnHand();
 		List<EncryptDataBean> cashOnHandList = new ArrayList<EncryptDataBean>();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_CASH_ON_HAND_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1974,6 +1969,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				.getScQtPRPBankStmts();
 		List<EncryptDataBean> encryptBankStmtList = new ArrayList<EncryptDataBean>();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_BANK_STMT_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -2047,6 +2048,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		ScQtPRPEmployee prpEmployee = getManagedBean().getScQtPRPEmployee();
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getTechnicalQtProposalChecklist();
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, false,
+				QTConstants.TECHNICAL_NUMBER_EMPLOYEES);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -2117,6 +2124,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getTechnicalQtProposalChecklist();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.TECHNICAL_PRIVATE_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -2241,6 +2254,12 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		ScQtPRPAssetLiability scQtPRPAssetLiability = this.getManagedBean()
 				.getScQtPRPAssetLiability();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -5864,9 +5883,21 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			reqDTO.setYear(scQtProposalChecklist.getScQtCheckList().getScQtCheckListValue().getYear().intValue());
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			reqDTO.setApplId(scQtProposalChecklist.getScQtProposal().getSupplierApplId()); //Bug #30980
+			reqDTO.setComExpClientType("F"); //Bug #38267 
 
 			ProposalResDTO sdto = proposalSO.getCompanyExperience(reqDTO);
 			List<SmCompanyExperience> suppExpList = sdto.getCompExperienceList();
+			//Bug #38267 start
+			if (null != scQtProposalChecklist.getProposalScore() && !scQtProposalChecklist.getProposalScore().isEmpty()){
+				ScQtProposalScore propScore = scQtProposalChecklist.getProposalScore().get(0);
+				if (propScore.getCriteriaValue().compareTo(BigDecimal.valueOf(suppExpList.size())) != 0) {
+					//Query without F filter
+					reqDTO.setComExpClientType(null);
+					sdto = proposalSO.getCompanyExperience(reqDTO);
+					suppExpList = sdto.getCompExperienceList();
+				}
+			}
+			//Bug #38267 end
 			this.getManagedBean().setSupplierExperienceList(suppExpList);
 			this.getManagedBean().setSuppExpSize(suppExpList.size());
 			
@@ -5940,22 +5971,44 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		
 	}
 	
-	//#25089@hatta - start
-		public void onTabChange(TabChangeEvent event){
-			if(event.getTab().getId().equals("tab1")){
-				try {
-					Thread.sleep(500);
-					RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+	// #25089@hatta - start
+	public void onTabChange(TabChangeEvent event) {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (qtStatus != null
+				&& !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus
+						.getStatusId())) {
+			return;
+		}
+		// #38852 End 12/08/2025 Vinod
+		if (event.getTab().getId().equals("tab1")) {
+			try {
+				Thread.sleep(500);
+				RequestContext.getCurrentInstance().execute(
+						"popUpInfoDlg.show()");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
-		
-		public void dafaultPopUpSupplierInfo(){
-		   RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+	}
+
+	public void dafaultPopUpSupplierInfo() {
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+		if (qtStatus != null
+				&& !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus
+						.getStatusId())) {
+			return;
 		}
-	//#25089@hatta - end
+		// #38852 End 12/08/2025 Vinod
+		RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
+	}
+
+	// #25089@hatta - end
 		
 
 		//#21695 farid	start display tree node
@@ -6570,4 +6623,46 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		}
 	}
 	// #34363 - note 50 - End - Vinod
+	
+	// Bug #39517@Syazani 07/01/2026 -- Start
+	private ScQtProposalChecklist validateManagedBeanPropososalChecklist(ScQtProposalChecklist scQtProposalChecklist,
+			boolean isFinancialChc, String checklistDefinictionKey) {
+		ScQtProposalChecklist newScQtProposalChecklist = scQtProposalChecklist;
+		boolean isDocumentId = null != newScQtProposalChecklist.getScQtCheckList()
+				&& null != newScQtProposalChecklist.getScQtCheckList().getPmDocument()
+				&& null != newScQtProposalChecklist.getScQtCheckList().getPmDocument().getDocDefinitionKey();
+		String checkListDefinitionKey = isDocumentId ? newScQtProposalChecklist.getScQtCheckList().getPmDocument()
+				.getDocDefinitionKey() : "";
+		if (!checklistDefinictionKey.equalsIgnoreCase(checkListDefinitionKey)) {
+			return processValidateManagedBeanProposalChecklist(isFinancialChc, checklistDefinictionKey,
+					newScQtProposalChecklist);
+		}
+		return newScQtProposalChecklist;
+	}
+
+	private ScQtProposalChecklist processValidateManagedBeanProposalChecklist(boolean isFinancialChc,
+			String checklistDefinictionKey, ScQtProposalChecklist scQtProposalChecklist) {
+		ScQtProposalChecklist newScQtProposalChecklist = scQtProposalChecklist;
+		List<ScQtProposalChecklist> scQtProposalChecklistLst;
+		if (isFinancialChc) {
+			scQtProposalChecklistLst = this.getManagedBean().getFinanceCheckDetailsList();
+		} else {
+			scQtProposalChecklistLst = this.getManagedBean().getTecCheckDetailsList();
+		}
+
+		if (!CollectionUtils.isEmpty(scQtProposalChecklistLst)) {
+			for (ScQtProposalChecklist temp : scQtProposalChecklistLst) {
+				boolean isDocumentIdTemp = null != temp.getScQtCheckList().getPmDocument()
+						&& null != temp.getScQtCheckList().getPmDocument().getDocDefinitionKey();
+				String checkListDefinitionKeyTemp = isDocumentIdTemp ? temp.getScQtCheckList().getPmDocument()
+						.getDocDefinitionKey() : "";
+				if (checklistDefinictionKey.equalsIgnoreCase(checkListDefinitionKeyTemp)) {
+					newScQtProposalChecklist = temp;
+					break;
+				}
+			}
+		}
+		return newScQtProposalChecklist;
+	}
+	// Bug #39517@Syazani 07/01/2026 -- End
 }

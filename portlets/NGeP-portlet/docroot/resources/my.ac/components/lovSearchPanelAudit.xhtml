@@ -10,67 +10,7 @@
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovAuditBackingBean.searchOptions}" />
 		</p:selectOneMenu>
-		<ui:remove>
-			<p:selectOneMenu value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[0].searchOperator}">
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-				<f:selectItems value="#{lovAuditBackingBean.searchOperators}" />
-			</p:selectOneMenu>
-		</ui:remove>
 		<p:inputText value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[0].searchValue}" style="margin-bottom: 5px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }" autocomplete="off"/>
-
-		<ui:remove>
-		<p:selectOneMenu value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[1].searchField}">
-			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-			<f:selectItems value="#{lovAuditBackingBean.searchOptions}" />
-		</p:selectOneMenu>
-		</ui:remove>
-		
-		<ui:remove>
-			<p:selectOneMenu value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[1].searchOperator}">
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-				<f:selectItems value="#{lovAuditBackingBean.searchOperators}" />
-			</p:selectOneMenu>
-		</ui:remove>
-		
-		<ui:remove>
-		<p:inputText value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[1].searchValue}" style="margin-top:6px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }" autocomplete="off"/>
-		<p:selectOneMenu value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[2].searchField}">
-			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-			<f:selectItems value="#{lovAuditBackingBean.searchOptions}" />
-		</p:selectOneMenu>
-		</ui:remove>
-		
-		<ui:remove>
-			<p:selectOneMenu value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[2].searchOperator}">
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-				<f:selectItems value="#{lovAuditBackingBean.searchOperators}" />
-			</p:selectOneMenu>
-		</ui:remove>
-		
-		<ui:remove>
-		<p:inputText value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[2].searchValue}" style="margin-top:6px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }" autocomplete="off"/>
-		</ui:remove>
-		
-		<ui:remove>
-		<p:selectOneMenu value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[3].searchField}">
-			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-			<f:selectItems value="#{lovAuditBackingBean.searchOptions}" />
-		</p:selectOneMenu>
-		<p:selectOneMenu value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[3].searchOperator}">
-			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-			<f:selectItems value="#{lovAuditBackingBean.searchOperators}" />
-		</p:selectOneMenu>
-		<p:inputText value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[3].searchValue}" style="margin-top:6px;" autocomplete="off"/>
-		<p:selectOneMenu value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[4].searchField}">
-			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-			<f:selectItems value="#{lovAuditBackingBean.searchOptions}" />
-		</p:selectOneMenu>
-		<p:selectOneMenu value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[4].searchOperator}">
-			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-			<f:selectItems value="#{lovAuditBackingBean.searchOperators}" />
-		</p:selectOneMenu>
-		<p:inputText value="#{lovAuditBackingBean.lovSearchBean.dataFilterBeans[4].searchValue}" style="margin-top:6px;" autocomplete="off"/>
-		</ui:remove>
 	</h:panelGrid>
    	
 </ui:composition>

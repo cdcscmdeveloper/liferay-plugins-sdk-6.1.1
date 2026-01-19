@@ -68,6 +68,12 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	/************ AUDIT #28895-35509 *************/
 	private PmFinancialOrg oldFinancialOrg;
 	private PmFinancialOrg savedFinancialOrg;
+	private PmAddress oldPmAddress;
+	private PmContact oldContactPerson;
+	private Long pmAddressTypeId;
+	private List<PmParameterDesc> oldBankServicesList;
+	private List<PmFinancialAcc> oldFinancialAccList;
+	private List<PmFinancialAcc> newFinancialAccList;
 	/************ AUDIT #28895-35509 *************/
 	
 	public FinancialOrgManagedBean(){}
@@ -359,6 +365,84 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 
 	public void setSavedFinancialOrg(PmFinancialOrg savedFinancialOrg) {
 		this.savedFinancialOrg = savedFinancialOrg;
+	}
+	
+	public PmAddress getOldPmAddress() {
+		return oldPmAddress;
+	}
+	
+	public void setOldPmAddress(PmAddress oldPmAddress) {
+		this.oldPmAddress = oldPmAddress;
+	}
+
+	/**
+	 * @return the pmAddressTypeId
+	 */
+	public Long getPmAddressTypeId() {
+		return pmAddressTypeId;
+	}
+
+	/**
+	 * @param pmAddressTypeId the pmAddressTypeId to set
+	 */
+	public void setPmAddressTypeId(Long pmAddressTypeId) {
+		this.pmAddressTypeId = pmAddressTypeId;
+	}
+
+	/**
+	 * @return the oldContactPerson
+	 */
+	public PmContact getOldContactPerson() {
+		return oldContactPerson;
+	}
+
+	/**
+	 * @param oldContactPerson the oldContactPerson to set
+	 */
+	public void setOldContactPerson(PmContact oldContactPerson) {
+		this.oldContactPerson = oldContactPerson;
+	}
+
+	/**
+	 * @return the oldBankServicesList
+	 */
+	public List<PmParameterDesc> getOldBankServicesList() {
+		return oldBankServicesList;
+	}
+
+	/**
+	 * @param oldBankServicesList the oldBankServicesList to set
+	 */
+	public void setOldBankServicesList(List<PmParameterDesc> oldBankServicesList) {
+		this.oldBankServicesList = oldBankServicesList;
+	}
+
+	/**
+	 * @return the oldFinancialAccList
+	 */
+	public List<PmFinancialAcc> getOldFinancialAccList() {
+		return oldFinancialAccList;
+	}
+
+	/**
+	 * @param oldFinancialAccList the oldFinancialAccList to set
+	 */
+	public void setOldFinancialAccList(List<PmFinancialAcc> oldFinancialAccList) {
+		this.oldFinancialAccList = oldFinancialAccList;
+	}
+
+	/**
+	 * @return the newFinancialAccList
+	 */
+	public List<PmFinancialAcc> getNewFinancialAccList() {
+		return newFinancialAccList;
+	}
+
+	/**
+	 * @param newFinancialAccList the newFinancialAccList to set
+	 */
+	public void setNewFinancialAccList(List<PmFinancialAcc> newFinancialAccList) {
+		this.newFinancialAccList = newFinancialAccList;
 	}
 	/************ AUDIT END #28895-35509 *************/
 	

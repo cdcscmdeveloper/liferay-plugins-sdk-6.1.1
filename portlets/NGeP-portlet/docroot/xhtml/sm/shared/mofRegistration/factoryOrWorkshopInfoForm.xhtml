@@ -1,4 +1,3 @@
-
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -42,8 +41,8 @@
 				<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
 					value="#{factoryCatVar.facilityList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rowKey="#{fac}" rowIndexVar="index" id="facDt">
-					<ac:paginator for="facDt" />
+					rowKey="#{fac}" rowIndexVar="index" id="facDt_#{factoryCatVarStatus.index}">
+					<ac:paginator for="facDt_#{factoryCatVarStatus.index}" /><!-- #28775 - 38498 -->
 					
 					<!-- Disable for UPS 32008 - START -->
 					<p:column style="width: 5% !important;" rendered="#{not empty factoryCatVar.facilityList and !backingBean.managedBean.upsCannotEdit}">
@@ -120,10 +119,11 @@
 					action="#{backingBean.assignNewFactoryBean}"
 					update=":form:tt:factoryDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #28775 - 38498 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="factoryPan"
-					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtn(factoryCatVar.facilityList)}"
+					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.factoryFacilitiesVOList)}"
 					update=":#{p:component('smFacilityFactoryDtPanel')},@this" 
 					oncomplete="factoryDeletePopUp.show()" />
 			</div>

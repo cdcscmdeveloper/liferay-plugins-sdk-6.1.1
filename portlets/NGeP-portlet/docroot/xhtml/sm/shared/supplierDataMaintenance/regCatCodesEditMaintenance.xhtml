@@ -165,8 +165,8 @@
 				businessTypeCode="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.businessType}"
 				supplierId="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.supplierId}"
 				special="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType}"
-				activeCategoryList="#{supplierDataMaintenanceBackingBean.managedBean.activeCategoryList}" />
-				<!-- #33387 - END -->
+				activeCategoryList="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}" />
+				<!-- #33387, #38864 - END -->
 				
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedBtnId" 
 				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedPendingApprovedCategories or 
