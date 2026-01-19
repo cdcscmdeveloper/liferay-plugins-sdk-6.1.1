@@ -5417,10 +5417,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public String getRemarks(SmRevisit revisit) {
 		StringBuilder remark = new StringBuilder();
 		remark.append(revisit.getRevisitRemark());
+		// #34031#note-122 Issue 27
+		remark.append("<br />");
 		double index = 1.1; 
  
 		if (null != revisit.getOldPmRegStatus() && null != revisit.getNewPmRegStatus()) { 
-			remark.append("<br /><br />");
+			// #34031#note-122 Issue 27
+			remark.append("<br />");
 			getRegStatus(revisit, remark, index);
 			index++; 
 			remark.append("<br />");
