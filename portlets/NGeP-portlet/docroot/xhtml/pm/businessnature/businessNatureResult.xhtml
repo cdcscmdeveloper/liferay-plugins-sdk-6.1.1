@@ -35,12 +35,17 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.bn.code']}" style="width:10%">
-				<h:outputText value="#{businessNature.levelCode}" />
+				<h:outputText value="#{businessNature.levelCode}"/>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.bn.name']}" style="width:65%">
-				<h:outputText value="#{businessNature.levelName}" />
+			<!-- #34445, Fix as-is bug: #39699 Start -->
+			<p:column headerText="#{lbl['lbl.pm.bn.name']}" 
+			style="white-space: normal; word-wrap: break-word; word-break: break-word; line-height:1.4;" 
+			styleClass="wrap-text">
+			<h:outputText id="levelNameText" value="#{businessNature.levelName}" />
 			</p:column>
+
+			<!-- #34445, Fix as-is bug: #39699 End -->
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"
 				style="width:10%">
