@@ -425,10 +425,7 @@ public class EvaluationMeetingBackingBean extends
 				ParameterHelper.getInstance().getParameterDesc(
 						ParameterTypeConst.SC_COMMITTEE_TYPE,
 						this.getManagedBean().getCommitteeType()));
-
-		List<ScCommitteeMember> newCommitteeAuditTrailList = this.getManagedBean().getNewCommitteeAuditTrailList() != null ?
-				this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();//#35500 Issue fix 10
-				
+		
 		// #12471 Start
 		IPagingDataModel<PmUser> userSearchCommitteeDataModel = getManagedBean().getUserSearchCommitteeDataModel();
 		UserCommitteeSearchBean userCommitteeSearchBean = getManagedBean().getUserCommitteeSearchBean();
@@ -450,11 +447,7 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setNameRequired(false);
 		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 		getSelectionTypes();
-		
-		//#35500 Issue fix 10 start
-//		newCommitteeAuditTrailList.add(committeeMember);//#35500 Fix Reopen 6th Jan issue 3
-//		this.getManagedBean().setNewCommitteeAuditTrailList(newCommitteeAuditTrailList);//#35500 Fix Reopen 6th Jan
-		//#35500 Issue fix 10 end
+	
 	}
 
 	/**
@@ -2537,7 +2530,7 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setDocNo(this.getManagedBean().getQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
-			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#355500 Flag changes
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#35500 Flag changes
 			auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_SUBMIT);
 
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
