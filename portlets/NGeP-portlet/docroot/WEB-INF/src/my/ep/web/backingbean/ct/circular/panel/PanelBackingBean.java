@@ -2308,16 +2308,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	// #39762 - Start
 	/**
-	*	Updates the OK button's enabled state based on whether required inputs are present.
-	*	The button is disabled if the Zone Name is empty or no locations exist.
-	*/
+	 * Updates the OK button's enabled state based on whether required inputs
+	 * are present. The button is disabled if the Zone Name is empty or no
+	 * locations exist.
+	 */
 	public void refreshOkButtonState() {
 
-	    boolean zoneNameEmpty = getManagedBean().getZoneName() == null
-	            || getManagedBean().getZoneName().trim().isEmpty();
+		boolean zoneNameEmpty = getManagedBean().getZoneName() == null || getManagedBean().getZoneName().trim().isEmpty();
 
-	    boolean noLocation = !getManagedBean().isHasExistingLocations();
-	    getManagedBean().setButtonHideActiveDel(zoneNameEmpty || noLocation);
+		boolean noLocation = !getManagedBean().isHasExistingLocations();
+		getManagedBean().setButtonHideActiveDel(zoneNameEmpty || noLocation);
 	}
 	// #39762 - End
 	
