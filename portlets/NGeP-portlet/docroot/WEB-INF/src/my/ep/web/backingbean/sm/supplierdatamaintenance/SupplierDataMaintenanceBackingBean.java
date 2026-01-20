@@ -1589,6 +1589,23 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSelectedPendingApprovedCategories(
 				new ArrayList<SmSupplierCategory>());
 	}
+	// #39760 - Start
+	/**
+	 * Delete selected category code(s) that are newly added in Supplier Data
+	 * Maintenance
+	 * 
+	 * @param selectedCategories
+	 */
+	public void deleteSelectedPendingCategoryCodes(List<SmSupplierCategory> selectedCategories) {
+		if (selectedCategories != null && !selectedCategories.isEmpty()) {
+			List<SmSupplierCategory> categories = selectedCategories;
+			deleteCatCodes(categories);
+			getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
+		} else {
+			throw new EpException(MessageConst.ERROR_722534, new String[] { SmCommonUtil.getMessage("lbl.sm.catCodes.catcode", null) });
+		}
+	}
+	// #39760 - End
 
 	/**
 	 * On click add category code
@@ -1922,13 +1939,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		boolean basicDA = getManagedBean().isCancelRegistration() || getManagedBean().isBlacklistOwnerOrDirector()
 				|| StringUtils.isNotEmpty(checkNonActiveDAWithPending(supplier));
 		// 39666 - START
-		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction() != null){
-			SmDisciplinaryAction action =
-			        getManagedBean().getDisciplineVO().getSmDiscplinaryAction();
+		if (getManagedBean().getDisciplineVO().getSmDiscplinaryAction() != null) {
+			SmDisciplinaryAction action = getManagedBean().getDisciplineVO().getSmDiscplinaryAction();
 
-			if (action.isRecordStatus() && action.getStartDate().compareTo(new Date()) >= 0) {
-			    return false;
-			}	
+			if (action.getDisciplinaryActionId() != null && action.isRecordStatus()
+					&& action.getStartDate().compareTo(new Date()) >= 0) {
+				return false;
+			}
 		}
 		// 39666 - START
 		
