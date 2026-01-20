@@ -1605,6 +1605,23 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSelectedPendingApprovedCategories(
 				new ArrayList<SmSupplierCategory>());
 	}
+	// #39760 - Start
+	/**
+	 * Delete selected category code(s) that are newly added in Supplier Data
+	 * Maintenance
+	 * 
+	 * @param selectedCategories
+	 */
+	public void deleteSelectedPendingCategoryCodes(List<SmSupplierCategory> selectedCategories) {
+		if (selectedCategories != null && !selectedCategories.isEmpty()) {
+			List<SmSupplierCategory> categories = selectedCategories;
+			deleteCatCodes(categories);
+			getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
+		} else {
+			throw new EpException(MessageConst.ERROR_722534, new String[] { SmCommonUtil.getMessage("lbl.sm.catCodes.catcode", null) });
+		}
+	}
+	// #39760 - End
 
 	/**
 	 * On click add category code
