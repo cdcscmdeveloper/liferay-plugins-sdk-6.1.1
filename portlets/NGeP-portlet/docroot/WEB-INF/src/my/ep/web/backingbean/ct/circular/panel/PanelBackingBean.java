@@ -2299,10 +2299,28 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		this.getManagedBean().setIndex(i);
 		this.getManagedBean().setEditZone(true);
 		this.getManagedBean().setZoneName(zoneLocation.getName());
-		getManagedBean().setButtonHideActiveDel(true);
+		
+		//#39762 - Start
+		getManagedBean().setHasExistingLocations(zoneLocation.getPanelZoneDtls() != null && !zoneLocation.getPanelZoneDtls().isEmpty());
+		refreshOkButtonState();
+		//#39762 - End
 	}
+	
+	// #39762 - Start
+	/**
+	*	Updates the OK button's enabled state based on whether required inputs are present.
+	*	The button is disabled if the Zone Name is empty or no locations exist.
+	*/
+	public void refreshOkButtonState() {
 
+	    boolean zoneNameEmpty = getManagedBean().getZoneName() == null
+	            || getManagedBean().getZoneName().trim().isEmpty();
 
+	    boolean noLocation = !getManagedBean().isHasExistingLocations();
+	    getManagedBean().setButtonHideActiveDel(zoneNameEmpty || noLocation);
+	}
+	// #39762 - End
+	
 	/**
 	 *   Method to set zone status active
 	 *   Return string vaule 1
