@@ -207,6 +207,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<Long> selectedSuppAccountType;
 	private List<PmParameterDesc> supplierType;
 	private Integer index;
+	private boolean firstExpiryDateIsNull;
 	// #35323 - End
 
 	public RuleCatalogueManageBean() {
@@ -2081,6 +2082,23 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	public void setNewPRList(boolean newPRList) {
 		this.newPRList = newPRList;
+	}
+	
+	/**
+	 * firstExpiryDateIsNull
+	 * 
+	 * @return the firstExpiryDateIsNull
+	 */
+	public boolean isFirstExpiryDateIsNull() {
+		return firstExpiryDateIsNull;
+	}
+
+	/**
+	 * @param firstExpiryDateIsNull
+	 *            the firstExpiryDateIsNull to set
+	 */
+	public void setFirstExpiryDateIsNull(boolean firstExpiryDateIsNull) {
+		this.firstExpiryDateIsNull = firstExpiryDateIsNull;
 	}
 	// #35323 - End
 }

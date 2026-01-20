@@ -1323,20 +1323,26 @@ public class RuleCatalogueBackingBean extends
 						case '1':
 							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
 								if (ruleTypeDesc.getRuleType().getRangeType() == 1
-										|| ruleTypeDesc.getRuleType().getRuleType().equalsIgnoreCase(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD)
-										&& baseValueToCompare.getGroupValueId().equals(value.getGroupValueId())) { //#35323
-	
+										&& baseValueToCompare.getGroupValueId()
+										.equals(value.getGroupValueId())) { //#35323
 									throw new EpException(
 											MessageConst.ERROR_770110,
 											new String[] { ruleTypeDesc
 													.getRuleDesc() });
 								} else {
-	
+									//#35323 - Start
+									if (!this.getManagedBean().isFirstExpiryDateIsNull()){
 									throw new EpException(
 											MessageConst.ERROR_770109,
 											new String[] { ruleTypeDesc
 													.getRuleDesc() });
-								}
+								} else {
+									throw new EpException(
+											MessageConst.ERROR_770275,
+											new String[] { ruleTypeDesc
+													.getRuleDesc() });
+								} //#35323 - End
+							  }
 							}
 							break;
 						case '2':
@@ -1697,8 +1703,8 @@ public class RuleCatalogueBackingBean extends
 				validationResult = true;
 			}
 
-		} else if (ruleType.getRangeType() == 1 || 
-				RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(ruleType.getRuleType())
+		} else if ((ruleType.getRangeType() == 1 ||
+				RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(ruleType.getRuleType()))
 				&& firstRuleValue.getGroupValueId().equals(
 						secondRuleValue.getGroupValueId())) {// step-2
 																// validation :
@@ -1728,10 +1734,23 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	boolean isDateOverlaped(Date start1, Date end1, Date start2, Date end2) {
+		this.getManagedBean().setFirstExpiryDateIsNull(false);
+		
+		log.info("end1=" + end1 + "start2=" + start2);
+		
+		if (isEmptyDate(end1) && !isEmptyDate(start2)) {
+		    log.info("check null expiry date");
+		    this.getManagedBean().setFirstExpiryDateIsNull(true);
+		    return true;
+		}
+		
 		if (end1 == null && end2 == null) {
+			log.info("one");
 			return true;
 		}
+		
 		if (end1 == null) {
+			log.info("two");
 			return start1.getTime() <= end2.getTime();
 
 		}
@@ -1739,8 +1758,13 @@ public class RuleCatalogueBackingBean extends
 			return start2.getTime() <= end1.getTime();
 
 		}
+		log.info("four");
 		return start1.getTime() <= end2.getTime()
 				&& start2.getTime() <= end1.getTime();
+	}
+	
+	private boolean isEmptyDate(Date d) {
+	    return d == null || d.getTime() == 0L;
 	}
 
 	public void saveFeeExemptionForOrgType() {
@@ -5529,6 +5553,16 @@ public class RuleCatalogueBackingBean extends
 		if (configRuleType.getRangeType() == 3) {
 			if (selectedValue.getToValue() != null && selectedValue.getRuleNumberValue() != null) {
 				if (selectedValue.getToValue() != null && selectedValue.getFromValue() != null) {
+					
+					if (selectedValue.getFromValue().compareTo(selectedValue.getToValue()) < 0) {
+						selectedValue.setError5(true);
+						selectedValue.setError3(false);
+					}
+					else {
+						selectedValue.setError5(false);
+						selectedValue.setError3(false);
+					}
+					
 					if (selectedValue.getToValue().compareTo(selectedValue.getFromValue()) < 0) {
 						selectedValue.setError5(true);
 						selectedValue.setError3(false);
