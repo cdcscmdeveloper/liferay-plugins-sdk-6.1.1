@@ -2418,8 +2418,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 			
 			// 36504 - START
-			String catType = cat.getPmCategoryL3().getCategoryTypeCode()
-					.getParameterCode();
+			String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 			cat.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
@@ -5384,10 +5383,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public String getRemarks(SmRevisit revisit) {
 		StringBuilder remark = new StringBuilder();
 		remark.append(revisit.getRevisitRemark());
+		// #34031#note-152 Issue 27
+		remark.append("<br />");
 		double index = 1.1; 
  
 		if (null != revisit.getOldPmRegStatus() && null != revisit.getNewPmRegStatus()) { 
-			remark.append("<br /><br />");
+			// #34031#note-152 Issue 27
+			remark.append("<br />");
 			getRegStatus(revisit, remark, index);
 			index++; 
 			remark.append("<br />");
@@ -5519,16 +5521,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * 
 	 * @param applId
-	 * @return
+	 * @return supplierCategoryId
 	 */
-	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(
-			Long supplierCategoryId) {
+	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(Long supplierCategoryId) {
 		if (supplierCategoryId == null) {
 			return null;
 		}
-
-		return SmServiceLookup.getMofRegistrationSO()
-				.retrieveActiveOtherDescHistory(supplierCategoryId);
-	}
+		
+		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistory(supplierCategoryId);
+	}  
 	// 36504 - END
 }
