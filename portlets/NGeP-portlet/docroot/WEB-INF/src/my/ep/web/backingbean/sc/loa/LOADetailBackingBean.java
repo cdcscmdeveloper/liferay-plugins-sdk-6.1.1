@@ -4264,6 +4264,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// remove empty remark - end
 
 		validateLOADetails(scLoa, outcome);
+		// 27868 - start
+		if (validateProcurementTypeisRPT(scLoa.getCreatedDate()).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
+			validateReasonStatus(scLoa);
+		}
+		// 27868 - end
 
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		// #26475 - start
