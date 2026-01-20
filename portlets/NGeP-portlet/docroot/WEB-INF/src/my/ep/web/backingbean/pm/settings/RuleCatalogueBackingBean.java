@@ -1377,7 +1377,7 @@ public class RuleCatalogueBackingBean extends
 
 		IRuleSO ruleSO = null;
 		try {
-			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+			ruleSO = BusinessDelegate.getInstance().getServiceObject( //#35323
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			
@@ -2960,26 +2960,28 @@ public class RuleCatalogueBackingBean extends
 						.getConfigRuleValues().get(index).getGroupValueId());
 
 		//#35323 - Start
+		PmConfigRuleValue configRuleValuesMarkIndex = configRuleType.getConfigRuleValues().get(markIndex);
+
 		if (!configRuleType.getRuleType().equalsIgnoreCase(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD)) {
-			if (configRuleType.getConfigRuleValues().get(markIndex).getRuleValue() == null
-					|| configRuleType.getConfigRuleValues().get(markIndex).getRuleValue().isEmpty()) {
+			if (configRuleValuesMarkIndex.getRuleValue() == null
+					|| configRuleValuesMarkIndex.getRuleValue().isEmpty()) {
 				throw new EpException(MessageConst.ERROR_770162);
 			}
-			if (configRuleType.getConfigRuleValues().get(markIndex).getToValue() != null
-					&& (configRuleType.getConfigRuleValues().get(markIndex).getRuleValue() != null && !configRuleType
-							.getConfigRuleValues().get(markIndex).getRuleValue().isEmpty())) {
-				ruleValue.setFromValue(configRuleType.getConfigRuleValues().get(markIndex).getToValue()
-						.add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
+			if (configRuleValuesMarkIndex.getToValue() != null
+					&& (configRuleValuesMarkIndex.getRuleValue() != null
+					&& !configRuleValuesMarkIndex.getRuleValue().isEmpty())) {
+				ruleValue.setFromValue(configRuleValuesMarkIndex.getToValue().add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
 				ruleValue.setRuleType(configRuleType);
 				configRuleType.getConfigRuleValues().add(markIndex + 1, ruleValue);
 			} else {
 				throw new EpException(MessageConst.ERROR_770156);
 			}
 		} else {
-			if (configRuleType.getConfigRuleValues().get(markIndex).getFromValue() != null
-					&& configRuleType.getConfigRuleValues().get(markIndex).getSupplAcctTypeId() != null
-					|| configRuleType.getConfigRuleValues().get(markIndex).getSupplAcctTypeIds() != null) {
-				BigDecimal toValue = configRuleType.getConfigRuleValues().get(markIndex).getToValue();
+			if (configRuleValuesMarkIndex.getToValue() != null
+					&& (configRuleValuesMarkIndex.getSupplAcctTypeId() != null
+					|| configRuleValuesMarkIndex.getSupplAcctTypeIds() != null
+					&& !configRuleValuesMarkIndex.getSupplAcctTypeIds().isEmpty())) {
+				BigDecimal toValue = configRuleValuesMarkIndex.getToValue();
 				ruleValue.setFromValue(toValue.add(BigDecimal.valueOf(0.01)).setScale(2, RoundingMode.UNNECESSARY));
 				ruleValue.setRuleType(configRuleType);
 				ruleValue.setSupplAcctTypeIds(null);
@@ -6426,7 +6428,7 @@ public class RuleCatalogueBackingBean extends
 			return createNewRuleValue(merged, supplAcctTypeId, first, parameterSO, reqDTO);
 		}
 
-		return updateExistingRuleValue(merged, supplAcctTypeId, configValueId, parameterSO, reqDTO);
+		return updateExistingRuleValue(merged, configValueId, reqDTO);
 	}
 
 	private PmConfigRuleValue createNewRuleValue(PmConfigRuleValue merged, Long supplAcctTypeId, boolean first,
@@ -6455,8 +6457,7 @@ public class RuleCatalogueBackingBean extends
 		return value;
 	}
 
-	private PmConfigRuleValue updateExistingRuleValue(PmConfigRuleValue merged, Long supplAcctTypeId,
-			Long configValueId, IParameterSO parameterSO, ParameterReqDTO reqDTO) {
+	private PmConfigRuleValue updateExistingRuleValue(PmConfigRuleValue merged, Long configValueId, ParameterReqDTO reqDTO) {
 
 		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IRuleSO.class);
@@ -6465,6 +6466,9 @@ public class RuleCatalogueBackingBean extends
 				configValueId);
 
 		value.setExpDate(merged.getExpDate());
+		/*35323 - Audit Start*/
+		value.setModified(true);
+		/*35323 - Audit End*/
 
 		return value;
 	}
