@@ -4618,6 +4618,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			}
 			//REMOVE Bug #31733
 				getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
+				// #34363 Start Vinod - Added for note #91
+				templateSpecbean.setCheckListCompleted(this.getManagedBean().getFinancialQtProposalChecklist().isSubmitted());
+				// #34363 End Vinod - Added for note #91
 			} //#28785-End
 		//REMOVE Bug #31542 
 	}
