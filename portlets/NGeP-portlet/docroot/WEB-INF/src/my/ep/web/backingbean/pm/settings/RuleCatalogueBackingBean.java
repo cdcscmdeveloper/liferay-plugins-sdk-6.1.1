@@ -5956,7 +5956,12 @@ public class RuleCatalogueBackingBean extends
         	//end #29267 - CR 22113: Static Code Analysis
         }
         //#36738 Start
-        this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+        Long ruleTypeId = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleTypeId();
+        if (this.getManagedBean().getOriginalConfigRuleValueMap() != null && this.getManagedBean().getOriginalConfigRuleValueMap().containsKey(ruleTypeId)){
+        	this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getOriginalConfigRuleValueMap().get(ruleTypeId));
+        }else{
+            this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+        }
         resetRuleValue();
         //#36738 End
 	}
@@ -6192,6 +6197,16 @@ public class RuleCatalogueBackingBean extends
 		List<PmConfigRuleValue> originalList = this.getManagedBean().getOriginalConfigRuleValueList() != null ? 
 				 this.getManagedBean().getOriginalConfigRuleValueList() : this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues();
 		List<PmConfigRuleValue> resultList = new ArrayList<>(originalList);
+		HashMap<Long, List<PmConfigRuleValue>> map = this.getManagedBean().getOriginalConfigRuleValueMap();
+		
+		Long ruleTypeId = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleTypeId();
+		if (map == null) {
+		    map = new HashMap<>();
+		}
+		if (!map.containsKey(ruleTypeId)) {
+		    map.put(ruleTypeId, originalList);
+		    this.getManagedBean().setOriginalConfigRuleValueMap(map);
+		}
 
 		// search via value
 		if (StringUtils.isNotBlank(searchRuleValues)) {
