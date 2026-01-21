@@ -4293,7 +4293,6 @@ public class SmApplicationUtil {
 					}
 				}
 				
-				
 				if (EntityHelper.isCollectionEmpty(voTmp.getOverlapInfoList())) {
 					voTmp.setOverlapInfoList(new ArrayList<SmBulkApplOverlapCatVO>());
 				}
