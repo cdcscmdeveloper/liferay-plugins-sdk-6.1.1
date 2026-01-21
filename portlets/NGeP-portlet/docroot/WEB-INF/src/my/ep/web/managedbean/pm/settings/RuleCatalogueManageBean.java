@@ -2011,5 +2011,5 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setOriginalConfigRuleValueMap(HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap) {
 		this.originalConfigRuleValueMap = originalConfigRuleValueMap;
 	}
-	//#36738 End	
+	//#36738 End
 }

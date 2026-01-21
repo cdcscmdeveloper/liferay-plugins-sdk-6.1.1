@@ -14,7 +14,7 @@
     PATH="/xhtml/wp/onlinehelpdisplay/displayContent.xhtml"
     TARGET="rules:#xhtml#wp#onlinehelpdisplay#displayContent.xhtml"
     TITLE="#{AllHelpDisplay.processPage}:page" model-entity="JSFProcessItemOutput"/>
-  </PROCESS-ITEM>
+  </PROCESS-ITEM>a
   <PROCESS-ITEM
    ID="rules:#xhtml#wp#onlinehelpdisplay#displayOnlineHelp.xhtml:1"
    NAME="item1"
