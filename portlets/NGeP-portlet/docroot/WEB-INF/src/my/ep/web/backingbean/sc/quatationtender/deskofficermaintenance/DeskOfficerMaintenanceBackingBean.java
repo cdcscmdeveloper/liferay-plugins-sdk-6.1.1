@@ -137,6 +137,18 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	private String textBeforeSign;
 
 	public String getTextBeforeSign() {
+		// #36466 -start-
+		StringBuilder sb = new StringBuilder();
+
+		if (getManagedBean().getCurrentApproval() != null && getManagedBean().getCurrentApproval().getScQt() != null) {
+			sb.append(getManagedBean().getCurrentApproval().getScQt().getQtNo());
+		}
+
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+
+		textBeforeSign = sb.toString();
+		// #36466 -end-
+
 		return textBeforeSign;
 	}
 	

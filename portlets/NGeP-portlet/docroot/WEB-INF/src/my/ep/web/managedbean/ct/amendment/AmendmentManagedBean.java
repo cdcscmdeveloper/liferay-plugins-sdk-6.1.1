@@ -120,6 +120,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private ScLoaReport selectedScLoaReports;
 	private PmDigiSign pmDigiSign;
 	private SelectItem[] secretaryList;
+	private List<PmUser> contractAdminlist; //#25956
 
 	private String contractId;
 	private String itemname;
@@ -148,6 +149,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	//20997
 	private PmUom selectedSearchItem;
+	
+	//25956
+	private boolean viewOnly = false; /*#25956 notification setting*/
+	private String backToNtf; //25956
+	
+	//Enhancement 15851 - shaqimi start
+	/** The back to previous page. */
+	private String backToPreviousPage;
+
+	/** The tracking dairy view. */
+	private boolean trackingDairyView;
+	
+	private Map<String, Integer> indexing;
+	
+	//Enhancement 15851 - shaqimi end
+	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1360,6 +1377,15 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	//#20997 - End
 	
+	//#25956 Start
+	public List<PmUser> getContractAdminlist() {
+		return contractAdminlist;
+	}
+	public void setContractAdminlist(List<PmUser> contractAdminlist) {
+		this.contractAdminlist = contractAdminlist;
+	}
+	//#25956 End
+	
 	//26753 - start
 	/**
 	 * @return the updateCommittee
@@ -1441,4 +1467,53 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedChangeItemPrice = selectedChangeItemPrice;
 	}
 	// End Fix - #33256
+
+	// #25956 - Start
+	public boolean isViewOnly() {
+		return viewOnly;
+	}
+	
+	public void setViewOnly(boolean viewOnly) {
+		this.viewOnly = viewOnly;
+	}
+	
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	// #25956 - End
+	
+	//15851 - shaqimi start
+	public String getBackToPreviousPage() {
+		return backToPreviousPage;
+	}
+	public void setBackToPreviousPage(String backToPreviousPage) {
+		this.backToPreviousPage = backToPreviousPage;
+	}
+	public boolean isTrackingDairyView() {
+		return trackingDairyView;
+	}
+	public void setTrackingDairyView(boolean trackingDairyView) {
+		this.trackingDairyView = trackingDairyView;
+	}
+	public Map<String, Integer> getIndexing() {
+		return indexing;
+	}
+	public void setIndexing(Map<String, Integer> indexing) {
+		this.indexing = indexing;
+	}
+
+	//Bug 34142, 15851 - shaqimi 04/12/2022 removed unnecessary code
+	//Bug 33096 - shaqimi start
+	public String getSupplementalLoaNo() {
+		return supplementalLoaNo;
+	}
+	public void setSupplementalLoaNo(String supplementalLoaNo) {
+		this.supplementalLoaNo = supplementalLoaNo;
+	}
+	//Bug 33096 - shaqimi end
+	//15851 - shaqimi end
 }

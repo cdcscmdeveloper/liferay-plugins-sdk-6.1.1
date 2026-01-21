@@ -32,11 +32,25 @@
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.supplier.name']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smSupplier.companyName}" /></td>
+						<!-- #24819 - start -->
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" 
+								rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+								&#160;
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
+								rendered="#{empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.company.type']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.supplierBusinessTypeVal}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.estdate']}" /></td>
 						<td><p:outputPanel>
 								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smSupplier.establishDate}" />
 							</p:outputPanel>
 						</td>
+						<!-- #24819 - end -->
 					</tr>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.company.type']}" /></td>

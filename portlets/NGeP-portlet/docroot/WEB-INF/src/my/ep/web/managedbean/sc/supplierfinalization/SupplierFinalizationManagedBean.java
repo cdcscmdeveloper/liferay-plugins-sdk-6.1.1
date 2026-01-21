@@ -183,6 +183,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean hasSupplierQualifiedForCurrentSelection;// 6906 note 202
 	// 6906 note 117 - end
 
+	private boolean isDemoReq; // #28784
+
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		/**
 		 * 
@@ -263,6 +265,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> deletedMemberList;
 	private SupplierFinalizationMeetingBackingBean meetingBB;
 	// 25037 - end
+
+	private ScQt checkCategoryCodeQt; // #29466
 
 	/**
 	 * @return the activeIndex
@@ -2207,7 +2211,24 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.meetingBB = meetingBB;
 	}
 	// 25037 - end
-	
+
+	// #29466 - START
+	/**
+	 * @return the checkCategoryCodeQt
+	 */
+	public ScQt getCheckCategoryCodeQt() {
+		return checkCategoryCodeQt;
+	}
+
+	/**
+	 * @param checkCategoryCodeQt
+	 *            the checkCategoryCodeQt to set
+	 */
+	public void setCheckCategoryCodeQt(ScQt checkCategoryCodeQt) {
+		this.checkCategoryCodeQt = checkCategoryCodeQt;
+	}
+	// #29466 - END
+
 	// 6906 note 117 - start
 	public SelectItem[] getDecisionDropdown() {
 		return decisionDropdown;
@@ -2259,4 +2280,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
 	}
 	// 6906 note 202 - end
+	//#28784 - Start
+	public boolean isDemoReq() {
+		return isDemoReq;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoReq(boolean isDemoReq) {
+		this.isDemoReq = isDemoReq;
+	}
+	//#28784 - End
 }

@@ -15,7 +15,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.bond.no.days']}" styleClass="required" />
 			<p:selectOneMenu id="bondSubmissionPeriod" style="width:200px;"
 				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondSubmissionPeriod}"
-				disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}">
+				disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails or ctBackingBean.managedBean.viewSCL}"> <!-- 15851 -->
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="14" itemValue="14"></f:selectItem>
 					<f:selectItem itemLabel="30" itemValue="30"></f:selectItem>

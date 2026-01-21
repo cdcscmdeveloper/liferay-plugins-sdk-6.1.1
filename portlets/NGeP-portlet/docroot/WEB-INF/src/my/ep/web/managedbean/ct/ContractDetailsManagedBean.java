@@ -103,6 +103,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	public boolean backPageAmendment;
 	private Long contractId;
+	private boolean backPageDpContinuity = Boolean.FALSE; //#25790
+	private String dpContinuitySession = null; //#25790
 
 	public int deductionIndex =99;
 	public int scheduleIndex =99;
@@ -917,6 +919,15 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 
+				//Enhancement 29418 - shaqimi start 20/10/2022
+				Boolean hasPBQCRole = 
+						(fc.hasRoleUser(RoleCode.QCA_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.QCA_MEMBER.value()) || fc.hasRoleUser(RoleCode.QCA_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.QCB_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.QCB_MEMBER.value()) || fc.hasRoleUser(RoleCode.QCB_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.PBA_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.PBA_MEMBER.value()) || fc.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.PBB_MEMBER.value()) || fc.hasRoleUser(RoleCode.PBB_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.PPB_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.PPB_MEMBER.value()) || fc.hasRoleUser(RoleCode.PPB_SECRETARY.value()));
+
+				if(!hasPBQCRole){
 				if(fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) && !fc.hasRoleUser(RoleCode.BPK_CCA.value())){
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_MINISTRY);
@@ -938,6 +949,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);		
 				}
+				}
+				//Enhancement 29418 - shaqimi end 20/10/2022
 
 				if (getSearchPtjProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
@@ -1076,7 +1089,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 	//#25406 - end
 	
-	
 	// Start - #30866
 	private class contractDataModelForCtAuditViewSubFl extends PagingDataModel<VCtFl> {
 		private static final long serialVersionUID = 1L;
@@ -1159,4 +1171,36 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.isFromContractViewPage = isFromContractViewPage;
 	}
 	// End - #30866
+	
+	// start - #25790
+	/**
+	 * @return the backPageDpContinuity
+	 */
+	public boolean isBackPageDpContinuity() {
+		return backPageDpContinuity;
+	}
+
+	/**
+	 * @param backPageDpContinuity
+	 *            the backPageDpContinuity to set
+	 */
+	public void setBackPageDpContinuity(boolean backPageDpContinuity) {
+		this.backPageDpContinuity = backPageDpContinuity;
+	}
+
+	/**
+	 * @return the dpContinuitySession
+	 */
+	public String getDpContinuitySession() {
+		return dpContinuitySession;
+	}
+
+	/**
+	 * @param dpContinuitySession
+	 *            the dpContinuitySession to set
+	 */
+	public void setDpContinuitySession(String dpContinuitySession) {
+		this.dpContinuitySession = dpContinuitySession;
+	}
+	// end - #25790
 }

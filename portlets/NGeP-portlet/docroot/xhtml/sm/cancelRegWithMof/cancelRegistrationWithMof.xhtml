@@ -34,11 +34,13 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.mof.reg.reason.delete']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputTextarea cols="60" style="margin-bottom:8px;"
+					<td>
+						<!-- #38195 -->
+						<p:inputTextarea cols="60" style="margin-bottom:8px;"
 							id="cancelReson" label="#{lbl['lbl.sm.mof.reg.reason.delete']}"
 							validatorMessage="#{lbl['lbl.sm.mof.reg.reason.delete']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 							value="#{backingBean.managedBean.supplierRemarks}"
-							maxlength="2500">
+							maxlength="2500" converter="trimConverter">
 							<p:ajax event="blur" process="@this"
 								update="cancelReson,@([id$=Msg])" />
 							<f:validateLength maximum="2500" />

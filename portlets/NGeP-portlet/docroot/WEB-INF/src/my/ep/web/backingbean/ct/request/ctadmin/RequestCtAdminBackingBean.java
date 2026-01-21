@@ -561,6 +561,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		ctReqDTO.setContractId(new Long(dataType.getContractId()));
 		ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 		ctReqDTO.setDocType(dataType.getDocType());
+		ctBB.getManagedBean().setContractVerIdFromTaskList(new Long(dataType.getDocId())); //#15851
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 		PortletRequest request = (PortletRequest)context.getExternalContext().getRequest();
@@ -651,4 +652,43 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			return userRole;
 		}
 	}
+
+	//Enhancement 15851, 34142 - shaqimi start 02/12/2022
+	/**
+	 * The method used to navigate to contract/loa details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
+	@Override
+	public void goToLoaView(ScLoa scLoa) {
+		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		
+		String docType = getManagedBean().getContractVer().getDocType();
+		Long statusId = getManagedBean().getContractVer().getStatus().getStatusId();
+		
+		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+			AmendmentBackingBean abb = new AmendmentBackingBean();
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
+			abb.getManagedBean().setTrackingDairyView(true);
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+			
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setDocTypeFromTaskList(docType);
+			ctBB.getManagedBean().setStatusIdFromTaskList(statusId);
+			ctBB.getManagedBean().setContractIdFromTaskList(null);
+			ctBB.getManagedBean().setTaskNameFromTaskList(null);
+
+			if(ctBB.getManagedBean().isViewContractFromAgreement()){
+				ctBB.getManagedBean().setViewSCLFromContract(true);
+			}
+			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
+		} else {
+			super.goToLoaView(scLoa);
+		}
+	}
+	//Enhancement 15851, 34142 - shaqimi end 02/12/2022
 }

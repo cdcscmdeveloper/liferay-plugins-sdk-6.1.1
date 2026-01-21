@@ -26,9 +26,9 @@ import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.factory.EpLogger;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -54,9 +54,11 @@ import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
@@ -109,7 +111,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
-import my.ep.util.CustomUtils;	// Bug #35219@Syazani 07/11/2023
+import my.ep.util.CustomUtils;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -124,7 +126,6 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
@@ -139,10 +140,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-
-	/** The Constant log. */
-	private static final Logger log = EpLogger
-			.getLogger(QTDetailManagedBean.class);
 	
 	/** The qt. */
 	private ScQt qt;
@@ -1100,11 +1097,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The financial scoring. */
 	private List<ScQtCheckList> financialScoring;
-	
-	//37813,35384 -start
+
+	// 37813,35384 -start
 	/** The tech points. */
 	private BigDecimal techPoints;
-	//37813,35384 -end
+	// 37813,35384 -end
 
 	/** The fin points. */
 	private int finPoints;
@@ -1658,18 +1655,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2techProposalLstClone = new ArrayList<ScQtCheckList>();
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
-	//#11104-start
+
+	// #11104-start
 	private ScQtCheckList sampleCheckList;
 	private TplSpecQuestion sampleSpecQuestion;
 	private String sampleItemName;
 	private int sampleTotalScore;
 	private List<ScQtCheckList> sampleSpecCheckList;
 	private List<BriefingZoneBean> sampleAddressBean;
-	private Map<Long,SampleQuestionBean> existingSampleSpecQuestions;
-	//#11104-End
-	
-	private boolean isSampleShowHide;//11104wip
-	
+	private Map<Long, SampleQuestionBean> existingSampleSpecQuestions;
+	private boolean isSampleShowHide; // 11104wip
+	// #11104-End
+
 	// 25037 - start
 	private boolean showHistory;
 	private Paginator committeeHistories;
@@ -1700,6 +1697,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #25426 - Start
 	private boolean firstViewPageCAUsers = false;
 	// #25426 - End
+	
+	// #28784 -start-
+	private boolean demoType;
+	private boolean demoAction;
+	private List<ScQtCheckList> demoSpecTemplateList;
+	private List<TplSpecQuestion> demoOriSpecQuestionTemplateList;
+	private boolean demoDisabled;
+	private boolean qtSpecMaintanance;
+	private boolean demoEvalDisabled;
+	private boolean demoSpecialCase;
+	private Long demoSampleChecklistStatusId;
+	// #28784 -end-
+
+	// 25791-start
+	private List<ScQt> qtTrackingDiaryView;
+	private String qtAuditMaintenanceView;
+	private ScQt viewTrackingDiaryQTDL;
+	private List<ScLoaForQt> loaContractTrackingDtls;
+	private ScLoaForQt loaContractTrackingDtl;
+	private List<VCtContract> loaContractListTracking;
+	private IPagingDataModel<ScLoa> viewQTDLLOAContractTrackingDtls;
+	private IPagingDataModel<VCtContract> viewLOAContractDataModel;
+	private Map<Long, VCtContract> checkLOAContract;
+	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
+	// 25791-End
 
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -8212,7 +8234,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.financialScoring = financialScoring;
 	}
 
-	//37813,35384 remove tech setter and getter.
 	/**
 	 * @return the finPoints
 	 */
@@ -10449,8 +10470,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
-	
-	/**11104-start
+
+	// 11104-start
+	/**
 	 * @return the sampleCheckList
 	 */
 	public ScQtCheckList getSampleCheckList() {
@@ -10458,7 +10480,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleCheckList the sampleCheckList to set
+	 * @param sampleCheckList
+	 *            the sampleCheckList to set
 	 */
 	public void setSampleCheckList(ScQtCheckList sampleCheckList) {
 		this.sampleCheckList = sampleCheckList;
@@ -10472,7 +10495,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleSpecQuestion the sampleSpecQuestion to set
+	 * @param sampleSpecQuestion
+	 *            the sampleSpecQuestion to set
 	 */
 	public void setSampleSpecQuestion(TplSpecQuestion sampleSpecQuestion) {
 		this.sampleSpecQuestion = sampleSpecQuestion;
@@ -10486,7 +10510,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleItemName the sampleItemName to set
+	 * @param sampleItemName
+	 *            the sampleItemName to set
 	 */
 	public void setSampleItemName(String sampleItemName) {
 		this.sampleItemName = sampleItemName;
@@ -10500,11 +10525,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleTotalScore the sampleTotalScore to set
+	 * @param sampleTotalScore
+	 *            the sampleTotalScore to set
 	 */
 	public void setSampleTotalScore(int sampleTotalScore) {
 		this.sampleTotalScore = sampleTotalScore;
 	}
+
 	/**
 	 * @return the sampleSpecCheckList
 	 */
@@ -10513,13 +10540,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleSpecCheckList the sampleSpecCheckList to set
+	 * @param sampleSpecCheckList
+	 *            the sampleSpecCheckList to set
 	 */
 	public void setSampleSpecCheckList(List<ScQtCheckList> sampleSpecCheckList) {
 		this.sampleSpecCheckList = sampleSpecCheckList;
 	}
+
 	/**
-	 * 11104-start
+	 * 
 	 * @return the sampleAddressBean
 	 */
 	public List<BriefingZoneBean> getSampleAddressBean() {
@@ -10527,13 +10556,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleAddressBean the sampleAddressBean to set
+	 * @param sampleAddressBean
+	 *            the sampleAddressBean to set
 	 */
 	public void setSampleAddressBean(List<BriefingZoneBean> sampleAddressBean) {
 		this.sampleAddressBean = sampleAddressBean;
 	}
+
 	/**
-	 * 11104-StartReendose
+	 * 
 	 * @return the existingSampleSpecQuestions
 	 */
 	public Map<Long, SampleQuestionBean> getExistingSampleSpecQuestions() {
@@ -10541,15 +10572,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param existingSampleSpecQuestions the existingSampleSpecQuestions to set
+	 * @param existingSampleSpecQuestions
+	 *            the existingSampleSpecQuestions to set
 	 */
-	public void setExistingSampleSpecQuestions(
-			Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
+	public void setExistingSampleSpecQuestions(Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
 		this.existingSampleSpecQuestions = existingSampleSpecQuestions;
-	}//11104-End
+	}
 
 	/**
-	 * 11104-Start
+	 * 
 	 * @return the isSampleShowHide
 	 */
 	public boolean isSampleShowHide() {
@@ -10557,12 +10588,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isSampleShowHide the isSampleShowHide to set
+	 * @param isSampleShowHide
+	 *            the isSampleShowHide to set
 	 */
 	public void setSampleShowHide(boolean isSampleShowHide) {
 		this.isSampleShowHide = isSampleShowHide;
-	}//11104-End
-	
+	}
+	// 11104-End
+
 	// 25037 - start
 	public boolean isShowHistory() {
 		return showHistory;
@@ -10762,8 +10795,160 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.firstViewPageCAUsers = firstViewPageCAUsers;
 	}
 	// #25426 - End
-	
-	//37813,35384 -start
+
+	// 25791-start
+	/**
+	 * @return the qtTrackingDiaryView
+	 */
+	public List<ScQt> getQtTrackingDiaryView() {
+		return qtTrackingDiaryView;
+	}
+
+	/**
+	 * @param qtTrackingDiaryView
+	 *            the qtTrackingDiaryView to set
+	 */
+	public void setQtTrackingDiaryView(List<ScQt> qtTrackingDiaryView) {
+		this.qtTrackingDiaryView = qtTrackingDiaryView;
+	}
+
+	/**
+	 * @return the qtAuditMaintenanceView
+	 */
+	public String getQtAuditMaintenanceView() {
+		return qtAuditMaintenanceView;
+	}
+
+	/**
+	 * @param qtAuditMaintenanceView
+	 *            the qtAuditMaintenanceView to set
+	 */
+	public void setQtAuditMaintenanceView(String qtAuditMaintenanceView) {
+		this.qtAuditMaintenanceView = qtAuditMaintenanceView;
+	}
+
+	/**
+	 * @return the viewTrackingDiaryQTDL
+	 */
+	public ScQt getViewTrackingDiaryQTDL() {
+		return viewTrackingDiaryQTDL;
+	}
+
+	/**
+	 * @param viewTrackingDiaryQTDL
+	 *            the viewTrackingDiaryQTDL to set
+	 */
+	public void setViewTrackingDiaryQTDL(ScQt viewTrackingDiaryQTDL) {
+		this.viewTrackingDiaryQTDL = viewTrackingDiaryQTDL;
+	}
+
+	/**
+	 * @return the loaContractTrackingDtls
+	 */
+	public List<ScLoaForQt> getLoaContractTrackingDtls() {
+		return loaContractTrackingDtls;
+	}
+
+	/**
+	 * @param loaContractTrackingDtls
+	 *            the loaContractTrackingDtls to set
+	 */
+	public void setLoaContractTrackingDtls(List<ScLoaForQt> loaContractTrackingDtls) {
+		this.loaContractTrackingDtls = loaContractTrackingDtls;
+	}
+
+	/**
+	 * @return the loaContractTrackingDtl
+	 */
+	public ScLoaForQt getLoaContractTrackingDtl() {
+		return loaContractTrackingDtl;
+	}
+
+	/**
+	 * @param loaContractTrackingDtl
+	 *            the loaContractTrackingDtl to set
+	 */
+	public void setLoaContractTrackingDtl(ScLoaForQt loaContractTrackingDtl) {
+		this.loaContractTrackingDtl = loaContractTrackingDtl;
+	}
+
+	/**
+	 * @return the loaContractListTracking
+	 */
+	public List<VCtContract> getLoaContractListTracking() {
+		return loaContractListTracking;
+	}
+
+	/**
+	 * @param loaContractListTracking
+	 *            the loaContractListTracking to set
+	 */
+	public void setLoaContractListTracking(List<VCtContract> loaContractListTracking) {
+		this.loaContractListTracking = loaContractListTracking;
+	}
+
+	/**
+	 * @return the viewQTDLLOAContractTrackingDtls
+	 */
+	public IPagingDataModel<ScLoa> getViewQTDLLOAContractTrackingDtls() {
+		return viewQTDLLOAContractTrackingDtls;
+	}
+
+	/**
+	 * @param viewQTDLLOAContractTrackingDtls
+	 *            the viewQTDLLOAContractTrackingDtls to set
+	 */
+	public void setViewQTDLLOAContractTrackingDtls(IPagingDataModel<ScLoa> viewQTDLLOAContractTrackingDtls) {
+		this.viewQTDLLOAContractTrackingDtls = viewQTDLLOAContractTrackingDtls;
+	}
+
+	/**
+	 * @return the viewLOAContractDataModel
+	 */
+	public IPagingDataModel<VCtContract> getViewLOAContractDataModel() {
+		return viewLOAContractDataModel;
+	}
+
+	/**
+	 * @param viewLOAContractDataModel
+	 *            the viewLOAContractDataModel to set
+	 */
+	public void setViewLOAContractDataModel(IPagingDataModel<VCtContract> viewLOAContractDataModel) {
+		this.viewLOAContractDataModel = viewLOAContractDataModel;
+	}
+
+	/**
+	 * @return the checkLOAContract
+	 */
+	public Map<Long, VCtContract> getCheckLOAContract() {
+		return checkLOAContract;
+	}
+
+	/**
+	 * @param checkLOAContract
+	 *            the checkLOAContract to set
+	 */
+	public void setCheckLOAContract(Map<Long, VCtContract> checkLOAContract) {
+		this.checkLOAContract = checkLOAContract;
+	}
+
+	/**
+	 * @return the searchBidScheduleDataModel
+	 */
+	public IPagingDataModel<ScBidScheduleForQT> getSearchBidScheduleDataModel() {
+		return searchBidScheduleDataModel;
+	}
+
+	/**
+	 * @param searchBidScheduleDataModel
+	 *            the searchBidScheduleDataModel to set
+	 */
+	public void setSearchBidScheduleDataModel(IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel) {
+		this.searchBidScheduleDataModel = searchBidScheduleDataModel;
+	}
+	// 25791-End
+
+	// 37813,35384 -start
 	/**
 	 * @return the techPoints
 	 */
@@ -10772,12 +10957,119 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param techPoints the techPoints to set
+	 * @param techPoints
+	 *            the techPoints to set
 	 */
 	public void setTechPoints(BigDecimal techPoints) {
 		this.techPoints = techPoints;
 	}
-	//37813,35384 -end
-	
-	
+	// 37813,35384 -end	
+
+	//#28784 - Start
+	public boolean isDemoType() {
+		return demoType;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoType(boolean demoType) {
+		this.demoType = demoType;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public boolean isDemoAction() {
+		return demoAction;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoAction(boolean demoAction) {
+		this.demoAction = demoAction;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public List<ScQtCheckList> getDemoSpecTemplateList() {
+		return demoSpecTemplateList;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoSpecTemplateList(List<ScQtCheckList> demoSpecTemplateList) {
+		this.demoSpecTemplateList = demoSpecTemplateList;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public List<TplSpecQuestion> getDemoOriSpecQuestionTemplateList() {
+		return demoOriSpecQuestionTemplateList;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoOriSpecQuestionTemplateList(List<TplSpecQuestion> demoOriSpecQuestionTemplateList) {
+		this.demoOriSpecQuestionTemplateList = demoOriSpecQuestionTemplateList;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public boolean isDemoDisabled() {
+		return demoDisabled;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoDisabled(boolean demoDisabled) {
+		this.demoDisabled = demoDisabled;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public boolean isQtSpecMaintanance() {
+		return qtSpecMaintanance;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setQtSpecMaintanance(boolean qtSpecMaintanance) {
+		this.qtSpecMaintanance = qtSpecMaintanance;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public boolean isDemoEvalDisabled() {
+		return demoEvalDisabled;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoEvalDisabled(boolean demoEvalDisabled) {
+		this.demoEvalDisabled = demoEvalDisabled;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public boolean isDemoSpecialCase() {
+		return demoSpecialCase;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoSpecialCase(boolean demoSpecialCase) {
+		this.demoSpecialCase = demoSpecialCase;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public Long getDemoSampleChecklistStatusId() {
+		return demoSampleChecklistStatusId;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setDemoSampleChecklistStatusId(Long demoSampleChecklistStatusId) {
+		this.demoSampleChecklistStatusId = demoSampleChecklistStatusId;
+	}
+	//#28784 - End
 }

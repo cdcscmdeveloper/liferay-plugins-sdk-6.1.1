@@ -62,11 +62,12 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{purchaseRequestBackingBean.managedBean.taskId==null}"
 						action="#{purchaseRequestBackingBean.backToPervious}"  /></td>
 				<td colspan="4" style="text-align: right">
+			<c:if test='#{not empty purchaseRequestBackingBean.managedBean.outComes}'><ui:remove>#36624 - Start</ui:remove>
 			<c:choose>
 			<c:when test="#{purchaseRequestBackingBean.managedBean.isPidValidityExpired()}">
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						<ui:fragment rendered="#{(bpmAction eq 'REJECT')or(bpmAction eq 'CANCEL')}">
-						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<ui:param name="buttonLabel" value="#{purchaseRequestBackingBean.buttonLabelKey(bpmAction)}" /> <ui:remove>#39192</ui:remove>
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								process="@form"
@@ -78,7 +79,7 @@
 			</c:when>
 			<c:otherwise>
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
-						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<ui:param name="buttonLabel" value="#{purchaseRequestBackingBean.buttonLabelKey(bpmAction)}" /> <ui:remove>#39192</ui:remove>
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								process="@form"
@@ -87,6 +88,7 @@
 					</ui:repeat>
 			</c:otherwise>
 			</c:choose>
+			</c:if><ui:remove>#36624 - End</ui:remove>
 				</td>
 				
 				<c:if

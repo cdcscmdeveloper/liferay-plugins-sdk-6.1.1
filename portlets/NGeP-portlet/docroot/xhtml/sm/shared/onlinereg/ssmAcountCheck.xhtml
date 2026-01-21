@@ -66,7 +66,8 @@
 							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}"  update="@form" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"></p:ajax>
+							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}"  update="@form" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"></p:ajax>
 						</p:selectOneMenu>
 						<p:outputLabel styleClass="outputLabel-view" 
 						value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
@@ -90,11 +91,11 @@
 				
 				<td class="tdContent">
 					<p:outputPanel id="regNoPanelId">
-						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="30"
+						<p:inputText id="regNo" required="#{!empty param['disableValidation']}" maxlength="20"
 							value="#{registrationBackingBean.managedBean.smSupp.regNo}" converter="toUpperCaseConverter"
 							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew or registrationBackingBean.managedBean.companyValidWithSSM}"
 							size="40" label="#{lbl['lbl.sm.businessregno']}" >
-							<p:ajax event="blur" update="regNoPanelId" listener="#{registrationBackingBean.removeRegNoWhiteSpace}" />
+							<p:ajax event="change" update="@form" process="@form" listener="#{registrationBackingBean.removeRegNoWhiteSpace}" /> <!-- #36710 -->
 							<f:validator validatorId="busRegNoValidator" />
 							</p:inputText>
 						&#160;
@@ -118,14 +119,15 @@
 					</p:outputPanel>
 				</td>
 				 </tr>
-				 <c:if test="#{registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG}">
+				 <!-- #34159 & #36710 START-->
+				 <c:if test="#{registrationBackingBean.businessTypeIsROB(registrationBackingBean.managedBean.smSupp.businessType)}">
 					 <tr >
 						<td class="tdTitle">
 							<p:outputLabel value="#{lbl['lbl.sm.register.owner.newic']} #{registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_BASIC ? lbl['lbl.sm.register.mycardonly'] : ''}" />
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</td>
 						<td class="tdContent">
-							<p:inputText required="true" maxlength="12" size="40" label="#{lbl['lbl.sm.register.owner.newic']}" value="#{registrationBackingBean.managedBean.regIcCheckSSM}"></p:inputText>
+							<p:inputText maxlength="12" size="40" label="#{lbl['lbl.sm.register.owner.newic']}" value="#{registrationBackingBean.managedBean.regIcCheckSSM}"></p:inputText>
 							<p:graphicImage id="noic" value="/css/images/design/tooltips.png" />
 							<p:tooltip style="width:25%;" id="noictt" for="noic">
 								<p:outputLabel escape="false" value="#{lbl['lbl.sm.register.owner.newic.tt']}" />
@@ -133,14 +135,14 @@
 						</td>
 					</tr>
 				 </c:if>
-				 <c:if test="#{registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD or registrationBackingBean.managedBean.smSupp.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD}">
+				 <c:if test="#{registrationBackingBean.businessTypeIsROC(registrationBackingBean.managedBean.smSupp.businessType)}">
 				 	<tr>
 				 		<td class="tdTitle">
 				 			<p:outputLabel value="#{lbl['lbl.sm.register.ownerdirector.newic']} #{registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_BASIC ? lbl['lbl.sm.register.mycardonly'] : ''}" />
 				 			<p:outputLabel value="*" styleClass="mandatory" />
 				 		</td>
 				 		<td class="tdContent">
-				 			<p:inputText required="#{!empty param['disableValidation']}" maxlength="12" size="40" label="#{lbl['lbl.sm.register.ownerdirector.newic']}" value="#{registrationBackingBean.managedBean.regIcCheckSSM}"></p:inputText>
+				 			<p:inputText maxlength="12" size="40" label="#{lbl['lbl.sm.register.ownerdirector.newic']}" value="#{registrationBackingBean.managedBean.regIcCheckSSM}"></p:inputText>
 				 			<p:graphicImage id="noic" value="/css/images/design/tooltips.png" />
 				 			<p:tooltip style="width:25%;" id="noictt" for="noic">
 				 				<p:outputLabel escape="false" value="#{lbl['lbl.sm.register.ownerdirector.newic.tt']}" />
@@ -149,6 +151,7 @@
 				 		</td>
 				 	</tr>
 				 </c:if>
+				 <!-- #34159 & #36710 END-->
 			</table>
 		
 		<div class="nav-wrapper" align="justify" >
@@ -184,6 +187,17 @@
 					<h:outputText value="#{lbl['lbl.sm.businessregno']}" />
 				</f:facet>
 				<h:outputText value="#{registrationBackingBean.managedBean.smSupp.regNo}" />
+			</p:column>
+			 
+			<!-- #24819  -->
+			<p:column styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.new.business.regNo']}" />
+				</f:facet>
+				<h:outputText value="#{registrationBackingBean.managedBean.smSupp.ssmNewRegNo}" 
+					rendered ="#{!empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}"/> 
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" 
+					rendered ="#{empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}" /> 
 			</p:column>
 			
 			<p:column  styleClass="column-align-center">

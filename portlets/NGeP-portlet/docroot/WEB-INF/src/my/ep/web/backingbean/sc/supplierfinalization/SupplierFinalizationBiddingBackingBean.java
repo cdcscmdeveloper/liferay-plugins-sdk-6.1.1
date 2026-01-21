@@ -2737,12 +2737,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 			ScQtFinalizationReport coverReport = null;
 			List<ScQtFinalizationReport> endorsementReports = 
 								new ArrayList<ScQtFinalizationReport>();
+
 			//#29702					
 			List<ScQtFinalizationReport> inputReport = new ArrayList<>();
 					new ArrayList<ScQtFinalizationReport>();
 			for (ScQtFinalizationReport report : finalizationReports) {
 				String docCategory = report.getDocCategory();
-			   //#29702
+				//#29702
+
 				String docDefinitionType = report.getDefinationType().getParameterCode();
 				String docDefinitionKey = null;
 				if (report.getPmDocument() != null) {
@@ -2935,15 +2937,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 	
 	// 30567 - start
-	private ScQtFinalizationReportAttachment generateBriefingPaperAttachment(ScQtFinalizationReport scQtFinalizationReport) throws Exception{
+	private ScQtFinalizationReportAttachment generateBriefingPaperAttachment(
+			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		SupplierFinalizationBackingBean supplierFinalizationBackingBean = new SupplierFinalizationBackingBean();
 		supplierFinalizationBackingBean.renewSesionObject();
 		supplierFinalizationBackingBean.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
-		supplierFinalizationBackingBean.getManagedBean().setScQtFinalization(this.getManagedBean().getScQtFinalization());
+		supplierFinalizationBackingBean.getManagedBean().setScQtFinalization(
+				this.getManagedBean().getScQtFinalization());
 		supplierFinalizationBackingBean.getManagedBean().setScQt(this.getManagedBean().getScQt());
 		return supplierFinalizationBackingBean.downloadBriefingPaperReportForBidding(scQtFinalizationReport);
 	}
 	// 30567 - end
+	
 	/**
 	 * To download all reports under Briefing Paper/Kertas Taklimat tab
 	 * 
@@ -2966,11 +2971,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 			if (attachment != null) {
 				attachment.setTempFileName(report.getTitle());
 			}
-			scAttachments.add(attachment); 
-		} 
+			scAttachments.add(attachment);
+		}
 		// 37623 - end
+		
 		downloadAllFiles("NGeP-Finalization-Report", scAttachments);
-
 	}
 	
 	// 25037 - start

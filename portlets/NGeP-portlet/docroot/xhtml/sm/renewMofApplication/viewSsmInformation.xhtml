@@ -30,7 +30,12 @@
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.txt.business.reg.no']} :"></h:outputLabel>
 				<h:outputText value="#{backingBean.managedBean.smSupplier.regNo}"></h:outputText>
-
+				
+				<h:outputLabel style="font-weight:bold"
+					value="#{lbl['lbl.sm.new.business.regNo']} :"></h:outputLabel>
+				<h:outputText value="#{backingBean.managedBean.smSupplier.ssmNewRegNo}" rendered="#{!empty backingBean.managedBean.smSupplier.ssmNewRegNo}"></h:outputText>
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty backingBean.managedBean.smSupplier.ssmNewRegNo}"></h:outputText>
+				
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.estdate']} :"></h:outputLabel>
 				<h:outputText

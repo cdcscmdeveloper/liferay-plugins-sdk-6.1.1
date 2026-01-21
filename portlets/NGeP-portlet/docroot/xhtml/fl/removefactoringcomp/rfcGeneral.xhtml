@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.fl.agency.details']}" toggleable="true" id="flDetails">
 		<table style="width: 100%">
@@ -124,6 +125,17 @@
 				<td style="width:295px;"><p:inputText size="15" disabled="true" 
 									value="#{flOrderBB.managedBean.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : flOrderBB.managedBean.flRequest.smSupplier.epNo}"></p:inputText></td>	
 			</tr>
+			<!-- 29982 start -->
+			<tr>
+			    <td><p:outputLabel value="#{lbl['lbl.fl.business.registration.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.smSupplier.ssmNewRegNo ==null ? lbl['lbl.fl.business.registration.no.empty'] : flOrderBB.managedBean.flRequest.smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.business.registration.no']}"/>
+					<br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.business.registration.no.note']}" style="float:left;margin-bottom: 5px;" />
+					</td>
+			</tr>
+			<!-- 29982 end -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="50"

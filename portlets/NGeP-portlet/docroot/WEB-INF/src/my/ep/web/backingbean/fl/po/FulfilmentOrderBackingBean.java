@@ -32,14 +32,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentYepSO;
@@ -120,9 +112,16 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Fulfillment Order.
@@ -1984,7 +1983,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		    try {
 				externalContext.redirect(url);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		  return url;
@@ -2016,7 +2014,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		try {
 			externalContext.redirect(url);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return url;
@@ -2066,7 +2063,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		try {
 			externalContext.redirect(url);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return url;
@@ -2516,4 +2512,43 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		return NAV_CO;
 	}
 	// End - #30866
+	
+	// Start - #25790
+	/**
+	 * 
+	 * Navigates to the purchase request page by retrieving the fulfillment
+	 * request details and initializing the necessary backing beans. This method
+	 * sets various attributes in the PurchaseRequestBackingBean based on the
+	 * retrieved fulfillment request information.
+	 * 
+	 * @return the string
+	 */
+	public String navigatePurchaseRequest() {
+		FulfilmentBackingBean fulfilmentBB = new FulfilmentBackingBean();
+		IFulfilmentRequestSO requestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(getManagedBean().getFlRequest().getFulfilmentReqId());
+		reqDTO.setFlRequestLink(true);
+		FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
+		prBB.initializePRBeans();
+		prBB.getManagedBean().setSubmitButtonStatus(false);
+		prBB.getManagedBean().setDocProcess(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+		prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+		prBB.getManagedBean().setHyperLinkPage(false);
+		prBB.getManagedBean().setPreviousRemarkList(fulfilmentBB.getManagedBean().getRemarkList());
+		prBB.getManagedBean().setPreviousAttachmentList(fulfilmentBB.getManagedBean().getAttachmentList());
+		prBB.setFulfilmentRequestField(resDTO);
+		prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+		prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+		prBB.getManagedBean().setDeclarationCheck(true);
+		prBB.getManagedBean().setPrevHideRemarks(fulfilmentBB.getManagedBean().isHideRemarks());
+		fulfilmentBB.getManagedBean().setHideRemarks(true);
+		prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+
+		return NAV_PR;
+	}
+	// End - #25790
 }

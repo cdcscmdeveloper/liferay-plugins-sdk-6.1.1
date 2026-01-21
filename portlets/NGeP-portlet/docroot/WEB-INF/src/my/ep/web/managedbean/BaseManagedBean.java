@@ -163,6 +163,15 @@ public abstract class BaseManagedBean implements Serializable {
 	// #32236 start
 	private String outputPage;
 	// #32236 end
+	
+	// #29007 Start
+	// #28784 - Demo WIP - To display QT BPM version
+	private String bpmVersionNo;
+	private boolean newVersion;
+
+	// #29007 End
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean forceReplace;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1012,4 +1021,35 @@ public abstract class BaseManagedBean implements Serializable {
 		this.outputPage = outputPage;
 	}
 	//#32236 - end
+
+	// #29007 Start
+	public String getBpmVersionNo() {
+		return bpmVersionNo;
+	}
+
+	public void setBpmVersionNo(String bpmVersionNo) {
+		this.bpmVersionNo = bpmVersionNo;
+	}
+	// #29007 End
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isForceReplace() {
+		return forceReplace;
+	}
+
+	public void setForceReplace(boolean forceReplace) {
+		this.forceReplace = forceReplace;
+	}
+	// #28895_35501 End
+	
+	//#28784 - Start
+	public boolean isNewVersion() {
+		return newVersion;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	public void setNewVersion(boolean newVersion) {
+		this.newVersion = newVersion;
+	}
+	//#28784 - End
 }

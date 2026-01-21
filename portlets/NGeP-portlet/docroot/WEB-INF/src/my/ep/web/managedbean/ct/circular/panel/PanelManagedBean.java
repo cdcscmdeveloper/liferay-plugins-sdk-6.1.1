@@ -135,6 +135,9 @@ public class PanelManagedBean extends BaseManagedBean {
 	private String[] outComesFromTaskList;
 	//#33533 end
 	
+	// #25790
+	private boolean sqEditableMode = false;
+
 	/**
 	 * @return the circular
 	 */
@@ -1028,5 +1031,13 @@ public class PanelManagedBean extends BaseManagedBean {
 	}
 
 	//#33533 end
+	// #25790 - start
+	public boolean isSqEditableMode() {
+		return sqEditableMode;
+	}
 
+	public void setSqEditableMode(boolean sqEditableMode) {
+		this.sqEditableMode = sqEditableMode;
+	}
+	// #25790 - end
 }

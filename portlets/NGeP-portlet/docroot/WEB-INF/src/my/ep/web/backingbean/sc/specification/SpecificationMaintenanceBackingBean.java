@@ -29,6 +29,7 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
@@ -483,6 +484,12 @@ public void specCommitteeMaintenancereset() {
 			boolean renewSessionObject, boolean useTempManagedBean,
 			String previousPageId, boolean redirect/* 29464-overload arg */) {
 	/*** 25692#95 ** -end- */
+		//#28784 - Start
+		this.getManagedBean().setQtSpecMaintanance(true);
+		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
+		//#28784 - End
 	
 		QtnTenderSearchBean qtTnderBean = this.getManagedBean().getQtnTenderSearchBean();
 		IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
@@ -549,20 +556,24 @@ public void specCommitteeMaintenancereset() {
 							.getParameterCode());
 		}
 		specBB.retriveTechnicalCheckList();//#11104-start
-		List<ScQtCheckList> technicalChekclist= this.getManagedBean().getScQtCheckSt2techProposal();
-		boolean isSampleWip=specBB.checkSampleRadioShowHideInSpecPrepareAndMaintenance();//11104Wip
-		if(null!=technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)){
-		for(ScQtCheckList checkList: technicalChekclist){
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-				.equalsIgnoreCase(checkList.getDefinationType()
-						.getParameterCode())) {
-			scQt_.setSampleReq(Boolean.TRUE);//#11104
-			checkList.setSampleWip(isSampleWip);//11104Wip
-			break;
 
+		// #11104 -start-
+		List<ScQtCheckList> technicalChekclist = this.getManagedBean().getScQtCheckSt2techProposal();
+		boolean isSampleWip = specBB.checkSampleRadioShowHideInSpecPrepareAndMaintenance(); // 11104Wip
+
+		if (null != technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)) {
+
+			for (ScQtCheckList checkList : technicalChekclist) {
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList.getDefinationType()
+						.getParameterCode())) {
+					scQt_.setSampleReq(Boolean.TRUE);
+					checkList.setSampleWip(isSampleWip); // 11104Wip
+					break;
+
+				}
+			}
 		}
-		}
-		}//#11104-End
+		// #11104-End
 
 		this.getManagedBean().setCurrentStatusId(scQt.getQtStatus().getStatusId());
 		this.getManagedBean().setSpecMaintenanceScreen(QTConstants.SPEC_MAINTENANCE);
@@ -617,16 +628,22 @@ public void specCommitteeMaintenancereset() {
 				this.getManagedBean().setChecklist(false);
 			}
 		}
+		//#33795 - start
+		if (!isSpecCommittee()) {
+			this.getManagedBean().setChecklist(false);
+		}
+		//#33795 - end
 		// #15391 - end
 
 		// 29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
 
-		if (redirect) {
+		if (redirect || checkDemoRedirect()){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 
-	this.getManagedBean().setSampleShowHide(isSampleWip);//11104Wip
+		this.getManagedBean().setSampleShowHide(isSampleWip); // 11104Wip
+
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);
 		// 29464-end
@@ -777,5 +794,20 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		editSpecificationMaintenance(scQt, isEditable, true, true, previouPageId, redirect);
 	}
 	// 29464-end
-
+	
+	//#28784 - Start
+	private boolean checkDemoRedirect() {
+		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
+				.getStatusId() : null;
+		boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
+		if (null != status
+				&& ((status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						|| status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) || status
+							.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL)))
+				&& this.getManagedBean().isMaintanceFlow() && demoRequired) {
+			return true;
+		}
+		return false;
+	}
+	//#28784 - End
 }

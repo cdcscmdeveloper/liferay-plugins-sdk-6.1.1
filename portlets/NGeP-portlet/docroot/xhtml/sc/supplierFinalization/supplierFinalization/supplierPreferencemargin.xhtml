@@ -7,11 +7,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<!-- Qualified Supplier Details By Evaluation Stage dialog -->
+	<!-- #29466 - START -->
+	<ui:param name="manufacturercategoryCode"
+		value="#{suppFinalizationBackingBean.checkManufacturerCategoryCodes(suppFinalizationBackingBean.managedBean.checkCategoryCodeQt)}"></ui:param>
 	<p:dialog id="preferenceMarginSuppDetailsPopupId"
 		widgetVar="preferenceMarginSuppDetailsPopup" position="center"
-		header="#{lbl['lbl.sc.sf.preference.margin.popup.header']}" 
+		header="#{lbl[manufacturercategoryCode? 'lbl.sc.sf.supplier.offerprice.manufacturer.popup.header' : 'lbl.sc.sf.preference.margin.popup.header']}"
 		modal="true" dynamic="true" styleClass="pop_up_top" width="950"
 		resizable="false">
+		<!-- #29466 - END -->
 
         <ui:param name="preferencemarginList" value="#{suppFinalizationBackingBean.getPreferenceMarginList(suppFinalizationBackingBean.managedBean.preferenceMarginDtls)}"></ui:param>
 		<p:dataTable id="preferenceMarginSFSuppliers"
@@ -82,8 +86,11 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.pref.margin']}"
+			<!-- #29466 - START -->
+			<p:column
+				headerText="#{lbl[manufacturercategoryCode? 'lbl.sc.pref.margin.manufacturer' : 'lbl.sc.pref.margin']}"
 				style="width:5%; text-align:right; white-space:normal;">
+				<!-- #29466 - END -->
 				<h:outputText rendered="#{qualifiedSupp.preferenceMargin gt 0}"
 					value="#{qualifiedSupp.preferenceMargin}">
 					<f:convertNumber

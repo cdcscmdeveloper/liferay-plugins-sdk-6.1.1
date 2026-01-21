@@ -174,23 +174,8 @@
 						</table>
 
 					</td>
-
-
-
-
-
-
-
-
 				</tr>
 			</c:if>
-
-
-
-
-
-
-
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}" escape="false"/></td>
 				<td><p:calendar id="delStartDate" mode="popup" showOn="button" 
@@ -242,10 +227,11 @@
 							<h3></h3>
 							<p></p>
 
+							<!-- 38255 --> 
 							<p:dataTable
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-								value="#{contractRequestBackingBean.schInfo}" id="contractRequestIdd"
-								rowIndexVar="rowIndex" var="contractObjj" width="100%">
+								value="#{contractRequestBackingBean.managedBean.schInfo}" id="contractRequestIdd"
+								rowIndexVar="rowIndex" var="contractObjj" width="100%"><!-- 38255 --> 
 
 								<ac:paginator for="contractRequestIdd"></ac:paginator>
 				
@@ -279,7 +265,7 @@
 								<p:column>
 									<h:outputText value="#{contractObjj.crNo}"
 										style="display: block; width:100%; text-align:center;" />
-									<h:outputText value="#{contractObjj.crNoStatus=='(null)' ? '' : contractObjj.crNoStatus}"
+					<!-- 38255 --><h:outputText value="#{contractObjj.crNoStatus=='()' ? '' : contractObjj.crNoStatus}"
 										style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 
 								</p:column>
@@ -288,7 +274,7 @@
 									<h:outputText value="#{contractObjj.coNo}"
 										style="display: block; width:100%; text-align:center;" />
 
-								<h:outputText value="#{contractObjj.coNoStatus=='(null)' ? '' : contractObjj.coNoStatus}"
+					<!-- 38255 --><h:outputText value="#{contractObjj.coNoStatus=='()' ? '' : contractObjj.coNoStatus}"
 										style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 
 								</p:column>
@@ -350,14 +336,14 @@
 			</tr>
 		</table>
 		<table>
-		<tr>
+			<tr>
 				<td><p:selectBooleanCheckbox
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
 						value="#{contractRequestBackingBean.managedBean.declarationCheck}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><h:outputText style="text-align:left" value="#{lbl['lbl.fl.declaration']}"/></td>
-		</tr>
-	</table>
+			</tr>
+		</table>
 	</p:panel>
 	
 	
@@ -366,7 +352,8 @@
 			<tr>
 				<td style="width: 142px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
-				<td><table style="width: 100%">
+				<td>
+					<table style="width: 100%">
 						<tr>
 							<td style="width: 175px;"><p:inputText size="15"
 									disabled="true"
@@ -377,29 +364,42 @@
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="15" disabled="true"
 									value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.mofNo}" />
-									
 								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}" />
 							</td>
 						</tr>
-					</table></td>
+					</table>
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
 				<td style="width: 260px;"><p:inputText size="15"
 						disabled="true"
-						value="#{contractRequestBackingBean.managedBean.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.flRequest.smSupplier.epNo}"></p:inputText></td>
+						value="#{contractRequestBackingBean.managedBean.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.flRequest.smSupplier.epNo}"></p:inputText>
+				</td>
 			</tr>
+			<!-- 29982 start -->
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.business.registration.no']}" /></td>
 				<td><p:inputText size="15" disabled="true"
-						value="#{contractRequestBackingBean.managedBean.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.flRequest.gstRegNo}" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+						value="#{contractRequestBackingBean.managedBean.flRequest.smSupplier.ssmNewRegNo ==null ? lbl['lbl.fl.business.registration.no.empty'] : contractRequestBackingBean.managedBean.flRequest.smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.business.registration.no']}"/>
+					<br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.business.registration.no.note']}" style="float:left;margin-bottom: 5px;" />
+					</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.flRequest.gstDeclaredDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ep.declared.date']}"/>
+				</td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{contractRequestBackingBean.managedBean.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.flRequest.gstRegNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+			</tr>
+			<!-- 29982 end -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"

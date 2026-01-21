@@ -45,7 +45,7 @@
 		</p:tooltip>
 		&#160;
 		<p:selectOneMenu value="#{cc.attrs.telcoId}" rendered="#{cc.attrs.isMobile and !cc.attrs.hideTelco}" label="#{cc.attrs.label} - #{lbl['lbl.sm.telco']}"
-			style="width: 100px" id="telcoCompId" disabled="#{cc.attrs.disabled}">
+			style="width: 100px" id="telcoCompId" disabled="#{cc.attrs.disabled}" required="#{cc.attrs.isMobile and !cc.attrs.hideTelco and cc.attrs.required}">
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{applicationBean.telcoItems}" />
 			<p:ajax process="@this" event="change" update="@this" partialSubmit="true"/>

@@ -109,6 +109,16 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	 */
 	public String lodgeComplaint() {
 		//String complNo = String.valueOf((new Date()).getTime());
+		
+		// START 38520
+		if (getManagedBean().getSmComplaint() == null 
+				|| getManagedBean().getSmComplaint().getSmSupplier() == null 
+				|| getManagedBean().getSmComplaint().getSmSupplier().getSupplierId() == null) {
+			String supplier = SmCommonUtil.getMessage("lbl.sm.complaint.against.supplier", new String[]{});
+			throw new EpException(MessageConst.ERROR_723103, new String[] { supplier });
+		}
+		// END 38520
+		
 		Date date = new Date();
 		Timestamp currDate = new Timestamp(date.getTime());
 		

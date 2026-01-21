@@ -648,6 +648,16 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			// #9019-END
 			
+			// #28784 - Start
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME + SCProcessNameConst.PRESENTATION_DEMO, SourcingConstants.NAV_PAGE_DEMO_INVITATION);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME + SCProcessNameConst.DEMO_APPROVE_CANCELLATION, SourcingConstants.NAV_PAGE_QT_APPROVAL);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME + SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME + SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME + SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME + SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME + SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			// #28784 - End
+			
 			// 25037 - start
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.GENERIC_APPROVAL_APPROVE,
 					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
@@ -1180,6 +1190,16 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME)
 					+ SCProcessNameConst.GENERIC_APPROVAL_REVISE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
 			// 25037 - end
+
+			// #28784 - Start
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME) + SCProcessNameConst.PRESENTATION_DEMO, SourcingConstants.NAV_PAGE_DEMO_INVITATION);
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME) + SCProcessNameConst.DEMO_APPROVE_CANCELLATION, SourcingConstants.NAV_PAGE_QT_APPROVAL);
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME) + SCProcessNameConst.UPDATE_DEMO_TEC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME) + SCProcessNameConst.FINALISE_DEMO_TEC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME) + SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME) + SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME) + SCProcessNameConst.SIGNOFF_DEMO_TEC_EVALUATION, SourcingConstants.NAV_PAGE_EVALUATION_PROPOSAL);
+			// #28784 - End
 			this.getManagedBean().setBpmMap(temp);
 		}
 
@@ -1704,19 +1724,23 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("taskId:"+this.getManagedBean().getTaskId());
 		log.info("token:"+token);
 		
-		//#21387 - Start
-		if(this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
-			
-			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-			bpmReqDTO.setDocNumber(getManagedBean().getDocNo());
-			BpmResponseDTO resDTO = claimBpmTaskGroupByDocNo(bpmReqDTO);
-			if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
-				for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
-					 if(getDocNumber.getDocNumber().equalsIgnoreCase(this.getManagedBean().getDocNo()) && getDocNumber.getAcquiredBy() == null){
-						 claimTaskByTaskId(getDocNumber.getTaskId());
-					 } 
-				 } 
-			}//#21387 - End			
+		//#37924: 070325 - Start
+		if(this.getManagedBean().getCurrentTaskDocType()!= null){
+			//#21387 - Start
+			if(this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+				BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+				bpmReqDTO.setDocNumber(getManagedBean().getDocNo());
+				BpmResponseDTO resDTO = claimBpmTaskGroupByDocNo(bpmReqDTO);
+				
+				if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
+					for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
+						 if(getDocNumber.getDocNumber().equalsIgnoreCase(this.getManagedBean().getDocNo()) && getDocNumber.getAcquiredBy() == null){
+							 claimTaskByTaskId(getDocNumber.getTaskId());
+						 }
+					 }
+				}
+			}//#21387 - End
+		//#37924: 070325 - End
 		}else{
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 	    	reqDTO.setCtxToken(token);

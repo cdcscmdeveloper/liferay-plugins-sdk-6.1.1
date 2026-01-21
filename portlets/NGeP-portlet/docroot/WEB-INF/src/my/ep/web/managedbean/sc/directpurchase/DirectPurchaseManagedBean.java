@@ -22,7 +22,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.DPStatusConstants;
-import my.ep.constants.SpecialCharacter; //#36018
+import my.ep.constants.SpecialCharacter; //#36018 & #25790
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -43,7 +43,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class DirectPurchaseManagedBean.
@@ -163,8 +162,9 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 							&& (getSearchStatusId() != null && getSearchStatusId().equals(
 									DPStatusConstants.RN_PENDING_ITEM_CODIFICATION))) {// #36018
 						paramPtj = "requestNote.pmOrgProfile.orgProfileId";
-						paramTitle = "requestNote.title";
+						paramTitle ="requestNote.title";
 					}
+					
 					paramPtjGroupAndMinistry = "pmOrgProfile";
 				} else if(ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSearchDocumentType())){
 					paramPtj = "requestNotes.pmOrgProfile.orgProfileId";
@@ -219,15 +219,23 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 					if (isSearchLoaByRN()) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_IN.value(), getLoaList()));
 					}else{
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), getSearchDocumentNo()));
+						// start - #25790
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("docNo", SearchOperator.OPERATOR_LIKE.value(), String.valueOf(
+										SpecialCharacter.MODULO.getCharacter()).concat(getSearchDocumentNo())));
+						// end - #25790
 					}
 				}
 				if(getSearchStatusId() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(), getSearchStatusId()));
 				} else { // start - #36018
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("status", SearchOperator.OPERATOR_NOT_EQUALS.value(),
-									DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
+					// 25790 & 36720 - start
+					if (isSearchDPM()) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("status", SearchOperator.OPERATOR_NOT_EQUALS.value(),
+										DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
+					}
+					// 25790 & 36720 - start
 				}// end - #36018
 				
 				if(getSearchDocumentFromDuration() != null && getSearchDocumentToDuration() != null) {
@@ -313,7 +321,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 			}
 			return null;
 		}
-		// start - 36018
+		
 		/**
 		 * Checks if the maintenance list is empty in the given Sourcing
 		 * Integration response DTO. If the total record count is zero, reloads
@@ -330,7 +338,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 			}
 			return resDTO;
 		}
-
+		
 		/**
 		 * Assigns sourcing documents based on the search status ID. Searches
 		 * for sourcing documents using the specified integration service object
@@ -583,8 +591,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 							SearchOperator.OPERATOR_EQUALS.value(), getSearchMinistryProfile().getOrgProfileId()));
 		}
 	}
-
-	// end - #36018
+	// end - #36018	
 	
     /**
      * Checks if is requisitioner or approver.
