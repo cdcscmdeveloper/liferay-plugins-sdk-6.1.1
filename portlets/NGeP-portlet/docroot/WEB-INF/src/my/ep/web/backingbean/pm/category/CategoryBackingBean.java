@@ -1656,9 +1656,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			validateNewAndDuplicateCategory();
 
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-			categoryCodeSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							ICategoryCodeSO.class);
+			categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 			
 			prepareCategoryData();
 			// Basic category and Category Restr data information
@@ -1699,8 +1697,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			//Bug #37757 - End
 
 			PmCategoryL3 pmCategoryL3 = this.getManagedBean().getPmCategoryL3();
-			IStatusSO statusSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			
 			trackingDiaryForCreateAndUpdateOfSubDivision(reqDTO, pmCategoryL3, statusSO);
 
