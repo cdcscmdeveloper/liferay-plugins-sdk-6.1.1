@@ -13198,7 +13198,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			// recommendationTotalScore = qualifiedSuppDM.getTotalScore();
 			qualifiedSuppDM.getQtEvaluationResult().getEvaluationResultDtls();
 			if (null != this.getManagedBean().getSelectedItem()) {
-				this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
+				requestNoteItemId = this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 			}
 			if (null != this.getManagedBean().getCurrentZone()) {
 				selectedZoneId = this.getManagedBean().getCurrentZone().getSpecZoneId();
