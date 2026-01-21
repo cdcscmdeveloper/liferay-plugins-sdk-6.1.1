@@ -30,7 +30,6 @@
 				<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
 				<p:selectOneMenu id="somMinistryForQtVal"
 					style="width:250px;" panelStyle="width:250px"
-					disabled="#{ruleCatalogueBackingBean.managedBean.disabledSelectedMinistryId}"
 					value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
 					<f:selectItems value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />
 				</p:selectOneMenu>
