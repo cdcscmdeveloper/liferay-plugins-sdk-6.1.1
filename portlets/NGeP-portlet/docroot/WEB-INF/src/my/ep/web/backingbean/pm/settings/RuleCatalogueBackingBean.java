@@ -5401,7 +5401,12 @@ public class RuleCatalogueBackingBean extends
 			//#35323 - End
         }
         //#36738 Start
-        this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+        Long ruleTypeId = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleTypeId();
+        if (this.getManagedBean().getOriginalConfigRuleValueMap() != null && this.getManagedBean().getOriginalConfigRuleValueMap().containsKey(ruleTypeId)){
+        	this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getOriginalConfigRuleValueMap().get(ruleTypeId));
+        }else{
+            this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+        }
         resetRuleValue();
         //#36738 End
 	}
@@ -5724,7 +5729,17 @@ public class RuleCatalogueBackingBean extends
 		List<PmConfigRuleValue> originalList = this.getManagedBean().getOriginalConfigRuleValueList() != null ?
 				 this.getManagedBean().getOriginalConfigRuleValueList() : this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues();
 		List<PmConfigRuleValue> resultList = new ArrayList<>(originalList);
-
+		HashMap<Long, List<PmConfigRuleValue>> map = this.getManagedBean().getOriginalConfigRuleValueMap();
+		
+		Long ruleTypeId = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleTypeId();
+		if (map == null) {
+		    map = new HashMap<>();
+		}
+		if (!map.containsKey(ruleTypeId)) {
+		    map.put(ruleTypeId, originalList);
+		    this.getManagedBean().setOriginalConfigRuleValueMap(map);
+		}
+		
 		// search via value	
 		if (StringUtils.isNotBlank(searchRuleValues)) {
 			List<PmConfigRuleValue> byValue = new ArrayList<>();
@@ -6466,6 +6481,9 @@ public class RuleCatalogueBackingBean extends
 				configValueId);
 
 		value.setExpDate(merged.getExpDate());
+		/*35323 - Audit Start*/
+		value.setModified(true);
+		/*35323 - Audit End*/
 
 		return value;
 	}
