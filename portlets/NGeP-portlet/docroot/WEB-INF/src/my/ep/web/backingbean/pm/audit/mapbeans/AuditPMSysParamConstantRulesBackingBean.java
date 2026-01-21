@@ -379,7 +379,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 
 				ruleValue = formatter.format(amount);
 			}
-			else if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId() != null && newCreatedItem.getRuleType().getParameterType() != null){
+			else if(newCreatedItem.getRuleType().getParameterType() != null){
 				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(), newCreatedItem.getRuleValue().toUpperCase());
 				ruleValue = pmParameter.getPmParameterDescsSpecCallOnly().get(1).getCodeName();
 			}else{
