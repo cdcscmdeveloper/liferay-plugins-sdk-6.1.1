@@ -13193,8 +13193,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * Only applicable when procurement type is Special Item.
 	 */
 	public void assignListOfPtjAllowedForSpecialItem() {
-		if (getManagedBean().getScLoa().getProcurementType().getParameterCode()
-				.equals(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+
+		if ((null != getManagedBean().getScLoa() && ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(getManagedBean()
+				.getScLoa().getScLoiLoa().getDocType()))
+				&& (null != getManagedBean().getScLoa().getProcurementType() && getManagedBean().getScLoa()
+						.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_SPECIAL_ITEM))) {
 			getManagedBean().getPtjIds().clear();
 
 			IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -13215,6 +13218,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+
 	}
 	
 	/**
