@@ -13195,7 +13195,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		for (ScQtEvaluationResultDtl qualifiedSuppDM : this.getManagedBean().getShortlistedSuppliersByRecommendType()
 				.getList()) {
 			currentEvalStage = qualifiedSuppDM.getQtEvaluationResult().getEvaluationStage();
-			// recommendationTotalScore = qualifiedSuppDM.getTotalScore();
 			qualifiedSuppDM.getQtEvaluationResult().getEvaluationResultDtls();
 			if (null != this.getManagedBean().getSelectedItem()) {
 				requestNoteItemId = this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
