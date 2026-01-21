@@ -92,6 +92,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 	private static final String APPROVAL = "lbl.sc.approval";
 	private ScQt selectedScqt;
 	
+	//25635-start
+	/**
+	 * Instantiates a new multiple clone backing bean.
+	 */
 	public QtMultipleCloneBackingBean(){
 		this.root = new DefaultTreeNode("Root Node", null);
 		this.selectedScqt=new ScQt();
@@ -99,8 +103,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		child.setParent(this.root);
 		child.setExpanded(true);
 		TreeNode descendent1 = new DefaultTreeNode(new QTSelectionNode(getLabel(QT_DETAILS),1L), child);
-		descendent1.setSelected(true);
-		descendent1.setSelectable(false);
+		//25635-start
+		descendent1.setSelected(Boolean.TRUE);
+		descendent1.setSelectable(Boolean.TRUE);
+		//25635-end
 		descendent1.setParent(child);
 		TreeNode descendent2 = new DefaultTreeNode(new QTSelectionNode(getLabel(SUPPLIER_QUALIFICATION_CRITERIA),2L), child);
 		descendent2.setParent(child);

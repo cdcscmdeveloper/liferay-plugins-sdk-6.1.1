@@ -3243,6 +3243,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 
 			}
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -4224,6 +4229,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return null;
 	}
+	
+	//#29594 - START
+	public String retrieveMinistryName() {
+		return retrieveMinistryCodeNameByOrgProfileId(getManagedBean().getSelectedUserOrg().getPmOrgProfile()
+				.getOrgProfileId());
+	}
+	
+	public String retrievePTJGroupName() {
+		return retrieveJabatanCodeNameByOrgProfileId(getManagedBean().getSelectedUserOrg().getPmOrgProfile()
+				.getOrgProfileId());
+	}
+	//#29594 - END
 	
 	/*** checks If Selected Receiving Address Type. */
 	// #35769 - Start // fixing null pointer after inactive user

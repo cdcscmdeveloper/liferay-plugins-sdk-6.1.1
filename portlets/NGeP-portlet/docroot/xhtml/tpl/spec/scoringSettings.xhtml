@@ -8,6 +8,9 @@
 	
 	<ui:param name="isQuestionTypeItem" value="#{templateSpecBean.selectedSpecQuestion.questionType == TplSpecConst.questionTypeItem}" />
 	
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<h:outputText styleClass="instruction" rendered="#{!isQuestionTypeItem}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.instruction']}" />
+	<ui:remove>#29187 End Vinod</ui:remove>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<ui:param name="itemSpecInfo" value="#{isQuestionTypeItem ? templateSpecBean.selectedSpecQuestion.clItem : templateSpecBean.selectedSpecQuestion.clSpecDetail}"></ui:param>
 	<tr>
@@ -91,6 +94,25 @@
 			</h:panelGroup>
 		</td>
 	</tr>
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>
+			<h:panelGroup rendered="#{!templateSpecBean.selectedSpecQuestion.weightageReq and !isQuestionTypeItem}">
+				<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" />
+			</h:panelGroup>
+		</td>
+		<td>
+			<h:panelGroup rendered="#{!templateSpecBean.selectedSpecQuestion.weightageReq and !isQuestionTypeItem}">
+				<h:selectOneMenu id="manSpec" value="#{templateSpecBean.selectedSpecQuestion.mandatorySpec}" disabled="#{!editable}">
+					<f:selectItems value="#{templateSpecBackingBean.getMandatorySpecAndComplianceDropdownValues(false)}" />
+				</h:selectOneMenu>
+				<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.tooltip']}" />
+			</h:panelGroup>
+		</td>
+	</tr>
+	<ui:remove>#29187 End Vinod</ui:remove>
 	</table>
 	
 	<br />

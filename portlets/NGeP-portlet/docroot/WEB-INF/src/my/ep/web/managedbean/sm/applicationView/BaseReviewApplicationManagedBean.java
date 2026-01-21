@@ -351,7 +351,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	//#3460
 	private String sdoRemark;
-	
+
 	public String getSupportingDocMode() {
 		return supportingDocMode;
 	}
@@ -389,6 +389,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		private SmApplInquiry poToSupplierInquiry;
 		private List<SmApplInquiry> poSupplierInquiryHistory;
 		private List<SmApplSupportDoc> missinDocs;
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean auditAccess;
+	private Long currRegStatusId; //#26238
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2577,5 +2580,23 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.allMachineDtls = allMachineDtls;
 	}
 	//#30766 & #34209 - END
-		
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isAuditAccess() {
+		return auditAccess;
+	}
+
+	public void setAuditAccess(boolean auditAccess) {
+		this.auditAccess = auditAccess;
+	}
+	// #28895_35501 End
+	// #38856 End
+	public Long getCurrRegStatusId() {
+		return currRegStatusId;
+	}
+
+	public void setCurrRegStatusId(Long currRegStatusId) {
+		this.currRegStatusId = currRegStatusId;
+	}
+	// #38856 End
+	
 }

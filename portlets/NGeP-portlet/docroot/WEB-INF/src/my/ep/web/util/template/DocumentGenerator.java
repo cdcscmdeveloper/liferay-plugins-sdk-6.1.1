@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -68,6 +69,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont; //#25025 & #26770 
 
+import my.ep.constant.EpPropertiesConst;
 import my.ep.factory.EpLogger;
 
 /**
@@ -196,8 +198,15 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 					
 			//#25142 - end
 				// #26130 - start
+				//#21692 - Start
 				String fontPath = "";
-				String getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
+				String getPortalBaseURL = "";
+				if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
+					getPortalBaseURL = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_BASE_URL);
+				} else {
+					getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
+				}
+				//#21692 - End
 
 				fontPath = getPortalBaseURL + "/NGeP-portlet/resources/fonts/Arial.ttf";
 

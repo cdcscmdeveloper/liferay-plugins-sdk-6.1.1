@@ -301,6 +301,11 @@ public class RaceBackingBean extends
 								 MessageConst.INFO_779103,new String[]{});				
 					}
 				}
+		 // #34445 Start
+		 } catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		 // #34445 End
 		 }catch(Exception e){
 			 throw e;
 		 }finally{
@@ -319,11 +324,13 @@ public class RaceBackingBean extends
 								IRaceSO.class);
 				ISearchBean<PmRace> searchBean = new SearchBean<PmRace>();
 				
-				searchBean.getDataFilterBeans().add(
+				//#34445 Start
+				/*searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(), 
 								DbValueConst.RECORD_STATUS_ACTIVE
-				));
+				));*/
+				//#34445 End
 				
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("raceCode",

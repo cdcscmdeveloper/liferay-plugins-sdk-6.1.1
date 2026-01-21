@@ -149,10 +149,15 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean reviseInvoice = false;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 
+	//#35508 start
+  	private String originalSupplierInvRef;
+  	private String originalBankAccNoName;
+  	//#35508 end
+  	
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
 			factoringAccountMap = new HashMap<String, PmFinancialOrg>();
@@ -1244,12 +1249,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -1260,4 +1265,32 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+
+	/**
+	 * @return the originalSupplierInvRef
+	 */
+	public String getOriginalSupplierInvRef() {
+		return originalSupplierInvRef;
+	}
+
+	/**
+	 * @param originalSupplierInvRef the originalSupplierInvRef to set
+	 */
+	public void setOriginalSupplierInvRef(String originalSupplierInvRef) {
+		this.originalSupplierInvRef = originalSupplierInvRef;
+	}
+
+	/**
+	 * @return the originalBankAccNoName
+	 */
+	public String getOriginalBankAccNoName() {
+		return originalBankAccNoName;
+	}
+
+	/**
+	 * @param originalBankAccNoName the originalBankAccNoName to set
+	 */
+	public void setOriginalBankAccNoName(String originalBankAccNoName) {
+		this.originalBankAccNoName = originalBankAccNoName;
+	}
 }

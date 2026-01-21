@@ -61,8 +61,10 @@
 				style="width:15%">
 				<ui:remove><!-- 6906 - add disabled isRejected, add style --></ui:remove>
 				<p:selectOneMenu style="max-width: 225px !important; width:100% !important" 
-					disabled="#{(complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired) or isRejected}"
-					value="#{complianceTechnicalSupplier.compliance}">
+					disabled="#{(complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired) or isRejected
+					or (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne null
+					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified))}"
+					value="#{complianceTechnicalSupplier.compliance}"><ui:remove>21692</ui:remove>
 
 					<f:selectItems
 						value="#{evaluationBackingBean.statusDropdownCodeValues(ParameterTypeConst.complianceStatus,complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"></f:selectItems>
@@ -73,7 +75,10 @@
 			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="width:35%;white-space: normal;">
 				<ui:fragment
-					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
+					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'
+					and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne null
+					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified))}"><ui:remove>21692</ui:remove>
 					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						onmouseout="limitTextArea(this,200);"
 						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
@@ -86,6 +91,17 @@
 
 
 				</ui:fragment>
+				<ui:remove>21692 - Start</ui:remove>
+				<ui:fragment
+					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'
+					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
+					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
+						onmouseout="limitTextArea(this,200);"
+						disabled="true"
+						value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}">
+					</p:inputTextarea>
+				</ui:fragment>
+				<ui:remove>21692 - End</ui:remove>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

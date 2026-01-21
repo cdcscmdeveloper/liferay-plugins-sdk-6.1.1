@@ -848,7 +848,9 @@ public class QtSpecCloneBackingBean extends
 		if (null != copy.getDefinationType()
 				&& ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(copy.getDefinationType()
 						.getParameterCode())) {
-			copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+			// 37859,25635 -start-
+			copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			// 37859,25635 -end-
 		}
 
 		if (null != copy.getDefinationType()
@@ -1170,6 +1172,7 @@ public class QtSpecCloneBackingBean extends
 		this.getManagedBean().getQt().setEstimateAmt(null);
 		this.getManagedBean().getQt().setEstimatedAmount(null);
 		// 25635&34176-End
+		this.getManagedBean().getQt().setJustificationProcValue(null);// #38396 - reset this value
 		this.getManagedBean().getQt().setCloned(Boolean.TRUE);//34320&25635
 		specificationBackingBean.saveSpecificationCommitteeDtls();
 	}	
@@ -1991,43 +1994,19 @@ public class QtSpecCloneBackingBean extends
 			this.getManagedBean().setTechnicalScoring(new ArrayList<ScQtCheckList>());
 			
 			List<ScQtCheckList> checkList = this.getManagedBean().getScQtCheckSt2techProposal();
-			int score = 0;
-			float addScore = 0;
-			
+			// 37813,35384,25635 remove coding.
 			if (null != checkList && !checkList.isEmpty()) {
 				reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 				reqDTO.setScQt(scqt);
 				resDTO = specSo.retrieveCheckLists(reqDTO);
 				
 				for (ScQtCheckList list : checkList) {
-					// if (null == list.getQtScoreWeightage()) {
-					list = cloneScoreWeightage(list, resDTO.getTechnicalCheckList());
-					// }
-
-					if (null != list.getQtScoreWeightage() && null != list.getQtScoreWeightage().getScore()) {
-						addScore = addScore + list.getQtScoreWeightage().getScore().intValue();
-					}
-					
-					score = (int) addScore;
-					
-					if (list.isScoringReq()) {
-						this.getManagedBean().getTechnicalScoring().add(list);
-					} else {
-						if (null == list.getQtScoreWeightage()) {
-							ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
-							list.setQtScoreWeightage(scoreWeightage);
-						}
-						
-						list.getQtScoreWeightage().setScore(new BigDecimal(0));
-					}
-					
-					if (null != list.getQtScoreWeightage() && null != list.getQtScoreWeightage().getScore()) {
-						list.getQtScoreWeightage().setScore(list.getQtScoreWeightage().getScore());
-					}
+					list=cloneScoreWeightage(list,resDTO.getTechnicalCheckList());
+				// 37813,35384,25635 -start
+				   checkScoreWeightageCheckList(list);
+				// 37813,35384,25635 -end
 				}
-				
-				this.getManagedBean().setTechPoints(score);
-				
+				// 37813,35384,25635 remove coding.				
 				techWeightageSum();
 				techScoreSum();
 				if(!isTechnicalItemExist){//35113-start
@@ -2061,6 +2040,31 @@ public class QtSpecCloneBackingBean extends
 			specSo = null;
 		}
 	}	
+	
+	// 37813,35384,25635-start
+	/**
+	 * added scoring checklist to list and set weightage.
+	 * 
+	 * @param list
+	 * @return ScQtCheckList
+	 */
+	private ScQtCheckList checkScoreWeightageCheckList(ScQtCheckList checkList) {
+		if (checkList.isScoringReq()) {
+			this.getManagedBean().getTechnicalScoring().add(checkList);
+		} else {
+			if (null == checkList.getQtScoreWeightage()) {
+				ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
+				checkList.setQtScoreWeightage(scoreWeightage);
+			}
+			checkList.getQtScoreWeightage().setScore(new BigDecimal(0));
+		}
+		if (null != checkList.getQtScoreWeightage() && null != checkList.getQtScoreWeightage().getScore()) {
+			checkList.getQtScoreWeightage().setScore(checkList.getQtScoreWeightage().getScore());
+		}
+		return checkList;
+	}
+
+	// 37813,35384,25635-end
 	
 	private ScQtCheckList cloneScoreWeightage(ScQtCheckList val, List<ScQtCheckList> checkList) {
 		String[] deftypes = { "UP", "PD", "SP", "NA", "SD" };
@@ -2259,33 +2263,56 @@ public class QtSpecCloneBackingBean extends
 	
 	private void techScoreSum() {
 		try {
-			int total = 0;
-			List<ScQtCheckList> weightageList = this.getManagedBean().getTechnicalScoring();
-			
+			// 37813,35384,25635 -start
+			BigDecimal totalScore = BigDecimal.valueOf(0);
+			// 37813,35384,25635 -end
+			List<ScQtCheckList> weightageList = this.getManagedBean()
+					.getTechnicalScoring();
 			if (weightageList == null) {
-				weightageList = new ArrayList<ScQtCheckList>();
+				// 37813,35384,25635 -start
+				weightageList = new ArrayList<>();
+				// 37813,35384,25635 -end
 			}
-			
 			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
-				
-				if (null != weight.getQtScoreWeightage() && weight.getQtScoreWeightage().getWeightage() == null) {
-					weight.getQtScoreWeightage().setWeightage(new BigDecimal(0));
-				}
-				
+				// 37813,35384,25635 -start
+				ScQtCheckList weight = weightageList.get(i);
 				if (null != weight.getQtScoreWeightage()) {
-					total = total + weight.getQtScoreWeightage().getScore().intValue();
+					ScQtScoreWeightage checklistWeighatge = setWeightageScore(weight
+							.getQtScoreWeightage());
+					weight.setQtScoreWeightage(checklistWeighatge);
+					BigDecimal checkListScore = weight.getQtScoreWeightage()
+							.getScore() != null ? weight.getQtScoreWeightage()
+							.getScore() : BigDecimal.valueOf(0);
+					totalScore = totalScore.add(checkListScore);
+					// 37813,35384,25635 -end
 				}
-				
-				BigDecimal techScore = new BigDecimal(total);
-				
-				this.getManagedBean().setTechPoints(techScore.intValue());
+
 			}
+			// 37813,35384,25635 -start
+			this.getManagedBean().setTechPoints(totalScore);
+			// 37813,35384,25635 -end
 		} finally {
 
 		}
+
 	}
 	
+	// 37813,35384,25635 -start
+	/**
+	 * set checkist score weight.
+	 * 
+	 * @param scoreWeightage
+	 * @return ScQtScoreWeightage
+	 */
+	private ScQtScoreWeightage setWeightageScore(ScQtScoreWeightage scoreWeightage) {
+		if (null == scoreWeightage.getWeightage()) {
+			scoreWeightage.setWeightage(new BigDecimal(0));
+		}
+		return scoreWeightage;
+	}
+
+	// 37813,35384,25635 -end
+		
 	private BigDecimal retrieveTechnicalEvalutionPassingScorePmrules(String ruleType) {
 		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IRuleSO.class);

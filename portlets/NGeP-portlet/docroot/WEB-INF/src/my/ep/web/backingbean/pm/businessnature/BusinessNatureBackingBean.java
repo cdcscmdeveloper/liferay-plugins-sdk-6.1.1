@@ -59,6 +59,8 @@ public class BusinessNatureBackingBean extends
 			.getLogger(BusinessNatureManagedBean.class);
 
 	private IPagingDataModel<PmBusinessNature> businessNatureDataModel = new BusinessNaturePagingDataModel();
+	
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml"; //#34445
 
 	public BusinessNatureBackingBean() {
 		log.info("inside constructor");
@@ -1083,7 +1085,11 @@ public class BusinessNatureBackingBean extends
 																	.getUserLocale())));
 				}
 			}
-
+		//#34445 Start
+		} catch (EpException e) {
+			handleException(e);
+			returnUrl = NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			throw (e);
 		} finally {

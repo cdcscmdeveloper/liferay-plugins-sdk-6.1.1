@@ -21,20 +21,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
@@ -54,8 +44,6 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -81,7 +69,6 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -97,12 +84,22 @@ import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.stopinstr.StopInstrManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.DisciplinaryActionVO;
+
+import org.apache.commons.lang3.StringUtils;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backingbean for Stop Instruction.
@@ -159,6 +156,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 
 			FulfilmentResDTO resDTO;//36386
@@ -329,34 +327,8 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				getManagedBean().getStopInstr().setGstDeclaredDate(gstResDTO.getSmGstSupplier().getGstDeclaredDate());
 				getManagedBean().getStopInstr().setGstRegNo(gstResDTO.getSmGstSupplier().getGstRegNo());
 			}
-			//26279 - start
-			if(getManagedBean().getStopInstr().getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.SD_PENDING_APPROVAL.longValue()) {
-				SmSupplier smSupplier = getManagedBean().getStopInstr().getFlRequest().getSmSupplier();
-				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-				if(smDisciplinaryAction != null) {
-					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-					boolean isWarningOnly = false;
-					String warningOrDisciplinaryActionMsg = null;
-					String language =  new FacesScopes().getUserLocale().getLanguage();
-					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
-							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
-							&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
-							&& !smDisciplinaryAction.isManufacturerCancel()) {
-						isWarningOnly = true;
-						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-					} else if(smDisciplinaryAction.isCancelCategory() 
-							|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
-							|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
-							|| smDisciplinaryAction.isManufacturerCancel()){
-						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-					}
-				} else {
-					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-				}
-			}
-			//26279 - end
+			
+			checkDisciplinaryAction(); //26279
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -364,6 +336,28 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			}
 		}
 	}
+	
+	// 26279 - start
+	/**
+	 * Checks Disciplinary Action
+	 * 
+	 * if true will display Disciplinary Action
+	 * 
+	 */
+	private void checkDisciplinaryAction() {
+		if (getManagedBean().getStopInstr().getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.SD_PENDING_APPROVAL
+				.longValue()) {
+			SmSupplier smSupplier = getManagedBean().getStopInstr().getFlRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if (smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
+	}
+	// 26279 - End
 	
 	/**
 	 * Gets the populate reason list based on language and reason category.
@@ -981,14 +975,27 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		return fulfilmentSO.checkTaxInvoice(reqId);
 	}
 	
-	//26279 - start
+	// 26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
 	public void viewDisciplinaryAction() {
-		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
-		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute(
-				"disciplinaryActionHistoryDlg.show();");
+		SmSupplier supplier;
+
+		if (getManagedBean().getStopInstr().getFlRequest().getSmSupplier() != null) {
+			supplier = getManagedBean().getStopInstr().getFlRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+			
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		}
 	}
-	//26279 - end
+
+	// 26279 - end
+	
 	
 	//29870-start
 	private void validatePOCOCurrentStatus() {

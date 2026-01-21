@@ -981,6 +981,7 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REPORT_BUFFERS = "buffers"; 
 	public static final int BUFFER_SIZE = 1024; 
 	//Bug #33714 - end
+	public static final int MAX_BUFFER_SIZE = 4096;	//Bug #37911
 
 	//Enhancement 29418 - shaqimi
 	public static final String PARAM_CONTRACT_VER_ID = "PCONTRECTVERID";
@@ -1135,8 +1136,9 @@ public class ReportConst implements Serializable{
 	public static final String ERR_999000_MORTHAN_TEN = "lbl.rpt.ERR_999000_MORTHAN_TEN";
 	public static final String TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR = "lbl.rpt.ERR_999001_TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR";
 	//26238 : Disciplinary Action
-	public static final String SM_DISCIPLINARY_ACTION_HISTORY_ENG = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
-	public static final String SM_DISCIPLINARY_ACTION_HISTORY_MALAY = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
+	public static final String SM_DISCIPLINARY_ACTION_HISTORY = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
+	public static final String SM_DISCIPLINARY_ACTION_HISTORY_BASIC = "SM_DISCIPLINARY_ACTION_HISTORY_BASIC.jsp";
+	public static final String SM_PARAM_KEY_SUPPLIER_ID = "PSUPPLIERID";
 	
 	// 28379 YEP
 	public static final String FL_DOCTYPE_CO = "CR";

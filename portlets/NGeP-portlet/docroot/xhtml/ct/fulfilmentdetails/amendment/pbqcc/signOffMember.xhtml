@@ -13,19 +13,21 @@
 	</style>
     <p:panel id="memberPanel" header="#{lbl['lbl.ct.panel.meeting.decision']}" toggleable="true"  toggleSpeed="500">
         <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth20" styleClass="panelColumns" >
-        	<h:panelGrid columns="2" style="float:right;">
+        	<!-- #26186 start -->
+			<h:panelGrid columns="2" style="float:right;">
 				<h:outputText value="* " styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.pbm.decision.date']}" />
 			</h:panelGrid>
 			<p:calendar
 				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcDecisionDate}"
-				size="25" id="calPbqcDecisionMember" navigator="true" required="true"
-				label="#{lbl['lbl.ct.pbm.decision.date']}" readonlyInput="true"
-				showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-				 disabled="true">
+				size="25" id="calPbqcDecisionMember" navigator="true"
+				required="true" label="#{lbl['lbl.ct.pbm.decision.date']}"
+				readonlyInput="true" showOn="button"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true">
 			</p:calendar>
-			
-     		<h:panelGrid columns="2" style="float:right;">
+			<!-- #26186 end -->
+
+			<h:panelGrid columns="2" style="float:right;">
 	        	<h:outputText value="* " styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.decision']}"/>
 			</h:panelGrid>

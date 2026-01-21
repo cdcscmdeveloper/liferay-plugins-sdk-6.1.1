@@ -8,6 +8,10 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:param name="scQt" value="#{demoInvBB.managedBean.qt}" />
+	<!-- Reopen #25726 note 187 - issue 6 -->
+	<ui:param name="isContractTypeAsCentral"
+		value="#{scQt.contractType.parameterCode == ParameterConst.contractTypeCentral}" />
+	
 
 	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
 		toggleable="true">
@@ -193,7 +197,6 @@
 						</tr>
 					</table>
 				</td>
-			</tr>
 			<tr>
 				<td colspan="3"></td>
 				<td>
@@ -205,6 +208,7 @@
 						</tr>
 					</table>
 				</td>
+			</tr>
 			</tr>
 
 			<tr>
@@ -250,6 +254,10 @@
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+				<!-- Reopen #25726 note 187 - issue 6 -->
+				<td>
+				<table>
+				<tr>
 				<td><p:inputText id="fulfilTypeTxt"
 						rendered="#{!specificationBackingBean.managedBean.isGenInfo()}"
 						value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
@@ -264,7 +272,13 @@
 							value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="@form" listener="#{createQtBB.fulfilmentChange}"></p:ajax>
-					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon" /></td>
+					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon" />
+				</td>	
+				<!-- Reopen #25726 note 187 - issue 6 -->	
+				<td style="margin-top: -3px">
+					<ac:iconTooltip  rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+				</td>
+				</tr></table></td>	
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"
@@ -347,21 +361,29 @@
 					<table>
 						<tr>
 							<td><p:inputText id="responsePeriod"
-									value="#{CommonConstants.DEFAULT_RESPONSE_PERIOD}"
+									value="#{scQt.responsePeriod}"
 									style="width:200px;" disabled="true" /></td>
-							<td colspan="2"><ac:iconTooltip
-									value="#{lbl['lbl.sc.qt.response.period.tooltip']}" /></td>
+							<td colspan="2">
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
+							</td>
 						</tr>
 					</table>
 				</td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
 				</td>
-				<td><p:inputText value="#{qtExtensionResponseDueDate}"
-						style="width:200px;" disabled="true">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-					</p:inputText></td>
+				<td>
+				<c:if test="#{qtExtensionResponseDueDate != null}">
+					<p:inputText value="#{qtExtensionResponseDueDate}" style="width:200px;" disabled="true" >
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+					</p:inputText>
+				</c:if>
+				<c:if test="#{qtExtensionResponseDueDate == null}">
+					<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
+					</p:inputText>
+				</c:if>
+				</td>
 			</tr>
 			<tr>
 				<td></td>

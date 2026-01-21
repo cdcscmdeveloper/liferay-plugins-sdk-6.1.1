@@ -20,10 +20,11 @@
 		<ui:repeat var="workshopCatVar" value="#{viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
-					<td style="white-space: nowrap; float: left;">
-					    <!-- #28175 -->
+					<td>
+						<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 					    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} 
-					    	(#{viewSmApplBackingBean.getSupplierCategoryName(workshopCatVar, isSuppProfile)})" />
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(workshopCatVar, isSuppProfile, true)})" 
+					    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 					</td>
 				</tr>
 			</table>
@@ -62,11 +63,12 @@
 						
 	</p:panel>
 	
-	<p:dialog style="max-height:450px;width:500px" header="#{lbl['lbl.sm.workshop.information']}"
+	<!-- 29379 - Site Visit Grouping Enhancement -28775 -->
+	<p:dialog style="max-height:450px;width:900px;" header="#{lbl['lbl.sm.workshop.information']}"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
 		closable="true" hideEffect="fade" modal="true" id="workShopDialog">
 		
-		<p:scrollPanel mode="native" style="max-height:400px;width:450px;border:none">
+		<p:scrollPanel mode="native" style="max-height:400px;width:900px;border:none">
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
@@ -83,8 +85,8 @@
 							<p:outputLabel value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 										#{catFac.pmCategoryL3.categoryL3Code}
-									 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile)})" 
-								styleClass="outputLabel-view" /><br /> <!-- #28175 -->
+									 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile, false)})" 
+								styleClass="outputLabel-view" /><br /> <!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 						</ui:repeat>
 					</td>
 				</tr>
@@ -177,6 +179,30 @@
 				</tr>
 	
 			</table>
+			<!-- 29379 - Site Visit Grouping Enhancement -28775 - start -->
+			<p:panel header="#{lbl['lbl.sm.employee.info']}" toggleable="true">
+				<p:dataTable var="empInfo" id="empInfoId" rowKey="#{empInfo}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smSvWorkers}">
+
+					<p:column headerText="#{lbl['lbl.sm.employee.name']}">
+						<p:outputLabel value="#{empInfo.name}"/>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.employee.idtype']}">
+						<p:outputLabel value="#{viewSmApplBackingBean.getParamDescByParameterId(empInfo.identificationTypeId)}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.employee.icno']}">
+						<p:outputLabel value="#{empInfo.identificationNo}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.employee.specialization']}" style="white-space:normal;">
+						<p:outputLabel value="#{empInfo.expertise}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.employee.experience']}">
+						<p:outputLabel value="#{empInfo.workExpYear}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<!-- 29379 - Site Visit Grouping Enhancement -28775 - end -->
 		</p:scrollPanel>
 	</p:dialog>
 </ui:composition>

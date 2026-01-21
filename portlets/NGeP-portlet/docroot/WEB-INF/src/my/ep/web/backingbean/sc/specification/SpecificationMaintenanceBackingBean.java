@@ -461,7 +461,8 @@ private class SpecMaintenanceSearchQtDataModel extends
 	this.getManagedBean().setQtSpecMaintanance(true);	
 	
 		// #28784 - Demo WIP
-		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		boolean isQtNewVersion = scQt.getParentQtId() == null ? validateSupportedTask(scQt.getQtNo(),
+				CompositeValidityConst.PM_COMPOSITE_VALIDITY) : checkParentRepublishQT(scQt);
 		this.getManagedBean().setNewVersion(isQtNewVersion);
    
 		QtnTenderSearchBean qtTnderBean = this.getManagedBean().getQtnTenderSearchBean();
@@ -596,20 +597,30 @@ private class SpecMaintenanceSearchQtDataModel extends
 				this.getManagedBean().setChecklist(false);
 			}
 		}
+		//#33795 - start
+		if (!isSpecCommittee()) {
+			this.getManagedBean().setChecklist(false);
+		}
+		//#33795 - end
 		// #15391 - end
 
+		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus().getStatusId() : null; //#29732
 		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());// #29732
 		// #29732 @idham 25/07/2023 - Start
-		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
-				&& !isQtRevisePubNqtPendingScheDoc()) {
-			if (isSpecRoleMaintenanceValidation() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
-					&& !isQtRevisePubNqtPendingScheDoc()) {
+		if (isSpecRoleMaintenanceValidation() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& !isQtRevisePubNqtPendingScheDoc() && status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
+			if (isSpecRoleMaintenanceValidation()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
-				this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
+				if(this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(this.getManagedBean().getCurrentStatusId()) 
+						&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(this.getManagedBean().getCurrentStatusId())
+						&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(this.getManagedBean().getCurrentStatusId())){
+					this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
+				}
 			}
 			String changedCatCodeList = specBB.checkCatCodeChange();
 
 			if (!changedCatCodeList.isEmpty() && !this.getManagedBean().isReadOnly()) {
+				this.getManagedBean().setResetHistoryCatCode(true);
 				redirect = false;
 				this.getManagedBean().setActiveIndex(1);
 				specBB.retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
@@ -636,7 +647,9 @@ private class SpecMaintenanceSearchQtDataModel extends
 		//#29732
 		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
 		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
-		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());// #29732 first time spec  maint
+		if(isSpecRoleMaintenanceCheckBox() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)){
+			previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());// #29732 first time spec  maint
+		}
 		
 		// 11104_Start
 		this.getManagedBean().setSampleShowHide(isSampleWip);
@@ -766,11 +779,10 @@ private class SpecMaintenanceSearchQtDataModel extends
 				.getDisplayPortletId());
 	}
 
-	private boolean isSpecRoleMaintenanceValidation() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
-				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
-				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+    private boolean isSpecRoleMaintenanceValidation(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value()); 
 	}
 
 	private boolean isQtRevisePubNqtPendingScheDoc() {
@@ -783,4 +795,12 @@ private class SpecMaintenanceSearchQtDataModel extends
 		}
 	}
 	// 29732 end
+	
+	//29732 -Start
+	private boolean isSpecRoleMaintenanceCheckBox() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
+	//29732 -End
 }

@@ -46,25 +46,12 @@ public class SmSideMenuIconUtil {
 	public static void setSectionEditorVO(SmApplicationManagedBean bean,
 			String sectionType) {
 		SmApplicationUtil.checkOverLappingCategories(bean); //#31018
+		if (bean.isSupplierUser()) {
+			SmApplicationUtil.enableBankSectionOnly(bean, null); //#26238 (39061)
+		}
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			log.info("31230 Check Company Basic has difference - start");
-			if (bean.isSupplierUser()) {
-				//27641, 27736 : Disciplinary Action - #26238 - start 
-				if(bean.getSmSupplier() != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								bean.getEditVO().setDisciplinary(true);
-							}
-						}						
-					} else {
-						bean.getEditVO().setDisciplinary(false);
-					}
-				}				
-				//27641, 27736 : Disciplinary Action - #26238 - end
-				
+			if (bean.isSupplierUser()) {				
 				bean.getEditVO().setSuppEditCompBasic(false);
 				log.info("31230 Check if Supplier edit company basic");
 				if (step1CompanyBasicHasDifference(bean.getLatestApproveAppl(),
@@ -117,21 +104,6 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)) {
 			if (bean.isSupplierUser()) {
-				//27641, 27736 : Disciplinary Action - #26238 - start 
-				if(bean.getSmSupplier() != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								bean.getEditVO().setDisciplinary(true);
-							}
-						}						
-					} else {
-						bean.getEditVO().setDisciplinary(false);
-					}
-				}				
-				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditAssocProj(false);
 				log.info("31230 Check if Supplier edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(true,
@@ -184,21 +156,6 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			log.info("31230 Check Personnel has difference - start");
 			if (bean.isSupplierUser()) {
-				//27641, 27736 : Disciplinary Action - #26238 - start 
-				if(bean.getSmSupplier() != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								bean.getEditVO().setDisciplinary(true);
-							}
-						}						
-					} else {
-						bean.getEditVO().setDisciplinary(false);
-					}
-				}				
-				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditPersonnel(false);
 				log.info("31230 Check if Supplier edit personnel");
 				if (step3PersonnelHasDifference(true, bean.getLatestApproveAppl(),
@@ -258,21 +215,6 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			if (bean.isSupplierUser()) {
-				//27641, 27736 : Disciplinary Action - #26238 - start 
-				if(bean.getSmSupplier() != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								bean.getEditVO().setDisciplinary(true);
-							}
-						}						
-					} else {
-						bean.getEditVO().setDisciplinary(false);
-					}
-				}				
-				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditEquity(false);
 				log.info("31230 Check if Supplier edit equity");
 				if (step4EquityHasDifference(true, bean.getLatestApproveAppl(),
@@ -322,22 +264,9 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
 			if (bean.isSupplierUser()) {
-				//27641, 27736 : Disciplinary Action - #26238 - start 
-				if(bean.getSmSupplier() != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								bean.getEditVO().setDisciplinary(true);
-							}
-						}						
-					} else {
-						bean.getEditVO().setDisciplinary(false);
-					}
-				}				
-				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditBank(false);
+				// #28895_35501 - AUDIT TRAIL SM
+				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
@@ -350,6 +279,8 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
+				// #28895_35501 - AUDIT TRAIL SM
+				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
@@ -364,6 +295,8 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
 				bean.getEditVO().setAppEditBank(false);
+				// #28895_35501 - AUDIT TRAIL SM
+				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
@@ -464,7 +397,6 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)) {
 			log.info("31230 Check Facility has difference - start");
 			if (bean.isSupplierUser()) {
-				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditFacility(false);
 				log.info("31230 Check if Supplier edit facility");
 				if (step7FacilityHasDifference(true, bean.getLatestApproveAppl(),
@@ -516,7 +448,6 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
 			log.info("31230 Check Equipment has difference - start");
 			if (bean.isSupplierUser()) {
-				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquipment(false);
 				log.info("31230 Check if Supplier edit equipment");
 				if (step8EquipmentHasDifference(true, bean.getLatestApproveAppl(),
@@ -1806,6 +1737,8 @@ public class SmSideMenuIconUtil {
 		}
 		
 		bean.getEditVO().setSuppEditBank(false);
+		// #28895_35501 - AUDIT TRAIL SM
+		bean.getEditVO().setSuppEditAuditTrail(false);
 		if (step5BankHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
 			bean.getEditVO().setSuppEditBank(true);
 		}

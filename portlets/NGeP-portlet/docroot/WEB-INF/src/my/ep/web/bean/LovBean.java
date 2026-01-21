@@ -27,6 +27,12 @@ public class LovBean implements Serializable {
 	private String autoUpdateValue;
 	private boolean isDisplayResultWhenFirstLoad;
 	private boolean isDisplayResultWhenReset;
+	// Start - #29416
+	private boolean itemUsageMonitoringReport = false;
+	private String docNo;
+	private boolean unSelectAndCancel = false;
+	private boolean resetFlag = false;
+	// End - #29416
 	
 	public String getLovId() {
 		return lovId;
@@ -145,6 +151,40 @@ public class LovBean implements Serializable {
 	public void setDisplayResultWhenReset(boolean isDisplayResultWhenReset) {
 		this.isDisplayResultWhenReset = isDisplayResultWhenReset;
 	}
+	
+	// Start - #29416
+	public boolean getItemUsageMonitoringReport() {
+		return itemUsageMonitoringReport;
+	}
+
+	public void setItemUsageMonitoringReport(boolean itemUsageMonitoringReport) {
+		this.itemUsageMonitoringReport = itemUsageMonitoringReport;
+	}
+
+	public String getDocNo() {
+		return docNo;
+	}
+
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
+	}
+
+	public boolean isUnSelectAndCancel() {
+		return unSelectAndCancel;
+	}
+
+	public void setUnSelectAndCancel(boolean unSelectAndCancel) {
+		this.unSelectAndCancel = unSelectAndCancel;
+	}
+
+	public boolean isResetFlag() {
+		return resetFlag;
+	}
+
+	public void setResetFlag(boolean resetFlag) {
+		this.resetFlag = resetFlag;
+	}
+	// End - #29416
 	
 	
 }

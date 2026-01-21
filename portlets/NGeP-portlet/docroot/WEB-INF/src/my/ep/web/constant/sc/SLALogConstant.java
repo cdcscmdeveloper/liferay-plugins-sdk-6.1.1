@@ -11,8 +11,8 @@ public class SLALogConstant {
 	 * MODULE
 	 */
 	public static final String QT_MODULE = "QT"; // #29007
-	public static final String COMMON_MODULE = "COMMON"; //#28895#35492
-	
+	public static final String COMMON_MODULE = "COMMON"; // #28895#35492
+
 	/*
 	 * CLASS_NAME
 	 */
@@ -23,17 +23,27 @@ public class SLALogConstant {
 	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
 	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
 	// 25037 - end
-	//#25426 - start
+	// #25426 - start
 	public static final String QT_SUPPLIER_FINALIZATION_BACKINGBEAN = "SupplierFinalizationBackingBean";
-	//#25426 - end
+	// #25426 - end
+
 	/*
 	 * METHOD_NAME
 	 */
 	// #29007 -start-
 	public static final String QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY = "generateLampiranA3PdfFromVelocity";
 	public static final String QT_CREATE_LAMPIRANA3FORQT = "createLampiranA3forQT";
-	public static final String QT_CREATE_LAMPIRANA3PDF_FOR_QT_VERIFICATION= "createLampiranA3forQTVerification";
+	public static final String QT_CREATE_LAMPIRANA3PDF_FOR_QT_VERIFICATION = "createLampiranA3forQTVerification";
 	// #29007 -end-
+	// #29187 Start Vinod
+	public static final String QT_GET_COMPLIANCE_DROPDOWN_VALUES = "getComplianceDropdownValues";
+	public static final String QT_CHECK_SAMPLE_COMPLIANCE = "checkSampleCompliance";
+	public static final String QT_CHECK_SPEC_COMPLIANCE = "checkTechnicalSpecCompliance";
+	public static final String QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES = "getMandatorySpecDropdownValues";
+	public static final String QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES = "getMandatorySpecAndComplianceDropdownValues";
+	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
+	// #29187 End Vinod
 	// 25037 - start
 	public static final String QT_PRERENDER_GENERIC_APPROVAL = "preRenderGenericApproval";
 	public static final String QT_UPDATE_GENERIC_APPROVAL_TASK = "updateGenericApprovalTask";
@@ -41,8 +51,19 @@ public class SLALogConstant {
 	public static final String QT_PREPARE_COMMITTEE_HISTORY = "prepareCommitteeHistory";
 	public static final String QT_PREPARE_QT_INFO = "prepareQTInfo";
 	public static final String QT_SLA_DOT_SEPARATOR = ".";
-
 	// 25037 - end
+	// 25791-start
+	public static final String QT_DETAIL_BACKING_BEAN = "QTDetailBackingBean";
+	public static final String QT_RETRIEVE_CONTRACT_DETAILS_LOA = "retrieveContractDtlsByLOA";
+	public static final String QT_VIEW_LOA_CONTRACT_PAGING_MODEL = "ViewLOAContractPagingDataModel";
+	public static final String QT_VIEW_CONTRACT_PAGING_MODEL = "ViewContractPagingDataModel";
+	public static final String QT_VIEW_NORMAL_LOA_TRACKING_DTLS_PAGE = "viewNormalLOATrackingDetailsPage";
+	public static final String VIEW_LOA_CONTRACT_DETAILS_PAGE = "viewLOAContractDetailsPage";
+	public static final String VIEW_DL_LOA_CONTRACT_TRACKING_DETAILS = "viewLOAContractTrackingDtls";
+	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQTLOAContractDtls";
+	public static final String VIEW_QT_BID_SCHEDULES_DATA_MODEL = "ScheduleBiddingPagingDataModel";
+	// 25791-end
+
 	private SLALogConstant() {
 
 	}

@@ -75,7 +75,10 @@
 					label="#{lbl['lbl.tpl.spec.content.user.score']}"
 					style="text-align:right;"  maxlength="18" required="true"
 					disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired or
-					evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' or isRejected}"><ui:remove><!-- 6906 --></ui:remove>
+					evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1' or isRejected
+					or (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
+					<ui:remove><!-- 6906 21692 --></ui:remove>
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 						maxIntegerDigits="14" integerOnly="true" />
@@ -93,13 +96,28 @@
 
 			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
 				<ui:fragment
-					rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
+					rendered="#{complianceTechnicalSupplier.submitted eq 'true'
+					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected
+					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified)}">
+					<ui:remove>21692</ui:remove>
 					<p:inputTextarea rows="2" cols="55" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);"
 						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 						value="#{complianceTechnicalSupplier.remark}">
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 					</p:inputTextarea>
 				</ui:fragment>
+				<ui:remove>21692 - Start</ui:remove>
+				<ui:fragment
+					rendered="#{complianceTechnicalSupplier.submitted eq 'true'
+					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
+					<p:inputTextarea rows="2" cols="55" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);"
+						disabled="true"
+						value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}">
+						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+					</p:inputTextarea>
+				</ui:fragment>
+				<ui:remove>21692 - End</ui:remove>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

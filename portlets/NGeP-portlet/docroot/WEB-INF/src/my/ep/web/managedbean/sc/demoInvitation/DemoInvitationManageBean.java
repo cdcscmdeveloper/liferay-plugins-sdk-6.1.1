@@ -148,6 +148,8 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 	private boolean showCancelButton = true;
 	
 	private boolean disableSaveAndSubmitButton = true;
+	
+	private boolean selectAll;
 
 	public int getTabActiveIndex() {
 		return tabActiveIndex;
@@ -556,6 +558,14 @@ public class DemoInvitationManageBean extends BaseManagedBean {
 
 	public void setDisableSaveAndSubmitButton(boolean disableSaveAndSubmitButton) {
 		this.disableSaveAndSubmitButton = disableSaveAndSubmitButton;
+	}
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
 	}
 	
 	

@@ -29,10 +29,12 @@ public class AmendTabSideMenus {
 	List<String> menuWithMeetings  = null;
 	List<String> menuWithDeclaration = null;
 	List<String> menuWithAmendSupplier = null;
+	List<String> menuWithBond = null; //24333 
 
 	List<String> menuWithAgency = null;
 	List<String> menuDeduction= null;
 	List<String> menuSchedule = null;
+	List<String> menuApprover = null; //#24333
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -72,7 +74,12 @@ public class AmendTabSideMenus {
 			menuWithPrepareBond =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
-
+		//24333 - Start
+		if (menuWithBond ==  null) {
+			menuWithBond =  new ArrayList<String>(Arrays.asList(
+					ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		}
+		//24333 - End
 		if (menuWithDecision == null) {
 			menuWithDecision =  new ArrayList<String>(Arrays.asList(
 					ResourceBundleUtils.getMessage("lbl.ct.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
@@ -109,5 +116,11 @@ public class AmendTabSideMenus {
 					ResourceBundleUtils.getMessage("lbl.ct.menu.loa.content", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.ct.menu.view.loa", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		}
+		//#24333 - Start
+		if (menuApprover == null) {
+			menuApprover =  new ArrayList<String>(Arrays.asList(
+					ResourceBundleUtils.getMessage("lbl.ct.menu.approver.setting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		}
+		//#24333 - End
 	}
 }

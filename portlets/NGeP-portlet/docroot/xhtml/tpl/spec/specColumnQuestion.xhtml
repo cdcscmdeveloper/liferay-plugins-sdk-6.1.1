@@ -29,16 +29,21 @@
 			</p:inputTextarea>
 			<p:message id="itemNameMsg" for="itemName" display="icon" />
 			<ui:fragment rendered="#{specificationrequired }">
+			<ui:remove>#36681 - start</ui:remove>
 			<p:inputTextarea id="specification" style="width:calc(100% - 30px);"
 				value="#{question.clSpecDetail}"
 				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
 				required="#{isValidationReq}" rows="5" maxlength="1000"
-				onkeyup="limitTextArea(this,1000);"
-				onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
+				validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
+				onkeyup="limitTextAreaWithBreakline(this,1000);"
+				onkeydown="limitTextAreaWithBreakline(this,1000);"
+				onmouseout="limitTextAreaWithBreakline(this,1000);"
 				label="#{lbl['lbl.tpl.spec.content.specification']}"
 				autoResize="false">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
+				<f:validateLength for="specification" maximum="1000" />
 			</p:inputTextarea>
+			<ui:remove>#36681 - end</ui:remove>
 			<p:message id="specificationMsg" for="specification" display="icon" />
 			<br />
 			#{question.cmItem.extensionCode}

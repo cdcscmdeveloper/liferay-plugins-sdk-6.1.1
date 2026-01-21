@@ -18,13 +18,22 @@
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 	
 	<div class="nav-wrapper" align="justify">
-			<p:commandButton id="backBtn"  style="left;"
-				action="#{poTaskWeightageBB.returnToPoUserMain}" value="#{lbl['lbl.btn.back']}"/>
+		<p:commandButton id="backBtn"  style="left;"
+			action="#{poTaskWeightageBB.returnToPoUserMain}" value="#{lbl['lbl.btn.back']}"/>
 				
-			<p:commandButton id="btnSave" style="float:right;" update="pnlPoRoleTask"
-				action="#{poTaskWeightageBB.updateUser()}" value="#{lbl['lbl.btn.save']}">
-				<f:param name="disableValidation" value="true" />
-			</p:commandButton>
+		<!-- 34445 start -->
+		<p:commandButton id="btnSave" value="#{lbl['lbl.btn.save']}" 
+			style="float:right;" oncomplete="if (!args.validationFailed) saveInfoDlg.show()">
+			<f:param name="disableValidation" value="true" />
+		</p:commandButton>
+		
+		<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
+			okAction="poTaskWeightageBB.updateUser"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.save.msg']}"
+			update="@([id$=pnlPoRoleTask])"/>
+		<!-- 34445 end -->
 	</div>
 	<div style="clear: both;"></div>
 	

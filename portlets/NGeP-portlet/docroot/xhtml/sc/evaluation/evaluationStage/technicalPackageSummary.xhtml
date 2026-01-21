@@ -121,8 +121,10 @@
 			<ui:remove><!-- 6906 - end --></ui:remove>
 
 
+			<ui:remove>#29187 changed width Vinod</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="width:50%;white-space: normal;text-align:right;">
+				style="width:25%;white-space: normal;text-align:right;">
+				<ui:remove>#29187 changed width Vinod</ui:remove>
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 
 			</p:column>
@@ -136,6 +138,14 @@
 					value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}" />
 			</p:column>
 			<!-- 29021 End-->
+			<ui:remove>29187 Start Vinod</ui:remove>
+			<p:column style="width:30%;white-space: normal;text-align:center;" rendered="#{isDisqualified}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.eva.disqualified.supplier.disqualified']}" />
+				</f:facet>
+				<h:outputText value="#{evaluationBackingBean.isDisqialifiedByCompliance(disQualifiedSupplier) ? lbl['lbl.sc.eva.disqualified.supplier.disqualified.message'] : ''}"/>
+			</p:column>
+			<ui:remove>29187 End Vinod</ui:remove>
 
 		</p:dataTable>
 

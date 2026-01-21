@@ -149,6 +149,19 @@
 					<ui:include src="SC_083_Financial_Evaluation_Committee_WIP.xhtml"></ui:include>
 				</c:if>
 
+				<ui:remove>21692 - Start</ui:remove>
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL}">
+					<ui:include src="SC_076_Prop_Valid_Period_Ext.xhtml"></ui:include>
+				</c:if>
+				<ui:remove>21692 - End</ui:remove>
+				<ui:remove>21692 - Start</ui:remove>
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL}">
+					<ui:include src="SC_080_Prop_Valid_Period_Ext_List.xhtml"></ui:include>
+				</c:if>
+				<ui:remove>21692 - End</ui:remove>
+
 			</p:panel>
 
 		</p:outputPanel>

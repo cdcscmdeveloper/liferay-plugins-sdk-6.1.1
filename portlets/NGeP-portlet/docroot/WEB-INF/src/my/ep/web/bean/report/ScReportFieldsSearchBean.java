@@ -13,6 +13,10 @@ package my.ep.web.bean.report;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.faces.model.SelectItem;
+
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+
 /**
  * The Class FinancialTableSearchBean.
  * 
@@ -38,6 +42,11 @@ public class ScReportFieldsSearchBean implements Serializable {
 	private Date scPublishToDate;
 	private String scDeskOfficer;
 	private String scPtj;
+	//#21692 - Start
+	private String scPtjName;
+	private PmOrgProfile ptjProfile;
+	private SelectItem doSelectItem;
+	//#21692 - End
 	/**
 	 * @return the allCheckboxValue
 	 */
@@ -255,6 +264,45 @@ public class ScReportFieldsSearchBean implements Serializable {
 	public void setScPtj(String scPtj) {
 		this.scPtj = scPtj;
 	}
+	
+	//#21692 - Start
+	public String getScPtjName() {
+		return scPtjName;
+	}
+	public void setScPtjName(String scPtjName) {
+		this.scPtjName = scPtjName;
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * @return the ptjProfile
+	 */
+	public PmOrgProfile getPtjProfile() {
+		return ptjProfile;
+	}
+	/**
+	 * @param ptjProfile the ptjProfile to set
+	 */
+	public void setPtjProfile(PmOrgProfile ptjProfile) {
+		this.ptjProfile = ptjProfile;
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * @return the doSelectItem
+	 */
+	public SelectItem getDoSelectItem() {
+		return doSelectItem;
+	}
+	/**
+	 * @param doSelectItem the doSelectItem to set
+	 */
+	public void setDoSelectItem(SelectItem doSelectItem) {
+		this.doSelectItem = doSelectItem;
+	}
+	//#21692 - End
 	
 	
 	

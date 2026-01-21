@@ -19,15 +19,21 @@
 			value="#{biddingBB.managedBean.scheduledBid.scBidItems}">
 			<ac:paginator for="scBidItemsList"></ac:paginator>
 
-
-			<p:column headerText="#{lbl['lbl.sc.item.name']}">
+			<ui:remove> #25791 start </ui:remove>
+			<p:column style="width : 400px;"
+				headerText="#{lbl['lbl.sc.item.name']}">
 				<h:outputText id="itemNameVBP"
+					style="white-space: normal;word-wrap: break-word;" escape="false"
 					value="#{item.scRequestItem.itemName}" />
+				<ui:remove> #25791 end </ui:remove>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.item.description']}">
-
+			<ui:remove> #25791 start </ui:remove>
+			<p:column style="width : 350px;"
+				headerText="#{lbl['lbl.sc.item.description']}">
 				<h:outputText id="ItemDescriptionVBP"
+					style="white-space: normal;word-wrap: break-word;" escape="false"
 					value="#{item.scRequestItem.itemDesc}" />
+				<ui:remove> #25791 end </ui:remove>
 			</p:column>
 			<p:column style="width : 60px" headerText="#{lbl['lbl.sc.uom']}">
 
@@ -77,7 +83,7 @@
 
 		<p:dataTable id="bidPackagesListForBMBP"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{biddingBB.managedBean.bidPackages}" var="item">
+			value="#{biddingBB.managedBean.bidPackages}" var="item" rowIndexVar="index"><ui:remove>26247 - added rowIndexVar attr</ui:remove>			
 			<ac:paginator for="bidPackagesListForBMBP"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.ranking']}">
 				<p:outputLabel value="#{item.ranking}" />
@@ -94,6 +100,17 @@
 				<h:outputText
 					value="#{(item.scBidSupplier.bumi)? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
+			<ui:remove>26247 - start</ui:remove>
+			<p:column style="white-space:normal;width:18%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+				</f:facet>
+				<ac:disciplinaryActionYesNo
+					supplier="#{item.scBidSupplier.smSupplier}" maxRow="5" index="#{index}"/>
+			</p:column>
+			<ui:remove>26247 - end</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
 				<h:outputText style="float : right"
 					value="#{item.scBidSupplier.packageStartPrice}">

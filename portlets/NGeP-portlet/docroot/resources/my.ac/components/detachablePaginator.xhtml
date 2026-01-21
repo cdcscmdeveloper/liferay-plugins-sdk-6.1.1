@@ -24,27 +24,27 @@
 				<!-- 25037 start -->
 				<p:commandLink rendered="#{!cc.attrs.minimal}"
 					styleClass="ui-paginator-first ui-state-default ui-corner-all"
-					action="#{cc.attrs.paginatorObject.goToPage(1)}" process="@this" oncomplete="updateForm();" partialSubmit="true" disabled="#{cc.attrs.paginatorObject.pageIndex==1}">
-					<i class="ui-icon ui-icon-seek-first">p</i>
+					action="#{cc.attrs.paginatorObject.goToPage(1)}" process="@this" update=":form:#{cc.attrs.loopId}" oncomplete="updateForm();" partialSubmit="true" disabled="#{cc.attrs.paginatorObject.pageIndex==1}">
+					<i class="ui-icon ui-icon-seek-first">p</i> <ui:remove><!-- #25138 add update =form... --></ui:remove>
 				</p:commandLink>
 				<!-- 25037 end -->
 				<p:commandLink id="prevBtn" 
 					styleClass="ui-paginator-prev ui-state-default ui-corner-all"
-					action="#{cc.attrs.paginatorObject.prev()}" process="@this" oncomplete="updateForm();" partialSubmit="true" disabled="#{cc.attrs.paginatorObject.pageIndex==1}">
-					<i class="ui-icon ui-icon-seek-prev">p</i>	
+					action="#{cc.attrs.paginatorObject.prev()}" process="@this" update=":form:#{cc.attrs.loopId}" oncomplete="updateForm();" partialSubmit="true" disabled="#{cc.attrs.paginatorObject.pageIndex==1}">
+					<i class="ui-icon ui-icon-seek-prev">p</i>	<ui:remove><!-- #25138 add update =form... --></ui:remove>
 				</p:commandLink>
 					<c:forEach var = "i" begin = "1" end = "#{cc.attrs.paginatorObject.pages}">
-        				<p:commandLink action="#{cc.attrs.paginatorObject.goToPage(i)}" process="@this" oncomplete="updateForm();" partialSubmit="true" value="#{i}" style="text-decoration: none !important; font-weight: bold !important;" 
+        				<p:commandLink action="#{cc.attrs.paginatorObject.goToPage(i)}" process="@this" update=":form:#{cc.attrs.loopId}" oncomplete="updateForm();" partialSubmit="true" value="#{i}" style="text-decoration: none !important; font-weight: bold !important;" 
         				styleClass="ui-paginator-next ui-state-default ui-corner-all #{cc.attrs.paginatorObject.pageIndex == i ?'ui-state-active':''}"></p:commandLink>
       				</c:forEach>
-				<p:commandLink styleClass="ui-paginator-next ui-state-default ui-corner-all" action="#{cc.attrs.paginatorObject.next()}" process="@this" oncomplete="updateForm();" partialSubmit="true"  disabled="#{cc.attrs.paginatorObject.pageIndex==cc.attrs.paginatorObject.pages}" >
-					<i class="ui-icon ui-icon-seek-next">p</i>	
+				<p:commandLink styleClass="ui-paginator-next ui-state-default ui-corner-all" action="#{cc.attrs.paginatorObject.next()}" process="@this" update=":form:#{cc.attrs.loopId}" oncomplete="updateForm();" partialSubmit="true"  disabled="#{cc.attrs.paginatorObject.pageIndex==cc.attrs.paginatorObject.pages}" >
+					<i class="ui-icon ui-icon-seek-next">p</i>	<ui:remove><!-- #25138 add update =form... --></ui:remove>
 				</p:commandLink>
 				<!-- 25037 start -->
 				<p:commandLink rendered="#{!cc.attrs.minimal}"
 					styleClass="ui-paginator-last ui-state-default ui-corner-all"
-					action="#{cc.attrs.paginatorObject.goToPage(cc.attrs.paginatorObject.pages)}" process="@this" oncomplete="updateForm();" partialSubmit="true" disabled="#{cc.attrs.paginatorObject.pageIndex==cc.attrs.paginatorObject.pages}">
-					<i class="ui-icon ui-icon-seek-end">p</i>		
+					action="#{cc.attrs.paginatorObject.goToPage(cc.attrs.paginatorObject.pages)}" process="@this" update=":form:#{cc.attrs.loopId}" oncomplete="updateForm();" partialSubmit="true" disabled="#{cc.attrs.paginatorObject.pageIndex==cc.attrs.paginatorObject.pages}">
+					<i class="ui-icon ui-icon-seek-end">p</i> <ui:remove><!-- #25138 add update =form... --></ui:remove>
 				</p:commandLink>
 				<!-- 25037 end -->
 		</h:panelGroup>

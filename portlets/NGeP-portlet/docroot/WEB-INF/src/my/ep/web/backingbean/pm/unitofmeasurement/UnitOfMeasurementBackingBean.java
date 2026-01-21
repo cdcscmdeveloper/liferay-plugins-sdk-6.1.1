@@ -67,6 +67,7 @@ public class UnitOfMeasurementBackingBean extends
 			.getLogger(UnitOfMeasurementManagedBean.class);
 	//Navigation Details
 	public static final String NAV_TO_SEARCH = "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml"; //#34445
 		
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	public static final boolean SEARCH_DEFAULT = false;
@@ -374,40 +375,24 @@ public class UnitOfMeasurementBackingBean extends
 
 		String messageId = null;
 
-		// PmUom oldPmUom=this.getManagedBean().getOldPmUom();
-		PmUom pmUom = this.getManagedBean().getPmUom();
-     	validationMessage(pmUom);
-
-		UomReqDTO reqDTO = new UomReqDTO();
-		reqDTO.setPmUom(pmUom);
-
-		String[] msgParam = new String[] { pmUom.getUomCode() };
-
+		//#34445 - Start
 		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
-
-	
+		PmUom pmUom = this.getManagedBean().getPmUom();
 
 		try {
+			validationMessage(pmUom);
+
+			UomReqDTO reqDTO = new UomReqDTO();
+			reqDTO.setPmUom(pmUom);
+
+			String[] msgParam = new String[] { pmUom.getUomCode() };
+			
 			if (pmUom.isBrandNew()) {
 				messageId = MessageConst.TD_80600;
 			} else {
 				messageId = MessageConst.TD_80601;
 
-				/*
-				 * if(oldPmUom!=null && pmUom!=null &&
-				 * !oldPmUom.getRecordStatusFlg
-				 * ().equals(pmUom.getRecordStatusFlg())){
-				 * if(pmUom.getRecordStatusFlg
-				 * ().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-				 * recordStatusMessageId = MessageConst.TD_80603; } else{
-				 * recordStatusMessageId = MessageConst.TD_80602; }
-				 * reqDTO.getTrackDairyVOs
-				 * ().add(PmCommonUtil.assignTrackingDairyForUOM
-				 * (pmUom.getUomId(),
-				 * pmUom.getUomCode(),getPmActionDesc(recordStatusMessageId
-				 * ,msgParam))); }
-				 */
 			}
 			reqDTO.setTrackingStatus(true);
 
@@ -461,6 +446,10 @@ public class UnitOfMeasurementBackingBean extends
 				}
 
 			}
+		} catch (EpException e) {
+			handleException(e);
+			return NAV_TO_MAINTAIN;
+		//#34445 End
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

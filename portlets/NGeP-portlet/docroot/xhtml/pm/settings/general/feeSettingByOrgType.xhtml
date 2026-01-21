@@ -11,10 +11,11 @@
 		<tr>
 			<td>
 				<div align="right" style="width: 100%">
+					<!-- 34445 start -->
 					<p:commandButton value="#{lbl['lbl.btn.save']}" id="orgTypeFeeSaveBtn"
 						partialSubmit="true" process=":form:settingTabId:feeSettingId"
-						update=":form:settingTabId:feeSettingId"
-						action="#{ruleCatalogueBackingBean.saveFeeExemptionForOrgType}"></p:commandButton>
+						oncomplete="if (!args.validationFailed) saveOrgTypeInfoDlg.show();"/>
+					<!-- 34445 end -->
 				</div>
 			</td>
 		</tr>
@@ -109,4 +110,15 @@
 				title="#{lbl['lbl.msg.confirm.delete.header']}"
 				content="#{lbl['lbl.msg.confirm.delete']}" 
 				update=":form:settingTabId:feeSettingId:feeByOrgTypeTableID" />
+				
+	<!-- 34445 start -->
+	<ac:confirmationPopupSM id="saveOrgTypeInfoDlg" widget="saveOrgTypeInfoDlg"
+		okAction="ruleCatalogueBackingBean.saveFeeExemptionForOrgType"
+		okProcess=":form:settingTabId:feeSettingId"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.pm.btn.save.msg']}" 
+		update=":form:settingTabId:feeSettingId"
+		loadingWidget="blockWidget" />
+	<!-- 34445 end -->
 </ui:composition>
