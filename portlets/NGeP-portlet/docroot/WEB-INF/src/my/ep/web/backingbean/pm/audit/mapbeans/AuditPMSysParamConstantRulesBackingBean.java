@@ -10,16 +10,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
+
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * AuditPMSysParamConstantRulesBackingBean #28895-35509 - GATE3
@@ -27,7 +28,11 @@ import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
  * @author normuliana
  * 
  */
-public class AuditPMSysParamConstantRulesBackingBean {
+public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBackingBean {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 	String roleCode = null;
@@ -360,25 +365,24 @@ public class AuditPMSysParamConstantRulesBackingBean {
 					newValue != null ? newValue : null, actionType);
 		}
 	}
-
+	
 	private String ruleNumberValueNewCreated(PmConfigRuleValue newCreatedItem) {
 		if (newCreatedItem != null
 				&& (newCreatedItem.getRuleNumberValue() != null || newCreatedItem.getRuleValue() != null)
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null)) {
 			String ruleValue;
 			String rawRuleValue = newCreatedItem.getRuleValue();
-			if ("TRUE".equalsIgnoreCase(rawRuleValue)) {
-				ruleValue = AuditConst.PM_AUD_YES;
-			} else if ("FALSE".equalsIgnoreCase(rawRuleValue)) {
-				ruleValue = AuditConst.PM_AUD_NO;
-			} else if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
 				String number = rawRuleValue;
 				double amount = Double.parseDouble(number);
-
 				DecimalFormat formatter = new DecimalFormat(amtFormatter);
 
 				ruleValue = formatter.format(amount);
-			} else {
+			}
+			else if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId() != null && newCreatedItem.getRuleType().getParameterType() != null){
+				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(), newCreatedItem.getRuleValue().toUpperCase());
+				ruleValue = pmParameter.getPmParameterDescsSpecCallOnly().get(1).getCodeName();
+			}else{
 				ruleValue = rawRuleValue;
 			}
 			if (rawRuleValue == null) {
