@@ -15,11 +15,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections; //#13847
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit; //#13847
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -91,6 +93,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtBondWaiverDetail; //#13847
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
@@ -132,6 +135,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //#13847
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.util.shared.PerformanceBondUtil; // Fix - #33491
@@ -156,6 +160,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.SerializationUtils; //#13847
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
@@ -211,6 +216,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		months.put("11", "November");
 		months.put("12", "December");  
 	}
+	
+	//#13847 start
+	/**
+	 * Variable for declaring maximum deferment bond days, sharing with
+	 * ContractDetailBackingBean
+	 */
+	public static final int MAX_DEFERMENT_BOND_DAYS = 60;
+	//#13847 end
 
 	/**
 	 * Constructor used to initialize file path directory
@@ -399,7 +412,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					getManagedBean().getDeleteAttachmentList().add(attachment);
 				}
 				this.getManagedBean().getContractVer().getItemAttachments().remove(getManagedBean().getAttachFileIndex());
-		} else {
+		}
+		//#13847 start
+		//Latest 
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.DEL_LATEST_WAIVER)){
+			if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()!= null
+					&& getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()!= null){
+				attachment = getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment();
+				if(attachment.getAttachmentId() != null){
+					getManagedBean().getDeleteAttachmentList().add(attachment);
+				}
+				getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtAttachment(null);
+			}
+		}
+		//History
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.DEL_HISTORY_WAIVER)){
+			attachment = getManagedBean().getContractVer().getBondWaiverDefermentHistory().get(getManagedBean().getAttachFileIndex()).getCtAttachment();
+			if(attachment.getAttachmentId() != null){
+				getManagedBean().getDeleteAttachmentList().add(attachment);
+			}
+			getManagedBean().getContractVer().getBondWaiverDefermentHistory().get(getManagedBean().getAttachFileIndex()).setCtAttachment(null);
+		}
+		//#13847 end
+		else {
 			attachment = this.getManagedBean().getAttachmentList().get(getManagedBean().getAttachFileIndex());
 			if(attachment.getAttachmentId() != null){
 				getManagedBean().getDeleteAttachmentList().add(attachment);
@@ -2199,31 +2234,264 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
+		
+		//#13847 start
+		CtAttachment attachment = new CtAttachment();
+		attachment.setFileName(item.getFileName());
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+		attachment.setCreatedUser(facesScopes.getUserSessionBean());
+		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
 		if(event.getComponent().getId().equalsIgnoreCase("agencyUploadId")){
-			CtAttachment attachment = new CtAttachment();
-			attachment.setFileName(item.getFileName());
-			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-			attachment.setCreatedUser(facesScopes.getUserSessionBean());
-			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
 			//#25703 start
 			getManagedBean().getContractVer().getAgencyContractSharingAttachements().add(attachment);
 			//#25703 end
 			RequestContext.getCurrentInstance().execute("ctSharingAttachDlg.hide()");
 		}
-		else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
-			CtAttachment attachment = new CtAttachment();
-			attachment.setFileName(item.getFileName());
-			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-			attachment.setCreatedUser(facesScopes.getUserSessionBean());
-			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			getManagedBean().getContractVer().getBondWaiverAttachments().add(attachment);
-			RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.UPLOAD_WAIVER)){
+			attachment.setDocType(getManagedBean().getContractVer().getDocType());
+			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
+			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
+			attachment.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+			getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtAttachment(attachment);
+			RequestContext.getCurrentInstance().execute(ContractConst.UPLOAD_WAIVER_DIALOG_HIDE);
+		}
+		else if(event.getComponent().getId().equalsIgnoreCase(ContractConst.UPLOAD_HISTORY_WAIVER)){
+			attachment.setDocType(getManagedBean().getContractVer().getDocType());
+			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
+			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
+			attachment.setRecordStatusFlg(getManagedBean().getContractVer().getBondWaiverDefermentHistory()
+					.get(getManagedBean().getAttachFileIndex()).getRecordStatusFlg());
+
+			getManagedBean().getContractVer().getBondWaiverDefermentHistory()
+					.get(getManagedBean().getAttachFileIndex()).setCtAttachment(attachment);
+			RequestContext.getCurrentInstance().execute(ContractConst.UPLOAD_HISTORY_WAIVER_DIALOG_HIDE);
+		}
+		//#13847 - end
+	}
+	
+	//13847 start
+	/** Validates the bond deferment details before processing the history.
+	 * This method checks for the presence of required fields, validates date ranges,
+	 * and ensures that the new bond deferment does not overlap with existing history.
+	 *
+	 * @throws EpException if any validation fails, indicating the specific error.
+	 */
+	public void validationBondDefermentBeforeHistory() {
+		Date bondStartDate;
+		Date bondEndDate;
+		long noOfDays = 0;
+
+		// Validate the latest bond waiver deferment details
+		validateBondWaiverDefermentLatest();
+		checkPerformanceBondExceedDate();
+
+		// Check for existing bond waiver deferment history
+		if (CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())) {
+			for (CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer()
+					.getBondWaiverDefermentHistory()) {
+				bondStartDate = getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate();
+				bondEndDate = getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate();
+
+				validateBondWaiverOverlap(bondStartDate, bondEndDate, bondWaiverHistory);
+				noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
+			}
+
+			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
+			validateTotalDays(noOfDays);
+		}
+		RequestContext.getCurrentInstance().execute(ContractConst.ADD_PB_CONFIRM_DLG_SHOW);
+	}
+	
+	/**
+	 * Validates the latest bond waiver deferment details.
+	 *
+	 * @throws EpException if any required field is missing or invalid.
+	 */
+	private void validateBondWaiverDefermentLatest() {
+	    CtBondWaiverDetail latestDeferment = getManagedBean().getContractVer().getBondWaiverDefermentLatest();
+
+	    if (latestDeferment.getWaiverStartDate() == null &&
+	        latestDeferment.getWaiverEndDate() == null &&
+	        StringUtils.isBlank(latestDeferment.getReferenceNo()) &&
+	        isAttachmentNull(latestDeferment.getCtAttachment())) {
+	        throw new EpException(MessageConst.ERROR_750061);
+	    }
+	    validateField(latestDeferment.getWaiverStartDate(), MessageConst.ERROR_750062);
+	    validateField(latestDeferment.getWaiverEndDate(), MessageConst.ERROR_750063);
+	    validateField(StringUtils.isNotBlank(latestDeferment.getReferenceNo()), MessageConst.ERROR_750064);
+	    validateField(!isAttachmentNull(latestDeferment.getCtAttachment()), MessageConst.ERROR_750065);
+	}
+	
+	/**
+	 * Method to validate variable/object and throw exception according to message constant.
+	 * 
+	 * @param field Variable/object that need to check
+	 * @param errorCode Message constant for error code
+	 */
+	private void validateField(Object field, String errorCode) {
+	    if (field == null || Boolean.FALSE.equals(field)) {
+	        throw new EpException(errorCode);
+	    }
+	}
+	
+	/**
+	 * Checks if the attachment is null.
+	 *
+	 * @param attachment The attachment to check.
+	 * @return true if the attachment is null; false otherwise.
+	 */
+	private boolean isAttachmentNull(CtAttachment attachment) {
+	    return attachment == null || StringUtils.isBlank(attachment.getFileName());
+	}
+
+	/**
+	 * Validates if the new bond waiver deferment overlaps with existing history.
+	 *
+	 * @param bondStartDate The start date of the new bond waiver.
+	 * @param bondEndDate The end date of the new bond waiver.
+	 * @param bondWaiverHistory The existing bond waiver history entry to check against.
+	 * @throws EpException if there is an overlap with existing history.
+	 */
+	private void validateBondWaiverOverlap(Date bondStartDate, Date bondEndDate, CtBondWaiverDetail bondWaiverHistory) {
+		Date entryBondStartDate = bondWaiverHistory.getWaiverStartDate();
+		Date entryBondEndDate = bondWaiverHistory.getWaiverEndDate();
+		
+		// Dates are the same as history entry
+		if (entryBondStartDate.compareTo(bondStartDate) == 0 && entryBondEndDate.compareTo(bondEndDate) == 0) {
+			throw new EpException(MessageConst.ERROR_750066); 
+		}
+
+        // Check for overlap
+        boolean overlaps = (bondStartDate.before(entryBondEndDate) || bondStartDate.equals(entryBondEndDate))
+        		&& (bondEndDate.after(entryBondStartDate) || bondEndDate.equals(entryBondStartDate));
+		
+		//Date range overlaps with  history entry
+		if (overlaps) {
+			throw new EpException(MessageConst.ERROR_750067);
 		}
 	}
+
+	/**
+	 * Validates the total number of days for bond waiver deferment.
+	 *
+	 * @param noOfDays The total number of days calculated from the history.
+	 * @throws EpException if the total exceeds the allowed limit.
+	 */
+	private void validateTotalDays(long noOfDays) {
+		long totalDays = findDifference(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate(), 
+				getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate())
+				+ noOfDays;
+		if (totalDays > MAX_DEFERMENT_BOND_DAYS) {
+			throw new EpException(MessageConst.ERROR_750082); // Total days exceed limit
+		}
+	}
+	
+	/**
+	 * method to set the latest waiver and attachment into history table 
+	 * and still maintain the latest waiver.
+	 * 
+	 * @exception SLAUtils
+	 */
+	public void saveBondWaiverToTable() {
+		long noOfDays = 0;
+		CtBondWaiverDetail defermentLatest = getManagedBean().getContractVer().getBondWaiverDefermentLatest();
+		List<CtBondWaiverDetail> defermentHistory = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
+
+		try {
+			if (CollectionUtils.isEmpty(defermentHistory)) {
+				defermentHistory = new ArrayList<>();
+			}
+
+			// reverse list to insert new data at first row
+			Collections.reverse(defermentHistory);
+
+			CtBondWaiverDetail bondWaiver = SerializationUtils.clone(defermentLatest);
+			bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+			bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+
+			defermentHistory.add(bondWaiver);
+			Collections.reverse(defermentHistory);
+
+			// renewing latest deferment after clone to make sure id is not
+			// duplicate in database
+			if (defermentLatest.getBondWaiverDetailId() != null) {
+				CtBondWaiverDetail bondWaiverLatest = (CtBondWaiverDetail) defermentLatest.cloneEntity();
+				bondWaiverLatest.setBondWaiverDetailId(null);
+				bondWaiverLatest.setAttachmentId(null);
+				bondWaiverLatest.setBrandNew(true);
+
+				CtAttachment bondWaiverAttach = (CtAttachment) defermentLatest.getCtAttachment().cloneEntity();
+				bondWaiverAttach.setAttachmentId(null);
+				bondWaiverAttach.setBrandNew(true);
+
+				bondWaiverLatest.setCtAttachment(bondWaiverAttach);
+				getManagedBean().getContractVer().setBondWaiverDefermentLatest(bondWaiverLatest);
+			}
+
+			for (CtBondWaiverDetail bondWaiverHistory : defermentHistory) {
+				noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
+			}
+			getManagedBean().getContractVer().setBondWaiverDefermentHistory(defermentHistory);
+			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_CONTRACTBACKINGBEAN,
+					getManagedBean().getContractVer().getCtContract().getContractNo(),
+					ContractConst.SLA_SAVE_BOND_WAIVER_TO_TABLE, getUserIdSessionFromLoginId(), e);
+		}
+	}
+		
+	/**
+	 * method to check differences between two days for bond deferment
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @return differenceInDays (include the start date)
+	 * 
+	 */
+	public long findDifference(Date startDate, Date endDate){
+		return TimeUnit.DAYS.convert(endDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS)+1;
+	}
+		
+	/**
+	 * method to calculate current start and end date of the deferment
+	 * throw exception when waiver exceed more than 60 days, use at xhtml during add current to history.
+	 * 
+	 * @throws EpException
+	 */
+	public void checkPerformanceBondExceedDate() {
+		CtBondWaiverDetail bondWaiverLatest = getManagedBean().getContractVer().getBondWaiverDefermentLatest();
+		if (bondWaiverLatest.getWaiverStartDate() != null && bondWaiverLatest.getWaiverEndDate() != null) {
+			if (findDifference(bondWaiverLatest.getWaiverStartDate(), bondWaiverLatest.getWaiverEndDate()) > MAX_DEFERMENT_BOND_DAYS) {
+				throw new EpException(MessageConst.ERROR_750070);
+			}
+			if (bondWaiverLatest.getWaiverStartDate().compareTo(bondWaiverLatest.getWaiverEndDate()) > 0) {
+				throw new EpException(MessageConst.ERROR_750080);
+			}
+		}
+	}
+	
+	/**
+	 * method to delete bond exemption document when the bond exemp is unclicked
+	 * 
+	 * @exception SLAUtils
+	 */
+	public void bondExempDocReset() {
+		try {
+			if (!getManagedBean().getCtContractAmount().isBondExempted()) {
+				delBondExemptedDoc();
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, ContractConst.SLA_CONTRACTBACKINGBEAN,
+					getManagedBean().getContractVer().getCtContract().getContractNo(), ContractConst.SLA_BOND_EXEMP_RESET,
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//Enhancement 13847 - end
 
 	/**
 	 * The method used to delete the uploaded agency file.
@@ -2422,58 +2690,100 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 
+	//#13847 start
 	/**
-	 * The method used to set the bond waiver flag value.
+	 * This method will run when user clicked the radio button for bond deferment.
+	 * If unchecked, the current deferment will be null and all the history that is not approved will be deleted.
+	 * If checked, it will renew the current deferment.
 	 */
 	public void chkBondWaiverAction(){
-		if(!getManagedBean().getCtContractAmount().isBondWaived()){
-			getManagedBean().getCtContractAmount().setBondWaived(false);
-			if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null){
-				getManagedBean().getContractVer().setBondWaiverAttachments(null);
+		try {
+			getManagedBean().setDisableDeferment(false);
+
+			if (!getManagedBean().getCtContractAmount().isBondWaived()) {
+				removeInactiveDefermentHistory();
+				
+				if(!getManagedBean().isDisableDeferment()){
+					removeDefermentLatest();	
+				}
+
+				if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null) {
+					getManagedBean().getContractVer().setCtBondWaiverDetails(null);
+				}
+			} else if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
+				getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
 			}
-			else {
-				Iterator<CtAttachment> attachIterator= getManagedBean().getContractVer().getBondWaiverAttachments().iterator();
-				while(attachIterator.hasNext()){
-					if(chkHistoryOfAttachment(attachIterator.next())){
-						continue;
-					}else {
-						attachIterator.remove();
-					}
-				} 
-			}   
-		} else if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null){
-			if(getManagedBean().getCtContractAmount().isBondWaived() ==  getManagedBean().getCtTestBondWaiverAmount().isBondWaived()){
-				if(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId() != null){
-					Iterator<CtAttachment> attachIterator= getManagedBean().getContractVer().getBondWaiverAttachments().iterator();
-					while(attachIterator.hasNext()){
-						if(chkHistoryOfAttachment(attachIterator.next())){
-							continue;
-						}else {
-							attachIterator.remove();
-						}
-					} 
-				}   
-				getManagedBean().setBondWaiver(true);
-			}
-		}	
+			checkDaysDefermentBondHistory();
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_CONTRACTBACKINGBEAN,
+					getManagedBean().getContractVer().getCtContract().getContractNo(),
+					ContractConst.SLA_CHK_BOND_WAIVER_ACTION, getUserIdSessionFromLoginId(), e);
+		}
+		
 	}
 	
-	private boolean chkHistoryOfAttachment(CtAttachment attachments){
-		ContractReqDTO reqDTO = new ContractReqDTO();
-		reqDTO.setDocId(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
-		reqDTO.setDocType(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getDocType());
-		reqDTO.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
-		IContractSO contractSO =   (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-		List<CtAttachment> attach= contractSO.retrieveAttachmentBySectionId(reqDTO).getCtAttachments();
-		if(attach != null && attach.size() > 0){
-			for(CtAttachment waivedAttach : attach){
-				if(waivedAttach.getFilePath().equalsIgnoreCase(attachments.getFilePath())){
-					return true;
+	/**
+	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment latest
+	 */
+	private void removeDefermentLatest(){
+		CtBondWaiverDetail latestDeferment = getManagedBean().getContractVer().getBondWaiverDefermentLatest();
+		if (latestDeferment != null && latestDeferment.getCtAttachment() != null
+				&& latestDeferment.getCtAttachment().getAttachmentId() != null) {
+			getManagedBean().getDeleteAttachmentList().add(latestDeferment.getCtAttachment());
+		}
+		getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
+	}
+	
+	/**
+	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment history
+	 */
+	private void removeInactiveDefermentHistory(){
+		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
+		// remove bond waiver that hasn't been approved
+		if (CollectionUtils.isNotEmpty(historyDeferment)) {
+			int noOfDays = 0;
+			Iterator<CtBondWaiverDetail> iter = historyDeferment.iterator();
+			while (iter.hasNext()) {
+				CtBondWaiverDetail bondWaiverHistory = iter.next();
+				if (!bondWaiverHistory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					removeAttachmentIfExist(bondWaiverHistory.getCtAttachment());
+					iter.remove();
+				}else{
+					noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
 				}
 			}
+			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
 		}
-		return false;
 	}
+	
+	/**
+	 * Method to remove attachment in the database if exist.
+	 * 
+	 * @param attachment The attachment that need to be deleted
+	 */
+	public void removeAttachmentIfExist(CtAttachment attachment){
+		if(attachment!=null && attachment.getAttachmentId() != null){
+			getManagedBean().getDeleteAttachmentList().add(attachment);
+		}
+	}
+	
+	/**
+	 * Method to check how many days the deferment Bond has.
+	 * If got more than MAX_DEFERMENT_BOND_DAYS, deferment will be disabled.
+	 */
+	private void checkDaysDefermentBondHistory(){
+		int noOfDays = 0;
+		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
+		if (CollectionUtils.isNotEmpty(historyDeferment)) {
+			for (CtBondWaiverDetail bondWaiverHistory : historyDeferment) {
+				noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
+			}
+			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
+		}
+	}
+	//#13847 end
 	
 	/**
 	 * The method used to upload bond exempted file.
@@ -2496,7 +2806,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		getManagedBean().getCtContractAmount().setBondExemptedFileName(item.getFileName());
 		getManagedBean().getCtContractAmount().setBondExemptedFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();");
+//		RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();"); //#13847
 	}
 
 	/**
