@@ -23,6 +23,11 @@
 		</c:if>		
 	</style>
 
+	<ui:remove> #28777#29729 - Start </ui:remove>
+	<ui:param name="isDisqualified"
+		value="#{consolidationReportBackingBean.checkListDisqualifiedSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}"></ui:param>
+	<ui:remove> #28777#29729 - End </ui:remove>
+
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 	
 	<p:outputPanel id="itemSupplierPanel">

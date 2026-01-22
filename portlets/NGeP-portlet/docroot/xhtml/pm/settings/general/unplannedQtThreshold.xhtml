@@ -12,13 +12,27 @@
 			<tr>
 				<td>
 					<div align="right" style="width: 100%">
+						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="unplanedThreSaveBtn"
-							action="#{ruleCatalogueBackingBean.saveThresholds(1)}"
-							process="unplannedThresholdPanel" update="@form"></p:commandButton>
+							partialSubmit="true" oncomplete="if (!args.validationFailed) saveUnplannedThreInfoDlg.show();"/>
+						<!-- 34445 end -->
 					</div>
 				</td>
 			</tr>
 		</table>
+
+		<!-- 34445 start -->
+		<ac:confirmationPopupSM id="saveUnplannedThreInfoDlg" widget="saveUnplannedThreInfoDlg"
+			okParam="#{ruleCatalogueBackingBean.saveThresholds(1)}"
+			hasParam="true"
+			okProcess="@([id$=unplannedThresholdPanel])"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.save.msg']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
+		<!-- 34445 end -->
+		
 		<table width="80%">
 			<tr style="height: 30px;">
 				<td style="width: 10%"><p:outputLabel

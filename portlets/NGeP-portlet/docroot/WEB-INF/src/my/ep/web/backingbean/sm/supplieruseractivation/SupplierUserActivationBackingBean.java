@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sm.supplieruseractivation;
 
+import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -72,7 +74,12 @@ public class SupplierUserActivationBackingBean extends
 	//private String password;
 	//private String confirmPassword;
 	private String loginId;
-	
+	//#32040
+	private static final String[] ADMIN_ROLES = new String[] {
+		RoleCode.SUPPLIER_TEMP.value(),
+		RoleCode.MOF_SUPPLIER_ADMIN.value(),
+		RoleCode.BASIC_SUPPLIER_ADMIN.value(),
+		RoleCode.G2G_SUPPLIER_ADMIN.value() };
 		
 	public SupplierUserActivationBackingBean(){
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -143,9 +150,25 @@ public class SupplierUserActivationBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(personnel != null && supplierProfile != null && !isPersonnelAlreadyDeactivatedOrTerminates(personnel, supplierProfile.getSupplierId()) 
 				&& isLatestActivationEmail(createdTimeParam, personnel)) {
+			//#32040 START
+			String adminName = null;
+			if(personnel.getSmAppl() != null && personnel.getSmAppl().getSmPersonnels() != null){
+				for(SmPersonnel person : personnel.getSmAppl().getSmPersonnels()){
+					if(person.getEpRole() != null &&
+							Arrays.asList(ADMIN_ROLES).contains(person.getEpRole())){
+						adminName = person.getName();
+						break;
+					}
+				}
+			}
 			if(hashSupplierId.equals(SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())))) {
-				
-				long applDateInMilis = personnel.getCreatedDate().getTime();
+				long applDateInMilis;
+				if(personnel.getActivationDate() != null){
+					applDateInMilis = personnel.getActivationDate().getTime();
+				}else{
+					applDateInMilis = personnel.getCreatedDate().getTime();
+				}
+				//#32040 END
 				long dayInMilis = 1000 * 60 * 60 * 24;
 
 				Date expiryDate = new Date(applDateInMilis + (SmRuleHelper.getInstance().getEmailActivationDays() * dayInMilis));
@@ -166,16 +189,34 @@ public class SupplierUserActivationBackingBean extends
 					log.info("****VALID - Expired******");
 					// redirect & display activation expired
 					this.getManagedBean().setValidActivation(false);
-					errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
-							new String[] { SmRuleHelper.getInstance()
-							.getEmailActivationDays() + "" });
+					//#32040
+					if(personnel.getEpRole() != null){
+						if(Arrays.asList(ADMIN_ROLES).contains(personnel.getEpRole())){
+							errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
+									new String[] { Integer.toString(SmRuleHelper.getInstance()
+											.getEmailActivationDays()) });
+						}else{
+							errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired.user",
+									new String[] { Integer.toString(SmRuleHelper.getInstance()
+											.getEmailActivationDays()) , adminName });
+						}
+					}
 				}
 			} else {
 				// redirect & display invalid activation
 				this.getManagedBean().setValidActivation(false);
-				errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
-						new String[] { SmRuleHelper.getInstance()
-						.getEmailActivationDays() + "" });
+				//#32040
+				if(personnel.getEpRole() != null){
+					if(Arrays.asList(ADMIN_ROLES).contains(personnel.getEpRole())){
+						errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
+								new String[] { Integer.toString(SmRuleHelper.getInstance()
+										.getEmailActivationDays()) });
+					}else{
+						errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired.user",
+								new String[] { Integer.toString(SmRuleHelper.getInstance()
+										.getEmailActivationDays()) , adminName });
+					}
+				}
 				
 				log.info("****Hash String is not match******");
 			}
@@ -575,20 +616,26 @@ public class SupplierUserActivationBackingBean extends
 	private boolean isLatestActivationEmail(String createdTimeParam,
 			SmPersonnel smPersonnel) {
 		boolean retVal = true;
-		try {
+		try { //#32040 START
+			Timestamp activationDate;
+			if(smPersonnel.getActivationDate() != null){
+				activationDate = smPersonnel.getActivationDate();
+			}else{
+				activationDate = smPersonnel.getCreatedDate();
+			}
 			if (createdTimeParam != null
 					&& StringUtils.isNotBlank(createdTimeParam)) {
 				log.info(">>>>>>>>>>>>>Inside comparing latest activation email for personnelId:"
 						+ smPersonnel.getPersonnelId()
 						+ " sendMailDate:"
 						+ createdTimeParam
-						+ " createdDate:"
-						+ smPersonnel.getCreatedDate().getTime());
+						+ " activationDate:"
+						+ activationDate.getTime());
 				Long createdTime = Long.parseLong(createdTimeParam);
-				if (createdTime.compareTo(smPersonnel.getCreatedDate()
+				if (createdTime.compareTo(activationDate
 						.getTime()) != 0) {
 					retVal = false;
-				}
+				}//#32040 END
 			}
 		} catch (Exception ex) {
 		}

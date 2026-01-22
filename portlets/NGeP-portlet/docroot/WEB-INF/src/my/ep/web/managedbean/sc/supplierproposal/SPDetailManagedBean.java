@@ -220,7 +220,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private boolean tierType=false; //#11715 danial
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
-	private boolean supplierBranchDeleted = false; //#29729
+	private boolean supplierBranchDeleted = false; // #28777 & #29729
 	private boolean isFinancialAttchment;//#28792
 	
 	// #30609 - Start.
@@ -1946,7 +1946,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 	//#11715 danial end
 	
-	//#29729 - Start
+	// #28777 & #29729 - Start
 	public boolean isSupplierBranchDeleted() {
 		return supplierBranchDeleted;
 	}
@@ -1954,7 +1954,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setSupplierBranchDeleted(boolean supplierBranchDeleted) {
 		this.supplierBranchDeleted = supplierBranchDeleted;
 	}
-	//#29729 - End
+
+	// #28777 & #29729 - End
 
 	//#28792-start
 	/**

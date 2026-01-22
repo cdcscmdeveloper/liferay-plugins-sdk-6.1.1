@@ -6,6 +6,39 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
+<!-- #25726/25725 - Check and display Italic value - Start -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
+
+	
+<h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{templateSpecBackingBean.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+</h:outputScript>
+<!-- #25726/25725 - Check and display Italic value - End--> 
+
 	
 	<ui:param name="delConfirmPopup" value="#{templateSpecId}delConfirmPopup" />
 	<ui:param name="tierQtyPopup" value="#{templateSpecId}tierQtyPopup" />
@@ -261,7 +294,9 @@
 				</ui:param>
 				<ui:remove> #32110 related to #21695 Farid End 30/11/2021</ui:remove>
 				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
-				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" /><!-- #29187 Added Vinod -->
+				<ui:remove>#29187 Start Vinod</ui:remove>
+				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" />
+				<ui:remove>#29187 End Vinod</ui:remove>
 				<!-- #33859 - start -->
 				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
 					value="#{filterList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

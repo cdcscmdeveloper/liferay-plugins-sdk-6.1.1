@@ -42,12 +42,13 @@
 					</td>
 					<td>
 						<p:inputText for="centralCtAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-			   				value="#{ctBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"
+			   				value="#{ctBackingBean.managedBean.ctContractAmount.contractAmount}"
 			   				disabled="#{ctBackingBean.managedBean.viewContract
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 						     		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment
 						     		or ctBackingBean.managedBean.disableContractAmount}">
-				   			<p:ajax  event="blur" update="@all" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
+						     		<!-- #35506 -->
+				   			<p:ajax  event="blur" update="@this overAllAmtsCentral" process="@this"  listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
@@ -74,7 +75,8 @@
 						     		or ctBackingBean.managedBean.disableGstAmount}"
 			   				 rendered="#{ctBackingBean.managedBean.gstCheckingGUI}"
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.gstAmount}" >
-			   				<p:ajax  event="blur" update="@all" process="@this"
+			   				 <!-- #35506 -->
+			   				<p:ajax  event="blur" update="@this overAllAmtsCentral" process="@this"
 				   			   listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
@@ -105,7 +107,8 @@
 						     		or ctBackingBean.managedBean.disableStaxAmount}"
 			   				 rendered="#{ctBackingBean.managedBean.staxCheckingGUI}"
 			   				 value="#{ctBackingBean.managedBean.ctContractAmount.staxAmount}" >
-			   				<p:ajax  event="blur" update="@all" process="@this"
+			   				 <!-- #35506 -->
+			   				<p:ajax  event="blur" update="@this overAllAmtsCentral" process="@this"
 				   			   listener="#{ctBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
@@ -177,9 +180,10 @@
 					</td>
 					<td>
 						<h:commandLink for="centralCicularId" styleClass="blue_font"
+							style="color:#009ae5 !important;"
 							title="#{ctBackingBean.managedBean.ctCircularVer.ctCircular.circularNo}"
 							value="#{ctBackingBean.managedBean.ctCircularVer.ctCircular.circularNo}"
-							action="#{ctBackingBean.gotoCicularPage(ctBackingBean.managedBean.ctCircularVer.circularVerId)}" />
+							action="#{ctBackingBean.gotoCicularPage(ctBackingBean.managedBean.ctCircularVer.circularVerId)}" /><!-- Fix #30866 -->
 					</td>
                 	</h:panelGroup>
                 	<td></td><td></td>
@@ -201,12 +205,14 @@
 	  	<h:panelGrid style="width:270px; margin-left:5px">
 	  	 	<h:panelGrid columns="3" 
 		     	rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+		     <!-- #13847 start-->
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"
 				 disabled="#{ctBackingBean.managedBean.viewContract
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}" style="text-align:top;">
-				 <p:ajax event="change" update="@all" process="@all" partialSubmit="true"></p:ajax>
+				 <p:ajax event="change" update="@all" process="@all" partialSubmit="true" listener="#{ctBackingBean.bondExempDocReset()}"></p:ajax>
 			  </p:selectBooleanCheckbox>
+			  <!-- #13847 end-->
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">
 				  <h:outputText value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />

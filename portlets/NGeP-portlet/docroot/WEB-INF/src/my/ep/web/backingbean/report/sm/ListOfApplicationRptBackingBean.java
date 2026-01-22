@@ -35,9 +35,15 @@ public class ListOfApplicationRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
-		params.put(SmReportConst.PARAM_ZONE,
-				getManagedBean().getZone() == null ? StringUtils.EMPTY
-						: getManagedBean().getZone());
+		//#32521 - START
+		if (!StringUtils.isBlank(getManagedBean().getZone())) {
+			params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getApplType())) {
+			params.put(SmReportConst.PARAM_APPL_TYPE, getManagedBean()
+					.getApplType());
+		}
+		//#32521 - END
 		if (!StringUtils.isBlank(getManagedBean().getSupplierType())) {
 			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean()
 					.getSupplierType());
@@ -76,6 +82,14 @@ public class ListOfApplicationRptBackingBean extends
 		getManagedBean().setRegNo(StringUtils.EMPTY);
 		getManagedBean().setSuppDocMode(StringUtils.EMPTY);
 		getManagedBean().setSuppDocStatus(StringUtils.EMPTY);
+		//#32521 - START
+		getManagedBean().setApplType(null);
+		//#32521 - END
+		//#38227 - START
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
+		//#38227 - END
+
 		setDefaultDateFromAndDateTo();
 	}
 

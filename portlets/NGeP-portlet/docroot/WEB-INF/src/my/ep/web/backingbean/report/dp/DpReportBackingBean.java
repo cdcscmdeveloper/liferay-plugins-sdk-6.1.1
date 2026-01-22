@@ -141,8 +141,10 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 			RequestContext.getCurrentInstance().execute(
 					"rptConfirmationDlg.show()");
 		} catch (Exception e) {
+			//start - Sonarqube DP Vulnerability Minor Ruzaimah [22/4/2024]
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error : " + e.getMessage());
+			//stop - Sonarqube DP Vulnerability Minor Ruzaimah [22/4/2024]
 		}
 	}
 	

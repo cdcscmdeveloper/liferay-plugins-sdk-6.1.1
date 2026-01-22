@@ -195,7 +195,7 @@ public class TrustGateHelper {
 	public String generateSecurityToken(String identificationNo, String epNo) {
 		String tok = null;
 		try {
-			// KMCClient client = getClient();
+			KMCClient client = getClient();
 			KMCRequestBuilder reqbuilder = getReqBuilder();
 			IKMCAPIResponse.GenSecToken res = reqbuilder.generateToken(identificationNo, epNo);
 			switch (res.getStatusCode()) {

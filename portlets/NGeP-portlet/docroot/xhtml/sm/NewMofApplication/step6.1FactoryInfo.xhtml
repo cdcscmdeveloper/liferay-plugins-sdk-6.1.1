@@ -60,7 +60,9 @@
 						
 							<p:blockUI block=":form:tt:facInfPan" widgetVar="buiPoFac"
 								id="poFacBlc"
-								blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.factoryVerify : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.factoryVerify : false)}" />
+								blocked="#{!backingBean.managedBean.upsCannotEdit and 
+									((backingBean.managedBean.poUser and backingBean.managedBean.poSecReview.factoryVerify)
+									or (backingBean.managedBean.approverUser and backingBean.managedBean.apprvrSecReview.factoryVerify))}" /><!-- #32008 -->
 
 							<h:inputHidden
 								value="#{backingBean.managedBean.smAppl.applCategoryType}" />

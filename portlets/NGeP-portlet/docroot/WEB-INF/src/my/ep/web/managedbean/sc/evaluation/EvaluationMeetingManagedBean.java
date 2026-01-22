@@ -11,6 +11,7 @@
 package my.ep.web.managedbean.sc.evaluation;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -128,6 +129,15 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 
 	/** The remove committee list. */
 	private List<ScCommitteeMember> removeCommitteeList;
+
+	/** #28895 - 35500 The new committee list. */
+	private List<ScCommitteeMember> newCommitteeAuditTrailList;
+	
+	/** #28895 - 35500 The deleted committee list. */
+	private List<ScCommitteeMember> deletedCommitteeAuditTrailList;
+	
+	/** #28895 - 35500 The modified role of sc qt committee */
+	private HashMap<PmUser,List<String>> mapModifiedRole;	
 
 	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -940,4 +950,32 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 		this.tempScQtApprovalRemark = tempScQtApprovalRemark;
 	}
 	//25037 #568 - end
+
+	//#28895-35500 start
+	public List<ScCommitteeMember> getNewCommitteeAuditTrailList() {
+		return newCommitteeAuditTrailList;
+	}
+
+	public void setNewCommitteeAuditTrailList(List<ScCommitteeMember> newCommitteeAuditTrailList) {
+		this.newCommitteeAuditTrailList = newCommitteeAuditTrailList;
+	}
+	
+	public HashMap<PmUser,List<String>> getMapModifiedRole() {
+		return mapModifiedRole;
+	}
+
+	public void setMapModifiedRole(HashMap<PmUser,List<String>> mapModifiedRole) {
+		this.mapModifiedRole = mapModifiedRole;
+	}
+
+	public List<ScCommitteeMember> getDeletedCommitteeAuditTrailList() {
+		return deletedCommitteeAuditTrailList;
+	}
+
+	public void setDeletedCommitteeAuditTrailList(List<ScCommitteeMember> deletedCommitteeAuditTrailList) {
+		this.deletedCommitteeAuditTrailList = deletedCommitteeAuditTrailList;
+	}
+	//#28895-35500 end
+
+	
 }

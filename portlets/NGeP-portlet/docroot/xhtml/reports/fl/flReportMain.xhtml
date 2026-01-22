@@ -12,6 +12,7 @@
 	
 		<table style="margin-top: 10px; width: 100%;">
 			
+			<c:if test="#{flReportBB.managedBean.showRptCategory}">
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" /> 
@@ -31,7 +32,8 @@
 							process="@this" partialSubmit="true" update="@all" />
 					</p:selectOneMenu>
 				</td>
-			</tr> 
+			</tr>
+			</c:if>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
@@ -258,6 +260,22 @@
 					test="#{FlReportConst.fl067YearEndReport == flReportBB.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/fl/yep/Fl067_yearEndReport.xhtml"></ui:include>
 				</c:when>
+				
+				<!-- Year End Report -->
+				<c:when
+					test="#{FlReportConst.fl067YearEndReport == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/yep/Fl067_yearEndReport.xhtml"></ui:include>
+				</c:when>
+				
+				<!-- 29554 start - transaction fee -->
+				<c:when test="#{FlReportConst.fl071ServiceFeeReportBasedOfAccountingOffice == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/tf/Fl071_ServiceFeeReportBasedOfAccountingOffice.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{FlReportConst.fl072AccumulatedServiceFeeReport == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/tf/Fl072_AccumulatedServiceFeeReport.xhtml"></ui:include>
+				</c:when>
+				<!-- 29554 end - transaction fee -->
 				
 				<c:otherwise>
         			ERROR!

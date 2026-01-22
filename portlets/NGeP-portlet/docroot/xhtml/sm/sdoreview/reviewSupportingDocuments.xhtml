@@ -45,13 +45,6 @@
 			</p:commandButton>
 		</div>
 		
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.confirm.proceed']}
-   			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="blockWidget.show();submissionConfirmDlg.hide();" oncomplete="blockWidget.hide()" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
-			</div>
-		</p:dialog>
 
 		<p:outputPanel id="resOutPanelId">
 		<!-- #11641 - START -->
@@ -119,10 +112,16 @@
 						           				<p:fileDownload value="#{sdoReviewBackingBean.file}" />
 						        			</p:commandLink>
 						        		</ui:remove>
-						        		<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
-						        			<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}</a>
-						        		</h:panelGroup>
-										<br />
+											<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
+												<!-- #39316 - Start -->
+												<h:commandLink id="mandfile" value="#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}"
+													rendered="#{not empty applDocsFile and !inquirytbl.pmDocument.hardCopyReq}">
+													<p:fileDownload
+														value="#{sdoReviewBackingBean.commonDownload(applDocsFile.filePath,applDocsFile.fileName,applDocsFile.fileName)}" />
+												</h:commandLink>
+												<!-- #39316 - End -->
+											</h:panelGroup>
+											<br />
 									</ui:repeat>
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory}">
@@ -179,10 +178,16 @@
 							           			<p:fileDownload value="#{sdoReviewBackingBean.file}" />
 							        		</p:commandLink>
 							        	</ui:remove>
-							        	<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
-							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}</a>
-							        	</h:panelGroup>
-										<br />
+											<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
+												<!-- #39316 - Start -->
+												<h:commandLink id="nonMandfile" value="#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}"
+													rendered="#{not empty applDocsFile and !inquirytbl.pmDocument.hardCopyReq}">
+													<p:fileDownload
+														value="#{sdoReviewBackingBean.commonDownload(applDocsFile.filePath,applDocsFile.fileName,applDocsFile.fileName)}" />
+												</h:commandLink>
+												<!-- #39316 - End -->
+											</h:panelGroup>
+											<br />
 									</ui:repeat>
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
@@ -241,7 +246,7 @@
 		</p:outputPanel>
 
 		<!-- #11641 - START -->
-		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg" width="auto">
+		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg" width="auto" style="max-height:80%; overflow-y: auto; top: 10%">
 			
 			<p:scrollPanel mode="native" style="max-height:auto;auto;border:none">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
@@ -379,7 +384,8 @@
 			</table>
 			<br />
 			<div align="right">
-				<p:commandButton onclick="abcdeblockWidget.show();" oncomplete="abcdeblockWidget.hide();" value="#{lbl['lbl.btn.submit']}" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}">
+				<!-- #34400 -->
+				<p:commandButton oncomplete="if (!args.validationFailed) confirmEnquiryDlg.show();" value="#{lbl['lbl.btn.submit']}" >
 					<f:param name="disableMsgAutoUpdate" value="true" />
 				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="inquiryDlg.hide();"></p:commandButton>
@@ -640,5 +646,19 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
+		<!-- #34400 - start -->
+		<ac:confirmationPopupSM id="confirmEnquiryDlg" widget="confirmEnquiryDlg"
+			okParam="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}"
+			hasParam="true"
+			content="#{lbl['lbl.sm.confirm.enquiry']}" 
+			update="@all"
+			loadingWidget="abcdeblockWidget" />
+		<ac:confirmationPopupSM id="submissionConfirmDlg" widget="submissionConfirmDlg"
+			okParam="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"
+			hasParam="true"
+			content="#{lbl['lbl.sm.confirm.proceed']}" 
+			update="@all"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 	</ui:define>
 </ui:composition>

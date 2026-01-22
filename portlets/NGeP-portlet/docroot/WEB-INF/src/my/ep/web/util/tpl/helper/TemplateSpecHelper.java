@@ -46,6 +46,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.constant.sc.QTConstants;	//Bug #35600@Syazani 19/09/2024
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -709,13 +710,16 @@ public class TemplateSpecHelper {
 	 */
 	public BigDecimal calcTotalAmount(TplSpecQuestion specQuestion, BigDecimal unitPrice, BigDecimal quantity) {
 		BigDecimal totalPrice = null;
-		boolean isPriceTypeTier = isPriceTypeTier(
-				specQuestion.getClPriceTypeCode().getParameterCode());
-		
-		if (!isPriceTypeTier) {
-			totalPrice = calulateTotalAmount(specQuestion, unitPrice, quantity);
+		//#38916 - Start
+		if(specQuestion.getClPriceTypeCode() != null){
+			boolean isPriceTypeTier = isPriceTypeTier(
+					specQuestion.getClPriceTypeCode().getParameterCode());
+			BigDecimal unitPriceTemp = null != unitPrice ? unitPrice.setScale(2, QTConstants.QT_ROUNDING_MODE) : null; //Bug #35600@Syazani 19/09/2024
+			if (!isPriceTypeTier) {
+				totalPrice = calulateTotalAmount(specQuestion, unitPriceTemp, quantity);	//Bug #35600@Syazani 19/09/2024
+			}	
 		}
-		
+		//#38916 - End
 		return totalPrice;
 	}
 	
@@ -786,14 +790,11 @@ public class TemplateSpecHelper {
 						specQuestion = resDTO.getSpecQuestionList().get(0);
 					}
 				}
-				//#25726 - Remove one-off from the condition
-				//Reopen #25726 note 221 - issue 10,14
+				
 				//#35521 @zaim - note 20. Change || with &&.
 				if(null != specQuestion.getClFulfilmentTypeCode()){
 					if (!specQuestion.getClFulfilmentTypeCode().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && 
-						!specQuestion.getClFulfilmentTypeCode().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
+						.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
 						if (itemDurationMonth != null) {
 							totalPrice = totalPrice.multiply(itemDurationMonth);
 						} else {
@@ -809,7 +810,7 @@ public class TemplateSpecHelper {
 		}		
 		
 		if(null!=totalPrice){
-			totalPrice=totalPrice.setScale(2, BigDecimal.ROUND_UP);
+			totalPrice=totalPrice.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		}
 		return totalPrice;
 	}

@@ -80,6 +80,8 @@ import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang3.StringUtils;
+//#34031
+import my.ep.persistence.entity.sm.SmRevisit;
 
 public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
@@ -277,8 +279,12 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private Date poRemarkAfterSiteVisitCreatedDate;
 	private String secondPoUserName = null;
 	// #29664 - start
+	//26238 - start
 	private boolean basicAccountMaintenance; //27437 : Disciplinary action
 	private SmSupplierOwner smSuppOwner; //26238
+	private boolean flagBlacklistCancel;	//28146
+	private boolean disableDownloadButtonDAHistory;	// 28342
+	//26238 - end
 	private boolean viewSupplierMaintenancePage; // #26639
 	
 	//28281 - start
@@ -352,6 +358,16 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	//#3460
 	private String sdoRemark;
 	
+	// 36504 - START
+	private boolean updateRecordTC;
+	private boolean otherDescChangePO;
+	private boolean otherDescChangeApprover;
+	private boolean otherDescChangeSupplier;
+	private boolean otherDescChangeSupPO;
+	private boolean otherDescChangeSupApprover;
+	private String otherDescEdited;
+	// 36504 - END
+	
 	public String getSupportingDocMode() {
 		return supportingDocMode;
 	}
@@ -361,13 +377,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 	//28771- end
 	
-	//26238 -  Disciplonary action - 28146
-	private boolean flagBlacklistCancel;
-	
-	// 28342 : Disciplinary Action - start
-	private boolean disableDownloadButtonDAHistory;
-	// 28342 : Disciplinary Action - end
-	
 	//28637
 	private boolean viewCatCode;
 	
@@ -375,6 +384,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean flagShowButtonSubmit;
 	//#34209
 	private boolean poApprUnClaimTask;
+	private List<SmMachineDtl> allMachineDtls;
+	
 	//#34099 - start
 	private SmApplInquiry selectedInquiryResponse;
 	private String tabActiveDlg = "0";
@@ -385,6 +396,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		private SmApplInquiry poToSupplierInquiry;
 		private List<SmApplInquiry> poSupplierInquiryHistory;
 		private List<SmApplSupportDoc> missinDocs;
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean auditAccess;
+	// #34031 Start
+	private List<SmRevisit> smRevisitList;
+	private SmRevisit currentSmRevisit;
+	// #34031 End=
+	private Long currRegStatusId;
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2584,4 +2602,152 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.latestChequeSignPersonnelName = latestChequeSignPersonnelName;
 	}
 	//#35086 - end
+	
+	//#34209 - START
+	public List<SmMachineDtl> getAllMachineDtls() {
+		return allMachineDtls;
+	}
+
+	public void setAllMachineDtls(List<SmMachineDtl> allMachineDtls) {
+		this.allMachineDtls = allMachineDtls;
+	}
+	//#34209 - END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isAuditAccess() {
+		return auditAccess;
+	}
+
+	public void setAuditAccess(boolean auditAccess) {
+		this.auditAccess = auditAccess;
+	}
+	// #28895_35501 End
+	// #34031 Start
+	public List<SmRevisit> getSmRevisitList() {
+		return smRevisitList;
+	}
+
+	public void setSmRevisitList(List<SmRevisit> smRevisitList) {
+		this.smRevisitList = smRevisitList;
+	}
+
+	public SmRevisit getCurrentSmRevisit() {
+		return currentSmRevisit;
+	}
+
+	public void setCurrentSmRevisit(SmRevisit currentSmRevisit) {
+		this.currentSmRevisit = currentSmRevisit;
+	}
+	// #34031 End
+	// #38856 End
+	public Long getCurrRegStatusId() {
+		return currRegStatusId;
+	}
+
+	public void setCurrRegStatusId(Long currRegStatusId) {
+		this.currRegStatusId = currRegStatusId;
+	}
+	// #38856 End
+	
+	// 36504 - START
+	/**
+	 * @return the updateRecordTC
+	 */
+	public boolean isUpdateRecordTC() {
+		return updateRecordTC;
+	}
+
+	/**
+	 * @param updateRecordTC
+	 *            the updateRecordTC to set
+	 */
+	public void setUpdateRecordTC(boolean updateRecordTC) {
+		this.updateRecordTC = updateRecordTC;
+	}
+
+	/**
+	 * @return the otherDescEdited
+	 */
+	public String getOtherDescEdited() {
+		return otherDescEdited;
+	}
+
+	/**
+	 * @param otherDescEdited
+	 *            the otherDescEdited to set
+	 */
+	public void setOtherDescEdited(String otherDescEdited) {
+		this.otherDescEdited = otherDescEdited;
+	}
+
+	/**
+	 * @return the otherDescChangePO
+	 */
+	public boolean isOtherDescChangePO() {
+		return otherDescChangePO;
+	}
+
+	/**
+	 * @param otherDescChangePO the otherDescChangePO to set
+	 */
+	public void setOtherDescChangePO(boolean otherDescChangePO) {
+		this.otherDescChangePO = otherDescChangePO;
+	}
+
+	/**
+	 * @return the otherDescChangeApprover
+	 */
+	public boolean isOtherDescChangeApprover() {
+		return otherDescChangeApprover;
+	}
+
+	/**
+	 * @param otherDescChangeApprover the otherDescChangeApprover to set
+	 */
+	public void setOtherDescChangeApprover(boolean otherDescChangeApprover) {
+		this.otherDescChangeApprover = otherDescChangeApprover;
+	}
+	
+	/**
+	 * @return the otherDescChangeSupplier
+	 */
+	public boolean isOtherDescChangeSupplier() {
+		return otherDescChangeSupplier;
+	}
+
+	/**
+	 * @param otherDescChangeSupplier the otherDescChangeSupplier to set
+	 */
+	public void setOtherDescChangeSupplier(boolean otherDescChangeSupplier) {
+		this.otherDescChangeSupplier = otherDescChangeSupplier;
+	}
+
+	/**
+	 * @return the otherDescChangeSupPO
+	 */
+	public boolean isOtherDescChangeSupPO() {
+		return otherDescChangeSupPO;
+	}
+
+	/**
+	 * @param otherDescChangeSupPO the otherDescChangeSupPO to set
+	 */
+	public void setOtherDescChangeSupPO(boolean otherDescChangeSupPO) {
+		this.otherDescChangeSupPO = otherDescChangeSupPO;
+	}
+
+	/**
+	 * @return the otherDescChangeSupApprover
+	 */
+	public boolean isOtherDescChangeSupApprover() {
+		return otherDescChangeSupApprover;
+	}
+
+	/**
+	 * @param otherDescChangeSupApprover the otherDescChangeSupApprover to set
+	 */
+	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
+		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
+	}
+	// 36504 - END
+	
 }

@@ -6,7 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.disciplinary.action.info.headerlbl']}" toggleable="true">
+	<!-- 39068 - START -->
+	<p:panel header="#{lbl['lbl.sm.disciplinary.action.info.headerlbl']}"
+		toggleable="true"
+		rendered="#{registrationBackingBean.managedBean.disciplinaryAction}">
 		<p:outputPanel>
 			<h:outputText value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -17,7 +20,6 @@
 			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
 			<p:spacer height="2"/>
 		</p:outputPanel>
-		
 		<table style="width: 50%;table-layout:fixed">
 			<tr>
 				<td style="vertical-align: top;">
@@ -27,18 +29,23 @@
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.noDisciplinary}"
 						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
 					
-					<p:outputLabel rendered="#{registrationBackingBean.managedBean.warning}" styleClass="outputLabel-view"
+					<p:outputLabel rendered="#{registrationBackingBean.managedBean.warning and !registrationBackingBean.managedBean.noDisciplinary}" styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
-					<p:outputLabel rendered="#{registrationBackingBean.managedBean.suspendRegistration}" styleClass="outputLabel-view"
+					<p:outputLabel rendered="#{registrationBackingBean.managedBean.suspendRegistration and !registrationBackingBean.managedBean.noDisciplinary}" styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']}"/>
-					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelRegistration}" styleClass="outputLabel-view"
-						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/>
-					<p:outputLabel rendered="#{registrationBackingBean.managedBean.blacklistOwner}" styleClass="outputLabel-view"
-						value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"/>
+					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelRegistration and !registrationBackingBean.managedBean.noDisciplinary}" styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/> 
+					<!-- 38928 Start -->
+					<p:outputLabel
+						rendered="#{registrationBackingBean.managedBean.blacklistowner and !registrationBackingBean.managedBean.noDisciplinary}"
+						styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" /> 
+					<!-- 38928 End -->
 					<!-- 30842 Start -->
-					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelCategory}" styleClass="outputLabel-view"
+					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelCategory and !registrationBackingBean.managedBean.noDisciplinary}" styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}"/>
-					<!-- 30842 End -->	
+					<!-- 30842 End -->
+					<!-- 39068 - END -->	
 						
 				</td>
 			</tr>

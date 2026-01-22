@@ -51,7 +51,7 @@
 				<h:panelGrid styleClass="gridContainer">
 					<p:panel id="historyCategPanelId">
 						
-						<p:dataTable id="historyCategTableId"
+						<p:dataTable id="historyCategTableId" lazy="true"
 							value="#{historyList}" rows="5" paginator="true" paginatorPosition="bottom"
 	                    	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 							var="history" rowIndexVar="index" sortBy="#{history.createdDate}" sortOrder="descending"

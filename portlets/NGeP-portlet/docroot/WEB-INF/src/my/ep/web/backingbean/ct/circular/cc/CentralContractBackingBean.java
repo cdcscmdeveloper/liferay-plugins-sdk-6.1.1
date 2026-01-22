@@ -53,6 +53,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.comparator.ct.CtItemPriceComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -109,9 +110,11 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
@@ -127,6 +130,12 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
+
+import my.ep.constant.ct.audit.AuditContractConst; //35506
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
+
 
 /**
  * Central Contract Circular Backingbean
@@ -246,15 +255,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 
 			if(getManagedBean().getCircularVer().getCtCircularContracts() != null && !getManagedBean().getCircularVer().getCtCircularContracts().isEmpty()) {
-				Collections.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract());
+				CustomUtils.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract()); //#36726
 				for(CtCircularContract ctCircularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 
 					if(ctCircularContract.getCtCircularItems() != null && !ctCircularContract.getCtCircularItems().isEmpty())
-						Collections.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem());
+						CustomUtils.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem()); //#36726
 
 					for(CtCircularItem circularItem : ctCircularContract.getCtCircularItems()){
-						if(circularItem.getCtContractItem() != null)
-							Collections.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPrice());
+						if(circularItem.getCtContractItem() != null) 
+							CustomUtils.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPriceComparator()); //#36726
 					}
 				}
 			}
@@ -293,6 +302,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			} else {
 				getManagedBean().getApproverModel().setTarget(new ArrayList<PmUser>());
 			}
+			
+			// #39594 - Start
+			initializeCtCircularPidReasons(getManagedBean().getCircularVer(), getManagedBean().getCtCircularPidReasons());
+			// #39594 - End
 
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
@@ -306,6 +319,38 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			resDTO = null;
 		}
 	}
+	
+	// #39594 - Start
+	/**
+	 * Copies PID reasons from the given CircularVer into the target list. Each
+	 * reason is cloned with its description, previous ID, and PmReason (if
+	 * present). The selected checkbox flag is set to false for all copied
+	 * items.
+	 * 
+	 * @param circularVer
+	 *            the source CircularVer containing PID reasons (may be null)
+	 * @param targetList
+	 *            the list to populate with copied reasons (must not be null)
+	 */
+	private void initializeCtCircularPidReasons(CtCircularVer circularVer, List<CtCircularPidReason> targetList) {
+		targetList.clear();
+
+		if (circularVer != null && circularVer.getCtCircularPidReason() != null && !circularVer.getCtCircularPidReason().isEmpty()) {
+			for (CtCircularPidReason src : circularVer.getCtCircularPidReason()) {
+				if (src.getPmReason() != null) {
+					PmReason pm = new PmReason();
+					pm.setReasonId(src.getPmReason().getReasonId());
+					pm.setReasonCode(src.getPmReason().getReasonCode());
+					src.setPmReason(pm);
+				} else {
+					src.setPmReason(new PmReason());
+				}
+
+				targetList.add(src);
+			}
+		}
+	}
+	// #39594 - End
 
 	/**
 	 * This  method used to initialize approver list
@@ -418,30 +463,40 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	/**
-	 * The method used  to add  associate 
-	 * circular with current circular for cancel
+	 * The method used to add associate circular with current circular for
+	 * cancel
 	 */
 	public void addCancelledCircular() {
-		try {	
+		try {
 
-			List<CtCancelCircular> cancelCirculars = new  ArrayList<CtCancelCircular>();
-			Iterator<CtCancelCircular> ctCancelCirculars = getManagedBean().getCancelledCircularList().iterator();
-			while(ctCancelCirculars.hasNext()){
-				CtCancelCircular  ctCancelCircular = ctCancelCirculars.next();
-				if(ctCancelCircular.isSelectedCheckBox()){
-					ctCancelCircular.setCancelCircularId(null);
-					ctCancelCircular.setCtCancelCircularReq(null);
-					ctCancelCircular.setSelectedCheckBox(false);
-					cancelCirculars.add(ctCancelCircular);
+			// #39594 - Start
+			CtCircularVer parentCircularVer = getManagedBean().getCircularVer();
+
+			if (parentCircularVer.getCtCancelCircularList() == null) {
+				parentCircularVer.setCtCancelCircularList(new ArrayList<CtCancelCircular>());
+			}
+
+			Iterator<CtCancelCircular> iterator = getManagedBean().getCancelledCircularList().iterator();
+
+			while (iterator.hasNext()) {
+				CtCancelCircular oldCancelCircular = iterator.next();
+
+				if (oldCancelCircular.isSelectedCheckBox()) {
+
+					CtCancelCircular newCancelCircular = new CtCancelCircular();
+					newCancelCircular.setParentCircularVer(parentCircularVer);
+					newCancelCircular.setCircularVer(oldCancelCircular.getCircularVer());
+					newCancelCircular.setSelectedCheckBox(false);
+					parentCircularVer.getCtCancelCircularList().add(newCancelCircular);
+
+					iterator.remove();
 				}
 			}
 
-			getManagedBean().getCircularVer().getCtCancelCircularList().addAll(cancelCirculars);
-			getManagedBean().getCancelledCircularList().removeAll(cancelCirculars);
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CentralContractBackingBean", null,
+					"CentralContractBackingBean.addCancelledCircular()", null, e);
+		} // #39594 - End
 	}
 
 	/**
@@ -550,6 +605,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if(circularVer.getDocType()==null) {
 				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 			}
+			
+			// #39594 - Start
+			if (!circularVer.getCtCircularPidReason().isEmpty()) {
+				circularVer.getCtCircularPidReason().clear();
+			}
+			circularVer.getCtCircularPidReason().addAll(getManagedBean().getCtCircularPidReasons());
+			// #39594 - End
 
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setUserMap(getManagedBean().getUserMap());
@@ -575,6 +637,39 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
+				// #35506 Start
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				if (auditCtBean.getAuditCtConfigState()) {
+					CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+					
+					if (shouldProcessAudit(auditCtBean, ctCircularVer, action)) {
+					
+						AuditContractReqDTO auCtData = new AuditContractReqDTO();
+						auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
+						auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
+						if (ctCircularVer.getCtCircular().getLatestCircularVer() != null) {
+							auCtData.setPrevContractVerId(ctCircularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+						}
+						auCtData.setDocType(resDTO.getCircularVer().getDocType());
+						auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
+						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
+
+						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+								|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) || getFacesScopes()
+										.hasRoleUser(RoleCode.BPK_CC_APPROVER.value())))) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+						} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						}
+
+						auditCtBean.saveAuditData(auCtData);
+					}	
+				}
+				// #35506 End
+				
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 
@@ -623,6 +718,47 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 		return null;
 	}
+	
+	//#35506 - Start
+	/**
+	 * Checks if audit processing should be executed based on config, status, and action.
+	 *
+	 * @param auditCtBean   the audit contract bean
+	 * @param ctCircularVer the circular version being processed
+	 * @param action        the user action
+	 * @return true if audit should be processed, false otherwise
+	 */
+	private boolean shouldProcessAudit(AuditContractBackingBean auditCtBean, CtCircularVer ctCircularVer, String action) {
+	    return auditCtBean.getAuditCtConfigState()
+	        && (getManagedBean().isUpdateAction() || isPendingUpdateStatus(ctCircularVer.getStatus().getStatusId()))
+	        && isAllowedAction(action);
+	}
+
+	/**
+	 * Checks if the status is a pending update status.
+	 *
+	 * @param statusId the status ID
+	 * @return true if pending update status, false otherwise
+	 */
+	private boolean isPendingUpdateStatus(Long statusId) {
+	    return ContractStatusConst.CQ_PENDING_UPDATE_SUBMISSION.equals(statusId)
+	    	|| ContractStatusConst.CQ_PENDING_UPDATE_APPROVAL.equals(statusId)
+	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION_APPROVAL.equals(statusId)
+	        || ContractStatusConst.CQ_PENDING_UPDATE_REVISION.equals(statusId);
+	}
+
+	/**
+	 * Checks if the action is allowed for audit.
+	 *
+	 * @param action the user action
+	 * @return true if allowed for audit, false otherwise
+	 */
+	private boolean isAllowedAction(String action) {
+	    return BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)
+	        || BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
+	}
+	//#35506 - End
 
 	/**
 	 * The method used for validating the central circular information.
@@ -647,22 +783,22 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			 
 			 //Validation for PID
 			 if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getCircularVer().isPid() && 
-					 (getManagedBean().getCircularVer().getCtCircularPidReason() == null || getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
+					 (getManagedBean().getCtCircularPidReasons() == null || getManagedBean().getCtCircularPidReasons().isEmpty())) { //#39594
 				 getManagedBean().setSelectedTabIndex(0);
 				 throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", 
 						 ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			 }
 
-			 if(getManagedBean().getCircularVer().getCtCircularPidReason() != null 
-					 && getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0 ){
-				 for(CtCircularPidReason reason : getManagedBean().getCircularVer().getCtCircularPidReason()){
+			 if(getManagedBean().getCtCircularPidReasons() != null 
+					 && !getManagedBean().getCtCircularPidReasons().isEmpty()){ //#39594
+				 for(CtCircularPidReason reason : getManagedBean().getCtCircularPidReasons()){ //#39594
 					 if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
 						 getManagedBean().setSelectedTabIndex(0);
 						 throw new EpException(MessageConst.ERROR_100022, 
 								 new String[]{ResourceBundleUtils.getMessage("lbl.ct.pid.reason", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					 }
-					 validatePidReason(reason.getPmReason().getReasonId());
-					 if(PidPurchaseTypeOther(reason.getPmReason().getReasonId())){
+					 validatePidReason(reason); //#39594
+					 if(pidPurchaseTypeOther(reason.getPmReason().getReasonId())){ //#39594
 						 if(reason.getReasonDesc().isEmpty()){
 							 getManagedBean().setSelectedTabIndex(0);
 							 throw new EpException(MessageConst.ERROR_100022, 
@@ -695,6 +831,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 								 ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())); 
 					 }
 				 }
+			 }
+			 
+			 // Validate For Extension date - #39213
+			 if(getManagedBean().isCircularExtension() && (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
+					 && getManagedBean().getCircularVer().getExtendEndDate() == null) {
+				 getManagedBean().setSelectedTabIndex(0);
+				 throw new EpException(MessageConst.ERROR_100022,
+						 new String[]{ResourceBundleUtils.getMessage("lbl.ct.extension.end.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())}); 
 			 }
 
 			 // Validate duplicated contract
@@ -1100,6 +1244,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
+		CircularBackingBean circularBB = new CircularBackingBean(); //#30866
 		if(getManagedBean().isChkCancelPage()) {
 			//#33533 /#33752 start
 			PanelBackingBean panelBB = new PanelBackingBean();
@@ -1129,6 +1274,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			return getManagedBean().getGotoPreviewPage();
 		} else if(getManagedBean().getGotoPreviewPage()!=null) {
 			return getManagedBean().getGotoPreviewPage();
+		} else if(circularBB.getManagedBean().isContinuityCircularAuditSearch()){ //Fix -#30866
+			return "/xhtml/ct/viewcontract/resultViewCircularContract.xhtml?faces-redirect=true"; //Fix -#30866
 		} else {
 			return "search.xhtml?faces-redirect=true";
 		}
@@ -1672,60 +1819,110 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * @return true,     if selected PID reason code is equals other
 	 *         false,    if selected PID reason code is not equals other
 	 */
-	public boolean PidPurchaseTypeOther(Long reasonId){
-
-		if(reasonId == null || reasonId.intValue() == 0)
+	public boolean pidPurchaseTypeOther(Long reasonId){
+		// #39594 - Start
+		if (reasonId == null || reasonId <= 0) {
 			return false;
+		}
 
 		ReasonReqDTO reqDTO = null;
 		IReasonSO reasonSO = null;
 		PmReason pmReason = null;
+
 		try {
 			reqDTO = new ReasonReqDTO();
 			reqDTO.setReasonId(reasonId);
 			reqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
-			reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+
+			reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+
 			pmReason = reasonSO.retrieveReasonById(reqDTO).getPmReason();
-			if(pmReason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.PID_REASONTYPE_OTHER)){
+
+			if (pmReason != null && pmReason.getReasonCode() != null
+					&& pmReason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.PID_REASONTYPE_OTHER)) {
 				return true;
 			}
+
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally{
-			reqDTO = null;
-			reasonSO = null;
-			pmReason = null;
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CentralContractBackingBean", null,
+					"CentralContractBackingBean.pidPurchaseTypeOther()", null, e);
+		}
+
+		return false;
+		// #39594 - End
+	}
+
+	// #39594 - Start
+	/**
+	 * Validates the selected PID reason.
+	 * <p>
+	 * - Skips validation for null or invalid IDs.<br>
+	 * - Allows multiple "Others" reasons.<br>
+	 * - Non-"Others" reasons must be unique; duplicates trigger
+	 * {@link EpException}.<br>
+	 * - Non-"Others" selections automatically clear {@code reasonDesc}.
+	 * 
+	 * @param currentPid
+	 *            the PID entry to validate
+	 * @throws EpException
+	 *             if a duplicate non-"Others" reason is found
+	 */
+	public void validatePidReason(CtCircularPidReason currentPid) {
+		Long reasonId = getReasonId(currentPid);
+
+		if (reasonId == null || reasonId <= 0L) {
+			return;
+		}
+
+		boolean isOthers = pidPurchaseTypeOther(reasonId);
+
+		if (!isOthers) {
+			currentPid.setReasonDesc(null);
+
+			if (hasDuplicate(reasonId, currentPid)) {
+				currentPid.getPmReason().setReasonId(null);
+				currentPid.setReasonDesc(null);
+				throw new EpException(MessageConst.ERROR_750020);
+			}
+		}
+	}
+
+	/** Safely extracts reason ID (null-safe). */
+	private Long getReasonId(CtCircularPidReason pid) {
+		return (pid != null && pid.getPmReason() != null) ? pid.getPmReason().getReasonId() : null;
+	}
+
+	/**
+	 * Returns true if another entry has the same reason ID (excludes current
+	 * entry).
+	 */
+	private boolean hasDuplicate(Long reasonId, CtCircularPidReason currentPid) {
+		for (CtCircularPidReason pid : getManagedBean().getCtCircularPidReasons()) {
+			PmReason other = pid.getPmReason();
+			if (pid != currentPid && other != null && reasonId.equals(other.getReasonId())) {
+				return true;
+			}
 		}
 		return false;
 	}
 
-	private void validatePidReason(Long resonId){
-		if(resonId == null || resonId.intValue() == 0){
-			return;
-		}
-		if(getManagedBean().getCircularVer().getCtCircularPidReason().size() > 0){
-			int counter = 0;
-			for(CtCircularPidReason  ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()){
-				if(ctCircularPidReasons.getPmReason() != null 
-						&& ctCircularPidReasons.getPmReason().getReasonId() != null
-						&& ctCircularPidReasons.getPmReason().getReasonId().equals(resonId)){
-					counter++;
-					if(!PidPurchaseTypeOther(resonId) && counter == 2){
-						throw new EpException(MessageConst.ERROR_750020);
-					}
-				}
-			}
-		}
-	}
+	// #39594 - End
 
 	/**
 	 * This method used to add new PID reason record in datatable
 	 */
 	public void addPurchaseInDefault(){
-		CtCircularPidReason ctCircularPidReasons = new CtCircularPidReason();
-		ctCircularPidReasons.setPmReason(new PmReason());
-		getManagedBean().getCircularVer().getCtCircularPidReason().add(ctCircularPidReasons);
+		// #39594 - Start
+		CtCircularPidReason newPid = new CtCircularPidReason();
+		PmReason pm = new PmReason();
+		pm.setReasonId(null);
+
+		newPid.setPmReason(pm);
+		newPid.setReasonDesc(null);
+		newPid.setSelectedCheckBox(false);
+
+		getManagedBean().getCtCircularPidReasons().add(newPid);
+		// #39594 - End
 	}
 
 	/**
@@ -1735,7 +1932,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * */
 	public void selectAllPidReason(AjaxBehaviorEvent e) {
 
-		for (CtCircularPidReason ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()) {
+		for (CtCircularPidReason ctCircularPidReasons : getManagedBean().getCtCircularPidReasons()) { //#39594
 			if (getManagedBean().isSelectAll()) {
 				ctCircularPidReasons.setSelectedCheckBox(true);
 				if(getManagedBean().isButtonHideActiveDel()){
@@ -1758,7 +1955,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void selectOnePidCheckboxSelect(AjaxBehaviorEvent e){
 
 		getManagedBean().setSelectAll(false);
-		for (CtCircularPidReason ctCircularPidReasons : getManagedBean().getCircularVer().getCtCircularPidReason()){
+		for (CtCircularPidReason ctCircularPidReasons : getManagedBean().getCtCircularPidReasons()){ //#39594
 			if(ctCircularPidReasons.isSelectedCheckBox()){
 				getManagedBean().setButtonHideActiveDel(false);
 				return;
@@ -1778,14 +1975,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void deleteTableRow(String tableType) {
 		try {
 			if(tableType.equalsIgnoreCase("PID")){	
-				Iterator<CtCircularPidReason> pidReasonIterator = getManagedBean().getCircularVer().getCtCircularPidReason().iterator();
+				Iterator<CtCircularPidReason> pidReasonIterator = getManagedBean().getCtCircularPidReasons().iterator(); //#39594
 				while(pidReasonIterator.hasNext()){
 					CtCircularPidReason  pidReason = pidReasonIterator.next();
 					if(pidReason.isSelectedCheckBox()){
 						pidReasonIterator.remove();
 					}
 				}
-				getManagedBean().setCtCircularPidReasons(null);
+				getManagedBean().setSelectedPidReason(null); // #39594
 			} else if(tableType.equalsIgnoreCase("PERSON")){
 				Iterator<CtContactPerson> contactPersonIterator = getManagedBean().getCircularVer().getCtContactPersons().iterator();
 				while(contactPersonIterator.hasNext()){

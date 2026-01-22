@@ -163,7 +163,19 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private List<ScQtFinalizationRemarks> finalizationRemarks;
 	//25638 - End.
 	
-	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private List<BidItemBean> bidItemSuppliersDisqualified;
+	private List<BidPackageBean> biddingPackagePriceListDisqualified;
+	private List<ScQtEvaluationResultDtl> notShortlistedSuppliers;
+	private Map<Long, List<ScQtEvaluationResultDtl>> pkgNotShortlistedSuppliersByZone;
+	private Map<Long, List<ScQtEvaluationResultDtl>> itemNotShortlistedSuppliers;
+	private Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> itemNotShortlistedSuppliersByZone;
+	private Map<Long, List<ScBidSchedule>> bidDisSchedulesByZone;
+	private Map<Long, List<BidPackageBean>> bidDisPackageBeansByZone;
+	private boolean flagBranchDeleted = false;
+
+	// #28777 & #29729 - End
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -1303,7 +1315,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	//25638 - End.
 	
-	//#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;
 	}
@@ -1311,5 +1323,80 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
 	}
-	//#28777 & #29729 - End
+
+	public List<BidItemBean> getBidItemSuppliersDisqualified() {
+		return bidItemSuppliersDisqualified;
+	}
+
+	public void setBidItemSuppliersDisqualified(List<BidItemBean> bidItemSuppliersDisqualified) {
+		this.bidItemSuppliersDisqualified = bidItemSuppliersDisqualified;
+	}
+
+	public List<BidPackageBean> getBiddingPackagePriceListDisqualified() {
+		return biddingPackagePriceListDisqualified;
+	}
+
+	public void setBiddingPackagePriceListDisqualified(List<BidPackageBean> biddingPackagePriceListDisqualified) {
+		this.biddingPackagePriceListDisqualified = biddingPackagePriceListDisqualified;
+	}
+
+	public List<ScQtEvaluationResultDtl> getNotShortlistedSuppliers() {
+		return notShortlistedSuppliers;
+	}
+
+	public void setNotShortlistedSuppliers(List<ScQtEvaluationResultDtl> notShortlistedSuppliers) {
+		this.notShortlistedSuppliers = notShortlistedSuppliers;
+	}
+
+	public Map<Long, List<ScQtEvaluationResultDtl>> getPkgNotShortlistedSuppliersByZone() {
+		return pkgNotShortlistedSuppliersByZone;
+	}
+
+	public void setPkgNotShortlistedSuppliersByZone(
+			Map<Long, List<ScQtEvaluationResultDtl>> pkgNotShortlistedSuppliersByZone) {
+		this.pkgNotShortlistedSuppliersByZone = pkgNotShortlistedSuppliersByZone;
+	}
+
+	public Map<Long, List<ScQtEvaluationResultDtl>> getItemNotShortlistedSuppliers() {
+		return itemNotShortlistedSuppliers;
+	}
+
+	public void setItemNotShortlistedSuppliers(Map<Long, List<ScQtEvaluationResultDtl>> itemNotShortlistedSuppliers) {
+		this.itemNotShortlistedSuppliers = itemNotShortlistedSuppliers;
+	}
+
+	public Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> getItemNotShortlistedSuppliersByZone() {
+		return itemNotShortlistedSuppliersByZone;
+	}
+
+	public void setItemNotShortlistedSuppliersByZone(
+			Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> itemNotShortlistedSuppliersByZone) {
+		this.itemNotShortlistedSuppliersByZone = itemNotShortlistedSuppliersByZone;
+	}
+
+	public Map<Long, List<ScBidSchedule>> getBidDisSchedulesByZone() {
+		return bidDisSchedulesByZone;
+	}
+
+	public void setBidDisSchedulesByZone(Map<Long, List<ScBidSchedule>> bidDisSchedulesByZone) {
+		this.bidDisSchedulesByZone = bidDisSchedulesByZone;
+	}
+
+	public Map<Long, List<BidPackageBean>> getBidDisPackageBeansByZone() {
+		return bidDisPackageBeansByZone;
+	}
+
+	public void setBidDisPackageBeansByZone(Map<Long, List<BidPackageBean>> bidDisPackageBeansByZone) {
+		this.bidDisPackageBeansByZone = bidDisPackageBeansByZone;
+	}
+	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
+	}
+	// #28777 & #29729 - End
+	
 }

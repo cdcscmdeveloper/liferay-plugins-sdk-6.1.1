@@ -13,13 +13,31 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	
-	<table>
+
+		<ui:remove> #25791 start </ui:remove>
+		<table style="width: 100%">
+			<ui:remove> #25791 end </ui:remove>
 			<tr>
-				<td><p:commandButton id="backButton" styleClass="BtnSpacing"
+				<td>
+				<ui:remove> #25791 start </ui:remove> 
+					<p:commandButton
+						id="backButton" styleClass="BtnSpacing"
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						partialSubmit="true" process="@this"
-						action="#{biddingBB.biddingMonitorBackAction}" /></td>
+						partialSubmit="true" process="@this" immediate="true"
+						action="#{biddingBB.biddingMonitorBackAction}" /> 
+					<ui:remove> #25791 end </ui:remove>
+				</td>
+				<ui:remove> #25791 start </ui:remove>
+				<td style="vertical-align: bottom;" align="right"><p:commandLink
+						value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, biddingBB.managedBean.scQt.qtId)}"
+						immediate="true"
+						rendered="#{biddingBB.isQTMaintenanceScreen()}">
+						<f:setPropertyActionListener
+							target="#{pmTrackingDiaryBackingBean.managedBean.biddingUrl}"
+							value="#{true}"></f:setPropertyActionListener><ui:remove> #25791 start </ui:remove>
+					</p:commandLink></td>
+				<ui:remove> #25791 end </ui:remove>
 			</tr>
 		</table>
 		<ui:include src="bidManagementSupplemenatryPage.xhtml"></ui:include>

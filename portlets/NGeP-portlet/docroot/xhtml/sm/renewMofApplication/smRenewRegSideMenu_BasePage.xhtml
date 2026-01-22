@@ -173,7 +173,8 @@
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
 			<c:choose>
-				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+				<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.specialCategoryRechecked}">
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
 						<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 					</c:if>
@@ -545,7 +546,8 @@
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
 			<c:choose>
-				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+				<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.specialCategoryRechecked}">
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 						<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 					</c:if>
@@ -913,17 +915,15 @@
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
 			<c:choose>
-			<!-- #26671 - START -->
-				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
-			<!-- #26671 - END -->
+			<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.specialCategoryRechecked}">
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 						<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 					</c:if>
 					
 					<c:choose>
-					<!-- #26671 - START -->
-						<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel or backingBean.managedBean.showFacilityMachine}">
-					<!-- #26671 - END -->			
+						<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel 
+									or backingBean.managedBean.showTravelSoftwarePanel}">			
 							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
 								<ui:include src="step6.2RenewAppln_EquipmentInfo.xhtml" />
 							</c:if>

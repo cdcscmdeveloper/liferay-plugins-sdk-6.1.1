@@ -25,7 +25,9 @@
 			</table>
 
 			<h:panelGroup id="technicalviewSummary">
-				<ui:param name="isDisqualified" value="#{evaluationBackingBean.renderDisqialified()}" /><!-- #29187 Added Vinod -->
+				<ui:remove>#29187 Start Vinod</ui:remove>
+				<ui:param name="isDisqualified" value="#{evaluationBackingBean.renderDisqialified()}" />
+				<ui:remove>#29187 End Vinod</ui:remove>
 				<c:if
 					test="#{evaluationBackingBean.managedBean.technicalSummaryView eq 'TPM'}">
 					<ui:param name="passingScore"

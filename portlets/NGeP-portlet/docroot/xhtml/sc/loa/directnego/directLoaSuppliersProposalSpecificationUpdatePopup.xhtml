@@ -82,8 +82,8 @@
 				</td>
 				<td colspan="3">
 					<br /><br />
-					<h:outputText style="width:24%;white-space: normal;"
-					value="#{directLOABackingBean.managedBean.itemNamePopup}" />
+					<h:outputText style="width:24%;white-space: normal;word-break:break-all;" escape="false" 
+					value="#{directLOABackingBean.replaceAllSpecialCharactersAndNewline(directLOABackingBean.managedBean.itemNamePopup)}" />
 				</td>
 			</tr>
 			<tr>
@@ -94,8 +94,9 @@
 					<p:inputTextarea label="#{lbl['lbl.sc.justification']}" id="justification" 
 					disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}"
 					value="#{directLOABackingBean.managedBean.newSupplierJustification}"
-					style="width:800px; margin-bottom:5px;" maxlength="1000"  rows="5" autoResize="false">
-						<p:ajax event="change" process="@this" update="@this" />	
+					style="width:800px; margin-bottom:5px;" onmouseout="limitTextArea(this,1000);" rows="5" autoResize="false">
+						<p:ajax event="change" process="@this" update="@this" />
+						<f:validateLength for="justification" maximum="1000" />		
 					</p:inputTextarea>
 					<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.justification.tooltip']}" />
 					<p:message id="justificationMsg" for="justification" display="icon" />
@@ -128,7 +129,7 @@
 		</p:columnGroup>
 		
 		<p:column style="width:30%; text-align: left;">
-			<h:outputText style="width:24%;white-space: normal;" value="#{spec.tplSpecQuestion.clSpecDetail}" /><br/>
+			<h:outputText style="width:24%;white-space: normal;word-break:break-all;" escape="false" value="#{directLOABackingBean.replaceAllSpecialCharactersAndNewline(spec.tplSpecQuestion.clSpecDetail)}" /><br/>
 			<p:commandLink id="addNewSpec" update="specList"
 						action="#{directLOABackingBean.addNewOfferedSpec(spec)}"
 						disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}"
@@ -147,16 +148,15 @@
 			</p:commandLink>
 		</p:column>
 			<p:column style="width:30%; text-align: left;">
-			<h:outputText style="width:24%;white-space: normal;" value="#{directLOABackingBean.supplierRemarks(spec.answerRemark)}" />
+			<h:outputText style="width:24%;white-space: normal;word-break:break-all;" escape="false" value="#{directLOABackingBean.supplierRemarks(spec.answerRemark)}" />
 		</p:column>
 		<p:column style="width:40%; text-align: center;">
 			<p:inputTextarea id="newOfferedSpec"
 					label="#{lbl['lbl.sc.loiloa.newoffered.specification']}"
 					style="width:calc(100% - 30px);" value="#{spec.newSupplierOffer}"
 					disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}"
-					rows="5" onkeyup="limitTextArea(this,1000);"
-					onkeydown="limitTextArea(this,1000);"
-					rendered="#{spec.renderNewSpec}"
+					rows="5"
+					rendered="#{spec.renderNewSpec}" autoResize="false"
 					onmouseout="limitTextArea(this,1000);">
 					<p:ajax event="change" process="@this" update="@this" />
 					<f:validateLength for="newOfferedSpec" maximum="1000" />
