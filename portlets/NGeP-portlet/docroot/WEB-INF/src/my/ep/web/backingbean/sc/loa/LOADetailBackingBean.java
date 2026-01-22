@@ -12225,10 +12225,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public BigDecimal calculateTotalItemPrice() {
 		BigDecimal totalPrice = BigDecimal.ZERO;
-		if(CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())){
-			for(ScLoiLoaItem item: this.getManagedBean().getLoiLoaItemsResult()){
-				totalPrice = calcSubTotalPrice(item).add(totalPrice) ;
-			}
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())) {
+			// #39747 - Start
+			totalPrice = calcTotalAmount(this.getManagedBean().getLoiLoaItemsResult());
+			// #39747 - End
+
 		}
 		totalPrice = totalPrice.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 
