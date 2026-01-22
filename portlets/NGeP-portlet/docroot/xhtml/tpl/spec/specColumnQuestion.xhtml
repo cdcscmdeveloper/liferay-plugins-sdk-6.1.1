@@ -131,7 +131,7 @@
 	<p:column style="width:98px;"
 		rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 		<!-- #25726/25725 - Check and display Italic value - Start-->
-		<h:selectOneMenu id="fulfilType"
+		<p:selectOneMenu id="fulfilType"
 			value="#{question.clFulfilmentTypeCode.parameterId}"
 			required="#{isValidationReq}" style="width:98px;"
 			rendered="#{isQuestionTypeItem}"
@@ -145,7 +145,8 @@
 				partialSubmit="true" process="@this"
 				oncomplete="styleFulfilmentDropdown();"
 				update="@this, fulfilTypeMsg, freqUOMPG, dayUOMPG, monthUOMPG, durationPG" />
-		</h:selectOneMenu>
+		</p:selectOneMenu>
+		<!-- #25726/25725 - Check and display Italic value - End -->
 		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
 	</p:column>
 	<p:column style="width:120px;">
