@@ -748,12 +748,13 @@ public class LOIDetailBackingBean extends
 					evaluationDataType.getFcSecretary())) {
 				this.getManagedBean().setSecretaryUser(true);
 			}
+			//QT WIP weightage flag
 
 			retrieveMultipleLoiDtls(sourceId,
 					evaluationDataType.getCommitteeType(),
 					evaluationDataType.getGroupkeyMa());
 			getManagedBean().setMultipleLoiFlag(Boolean.TRUE);
-			
+
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 			
@@ -762,7 +763,7 @@ public class LOIDetailBackingBean extends
 			// #25638 - End
 			checkSupplierAwardedRejectValidityExtensionPreRender();//#21692
 			
-			
+			checkWeightage35384WIP(); //#38151			
 			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
