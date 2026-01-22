@@ -12,11 +12,13 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;//25406
-import java.util.Collections;
+import java.util.Collections; //#13847
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap; //#13847
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map; //#13847
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -59,6 +61,7 @@ import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtBondWaiverDetail; //#13847
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract; //Fix - #30866
@@ -87,6 +90,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils; //#36726 || #33287
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //#13847
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
@@ -106,6 +110,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.pm.helper.StatusHelper; //Fix - #30866
 
+import org.apache.commons.collections.CollectionUtils; //#13847
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -150,6 +155,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
 	private CtAgency selectedRecommendedAgency;//25406
+
+	//#13847 start
+	/**
+	 * initialize mapping to contain status for approval for bond waiver/deferment
+	 */
+	private static final Map<Integer, Long> approvalStatus = new HashMap<>();
+	static{
+		Integer i = 0;
+		approvalStatus.put(i++, ContractStatusConst.FD_PENDING_APPROVAL);
+		approvalStatus.put(i++, ContractStatusConst.FD_PENDING_REVISION_APPROVAL);
+		approvalStatus.put(i++, ContractStatusConst.FU_PENDING_APPROVAL);
+		approvalStatus.put(i++, ContractStatusConst.FU_PENDING_REVISION_APPROVAL);
+		approvalStatus.put(i++, ContractStatusConst.FW_PENDING_APPROVAL);
+		approvalStatus.put(i++, ContractStatusConst.FW_PENDING_REVISION_APPROVAL);
+	}
+	//#13847 end
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -835,26 +856,260 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		commonDownload(filePath, fileName);
 	}
 	
+	//#13847 start
+	/**
+	 * method to check all the attachment of the bond waiver (active, in
+	 * progress and suspended) and grouping the bond waiver into latest and
+	 * history to show on the screen which one is the history.
+	 * 
+	 * @throws Exception if an exception occurred
+	 */
 	private void chkBondWaivedAttachment() {
-		if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
-				|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setDocId(ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
-			reqDTO.setDocType(ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getDocType());
-			reqDTO.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
-			IContractSO contractSO =   (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			List<CtAttachment> attachments = contractSO.retrieveAttachmentBySectionId(reqDTO).getCtAttachments();
-			if(attachments != null && attachments.size() > 0){
-				for(CtAttachment ctAttach : attachments){
-					for(CtAttachment waivedAttach :ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
-						if(waivedAttach.getFilePath().equalsIgnoreCase(ctAttach.getFilePath())){
-							waivedAttach.setBondWaivedTrue(true);
-						}
-					}
+		try {
+			resetBondWaiverDetails();
+
+			if (CollectionUtils.isNotEmpty(ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails())) {
+				long noOfDays = 0;
+				List<CtBondWaiverDetail> bondWaiverDetails = ctBB.getManagedBean().getContractVer()
+						.getCtBondWaiverDetails();
+				List<CtAttachment> bondWaiverAttachments = ctBB.getManagedBean().getContractVer()
+						.getBondWaiverAttachments();
+
+				for (CtBondWaiverDetail waiverDetail : bondWaiverDetails) {
+					updateWaiverDetailAttachment(waiverDetail, bondWaiverAttachments);
+					noOfDays += processWaiverDetail(waiverDetail);
 				}
+
+				ctBB.getManagedBean().setDisableDeferment(noOfDays >= ContractBackingBean.MAX_DEFERMENT_BOND_DAYS);
+
+				sortBondWaiverDefermentHistory();
+			}
+
+			handleBondWaiverDefermentLatest();
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_CONTRACTDETAILSBACKINGBEAN,
+					ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),
+					ContractConst.SLA_CHK_BOND_WAIVED_ATTACHMENT, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	/**
+	 * Resets the latest bond waiver and history.
+	 */
+	private void resetBondWaiverDetails() {
+	    ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
+	    ctBB.getManagedBean().getContractVer().setBondWaiverDefermentHistory(null);
+	}
+
+	/**
+	 * Updates the attachment for the given waiver detail based on the available bond waiver attachments.
+	 *
+	 * @param waiverDetail The bond waiver detail to update.
+	 * @param bondWaiverAttachments The list of available bond waiver attachments.
+	 */
+	private void updateWaiverDetailAttachment(CtBondWaiverDetail waiverDetail, List<CtAttachment> bondWaiverAttachments) {
+		waiverDetail.setCtAttachment(new CtAttachment());
+
+		if (CollectionUtils.isNotEmpty(bondWaiverAttachments)) {
+			if (waiverDetail.getAttachmentId() != null) {
+				setAttachmentById(waiverDetail, bondWaiverAttachments);
+			} else if (waiverDetail.getTempAttachmentId() != null) {
+				setAttachmentByTempId(waiverDetail, bondWaiverAttachments);
 			}
 		}
 	}
+
+	/**
+	 * Sets the attachment for the waiver detail based on the attachment ID.
+	 *
+	 * @param waiverDetail The bond waiver detail to update.
+	 * @param bondWaiverAttachments The list of available bond waiver attachments.
+	 * @param attachmentId The ID of the attachment to set.
+	 */
+	private void setAttachmentById(CtBondWaiverDetail waiverDetail, List<CtAttachment> bondWaiverAttachments) {
+		for (CtAttachment waiverAttach : bondWaiverAttachments) {
+			if (waiverDetail.getAttachmentId().equals(waiverAttach.getAttachmentId())) {
+				waiverDetail.setCtAttachment(waiverAttach);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Sets the attachment for the waiver detail based on the temporary attachment ID.
+	 *
+	 * @param waiverDetail The bond waiver detail to update.
+	 * @param bondWaiverAttachments The list of available bond waiver attachments.
+	 * @param tempAttachmentId The temporary ID of the attachment to set.
+	 */
+	private void setAttachmentByTempId(CtBondWaiverDetail waiverDetail, List<CtAttachment> bondWaiverAttachments) {
+		for (CtAttachment waiverAttach : bondWaiverAttachments) {
+			if (waiverDetail.getTempAttachmentId().equals(waiverAttach.getTempAttachmentId())) {
+				waiverDetail.setCtAttachment(waiverAttach);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Processes the given waiver detail and updates the latest bond waiver or history.
+	 *
+	 * @param waiverDetail The bond waiver detail to process.
+	 * @return The number of days between the waiver start and end dates.
+	 */
+	private long processWaiverDetail(CtBondWaiverDetail waiverDetail) {
+		long noOfDays = 0;
+
+		if (waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+			setLatestBondWaiver(waiverDetail);
+		} else if (waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)
+				|| waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
+			addToBondWaiverHistory(waiverDetail);
+			noOfDays += ctBB.findDifference(waiverDetail.getWaiverStartDate(), waiverDetail.getWaiverEndDate());
+		}
+
+		return noOfDays;
+	}
+
+	/**
+	 * Sets the latest bond waiver detail.
+	 *
+	 * @param waiverDetail The bond waiver detail to set as the latest.
+	 */
+	private void setLatestBondWaiver(CtBondWaiverDetail waiverDetail) {
+		if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() == null) {
+			ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
+		}
+		ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(waiverDetail);
+	}
+
+	/**
+	 * Adds the given waiver detail to the bond waiver deferment history.
+	 *
+	 * @param waiverDetail The bond waiver detail to add.
+	 */
+	private void addToBondWaiverHistory(CtBondWaiverDetail waiverDetail) {
+		if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() == null) {
+			ctBB.getManagedBean().getContractVer().setBondWaiverDefermentHistory(new ArrayList<CtBondWaiverDetail>());
+		}
+		ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory().add(waiverDetail);
+	}
+
+	/**
+	 * Sorts the bond waiver deferment history by waiver start date in descending order.
+	 */
+	private void sortBondWaiverDefermentHistory() {
+		List<CtBondWaiverDetail> history = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory();
+		if (CollectionUtils.isNotEmpty(history)) {
+			Collections.sort(history, new Comparator<CtBondWaiverDetail>() {
+				@Override
+				public int compare(CtBondWaiverDetail bwd1, CtBondWaiverDetail bwd2) {
+					if (bwd1.getWaiverStartDate() != null && bwd2.getWaiverStartDate() != null) {
+						return bwd2.getWaiverStartDate().compareTo(bwd1.getWaiverStartDate());
+					}
+					return 0;
+				}
+			});
+		}
+	}
+
+	/**
+	 * Handles the latest bond waiver deferment detail based on the contract amount.
+	 */
+	private void handleBondWaiverDefermentLatest() {
+		if (ctBB.getManagedBean().getContractVer().getCtContractAmount() != null
+				&& ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondWaived()
+				&& ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() == null) {
+			ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
+		}
+	}
+	
+	/**
+	 * Method to set all the bond waiver and its attachment 
+	 * (latest, history, latest delete and history delete) into full waiver to be save into database.
+	 * Separate the bond waiver with the attachment due to the save method for attachment 
+	 * is not in the same persistance with the bond waiver.
+	 * 
+	 * @param outcome The outcome of the operation (e.g., approve).
+	 * @param status The status of the bond waiver.
+	 * @return A list of updated bond waiver details.
+	 */
+	private List<CtBondWaiverDetail> setBondWaiverLatestHistory(String outcome, Long status) {
+		List<CtBondWaiverDetail> bondWaiverFull = new ArrayList<>();
+		List<CtAttachment> waiverAttachmentFull = new ArrayList<>();
+		CtBondWaiverDetail bondWaiverLatest = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest();
+		Long tempAttachmentId = 1L; // Use Long directly for clarity
+
+		try {
+			// Process history
+			tempAttachmentId = processBondWaiverHistory(bondWaiverFull, waiverAttachmentFull, status, outcome,
+					tempAttachmentId);
+
+			// Process latest bond waiver
+			if (bondWaiverLatest != null) {
+				processLatestBondWaiver(bondWaiverLatest, tempAttachmentId);
+				waiverAttachmentFull.add(bondWaiverLatest.getCtAttachment());
+				bondWaiverFull.add(bondWaiverLatest);
+			}
+
+			// Set bond waiver attachments if any
+			if (CollectionUtils.isNotEmpty(waiverAttachmentFull)) {
+				ctBB.getManagedBean().getContractVer().setBondWaiverAttachments(waiverAttachmentFull);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_SET_BOND_WAIVER_LATEST_HISTORY,
+					ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),
+					ContractConst.SLA_SET_BOND_WAIVER_LATEST_HISTORY, getUserIdSessionFromLoginId(), e);
+		}
+
+		return bondWaiverFull;
+	}
+	
+	/**
+	 * Processes the bond waiver history and updates the record status and attachment IDs.
+	 *
+	 * @param bondWaiverFull The list to store updated bond waiver details.
+	 * @param waiverAttachmentFull The list to store updated waiver attachments.
+	 * @param status The status of the bond waiver.
+	 * @param outcome The outcome of the operation (e.g., approve).
+	 * @param tempAttachmentId The temporary attachment ID to be assigned.
+	 * @return tempAttachId return new value of tempAttachmentId.
+	 */
+	private Long processBondWaiverHistory(List<CtBondWaiverDetail> bondWaiverFull,
+			List<CtAttachment> waiverAttachmentFull, Long status, String outcome, Long tempAttachmentId) {
+		Long tempAttachId = tempAttachmentId;
+		if (CollectionUtils.isNotEmpty(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory())) {
+			for (CtBondWaiverDetail waiver : ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory()) {
+				if (approvalStatus.containsValue(status) && outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+					waiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					waiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				}
+				waiver.setTempAttachmentId(tempAttachId);
+				waiver.getCtAttachment().setTempAttachmentId(tempAttachId);
+				tempAttachId++;
+				waiverAttachmentFull.add(waiver.getCtAttachment());
+				bondWaiverFull.add(waiver);
+			}
+		}
+		return tempAttachId;
+	}
+
+	/**
+	 * Processes the latest bond waiver and updates its record status and attachment ID.
+	 *
+	 * @param bondWaiverLatest The latest bond waiver detail to process.
+	 * @param tempAttachmentId The temporary attachment ID to be assigned.
+	 */
+	private void processLatestBondWaiver(CtBondWaiverDetail bondWaiverLatest, Long tempAttachmentId) {
+		bondWaiverLatest.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+		bondWaiverLatest.setTempAttachmentId(tempAttachmentId);
+		bondWaiverLatest.getCtAttachment().setTempAttachmentId(tempAttachmentId);
+	}
+	//#13847 end
+
+
 	//Start - 25890 - Minh
 	private void validateFDDescAndAmount(String action) {
 		List<CtDeduction> ctDeductions = ctBB.getManagedBean().getContractVer().getCtDeductions();
@@ -995,6 +1250,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				}
 			}
+			
+			//#13847 start
+			if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
+					|| ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() != null) {
+				ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(action, ctBB.getManagedBean()
+						.getContractVer().getStatus().getStatusId()));
+			}
+			//#13847 end
 
 			reqDTO.setCtContractVer(ctContractVer);
 			reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());// 26475 
@@ -1650,6 +1913,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
+		
+		validationPerformanceBond(action); //#13847
 
 		// Validation for Approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
@@ -1662,6 +1927,135 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
 	}
+	
+	//LOG : 13847, by Fahmi 22032019 start
+	/**
+	 * Validates the performance bond based on the specified action and the current state of the contract.
+	 *
+	 * @param action The action being performed (e.g., save, submit, reject, revise, approve).
+	 * @throws EpException if any validation fails, indicating the specific error.
+	 */
+	public void validationPerformanceBond(String action) {
+		Long status = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
+		CtBondWaiverDetail latestWaiver = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest();
+
+		validateBondWaiverHistory(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory());
+		if (isBondValidationRequired(action)) {
+			if (!isBondWaiverConditionsMet(latestWaiver)) {
+				setTabValue("PB");
+				throw new EpException(MessageConst.ERROR_750061);
+			} else {
+				validateWaiverDates(latestWaiver);
+
+				if (approvalStatus.containsValue(status) && !isBondWaiverInHistory(latestWaiver)) {
+					setTabValue("PB");
+					throw new EpException(MessageConst.ERROR_750071);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Checks if bond validation is required based on the action and CtContractAmount conditions.
+	 *
+	 * @param action The action being performed (e.g., save, submit, approve).
+	 * @return true if bond validation is required; false otherwise.
+	 */
+	private boolean isBondValidationRequired(String action) {
+		CtContractAmount contractAmount = ctBB.getManagedBean().getCtContractAmount();
+		boolean isActionValid = isActionRequiringValidation(action);
+
+		return contractAmount.isBondWaived() && contractAmount.isBondReq() && !contractAmount.isBondExempted()
+				&& isActionValid;
+	}
+	
+	/**
+	 * Checks if the specified action requires bond validation.
+	 *
+	 * @param action The action to check.
+	 * @return true if the action requires bond validation; false otherwise.
+	 */
+	private boolean isActionRequiringValidation(String action) {
+		return action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE); // 33824 remove duplicate reject
+	}
+
+	/**
+	 * Validates if the bond waiver conditions are met.
+	 *
+	 * @param latestWaiver The latest bond waiver details.
+	 * @return true if all conditions are met; false otherwise.
+	 */
+	private boolean isBondWaiverConditionsMet(CtBondWaiverDetail latestWaiver) {
+		boolean isAttachmentValid = isAttachmentValid(latestWaiver.getCtAttachment());
+
+		return latestWaiver.getWaiverStartDate() != null && latestWaiver.getWaiverEndDate() != null
+				&& StringUtils.isNotBlank(latestWaiver.getReferenceNo()) && isAttachmentValid;
+	}
+	
+	/**
+	 * Checks if the attachment is valid.
+	 *
+	 * @param attachment The attachment to check.
+	 * @return true if the attachment is valid; false otherwise.
+	 */
+	private boolean isAttachmentValid(CtAttachment attachment) {
+	    return attachment != null && StringUtils.isNotBlank(attachment.getFileName());
+	}
+
+	/**
+	 * Validates that the waiver start date is not after the waiver end date.
+	 *
+	 * @param latestWaiver The latest bond waiver details.
+	 * @throws EpException if the start date is after the end date.
+	 */
+	private void validateWaiverDates(CtBondWaiverDetail latestWaiver) {
+	    if (latestWaiver.getWaiverStartDate().compareTo(latestWaiver.getWaiverEndDate()) > 0) {
+	        setTabValue("PB");
+	        throw new EpException(MessageConst.ERROR_750080);
+	    }
+	}
+
+	/**
+	 * Checks if the latest bond waiver is present in the history of bond waivers.
+	 *
+	 * @param latestWaiver The latest bond waiver details.
+	 * @return true if the latest waiver is found in history; false otherwise.
+	 */
+	private boolean isBondWaiverInHistory(CtBondWaiverDetail latestWaiver) {
+	    List<CtBondWaiverDetail> historyList = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory();
+	    if (historyList != null) {
+	        for (CtBondWaiverDetail history : historyList) {
+	            if (history.getWaiverStartDate().equals(latestWaiver.getWaiverStartDate()) &&
+	                history.getWaiverEndDate().equals(latestWaiver.getWaiverEndDate()) &&
+	                history.getReferenceNo().equals(latestWaiver.getReferenceNo()) &&
+	                history.getCtAttachment().getFileName().equals(latestWaiver.getCtAttachment().getFileName())) {
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
+	}
+
+	/**
+	 * Validates the history of bond waivers to ensure all required details are present.
+	 *
+	 * @param bondWaiverHistory The list of bond waiver history details.
+	 * @throws EpException if any historical bond waiver is missing required details.
+	 */
+	private void validateBondWaiverHistory(List<CtBondWaiverDetail> bondWaiverHistory) {
+	    if (bondWaiverHistory != null && !bondWaiverHistory.isEmpty()) {
+	        for (CtBondWaiverDetail history : bondWaiverHistory) {
+	            if (history.getCtAttachment() == null || 
+	                StringUtils.isBlank(history.getCtAttachment().getFileName()) || 
+	                StringUtils.isBlank(history.getCtAttachment().getFilePath())) {
+	                setTabValue("PB");
+	                throw new EpException(MessageConst.ERROR_750065);
+	            }
+	        }
+	    }
+	}
+	//#13847 - end
 
 	/**
 	 * The method used to authenticate user during submit the contract.
