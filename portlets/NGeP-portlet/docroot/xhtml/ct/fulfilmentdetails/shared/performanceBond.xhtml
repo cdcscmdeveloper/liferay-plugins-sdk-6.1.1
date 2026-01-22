@@ -16,52 +16,7 @@
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
 	   	</f:facet>
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.performance.bond']}" escape="false"/><br/>
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.bond.waiver']}" escape="false"/><br/><br/>
-		<h:panelGrid columns="2" >
-			<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}"
-				disabled="#{!ctBackingBean.managedBean.ctContractAmount.bondReq or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
-				<p:ajax event="change" update=":form:fileBondWaiver" listener="#{ctBackingBean.chkBondWaiverAction}" process="@this"/> 
-	  		</p:selectBooleanCheckbox>
-	   		<h:outputFormat id="waiverId" value="#{lbl['lbl.ct.bond.waiver.chkbox']}" styleClass="instruction">
-	   			<f:param value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
-	 		</h:outputFormat>
-	   	</h:panelGrid>
-	  	<h:panelGroup id="fileBondWaiver">
-	 		<table style="width: 100%">
-			<tr>
-			<td class="TableFieldLeft" width="17%"><h:outputLabel value="#{lbl['lbl.ct.bond.waiver.letter']}"  styleClass="required" /></td>
-			<td class="TableFieldRight" width="7%">
-				<p:commandButton oncomplete="uploadWaiverDlg.show();return false;"
-					update=":form:dataGridId, :form:uploadWaiverDlg" icon=" ui-icon-upload" process="@this" partialSubmit="true"
-					rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
-					disabled="#{ctBackingBean.disableBondAttachmentBtn() 
-					   or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
-			</td>
-			<td>
-			<p:dataGrid id="dataGridId" value="#{ctBackingBean.managedBean.contractVer.bondWaiverAttachments}"
-				var="attachFile" rowIndexVar="attachFileIndex" columns="1" style="width:100%" emptyMessage="">
-				<table>
-				<tr>
-				<td>
-					<h:commandLink value="#{attachFile.fileName}" 
-						styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
-					<p:commandLink onsuccess="deleteWaiverAttachDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
-						rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" process="@this" partialSubmit="true"
-						disabled="#{(ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)
-							or (ctBackingBean.managedBean.contractVer.ctContract.latestContractVer != null and attachFile.bondWaivedTrue)
-							or !ctBackingBean.managedBean.ctContractAmount.bondReq}">
-		  					<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-		 			</p:commandLink>
-				</td>
-				</tr>
-				</table>
-			</p:dataGrid>
-			</td>
-			</tr>
-			</table>
-		</h:panelGroup>
-		   	
+
 	   	<h:panelGrid columns="2">
 	   		<p:outputLabel id="bondAmount" value="#{lbl['lbl.ct.pb.amount']}" />
 			<p:inputText for="bondAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
@@ -262,38 +217,4 @@
 		</p:confirmDialog>
 	</p:panel>
 		
-	<p:dialog id="uploadWaiverDlg" widgetVar="uploadWaiverDlg" modal="true"  resizable="false"
-	     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-	     	onShow="singleUploadListener(uploadWaiverFile);">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{ctBackingBean.ComonFileUpload}" showButtons="false"
-			mode="advanced" id="uploadWaiver" multiple="false"  dragDropSupport="false"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="uploadWaiverFile"
-			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
-			update="dataGridId" >
-		</p:fileUpload>
-		<f:facet name="footer">
-		<div class="ppRightBtn">
-		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadWaiverDlg.hide();" />
-	 		</div>
-	  		</f:facet>
-	</p:dialog>	
-		
-	<p:confirmDialog id="deleteWaiverAttachDlg" widgetVar="deleteWaiverAttachDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
-		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
-		<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-	 		update=":form:dataGridId" 
-			action="#{ctBackingBean.deleteBondWaiverAttach()}" oncomplete="deleteWaiverAttachDlg.hide();"/>
-		<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteWaiverAttachDlg.hide();" type="button" />
-		</div>
-	</p:confirmDialog>
-	
-	
 </ui:composition>
-
-
