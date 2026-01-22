@@ -59,6 +59,9 @@ public class TemplateSpecBean implements Serializable {
 	private List<TplSpecAnswer> hideanswerList;//32453-End
 	private boolean wordBreakForQT;//#29007 Added Vinod
 	private boolean weightage35384WIP;;//#38151
+	//#34363 Start Vinod
+	private boolean checkListCompleted;
+	//#34363 End Vinod
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -383,5 +386,15 @@ public class TemplateSpecBean implements Serializable {
 		this.weightage35384WIP = weightage35384WIP;
 	}
 	//#38151
+
+	//#34363 Start Vinod
+	public boolean isCheckListCompleted() {
+		return checkListCompleted;
+	}
+
+	public void setCheckListCompleted(boolean checkListCompleted) {
+		this.checkListCompleted = checkListCompleted;
+	}
+	//#34363 End Vinod
 	
 }
