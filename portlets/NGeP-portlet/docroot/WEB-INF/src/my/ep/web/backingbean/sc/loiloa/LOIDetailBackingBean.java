@@ -740,6 +740,8 @@ public class LOIDetailBackingBean extends
 			// #25638 - End
 			checkSupplierAwardedRejectValidityExtensionPreRender();//#21692
 			
+			checkWeightage35384WIP(); //#38151			
+			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
 		} catch (Exception e) {
