@@ -4652,7 +4652,6 @@ public class SmApplicationUtil {
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 						
 						previouscat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previouscat.getSupplierCategoryId()));
-						managedBean.getOtherDescDataModel().reloadData();
 						
 						for (SmSuppCatOtherDescHistory history : previouscat.getSmSuppCatOtherDescHistory()) {
 							if (!EntityHelper.isCollectionEmpty(previouscat.getSmSuppCatOtherDescHistory())
@@ -4687,7 +4686,6 @@ public class SmApplicationUtil {
 				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 						cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-					managedBean.getOtherDescDataModel().reloadData();
 					
 					for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 						if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
@@ -4841,7 +4839,6 @@ public class SmApplicationUtil {
 			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-				managedBean.getOtherDescDataModel().reloadData();
 				
 				for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 					if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
@@ -16131,7 +16128,7 @@ public class SmApplicationUtil {
 	 */
 	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(Long supplierCategoryId) {
 		if (supplierCategoryId == null) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistory(supplierCategoryId);
