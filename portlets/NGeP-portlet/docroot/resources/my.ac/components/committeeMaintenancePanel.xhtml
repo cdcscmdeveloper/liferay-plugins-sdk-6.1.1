@@ -68,7 +68,7 @@
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						selectionMode="single" selection="#{selectedHistory}">
 						<p:ajax event="rowSelect"
-							listener="#{backingBean[onSelectHistory]}"
+							listener="#{committeBackingBean.onSelectTplHistory}"
 							update="@([id$=updateId])" />
 						<p:column>
 							<f:facet name="header">
@@ -139,9 +139,8 @@
 							<ui:param name="tableId" value="memberList_tab4" />
 						</ui:include>
 					</p:tab>
-
-					<p:tab id="norecordfound"
-						title="#{lbl['lbl.sc.committee.notfound']}"
+					
+					<p:tab id="norecordfound" title="#{lbl['lbl.sc.committee.notfound']}"
 						styleClass="noBorders tr,noBorders td"
 						rendered="#{backingBean.managedBean.committeMap eq null}">
 						<ui:include src="committeeMaintenanceMemberPanel.xhtml">
