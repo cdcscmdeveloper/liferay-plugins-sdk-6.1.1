@@ -3681,7 +3681,7 @@ public class SmApplicationUtil {
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
 		//13362
-
+		
 		// #39422 - Start - Add checking
 		if (managedBean.getApplnOverLapRemarks() == null || managedBean.getApplnOverLapRemarks().isEmpty()) {
 			managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
@@ -3860,8 +3860,7 @@ public class SmApplicationUtil {
 					if("".equalsIgnoreCase(companyName)){
 						companyName = arrI[4].toString();
 						log.info("MOF NO == "+arrI[5]);
-
-
+						
 						// #39422 - Start - Change null to N/A
 						mofNo = arrI[5] != null ? arrI[5].toString() : SmCommonUtil.getMessage("lbl.txt.na", null);
 						// #39422 - End -
