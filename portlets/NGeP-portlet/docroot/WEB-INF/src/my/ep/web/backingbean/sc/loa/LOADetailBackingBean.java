@@ -11424,9 +11424,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		BigDecimal totalPrice = BigDecimal.ZERO;
 
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())) {
-			for (ScLoiLoaItem item : this.getManagedBean().getLoiLoaItemsResult()) {
-				totalPrice = calcSubTotalPrice(item).add(totalPrice);
-			}
+			// #39747 - Start
+			totalPrice = calcTotalAmount(this.getManagedBean().getLoiLoaItemsResult());
+			// #39747 - End
+
 		}
 
 		totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_UP);
