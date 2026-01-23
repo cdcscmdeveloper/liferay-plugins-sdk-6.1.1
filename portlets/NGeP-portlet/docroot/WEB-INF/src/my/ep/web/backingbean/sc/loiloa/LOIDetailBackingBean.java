@@ -748,12 +748,13 @@ public class LOIDetailBackingBean extends
 					evaluationDataType.getFcSecretary())) {
 				this.getManagedBean().setSecretaryUser(true);
 			}
+			//QT WIP weightage flag
 
 			retrieveMultipleLoiDtls(sourceId,
 					evaluationDataType.getCommitteeType(),
 					evaluationDataType.getGroupkeyMa());
 			getManagedBean().setMultipleLoiFlag(Boolean.TRUE);
-			
+
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 			
@@ -762,7 +763,7 @@ public class LOIDetailBackingBean extends
 			// #25638 - End
 			checkSupplierAwardedRejectValidityExtensionPreRender();//#21692
 			
-			
+			checkWeightage35384WIP(); //#38151			
 			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
@@ -6235,16 +6236,21 @@ public class LOIDetailBackingBean extends
 			}		
 			
 			// #28777 & #29729 - Start
+			Map<Long,ScQtRecommendDtl> recommendDtlsDisMap = new HashMap<>();
+			for (ScQtRecommendDtl scQtRecommendDtl : scQtRecommend.getRecommendDtls()) {
+				Long supplierId = scQtRecommendDtl.getSupplier().getSupplierId();
+				recommendDtlsDisMap.put(supplierId, scQtRecommendDtl);
+			}
 			scQtRecommend.setNotAwardSupplierList(new ArrayList<ScQtEvaluationResultDtl>());
 			if (CollectionUtils.isNotEmpty(disqualifiedSupplierList)) {
 				for (ScQtEvaluationResultDtl evaluationResultDtl : disqualifiedSupplierList) {
 					Long supplierId = evaluationResultDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
 							.getSmSupplier().getSupplierId();
-					if (recommendDtlsMap.containsKey(supplierId)) {
+					if (recommendDtlsDisMap.containsKey(supplierId)) {
 						if (evaluationResultDtl.getScQtRecommendDtl() == null) {
 							evaluationResultDtl.setScQtRecommendDtl(new ArrayList<ScQtRecommendDtl>());
 						}
-						ScQtRecommendDtl recommendDtl = recommendDtlsMap.get(supplierId);
+						ScQtRecommendDtl recommendDtl = recommendDtlsDisMap.get(supplierId);
 						evaluationResultDtl.getScQtRecommendDtl().add(recommendDtl);
 
 						if (recommendDtl != null
@@ -6253,6 +6259,9 @@ public class LOIDetailBackingBean extends
 						}
 
 						if (isItemized) {
+							if (!scQtRecommend.getNotAwardSupplierList().contains(evaluationResultDtl)) {
+							    scQtRecommend.getNotAwardSupplierList().add(evaluationResultDtl);
+							}
 							calculateOfferedPrice(evaluationResultDtl, scQtRecommend.getRequestItem());
 						}
 					}

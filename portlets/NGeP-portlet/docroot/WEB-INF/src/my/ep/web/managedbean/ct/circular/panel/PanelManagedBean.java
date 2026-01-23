@@ -81,6 +81,7 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	private TreeNode[] selectedGeneralTreeNodes;
 	private TreeNode rootZoanlTree;
+	private boolean hasExistingLocations; //#39762
 
 	private CtCircular circular;
 	private CtCircularVer circularVer;
@@ -1079,4 +1080,24 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.selectedPidReason = selectedPidReason;
 	}
 	//#39594 - End
+	
+	//#39762 - Start
+	/**
+	 * Returns {@code true} if the zone has existing location data, {@code false} otherwise.
+	 *
+	 * @return {@code true} if locations exist, {@code false} otherwise
+	 */
+	public boolean isHasExistingLocations() {
+		return hasExistingLocations;
+	}
+	
+	/**
+	 * Sets whether the zone has existing location data.
+	 *
+	 * @param hasExistingLocations {@code true} if locations exist, {@code false} otherwise
+	 */
+	public void setHasExistingLocations(boolean hasExistingLocations) {
+		this.hasExistingLocations = hasExistingLocations;
+	}
+	//#39762 - End
 }
