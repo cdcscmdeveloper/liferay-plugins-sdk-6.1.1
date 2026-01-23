@@ -134,11 +134,11 @@
 							</p:column>
 
 							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
-							<p:column headerText="#{lOIDetailBackingBean.managedBean.multipleLoiFlag ? lbl['lbl.sc.mloi.overall.score'] : lbl['lbl.sc.total.score']}"
+							<p:column headerText="#{lbl['lbl.sc.mloi.overall.score']}"
 								style="text-align: right;">
 								<ui:remove><!-- #38151 datatable value popup--></ui:remove>
 								<p:commandLink action ="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
-	 											  rendered="#{lOIDetailBackingBean.managedBean.weightageReq and !lOIDetailBackingBean.managedBean.weightage35384WIP and !lOIDetailBackingBean.managedBean.multipleLoiFlag}" process="@this" update="@([id$=SuppScoreDetailsPopupId])" styleClass="commandLink" >
+	 											  rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}" process="@this" update="@([id$=SuppScoreDetailsPopupId])" styleClass="commandLink" >
 							
 								<h:outputText value="#{supplierDtl.totalScore}">
 									<f:convertNumber
@@ -152,11 +152,6 @@
 																				CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 								</h:outputText>
 								<ui:remove><!-- #38151 datatable value popup--></ui:remove>
-								<h:outputText value="#{supplierDtl.totalScore}" rendered="#{lOIDetailBackingBean.managedBean.multipleLoiFlag}">
-									<f:convertNumber
-										pattern="#{CommonUtils.getDisplayNumberFormat(
-																				CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-								</h:outputText>
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.ranking']}"

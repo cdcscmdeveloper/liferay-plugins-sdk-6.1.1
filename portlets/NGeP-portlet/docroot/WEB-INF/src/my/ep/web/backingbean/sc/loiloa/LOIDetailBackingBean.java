@@ -7734,12 +7734,13 @@ public class LOIDetailBackingBean extends
 		String evalstageF = null;
 		Long requestNoteItemId = null;
 		Long selectedZoneId = null;
+		retrievescoresettings(this.getManagedBean().getScQt());
 		
 		requestNoteItemId = (CollectionUtils.isNotEmpty(this.getManagedBean().getRecommendList()))
 			    ? this.getManagedBean().getRecommendList().get(0).getRequestItem().getRequestNoteItemId()
 			    : requestNoteItemId;
 		
-		selectedZoneId = (this.getManagedBean().getSelectedZone().getSpecZoneId() != null)
+		selectedZoneId = (this.getManagedBean().getSelectedZone() != null)
 			    ? this.getManagedBean().getSelectedZone().getSpecZoneId()
 			    : selectedZoneId;
 
