@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.math.RoundingMode; //24336
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
@@ -136,7 +136,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQt; //24336
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -172,7 +172,7 @@ import my.ep.web.constant.ct.ContractHashSetConst; //#35238 / #26186
 import my.ep.web.constant.report.ReportConst; //24333
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
-import my.ep.web.managedbean.ct.ContractManagedBean;
+import my.ep.web.managedbean.ct.ContractManagedBean; //24336
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -4882,6 +4882,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onChangeValueByGstChecked() {
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);	
 			setGstAndStaxAmounts();	
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() 
@@ -4910,8 +4911,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			onChangeValueChecked();
 			// #24336 - End
 			
-			Calendar c = Calendar.getInstance();
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			resetEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()); //Fix - #39538
 			spToCheck = true;
 		} else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
 			//Start Fix - #39722
@@ -4942,26 +4942,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 *to set the gstAmount and staxAmout
 	 */
 	private void setGstAndStaxAmounts() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
-			ctBackingBean
-					.getManagedBean()
-					.getContractVer()
-					.getCtAmendment()
-					.setNewGstAmount(
-							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount());
+		BigDecimal contractAmountGst = (BigDecimal) EntityHelper.getNestedProperty(ctBackingBean.getManagedBean(), "contractVer.ctContractAmount.gstAmount");
+		BigDecimal contractAmountSst = (BigDecimal) EntityHelper.getNestedProperty(ctBackingBean.getManagedBean(), "contractVer.ctContractAmount.staxAmount");
+		CtAmendment amendment = (CtAmendment) EntityHelper.getNestedProperty(ctBackingBean.getManagedBean(), "contractVer.ctAmendment");
+		if (contractAmountGst != null && contractAmountGst.compareTo(BigDecimal.ZERO) > 0) {
+			amendment.setNewGstAmount(contractAmountGst);
 		} else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
-		}
-		
-		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() != null) {
-			ctBackingBean
-					.getManagedBean()
-					.getContractVer()
-					.getCtAmendment()
-					.setNewStaxAmount(
-							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
+			amendment.setNewGstAmount(BigDecimal.ZERO);
+		}	
+		if (contractAmountSst != null && contractAmountSst.compareTo(BigDecimal.ZERO) > 0) {
+			amendment.setNewStaxAmount(contractAmountSst);
 		} else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);	
+			amendment.setNewStaxAmount(BigDecimal.ZERO);
 		}
 	}
 	//End Fix #39722
@@ -9319,7 +9311,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal getMaxAdditionalValue() {
 		BigDecimal maxAdditionalValue = BigDecimal.ZERO;
-		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+		BigDecimal ctAmount = getBaseContractAmount();
 		if (ctAmount != null && ctAmount.compareTo(BigDecimal.ZERO) > 0) {
 			maxAdditionalValue = ctAmount.multiply(new BigDecimal("0.5"));
 		}
@@ -9332,7 +9324,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal getAdditionalPercentage() {
 		BigDecimal additionalPercentage = BigDecimal.ZERO;
-		BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+		BigDecimal ctAmount = getBaseContractAmount();
 		BigDecimal addition = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount();
 		if (ctAmount != null && addition != null && ctAmount.compareTo(BigDecimal.ZERO) != 0) {
 	        additionalPercentage = addition
@@ -9428,7 +9420,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public BigDecimal getReducibleContractAmount() {
 		BigDecimal amount;
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
-			BigDecimal ctAmount = ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount();
+			BigDecimal ctAmount = getBaseContractAmount();
 		    BigDecimal pendingAmount = getPendingTransactionAmount();
 		    BigDecimal prePaymentAmount = getAmountBeforePendingPayment();
 
@@ -9694,6 +9686,46 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void resetPbqcAuthoritySelection() {
         getManagedBean().setCommitteeType(null);
         getManagedBean().setSecretaryId(null);
+	}
+	
+	/**
+	 * Returns the contract amount based on SCL view.
+	 *
+	 * If viewSCL is true, the amount is reverted to the base contract amount
+	 * before the latest amendment (addition or reduction).
+	 *
+	 * If viewSCL is false, the current contract amount after amendment is returned.
+	 *
+	 * @return base or current contract amount
+	 */
+	public BigDecimal getBaseContractAmount() {
+	    
+	    BigDecimal contractAmount = ctBackingBean.getManagedBean()
+	            .getContractVer()
+	            .getCtContractAmount()
+	            .getContractAmount();
+
+	    if (ctBackingBean.getManagedBean().isViewSCL()) {
+	        CtAmendment ctAmendment = ctBackingBean.getManagedBean()
+	                .getContractVer()
+	                .getCtAmendment();
+
+	        BigDecimal addition = convertNullToZero(ctAmendment.getAdditionalAmount());
+	        BigDecimal reduction = convertNullToZero(ctAmendment.getReductionAmt());
+	        
+	        // Revert value
+	        if (ctAmendment.isReduction()) {
+	            contractAmount = contractAmount.add(reduction);
+	        } else {
+	            contractAmount = contractAmount.subtract(addition);
+	        }
+	    }
+	    return contractAmount;
+	}
+	
+	/** Return 0 if value is null, else return the value */
+	private BigDecimal convertNullToZero(BigDecimal value) {
+	    return value == null ? BigDecimal.ZERO : value;
 	}
 
 	//#24336 - End
