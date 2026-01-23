@@ -2003,7 +2003,7 @@ public class OrganisationBackingBean extends
 							&& address.getAddressId() != null
 							&& address.getAddressId().equals(
 									manualAddr.getAddressId())) {
-						getManagedBean().getAddressTypesList().set(i, adressType);					
+						getManagedBean().getAddressTypesList().set(i, adressType);
 						deliveryAddr.setPmAddress(manualAddr);
 						/**********************************AUDIT 35509******************************************/
 						getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr));
@@ -2032,7 +2032,7 @@ public class OrganisationBackingBean extends
 					}
 				}
 			}
-		} 
+		}
 		//#34445, Fix as-is bug: #39639 - End
 
 		RequestContext.getCurrentInstance().execute("addressPopup.hide();");
