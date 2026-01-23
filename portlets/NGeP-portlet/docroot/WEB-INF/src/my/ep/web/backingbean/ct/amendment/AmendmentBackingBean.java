@@ -9283,14 +9283,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * Handle changes when the contract value type (addition/reduction) is selected.
 	 */
 	public void handleContractValueTypeChange() {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
-			ctBackingBean.getManagedBean().setDisableReductionContractAmount(false);
-			ctBackingBean.getManagedBean().setDisableAdditionContractAmount(true);
+		
+		ContractManagedBean managedBean = ctBackingBean.getManagedBean();
+		CtAmendment amendment = managedBean.getContractVer().getCtAmendment();
+		
+		if (amendment.isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
+			amendment.setAdditionalAmount(BigDecimal.ZERO);
+			managedBean.setDisableReductionContractAmount(false);
+			managedBean.setDisableAdditionContractAmount(true);
 		} else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setReductionAmt(BigDecimal.ZERO);
-			ctBackingBean.getManagedBean().setDisableReductionContractAmount(true);
-			ctBackingBean.getManagedBean().setDisableAdditionContractAmount(false);
+			amendment.setReductionAmt(BigDecimal.ZERO);
+			managedBean.setDisableReductionContractAmount(true);
+			managedBean.setDisableAdditionContractAmount(false);
 		}
 		handleNewAmtEffDate();
 	}
