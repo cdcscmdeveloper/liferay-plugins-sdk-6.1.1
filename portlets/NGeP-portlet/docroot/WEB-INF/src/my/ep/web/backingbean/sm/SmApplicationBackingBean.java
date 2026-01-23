@@ -1762,7 +1762,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								getManagedBean().getBusinessTypeVal()));
 				//31043 START
 				initNonMandatoryAndMandatoryDocs();
-				//this.getManagedBean().getOtherDescDataModel().reloadData();
 				SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean()); 
 				//31043 END
 				if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {

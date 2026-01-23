@@ -11667,9 +11667,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * 
 	 **/
 	private Boolean checkFlagForSupplierBranchDeleted() {
-		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-
+		
 		String outcome = this.getManagedBean().getOutcome();
 		boolean isEndorseOrSignOff = false;
 		if (outcome != null
@@ -11678,10 +11676,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 
 		ScQt scqt = this.getManagedBean().getScQt();
-		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-		reqDTO.setScQt(scqt);
-		SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationDtls(reqDTO);
-		ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
 
 		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)
@@ -11727,9 +11722,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * 
 	 **/
 	private void checkNeedSupplierIfHaveBranchDeleted() {
-		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-
+	
 		String outcome = this.getManagedBean().getOutcome();
 		boolean isEndorseOrSignOff = false;
 		if (outcome != null
@@ -11738,10 +11731,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 
 		ScQt scqt = this.getManagedBean().getScQt();
-		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-		reqDTO.setScQt(scqt);
-		SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationDtls(reqDTO);
-		ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
 
 		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)) {
@@ -13195,10 +13185,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		for (ScQtEvaluationResultDtl qualifiedSuppDM : this.getManagedBean().getShortlistedSuppliersByRecommendType()
 				.getList()) {
 			currentEvalStage = qualifiedSuppDM.getQtEvaluationResult().getEvaluationStage();
-			// recommendationTotalScore = qualifiedSuppDM.getTotalScore();
 			qualifiedSuppDM.getQtEvaluationResult().getEvaluationResultDtls();
 			if (null != this.getManagedBean().getSelectedItem()) {
-				this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
+				requestNoteItemId = this.getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 			}
 			if (null != this.getManagedBean().getCurrentZone()) {
 				selectedZoneId = this.getManagedBean().getCurrentZone().getSpecZoneId();
