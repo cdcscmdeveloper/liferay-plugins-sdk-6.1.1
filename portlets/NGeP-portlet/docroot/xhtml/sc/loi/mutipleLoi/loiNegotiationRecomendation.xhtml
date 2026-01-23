@@ -130,7 +130,7 @@
 							</p:column>
 
 							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
-							<p:column headerText="#{lOIDetailBackingBean.managedBean.multipleLoiFlag ? lbl['lbl.sc.mloi.overall.score'] : lbl['lbl.sc.total.score']}"
+							<p:column headerText="#{lbl['lbl.sc.mloi.overall.score']}"
 								style="text-align: right;">
 								<ui:remove><!-- #38151 datatable value popup--></ui:remove>
 								<p:commandLink action ="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
