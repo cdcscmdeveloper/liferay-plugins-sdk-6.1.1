@@ -1943,7 +1943,6 @@ public class OrganisationBackingBean extends
 		//#34445, Fix as-is bug: #39639 - Start
 		getManagedBean().getAddressTypesCheckingList().add(deliveryAddr);
 		if (getManagedBean().getAddressTypesCheckingList().size() < 2) {
-		//#34445, Fix as-is bug: #39639 - End
 
 			PmAddress manualAddr = deliveryAddr.getPmAddress();
 			if (manualAddr.isBrandNew()) {
@@ -2033,7 +2032,8 @@ public class OrganisationBackingBean extends
 					}
 				}
 			}
-		} //#34445, Fix as-is bug: #39639
+		} 
+		//#34445, Fix as-is bug: #39639 - End
 
 		RequestContext.getCurrentInstance().execute("addressPopup.hide();");
 
