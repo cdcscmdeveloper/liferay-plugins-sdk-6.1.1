@@ -495,7 +495,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			e.printStackTrace();
 		}
 		
-		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
+		return NAV_TO_MAINTAIN; //#34445 SQ fixing
 	}
 		
 	/**
