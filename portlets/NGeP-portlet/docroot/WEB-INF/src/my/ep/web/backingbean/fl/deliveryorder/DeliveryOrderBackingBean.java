@@ -216,6 +216,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			//38009-Start
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				validateExpectedDeliveryDate();
+				
+				// 39692-Start
+				if (hasActiveFrnWithCancelledWorkflow(getManagedBean().getFulfilmentRequest().getFulfilmentReqId())) {
+					throw new EpException(MessageConst.ERROR_760823);
+				}
+				// 39692-End
 			}
 			//38009-End
 			
@@ -2213,4 +2219,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	}
 	
 	// 30753-End
+	
+	/**
+	 * #39692 Validates whether there is any active FRN under the given
+	 * fulfilment request that is in an inconsistent workflow state due to BPM /
+	 * OSB failure.
+	 * 
+	 * @param fulfilmentReqId
+	 * @return true if inconsistent FRN exists, false otherwise
+	 */
+	private boolean hasActiveFrnWithCancelledWorkflow(Long reqId) {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		return fulfilmentSO.hasActiveFrnWithCancelledWorkflow(reqId);
+	}
 }
