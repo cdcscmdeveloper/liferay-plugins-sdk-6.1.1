@@ -767,9 +767,10 @@ public class SupplierManagementConst {
 	// #28895_35501 End
 	// #34031
 	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
-	// #9299
+	// #9299 Start
 	public static final String SM_COMP_EXP_FILE_PATH = "/SM/COMPEXP/";
 	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
+	// #9299 End
 	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
