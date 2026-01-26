@@ -744,7 +744,33 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} finally {
 				workFlowStatusSO = null;
 			}
-		}
+		}else if (SCProcessNameConst.PUBLICATION_APPROVAL_BSV_CHANGE //#28188 - Start
+				.equalsIgnoreCase(taskName)) {
+			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
+					.getXflagPublication());
+			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_PTJ;
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
+					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
+
+			if (CollectionUtils.isNotEmpty(paramTypes)) {
+		//200520@asyrafhaziq_27839 - Start
+				for (String paramType : paramTypes){
+					if (ParameterConst.APPROVAL_REQUEST_UPDATE_BSV_DETAILS.equals(paramType)) {
+						approvalCategoryCode = ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL;
+	
+						QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
+						qTDetailBackingBean.retrieveBriefingSitevisitTabDtl();
+						break;
+					}
+				}
+		//200520@asyrafhaziq_27839 - End
+			}
+			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PTJ_APPROVAL,
+					getManagedBean().getQt().getQtId());
+			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			docType = ParameterConst.DOCTYPE_PTJ_APPROVAL; //#25692#128
+
+		}//#28188 - End
 		
 		if (currentStatus == null) {
 			currentStatus = getManagedBean().getQt().getCurrentWorkFlowStatus();
