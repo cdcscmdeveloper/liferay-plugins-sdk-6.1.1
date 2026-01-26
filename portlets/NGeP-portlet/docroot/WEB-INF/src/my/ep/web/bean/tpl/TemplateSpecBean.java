@@ -58,6 +58,9 @@ public class TemplateSpecBean implements Serializable {
 	private ScQt qt;
 	private List<TplSpecAnswer> hideanswerList;//32453-End
 	private boolean wordBreakForQT;//#29007 Added Vinod
+	//#34363 Start Vinod
+	private boolean checkListCompleted;
+	//#34363 End Vinod
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -372,5 +375,15 @@ public class TemplateSpecBean implements Serializable {
 		this.wordBreakForQT = wordBreakForQT;
 	}
 	// #29007 End Vinod
+
+	//#34363 Start Vinod
+	public boolean isCheckListCompleted() {
+		return checkListCompleted;
+	}
+
+	public void setCheckListCompleted(boolean checkListCompleted) {
+		this.checkListCompleted = checkListCompleted;
+	}
+	//#34363 End Vinod
 	
 }

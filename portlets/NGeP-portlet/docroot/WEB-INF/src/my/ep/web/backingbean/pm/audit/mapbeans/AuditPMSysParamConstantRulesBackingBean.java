@@ -1,17 +1,20 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
+
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * AuditPMSysParamConstantRulesBackingBean #28895-35509 - GATE3
@@ -19,7 +22,11 @@ import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
  * @author normuliana
  * 
  */
-public class AuditPMSysParamConstantRulesBackingBean {
+public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBackingBean {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 	String roleCode = null;
@@ -34,6 +41,7 @@ public class AuditPMSysParamConstantRulesBackingBean {
 	BigInteger itemName;
 	String pattern = "dd/MM/yyyy";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+	String amtFormatter = "#,##0.00";
 
 	/**
 	 * @param managedBeans
@@ -228,20 +236,53 @@ public class AuditPMSysParamConstantRulesBackingBean {
 					newValue != null ? newValue : null, actionType);
 		}
 	}
-
+	
 	private String ruleNumberValueNewCreated(PmConfigRuleValue newCreatedItem) {
-		if (newCreatedItem != null && (newCreatedItem.getRuleNumberValue() != null || newCreatedItem.getRuleValue() != null)
+		if (newCreatedItem != null
+				&& (newCreatedItem.getRuleNumberValue() != null || newCreatedItem.getRuleValue() != null)
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null)) {
-			return newCreatedItem.getRuleValue() != null ? newCreatedItem.getRuleValue() : newCreatedItem.getRuleNumberValue()
-					.toString();
+			String ruleValue;
+			String rawRuleValue = newCreatedItem.getRuleValue();
+			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+				String number = rawRuleValue;
+				double amount = Double.parseDouble(number);
+				DecimalFormat formatter = new DecimalFormat(amtFormatter);
+
+				ruleValue = formatter.format(amount);
+			}
+			else if(newCreatedItem.getRuleType().getParameterType() != null){
+				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(), newCreatedItem.getRuleValue().toUpperCase());
+				ruleValue = pmParameter.getPmParameterDescsSpecCallOnly().get(1).getCodeName();
+			}else{
+				ruleValue = rawRuleValue;
+			}
+			if (rawRuleValue == null) {
+				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
+						.toString() : null;
+			}
+			return ruleValue;
 		}
 		return null;
 	}
-
+	
 	private String ruleNumberValueDeleted(PmConfigRuleValue deletedItem) {
 		if (deletedItem != null && (deletedItem.getRuleValue() != null || deletedItem.getRuleNumberValue() != null)
 				&& (Long.valueOf(deletedItem.getRuleValueId()) != null)) {
-			return deletedItem.getRuleValue() != null ? deletedItem.getRuleValue() : deletedItem.getRuleNumberValue().toString();
+			String ruleValue;
+			String rawRuleValue = deletedItem.getRuleValue();
+			if ("TRUE".equalsIgnoreCase(rawRuleValue)) {
+				ruleValue = AuditConst.PM_AUD_YES;
+			} else if ("FALSE".equalsIgnoreCase(rawRuleValue)) {
+				ruleValue = AuditConst.PM_AUD_NO;
+			} else {
+				ruleValue = rawRuleValue;
+			}
+
+			if (rawRuleValue == null) {
+				ruleValue = deletedItem.getRuleNumberValue() != null ? deletedItem.getRuleNumberValue()
+						.toString() : null;
+			}
+			return ruleValue;
 		}
 		return null;
 	}
@@ -270,9 +311,22 @@ public class AuditPMSysParamConstantRulesBackingBean {
 
 	private String fromValueNewCreated(PmConfigRuleValue newCreatedItem) {
 		if (newCreatedItem != null
-				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem.getRuleValueId()) > 0)
-				&& newCreatedItem.getFromValue() != null) {
-			return newCreatedItem.getFromValue().toString();
+				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
+						.getRuleValueId()) > 0) && newCreatedItem.getFromValue() != null) {
+			String ruleValue;
+			String rawValue = newCreatedItem.getFromValue().toString();
+			if (rawValue != null) {
+				String number = rawValue;
+				double amount = Double.parseDouble(number);
+
+				DecimalFormat formatter = new DecimalFormat(amtFormatter);
+
+				ruleValue = formatter.format(amount);
+			} else {
+				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
+						.toString() : null;
+			}
+			return ruleValue;
 		}
 		return null;
 	}
@@ -285,12 +339,26 @@ public class AuditPMSysParamConstantRulesBackingBean {
 		}
 		return null;
 	}
+	
 
 	private String toValueNewCreated(PmConfigRuleValue newCreatedItem) {
 		if (newCreatedItem != null
-				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem.getRuleValueId()) > 0)
-				&& newCreatedItem.getToValue() != null) {
-			return newCreatedItem.getToValue().toString();
+				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
+						.getRuleValueId()) > 0) && newCreatedItem.getToValue() != null) {
+			String ruleValue;
+			String rawValue = newCreatedItem.getToValue().toString();
+			if (rawValue != null) {
+				String number = rawValue;
+				double amount = Double.parseDouble(number);
+
+				DecimalFormat formatter = new DecimalFormat(amtFormatter);
+
+				ruleValue = formatter.format(amount);
+			} else {
+				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
+						.toString() : null;
+			}
+			return ruleValue;
 		}
 		return null;
 	}
