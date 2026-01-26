@@ -20,7 +20,7 @@
 				 <h:outputText value="#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
 							 (#{empty cat.categoryL1Name ? cat.pmCategoryL1.categoryName : cat.categoryL1Name}, 
 							 #{empty cat.categoryL2Name ? cat.pmCategoryL2.categoryName : cat.categoryL2Name}, 
-							 #{empty cat.categoryL3Name ? cat.pmCategoryL3.categoryName : cat.categoryL3Name})" style="float: left;white-space: normal;" />
+							 #{empty cat.categoryL3Name ? cat.pmCategoryL3.categoryName : cat.categoryL3Name})" />
 					<br />
 					<p:dataTable id="OtherDescriptionDtId" var="otherDescBean"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

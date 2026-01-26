@@ -1155,6 +1155,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				paymentRefNo = jsonObject.optString("paymentRefNo",null);
 				log.info("######38377#####json paymentRefNo: " + paymentRefNo);
 				providerTransId = jsonObject.optString("providerTransId",null);
+				providerTransId = providerTransId==null?paymentRefNo:providerTransId;
 				log.info("######38377#####json providerTransId: " + providerTransId);
 				bankName = jsonObject.optString("bankName",null);
 				log.info("######38377#####json bankName: " + bankName);
