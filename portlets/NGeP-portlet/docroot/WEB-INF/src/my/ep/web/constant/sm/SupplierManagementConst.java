@@ -236,6 +236,8 @@ public class SupplierManagementConst {
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
+	public static final String SUPPLIER_APPROVER = "SA";
+	public static final String SUPPLIER_PO = "SP";
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
@@ -1549,6 +1551,24 @@ public class SupplierManagementConst {
 		return SUPPLIER_APPL_SEARCH_URL;
 	}
 	// #28895_35501 End
+	
+	// 36504 - START
+	public String getSECTION_REV_ROLE_PO() {
+		return SECTION_REV_ROLE_PO;
+	}
+
+	public String getSECTION_REV_ROLE_APP() {
+		return SECTION_REV_ROLE_APP;
+	}
+	
+	public String getSUPPLIER_APPROVER() {
+		return SUPPLIER_APPROVER;
+	}
+
+	public String getSUPPLIER_PO() {
+		return SUPPLIER_PO;
+	}
+	// 36504 - END
 	
 //	#37925 START
 	public String getApplTypeBumi() {

@@ -1332,7 +1332,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						this.getManagedBean().getQt().getFulfilmentType()
 								.getParameterCode());
 			}
-			this.getManagedBean().setGenInfo(true);
+			//Reopen #25726 note 221 - issue 8
+			if (null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+					&& this.getManagedBean().isQtSpecMaintanance()) {
+				this.getManagedBean().setGenInfo(editable);
+			}else{
+				this.getManagedBean().setGenInfo(false);
+			}
+
 			//#29474 - end
 			
 			//9019 - Start (Harun) WIP Transaction add information message
@@ -3732,9 +3739,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				CommitteReqDTO reqDTO = new CommitteReqDTO();
 				reqDTO.setQtId(scQt.getQtId());
-				
-				
-				
 				CommitteResDTO resDTO = committeSO
 						.retrieveFinalizationCommitteeType(reqDTO);
 
@@ -13009,9 +13013,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 					ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 					docDefTypeReqDTO
 							.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
-					
-					docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
-			
+					//new #25726
+					docDefTypeReqDTO
+					.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
 					ParameterResDTO docDefTypeResDTO = parameterSo
 							.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 					

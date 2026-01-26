@@ -214,6 +214,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean hasSupplierQualifiedForCurrentSelection;//6906 note 202
 	//6906 note 117 - end
 	private ScQtRecommend lastSelectedItem;//35157
+	
+	private ScQtEvaluationResultDtl tempRecommendedSupplier;//#39620 
 
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -314,6 +316,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<SmSupplierBranch> supplierBranchList;
 	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;
 	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage;	
+	private boolean flagBranchDeleted = false;
 	// #28777 & #29729 - End
 	
 	//29562 - START
@@ -2498,6 +2501,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disqualifiedSuppliersByEvalStage = disqualifiedSuppliersByEvalStage;
 	}
 	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
+	}
+	
 	// #28777 & #29729 - End
 
 	public boolean isDemoReq() {
@@ -2662,6 +2673,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setSelectedSupplierOfferedPrice(String selectedSupplierOfferedPrice) {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
 	}// #35320 - End
+
+	public ScQtEvaluationResultDtl getTempRecommendedSupplier() {
+		return tempRecommendedSupplier;
+	}
+
+	public void setTempRecommendedSupplier(ScQtEvaluationResultDtl tempRecommendedSupplier) {
+		this.tempRecommendedSupplier = tempRecommendedSupplier;
+	}
 	
 }
 // ***25201

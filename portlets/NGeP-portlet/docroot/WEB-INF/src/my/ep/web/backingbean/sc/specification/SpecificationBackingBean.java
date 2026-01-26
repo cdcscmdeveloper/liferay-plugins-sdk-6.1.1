@@ -1479,7 +1479,7 @@ public class SpecificationBackingBean extends
 									.getFulfilmentType())
 					|| ParameterConst.FULFILMENT_TYPE_ONE_OFF
 							.equalsIgnoreCase(this.getManagedBean()
-									.getFulfilmentType())) {//25635&33723
+									.getFulfilmentType())) {//25635&33723&25725
 				retriveFulfilmentDtls();
 				// checktemplateSpecStatus(this.getManagedBean().getQt());
 				// checkFinancialSpecStatus(this.getManagedBean().getQt());
@@ -2069,7 +2069,11 @@ public class SpecificationBackingBean extends
 					checklistSorting(this.getManagedBean()
 							.getScQtCheckSt2techProposal());
 				}
-				
+			   // 20231122@asyrafhaziq_25726 - Issue 14 
+			   if (null == this.getManagedBean()
+						.getScQtCheckSt2financeProposalList()
+						|| this.getManagedBean()
+								.getScQtCheckSt2financeProposalList().isEmpty()){
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
 				if (CollectionUtils.isNotEmpty(this.getManagedBean()
@@ -2077,6 +2081,7 @@ public class SpecificationBackingBean extends
 					checklistSorting(this.getManagedBean()
 							.getScQtCheckSt2financeProposalList());
 				}
+			   }
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
@@ -8308,6 +8313,8 @@ public class SpecificationBackingBean extends
 					ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
 					docDefTypeReqDTO
 							.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
+					
+					//new #25726
 					docDefTypeReqDTO.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
 					ParameterResDTO docDefTypeResDTO = parameterSo
 							.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
@@ -11351,7 +11358,7 @@ public class SpecificationBackingBean extends
 				&& (this.getManagedBean()
 						.getFulfilmentType()
 						.equalsIgnoreCase(
-								ParameterConst.FULFILMENT_TYPE_SCHEDULED))) {
+								ParameterConst.FULFILMENT_TYPE_SCHEDULED)) ) {
 			if (null == scQt.getScheduleType()) {
 				scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 			}
@@ -12507,7 +12514,7 @@ public class SpecificationBackingBean extends
 								.getFulfilmentType())
 						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
 								.equalsIgnoreCase(this.getManagedBean()
-										.getFulfilmentType())) {//25635&33723
+										.getFulfilmentType())) {//25635&33723&25725
 					specReqDTO.setScQt(fulfilMentdtls);
 					specSO.validateSCFulfillmentSchedules(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
@@ -19679,7 +19686,7 @@ public class SpecificationBackingBean extends
 		Boolean isItemTypeService = false;
 		Boolean isFulfilmentTypeScheduled = false;	
 		Boolean isZonal = false;
-
+		
 		
 		if (templateSpecBean.getSpecMaster().getTplSpecZone() != null) {
 			isZonal = true;
@@ -19692,7 +19699,7 @@ public class SpecificationBackingBean extends
 		if (this.getManagedBean().getFulfilmentType().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 			isFulfilmentTypeScheduled = true;
 		}
-		
+
 		if(getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 			isItemTypeService = true;
 		}
