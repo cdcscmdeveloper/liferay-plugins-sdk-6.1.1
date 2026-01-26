@@ -1821,7 +1821,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					this.remarkDisable = true;
 					updateTabIndex();
 					// end #29665
-					returnUrl = "/xhtml/pm/category/categoryl3.xhtml";
+					returnUrl = NAV_TO_MAINTAIN_L3; //#34445 SQ fixing
 					result = resDTO.isSuccessful();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
@@ -2604,7 +2604,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			//#29665 remove load getmachine
 		
 			//#34445 Start
-			if (this.getManagedBean().isFacilityTypeChoosable() == true
+			if (this.getManagedBean().isFacilityTypeChoosable()
 					&& StringUtils.isBlank(this.getManagedBean().getPmCategoryL3().getFacilityType())) {
 				throw new EpException(MessageConst.ERROR_770233);
 			}

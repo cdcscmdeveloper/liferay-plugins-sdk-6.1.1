@@ -3663,7 +3663,7 @@
 	
 	<!-- #28188 Start -->
 	<portlet>
-		<portlet-name>QTBSVUpdate</portlet-name>
+		<portlet-name>QTBSVChange</portlet-name>
 		<icon>/icon.png</icon>
 		<requires-namespaced-parameters>false</requires-namespaced-parameters>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
