@@ -170,7 +170,7 @@
 					maxlength="17" id="amountValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}" required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}">
-					<f:converter converterId="pmIntegerConverter"/>
+					<f:converter converterId="pmNumberConverter"/>
                     <f:attribute name="numberType" value="DECIMAL"/>
                     <f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
 					<f:attribute name="min" value="0"/>
@@ -186,8 +186,8 @@
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode== 'N') and (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 2)}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
-					                 #{lbl['lbl.pm.value']}
-				           </f:facet>
+					#{lbl['lbl.pm.value']}
+				</f:facet>
                 <!-- #35323 - Start -->
 				<p:inputText value="#{typeValueObj.ruleNumberValue}" size="30"
 					label="#{lbl['lbl.pm.value']}"
@@ -195,11 +195,11 @@
 					disabled="#{!(typeValueObj.brandNew)}" 
 					required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"	>
-					<f:converter converterId="pmIntegerConverter"/> <!-- #34397, #34398 -->
+					<f:converter converterId="pmNumberConverter"/> <!-- #34397, #34398 -->
                     <f:attribute name="numberType" value="INTEGER"/>
                     <f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
 					<f:attribute name="min" value="0"/>	
-		  			<f:attribute name="max" value="9999"/>	
+		  			<f:attribute name="max" value="9999"/>
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<!-- 29650 - START -->
 					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.valueErrorCheck(index)}"
@@ -285,7 +285,7 @@
 					onchange="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
 					disabled="#{!(typeValueObj.brandNew) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and !typeValueObj.showFlag)}">
-					<f:converter converterId="pmIntegerConverter"/>
+					<f:converter converterId="pmNumberConverter"/>
                     <f:attribute name="numberType" value="DECIMAL"/>
                     <f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
 		  			<f:attribute name="max" value="99999999999.99"/>			
@@ -307,7 +307,7 @@
 					label="#{lbl['lbl.pm.rule.to.value']}"
 					maxlength="17" id="toValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}">
-					<f:converter converterId="pmIntegerConverter"/>
+					<f:converter converterId="pmNumberConverter"/>
                     <f:attribute name="numberType" value="DECIMAL"/>
                     <f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
 		  			<f:attribute name="max" value="99999999999.99"/>				
@@ -339,20 +339,22 @@
 					<h:outputText value="*" styleClass="mandatory" />			
 				                 	#{lbl['lbl.pm.rule.from.value']}
 				</f:facet>
+				<!-- #35323 - Start -->
 				<p:inputText id="numberFromValueId" value="#{typeValueObj.fromValue}"
 					label="#{lbl['lbl.pm.rule.from.value']}"
 					size="17" required="true" maxlength="4" style="text-align:right"
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
 					disabled="#{!(typeValueObj.brandNew)}">
-					<f:converter converterId="pmIntegerConverter"/> <!-- #34397, #34398 -->
-					<f:attribute name="numberType" value="INTEGER"/> <!-- #35323 -->
-					<f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/> <!-- #35323 -->
+					<f:converter converterId="pmNumberConverter"/> <!-- #34397, #34398 -->
+					<f:attribute name="numberType" value="INTEGER"/>
+					<f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
 		  			<f:attribute name="min" value="0"/>
 		  			<f:attribute name="max" value="9999"/>				
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.fromErrorCheck(index)}"
 						partialSubmit="true" process="@this" update="@this, numberFromValueMsg" />
 				</p:inputText>
+				<!-- #35323 - End -->
 				<p:message id="numberFromValueMsg" for="numberFromValueId" display="icon" />
 			</p:column>
 			
@@ -362,20 +364,22 @@
 					<h:outputText value="*" styleClass="mandatory" />			
 				                 	#{lbl['lbl.pm.rule.to.value']}
 				</f:facet>
+				<!-- #35323 - Start -->
 				<p:inputText id="numberToValueId" value="#{typeValueObj.toValue}"
 					label="#{lbl['lbl.pm.rule.to.value']}"
 					size="15" required="true" maxlength="17" style="text-align:right"
 					requiredMessage="#{lbl['lbl.pm.settings.tovalue.required']}"
 					disabled="#{!(typeValueObj.brandNew)}">
-					<f:converter converterId="pmIntegerConverter"/> <!-- #34397, #34398 -->
-					<f:attribute name="numberType" value="INTEGER"/> <!-- #35323 -->
-					<f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/> <!-- #35323 -->
+					<f:converter converterId="pmNumberConverter"/> <!-- #34397, #34398 -->
+					<f:attribute name="numberType" value="INTEGER"/>
+					<f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
 		  			<f:attribute name="min" value="0"/>
 		  			<f:attribute name="max" value="9999"/>				
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.toErrorCheck(index)}"
 						partialSubmit="true" process="@this" update="@this, numberToValueMsg" />
 				</p:inputText>
+				<!-- #35323 - End -->
 				<p:message id="numberToValueMsg" for="numberToValueId" display="icon" />
 			</p:column>
 			<!-- 29650 - END -->
@@ -397,7 +401,7 @@
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
 					disabled="#{!typeValueObj.brandNew or !typeValueObj.showFlag}">
 					<p:ajax partialSubmit="true" process="@this" update="@this, @([id$=cloneLink])" />
-					<f:converter converterId="pmIntegerConverter"/>
+					<f:converter converterId="pmNumberConverter"/>
                     <f:attribute name="numberType" value="DECIMAL"/>
                     <f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
 					<f:attribute name="max" value="99999999999.99" />
@@ -417,7 +421,7 @@
 					label="#{lbl['lbl.pm.rule.to.value']}" maxlength="17"
 					style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}">
-					<f:converter converterId="pmIntegerConverter"/>
+					<f:converter converterId="pmNumberConverter"/>
                     <f:attribute name="numberType" value="DECIMAL"/>
 					<f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
 					<f:attribute name="max" value="99999999999.99" />
