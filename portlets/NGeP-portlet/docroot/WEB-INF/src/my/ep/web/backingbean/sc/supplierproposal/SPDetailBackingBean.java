@@ -633,8 +633,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					.getFinanceCheckDetailsList();
 			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
 			setUserDetails(scQtProposal);
-			scQtProposal.setProposalSubmitBy(facesScopes.getUserSessionBean()
-					.getUserId());
+			scQtProposal.setProposalSubmitBy(getUserIdSessionFromLoginId()); //Bug #39501
 			reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
 			reqDTO.setQtSupplierId(getManagedBean().getQtProposal()
@@ -667,7 +666,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	 *            the digi sign
 	 */
 	public void submitSupplierProposal(PmDigiSign digiSign) {
-		debugLogger("submitSupplierProposal supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
+		//Bug #39501 start
+		Long qtId = this.getManagedBean().getQt().getQtId();
+		Long suppId = this.getManagedBean().getSupplierId();
+		//Bug #39501 end
 		
 		long startTime = System.currentTimeMillis();
 		
@@ -730,7 +732,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			if (resDTO.isSuccessful()) {
 				String variable1 = getMessageCommon("lbl.sc.proposal.no");
 				String variable2 = scQtProposal.getProposalNo();
-				
+
+				//Bug #39501
+				log.info("submitSupplierProposal|qtId:"+qtId+"|supplierId:"+suppId+"|proposalId:"+scQtProposal.getQtProposalId()
+						+"|userId:"+scQtProposal.getProposalSubmitBy() +"|submit");
+
 				commonMessageAcknowledgementPage(MessageConst.INFO_700026, variable1, variable2);
 								
 				SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL, 
@@ -5820,7 +5826,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	 * Method to update scQTProposal to allow resubmit.
 	 */
 	public void updateProposal() {
-		debugLogger("updateProposal supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
+		//Bug #39501 start
+		Long qtId = this.getManagedBean().getQt().getQtId();
+		Long suppId = this.getManagedBean().getSupplierId();
+		//Bug #39501 end
 		//Bug #28326 start
 		validateProposalCloseTimeForUpdateButton(this.getManagedBean().getQt());
 		//Bug #28326 end
@@ -5850,6 +5859,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			ProposalResDTO resDTO = proposalSO
 					.updateQTProposalForReSubmit(reqDTO);
 			this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
+			//Bug #39501
+			log.info("updateProposal|qtId:"+qtId+"|supplierId:"+suppId+"|proposalId:"+proposal.getQtProposalId()
+					+"|userId:"+getUserIdSessionFromLoginId()+"|update");
+
 //		} finally {
 //			proposalSO = null;
 //		}
