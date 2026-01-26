@@ -54,7 +54,7 @@
 								value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 								partialSubmit="true" process="@this"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-								action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
+								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #29727 -->
 							<!-- Disable for UPS 32008 - START -->
 							<p:commandButton onstart="blockWidget.show()"
 								rendered="#{!backingBean.managedBean.upsCannotEdit}"
@@ -96,7 +96,7 @@
 								update=":form:tt:approveDialog" partialSubmit="true"
 								process="@this"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-								action="#{backingBean.assignFinalApproveOrReject('approveDialog')}" />
+								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approveDialog')}" />  <!-- #29727 -->
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:rejectDialogId" partialSubmit="true"
@@ -119,7 +119,7 @@
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
 									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-									action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
+									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- 29727 -->
 							</c:if>
 
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
@@ -375,6 +375,17 @@
 		</p:outputPanel>
 		
 	</p:dialog>
+	
+	<!-- #29727 START -->
+	<ac:confirmationPopup id="pendingQTPopUpRecommendApprovePoId"
+		widget="pendingQTPopUpRecommendApprovePo"
+		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
+		width="400" height="100"
+		title="#{lbl['lbl.sm.approve.application']}"
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
+		update=":form:tt:approveDialog"/>
+	<!-- #29727 END -->
+	
 	<p:dialog width="1000px" header="#{lbl['lbl.sm.approve.application']}"
 		closable="false" id="approveDialog" widgetVar="approveDialog"
 		height="350px" resizable="false" showEffect="fade" hideEffect="fade"

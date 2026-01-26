@@ -663,6 +663,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean inquirySiteVisitAfter;
 	//#34392 - end
 	
+	//29727
+	private String deleteBranchMsg;
+	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4819,4 +4822,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setShowDifferenceRejection(boolean showDifferenceRejection) {
 		this.showDifferenceRejection = showDifferenceRejection;
 	}
+	
+	// 29727 - START
+	public String getDeleteBranchMsg() {
+		return deleteBranchMsg;
+	}
+
+	public void setDeleteBranchMsg(String deleteBranchMsg) {
+		this.deleteBranchMsg = deleteBranchMsg;
+	}
+	// 29727 - END
 }
