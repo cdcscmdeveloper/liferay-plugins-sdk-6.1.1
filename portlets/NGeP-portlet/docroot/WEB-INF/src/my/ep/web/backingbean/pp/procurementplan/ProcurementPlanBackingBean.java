@@ -3770,36 +3770,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						if(epItem.getPmGlAccount().getGlAccountId()==null){
 							throw new EpException(MessageConst.ERROR_730003);
 						}
-						if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
+						//#39764 - Start
+						if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().compareTo(BigDecimal.ZERO)<=0){
 							throw new EpException(MessageConst.ERROR_730004);
 						}
-						if(epItem.getPlanAmt()==null || epItem.getPlanAmt().intValue()<=0){
+						if(epItem.getPlanAmt()==null || epItem.getPlanAmt().compareTo(BigDecimal.ZERO)<=0){
 							throw new EpException(MessageConst.ERROR_730005);
 						}
 						//01032021@Bug #30476 - start
-						if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0
+						if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().compareTo(BigDecimal.ZERO)<0
 								|| epItem.getNonEpAmt().doubleValue()<-epItem.getNonEpAmt().doubleValue()){
 							throw new EpException(MessageConst.ERROR_730006, new String[]{epItem.getPmGlAccount().getGlAccCode()});
 						}	//01032021@Bug #30476 - end
-						
-						if(epItem.getNonEpAmt().intValue()>0){
-							if(epItem.getJustifications()==null 
-									|| (epItem.getJustifications()!=null && epItem.getJustifications().isEmpty())
-									|| (epItem.getJustifications()!=null 
-										&& epItem.getJustifications().isEmpty() 
-										&& epItem.getJustifications().get(0)==null)  
-									|| (epItem.getJustifications()!=null &&(
-										 epItem.getJustifications().isEmpty() 
-										|| epItem.getJustifications().get(0)==null
-										|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())))){
-								//03122020@24975 - Start
-								epItem.setNotUsingEp(true);
-								ppItemNotUsingEp.add(epItem);
-								indicatorIndex++;
-								//03122020@24975 - End
-							}
+						if (epItem.getNonEpAmt().compareTo(BigDecimal.ZERO) > 0 && isJustificationInvalid(epItem)) {
+							// 03122020@24975 - Start
+							epItem.setNotUsingEp(true);
+							ppItemNotUsingEp.add(epItem);
+							indicatorIndex++;
+							// 03122020@24975 - End
 						}
-						//#25549@24022021 - remove 
+						//#39764 - End
+						//#25549@24022021 - remove
 						soIds.add(epItem.getPmGlAccount().getGlAccountId());
 					}
 				}
@@ -4817,7 +4808,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if(ppItem.getInvitationDate()==null){
 						throw new EpException(MessageConst.ERROR_730012);
 					}
-					if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().intValue()<=0){
+					if(ppItem.getEstimatedAmt()==null || ppItem.getEstimatedAmt().compareTo(BigDecimal.ZERO)<=0){ //#39764
 						throw new EpException(MessageConst.ERROR_730014);
 					}
 					// Set Reason For Update to be mandatory
@@ -9336,10 +9327,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			System.out.println("unSelectRow is Disable Button !!:" + this.getManagedBean().isDisableSelectBtn());
 		}
 	}//#25549@24022021 - end
+	
+	//#39764 - Start
+	private boolean isJustificationInvalid(PpExpenditureItem epItem) {
+	    List<PpRemark> justifications = epItem.getJustifications();
+
+	    if (justifications == null || justifications.isEmpty()) {
+	        return true;
+	    }
+	    PpRemark first = justifications.get(0);
+	    if (first == null) {
+	        return true;
+	    }
+	    return StringUtils.isBlank(first.getRemark());
+	}
+	//#39764 - End
 }
-	   
-
-
-
-
-			
