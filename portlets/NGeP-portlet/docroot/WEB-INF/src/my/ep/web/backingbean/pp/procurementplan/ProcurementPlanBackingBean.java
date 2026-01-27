@@ -9335,11 +9335,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    if (justifications == null || justifications.isEmpty()) {
 	        return true;
 	    }
-	    PpRemark first = justifications.get(0);
-	    if (first == null) {
+	    PpRemark remark = justifications.get(0);
+	    if (remark == null) {
 	        return true;
 	    }
-	    return StringUtils.isBlank(first.getRemark());
+	    return StringUtils.isBlank(remark.getRemark());
 	}
 	//#39764 - End
 }
