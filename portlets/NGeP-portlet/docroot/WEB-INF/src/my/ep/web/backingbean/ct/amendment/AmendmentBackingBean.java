@@ -2793,7 +2793,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
-			
 			// Validation mandatory for approval letter if approver authority is required
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isApproverAuthorityReq() && (!isContractAmountAmend() && 
 					!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange())) {
@@ -4772,7 +4771,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			} else {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
 			}
 			
 			// #24336 - Start
@@ -4820,7 +4819,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			} else {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);	
+				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
 			}
 			
 			// #24336 - Start
@@ -4883,7 +4882,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void onChangeValueByGstChecked() {
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);	
-			setGstAndStaxAmounts();	
+			setGstAndStaxAmounts();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() 
 					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
@@ -5028,6 +5027,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount() == null) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 		}
+		// #24336
 		handleNewAmtEffDate();
 	}
 
@@ -5758,7 +5758,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Bug #29740
 			ISearchResultBean<PmUser> userListDO = null;
 			List<PmUser> userList = new ArrayList<PmUser>();
-			
 			try {
 
 				int i = 1;
@@ -5819,7 +5818,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (items != null && items.length == 2) {
 						getManagedBean().setSecretaryId((Long)items[1].getValue());
 					}
-					
 					getManagedBean().setSecretaryList(items);
 				}
 			} catch (Exception e) {
@@ -6881,7 +6879,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
-	
+
 	/**
 	 * The method used to check the accessibility of factoring tab menu.
 	 * 
