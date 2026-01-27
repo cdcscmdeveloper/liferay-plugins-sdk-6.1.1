@@ -1694,8 +1694,8 @@ public class RuleCatalogueBackingBean extends
 		return fromValue1 <= toValue2 && fromValue2 <= toValue1;
 	}
 
+	//#35323 - Start
 	boolean isDateOverlaped(Date start1, Date end1, Date start2, Date end2) {
-		//#35323 - Start
 		this.getManagedBean().setFirstExpiryDateIsNull(false);
 
 		if (isEmptyDate(end1) && !isEmptyDate(start2)) {
@@ -1705,7 +1705,6 @@ public class RuleCatalogueBackingBean extends
 		if (end1 == null && end2 == null) {
 			return true;
 		}
-		
 		if (end1 == null) {
 			return start1.getTime() <= end2.getTime();
 
@@ -2994,7 +2993,7 @@ public class RuleCatalogueBackingBean extends
 					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(true);
 				} else {
 					rulevalue.setFromValue(configRuleType.getConfigRuleValues()
-							.get(index).getToValue().add(BigDecimal.valueOf(0.01))); //#35323
+							.get(index).getToValue().add(new BigDecimal("0.01"))); //#35323
 					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(false);
 				}
 				// 29669 - end

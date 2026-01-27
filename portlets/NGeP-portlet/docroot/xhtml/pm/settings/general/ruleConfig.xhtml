@@ -300,7 +300,7 @@
 			<p:column width="15%"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and 'PR' != ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType) or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 2}"> <!-- #35323 -->
 				<f:facet name="header">
-				#{lbl['lbl.pm.rule.to.value']}
+					#{lbl['lbl.pm.rule.to.value']}
 			    </f:facet>
 			    <!-- #35323 - Start -->
 				<p:inputText value="#{typeValueObj.toValue}" size="15"
