@@ -276,8 +276,8 @@
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and 'PR' != ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType) or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 2}"> <!-- #35323 -->
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />			
-				                 	#{lbl['lbl.pm.rule.from.value']}
-			</f:facet>
+				    #{lbl['lbl.pm.rule.from.value']}
+			    </f:facet>
 				<!-- #35323 - Start -->
 				<p:inputText id="fromValueId" value="#{typeValueObj.fromValue}"
 					label="#{lbl['lbl.pm.rule.from.value']}"
@@ -288,7 +288,7 @@
 					<f:converter converterId="pmNumberConverter"/>
                     <f:attribute name="numberType" value="DECIMAL"/>
                     <f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
-		  			<f:attribute name="max" value="99999999999.99"/>			
+		  			<f:attribute name="max" value="99999999999.99"/>
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.fromErrorCheck(index)}" partialSubmit="true" process="@this"
 						update="@this, @([id$=cloneLink]), fromValueMsg, :form:settingTabId:errorDialog" />
@@ -300,8 +300,8 @@
 			<p:column width="15%"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and 'PR' != ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType) or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 2}"> <!-- #35323 -->
 				<f:facet name="header">
-				                	#{lbl['lbl.pm.rule.to.value']}
-			                	</f:facet>
+				#{lbl['lbl.pm.rule.to.value']}
+			    </f:facet>
 			    <!-- #35323 - Start -->
 				<p:inputText value="#{typeValueObj.toValue}" size="15"
 					label="#{lbl['lbl.pm.rule.to.value']}"
@@ -337,7 +337,7 @@
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 3}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />			
-				                 	#{lbl['lbl.pm.rule.from.value']}
+				    #{lbl['lbl.pm.rule.from.value']}
 				</f:facet>
 				<!-- #35323 - Start -->
 				<p:inputText id="numberFromValueId" value="#{typeValueObj.fromValue}"
@@ -362,7 +362,7 @@
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 3}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />			
-				                 	#{lbl['lbl.pm.rule.to.value']}
+				    #{lbl['lbl.pm.rule.to.value']}
 				</f:facet>
 				<!-- #35323 - Start -->
 				<p:inputText id="numberToValueId" value="#{typeValueObj.toValue}"
@@ -600,10 +600,10 @@
 				<p:commandLink id="cloneLink" title="#{lbl['lbl.cm.clone']}"
 					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag}"
 					disabled="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'PR'
-					and !typeValueObj.brandNew or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue > typeValueObj.toValue or typeValueObj.effDate eq null)
-					or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR'
-					and fn:length(typeValueObj.supplAcctTypeIds) eq 0 or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue > typeValueObj.toValue or typeValueObj.effDate eq null
-					or typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
+						and !typeValueObj.brandNew or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue > typeValueObj.toValue or typeValueObj.effDate eq null)
+						or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PR'
+						and fn:length(typeValueObj.supplAcctTypeIds) eq 0 or typeValueObj.fromValue eq null or typeValueObj.toValue eq null or typeValueObj.fromValue > typeValueObj.toValue or typeValueObj.effDate eq null
+						or typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 					action="#{ruleCatalogueBackingBean.cloneRuleTypeValue(index)}"
 					partialSubmit="true" process="@this"
 					update=":form:settingTabId:ruleTypeValueTableID">
@@ -612,12 +612,9 @@
 				<p:commandLink
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
-					id="deleteValue" partialSubmit="true" process="@this"
-					oncomplete="ruleValueDeletePopUp.show();"
-					update="@([id$=#{ruleValueDeleteId}])">
+					id="deleteValue" partialSubmit="true" process="@this" oncomplete="ruleValueDeletePopUp.show();" update="@([id$=#{ruleValueDeleteId}])">
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-					<f:setPropertyActionListener target="#{ruleCatalogueBackingBean.managedBean.deleteRowIndex}" 
-							value="#{index}" />
+					<f:setPropertyActionListener target="#{ruleCatalogueBackingBean.managedBean.deleteRowIndex}" value="#{index}" />
 				</p:commandLink>
 				<h:panelGroup id="errorLink">
 					<!-- 29669 - START -->

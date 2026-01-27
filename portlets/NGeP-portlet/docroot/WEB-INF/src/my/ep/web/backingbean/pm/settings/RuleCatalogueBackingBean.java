@@ -1303,7 +1303,6 @@ public class RuleCatalogueBackingBean extends
 						// go to next record
 						continue;
 					}
-					
 					//#35323 - Start
 					else if (isRangeTypeAllowed){
 						if (value.isError3()) // From must be less than or equal to To
@@ -1703,7 +1702,6 @@ public class RuleCatalogueBackingBean extends
 		    this.getManagedBean().setFirstExpiryDateIsNull(true);
 		    return true;
 		}
-		//#35323 - End
 		if (end1 == null && end2 == null) {
 			return true;
 		}
@@ -1723,6 +1721,7 @@ public class RuleCatalogueBackingBean extends
 	private boolean isEmptyDate(Date d) {
 	    return d == null || d.getTime() == 0L;
 	}
+	//#35323 - End
 
 	public void saveFeeExemptionForOrgType() {
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
@@ -6669,9 +6668,7 @@ public class RuleCatalogueBackingBean extends
 		return this.getManagedBean().isFirstExpiryDateIsNull() ? MessageConst.ERROR_770275 : MessageConst.ERROR_770109;
 	}
 
-	private void validateType1(PmConfigRuleDesc ruleTypeDesc, PmConfigRuleValue baseValueToCompare,
-			PmConfigRuleValue value) {
-
+	private void validateType1(PmConfigRuleDesc ruleTypeDesc, PmConfigRuleValue baseValueToCompare, PmConfigRuleValue value) {
 		if ("LOPO".equals(ruleTypeDesc.getRuleType().getRuleType())) {
 			return;
 		}
@@ -6684,7 +6681,6 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	private void validateType2(PmConfigRuleDesc ruleTypeDesc, PmConfigRuleValue value) {
-
 		if ("LOPO".equals(ruleTypeDesc.getRuleType().getRuleType())) {
 			return;
 		}
@@ -6699,7 +6695,6 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	private void validateType3(PmConfigRuleDesc ruleTypeDesc) {
-
 		if ("LOPO".equals(ruleTypeDesc.getRuleType().getRuleType())) {
 			return;
 		}
