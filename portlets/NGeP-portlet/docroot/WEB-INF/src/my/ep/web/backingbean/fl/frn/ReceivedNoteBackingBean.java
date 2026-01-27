@@ -185,7 +185,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			if (action.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SAVE)
 					|| action.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)
 					|| action.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
-				if (hasActiveFrnWithCancelledWorkflow(getManagedBean().getFulfilmentNote().getFlRequest()
+				if (hasInvalidActiveFrnVsWorkflow(getManagedBean().getFulfilmentNote().getFlRequest()
 						.getFulfilmentReqId())) {
 					throw new EpException(MessageConst.ERROR_760823);
 				}
@@ -2238,16 +2238,17 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	//30753-End
 	
 	/**
-	 * #39692 Validates whether there is any active FRN under the given
-	 * fulfilment request that is in an inconsistent workflow state due to BPM /
-	 * OSB failure.
-	 * 
+	 * 39692
+	 *
+	 * Checks whether there is any active FRN (record_status = 1)
+	 * with an invalid workflow state such as Cancelled or Rejected.
+	 *
 	 * @param fulfilmentReqId
-	 * @return true if inconsistent FRN exists, false otherwise
+	 * @return true if invalid FRN data is detected
 	 */
-	private boolean hasActiveFrnWithCancelledWorkflow(Long reqId) {
+	private boolean hasInvalidActiveFrnVsWorkflow(Long reqId) {
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentSO.class);
-		return fulfilmentSO.hasActiveFrnWithCancelledWorkflow(reqId);
+		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
 	}
 }
