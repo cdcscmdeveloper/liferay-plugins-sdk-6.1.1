@@ -693,8 +693,9 @@
 						<p:outputPanel id="uploadApprovalLetterPg"> 
 						<!-- #25726 START -->
 						<!-- new #25726 - Start -->
+						<!-- #25726 - note 424-->		
 						<h:panelGroup
-							rendered="#{isEditableStatus and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)}"
+							rendered="#{isEditableStatus and isContractTypeAsMinistry and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)}"
 							required="true">
 							<!-- new #25726 - End -->
 							<!-- #25726 END -->
