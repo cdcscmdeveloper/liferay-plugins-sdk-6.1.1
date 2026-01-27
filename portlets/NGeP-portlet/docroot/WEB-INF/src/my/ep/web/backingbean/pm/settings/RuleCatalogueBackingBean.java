@@ -5408,6 +5408,7 @@ public class RuleCatalogueBackingBean extends
             this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
         }
         resetRuleValue();
+        this.getManagedBean().setRuleValueCollapsePanel(true);
         //#36738 End
 	}
 	
