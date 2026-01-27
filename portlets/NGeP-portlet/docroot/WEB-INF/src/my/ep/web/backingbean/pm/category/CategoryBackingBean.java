@@ -635,7 +635,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setNewCategory(true);
 		reloadSelectionPmCategoryL3();
 		this.tabIndexActive=2; //#29665
-		return "/xhtml/pm/category/categoryl3.xhtml";
+		return NAV_TO_MAINTAIN_L3; //#34445 SQ fixing
 	}
 
 	/**
