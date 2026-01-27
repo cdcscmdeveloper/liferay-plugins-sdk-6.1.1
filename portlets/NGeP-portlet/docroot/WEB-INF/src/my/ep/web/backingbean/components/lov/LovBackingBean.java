@@ -676,18 +676,19 @@ public class LovBackingBean implements Serializable {
 	
 	private void createSearchOptions(LovBean lovBean) {
 		this.setSearchOptions(new ArrayList<SelectItem>());
-		if(lovBean.getColumns() != null && lovBean.getColumns().size() > 0) {
-			for(LovColumnBean column : lovBean.getColumns()) {
-				//Start Fix - #29416
+		if (lovBean.getColumns() != null && lovBean.getColumns().size() > 0) {
+			for (LovColumnBean column : lovBean.getColumns()) {
+				// Start Fix - #29416
 				SelectItem item = new SelectItem();
 				if (column.isSearchable()) {
 					if (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
-						item = new SelectItem(column.getSearchColumn(),column.getColumnTitle());
+						item = new SelectItem(column.getSearchColumn(), column.getColumnTitle());
 					} else {
-						item = new SelectItem(column.getColumnName(),column.getColumnTitle());
+						item = new SelectItem(column.getColumnName(), column.getColumnTitle());
 					}
 					this.getSearchOptions().add(item);
-				// End Fix - #29416
+					// End Fix - #29416
+				}
 			}
 		}
 	}

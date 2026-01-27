@@ -231,6 +231,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					getManagedBean().setSelectedPTJ(null);
 				}
 			}//29416 - end 
+		}
 	}
 	
 	/**
