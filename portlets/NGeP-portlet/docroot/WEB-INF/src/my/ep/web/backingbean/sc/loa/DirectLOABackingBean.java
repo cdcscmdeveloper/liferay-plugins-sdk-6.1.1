@@ -11684,6 +11684,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ScLoa scLoa;
 		Boolean isOneOff = false;
 		Boolean agreementReqCheck = false;
+		boolean isContractTypeAsMinistry = false; // #25726 - note 424
 
 		if ((agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_ID) || agreementReqChoice
 				.equalsIgnoreCase(ParameterConst.NO_SELECTED)) && getManagedBean().getScLoa().isAgreementReq()) {
@@ -11700,7 +11701,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		if (this.getManagedBean().getScLoa() != null) {
 			scLoa = this.getManagedBean().getScLoa();
-			if (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode() != null) {
+			if (scLoa.getScLoiLoa().getFulfilmentTypeCode() != null) {
 				isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED))
 						|| (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
@@ -11708,12 +11709,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
 						.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			}
-			if (this.getManagedBean().getScLoa().getQtType() != null) {
+			if (scLoa.getQtType() != null) {
 				isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa().getQtType()
 						.getParameterType())
 						&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa()
 								.getQtType().getParameterCode());
 			}
+			// #25726 - note 424 - start
+			if (scLoa.getContractType() != null) {
+				isContractTypeAsMinistry = scLoa.getContractType().getParameterCode()
+						.equals(ParameterConst.CONTRACT_TYPE_MINISTRY);
+			}
+			// #25726 - note 424 - end
+			
 		}
 
 		// To check the value change to NO
@@ -11732,7 +11740,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 
 		// To display confirmation box
-		if (isPK7 && agreementReqCheck) {//new #25726	
+		// #25726 - note 424
+		if (isPK7 && agreementReqCheck && isContractTypeAsMinistry) {//new #25726	
 			RequestContext.getCurrentInstance().execute("qtChangeAgreementReqDlg.show()");
 		} else {
 			// To set the changes for no confirmation box
