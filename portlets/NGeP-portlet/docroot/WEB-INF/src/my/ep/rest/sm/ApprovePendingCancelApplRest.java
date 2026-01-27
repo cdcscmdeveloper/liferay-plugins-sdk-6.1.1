@@ -38,8 +38,29 @@ public class ApprovePendingCancelApplRest {
 
 public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.class);
 	
+
+
+/**
+	 * REST system terminate appl, URL: cancelappl?no=xxx
+	 *  
+	 * @param applNo
+	 * @return
+	 * @throws IOException
+	 * @return
+	 */
+	@GET
+	@Path("/cancelappl")
+	public String terminateAppl(@QueryParam("no") String applNo) throws IOException {
+		log.info("Terminating... " + applNo);
+		log.info("attempt 1");
+		
+		SmServiceLookup.getReviewApplicationSO().terminateApplRest(applNo);
+		return "Done terminate : "+applNo;
+	}
+
+
 	/**
-	 * REST cancel pending appl, URL: cancelappl?no=xxx
+	 * REST cancel pending appl, URL: cancelappl2?no=xxx
 	 * 
 	 * Based on deletePendingMofAppln/cancelPendingApplicationDescisionPage.xhtml
 	 *  in CommonApplBackingBean
@@ -50,10 +71,10 @@ public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.c
 	 * @return
 	 */
 	@GET
-	@Path("/cancelappl")
+	@Path("/cancelappl2")
 	public String cancelAppl(@QueryParam("no") String applNo) throws IOException {
 		log.info("Approve pending cancel: " + applNo);
-		log.info("attempt 5");
+		log.info("attempt 6");
 		
 		MofRegistrationReqDTO req = new MofRegistrationReqDTO();
 		req.setApplNo(applNo);
@@ -70,6 +91,8 @@ public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.c
 		for (WorklistItemVO vo : vos.getWorklistItem()){
 			log.info(vo.getTaskId());
 			log.info(vo.getTaskName());
+			
+			token = SmServiceLookup.getBpmSO().authenticate(vo.getAssignees().get(0));
 			
 			SMMOFAppCanDataType payload = getPojo(vo.getTaskId(), token);
 			approve(appl, payload, vo.getTaskId(), token);

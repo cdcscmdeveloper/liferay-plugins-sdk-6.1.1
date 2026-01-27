@@ -10981,6 +10981,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		long currentRegStatusId = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId();
 
 		long latestRegStatusId = latestPOChange.getPmRegStatus().getRegStatusId();
+		
+		long prevRegStatusId = latestPOChange.getPreviousRegStatusId().getRegStatusId();
+		
+		if(currentRegStatusId != prevRegStatusId){
+			getManagedBean().setApprovedStatusId(getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId());
+			return;
+		}
 
 		getManagedBean().setChangeCurrRegStatus(currentRegStatusId != latestRegStatusId);
 		getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
@@ -12018,6 +12025,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}
 				} else if (res	
 						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.ESCALATE)) {
+					//#37925 START
+					PmRegStatus currentRegStatus = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus();
+					getManagedBean().getPoSecReview().setPreviousRegStatusId(currentRegStatus);
+					//#37925 END
+					
 					String statusDesc = "";
 					if (getManagedBean().getPoSecReview() != null
 							&& getManagedBean().getPoSecReview()
@@ -19283,18 +19295,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * Updates the approved registration status ID for an approver user.
 	 */
 	public void updateApproverRegistrationStatusValue() {
-		if (getManagedBean() == null || !getManagedBean().isApproverUser()) {
+		Long approvedStatusId = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId();
+		if (approvedStatusId == null || !getManagedBean().isApproverUser()) {
 			return;
 		}
-
-		Long approvedStatusId = null;
+		
 		if (getManagedBean().isChangeCurrRegStatus()) {
 			SmApplSectionReview latestPOSectionReview = findLatestPOSectionReview();
 			if (latestPOSectionReview != null && validStatusId(latestPOSectionReview)) {
 				approvedStatusId = findLatestPOSectionReview().getPmRegStatus().getPmStatus().getStatusId();
 			}
-		} else {
-			approvedStatusId = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId();
 		}
 
 		getManagedBean().setApprovedStatusId(approvedStatusId);
@@ -19319,6 +19329,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		PmStatus pmStatus = pmRegStatus.getPmStatus();
 		if (pmStatus == null) {
+			return false;
+		}
+		
+		PmRegStatus previousRegStatusId = latestPOSectionReview.getPreviousRegStatusId();
+		if(previousRegStatusId == null){
+			return false;
+			
+		}
+		if (previousRegStatusId.getRegStatusId() != getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId()) {
 			return false;
 		}
 

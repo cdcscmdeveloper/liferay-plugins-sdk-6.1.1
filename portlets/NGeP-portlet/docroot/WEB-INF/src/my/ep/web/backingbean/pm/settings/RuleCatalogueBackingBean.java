@@ -1244,7 +1244,7 @@ public class RuleCatalogueBackingBean extends
 					// next
 					// record\
 					continue;
-				} 
+				}
 				// 29669 - start
 				else if (isRangeTypeAllowed && hasBaseValueError) { // #35323
 					// to value can not be less than from value
@@ -1302,7 +1302,13 @@ public class RuleCatalogueBackingBean extends
 					if (value.getRecordStatusFlg() == 0) {// if is inActive one
 						// go to next record
 						continue;
-					} 
+					}
+					//#35323 - Start
+					else if (isRangeTypeAllowed){
+						if (value.isError3()) // From must be less than or equal to To
+							throw new EpException(MessageConst.ERROR_770238, new String[] { ruleTypeDesc.getRuleDesc() });
+					}
+					//#35323 - End
 					// 29669 - start
 					else if (isRangeTypeAllowed && hasValueError) { //#35323
 						// to value can not be less than from value
@@ -1320,54 +1326,19 @@ public class RuleCatalogueBackingBean extends
 
 						// hit error and return
 						switch (ruleTypeDesc.getRuleType().getValidationType()) {
+						//#35323 and sonarLint Fixing - Start
 						case '1':
-							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
-								if (ruleTypeDesc.getRuleType().getRangeType() == 1
-										|| ruleTypeDesc.getRuleType().getRuleType().equalsIgnoreCase(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD)
-										&& baseValueToCompare.getGroupValueId().equals(value.getGroupValueId())) { //#35323
-	
-									throw new EpException(
-											MessageConst.ERROR_770110,
-											new String[] { ruleTypeDesc
-													.getRuleDesc() });
-								} else {
-	
-									throw new EpException(
-											MessageConst.ERROR_770109,
-											new String[] { ruleTypeDesc
-													.getRuleDesc() });
-								}
-							}
+							validateType1(ruleTypeDesc, baseValueToCompare, value);
 							break;
 						case '2':
-							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
-								if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
-										.getParameterCode().equalsIgnoreCase("c")) {
-									throw new EpException(
-											MessageConst.ERROR_770199,
-											new String[] {
-													ruleTypeDesc.getRuleDesc(),
-													value.getCategoryDisplayValue() });
-								} else {
-									throw new EpException(
-											MessageConst.ERROR_770110,
-											new String[] { ruleTypeDesc
-													.getRuleDesc() });
-								}
-							}
+							validateType2(ruleTypeDesc, value);
 							break;
-
 						case '3':
-							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
-								throw new EpException(MessageConst.ERROR_770154,
-										new String[] { ruleTypeDesc.getRuleDesc() });
-							}
+							validateType3(ruleTypeDesc);
 							break;
-							
 						default:
-
 						}
-
+						//#35323 and sonarLint Fixing - End
 					}
 				}
 
@@ -1640,10 +1611,8 @@ public class RuleCatalogueBackingBean extends
 			PmConfigRuleValue secondRuleValue, PmConfigRule ruleType) {
 		boolean validationResult = false;
 		boolean isValuesEqual = false;
-		//#35323 - Start
 		if (ruleType.getValidationType() == '1'
-				&& (ruleType.getRangeType() == 2 || !(ruleType.getRangeType() == 1 || 
-				RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(ruleType.getRuleType()) && firstRuleValue
+				&& (ruleType.getRangeType() == 2 || !(ruleType.getRangeType() == 1 && firstRuleValue
 						.getGroupValueId().equals(
 								secondRuleValue.getGroupValueId())))) {// EffectiveDate
 																		// validation
@@ -1697,8 +1666,7 @@ public class RuleCatalogueBackingBean extends
 				validationResult = true;
 			}
 
-		} else if (ruleType.getRangeType() == 1 || 
-				RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(ruleType.getRuleType())
+		} else if (ruleType.getRangeType() == 1
 				&& firstRuleValue.getGroupValueId().equals(
 						secondRuleValue.getGroupValueId())) {// step-2
 																// validation :
@@ -1717,7 +1685,6 @@ public class RuleCatalogueBackingBean extends
 			} else {
 				validationResult = true;
 			}
-		//#35323 - End
 		}
 		return validationResult;
 	}
@@ -1727,7 +1694,14 @@ public class RuleCatalogueBackingBean extends
 		return fromValue1 <= toValue2 && fromValue2 <= toValue1;
 	}
 
+	//#35323 - Start
 	boolean isDateOverlaped(Date start1, Date end1, Date start2, Date end2) {
+		this.getManagedBean().setFirstExpiryDateIsNull(false);
+
+		if (isEmptyDate(end1) && !isEmptyDate(start2)) {
+		    this.getManagedBean().setFirstExpiryDateIsNull(true);
+		    return true;
+		}
 		if (end1 == null && end2 == null) {
 			return true;
 		}
@@ -1742,6 +1716,11 @@ public class RuleCatalogueBackingBean extends
 		return start1.getTime() <= end2.getTime()
 				&& start2.getTime() <= end1.getTime();
 	}
+	
+	private boolean isEmptyDate(Date d) {
+	    return d == null || d.getTime() == 0L;
+	}
+	//#35323 - End
 
 	public void saveFeeExemptionForOrgType() {
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
@@ -3014,7 +2993,7 @@ public class RuleCatalogueBackingBean extends
 					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(true);
 				} else {
 					rulevalue.setFromValue(configRuleType.getConfigRuleValues()
-							.get(index).getToValue().add(new BigDecimal(0.01)));
+							.get(index).getToValue().add(new BigDecimal("0.01"))); //#35323
 					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(false);
 				}
 				// 29669 - end
@@ -3023,16 +3002,16 @@ public class RuleCatalogueBackingBean extends
 
 		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 				.get(index);
-		// 29669 start
+		// 29669, #35323 - start
 		if (selectedValue.getFromValue() != null
 				&& selectedValue.getToValue() != null
 				&& selectedValue.getFromValue().compareTo(
-						selectedValue.getToValue()) >= 0) {
+						selectedValue.getToValue()) > 0) {
 			selectedValue.setError(true);
 		} else {
 			selectedValue.setError(false);
 		}
-		// 29669 end
+		// 29669, #35323 - end
 	}
 	
 	/**
@@ -4460,13 +4439,13 @@ public class RuleCatalogueBackingBean extends
 				.getSelectedRuleDescType().getRuleType();
 		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 				.get(index);
-		// 29669 start
-		if (selectedValue.getFromValue() != null && selectedValue.getToValue() != null && selectedValue.getFromValue().compareTo(selectedValue.getToValue()) >= 0) {
+		// 29669, #35323 - start
+		if (selectedValue.getFromValue() != null && selectedValue.getToValue() != null && selectedValue.getFromValue().compareTo(selectedValue.getToValue()) > 0) {
 			selectedValue.setError(true);
 		} else {
 			selectedValue.setError(false);
 		}
-		// 29669 end
+		// 29669, #35323 - end
 	}
 
 	/**
@@ -5408,6 +5387,7 @@ public class RuleCatalogueBackingBean extends
             this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
         }
         resetRuleValue();
+        this.getManagedBean().setRuleValueCollapsePanel(true);
         //#36738 End
 	}
 	
@@ -5495,6 +5475,10 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 	
+	/**
+	 * check from value
+	 * @param index
+	 */
 	public void fromErrorCheck(int index) {
 		PmConfigRule configRuleType = this.getManagedBean()
 				.getSelectedRuleDescType().getRuleType();
@@ -5523,6 +5507,16 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 		}
+		//#35323 - Start
+		if (configRuleType.getRangeType() == 1 || configRuleType.getRangeType() == 2) {
+			if (selectedValue.getFromValue() != null && selectedValue.getToValue() != null
+					&& selectedValue.getFromValue().compareTo(selectedValue.getToValue()) > 0) {
+				selectedValue.setError3(true);
+			} else {
+				selectedValue.setError3(false);
+			}
+		}
+		//#35323 - End
 	}
 	
 	public void toErrorCheck(int index) {
@@ -6659,5 +6653,43 @@ public class RuleCatalogueBackingBean extends
 			setupPurchaseRequestRule(descRuleType);
 		}
 	}
-	// #35323 - End
+
+	private String getExpiryDateErrorCode() {
+		return this.getManagedBean().isFirstExpiryDateIsNull() ? MessageConst.ERROR_770275 : MessageConst.ERROR_770109;
+	}
+
+	private void validateType1(PmConfigRuleDesc ruleTypeDesc, PmConfigRuleValue baseValueToCompare, PmConfigRuleValue value) {
+		if ("LOPO".equals(ruleTypeDesc.getRuleType().getRuleType())) {
+			return;
+		}
+
+		if (ruleTypeDesc.getRuleType().getRangeType() == 1
+				&& baseValueToCompare.getGroupValueId().equals(value.getGroupValueId())) {
+			throw new EpException(MessageConst.ERROR_770110, new String[] { ruleTypeDesc.getRuleDesc() });
+		}
+		throw new EpException(getExpiryDateErrorCode(), new String[] { ruleTypeDesc.getRuleDesc() });
+	}
+
+	private void validateType2(PmConfigRuleDesc ruleTypeDesc, PmConfigRuleValue value) {
+		if ("LOPO".equals(ruleTypeDesc.getRuleType().getRuleType())) {
+			return;
+		}
+
+		if ("c".equalsIgnoreCase(ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode())) {
+
+			throw new EpException(MessageConst.ERROR_770199, new String[] { ruleTypeDesc.getRuleDesc(),
+					value.getCategoryDisplayValue() });
+		}
+
+		throw new EpException(MessageConst.ERROR_770110, new String[] { ruleTypeDesc.getRuleDesc() });
+	}
+
+	private void validateType3(PmConfigRuleDesc ruleTypeDesc) {
+		if ("LOPO".equals(ruleTypeDesc.getRuleType().getRuleType())) {
+			return;
+		}
+
+		throw new EpException(MessageConst.ERROR_770154, new String[] { ruleTypeDesc.getRuleDesc() });
+	}
+	//#35323 - End
 }
