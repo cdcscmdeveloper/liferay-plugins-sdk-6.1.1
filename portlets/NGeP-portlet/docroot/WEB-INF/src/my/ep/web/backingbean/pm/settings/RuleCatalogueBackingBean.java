@@ -5527,16 +5527,6 @@ public class RuleCatalogueBackingBean extends
 		if (configRuleType.getRangeType() == 3) {
 			if (selectedValue.getToValue() != null && selectedValue.getRuleNumberValue() != null) {
 				if (selectedValue.getToValue() != null && selectedValue.getFromValue() != null) {
-					
-					if (selectedValue.getFromValue().compareTo(selectedValue.getToValue()) < 0) {
-						selectedValue.setError5(true);
-						selectedValue.setError3(false);
-					}
-					else {
-						selectedValue.setError5(false);
-						selectedValue.setError3(false);
-					}
-					
 					if (selectedValue.getToValue().compareTo(selectedValue.getFromValue()) < 0) {
 						selectedValue.setError5(true);
 						selectedValue.setError3(false);
