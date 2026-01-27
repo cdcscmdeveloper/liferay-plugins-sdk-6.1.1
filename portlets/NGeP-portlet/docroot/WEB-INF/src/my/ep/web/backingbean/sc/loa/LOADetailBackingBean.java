@@ -12225,10 +12225,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public BigDecimal calculateTotalItemPrice() {
 		BigDecimal totalPrice = BigDecimal.ZERO;
-		if(CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())){
-			for(ScLoiLoaItem item: this.getManagedBean().getLoiLoaItemsResult()){
-				totalPrice = calcSubTotalPrice(item).add(totalPrice) ;
-			}
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())) {
+			// #39747 - Start
+			totalPrice = calcTotalAmount(this.getManagedBean().getLoiLoaItemsResult());
+			// #39747 - End
+
 		}
 		totalPrice = totalPrice.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 
@@ -13193,8 +13194,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * Only applicable when procurement type is Special Item.
 	 */
 	public void assignListOfPtjAllowedForSpecialItem() {
-		if (getManagedBean().getScLoa().getProcurementType().getParameterCode()
-				.equals(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+
+		if ((null != getManagedBean().getScLoa() && ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(getManagedBean()
+				.getScLoa().getScLoiLoa().getDocType()))
+				&& (null != getManagedBean().getScLoa().getProcurementType() && getManagedBean().getScLoa()
+						.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_SPECIAL_ITEM))) {
 			getManagedBean().getPtjIds().clear();
 
 			IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -13215,6 +13219,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+
 	}
 	
 	/**
