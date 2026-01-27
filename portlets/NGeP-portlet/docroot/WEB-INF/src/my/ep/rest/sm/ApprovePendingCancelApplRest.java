@@ -53,7 +53,7 @@ public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.c
 	@Path("/cancelappl")
 	public String cancelAppl(@QueryParam("no") String applNo) throws IOException {
 		log.info("Approve pending cancel: " + applNo);
-		log.info("attempt 5");
+		log.info("attempt 6");
 		
 		MofRegistrationReqDTO req = new MofRegistrationReqDTO();
 		req.setApplNo(applNo);
@@ -70,6 +70,8 @@ public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.c
 		for (WorklistItemVO vo : vos.getWorklistItem()){
 			log.info(vo.getTaskId());
 			log.info(vo.getTaskName());
+			
+			token = SmServiceLookup.getBpmSO().authenticate(vo.getAssignees().get(0));
 			
 			SMMOFAppCanDataType payload = getPojo(vo.getTaskId(), token);
 			approve(appl, payload, vo.getTaskId(), token);
