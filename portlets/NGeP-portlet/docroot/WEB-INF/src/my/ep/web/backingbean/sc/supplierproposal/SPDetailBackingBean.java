@@ -5603,7 +5603,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		//Bug #39501 start
 		Long qtId = this.getManagedBean().getQt().getQtId();
 		Long suppId = this.getManagedBean().getSupplierId();
-		//Bug #39501 end		//Bug #28326 start
+		//Bug #39501 end		
+		//Bug #28326 start
 		validateProposalCloseTimeForUpdateButton(this.getManagedBean().getQt());
 		//Bug #28326 end
 		getManagedBean().setReadOnly(false);
