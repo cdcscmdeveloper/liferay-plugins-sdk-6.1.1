@@ -4259,6 +4259,9 @@ public class SmApplicationUtil {
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
+				// #39545 - Start
+				applStatus = StringUtils.EMPTY;
+				// #39545 - End
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
 				isActiveAppl = arr[20] + "";
 				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
@@ -4289,7 +4292,7 @@ public class SmApplicationUtil {
 						}
 					}
 				}
-
+				
 				if (EntityHelper.isCollectionEmpty(voTmp.getOverlapInfoList())) {
 					voTmp.setOverlapInfoList(new ArrayList<SmBulkApplOverlapCatVO>());
 				}
@@ -4649,7 +4652,6 @@ public class SmApplicationUtil {
 							|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 						
 						previouscat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previouscat.getSupplierCategoryId()));
-						managedBean.getOtherDescDataModel().reloadData();
 						
 						for (SmSuppCatOtherDescHistory history : previouscat.getSmSuppCatOtherDescHistory()) {
 							if (!EntityHelper.isCollectionEmpty(previouscat.getSmSuppCatOtherDescHistory())
@@ -4684,7 +4686,6 @@ public class SmApplicationUtil {
 				if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 						|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 						cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-					managedBean.getOtherDescDataModel().reloadData();
 					
 					for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 						if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
@@ -4838,7 +4839,6 @@ public class SmApplicationUtil {
 			if (catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_DOCKYARD)
 					|| catType.equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_MANUFACTURING)) {
 					cat.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(cat.getSupplierCategoryId()));
-				managedBean.getOtherDescDataModel().reloadData();
 				
 				for (SmSuppCatOtherDescHistory history : cat.getSmSuppCatOtherDescHistory()) {
 					if (!EntityHelper.isCollectionEmpty(cat.getSmSuppCatOtherDescHistory())
@@ -16128,7 +16128,7 @@ public class SmApplicationUtil {
 	 */
 	public static List<SmSuppCatOtherDescHistory> retrieveActiveOtherDescHistory(Long supplierCategoryId) {
 		if (supplierCategoryId == null) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistory(supplierCategoryId);
