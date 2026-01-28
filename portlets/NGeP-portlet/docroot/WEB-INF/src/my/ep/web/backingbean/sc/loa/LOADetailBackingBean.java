@@ -11670,12 +11670,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.getScLoa().getProcurementMode().getParameterCode());
 		boolean isPeriodicBelow4Above500K = isPeriodic && !isPeriodAbove4 && isAbove500K;
 		boolean isPeriodicAbove4 = isPeriodic && isPeriodAbove4;
+		// #25726 - note 424
+        boolean isContractTypeAsMinistry = scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY);
 
 		this.getManagedBean().setAbove500K(isAbove500K);
 
 		// Case 1: PK7 (strict check), Periodic contract, agreement false
 		if (!agreementReq) {
-			if ((isPK7 && !isPK2OrSpecial) && (isPeriodicAbove4 || (isPeriodicBelow4Above500K))) {
+			// #25726 - note 424
+			if (isContractTypeAsMinistry  && (isPK7 && !isPK2OrSpecial) && (isPeriodicAbove4 || (isPeriodicBelow4Above500K))) {
 				this.getManagedBean().setAgreementReqChange(true);
 				RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");
 

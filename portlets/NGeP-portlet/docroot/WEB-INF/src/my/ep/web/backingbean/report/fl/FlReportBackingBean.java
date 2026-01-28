@@ -2272,6 +2272,26 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 
 		return items;
 	}
+	
+	/**
+	 * Construct financial year list
+	 * 
+	 * @return List of select item for financial year
+	 */
+	public static List<SelectItem> getFinancialYearOpt() {
+		List<SelectItem> financialYearOpt = new ArrayList<>();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+
+		int currentYear = cal.get(Calendar.YEAR);
+		int startYear = 2018;
+
+		for (int year = currentYear; year >= startYear; year--) {
+			financialYearOpt.add(new SelectItem(year, Integer.toString(year)));
+		}
+
+		return financialYearOpt;
+	}
 	//#31344 end
 
 }
