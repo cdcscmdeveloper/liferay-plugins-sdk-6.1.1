@@ -631,29 +631,29 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{weightageScore.technicalTotalScore}" />
-
+				<h:outputText value="#{weightageScore.technicalTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{weightageScore.financialTotalScore}" />
-
+				<h:outputText value="#{weightageScore.financialTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{weightageScore.recommendationTechnicalScore}" />
-
+				<h:outputText value="#{weightageScore.recommendationTechnicalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{weightageScore.recommendationFinancialScore}" />
-
+				<h:outputText value="#{weightageScore.recommendationFinancialScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{weightageScore.recommendationTotalScore}" />
-
+				<h:outputText value="#{weightageScore.recommendationTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 
 		</p:dataTable>
