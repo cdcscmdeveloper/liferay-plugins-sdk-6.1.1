@@ -160,6 +160,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sc.loaloi.ScLoa; //#25790
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa; //#25790
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -220,6 +221,7 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent; //#26059
 
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
@@ -841,6 +843,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if (CollectionUtils.isNotEmpty(requestNoteDtlList)) {
 			getManagedBean().setSmSupplier(requestNoteDtlList.get(0).getScRequestSupplierItem().getSmSupplier());
 		}
+		
+		//#26059 - Start
+		if(requestNoteResDTO.getAssignItemDtl()!=null){
+			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
+		}
+		//#26059 - End
 
 		// created by
 		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
@@ -879,7 +887,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							requestItem.setPurchaseInDefault(null);
 						}
 					}
-
+					//#26059 - Start
+					CommonUtils commonUtils = new CommonUtils();
+					requestItem.setItemName(commonUtils.removeItemNameNA(requestItem.getItemName()));
+					compareItemName(requestItem);
+					//#26059 - End
 				}
 			}
 			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
@@ -1315,23 +1327,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	// #27545 - End
 
 	/**
-	 * submit codification task Action.
+	 * Submits the codification task action and validates item status.
+	 * * @param outcome The BPM outcome string (e.g., BPM_SUBMIT) that determines 
+	 * the workflow direction.
 	 */
 	public void submitCodificationAction(String outcome) {
-		debugLogger("submitCodificationAction");
-		getManagedBean().setAction(outcome);
-		List<ScRequestNoteDtl> requestNoteDtls = this.getManagedBean().getRequestNoteDtls();
+	    debugLogger("submitCodificationAction");
+	    getManagedBean().setAction(outcome);
+	    
+	    List<ScRequestNoteDtl> requestNoteDtls = this.getManagedBean().getRequestNoteDtls();
+	    
+	    // #26059 - Start
+	    List<String> nonExtensionCodeCode = putAllTheNonExtensionCodeItemInList(requestNoteDtls);
 
-		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
-			// check is all items codified
-			for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
-				ScRequestItem requestItem = rnDtl.getRequestItem();
-				if (requestItem.getCmItem() == null) {
-					throw new EpException(MessageConst.ERROR_760448, new String[] { requestItem.getItemName() });
-				}
-			}
-		}
-		requestNoteCodificationSubmit(outcome);
+	    if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && !nonExtensionCodeCode.isEmpty()) {
+	    	validateAndThrowCodificationError(nonExtensionCodeCode);
+	    }
+	    
+	    requestNoteCodificationSubmit(outcome);
+	    // #26059 - End
 	}
 
 	/**
@@ -1686,6 +1700,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								+ rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") " + "RnNo ("
 								+ requestNote.getRequestNoteNo() + ")");
 						getManagedBean().setRequestSupplierItem(rnDtl.getScRequestSupplierItem()); //27868
+						//#26059 - Start
+						CommonUtils utils = new CommonUtils();
+						rnDtl.getRequestItem().setItemName(utils.removeItemNameNA(rnDtl.getRequestItem().getItemName()));
+						//#26059 - End
 						// 27868 - start
 						if (getParameterCodeForPK7(assignActualDate()).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
 							finalizeWIPCodePK7(rnDtl);
@@ -8234,4 +8252,201 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	//27868 - end
+ 
+	//#26059 - Start
+	/**
+	 * Validates the extension code of a request note detail.
+	 *
+	 * @param requestNoteDtl
+	 * The request detail object to be validated.
+	 * @return true if the item is assigned or has a valid extension code length;
+	 * false otherwise.
+	 */
+	public boolean checkExtensionCode(ScRequestNoteDtl requestNoteDtl) {
+	    if (isInvalidRequestDetail(requestNoteDtl)) {
+	        return false;
+	    }
+
+	    if (getManagedBean().isExistInAssignItemDetail()) {
+	        return true;
+	    }
+
+	    CmItem cmItem = requestNoteDtl.getRequestItem().getCmItem();
+	    return isValidExtensionLength(cmItem.getExtensionCode());
+	}
+
+	/**
+	 * Checks if the request detail or its nested item objects are null. * @param
+	 * requestNoteDtl The object to check.
+	 * 
+	 * @return true if any required component is missing.
+	 */
+	private boolean isInvalidRequestDetail(ScRequestNoteDtl requestNoteDtl) {
+		return requestNoteDtl == null || requestNoteDtl.getRequestItem() == null
+				|| requestNoteDtl.getRequestItem().getCmItem() == null;
+	}
+
+	/**
+	 * Validates that the extension code is not blank and meets length
+	 * requirements. * @param extensionCode The code string to check.
+	 * 
+	 * @return true if valid, false otherwise.
+	 */
+	private boolean isValidExtensionLength(String extensionCode) {
+		if (StringUtils.isBlank(extensionCode)) {
+			return false;
+		}
+
+		// Remove whitespace to get actual character count
+		int codeLength = extensionCode.replaceAll("\\s+", "").length();
+
+		// Logic: Return false if length is between 8 and 18 (inclusive)
+		// Note: Verify this logic matches your business rule. Usually, this
+		// check
+		// would be (codeLength < 8 || codeLength > 18) to be invalid.
+		if (codeLength >= DPConstants.NUMBER_EIGHT && codeLength <= DPConstants.NUMBER_EIGHTEEN) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Compares the item name of the request item with its associated CmItem
+	 * name. If the names differ, the extension code of the CmItem is trimmed to
+	 * 8 characters.
+	 * 
+	 * @param requestItem
+	 *            the request item containing the CmItem to compare and update
+	 */
+	public void compareItemName(ScRequestItem requestItem) {
+		if (requestItem == null || requestItem.getCmItem() == null) {
+			return;
+		}
+
+		if (getManagedBean().isExistInAssignItemDetail()) {
+			return;
+		}
+
+		String cmItemName = getCleanedItemName(requestItem.getCmItem().getItemName());
+		String itemName = getCleanedItemName(requestItem.getItemName());
+
+		boolean namesDiffer = !cmItemName.equalsIgnoreCase(itemName);
+		boolean tempUnspscBlank = StringUtils.isBlank(requestItem.getTempUnspscCode());
+
+		if (namesDiffer && tempUnspscBlank) {
+			trimExtensionCode(requestItem.getCmItem());
+		}
+	}
+
+	/**
+	 * Helper to clean item names by removing 'N/A' and trimming whitespace. * @param
+	 * rawName The raw name string from the item.
+	 * 
+	 * @return The cleaned name or an empty string.
+	 */
+	private String getCleanedItemName(String rawName) {
+		if (StringUtils.isBlank(rawName)) {
+			return StringUtils.EMPTY;
+		}
+		CommonUtils commonUtils = new CommonUtils();
+		return commonUtils.removeItemNameNA(rawName).trim();
+	}
+
+	/**
+	 * Trims the extension code to 8 characters if it exceeds that length. * @param
+	 * cmItem The CmItem to update.
+	 */
+	private void trimExtensionCode(CmItem cmItem) {
+		String extensionCode = cmItem.getExtensionCode();
+
+		if (StringUtils.isNotBlank(extensionCode) && extensionCode.length() > DPConstants.NUMBER_EIGHT) {
+			cmItem.setExtensionCode(extensionCode.substring(DPConstants.NUMBER_ZERO, DPConstants.NUMBER_EIGHT));
+		}
+	}
+	
+	/**
+	 * Processes a list of Request Note Details and compiles a list of item names 
+	 * that do not meet the criteria for having a valid extension code.
+	 *
+	 * An item's name is added to the result list if its associated {@code CmItem} 
+	 * is null, or if the item fails the extension code validation check performed 
+	 * by the helper method {@code checkExtensionCode(ScRequestNoteDtl)}.
+	 *
+	 * @param listNoteDtl The {@code List<ScRequestNoteDtl>} containing the request item details to be evaluated.
+	 * @return A {@code List<String>} containing the names ({@code itemName}) of all items 
+	 * that are identified as lacking a proper extension code or associated {@code CmItem}.
+	 */
+	private List<String> putAllTheNonExtensionCodeItemInList(List<ScRequestNoteDtl> listNoteDtl) {
+
+		List<String> listNonExtensionCode = new ArrayList<>();
+		for (ScRequestNoteDtl scRequestNoteDtl : listNoteDtl) {
+			ScRequestItem scRequestItem = scRequestNoteDtl.getRequestItem();
+			CmItem cmItem = scRequestItem.getCmItem();
+
+			if (cmItem == null || !checkExtensionCode(scRequestNoteDtl)) {
+				listNonExtensionCode.add(scRequestItem.getItemName());
+			}
+		}
+		return listNonExtensionCode;
+	}
+	
+	/**
+	 * Constructs a numbered list from a list of item names and throws a custom exception 
+	 * containing the formatted message.
+	 *
+	 * This method iterates through the provided list of item names, creates a 
+	 * numbered list string, and then throws an {@link EpException} using the constant 
+	 * {@code MessageConst.ERROR_760702} and the generated list as a parameter.
+	 * * @param listItemName The {@code List<String>} containing the names of the items 
+	 * that failed codification or triggered the error condition.
+	 * @throws EpException If the method is called, it always throws this exception 
+	 * containing the formatted list of item names.
+	 */
+	private void validateAndThrowCodificationError(List<String> listItemName) {
+
+		StringBuilder numberedList = new StringBuilder();
+		int count = DPConstants.NUMBER_ONE;
+
+		for (String itemName : listItemName) {
+			numberedList.append("\n").append(count).append(". ").append(itemName).append(".");
+			count++;
+		}
+		String formattedMessageParam = numberedList.toString();
+
+		throw new EpException(MessageConst.ERROR_760702, new String[] { formattedMessageParam });
+
+	}
+	
+	
+	/**
+	 * Determines whether the "Assign" button should be enabled or visible.
+	 *
+	 * The button is active (returns {@code true}) if either of the following conditions is met:
+	 * The current context is read-only ({@code readOnly == true}).
+	 * The context is NOT read-only, AND the following three conditions are simultaneously true:
+	 * The item's procurement type is **SERVICE** (matching {@code DbValueConst.PROCUMENT_TYPE_SERVICE}).
+	 * The item's temporary UNSPSC code is empty or null (validated via {@code StringUtils.isEmpty()}).
+	 * The item has an associated {@code CmItem} (i.e., {@code requestNoteDtl.getRequestItem().getCmItem()} is not null).
+	 *
+	 * @param readOnly      {@code true} if the form or context is in read-only mode, bypassing further checks.
+	 * @param requestNoteDtl The {@link ScRequestNoteDtl} instance being evaluated. This object is used to check its
+	 * procurement category and the details of its associated {@code RequestItem} (specifically the
+	 * {@code TempUnspscCode} and {@code CmItem}).
+	 * @return              {@code true} if the "Assign" button should be active (enabled or shown); {@code false} otherwise.
+	 */
+	public boolean validateAssignButton(boolean readOnly, ScRequestNoteDtl requestNoteDtl) {
+		if (readOnly) {
+			return true;
+		}
+
+		if (requestNoteDtl.getProcurementTypeCategory().getParameterId().equals(DbValueConst.PROCUMENT_TYPE_SERVICE)
+				&& StringUtils.isEmpty(requestNoteDtl.getRequestItem().getTempUnspscCode())
+				&& requestNoteDtl.getRequestItem().getCmItem() != null) {
+			return true;
+		}
+
+		return false;
+	}
+	//#26059 - End			 
 }
