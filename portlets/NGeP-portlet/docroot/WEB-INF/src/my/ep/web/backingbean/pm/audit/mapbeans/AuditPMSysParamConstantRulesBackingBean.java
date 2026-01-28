@@ -461,25 +461,25 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		String ruleValue = null;
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
-						.getRuleValueId()) > 0) && newCreatedItem.getFromValue() != null) {			
+						.getRuleValueId()) > 0) && newCreatedItem.getFromValue() != null) {
 			String rawValue = newCreatedItem.getFromValue().toString();
 			if (rawValue != null) {
-			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
-				String number = rawValue;
-				double amount = Double.parseDouble(number);
+				if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+					String number = rawValue;
+					double amount = Double.parseDouble(number);
 
-				DecimalFormat formatter = new DecimalFormat(amtFormatter);
+					DecimalFormat formatter = new DecimalFormat(amtFormatter);
 
-				ruleValue = formatter.format(amount);			
-			 }else{
+					ruleValue = formatter.format(amount);
+				} else {
 					ruleValue = rawValue;
 				}
-				}else {
+			} else {
 				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
 						.toString() : null;
 			}
 		}
-		return ruleValue;	
+		return ruleValue;
 	}
 
 	private String fromValueDeleted(PmConfigRuleValue deletedItem) {
@@ -500,13 +500,13 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			String rawValue = newCreatedItem.getToValue().toString();
 			if (rawValue != null) {
 				if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
-				String number = rawValue;
-				double amount = Double.parseDouble(number);
+					String number = rawValue;
+					double amount = Double.parseDouble(number);
 
-				DecimalFormat formatter = new DecimalFormat(amtFormatter);
+					DecimalFormat formatter = new DecimalFormat(amtFormatter);
 
-				ruleValue = formatter.format(amount);
-				}else{
+					ruleValue = formatter.format(amount);
+				} else {
 					ruleValue = rawValue;
 				}
 			} else {
