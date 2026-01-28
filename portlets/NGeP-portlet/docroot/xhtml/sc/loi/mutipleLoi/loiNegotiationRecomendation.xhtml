@@ -973,29 +973,29 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{qualifiedSupp.technicalTotalScore}" />
-
+				<h:outputText value="#{qualifiedSupp.technicalTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{qualifiedSupp.financialTotalScore}" />
-
+				<h:outputText value="#{qualifiedSupp.financialTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{qualifiedSupp.recommendationTechnicalScore}" />
-
+				<h:outputText value="#{qualifiedSupp.recommendationTechnicalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{qualifiedSupp.recommendationFinancialScore}" />
-
+				<h:outputText value="#{qualifiedSupp.recommendationFinancialScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{qualifiedSupp.recommendationTotalScore}" />
-
+				<h:outputText value="#{qualifiedSupp.recommendationTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 		</p:dataTable>
 	</p:dialog>
