@@ -375,17 +375,21 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			DecimalFormat basePatternformatter = new DecimalFormat(GROUPING_BASE_PATTERN);
 			String ruleValue;
 			String rawRuleValue = newCreatedItem.getRuleValue();
-			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId()) || rawRuleValue.contains(".")) {
+			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())
+					|| rawRuleValue.contains(".")) {
 				String number = rawRuleValue;
 				double amount = Double.parseDouble(number);
 				DecimalFormat formatter = new DecimalFormat(amtFormatter);
 
 				ruleValue = formatter.format(amount);
-			}
-			else if(newCreatedItem.getRuleType().getParameterType() != null){
-				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(), newCreatedItem.getRuleValue().toUpperCase());
+			} else if (newCreatedItem.getRuleType().getParameterType() != null) {
+				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(),
+						newCreatedItem.getRuleValue().toUpperCase());
 				ruleValue = pmParameter.getPmParameterDescsSpecCallOnly().get(1).getCodeName();
-			}else{				
+			} else if (Long.valueOf(1382).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())
+					|| Long.valueOf(677).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+				ruleValue = rawRuleValue;
+			} else {
 				BigDecimal bd = new BigDecimal(rawRuleValue);
 				ruleValue = basePatternformatter.format(bd);
 			}
