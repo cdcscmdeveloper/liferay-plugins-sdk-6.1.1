@@ -11657,58 +11657,41 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		BigDecimal limit = this.getManagedBean().getLimit();
 
-		if (contractAmt.compareTo(limit) == 0) {
-			getManagedBean().setAbove500K(false);
-			return false;
-			// start - Sonarqube DP Bug Minor Iskandar [12/7/2023]
-		} else if (contractAmt.compareTo(limit) > 0) {
-			getManagedBean().setAbove500K(true);
-			return true;
-			// stop - Sonarqube DP Bug Minor Iskandar [12/7/2023]
-		} else {
-			getManagedBean().setAbove500K(false);
-			return false;
-		}
+		boolean isAbove = contractAmt.compareTo(limit) > 0;
+
+		getManagedBean().setAbove500K(isAbove);
+		return isAbove;
 	}
 
+	/**
+	 * @param event
+	 * Get parameter id
+	 * 
+	 * 207 - TRUE 208 - FALSE
+	 */
 	public void onChangeAgreementReqType(AjaxBehaviorEvent event) {
-		/**
-		 * Get parameter id
-		 * 
-		 * 207 - TRUE 208 - FALSE
-		 * 
-		 * **/
+	
 		String agreementReqChoice = String.valueOf(event.getComponent().getAttributes().get("value"));
-		Boolean isPeriodic = false;
 		Boolean isPK7 = false;
 		ScLoa scLoa;
-		Boolean isOneOff = false;
 		Boolean agreementReqCheck = false;
 		boolean isContractTypeAsMinistry = false; // #25726 - note 424
+		boolean currentAgreementReq = getManagedBean().getScLoa().isAgreementReq();
 
-		if ((agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_ID) || agreementReqChoice
-				.equalsIgnoreCase(ParameterConst.NO_SELECTED)) && getManagedBean().getScLoa().isAgreementReq()) {
-			getManagedBean().setAgreementReqChange(true);
-		} else if ((agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_ID) || agreementReqChoice
-				.equalsIgnoreCase(ParameterConst.YES_SELECTED)) && !getManagedBean().getScLoa().isAgreementReq()) {
-			getManagedBean().setAgreementReqChange(true);
-		} else if ((agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_ID) || agreementReqChoice
-				.equalsIgnoreCase(ParameterConst.NO_SELECTED)) && !getManagedBean().getScLoa().isAgreementReq()) {
-			getManagedBean().setAgreementReqChange(false);
+		if (ParameterConst.NO_ID.equalsIgnoreCase(agreementReqChoice)
+				|| ParameterConst.NO_SELECTED.equalsIgnoreCase(agreementReqChoice)) {
+			getManagedBean().setAgreementReqChange(currentAgreementReq);
+
+		} else if (ParameterConst.YES_ID.equalsIgnoreCase(agreementReqChoice)
+				|| ParameterConst.YES_SELECTED.equalsIgnoreCase(agreementReqChoice)) {
+			getManagedBean().setAgreementReqChange(!currentAgreementReq);
+
 		} else {
 			getManagedBean().setAgreementReqChange(false);
 		}
 
 		if (this.getManagedBean().getScLoa() != null) {
 			scLoa = this.getManagedBean().getScLoa();
-			if (scLoa.getScLoiLoa().getFulfilmentTypeCode() != null) {
-				isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED))
-						|| (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
-								.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
-				isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
-						.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-			}
 			if (scLoa.getQtType() != null) {
 				isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa().getQtType()
 						.getParameterType())
@@ -11725,19 +11708,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 
 		// To check the value change to NO
-		if (agreementReqChoice != null) {
-			if (agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_ID)
-					|| agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_SELECTED)) {
-				agreementReqCheck = true;
-			}
+		if (agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_ID)
+				|| agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_SELECTED)) {
+			agreementReqCheck = true;
 		}
 
 		// To check the contract amount
-		if (over500K(this.getManagedBean().getScLoa())) {
-			this.getManagedBean().setAbove500K(true);
-		} else {
-			this.getManagedBean().setAbove500K(false);
-		}
+		this.getManagedBean().setAbove500K(over500K(this.getManagedBean().getScLoa()));
 
 		// To display confirmation box
 		// #25726 - note 424
