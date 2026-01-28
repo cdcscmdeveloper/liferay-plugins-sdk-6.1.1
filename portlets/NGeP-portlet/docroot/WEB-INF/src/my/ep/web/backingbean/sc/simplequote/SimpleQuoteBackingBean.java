@@ -9655,13 +9655,22 @@ public class SimpleQuoteBackingBean extends
 	 * @return The fully populated CmItem object.
 	 * @throws Exception If the service lookup fails.
 	 */
-	private CmItem refreshCmItem(CmItem cmItem){
+	private CmItem refreshCmItem(CmItem cmItem) throws Exception {
+	    if (cmItem != null && cmItem.getCmUnspsc() != null) {
+	        return cmItem;
+	    }
 	    ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
 	            ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 	    
 	    CodificationReqDTO cReqDTO = new CodificationReqDTO();
 	    cReqDTO.setItemId(cmItem.getItemId());
+	    
 	    CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
+	    
+	    if (cResDTO == null || cResDTO.getCmItem() == null) {
+	        return cmItem; 
+	    }
+	    
 	    return cResDTO.getCmItem();
 	}
 

@@ -8288,27 +8288,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	/**
 	 * Validates that the extension code is not blank and meets length
-	 * requirements. * @param extensionCode The code string to check.
-	 * 
-	 * @return true if valid, false otherwise.
+	 * requirements (between 8 and 18 characters).
+	 * * @param extensionCode The code string to check.
+	 * @return true if the code length is within the valid range (8-18); false otherwise.
 	 */
 	private boolean isValidExtensionLength(String extensionCode) {
-		if (StringUtils.isBlank(extensionCode)) {
-			return false;
-		}
+	    if (StringUtils.isBlank(extensionCode)) {
+	        return false;
+	    }
 
-		// Remove whitespace to get actual character count
-		int codeLength = extensionCode.replaceAll("\\s+", "").length();
+	    // Remove whitespace to get actual character count
+	    int codeLength = extensionCode.replaceAll("\\s+", "").length();
 
-		// Logic: Return false if length is between 8 and 18 (inclusive)
-		// Note: Verify this logic matches your business rule. Usually, this
-		// check
-		// would be (codeLength < 8 || codeLength > 18) to be invalid.
-		if (codeLength >= DPConstants.NUMBER_EIGHT && codeLength <= DPConstants.NUMBER_EIGHTEEN) {
-			return false;
-		}
+	    // Logic: Return false if length is NOT between 8 and 18
+	    if (codeLength < DPConstants.NUMBER_EIGHT || codeLength > DPConstants.NUMBER_EIGHTEEN) {
+	        return false;
+	    }
 
-		return true;
+	    return true;
 	}
 
 	/**
