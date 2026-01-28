@@ -373,14 +373,12 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 				&& (newCreatedItem.getRuleNumberValue() != null || newCreatedItem.getRuleValue() != null)
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null)) {
 			DecimalFormat basePatternformatter = new DecimalFormat(GROUPING_BASE_PATTERN);
+			DecimalFormat formatter = new DecimalFormat(amtFormatter);
 			String ruleValue;
 			String rawRuleValue = newCreatedItem.getRuleValue();
-			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())
-					|| rawRuleValue.contains(".")) {
+			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
 				String number = rawRuleValue;
 				double amount = Double.parseDouble(number);
-				DecimalFormat formatter = new DecimalFormat(amtFormatter);
-
 				ruleValue = formatter.format(amount);
 			} else if (newCreatedItem.getRuleType().getParameterType() != null) {
 				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(),
@@ -390,8 +388,14 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 					|| Long.valueOf(677).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
 				ruleValue = rawRuleValue;
 			} else {
-				BigDecimal bd = new BigDecimal(rawRuleValue);
-				ruleValue = basePatternformatter.format(bd);
+				if (rawRuleValue.contains(".")) {
+					String number = rawRuleValue;
+					double amount = Double.parseDouble(number);
+					ruleValue = formatter.format(amount);
+				} else {
+					BigDecimal bd = new BigDecimal(rawRuleValue);
+					ruleValue = basePatternformatter.format(bd);
+				}
 			}
 			if (rawRuleValue == null) {
 				BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
@@ -471,19 +475,22 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
 						.getRuleValueId()) > 0) && newCreatedItem.getFromValue() != null) {
 			DecimalFormat basePatternformatter = new DecimalFormat(GROUPING_BASE_PATTERN);
+			DecimalFormat formatter = new DecimalFormat(amtFormatter);
 			String rawValue = newCreatedItem.getFromValue().toString();
 			if (rawValue != null) {
-				if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())
-						|| rawValue.contains(".")) {
+				if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
 					String number = rawValue;
 					double amount = Double.parseDouble(number);
-
-					DecimalFormat formatter = new DecimalFormat(amtFormatter);
-
 					ruleValue = formatter.format(amount);
-				} else {					
-					BigDecimal bd = new BigDecimal(rawValue);
-					ruleValue = basePatternformatter.format(bd);
+				} else {
+					if (rawValue.contains(".")) {
+						String number = rawValue;
+						double amount = Double.parseDouble(number);
+						ruleValue = formatter.format(amount);
+					} else {
+						BigDecimal bd = new BigDecimal(rawValue);
+						ruleValue = basePatternformatter.format(bd);
+					}
 				}
 			} else {
 				BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
@@ -509,19 +516,22 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
 						.getRuleValueId()) > 0) && newCreatedItem.getToValue() != null) {
 			DecimalFormat basePatternformatter = new DecimalFormat(GROUPING_BASE_PATTERN);
+			DecimalFormat formatter = new DecimalFormat(amtFormatter);
 			String rawValue = newCreatedItem.getToValue().toString();
 			if (rawValue != null) {
-				if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())
-						|| rawValue.contains(".")) {
+				if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
 					String number = rawValue;
 					double amount = Double.parseDouble(number);
-
-					DecimalFormat formatter = new DecimalFormat(amtFormatter);
-
 					ruleValue = formatter.format(amount);
 				} else {
-					BigDecimal bd = new BigDecimal(rawValue);
-					ruleValue = basePatternformatter.format(bd);
+					if (rawValue.contains(".")) {
+						String number = rawValue;
+						double amount = Double.parseDouble(number);
+						ruleValue = formatter.format(amount);
+					} else {
+						BigDecimal bd = new BigDecimal(rawValue);
+						ruleValue = basePatternformatter.format(bd);
+					}
 				}
 			} else {
 				BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
