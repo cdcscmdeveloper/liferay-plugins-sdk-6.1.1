@@ -8,9 +8,6 @@
 
 	<ui:param name="validityDaysExpiredQt"
 		value="#{lOIDetailBackingBean.checkProposalValidityDateReach(lOIDetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
-	<ui:param name="supplierDisagreeEPV"
-		value="#{!lOIDetailBackingBean.isSupplierAgreeExtendEPV(
-		lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.docId, lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier.supplierId)}"/><ui:remove>#21692</ui:remove>
 
 	<div class="ppRightBtn">
 		<p:blockUI block=":form" widgetVar="blockWidget">
@@ -61,28 +58,31 @@
 				</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{lOIDetailBackingBean.saveAction}"
-					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
+					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and !lOIDetailBackingBean.isApproverAbleToSave()}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					process="@form" update="@form" />
-
-				<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>
+					process="@form" update="@form" /><ui:remove>21692</ui:remove>
+					
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
+					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and lOIDetailBackingBean.managedBean.ableToSubmitLOI}"
 					action="#{lOIDetailBackingBean.submitAction}" process="@form"
 					update="@form" /><ui:remove>#21692</ui:remove>
-					
-<!-- 				<p:commandButton value="#{lbl['lbl.btn.submit']}" -->
-<!-- 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}" -->
-<!-- 					action="#{lOIDetailBackingBean.validateNegoDecisionitAction}" process="@form" -->
-<!-- 					update="@form" /> -->
-				<ui:remove>#30008 - End</ui:remove>
 
 				<ui:remove>36339, 21692</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					oncomplete="cancelPopup.show();"
-					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOI}"
+					action="#{lOIDetailBackingBean.validateBeforePopup(true)}"
+					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOI and lOIDetailBackingBean.disableCancelForApprover()}"
 					process="@form" update="@form" />
 				<ui:remove>36339, 21692</ui:remove>
+					
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					action="#{lOIDetailBackingBean.validateBeforePopup(false)}"
+					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOIWithoutBPM}"
+					process="@form" update="@form" /><ui:remove>36339, 21692</ui:remove>
+	
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					action="#{lOIDetailBackingBean.validateBeforePopupWIP()}"
+					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelWIP}"
+					process="@form" update="@form" /><ui:remove>21692</ui:remove>
 
 				<c:choose>
 					<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
@@ -94,13 +94,22 @@
 
 							<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>							
 								<p:commandButton value="#{lbl[buttonLabel]}"
-									rendered="#{validityDaysExpiredQt}"
+									rendered="#{validityDaysExpiredQt and bpmAction != 'APPROVE' and bpmAction != 'SUBMIT'}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									styleClass="ui-button"
 									action="#{lOIDetailBackingBean.validateNegoDecisionAction(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-									update="#{isReject ? '@this' : '@form'}" />
+									update="#{isReject ? '@this' : '@form'}" /><ui:remove>#21692</ui:remove>
 							<ui:remove>#30008 - End</ui:remove>
+							<ui:remove>#21692 - Start</ui:remove>
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								rendered="#{validityDaysExpiredQt and (bpmAction == 'APPROVE' or bpmAction == 'SUBMIT') and lOIDetailBackingBean.managedBean.ableToSubmitLOI}"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								styleClass="ui-button"
+								action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
+								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+								update="#{isReject ? '@this' : '@form'}" />
+							<ui:remove>#21692 - End</ui:remove>
 								
 						</ui:repeat>
 					</c:when>
@@ -122,6 +131,50 @@
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" onclick="blockWidget.show();"
 					action="#{lOIDetailBackingBean.updateBpmTaskAction('EPVCANCEL')}"
 					oncomplete="cancelPopup.hide();"  update="@form">
+				</p:commandButton>
+
+			</div>
+			</p:dialog>
+			<ui:remove>#21692 - end</ui:remove>
+			<ui:remove>#21692 - start</ui:remove>
+			<p:dialog id="submissionPopupId2" widgetVar="cancelPopup2"
+			header="#{lbl['lbl.sc.cancel.confirm']}"
+			resizable="false" width="325" height="100" closable="false"
+			modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.qt.pending.qt.loi.cancel']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" onclick="blockWidget.show();"
+					action="#{lOIDetailBackingBean.cancelLOIWithoutBPM()}"
+					oncomplete="cancelPopup2.hide();"  update="@form">
+				</p:commandButton>
+
+			</div>
+			</p:dialog>
+			<ui:remove>#21692 - end</ui:remove>
+			<ui:remove>#21692 - start</ui:remove>
+			<p:dialog id="submissionPopupId3" widgetVar="cancelPopup3"
+			header="#{lbl['lbl.sc.cancel.confirm']}"
+			resizable="false" width="325" height="100" closable="false"
+			modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.qt.pending.qt.loi.cancel']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" onclick="blockWidget.show();"
+					action="#{lOIDetailBackingBean.cancelLOIWIP()}"
+					oncomplete="cancelPopup3.hide();"  update="@form">
 				</p:commandButton>
 
 			</div>

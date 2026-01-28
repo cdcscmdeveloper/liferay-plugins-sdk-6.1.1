@@ -22,7 +22,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" styleClass="required" />
 			<h:panelGrid columns="3">
 				<p:inputText style="width:300px;" disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails or ctBackingBean.managedBean.viewSCL}"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoiLoa.fileNo}" maxlength="50" /><!-- Enhancement 15851 - shaqimi -->
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.sclRefNo}" maxlength="50" /><!-- Enhancement 15851 - shaqimi, Fix - #36708 -->
 				<p:spacer width="2" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.scl.file.ref.no']}" />
 			</h:panelGrid>
@@ -41,10 +41,12 @@
 					value="#{ctBackingBean.managedBean.contractVer.ctContractValue.contractPeriod}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+				<!-- #32418 Start -->
 				<p:inputText value="#{ctBackingBean.managedBean.contractVer.ctContractValue.contractDaysPeriod}" style="width:75px;" maxlength="3" disabled="true" >
 				</p:inputText>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+				<!-- #32418 End -->
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.effective.date']}" />
 			<p:calendar id="popupButtonCal1" showOn="button" styleClass="calanderWidth" disabled="true"
@@ -57,17 +59,19 @@
 			<p:outputLabel value="#{lbl['lbl.ct.amend.effective.date']}" />
 			<p:calendar id="popupButtonCal3" showOn="button" disabled="true" styleClass="calanderWidth"
 			     value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
-		         pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+		         pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" /> <!-- #32418 -->
 			<p:outputLabel value="#{lbl['lbl.ct.extension.period']}" />
 			<h:panelGrid columns="6">
 				<p:inputText style="width:75px;"  disabled="true"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+				<!-- #32418 Start -->
 				<p:inputText value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendDaysPeriod}" style="width:75px;" maxlength="3" disabled="true" >
 				</p:inputText>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+				<!-- #32418 End -->
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.extension.effective.date']}" />
 			<h:panelGrid columns="3" style="width:500px;"	columnClasses="columnWidth20,columnWidth30,columnWidth30">

@@ -49,7 +49,7 @@
 					<p:outputPanel rendered="#{not empty cc.attrs.bean.poRecommendationDesc}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
-							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}"/></td>
+							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}" converter="capitalizeConverter" /></td>
 						</tr>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N'}">
@@ -60,6 +60,17 @@
 							</td>
 						</tr>
 					</p:outputPanel>
+					
+					<!-- #37925 START -->
+					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne SupplierManagementConst.applTypeBumi}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
+							<td>
+								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" converter="capitalizeConverter" />
+							</td>
+						</tr>
+					</p:outputPanel>
+					
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.panHdr.offFacility']}" /></td>
 						<td>
@@ -69,12 +80,14 @@
 								rendered="#{cc.attrs.facilityType eq 'B'}" />
 						</td>
 					</tr>
-					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N' and cc.attrs.smAppl.applType ne 'B'}">
+					
+					<p:outputPanel rendered="#{cc.attrs.bean.displayCheckboxChangeCurrentStatus}">
+					<!-- #37925 END -->
 						<tr>
-							<td style="border-style: none !important;float: right !important;">
-								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" 
+							<td style="border-style: none !important;float: right !important;"> <!-- #37925 -->
+								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" id="changeRegStatusChk"
 									disabled="#{empty cc.attrs.currRegStatus}">
-									<p:ajax event="change" partialSubmit="true" process="@this"
+									<p:ajax event="change" partialSubmit="true" process="@this" listener="#{cc.attrs.backingBean.updateApproverRegistrationStatusValue()}"
 										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" />
 								</p:selectBooleanCheckbox>
 							</td>
@@ -93,7 +106,8 @@
 							</td>
 			
 							<td>
-								<p:outputPanel rendered="#{!cc.attrs.poRecommend}">
+								<h:outputText value="#{cc.attrs.bean.currRegStatus}" rendered="#{cc.attrs.bean.displayLabelRegistrationStatus}" /><!-- #37925 -->
+								<p:outputPanel rendered="#{!cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
 										id="approveSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.approvedStatusId}"
@@ -105,7 +119,7 @@
 									<p:message id="approveSelBoxMsg" for="approveSelBox"
 										showSummary="true" showDetail="false" display="icon" />
 								</p:outputPanel>
-								<p:outputPanel rendered="#{cc.attrs.poRecommend}">
+								<p:outputPanel rendered="#{cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
 										id="poRecommendSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.poRecommendStatusId}"
@@ -260,19 +274,29 @@
 				
                 <!-- #15629 end -->
 												
-				<c:if test="#{cc.attrs.overLappedCategoryExists}">
+				<c:if test="#{cc.attrs.overLappedCategoryExists and cc.attrs.smAppl.applType ne 'C'}"> <!-- 39614 -->
 				<!-- 13362 START -->
 				<tr><td><br></br></td></tr>
 					<tr>
 						<td></td>
 						<td align="left">
 							<span id="blinkId4">
-								<font color="red">&#x26A0;</font>
-								<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
+								<!-- #13362 START -->
+								<p:graphicImage id="alert-img-overlapcat"
+									style="vertical-align:top"
+									value="/css/images/design/icon_alert.png" />
+								<strong><h:outputText
+										styleClass="warning"
+										value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
 							</span>
 							<span style="opacity: 0.0;">
-								<font color="red">&#x26A0;</font>
-								<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" />
+								<p:graphicImage id="alert-img"
+									style="vertical-align:top"
+									value="/css/images/design/icon_alert.png" />
+								<strong><h:outputText
+										styleClass="instruction"
+										value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
+								<!-- #13362 END -->
 							</span>
 						</td>
 					</tr>

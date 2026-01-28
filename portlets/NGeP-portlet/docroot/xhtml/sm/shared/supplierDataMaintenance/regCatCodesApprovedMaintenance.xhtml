@@ -55,13 +55,14 @@
 				<p:column headerText="#{lbl['lbl.sm.status']}" />
 			</p:row>
 		</p:columnGroup>
-		<p:column selectionMode="multiple" disabledSelection="#{!aprvdCatBean.selectable}" style="width:2%" />
-		<p:column style="width : 2%;">
+		<!-- #37605 -->
+		<p:column selectionMode="multiple" disabledSelection="#{!aprvdCatBean.selectable}" style="width:2%;vertical-align: top;" />
+		<p:column style="width : 2%;vertical-align: top;">
 			<p:outputLabel value="#{index + 1}"
 				style="float: left;white-space: normal;" />
 		</p:column>
 		<!-- 32618 - START -->	
-		<p:column disabledSelection="#{!aprvdCatBean.selectable}" style="width :350px;white-space : normal">
+		<p:column disabledSelection="#{!aprvdCatBean.selectable}" style="width :350px;white-space : normal;vertical-align: top;">
 		<!-- 32618 - END -->
 			<h:outputText
 				value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
@@ -73,7 +74,7 @@
 				value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
 		</p:column>
 		<!-- 32618 - START -->
-		<p:column disabledSelection="#{!aprvdCatBean.selectable}" style="width : 10% !important;">
+		<p:column disabledSelection="#{!aprvdCatBean.selectable}" style="width : 10% !important;vertical-align: top;">
 		<!-- 32618 - END -->
 			<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 				rendered="#{!aprvdCatBean.specialCategory}" />
@@ -81,13 +82,34 @@
 				rendered="#{aprvdCatBean.specialCategory}" />
 		</p:column>
 		<!-- 32618 - START -->
-		<p:column style="width : 25% !important;">
+		<p:column style="width : 30% !important;vertical-align: top;">
 		<!-- 32618 - END -->
-			<p:inputTextarea id="otherDescMaintenance" maxlength="100"
+			<!-- 36504 - START -->
+			<p:inputTextarea id="otherDescMaintenance" maxlength="5000"
 				style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
-				value="#{aprvdCatBean.otherDesc}" rows="5" cols="40"
-				rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}">
+				value="#{aprvdCatBean.otherDesc}" rows="5" cols="90"
+				rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}"
+				autoResize="false" readonly="true" > <!-- #37605 -->
 			</p:inputTextarea>
+			<br/>
+			<p:graphicImage
+					value="/css/images/design/icon_alert.png"
+					style="float:right;"
+					rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory}" />
+			<p:commandLink
+				partialSubmit="true"
+				onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				update=":form" process="@this"
+				action="#{backingBean.otherDescriptionEdit(aprvdCatBean)}"
+				rendered="#{aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
+				aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
+				<p:graphicImage
+					value="/css/images/design/edit.png"
+					title="#{lbl['lbl.sm.edit']}"
+					style="float:right;" />
+			</p:commandLink>
+			<!-- 36504 - END -->
 			<p:graphicImage id="otherDescMaintenanceImg"
 				value="/css/images/design/icon_alert.png"
 				style="padding-left : 3px;"
@@ -103,7 +125,7 @@
 				display="icon" />
 		</p:column>
 		<!-- 32618 - START -->
-		<p:column>
+		<p:column style="white-space : normal;vertical-align: top;width: 80px">
 		<!-- 32618 - END -->
 			<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}" />
 		</p:column>
@@ -121,5 +143,10 @@
 		</p:commandButton>
 		<!-- #34209 - END -->
 	</div>
-
+	
+	<!-- 36504 - START -->
+	<ac:otherDescriptionHistory categoryCodeList="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}" applNo="#{backingBean.managedBean.smAppl.applNo}" />
+	<ac:otherDescriptionEdit />
+  	<!-- 36504 - END -->
+    
 </ui:composition>

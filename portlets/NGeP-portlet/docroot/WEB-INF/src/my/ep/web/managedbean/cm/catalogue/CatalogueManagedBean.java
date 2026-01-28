@@ -74,6 +74,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.backingbean.cm.catalogue.ScheduleInfo;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -575,6 +576,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean catDPScreen = false;
 	private boolean addPromotion = false;
 	//#30457 - end 1/08/2022
+	//38255-Start
+	private List<ScheduleInfo> schInfo;
+	//38255-End
+	
+	private String mofNo; //#38972
 
 	private class ExpiredSearchPagingDataModel extends
 			PagingDataModel<CmSupplierItem> {
@@ -4469,13 +4475,25 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.addPromotion = addPromotion;
 	}
 	// #30457 - End
+	
+	//38255-Start
+	public List<ScheduleInfo> getSchInfo() {
+		if (schInfo == null)
+			schInfo = new ArrayList<>();
+		return schInfo;
+	}
 
+	public void setSchInfo(List<ScheduleInfo> schInfo) {
+		this.schInfo = schInfo;
+	}
+	//38255-End
+	
 	//#26282 and SonarQube fixing - Start
 	/**
 	 * To check what DA the supplier involve
 	 */
 	public void checkForDisciplinaryAction() {
-
+		
 		for (VCmSupplierItem supplierItem : getViewSupplierItemList()) {
 
 			// check for disciplinary action
@@ -4494,8 +4512,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				log.info("[#26282] - ========================================");
 
 				applyDisciplinaryActions(supplierItem, disciplinaryAct);
-			} else {
-				log.info("[#26282] - Disciplinary action does not imposed on supplier");
 			}
 		}
 	}
@@ -4526,4 +4542,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 	}
 	//#26282 and SonarQube fixing - End
+	
+	//#38972 - Start
+	public String getMofNo() {
+		return mofNo;
+	}
+
+	public void setMofNo(String mofNo) {
+		this.mofNo = mofNo;
+	}
+	//#38972 - End
 }

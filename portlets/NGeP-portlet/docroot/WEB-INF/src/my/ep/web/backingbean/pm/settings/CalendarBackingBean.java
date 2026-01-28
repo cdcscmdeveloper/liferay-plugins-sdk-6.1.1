@@ -155,7 +155,10 @@ public class CalendarBackingBean extends
 		setEndDateTemp(endDate);
 		
 	}
-	public void addOrUpdateEvent(ActionEvent actionEvent) {
+	
+	/* #34445 start : remove ActionEvent parameter*/
+	public void addOrUpdateEvent() {
+	/* #34445 end */
 		log.info("......addOrUpdateEvent.......");
 		log.info("........getManagedBean().getEvent().getTitle()="+getManagedBean().getEvent().getTitle());
 		log.info("........getManagedBean().getEvent().getStartDate()="+getManagedBean().getEvent().getStartDate());
@@ -245,7 +248,9 @@ public class CalendarBackingBean extends
 		return new FacesScopes().getUserLocale().getLanguage();
 	}
 	
-	public void deleteEvent(ActionEvent actionEvent) {
+	/* #34445 start : remove ActionEvent parameter */
+	public void deleteEvent() {
+	/* #34445 end */
 		
 		if (getManagedBean().getEvent().getId() != null) {
 			String holidayName = getManagedBean().getEvent().getTitle();

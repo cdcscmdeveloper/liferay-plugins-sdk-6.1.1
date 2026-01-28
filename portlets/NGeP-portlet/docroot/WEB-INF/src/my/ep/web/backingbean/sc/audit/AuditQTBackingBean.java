@@ -27,7 +27,6 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.au.AuditQTSearchBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -39,6 +38,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.rpt.excel.ExcelCellStyleBuilder;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -70,8 +70,6 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 
 	private static final Map<Long, TabHeaderPair> sectionTabHeaderMap = createSectionTabHeaderMap();
 
-	private transient Map<Integer, NavigationAction> navigationActions = createNavigationActions();
-
 	/**
 	 * Throw exception for AuditTrails
 	 */
@@ -100,11 +98,12 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	 */
 	public void redirectToAuditTrailsViews(Long docId) throws AuditTrailRedirectException {
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
+		int activeIndex = 0;
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setQtId(docId);
-		this.getManagedBean().setActiveIndex(0);
+		this.getManagedBean().setActiveIndex(12);
 		this.getManagedBean().setBackURL(fc.getViewRoot().getViewId());
-		navigateToGeneralInfoTab();
+		onTabMenuChangeAction(activeIndex);
 
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/sc/quatationtender/audit/auditTrailDetailsMain.xhtml");
@@ -120,100 +119,10 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, this.getManagedBean().getBackURL());
 	}
-
+	
+	
 	/**
 	 * #35500 To navigate to the selected tab
-	 * 
-	 */
-	public interface NavigationAction {
-		/**
-		 * navigate
-		 */
-		void navigate();
-	}
-
-	/**
-	 * Navigate Tab Index
-	 * 
-	 * @return Map
-	 */
-	private Map<Integer, NavigationAction> createNavigationActions() {
-		Map<Integer, NavigationAction> actions = new HashMap<>();
-
-		// Array of navigation methods
-		NavigationAction[] navigationTabActions = { new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToGeneralInfoTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToBriefingSiteVisitTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToSupplierListTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToDeskOfficerAssistantTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToDeskOfficerTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToSpecCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToEvalCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToTechCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToFinanceCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToOpenCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToQuotCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToProcBoardAppointTab();
-			}
-		} };
-
-		// Populate the map using a loop
-		for (int i = 0; i < navigationTabActions.length; i++) {
-			actions.put(i, navigationTabActions[i]);
-		}
-
-		return actions;
-	}
-
-	/**
-	 * Navigate Tab changes
-	 * 
 	 * @param activeIndex
 	 */
 	public void onTabMenuChangeAction(Integer activeIndex) {
@@ -222,125 +131,59 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		int previousIndex = this.getManagedBean().getActiveIndex();
 
 		if (previousIndex != activeIndex) {
-			navigateToTab(activeIndex);
+			switch (activeIndex) {			
+			case 0:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_GI);
+				break;
+			case 1:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_BSV);
+				break;
+			case 2:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SL);
+				break;
+			case 3:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
+				break;
+			case 4:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DO);
+				break;
+			case 5:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SC);
+				break;
+			case 6:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_EC);
+				break;
+			case 7:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
+				break;
+			case 8:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
+				break;
+			case 9:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
+				break;
+			case 10:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+				break;
+			case 11:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_PB);
+				break;
+			default:				
+				break;
+			}
 			this.getManagedBean().setActiveIndex(activeIndex);
+			reloadTabData();
 		} else {
 			RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
 		}
 	}
-
-	private void navigateToTab(Integer activeIndex) {
-		NavigationAction action = navigationActions.get(activeIndex);
-		if (action != null) {
-			action.navigate();
-		}
-	}
-
-	private void navigateToGeneralInfoTab() {
-		log.info("navigateToGeneralInfoTab");
+	
+	private void reloadTabData() {
 		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_GI);
 		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToBriefingSiteVisitTab() {
-		log.info("navigateToBriefingSiteVisitTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_BSV);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToSupplierListTab() {
-		log.info("navigateToSupplierListTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SL);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToDeskOfficerAssistantTab() {
-		log.info("navigateToDeskOfficerAssistantTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToDeskOfficerTab() {
-		log.info("navigateToDeskOfficerTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DO);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToSpecCommitteeAppointTab() {
-		log.info("navigateToSpecCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToEvalCommitteeAppointTab() {
-		log.info("navigateToEvalCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_EC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToTechCommitteeAppointTab() {
-		log.info("navigateToTechCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-	}
-
-	private void navigateToOpenCommitteeAppointTab() {
-		log.info("navigateToOpenCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToFinanceCommitteeAppointTab() {
-		log.info("navigateToFinanceCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToQuotCommitteeAppointTab() {
-		log.info("navigateToQuotCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_QC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToProcBoardAppointTab() {
-		log.info("navigateToProcBoardAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_PB);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-	}
+		searchQT.reloadData();		
+	}	
+	
 
 	private class SearchQTPagingDataModel extends PagingDataModel<AuditQTDTO> {
 
@@ -469,7 +312,6 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 
 			// Section - Setting Cell Style for No Records Found message.
 			noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
-
 			// Cell Format: String
 			cellStyleString = new ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE).buildDataCellStyleString();
 
@@ -509,11 +351,12 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 					cellTitleRow = titleRptRow.createCell(1);// Create
 																// Cell(Column)
 					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE);
-
+					cellTitleRow.setCellStyle(cellStyleTitleRpt);//#35500 fix issue 3
+					
 					titleRptRow = sheetRptAudit.createRow(3); // Create Row
 					cellTitleRow = titleRptRow.createCell(1);
 					cellTitleRow.setCellValue(getCurrentReportTab(rpt.getGroupSectionId().longValue(), titleHeader));
-
+					
 					cellTitleRow.setCellStyle(cellStyleTitleRpt);
 					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
 																						// Cell
@@ -529,6 +372,8 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 
 				if (rpt.getDocNo() == null && rpt.getActionBy() == null) {
 					createNotFoundRecord(sheetRptAudit, rowIndex, colHeaderDataTableRpt.length, noRecordsStyle);
+					// Set column width
+					setExlSheetColumnWidth(colHeaderDataTableRpt.length, sheetRptAudit);//#35500 fix issue 4
 				} else {
 					Row currRow = sheetRptAudit.createRow(rowIndex++);
 
@@ -629,7 +474,7 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		map.put(QTAuditConstant.AU_SECTION_SL, new TabHeaderPair(ReportExcelAuditConstant.TAB_SUPPLIER_LIST,
 				ReportExcelAuditConstant.TAB_SUPPLIER_LIST));
 		map.put(QTAuditConstant.AU_SECTION_DOA, new TabHeaderPair(ReportExcelAuditConstant.TAB_DESK_OFFICER_ASSISTANT,
-				ReportExcelAuditConstant.TAB_SUPPLIER_LIST));
+				ReportExcelAuditConstant.TAB_DESK_OFFICER_ASSISTANT));
 		map.put(QTAuditConstant.AU_SECTION_DO, new TabHeaderPair(ReportExcelAuditConstant.TAB_DESK_OFFICER,
 				ReportExcelAuditConstant.TAB_DESK_OFFICER));
 		map.put(QTAuditConstant.AU_SECTION_SC, new TabHeaderPair(
@@ -713,11 +558,27 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	 * @param noRecordsStyle
 	 */
 	private void createNotFoundRecord(Sheet sheet, int rowIndex, int totalCell, CellStyle noRecordsStyle) {
+		//#35500 fix issue 3 start
+		Workbook workbook = sheet.getWorkbook();
+		CellStyle borderStyle = workbook.createCellStyle();
+		borderStyle.cloneStyleFrom(noRecordsStyle);
+		borderStyle.setBorderTop(BorderStyle.THIN);
+		borderStyle.setBorderBottom(BorderStyle.THIN);
+		borderStyle.setBorderLeft(BorderStyle.THIN);
+		borderStyle.setBorderRight(BorderStyle.THIN);
+
 		Row noRecordRow = sheet.createRow(rowIndex);
-		Cell cellNoRecord = noRecordRow.createCell(1);
-		cellNoRecord.setCellValue(ReportExcelAuditConstant.RPT_NO_RECORDS);
-		cellNoRecord.setCellStyle(noRecordsStyle);
-		sheet.addMergedRegion(new CellRangeAddress(sheet.getLastRowNum(), sheet.getLastRowNum(), 1, totalCell));
+
+		for (int i = 1; i <= totalCell; i++) {
+			Cell cell = noRecordRow.createCell(i);
+			cell.setCellStyle(borderStyle);
+			if (i == 1) {
+				cell.setCellValue(ReportExcelAuditConstant.RPT_NO_RECORDS);
+			}
+		}
+
+		sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 1, totalCell));
+		//#35500 fix issue 3 end
 	}
 
 	/**

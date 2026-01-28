@@ -96,9 +96,14 @@
 					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}" update="@form">
 						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
+					<!-- #30014 Start-->
+					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.category.code']}" update="@form">
+					<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="2" />
+					</p:menuitem>
+					<!-- #30014 End-->
 					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.setting']}" 
 					   update="@form" rendered="#{panelBackingBean.isPanelAdmin() || panelBackingBean.isCentralContractAdmin()}">
-						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="2" />
+						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 				</p:tabMenu>
 			</td>
@@ -109,7 +114,12 @@
 				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 1}">
 					<ui:include src="item.xhtml" />
 				</p:outputPanel>
-				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 2 
+				<!-- #30014 Start-->
+				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 2}">
+					<ui:include src="categoryCode.xhtml" />
+				</p:outputPanel>
+				<!-- #30014 End-->
+				<p:outputPanel rendered="#{panelBackingBean.managedBean.selectedTabIndex == 3 
 				  and (panelBackingBean.isPanelAdmin() || panelBackingBean.isCentralContractAdmin())}">
 					<ui:include src="approverSetting.xhtml" />
 				</p:outputPanel>

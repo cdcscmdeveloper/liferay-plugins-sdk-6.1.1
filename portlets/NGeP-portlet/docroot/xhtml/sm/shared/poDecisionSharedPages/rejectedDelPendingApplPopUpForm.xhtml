@@ -17,7 +17,9 @@
 					style="width : auto;" rows="10" maxlength="1000"
 					id="rmrksForRejectTxtArea"
 					label="#{lbl['lbl.sm.remarks.rejection']}"
-					required="#{backingBean.managedBean.valueReqd}" /> <p:message
+					required="#{backingBean.managedBean.valueReqd}" converter="trimConverter"
+					value="#{backingBean.managedBean.applnRejectionRemarks}" /> <!-- #38195 -->
+					<p:message
 					id="rmrksForRejectTxtAreaMsg" for="rmrksForRejectTxtArea"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>

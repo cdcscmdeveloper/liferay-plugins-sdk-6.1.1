@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,17 +17,26 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -35,10 +45,13 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.fl.FlAddress;
@@ -51,8 +64,10 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -61,8 +76,11 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -396,34 +414,45 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	/**
 	 * Update Supplier Hq Address
 	 */
-	protected void updateSupplierHqAddress(FlSupplierDtl supplierDtl, SmSupplier supplier){
+	protected void updateSupplierHqAddress(FlSupplierDtl supplierDtl,Long supplierId, List<SmCompanyBasic> compBasicList ){//29728
 		FlAddress flAddress = supplierDtl.getFlAddress();
-		for(SmCompanyAddress smCompanyAddress : supplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
-			if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
-				SmAddress smAddress = smCompanyAddress.getSmAddress();
-				flAddress.setAddress1(smAddress.getAddress1());
-				flAddress.setAddress2(smAddress.getAddress2());
-				flAddress.setAddress3(smAddress.getAddress3());
-				flAddress.setMapLatitude(smAddress.getMapLatitude());
-				flAddress.setMapLongitude(smAddress.getMapLongitude());
-				flAddress.setPmCity(smAddress.getPmCity());
-				flAddress.setPmCountry(smAddress.getPmCountry());
-				flAddress.setPmDistrict(smAddress.getPmDistrict());
-				flAddress.setPmDivision(smAddress.getPmDivision());
-				flAddress.setPmState(smAddress.getPmState());
-				flAddress.setPostcode(smAddress.getPostcode());
-				flAddress.setFaxNo(supplier.getSmAppl().getSmCompanyBasic().getFaxNo());
-				flAddress.setFaxArea(supplier.getSmAppl().getSmCompanyBasic().getFaxArea());
-				flAddress.setFaxCountry(supplier.getSmAppl().getSmCompanyBasic().getFaxCountry());
-				flAddress.setPhoneNo(supplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
-				flAddress.setPhoneArea(supplier.getSmAppl().getSmCompanyBasic().getPhoneArea());
-				flAddress.setPhoneCountry(supplier.getSmAppl().getSmCompanyBasic().getPhoneCountry());
+		//29728-Start
+		for (SmCompanyBasic companyBasic : compBasicList) {
+			for(SmCompanyAddress smCompanyAddress : companyBasic.getSmCompanyAddresses()){
+				if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+					SmAddress smAddress = smCompanyAddress.getSmAddress();
+					
+					flAddress.setAddress1(smAddress.getAddress1());
+					flAddress.setAddress2(smAddress.getAddress2());
+					flAddress.setAddress3(smAddress.getAddress3());
+					flAddress.setMapLatitude(smAddress.getMapLatitude());
+					flAddress.setMapLongitude(smAddress.getMapLongitude());
+					flAddress.setPmCity(smAddress.getPmCity());
+					flAddress.setPmCountry(smAddress.getPmCountry());
+					flAddress.setPmDistrict(smAddress.getPmDistrict());
+					flAddress.setPmDivision(smAddress.getPmDivision());
+					flAddress.setPmState(smAddress.getPmState());
+					flAddress.setPostcode(smAddress.getPostcode());
+					flAddress.setFaxNo(companyBasic.getFaxNo());
+					flAddress.setFaxArea(companyBasic.getFaxArea());
+					flAddress.setFaxCountry(companyBasic.getFaxCountry());
+					flAddress.setPhoneNo(companyBasic.getPhoneNo());
+					flAddress.setPhoneArea(companyBasic.getPhoneArea());
+					flAddress.setPhoneCountry(companyBasic.getPhoneCountry());
+				}
 			}
 		}
-		for(SmPersonnel smPersonnel: supplier.getSmAppl().getSmPersonnels()){
-			//#31920 filter active user
-			if(smPersonnel.isContactPerson() 
-					&& smPersonnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE){
+		
+		IPersonnelSO personnelSO;
+		personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+				IPersonnelSO.class);
+
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplierId);
+		PersonnelResDTO personnelResDTO = personnelSO.retrieveContactPersonBySupplierId(reqDTO);
+
+		if (!personnelResDTO.getSmPersonnelList().isEmpty()) {
+			for (SmPersonnel smPersonnel : personnelResDTO.getSmPersonnelList()) {
 				flAddress.setContactEmail(smPersonnel.getEmail());
 				flAddress.setContactFaxNo(smPersonnel.getFaxNo());
 				flAddress.setContactMobileNo(smPersonnel.getMobileNo());
@@ -435,8 +464,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				flAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
 				flAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
 				flAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
-				
+
 			}
+			//29728-End
 		}
 	}
 	
@@ -716,10 +746,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
 
 		SupplierDataMaintenanceResDTO resDTO = supplierDataMaintenanceSO
-				.retrieveImposedDisciplinaryActionBySupplier(reqDTO);// always
-																		// return
-																		// single
-																		// result
+				.retrieveImposedDisciplinaryActionBySupplier(reqDTO);// always return single result
 
 		if (resDTO.getSmDisciplinaryActions() != null && !resDTO.getSmDisciplinaryActions().isEmpty()) {
 			return resDTO.getSmDisciplinaryActions().get(0);
@@ -735,7 +762,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @param langCode
 	 * @return msg
 	 */
-	protected String getDisciplinaryActionMsg(Date startDate, Date endDate, String langCode, boolean isWarningOnly) {
+	protected String getDisciplinaryActionMsg(Date startDate, Date endDate, boolean isWarningOnly) {
 		StringBuilder msg = new StringBuilder();
 		if (startDate != null && endDate != null) {
 			msg.append(" ");
@@ -745,8 +772,13 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			} else {
 				messagePrefix = "lbl.sm.supplier.imposed.disc.action";
 			}
-			msg.append(getMessageByKey(messagePrefix, new String[] { DateUtils.dateToString("dd-MM-yyyy", startDate),
-					DateUtils.dateToString("dd-MM-yyyy", endDate) }, langCode));
+			
+			msg.append(ResourceBundleUtils.getMessage(
+					messagePrefix,
+					new String[] { DateUtils.dateToString(CommonConstants.DATE_FORMAT_DASH, startDate),
+							DateUtils.dateToString(CommonConstants.DATE_FORMAT_DASH, endDate) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+
 		}
 		return msg.toString();
 	}
@@ -754,20 +786,8 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	// 26279 - Remove the retrieveDisciplinaryActions method because the method
 	// from the SM module is used for displaying the Disciplinary Action info in
 	// the pop-up
-
-	private String getMessageByKey(String key, String[] params, String langCode) {
-		String msg;
-		Locale loc = new Locale("en", "EN");
-		if ("ms".equalsIgnoreCase(langCode)) {
-			loc = new Locale("ms", "MY");
-		}
-		if (params != null) {
-			msg = ResourceBundleUtils.getMessage(key, params, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-		} else {
-			msg = ResourceBundleUtils.getMessage(key, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-		}
-		return msg;
-	}
+	
+	// 26279 - remove getMessageByKey and use ResourceBundleUtils.getMessage
 
 	/**
 	 * Check if the disciplinary action is a warning-only action.
@@ -777,16 +797,29 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return true if the action is only a warning, false if otherwise actions
 	 */
 	public boolean isWarningOnly(SmDisciplinaryAction smDisciplinaryAction) {
-		Set<Boolean> actionsSet = new HashSet<>();
-		actionsSet.add(smDisciplinaryAction.isCancelCategory());
-		actionsSet.add(smDisciplinaryAction.isSuspendRegistration());
-		actionsSet.add(smDisciplinaryAction.isCancelRegistration());
-		actionsSet.add(smDisciplinaryAction.isBlacklistOwner());
-		actionsSet.add(smDisciplinaryAction.isBumiputeraCancel());
-		actionsSet.add(smDisciplinaryAction.isManufacturerCancel());
+		Set<Boolean> actionSet = new HashSet<>();
+		actionSet.add(smDisciplinaryAction.isCancelCategory());
+		actionSet.add(smDisciplinaryAction.isSuspendRegistration());
+		actionSet.add(smDisciplinaryAction.isCancelRegistration());
+		actionSet.add(smDisciplinaryAction.isBlacklistOwner());
+		actionSet.add(smDisciplinaryAction.isBumiputeraCancel());
+		actionSet.add(smDisciplinaryAction.isManufacturerCancel());
 
-		boolean isNotWarningAction = actionsSet.contains(true);
-		return !isNotWarningAction && smDisciplinaryAction.isWarning();
+		boolean isImposedAction  = actionSet.contains(true);
+		return !isImposedAction && smDisciplinaryAction.isWarning();
+	}
+	
+	/**
+	 * Sets the disciplinary action message
+	 * 
+	 * @param smDisciplinaryAction
+	 * @return warningOrDisciplinaryActionMsg
+	 */
+	public String getDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
+		boolean isWarningOnly = isWarningOnly(smDisciplinaryAction);
+
+		return getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(),
+				isWarningOnly);
 	}
 
 	// 26279 - end
@@ -814,4 +847,165 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return filteredItemName;
 	}
 	//21416 end
+	
+	//36386 -Start
+	/**
+	 * Checks if is Government User Role
+	 *
+	 * @return true, if user has Government User Role
+	 */
+	public boolean hasFlGovernmentUserRole() {
+		List<String> roles = Arrays.asList(RoleCode.REQUISITIONER.value(), RoleCode.FL_APPROVER.value(),
+				RoleCode.RECEIVING_OFFICER.value(), RoleCode.ACKNOWLEDGE_OFFICER.value(), RoleCode.PAY_OFFICER.value(),
+				RoleCode.BPK_APPROVER.value(), RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(),
+				RoleCode.AUDITOR_INTERNAL.value(), RoleCode.SYS_ADMIN.value());
+
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	
+	/**
+	 * Determines whether the PRCR link can be viewed based on user roles.
+	 * 
+	 * @return {@code true} if the user can view the PRCR link, {@code false} otherwise
+	 */
+	public boolean canViewPRCRLink() {
+		
+		if (hasSupplierRole() || hasFactoringUserRole()) {
+			if(hasGovtSellerRole() && hasFlGovernmentUserRole()){
+				return Boolean.TRUE;
+			}
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
+	}
+	//36386 -End
+	
+	// #31344 -start-
+	/**
+	 * Show Details Items in popup
+	 * @param cmItemId
+	 * @return void
+	 */
+	public void showItemDescPopup(Long cmItemId) {
+        if (cmItemId == null) {
+            return;
+        }
+        
+        try {
+        	CodificationReqDTO cReqDTO = new CodificationReqDTO();
+            cReqDTO.setItemId(cmItemId);
+            ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+                    ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+            CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
+            if (codificationResDTO == null || codificationResDTO.getCmItem() == null) {
+                return;
+            }
+
+            CmItem item = codificationResDTO.getCmItem();
+            populateItemDescPopup(item);
+        } catch (Exception e) {
+        	SLAUtils.getInstance().logSLAError("FL", "showItemDescPopup", "showItemDescPopup", null,
+					getUserIdSessionFromLoginId(), e);
+			return;
+        }
+        
+    }
+
+    /**
+     * Populate the item description for pop up
+     * @param item
+     * @return void
+     */
+	private void populateItemDescPopup(CmItem item) {
+        CommonUtils common = new CommonUtils();
+        CodificationBackingBean cdbb = new CodificationBackingBean();
+        
+        String segmentTitle = common.removeItemNameNA(item.getCmType().getTypeName()) + " " +
+        		common.removeItemNameNA(item.getCmBrand().getBrandName()) + " " +
+        		common.removeItemNameNA(item.getCmMeasurement().getMeasurementName()) + " " +
+        		common.removeItemNameNA(item.getCmColor().getColorName());
+
+        String segmentCode = item.getCmType().getTypeCode() +
+                             item.getCmBrand().getBrandCode() +
+                             item.getCmMeasurement().getMeasurementCode() +
+                             item.getCmColor().getColorCode();
+        
+        String familyTitle = item.getCmUnspsc().getUnspscTitle() + " " + segmentTitle;
+
+        cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
+        cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
+        cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
+        cdbb.getManagedBean().setSegmentTitle(segmentTitle);
+        cdbb.getManagedBean().setSegmentCode(segmentCode);
+        cdbb.getManagedBean().setFamilyTitle(familyTitle);
+        cdbb.getManagedBean().setHideExtension(segmentTitle.trim().isEmpty());
+    }
+	
+	/**
+	 * Filter item contain NA, N A, N/A
+	 * @param scRequestItemId
+	 * @return
+	 */
+	public String filterNARequestItemName(Long scRequestItemId) {
+		log.info(scRequestItemId);
+		String emptyItemName = "";
+
+		if (scRequestItemId == null || scRequestItemId == 0) {
+			return emptyItemName;
+		}
+		
+		try {
+			IRequestItemSO reqItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IRequestItemSO.class);
+
+			ScRequestItem scRequestItem = reqItemSO.getRequestItemAndCmItemByRequestItemId(scRequestItemId);
+
+			if (scRequestItem == null || scRequestItem.getItemName() == null) {
+				return emptyItemName;
+			}
+
+			CommonUtils commonUtils = new CommonUtils();
+			String itemName = scRequestItem.getItemName();
+
+			return containsNAExtension(scRequestItem.getCmItem()) ? commonUtils.removeItemNameNA(itemName) : commonUtils
+					.filterItemNameNA(itemName);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("FL", "filterNARequestItemName", "filterNARequestItemName", null,
+					getUserIdSessionFromLoginId(), e);
+			return emptyItemName;
+		}
+	}
+
+	/**
+	 * Check cm item extension NA, N A, N/A
+	 * @param cmItem
+	 * @return
+	 */
+	private boolean containsNAExtension(CmItem cmItem) {
+		if(cmItem == null) {
+			return false;
+		}
+		
+	    return isNAValue(cmItem.getCmType().getTypeName())
+	            || isNAValue(cmItem.getCmBrand().getBrandName())
+	            || isNAValue(cmItem.getCmColor().getColorName())
+	            || isNAValue(cmItem.getCmMeasurement().getMeasurementName());
+	}
+
+	/**
+	 * Check NA value
+	 * @param value
+	 * @return
+	 */
+	private boolean isNAValue(String value) {
+	    return "NA".equalsIgnoreCase(value);
+	}
+		
+	// #31344 -end-
 }

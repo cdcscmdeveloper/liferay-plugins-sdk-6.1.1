@@ -46,7 +46,9 @@
 						rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel
 						value="*" styleClass="mandatory" id="rejReasonLblMndty"
 						rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
-				<td style="padding-top: 5px;"><p:inputTextarea cols="100"
+				<td style="padding-top: 5px;">
+					<!-- #38195 -->
+					<p:inputTextarea cols="100"
 						style="width : auto;"
 						rendered="#{backingBean.managedBean.rejectReasonReqd}"
 						value="#{backingBean.managedBean.applnRejectionRemarks}"
@@ -54,7 +56,7 @@
 						validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 						label="#{lbl['lbl.sm.remarks.rejection']}"
 						required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
-						maxlength="2500">
+						maxlength="2500" converter="trimConverter">
 						<f:validateLength maximum="2500" />
 					</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg"
 						for="rmrksForRejectTxtArea" showSummary="true" showDetail="false"

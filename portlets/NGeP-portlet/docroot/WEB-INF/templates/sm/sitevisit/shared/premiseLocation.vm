@@ -1,6 +1,24 @@
 <u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.premiselocation')</u>
 <br />
 <table>
+	<tr>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.ownership')</td>
+		<td>#if($!facility)
+				#if($facility.ownershipType == "O") $smVmUtil.getDescByLabel('lbl.sm.facility.own') #end
+				#if($facility.ownershipType == "R") $smVmUtil.getDescByLabel('lbl.sm.facility.rent') #end
+			#end
+		</td>
+	</tr>
+	
+	<tr>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.officeloc.purchase.monthly.price')</td>
+		<td>#if($facility.purchaseRentPrice) 
+				$smVmUtil.formatToTwoDecimalPoint($facility.purchaseRentPrice)
+			#end
+		</td>
+	</tr>
+	
+	<tr><td><br /></td></tr>
 	
 	<tr>
 		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevist.area')</td>

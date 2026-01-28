@@ -1,0 +1,128 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_dpApprovalExceedThreshold_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sc.direct.purchase.approval.exceed.threshold.title']}");			
+		</script>
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="true"></p:messages>
+		<ac:lovPopup />
+		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search.button']}"
+			toggleable="true">
+			<table style="margin-left: auto;margin-right: auto;">
+				<tr>
+					<td><p:outputLabel id="searchMinistryLbL1"
+							value="#{lbl['lbl.sc.ministry']}"/></td>
+					<td colspan="3"><ac:lov id="searchMinistry1" 
+							lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
+							headerText="#{lbl['lbl.sc.ministry']}"
+							disabled="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null}"
+							value="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName}"
+							postUpdateListener="approvalExceedThresholdBackingBean.postUpdateOrgProfileListener"
+							update="@form"
+							saveObject="approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile">
+						</ac:lov></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel id="searchPtjGroupLbL1"
+							value="#{lbl['lbl.sc.kumpulan.ptj']}"/></td>
+					<td colspan="3"><ac:lov id="searchPtjGroup1" 
+							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
+							headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
+							disabled="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null or approvalExceedThresholdBackingBean.managedBean.disablePtjGroupLov}"
+							value="#{approvalExceedThresholdBackingBean.managedBean.searchPtjGroupProfile.orgName}"
+							postUpdateListener="approvalExceedThresholdBackingBean.postUpdateOrgProfileListener"
+							update="@form"
+							saveObject="approvalExceedThresholdBackingBean.managedBean.searchPtjGroupProfile"
+							conditionField="#{approvalExceedThresholdBackingBean.getPTJGroupCondition()}"></ac:lov></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel id="searchPtjLbL1"
+							value="#{lbl['lbl.sc.ptj']}"/></td>
+					<td colspan="3"><ac:lov id="searchPtj1" 
+							lovId="PM_ORG_PROFILE_PTJ" size="148" readonly="true"
+							headerText="#{lbl['lbl.sc.ptj']}"
+							disabled="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null or approvalExceedThresholdBackingBean.managedBean.disablePtjLov}"
+							value="#{approvalExceedThresholdBackingBean.managedBean.searchPtjProfile.orgName}"
+							postUpdateListener="approvalExceedThresholdBackingBean.postUpdateOrgProfileListener"
+							update="@form"
+							saveObject="approvalExceedThresholdBackingBean.managedBean.searchPtjProfile"
+							conditionField="#{approvalExceedThresholdBackingBean.getPtjCondition()}">
+						</ac:lov></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.request.note.no']}" /></td>
+					<td><p:inputText size="35"
+							value="#{approvalExceedThresholdBackingBean.managedBean.requestNoteNo}" readonly="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null}"></p:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.title']}" /></td>
+					<td colspan="3"><p:inputText size="148"
+							value="#{approvalExceedThresholdBackingBean.managedBean.requestNoteTitle}" readonly="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null}"></p:inputText></td>
+				</tr>				
+			</table>
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.sc.search.button']}" disabled="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null}"
+					action="#{approvalExceedThresholdBackingBean.search}" update="resultPanel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" disabled="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null}"
+					action="#{approvalExceedThresholdBackingBean.reset()}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+			</div>
+		</p:panel>
+		<p:panel id="resultPanel" header="#{lbl['lbl.sc.result.list']}"
+			toggleable="true">
+
+			<p:dataTable id="scDocumentTableID" lazy="true"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{approvalExceedThresholdBackingBean.managedBean.dpDocumentDataModel}"
+				var="Obj" width="100%" rows="10">
+
+				<ac:paginator for="scDocumentTableID"></ac:paginator>
+				<p:column width="10%" style="text-align: left;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.request.note.no']}" style="display:block; text-align:center;" />
+					</f:facet>
+					#{Obj[1]}
+				</p:column>
+				<p:column width="40%" style="text-align: left;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.title.result']}" style="display:block; text-align:center;" />
+					</f:facet>
+
+					<h:outputText value="#{Obj[5]}"
+						style="white-space: normal;word-wrap: break-word;" />
+				</p:column>
+				<p:column width="10%" style="text-align: left;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pm.org.ptjName']}" style="display:block; text-align:center;" />
+					</f:facet>
+					#{approvalExceedThresholdBackingBean.getOrgName(Obj[7])}
+				</p:column>
+				<p:column width="10%" style="text-align:center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.action']}" />
+					</f:facet>
+					<p:commandButton icon="ui-icon-view"
+						style="background-color:transparent !important; border:0px none;"
+						action="#{approvalExceedThresholdBackingBean.performViewDoc(Obj)}">
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</ui:define>
+</ui:composition>

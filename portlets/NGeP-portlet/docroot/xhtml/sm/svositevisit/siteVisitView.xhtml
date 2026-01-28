@@ -39,7 +39,8 @@
 		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
 		<p:dataTable var="tmp" value="#{svoSiteVisitBackingBean.managedBean.templates}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<p:column headerText="#{lbl['lbl.sm.category.description']}">
+			<!-- #37605 -->
+			<p:column headerText="#{lbl['lbl.sm.category.description']}" style="white-space: normal; width: 88%;">
 				<!-- #28175 start -->
 				<h:outputText value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(tmp)}" />
 				<!-- #28175 end -->
@@ -95,8 +96,11 @@
 					escape="false" style="float : left" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}">			
+			<!-- #28775 -->	
+			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}"
+				style="width: 520px !important; white-space: normal !important;">			
 				<ac:gmap id="gmap" disabled="#{viewFlag}"
+					style="width: 500px !important; white-space: normal !important;"
 					locationName="#{task.smAppl.smCompanyBasic.companyName}"
 					latitude="#{task.smSvAddress.address.mapLatitude}" 
 					longitude="#{task.smSvAddress.address.mapLongitude}" 

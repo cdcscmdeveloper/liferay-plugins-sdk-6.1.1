@@ -42,17 +42,16 @@
 			value="#{svcSiteAssignBackingBean.getsupplierApplTypeDesc(svcSiteAssignBackingBean.managedBean.smAppl.applType)}" />
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.sitevisit.want.proceed.qmark']}	
-   			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					action="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(SupplierManagementConst.BPM_SUBMIT)}">
-						<f:param name="disableValidation" value="true" />
-					</p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="submissionConfirmDlg.hide();"></p:commandButton>
-			</div>
-		</p:dialog>
+		<!-- #34400 -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<ac:confirmationPopupSM id="submissionConfirmDlg" widget="submissionConfirmDlg"
+			okParam="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(SupplierManagementConst.BPM_SUBMIT)}"
+			hasParam="true"
+			content="#{lbl['lbl.sm.sitevisit.want.proceed.qmark']}" 
+			update="@all"
+			loadingWidget="blockWidget" />
 
 		<p:messages id="svoMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
@@ -71,7 +70,7 @@
 			<tr>
 				<!-- #24819 - start -->
 				<td><p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
-				<td class="header-info-text">
+				<td>
 					<h:outputText value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"
 						rendered="#{!empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" />
 					<h:outputText value="#{lbl['lbl.sm.no.available']}"
@@ -109,18 +108,21 @@
 		<p:panel header="#{lbl['lbl.sm.siteassign.catcode.req.site.visit']}">
 			<p:dataTable value="#{svcSiteAssignBackingBean.managedBean.categoryLs}" var="catApp" rowIndexVar="index">
 				<ui:param name="catCode" value="#{catApp.pmCategoryL1.categoryL1Code}#{catApp.pmCategoryL2.categoryL2Code}#{catApp.pmCategoryL3.categoryL3Code}" />
-				<p:column headerText="No.">
+				<!-- #37605 -->
+				<p:column headerText="No." style="white-space : normal;vertical-align: top;">
 					#{index + 1}
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space : normal;vertical-align: top;">
 					#{catCode} 
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.category.description']}">
 					<!-- #28175 - start, 28775 - Site Visit Grouping Enhancement - 28775 -->
+				<p:column headerText="#{lbl['lbl.sm.category.description']}"
+					style="white-space: normal; width: 88%;vertical-align: top;">
 					<h:outputText value="#{svcSiteAssignBackingBean.getSupplierCategoryName(catApp, 
-										svcSiteAssignBackingBean.managedBean.smAppl)}"/>
+										svcSiteAssignBackingBean.managedBean.smAppl)}"
+								style="white-space: pre-wrap; word-wrap: break-word;"/>
 					<br />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.othDesc']}: #{catApp.otherDesc}" 
 						rendered="#{catApp.otherDesc != null}" />

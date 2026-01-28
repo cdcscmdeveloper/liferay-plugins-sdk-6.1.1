@@ -56,14 +56,14 @@
 			<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
 				style="white-space: pre-line;" width="15%">
 				<h:outputText rendered="#{obj.oldValue == null}"
-					value="#{lbl['lbl.fl.empty']}" />
+					value="T/B" />
 				<h:outputText rendered="#{obj.oldValue != null}"
 					value="#{obj.oldValue}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
 				style="white-space: pre-line;" width="15%">
 				<h:outputText rendered="#{obj.newValue == null}"
-					value="#{lbl['lbl.fl.empty']}" />
+					value="T/B" />
 				<h:outputText rendered="#{obj.newValue != null}"
 					value="#{obj.newValue}" />
 			</p:column>
