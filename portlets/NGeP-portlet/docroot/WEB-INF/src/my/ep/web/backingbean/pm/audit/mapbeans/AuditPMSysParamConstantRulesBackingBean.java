@@ -458,25 +458,28 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	/*35323 - Audit End*/
 
 	private String fromValueNewCreated(PmConfigRuleValue newCreatedItem) {
+		String ruleValue = null;
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
-						.getRuleValueId()) > 0) && newCreatedItem.getFromValue() != null) {
-			String ruleValue;
+						.getRuleValueId()) > 0) && newCreatedItem.getFromValue() != null) {			
 			String rawValue = newCreatedItem.getFromValue().toString();
 			if (rawValue != null) {
+			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
 				String number = rawValue;
 				double amount = Double.parseDouble(number);
 
 				DecimalFormat formatter = new DecimalFormat(amtFormatter);
 
-				ruleValue = formatter.format(amount);
-			} else {
+				ruleValue = formatter.format(amount);			
+			 }else{
+					ruleValue = rawValue;
+				}
+				}else {
 				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
 						.toString() : null;
 			}
-			return ruleValue;
 		}
-		return null;
+		return ruleValue;	
 	}
 
 	private String fromValueDeleted(PmConfigRuleValue deletedItem) {
@@ -490,25 +493,28 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	
 
 	private String toValueNewCreated(PmConfigRuleValue newCreatedItem) {
+		String ruleValue = null;
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
 						.getRuleValueId()) > 0) && newCreatedItem.getToValue() != null) {
-			String ruleValue;
 			String rawValue = newCreatedItem.getToValue().toString();
 			if (rawValue != null) {
+				if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
 				String number = rawValue;
 				double amount = Double.parseDouble(number);
 
 				DecimalFormat formatter = new DecimalFormat(amtFormatter);
 
 				ruleValue = formatter.format(amount);
+				}else{
+					ruleValue = rawValue;
+				}
 			} else {
 				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
 						.toString() : null;
 			}
-			return ruleValue;
 		}
-		return null;
+		return ruleValue;
 	}
 
 	private String toValueDeleted(PmConfigRuleValue deletedItem) {
