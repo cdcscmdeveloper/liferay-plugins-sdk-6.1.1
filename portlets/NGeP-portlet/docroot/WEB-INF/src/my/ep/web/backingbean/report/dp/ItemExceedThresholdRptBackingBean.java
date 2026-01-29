@@ -18,6 +18,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -183,9 +184,16 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	}
 
 	/**
-	 * Generate year list.
+	 * Generates a list of selectable years for use in dropdown menus or UI
+	 * components. The list starts from the year 2018 and continues up to the
+	 * current system year. Each entry is represented as a {@link SelectItem}
+	 * with the year as both the value and label. Additionally, if the managed
+	 * bean's financial year is not yet set, this method initializes it to the
+	 * current year by default to ensure a valid selection is always available.
 	 * 
-	 * @return the list
+	 * @return a list of {@link SelectItem} objects representing the available
+	 *         year options, including all years from 2018 through the current
+	 *         year.
 	 */
 	public List<SelectItem> generateYearList() {
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -294,7 +302,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 * @return the procurement mode dropdown values
 	 */
 	public SelectItem[] getProcurementModeDropdownValues() {
-		SelectItem[] items = getDropdownValuesBySearchBean("RPT", null);
+		SelectItem[] items = getDropdownValuesBySearchBean(ParameterTypeConst.PROCUREMENT_TYPE_RPT, null);
 		SelectItem[] filtered;
 		
 		if (getManagedBean().getCentralPanelContract() == null || !getManagedBean().getCentralPanelContract()){
