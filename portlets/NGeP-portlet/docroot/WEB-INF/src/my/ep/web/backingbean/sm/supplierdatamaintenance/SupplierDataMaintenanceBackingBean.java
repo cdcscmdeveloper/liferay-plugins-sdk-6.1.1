@@ -590,6 +590,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().getSearchSupplier().setCompanyName(null);
 		getManagedBean().getSearchSupplier().setRegNo(null);
 		getManagedBean().getSearchSupplier().setEpNo(null);
+		// #38094 - Start
+		getManagedBean().setSearchSuppType(StringUtils.EMPTY);
+		getManagedBean().setSearchPmZoneId(1L);
+		getManagedBean().setSearchPmRegStatusId(null);
+		getManagedBean().setSearchEpNo(StringUtils.EMPTY);
+		getManagedBean().setSearchMofNo(StringUtils.EMPTY);
+		// #38094 - End
 	}
 	//27437 : Disciplinary action - end
 	
