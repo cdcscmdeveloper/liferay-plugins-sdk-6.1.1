@@ -1140,8 +1140,9 @@
 				<td colspan="3">
 					<p:outputPanel id="uploadApprovalLetterPg"> 
 						<!-- #25726 START -->
-						<!-- new #25726 - Start-->													
-						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision || StatusLOAApproval) and 
+						<!-- new #25726 - Start-->		 
+						<!-- #25726 - note 424-->											
+						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision || StatusLOAApproval) and isContractTypeAsMinistry  and 
 						(((((isPeriodic and !isContractPeriodAbove4) || isOneOff) and !isPK7) and 
 						!directLOABackingBean.managedBean.scLoa.agreementReq and above500K and 
 						!directLOABackingBean.managedBean.readOnly)||((((isPeriodic and !isContractPeriodAbove4) || isOneOff) and !isPK7) and 
