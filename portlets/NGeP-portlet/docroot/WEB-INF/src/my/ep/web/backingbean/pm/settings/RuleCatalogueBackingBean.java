@@ -3008,8 +3008,10 @@ public class RuleCatalogueBackingBean extends
 				&& selectedValue.getFromValue().compareTo(
 						selectedValue.getToValue()) > 0) {
 			selectedValue.setError(true);
+			selectedValue.setError3(false);
 		} else {
 			selectedValue.setError(false);
+			selectedValue.setError3(false);
 		}
 		// 29669, #35323 - end
 	}
@@ -5961,6 +5963,13 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleDataTypeExpiryDate(null);
 		this.getManagedBean().setSearchRuleDataTypeZone(0L);
 		this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
+		
+		//#35323 - Start - Checking for list value.....
+		for (PmConfigRuleValue value : this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()) {
+			log.info("CONFIG_RULE_VALUE=" + value.getRuleValueId());
+			log.info("EFF_DATE=" + value.getEffDate());
+		}
+		//#35323 - End - Checking for list value.....
 	}
 	
 	/**
