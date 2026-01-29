@@ -934,7 +934,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				// end summary calculation
 
 				summaryFiList.put(summaryfiCount, new Object[] {
-						String.valueOf(row[8]) + " - " + String.valueOf(row[0]), //PEJABAT PERAKAUNAN
+						String.valueOf(row[8]) + " - " + row[0].toString(), //PEJABAT PERAKAUNAN
 						String.valueOf(row[1]), //SERVICE FEE
 						sumpoco, //TOTAL POCO
 						sumTotalAmtWithGST, //NILAI TRANSAKSI CBP
