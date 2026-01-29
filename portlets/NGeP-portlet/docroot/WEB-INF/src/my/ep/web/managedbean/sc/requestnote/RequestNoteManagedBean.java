@@ -427,6 +427,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
     private	Integer	counter = 0; //#26059
     
+    private boolean existInAssignItemDetail = Boolean.FALSE; //#26059
+    
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2641,5 +2643,21 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setContainRejectDecision(boolean containRejectDecision) {
 	    this.containRejectDecision = containRejectDecision;
 	}
+
+	/**
+	 * @return the existInAssignItemDetail
+	 */
+	public boolean isExistInAssignItemDetail() {
+		return existInAssignItemDetail;
+	}
+
+	/**
+	 * @param existInAssignItemDetail the existInAssignItemDetail to set
+	 */
+	public void setExistInAssignItemDetail(boolean existInAssignItemDetail) {
+		this.existInAssignItemDetail = existInAssignItemDetail;
+	}
+	
+	
 	// #26059 - end
 }
