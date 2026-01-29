@@ -1188,6 +1188,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmSupplierOwner smSuppOwner = this.getManagedBean().getSmSuppOwner();
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
 		SmAppl smAppl = this.getManagedBean().getSmAppl();
+		checkBlacklistedOwners(smPersonnel.getIdentificationNo(), false); //#26238 - 39069, 39355, 39681
 		
 		if (getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.INDIVIDUAL_FLAG)) {
 			this.getManagedBean().setSameAsOwner(true);
@@ -1261,7 +1262,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}*/
 		validateNewIC(smPersonnel,false);
-		checkBlacklistedOwners(smPersonnel.getIdentificationNo(), false); //#26238 - 39069, #39355
 		RequestContext.getCurrentInstance().execute("firstUserTncDialog.show()");
 	}
 

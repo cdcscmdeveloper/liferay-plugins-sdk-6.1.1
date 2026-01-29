@@ -748,12 +748,13 @@ public class LOIDetailBackingBean extends
 					evaluationDataType.getFcSecretary())) {
 				this.getManagedBean().setSecretaryUser(true);
 			}
+			//QT WIP weightage flag
 
 			retrieveMultipleLoiDtls(sourceId,
 					evaluationDataType.getCommitteeType(),
 					evaluationDataType.getGroupkeyMa());
 			getManagedBean().setMultipleLoiFlag(Boolean.TRUE);
-			
+
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 			
@@ -762,7 +763,7 @@ public class LOIDetailBackingBean extends
 			// #25638 - End
 			checkSupplierAwardedRejectValidityExtensionPreRender();//#21692
 			
-			
+			checkWeightage35384WIP(); //#38151			
 			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
@@ -8051,14 +8052,17 @@ public class LOIDetailBackingBean extends
 		String evalstageF = null;
 		Long requestNoteItemId = null;
 		Long selectedZoneId = null;
+		retrievescoresettings(this.getManagedBean().getScQt());
 		
 		requestNoteItemId = (CollectionUtils.isNotEmpty(this.getManagedBean().getRecommendList()))
 			    ? this.getManagedBean().getRecommendList().get(0).getRequestItem().getRequestNoteItemId()
 			    : requestNoteItemId;
 		
-		selectedZoneId = (this.getManagedBean().getSelectedZone().getSpecZoneId() != null)
-			    ? this.getManagedBean().getSelectedZone().getSpecZoneId()
-			    : selectedZoneId;
+
+		selectedZoneId = (this.getManagedBean().getSelectedZone() != null)
+				? this.getManagedBean().getSelectedZone().getSpecZoneId()
+				: selectedZoneId;	    
+		
 
 		if (null != this.getManagedBean().getRecommendedSupplierList()) {
 				if (null == this.getManagedBean().getSelectItemList()) {

@@ -429,7 +429,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 							.getManagedBean().getBillDesc(), this
 							.getManagedBean().getCountry(),
 							this.getCancelUrl(), this.responseUrl,
-							this.callbackUrl));
+							this.callbackUrl, new FacesScopes().getUserLocale()
+									.getLanguage()));
 			
 			return "paymentRequestSubmission";
 
