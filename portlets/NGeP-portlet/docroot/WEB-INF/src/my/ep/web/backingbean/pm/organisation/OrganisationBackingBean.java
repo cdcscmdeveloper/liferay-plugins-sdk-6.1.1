@@ -277,8 +277,6 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
 		this.getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
 		this.getManagedBean().setOldReceivingAddressList(new ArrayList<PmAddressType>());
-		this.getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
-		this.getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
 		this.getManagedBean().setAuditContactPerson(new PmContact());
 		this.getManagedBean().setAuditBillingAddress(new PmAddress());
 		this.getManagedBean().setAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
@@ -323,11 +321,19 @@ public class OrganisationBackingBean extends
 				getManagedBean().setCityList(null);
 				getManagedBean().setCityId(0);
 				getManagedBean().setResetTablerow(0);
+
+				/************ AUDIT 35509 - start *************/
+				for(PmAddressType pmAddressType : this.getManagedBean().getAddressTypesList()){
+					this.getManagedBean().getNewReceivingAddressList().add(setManualPmAddressType(pmAddressType, false));
+					this.getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(pmAddressType, false));
+				}
+				/************ AUDIT 35509 - end   *************/
 			}
 		} else {
 			initialOrganisation();
 
 		}
+		
 		getManagedBean().setShowParentMsg(true);
 		RequestContext.getCurrentInstance().execute("window.scrollTo(0,0);");
 		return NAV_TO_MAINTAIN;
@@ -1019,6 +1025,7 @@ public class OrganisationBackingBean extends
 			addressTypet.setPmOrgProfile(orgProfile);
 			orgProfile.setPmAddressTypes(orgAddressTypes);
 		}
+		
 		return NAV_TO_SEARCH;
 	}
 
@@ -1488,23 +1495,21 @@ public class OrganisationBackingBean extends
 					}
 					
 					if(this.getManagedBean().getNewReceivingAddressList().size() > 0){
-						for(PmAddressType addressType : this.getManagedBean().getAddressTypesList()){
-							for(PmAddressType newAddressType : this.getManagedBean().getNewReceivingAddressList()){
-								if(newAddressType.getAddressTypeId() == null && 
-										addressType.getPmAddress().getAddressName().equals(newAddressType.getPmAddress().getAddressName())){
-									newAddressType.setAddressTypeId(addressType.getAddressTypeId());
-								}
+						for(int i = 0; i < this.getManagedBean().getNewReceivingAddressList().size(); i++){
+							PmAddressType newAddressType = this.getManagedBean().getNewReceivingAddressList().get(i);
+							PmAddressType addressType = this.getManagedBean().getAddressTypesList().get(i);							
+							if(newAddressType.isSelected()){
+								newAddressType.setAddressTypeId(addressType.getAddressTypeId());
 							}
 						}
 					}
 					
 					if(this.getManagedBean().getEditedReceivingAddressList().size() > 0){
-						for(PmAddressType addressType : this.getManagedBean().getAddressTypesList()){
-							for(PmAddressType editedAddressType : this.getManagedBean().getEditedReceivingAddressList()){
-								if(editedAddressType.getAddressTypeId() == null && 
-										addressType.getPmAddress().getAddressName().equals(editedAddressType.getPmAddress().getAddressName())){
-									editedAddressType.setAddressTypeId(addressType.getAddressTypeId());
-								}
+						for(int i = 0; i < this.getManagedBean().getEditedReceivingAddressList().size(); i++){
+							PmAddressType editedAddressType = this.getManagedBean().getEditedReceivingAddressList().get(i);
+							PmAddressType addressType = this.getManagedBean().getAddressTypesList().get(i);							
+							if(editedAddressType.isSelected()){
+								editedAddressType.setAddressTypeId(addressType.getAddressTypeId());
 							}
 						}
 					}
@@ -1863,13 +1868,14 @@ public class OrganisationBackingBean extends
 	 * This method is used to set pm address manually in audit
 	 * Reasons why is because data used as reference will change when the main data changes
 	 */
-	public PmAddressType setManualPmAddressType(PmAddressType pmAddressType){
+	public PmAddressType setManualPmAddressType(PmAddressType pmAddressType, boolean indicator){
 		PmAddressType manualPmAddressType = new PmAddressType();
 		PmAddress manualPmAddress = new PmAddress();
 		
 		manualPmAddressType.setAddressTypeId(pmAddressType.getAddressTypeId());
 		manualPmAddress.setAddressName(pmAddressType.getPmAddress().getAddressName());
 		manualPmAddressType.setPmAddress(manualPmAddress);
+		manualPmAddressType.setSelected(indicator);
 		
 		return manualPmAddressType;
 	}
@@ -1939,6 +1945,7 @@ public class OrganisationBackingBean extends
 
 		PmAddressType deliveryAddr = getManagedBean().getDeliveryAddress();
 		PmAddress manualAddr = deliveryAddr.getPmAddress();
+		
 		if (manualAddr.isBrandNew()) {
 			deliveryAddr.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 			deliveryAddr.setPmOrgProfile(getManagedBean().getOrgProfile());
@@ -1984,9 +1991,10 @@ public class OrganisationBackingBean extends
 		if (manualAddr.isBrandNew() && !manualAddr.isModified()) {
 			getManagedBean().getAddressTypesList().add(deliveryAddr);
 			deliveryAddr.setPmAddress(manualAddr);
-			/**********************************AUDIT 35509******************************************/
-			getManagedBean().getNewReceivingAddressList().add(setManualPmAddressType(deliveryAddr));
-			/**********************************AUDIT 35509******************************************/
+			/****AUDIT 35509****/
+			this.getManagedBean().getNewReceivingAddressList().add(setManualPmAddressType(deliveryAddr, true));
+			this.getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr, false));
+			/****AUDIT 35509****/
 		} else {
 			for (int i = 0; i < getManagedBean().getAddressTypesList().size(); i++) {
 				PmAddressType adressType = getManagedBean()
@@ -1999,18 +2007,18 @@ public class OrganisationBackingBean extends
 								manualAddr.getAddressId())) {
 					getManagedBean().getAddressTypesList().set(i, adressType);					
 					deliveryAddr.setPmAddress(manualAddr);
-					/**********************************AUDIT 35509******************************************/
-					getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr));
-					/**********************************AUDIT 35509******************************************/
+					/****AUDIT 35509****/
+					getManagedBean().getEditedReceivingAddressList().set(i, setManualPmAddressType(deliveryAddr, true));
+					/****AUDIT 35509****/
 					break;
 				} else if (address.getAddressName() != null
 						&& address.getAddressName().equals(
 								manualAddr.getAddressName())) {
 					getManagedBean().getAddressTypesList().set(i, adressType);
 					deliveryAddr.setPmAddress(manualAddr);
-					/**********************************AUDIT 35509******************************************/
-					getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr));
-					/**********************************AUDIT 35509******************************************/
+					/****AUDIT 35509****/
+					getManagedBean().getEditedReceivingAddressList().set(i, setManualPmAddressType(deliveryAddr, true));
+					/****AUDIT 35509****/
 				} else {
 					// Bug #22684
 					if (address.getAddressId() != null
@@ -2019,9 +2027,9 @@ public class OrganisationBackingBean extends
 						getManagedBean().getAddressTypesList().set(i,
 								adressType);
 						deliveryAddr.setPmAddress(manualAddr);
-						/**********************************AUDIT 35509******************************************/
-						getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr));
-						/**********************************AUDIT 35509******************************************/
+						/****AUDIT 35509****/
+						getManagedBean().getEditedReceivingAddressList().set(i, setManualPmAddressType(deliveryAddr, true));
+						/****AUDIT 35509****/
 					}
 				}
 			}
@@ -2146,6 +2154,11 @@ public class OrganisationBackingBean extends
 			for (PmAddressType address : getManagedBean()
 					.getSelectedAddressTypes()) {
 				if (address.isBrandNew() && address.getAddressTypeId() == null) {
+					/**AUDIT 35509 - start**/
+					int index = getManagedBean().getAddressTypesList().indexOf(address);
+					getManagedBean().getNewReceivingAddressList().remove(index);
+					getManagedBean().getEditedReceivingAddressList().remove(index);
+					/**AUDIT 35509 - end  **/
 					getManagedBean().getAddressTypesList().remove(address);
 				}
 			}
@@ -4106,6 +4119,13 @@ public class OrganisationBackingBean extends
 
 		searchAddressType();
 		getManagedBean().setResetTablerow(0);
+
+		/************ AUDIT 35509 - start *************/
+		for(PmAddressType pmAddressType : this.getManagedBean().getAddressTypesList()){
+			this.getManagedBean().getNewReceivingAddressList().add(setManualPmAddressType(pmAddressType, false));
+			this.getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(pmAddressType, false));
+		}
+		/************ AUDIT 35509 - end   *************/
 
 	}
 
