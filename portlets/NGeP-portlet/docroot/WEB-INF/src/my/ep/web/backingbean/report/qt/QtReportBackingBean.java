@@ -1110,6 +1110,13 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 
 		return statusValues;
 	}
+	//#29580 - Start
+	public boolean isAllSelected() {
+		List<String> selected = this.getManagedBean().getScReportSearchBean().getScStatusManyMenu();
+
+		return selected != null && selected.contains(QTConstants.RPT_ALL_LBL);
+	}
+	//#29580 - End
 
 	/**
 	 * onSelectAll - For select /unselect all select option

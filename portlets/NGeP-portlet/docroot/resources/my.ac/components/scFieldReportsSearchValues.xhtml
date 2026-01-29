@@ -57,6 +57,20 @@
 .columnDateToWidthClass {
 	width: 6.4%;
 }
+<!--#29580 - Start-->
+/* Lock all items EXCEPT "All" */
+.lock-items .ui-selectlistbox-item:not(:first-child) {
+    pointer-events: none;   /* cannot click */
+    opacity: 0.5;           /* looks disabled */
+}
+
+/* Keep "All" clickable */
+.lock-items .ui-selectlistbox-item:first-child {
+    pointer-events: auto;
+    opacity: 1;
+}
+
+<!--#29580 - End)-->
 </style>
 
 		<h:outputText styleClass="instruction"
@@ -191,27 +205,24 @@
 								<p:ajax event="change" partialSubmit="true" update="@this" />
 							</p:selectOneMenu>
 						</c:if>
-						<ui:remove>#29580 start</ui:remove>
+						<!--#29580 - Start (Harun) change from dropdownlist to selectManyMenu-->
 						<c:if test="#{statusEnabelDisable and brifSiteStatusEnabelDisable and priceSchStatusEnabelDisable}">
 							<p:outputLabel value="#{lbl['lbl.rpt.status']}"
 								style="margin-top:5px;width:160px;" />
-							<p:accordionPanel multiple="true" id="accPanel">
-							    <p:tab title="#{lbl['lbl.sc.status']}:" titleStyle="width:270px;height:20px">
-							        <p:scrollPanel style="width:240px;height:100px">
-							            <p:selectManyCheckbox id="manyMenusts" value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scStatusManyMenu}" 
-							            layout="pageDirection" style="width:230px;text-align:right" >
-							                <f:selectItem itemValue="#{lbl['lbl.rpt.all']}" itemLabel="#{lbl['lbl.rpt.all']}"/>
-							                <f:selectItems value="#{cc.attrs.bBean.reportStatusDropdownValuesSelectManyMenu(qtReportMainBB.managedBean.reportCode)}" 
-							                var="status" itemValue="#{status}" itemLabel="#{status}" 
-							                itemDisabled="#{cc.attrs.bBean.isDisabled(status,qtReportMainBB.managedBean.reportCode)}"/>
-							                <p:ajax event="change" update="manyMenusts" process="@form" 
-			    					 		 listener="#{cc.attrs.bBean.onSelectAll(qtReportMainBB.managedBean.reportCode)}"/>
-			    			            </p:selectManyCheckbox>
-							        </p:scrollPanel>
-							    </p:tab>
-			    			</p:accordionPanel>
-			    		</c:if>
-						<ui:remove>#29580 end</ui:remove>
+							 <p:selectManyMenu id="manyMenuSts" value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scStatusManyMenu}" 
+								converter="#{statusConverter}" filter="true" multiple="true" filterMatchMode="startsWith" showCheckbox="true" styleClass="manymenu-advanced #{cc.attrs.bBean.allSelected ? 'lock-items' : ''}"
+								style="width:300px;height:100px;position:relative;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{lbl['lbl.rpt.all']}" >
+								</f:selectItem>
+								<f:selectItems
+									value="#{cc.attrs.bBean.reportStatusDropdownValuesSelectManyMenu(qtReportMainBB.managedBean.reportCode)}"
+									var="status" itemValue="#{status}" itemLabel="#{status}" 
+									itemDisabled="#{cc.attrs.bBean.isDisabled(status,qtReportMainBB.managedBean.reportCode)}" ></f:selectItems>
+								<p:ajax event="change" process="@this" update="@this"
+								listener="#{cc.attrs.bBean.onSelectAll(qtReportMainBB.managedBean.reportCode)}" />	
+							</p:selectManyMenu>
+						</c:if>
+						<!--#29580 - End (Harun) change from dropdownlist to selectManyMenu-->
 					</h:panelGrid></td>
 			</tr>
 		</table>
