@@ -49,6 +49,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	BigInteger docId;
 	BigInteger docGroupId;
 	String actionType;
+	String amtFormatter = "#,##0.00";
 
 	@Override
 	public String getRoleCode() {
@@ -726,32 +727,41 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	private void setNewPK7WandSIT(PmReason reason) {
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 		this.docId = BigInteger.valueOf(reason.getReasonId());
+		DecimalFormat formatter = new DecimalFormat(amtFormatter);
 
 		// handle null
 		if (reason.getDpThreshold() != null) {
-			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, null, String.valueOf(reason.getDpThreshold()));
+			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, null,
+					formatter.format(reason.getDpThreshold().setScale(2)));
 		}
 
 		if (reason.getPrThreshold() != null) {
-			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, null, String.valueOf(reason.getPrThreshold()));
+			detailObj(AuditConst.PM_AUD_RC_PR_THRESHOLD_FIELDLABELCODE, null,
+					formatter.format(reason.getPrThreshold().setScale(2)));
 		}
 
 		// if SIT handle agency
 		addAgency();
-				
+
 		setNewSupplAcctType(managedBeans.getAuditAddSupplAcctType());
 
 	}
 
 	private void setNewSupplAcctType(List<PmReasonRestr> pmReasonRestrs) {
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+		PmReason pmReasonSaved = managedBeans.getNewPmReason(); 
 
 		if (CollectionUtils.isNotEmpty(pmReasonRestrs)) {
-			for (PmReasonRestr tempReason : pmReasonRestrs) {
-				// belum add doc id
-				// this.docId = BigInteger.valueOf(tempReason.getReasonRestrId());
-				detailObj(AuditConst.PM_AUD_RC_SUPPLIER_ACCT_FIELDLABELCODE, null,
-						checkPmParameterDesc(tempReason.getSupplAcctTypeId()));
+			for (PmReasonRestr newReasonRestr : pmReasonRestrs) {
+				for (PmReasonRestr  savedReasonRestr : pmReasonSaved.getPmReasonRestr()){
+					if(newReasonRestr.getSupplAcctTypeId().equals(savedReasonRestr.getSupplAcctTypeId())){
+						this.docId = BigInteger.valueOf(savedReasonRestr.getReasonRestrId());
+						detailObj(AuditConst.PM_AUD_RC_SUPPLIER_ACCT_FIELDLABELCODE, null,
+								checkPmParameterDesc(newReasonRestr.getSupplAcctTypeId()));
+						
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -796,7 +806,8 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 		this.docId = BigInteger.valueOf(existingReason.getReasonId());
-		DecimalFormat formatter = new DecimalFormat("#,##0.00");
+		DecimalFormat formatter = new DecimalFormat(amtFormatter);
+
 		
 		// handle null when compare dgn null value
 		if (existingReason.getDpThreshold() == null && oldReason.getDpThreshold() != null
