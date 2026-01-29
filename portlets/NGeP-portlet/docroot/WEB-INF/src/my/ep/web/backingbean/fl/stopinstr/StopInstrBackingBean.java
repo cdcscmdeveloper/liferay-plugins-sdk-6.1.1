@@ -158,13 +158,10 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			
 			// 39692-Start
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
-					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
-					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
-				if (hasInvalidActiveFrnVsWorkflow(getManagedBean().getStopInstr().getFlRequest()
-						.getFulfilmentReqId())) {
-					throw new EpException(MessageConst.ERROR_760823);
-				}
+					&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getStopInstr().getFlRequest()
+							.getFulfilmentReqId())) {
+				throw new EpException(MessageConst.ERROR_760823);
+
 			}
 			// 39692-End
 			
@@ -549,6 +546,17 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 			}
 		} else {
+			
+			// 39692-Start
+			if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome
+						.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))
+					&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getStopInstr().getFlRequest()
+							.getFulfilmentReqId())) {
+				throw new EpException(MessageConst.ERROR_760823);
+			}
+			// 39692-End
+			
 			if(getManagedBean().getStopInstr().getPmReason().getReasonCode() == null){
 				throw new EpException(MessageConst.ERROR_100022, new String[]{
 						ResourceBundleUtils.getMessage("lbl.fl.stop.instuc.reason.justification",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
