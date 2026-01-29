@@ -212,7 +212,7 @@ public class MolPayServlet extends HttpServlet {
 					if (cardType != null) {
 						if (cardType.equalsIgnoreCase("Credit")) {
 							cardType = "CC";
-						} else if (cardType.equalsIgnoreCase("Debit")) {
+						} else if (cardType.equalsIgnoreCase("Debit") || cardType.equalsIgnoreCase("Prepaid")) { //#39654 - add prepaid
 							cardType = "DC";
 						} 
 						log.info("cardType===="+cardType);
