@@ -885,6 +885,12 @@ public class SPDetailBackingBean extends
 				.getScQtPRPExperiences();
 		List<List<EncryptDataBean>> encryptExpriencList = new ArrayList<List<EncryptDataBean>>();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_PRIVATE_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1468,6 +1474,12 @@ public class SPDetailBackingBean extends
 		List<ScQtPRPCreditFacility> creditFacilitiesList = this
 				.getManagedBean().getScQtPRPCreditFacilities();
 		List<List<EncryptDataBean>> encryptCrditFacilitesList = new ArrayList<List<EncryptDataBean>>();
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1693,6 +1705,12 @@ public class SPDetailBackingBean extends
 				.getScQtPRPCashOnHand();
 		List<EncryptDataBean> cashOnHandList = new ArrayList<EncryptDataBean>();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_CASH_ON_HAND_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1770,6 +1788,12 @@ public class SPDetailBackingBean extends
 				.getScQtPRPBankStmts();
 		List<EncryptDataBean> encryptBankStmtList = new ArrayList<EncryptDataBean>();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_BANK_STMT_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1843,6 +1867,12 @@ public class SPDetailBackingBean extends
 		ScQtPRPEmployee prpEmployee = getManagedBean().getScQtPRPEmployee();
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getTechnicalQtProposalChecklist();
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, false,
+				QTConstants.TECHNICAL_NUMBER_EMPLOYEES);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -1913,6 +1943,12 @@ public class SPDetailBackingBean extends
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getTechnicalQtProposalChecklist();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.TECHNICAL_PRIVATE_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -2039,6 +2075,12 @@ public class SPDetailBackingBean extends
 		ScQtPRPAssetLiability scQtPRPAssetLiability = this.getManagedBean()
 				.getScQtPRPAssetLiability();
 		IQTProposalSO proposalSO = null;
+		
+		// Bug #39517@Syazani 07/01/2026 -- Start
+		scQtProposalChecklist = validateManagedBeanPropososalChecklist(scQtProposalChecklist, true,
+				QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);
+		// Bug #39517@Syazani 07/01/2026 -- End
+
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
@@ -5907,5 +5949,47 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		  }
 	    return specZoneDetail;
 	}
-	//#28785-End	
+	//#28785-End
+	
+	// Bug #39517@Syazani 07/01/2026 -- Start
+	private ScQtProposalChecklist validateManagedBeanPropososalChecklist(ScQtProposalChecklist scQtProposalChecklist,
+			boolean isFinancialChc, String checklistDefinictionKey) {
+		ScQtProposalChecklist newScQtProposalChecklist = scQtProposalChecklist;
+		boolean isDocumentId = null != newScQtProposalChecklist.getScQtCheckList()
+				&& null != newScQtProposalChecklist.getScQtCheckList().getPmDocument()
+				&& null != newScQtProposalChecklist.getScQtCheckList().getPmDocument().getDocDefinitionKey();
+		String checkListDefinitionKey = isDocumentId ? newScQtProposalChecklist.getScQtCheckList().getPmDocument()
+				.getDocDefinitionKey() : "";
+		if (!checklistDefinictionKey.equalsIgnoreCase(checkListDefinitionKey)) {
+			return processValidateManagedBeanProposalChecklist(isFinancialChc, checklistDefinictionKey,
+					newScQtProposalChecklist);
+		}
+		return newScQtProposalChecklist;
+	}
+
+	private ScQtProposalChecklist processValidateManagedBeanProposalChecklist(boolean isFinancialChc,
+			String checklistDefinictionKey, ScQtProposalChecklist scQtProposalChecklist) {
+		ScQtProposalChecklist newScQtProposalChecklist = scQtProposalChecklist;
+		List<ScQtProposalChecklist> scQtProposalChecklistLst;
+		if (isFinancialChc) {
+			scQtProposalChecklistLst = this.getManagedBean().getFinanceCheckDetailsList();
+		} else {
+			scQtProposalChecklistLst = this.getManagedBean().getTecCheckDetailsList();
+		}
+
+		if (!CollectionUtils.isEmpty(scQtProposalChecklistLst)) {
+			for (ScQtProposalChecklist temp : scQtProposalChecklistLst) {
+				boolean isDocumentIdTemp = null != temp.getScQtCheckList().getPmDocument()
+						&& null != temp.getScQtCheckList().getPmDocument().getDocDefinitionKey();
+				String checkListDefinitionKeyTemp = isDocumentIdTemp ? temp.getScQtCheckList().getPmDocument()
+						.getDocDefinitionKey() : "";
+				if (checklistDefinictionKey.equalsIgnoreCase(checkListDefinitionKeyTemp)) {
+					newScQtProposalChecklist = temp;
+					break;
+				}
+			}
+		}
+		return newScQtProposalChecklist;
+	}
+	// Bug #39517@Syazani 07/01/2026 -- End
 }
