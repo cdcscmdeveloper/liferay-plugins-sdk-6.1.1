@@ -174,9 +174,9 @@
 			</c:choose>
 			<!-- #31344 add instruction for item -->
 			<br/><br/> 
-			<h:outputText styleClass="instruction" style="color: #009ae5;" value="#{lbl['lbl.fl.instruction.item.list3']}" escape="false"  /><br/>
-			<h:outputText styleClass="instruction" style="color: #009ae5;" value="#{lbl['lbl.fl.instruction.item.list4']}" escape="false"  /><br/>
-			<h:outputText styleClass="instruction" style="color: #009ae5;" value="#{lbl['lbl.fl.instruction.item.list5']}" escape="false"  /><br/><br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list3']}" escape="false"  /><br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list4']}" escape="false"  /><br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list5']}" escape="false"  /><br/><br/>
 			<p:dataTable id="itemDataTable" var="flItem" 
 				rowIndexVar="index"
 				value="#{purchaseRequestBackingBean.managedBean.showAllItemsRows}"
