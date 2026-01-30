@@ -97,7 +97,7 @@ QtReportBackingBean<FinancialTableReportManagedBean> implements Serializable{
 	public LinkedHashMap<String, String> getparams() {
 		LinkedHashMap<String, String> params=new LinkedHashMap<>();
 		ScReportFieldsSearchBean reportFieldBean=this.getManagedBean().getScReportSearchBean();
-		//Disable #29580
+		//#29580 -start
        StringBuilder procureMethod = new StringBuilder();
 		if ( null!=reportFieldBean.getAllCheckboxValue() && reportFieldBean.getAllCheckboxValue().length > 0) {
 			 params.put(QtReportConst.PARAM_PROCURE_METHOD_EQ, returnProcurementValue(reportFieldBean.getAllCheckboxValue()));
@@ -118,7 +118,7 @@ QtReportBackingBean<FinancialTableReportManagedBean> implements Serializable{
 		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
 			params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getQuotationId());
 		}
-		//Disable #29580
+		//#29580 -end
 		if(StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())){
 			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());	
 		}
