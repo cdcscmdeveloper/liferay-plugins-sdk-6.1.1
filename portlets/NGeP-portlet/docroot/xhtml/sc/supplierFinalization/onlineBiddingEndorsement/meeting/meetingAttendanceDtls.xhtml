@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel id="attendeesPanel" header="#{lbl['lbl.sc.join.in']}"
 		toggleable="true">
@@ -32,26 +33,58 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"
-					required="#{!meetingAttDtl.selected}" label="#{lbl['lbl.sc.name']}"
-					disabled="#{!isSecretaryUser or 
-							 			meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" >
-							 			<p:ajax partialSubmit="true" process="@this"
-						update="@this" />
-							 			</h:inputText>
-			</p:column>
+			<ui:remove>#35360 - Start </ui:remove>
+			<c:choose>
+				<c:when test="#{isSecretaryUser}">
+					<p:column headerText="#{lbl['lbl.sc.name']}">
+						<h:inputText value="#{meetingAttDtl.name}" maxlength="50"
+							size="50" style="color:black"
+							required="#{!meetingAttDtl.selected}"
+							label="#{lbl['lbl.sc.name']}"
+							disabled="#{!isSecretaryUser or
+ 							 			meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}">
+							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 
-			<p:column headerText="#{lbl['lbl.sc.identification.no']}">
-				<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
-					size="15" required="#{!meetingAttDtl.selected}"
-					label="#{lbl['lbl.sc.identification.no']}"
-					disabled="#{!isSecretaryUser or 
-								meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" >
-									<p:ajax partialSubmit="true" process="@this" update="@this" />
-								
-								</h:inputText>
-			</p:column>
+						</h:inputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+						<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
+							style="color:black" size="15"
+							required="#{!meetingAttDtl.selected}"
+							label="#{lbl['lbl.sc.identification.no']}"
+							disabled="#{!isSecretaryUser or 
+								meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}">
+							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+						</h:inputText>
+					</p:column>
+				</c:when>
+				<c:otherwise>
+					<p:column headerText="#{lbl['lbl.sc.name']}">
+						<h:inputText value="#{meetingAttDtl.name}" maxlength="50"
+							size="50" style="color:black"
+							required="#{!meetingAttDtl.selected}"
+							label="#{lbl['lbl.sc.name']}"
+							disabled="#{!isSecretaryUser or 
+							 			meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}">
+							<p:ajax partialSubmit="true" process="@this" update="@this" />
+						</h:inputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+						<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
+							size="15" style="color:black"
+							required="#{!meetingAttDtl.selected}"
+							label="#{lbl['lbl.sc.identification.no']}"
+							disabled="#{!isSecretaryUser or 
+ 								meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive}">
+							<p:ajax partialSubmit="true" process="@this" update="@this" />
+
+						</h:inputText>
+					</p:column>
+				</c:otherwise>
+			</c:choose>
+			<ui:remove>#35360 - End</ui:remove>
 		</p:dataTable>
 
 		<div align="right" class="BtnSpacing">

@@ -44,9 +44,6 @@
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
 		
-		<!-- #25726 START -->
-		<ui:param name="isfulfilmentTypeNonPeriodicScheduled" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled}"></ui:param>
-		<!-- #25726 END -->
 		
 			<!-- 20190405@asyrafhaziq - CR(25062)- Start -->
 		<ui:param name="bpmAction" value="APPROVE" />
@@ -90,7 +87,7 @@
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" 
-					  actionListener="#{lOADetailBackingBean.searchSupplierItemByName}" update="@form"><!-- #29007 Added actionListener Vinod -->
+					  actionListener="#{lOADetailBackingBean.searchSupplierItemByName}" update="@form"><ui:remove>#29007 Added actionListener Vinod</ui:remove>
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form">
@@ -99,8 +96,9 @@
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
+					<!-- new #25726 -->
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
-					  disabled="#{!(isFulfilmentTypeScheduled or isfulfilmentTypeNonPeriodicScheduled)}">	
+					  disabled="#{!isFulfilmentTypeScheduled}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" disabled="#{!lOADetailBackingBean.managedBean.scLoa.bondReq}">

@@ -32,6 +32,17 @@
 			<td width="50%">$!companyInfo.regNo</td>
 		</tr>
 		
+		<!-- #24819 -->
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.new.business.regNo')</b></td>
+			<td width="5%">:</td>
+			#if($ssmNewRegNo != $null)
+	      	<td width="50%">$!ssmNewRegNo</td>
+	      	#else
+	      	<td width="50%">$!smVmUtil.getDescByLabel('lbl.txt.na') </td>
+	      	#end
+		</tr>
+		
 		<tr align="left">
 			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.estdate')</b></td>
 			<td width="5%">:</td>

@@ -6,16 +6,23 @@ package my.ep.web.backingbean.report.ct;
 
 import java.util.LinkedHashMap;
 
+import javax.faces.application.FacesMessage; //#29416
+import javax.faces.context.FacesContext; //#29416
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.SearchBean; //#29416
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.constant.MessageConst; //#29416
+import my.ep.constant.ct.ContractConst; //#29416 || #34889
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;//#29416
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.MessageUtils;//#29416
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -33,7 +40,7 @@ import org.primefaces.context.RequestContext;
  * 
  * @author Nancy Ang
  */
-public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean> extends ReportBaseBackingBean<T> {
+public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean> extends ReportBaseBackingBean<T>{
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CtReportBaseBackingBean.class);
@@ -219,6 +226,85 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 		return items;
 	}
 	//#30918 - end
+
+	// Start - #29416
+	public void checkValue() {
+	     // Get the bean instance
+		if (getManagedBean().getLovSelectedItemList() != null) {
+			StringBuilder sb = new StringBuilder();
+			for (CtContractItem item : getManagedBean().getLovSelectedItemList()) {
+				if (sb.length() > 0) {
+					sb.append(", "); // Add comma before appending next item
+				}
+				sb.append(item.getContractItemId());
+			}
+			getManagedBean().setContractItemId(sb.toString());
+		}
+	}
+
+	/**
+	 * To set contractNo in searchbean
+	 */
+	public void onChangeContractNo() {
+		 String contractNo = getManagedBean().getContractNo(); // Store value in a variable
+		if (contractNo != null) {
+			SearchBean searchbeanz = new SearchBean();
+			searchbeanz.setDocNo(contractNo);
+		}
+	}
 	
-	
+	//Start - #34889
+	public boolean isCentralItemUsageMonitoringDtls(){
+		boolean isQualifiedReport = false;
+		if(getManagedBean().getReportCode().equals(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_CC_VAL)){
+			isQualifiedReport = true;
+		}
+		return isQualifiedReport;
+	}
+	//Start - #29416 || #34889
+	/**
+	 * Validates the contract number before executing the LOV process.
+	 * <p>
+	 * This method checks if the contract number in the managed bean is:
+	 * <ul>
+	 *   <li>Null or empty: Logs a message and adds an error message to the JSF context.</li>
+	 *   <li>Not exactly 17 characters long: Logs a message and adds an error message to the JSF context.</li>
+	 * </ul>
+	 * If any validation fails, an error message is displayed in the UI using {@link FacesContext}.
+	 * </p>
+	 *
+	 * @param contractNumber is passed from different beans
+	 * @return {@code true} if validation fails (error detected), otherwise {@code false}.
+	 */
+	public boolean validateBeforeExecuteLov(String contractNumber) {
+		boolean isError = false;
+		if (contractNumber == null || contractNumber.isEmpty()) {
+			isError = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(
+									MessageConst.ERROR_750083,
+									new String[] {
+											ResourceBundleUtils.getMessage("lbl.rpt.itmName",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()),
+											ResourceBundleUtils.getMessage("lbl.ct.contract.no",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()) },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+		} else if (contractNumber.length() != ContractConst.CONTRACT_LENGTH) {
+			isError = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_750084, new String[] { ResourceBundleUtils.getMessage(
+									"lbl.ct.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		}
+		return isError;
+	}
+	//End - #29416 || #34889
 }

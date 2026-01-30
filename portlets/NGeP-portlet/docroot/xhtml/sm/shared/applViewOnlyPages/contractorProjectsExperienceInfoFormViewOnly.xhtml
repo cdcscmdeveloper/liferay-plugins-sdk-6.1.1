@@ -186,7 +186,9 @@
 											<h:outputText value="#{contExpCat.pmCategoryL2.categoryL2Code} - #{contExpCat.pmCategoryL2.categoryName}" style="float: left;white-space: normal;"/>
 										</p:column>
 										<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-											<h:outputText value="#{contExpCat.pmCategoryL3.categoryL3Code} - #{contExpCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;"/>
+										<!-- #37771 - Start -->
+											<h:outputText value="#{contExpCat.pmCategoryL3.categoryL3Code} - #{contExpCat.pmCategoryL3.categoryName}" style="white-space: normal;"/>
+										<!-- #37771 - End -->
 											<ac:smFieldChangeTableAlertView object="#{contExpCat}" />
 										</p:column>
 									</c:when>

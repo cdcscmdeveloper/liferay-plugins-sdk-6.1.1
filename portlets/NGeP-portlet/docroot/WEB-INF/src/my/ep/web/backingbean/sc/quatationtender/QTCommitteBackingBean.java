@@ -1126,13 +1126,13 @@ public class QTCommitteBackingBean extends
 		if (Arrays.asList(specDisabledRoleStatusArr).contains(qtStatus) || isReevaluation(qtStatus, committee)) {
 			List<String> list = new ArrayList<>();
 			if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(qtStatus)) {
-
-				String taskName = currentTaskName == null ? "" : currentTaskName;
-				if (!Arrays
-						.asList(new String[] { SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
-								SCProcessNameConst.ASSIGN_TEC_COMMITTEE }).contains(taskName)) {
+				// 36695 - start
+				Long currentCMTStatus = getCurrentCMTStatusId();
+				if (!Arrays.asList(QTStatusConst.CMT_PENDING_SUBMISSION, QTStatusConst.CMT_PENDING_APPROVAL,
+						QTStatusConst.CMT_PENDING_REVISION, QTStatusConst.CMT_PENDING_REVISION_APPROVAL).contains(currentCMTStatus)) {
 					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 				}
+				// 36695 - end
 			} else {
 				list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 			}
@@ -1889,7 +1889,11 @@ public class QTCommitteBackingBean extends
 				selectedList.get(i).setRepresentativeTypeId(null);
 				committeeMembers.add(selectedList.get(i));
 				//#28895 - 35500 start
-				deletedCommitteeMembers.add(selectedList.get(i));
+				if (CollectionUtils.isNotEmpty(deletedCommitteeMembers) && !deletedCommitteeMembers.contains(selectedList.get(i))){//#35500 Fix Reopen 27th Nov
+					deletedCommitteeMembers.add(selectedList.get(i));
+				}else if (CollectionUtils.isEmpty(deletedCommitteeMembers)) {
+					deletedCommitteeMembers.add(selectedList.get(i));
+				}
 				if (!(newScCommitteeMemberList == null || newScCommitteeMemberList.isEmpty())) {
 					newScCommitteeMemberList.remove(selectedList.get(i));
 				}				
@@ -2033,9 +2037,10 @@ public class QTCommitteBackingBean extends
 			}
 
 			if (super.isQTStatusPublished(currentStatusId)) {
+				// 25037 - start - note 372
 				Long[] allowedStatusAfterPublish = new Long[] { QTStatusConst.QT_BRIEFING_SITE_VISIT,
 						QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE, QTStatusConst.QT_PROPOSAL_PREPARATION };
-				// 25037 - start - note 372
+				
 				if ((!Arrays.asList(allowedStatusAfterPublish).contains(currentStatusId) && Arrays.asList(
 						ParameterConst.QT_COMMITTEES_ORDERED_LIST).contains(commType))
 						|| ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)) {
@@ -2270,6 +2275,14 @@ public class QTCommitteBackingBean extends
 							.getScCommitteeMembers())) {
 					
 						String committeeType = committee.getCommitteeType().getParameterCode();
+						
+						// #35320 - Set QCA, QCB to QQC - Start						
+						if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+								|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
+							committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+						}						
+						// #35320 - End	
+						
 						committeeType=retrieveCommitteeDescription(committeeType,new FacesScopes().getUserLocale());
 						isChairpersonRequired(committee.getScCommitteeMembers(),committeeType);
 						isSecretaryRequired(committee.getScCommitteeMembers(),committeeType);
@@ -2306,14 +2319,18 @@ public class QTCommitteBackingBean extends
 				}
 				count++;
 				if (count >= 2) {
-					throw new EpException(MessageConst.ERROR_760123,new String[]{committeeType});
+					//#35320 - Start
+					throw new EpException(MessageConst.ERROR_760712,new String[]{committeeType});
+					//#35320 - End
 					// Only required to have 1 chairperson for appoint committee
 				}
 			}
 		}
 
 		if (count == 0) {
-			throw new EpException(MessageConst.ERROR_760047,new String[]{committeeType});
+			//#35320 - Start
+			throw new EpException(MessageConst.ERROR_760711,new String[]{committeeType});
+			//#35320 - End
 			// At least one chairperson are required for appoint committee
 		}
 	}
@@ -2574,6 +2591,61 @@ public class QTCommitteBackingBean extends
 		setQtMaintencesChanges();
 	}
 	
+	/**
+	 * #35500 issue fix 4-9
+	 * Capture the modified role values
+	 * @param member
+	 */
+	public void onChangeRole(ScCommitteeMember member){		
+		//#35500 Fix Reopen 6th Jan Start issue 1
+		List<ScCommitteeMember>	newScCommitteeMemberAuditTrailList = this.getManagedBean().getNewScCommitteeMemberAuditTrailList() != null
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
+				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
+		
+		if (member.getMemberRoleId() == null || newScCommitteeMemberAuditTrailList.contains(member)){
+			this.roleChangedListener(member);
+			return;
+		}
+		//#35500 Fix Reopen 6th Jan End
+		
+		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
+		String changedRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, changedRolePmParameter.getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		String previousRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		
+		if (!mapModifiedRole.isEmpty()) {
+			if (mapModifiedRole.containsKey(member.getPmUser())) {
+				userRoles = mapModifiedRole.get(member.getPmUser());
+				if (userRoles.get(1).equals(changedRole)){
+					mapModifiedRole.remove(member.getPmUser());
+				} else {
+					userRoles.add(0, changedRole);
+					mapModifiedRole.remove(member.getPmUser());
+					mapModifiedRole.put(member.getPmUser(),userRoles);					
+				}
+			} else {
+				userRoles.add(changedRole);
+				userRoles.add(previousRole);
+				userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+				mapModifiedRole.put(member.getPmUser(),userRoles);
+			}
+		} else {
+			userRoles.add(changedRole);
+			userRoles.add(previousRole);
+			userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+			mapModifiedRole.put(member.getPmUser(),userRoles);
+		}
+
+		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
+		
+		super.roleChangedListener(member);	
+		setQtMaintencesChanges();
+	}
 	
 	/**
 	 * Set member role for chair person
@@ -2739,6 +2811,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public boolean isCommitteeRoleEditable(PmParameter role) {
 		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
+
 		if (role != null && StringUtils.isNotEmpty(committeeType) && role.getParameterCode() != null) {
 			Long status = getCurrentQtStatusId();
 			status = status == null ? new Long(0L) : status;
@@ -2753,8 +2826,19 @@ public class QTCommitteBackingBean extends
 				}
 			} else {
 				if (status.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)) {
-					return Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
-							ParameterConst.COMMITTEE_ROLE_MEMBER).contains(role.getParameterCode());
+					// 36695 - start
+					Long currentCMTStatus = getCurrentCMTStatusId();
+					List<String> allowedRoles = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
+							ParameterConst.COMMITTEE_ROLE_MEMBER);
+					allowedRoles = new ArrayList<>(allowedRoles);
+
+					if (Arrays.asList(QTStatusConst.CMT_PENDING_SUBMISSION, QTStatusConst.CMT_PENDING_APPROVAL,
+							QTStatusConst.CMT_PENDING_REVISION, QTStatusConst.CMT_PENDING_REVISION_APPROVAL).contains(
+							currentCMTStatus)) {
+						allowedRoles.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					}
+					return allowedRoles.contains(role.getParameterCode());
+					// 36695 - end
 				} else if (status.equals(QTStatusConst.QT_RE_EVALUATION) && getManagedBean().getQt() != null) {
 					ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(committeeType, getManagedBean().getQt()
 							.getQtId());
@@ -2822,4 +2906,17 @@ public class QTCommitteBackingBean extends
 	}
 
 	// 25037 - end
+	
+	// 36695 - start
+	private Long getCurrentCMTStatusId(){
+		ScQt scQt = getManagedBean().getQt();
+		if (this.getManagedBean().getCurrentCMTStatus() == null && scQt != null) {
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_COMMITTE_APROVAL, scQt.getQtId());
+			if (wfStatus != null) {
+				this.getManagedBean().setCurrentCMTStatus(wfStatus.getPmStatus().getStatusId());
+			}
+		}
+		return this.getManagedBean().getCurrentCMTStatus();
+	}
+	// 36695 - end
 }

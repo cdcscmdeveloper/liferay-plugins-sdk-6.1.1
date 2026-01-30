@@ -15,6 +15,7 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -65,7 +66,7 @@ public class StopInstrManagedBean extends BaseManagedBean {
     private String backToNtf;
     //26279 - start
     private String disciplinaryActionMessage;
-    private List<DisciplinaryActionVO> disciplineVO;
+    private List<DisciplinaryActionVO> disciplinaryActionVO;
     private SmDisciplinaryAction smDisciplinaryAction;
     //26279 - end
     private String searchFunctionType;//36386
@@ -96,6 +97,13 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	 * @return the stop instr
 	 */
 	public FlStopInstr getStopInstr() {
+		// 39692-Start
+		// Prevent ERR-000001 by by ensuring pmReason is always initialized
+		// Required to prevent JSF UpdateModelException when binding nested properties during postback.
+		if (stopInstr.getPmReason() == null) {
+			stopInstr.setPmReason(new PmReason());
+		}
+		// 39692-End
 		return stopInstr;
 	}
 
@@ -409,12 +417,12 @@ public class StopInstrManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVO() {
-		return disciplineVO;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVO(List<DisciplinaryActionVO> disciplineVO) {
-		this.disciplineVO = disciplineVO;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {

@@ -31,7 +31,11 @@
 				value="#{lbl['lbl.sc.loiloa.loa.zone.instruction']}" />
 				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
 				id="supplierUpdateInstructionIconQT" rendered="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}"
-				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
+				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" /><br />                   
+			<ui:remove>#26059 - Start</ui:remove>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loa.agency.instruction.verification']}" /><br />
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loa.agency.instruction.verification2']}" />
+			<ui:remove>#26059 - End</ui:remove>
 			<p:spacer height="10" />
 			<p:panel id="supplierSearchCriteria" rendered="#{!isDocTypeQuotation}"
 				header="#{lbl['lbl.sc.notice.board.searchCriteria']}" toggleable="true">
@@ -93,8 +97,13 @@
 		<br />
 		<!-- #29006 - end -->
 		
+		<!-- #31503 - start -->
 		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}" escape="false"
-			value="#{lbl['lbl.sc.qt.pending.qt.loa.submission.zone.item.instruction']}" /><ui:remove>#34757</ui:remove>
+			value="#{lbl['lbl.sc.qt.assign.item.code.instruction']}" /><ui:remove>#34757</ui:remove>
+		<br />
+		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}" escape="false"
+			value="#{lbl['lbl.sc.qt.assign.item.code.instruction2']}" />
+		<!-- #31503 - end -->
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -175,9 +184,17 @@
 				<!-- #29007 End Vinod -->
 				<br /><br />
 				<!-- #29006 - end -->
-				<h:outputText value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null
-				 and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}" /><ui:remove>Bug #34757</ui:remove>
-				
+				<!-- #31503 remove h:outputText from Bug #34757 -->
+
+				<!-- #31503 Start -->
+				<p:commandLink oncomplete="itemDescDialogId.show();"
+					value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}"
+					style="color: #009ae5; font-size:12px;font-style:italic"
+					action="#{lOADetailBackingBean.showItemDescPopup(scLoiLoaItem.scRequestItem)}"
+					rendered="#{scLoiLoaItem.scRequestItem.cmItem != null and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}"
+					process="@this"
+					update="@([id$=itemDescDialogId], [id$=itemDetailPanel])" />
+				<!-- #31503 End -->
 			</p:column>
 			
 			<p:column style="width:7%;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
@@ -246,16 +263,18 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-
+			
+			<ui:remove>#26059 - Start</ui:remove>
 			<p:column rendered="#{isSupplierAckStatus}">
 				<f:facet name="header">
 					#{lbl['lbl.sc.action']}
 				</f:facet>
 				<p:commandButton value="#{lbl['lbl.btn.assign']}" 
-					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					disabled="#{lOADetailBackingBean.validateAssignButton(lOADetailBackingBean.managedBean.readOnly , scLoiLoaItem)}"
 					action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
 					rendered="#{lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" /><ui:remove>Bug #34757</ui:remove>
 			</p:column>
+			<ui:remove>#26059 - End</ui:remove>
 			<p:ajax event="page" listener="#{lOADetailBackingBean.retainAwardPage()}" process="@this" update="@this" /><ui:remove>#34242</ui:remove>
 		</p:dataTable>
 		<c:if test=	"#{isZonalWithPaOrPs}">
@@ -478,6 +497,10 @@
 	<c:if test="#{isZonal}">
 		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
 	</c:if>
+
+	<!-- #31503 Start -->
+	<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+	<!-- #31503 End -->
 
 	<!-- #29006 - start -->
 	<p:dialog id="specAndSupplierOfferDlg"

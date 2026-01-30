@@ -4,6 +4,27 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<style>
+        .aligned-text {
+            vertical-align: middle;
+        }
+        .command-link {
+            display: inline-block; /* Ensures the command link is treated like an inline element */
+            float:left; /* Aligns the command link with other inline elements */
+            color: #009ae5 !important; /* Ensures the link color is applied */
+            text-decoration: none; /* Removes the underline */
+            padding-top: 6px; /* Adjust top padding to move text down */
+        }
+        .command-link:hover {
+            text-decoration: underline; /* Adds underline on hover */
+        }
+        .dataTableColumn {
+            text-align: center; /* Centers text in columns */
+        }
+        .dataTableColumn p {
+            margin: 0; /* Removes default margin */
+        }
+    </style>
 	<p:outputPanel id="sqHeader">
 		<div align="left" class="header-info header-spacing" style="width: 100%;" >
 			<table style="width: 100%">
@@ -23,7 +44,7 @@
 								<tr>
 									<td style="width: 9%"><h:outputLabel
 											value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" /></td>
-									<td class="header-info-text"><p:commandLink
+									<td class="header-info-text"><p:commandLink styleClass="command-link"
 											value="#{simpleQuoteBackingBean.managedBean.scQuote.purchaseInDefault.purchaseInDefaultNo}"
 											style="float:left;" action="#{simpleQuoteBackingBean.viewPurchaseInDefault(simpleQuoteBackingBean.managedBean.scQuote.purchaseInDefault.purchaseInDefaultId)}" immediate="true" /></td>
 								</tr>

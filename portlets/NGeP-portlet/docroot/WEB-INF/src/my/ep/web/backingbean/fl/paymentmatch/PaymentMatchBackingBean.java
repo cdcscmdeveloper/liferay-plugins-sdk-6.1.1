@@ -259,6 +259,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			//32678-End
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			//start 21229
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			
 			//START 28246 NEW implementation: IF SentIddCre = 1 , ACTION CODE CRE already sent and next action must ADJ
 			if(getManagedBean().getPaymentAdvice().getFlInvoice() !=null){				
@@ -533,7 +534,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 
 			if (smDisciplinaryAction != null) {
 				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				setDisciplinaryActionMsg(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
@@ -553,28 +554,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY, FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION));// //30738 - add new status filter
 		return pendingStatusIds.contains(statusId);
 	}
-
-	/**
-	 * Sets the disciplinary action message
-	 * 
-	 * @param smDisciplinaryAction
-	 */
-	public void setDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
-		boolean isWarningOnly = false;
-		String warningOrDisciplinaryActionMsg;
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly(smDisciplinaryAction)) {
-			isWarningOnly = true;
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		} else if (!isWarningOnly(smDisciplinaryAction)) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		}
-	}
-
 	// 26279 - End
 	
 	/**
@@ -1166,6 +1145,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	public void onNodeSelect() {
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 		onNodeUnSelect();
+		Long orgProfileId = null; //38898
 		if(null!=selectedNode){
 			InvoiceChargeLineVO treeNode = (InvoiceChargeLineVO)selectedNode.getData();
 			if(treeNode.getLevel() == 1){
@@ -1194,16 +1174,38 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 						getManagedBean().setProjectCode(childData.getPmSubSetia().getProjectCode());
 						getManagedBean().setFinancingTypeCode(childData.getPmSubSetia().getFinancingTypeValue());
 					}
-					//24893 - start
-					if(null != childData.getFlFulfilmentItemAddr().get(0).getChargePTJOrg()) {
-						getManagedBean().setChargePTJOrg(childData.getFlFulfilmentItemAddr().get(0).getChargePTJOrg());
-						System.out.println("Item Charge PTJ");
+					//24893 - start || 38898 -Start
+					if (childData.getFlFulfilmentItemAddr() != null && !childData.getFlFulfilmentItemAddr().isEmpty()
+							&& childData.getFlFulfilmentItemAddr().get(0).getChargePTJOrg() != null) {
+
+						orgProfileId = childData.getFlFulfilmentItemAddr().get(0).getChargePTJOrg().getOrgProfileId();
+						log.info("Item Charge PTJ");
+						// 38898 -End
 					} else {
 						getManagedBean().setChargePTJOrg(getManagedBean().getPaymentAdvice().getFlRequest().getChargeOrgProfile());
-						System.out.println("FL Request Charge PTJ");
+						log.info("FL Request Charge PTJ");// 38898
 					}
 					//24893 - end
 				}
+				//38898 -Start
+				if(orgProfileId !=null) {					
+					IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+					reqDTO.setOrgProfileId(orgProfileId);
+					OrgProfileResDTO resDTO = orgProfileSO.getActivePmOrgValidityByOrgProfileId(reqDTO);
+					
+					if (resDTO != null && resDTO.getPmOrgProfile() != null) {
+						getManagedBean().setChargePTJOrg(resDTO.getPmOrgProfile());
+						log.info("Item Charge PTJ");
+					}else{
+						getManagedBean().setChargePTJOrg(getManagedBean().getPaymentAdvice().getFlRequest().getChargeOrgProfile());
+						log.info("FL Request Charge PTJ");
+					}
+
+					
+				}
+				//38898 -End
 			}
 			
 		}
@@ -1637,6 +1639,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			validateDuplicateDeduction(outcome);
 			validateDeductionAmt();
+			
+			//36754-Start
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				validateOrderFulfiledAndDOFRNPendingCancellation();
+			}
+			//36754-End
+			
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
 				calPmSummary();
 			}
@@ -2705,20 +2714,18 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFulfilmentRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 
 	// 26279 - end
@@ -2804,16 +2811,30 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}		
     }
 	//29551 - end
-	//#21416 start
-	public String filterItemName(String itemName) {
-		if( getManagedBean().getPaymentAdvice() != null ){
-			if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-				String filteredItemName = filterItemNameNA(itemName);
-				return filteredItemName;
-			}
+	
+	// 36754 -Start
+	/**
+	 * Validates if an order can proceed based on the following checks: 
+	 * 1. Check quantities of ordered and received items fully fulfilled 
+	 * 2. Check Stop Delivery Instruction (SDI) with approval status if Quantities is not fully fulfilled 
+	 * 3. Check if any Pending cancellations for Delivery Orders (DO) or Fulfilment Notes (FRN).
+	 * 
+	 * @throws EpException
+	 *             if the order validation fails with a specific error code.
+	 */
+	private void validateOrderFulfiledAndDOFRNPendingCancellation() {
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setFlRequestId(getManagedBean().getPaymentAdvice().getFlRequest().getFulfilmentReqId());
+		reqDTO.setFlOrderId(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getFulfilmentOrderId());
+		FulfilmentResDTO resDTO = orderSO.verifyOrderQtySDIAndDOFRNPendingCancellation(reqDTO);
+		Boolean allowToProceed = resDTO.isAllowToProceed();
+		if (!allowToProceed) {
+			throw new EpException(MessageConst.ERROR_740069);
 		}
-		return itemName;		
 	}
-	//#21416 end
+	// 36754 -End
 	
 }

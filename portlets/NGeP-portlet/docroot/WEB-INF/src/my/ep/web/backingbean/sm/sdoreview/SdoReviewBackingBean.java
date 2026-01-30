@@ -53,6 +53,7 @@ import my.ep.util.BpmCommonUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.ai.SmAIDocBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sdoreview.SdoReviewManagedBean;
@@ -208,6 +209,10 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		
 		//initialized mandatory and non mandatory supporting documents
 		initNonMandatoryAndMandatoryDocs();
+		//#38890 - start
+		SmAIDocBackingBean aiBB = new SmAIDocBackingBean();
+		aiBB.validateBank(getManagedBean().getSmAppl());
+		//#38890 - end
 	}
 
 	/**
@@ -679,7 +684,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 
 	private String setPOJobRoleWeigtage(SdoReviewReqDTO reqDTO){
-		String processingOfficer = null;
+		// #38054 - Start
+		String processingOfficer;
+		// #38054 - End
 		if(!getManagedBean().getSmAppl().isResubmit()) {
 			PmUser poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
 					.getSmAppl().getSupplierType(), getManagedBean()
@@ -691,9 +698,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			processingOfficer = poUser.getUserName();
 			reqDTO.setPmUser(poUser);
 			reqDTO.getSmAppl().setPoUserId(poUser.getUserId());
-			setPendingWeightage(reqDTO);
+			
 		}else{
-			PmUser poUser = null;
+			// #38054 - Start
+			PmUser poUser;
+			// #38054 - End
 			String payloadPO = ((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).getPoUsers();
 			String loginId = StringUtils.isNotBlank(payloadPO) ? payloadPO.trim() : null;
 			if(loginId == null){
@@ -714,7 +723,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			reqDTO.setPmUser(poUser);
 			reqDTO.getSmAppl().setPoUserId(poUser.getUserId());
 		}
-		
+		// #38054 - Start
+		setPendingWeightage(reqDTO);
+		// #38054 - End
 		
 		return processingOfficer;
 	}

@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
+import my.ep.dto.sm.smSuppCatOtherDescHistory.SmSuppCatOtherDescHistoryReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -69,6 +70,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSstSupplier;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
+import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -573,8 +575,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierBusiness> smSupplierBusinessSsm = new ArrayList<SmSupplierBusiness>();
 	private List<SmEquityCompany> smEquityCompaniesSsm = new ArrayList<SmEquityCompany>();
 
-	// 26238
-	private Long disabledCategoryL3Id;
 
 	// #29315
 	private boolean flagMandatoryEpfNo;
@@ -614,7 +614,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSvWorker> deletedWorkers;
 	// 29379 - Site Visit Grouping Enhancement -28775 - end
 	
-	// #28778 - Start
+	// #28778 -28775 - Start
 	private boolean specialCategoryRechecked;
 	// #28778 - End
 	
@@ -673,6 +673,23 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean basicSupplier;
 	//#34831 - End
 	
+	// 36504 - START
+	private boolean updateRecordTC;
+	private boolean otherDescChangePO;
+	private boolean otherDescChangeApprover;
+	private boolean otherDescChangeSupplier;
+	private boolean otherDescChangeSupPO;
+	private boolean otherDescChangeSupApprover;
+	private String otherDescEdited;
+	private boolean otherDescChangePOPrev;
+	private boolean otherDescChangeApproverPrev;
+	private boolean otherDescChangeSupplierPrev;
+	private boolean otherDescChangeSupPOPrev;
+	private boolean otherDescChangeSupApproverPrev;
+	private List<SmSupplierCategory> previousCategoryList;
+	private SmSupplierCategory historySuppCategory;
+	// 36504 - END
+
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4104,15 +4121,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelsSsm = personnelsSsm;
 	}
 
-	// 26238 - start
-	public Long getDisabledCategoryL3Id() {
-		return disabledCategoryL3Id;
-	}
-
-	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
-		this.disabledCategoryL3Id = disabledCategoryL3Id;
-	} // 26238 - end
-
 	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
 		return smEquityCompaniesSsm;
 	}
@@ -4690,4 +4698,206 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setBasicSupplier(boolean basicSupplier) {
 		this.basicSupplier = basicSupplier;
 	}
+	
+	// 36504 - START
+	/**
+	 * @return the updateRecordTC
+	 */
+	public boolean isUpdateRecordTC() {
+		return updateRecordTC;
+	}
+
+	/**
+	 * @param updateRecordTC
+	 *            the updateRecordTC to set
+	 */
+	public void setUpdateRecordTC(boolean updateRecordTC) {
+		this.updateRecordTC = updateRecordTC;
+	}
+
+	/**
+	 * @return the otherDescEdited
+	 */
+	public String getOtherDescEdited() {
+		return otherDescEdited;
+	}
+
+	/**
+	 * @param otherDescEdited
+	 *            the otherDescEdited to set
+	 */
+	public void setOtherDescEdited(String otherDescEdited) {
+		this.otherDescEdited = otherDescEdited;
+	}
+
+	/**
+	 * @return the otherDescChangePO
+	 */
+	public boolean isOtherDescChangePO() {
+		return otherDescChangePO;
+	}
+
+	/**
+	 * @param otherDescChangePO the otherDescChangePO to set
+	 */
+	public void setOtherDescChangePO(boolean otherDescChangePO) {
+		this.otherDescChangePO = otherDescChangePO;
+	}
+
+	/**
+	 * @return the otherDescChangeApprover
+	 */
+	public boolean isOtherDescChangeApprover() {
+		return otherDescChangeApprover;
+	}
+
+	/**
+	 * @param otherDescChangeApprover the otherDescChangeApprover to set
+	 */
+	public void setOtherDescChangeApprover(boolean otherDescChangeApprover) {
+		this.otherDescChangeApprover = otherDescChangeApprover;
+	}
+
+	/**
+	 * @return the otherDescChangeSupplier
+	 */
+	public boolean isOtherDescChangeSupplier() {
+		return otherDescChangeSupplier;
+	}
+
+	/**
+	 * @param otherDescChangeSupplier the otherDescChangeSupplier to set
+	 */
+	public void setOtherDescChangeSupplier(boolean otherDescChangeSupplier) {
+		this.otherDescChangeSupplier = otherDescChangeSupplier;
+	}
+
+	/**
+	 * @return the previousCategoryList
+	 */
+	public List<SmSupplierCategory> getPreviousCategoryList() {
+		return previousCategoryList;
+	}
+
+	/**
+	 * @param previousCategoryList the previousCategoryList to set
+	 */
+	public void setPreviousCategoryList(
+			List<SmSupplierCategory> previousCategoryList) {
+		this.previousCategoryList = previousCategoryList;
+	}
+
+	/**
+	 * @return the otherDescChangeSupPO
+	 */
+	public boolean isOtherDescChangeSupPO() {
+		return otherDescChangeSupPO;
+	}
+
+	/**
+	 * @param otherDescChangeSupPO the otherDescChangeSupPO to set
+	 */
+	public void setOtherDescChangeSupPO(boolean otherDescChangeSupPO) {
+		this.otherDescChangeSupPO = otherDescChangeSupPO;
+	}
+
+	/**
+	 * @return the otherDescChangeSupApprover
+	 */
+	public boolean isOtherDescChangeSupApprover() {
+		return otherDescChangeSupApprover;
+	}
+
+	/**
+	 * @param otherDescChangeSupApprover the otherDescChangeSupApprover to set
+	 */
+	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
+		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
+	}
+
+	/**
+	 * @return the otherDescChangePOPrev
+	 */
+	public boolean isOtherDescChangePOPrev() {
+		return otherDescChangePOPrev;
+	}
+
+	/**
+	 * @param otherDescChangePOPrev the otherDescChangePOPrev to set
+	 */
+	public void setOtherDescChangePOPrev(boolean otherDescChangePOPrev) {
+		this.otherDescChangePOPrev = otherDescChangePOPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeApproverPrev
+	 */
+	public boolean isOtherDescChangeApproverPrev() {
+		return otherDescChangeApproverPrev;
+	}
+
+	/**
+	 * @param otherDescChangeApproverPrev the otherDescChangeApproverPrev to set
+	 */
+	public void setOtherDescChangeApproverPrev(boolean otherDescChangeApproverPrev) {
+		this.otherDescChangeApproverPrev = otherDescChangeApproverPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeSupplierPrev
+	 */
+	public boolean isOtherDescChangeSupplierPrev() {
+		return otherDescChangeSupplierPrev;
+	}
+
+	/**
+	 * @param otherDescChangeSupplierPrev the otherDescChangeSupplierPrev to set
+	 */
+	public void setOtherDescChangeSupplierPrev(boolean otherDescChangeSupplierPrev) {
+		this.otherDescChangeSupplierPrev = otherDescChangeSupplierPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeSupPOPrev
+	 */
+	public boolean isOtherDescChangeSupPOPrev() {
+		return otherDescChangeSupPOPrev;
+	}
+
+	/**
+	 * @param otherDescChangeSupPOPrev the otherDescChangeSupPOPrev to set
+	 */
+	public void setOtherDescChangeSupPOPrev(boolean otherDescChangeSupPOPrev) {
+		this.otherDescChangeSupPOPrev = otherDescChangeSupPOPrev;
+	}
+
+	/**
+	 * @return the otherDescChangeSupApproverPrev
+	 */
+	public boolean isOtherDescChangeSupApproverPrev() {
+		return otherDescChangeSupApproverPrev;
+	}
+
+	/**
+	 * @param otherDescChangeSupApproverPrev the otherDescChangeSupApproverPrev to set
+	 */
+	public void setOtherDescChangeSupApproverPrev(
+			boolean otherDescChangeSupApproverPrev) {
+		this.otherDescChangeSupApproverPrev = otherDescChangeSupApproverPrev;
+	}
+
+	/**
+	 * @return the historySuppCategory
+	 */
+	public SmSupplierCategory getHistorySuppCategory() {
+		return historySuppCategory;
+	}
+
+	/**
+	 * @param historySuppCategory the historySuppCategory to set
+	 */
+	public void setHistorySuppCategory(SmSupplierCategory historySuppCategory) {
+		this.historySuppCategory = historySuppCategory;
+	}
+	// 36504 - END
 }

@@ -51,13 +51,14 @@ var gpkiRequestTime = 0;
 
   this.signToken = function (a) {
     gpkiBlockWidget.show();
-    text = encodeURIComponent(Gpki.hash(a[0]));
+    text = a[0];
+    data = encodeURIComponent(Gpki.hash(a[0]));
     const pin = a[1];
     if (pin === "") {
       this.mandatoryError(a[2]);
       return;
     }
-    sign("token", nric, pin, text, "false", "data");
+    sign("token", nric, pin, data, "false", "data");
   };
 
   this.signRoam = function (a) {
@@ -73,6 +74,12 @@ var gpkiRequestTime = 0;
       this.mandatoryError(a[4]);
       return;
     }
+	// check if undefined, null, NaN, empty string, etc.
+	if (!gpkiNonce) {
+	  errorAction([{ name: 'gpkiNonceNull', value: 'invalid nonce'}]);
+	  gpkiBlockWidget.hide();
+	  return;
+	}
     const data = encodeURIComponent(Gpki.hash(text));
     sign_roaming(nric, gpkiNonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
   };
@@ -80,6 +87,8 @@ var gpkiRequestTime = 0;
   this.otpExp = function () { return otpExp; };
   
   this.textBeforeSign = function () { return text; };
+  
+  this.nric = function () { return nric; };
 
   this.mandatoryError = function (f) {
     errorAction([{ name: 'field', value: f }]);
@@ -94,38 +103,39 @@ var gpkiRequestTime = 0;
 function parseResultMedium(msg) {
   $(document).ready(
     function () {
-      const obj = jQuery.parseJSON(msg);
+		const obj = jQuery.parseJSON(msg);
       const response = obj.response;
       var mediumTypeId;
-      if (obj.status) {
+		if (obj.status) {
         var mediumArr = jQuery.parseJSON(response);
-        mediumTypeId = mediumArr[0].id;
+				mediumTypeId = mediumArr[0].id;
         var id;
         //pick roaming otp over token
-        for (var i = 0; i < mediumArr.length; i++) {
+				for (var i = 0; i < mediumArr.length; i++) {
           id = parseInt(mediumArr[i].id, 10);
-          if (id === 5) {
-            mediumTypeId = 5;
-            break;
-          } else if (id === 4 && mediumTypeId !== 4) {
-        	mediumTypeId = 4;
-          }
-        }
+					if (id === 5) {
+						mediumTypeId = 5;
+						break;
+					} else if (id === 4 && mediumTypeId !== 4) {
+						mediumTypeId = 4;
+					}
+				}
         setMediumType([{ name: 'message', value: obj.message },
-                       { name: 'mediumTypeId', value: mediumTypeId },
-                       { name: 'response', value: response }]);
-        if (mediumTypeId === 5) {
-          gpki.requestOtp();
-        } else if (mediumTypeId !== 4) {
-          gpki_dlg.hide();
-          gpki_dlg2.show();
-          showError(obj.status, "Medium Token atau Roaming OTP sahaja");
-        }
-      } else {
-        gpki_dlg.hide();
-        gpki_dlg2.show();
-        showError(obj.status, obj.message);
-      }
+	        	{ name: 'mediumTypeId', value: mediumTypeId },
+	        	{ name: 'response', value: msg },
+                       { name: 'js_nric', value: gpki.nric()} ]);
+			if (mediumTypeId === 5) {
+				gpki.requestOtp();
+			} else if (mediumTypeId !== 4) {
+				gpki_dlg.hide();
+				gpki_dlg2.show();
+				showError(obj.status, "Medium Token atau Roaming OTP sahaja", msg);
+			}
+		} else {
+			gpki_dlg.hide();
+			gpki_dlg2.show();
+			showError(obj.status, obj.message, msg);
+		}
     });
 }
 
@@ -136,17 +146,17 @@ function parseResultMedium(msg) {
 function parseTxResultRequestOTP(msg) {
   $(document).ready(
     function () {
-      const obj = jQuery.parseJSON(msg);
-      if (obj.status) {
-    	gpkiRequestTime = Date.now();
-    	disableOtpTimeout();
-        const response = jQuery.parseJSON(obj.response);
-        gpkiNonce = response.nonce;
-        saveNonce([ { name: 'gpkiNonce', value: gpkiNonce }]);
-      } else {
-    	disableOtpTimeout();
-        showError(obj.status, obj.message);
-      }
+		const obj = jQuery.parseJSON(msg);
+		if (obj.status) {
+			gpkiRequestTime = Date.now();
+			disableOtpTimeout();
+			const response = jQuery.parseJSON(obj.response);
+			gpkiNonce = response.nonce;
+			saveNonce([ { name: 'gpkiNonce', value: gpkiNonce }]);
+		} else {
+			disableOtpTimeout();
+			showError(obj.status, obj.message, msg);
+		}
     });
 }
 
@@ -157,16 +167,17 @@ function parseTxResultRequestOTP(msg) {
 function parseSignResult(msg) {
   $(document).ready(
     function () {
-      const obj = jQuery.parseJSON(msg);
-      if (obj.status_code === 0) {
+		const obj = jQuery.parseJSON(msg);
+		if (obj.status_code === 0) {
         postSignOTP([ { name: 'message', value: obj.message },
-                      { name: 'subjectDN', value: obj.subject_dn },
-                      { name: 'textBeforeSign', value: gpki.textBeforeSign() },
-                      { name: 'signedText', value: obj.signed_data }]);
-      } else {
-        showError(obj.status_code, obj.status_message);
-      }
-      gpkiBlockWidget.hide();
+				{ name: 'subjectDN', value: obj.subject_dn },
+				{ name: 'textBeforeSign', value: gpki.textBeforeSign() },
+				{ name: 'signedText', value: obj.signed_data },
+                      { name: 'response', value: msg }]);
+		} else {
+			showError(obj.status_code, obj.status_message, msg);
+		}
+		gpkiBlockWidget.hide();
     });
 }
 
@@ -177,24 +188,26 @@ function parseSignResult(msg) {
 function parseTxResultSigningRoaming(msg) {
   $(document).ready(
     function () {
-      const obj = jQuery.parseJSON(msg);
-      if (obj.status) {
-    	clearTimeout(otpTimeoutId);
-        const response = jQuery.parseJSON(obj.response);
+		const obj = jQuery.parseJSON(msg);
+		if (obj.status) {
+			clearTimeout(otpTimeoutId);
+			const response = jQuery.parseJSON(obj.response);
         postSignOTP([{ name: 'message', value: obj.message },
-			         { name: 'subjectDN', value: response.subject_dn },
-			         { name: 'textBeforeSign', value: gpki.textBeforeSign() },
-			         { name: 'signedText', value: response.signed_data }]);
-      } else {
-        showError(obj.status, obj.message);
-      }
-      gpkiBlockWidget.hide();
+	        	{ name: 'subjectDN', value: response.subject_dn },
+	        	{ name: 'textBeforeSign', value: gpki.textBeforeSign() },
+	        	{ name: 'signedText', value: response.signed_data },
+			         { name: 'response', value: msg }]);
+		} else {
+			showError(obj.status, obj.message, msg);
+		}
+		gpkiBlockWidget.hide();
     });
 }
 
-function showError(code, msg) {
+function showError(code, msg, response) {
   errorAction([{ name: 'statusCode', value: code },
-               { name: 'statusMsg', value: msg }]);
+               { name: 'statusMsg', value: msg },
+               { name: 'response', value: response }]);
 }
 
 /**

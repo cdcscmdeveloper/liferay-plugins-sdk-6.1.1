@@ -52,6 +52,14 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+// 35503 Start
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.cm.AuditCMConst;
+import my.ep.web.backingbean.cm.audit.AuditCodificationManagementBackingBean;
+import my.ep.web.backingbean.cm.audit.AuditCodificationManagementBackingBeanTemplate;
+import my.ep.constant.ModuleCodeConst;
+// 35503 End
+
 @ManagedBean(name = "extensionCodeCreationBackingBean")
 @ViewScoped
 public class ExtensionCodeCreationBackingBean extends
@@ -795,7 +803,7 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 					int code = (Integer.parseInt(unspsc.getUnspscCode().substring(0, 2)));
 					
                 
-					if (code < 61){
+					if (code < 68){ //#35503, Fix as-is bug: #38632
 						unspscCodes.add(unspsc.getUnspscCode());
 					}		
 				}	
@@ -1206,7 +1214,9 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	
 	public void editExtensionRequest(int index){
 		
-
+		// 35503 Start
+		this.getManagedBean().setAuditRequestExtList(null);
+		// 35503 End
 		this.getManagedBean().setEditMode(true);
 		this.getManagedBean().setEditModeIndex(index);
 		if(this.getManagedBean().getRequestExtCodeList()!=null && this.getManagedBean().getRequestExtCodeList().size()>0){
@@ -1269,6 +1279,9 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 	
 	public void deleteExtensionRequest(int index){
 		this.getManagedBean().getRequestExtCodeList().remove(index);
+		// 35503 Start
+		this.getManagedBean().setAuditRequestExtList(null);
+		// 35503 End
 		
 		if (this.getManagedBean().getRequestExtCodeList().size()> 0){
 		    this.getManagedBean().setDisableSelectBtn(false);
@@ -1424,6 +1437,11 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 		
+		// 35503 Start
+		this.getManagedBean().getAuditRequestExtList().addAll(this.getManagedBean().getRequestExtCodeList());
+		this.getManagedBean().setUnspscCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
+		// 35503 End
+		
 		for (CmRequestCode code :  this.getManagedBean().getRequestExtCodeList()){
 		
 		reqDTO.setUnspscCode(this.getManagedBean().getSelectedLovUnspsc().
@@ -1442,6 +1460,18 @@ BaseBackingBean<ExtensionCodeCreationManagedBean> implements Serializable {
 		reqDTO.getRequestExtList().add(code);
 	   }
 		resDTO = unspscSO.publishExtension(reqDTO);
+		
+		// 35503 Start - for audit trail required
+		if (resDTO.isSuccessful()) {
+			IAuditTrailSO auditCodificationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailSO.class);
+
+			if (auditCodificationSO.isAuditConfig(AuditCMConst.CM_AU_CONF)) {
+				AuditCodificationManagementBackingBeanTemplate auTemplate = new AuditCodificationManagementBackingBean();
+				auTemplate.saveAuditExtensionCodeCreation();
+			}
+		}
+		// 35503 End - for audit trail required
 					
 		renewSesionObject(); 
 		

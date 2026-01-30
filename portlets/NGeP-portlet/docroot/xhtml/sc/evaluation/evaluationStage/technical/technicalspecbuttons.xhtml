@@ -17,13 +17,23 @@
 					<td align="right"><p:commandButton
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
 							immediate="true"
-							action="#{evaluationBackingBean.technicalSpecBackaction}" /> <p:commandButton
-							value="#{lbl['lbl.btn.save']}"
+							action="#{evaluationBackingBean.technicalSpecBackaction}" /> 
+							<ui:remove>#29187 Start Moved update to backingbean for note #582 Vinod
+							Added hidden button to update data note #721
+							</ui:remove>
+							<p:commandButton
+							value="#{lbl['lbl.btn.save']}" style="display:none;" id="hidSaveButton" binding="#{hidSaveButton}"
 							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 							or evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}"
-							style="float:right;" update="@all" onstart="blockWidget.show();"
+							update="@all" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
-							action="#{evaluationBackingBean.checkTechnicalSpecCompliance}" /></td><!-- #29187 Changed Action Vinod -->
+							action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
+							<p:commandButton 
+							value="#{lbl['lbl.btn.save']}" style="float:right;"
+							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+							or evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}"
+							action="#{evaluationBackingBean.validateSaveTemplateForMandatorySpec(hidSaveButton.clientId)}" /></td>
+							<ui:remove>#29187 End Vinod</ui:remove>
 				</tr>
 			</table>
 
@@ -40,7 +50,7 @@
 		</p:panel>
 
 	</h:panelGroup>
-	<!-- #29187 Start Vinod -->
+	<ui:remove>#29187 Start Vinod</ui:remove>
 	<p:dialog id="complianceConfirmId" widgetVar="complianceConfirmPopUp"
 			header="#{lbl['lbl.msg.confirm.cancel.header']}" resizable="false"
 			width="35%" height="100" closable="false">
@@ -55,11 +65,12 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="blockWidget.show();"
 					oncomplete="complianceConfirmPopUp.hide(); blockWidget.hide();"
-					partialSubmit="true" process="@form" update="@form" 
-					action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="complianceConfirmPopUp.hide();" 
-					type="button" partialSubmit="true"  process="@this"/>
+					action="#{evaluationBackingBean.validateSaveTemplateForMandatorySpec(hidSaveButton.clientId)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="blockWidget.show();"
+					oncomplete="complianceConfirmPopUp.hide(); blockWidget.hide();"
+					action="#{evaluationBackingBean.resetComplianceConfirmationFlag}"
+					partialSubmit="true" process="@this"/>
 			</div>
 	</p:dialog>
-	<!-- #29187 End Vinod -->
+	<ui:remove>#29187 End Vinod</ui:remove>
 </ui:composition>

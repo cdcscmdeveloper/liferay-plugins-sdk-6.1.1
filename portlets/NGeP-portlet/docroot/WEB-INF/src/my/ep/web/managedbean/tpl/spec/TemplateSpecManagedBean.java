@@ -87,6 +87,13 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private boolean updateSpecByAnswers;
 	private List<TplSpecAnswer> specAnswersToDelete;
 	/** from specification bean */
+	// #29187 Start Vinod
+	private List<SelectItem> mandatorySpecList;
+	private boolean zoneForItemHlink;
+	private TplSpecQuestion questionForItemHlink;
+	private List<TplSpecZoneQty> zoneQtyForItemHlink;
+	private boolean isComplianceOldNull;
+	// #29187 End Vinod
 	
 	/** for specification Zonal ****************************/
 	/** The total suppliers spec loc. */
@@ -147,6 +154,11 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	/** The qt. */
 	private ScQt qt;
+	
+	// #38151 Start 
+	private boolean weightage35384WIP;
+	// #38151 End 
+	
 	/**
 	 * @return the beans
 	 */
@@ -163,12 +175,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	/** Import & Export */
 	private boolean enableImportExport;//#25633
 	
-	//#29187 Start Vinod
-	List<SelectItem> mandatorySpecList;
-	private boolean zoneForItemHlink;
-	private TplSpecQuestion questionForItemHlink;
-	private List<TplSpecZoneQty> zoneQtyForItemHlink;
-	//#29187 End Vinod
 	
 	/**
 	 * @return the statecode
@@ -1014,5 +1020,24 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	public void setZoneQtyForItemHlink(List<TplSpecZoneQty> zoneQtyForItemHlink) {
 		this.zoneQtyForItemHlink = zoneQtyForItemHlink;
 	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
+	
 	//#29187 End Vinod
+	
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
 }

@@ -312,11 +312,16 @@
 				</f:facet>
 
 				<h:panelGroup id="actionView">
+				<ui:remove>#29661 -start- </ui:remove>
 					<p:commandLink
-						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
-						rendered="#{stageTwofunctional.definationType.parameterCode eq 'TS' or ((stageTwofunctional.pmDocument ne null) and (stageTwofunctional.pmDocument.docDefinitionKey eq 'FG' or stageTwofunctional.pmDocument.docDefinitionKey eq 'FN' or stageTwofunctional.pmDocument.docDefinitionKey eq 'BS' or ((stageTwofunctional.pmDocument.docDefinitionKey eq 'CH' or stageTwofunctional.pmDocument.docDefinitionKey eq 'AL' or stageTwofunctional.pmDocument.docDefinitionKey eq 'PC' or stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' or stageTwofunctional.pmDocument.docDefinitionKey eq 'CF') and stageTwofunctional.scoringReq)))}">
-						<ui:remove><!-- 1873 note 74 update rendered condition--></ui:remove>
-						<ui:fragment rendered="#{!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)}">
+						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,SourcingConstants.FINANCIAL_TEMPLATE)}"
+						rendered="#{stageTwofunctional.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification or ((stageTwofunctional.pmDocument ne null) and (stageTwofunctional.pmDocument.docDefinitionKey eq SourcingConstants.FINANCIAL_GOV_CODE or stageTwofunctional.pmDocument.docDefinitionKey eq SourcingConstants.FINANCIAL_PRIVATE_CODE or stageTwofunctional.pmDocument.docDefinitionKey eq SourcingConstants.FINANCIAL_BANK_STMT_CODE or stageTwofunctional.pmDocument.docDefinitionKey eq SourcingConstants.FINANCIAL_GOVERNMENT_COMPANY_EXPERIENCE or stageTwofunctional.pmDocument.docDefinitionKey eq SourcingConstants.FINANCIAL_NONGOVERNMENT_COMPANY_EXPERIENCE or ((stageTwofunctional.pmDocument.docDefinitionKey eq SourcingConstants.FINANCIAL_CASH_ON_HAND_CODE or stageTwofunctional.pmDocument.docDefinitionKey eq SourcingConstants.FINANCIAL_ASSET_LIABILITY_CODE or stageTwofunctional.pmDocument.docDefinitionKey eq SourcingConstants.FINANCIAL_PAID_UP_CAPITAL_CODE or stageTwofunctional.pmDocument.docDefinitionKey eq SourcingConstants.FINANCIAL_SUPPLIER_DETAILS_CODE or stageTwofunctional.pmDocument.docDefinitionKey eq SourcingConstants.FINANCIAL_CREDIT_FACILITY_CODE) and stageTwofunctional.scoringReq)))}">
+						<ui:remove>
+							<!-- 1873 note 74 update rendered condition-->
+						</ui:remove>
+						<ui:remove>#29661 -end- </ui:remove>
+						<ui:fragment
+							rendered="#{!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)}">
 							<h:graphicImage value="/css/images/design/edit.png" />
 						</ui:fragment>
 						<ui:fragment
@@ -333,7 +338,19 @@
 		<ui:param name="isReadOnlyOrSpecMain"
 			value="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" />
 
+		<ui:remove>#10141 Start Vinod </ui:remove>
+		<ui:include src="/xhtml/sc/specification/specificationCommittee/financialChecklistPreview.xhtml"/>
+		<ui:remove>#10141 End Vinod </ui:remove>
 		<div align="right">
+			<ui:remove>#10141 Start Vinod -- Added new button for financial checklist preview</ui:remove>
+			<p:commandButton styleClass="BtnSpacing"
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
+				value="#{lbl['lbl.sc.spec.btn.checklist.preview']}"
+				action="#{specificationBackingBean.financialCheckListPreview}"
+				onstart="blockWidget.show()"
+				oncomplete="financialChecklistPreview.show();"
+				process="@this" update="@([id$=financialChecklistTitleListId])"/>
+			<ui:remove>#10141 End Vinod </ui:remove>
 			<p:commandButton styleClass="BtnSpacing"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"

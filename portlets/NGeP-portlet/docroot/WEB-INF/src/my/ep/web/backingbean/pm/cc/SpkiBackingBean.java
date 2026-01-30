@@ -28,9 +28,9 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.SPKIConst;
 import my.ep.web.util.DigiCertHelper;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.SPKIHelper;
 import my.ep.web.util.TrustGateHelper;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -102,7 +102,6 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private PmUser loginUser;
 	private String certIssuer;
 	//#36605
-	private String identificationNo;
 	private static String digicertEnabled = EpPropertiesUtils.getInstance().getProperty("spki.digicert.enabled");
 	private static String trustgateEnabled = EpPropertiesUtils.getInstance().getProperty("spki.trustgate.enabled");
 	private static final Logger logger = EpLogger.getLogger(SpkiBackingBean.class);
@@ -114,11 +113,11 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public String getSpkiEnabledProperty() {
 		//#30425 - Start
-		log.info(">>>>>>>>>>>> Trying to call EP properties for SPKI <<<<<<<<<<<");
+		log.info(">>>>>>>>>>>> Trying to call EP properties for SPKI Bug 38236<<<<<<<<<<<");
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
 		log.info("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled"));
 		System.out.println("getSpkiEnabledProperty :" + prop.getProperty("spki.enabled"));
-		log.info(">>>>>>>>>>>> Calling EP Properties for SPKI Done <<<<<<<<<<<<<< ");
+		log.info(">>>>>>>>>>>> Calling EP Properties for SPKI Done Bug 38236<<<<<<<<<<<<<< ");
 		//#30425 - End
 		return prop.getProperty("spki.enabled").trim();
 	}
@@ -132,20 +131,28 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			//end checking for validation
 		}
 		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
-		// #30425 - End
+		// #30425 - End, #36605
 		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(null)) {
 			logger.info("::: #25061 getSpkiEnabledProperty true :::");
 			logger.info("::: #25061 getCertIssuer " + getCertIssuer());
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
-				challs = TrustGateHelper.getInstance().getChallengeQuestion(
-						getLoginUser().getIdentificationNo(),
-						getSupplier().getEpNo(), challengeQues1);
+				challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+						.getInstance().getChallengeQuestion(getCertIssuer(),
+								getLoginUser().getIdentificationNo(),
+								getSupplier().getEpNo(), challengeQues1)
+						: TrustGateHelper.getInstance().getChallengeQuestion(
+								getLoginUser().getIdentificationNo(),
+								getSupplier().getEpNo(), challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
-				challs = DigiCertHelper.getInstance().getChallengeQuestion(
-						getLoginUser().getIdentificationNo());
+				challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+						.getInstance().getChallengeQuestion(getCertIssuer(),
+								getLoginUser().getIdentificationNo(),
+								getSupplier().getEpNo(), challengeQues1)
+						: DigiCertHelper.getInstance().getChallengeQuestion(
+								getLoginUser().getIdentificationNo());
 			}
 			setChallengeQues1(challs.get(0));
 			logger.info("::: #25061 before spki_dlg.show");
@@ -162,19 +169,27 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			//end checking for validation
 		}
 		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
-		//#30425 - End
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+		//#30425 - End, #36605
+		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(identificationNo)) {
 			if (getTypeOfCert(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				log.info(">>>>>>>>>>>>>>> masuk dalam trust gate <<<<<<<<<<<<<");
-				challs = TrustGateHelper.getInstance().getChallengeQuestion(
-						identificationNo, getSupplier().getEpNo(),
-						challengeQues1);
+				challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+						.getInstance().getChallengeQuestion(
+								SupplierManagementConst.CERT_TRUSTGATE,
+								identificationNo, getSupplier().getEpNo(),
+								challengeQues1) : TrustGateHelper.getInstance()
+						.getChallengeQuestion(identificationNo,
+								getSupplier().getEpNo(), challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				log.info(">>>>>>>>>>>>>>> masuk dalam certIssuer gate <<<<<<<<<");
-				challs = DigiCertHelper.getInstance().getChallengeQuestion(
-						identificationNo);
+				challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+						.getInstance().getChallengeQuestion(
+								SupplierManagementConst.CERT_DIGICERT,
+								identificationNo, getSupplier().getEpNo(),
+								challengeQues1) : DigiCertHelper.getInstance()
+						.getChallengeQuestion(identificationNo);
 			}
 			log.info("The properties of challs >>>>>>>>>>" + challs);
 			log.info("challs size >>>>>>>>>>>>>>>>>>>>>>>" + challs.size());
@@ -221,13 +236,22 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		challenges.put(challengeQues1, challengeAns1);
 
 		String dataForSigning = originalText;
+		String provider = getCertIssuer(identificationNo);
 
-		if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-			vo = TrustGateHelper.getInstance().getSignedData(identificationNo,
-					getSupplier().getEpNo(), pin, challenges, dataForSigning);
+		if (provider.equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+			vo = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+					.getInstance().getSignedData(provider, identificationNo,
+							getSupplier().getEpNo(), pin, challenges,
+							dataForSigning) : TrustGateHelper.getInstance()
+					.getSignedData(identificationNo, getSupplier().getEpNo(),
+							pin, challenges, dataForSigning);
 		} else {
-			vo = DigiCertHelper.getInstance().getSignedData(identificationNo,
-					getSupplier().getEpNo(), pin, challenges, dataForSigning);
+			vo = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+					.getInstance().getSignedData(provider, identificationNo,
+							getSupplier().getEpNo(), pin, challenges,
+							dataForSigning) : DigiCertHelper.getInstance()
+					.getSignedData(identificationNo, getSupplier().getEpNo(),
+							pin, challenges, dataForSigning);
 		}
 		if (StringUtils.isBlank(vo.getErrMsg())) {
 			signedData = vo.getSignedData();
@@ -262,12 +286,10 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 	
 	private boolean isCertEnabled(String identificationNo){
-		String idNo = StringUtils.isBlank(identificationNo) ? getLoginUser()
-				.getIdentificationNo() : identificationNo;
-		this.identificationNo = idNo;
-		String cert = getCertIssuer(idNo);
+		String cert = StringUtils.isBlank(identificationNo) ? getCertIssuer() : getCertIssuer(identificationNo);
 		boolean isTrustgate = cert.equals(SupplierManagementConst.CERT_TRUSTGATE) && "true".equals(trustgateEnabled);
 		boolean isDigicert = cert.equals(SupplierManagementConst.CERT_DIGICERT) && "true".equals(digicertEnabled);
+		logger.info("isCertEnabled-"+cert+"\t"+isTrustgate+"\t"+isDigicert);
 		return isTrustgate || isDigicert;
 	}
 	//#36605 - end
@@ -303,10 +325,14 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		Object returnObj = null;
 		//#36605
 		//PIN must be 8 chars long, contain only letters, numbers, and at least 1 alphabet and 1 number
-		if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z0-9]{8}$")
-				&& (isCertEnabled(identificationNo))
-				&& "true".equalsIgnoreCase(getSpkiEnabledProperty())){
-			throw new EpException(MessageConst.ERROR_776060, null);
+		if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z0-9]{8}$")){
+			String cert = getCertIssuer();
+			boolean checkTG = cert.equals(SupplierManagementConst.CERT_TRUSTGATE) && !"true".equals(trustgateEnabled);
+			boolean checkDG = cert.equals(SupplierManagementConst.CERT_DIGICERT) && !"true".equals(digicertEnabled);
+			if (checkTG || checkDG || !"true".equalsIgnoreCase(getSpkiEnabledProperty())){
+				//disable for environment other than PRD
+				//throw new EpException(MessageConst.ERROR_776060, null);
+			}
 		}
 
 		try {
@@ -444,13 +470,27 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public void changeChallengeQuestions() {
+		//#36605
+		if (!isCertEnabled(null)){
+			return;
+		}
 		if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-			challs = TrustGateHelper.getInstance().getChallengeQuestion(
-					getLoginUser().getIdentificationNo(),
-					getSupplier().getEpNo(), challengeQues1);
+			challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+					.getInstance().getChallengeQuestion(
+							SupplierManagementConst.CERT_TRUSTGATE,
+							getLoginUser().getIdentificationNo(),
+							getSupplier().getEpNo(), challengeQues1)
+					: TrustGateHelper.getInstance().getChallengeQuestion(
+							getLoginUser().getIdentificationNo(),
+							getSupplier().getEpNo(), challengeQues1);
 		} else {
-			challs = DigiCertHelper.getInstance().getChallengeQuestion(
-					getLoginUser().getIdentificationNo());
+			challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+					.getInstance().getChallengeQuestion(
+							SupplierManagementConst.CERT_DIGICERT,
+							getLoginUser().getIdentificationNo(),
+							getSupplier().getEpNo(), challengeQues1)
+					: DigiCertHelper.getInstance().getChallengeQuestion(
+							getLoginUser().getIdentificationNo());
 		}
 		setChallengeQues1(challs.get(0));
 	}

@@ -32,13 +32,15 @@
 						#{lbl['lbl.sc.eva.all.template']}</td>
 					</c:when>
 					<c:otherwise>
+						<ui:remove>#33787 Start Vinod</ui:remove>
 						<td style="font-size: 12px;">:
-						#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}</td>
+						#{evaluationBackingBean.getChecklistTitle(evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList)}</td>
+						<ui:remove>#33787 End Vinod</ui:remove>
 					</c:otherwise>
 				</c:choose>		
 			</tr>
 			<ui:remove> <!-- Bug #34876 End--></ui:remove>
-			<!-- #29187 Start Vinod -->
+			<ui:remove>#29187 Start Vinod</ui:remove>
 			<c:if test="#{!empty evaluationBackingBean.managedBean.tplSpecZoneDtl.zoneName}">
 			<tr>
 				<td><h:outputLabel
@@ -53,7 +55,7 @@
 				</td>
 			</tr>
 			</c:if>
-			<!-- #29187 End Vinod -->
+			<ui:remove>#29187 End Vinod</ui:remove>
 		</table>
 	</div>
 

@@ -108,13 +108,12 @@
 		
 		<ac:lovPopup />
 		
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.supplier.businessnature.confirm.declare']}
-   			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" action="#{supplierBusinessNatureBackingBean.updateBusinessNature}" oncomplete="submissionConfirmDlg.hide();"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();" ></p:commandButton>
-			</div>
-		</p:dialog>
+		<!-- #34400 -->
+		<ac:confirmationPopupSM id="submissionConfirmDlg" widget="submissionConfirmDlg"
+			okAction="supplierBusinessNatureBackingBean.updateBusinessNature"
+			content="#{lbl['lbl.sm.supplier.businessnature.confirm.declare']}" 
+			update="@this"
+			loadingWidget="blockWidget" />
 	</p:panel>
 	
 	<ac:confirmationPopup id="businessNatureDeletePopUpId"

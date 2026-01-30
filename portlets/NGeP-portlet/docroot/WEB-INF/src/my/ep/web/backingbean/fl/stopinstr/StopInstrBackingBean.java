@@ -155,6 +155,16 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				}
 			}
 			// 36386 - End
+			
+			// 39692-Start
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+					&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getStopInstr().getFlRequest()
+							.getFulfilmentReqId())) {
+				throw new EpException(MessageConst.ERROR_760823);
+
+			}
+			// 39692-End
+			
 			reqDTO.setStopIns(flStopInstr);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
@@ -163,6 +173,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 
 			FulfilmentResDTO resDTO;//36386
@@ -357,34 +368,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
 				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				setDisciplinaryActionMsg(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
 		}
 	}
-
-	/**
-	 * Sets the disciplinary action message
-	 * 
-	 * @param smDisciplinaryAction
-	 */
-	public void setDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
-		boolean isWarningOnly = false;
-		String warningOrDisciplinaryActionMsg;
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly(smDisciplinaryAction)) {
-			isWarningOnly = true;
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		} else if (!isWarningOnly(smDisciplinaryAction)) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		}
-	}
-
 	// 26279 - End
 	
 	/**
@@ -550,13 +539,24 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		validatePOCOCurrentStatus(); //29870
+		validatePOCOCurrentStatus(outcome); //29870-38104
 
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 			}
 		} else {
+			
+			// 39692-Start
+			if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome
+						.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))
+					&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getStopInstr().getFlRequest()
+							.getFulfilmentReqId())) {
+				throw new EpException(MessageConst.ERROR_760823);
+			}
+			// 39692-End
+			
 			if(getManagedBean().getStopInstr().getPmReason().getReasonCode() == null){
 				throw new EpException(MessageConst.ERROR_100022, new String[]{
 						ResourceBundleUtils.getMessage("lbl.fl.stop.instuc.reason.justification",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
@@ -582,11 +582,40 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				}
 				
 				PmUser approver = null;
-				if(hasSupplierRole() && !getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
-					approver = fulfilmentSO.retrieveFlActors(getManagedBean().getStopInstr().getFlRequest().getDocType(), getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value()).getUser();
-				} else {
-					approver = getFacesScopes().getUserSessionBean();
+				
+				// 36386-start
+				String functionType = getManagedBean().getSearchFunctionType();
+				IFulfilmentSO flfulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+				PmUser approverCreatedSdi = null;
+				if (getManagedBean().getStopInstr() != null && getManagedBean().getStopInstr().getStopInstrId() != null) {
+					FlActor flactor = flfulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_STOP_DELIVERY,
+							getManagedBean().getStopInstr().getStopInstrId(), RoleCode.FL_APPROVER.toString());
+					if (flactor != null && flactor.getUserName() != null) {
+						approverCreatedSdi = flactor.getUser();
+					}
 				}
+				if (functionType != null) { // from maintenance
+					if (functionType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+						approver = getFacesScopes().getUserSessionBean();
+					} else if (functionType.equalsIgnoreCase(ParameterConst.ORG_TYPE_SUPPLIER)) {
+						approver = fulfilmentSO.retrieveFlActors(
+								getManagedBean().getStopInstr().getFlRequest().getDocType(),
+								getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId(),
+								RoleCode.FL_APPROVER.value()).getUser();
+					}
+				} else {
+					if (approverCreatedSdi != null || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) { // from task list
+						approver = getFacesScopes().getUserSessionBean();
+					} else {
+						approver = fulfilmentSO.retrieveFlActors(
+								getManagedBean().getStopInstr().getFlRequest().getDocType(),
+								getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId(),
+								RoleCode.FL_APPROVER.value()).getUser();
+					}
+				}
+				// 36386-end
+				
 				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
 				getManagedBean().getApproverList().addAll(approverUserList);
 			}
@@ -979,26 +1008,24 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getStopInstr().getFlRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getStopInstr().getFlRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getStopInstr().getFlRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+			
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 
 	// 26279 - end
 	
 	//29870-start
-	private void validatePOCOCurrentStatus() {
+	private void validatePOCOCurrentStatus(String outcome) {//38104
 		Boolean allowToProceed = true;
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1010,6 +1037,15 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_STOP_DELIVERY);
 		reqDTO.setActionCode(FulfilmentConst.STOP_FULFILMENT);
 		// 36247-End
+		
+		//38104-Start
+		if (getManagedBean().getTaskId()==null && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))
+			reqDTO.setFulfilmentOrderId(getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
+		FulfilmentResDTO resDTOSdi = orderSO.retrieveStopInstructionByOrder(reqDTO);
+		if (resDTOSdi.getFlStopInstr() != null) {
+			throw new EpException(MessageConst.ERROR_740071);
+		}
+		//38104-End
 		resDTO= orderSO.validatePOCOCurrentStatus(reqDTO);
 		
 		allowToProceed = resDTO.isFlag();		
@@ -1018,15 +1054,19 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		}	
 	}		
 	//29870-end
-	//#21416 start
-	public String filterItemName(String itemName) {
-		if(this.getManagedBean().getStopInstr() != null){
-			if(this.getManagedBean().getStopInstr().getFlRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
-				String filteredItemName = filterItemNameNA(itemName);
-				return filteredItemName;
-			}
-		}
-		return itemName;		
+	
+	/**
+	 * 39692
+	 *
+	 * Checks whether there is any active FRN (record_status = 1)
+	 * with an invalid workflow state such as Cancelled or Rejected.
+	 *
+	 * @param fulfilmentReqId
+	 * @return true if invalid FRN data is detected
+	 */
+	private boolean hasInvalidActiveFrnVsWorkflow(Long reqId) {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
 	}
-	//#21416 end
 }

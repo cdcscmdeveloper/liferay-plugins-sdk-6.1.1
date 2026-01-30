@@ -1,3 +1,4 @@
+
 <u><b>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.printing.license.insurance')</b></u>
 
 <table class="descTable" width="100%">
@@ -21,7 +22,7 @@
 		#end
 	#else
 		<tr>
-			<td colspan="5" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+			<td colspan="4" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 		</tr>
 	#end
 </table>
