@@ -729,7 +729,6 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		this.docId = BigInteger.valueOf(reason.getReasonId());
 		DecimalFormat formatter = new DecimalFormat(amtFormatter);
 
-		// handle null
 		if (reason.getDpThreshold() != null) {
 			detailObj(AuditConst.PM_AUD_RC_DP_THRESHOLD_FIELDLABELCODE, null,
 					formatter.format(reason.getDpThreshold().setScale(2)));
@@ -740,7 +739,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 					formatter.format(reason.getPrThreshold().setScale(2)));
 		}
 
-		// if SIT handle agency
+		// if Special Item handle agency
 		addAgency();
 
 		setNewSupplAcctType(managedBeans.getAuditAddSupplAcctType());
@@ -749,12 +748,12 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 
 	private void setNewSupplAcctType(List<PmReasonRestr> pmReasonRestrs) {
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-		PmReason pmReasonSaved = managedBeans.getNewPmReason(); 
+		List<PmReasonRestr> pmReasonRestrSaved = managedBeans.getNewPmReason() == null ? managedBeans.getSuppAccountTypeList() : managedBeans.getNewPmReason().getPmReasonRestr(); 
 
 		if (CollectionUtils.isNotEmpty(pmReasonRestrs)) {
 			for (PmReasonRestr newReasonRestr : pmReasonRestrs) {
-				for (PmReasonRestr  savedReasonRestr : pmReasonSaved.getPmReasonRestr()){
-					if(newReasonRestr.getSupplAcctTypeId().equals(savedReasonRestr.getSupplAcctTypeId())){
+				for (PmReasonRestr savedReasonRestr : pmReasonRestrSaved){
+					if(newReasonRestr.getSupplAcctTypeId().getParameterId().equals(savedReasonRestr.getSupplAcctTypeId().getParameterId())){
 						this.docId = BigInteger.valueOf(savedReasonRestr.getReasonRestrId());
 						detailObj(AuditConst.PM_AUD_RC_SUPPLIER_ACCT_FIELDLABELCODE, null,
 								checkPmParameterDesc(newReasonRestr.getSupplAcctTypeId()));
