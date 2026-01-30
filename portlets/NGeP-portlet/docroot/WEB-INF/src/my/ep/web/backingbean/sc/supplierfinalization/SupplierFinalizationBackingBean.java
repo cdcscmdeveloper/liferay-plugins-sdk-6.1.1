@@ -316,9 +316,8 @@ public class SupplierFinalizationBackingBean extends
 			 // #27502 -- Start
 			QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(qtId);
-			ScQt scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = false;
-			isBpkCentralContract = isBpkCentralContract(scQt);
+			scQt = qtBackingBean.getManagedBean().getQt();
+			boolean isBpkCentralContract = isBpkCentralContract(scQt);
 			
 			//#31632
 			getManagedBean().setMofCntralCtc(isBpkCentralContract);
@@ -505,9 +504,8 @@ public class SupplierFinalizationBackingBean extends
 		// #27502 -- Start
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
-		ScQt scQt = qtBackingBean.getManagedBean().getQt();	
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		scQt = qtBackingBean.getManagedBean().getQt();	
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 		// #27502 -- END
 		
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
@@ -537,8 +535,6 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setSecretaryUser(true);	
 			getManagedBean().setMofFinalization(true);
 			//haziq - button download didn't show after upload - start
-			//ScQtFinalizationReport endorsementReport = new ScQtFinalizationReport();
-			//getManagedBean().setEndorsementReport(endorsementReport); 
 			//haziq - button download didn't show after upload - end
 			// #27502 -- END
 		} else {
@@ -598,9 +594,6 @@ public class SupplierFinalizationBackingBean extends
 				if (isMedicalProcCategory) {
 					this.getManagedBean().getScQt().setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);
 				}
-				// getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
-
-				
 			}
 			List<TplSpecZoneDtl> zoneDetails = resDTO.getZoneDetails();//31401&27502-start
 			getManagedBean().setZoneDetails(zoneDetails);//31401&27502-End
@@ -957,9 +950,8 @@ public class SupplierFinalizationBackingBean extends
 		// #27502 - Start
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
-		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		scQt = qtBackingBean.getManagedBean().getQt();
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 				
 		// Retrieve finalization endorsement remarks
 		if(isBpkCentralContract || this.getManagedBean().isSecretaryUser()){
@@ -1046,16 +1038,6 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	//#27502 - New DO MOF Role and Process - Start
-	private void retrieveMeetingRecordDtls(Long qtId, String committeeType) {
-		//to retrieve Approval Authority
-		IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthoritySO.class);
-		
-		List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
-		
-		this.getManagedBean().setListApprovalAuthority(resultComittee);
-		
-	}
 	
 	/**
 	 * This loadCommitteeList method is to load data from pm_authority_committee
@@ -1063,45 +1045,35 @@ public class SupplierFinalizationBackingBean extends
 	 * @param eventTab the tab where the user has clicked
 	 */
 	public void changeApprovalAuth() {
-		log.info("start changeApprovalAuth");
-		
 		IApproveAuthorityCommitteeSO approveAuthorityCommitteeSo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthorityCommitteeSO.class);
-		
+
 		PmAuthority authority = this.getManagedBean().getApprovalAuthority();
 		List<PmAuthorityCommittee> newComList = new ArrayList<>();
-		//this.getManagedBean().setAuthCodeDesc(tabAuth.getAuthCodeDesc());
-		//this.getManagedBean().setAuthority(tabAuth);
-		if (authority != null && authority.getAuthId() != null){
-		System.out.println("AuthCodeDesc 2 :"+authority.getAuthCodeDesc());
-		System.out.println("Authid 2 :"+authority.getAuthId());
-		AuthorityCommitteeReqDTO reqDTO = new AuthorityCommitteeReqDTO();
-		reqDTO.setAuthority(authority);
-		
-		 AuthorityCommitteeResDTO resDTO = approveAuthorityCommitteeSo.retrieveListApproveAuthority(reqDTO);
-			if (resDTO.getListAuthorityCommittee() != null && !resDTO.getListAuthorityCommittee().isEmpty()){	
-				for(PmAuthorityCommittee committee : resDTO.getListAuthorityCommittee()){
+		if (authority != null && authority.getAuthId() != null) {
+			AuthorityCommitteeReqDTO reqDTO = new AuthorityCommitteeReqDTO();
+			reqDTO.setAuthority(authority);
+
+			AuthorityCommitteeResDTO resDTO = approveAuthorityCommitteeSo.retrieveListApproveAuthority(reqDTO);
+			if (resDTO.getListAuthorityCommittee() != null && !resDTO.getListAuthorityCommittee().isEmpty()) {
+				for (PmAuthorityCommittee committee : resDTO.getListAuthorityCommittee()) {
 					newComList.add(committee);
 				}
 
-				Collections.sort(newComList, new Comparator<PmAuthorityCommittee>(){
+				Collections.sort(newComList, new Comparator<PmAuthorityCommittee>() {
 					@Override
-					public int compare(PmAuthorityCommittee c1, PmAuthorityCommittee c2){
-							return c1.getAuthCommitteeId().compareTo(c2.getAuthCommitteeId());
-					}					
+					public int compare(PmAuthorityCommittee c1, PmAuthorityCommittee c2) {
+						return c1.getAuthCommitteeId().compareTo(c2.getAuthCommitteeId());
+					}
 				});
-		
 			}
-		}else{
+		} else {
 			this.getManagedBean().setApprovalAuthCommittee(new PmAuthorityCommittee());
 		}
-		
-		if(this.getManagedBean().getApprovalAuthCommittee() == null){
-			System.out.println("ApprovalAuthCommittee kosong");
+
+		if (this.getManagedBean().getApprovalAuthCommittee() == null) {
 			this.getManagedBean().setApprovalAuthCommittee(new PmAuthorityCommittee());
 		}
-		
-		System.out.println("newComList size :"+newComList.size());
 		this.getManagedBean().setListApprovalAuthCommittee(newComList);
 	}
 	
@@ -1111,22 +1083,18 @@ public class SupplierFinalizationBackingBean extends
 	}
 			
 	private void getListApprovalAuthority() {
-		//to retrieve Approval Authority
+		// to retrieve Approval Authority
 		IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthoritySO.class);
-		
+
 		List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
-		
-		if (this.getManagedBean().getApprovalAuthority() == null){
+
+		if (this.getManagedBean().getApprovalAuthority() == null) {
 			this.getManagedBean().setApprovalAuthority(new PmAuthority());
-			
-			System.out.println("AuthCodeDesc kosong :");
-		}else{
-			System.out.println("AuthCodeDesc :"+this.getManagedBean().getApprovalAuthority().getAuthCodeDesc());
 		}
-		
+
 		this.getManagedBean().setListApprovalAuthority(resultComittee);
-		
+
 	}
 	//#27502 - New DO MOF Role and Process - end
 	
@@ -1279,11 +1247,6 @@ public class SupplierFinalizationBackingBean extends
 			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();	
 			 //20230727@asyrafhaziq #27502 - New DO MOF Role and Process
 			if (getManagedBean().isBpkCentralContract()){
-			 /* if (meetingList != null && ! meetingList.isEmpty()){
-				for (ScQtMeeting list : meetingList){
-					list.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_DONE));
-				}
-			  }*/
 				this.getManagedBean().setDisableBfButton(true);
 			}
 			getManagedBean().setMeetingList(meetingList);
@@ -1454,7 +1417,6 @@ public class SupplierFinalizationBackingBean extends
 	public void retrieveCommitteeMOFDtls() {
 		log.info("..In retrieveCommitteeMOFDtls()..");
 		
-		System.out.println("..In retrieveCommitteeMOFDtls()..");
 		this.getManagedBean().setPrepareActiveIndex(
 				PREPARE_ACTIVE_INDEX_MINISTRY_OF_FINANCE);
 		
@@ -1692,12 +1654,10 @@ public class SupplierFinalizationBackingBean extends
 			ScQtCommittee scQtCommittee = null;
 			
 			//#27502 -Start
-			ScQt scQt = this.getManagedBean().getScQt();
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 			scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = false;
-			isBpkCentralContract = isBpkCentralContract(scQt);
+			boolean isBpkCentralContract = isBpkCentralContract(scQt);
 			if (isBpkCentralContract) {			
 				reqDTO = validateInfo(2, skipValidation);
 			} else {	//#27502 - END		
@@ -1797,13 +1757,11 @@ public class SupplierFinalizationBackingBean extends
 			if (!isBpkCentralContract) {
 				// #18685 - Start
 				resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
-				if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
-					log.info("masuk 1");
+				if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {					
 					scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
 				}
 				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
 						&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
-					log.info("masuk 2");
 					getManagedBean().getNewBriefingPaperReportList().addAll(
 							getManagedBean().getConsolidationBriefingPaperReportList());
 				}
@@ -2130,9 +2088,8 @@ public class SupplierFinalizationBackingBean extends
 		//27502, navigate to endorsement tab after save
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
-		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		scQt = qtBackingBean.getManagedBean().getQt();
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 		
 		if (isBpkCentralContract) {
 			this.getManagedBean().setActiveIndex(5);
@@ -2992,20 +2949,19 @@ public class SupplierFinalizationBackingBean extends
 				// changeMeetingStatusBrief();
 
 			} else {
+				
 				if (ParameterConst.DECISION_RBP
 						.equals(decisionTypeCode)
 						)  {
 					RequestContext.getCurrentInstance().execute("confirmBriefPopup1.show()");
 				}
-				else
-				{ //@asyrafhaziq #27502 - New DO MOF Role and Process
-					if ( getManagedBean().isBpkCentralContract()) {
+				//@asyrafhaziq #27502 - New DO MOF Role and Process
+				else if (getManagedBean().isBpkCentralContract()) {
 					RequestContext.getCurrentInstance().execute("confirmBriefPopup2.show()");
-				  }else{
+				} else {
 					RequestContext.getCurrentInstance().execute("submissionPopup.show()");
-				  }
 				}
-				
+
 			}
 		} else {
 			this.submitSuppFinalization();
@@ -4215,9 +4171,8 @@ return	remarksNotFound;
 			 // #27502 -- Start
 			QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
-			ScQt scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = false;
-			isBpkCentralContract = isBpkCentralContract(scQt);
+			scQt = qtBackingBean.getManagedBean().getQt();
+			boolean isBpkCentralContract = isBpkCentralContract(scQt);
 			//27502 - Start.
 			// #28834 - Start.
 			getManagedBean().setBpkCentralContract(isBpkCentralContract);
@@ -5713,9 +5668,8 @@ return	remarksNotFound;
 			//27502
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(getManagedBean().getScQt().getQtId());
-			ScQt scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = false;
-			isBpkCentralContract = isBpkCentralContract(scQt);
+			scQt = qtBackingBean.getManagedBean().getQt();
+			boolean isBpkCentralContract = isBpkCentralContract(scQt);
 
 			if (isBpkCentralContract) {
 				statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#27901
@@ -6263,12 +6217,6 @@ return	remarksNotFound;
 				}
 				//6906 note 117 - end
 				
-		//@asyrafhaziq #27502 - New DO MOF Role and Process		
-		/*if (this.getManagedBean().isBpkCentralContract()){
-			excludedDecisionList.add(
-					ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
-		}*/
-				
 		if (excludedDecisionList != null && CollectionUtils.isNotEmpty( //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					excludedDecisionList)) {
 			searchBean = new SearchBean<PmParameterDesc>();
@@ -6755,9 +6703,8 @@ return	remarksNotFound;
 		//Bug #29707 - start
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
-		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		scQt = qtBackingBean.getManagedBean().getQt();
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 		if (isBpkCentralContract ){
 			getManagedBean().setFinalizationMethod(null);//#27502, null the 'Supplier Finalization Method' for re-evaluation 
 		}
@@ -7060,8 +7007,7 @@ return	remarksNotFound;
       String tabMenuChangeCommonAction = "onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : ";
       
       // #27502 -- Start
-      boolean isBpkCentralContract = false;
-      isBpkCentralContract = isBpkCentralContract(scQt);
+      boolean isBpkCentralContract = isBpkCentralContract(scQt);
       if (isBpkCentralContract) {
     	  
     	  //20230727@asyrafhaziq #27502 - New DO MOF Role and Process
@@ -7070,7 +7016,6 @@ return	remarksNotFound;
           menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.preparation",
                   ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
           menuItem.setStyle("width:15%;");
-          // menuItem.setDisabled(isQTMaintenanceScreen());
           menuItem.setTransient(true);
           menuItem.setPartialSubmit(true);
           menuItem.setProcess("@form");
@@ -7087,7 +7032,6 @@ return	remarksNotFound;
           menuItem.setPartialSubmit(true);
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
-//        menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
           menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (2)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
 
@@ -7096,12 +7040,10 @@ return	remarksNotFound;
           menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.meeting.decision",
                   ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
           menuItem.setStyle("width:20%;");
-          // menuItem.setDisabled(isQTMaintenanceScreen());
           menuItem.setTransient(true);
           menuItem.setPartialSubmit(true);
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
-//        menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
           menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (3)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
 
@@ -7113,7 +7055,6 @@ return	remarksNotFound;
           menuItem.setPartialSubmit(true);
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");        
-          //menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
           menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 3 : (5)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
           
@@ -10604,9 +10545,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		// #27502 -- Start
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
-		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		scQt = qtBackingBean.getManagedBean().getQt();
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 		
 		if (!isBpkCentralContract) {
 

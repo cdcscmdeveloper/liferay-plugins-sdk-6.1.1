@@ -2322,27 +2322,17 @@ public class LOIDetailBackingBean extends
 				scLoi != null ?scLoi.getScLoiLoa().getPmOrgProfile()
 						.getOrgProfileId():null).getOrgProfileId());
 		
-	//@asyrafhaziq #27502 - New DO MOF Role and Process
-		
-		//if (resDTO.getScQt().getContractType() == null) {
-			//QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-			//System.out.println("qt_id no " + resDTO.getScQt().getQtId());
-			//qtBackingBean.retrieveQuationTenderDetails(resDTO.getScQt().getQtId());
-			//Long contractType = qtBackingBean.getManagedBean().getQt().getContractType().getParameterId();
-			Long contractType = resDTO.getScQt().getContractType().getParameterId();
-		//} else {
-		//	contractType = resDTO.getScQt().getContractType().getParameterId();
-		//}
-		//System.out.println("contractType " + contractType);
-		if (contractType != null && contractType.equals(SourcingConstants.CENTRAL_CONTRACT)){
-			PmZone zone = SmCommonUtil.getInstance().getUserZone();		
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - start
+		Long contractType = resDTO.getScQt().getContractType().getParameterId();
+
+		if (contractType != null && contractType.equals(SourcingConstants.CENTRAL_CONTRACT)) {
+			PmZone zone = SmCommonUtil.getInstance().getUserZone();
 			if (zone != null) {
-				//System.out.println("zone code " + zone.getZoneCode());
-				userReqDTO.setZoneCode(zone.getZoneCode()) ;
+				userReqDTO.setZoneCode(zone.getZoneCode());
 			}
 			userReqDTO.setBpk(true);
 		}
-		
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 		//20210406@asyrafhaziq - Bug #30662 - End
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 

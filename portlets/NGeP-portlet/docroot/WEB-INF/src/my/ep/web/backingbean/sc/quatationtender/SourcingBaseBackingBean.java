@@ -2526,34 +2526,38 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return contractTypes;
 	}
 	
-	// add rule #27502 START
-	public List<PmParameterDesc> getContractTypesForQt(String procurementMode,ScQt scqt) {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+	/**
+	 * add rule #27502 START
+	 * @param procurementMode
+	 * @param scqt
+	 * @return
+	 */
+	public List<PmParameterDesc> getContractTypesForQt(String procurementMode, ScQt scqt) {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();
 		// check logged in user allow central contract for qt.
-		boolean isAllowCentralContract =  isAllowCentralContract();
+		boolean isAllowCentralContract = isAllowCentralContract();
 		boolean isRuleBpk = false;
-		
-		if (scqt != null){
-			IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-			List<Object[]> bpkList = ruleSO.getBpkByOrgProfileIdAndRuleType(scqt.getOrgProfileId(), RuleTypeConst.PTJCO);
-			
-			if(bpkList != null){
+
+		if (scqt != null) {
+			IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IRuleSO.class);
+			List<Object[]> bpkList = ruleSO
+					.getBpkByOrgProfileIdAndRuleType(scqt.getOrgProfileId(), RuleTypeConst.PTJCO);
+
+			if (bpkList != null) {
 				isRuleBpk = true;
 			}
 		}
-	
-		if(!isRuleBpk || !isAllowCentralContract || procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));
-			} 
-		
-		List<PmParameterDesc> contractTypes = ParameterHelper.getInstance()
-				.getParameterDescListBySearchBean(
-						ParameterTypeConst.CONTRACT_TYPE, searchBean);
-		
-		return contractTypes;
+
+		if (!isRuleBpk || !isAllowCentralContract
+				|| procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							ParameterConst.CONTRACT_TYPE_CENTRAL));
+		}
+
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.CONTRACT_TYPE,
+				searchBean);
 	}
 	// add rule #27502 END
 	
@@ -6349,65 +6353,61 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	//25037 - end - note 510
 	//25037 - End
 		
-		/*
-		 * To check if Application fall under MOF Central Contract flows
-		 * #27502		 
-		 */
-		public boolean isBpkCentralContract(ScQt scQt) {
-			boolean isBpkCentralContract = false;
-			boolean isSbhOrSrwk = false;
-			boolean isRuleBpk = false;
-			Long ctType = null;		
-			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
-					&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
-					&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(scQt.getQtStatus().getStatusId())) {//#25037
-				
-					IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
-							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-					List<String> stateCodeList = new ArrayList<String>();
-					stateCodeList.add(ProfileManagementConst.STATE_CODE_SABAH);
-					stateCodeList.add(ProfileManagementConst.STATE_CODE_SARAWAK);
-					stateCodeList.add(ProfileManagementConst.STATE_CODE_LABUAN);
-					
-					for(String s:stateCodeList){
-						List<Object[]> pjtcode = addressSO.getSabahOrSrwkPtj(scQt.getOrgProfileId(), s);
-						
-						if(pjtcode != null){
-							isSbhOrSrwk = true;
-							break;
-						}					
-					}	
-					
-					IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-					List<Object[]> bpkList = ruleSO.getBpkByOrgProfileIdAndRuleType(scQt.getOrgProfileId(), RuleTypeConst.PTJCO);
-					
-					if(bpkList != null){
-						isRuleBpk = true;
-					}
-					
-					if (scQt.getContractType() == null) {
-						QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-						qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
-						ctType = qtBackingBean.getManagedBean().getQt().getContractType().getParameterId();
-					} else {
-						ctType = scQt.getContractType().getParameterId();
-					}
-					
-					//#9019 Start #note-445 User unable to open side menu for Committee Appointment and Approval when ctType is null. 
-					//      Contract type is not selected while cancel QT
-					if(ctType != null){
-						if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
-							return isBpkCentralContract = true;
-						}
-					}
-					//9019 End #note-445
+	/**
+	 * #27502
+	 * To check if Application fall under MOF Central Contract flows 
+	 * @param scQt
+	 * @return
+	 */
+	public boolean isBpkCentralContract(ScQt scQt) {
+		boolean isSbhOrSrwk = false;
+		Long ctType ;
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setQtId(scQt.getQtId());
+		if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
+				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
+				&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(scQt.getQtStatus().getStatusId())) {// #25037
+
+			IAddressSO addressSO =  BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			List<String> stateCodeList = new ArrayList<>();
+			stateCodeList.add(ProfileManagementConst.STATE_CODE_SABAH);
+			stateCodeList.add(ProfileManagementConst.STATE_CODE_SARAWAK);
+			stateCodeList.add(ProfileManagementConst.STATE_CODE_LABUAN);
+
+			for (String s : stateCodeList) {
+				List<Object[]> pjtcode = addressSO.getSabahOrSrwkPtj(scQt.getOrgProfileId(), s);
+
+				if (pjtcode != null) {
+					isSbhOrSrwk = true;
+					break;
 				}
-			
-			return isBpkCentralContract;
+			}
+
+			IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			List<Object[]> bpkList = ruleSO
+					.getBpkByOrgProfileIdAndRuleType(scQt.getOrgProfileId(), RuleTypeConst.PTJCO);
+
+			if (scQt.getContractType() == null) {
+				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+				qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+				ctType = qtBackingBean.getManagedBean().getQt().getContractType().getParameterId();
+			} else {
+				ctType = scQt.getContractType().getParameterId();
+			}
+
+			// #9019 Start #note-445 User unable to open side menu for Committee
+			// Appointment and Approval when ctType is null.
+			// Contract type is not selected while cancel QT
+			if (ctType != null && bpkList != null && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+				return true;
+			}
+			// 9019 End #note-445
 		}
+
+		return false;
+	}
 		
 		// #18685-Start.
         /**
