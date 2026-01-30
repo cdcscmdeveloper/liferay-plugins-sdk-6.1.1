@@ -1241,7 +1241,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				approverAction(outcome);
 			}
 			//#26059 - start
-			else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
+			else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || getManagedBean().isExceededAmountAlerted()) {
 				proceedSubmit(outcome);
 			}
 			//#26059 - end
@@ -1452,6 +1452,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			if (thresholdData.count > 0) {
 				// #27868 - start
+				getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
 				triggerAlert(outcome, thresholdData, ptjName);
 				// #27868 - end
 			} else if (getManagedBean().getRequestNote() != null
@@ -7784,6 +7785,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	// 27868 - start
+	/**
+	 * Returns the display description for the given procurement parameter.
+	 *
+	 * @param pmParameter procurement parameter
+	 * @return parameter description or empty string if null
+	 */
+	public String getParameterDescription(PmParameter pmParameter) {
+	    return pmParameter == null ? StringUtils.EMPTY : getParameterDesc(pmParameter);
+	}
 	
 	/**
 	 * Checks if the current user's organizational profile is allowed to access Special Item procurements.
@@ -8135,7 +8145,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 			requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
 			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
-			getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
 
 			for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
 				scRequestNoteDtl.setExceedThreshold(true);
