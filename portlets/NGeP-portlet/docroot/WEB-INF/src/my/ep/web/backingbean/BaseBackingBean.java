@@ -891,7 +891,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	/**
-	 * Retrieves combined radio button values from new and old parameter types.
+	 * Retrieves drop down values from new and old parameter types.
 	 * Includes the old parameter only if its code matches the given
 	 * oldParameterCode.
 	 * 
@@ -904,7 +904,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return an array of SelectItem objects representing the combined radio
 	 *         button options
 	 */
-	public SelectItem[] getRadioButtonCodeValuesCombineWIPParameter(String newParameterType, String oldParameterType,
+	public SelectItem[] getDropDownValuesCombineWIPParameter(String newParameterType, String oldParameterType,
 			String oldParameterCode) {
 
 		List<SelectItem> items = new ArrayList<>();
@@ -914,7 +914,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					newParameterType);
 
 			for (PmParameterDesc desc : newParameterDescs) {
-				items.add(new SelectItem(desc.getPmParameter().getParameterCode(), desc.getCodeName()));
+				if (CommonConstants.PK7.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(CommonConstants.PK7_NEW, desc.getCodeName()));
+				} else {
+					items.add(new SelectItem(desc.getPmParameter().getParameterCode(), desc.getCodeName()));
+				}
 			}
 
 			List<PmParameterDesc> oldParameterDescs = ParameterHelper.getInstance().getParameterDescList(
@@ -923,7 +927,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			for (PmParameterDesc desc : oldParameterDescs) {
 				if (oldParameterCode != null
 						&& oldParameterCode.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
-					items.add(new SelectItem(desc.getPmParameter().getParameterCode(), desc.getCodeName()));
+					items.add(new SelectItem(CommonConstants.PK7_OLD, desc.getCodeName()));
 				}
 			}
 

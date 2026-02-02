@@ -11653,127 +11653,114 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	// 26770 - end fix sonarlint
 	
-		// #25726 START
-		private boolean over500K(ScLoa loa) {
+	// #25726 START
+	private boolean over500K(ScLoa loa) {
 
-			BigDecimal contractAmt;
+		BigDecimal contractAmt;
 
-			if (loa.getLoaAmt() != null) {
-				contractAmt = loa.getLoaAmt();
+		if (loa.getLoaAmt() != null) {
+			contractAmt = loa.getLoaAmt();
+		} else {
+			return false;
+		}
+		BigDecimal limit = this.getManagedBean().getLimit();
+
+		boolean isAbove = contractAmt.compareTo(limit) > 0;
+
+		getManagedBean().setAbove500K(isAbove);
+		return isAbove;
+	}
+
+	/**
+	 * @param event
+	 * 207 - TRUE 208 - FALSE
+	 */
+	public void onChangeAgreementReqType(AjaxBehaviorEvent event) {
+	
+		String agreementReqChoice = String.valueOf(event.getComponent().getAttributes().get("value"));
+		Boolean isPK7 = false;
+		ScLoa scLoa;
+		Boolean agreementReqCheck = false;
+		boolean isContractTypeAsMinistry = false; // #25726 - note 424
+
+		boolean currentAgreementReq = getManagedBean().getScLoa().isAgreementReq();
+
+		if (ParameterConst.NO_ID.equalsIgnoreCase(agreementReqChoice)
+				|| ParameterConst.NO_SELECTED.equalsIgnoreCase(agreementReqChoice)) {
+			getManagedBean().setAgreementReqChange(currentAgreementReq);
+
+		} else if (ParameterConst.YES_ID.equalsIgnoreCase(agreementReqChoice)
+				|| ParameterConst.YES_SELECTED.equalsIgnoreCase(agreementReqChoice)) {
+			getManagedBean().setAgreementReqChange(!currentAgreementReq);
+
+		} else {
+			getManagedBean().setAgreementReqChange(false);
+		}
+
+		if (this.getManagedBean().getScLoa() != null) {
+			scLoa = this.getManagedBean().getScLoa();
+			if (scLoa.getQtType() != null) {
+				// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking
+				// to check 2 QT type codes
+				isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(scLoa.getQtType().getParameterType())
+						&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(
+								scLoa.getQtType().getParameterCode());
+				// #29766 End Vinod
+			}
+
+			// #25726 - note 424 - start
+			if (scLoa.getContractType() != null) {
+				isContractTypeAsMinistry = scLoa.getContractType().getParameterCode()
+						.equals(ParameterConst.CONTRACT_TYPE_MINISTRY);
+			}
+			// #25726 - note 424 - end
+		}
+
+		// To check the value change to NO
+		if (agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_ID)
+				|| agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_SELECTED)) {
+			agreementReqCheck = true;
+		}
+
+		// To check the contract amount
+		this.getManagedBean().setAbove500K(over500K(this.getManagedBean().getScLoa()));
+
+		// To display confirmation box
+		// #25726 - note 424
+		if (isPK7 && agreementReqCheck && isContractTypeAsMinistry) {// new
+																		// #25726
+			RequestContext.getCurrentInstance().execute("qtChangeAgreementReqDlg.show()");
+		} else {
+			// To set the changes for no confirmation box
+			if (agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_ID)
+					|| agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_SELECTED)) {
+				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+				getManagedBean().getScLoa().setAgreementReq(true);
+				getManagedBean().getScLoa().setScLoaAttachment(null);
+				RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
+				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 			} else {
-				return false;
-			}
-			BigDecimal limit = this.getManagedBean().getLimit();
-
-			if (contractAmt.compareTo(limit) == 0) {
-				getManagedBean().setAbove500K(false);
-				return false;			
-			} else if (contractAmt.compareTo(limit) > 0) {
-				getManagedBean().setAbove500K(true);
-				return true;
-			} else {
-				getManagedBean().setAbove500K(false);
-				return false;
+				getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
+				getManagedBean().getScLoa().setAgreementReq(false);
+				RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
+				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 			}
 		}
+	}
 
-		public void onChangeAgreementReqType(AjaxBehaviorEvent event) {
-			/**
-			 * Get parameter id
-			 * 
-			 * 207 - TRUE 208 - FALSE
-			 * 
-			 * **/
-			String agreementReqChoice = String.valueOf(event.getComponent().getAttributes().get("value"));
-			Boolean isPeriodic = false;
-			Boolean isPK7 = false;
-			ScLoa scLoa;
-			Boolean isOneOff = false;
-			Boolean agreementReqCheck = false;
-			
-			if((agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_ID)
-					|| agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_SELECTED)) && getManagedBean().getScLoa().isAgreementReq()){
-				getManagedBean().setAgreementReqChange(true);
-			} else if ((agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_ID)
-					|| agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_SELECTED)) && !getManagedBean().getScLoa().isAgreementReq()){
-				getManagedBean().setAgreementReqChange(true);
-			} else if ((agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_ID)
-					|| agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_SELECTED)) && !getManagedBean().getScLoa().isAgreementReq()){
-				getManagedBean().setAgreementReqChange(false);
-			}else{
-				getManagedBean().setAgreementReqChange(false);
-			}
-				
+	// Proceed with changes and set new value for required agreement
+	public void agreementReqYes() {
+		getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
+		getManagedBean().getScLoa().setAgreementReq(false);
+		RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
+	}
 
-			if (this.getManagedBean().getScLoa() != null) {
-				scLoa = this.getManagedBean().getScLoa();
-				if (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode() != null) {
-					isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
-							.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED))
-							|| (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
-									.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
-					isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
-							.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-				}
-				if (this.getManagedBean().getScLoa().getQtType() != null) {
-					// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type codes
-					isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa().getQtType()
-							.getParameterType())
-							&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(this.getManagedBean().getScLoa()
-									.getQtType().getParameterCode());
-					// #29766 End Vinod
-				}
-			}
-
-			// To check the value change to NO
-			if (agreementReqChoice != null) {
-				if (agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_ID)
-						|| agreementReqChoice.equalsIgnoreCase(ParameterConst.NO_SELECTED)) {
-					agreementReqCheck = true;
-				}
-			}
-
-			// To check the contract amount
-			if (over500K(this.getManagedBean().getScLoa())) {
-				this.getManagedBean().setAbove500K(true);
-			} else {
-				this.getManagedBean().setAbove500K(false);
-			}
-
-			// To display confirmation box	
-			if (isPK7 && agreementReqCheck) {//new #25726		
-				RequestContext.getCurrentInstance().execute("qtChangeAgreementReqDlg.show()");
-			} else {			
-				// To set the changes for no confirmation box
-				if (agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_ID)
-						|| agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_SELECTED)) {
-					getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
-					getManagedBean().getScLoa().setAgreementReq(true);
-					getManagedBean().getScLoa().setScLoaAttachment(null);
-					RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
-					RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-				} else {
-					getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
-					getManagedBean().getScLoa().setAgreementReq(false);				
-					RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
-					RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-				}
-			}
-		}
-
-		// Proceed with changes and set new value for required agreement
-		public void agreementReqYes() {
-			getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
-			getManagedBean().getScLoa().setAgreementReq(false);
-			RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);		
-		}
-
-		// Cancel changes and reset the value for required agreement
-		public void agreementReqNo() {
-			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());	
-			getManagedBean().getScLoa().setAgreementReq(true);
-			RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);		
-		}
+	// Cancel changes and reset the value for required agreement
+	public void agreementReqNo() {
+		getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+		getManagedBean().getScLoa().setAgreementReq(true);
+		RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
+	}
     //new #25726 - Start
 	/**
 	 * @return
@@ -11814,100 +11801,99 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	}
 	//new #25726 - End
-		public void loaOfferedPriceChange(){
-			IParameterSO parameterSO = null;
-			try {
-				ScLoa scLoa = null;
-				Boolean isOneOff = false;
-				Boolean isPK7 = false;			
-				
-				if(getManagedBean().getScLoa() != null){
-					scLoa = getManagedBean().getScLoa();
-					if(getManagedBean().getScLoa().getQtType().getParameterId()!=null){					
-						Long parameterId = scLoa.getQtType().getParameterId();
+	public void loaOfferedPriceChange() {
+		IParameterSO parameterSO = null;
+		try {
+			ScLoa scLoa = null;
+			Boolean isOneOff = false;
+			Boolean isPK7 = false;
 
-						parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IParameterSO.class);
-						ParameterReqDTO reqDTO = new ParameterReqDTO();
-						reqDTO.setParameterId(parameterId);
-						ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-						scLoa.setQtType(resDTO.getPmParameter());					
-					}
-					
-					if(this.getManagedBean().getScLoa().getScLoiLoa() != null){
-						if(this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()!= null){				
-							isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()
-									.getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-							}
-					}
-					
-					if(this.getManagedBean().getScLoa().getQtType() != null){
-						// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type codes
-						isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
-								.getQtType().getParameterType())
-								&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(this.getManagedBean().getScLoa()
-										.getQtType().getParameterCode());
-						// #29766 End Vinod
-					}				
-				}		
+			if (getManagedBean().getScLoa() != null) {
+				scLoa = getManagedBean().getScLoa();
+				if (getManagedBean().getScLoa().getQtType().getParameterId() != null) {
+					Long parameterId = scLoa.getQtType().getParameterId();
 
-				// To check the contract amount
-				if (over500K(scLoa)) {
-					this.getManagedBean().setAbove500K(true);
-				} else {
-					this.getManagedBean().setAbove500K(false);
+					parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IParameterSO.class);
+					ParameterReqDTO reqDTO = new ParameterReqDTO();
+					reqDTO.setParameterId(parameterId);
+					ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+					scLoa.setQtType(resDTO.getPmParameter());
 				}
 
-				// Set to default value if there is changes in qt type
-			//new #25726 - Start
-			updateBondAndAgreement(isPK7, isOneOff);//25726 note 298 - issue 3
-			//new #25726 - End	
-			} finally {
-				parameterSO = null;
+				if (this.getManagedBean().getScLoa().getScLoiLoa() != null) {
+					if (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode() != null) {
+						isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode()
+								.getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+					}
+				}
+
+				if (this.getManagedBean().getScLoa().getQtType() != null) {
+					// #29766 Start Vinod updated
+					// getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type
+					// codes
+					isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
+							.getQtType().getParameterType())
+							&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(
+									this.getManagedBean().getScLoa().getQtType().getParameterCode());
+					// #29766 End Vinod
+				}
+			}
+
+			// To check the contract amount
+			if (over500K(scLoa)) {
+				this.getManagedBean().setAbove500K(true);
+			} else {
+				this.getManagedBean().setAbove500K(false);
+			}
+
+			// Set to default value if there is changes in qt type
+			// new #25726 - Start
+			updateBondAndAgreement(isPK7, isOneOff);// 25726 note 298 - issue 3
+			// new #25726 - End
+		} finally {
+			parameterSO = null;
+		}
+	}
+
+	public void fileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		debugLogger("FileUpload");
+		FacesScopes facesScopes = new FacesScopes();
+		if (event.getFile() != null) {
+			ScLoa scLoa = getManagedBean().getScLoa();
+			ScLoaAttachment attachment = new ScLoaAttachment();
+
+			attachment.setScLoa(scLoa);
+			attachment.setDocNo(scLoa.getScQt().getQtNo());
+			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			attachment.setCreatedUser(facesScopes.getUserSessionBean());
+			uploadAttachment(event.getFile(), attachment);
+			scLoa.setScLoaAttachment(attachment);
+		}
+	}
+
+	public void fileDownload() {
+		debugLogger("FileDownload");
+		ScAttachment scAttachment = getManagedBean().getScLoa().getScLoaAttachment();
+		if (scAttachment != null) {
+			try {
+				downloadFile(scAttachment);
+			} catch (IOException ex) {
+				if (ex instanceof FileNotFoundException) {
+					handleException(new EpException(MessageConst.ERROR_760411,
+							new String[] { scAttachment.getFileName() }));
+				}
+
+			} catch (EpException ex) {
+				handleException(ex);
 			}
 		}
-		
-		public void fileUpload(FileUploadEvent event)
-				throws FileNotFoundException, IOException {
-				debugLogger("FileUpload");
-				FacesScopes facesScopes = new FacesScopes();
-				if (event.getFile() != null) {
-					ScLoa scLoa = getManagedBean().getScLoa();			
-					ScLoaAttachment attachment = new ScLoaAttachment();							
-					
-					attachment.setScLoa(scLoa);				
-					attachment.setDocNo(scLoa.getScQt().getQtNo());				
-					attachment
-							.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-					attachment.setCreatedUser(facesScopes.getUserSessionBean());
-					uploadAttachment(event.getFile(), attachment);
-					scLoa.setScLoaAttachment(attachment);
-					}
-			}
-			
-			public void fileDownload(){
-				debugLogger("FileDownload");
-				ScAttachment scAttachment = getManagedBean().getScLoa().getScLoaAttachment();
-				if(scAttachment != null){
-					try{
-						downloadFile(scAttachment);
-					}
-					catch(IOException ex){
-						if(ex instanceof FileNotFoundException){
-							handleException(new EpException(MessageConst.ERROR_760411, new String[]{scAttachment.getFileName()}));
-						}
-						
-					}
-					catch(EpException ex){
-						handleException(ex);
-					}
-				}
-			}
-			
-			public void fileDelete(){
-				debugLogger("FileDelete");
-				getManagedBean().getScLoa().setScLoaAttachment(null);
-			}
+	}
+
+	public void fileDelete() {
+		debugLogger("FileDelete");
+		getManagedBean().getScLoa().setScLoaAttachment(null);
+	}
 			
 	//new #25726 - Start		
 	/**
