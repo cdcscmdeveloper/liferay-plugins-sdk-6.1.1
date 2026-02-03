@@ -181,16 +181,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
-			// 39692-Start
-			if (action.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SAVE)
-					|| action.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)
-					|| action.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
-				if (hasInvalidActiveFrnVsWorkflow(getManagedBean().getFulfilmentNote().getFlRequest()
-						.getFulfilmentReqId())) {
-					throw new EpException(MessageConst.ERROR_760823);
-				}
-			}
-			// 39692-End
 
 			if(!getManagedBean().isValidated()){
 				validateFulfilmentNote(action);
@@ -950,6 +940,17 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				throw new EpException(MessageConst.ERROR_100048);
 			}
 		}
+		
+		// 39692-Start
+		if ((outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SAVE)
+				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT) || outcome
+					.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE))
+				&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getFulfilmentNote().getFlRequest()
+						.getFulfilmentReqId())) {
+
+			throw new EpException(MessageConst.ERROR_760823);
+		}
+		// 39692-End
 		
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {		
 			validateFulfilmentNote(outcome);
