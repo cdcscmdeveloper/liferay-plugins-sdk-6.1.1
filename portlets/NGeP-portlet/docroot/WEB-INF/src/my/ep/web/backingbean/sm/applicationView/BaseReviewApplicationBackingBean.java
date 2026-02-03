@@ -1096,6 +1096,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmCompanyExperiences(
 					activeCompanyExperiences);
 		}
+		// #9299 - Start
+		if (!getAppVersionDetailsWithRedmineNo()) {
+			this.getManagedBean().getMasterAllDataModel().reloadData();
+		}
+		// #9299 - End
 
 	}
 
@@ -5531,4 +5536,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return SmServiceLookup.getMofRegistrationSO().retrieveActiveOtherDescHistory(supplierCategoryId);
 	}  
 	// 36504 - END
+	// #9299 - Start
+	public boolean getAppVersionDetailsWithRedmineNo() {
+		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(),
+				SupplierManagementConst.APP_VERSION_REDMINE_NO_9299);
+	}
+	// #9299 - End
 }
