@@ -11542,7 +11542,7 @@
 	
 	<!--#28188-start-->
 	<portlet>
-		<portlet-name>QTBSVUpdate</portlet-name>
+		<portlet-name>QTBSVChange</portlet-name>
 		<display-name>Briefing/Site Visit Update</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>

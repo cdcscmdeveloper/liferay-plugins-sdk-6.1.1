@@ -31,7 +31,11 @@
 				value="#{lbl['lbl.sc.loiloa.loa.zone.instruction']}" />
 				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
 				id="supplierUpdateInstructionIconQT" rendered="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}"
-				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
+				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" /><br />                   
+			<ui:remove>#26059 - Start</ui:remove>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loa.agency.instruction.verification']}" /><br />
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loa.agency.instruction.verification2']}" />
+			<ui:remove>#26059 - End</ui:remove>
 			<p:spacer height="10" />
 			<p:panel id="supplierSearchCriteria" rendered="#{!isDocTypeQuotation}"
 				header="#{lbl['lbl.sc.notice.board.searchCriteria']}" toggleable="true">
@@ -259,16 +263,18 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-
+			
+			<ui:remove>#26059 - Start</ui:remove>
 			<p:column rendered="#{isSupplierAckStatus}">
 				<f:facet name="header">
 					#{lbl['lbl.sc.action']}
 				</f:facet>
 				<p:commandButton value="#{lbl['lbl.btn.assign']}" 
-					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+					disabled="#{lOADetailBackingBean.validateAssignButton(lOADetailBackingBean.managedBean.readOnly , scLoiLoaItem)}"
 					action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
 					rendered="#{lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" /><ui:remove>Bug #34757</ui:remove>
 			</p:column>
+			<ui:remove>#26059 - End</ui:remove>
 			<p:ajax event="page" listener="#{lOADetailBackingBean.retainAwardPage()}" process="@this" update="@this" /><ui:remove>#34242</ui:remove>
 		</p:dataTable>
 		<c:if test=	"#{isZonalWithPaOrPs}">
