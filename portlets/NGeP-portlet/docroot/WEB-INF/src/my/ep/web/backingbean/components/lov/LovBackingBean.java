@@ -784,6 +784,7 @@ public class LovBackingBean implements Serializable {
 	
 			}
 		} else	if(this.getLovBean().getSelectionMode().equalsIgnoreCase("multiple")) {
+			lovBean.setUnSelectAndCancel(false); //Fix - #29416
 			//20200909@akmal - Enhancement28951 - Start
 			if(!persistedEntities.isEmpty()) selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values());
 			//20200909@akmal - Enhancement28951 - End
@@ -861,7 +862,7 @@ public class LovBackingBean implements Serializable {
 				if (getSelectedEntities() != null && !getSelectedEntities().isEmpty()) {
 					return false;
 				}
-			} else if(getSelectedEntities()!=null && getSelectedEntities().size()>0 && !itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())){
+			} else if(getSelectedEntities()!=null && !getSelectedEntities().isEmpty() && !itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())){
 				// #29832 & #9442 added if else to make sure the selected cb save after tick. 
 				// Default save after click next page onPageChange listener
 				if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
@@ -891,6 +892,7 @@ public class LovBackingBean implements Serializable {
 	//Start - #29416
 	//20200909@akmal - Enhancement28951 - Start
 	public void onUnselectRow(UnselectEvent event){
+		lovBean.setUnSelectAndCancel(true);
 		Object value = event.getObject();
 		if(value instanceof PmBusinessNature){
 			Long key = ((PmBusinessNature) value).getBusinessNatureId();
