@@ -19377,7 +19377,7 @@ public class SmApplicationBackingBean extends
 		return pmStatus.getStatusId() != null;
 	}
 //	#37925 END
-// #9299 - Start
+	// #9299 - Start
 	public boolean getAppVersionDetailsWithRedmineNo() {
 		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(),
 				SupplierManagementConst.APP_VERSION_REDMINE_NO_9299);
