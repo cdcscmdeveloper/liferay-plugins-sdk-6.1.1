@@ -3618,9 +3618,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 		getManagedBean().setSelectedCategoryList(new ArrayList<CtPanelCategory>());
 	}
-
+	
+	/**
+	 * Handles category selection change events from the UI.
+	 * This method is intentionally empty and exists only to trigger JSF Ajax updates.
+	 */
 	public void onCategorySelectionChange() {
-
+		// No implementation required
 	}
 	// #30014 - End
 	
