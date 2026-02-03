@@ -95,6 +95,22 @@ public class SLALogConstant {
 	public static final String VIEW_QT_BID_SCHEDULES_DATA_MODEL = "ScheduleBiddingPagingDataModel";
 	
 	// 25791-end
+	
+	// 29661 -start-
+	public static final String FETCH_CHECKLIST_VALUE_SCORE = "fetchCheckListValueScore";
+	public static final String FETCH_COMPANY_EXP_PROPOSAL_CHECKLIST_SCORE = "fetchProposalAndCheckListScores";
+	public static final String RETRIEVE_COMPANY_EXP_EVALUATION_DETAILS = "retrieveCompanyExpDetails";
+	public static final String QT_SP_DETAIL_BACKINGBEAN = "SPDetailBackingBean";
+	public static final String RETRIEVE_PROPOSAL_COMPANY_EXP_DETAILS = "retrieveProposalCompanyExpdtls";
+	public static final String DOWNLOAD_SUPPLIER_LOA_DETAILS_REPORTS = "downloadCompExpLOAReports";
+	public static final String RETRIEVE_SUPP_MAP_REPORT = "retrieveSuppLoiLoaMapForReport";
+	public static final String COMP_EXP_SUPP_PAGING_DATA_MODEL = "ViewSupplierCompExpDtlsPagingDataModel";
+	public static final String RETRIEVE_CONTRACT_STATUS_COUNT = "retrieveContractStatusValueCount";
+	public static final String COMP_EXP_LOA_DETAILS_PAGE = "viewLOADetailsPage";
+	public static final String QT_SOURCING_BACKINGBEAN = "SourcingBaseBackingBean";
+
+	// 29661 -end-
+	
 	private SLALogConstant(){
 		
 	}	
