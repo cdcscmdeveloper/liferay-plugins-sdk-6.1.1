@@ -803,8 +803,9 @@
 						<p:outputPanel id="uploadApprovalLetterPg"> 
 							<!-- #25726 START -->													
 							<!-- #25725 note 165  --><!-- new #25726 - Start -->
+							<!-- #25726 - note 424-->
 						<h:panelGroup
-							rendered="#{isEditableStatus and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)}"
+							rendered="#{isEditableStatus and isContractTypeAsMinistry and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)}"
 							required="true">
 							<!-- new #25726 - End -->
 							<!-- #25726 END -->
@@ -836,15 +837,9 @@
 													styleClass="tasklist_title1" />
 											</p:commandLink>
 										</p:outputPanel></td>
-									<td style="margin-top: -3px"><c:if
-											test="#{isDocTypeQuotation}">
-											<ac:iconTooltip
-												value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" />
-											<ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
-										</c:if> <c:if test="#{!isDocTypeQuotation}">
-											<ac:iconTooltip
-												value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
-										</c:if></td>
+									<td style="margin-top: -3px">
+										<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" /><ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
+									</td>
 								</tr>
 							</table>
 						</h:panelGroup>
@@ -865,14 +860,8 @@
 			 	 							</p:outputPanel> 
 			 	 						</td>
 			 	 						<td style="margin-top: -3px">
-											<c:if test="#{isDocTypeQuotation}">
 												<ac:iconTooltip
 													value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" /> <ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
-											</c:if>
-											<c:if test="#{!isDocTypeQuotation}">
-												<ac:iconTooltip
-													value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
-											</c:if>
 										</td>
 			 	 					</tr>
 			 	 				</table>		
