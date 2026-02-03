@@ -795,6 +795,7 @@ public class LovBackingBean implements Serializable {
 	
 			}
 		} else	if(this.getLovBean().getSelectionMode().equalsIgnoreCase("multiple")) {
+			lovBean.setUnSelectAndCancel(false); //Fix - #29416
 			//20200909@akmal - Enhancement28951 - Start
 			if(!persistedEntities.isEmpty()) selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values());
 			//20200909@akmal - Enhancement28951 - End
@@ -902,6 +903,7 @@ public class LovBackingBean implements Serializable {
 	//20200909@akmal - Enhancement28951 - Start
 	//Start - #29416
 	public void onUnselectRow(UnselectEvent event){
+		lovBean.setUnSelectAndCancel(true);
 		Object value = event.getObject();
 		if(value instanceof PmBusinessNature){
 			Long key = ((PmBusinessNature) value).getBusinessNatureId();
