@@ -41,6 +41,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	String lvlCode3;
 	BigInteger paramlvlId;
 	BigInteger docId;
+	String docNo = null;
 	String feeExemptionOrgType;
 	String feeExemptionSuppItem;
 	String feeExemptionComodity;
@@ -387,6 +388,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			} else if (Long.valueOf(1382).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())
 					|| Long.valueOf(677).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
 				ruleValue = rawRuleValue;
+				docNo = rawRuleValue;
 			} else {
 				if (rawRuleValue.contains(".")) {
 					String number = rawRuleValue;
@@ -432,9 +434,10 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem.getRuleValueId()) > 0)
 				&& newCreatedItem.getCategoryL3Id() != null) {
-			return newCreatedItem.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+			docNo = newCreatedItem.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ newCreatedItem.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
 					+ newCreatedItem.getCategoryL3Id().getCategoryL3Code();
+			return docNo;
 		}
 		return null;
 	}
@@ -632,7 +635,6 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	public void spRuleValTypeAddUpdateDeleteAuditDetail(PmConfigRuleValue ruleValue, BigInteger fieldLabelCode, String oldValue,
 			String newValue, String actionType) {
 		lvlCode3 = ruleValue.getRuleTypeCode();
-		docId = BigInteger.valueOf(ruleValue.getRuleValueId());
 		addAuditDetail(fieldLabelCode, oldValue, newValue, actionType);
 	}
 
@@ -656,6 +658,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		detailObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		detailObj.setLvlCode2(lvlCode2);
 		detailObj.setDocId(docId);
+		detailObj.setDocNo(docNo);
 		detailObj.setActionType(actionType);
 		detailObj.setLvlCode3(lvlCode3);
 		detailObj.setFieldLabelCode(fieldLabelCode);
