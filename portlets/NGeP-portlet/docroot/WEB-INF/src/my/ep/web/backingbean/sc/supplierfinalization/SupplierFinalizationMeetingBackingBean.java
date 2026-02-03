@@ -2509,6 +2509,8 @@ if (CollectionUtils.isNotEmpty(
 		}
 		
 		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
+		
+		this.roleChangedListener(member);//#39858
 	}
 	
 	/**

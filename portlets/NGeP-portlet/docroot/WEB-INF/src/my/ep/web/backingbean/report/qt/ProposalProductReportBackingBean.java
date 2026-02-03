@@ -144,9 +144,6 @@ QtReportBackingBean<ProposalProductReportManagedBean> implements Serializable{
 		}
 		
 		// 29580 - Start (Harun) Change option from single status to multiple 
-		/*if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
-			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
-		}*/
 		if(CollectionUtils.isNotEmpty(reportFieldBean.getScStatusManyMenu())){
 			List<String> conversionList = new ArrayList<>();
 			

@@ -184,10 +184,12 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;							
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean; //#25790
+import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;							  
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -758,6 +760,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			ScLoa scLoa = resDTO.getScLoa();
 			getManagedBean().setScLoa(scLoa);
+   
+			//#26059 - Start
+			CommonUtils commonUtils = new CommonUtils();
+			for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
+				item.getScRequestItem()
+						.setItemName(commonUtils.removeItemNameNA(item.getScRequestItem().getItemName()));
+			}
+			//#26059 - End
 							
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
@@ -1355,6 +1365,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			SmSupplier smSupplier = getQtSuppFinalizationSO().evaluateDisciplinaryActions(
 					scLoa.getScLoiLoa().getSmSupplier(), qtId);
 			scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+			
+			//#26059 - Start
+			filterLOAItemName(scLoa.getScLoiLoaItems());
+			//#26059 - End	 
 		}
 
 		}
@@ -11670,12 +11684,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.getScLoa().getProcurementMode().getParameterCode());
 		boolean isPeriodicBelow4Above500K = isPeriodic && !isPeriodAbove4 && isAbove500K;
 		boolean isPeriodicAbove4 = isPeriodic && isPeriodAbove4;
+		// #25726 - note 424
+        boolean isContractTypeAsMinistry = scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY);
 
 		this.getManagedBean().setAbove500K(isAbove500K);
 
 		// Case 1: PK7 (strict check), Periodic contract, agreement false
 		if (!agreementReq) {
-			if ((isPK7 && !isPK2OrSpecial) && (isPeriodicAbove4 || (isPeriodicBelow4Above500K))) {
+			// #25726 - note 424
+			if (isContractTypeAsMinistry  && (isPK7 && !isPK2OrSpecial) && (isPeriodicAbove4 || (isPeriodicBelow4Above500K))) {
 				this.getManagedBean().setAgreementReqChange(true);
 				RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");
 
@@ -12225,10 +12242,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public BigDecimal calculateTotalItemPrice() {
 		BigDecimal totalPrice = BigDecimal.ZERO;
-		if(CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())){
-			for(ScLoiLoaItem item: this.getManagedBean().getLoiLoaItemsResult()){
-				totalPrice = calcSubTotalPrice(item).add(totalPrice) ;
-			}
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())) {
+			// #39747 - Start
+			totalPrice = calcTotalAmount(this.getManagedBean().getLoiLoaItemsResult());
+			// #39747 - End
+
 		}
 		totalPrice = totalPrice.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 
@@ -13383,5 +13401,36 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//#21692 - End
+	
+	// #26059 - Start
+		/**
+		 * Removes "NA" placeholders from the item names in the list of LOA items.
+		 * This method iterates through each {@code ScLoi} and its associated
+		 * {@code ScLoiLoaItem} list. If the item name contains "NA", it will be
+		 * cleaned using {@code CommonUtils.removeItemNameNA()}.
+		 * 
+		 * @param listOfScLoi
+		 *            the list of LOA objects to process
+		 */
+		private void filterLOAItemName(List<ScLoiLoaItem> listOfScLoiItem) {
+			if (listOfScLoiItem == null || listOfScLoiItem.isEmpty()) {
+				return;
+			}
+			try {
+				CommonUtils commonUtils = new CommonUtils();
+				for (ScLoiLoaItem item : listOfScLoiItem) {
+					if (item == null || item.getScRequestItem() == null) {
+						continue;
+					}
+					String cleanedName = commonUtils.removeItemNameNA(item.getScRequestItem().getItemName());
+					item.getScRequestItem().setItemName(cleanedName);
+				}
+
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("DP", "filterLOAItemName", StringUtils.EMPTY, "filterLOAItemName",
+						getUserIdSessionFromLoginId(), e);
+			}
+		}
+		// #26059 - End
 }
 
