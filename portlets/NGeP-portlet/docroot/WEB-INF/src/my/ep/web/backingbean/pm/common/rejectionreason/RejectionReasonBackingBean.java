@@ -1960,6 +1960,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 	
 	private void resetAuditBean(){
+		this.getManagedBean().setNewPmReason(null);
 		this.getManagedBean().setAuditAddAppTypeRestrictions(null);
 		this.getManagedBean().setAuditAddComTypeRestrictions(null);
 		this.getManagedBean().setAuditAddSuppTypeRestrictions(null);
@@ -1968,6 +1969,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setAuditDeleteAppRestrictions(null);
 		this.getManagedBean().setAuditDeleteComRestrictions(null);
 		this.getManagedBean().setAuditDeleteSuppRestrictions(null);
+		
+		// 28962-Audit START
+		this.getManagedBean().setAuditAddSupplAcctType(null);
+		this.getManagedBean().setAuditUpdateSupplAcctType(null);
+		this.getManagedBean().setAuditDeleteSupplAcctType(null);
+		this.getManagedBean().setAuditAddAgency(null);
+		this.getManagedBean().setAuditDeleteAgency(null);
+		// 28962-Audit END
 	}
 	//35509 - END
 	
