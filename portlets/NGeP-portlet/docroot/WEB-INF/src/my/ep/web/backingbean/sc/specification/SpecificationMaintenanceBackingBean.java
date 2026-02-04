@@ -450,7 +450,7 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 			this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
 			if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
 				SpecificationBackingBean specBB = new SpecificationBackingBean();
-				specBB.qtChecklistTabChange(10);
+				specBB.qtChecklistTabChange(11);//+1 from original no due to #29661
 				RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
 			}
 		}
@@ -675,6 +675,21 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
+		// #10141 Start Vinod
+		boolean isReadOnly = this.getManagedBean().isReadOnly();
+		if (!isReadOnly
+				&& QTStatusConst.getQTSpecMaintenanceInactiveChecklistUpdateGroup().contains(
+						this.getManagedBean().getCurrentStatusId())) {
+			boolean isInactiveChecklistPopup = specBB.checkInactiveChecklistForPopup(this.getManagedBean()
+					.isShowInactiveChecklistPopup(), QTConstants.SPEC_MAINTENANCE);
+
+			if (isInactiveChecklistPopup) {
+				RequestContext.getCurrentInstance()
+				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+				return;
+			}
+		}
+		// #10141 End Vinod
 		
 	log.debug("end editSpecificationMaintenance");
 }
