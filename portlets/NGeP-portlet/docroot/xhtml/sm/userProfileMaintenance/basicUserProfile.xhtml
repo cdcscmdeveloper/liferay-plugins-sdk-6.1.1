@@ -26,9 +26,9 @@
 						immediate="true" action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-				<!-- #34159 - START - add param disablevalidation, #34400, #36718 - add update @all -->
+				<!-- #34159 - START - add param disablevalidation, #34400, #36718 - add update @form -->
 					<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" update="@all">
+						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" update="@form">
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton> 
 				<!-- #34159 & #36718 - END -->

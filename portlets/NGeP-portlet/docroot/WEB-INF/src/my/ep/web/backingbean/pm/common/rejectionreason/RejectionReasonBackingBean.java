@@ -398,9 +398,11 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			//#28962 - end
 			if(pmReason.getSourceMethod() != null && pmReason.getSourceMethod().getParameterId() != null){
 					this.getManagedBean().setSelectedSourceMethodId(pmReason.getSourceMethod().getParameterId());
+			// #39618 - Start
 			} else {
 				this.getManagedBean().setSelectedSourceMethodId(null);
 			}
+			// #39618 - end
 		
 		}catch (Exception e){
 			e.printStackTrace();
@@ -1314,16 +1316,27 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 	
 	// 39618 START
-	public void deleteCircularPanel(){
+	/**
+	 * To delete reason applicability when tick purchase from contract
+	 */
+	private void deleteCircularPanel(){
 
+		boolean isPanelCircular = false;
+		int rowIndex = 0;
+		
 		if(CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedReason().getPmPIDReasonList())){
-			for( PmPIDReason pIDReason :this.getManagedBean().getSelectedReason().getPmPIDReasonList()){
+			for(int i =0; i<this.getManagedBean().getSelectedReason().getPmPIDReasonList().size(); i++){
+				PmPIDReason pIDReason = this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(i);
 				if((ParameterConst.DOCTYPE_PANEL_CIRCULAR).equals(pIDReason.getDocType())){
-					this.getManagedBean().getSelectedReason().getPmPIDReasonList().remove(pIDReason);
+					isPanelCircular = true;
+					rowIndex = i;
 					}
 				}
 			}
+		if(isPanelCircular){
+			deleteReasonApplicability(rowIndex);
 		}
+	}
 	// 39618 END
 	
 	/**
@@ -1947,6 +1960,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 	
 	private void resetAuditBean(){
+		this.getManagedBean().setNewPmReason(null);
 		this.getManagedBean().setAuditAddAppTypeRestrictions(null);
 		this.getManagedBean().setAuditAddComTypeRestrictions(null);
 		this.getManagedBean().setAuditAddSuppTypeRestrictions(null);
@@ -1955,6 +1969,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setAuditDeleteAppRestrictions(null);
 		this.getManagedBean().setAuditDeleteComRestrictions(null);
 		this.getManagedBean().setAuditDeleteSuppRestrictions(null);
+		
+		// 28962-Audit START
+		this.getManagedBean().setAuditAddSupplAcctType(null);
+		this.getManagedBean().setAuditUpdateSupplAcctType(null);
+		this.getManagedBean().setAuditDeleteSupplAcctType(null);
+		this.getManagedBean().setAuditAddAgency(null);
+		this.getManagedBean().setAuditDeleteAgency(null);
+		// 28962-Audit END
 	}
 	//35509 - END
 	

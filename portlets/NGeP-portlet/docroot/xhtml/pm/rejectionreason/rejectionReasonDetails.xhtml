@@ -192,7 +192,7 @@
 								<td width="5%"><p:selectBooleanCheckbox id="chkPrchaseContract"
 										value="#{rejectionReasonBackingBean.managedBean.selectedReason.contractPurchase}">
 										<p:ajax event="change" process="@this"
-											update="circularCategory, sourcingMethod,circularCriteriaLabel"
+											update="circularCategory, sourcingMethod, circularCriteriaLabel, dtReasonApplicaility"
 											listener="#{rejectionReasonBackingBean.purchaseFromContractChange()}" />
 									</p:selectBooleanCheckbox></td>
 								<th width="20%"><p:outputLabel

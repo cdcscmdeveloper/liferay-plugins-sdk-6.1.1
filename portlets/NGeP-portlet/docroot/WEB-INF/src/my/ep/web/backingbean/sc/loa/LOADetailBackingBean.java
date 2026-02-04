@@ -48,6 +48,7 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;//#27868
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.pm.map.IPmPK7MapSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -89,6 +90,7 @@ import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;//#27868
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
@@ -126,9 +128,11 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;//#27868
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmReasonRestr; //#27868
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.pm.map.PmPK7Mapping;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -171,6 +175,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
@@ -179,10 +184,12 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;							
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean; //#25790
+import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;							  
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -204,6 +211,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ReasonHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
@@ -585,6 +593,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		triggerPK7AndSpecialItemAlert(); //#27868
 		assignListOfPtjAllowedForSpecialItem();//#27868
+		//27868 - start
+		if (validateProcurementTypeisRPT(resDTO.getScLoa().getCreatedDate()).equalsIgnoreCase(
+				ParameterTypeConst.PROCUREMENT_TYPE) && null != getManagedBean().getScLoa()
+						&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(getManagedBean().getScLoa().getScLoiLoa()
+								.getDocType())) {
+			finalizeWIPCodePK7();
+		}
+		//27868 - end
 		// Bug 34404 - related to 29007 - end
 		//#21692 - Start
 		QtLOABackingBean qtLoa = new QtLOABackingBean();
@@ -744,6 +760,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			ScLoa scLoa = resDTO.getScLoa();
 			getManagedBean().setScLoa(scLoa);
+   
+			//#26059 - Start
+			CommonUtils commonUtils = new CommonUtils();
+			for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
+				item.getScRequestItem()
+						.setItemName(commonUtils.removeItemNameNA(item.getScRequestItem().getItemName()));
+			}
+			//#26059 - End
 							
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
@@ -1341,6 +1365,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			SmSupplier smSupplier = getQtSuppFinalizationSO().evaluateDisciplinaryActions(
 					scLoa.getScLoiLoa().getSmSupplier(), qtId);
 			scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+			
+			//#26059 - Start
+			filterLOAItemName(scLoa.getScLoiLoaItems());
+			//#26059 - End	 
 		}
 
 		}
@@ -4250,6 +4278,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// remove empty remark - end
 
 		validateLOADetails(scLoa, outcome);
+		// 27868 - start
+		if (validateProcurementTypeisRPT(scLoa.getCreatedDate()).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
+			validateReasonStatus(scLoa);
+		}
+		// 27868 - end
 
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		// #26475 - start
@@ -11651,12 +11684,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.getScLoa().getProcurementMode().getParameterCode());
 		boolean isPeriodicBelow4Above500K = isPeriodic && !isPeriodAbove4 && isAbove500K;
 		boolean isPeriodicAbove4 = isPeriodic && isPeriodAbove4;
+		// #25726 - note 424
+        boolean isContractTypeAsMinistry = scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY);
 
 		this.getManagedBean().setAbove500K(isAbove500K);
 
 		// Case 1: PK7 (strict check), Periodic contract, agreement false
 		if (!agreementReq) {
-			if ((isPK7 && !isPK2OrSpecial) && (isPeriodicAbove4 || (isPeriodicBelow4Above500K))) {
+			// #25726 - note 424
+			if (isContractTypeAsMinistry  && (isPK7 && !isPK2OrSpecial) && (isPeriodicAbove4 || (isPeriodicBelow4Above500K))) {
 				this.getManagedBean().setAgreementReqChange(true);
 				RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");
 
@@ -12206,10 +12242,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public BigDecimal calculateTotalItemPrice() {
 		BigDecimal totalPrice = BigDecimal.ZERO;
-		if(CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())){
-			for(ScLoiLoaItem item: this.getManagedBean().getLoiLoaItemsResult()){
-				totalPrice = calcSubTotalPrice(item).add(totalPrice) ;
-			}
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getLoiLoaItemsResult())) {
+			// #39747 - Start
+			totalPrice = calcTotalAmount(this.getManagedBean().getLoiLoaItemsResult());
+			// #39747 - End
+
 		}
 		totalPrice = totalPrice.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 
@@ -13174,8 +13211,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * Only applicable when procurement type is Special Item.
 	 */
 	public void assignListOfPtjAllowedForSpecialItem() {
-		if (getManagedBean().getScLoa().getProcurementType().getParameterCode()
-				.equals(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+
+		if ((null != getManagedBean().getScLoa() && ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(getManagedBean()
+				.getScLoa().getScLoiLoa().getDocType()))
+				&& (null != getManagedBean().getScLoa().getProcurementType() && getManagedBean().getScLoa()
+						.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_SPECIAL_ITEM))) {
 			getManagedBean().getPtjIds().clear();
 
 			IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -13196,6 +13236,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+
 	}
 	
 	/**
@@ -13215,6 +13256,94 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							.equals(userOrg.getPmOrgProfile().getParentOrgProfile().getOrgProfileId())) {
 				getManagedBean().getPtjIds().add(userOrg.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
 			}
+		}
+	}
+	
+	/**
+	 * Finalize PK7 justification by resolving old-to-new reason mapping,
+	 * handling special item cases, and filtering inactive justification reasons.
+	 */
+	private void finalizeWIPCodePK7() {
+		if (null != getManagedBean().getScLoa().getScQuote()
+				&& null != getManagedBean().getScLoa().getScQuote().getJustificationType()
+				&& null != getManagedBean().getScLoa().getScQuote().getJustificationType().getReasonId()) {
+			IPmPK7MapSO pk7MapSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IPmPK7MapSO.class);
+			
+			PmPK7Mapping pmPK7Mapping = pk7MapSO.findByOldReasonId(getManagedBean().getScLoa().getScQuote().getJustificationType().getReasonId());
+
+			if (pmPK7Mapping != null){
+				defaultToPK7W(pmPK7Mapping);
+			}
+			else {
+				defaultToSpecialtem();				
+			}			
+		} else {
+			//set default PK7
+			getManagedBean().getScLoa().setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_PK7));
+			getManagedBean().getScLoa().getScQuote().setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_PK7));
+		}
+	}
+
+	/**
+	 * Defaults quotation to Special Item flow when justification matches SIT list.
+	 * Falls back to PK7W when no matching Special Item is found.
+	 */
+	protected void defaultToSpecialtem() {
+		// special item
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(getManagedBean().getScLoa().getScQuote().getJustificationType().getReasonId());
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+
+		ReasonResDTO resDTO = reasonSO.retrieveReasonDescById(reqDTO);
+		PmReasonDesc reasonDesc = (resDTO != null) ? resDTO.getReasonDesc() : null;
+		boolean matched = false;
+
+		if (reasonDesc != null && reasonDesc.getReasonDesc() != null) {
+
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(
+					ReasonCategory.JUSTIFICATION_SIT.value());
+
+			for (PmReasonDesc sitReason : reasonDescs) {
+				if (sitReason != null && reasonDesc.getReasonDesc().trim().equalsIgnoreCase(sitReason.getReasonDesc().trim())) {
+					matched = true;
+					// set procurement type = Special Item
+					getManagedBean().getScLoa().setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_SPECIAL_ITEM));
+					getManagedBean().getScLoa().getScQuote().setJustificationType(sitReason.getPmReason());
+					getManagedBean().getScLoa().getScQuote().setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_SPECIAL_ITEM));
+					
+					break;
+				}
+			}
+			
+			if (!matched) {
+				//set default PK7
+				getManagedBean().getScLoa().setProcurementType(getManagedBean().getScLoa().getProcurementType());
+				getManagedBean().getScLoa().getScQuote().setJustificationType(getManagedBean().getScLoa().getJustificationType());
+				getManagedBean().getScLoa().getScQuote().setProcurementType(getManagedBean().getScLoa().getProcurementType());
+			}
+		}
+	}
+
+	/**
+	 * Applies PK7W defaults based on PK7 mapping.
+	 * Handles inactive old PK7 or mapped PK7W justification.
+	 */
+	protected void defaultToPK7W(PmPK7Mapping pmPK7Mapping) {
+		if(pmPK7Mapping.getNewReason() == null){
+			//no PK7 New mapping, basically the old PK7 data already inactive
+			getManagedBean().getScLoa().setProcurementType(getManagedBean().getScLoa().getProcurementType());
+			getManagedBean().getScLoa().getScQuote().setJustificationType(getManagedBean().getScLoa().getScQuote().getJustificationType());
+			getManagedBean().getScLoa().getScQuote().setProcurementType(getManagedBean().getScLoa().getScQuote().getProcurementType());
+		}
+		else if(pmPK7Mapping.getNewParameterCode().equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())){
+			//PK7 New
+			getManagedBean().getScLoa().setProcurementType(pmPK7Mapping.getNewProcurementType());
+			getManagedBean().getScLoa().getScQuote().setJustificationType(pmPK7Mapping.getNewReason());
+			getManagedBean().getScLoa().getScQuote().setProcurementType(pmPK7Mapping.getNewProcurementType());
 		}
 	}
 	// #27868 - End
@@ -13272,5 +13401,36 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//#21692 - End
+	
+	// #26059 - Start
+		/**
+		 * Removes "NA" placeholders from the item names in the list of LOA items.
+		 * This method iterates through each {@code ScLoi} and its associated
+		 * {@code ScLoiLoaItem} list. If the item name contains "NA", it will be
+		 * cleaned using {@code CommonUtils.removeItemNameNA()}.
+		 * 
+		 * @param listOfScLoi
+		 *            the list of LOA objects to process
+		 */
+		private void filterLOAItemName(List<ScLoiLoaItem> listOfScLoiItem) {
+			if (listOfScLoiItem == null || listOfScLoiItem.isEmpty()) {
+				return;
+			}
+			try {
+				CommonUtils commonUtils = new CommonUtils();
+				for (ScLoiLoaItem item : listOfScLoiItem) {
+					if (item == null || item.getScRequestItem() == null) {
+						continue;
+					}
+					String cleanedName = commonUtils.removeItemNameNA(item.getScRequestItem().getItemName());
+					item.getScRequestItem().setItemName(cleanedName);
+				}
+
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("DP", "filterLOAItemName", StringUtils.EMPTY, "filterLOAItemName",
+						getUserIdSessionFromLoginId(), e);
+			}
+		}
+		// #26059 - End
 }
 
