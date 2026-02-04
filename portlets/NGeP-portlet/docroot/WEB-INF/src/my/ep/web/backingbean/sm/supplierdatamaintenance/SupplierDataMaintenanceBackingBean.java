@@ -590,6 +590,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().getSearchSupplier().setCompanyName(null);
 		getManagedBean().getSearchSupplier().setRegNo(null);
 		getManagedBean().getSearchSupplier().setEpNo(null);
+		// #38094 - Start
+		getManagedBean().setSearchSuppType(StringUtils.EMPTY);
+		getManagedBean().setSearchPmZoneId(1L);
+		getManagedBean().setSearchPmRegStatusId(null);
+		getManagedBean().setSearchEpNo(StringUtils.EMPTY);
+		getManagedBean().setSearchMofNo(StringUtils.EMPTY);
+		// #38094 - End
 	}
 	//27437 : Disciplinary action - end
 	
@@ -1605,6 +1612,23 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSelectedPendingApprovedCategories(
 				new ArrayList<SmSupplierCategory>());
 	}
+	// #39760 - Start
+	/**
+	 * Delete selected category code(s) that are newly added in Supplier Data
+	 * Maintenance
+	 * 
+	 * @param selectedCategories
+	 */
+	public void deleteSelectedPendingCategoryCodes(List<SmSupplierCategory> selectedCategories) {
+		if (selectedCategories != null && !selectedCategories.isEmpty()) {
+			List<SmSupplierCategory> categories = selectedCategories;
+			deleteCatCodes(categories);
+			getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
+		} else {
+			throw new EpException(MessageConst.ERROR_722534, new String[] { SmCommonUtil.getMessage("lbl.sm.catCodes.catcode", null) });
+		}
+	}
+	// #39760 - End
 
 	/**
 	 * On click add category code
