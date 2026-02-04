@@ -16,8 +16,8 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
-import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -99,9 +99,14 @@ public class DisciplinaryActionRest {
 		}
 		
 		for (SmDisciplinaryAction disc : daList) {
-			if(disc != null){
+			// 39874 - START
+			boolean skipPunishment = ((disc.isBlacklistOwner() && !disc
+					.isPendingBlacklist()) || (disc.isCancelRegistration() && !disc.isPendingCancel()))
+					&& disc.getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_CANCELLED);
+			if(disc != null && !skipPunishment){
 				 SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingTodayStartEndDisciplinaryAction(disc);
-			}										
+			}
+			// 39874 - END
 		}
 	}
 	// 39302 - END
