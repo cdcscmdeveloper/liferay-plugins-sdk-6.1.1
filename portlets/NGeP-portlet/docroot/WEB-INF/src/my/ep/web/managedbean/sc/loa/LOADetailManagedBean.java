@@ -22,6 +22,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -31,6 +32,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -317,7 +319,15 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private List <TplSpecQuestion> listSpecAnswer;
 	//#29006 - end
 	
-
+	//#25725 start
+	private boolean disabledButton = true;
+	private BigDecimal limit = new BigDecimal(500000); //#Sqube Vulnerability Minor G47 start
+	private boolean above500K = true;
+	private boolean AgreementReqChange = false;
+	private String docStatus;
+	private String procurementType; //#Sqube Vulnerability Minor G47 end
+	private boolean showApprovalLetter = false;//# note 146
+	//#25725 end
 	
 	//#19336
 		private boolean isValidatewitness=false;
@@ -378,6 +388,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	private Boolean readOnlyLOADownload = true;
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+	
+	// #29661 start
+	private List<SmSupplierCategory> supplierCategoryList;
+	private List<SmSupplierCategory> procurementRelatedCategoryList;
+	private List<ScQtCategory> qtCategoryList;
+	// #29661 end
 	
     /**
      * Gets the spki backing bean.
@@ -1954,6 +1970,43 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	/*#29007 End Vinod*/
 
+	//#25725 start
+	public boolean isDisabledButton() {
+		return disabledButton;
+	}
+	public void setDisabledButton(boolean disabledButton) {
+		this.disabledButton = disabledButton;
+	}
+	public BigDecimal getLimit() {
+		return limit;
+	}
+	public void setLimit(BigDecimal limit) {
+		this.limit = limit;
+	}
+	public boolean isAbove500K() {
+		return above500K;
+	}
+	public void setAbove500K(boolean above500k) {
+		above500K = above500k;
+	}	
+
+	public boolean isAgreementReqChange() {
+		return AgreementReqChange;
+	}
+
+	public void setAgreementReqChange(boolean agreementReqChange) {
+		AgreementReqChange = agreementReqChange;
+	}
+
+	public String getDocStatus() {
+		return docStatus;
+	}
+
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+	
+	//#25725 end
 
 	//#27797 - start
 	public ScLoiLoaItem getHighestZoneScLoiLoaItem() {
@@ -2058,6 +2111,15 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}	
 	//#32280 - end
 	
+	//#25725 - start
+	public String getProcurementType() {
+		return procurementType;
+	}
+
+	public void setProcurementType(String procurementType) {
+		this.procurementType = procurementType;
+	}
+	//#25725 - end
 
 	//Bug #33674@Syazani - Start
 	public Long getSupplierBankId() {
@@ -2094,6 +2156,22 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.loiLoaItemsResult = loiLoaItemsResult;
 	}
 	//29007 - fix issue 2 search action note 347 - end
+	// #25725 - note 146 - start
+	/**
+	 * @return the showApprovalLetter
+	 */
+	public boolean isShowApprovalLetter() {
+		return showApprovalLetter;
+	}
+
+	/**
+	 * @param showApprovalLetter
+	 *            the showApprovalLetter to set
+	 */
+	public void setShowApprovalLetter(boolean showApprovalLetter) {
+		this.showApprovalLetter = showApprovalLetter;
+	}
+	// #25725 - note 146 - end
 	
 	// Bug #35078@Syazani -- 22/09/2023 -- Start
 	public Boolean getDownloadLOADisabled() {
@@ -2152,6 +2230,35 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		public void setLoaItemIds(List<Long> loaItemIds) {
 			this.loaItemIds = loaItemIds;
 		}
+
+	
+		
+	// #29661 start
+	public List<SmSupplierCategory> getSupplierCategoryList() {
+		return supplierCategoryList;
+	}
+
+	public void setSupplierCategoryList(List<SmSupplierCategory> supplierCategoryList) {
+		this.supplierCategoryList = supplierCategoryList;
+	}
+
+	public List<SmSupplierCategory> getProcurementRelatedCategoryList() {
+		return procurementRelatedCategoryList;
+	}
+
+	public void setProcurementRelatedCategoryList(List<SmSupplierCategory> procurementRelatedCategoryList) {
+		this.procurementRelatedCategoryList = procurementRelatedCategoryList;
+	}
+
+	public List<ScQtCategory> getQtCategoryList() {
+		return qtCategoryList;
+	}
+
+	public void setQtCategoryList(List<ScQtCategory> qtCategoryList) {
+		this.qtCategoryList = qtCategoryList;
+	}
+	// #29661 end
+
 }
 
 

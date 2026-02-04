@@ -1,0 +1,193 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<!-- #29661 -->
+	<ui:param name="editable"
+		value="#{!isPendingVerification}" />
+					
+	<p:blockUI block="panelResult" widgetVar="blockWidgetClone">
+		<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:blockUI>
+
+	<c:if test="#{directLOABackingBean.managedBean.readOnly}">
+		<ui:param name="editable" value="#{false}" />
+	</c:if>
+
+	<p:panel id="openCategoryCodesPanel" 
+		header="#{lbl['lbl.sc.category.code.registered']}" toggleable="true">
+		<p:row>
+			<p:column>
+				<p:dataTable id="supplierPnlId" var="categorySM" 
+					value="#{directLOABackingBean.managedBean.supplierCategoryList}"
+					rowIndexVar="index" rows="10" 
+					selection="#{directLOABackingBean.managedBean.selectedCategoryList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowKey="#{categorySM}">
+
+					<ac:paginator for="supplierPnlId"></ac:paginator>
+
+					<p:column headerText="#{lbl['lbl.sc.action']}" rendered="#{editable}"
+						style="width:6%;text-align: center;">
+						<f:facet name="header">
+							<p:selectBooleanCheckbox
+								value="#{directLOABackingBean.managedBean.selectAll}">
+								<p:ajax partialSubmit="true" process="@this"
+									update="@([id$=openCategoryCodesPanel])"
+									listener="#{directLOABackingBean.selectAllCategory}"
+									event="change" />
+							</p:selectBooleanCheckbox>
+						</f:facet>
+
+						<p:selectBooleanCheckbox value="#{categorySM.selected}"
+							id="categorySelect">
+							<p:ajax partialSubmit="true" process="@this"
+								update="@([id$=openCategoryCodesPanel])"
+								listener="#{directLOABackingBean.selectCategory}" event="change" />
+						</p:selectBooleanCheckbox>
+					</p:column>
+
+
+					<p:column headerText="#{lbl['lbl.sc.sr.cat.code']}">
+									#{categorySM.pmCategoryL1.categoryL1Code}#{categorySM.pmCategoryL2.categoryL2Code}#{categorySM.pmCategoryL3.categoryL3Code}
+									</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.main.category']}"
+						style="width:25%;white-space: normal;">
+						<h:outputText value="#{categorySM.categoryL1Name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.sub.category']}"
+						style="width:25%;white-space: normal;">
+						<h:outputText value="#{categorySM.categoryL2Name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
+						style="width:25%;white-space: normal;">
+						<h:outputText value="#{categorySM.categoryL3Name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.category.type']}"
+						style="width:10%;white-space:normal;">
+						<h:outputText
+							value="#{directLOABackingBean.getParameterDesc(categorySM.pmCategoryL3.categoryTypeCode)}" />
+					</p:column>
+
+				</p:dataTable>
+				<p:spacer width="12px"></p:spacer>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" id="okButton"
+						onclick="submitConfirmPopUp.show();" rendered="#{editable}"
+						disabled="#{!directLOABackingBean.managedBean.categorySelected}" />
+				</div>
+				<p:dialog id="submitConfirmId" widgetVar="submitConfirmPopUp"
+					header="#{lbl['lbl.sc.category.code.confirmation']}" 
+					closable="false" resizable="false">
+					<p:spacer height="1" />
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}"
+							onclick="blockWidget.show();"
+							oncomplete="submitConfirmPopUp.hide(); blockWidget.hide();"
+							partialSubmit="true" process="@this"
+							update="@([id$=selectedCategoryTable]) @([id$=supplierPnlId])"
+							action="#{directLOABackingBean.addToProcurementRelatedCategory()}" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}"
+							onclick="submitConfirmPopUp.hide();" type="button"
+							partialSubmit="true" process="@this" />
+					</div>
+				</p:dialog>
+			</p:column>
+		</p:row>
+	</p:panel>
+
+
+	<p:panel id="panelResult"
+		header="#{lbl['lbl.sc.category.code.procurement']}" toggleable="true">
+		<p:row>
+			<p:column>
+				<p:dataTable id="selectedCategoryTable" var="categorySelected" 
+					value="#{directLOABackingBean.managedBean.procurementRelatedCategoryList}"
+					rowIndexVar="index" rows="10"
+					selection="#{directLOABackingBean.managedBean.selectedCategoryList}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowKey="#{categorySelected}">
+
+					<ac:paginator for="selectedCategoryTable"></ac:paginator>
+
+					<p:column headerText="#{lbl['lbl.sc.action']}"
+						rendered="#{editable}" style="width:6%;text-align: center;">
+						<f:facet name="header">
+							<p:selectBooleanCheckbox
+								value="#{directLOABackingBean.managedBean.selectAll}">
+								<p:ajax partialSubmit="true" process="@this"
+									update="@([id$=panelResult])"
+									listener="#{directLOABackingBean.deleteAllCategory}"
+									event="change" />
+							</p:selectBooleanCheckbox>
+						</f:facet>
+
+						<p:selectBooleanCheckbox value="#{categorySelected.selected}"
+							id="categorySelect">
+							<p:ajax partialSubmit="true" process="@this"
+								update="@([id$=panelResult])"
+								listener="#{directLOABackingBean.deleteCategory}" event="change" />
+						</p:selectBooleanCheckbox>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.sr.cat.code']}">
+									#{categorySelected.pmCategoryL1.categoryL1Code}#{categorySelected.pmCategoryL2.categoryL2Code}#{categorySelected.pmCategoryL3.categoryL3Code}
+									</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.main.category']}"
+						style="width:25%;white-space: normal;">
+						<h:outputText value="#{categorySelected.categoryL1Name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.sub.category']}"
+						style="width:25%;white-space: normal;">
+						<h:outputText value="#{categorySelected.categoryL2Name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
+						style="width:25%;white-space: normal;">
+						<h:outputText value="#{categorySelected.categoryL3Name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.category.type']}"
+						style="width:10%;white-space:normal;">
+						<h:outputText
+							value="#{directLOABackingBean.getParameterDesc(categorySelected.pmCategoryL3.categoryTypeCode)}" />
+					</p:column>
+
+				</p:dataTable>
+				<p:spacer width="12px"></p:spacer>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" id="deleteButton"
+						onclick="deleteConfirmPopUp.show();" rendered="#{editable}"
+						disabled="#{!directLOABackingBean.managedBean.categorySelected}" />
+				</div>
+				<p:dialog id="deleteConfirmId" widgetVar="deleteConfirmPopUp"
+					header="#{lbl['lbl.sc.category.code.confirmation.delete']}"
+					closable="false" resizable="false">
+					<p:spacer height="1" />
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}"
+							onclick="blockWidget.show();"
+							oncomplete="deleteConfirmPopUp.hide(); blockWidget.hide();"
+							partialSubmit="true" process="@this"
+							update="@([id$=selectedCategoryTable])"
+							action="#{directLOABackingBean.deleteProcurementRelatedCategory()}" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}"
+							onclick="deleteConfirmPopUp.hide();" type="button"
+							partialSubmit="true" process="@this" />
+					</div>
+				</p:dialog>
+			</p:column>
+		</p:row>
+	</p:panel>
+
+</ui:composition>
