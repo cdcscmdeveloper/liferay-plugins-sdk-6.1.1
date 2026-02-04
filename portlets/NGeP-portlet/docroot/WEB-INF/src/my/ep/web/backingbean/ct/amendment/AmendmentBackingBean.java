@@ -6065,7 +6065,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		if (filePath != null) {
 			filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
-			filePath = URLEncoder.encode(filePath, "UTF-8"); //#33817
+			filePath = URLEncoder.encode(filePath, "UTF-8"); //#33817, #39650
 		}
 		return filePath;
 	}
