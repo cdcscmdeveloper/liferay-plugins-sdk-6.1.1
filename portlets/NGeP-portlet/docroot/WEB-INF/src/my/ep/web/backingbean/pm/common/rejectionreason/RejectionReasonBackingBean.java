@@ -194,6 +194,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		temp.remove(pidReason);
 		for(PmPIDReason pReason : temp){
 			if(pReason.getDocType()!= null && pReason.getDocType().equals(pidReason.getDocType())){
+				log.info(" reasonApplicableChange in here ::::::::::::::::::::::::::: ");
+				getManagedBean().setReasonApplicabilityDuplicate(true); // 39618
 				throw new EpException(MessageConst.ERROR_770301, new String[]{ResourceBundleUtils.getMessage(
 						"lbl.pm.reason.applicability", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())});
@@ -2589,4 +2591,15 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 
 	//#28962 - End
+	
+	//#39618 - Start
+	public void validationForUpdate(){
+		log.info(" rejectionreasonbackingbean  in validationCheck()  :::::::::::::::::::::::::::::::: "+getManagedBean().isReasonApplicabilityDuplicate());
+		if(getManagedBean().isReasonApplicabilityDuplicate()){
+			FacesContext.getCurrentInstance().validationFailed();
+		}
+		
+	}
+	//#39618 - End
+	
 }
