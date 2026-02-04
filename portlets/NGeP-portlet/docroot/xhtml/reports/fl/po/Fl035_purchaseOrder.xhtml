@@ -202,7 +202,7 @@
 					value="#{poPurRptBB.managedBean.procumentType}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.all']}" itemValue="#{null}" />
 					<f:selectItems
-						value="#{poPurRptBB.getRadioButtonCodeValues(ParameterTypeConst.procurementTypeRpt)}" />
+						value="#{poPurRptBB.getDropDownValuesCombineWIPParameter(ParameterTypeConst.procurementTypeRpt,ParameterTypeConst.procurementType,ParameterTypeConst.procurementCodePk7)}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 			<ui:remove>#27476 end</ui:remove>

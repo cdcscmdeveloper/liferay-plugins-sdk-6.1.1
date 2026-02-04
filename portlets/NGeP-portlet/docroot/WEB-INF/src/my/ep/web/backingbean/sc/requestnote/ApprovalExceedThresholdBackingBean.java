@@ -233,7 +233,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * @return String
 	 */
 	public String getPTJGroupCondition() {
-		debugLogger("getPTJGroupCondition");
 		StringBuilder condition = new StringBuilder("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
 		PmOrgProfile searchMinistryProfile = this.getManagedBean().getSearchMinistryProfile();
 		if (null != searchMinistryProfile && searchMinistryProfile.getOrgProfileId() != null) {
@@ -266,7 +265,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * @return String
 	 */
 	public String getPtjCondition() {
-		debugLogger("getPTJCondition");
 		StringBuilder condition = new StringBuilder("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
 		PmOrgProfile searchMinistryProfile = this.getManagedBean().getSearchMinistryProfile();
 		PmOrgProfile searchPtjGroupProfile = this.getManagedBean().getSearchPtjGroupProfile();
@@ -291,8 +289,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * 		the PmOrgProfile instance
 	 */
 	public void postUpdateOrgProfileListener(BaseEntity orgProfile) {
-		debugLogger("postUpdateOrgProfileListener");
-
 		getManagedBean().setCounter(0);
 
 		if (!(orgProfile instanceof PmOrgProfile)) {
@@ -304,8 +300,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		while (currentProcessingProfile != null) {
 			String orgType = currentProcessingProfile.getOrgTypeCode().getParameterCode();
 			PmOrgProfile nextProfileToProcess = null;
-
-			debugLogger("Processing orgType: " + orgType + ", Counter: " + getManagedBean().getCounter());
 
 			if (ParameterConst.ORG_TYPE_MINISTRY.equals(orgType)) {
 				PmOrgProfile ministryOrgProfile = new PmOrgProfile();
@@ -326,7 +320,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 			currentProcessingProfile = nextProfileToProcess;
 		}
 
-		debugLogger("postUpdateOrgProfileListener end");
 	}
 
 	/**
@@ -495,25 +488,26 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * @param sqEndDate The end date of the Service Quote.
 	 * @return {@code true} if the SQ is still valid, {@code false} otherwise.
 	 */
-	public boolean isSqStillValid(Date sqEndDate){		
+	public boolean isSqStillValid(Date sqEndDate){
 		
 		Boolean validDate = true;
 		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
-		
-		if(sqEndDate != null){
-				Date currentDate = new Date();
-				Date closingDate = sqEndDate;
-					
-				Calendar cal = Calendar.getInstance();
-				cal.clear(); 
-				cal.setTime(closingDate);
-				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
-					
-				if(currentDate.compareTo(cal.getTime()) >= 0){
-						validDate = false;
-				}							
-			}						
-			return validDate;	
+
+		if (sqEndDate != null) {
+			Date currentDate = new Date();
+			Date closingDate = sqEndDate;
+
+			Calendar cal = Calendar.getInstance();
+			cal.clear();
+			cal.setTime(closingDate);
+			cal.add(Calendar.DATE, sqTimeValidity); // add 60days to closing/end
+													// date
+
+			if (currentDate.compareTo(cal.getTime()) >= 0) {
+				validDate = false;
+			}
+		}
+		return validDate;
 	}
 	
 	/**

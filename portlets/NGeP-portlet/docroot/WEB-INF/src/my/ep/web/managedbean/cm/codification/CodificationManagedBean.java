@@ -224,6 +224,10 @@ public class CodificationManagedBean extends BaseManagedBean {
 			IPagingDataModel<Object[]> extensionSearchItemDataModel) {
 		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
 	}
+	
+	//#26059 - Start
+	private String cmItemCode;
+	//#26059 - End
 
 	
 	public void initRefreshPageNoFlag(){
@@ -1602,7 +1606,22 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 	//35503 End
 
-	
+	//#26059 - Start
+	/**
+	 * @return the cmItemCode
+	 */
+	public String getCmItemCode() {
+		return cmItemCode;
+	}
 
+	/**
+	 * @param cmItemCode the cmItemCode to set
+	 */
+	public void setCmItemCode(String cmItemCode) {
+		this.cmItemCode = cmItemCode;
+	}
+	//#26059 - End
+	
+	
 	
 }
