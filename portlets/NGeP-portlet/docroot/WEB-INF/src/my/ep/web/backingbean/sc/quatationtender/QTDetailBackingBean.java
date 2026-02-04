@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -122,6 +123,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -212,6 +214,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
@@ -239,8 +242,8 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
@@ -1156,7 +1159,12 @@ public class QTDetailBackingBean extends
 			checkForPublishperiodAndValidityDays(selectedScQt,fc);
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
-			
+			//#21692 - Start
+			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
+			if (checkProposalValidityExtensionStatus(selectedScQt.getQtId())) {
+				selectedScQt.setResponsePeriod(result);
+			}
+			//#21692 - End
 			// #25692 -start-
 			if (!isApprovalScreen() || this.getManagedBean().getQt() == null) {
 				this.getManagedBean().setQt(selectedScQt);
@@ -1261,6 +1269,15 @@ public class QTDetailBackingBean extends
 								new FacesScopes().getUserLocale())));
 			}
 			// 9019 - End (Harun)
+			//#21692 - Start
+			if (this.getManagedBean().getActiveIndex() == 3
+					&& this.getManagedBean().getTabList() != null
+					&& this.getManagedBean().getTabList().get(this.getManagedBean().getSelectedApprovalTabIndex())
+							.getTabType().equals(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE)) {
+				retrieveApprovalTabDtl();
+			}
+			enableChangesToPBSecretary();
+			//#21692 - End
 			// 25037 - start
 			boolean isValidFor25037 = this.validateSupportedTask(scQt.getQtNo(),
 					QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
@@ -1869,7 +1886,13 @@ public class QTDetailBackingBean extends
 			}
 		}	
 		// 9019 end
-
+		
+		//#21692 - Start
+		if (null == scQt.getResponsePeriod()) {
+			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
+			scQt.setResponsePeriod(result);
+		} 
+		//#21692 - End
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
 		quationTenderReqDTO.setQtCommittes(scQt.getScQtCommittees());
@@ -3822,24 +3845,32 @@ public class QTDetailBackingBean extends
 							if (null == approvalSettings || approvalSettings.isEmpty()) {
 								approvalSettings = new ArrayList<ScQtApproverSettings>();
 								ScQtApproverSettings approverSettings = new ScQtApproverSettings();
-								approverSettings.setPmUser(new PmUser());
+								//#21692 - Start
+								approverSettings.setPmUser(scQt.getFinalizationSecratery());
 								approverSettings.setScQtApproval(qtApproval);
-								approverSettings.setCommitteeType(new PmParameter());
+								approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
+								//#21692 - End
 								approvalSettings.add(approverSettings);
 								qtApproval.setApproverSettings(approvalSettings);
 							} else {
 								for (ScQtApproverSettings approverSettings : approvalSettings) {
 									approverSettings.setScQtApproval(qtApproval);
 									
-									// Added to populate security if Finalization committee is same as Committee Appointment
-									PmParameter finalizationCommitee = scQt.getFinalizationCommitte();
-									PmParameter committeeSettings = approverSettings.getCommitteeType();
-									if (committeeSettings != null && finalizationCommitee != null && finalizationCommitee.getParameterId() != null 
-											&& finalizationCommitee.getParameterCode().equalsIgnoreCase(committeeSettings.getParameterCode())) {
+									//21692 - Start
+									if (!scQt.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 										approverSettings.setPmUser(scQt.getFinalizationSecratery());
+										approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
 									}
+									//21692 - End
 								}
 							}
+							//#21692 - Start
+							if (CollectionUtils.isNotEmpty(qtApproval.getHistoryApprovalRequests())) {
+								LinkedHashSet<ScQtApprovalRequest> removeDuplicate = new LinkedHashSet<>(qtApproval.getHistoryApprovalRequests());
+								List<ScQtApprovalRequest> noDuplicate = new ArrayList<>(removeDuplicate);
+								qtApproval.setHistoryApprovalRequests(noDuplicate);
+							}
+							//#21692 - End
 							tabBeans.add(new TabBean(titleName, approvalCategoryCode, qtApproval, retrieveFinalizationCommitteeType()));
 						} else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equals(approvalCategoryCode)) {
 							// Enhancement #26146 - start -
@@ -12131,4 +12162,279 @@ public class QTDetailBackingBean extends
 		}
 	}
 	// #28784 note-#634 - End
+
+	//#21692 - Start
+	/**
+	 * retrieve Supplier Response Due Date for Proposal Validity Extension
+	 * 
+	 * @param qtId
+	 * @param resPeriod
+	 * @return
+	 */
+	public Timestamp getExtensionResponseDueDate(Long qtId, int resPeriod) {
+		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocId(qtId);
+		reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
+
+		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		if (status != null && status.isCurrent()
+				&& status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE)) {
+			return getQTDetailSO().getExtensionResponseDueDate(qtId, resPeriod);
+		}
+		return null;
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private boolean checkProposalValidityExtensionStatus(Long qtId) {
+		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocId(qtId);
+		reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
+
+		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		if (status != null
+				&& status.isCurrent()
+				&& (status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_ACCEPTED)
+						|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_REJECTED) || status
+						.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED))) {
+			return true;
+		}
+		return false;
+	}
+	//#21692 - End
+	
+	//#21692 - start
+	/**
+	 * retrieve Response Period from Pm Rule Config Table
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public int retrieveResponsePeriod(String value) {
+		
+		IRuleSO ruleSO = null;
+		int result = 0;
+		RuleReqDTO reqDTO = new RuleReqDTO();
+		reqDTO.setRuleType(RuleTypeConst.VALIDITY_PERIOD_EXTENSION_RESPONSE_PERIOD);
+		ruleSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+		RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(reqDTO);
+		if (roleResDTO.isSuccessful()
+				&& roleResDTO.getRuleValueList() != null
+				&& CollectionUtils.isNotEmpty(roleResDTO.getRuleValueList())) {
+			if (value.equals(ParameterConst.RULE_VALUE)) {
+				result = Integer.parseInt(roleResDTO.getRuleValueList()
+						.get(0).getRuleValue());
+			}
+			if (value.equals(ParameterConst.FROM_VALUE)) {
+				result = Integer.parseInt(roleResDTO.getRuleValueList()
+						.get(0).getFromValue().toString());
+			}
+			if (value.equals(ParameterConst.TO_VALUE)) {
+				result = Integer.parseInt(roleResDTO.getRuleValueList()
+						.get(0).getToValue().toString());
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770222,
+					new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
+		}
+		
+		return result;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * retrieve new proposal validity
+	 * 
+	 * @param scQt
+	 * @param newValidityPeriod
+	 * @return
+	 */
+	public Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
+		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocId(scQt.getQtId());
+		reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
+		
+		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		if (status != null) {
+
+			Date date = DateUtils.addDays(scQt.getClosingDate(), newValidityPeriod);
+
+			Timestamp ts = null;
+			if (date != null) {
+				ts = new Timestamp(date.getTime());
+			}
+			return ts;
+		}
+		return null;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * make sure qt after publish
+	 * 
+	 * @param currentStatusId
+	 * @return
+	 */
+	public boolean isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(Long currentStatusId) {
+		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION,
+				QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
+				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION,
+				QTStatusConst.QT_PENDING_LOI, QTStatusConst.QT_PENDING_LOA, QTStatusConst.QT_AWARDED,
+				QTStatusConst.QT_CLOSED, QTStatusConst.QT_CONSOLIDATION_REPORT,
+				QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER,
+				QTStatusConst.QT_RE_EVALUATION, QTStatusConst.QT_RE_FINALIZATION);
+
+		for (int i = 0; i < validPeriodExts.size(); i++) {
+			if (validPeriodExts.get(i).longValue() == currentStatusId)
+				return Boolean.TRUE;
+		}
+
+		return Boolean.FALSE;
+	}
+	//#21692 - end
+	
+	//#21692 - Start
+	/**
+	 * 
+	 * get new page for EPV approval details (PTJ details, EPV Type of Request,
+	 * Remarks)
+	 * 
+	 * @param approvalReq
+	 * @return String
+	 */
+	public String getEpvApprovalDtl(ScQtApprovalRequest approvalReq) {
+		this.getManagedBean().setScQtApprovalRequest(approvalReq);
+		//add attachment - Start
+		if (CollectionUtils.isNotEmpty(approvalReq.getEpvApprovalReqAttachment())) {
+			for (ScQtEpvApprovalReqAttachment att : approvalReq.getEpvApprovalReqAttachment()) {
+				if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_1)) {
+					approvalReq.setEpvApprovalReqAttachmentR1(att);
+				} else if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_2)) {
+					approvalReq.setEpvApprovalReqAttachmentR2(att);
+				} else if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_3)) {
+					approvalReq.setEpvApprovalReqAttachmentR3(att);
+				}
+			}
+		}
+		//add attachment - End
+		return QTConstants.MAINT_EPV_APPROVAL_DETAIL;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * 
+	 * check approval type to be EPV
+	 * 
+	 * @param approvalType
+	 * @return boolean
+	 */
+	public boolean isApprovalTypeEpv(PmParameter approvalType) {
+		if (approvalType != null) {
+			return approvalType.getParameterCode().equals(
+					ParameterConst.DOCTYPE_EXTENSION_PROPOSAL_VALIDITY);
+		}
+		return false;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * 
+	 * Back action for new EPV approval details page
+	 * 
+	 * @return String
+	 */
+	public String epvBackAction() {
+		this.getManagedBean().setScQtApprovalRequest(null);
+		return QTConstants.MAINTANANCE_PAGE_FULL;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * Check if Ministry of Finance decision date render
+	 * 
+	 * @param validityDaysExpiredQt
+	 * @return
+	 */
+	public boolean handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
+		boolean enableApprovalDateMOF = Boolean.FALSE;
+
+		log.info("Invalid");
+		Date proposalValidityEndDate = this.getManagedBean().getScQtApprovalRequest().getProposalValidityEndDateOri();
+		Date chmnFinalizationDate = this.getManagedBean().getScQtApprovalRequest().getChmnFinalizationDate();
+		if ((null != proposalValidityEndDate) && (null != chmnFinalizationDate)) {
+
+			long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
+			int day = (int) days;
+			if (day >= 0) {
+				return Boolean.TRUE;
+			}
+		}
+
+		return enableApprovalDateMOF;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * Specific for History usage only since it always shows due date
+	 * 
+	 * @param approverActionDate
+	 * @param resPeriod
+	 * @return
+	 */
+	public Timestamp getHistoryExtensionResponseDueDate(Date approverActionDate, int resPeriod) {
+		Date date = null;
+		if (null != approverActionDate) {
+			date = DateUtils.addDays(approverActionDate, resPeriod);
+		}
+		Timestamp ts = null;
+		if (date != null) {
+			ts = new Timestamp(date.getTime());
+		}
+		return ts;
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private void enableChangesToPBSecretary() {
+		if (this.getManagedBean().getQt() != null && this.getManagedBean().getQt().getQtId() != null) {
+			IScWorkFlowStatusSO workFlowStatusSO;
+			ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IScWorkFlowStatusSO.class);
+			scWreqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
+			scWreqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+
+			this.getManagedBean().setUserAbleToChangePBSecretary(
+					workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus() == null);
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Cannot directly use in html due to unknown issue,
+	 * so done it through backing bean
+	 * 
+	 * @return TRUE if status LESS than Pending Recommendation
+	 */
+	public boolean showEPVInstruction() {
+		boolean isShow = isQTStatusGreaterThan(this.getManagedBean().getQt().getQtStatus().getStatusId(),
+				QTStatusConst.QT_CONSOLIDATION_REPORT);
+		return !isShow;
+	}
+	//#21692 - End
 }

@@ -121,7 +121,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
-import my.ep.persistence.entity.sc.quationtender.ScQtDemoByItemScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplierAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoTechnicalCommitteeRemark;
@@ -157,6 +156,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.common.ScRemarkAndAttachmentBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
@@ -1284,6 +1284,13 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 								throw new EpException(MessageConst.ERROR_760198);
 							}
 						}
+						//#21692 - Start
+						if (null != proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod()
+								&& (proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED
+								|| proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED)) {
+							proposalCheckList.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
+						}
+						//#21692 - End
 					}
 
 				}
@@ -1668,6 +1675,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
 		this.getManagedBean().setComplianceActiveIndex(0);
+		this.getManagedBean().setAllSupplierRejectEpv(false);//#21692
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1678,6 +1686,12 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 			reqDTO.setCompliance(null);
 			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
+			
+			//#21692 - Start
+			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO);
+			}
+			//#21692 - End
 
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			/*if (null != resDTO.getCheckListResultBean().getResultList()
@@ -1794,6 +1808,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			reqDTO.setCompliance(null);
 			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
+			//#21692 - Start
+			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO);
+			}
+			//#21692 - End
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 
 			/*if (null != resDTO.getCheckListResultBean().getResultList()
@@ -2039,6 +2058,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			//#21692 - Start
+			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				this.getManagedBean().setAllSupplierRejectEpv(evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO).isCheckQualifiedSuppliers());
+			}
+			//#21692 - End
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 
 			// #28784 WIP @idham - Start
@@ -2195,6 +2219,12 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			//#21692 - Start
+			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				evaluationSO.checkChecklistForEPV(reqDTO);
+				this.getManagedBean().setAllSupplierRejectEpv(evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO).isCheckQualifiedSuppliers());
+			}
+			//#21692 - End
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
 			this.getManagedBean().setCheckQualifiedSuppliers(
@@ -7252,6 +7282,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		retrieveReportHeader();
 		IQTEvaluationSO evaluationSO;
 		EvaluationResDTO resDTO = null;
+		this.getManagedBean().setAllSupplierRejectEpv(false);//#21692
 		try {
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -8095,6 +8126,14 @@ private void retriveCommitteeRemarksList(){
 			if (null != this.getManagedBean().getNoOfContractsProposalScore()) {
 				ScQtProposalScore contract = this.getManagedBean()
 						.getNoOfContractsProposalScore();
+				//#21692 - start
+				if (null == contract.getUserScore() &&
+						null != this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod()
+						&& (this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED
+								|| this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED)) {
+					contract.setUserScore(new BigDecimal(0));
+				}
+				//#21692 - end
 				if (null != contract.getUserScore() && null != this.getManagedBean().getUserScores()) {
 						if (contract.getUserScore().intValue() > new Integer(
 								getManagedBean().getUserScores())) {
@@ -11031,7 +11070,8 @@ private void retriveCommitteeRemarksList(){
 		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 
 		} else {
-			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()) {// 6906
+			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()
+					&& !this.getManagedBean().isAllSupplierRejectEpv()) {// 6906, #21692
 				this.getManagedBean().setCheckTechnicalQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(
@@ -11054,7 +11094,8 @@ private void retriveCommitteeRemarksList(){
 		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 
 		} else {
-			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()) {// 6906
+			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()
+					&& !this.getManagedBean().isAllSupplierRejectEpv()) {// 6906, #21692
 				this.getManagedBean().setCheckFinancialQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(
@@ -12914,14 +12955,14 @@ private void retriveCommitteeRemarksList(){
 				totalScore = BigDecimal.valueOf(0);
 			}
 			// add weightage to calculation - start
-			if (null != specscore.getScQtCheckList().getQtScoreWeightage() &&
+			/*if (null != specscore.getScQtCheckList().getQtScoreWeightage() &&
 					(null != specscore.getScQtCheckList().getQtScoreWeightage().getWeightage() &&
 						!specscore.getScQtCheckList().getQtScoreWeightage().getWeightage().equals(BigDecimal.valueOf(0)))) {
 				BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
 				BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
 				
 				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, RoundingMode.HALF_UP).stripTrailingZeros();//#28784 no package bug//#28784 sonarqube
-			}
+			}*/
 			// add weightage to calculation - end
 			divNum = divNum.add(totalScore);
 		}		
@@ -13759,4 +13800,31 @@ private void retriveCommitteeRemarksList(){
 		return demoProcesses.contains(this.getManagedBean().getTaskName());
 	}
 	//#28784 - End
+
+	//#21692 - start
+	/**
+	 * Check if latest meeting with status Done less than Proposal Validity End
+	 * Date
+	 * 
+	 * @param proposalValidityEndDate
+	 * @return
+	 */
+	public boolean checkMeetingDoneLessThanValidityEndDate(Date proposalValidityEndDate) {
+		boolean lessThanValidityEndDate = false;
+
+		List<ScQtMeeting> meetingDetailsList = this.getManagedBean().getScQtMeetings();
+
+		for (ScQtMeeting meeting : meetingDetailsList) {
+			if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+					&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+					&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)
+					&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
+				lessThanValidityEndDate = true;
+
+			}
+		}
+
+		return lessThanValidityEndDate;
+	}
+	//#21692 - end
 }
