@@ -634,6 +634,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	public void spRuleValTypeAddUpdateDeleteAuditDetail(PmConfigRuleValue ruleValue, BigInteger fieldLabelCode, String oldValue,
 			String newValue, String actionType) {
 		lvlCode3 = ruleValue.getRuleTypeCode();
+		docId = BigInteger.valueOf(ruleValue.getRuleValueId());
 		addAuditDetail(fieldLabelCode, oldValue, newValue, actionType);
 	}
 
