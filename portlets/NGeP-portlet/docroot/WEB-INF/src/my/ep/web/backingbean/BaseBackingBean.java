@@ -4810,8 +4810,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
 			if (cResDTO != null) {
 				item = cResDTO.getCmItem();
+				populateItemExtensionDtls(item);
 			}
-			populateItemExtensionDtls(item);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("CT", "viewItemUnspscDetails", "viewItemUnspscDetails", null,
 					getUserIdSessionFromLoginId(), e);
@@ -4872,11 +4872,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		codificationBB.getManagedBean().setSegmentTitle(itemName);
 		codificationBB.getManagedBean().setSegmentCode(extCode);
 		codificationBB.getManagedBean().setFamilyTitle(completeItemName);		
-		if (itemName == null || itemName.trim().isEmpty()) {
-			codificationBB.getManagedBean().setHideExtension(true);
-		} else {
-			codificationBB.getManagedBean().setHideExtension(false);
-		}
+		codificationBB.getManagedBean().setHideExtension(itemName.trim().isEmpty());
 	}
 	//End - #31341
 }
