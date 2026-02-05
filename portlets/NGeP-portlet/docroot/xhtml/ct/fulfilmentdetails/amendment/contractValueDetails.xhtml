@@ -12,12 +12,9 @@
 			<p:outputLabel value="#{lbl['lbl.ct.overall.contract.amount']}" />
 			<h:panelGrid columns="4">
 				<p:inputText id="overallAmount" styleClass="ppRightBtn change-contract-value-inputtext"
-					value="#{amendmentBackingBean.getBaseContractAmount()}" disabled="true">
+					value="#{amendmentBackingBean.getApplicableOverallContractAmount()}" disabled="true">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					<p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this"
-						listener="#{amendmentBackingBean.changeAdditionalValue}" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();" />
 				</p:inputText>
 				<p:spacer width="1" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.overall.amt']}" />

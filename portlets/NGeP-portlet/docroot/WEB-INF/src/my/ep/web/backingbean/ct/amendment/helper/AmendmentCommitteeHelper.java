@@ -696,7 +696,7 @@ public class AmendmentCommitteeHelper {
 	 * @param userIdSession
 	 * @return List<SelectItem> */
 	public List<SelectItem> findCommitteeTypeSelectItems(Long userIdSession) {
-		IContractAmendmentSO iContractAmendmentSO 
+		IContractAmendmentSO contractAmendmentSO 
 			= BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 		
 		List<SelectItem> items = new ArrayList<>();
@@ -711,7 +711,7 @@ public class AmendmentCommitteeHelper {
 	        searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), codes));
 	        List<PmParameterDesc> parameterDescs 
 	        	= ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterConst.COMMITTE_TYPE, searchBean);
-    		String stateCode = iContractAmendmentSO.getPtjContractOwnerStateCode(ctBackingBean.getManagedBean().getContractVer());
+    		String stateCode = contractAmendmentSO.getPtjContractOwnerStateCode(ctBackingBean.getManagedBean().getContractVer());
     		
     		// Sort codes
     		if (parameterDescs != null && !parameterDescs.isEmpty()) {
