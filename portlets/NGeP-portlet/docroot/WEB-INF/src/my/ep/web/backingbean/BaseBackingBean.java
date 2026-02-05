@@ -61,6 +61,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.cm.codification.ICodificationSO;//#31341
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849  #32682
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -85,6 +86,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.codification.CodificationReqDTO;//#31341
+import my.ep.dto.cm.codification.CodificationResDTO;//#31341
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
@@ -108,6 +111,12 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.cm.catalog.CmBrand;//#31341
+import my.ep.persistence.entity.cm.catalog.CmColor;//#31341
+import my.ep.persistence.entity.cm.catalog.CmItem;//#31341
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;//#31341
+import my.ep.persistence.entity.cm.catalog.CmType;//#31341
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;//#31341
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -124,6 +133,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScRequestItem;//#31341
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -150,6 +160,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
+import my.ep.web.backingbean.cm.codification.CodificationBackingBean;//#31341
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -4768,5 +4779,101 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	    return false;
 	}
 	//#35238 end
+	
+	//Start - #31341
+	/**
+	 * Retrieves and displays UNSPSC-related details for the given SC request item.
+	 * <p>
+	 * This method looks up the corresponding {@link CmItem} using the item ID
+	 * from the provided {@link ScRequestItem} via the Codification service.
+	 * If an item is found, its extension details are populated for display.
+	 * </p>
+	 *
+	 * <p>
+	 * Any exception encountered during processing is caught and logged
+	 * using the SLA logging mechanism.
+	 * </p>
+	 *
+	 * @param scRequestItem
+	 *        the SC request item containing the CM item reference whose
+	 *        UNSPSC details need to be viewed
+	 */
+	public void viewItemUnspscDetails(ScRequestItem scRequestItem) {
+		try {
+			CmItem item = null;
+			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+			CodificationReqDTO cReqDTO = new CodificationReqDTO();
+			if (scRequestItem.getCmItem().getItemId() != null) {
+				cReqDTO.setItemId(scRequestItem.getCmItem().getItemId());
+			}
+			CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
+			if (cResDTO != null) {
+				item = cResDTO.getCmItem();
+				populateItemExtensionDtls(item);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("CT", "viewItemUnspscDetails", "viewItemUnspscDetails", null,
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	
+	/**
+	 * Populates item extension and codification details based on the given {@link CmItem}.
+	 * <p>
+	 * This method extracts UNSPSC, type, brand, measurement, and color information
+	 * from the provided {@code CmItem} and constructs the corresponding segment,
+	 * commodity, and family details. These details are then set into the
+	 * {@link CodificationBackingBean} for display or further processing.
+	 * </p>
+	 *
+	 * <p>
+	 * If the provided {@code CmItem} is {@code null}, the method logs the condition
+	 * and exits without performing any processing.
+	 * </p>
+	 *
+	 * <p>
+	 * The extension section visibility is controlled based on whether the item name
+	 * is present or empty.
+	 * </p>
+	 *
+	 * @param cmitem
+	 *        the catalog item containing UNSPSC classification and
+	 *        extension-related attributes such as type, brand, measurement,
+	 *        and color
+	 */
+	public void populateItemExtensionDtls(CmItem cmitem) {
+		if (cmitem == null) {
+			log.info("populateItemExtensionDtls called with null CmItem");
+			return;
+		}
+		CommonUtils common = new CommonUtils();
+		CodificationBackingBean codificationBB = new CodificationBackingBean();
+		// Extract objects once
+		CmType type = cmitem.getCmType();
+		CmBrand brand = cmitem.getCmBrand();
+		CmMeasurement measurement = cmitem.getCmMeasurement();
+		CmColor color = cmitem.getCmColor();
+		CmUnspsc unspsc = cmitem.getCmUnspsc();
+		// segment title
+		String itemName = common.removeItemNameNA(type.getTypeName()) + " "
+				+ common.removeItemNameNA(brand.getBrandName()) + " "
+				+ common.removeItemNameNA(measurement.getMeasurementName()) + " "
+				+ common.removeItemNameNA(color.getColorName());
+		// segment code
+		String extCode = type.getTypeCode() + brand.getBrandCode() + measurement.getMeasurementCode()
+				+ color.getColorCode();
+		// Family title combines UNSPSC Title + segment details
+		String completeItemName = unspsc.getUnspscTitle() + " " + itemName;
+		codificationBB.getManagedBean().setFamilyCode(cmitem.getExtensionCode());
+		codificationBB.getManagedBean().setCommodityCode(unspsc.getUnspscCode());
+		codificationBB.getManagedBean().setCommodityTitle(unspsc.getUnspscTitle());
+		codificationBB.getManagedBean().setSegmentTitle(itemName);
+		codificationBB.getManagedBean().setSegmentCode(extCode);
+		codificationBB.getManagedBean().setFamilyTitle(completeItemName);		
+		codificationBB.getManagedBean().setHideExtension(itemName.trim().isEmpty());
+	}
+	//End - #31341
 }
 
