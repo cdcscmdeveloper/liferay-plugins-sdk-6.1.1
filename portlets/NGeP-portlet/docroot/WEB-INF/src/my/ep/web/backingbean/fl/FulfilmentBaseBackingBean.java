@@ -912,7 +912,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
         } catch (Exception e) {
         	SLAUtils.getInstance().logSLAError("FL", "showItemDescPopup", "showItemDescPopup", null,
 					getUserIdSessionFromLoginId(), e);
-			return;
         }
         
     }
