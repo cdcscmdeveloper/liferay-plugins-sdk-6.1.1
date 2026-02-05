@@ -458,8 +458,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		}
 	}
 
-	private void setExistingReceivingAddress(List<PmAddressType> editedAddressType,
-            List<PmAddressType> oldAddressType) {
+	private void setExistingReceivingAddress(List<PmAddressType> editedAddressType, List<PmAddressType> oldAddressType) {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 		
 		for (int i = 0, size = editedAddressType.size(); i < size; i++) {
