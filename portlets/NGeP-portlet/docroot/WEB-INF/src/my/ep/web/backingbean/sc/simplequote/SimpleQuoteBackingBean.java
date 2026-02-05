@@ -2701,8 +2701,6 @@ public class SimpleQuoteBackingBean extends
 						.getPmOrgProfile().getOrgProfileId());
 			}
 			//#39230 - End
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
