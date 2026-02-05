@@ -178,8 +178,11 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}
 		// 35509
 		
+		this.getManagedBean().setReasonApplicabilityDuplicate(false); // 39618
+		
 			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
 					.remove(rowIndex);
+		
 	}
 	
 	/**
@@ -188,17 +191,18 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * @param pidReason
 	 */
 	public void reasonApplicableChange(PmPIDReason pidReason){
-		
+
 		List<PmPIDReason> temp = new ArrayList<PmPIDReason>();
 		temp.addAll(this.getManagedBean().getSelectedReason().getPmPIDReasonList());
 		temp.remove(pidReason);
 		for(PmPIDReason pReason : temp){
 			if(pReason.getDocType()!= null && pReason.getDocType().equals(pidReason.getDocType())){
-				log.info(" reasonApplicableChange in here ::::::::::::::::::::::::::: ");
 				getManagedBean().setReasonApplicabilityDuplicate(true); // 39618
 				throw new EpException(MessageConst.ERROR_770301, new String[]{ResourceBundleUtils.getMessage(
 						"lbl.pm.reason.applicability", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())});
+			} else {
+				getManagedBean().setReasonApplicabilityDuplicate(false); // 39618
 			}
 		}
 	}
@@ -2597,6 +2601,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		log.info(" rejectionreasonbackingbean  in validationCheck()  :::::::::::::::::::::::::::::::: "+getManagedBean().isReasonApplicabilityDuplicate());
 		if(getManagedBean().isReasonApplicabilityDuplicate()){
 			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_770301, new String[]{ResourceBundleUtils.getMessage(
+					"lbl.pm.reason.applicability", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
 		}
 		
 	}
