@@ -211,9 +211,10 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setCircularExpDate(circular.getEndDate());
 			this.getManagedBean().setCircularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
-			
-			if(null!=scQt.getItemGroup() && null!=scQt.getItemGroup().getPanelItemGroupId()){
-			deleteTemplateSpecs(getManagedBean().getQt());
+			this.getManagedBean().setCircularVer(circular);// #29661
+
+			if (null != scQt.getItemGroup() && null != scQt.getItemGroup().getPanelItemGroupId()) {
+				deleteTemplateSpecs(getManagedBean().getQt());
 			}
 			
 		}
@@ -3016,7 +3017,28 @@ public class CreateQtBackingBean extends
 	 * 		the scQt
 	 */
 	public void setFileNo(ScQt scQt) {
-		scQt.getFileNo();
+		//#29661 start
+		if (scQt != null){
+		String fileNo = scQt.getFileNo();
+		fileNo = trimFileNo(fileNo);
+		scQt.setFileNo(fileNo);		
+		}
+		//#29961 end
+	}
+	
+	/**
+	 * #29661
+	 * trim file no from quotation tender's general details
+	 * @param fileNo
+	 * @return
+	 */
+	private String trimFileNo(String fileNo) {
+		if (!(fileNo == null || fileNo.isEmpty())){
+			fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");//first character condition
+			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");//last character condition
+			fileNo = fileNo.trim().replaceAll(" +", " ");//one white space only condition
+		}
+		return fileNo;
 		
 	}
 	
