@@ -3783,11 +3783,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							throw new EpException(MessageConst.ERROR_730006, new String[]{epItem.getPmGlAccount().getGlAccCode()});
 						}	//01032021@Bug #30476 - end
 						if (epItem.getNonEpAmt().compareTo(BigDecimal.ZERO) > 0 && isJustificationInvalid(epItem)) {
-							// 03122020@24975 - Start
+							//03122020@24975 - Start
 							epItem.setNotUsingEp(true);
 							ppItemNotUsingEp.add(epItem);
 							indicatorIndex++;
-							// 03122020@24975 - End
+							//03122020@24975 - End
 						}
 						//#39764 - End
 						//#25549@24022021 - remove
