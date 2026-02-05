@@ -81,6 +81,7 @@ import my.ep.web.util.pm.helper.ReasonHelper;
 import org.apache.commons.collections.CollectionUtils; //#28962
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext; //#28962
 /**
  * Backing Bean for Rejection Reason
  * 
@@ -2360,6 +2361,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 		agencyList.add(agency);
 		existingOrgProfileIds.add(orgId);
+		RequestContext.getCurrentInstance().execute("dtSuppAccTypeWidget.paginator.endLink.click()");
 
 		log.info(".......agencyList.size.......=" + agencyList.size());
 	}
