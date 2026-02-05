@@ -49,7 +49,7 @@
 	<ui:param name="specificationrequired"
 		value="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec }" />
 	<ui:param name="isPanel"
-		value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}" />
+		value="#{simpleQuoteBackingBean.checkPanel()}" />
 	<ui:param name="isColumnItemDisable"
 		value="#{question.disabledColumnItem}" />							
 
