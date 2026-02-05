@@ -805,6 +805,7 @@ public class LovBackingBean implements Serializable {
 			if (this.getSelectedEntities().isEmpty() && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 				ctReportBB.resetSearch();
 				ccContractItemMonitoringRptBB.resetSearch();
+				ccContractItemUsageMonitoringDtlsReportBB.resetSearch(); //#34889
 			}
 			// End - #29416			
 			if(selectedEntities != null && !selectedEntities.isEmpty()) {
