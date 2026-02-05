@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -40,6 +41,8 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	String lvlCode3;
 	BigInteger paramlvlId;
 	BigInteger docId;
+	String docNo = null;
+	String ruleValue;
 	String feeExemptionOrgType;
 	String feeExemptionSuppItem;
 	String feeExemptionComodity;
@@ -49,6 +52,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);	
 	/*35323 - Audit Start*/	
 	String amtFormatter = "#,##0.00";
+	String groupingBasePattern = "#,##0";
 	PmConfigRuleDesc pmConfigRuleDesc = new PmConfigRuleDesc();
 	String suppAccTypeNewValue;
 	/*35323 - Audit End*/
@@ -370,34 +374,55 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		if (newCreatedItem != null
 				&& (newCreatedItem.getRuleNumberValue() != null || newCreatedItem.getRuleValue() != null)
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null)) {
-			String ruleValue;
+			DecimalFormat formatter = new DecimalFormat(amtFormatter);
+			
 			String rawRuleValue = newCreatedItem.getRuleValue();
 			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
 				String number = rawRuleValue;
 				double amount = Double.parseDouble(number);
-				DecimalFormat formatter = new DecimalFormat(amtFormatter);
-
 				ruleValue = formatter.format(amount);
-			}
-			else if(newCreatedItem.getRuleType().getParameterType() != null){
-				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(), newCreatedItem.getRuleValue().toUpperCase());
+			} else if (newCreatedItem.getRuleType().getParameterType() != null) {
+				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(),
+						newCreatedItem.getRuleValue().toUpperCase());
 				ruleValue = pmParameter.getPmParameterDescsSpecCallOnly().get(1).getCodeName();
-			}else{
+			} else if (Long.valueOf(1382).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())
+					|| Long.valueOf(677).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
 				ruleValue = rawRuleValue;
+				docNo = rawRuleValue;
+			} else {
+				rawRuleValueNextProcess(rawRuleValue);
 			}
-			if (rawRuleValue == null) {
-				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
-						.toString() : null;
-			}
+			rawRuleValue(rawRuleValue,newCreatedItem);
+			
 			return ruleValue;
 		}
 		return null;
 	}
 	
+	private void rawRuleValueNextProcess(String rawRuleValue) {
+		DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
+		DecimalFormat formatter = new DecimalFormat(amtFormatter);
+		if (rawRuleValue.contains(".")) {
+			String number = rawRuleValue;
+			double amount = Double.parseDouble(number);
+			ruleValue = formatter.format(amount);
+		} else {
+			BigDecimal bd = new BigDecimal(rawRuleValue);
+			ruleValue = basePatternformatter.format(bd);
+		}
+	}
+
+	private void rawRuleValue(String rawRuleValue, PmConfigRuleValue newCreatedItem) {
+		DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
+		if (rawRuleValue == null) {
+			BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
+			ruleValue = basePatternformatter.format(bd);
+		}
+	}
+	
 	private String ruleNumberValueDeleted(PmConfigRuleValue deletedItem) {
 		if (deletedItem != null && (deletedItem.getRuleValue() != null || deletedItem.getRuleNumberValue() != null)
 				&& (Long.valueOf(deletedItem.getRuleValueId()) != null)) {
-			String ruleValue;
 			String rawRuleValue = deletedItem.getRuleValue();
 			if ("TRUE".equalsIgnoreCase(rawRuleValue)) {
 				ruleValue = AuditConst.PM_AUD_YES;
@@ -420,9 +445,10 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem.getRuleValueId()) > 0)
 				&& newCreatedItem.getCategoryL3Id() != null) {
-			return newCreatedItem.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+			docNo = newCreatedItem.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ newCreatedItem.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
 					+ newCreatedItem.getCategoryL3Id().getCategoryL3Code();
+			return docNo;
 		}
 		return null;
 	}
@@ -461,24 +487,18 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
 						.getRuleValueId()) > 0) && newCreatedItem.getFromValue() != null) {
-			String ruleValue;
+			DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
 			String rawValue = newCreatedItem.getFromValue().toString();
 			if (rawValue != null) {
-				String number = rawValue;
-				double amount = Double.parseDouble(number);
-
-				DecimalFormat formatter = new DecimalFormat(amtFormatter);
-
-				ruleValue = formatter.format(amount);
+				rawValueNotNullProcess(rawValue,newCreatedItem);
 			} else {
-				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
-						.toString() : null;
+				BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
+				ruleValue = basePatternformatter.format(bd);
 			}
-			return ruleValue;
 		}
-		return null;
+		return ruleValue;
 	}
-
+	
 	private String fromValueDeleted(PmConfigRuleValue deletedItem) {
 		if (deletedItem != null
 				&& (Long.valueOf(deletedItem.getRuleValueId()) != null || Long.valueOf(deletedItem.getRuleValueId()) > 0)
@@ -488,28 +508,40 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		return null;
 	}
 	
-
 	private String toValueNewCreated(PmConfigRuleValue newCreatedItem) {
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
 						.getRuleValueId()) > 0) && newCreatedItem.getToValue() != null) {
-			String ruleValue;
+			DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
 			String rawValue = newCreatedItem.getToValue().toString();
 			if (rawValue != null) {
+				rawValueNotNullProcess(rawValue,newCreatedItem);
+			} else {
+				BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
+				ruleValue = basePatternformatter.format(bd);
+			}
+		}
+		return ruleValue;
+	}
+	
+	private void rawValueNotNullProcess(String rawValue,PmConfigRuleValue newCreatedItem){
+		DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
+		DecimalFormat formatter = new DecimalFormat(amtFormatter);
+		if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+			String number = rawValue;
+			double amount = Double.parseDouble(number);
+			ruleValue = formatter.format(amount);
+		} else {
+			if (rawValue.contains(".")) {
 				String number = rawValue;
 				double amount = Double.parseDouble(number);
-
-				DecimalFormat formatter = new DecimalFormat(amtFormatter);
-
 				ruleValue = formatter.format(amount);
 			} else {
-				ruleValue = newCreatedItem.getRuleNumberValue() != null ? newCreatedItem.getRuleNumberValue()
-						.toString() : null;
+				BigDecimal bd = new BigDecimal(rawValue);
+				ruleValue = basePatternformatter.format(bd);
 			}
-			return ruleValue;
 		}
-		return null;
-	}
+	}	
 
 	private String toValueDeleted(PmConfigRuleValue deletedItem) {
 		if (deletedItem != null
@@ -626,6 +658,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		detailObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		detailObj.setLvlCode2(lvlCode2);
 		detailObj.setDocId(docId);
+		detailObj.setDocNo(docNo);
 		detailObj.setActionType(actionType);
 		detailObj.setLvlCode3(lvlCode3);
 		detailObj.setFieldLabelCode(fieldLabelCode);
