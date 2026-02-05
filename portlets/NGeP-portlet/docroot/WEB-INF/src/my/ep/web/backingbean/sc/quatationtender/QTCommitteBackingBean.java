@@ -2881,7 +2881,7 @@ public class QTCommitteBackingBean extends
 			}
 			// 39593 - start
 			String taskNames[] = new String[] { SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE,
-					SCProcessNameConst.ASSIGN_TEC_COMMITTEE, SCProcessNameConst.ASSIGN_TEC_COMMITTEE,
+					SCProcessNameConst.ASSIGN_TEC_COMMITTEE, SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
 					SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE };
 			String taskName = this.getManagedBean().getTaskName();
 			if (Arrays.asList(taskNames).contains(taskName)) {
