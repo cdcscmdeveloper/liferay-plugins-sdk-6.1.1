@@ -2677,7 +2677,7 @@ public class CommitteBackingBean extends
 	}
 	// #35320 - END
 
-	//35320 - START
+	// #35320 - START
 	/**
 	 * Method to retrieve Committee Type detail based on the tab id
 	 */
