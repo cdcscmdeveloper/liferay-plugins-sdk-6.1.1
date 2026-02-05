@@ -9905,5 +9905,21 @@ public class SimpleQuoteBackingBean extends
 			question.setClItem(question.getCmTitleValue() + DPConstants.SPACE + extension);
 		}
 	}
+	
+	
+	/**
+	 * Determines whether the specific question column should be displayed or enabled.
+	 * This method checks the current quote's panel status. It is specifically utilized 
+	 * by the {@code specColumnQuestion} component to toggle visibility/functionality 
+	 * based on whether the quote is classified as a panel.
+	 * * @return {@code false} if the quote exists and is marked as a panel; 
+	 * {@code true} otherwise (indicating the panel check passed or is not applicable).
+	 */
+	public boolean checkPanel() {
+		if (getManagedBean().getScQuote() != null && getManagedBean().getScQuote().isPanel()) {
+			return false;
+		}
+		return true;
+	}
 	// #26059 - End
 }
