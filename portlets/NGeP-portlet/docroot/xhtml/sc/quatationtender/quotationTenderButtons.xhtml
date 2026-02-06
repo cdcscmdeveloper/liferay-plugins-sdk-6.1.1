@@ -510,6 +510,30 @@
 				</p:dialog>
 			</c:if>	
 	    <ui:remove>#25077 - End</ui:remove>
+	    
+	    <!-- #10098 - start -->
+	    <p:dialog id="confirmAutosaveId" widgetVar="confirmAutosave"
+			header="#{lbl['lbl.sc.dialog.autosave.title']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.sc.dialog.autosave.content']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    action="#{qTDetailBB.autosaveQtDetailsAction}" onclick="confirmAutosave.hide(); blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					partialSubmit="true" process="@form" update="@form">
+				    <f:param name="skipvalidation" value="0" />
+			    </p:commandButton>    
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="confirmAutosave.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
+		<!-- #10098 - end -->
 		
 		<ac:confirmationPopup id="confirmReendorseOnReassignmentId"
 			widget="confirmReendorseOnReassignmentPopup" loadingWidget="blockWidget"

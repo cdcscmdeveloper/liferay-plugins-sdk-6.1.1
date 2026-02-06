@@ -96,11 +96,13 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.specification.SpecificationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -154,6 +156,11 @@ public class TemplateSpecBackingBean extends
 	private static final String TPL_SPEC_KEY = "lbl.sc.template.spec";
 
 	private IPagingDataModel<TplSpecMaster> specMasterDataModel = new SpecMasterPagingDataModel();
+	
+	private int pollNumber;
+	private int pollNumberScore;
+	private boolean pollStart = false;
+	private static EpPropertiesUtils util = EpPropertiesUtils.getInstance();
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -2027,6 +2034,7 @@ public class TemplateSpecBackingBean extends
 			}
 
 		} finally {
+			resetPoll();
 			templateSpecSO = null;
 		}
 
@@ -5936,4 +5944,12 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	//#38151 End
+		//#10098 - Start
+	public void resetPoll() {
+		log.info("harun TemplateSpec resetPoll new approach===================");
+		FacesContext fctx = FacesContext.getCurrentInstance();
+		SpecificationBackingBean specBackingBean = fctx.getApplication().evaluateExpressionGet(fctx , "#{specificationBackingBean}", SpecificationBackingBean.class);
+		specBackingBean.resetPollScoring();
+	}
+	//#10098 - End
 }
