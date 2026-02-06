@@ -1816,8 +1816,14 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
+			//#39230 - Start
+			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
+				throw new EpException(MessageConst.ERROR_760824);
+			} else {
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
+						.getPmOrgProfile().getOrgProfileId());
+			}
+			//#39230 - End
 			reqDTO.setQuoteBidDtl(quote);
 			//29194 - Start
 			reqDTO.setRoleCode(getUserRoleCodeSQ());
@@ -2687,8 +2693,14 @@ public class SimpleQuoteBackingBean extends
 
 			FacesScopes facesScopes = new FacesScopes();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
+			//#39230 - Start
+			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
+				throw new EpException(MessageConst.ERROR_760824);
+			} else {
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
+						.getPmOrgProfile().getOrgProfileId());
+			}
+			//#39230 - End
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -9892,6 +9904,22 @@ public class SimpleQuoteBackingBean extends
 					: StringUtils.EMPTY;
 			question.setClItem(question.getCmTitleValue() + DPConstants.SPACE + extension);
 		}
+	}
+	
+	
+	/**
+	 * Determines whether the specific question column should be displayed or enabled.
+	 * This method checks the current quote's panel status. It is specifically utilized 
+	 * by the {@code specColumnQuestion} component to toggle visibility/functionality 
+	 * based on whether the quote is classified as a panel.
+	 * * @return {@code false} if the quote exists and is marked as a panel; 
+	 * {@code true} otherwise (indicating the panel check passed or is not applicable).
+	 */
+	public boolean checkPanel() {
+		if (getManagedBean().getScQuote() != null && getManagedBean().getScQuote().isPanel()) {
+			return false;
+		}
+		return true;
 	}
 	// #26059 - End
 }

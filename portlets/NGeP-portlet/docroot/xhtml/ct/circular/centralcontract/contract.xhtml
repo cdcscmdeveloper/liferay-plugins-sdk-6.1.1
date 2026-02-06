@@ -5,6 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:blockUI block=":form" widgetVar="itemLoadblock">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.contract.list']}" toggleable="true" toggleSpeed="500">
 		 <div>
 	      <h:panelGrid style="width:100%">
@@ -97,10 +100,21 @@
 						update=":form:circularZonePanel,:form:circularPricePanel"
 						process="@this" 
 						listener="#{centralContractBackingBean.setZoneListener()}" />
+					<!-- Start Fix - #31341-->
 					<p:column headerText="#{lbl['lbl.ct.item.name']}"
-						style="width:45%; white-space:pre-line;" styleClass="column-align-center">
+						style="width:45%; white-space:normal;" styleClass="column-align-center">
 						<h:outputText value="#{itemVar.ctContractItem.scRequestItem.itemName}"  style="float:left;text-align:left;"  />
+						<br />						
+			    			<p:commandLink id="extensionCodeID"
+			    				value="#{itemVar.ctContractItem.scRequestItem.cmItem.extensionCode}" styleClass="blue_font"
+								style="color:#009ae5 !important; float:left;text-align:left;"
+								action="#{centralContractBackingBean.viewItemUnspscDetails(itemVar.ctContractItem.scRequestItem)}"
+								update=":form:itemDescDialogId"
+								onstart="itemLoadblock.show()"
+								oncomplete="itemLoadblock.hide(); itemDescDialogId.show();">
+							</p:commandLink>						
 					</p:column>
+					<!-- End Fix - #31341-->
 					<p:column headerText="#{lbl['lbl.ct.uom']}" styleClass="column-align-center" style="width:15%; white-space:normal;">
 		              <h:outputText value="#{itemVar.ctContractItem.scRequestItem.uom.uomName}" style="float:left;"/>
 		         </p:column> 
@@ -629,5 +643,6 @@
 			</tr>
 		</table>
 	</p:panel>
+	 <ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
 	<!-- Bug #29447 - end -->
 </ui:composition>
