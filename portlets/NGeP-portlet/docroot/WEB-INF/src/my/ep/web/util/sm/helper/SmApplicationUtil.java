@@ -226,6 +226,12 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.util.StringUtil;
+// #9299 - Start
+import my.ep.persistence.entity.pm.common.PmAppVersion;
+import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
+import my.ep.persistence.entity.sm.SmCompExpCatDraft;
+import my.ep.persistence.entity.sm.SmCompExpDraft;
+// #9299 - End
 
 
 public class SmApplicationUtil {
@@ -4324,6 +4330,9 @@ public class SmApplicationUtil {
 					voSubTmp.setApplStatus(StringUtils.isBlank(applStatus) ? arr[21]
 							+ ""
 							: applStatus);
+					//#29659 - START 
+					voSubTmp.setTitle(arr[23] + "");
+					//#29659 - END
 					voTmp.getOverlapInfoList().add(voSubTmp);
 					isSubAdd = false;
 				}
@@ -7866,93 +7875,26 @@ public class SmApplicationUtil {
 		managedBean.setShowFactoryPanel(false);
 		managedBean.setShowWorkShopPanel(false);
 
-		// if site after approval, show panel if facility type has records
-		if (managedBean.isSiteVisitAfterApproval()) {
-			for (SmFacility facility : managedBean.getSmAppl()
-					.getSmFacilities()) {
-				if (!StringUtils.isBlank(facility.getFacilityType())) {
-					if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
-						managedBean.setShowFactoryPanel(true);
-					} else if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_STORE)
-							//#28775 - 38380
-							|| facility.getFacilityType().equalsIgnoreCase(
-								SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-						managedBean.setShowStorePanel(true);
-					} else if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
-						managedBean.setShowWorkShopPanel(true);
-					} else if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
-						managedBean.setShowDockyardPanel(true);
-					}
-				}
-			}
-		}
-		// if not site visit after approval, check based on pending activation
-		// cat code
-		else {
-			for (SmSupplierCategory cat : managedBean.getSmAppl()
-					.getSmSupplierCategories()) {
-				if (cat.isSpecialCategory()
-						&& cat.getPmCategoryL3() != null
-						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
-						&& cat.getPmCategoryL3().getCategoryTypeCode()
-								.getParameterId() != null
-						&& cat.getRecordStatusFlg() != null
-						&& (cat.getRecordStatusFlg().compareTo(
-								SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
-								.getRecordStatusFlg()
-								.compareTo(
-										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
-						//#30766 - START
-						&& ( ((cat.getApprvrDecFlg()!=null && cat.getApprvrDecFlg() == 1) || (cat.getPoDecFlg()!=null && cat.getPoDecFlg()==1)) ||  (cat.getPoDecFlg()==null && cat.getApprvrDecFlg()==null))) { 
-						//&& !isCategoryRejected(cat)) {
-					   //#30766 - END
-					String facType = "";
-					if (cat.getPmCategoryL3().getFacilityType() != null) {
-						facType = cat.getPmCategoryL3().getFacilityType();
-					}
-					if (facType
-							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
-						managedBean.setShowFactoryPanel(true);
-					} else if (facType.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)
-							|| facType.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) { //#30043
-						managedBean.setShowStorePanel(true);
-					} else if (facType
-							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
-						managedBean.setShowWorkShopPanel(true);
-					} else if (facType
-							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD)) {
-						managedBean.setShowDockyardPanel(true);
-					}
-				}
-			}
-		}
-
-		managedBean.setDockYardFacilitiesVOList(SmApplicationUtil
-				.getCategoryFacilityVO(managedBean.getSmAppl(),
+		//#28775, 39894 - start
+		SmAppl appl = managedBean.getSmAppl();
+		managedBean.setDockYardFacilitiesVOList(SmApplicationUtil.getCategoryFacilityVO(appl,
 						SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD));
-		managedBean.setWorkshopFacilitiesVOList(SmApplicationUtil
-				.getCategoryFacilityVO(managedBean.getSmAppl(),
+		managedBean.setWorkshopFacilitiesVOList(SmApplicationUtil.getCategoryFacilityVO(appl,
 						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
-		managedBean.setStoreFacilitiesVOList(SmApplicationUtil
-				.getCategoryFacilityVO(managedBean.getSmAppl(),
+		managedBean.setStoreFacilitiesVOList(SmApplicationUtil.getCategoryFacilityVO(appl,
 						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
-		managedBean.setFactoryFacilitiesVOList(SmApplicationUtil
-				.getCategoryFacilityVO(managedBean.getSmAppl(),
+		managedBean.setFactoryFacilitiesVOList(SmApplicationUtil.getCategoryFacilityVO(appl,
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
-		
 		// start #30043
-		if (managedBean.isShowStorePanel()) {
-			managedBean.getStoreFacilitiesVOList().addAll((SmApplicationUtil.getCategoryFacilityVO(managedBean.getSmAppl(),
+		managedBean.getStoreFacilitiesVOList().addAll((SmApplicationUtil.getCategoryFacilityVO(appl,
 					SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)));
-			if (managedBean.getStoreFacilitiesVOList().isEmpty()) {
-				managedBean.setShowStorePanel(false);
-			}
-		}
 		// end #30043
+
+		managedBean.setShowFactoryPanel(!managedBean.getFactoryFacilitiesVOList().isEmpty());
+		managedBean.setShowStorePanel(!managedBean.getStoreFacilitiesVOList().isEmpty());
+		managedBean.setShowWorkShopPanel(!managedBean.getWorkshopFacilitiesVOList().isEmpty());
+		managedBean.setShowDockyardPanel(!managedBean.getDockYardFacilitiesVOList().isEmpty());
+		//#28775, 39894 - end
 
 		// set PO assign site visit popup VO value
 		if (managedBean.isPoUser()
@@ -16291,5 +16233,83 @@ public class SmApplicationUtil {
 		RegistrationBackingBean.checkBannedOwners(smAppl.getSmSupplier().getSmSupplierOwners());
 	}
 	// 39392 - END
+	// #9299 - Start
+	public static boolean getAppVersionDetailsWithRedmineNo(SmAppl smAppl, Long redmineNo) {
+		PmAppVersion appVerDtls = SmServiceLookup.getMofRegistrationSO().getAppVersionDetails(redmineNo,
+				ParameterConst.DOCTYPE_SUPPLIER_MANAGEMENT);
+		if (smAppl.getCreatedDate().before(appVerDtls.getEffDate())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Save sm remarks.
+	 * 
+	 * @param remarks
+	 *            - SmRemark object
+	 */
+	public static void setCompExpDraft(SmAppl smAppl) {
+		List<SmCompExpDraft> smCompExpDraft = new ArrayList<>();
+		for (SmCompanyExperience exp : smAppl.getSmCompanyExperiences()) {
+			boolean isConsultant = false;
+			if (exp.getSupplierType().equals(ParameterConst.SUPPLIER_TYPE_CONSULTANT)) {
+				isConsultant = true;
+			}
+			if (exp.isNewlyAdded()) {
+				SmCompExpDraft draft = new SmCompExpDraft();
+				draft.setSmSupplier(smAppl.getSmSupplier());
+				draft.setSmAppl(smAppl);
+				draft.setTitle(exp.getTitle());
+				draft.setContractValue(exp.getContractValue());
+				draft.setSourceType(retrievePmParameterById(ParameterConst.SOURCE_TYPE_ID_SM));
+				draft.setClientType(exp.getClientType());
+				if(exp.getClientType().equalsIgnoreCase("F")){
+					draft.setOriAgencyName(exp.getClientName());
+				}else if(exp.getClientType().equalsIgnoreCase("O")){
+					draft.setAgencyName(exp.getClientName());	
+				}
+				draft.setPaymentMethod(retrievePmParameterById(exp.getPaymentMethodId().longValue()));
+				draft.setContractEffDate(exp.getProcurementDate());
+				if(isConsultant){
+					draft.setFileReferenceNo(exp.getRefNo());
+					draft.setProjectLoc(exp.getProjectLocation());
+					draft.setWorkServDesc(exp.getWorkServiceDesc());
+					draft.setConsultantFee(exp.getConsultantFee());
+				} else {
+					draft.setProcumentMode(retrievePmParameterById(exp.getProcurementModeId().longValue()));
+				}
+				List<SmCompExpCatDraft> catDraftList = new ArrayList<>();
+				for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {
+					SmCompExpCatDraft catDraft = new SmCompExpCatDraft();
+					CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+					
+					reqDTO.setCategoryL1Id(cat.getPmCategoryL1().getCategoryL1Id());
+					catDraft.setCategoryL1(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL1DtlById(reqDTO).getCategoryL1());
+					catDraft.setCategoryL1(cat.getPmCategoryL1());
+					catDraft.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+
+					reqDTO.setCategoryL2Id(cat.getPmCategoryL2().getCategoryL2Id());
+					catDraft.setCategoryL2(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL2DtlById(reqDTO).getCategoryL2());
+					catDraft.setCategoryL2(cat.getPmCategoryL2());
+					catDraft.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+
+					reqDTO.setCategoryL3Id(cat.getPmCategoryL3().getCategoryL3Id());
+					catDraft.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO).getCategoryL3());
+					catDraft.setCategoryL3(cat.getPmCategoryL3());
+					catDraft.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+
+					catDraft.setCompExpDraft(draft);
+					catDraftList.add(catDraft);
+				}
+				draft.setCompExpDraftCats(catDraftList);
+				smCompExpDraft.add(draft);
+			}
+			
+		}
+		smAppl.setSmCompExpDraft(smCompExpDraft);
+	}
+	// #9299 - End
 
 }
