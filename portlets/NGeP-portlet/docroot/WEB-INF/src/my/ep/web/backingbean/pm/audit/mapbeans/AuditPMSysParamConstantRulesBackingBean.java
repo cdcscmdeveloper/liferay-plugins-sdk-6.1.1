@@ -414,7 +414,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 
 	private void rawRuleValue(String rawRuleValue, PmConfigRuleValue newCreatedItem) {
 		DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
-		if (rawRuleValue == null) {
+		if (rawRuleValue == null && newCreatedItem.getRuleNumberValue() != null) {
 			BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
 			ruleValue = basePatternformatter.format(bd);
 		}
