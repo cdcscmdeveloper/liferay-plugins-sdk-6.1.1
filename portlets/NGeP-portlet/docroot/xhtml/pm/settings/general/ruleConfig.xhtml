@@ -29,6 +29,7 @@
 			rowKey="#{ruleTypeDescObj}" rowIndexVar="rowIndex" selectionMode="single">
 			<ac:paginator for="ruleTypeTableID" />
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				listener="#{ruleCatalogueBackingBean.onRuleType}" 
 				update=":form:settingTabId:ruleConfigId" />
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"				
 				update=":form:settingTabId:ruleConfigId" />
