@@ -127,15 +127,27 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 				}
 			}
 		}
+		/* Temporary close this deleted section
 		if (CollectionUtils.isNotEmpty(deletedItem)) {
 			for (PmConfigRuleValue deleted : deletedItem) {
 				processSPRulesValueTypeCreateDeleted(null, deleted);
 
 			}
 		}
+		*/
 		for (PmConfigRuleValue updateVal : update) {
 			PmConfigRuleValue matchingIdUpdatedOldVal = findMatchingSPRulesTypeValue(ruleValueOld, updateVal);
 			if (matchingIdUpdatedOldVal != null) {
+				
+				if(matchingIdUpdatedOldVal.getRuleDataTypeCode().matches("PC")) {
+					docNo = matchingIdUpdatedOldVal.getRuleValue();
+				}
+					
+				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equals(matchingIdUpdatedOldVal.getRuleDataTypeCode())) {
+					docNo = matchingIdUpdatedOldVal.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+					+ matchingIdUpdatedOldVal.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
+					+ matchingIdUpdatedOldVal.getCategoryL3Id().getCategoryL3Code();
+				}
 				docId = BigInteger.valueOf(matchingIdUpdatedOldVal.getRuleValueId());
 				/*35323 - Audit Start*/
 				if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(pmConfigRuleDesc.getRuleType()
@@ -377,16 +389,15 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			DecimalFormat formatter = new DecimalFormat(amtFormatter);
 			
 			String rawRuleValue = newCreatedItem.getRuleValue();
-			if (Long.valueOf(676).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+			if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().toUpperCase().equalsIgnoreCase("A")) {
 				String number = rawRuleValue;
 				double amount = Double.parseDouble(number);
 				ruleValue = formatter.format(amount);
-			} else if (newCreatedItem.getRuleType().getParameterType() != null) {
+			} else if(newCreatedItem.getRuleType().getParameterType() != null) {
 				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(),
 						newCreatedItem.getRuleValue().toUpperCase());
 				ruleValue = pmParameter.getPmParameterDescsSpecCallOnly().get(1).getCodeName();
-			} else if (Long.valueOf(1382).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())
-					|| Long.valueOf(677).equals(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterId())) {
+			}else if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().toUpperCase().equalsIgnoreCase("PC")){
 				ruleValue = rawRuleValue;
 				docNo = rawRuleValue;
 			} else {
@@ -399,20 +410,20 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		return null;
 	}
 	
-	private void rawRuleValueNextProcess(String rawRuleValue) {
+	private void rawRuleValueNextProcess(String rawRuleValue){
 		DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
 		DecimalFormat formatter = new DecimalFormat(amtFormatter);
-		if (rawRuleValue.contains(".")) {
-			String number = rawRuleValue;
-			double amount = Double.parseDouble(number);
-			ruleValue = formatter.format(amount);
-		} else {
-			BigDecimal bd = new BigDecimal(rawRuleValue);
-			ruleValue = basePatternformatter.format(bd);
-		}
+			if (rawRuleValue.contains(".")) {
+				String number = rawRuleValue;
+				double amount = Double.parseDouble(number);
+				ruleValue = formatter.format(amount);
+			} else {
+				BigDecimal bd = new BigDecimal(rawRuleValue);
+				ruleValue = basePatternformatter.format(bd);
+			}
 	}
 
-	private void rawRuleValue(String rawRuleValue, PmConfigRuleValue newCreatedItem) {
+	private void rawRuleValue(String rawRuleValue, PmConfigRuleValue newCreatedItem){
 		DecimalFormat basePatternformatter = new DecimalFormat(groupingBasePattern);
 		if (rawRuleValue == null && newCreatedItem.getRuleNumberValue() != null) {
 			BigDecimal bd = new BigDecimal(newCreatedItem.getRuleNumberValue().toString());
