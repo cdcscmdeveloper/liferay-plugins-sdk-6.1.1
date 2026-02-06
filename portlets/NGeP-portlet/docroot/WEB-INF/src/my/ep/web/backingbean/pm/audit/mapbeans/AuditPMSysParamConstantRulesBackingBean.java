@@ -115,14 +115,27 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	 */
 	public void spRuleValueType(List<PmConfigRuleValue> ruleValueOld, List<PmConfigRuleValue> update,
 			List<PmConfigRuleValue> deletedItem, List<PmConfigRuleValue> newCreatedItem) {
-
+		boolean docNoBool = false;
+		boolean docNoCategoryBool = false;
 		if (CollectionUtils.isNotEmpty(newCreatedItem)) {
-			/*35323 - Audit Start*/
+			/* 35323 - Audit Start */
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(pmConfigRuleDesc.getRuleType().getRuleType())) {
 				processSupplierAccTypeCreated(newCreatedItem);
-			} else {/*35323 - Audit End*/
+			} else {/* 35323 - Audit End */
 				for (PmConfigRuleValue newCreate : newCreatedItem) {
+
 					docId = BigInteger.valueOf(newCreate.getRuleValueId());
+
+					if (newCreate.getRuleDataTypeCode().matches("PC")) {
+						docNoBool = true;
+						docNo = newCreate.getRuleValue();
+					}
+
+					if (newCreate.getCategoryL3Id() != null && "C".equalsIgnoreCase(newCreate.getRuleDataTypeCode())) {
+						docNoCategoryBool = true;
+						setDocNo(docNoBool, docNoCategoryBool, newCreate);
+					}
+
 					processSPRulesValueTypeCreateDeleted(newCreate, null);
 				}
 			}
@@ -140,13 +153,13 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			if (matchingIdUpdatedOldVal != null) {
 				
 				if(matchingIdUpdatedOldVal.getRuleDataTypeCode().matches("PC")) {
+					docNoBool = true;
 					docNo = matchingIdUpdatedOldVal.getRuleValue();
 				}
 					
-				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equals(matchingIdUpdatedOldVal.getRuleDataTypeCode())) {
-					docNo = matchingIdUpdatedOldVal.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
-					+ matchingIdUpdatedOldVal.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
-					+ matchingIdUpdatedOldVal.getCategoryL3Id().getCategoryL3Code();
+				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleDataTypeCode())) {
+					docNoCategoryBool = true;
+					setDocNo(docNoBool,docNoCategoryBool,matchingIdUpdatedOldVal);
 				}
 				docId = BigInteger.valueOf(matchingIdUpdatedOldVal.getRuleValueId());
 				/*35323 - Audit Start*/
@@ -159,6 +172,19 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			}
 		}
 	}
+	
+	private void setDocNo(boolean docNoBool, boolean docNoCategoryBool, PmConfigRuleValue pmConfigRuleValue) {
+		if (docNoBool) {
+			docNo = pmConfigRuleValue.getRuleValue();
+		} else if (docNoCategoryBool) {
+			docNo = pmConfigRuleValue.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+					+ pmConfigRuleValue.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
+					+ pmConfigRuleValue.getCategoryL3Id().getCategoryL3Code();
+		}
+		docNoBool = false;
+		docNoCategoryBool = false;
+	}
+	
 	/*35323 - Audit Start*/
 	private void updateRuleType(PmConfigRuleValue updateVal,PmConfigRuleValue matchingIdUpdatedOldVal){
 		if (updateVal.getSupplAcctTypeId() != null && updateVal.isShowFlag()
@@ -389,7 +415,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			DecimalFormat formatter = new DecimalFormat(amtFormatter);
 			
 			String rawRuleValue = newCreatedItem.getRuleValue();
-			if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().toUpperCase().equalsIgnoreCase("A")) {
+			if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().equalsIgnoreCase("A")) {
 				String number = rawRuleValue;
 				double amount = Double.parseDouble(number);
 				ruleValue = formatter.format(amount);
@@ -397,9 +423,8 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(),
 						newCreatedItem.getRuleValue().toUpperCase());
 				ruleValue = pmParameter.getPmParameterDescsSpecCallOnly().get(1).getCodeName();
-			}else if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().toUpperCase().equalsIgnoreCase("PC")){
+			}else if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().equalsIgnoreCase("PC")){
 				ruleValue = rawRuleValue;
-				docNo = rawRuleValue;
 			} else {
 				rawRuleValueNextProcess(rawRuleValue);
 			}
@@ -454,12 +479,11 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 
 	private String categoryL3IdNewCreated(PmConfigRuleValue newCreatedItem) {
 		if (newCreatedItem != null
-				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem.getRuleValueId()) > 0)
-				&& newCreatedItem.getCategoryL3Id() != null) {
-			docNo = newCreatedItem.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
+						.getRuleValueId()) > 0) && newCreatedItem.getCategoryL3Id() != null) {
+			return newCreatedItem.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ newCreatedItem.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
 					+ newCreatedItem.getCategoryL3Id().getCategoryL3Code();
-			return docNo;
 		}
 		return null;
 	}
