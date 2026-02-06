@@ -115,8 +115,8 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 	 */
 	public void spRuleValueType(List<PmConfigRuleValue> ruleValueOld, List<PmConfigRuleValue> update,
 			List<PmConfigRuleValue> deletedItem, List<PmConfigRuleValue> newCreatedItem) {
-		boolean docNoBool = false;
-		boolean docNoCategoryBool = false;
+		boolean hasDocNo = false;
+		boolean hasDocNoCategory = false;
 		if (CollectionUtils.isNotEmpty(newCreatedItem)) {
 			/* 35323 - Audit Start */
 			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(pmConfigRuleDesc.getRuleType().getRuleType())) {
@@ -127,13 +127,13 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 					docId = BigInteger.valueOf(newCreate.getRuleValueId());
 
 					if (newCreate.getRuleDataTypeCode().matches("PC")) {
-						docNoBool = true;
+						hasDocNo = true;
 						docNo = newCreate.getRuleValue();
 					}
 
 					if (newCreate.getCategoryL3Id() != null && "C".equalsIgnoreCase(newCreate.getRuleDataTypeCode())) {
-						docNoCategoryBool = true;
-						setDocNo(docNoBool, docNoCategoryBool, newCreate);
+						hasDocNoCategory = true;
+						setDocNo(hasDocNo, hasDocNoCategory, newCreate);
 					}
 
 					processSPRulesValueTypeCreateDeleted(newCreate, null);
@@ -153,13 +153,13 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			if (matchingIdUpdatedOldVal != null) {
 				
 				if(matchingIdUpdatedOldVal.getRuleDataTypeCode().matches("PC")) {
-					docNoBool = true;
+					hasDocNo = true;
 					docNo = matchingIdUpdatedOldVal.getRuleValue();
 				}
 					
 				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleDataTypeCode())) {
-					docNoCategoryBool = true;
-					setDocNo(docNoBool,docNoCategoryBool,matchingIdUpdatedOldVal);
+					hasDocNoCategory = true;
+					setDocNo(hasDocNo,hasDocNoCategory,matchingIdUpdatedOldVal);
 				}
 				docId = BigInteger.valueOf(matchingIdUpdatedOldVal.getRuleValueId());
 				/*35323 - Audit Start*/
@@ -173,16 +173,16 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		}
 	}
 	
-	private void setDocNo(boolean docNoBool, boolean docNoCategoryBool, PmConfigRuleValue pmConfigRuleValue) {
-		if (docNoBool) {
+	private void setDocNo(boolean hasDocNo, boolean hasDocNoCategory, PmConfigRuleValue pmConfigRuleValue) {
+		if (hasDocNo) {
 			docNo = pmConfigRuleValue.getRuleValue();
-		} else if (docNoCategoryBool) {
+		} else if (hasDocNoCategory) {
 			docNo = pmConfigRuleValue.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ pmConfigRuleValue.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
 					+ pmConfigRuleValue.getCategoryL3Id().getCategoryL3Code();
 		}
-		docNoBool = false;
-		docNoCategoryBool = false;
+		hasDocNo = false;
+		hasDocNoCategory = false;
 	}
 	
 	/*35323 - Audit Start*/
