@@ -102,6 +102,11 @@ public class MolPayServlet extends HttpServlet {
 		String bankName = reqMap.get("bankName");
 		String providerTransId = reqMap.get("providerTransId");
 		String customerEmail = reqMap.get("customerEmail");
+		String customerContactNo = reqMap.get("customerContactNo");
+		
+		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
+		String cardMaskedNum = reqMap.get("cardMaskedNum");
+		
 		log.info("set session--");
 		req.getSession().setAttribute("orderidS", orderId);
 		log.info("getsession servlet: -"+req.getSession().getAttribute("orderidS"));
@@ -202,13 +207,16 @@ public class MolPayServlet extends HttpServlet {
 					//32422 END
 					// #26307 start
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+					
 					//#38377
 					pymtReqDTO.setCustomerEmail(customerEmail);
+					pymtReqDTO.setContactNo(customerContactNo);
+					
 					log.info("Card type=============="+cardType);
 					if (cardType != null) {
 						if (cardType.equalsIgnoreCase("Credit")) {
 							cardType = "CC";
-						} else if (cardType.equalsIgnoreCase("Debit")) {
+						} else if (cardType.equalsIgnoreCase("Debit") || cardType.equalsIgnoreCase("Prepaid")) { //#39654 - add prepaid
 							cardType = "DC";
 						} 
 						log.info("cardType===="+cardType);
@@ -332,6 +340,11 @@ public class MolPayServlet extends HttpServlet {
 					//#38377
 					smPaymentRes.setProviderTransactionId(providerTransId);
 					log.info("#38377########smPaymentRes.setProviderTransactionId:"+smPaymentRes.getProviderTransactionId());
+					
+					//#38377 - DO NOT INCLUDE IN PROD
+					log.info("#38377########cardMaskedNum:"+cardMaskedNum);
+					smPaymentRes.setMolpayTransactionId((cardMaskedNum!=null && cardMaskedNum.length()>0)?cardMaskedNum: smPaymentRes.getMolpayTransactionId());
+					
 					paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 					int requeryCount = paymentOrder.getRequeryCount() + 1;
 					paymentOrder.setRequeryCount(requeryCount);
@@ -380,6 +393,7 @@ public class MolPayServlet extends HttpServlet {
 					pymtReqDTO.setMethodName("doPost-MolPayServlet");
 					
 					log.info(">>>>#38377 enable payment update<<<");
+					reqSO.sendSuccessPaymentEmail(pymtReqDTO);
 					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
@@ -506,6 +520,8 @@ public class MolPayServlet extends HttpServlet {
 		String bankName = "";
 		String providerTransId = "";
 		String customerEmail = "";
+		String cardMaskedNum = "";
+		String customerContactNo = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
@@ -534,8 +550,15 @@ public class MolPayServlet extends HttpServlet {
 				log.info("######38377#####json currency: " + currency);
 				customerEmail = jsonObject.optString("customerEmail", null);
 				log.info("######38377#####json customerEmail: " + customerEmail);
+				customerContactNo = jsonObject.optString("customerContactNo", null);
+				log.info("######38377#####json customerContactNo: " + customerContactNo);
 				if (SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE.equals(channel)) {
 					cardType = ParameterConst.CARD_TYPES_CREDIT;
+					
+					//do not include to PROD. Used for generate dummy transaction list excel
+					cardMaskedNum = jsonObject.optString("cardMaskedNum", null);
+					log.info("######38377#####json cardMaskedNum: " + cardMaskedNum);
+					
 					log.info("######38377#####json cardType: " + cardType);
 				}
 				if (paydate != null && !paydate.isEmpty()) {
@@ -580,6 +603,10 @@ public class MolPayServlet extends HttpServlet {
 		reqMap.put("providerTransId", providerTransId);
 		reqMap.put("bankName", bankName);
 		reqMap.put("customerEmail", customerEmail);
+		reqMap.put("customerContactNo", customerContactNo);
+		
+		//do not include to PROD. Used for generate dummy transaction list excel
+		reqMap.put("cardMaskedNum", cardMaskedNum);
 		
 		log.info("######38377#####nbcb:" + reqMap.get("nbcb"));
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
@@ -603,6 +630,10 @@ public class MolPayServlet extends HttpServlet {
 		log.info("######38377#####paymentRefNo:" + reqMap.get("paymentRefNo"));
 		log.info("######38377#####providerTransId:" + reqMap.get("providerTransId"));
 		log.info("######38377#####customerEmail:" + reqMap.get("customerEmail"));
+		log.info("######38377#####customerContactNo:" + reqMap.get("customerContactNo"));
+		
+		//do not include to PROD. Used for generate dummy transaction list excel
+		log.info("######38377#####cardMaskedNum:" + reqMap.get("cardMaskedNum"));
 		
 		return reqMap;
 	}

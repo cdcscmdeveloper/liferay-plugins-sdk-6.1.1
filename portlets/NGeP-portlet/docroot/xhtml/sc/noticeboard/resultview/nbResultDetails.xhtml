@@ -68,6 +68,15 @@
 					title="#{lbl['lbl.sc.notice.board.self.registration.tooltip']}">
 					<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/register.png" />
 				</p:commandLink>
+				<ui:remove>#28188 - Start </ui:remove>
+				<h:outputText
+					value="&#60;br/&#62;&#60;br/&#62;#{lbl['lbl.sc.updated.on']} "
+					styleClass="lastUpdated" escape="false"
+					rendered="#{isChangesTab and !empty closingChangeDate}" />
+				<h:outputText value="#{closingChangeDate}" styleClass="lastUpdated" rendered="#{isChangesTab and !empty closingChangeDate}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+				</h:outputText>
+				<ui:remove>#28188 - End </ui:remove>
 			</p:column>
 
 		<ui:remove>#36709 - Start </ui:remove>
