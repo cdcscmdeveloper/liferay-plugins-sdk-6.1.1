@@ -2,12 +2,9 @@ package my.ep.web.backingbean.sm.ai;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -26,7 +23,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.portlet.PortletRequest;
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -85,17 +85,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static final String TYPE_BANK = "bank";
 
 	private static String googleUrl = EpPropertiesUtils.getInstance().getProperty("google.doc.url");
-	
+	private static String googleApiKey = EpPropertiesUtils.getInstance().getProperty("google.doc.key");
+	private static String googleTenantId = EpPropertiesUtils.getInstance().getProperty("google.doc.tenant.id");
+	private static String googleConsent = EpPropertiesUtils.getInstance().getProperty("google.doc.consent");
+
 	private List<EPFEntity> epfs;
 	private TenancyEntity tenancy;
 	private List<EPFEntity.EmployeeInfo> selectedEmployees;
 	private boolean postAI = false;
 	private String docType;
 	private SmAppl smAppl;
-	
-	private static final String TEMP_GOOGLE_URL = "http://192.168.62.17:5000/process";
-	//172.23.114.72, 192.168.62.17 (dev)"
-	
+
 	private SmAppl testAppl;
 	/**
 	 * temp test
@@ -226,11 +226,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				continue;
 			}
 			
-			JsonWrapper result = sendDocumentOCR(docType, doc.getFilePath(), doc.getFileName());
-			if (appl == null && result != null){	//temp
-				jsonWrappers.add(result);
-				
-			} else if (result != null){
+			JsonWrapper result = sendDocumentOCR(docType, doc.getFilePath(), doc.getFileName(), appl.getApplNo());
+			if (result != null){
 				long apiId = saveResponse(appl, result);
 				doc.setAiApiResponseId(apiId);
 				result.apiId = apiId;
@@ -262,7 +259,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 	
 	//do parallel request using ExecutorService
-	private static JsonWrapper sendDocumentOCR(String docType, String filepath, String filename){
+	private static JsonWrapper sendDocumentOCR(String docType, String filepath, String filename, String clientRequestId){
 		///temporary demo filter - start
 		if (filename.endsWith(".json")){
 			log.info("skip AI");
@@ -279,7 +276,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		long startTime = System.currentTimeMillis();
 		
 		try {
-			InputStream is = sendDocumentToExternalService(docType, filepath, filename);
+			InputStream is = sendDocumentToExternalService(docType, filepath, filename, clientRequestId);
 			SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 					"SmAIDocbackingBean.sendDocumentOCR", "1:"+filename, startTime);
 			String content = getRawContent(is);
@@ -416,7 +413,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (doc.getAiApiResponseId() != null){
 				continue;
 			}
-			JsonWrapper result = sendDocumentOCR(TYPE_BANK, doc.getFilePath(), doc.getFileName());
+			JsonWrapper result = sendDocumentOCR(TYPE_BANK, doc.getFilePath(), doc.getFileName(), appl.getApplNo());
 			if (result != null){
 				long apiId = saveResponse(appl, result);
 				doc.setAiApiResponseId(apiId);
@@ -885,19 +882,21 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 
-	private static InputStream sendDocumentToExternalService(String docType, String filepath, String filename) 
+	private static InputStream sendDocumentToExternalService(String docType, String filepath, String filename, String clientRequestId)
 			throws IOException {
-		
+
 		if (StringUtils.isEmpty(googleUrl)) {
-			googleUrl = TEMP_GOOGLE_URL;
+			throw new IOException("ngep.properties missing property: google.doc.url");
+		}
+		if (StringUtils.isEmpty(googleApiKey)) {
+			throw new IOException("ngep.properties missing property: google.doc.key");
 		}
 		log.info("use google url: " + googleUrl);
-		
+
 		String tempDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR) + "/" + filepath + filename;
 		File file = new File(tempDir);
 
-		
 		if (!file.exists()) {
 			String errorMsg = "File not found: " + tempDir;
 			log.error(errorMsg);
@@ -910,71 +909,68 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 
 		log.info("Uploading file: " + filename + " (" + file.length() + " bytes from " + tempDir + ")");
+
+		// Read file and convert to base64
+		byte[] fileBytes = Files.readAllBytes(file.toPath());
+		String base64Content = DatatypeConverter.printBase64Binary(fileBytes);
+		log.info("Encoded " + fileBytes.length + " bytes to base64 for file: " + filename);
+
+		// Build JSON payload
+		String consent = StringUtils.isEmpty(googleConsent) ? "true" : googleConsent;
+		JSONObject jsonPayload = new JSONObject();
+		try {
+			jsonPayload.put("base64Content", base64Content);
+			jsonPayload.put("consent", consent);
+			jsonPayload.put("documentType", docType);
+			jsonPayload.put("fileName", filename);
+			jsonPayload.put("mimeType", "application/pdf");
+			jsonPayload.put("clientRequestId", clientRequestId);
+			
+		} catch (JSONException e){
+			log.error(e);
+			throw new IOException("Error building JSON payload");
+		}
 		
-		// Create boundary for multipart
-		String boundary = "----WebKitFormBoundary" + System.currentTimeMillis();
-		String crlf = "\r\n";
+		String jsonBody = jsonPayload.toString();
 		
 		URL url = new URL(googleUrl);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-		conn.setDoOutput(true);
-		conn.setConnectTimeout(30 * 1000); // 30 sec
-		conn.setReadTimeout(120 * 1000); // 2 min
-		
-		OutputStream out = conn.getOutputStream();
-		OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8);
-
-		osw.write("--" + boundary + crlf);
-		osw.write("Content-Disposition: form-data; name=\"documentType\"" + crlf);
-		osw.write(crlf);
-		osw.write(docType + crlf);
-		osw.flush();
-
-		osw.write("--" + boundary + crlf);
-		osw.write("Content-Disposition: form-data; name=\"file\"; filename=\"" + filename + "\"" + crlf);
-		osw.write("Content-Type: application/pdf" + crlf);
-		osw.write(crlf);
-		osw.flush();
-		
-		FileInputStream input = null;
-		try {
-			input = new FileInputStream(file);
-			byte[] buffer = new byte[8192];
-			int bytesRead;
-			long totalBytes = 0;
-
-			while ((bytesRead = input.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
-				totalBytes += bytesRead;
-			}
-			out.flush();
-		
-			log.info("Successfully streamed " + totalBytes + " bytes for file: " + filename);
-		
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					log.warn("Error closing file input stream", e);
-				}
+		// Force TLS 1.2 for Java 7
+		if (url.getProtocol().equals("https")) {
+			try {
+				SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+				sslContext.init(null, null, null);
+				HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+			} catch (Exception e) {
+				log.error("Failed to initialize TLS 1.2", e);
+				throw new IOException("TLS 1.2 initialization failed", e);
 			}
 		}
 
-		// Write closing boundary
-		osw.write(crlf);
-		osw.write("--" + boundary + "--" + crlf);
-		osw.flush();
-		osw.close();
-		
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setRequestProperty("Accept", "application/json");
+		conn.setRequestProperty("X-API-Key", googleApiKey);
+		if (!StringUtils.isEmpty(googleTenantId)) {
+			conn.setRequestProperty("puncakai-tenant-id", googleTenantId);
+		}
+		conn.setDoOutput(true);
+		conn.setConnectTimeout(30 * 1000); // 30 sec
+		conn.setReadTimeout(120 * 1000); // 2 min
+
+		// Write JSON body
+		byte[] jsonBytes = jsonBody.getBytes(StandardCharsets.UTF_8);
+		conn.setFixedLengthStreamingMode(jsonBytes.length);
+		conn.getOutputStream().write(jsonBytes);
+		conn.getOutputStream().flush();
+		conn.getOutputStream().close();
+
 		try {
-			log.info("sendDocumentToExternalService-status: " + conn.getResponseCode() + " " 
+			log.info("sendDocumentToExternalService-status: " + conn.getResponseCode() + " "
 					+ conn.getResponseMessage());
 			return conn.getInputStream();
 		} catch (IOException e){
-			log.error("Response error",e);
+			log.error("Response error", e);
 			return conn.getErrorStream();
 		}
 	}

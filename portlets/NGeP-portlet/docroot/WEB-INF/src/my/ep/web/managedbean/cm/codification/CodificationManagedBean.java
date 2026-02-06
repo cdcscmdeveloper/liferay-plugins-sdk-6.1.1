@@ -206,7 +206,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String itemCodeDesc;
 	private Object[] objSelected;
 	private boolean renderButtonAssignCode;
-	private boolean isItemTypeService = true;
+	private boolean isHideExtension;
 	// #31503 - End
 	
 	//35503 Start
@@ -224,6 +224,10 @@ public class CodificationManagedBean extends BaseManagedBean {
 			IPagingDataModel<Object[]> extensionSearchItemDataModel) {
 		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
 	}
+	
+	//#26059 - Start
+	private String cmItemCode;
+	//#26059 - End
 
 	
 	public void initRefreshPageNoFlag(){
@@ -1554,19 +1558,18 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the isItemTypeService
+	 * @return the isHideExtension
 	 */
-	public boolean isItemTypeService() {
-		return isItemTypeService;
+	public boolean isHideExtension() {
+		return isHideExtension;
 	}
 
 	/**
-	 * @param isItemTypeService the isItemTypeService to set
+	 * @param isHideExtension the isHideExtension to set
 	 */
-	public void setItemTypeService(boolean isItemTypeService) {
-		this.isItemTypeService = isItemTypeService;
+	public void setHideExtension(boolean isHideExtension) {
+		this.isHideExtension = isHideExtension;
 	}
-	
 	// #31503 -end-
 
 	//35503 Start
@@ -1603,5 +1606,22 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 	//35503 End
 
+	//#26059 - Start
+	/**
+	 * @return the cmItemCode
+	 */
+	public String getCmItemCode() {
+		return cmItemCode;
+	}
+
+	/**
+	 * @param cmItemCode the cmItemCode to set
+	 */
+	public void setCmItemCode(String cmItemCode) {
+		this.cmItemCode = cmItemCode;
+	}
+	//#26059 - End
+	
+	
 	
 }

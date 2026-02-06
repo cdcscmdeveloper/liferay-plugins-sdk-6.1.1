@@ -84,10 +84,10 @@
 					<p:outputPanel rendered="#{cc.attrs.bean.displayCheckboxChangeCurrentStatus}">
 					<!-- #37925 END -->
 						<tr>
-							<td style="border-style: none !important;float: right !important;">
-								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" 
+							<td style="border-style: none !important;float: right !important;"> <!-- #37925 -->
+								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" id="changeRegStatusChk"
 									disabled="#{empty cc.attrs.currRegStatus}">
-									<p:ajax event="change" partialSubmit="true" process="@this"
+									<p:ajax event="change" partialSubmit="true" process="@this" listener="#{cc.attrs.backingBean.updateApproverRegistrationStatusValue()}"
 										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" />
 								</p:selectBooleanCheckbox>
 							</td>
@@ -274,7 +274,7 @@
 				
                 <!-- #15629 end -->
 												
-				<c:if test="#{cc.attrs.overLappedCategoryExists}">
+				<c:if test="#{cc.attrs.overLappedCategoryExists and cc.attrs.smAppl.applType ne 'C'}"> <!-- 39614 -->
 				<!-- 13362 START -->
 				<tr><td><br></br></td></tr>
 					<tr>

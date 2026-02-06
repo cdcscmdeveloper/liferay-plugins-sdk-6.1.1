@@ -149,7 +149,7 @@
 					<p:column headerText="#{lbl['lbl.sm.label.action']}" >
 						<p:commandLink onstart="blockWidget.show()"
 							rendered="#{empty smSupplier.typeDisciplinaryAction
-							or (smSupplier.pendingCancel eq true or smSupplier.pendingBlacklist eq true or smSupplier.pendingSuspend eq true)}"
+							or (smSupplier.pendingCancel eq true or smSupplier.pendingBlacklist eq true or smSupplier.pendingSuspend eq true) or smSupplier.futureImposed eq true}"
 							oncomplete="blockWidget.hide()"
 							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl,'C')}"
 							process="@this" partialSubmit="true" update="@form"
@@ -158,7 +158,7 @@
 						</p:commandLink>
 						<p:commandLink onstart="blockWidget.show()"
 							rendered="#{not empty smSupplier.typeDisciplinaryAction
-							and smSupplier.pendingCancel ne true and smSupplier.pendingBlacklist ne true and smSupplier.pendingSuspend ne true}"
+							and smSupplier.pendingCancel ne true and smSupplier.pendingBlacklist ne true and smSupplier.pendingSuspend ne true and smSupplier.futureImposed eq false}"
 							oncomplete="blockWidget.hide()"
 							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl, 'D')}"
 							process="@this" partialSubmit="true" update="@form"

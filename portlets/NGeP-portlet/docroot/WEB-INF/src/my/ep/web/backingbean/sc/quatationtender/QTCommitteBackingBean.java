@@ -2596,11 +2596,19 @@ public class QTCommitteBackingBean extends
 	 * Capture the modified role values
 	 * @param member
 	 */
-	public void onChangeRole(ScCommitteeMember member){
-		if (member.getMemberRoleId() == null){
+	public void onChangeRole(ScCommitteeMember member){		
+		//#35500 Fix Reopen 6th Jan Start issue 1
+		List<ScCommitteeMember>	newScCommitteeMemberAuditTrailList = this.getManagedBean().getNewScCommitteeMemberAuditTrailList() != null
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
+				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
+		
+		if (member.getMemberRoleId() == null || newScCommitteeMemberAuditTrailList.contains(member)){
 			this.roleChangedListener(member);
 			return;
 		}
+		//#35500 Fix Reopen 6th Jan End
 		
 		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
 		String changedRole = ParameterHelper.getInstance().getParameterDesc(
@@ -2610,10 +2618,6 @@ public class QTCommitteBackingBean extends
 				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
 				SourcingConstants.MY_LOCALE);
 		
-		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
-				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
-		List<String> userRoles = new ArrayList<>();
-				
 		if (!mapModifiedRole.isEmpty()) {
 			if (mapModifiedRole.containsKey(member.getPmUser())) {
 				userRoles = mapModifiedRole.get(member.getPmUser());
@@ -2875,8 +2879,14 @@ public class QTCommitteBackingBean extends
 						&& (QTStatusConst.CMT_COMPLETED.equals(committeeStatusId) || QTStatusConst.CMT_PENDING_SUBMISSION
 								.equals(committeeStatusId));
 			}
+			// 39593 - start
+			String[] taskNames = new String[] { SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE,
+					SCProcessNameConst.ASSIGN_TEC_COMMITTEE, SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
+					SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE };
+			String taskName = this.getManagedBean().getTaskName();
+			return Arrays.asList(taskNames).contains(taskName);
+			// 39593 - end
 			// 31954 - end
-			return false;
 		}
 		return true;
 	}
