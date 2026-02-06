@@ -128,7 +128,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 
 					if (newCreate.getRuleDataTypeCode().matches("PC")) {
 						hasDocNo = true;
-						docNo = newCreate.getRuleValue();
+						setDocNo(hasDocNo,hasDocNoCategory,newCreate);
 					}
 
 					if (newCreate.getCategoryL3Id() != null && "C".equalsIgnoreCase(newCreate.getRuleDataTypeCode())) {
@@ -154,7 +154,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 				
 				if(matchingIdUpdatedOldVal.getRuleDataTypeCode().matches("PC")) {
 					hasDocNo = true;
-					docNo = matchingIdUpdatedOldVal.getRuleValue();
+					setDocNo(hasDocNo,hasDocNoCategory,matchingIdUpdatedOldVal);
 				}
 					
 				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleDataTypeCode())) {
