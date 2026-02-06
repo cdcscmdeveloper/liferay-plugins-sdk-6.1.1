@@ -1,0 +1,108 @@
+<!-- #24336 -->
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<style>
+		.columnWidth10 {
+			width: 10px;
+			vertical-align: top;
+			text-align: right;
+		}
+	</style>
+
+  <p:panel id="amendmentChecklistPanel" header="#{lbl['lbl.ct.panel.contract.amendment.checklist']}" toggleable="true" toggleSpeed="500">
+
+  	<h:outputText value="#{lbl['lbl.ct.instruction.contract.amendment.checklist']}"
+		styleClass="instruction" style="color:blue" escape="false" /><br />
+
+		<h:panelGrid columns="2" width="100%" columnClasses="columnWidth10">
+			<p:spacer width="50" />
+
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractExtendChecklist}" 
+					disabled="#{!ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2"/>
+				<h:panelGrid>
+					<!-- styleClass="required" -->
+					<p:outputLabel value="#{lbl['lbl.ct.checkbox.contract.extension']}" style="text-align:left" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim />
+			
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.itemPriceChangeChecklist}"
+					disabled="#{!ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}">
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.checkbox.change.item.price']}" style="text-align:left" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim />
+
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.quantityChangeChecklist}"
+					disabled="#{!ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.checkbox.change.quantity']}" style="text-align:left" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim />
+
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.valueChangeChecklist}"
+					disabled="#{!ctBackingBean.managedBean.contractVer.ctAmendment.valueChange}">
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.checkbox.change.contract.value']}" style="text-align:left" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim />
+
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.clauseChangeChecklist}"
+					disabled="#{!ctBackingBean.managedBean.contractVer.ctAmendment.clauseChange}">
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.checkbox.change.clause']}" style="text-align:left" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim />
+
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.valueChangeByGstChecklist}"
+					disabled="#{!ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}">
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.checkbox.change.contract.value.gst']}" style="text-align:left" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim />
+
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.otherChangeChecklist}"
+					disabled="#{!ctBackingBean.managedBean.contractVer.ctAmendment.otherChange}">
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.checkbox.change.other']}" style="text-align:left" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<f:verbatim />
+
+		</h:panelGrid>
+	</p:panel>
+
+</ui:composition>
