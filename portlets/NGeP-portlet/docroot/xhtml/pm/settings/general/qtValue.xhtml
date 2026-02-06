@@ -54,11 +54,13 @@
 				<p:message id="qtLimitMsg" for="qtLimit" display="tooltip" />
 			</h:panelGrid>
 
+			<!-- #36738, Fix as-is bug: #39352 Start -->
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					action="#{ruleCatalogueBackingBean.searchQtValues}"
+					action="#{ruleCatalogueBackingBean.searchQtValues}" process="@this, qtValueSearchPanelGrid"
 					update=":form:settingTabId:qtValueTableId" />
 				&#160;
+			<!-- #36738, Fix as-is bug: #39352 End -->
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{ruleCatalogueBackingBean.resetQtValues}" process="@this"
 					update=":form:settingTabId:qtValueTableId :form:settingTabId:qtValueSearchPanelGrid" />
