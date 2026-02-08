@@ -5748,6 +5748,16 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 	//#25089@hatta - start
 	public void onTabChange(TabChangeEvent event){
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+
+		if (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId())) {
+			return;
+		}
+		// #38852 End 12/08/2025 Vinod
+
 		if(event.getTab().getId().equals("tab1")){
 			try {
 				Thread.sleep(500);
@@ -5759,6 +5769,16 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	}
 		
 	public void dafaultPopUpSupplierInfo(){
+		// #38852 Start 12/08/2025 Vinod
+		// Added Status checking to show the popup only for supplier.
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt.getQtStatus();
+
+		if (qtStatus != null && !QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId())) {
+			return;
+		}
+		// #38852 End 12/08/2025 Vinod
+
 	   RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
 	}
 	//#25089@hatta - end
