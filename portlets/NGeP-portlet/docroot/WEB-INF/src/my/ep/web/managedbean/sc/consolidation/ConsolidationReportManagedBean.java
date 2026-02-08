@@ -95,6 +95,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	
 	private boolean isSetNull ; //Bug #31364
 	private boolean isDemoReq; // #28784
+	private boolean allSupplierDisagreeEPV;//#21692
 	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -623,4 +624,13 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.isDemoReq = isDemoReq;
 	}
 	// #28784 -end-
+
+	//#21692 - Start
+	public boolean isAllSupplierDisagreeEPV() {
+		return allSupplierDisagreeEPV;
+	}
+	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
+		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
+	}
+	//#21692 - End
 }

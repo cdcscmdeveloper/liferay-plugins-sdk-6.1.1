@@ -267,6 +267,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// 25037 - end
 
 	private ScQt checkCategoryCodeQt; // #29466
+	private boolean allSupplierDisagreeEPV;//#21692
 
 	/**
 	 * @return the activeIndex
@@ -2291,4 +2292,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.isDemoReq = isDemoReq;
 	}
 	//#28784 - End
+
+	//#21692 - Start
+	public boolean isAllSupplierDisagreeEPV() {
+		return allSupplierDisagreeEPV;
+	}
+	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
+		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
+	}
+	//#21692 - End
 }
