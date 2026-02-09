@@ -633,6 +633,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal itemTsPercentage;
 	private BigDecimal itemAllOtherElementsPercentage;
 	private BigDecimal maxItemTsScore;
+	private String totalScoreLabel;
+	private String maxItemAllOtherElementsScoreLabel;
+	private String tooltipDemo;
 	//#28784 - end
 	private boolean fecIndexPreRender;//#10542
 	private boolean allSupplierRejectEpv;//#21692
@@ -702,6 +705,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private Paginator financialPackagePaginator;
 	
 	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
+	
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
 	
 	// 29661 -start-
 	private int companyExpProcRelated = SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
@@ -4582,6 +4588,30 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 	
+	//#38151 - start
+	/**
+	 * @return the flag from nextbutton
+	 */
+	public boolean isComingFromNextButton() {
+		return comingFromNextButton;
+	}
+
+	/**
+	 * @param set flag from nextbutton
+	 */
+	public void setComingFromNextButton(boolean comingFromNextButton) {
+		this.comingFromNextButton = comingFromNextButton;
+	}
+	
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151 - end
+	
 	// 29661 -start-
 
 	/**
@@ -4787,6 +4817,30 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setCompanyExpNonProcRelatedPagingModel(
 			IPagingDataModel<ScQtPRPExperience> companyExpNonProcRelatedPagingModel) {
 		this.companyExpNonProcRelatedPagingModel = companyExpNonProcRelatedPagingModel;
+	}
+
+	public String getTotalScoreLabel() {
+		return totalScoreLabel;
+	}
+
+	public void setTotalScoreLabel(String totalScoreLabel) {
+		this.totalScoreLabel = totalScoreLabel;
+	}
+
+	public String getMaxItemAllOtherElementsScoreLabel() {
+		return maxItemAllOtherElementsScoreLabel;
+	}
+
+	public void setMaxItemAllOtherElementsScoreLabel(String maxItemAllOtherElementsScoreLabel) {
+		this.maxItemAllOtherElementsScoreLabel = maxItemAllOtherElementsScoreLabel;
+	}
+
+	public String getTooltipDemo() {
+		return tooltipDemo;
+	}
+
+	public void setTooltipDemo(String tooltipDemo) {
+		this.tooltipDemo = tooltipDemo;
 	}
 
 	// 29661 -end-
