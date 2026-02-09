@@ -77,7 +77,8 @@
 							value="#{qualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.total.score']}"
+					<ui:remove><!-- #38151 (headertext) --></ui:remove>
+					<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 						style="width:30%;white-space: normal;text-align:right;">
 						<h:outputText value="#{qualifiedSupplier.totalScore}"></h:outputText>
 					</p:column>					
@@ -126,7 +127,8 @@
 							value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.total.score']}"
+					<ui:remove><!-- #38151 (headertext) --></ui:remove>
+					<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 						style="width:50%;white-space: normal;text-align:right;">
 						<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 					</p:column>
