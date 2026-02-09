@@ -121,6 +121,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.fl.common.user.FLUserDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -5381,15 +5382,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 */
 	private BigDecimal getThresholdForPK7() {
 		BigDecimal thresholdAmount = null;
-
-		if (!getManagedBean().getRequestNoteWithDtlsList().isEmpty()) {
-			for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
-				if (purchaseItem.getJustificationType().getDpThreshold() != null) {
-					thresholdAmount = purchaseItem.getJustificationType().getDpThreshold();
-				}
-			}
+		
+		thresholdAmount = EntityHelper.getNestedProperty(getManagedBean().getFulfilmentRequest(),
+				"justificationType.dpThreshold");
+		
+		if(thresholdAmount == null){
+			thresholdAmount = BigDecimal.ZERO;
 		}
-
+				
 		return thresholdAmount;
 	}
 
