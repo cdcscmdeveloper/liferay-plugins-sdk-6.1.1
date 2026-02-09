@@ -13,7 +13,7 @@
     <meta http-equiv='pragma' content='no-cache'/>
     <!-- End Fix #34110 -->
     <!-- Start Fix - #31341-->
-    <p:blockUI block=":form" widgetVar="itemLoadblock">
+    <p:blockUI block=":form" widgetVar="itemLoadBlock">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 	<!-- End Fix - #31341-->
@@ -138,8 +138,8 @@
 							style="color:#009ae5 !important;"
 							action="#{amendmentBackingBean.viewItemUnspscDetails(ctItemVar.scRequestItem)}"
 							update=":form:itemDescDialogId"
-							onstart="itemLoadblock.show()"
-							oncomplete="itemLoadblock.hide(); itemDescDialogId.show();">
+							onstart="itemLoadBlock.show()"
+							oncomplete="itemLoadBlock.hide(); itemDescDialogId.show();">
 				</p:commandLink>
 				<!-- End Fix - #31341-->
 			    <br /> 	
@@ -511,8 +511,8 @@
 							style="color:#009ae5 !important;"
 							action="#{amendmentBackingBean.viewItemUnspscDetails(serviceItemVar.scRequestItem)}"
 							update=":form:itemDescDialogId"
-							onstart="itemLoadblock.show()"
-							oncomplete="itemLoadblock.hide(); itemDescDialogId.show();">
+							onstart="itemLoadBlock.show()"
+							oncomplete="itemLoadBlock.hide(); itemDescDialogId.show();">
 				</p:commandLink>
 				<!-- End Fix - #31341-->       		 				                        
 	      	</p:column>	      	
