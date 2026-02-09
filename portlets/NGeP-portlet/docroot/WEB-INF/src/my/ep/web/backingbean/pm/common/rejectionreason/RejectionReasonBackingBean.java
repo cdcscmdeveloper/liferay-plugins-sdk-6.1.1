@@ -157,6 +157,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}
 		// 35509
 		
+		this.getManagedBean().setReasonApplicabilityDuplicate(false); // 39618
+		
 			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
 					.remove(rowIndex);
 	}
@@ -173,10 +175,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		temp.remove(pidReason);
 		for(PmPIDReason pReason : temp){
 			if(pReason.getDocType()!= null && pReason.getDocType().equals(pidReason.getDocType())){
+				getManagedBean().setReasonApplicabilityDuplicate(true); // 39618
 				throw new EpException(MessageConst.ERROR_770301, new String[]{ResourceBundleUtils.getMessage(
 						"lbl.pm.reason.applicability", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())});
+			} else {
+				getManagedBean().setReasonApplicabilityDuplicate(false); // 39618
 			}
+			
 		}
 	}
 	
@@ -290,6 +296,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setSelectedTabIndex(0);
 		this.resetAuditBean(); // 35509
 		log.info("initialRejectReason - End");
+		this.getManagedBean().setSelectedSourceMethodId(null);  // 39618
 	}
 	
 	/**
@@ -385,7 +392,11 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 //			this.getManagedBean().setSuppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_TYPES, id));
 			if(pmReason.getSourceMethod() != null && pmReason.getSourceMethod().getParameterId() != null){
 					this.getManagedBean().setSelectedSourceMethodId(pmReason.getSourceMethod().getParameterId());
+			// #39618 - Start
+			} else {
+				this.getManagedBean().setSelectedSourceMethodId(null);
 			}
+			// #39618 - end
 		
 		}catch (Exception e){
 			e.printStackTrace();
@@ -1298,11 +1309,39 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		if(this.getManagedBean().getSelectedReason().isContractPurchase()){
 			PmParameter paramObj = (PmParameter) souringMethodMapper.get(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 			this.getManagedBean().getSelectedReason().getSourceMethod().setParameterId(paramObj.getParameterId());
+			this.getManagedBean().setSelectedSourceMethodId(paramObj.getParameterId());  // 39618
+			deleteCircularPanel(); // 39618
+			
 		}else{
 			
 			this.getManagedBean().getSelectedReason().setConditionField(new PmParameter());
 		}
+	}	
+	
+	// 39618 START
+	/**
+	 * To delete reason applicability when tick purchase from contract
+	 */
+	private void deleteCircularPanel(){
+
+		boolean isPanelCircular = false;
+		int rowIndex = 0;
+		
+		if(CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedReason().getPmPIDReasonList())){
+			for(int i =0; i<this.getManagedBean().getSelectedReason().getPmPIDReasonList().size(); i++){
+				PmPIDReason pIDReason = this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(i);
+				if((ParameterConst.DOCTYPE_PANEL_CIRCULAR).equals(pIDReason.getDocType())){
+					isPanelCircular = true;
+					rowIndex = i;
+					}
+				}
+			}
+		if(isPanelCircular){
+			deleteReasonApplicability(rowIndex);
+		}
 	}
+	// 39618 END
+	
 	/**
 	 * get reason category object by selected id
 	 * @param isSearchBean
@@ -1900,5 +1939,21 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setAuditDeleteSuppRestrictions(null);
 		}
 		//35509 - END
+	
+	//#39618 - Start
+	/**
+	 * validate if reason applicability duplicate during submission
+	 */
+	public void validationForUpdate(){
+		log.info(" rejectionreasonbackingbean  in validationForUpdate()  :::::::::::::::::::::::::::::::: "+getManagedBean().isReasonApplicabilityDuplicate());
+		if(getManagedBean().isReasonApplicabilityDuplicate()){
+			FacesContext.getCurrentInstance().validationFailed();
+			throw new EpException(MessageConst.ERROR_770301, new String[]{ResourceBundleUtils.getMessage(
+					"lbl.pm.reason.applicability", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+		}
+		
+	}
+	//#39618 - End
 	
 }

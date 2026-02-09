@@ -131,7 +131,7 @@
 	<p:column style="width:98px;"
 		rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 		<!-- #25726/25725 - Check and display Italic value - Start-->
-		<h:selectOneMenu id="fulfilType"
+		<p:selectOneMenu id="fulfilType"
 			value="#{question.clFulfilmentTypeCode.parameterId}"
 			required="#{isValidationReq}" style="width:98px;"
 			rendered="#{isQuestionTypeItem}"
@@ -145,7 +145,8 @@
 				partialSubmit="true" process="@this"
 				oncomplete="styleFulfilmentDropdown();"
 				update="@this, fulfilTypeMsg, freqUOMPG, dayUOMPG, monthUOMPG, durationPG" />
-		</h:selectOneMenu>
+		</p:selectOneMenu>
+		<!-- #25726/25725 - Check and display Italic value - End -->
 		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
 	</p:column>
 	<p:column style="width:120px;">
@@ -187,9 +188,9 @@
 					style="min-width:0px !important;width:50px; text-align:right;"
 					value="#{question.clUomFrequency}"
 					rendered="#{isQuestionTypeItem and isShowService}"
-					required="#{isValidationReq}" maxlength="5"
+					required="#{isValidationReq}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"
-					onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
+					onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 --> <!-- #39230 -->
 					<ac:validateNumber maxIntegerDigits="7"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					<p:ajax partialSubmit="true" process="@this"
