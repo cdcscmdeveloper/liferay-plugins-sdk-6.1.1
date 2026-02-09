@@ -259,11 +259,13 @@
 							rendered="#{detailCategory.businessLevel == '50'}" />
 					</p:column>
 
+					<!-- #34445, Fix as-is bug: #39699 Start -->
 					<p:column headerText="#{lbl['lbl.pm.bn.code']}">
 						<h:outputText value="#{detailCategory.levelCode}" />
 					</p:column>
+					<!-- #34445, Fix as-is bug: #39699 End -->
 
-					<p:column headerText="#{lbl['lbl.pm.bn.name']}">
+					<p:column headerText="#{lbl['lbl.pm.bn.name']}" style="white-space:normal">
 						<h:outputText value="#{detailCategory.levelName}" />
 					</p:column>
 
