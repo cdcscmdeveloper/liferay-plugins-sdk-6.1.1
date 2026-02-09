@@ -126,7 +126,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 
 					docId = BigInteger.valueOf(newCreate.getRuleValueId());
 
-					if (newCreate.getRuleDataTypeCode().equalsIgnoreCase("PC")) {
+					if ("PC".equalsIgnoreCase(newCreate.getRuleDataTypeCode())) {
 						hasDocNo = true;
 						setDocNo(hasDocNo,hasDocNoCategory,newCreate);
 					}
@@ -152,12 +152,12 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			PmConfigRuleValue matchingIdUpdatedOldVal = findMatchingSPRulesTypeValue(ruleValueOld, updateVal);
 			if (matchingIdUpdatedOldVal != null) {
 				
-				if(matchingIdUpdatedOldVal.getRuleDataTypeCode().equalsIgnoreCase("PC")) {
+				if("PC".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleType().getRuleDataTypeId().getParameterCode())) {
 					hasDocNo = true;
 					setDocNo(hasDocNo,hasDocNoCategory,matchingIdUpdatedOldVal);
 				}
 					
-				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleDataTypeCode())) {
+				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleType().getRuleDataTypeId().getParameterCode())) {
 					hasDocNoCategory = true;
 					setDocNo(hasDocNo,hasDocNoCategory,matchingIdUpdatedOldVal);
 				}
