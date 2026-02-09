@@ -173,7 +173,7 @@
 					<p:inputText id="deskOfficerRankInput" value="#{qualifiedSupp.deskOfficerRank}" 
 								 size="5" maxlength="3" required="false" autocomplete="false" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
-								 disabled="#{]qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}">
+								 disabled="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}">
 								 <ui:remove>21692</ui:remove>
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
