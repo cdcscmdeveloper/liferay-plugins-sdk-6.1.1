@@ -1319,6 +1319,9 @@ public class ViewApplHistoryBackingBean extends
 					voSubTmp.setApplStatus(StringUtils.isBlank(applStatus) ? arr[21]
 							+ ""
 							: applStatus);
+					//#29659 - START 
+					voSubTmp.setTitle(arr[23] + "");
+					//#29659 - END
 					voTmp.getOverlapInfoList().add(voSubTmp);
 					isSubAdd = false;
 				}

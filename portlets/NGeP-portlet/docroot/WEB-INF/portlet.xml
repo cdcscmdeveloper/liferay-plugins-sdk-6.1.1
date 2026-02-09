@@ -11227,6 +11227,78 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<!-- #9299 start -->
+	<portlet>
+		<portlet-name>smCompExp</portlet-name>
+		<display-name>Update Company Experience Information</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>
+				/xhtml/sm/compExp/preRenderSmCompExp.xhtml
+			</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Update Company Experience Information</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>smCompExpAlert</portlet-name>
+		<display-name>Company Experience Draft Alert</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>
+				/xhtml/sm/compExp/preRenderSmCompExpAlert.xhtml
+			</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Company Experience Draft Alert</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- #9299 end -->
 	
 	<!--#35320-start-->
 	<portlet>
@@ -11261,5 +11333,38 @@
 		</security-role-ref>
 	</portlet>
 	<!--#35320-end-->
+	<!-- #28188-start -->
+	<portlet>
+		<portlet-name>QTBSVChange</portlet-name>
+		<display-name>Briefing/Site Visit Update</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/quatationtender/approval/prerenderapprovaldtls.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Briefing/Site Visit Update</title>
+			<short-title>Briefing/Site Visit Update</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- #28188-start -->
 	
 </portlet-app>

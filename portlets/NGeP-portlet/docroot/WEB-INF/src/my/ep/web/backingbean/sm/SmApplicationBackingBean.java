@@ -11083,19 +11083,41 @@ public class SmApplicationBackingBean extends
 			return;
 		}
 
-		long currentRegStatusId = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId();
-
-		long latestRegStatusId = latestPOChange.getPmRegStatus().getRegStatusId();
+		Long currentRegStatusId = getCurrRegStatusId();
+		Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
 		
-		long prevRegStatusId = latestPOChange.getPreviousRegStatusId().getRegStatusId();
-		
-		if(currentRegStatusId != prevRegStatusId){
+		if(prevRegStatusId != null && currentRegStatusId != prevRegStatusId){
 			getManagedBean().setApprovedStatusId(getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId());
 			return;
 		}
-
-		getManagedBean().setChangeCurrRegStatus(currentRegStatusId != latestRegStatusId);
+		
+		getManagedBean().setChangeCurrRegStatus(true);
 		getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
+	}
+	
+	public Long getCurrRegStatusId() {
+		if (getManagedBean().getSmSupplier() == null || getManagedBean().getSmSupplier().getSmAppl() == null
+				|| getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus() == null
+				|| getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId() == null) {
+			return null;
+		}
+		return getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId();
+	}
+	
+	/**
+	 * Returns the registration status ID that was in effect before the current
+	 * status change for the given application section review.
+	 *
+	 * @param smApplSectionReview
+	 *        the application section review containing the previous registration status
+	 * @return the previous registration status ID
+	 */
+	public Long getPreviousRegStatusId(SmApplSectionReview smApplSectionReview) {
+		if (smApplSectionReview == null || smApplSectionReview.getPreviousRegStatusId() == null
+				|| smApplSectionReview.getPreviousRegStatusId().getRegStatusId() == null) {
+			return null;
+		}
+	    return smApplSectionReview.getPreviousRegStatusId().getRegStatusId();
 	}
 
 	/**
@@ -11977,6 +11999,11 @@ public class SmApplicationBackingBean extends
 								ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
 								getManagedBean().getApplnOverLapRemarks());
 			}
+			//#9299 - Start
+			if(!getAppVersionDetailsWithRedmineNo() && checkCompanyExperienceNewlyAdded(getManagedBean().getSmAppl().getSmCompanyExperiences())){
+				SmApplicationUtil.setCompExpDraft(getManagedBean().getSmAppl());
+			}
+			//#9299 - End
 
 			// #17064 - update establish_date in supplier if there is any
 			// changes
@@ -19338,15 +19365,50 @@ public class SmApplicationBackingBean extends
 		if (pmStatus == null) {
 			return false;
 		}
-		//FIXME #37925: START
-//		PmRegStatus pmRegStatusOri = latestPOSectionReview.getPmRegStatusOri();
-//		if(pmRegStatusOri == null){
-//			latestPOSectionReview.setPmRegStatusOri(latestPOSectionReview.getPmRegStatus());
-//		}
-		//FIXME #37925: END
+		
+		PmRegStatus previousRegStatusId = latestPOSectionReview.getPreviousRegStatusId();
+		if(previousRegStatusId == null){
+			return false;
+			
+		}
+		if (previousRegStatusId.getRegStatusId() != getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId()) {
+			return false;
+		}
+
 		return pmStatus.getStatusId() != null;
 	}
 //	#37925 END
+	// #9299 - Start
+	public boolean getAppVersionDetailsWithRedmineNo() {
+		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(),
+				SupplierManagementConst.APP_VERSION_REDMINE_NO_9299);
+	}
+
+	public boolean checkCompanyExperienceNewlyAdded(List<SmCompanyExperience> list) {
+		for (SmCompanyExperience exp : list) {
+			if (exp.isNewlyAdded()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public String getCompanyExperienceLabel() {
+		boolean isNewAppl = getManagedBean().getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+		boolean isSupplier = getManagedBean().isSupplierUser();
+		boolean isPoOrApprover = getManagedBean().isPoUser() || getManagedBean().isApproverUser();
+
+		if (isSupplier) {
+			return SmCommonUtil.getMessage(isNewAppl ? "lbl.sm.comp.exp.new.version.new.application.supplier"
+					: "lbl.sm.comp.exp.new.version.other.application.supplier", null);
+		} else if (isPoOrApprover) {
+			return SmCommonUtil.getMessage(isNewAppl ? "lbl.sm.comp.exp.new.version.new.application.supplier"
+					: "lbl.sm.comp.exp.new.version.other.application.ups", null);
+		}
+		return "";
+	}
+	// #9299 - End
 	
 	//#38927 START
 	/**
