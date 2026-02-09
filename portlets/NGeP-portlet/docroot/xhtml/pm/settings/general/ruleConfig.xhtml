@@ -13,14 +13,27 @@
 			<tr>
 				<td>
 					<div align="right" style="width: 100%">
+						<!-- 34445 start -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" id="ruleCatalogSaveBtn"
 							partialSubmit="true" process=":form:settingTabId:ruleConfigId"
-							update=":form:settingTabId:ruleConfigId"
-							action="#{ruleCatalogueBackingBean.saveRuleCatalog}"></p:commandButton>
+							oncomplete="if (!args.validationFailed) saveInfoDlg.show();">
+						</p:commandButton>
+						<!-- 34445 end -->
 					</div>
 				</td>
 			</tr>
 		</table>
+		
+		<!-- 34445 start -->
+		<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
+			okAction="ruleCatalogueBackingBean.saveRuleCatalog"
+			okProcess=":form:settingTabId:ruleConfigId"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.save.msg']}"
+			update=":form:settingTabId:ruleConfigId"
+			loadingWidget="blockWidget" />
+		<!-- 34445 end -->
 		
 		<!-- 36738 Start -->
 		<p:panel header="#{lbl['lbl.pm.search']}" toggleable="true"
@@ -55,7 +68,7 @@
 				update=":form:settingTabId:ruleConfigId :form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch"/><!-- 36738, #35323 -->
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"				
 				update=":form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch"/><!-- 36738 -->
-			<p:ajax event="page" process="@this"				
+			 <p:ajax event="page" process="@this"				
 				update=":form:settingTabId:ruleTypeTableID :form:settingTabId:ruleTypeValueTableID :form:settingTabId:ruleTypeValueSearch"/><!-- 36738 -->
 			<p:column>
 				<f:facet name="header">
@@ -181,8 +194,10 @@
 					<f:attribute name="min" value="0"/>	
 		  			<f:attribute name="max" value="9999"/>		
 					<f:validator validatorId="quantityDoubleRangeValidator" />
-					<p:ajax partialSubmit="true" process="@this"
-						update="@this, numberValueMsg" />
+					<!-- 29650 - START -->
+					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.valueErrorCheck(index)}"
+						partialSubmit="true" process="@this" update="@this, numberValueMsg" />
+					<!-- 29650 - END -->
 				</p:inputText>
 				<p:message id="numberValueMsg" for="numberValueId" display="icon" />
 			</p:column>
@@ -229,7 +244,15 @@
 				<p:message id="percentageValueMsg" for="percentageValueId"
 					display="icon" />
 			</p:column>
-
+			<!-- 27827 - START -->
+			<p:column rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC'}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					    #{lbl['lbl.pm.value']}
+				</f:facet>
+				<h:outputText value="#{typeValueObj.ruleValue}"/>
+			</p:column>
+			<!-- 27827 - END -->
 			<p:column
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C'}">
 				<f:facet name="header">
@@ -273,15 +296,71 @@
 					disabled="#{!(typeValueObj.brandNew)}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@this, @([id$=cloneLink])" />
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		  			<f:attribute name="max" value="99999999999.99"/>				
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						listener="#{ruleCatalogueBackingBean.updateToValue(index)}"
 						update=":form:settingTabId:ruleTypeValueTableID, :form:settingTabId:errorDialog" />
 				</p:inputText>
+				<!-- 29669 - START -->
+				<h:panelGroup id="toErrorLink">
+					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
+						partialSubmit="true" id="toErrorRequired"
+						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
+						oncomplete="errorDialog.show();"
+						rendered="#{typeValueObj.errorToRequired}">
+						<f:param name="index" value="#{index}"></f:param>
+						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+					</p:commandLink>
+				</h:panelGroup>
+				<!-- 29669 - END -->
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
+
+			<!-- 29650 - START -->
+			<p:column width="15%"
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 3}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />			
+				                 	#{lbl['lbl.pm.rule.from.value']}
+				</f:facet>
+				<p:inputText id="numberFromValueId" value="#{typeValueObj.fromValue}"
+					label="#{lbl['lbl.pm.rule.from.value']}"
+					size="17" required="true" maxlength="4" style="text-align:right"
+					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
+					disabled="#{!(typeValueObj.brandNew)}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+		  			<f:attribute name="min" value="0"/>
+		  			<f:attribute name="max" value="9999"/>				
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.fromErrorCheck(index)}"
+						partialSubmit="true" process="@this" update="@this, numberFromValueMsg" />
+				</p:inputText>
+				<p:message id="numberFromValueMsg" for="numberFromValueId" display="icon" />
+			</p:column>
+			
+			<p:column width="15%"
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 3}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />			
+				                 	#{lbl['lbl.pm.rule.to.value']}
+				</f:facet>
+				<p:inputText id="numberToValueId" value="#{typeValueObj.toValue}"
+					label="#{lbl['lbl.pm.rule.to.value']}"
+					size="15" required="true" maxlength="17" style="text-align:right"
+					requiredMessage="#{lbl['lbl.pm.settings.tovalue.required']}"
+					disabled="#{!(typeValueObj.brandNew)}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+		  			<f:attribute name="min" value="0"/>
+		  			<f:attribute name="max" value="9999"/>				
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.toErrorCheck(index)}"
+						partialSubmit="true" process="@this" update="@this, numberToValueMsg" />
+				</p:inputText>
+				<p:message id="numberToValueMsg" for="numberToValueId" display="icon" />
+			</p:column>
+			<!-- 29650 - END -->
 
 			<p:column width="35%" style="white-space:normal"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C')}">
@@ -290,6 +369,35 @@
 		       </f:facet>
 		      	#{typeValueObj.categoryL3Id.categoryName}
 		</p:column>
+			<!-- 27827 - START -->
+			<p:column width="35%" style="white-space:normal" rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}">
+				<f:facet name="header">
+	             	#{lbl['lbl.pm.desc']}
+		       	</f:facet>
+		      	#{typeValueObj.ruleDescription}
+			</p:column>
+			<p:column width="15%" style="white-space:normal"
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+	             	#{lbl['lbl.pm.zone']}
+		       	</f:facet>
+		      	<p:selectOneMenu id="zoneCode"
+					label="#{lbl['lbl.pm.zone.name']}"
+					value="#{typeValueObj.zoneId}"
+					required="true"
+					requiredMessage="#{lbl['lbl.pm.settings.zone.required']}"
+					disabled="#{!(typeValueObj.brandNew)}"
+					style="width: 250px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
+					<f:selectItems var="zoneLs"
+						value="#{ruleCatalogueBackingBean.managedBean.zoneList}"
+						itemLabel="#{zoneLs.zoneName}" itemValue="#{zoneLs.zoneId}"/>
+					<p:ajax partialSubmit="true" process="@this" update="@this, zoneCodeMsg"/>
+				</p:selectOneMenu>
+				<p:message id="zoneCodeMsg" for="zoneCode" display="icon"/>
+			</p:column>
+			<!-- 27827 - END -->
 
 			<p:column width="16%" id="effDateColumnId">
 				<f:facet name="header">
@@ -298,7 +406,7 @@
 				</f:facet>
 
 				<p:calendar  navigator="true"
-					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"					
+					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleValeffDateId"
@@ -324,8 +432,7 @@
 				<f:facet name="header">
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
-
-				<p:calendar  navigator="true"
+				 <p:calendar  navigator="true"
 					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.expDate)}"	
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.expDate lt DateUtils.getCurrentDateWithoutTime()}"
@@ -334,19 +441,20 @@
 					maxdate="#{ruleCatalogueBackingBean.managedBean.maxDate}"
 					label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-					value="#{typeValueObj.expDate}"
-					validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}">
-					<f:attribute name="startDate" value="#{typeValueObj.effDate}" />
+					value="#{typeValueObj.expDate}">
+					<!-- validatorMessage="#{lbl['lbl.pm.as.expdate']} #{lbl['lbl.pm.date.range.validation']} #{lbl['lbl.pm.as.effdate']}"> --> <!-- #30672 - start  -->
+					<!-- <f:attribute name="startDate" value="#{typeValueObj.effDate}" /> --> <!-- #30672 - end  -->
 					<f:validator validatorId="primeDateRangeValidatorPm" />
 					<p:ajax event="dateSelect" update="@this"
 						process="@this" />
+					<!--  #30672, #29669 - Start  29/01/2023 -->
 					<p:ajax event="dateSelect"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
-						update="@([id$=cloneLink])" />
+						update=":form:settingTabId:ruleTypeValueTableID, @([id$=cloneLink])" />
 					<p:ajax event="change"
 						listener="#{ruleCatalogueBackingBean.updateGroupChildDate(index)}"
-						update="@([id$=cloneLink])" />
-
+						update=":form:settingTabId:ruleTypeValueTableID, @([id$=cloneLink])" />
+					<!--  #30672, #29669 - End 29/01/2023 -->
 				</p:calendar>
 			</p:column>
 
@@ -394,15 +502,17 @@
 							value="#{index}" />
 				</p:commandLink>
 				<h:panelGroup id="errorLink">
+					<!-- 29669 - START -->
 					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
 						partialSubmit="ture"
 						actionListener="#{ruleCatalogueBackingBean.updateErrorDialog(index)}"
 						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
 						oncomplete="errorDialog.show();"
-						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 2) and typeValueObj.fromValue >= typeValueObj.toValue}">
+						rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 or ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 2) and typeValueObj.fromValue >= typeValueObj.toValue and typeValueObj.fromValue != null}">
 						<f:param name="index" value="#{index}"></f:param>
 						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
 					</p:commandLink>
+					<!-- 29669 - END -->
 				</h:panelGroup>
 
 			</p:column>
@@ -419,12 +529,22 @@
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				rendered="#{!(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C')}"
+				rendered="#{!(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C') and
+						    !(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}"
 				id="addTypeValueButton" style="float:right;"
 				action="#{ruleCatalogueBackingBean.addNewRuleTypeValue}"
 				partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
-
+			
+			<!-- 27827 - START -->
+			<p:commandButton value="#{lbl['lbl.btn.add']}" id="ptjAddBtn"
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}"
+				process="@this" partialSubmit="true"
+				update="@([id$=ptjCRPopup])" style="float:right;"
+				oncomplete="ptjCRPopup.show();"
+				action="#{ruleCatalogueBackingBean.initPtjPopup}">
+			</p:commandButton>
+			<!-- 27827 - END -->
 		</div>
 		
 		<ac:confirmationPopup id="ruleValueDeleteId"
