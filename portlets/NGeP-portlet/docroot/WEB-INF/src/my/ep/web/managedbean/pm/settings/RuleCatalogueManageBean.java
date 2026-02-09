@@ -1517,11 +1517,11 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		return selectedZoneId;
 	}
 
-	// #36738 Start
 	public void setSelectedZoneId(Long selectedZoneId) {
 		this.selectedZoneId = selectedZoneId;
 	}
-	
+
+	// #36738 Start
 	public List<PmConfigRuleDesc> getOriginalConfigRuleDescList() {
 		return originalConfigRuleDescList;
 	}
