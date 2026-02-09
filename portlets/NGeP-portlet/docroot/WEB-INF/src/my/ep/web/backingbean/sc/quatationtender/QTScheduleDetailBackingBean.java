@@ -81,6 +81,7 @@ import org.primefaces.context.RequestContext;
 @RequestScoped
 public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 	private static final long serialVersionUID = 1L;
+	private Boolean sampleExistCache; // Bug_39486
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -989,5 +990,22 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		//this.getManagedBean().setZoneLocation(Boolean.FALSE);
 		this.getManagedBean().setAutoUpdate(true);
 	}
+	
+	/**
+	 * Get value for sample, Bug #39486.
+	 * 
+	 * @param scQt the quotation tender object
+	 * 
+	 * @return true if sample exists, false otherwise
+	 */
+	public boolean sampleExist(ScQt scQt) {
+		
+        if (sampleExistCache == null) {
+            sampleExistCache = checkISSampleExistWIPChecklist(scQt);
+        }
+
+        return Boolean.TRUE.equals(sampleExistCache);
+    }
+
 
 }
