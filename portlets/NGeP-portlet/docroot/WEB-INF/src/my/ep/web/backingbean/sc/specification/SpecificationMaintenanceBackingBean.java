@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;//#29732
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -44,6 +45,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils; //#29732
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
@@ -842,35 +844,6 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 	}
 	// 29464-end
 	
-<<<<<<< HEAD
-	// #29732 start
-	public boolean isSpecEndorsmentScreen() {
-		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil
-				.getDisplayPortletId());
-	}
-
-    private boolean isSpecRoleMaintenanceValidation(){
-    	FacesScopes facesScopes = new FacesScopes();
-		return  facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
-				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value()); 
-	}
-
-	private boolean isQtRevisePubNqtPendingScheDoc() {
-		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
-				&& (QTStatusConst.QT_REVISION_PUBLICATION.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
-						.equals(this.getManagedBean().getCurrentStatusId()))) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	private boolean isSpecRoleMaintenanceCheckBox() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
-				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
-	}
-	//29732 -End
 	
 	//#28784 - Start
 	private boolean checkDemoRedirect() {
