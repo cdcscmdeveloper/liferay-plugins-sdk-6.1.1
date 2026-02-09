@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -64,6 +65,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -141,6 +143,7 @@ public class ConsolidationReportBackingBean extends
 			// #18685 - Start.
 			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
 			// #18685 - End.
+			getManagedBean().setAllSupplierDisagreeEPV(allSupplierDisagreeEPV(qtId));//#21692
 
 			fc.getApplication()
 					.getNavigationHandler()
@@ -703,9 +706,9 @@ public class ConsolidationReportBackingBean extends
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
-			// 18685 -start-
-			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
-			// 18685 -end-
+			//#28784 - Start
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
+			//#28784 - End
 		}
 	}
 
@@ -1582,6 +1585,7 @@ public class ConsolidationReportBackingBean extends
 					resultDtlBean.setQtEvalResDtlId(evalResDtl
 							.getEvaluationResultDtlId());
 					resultDtlBean.setEvaluationRank(evalResDtl.getEvalRank());
+					setRankNull(evalResDtl);//#21692
 					resultDtlBean.setDeskOfficerRank(evalResDtl
 							.getDeskOfficerRank());
 					resultDtlBean.setDeskOfficerRemark(evalResDtl
@@ -2016,6 +2020,7 @@ public class ConsolidationReportBackingBean extends
 													.getDeskOfficerRemark());
 								}
 							}
+							setRankNull(qualSupplier);//#21692
 						}
 						getManagedBean().setMaxRank(
 								String.valueOf(resultBean.getTotalRecord()));
@@ -2251,5 +2256,72 @@ public class ConsolidationReportBackingBean extends
 		getManagedBean().setActiveIndex(EVALUATION_REPORT_TAB_INDEX);
 	}
 	// 18685 -end-
-
+	
+	//#21692 - Start
+	/**
+	 * Created to make sure new instructions in Consolidation Report status
+	 * start with 4 and in sequence.
+	 * 
+	 * Each TRUE condition is a + 1, meaning, first TRUE condition is 4, second is 5
+	 * and so on.
+	 * 
+	 * @param qtId
+	 * @return
+	 */
+	public List<String> qualifiedSupplierInstructionList(Long qtId) {
+		Locale locale = new FacesScopes().getUserLocale();
+		List<String> instructionList = new ArrayList<>();
+		int condition = SourcingConstants.DEFAULT_INSTRUCTIONS_MESSAGE_NUMBERING;//Initial instruction number, after 3 default (as-is) instructions
+		
+		//#28777#29729 condition uncomment if released in UAT/PRD
+//		if (checkInstructionSupplierBranchDeleted(qtId)) {
+//			condition = condition + 1;
+//		}
+		
+		//#21692 condition, should be 5th instruction if above condition is TRUE, else 4th
+		if (new ApprovalBackingBean().isEPVApprovalRequestAccepted(qtId)) {
+			condition = condition + 1;
+			instructionList.add(SourcingConstants.BREAK_LINE + condition + SourcingConstants.DOT
+					+ ResourceBundleUtils.getMessage("lbl.sc.qt.pending.rec.instruction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		}
+		
+		//Will be the list of instruction(s) above, can be empty if no condition met.
+		return instructionList;
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * @return String Warning message for no supplier accept Extend Proposal Validity
+	 */
+	public String getNoSupplierWarningMessage() {
+		return MessageUtils.getMessage(MessageConst.WARN_7602693, MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale());
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private boolean allSupplierDisagreeEPV(Long qtId) {		
+		IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		return qtDetailSO.allSupplierDisagreeEPV(qtId);
+	}
+	//#21692 - End
+	
+	// #21692 - Start
+	private void setRankNull(ScQtEvaluationResultDtl qualSupplier) {
+		boolean disagreeProposalValidityExtension = qualSupplier.getQtEvaluationResult().getScQtProposal()
+				.getIsAgreeQtExtendPeriod() != null
+				&& (qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED || qualSupplier
+						.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+		// 26247 commit under 21692 - start
+//		SmSupplier supplier = qualSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier(); //#26247
+		if (disagreeProposalValidityExtension
+//				|| this.disabledQTProcess(supplier) //#26247
+				) {
+			qualSupplier.setDeskOfficerRank(null);
+			updateCachedData(qualSupplier);
+		}
+		// 26247 commit under 21692 - end
+	}
+	// #21692 - End
 }

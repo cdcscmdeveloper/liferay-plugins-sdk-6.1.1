@@ -555,6 +555,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal itemAllOtherElementsPercentage;
 	private BigDecimal maxItemTsScore;
 	// #28784 - End
+	private boolean allSupplierRejectEpv;//#21692
 
 	// #28784 - Start
 	public boolean isEvalStatusComp() {
@@ -3906,4 +3907,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.supplierRejected = supplierRejected;
 	}
 	// 6906 - end
+
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
+	}
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
 }
