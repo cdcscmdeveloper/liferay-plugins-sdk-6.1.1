@@ -3477,9 +3477,9 @@ public class CommitteBackingBean extends
 	
 	// #35320 - START
 	private void setTplCommMemberRepresentativeType(List<TplCommMember> latestCommittee){
-		for(TplCommMember mem3 : latestCommittee){
-			if(mem3.getRepresentativeType() != null){
-				mem3.setRepresentativeTypeId(mem3.getRepresentativeType().getParameterId());
+		for(TplCommMember mem : latestCommittee){
+			if(mem.getRepresentativeType() != null){
+				mem.setRepresentativeTypeId(mem.getRepresentativeType().getParameterId());
 			}
 		}
 	}
