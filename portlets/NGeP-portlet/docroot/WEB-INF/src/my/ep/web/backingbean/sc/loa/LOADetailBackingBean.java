@@ -6564,6 +6564,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		boolean isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType);
 		// new #25726
 		boolean isContractPeriodAbove4 = isContractPeriodAbove4();
+		//#25726 - note 441 
+		boolean isContractTypeCentral = loa.getContractType().getParameterCode()
+				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL);
 
 		// #25725 start
 		boolean isPeriodic = (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType))
@@ -6582,7 +6585,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// new #25725 - End
 		} else {
 			// new #25726 - Start
-			if (isOneOffFulfilment || (isPeriodic && !isContractPeriodAbove4)) {
+			//#25726 - note 441 - Start
+			if (isContractTypeCentral) {
+				isAgreementMandatory = true;
+			}
+			else if (isOneOffFulfilment || (isPeriodic && !isContractPeriodAbove4)) {
+			//#25726 - note 441 - End
 				isAgreementMandatory = over500K(loa);
 			} else if (isPeriodic) {
 				isAgreementMandatory = true;
@@ -11764,6 +11772,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		boolean isContractPeriodAbove4 = isContractPeriodAbove4();
 		boolean isPeriodicAbove4 = isPeriodic && isContractPeriodAbove4;
 		boolean isPeriodicBelow4 = isPeriodic && !isContractPeriodAbove4;
+		//#25726 - note 441 
+		boolean isContractTypeCentral = scLoa.getContractType().getParameterCode()
+				.equals(ParameterConst.CONTRACT_TYPE_CENTRAL);
 
 		String procurementMode = scLoa.getProcurementMode().getParameterCode();
 		if (procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
@@ -11778,7 +11789,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		} else {
-			result = isPeriodicAbove4; // #25726: only periodic & above 4 years allowed
+			//#25726 - note 441 
+			result = isPeriodicAbove4 || isContractTypeCentral; // #25726: only periodic & above 4 years or Contract type central is allowed 
 		}
 		// new #25726/25725 - End
 		return result;

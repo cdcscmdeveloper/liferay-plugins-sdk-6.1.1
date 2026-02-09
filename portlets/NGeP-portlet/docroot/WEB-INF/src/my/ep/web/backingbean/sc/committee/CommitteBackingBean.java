@@ -2723,6 +2723,9 @@ public class CommitteBackingBean extends
 			List<TplCommMember> latestCommittee = resDto.getTplMemberList();
 			if (null != latestCommittee) {
 				Collections.sort(latestCommittee, new TplMemberRoleComparator());
+				for(TplCommMember mem : latestCommittee){
+					mem.getRepresentativeTypeId();
+				}
 			}
 
 			TplCommittee scCommittee = resDto.getTplCommittee();
