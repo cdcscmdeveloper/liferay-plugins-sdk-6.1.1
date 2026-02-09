@@ -221,6 +221,21 @@ public class ContractManagedBean extends BaseManagedBean {
 	private int contractDaysPeriod;
 	//32418 - End
 	
+	//#24336 - Start
+	private boolean disableReductionContractAmount;
+	private boolean disableAdditionContractAmount;
+	private boolean disableNewCtAmountEffDate;
+	
+	private boolean contractExtendChecklist;
+	private boolean itemPriceChangeChecklist;
+	private boolean quantityChangeChecklist;
+	private boolean valueChangeChecklist;
+	private boolean clauseChangeChecklist;
+	private boolean valueChangeByGstChecklist;
+	private boolean otherChangeChecklist;
+	private boolean initPage = false;
+	//#24336 - End
+	
 	private boolean isDefaultMinistryExist = false; //Fix - #30045
 	
 	/**
@@ -1712,6 +1727,99 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.contractDaysPeriod = contractDaysPeriod;
 	}
 	//32418 - End
+
+	//#24336 - Start
+	public boolean isDisableReductionContractAmount() {
+		return disableReductionContractAmount;
+	}
+
+	public void setDisableReductionContractAmount(
+			boolean disableReductionContractAmount) {
+		this.disableReductionContractAmount = disableReductionContractAmount;
+	}
+
+	public boolean isDisableAdditionContractAmount() {
+		return disableAdditionContractAmount;
+	}
+
+	public void setDisableAdditionContractAmount(
+			boolean disableAdditionContractAmount) {
+		this.disableAdditionContractAmount = disableAdditionContractAmount;
+	}
+
+	public boolean isDisableNewCtAmountEffDate() {
+		return disableNewCtAmountEffDate;
+	}
+
+	public void setDisableNewCtAmountEffDate(boolean disableNewCtAmountEffDate) {
+		this.disableNewCtAmountEffDate = disableNewCtAmountEffDate;
+	}
+
+	public boolean isContractExtendChecklist() {
+		return contractExtendChecklist;
+	}
+
+	public void setContractExtendChecklist(boolean contractExtendChecklist) {
+		this.contractExtendChecklist = contractExtendChecklist;
+	}
+
+	public boolean isItemPriceChangeChecklist() {
+		return itemPriceChangeChecklist;
+	}
+
+	public void setItemPriceChangeChecklist(boolean itemPriceChangeChecklist) {
+		this.itemPriceChangeChecklist = itemPriceChangeChecklist;
+	}
+
+	public boolean isQuantityChangeChecklist() {
+		return quantityChangeChecklist;
+	}
+
+	public void setQuantityChangeChecklist(boolean quantityChangeChecklist) {
+		this.quantityChangeChecklist = quantityChangeChecklist;
+	}
+
+	public boolean isValueChangeChecklist() {
+		return valueChangeChecklist;
+	}
+
+	public void setValueChangeChecklist(boolean valueChangeChecklist) {
+		this.valueChangeChecklist = valueChangeChecklist;
+	}
+
+	public boolean isClauseChangeChecklist() {
+		return clauseChangeChecklist;
+	}
+
+	public void setClauseChangeChecklist(boolean clauseChangeChecklist) {
+		this.clauseChangeChecklist = clauseChangeChecklist;
+	}
+
+	public boolean isValueChangeByGstChecklist() {
+		return valueChangeByGstChecklist;
+	}
+
+	public void setValueChangeByGstChecklist(boolean valueChangeByGstChecklist) {
+		this.valueChangeByGstChecklist = valueChangeByGstChecklist;
+	}
+
+	public boolean isOtherChangeChecklist() {
+		return otherChangeChecklist;
+	}
+
+	public void setOtherChangeChecklist(boolean otherChangeChecklist) {
+		this.otherChangeChecklist = otherChangeChecklist;
+	}
+
+	public boolean isInitPage() {
+		return initPage;
+	}
+
+	public void setInitPage(boolean initPage) {
+		this.initPage = initPage;
+	}
+	//#24336 - End
+	
 	//Start - #30045
 	public boolean isDefaultMinistryExist() {
 		return isDefaultMinistryExist;
