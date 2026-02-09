@@ -24,7 +24,7 @@
 							</c:when>
 							<c:otherwise>
 								<p:commandButton id="btnReasonUpdate" value="#{lbl['lbl.btn.update']}" action="#{rejectionReasonBackingBean.validationForUpdate}"
-									oncomplete="if (!args || !args.validationFailed) updateInfoDlg.show()"/>
+									oncomplete="if (!args || !args.validationFailed) updateInfoDlg.show()"/> <!-- #39618 -->
 							</c:otherwise>
 						</c:choose>
 						<!-- 34445 end -->

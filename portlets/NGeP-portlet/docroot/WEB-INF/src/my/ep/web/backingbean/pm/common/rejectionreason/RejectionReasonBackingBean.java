@@ -1937,6 +1937,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setAuditDeleteAppRestrictions(null);
 			this.getManagedBean().setAuditDeleteComRestrictions(null);
 			this.getManagedBean().setAuditDeleteSuppRestrictions(null);
+			
+			this.getManagedBean().setReasonApplicabilityDuplicate(false); //39618
 		}
 		//35509 - END
 	
