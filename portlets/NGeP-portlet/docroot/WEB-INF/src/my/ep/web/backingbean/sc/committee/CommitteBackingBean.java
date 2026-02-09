@@ -2721,6 +2721,7 @@ public class CommitteBackingBean extends
 			List<TplCommMember> latestCommittee = resDto.getTplMemberList();
 			if (null != latestCommittee) {
 				Collections.sort(latestCommittee, new TplMemberRoleComparator());
+				setTplCommMemberRepresentativeType(latestCommittee);
 			}
 
 			TplCommittee scCommittee = resDto.getTplCommittee();
@@ -3471,6 +3472,16 @@ public class CommitteBackingBean extends
 			}
 		}
 		return hasChairperson;
+	}
+	// #35320 - END
+	
+	// #35320 - START
+	private void setTplCommMemberRepresentativeType(List<TplCommMember> latestCommittee){
+		for(TplCommMember mem3 : latestCommittee){
+			if(mem3.getRepresentativeType() != null){
+				mem3.setRepresentativeTypeId(mem3.getRepresentativeType().getParameterId());
+			}
+		}
 	}
 	// #35320 - END
 }
