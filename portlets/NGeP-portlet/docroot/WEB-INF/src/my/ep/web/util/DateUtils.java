@@ -2,18 +2,19 @@ package my.ep.web.util;
 
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
-
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
 import my.ep.util.ResourceBundleUtils;
+
+import org.apache.log4j.Logger;
 
 /**
  * DateUtils is a utility class for Date. 
@@ -191,6 +192,21 @@ public class DateUtils {
 		Date tmpDate = null;
 		tmpDate = sdf.parse(argValue);
 		return new Timestamp(tmpDate.getTime());
+	}
+	
+	public static String reformatDate(String inputDate, String inputFormat,
+			String outputFormat) {
+		String retDate = "";
+		try {
+			SimpleDateFormat inputFormatter = new SimpleDateFormat(inputFormat);
+			SimpleDateFormat outputFormatter = new SimpleDateFormat(
+					outputFormat);
+			Date date = inputFormatter.parse(inputDate);
+			retDate = outputFormatter.format(date);
+		} catch (ParseException e) {
+			log.info("failed convert date due to ", e);
+		}
+		return retDate;
 	}
 			
 
