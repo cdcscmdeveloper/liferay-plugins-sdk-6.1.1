@@ -40,6 +40,7 @@ import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#29732
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
@@ -82,6 +83,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;//#29732
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -117,12 +119,14 @@ import my.ep.web.bean.sc.quatationtender.AwardedItemsBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
+import my.ep.web.constant.sc.QTConstants;//#29732
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;//#29732
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
@@ -134,6 +138,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.autocomplete.AutoComplete;
 import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.context.RequestContext;//#29732
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -146,6 +151,8 @@ import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
+import java.sql.Timestamp;//#29732
+import java.text.SimpleDateFormat;//#29732
 
 /**
  * Notice Board Backing Bean class displays the status of 
