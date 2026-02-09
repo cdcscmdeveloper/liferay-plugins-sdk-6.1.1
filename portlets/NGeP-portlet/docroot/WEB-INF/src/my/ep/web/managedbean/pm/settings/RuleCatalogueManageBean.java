@@ -186,6 +186,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	//#36738 Start
 	private List<PmConfigRuleDesc> originalConfigRuleDescList;
 	private List<PmConfigRuleValue> originalConfigRuleValueList;
+	private HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap;
 	private List<PmPtjSpecialApproval> originalPtjSpecialApprovalList;
 	private String searchRuleType;
 	private String searchRuleDataTypeValues;
@@ -207,6 +208,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<Long> selectedSuppAccountType;
 	private List<PmParameterDesc> supplierType;
 	private Integer index;
+	private boolean firstExpiryDateIsNull;
 	// #35323 - End
 
 	public RuleCatalogueManageBean() {
@@ -2001,6 +2003,14 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setQtValueCollapsePanel(Boolean qtValueCollapsePanel) {
 		this.qtValueCollapsePanel = qtValueCollapsePanel;
 	}
+	
+	public HashMap<Long, List<PmConfigRuleValue>> getOriginalConfigRuleValueMap() {
+		return originalConfigRuleValueMap;
+	}
+	
+	public void setOriginalConfigRuleValueMap(HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap) {
+		this.originalConfigRuleValueMap = originalConfigRuleValueMap;
+	}
 	//#36738 End
 	
 	//#35323 - Start
@@ -2081,6 +2091,23 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	public void setNewPRList(boolean newPRList) {
 		this.newPRList = newPRList;
+	}
+	
+	/**
+	 * firstExpiryDateIsNull
+	 * 
+	 * @return the firstExpiryDateIsNull
+	 */
+	public boolean isFirstExpiryDateIsNull() {
+		return firstExpiryDateIsNull;
+	}
+
+	/**
+	 * @param firstExpiryDateIsNull
+	 *            the firstExpiryDateIsNull to set
+	 */
+	public void setFirstExpiryDateIsNull(boolean firstExpiryDateIsNull) {
+		this.firstExpiryDateIsNull = firstExpiryDateIsNull;
 	}
 	// #35323 - End
 }

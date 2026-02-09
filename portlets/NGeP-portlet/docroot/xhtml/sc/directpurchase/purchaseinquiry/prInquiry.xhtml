@@ -53,13 +53,25 @@
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.itemName}"
 						size="106" /></td>
 			</tr>
+			<ui:remove>#26059 - Start</ui:remove>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.product.code']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.extensionCode}"
-						size="50" /></td>
+				<td><h:panelGroup id="extensionCodeWrapper">
+						<p:inputText disabled="true"
+							rendered="#{empty purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.extensionCode}"
+							value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.extensionCode}"
+							size="50" />
+
+						<p:commandLink oncomplete="itemDescDialogId.show();"
+							rendered="#{not empty purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.extensionCode}"
+							value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.extensionCode}"
+							style="color: #009ae5; font-size:12px; font-style:italic; display:inline-block;"
+							action="#{lOADetailBackingBean.showItemDescPopup(purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem)}"
+							process="@this" update="@([id$=itemDescDialogId])" />
+					</h:panelGroup></td>
 			</tr>
+			<ui:remove>#26059 - End</ui:remove>
 			<tr>
 				<td style="vertical-align: top; text-align: left;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.desc']}" /></td>
@@ -364,6 +376,9 @@
 					</h:panelGroup></td>
 			</tr>
 		</table>
+		<ui:remove>#26059 - Start</ui:remove>
+		<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+		<ui:remove>#26059 - End</ui:remove>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}"
 		toggleable="true" id="resDetailId">

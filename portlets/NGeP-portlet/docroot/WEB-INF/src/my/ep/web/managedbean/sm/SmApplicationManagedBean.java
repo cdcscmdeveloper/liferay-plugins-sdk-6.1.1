@@ -688,7 +688,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangeSupApproverPrev;
 	private List<SmSupplierCategory> previousCategoryList;
 	private SmSupplierCategory historySuppCategory;
-	private IPagingDataModel<SmSuppCatOtherDescHistory> otherDescDataModel = new OtherDescSearchPagingDataModel();
 	// 36504 - END
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
@@ -4729,55 +4728,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	 */
 	public void setOtherDescEdited(String otherDescEdited) {
 		this.otherDescEdited = otherDescEdited;
-	}
-
-	public IPagingDataModel<SmSuppCatOtherDescHistory> getOtherDescDataModel() {
-		return otherDescDataModel;
-	}
-
-	public void setOtherDescDataModel(
-			IPagingDataModel<SmSuppCatOtherDescHistory> otherDescDataModel) {
-		this.otherDescDataModel = otherDescDataModel;
-	}
-
-	private class OtherDescSearchPagingDataModel extends
-			PagingDataModel<SmSuppCatOtherDescHistory> {
-		/**
-			 * 
-			 */
-		private static final long serialVersionUID = 1L;
-
-		public OtherDescSearchPagingDataModel() {
-			super("OtherDescriptionDtId");
-		}
-
-		@Override
-		protected ISearchResultBean<SmSuppCatOtherDescHistory> pageChangeListener(
-				ISearchBean<SmSuppCatOtherDescHistory> searchBean) {
-			SmSuppCatOtherDescHistoryReqDTO reqDTO = new SmSuppCatOtherDescHistoryReqDTO();
-			reqDTO.setOtherDescHistorySearchBean(searchBean);
-			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
-			try {
-				return getOtherDescHistoryResultBean(reqDTO);
-			} catch (Exception ex) {
-				return new SearchResultBean<SmSuppCatOtherDescHistory>();
-			} finally {
-				reqDTO = null;
-			}
-		}
-
-		private ISearchResultBean<SmSuppCatOtherDescHistory> getOtherDescHistoryResultBean(
-				SmSuppCatOtherDescHistoryReqDTO reqDTO) {
-			reqDTO.getOtherDescHistorySearchBean().getDataFilterBeans().clear();
-			// reqDTO.setSupplierCategoryId(getSupplierAppl());;
-			return SmServiceLookup.getMofRegistrationSO()
-					.retrieveOtherDescHistorySearchBean(reqDTO)
-					.getOtherDescResultBean();
-		}
-	}
-
-	public void searchOtherDescHistoryDesc() {
-		otherDescDataModel.reloadData();
 	}
 
 	/**
