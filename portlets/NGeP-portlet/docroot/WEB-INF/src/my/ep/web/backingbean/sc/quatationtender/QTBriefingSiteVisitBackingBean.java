@@ -1488,6 +1488,8 @@ public class QTBriefingSiteVisitBackingBean extends
 		// Filter By - statusId
 		List<Long> statusIds = new ArrayList<Long>();
 		statusIds.add(QTStatusConst.BSV_COMPLETED);
+		statusIds.add(QTStatusConst.BSV_REQUEST_REJECT);//#28188
+		statusIds.add(QTStatusConst.BSV_CANCELLED);//#28188
 		searchBean.getDataFilterBeans().add(new SearchFilterBean(
 				"pmStatus.statusId",
 				SearchOperator.OPERATOR_NOT_IN.value(),
