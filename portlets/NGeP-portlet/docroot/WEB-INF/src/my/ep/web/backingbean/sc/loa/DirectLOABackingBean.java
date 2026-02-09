@@ -13290,7 +13290,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (isCheckLOAReport) {
 			for (ScLoaReport report : scLoa.getScLoaReports()) {
 				if (report != null && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())
-						&& report.getScLoaReportAttachment() != null && report.getIsPK42BondCalc() == null) {
+						&& report.getScLoaReportAttachment() != null ) {// #25726 - Remove because default to checking if have attachment upload.
 					RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
 					return false;
 
