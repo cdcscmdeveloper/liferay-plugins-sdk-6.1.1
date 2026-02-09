@@ -36,7 +36,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -46,6 +45,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
@@ -112,7 +112,7 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAppVersion;
+import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -212,10 +212,12 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
 import com.liferay.portal.util.PortalUtil;
-//#38151
 //25138
 //25138
+
 //29661 -start-
+import java.util.Locale;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 
 //29661 -end-
 
@@ -19419,18 +19421,23 @@ private void retriveCommitteeRemarksList(){
 								.getDefinationType()
 								.getParameterCode())) {
 					maxTsScore = maxTsScore.add(cl.getQtScoreWeightage().getScore());
+					
 				} else if (SourcingConstants.DOC_DEF_KEY_PRESENTATION_DEMO
 						.equalsIgnoreCase(cl
 								.getDefinationType()
 								.getParameterCode())) {
 					weightageScore = cl.getQtScoreWeightage().getWeightage();
-					maxOtherElementsScore = maxOtherElementsScore.add(cl.getQtScoreWeightage().getScore());
+					maxOtherElementsScore = maxOtherElementsScore.add(cl.getQtScoreWeightage().getScore());						
 					this.getManagedBean().setDemoWeightage(cl.getQtScoreWeightage().getWeightage());
+					
+					
 				} else {
 					maxOtherElementsScore = maxOtherElementsScore.add(cl.getQtScoreWeightage().getScore());
-					maxItemOtherElementsScore = maxItemOtherElementsScore.add(cl.getQtScoreWeightage().getScore());
-				}
+					maxItemOtherElementsScore = maxItemOtherElementsScore.add(cl.getQtScoreWeightage().getScore());					
+					
+				}		
 			}
+			
 		}
 		
 		if (!weightageScore.equals(BigDecimal.valueOf(0))) {
