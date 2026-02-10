@@ -2746,8 +2746,14 @@ public class QTCommitteBackingBean extends
 						&& (QTStatusConst.CMT_COMPLETED.equals(committeeStatusId) || QTStatusConst.CMT_PENDING_SUBMISSION
 								.equals(committeeStatusId));
 			}
+			// 39593 - start
+			String[] taskNames = new String[] { SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE,
+					SCProcessNameConst.ASSIGN_TEC_COMMITTEE, SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
+					SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE };
+			String taskName = this.getManagedBean().getTaskName();
+			return Arrays.asList(taskNames).contains(taskName);
+			// 39593 - end
 			// 31954 - end
-			return false;
 		}
 		return true;
 	}
