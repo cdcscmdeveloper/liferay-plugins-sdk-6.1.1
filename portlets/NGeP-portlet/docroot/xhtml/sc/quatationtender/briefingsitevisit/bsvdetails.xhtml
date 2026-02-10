@@ -22,6 +22,14 @@
 							listener="#{qTBriefingSiteVisitBackingBean.processChecked}" />
 					</p:selectOneRadio></td>
 			</tr>
+			<ui:remove>#28188 add instruction - Start</ui:remove>
+			<tr>
+				<td colspan="2" style="width: 280px; white-space: nowrap;"><h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sc.qt.bsv.instruction']}"
+						escape="false" /></td>
+			</tr>
+			<ui:remove>#28188 add instruction - End</ui:remove>
+			
 		</table>
 		<p:dataTable id="briefingdtlid" var="briefingdtls"
 			value="#{bsvdtlbean.briefingList}" rowKey="#{briefingdtls}"

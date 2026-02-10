@@ -49,7 +49,7 @@
 	<ui:param name="specificationrequired"
 		value="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec }" />
 	<ui:param name="isPanel"
-		value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}" />
+		value="#{simpleQuoteBackingBean.checkPanel()}" />
 	<ui:param name="isColumnItemDisable"
 		value="#{question.disabledColumnItem}" />							
 
@@ -260,9 +260,9 @@
 					style="min-width:0px !important;width:50px; text-align:right;"
 					value="#{question.clUomFrequency}"
 					rendered="#{isQuestionTypeItem and isShowService}"
-					required="#{isValidationReq}" maxlength="5"
+					required="#{isValidationReq}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"
-					onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
+					onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 --> <!-- #39230 -->
 					<ac:validateNumber maxIntegerDigits="7"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					<p:ajax partialSubmit="true" process="@this"

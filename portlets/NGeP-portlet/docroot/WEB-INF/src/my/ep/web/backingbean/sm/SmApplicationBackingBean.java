@@ -10986,6 +10986,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			return;
 		}
 		
+		getManagedBean().setChangeCurrRegStatus(true);
 		getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
 	}
 
