@@ -1248,7 +1248,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return the redirect page
 	 */
 	public String proceedToApplication(String applicationType, boolean fromBpm, SmAppl appl, SmSupplier supp) {
-		try {
 
 			String sessionId = ((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestedSessionId(); 
 			long subStartTime = 0L;
@@ -2751,11 +2750,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					"SmApplicationBackingBean.proceedToApplication", "calcPersonnelListCount-updateCategoriesRecordStatus-36", 
 					subStartTime); //20211005@fadhli - #31754
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
-
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			return SmApplicationUtil.setNavigationForAppl(applicationType);
-		}
 	}
 	
 	//#26238
@@ -10914,7 +10908,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		//#12483 - END
 		//Bug #26705
-		getlatestPoOverlappingRemarks();
+		// #39422 - Start - Comment method
+		// getlatestPoOverlappingRemarks();
+		// #39422 - End
+		
+		//#39679 - Start
+		getManagedBean().setApplnOverLapRemarks(null);
+		SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+		//#39679 - End
 		
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
@@ -19374,8 +19375,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	// #9299 - Start
 	public boolean getAppVersionDetailsWithRedmineNo() {
-		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(),
-				SupplierManagementConst.APP_VERSION_REDMINE_NO_9299);
+		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(), SupplierManagementConst.APP_VERSION_REDMINE_NO_9299,
+				SupplierManagementConst.PHASE_1);
 	}
 
 	public boolean checkCompanyExperienceNewlyAdded(List<SmCompanyExperience> list) {
