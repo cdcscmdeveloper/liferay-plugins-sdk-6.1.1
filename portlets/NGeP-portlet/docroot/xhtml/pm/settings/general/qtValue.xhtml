@@ -21,20 +21,6 @@
 					</div>
 				</td>
 			</tr>
-			<tr>
-				<td><p:selectOneMenu id="somMinistryForQtVal"
-						styleClass="ptjPopupSomWidth"
-						label="#{lbl['lbl.pm.org.ptj.search.ministry']}"
-						disabled="#{ruleCatalogueBackingBean.managedBean.disabledSelectedMinistryId}"
-						value="#{ruleCatalogueBackingBean.managedBean.selectedMinistryId}">
-						<f:selectItems
-							value="#{ruleCatalogueBackingBean.getAvailableMinistryDropdown()}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update=":form:settingTabId:qtValueTableId"
-							listener="#{ruleCatalogueBackingBean.selectQtValues()}" />
-					</p:selectOneMenu></td>
-				<td></td>
-			</tr>
 		</table>
 		
 		<!-- #36738 Start -->
@@ -74,8 +60,8 @@
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{ruleCatalogueBackingBean.searchQtValues}" process="@this, qtValueSearchPanelGrid"
 					update=":form:settingTabId:qtValueTableId" />
-				&#160;
 				<!-- #36738, Fix as-is bug: #39352 End -->
+				&#160;
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{ruleCatalogueBackingBean.resetQtValues}" process="@this"
 					update=":form:settingTabId:qtValueTableId :form:settingTabId:qtValueSearchPanelGrid" />
