@@ -256,9 +256,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				this.getManagedBean().getSelectedDraft().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
 			} else if (this.getManagedBean().isMasterUpdate()) {
 				this.getManagedBean().getSelectedMaster().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
-			} else if (this.getManagedBean().isMasterNew()) {
-				this.getManagedBean().getNewMaster().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
 			}
+		} else if (this.getManagedBean().isMasterNew()) {
+			this.getManagedBean().getNewMaster().setContractStatus(setContractStatus(contractStatus, expDate, effDate));
 		}
 
 	}
