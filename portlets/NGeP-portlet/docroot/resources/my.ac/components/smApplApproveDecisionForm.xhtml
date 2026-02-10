@@ -339,6 +339,9 @@
 								label="#{lbl['lbl.sm.remarks.overLapping']}"
 								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 								required="false">
+								<!-- 39422 START -->
+								<p:ajax event="blur" process="@this" update="@this"/>
+								<!-- 39422 End -->
 								<f:validateLength maximum="2500" />
 							</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
 								for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"
