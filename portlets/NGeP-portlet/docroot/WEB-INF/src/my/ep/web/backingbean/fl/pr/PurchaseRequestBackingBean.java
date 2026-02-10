@@ -152,6 +152,7 @@ import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonRestr;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
@@ -3424,10 +3425,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//#28718 - End
 
 		// #27476 start
-		if (getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
-				|| getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+		if (isThresholdPK7Required()) {
 			validatePK7forPRAction(outcome);
 		} else {
 			// 31344
@@ -5383,12 +5381,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private BigDecimal getThresholdForPK7() {
 		BigDecimal thresholdAmount = null;
 		
-		thresholdAmount = EntityHelper.getNestedProperty(getManagedBean().getFulfilmentRequest(),
-				"justificationType.dpThreshold");
-		
-		if(thresholdAmount == null){
-			thresholdAmount = BigDecimal.ZERO;
-		}
+		thresholdAmount = getPMReasonForThreshold().getDpThreshold();
 				
 		return thresholdAmount;
 	}
@@ -5473,7 +5466,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
 			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
-			summReq.setReasonId(getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getReasonId());
+			summReq.setReasonId(getPMReasonForThreshold().getReasonId());
 
 			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearPerExtensionCodeWithReason(summReq);
 
@@ -5598,8 +5591,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			outcomeCheckReason.add(BpmOutcomeConst.BPM_REVISE);
 
 			if (outcomeCheckReason.contains(action)
-					&& getManagedBean().getRequestNoteWithDtlsList() != null
-					&& getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+					&& getPMReasonForThreshold().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				String msgId = isFlFulfilmentRequisitioner() ? MessageConst.ERROR_740074 : MessageConst.ERROR_740075;
 
 				throw new EpException(msgId, new String[] { getManagedBean().getReason(),
@@ -5634,7 +5626,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				IReasonSO.class);
 
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		reqDTO.setReasonId(getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getReasonId());
+		reqDTO.setReasonId(getPMReasonForThreshold().getReasonId());
 
 		SmMofAccount mofAcc = SmServiceLookup.getMofRegistrationSO().getLatestMofAccountBySupplierId(
 				getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
@@ -5781,7 +5773,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				IReasonSO.class);
 
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		reqDTO.setReasonId(getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType().getReasonId());
+		reqDTO.setReasonId(getPMReasonForThreshold().getReasonId());
 
 		ReasonResDTO resDTO = reasonSO.retrieveSuppAccTypeByReasonId(reqDTO);
 
@@ -5827,6 +5819,24 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				getManagedBean().getReason(), pronounAllowableSuppAccType, allowableSuppAccTypeMsgBuilder.toString() });
 
 	}
+	
+	/**
+	 * get pmReason object either from fl or dp
+	 * 
+	 * @return pmReason
+	 */
+	private PmReason getPMReasonForThreshold() {
+		PmReason pmReason = null;
+
+		if (getManagedBean().getFulfilmentRequest().getJustificationType() != null) {
+			pmReason = getManagedBean().getFulfilmentRequest().getJustificationType();
+		} else {
+			pmReason = getManagedBean().getRequestNoteWithDtlsList().get(0).getJustificationType();
+		}
+
+		return pmReason;
+	}
+
 	// #27476 end
 	
 	// #31344 start
