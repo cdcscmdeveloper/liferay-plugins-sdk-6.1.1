@@ -94,6 +94,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
 	
 	private boolean isSetNull ; //Bug #31364
+	private boolean allSupplierDisagreeEPV;//#21692
 	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -611,4 +612,12 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 	// #18685 - End
 
+	//#21692 - Start
+	public boolean isAllSupplierDisagreeEPV() {
+		return allSupplierDisagreeEPV;
+	}
+	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
+		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
+	}
+	//#21692 - End
 }

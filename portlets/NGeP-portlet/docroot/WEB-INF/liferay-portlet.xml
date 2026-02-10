@@ -1262,6 +1262,21 @@
 		</css-class-wrapper>
 	</portlet>
 	
+	<!-- #31919 & #21692 - Start -->
+  	<portlet>
+		<portlet-name>applProposalValidPeriodExtension</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			scSupplierProposal-portlet
+		</css-class-wrapper>
+	</portlet>
+	<!-- #31919 & #21692 - Start -->
+	
 	<portlet>
 		<portlet-name>SiteVisit</portlet-name>
 		<icon>/icon.png</icon>
