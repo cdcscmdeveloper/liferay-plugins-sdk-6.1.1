@@ -708,9 +708,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	private boolean comingFromNextButton;//#38151
 	private boolean weightage35384WIP; //#38151
-	
-	private boolean comingFromNextButton;//#38151
-	private boolean weightage35384WIP; //#38151
+
 	
 	// 29661 -start-
 	private int companyExpProcRelated = SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL;
