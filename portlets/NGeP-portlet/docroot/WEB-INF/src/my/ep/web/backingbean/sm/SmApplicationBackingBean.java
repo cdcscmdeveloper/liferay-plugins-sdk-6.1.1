@@ -1248,7 +1248,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return the redirect page
 	 */
 	public String proceedToApplication(String applicationType, boolean fromBpm, SmAppl appl, SmSupplier supp) {
-		try {
 
 			String sessionId = ((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestedSessionId(); 
 			long subStartTime = 0L;
@@ -2751,11 +2750,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					"SmApplicationBackingBean.proceedToApplication", "calcPersonnelListCount-updateCategoriesRecordStatus-36", 
 					subStartTime); //20211005@fadhli - #31754
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
-
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			return SmApplicationUtil.setNavigationForAppl(applicationType);
-		}
 	}
 	
 	//#26238
