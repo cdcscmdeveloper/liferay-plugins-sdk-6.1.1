@@ -2734,7 +2734,6 @@ public class QTCommitteBackingBean extends
 	}
 
 	public boolean isCommitteeCloneable() {
-		System.out.println("---> ajk6q13fmo QT250000000002051");
 		String committeeType = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee()
 				.getCommitteeType().getParameterCode();
 		Long status = getCurrentQtStatusId();
