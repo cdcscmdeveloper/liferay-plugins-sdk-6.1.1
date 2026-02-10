@@ -15,9 +15,9 @@ import my.ep.util.ResourceBundleUtils;
  */
 @FacesConverter(value = "pmNumberConverter")
 public class PmNumberConverter extends NumberConverter {
-	String DECIMAL = "DECIMAL";
-	String DECIMAL_PATTERN = "#,##0.00";
-	String INTEGER_PATTERN = "#,##0";
+	String decimal = "DECIMAL";
+	String decimalPattern = "#,##0.00";
+	String integerPattern = "#,##0";
 
 	@Override
 	public Object getAsObject(FacesContext ctx, UIComponent comp, String value) {
@@ -52,10 +52,10 @@ public class PmNumberConverter extends NumberConverter {
 			return "";
 		}
 
-		if (DECIMAL.equals(numberType)) {
-			setPattern(DECIMAL_PATTERN);
+		if (decimal.equals(numberType)) {
+			setPattern(decimalPattern);
 		} else {
-			setPattern(INTEGER_PATTERN);
+			setPattern(integerPattern);
 		}
 
 		return super.getAsString(ctx, comp, value);
