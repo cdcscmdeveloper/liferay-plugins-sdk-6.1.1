@@ -10,6 +10,13 @@
 		<ui:remove>#18685 start</ui:remove>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.item']} " escape="false" />
 		<ui:remove>#18685 end</ui:remove>
+		<ui:remove> #28777#29729 - Start </ui:remove>
+		<c:if
+			test="#{consolidationReportBackingBean.checkInstructionSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+			<h:outputText styleClass="instruction" escape="false"
+				value="#{lbl['lbl.sc.branch.related.deleted.instruction.four']}" />
+		</c:if>
+		<ui:remove> #28777#29729 - End </ui:remove>
 		<ui:remove>21692 - Start</ui:remove>
 		<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
 			<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />
