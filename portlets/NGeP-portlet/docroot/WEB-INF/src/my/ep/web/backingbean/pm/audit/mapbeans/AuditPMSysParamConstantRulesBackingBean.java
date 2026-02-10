@@ -17,6 +17,7 @@ import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
@@ -148,25 +149,35 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			}
 		}
 		*/
+		
 		for (PmConfigRuleValue updateVal : update) {
 			PmConfigRuleValue matchingIdUpdatedOldVal = findMatchingSPRulesTypeValue(ruleValueOld, updateVal);
 			if (matchingIdUpdatedOldVal != null) {
-				
-				if("PC".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleType().getRuleDataTypeId().getParameterCode())) {
-					hasDocNo = true;
-					setDocNo(hasDocNo,hasDocNoCategory,matchingIdUpdatedOldVal);
+				PmConfigRule rt = matchingIdUpdatedOldVal.getRuleType();
+				String paramCode = null;
+				if (rt != null) {
+					PmParameter pmParam = rt.getRuleDataTypeId();
+
+					if (pmParam != null) {
+						paramCode = pmParam.getParameterCode();
+					}
 				}
-					
-				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleType().getRuleDataTypeId().getParameterCode())) {
+
+				if ("PC".equalsIgnoreCase(paramCode)) {
+					hasDocNo = true;
+					setDocNo(hasDocNo, hasDocNoCategory, matchingIdUpdatedOldVal);
+				}
+
+				if (matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(paramCode)) {
 					hasDocNoCategory = true;
-					setDocNo(hasDocNo,hasDocNoCategory,matchingIdUpdatedOldVal);
+					setDocNo(hasDocNo, hasDocNoCategory, matchingIdUpdatedOldVal);
 				}
 				docId = BigInteger.valueOf(matchingIdUpdatedOldVal.getRuleValueId());
-				/*35323 - Audit Start*/
+				/* 35323 - Audit Start */
 				if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(pmConfigRuleDesc.getRuleType()
 						.getRuleType())) {
-					updateRuleType(updateVal,matchingIdUpdatedOldVal);
-				} else {/*35323 - Audit End*/
+					updateRuleType(updateVal, matchingIdUpdatedOldVal);
+				} else {/* 35323 - Audit End */
 					processSPRuleTypeValEffExpDate(matchingIdUpdatedOldVal, updateVal);
 				}
 			}
