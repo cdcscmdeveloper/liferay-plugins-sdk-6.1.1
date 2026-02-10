@@ -1618,14 +1618,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.searchQtValueLimit = searchQtValueLimit;
 	}
 	
-	public HashMap<Long, List<PmConfigRuleValue>> getOriginalConfigRuleValueMap() {
-		return originalConfigRuleValueMap;
-	}
-	
-	public void setOriginalConfigRuleValueMap(HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap) {
-		this.originalConfigRuleValueMap = originalConfigRuleValueMap;
-	}
-	
 	public Boolean getRuleTypeCollapsePanel() {
 		return ruleTypeCollapsePanel;
 	}
@@ -1648,6 +1640,14 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	
 	public void setQtValueCollapsePanel(Boolean qtValueCollapsePanel) {
 		this.qtValueCollapsePanel = qtValueCollapsePanel;
+	}
+	
+	public HashMap<Long, List<PmConfigRuleValue>> getOriginalConfigRuleValueMap() {
+		return originalConfigRuleValueMap;
+	}
+	
+	public void setOriginalConfigRuleValueMap(HashMap<Long, List<PmConfigRuleValue>> originalConfigRuleValueMap) {
+		this.originalConfigRuleValueMap = originalConfigRuleValueMap;
 	}
 	// #36738 End
 }
