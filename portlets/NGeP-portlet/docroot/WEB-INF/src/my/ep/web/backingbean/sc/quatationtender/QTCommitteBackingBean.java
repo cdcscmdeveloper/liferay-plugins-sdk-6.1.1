@@ -845,7 +845,7 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().setAutoUpdate(true);
 	}
 
-	//39593 - start
+	// 39593 - start
 	private void processCommitteeClone(Map<String, List<ScCommitteeMember>> committees, Set<String> committeeTypes) {
 		List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
 		Map<TabBean, List<ScCommitteeMember>> syncCommitteeMap = new HashMap<>();
@@ -900,9 +900,10 @@ public class QTCommitteBackingBean extends
 			Collections.sort(tabBeanCommitteeMembers, new MemberRoleComparator());
 		}
 	}
-	//39593 - end
 
-	//39593 - start
+	// 39593 - end
+
+	// 39593 - start
 	private ScCommitteeMember cloneMember(ScCommitteeMember member) {
 		try {
 			return (ScCommitteeMember) BeanUtils.cloneBean(member);
@@ -912,23 +913,25 @@ public class QTCommitteBackingBean extends
 		}
 		return null;
 	}
-	//39593 - end
 
-	//39593 - start
-	private void rollbackMembersUpdate(Map<TabBean, List<ScCommitteeMember>> syncCommitteeMap){
+	// 39593 - end
+
+	// 39593 - start
+	private void rollbackMembersUpdate(Map<TabBean, List<ScCommitteeMember>> syncCommitteeMap) {
 		for (Map.Entry<TabBean, List<ScCommitteeMember>> entry : syncCommitteeMap.entrySet()) {
 			List<ScCommitteeMember> listToSync = entry.getValue();
 			if (CollectionUtils.isEmpty(listToSync)) {
 				continue;
 			}
 			TabBean tabBeanToSync = entry.getKey();
-			List<ScCommitteeMember> tabBeanCommitteeMembers = tabBeanToSync.getScQtCommittee()
-					.getScCommittee().getScCommitteeMembers();
+			List<ScCommitteeMember> tabBeanCommitteeMembers = tabBeanToSync.getScQtCommittee().getScCommittee()
+					.getScCommitteeMembers();
 			tabBeanCommitteeMembers.removeAll(listToSync);
 			listToSync.clear();
 		}
 	}
-	//39593 - end
+
+	// 39593 - end
 	/**
 	 * Removes the unselected childs.
 	 * 
