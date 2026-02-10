@@ -484,7 +484,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		downloadFile(scLoaReportAttachmentGenerated);
 		//#25726 - start
-		scLoaReport.setIsPK42BondCalc(true);
+		//#25726 - note 449 - Start
+		if (QTConstants.SURAT_SETUJU_TERIMA.equals(scLoaReport.getTitle())
+				&& scLoaReport.getScLoaReportAttachment() != null && scLoaReport.getIsPK42BondCalc() == null) {
+			checkSetReport(scLoaReport);
+		} else {
+			scLoaReport.setIsPK42BondCalc(true);
+		}
+		//#25726 - note 449 - End
 		//#25726 - end
 	}
 	
@@ -562,7 +569,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			//new #25726 - Start
 			
-			boolean newBond = validateNewBond(scLoa);
+			boolean newBond = validateNewBond(scLoa, outcome);// #25726 - note 449
 			boolean approvalLetter = validateApprovalLetter(scLoa);
 
 			if (!approvalLetter || !newBond) {
@@ -5577,7 +5584,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			// new #25726 - start
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-			boolean newBond = validateNewBond(scLoa);
+			boolean newBond = validateNewBond(scLoa, outcome);// #25726 - note 449
 	
 			boolean approvalLetter = validateApprovalLetter(scLoa);
 	
@@ -13271,35 +13278,71 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #26130 - end
 			
 	// new #25726 - start
+	// #25726 - note 449 - Start
 	/**
 	 * @param scLoa
 	 * @return
 	 */
-	private boolean validateNewBond(ScLoa scLoa) {
+	private boolean validateNewBond(ScLoa scLoa, String outcome) {
 
 		boolean isCheckLOAReport = false;
-		if (scLoa != null && CollectionUtils.isNotEmpty(scLoa.getScLoaReports()) && !scLoa.isBrandNew()
-				&& scLoa.getScLoiLoa() != null) {
+		if (scLoa != null && CollectionUtils.isNotEmpty(scLoa.getScLoaReports()) && null == scLoa.getScQuote()
+				&& !scLoa.isBrandNew() && scLoa.getScLoiLoa() != null) {
+
+			Long statusId = scLoa.getPmStatus().getStatusId();
+			boolean isAvailableStatus = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
+					QTStatusConst.LOA_PENDING_REVISION, QTStatusConst.LOA_PENDING_APPROVAL,
+					QTStatusConst.LOA_PENDING_REVISION_APPROVAL).contains(statusId);
 
 			String fulfilmentCode = scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
-
-			isCheckLOAReport = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentCode);
-
+			boolean isOneOff = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentCode);
+			isCheckLOAReport = isAvailableStatus && isOneOff;
 		}
-
 		if (isCheckLOAReport) {
 			for (ScLoaReport report : scLoa.getScLoaReports()) {
 				if (report != null && QTConstants.SURAT_SETUJU_TERIMA.equals(report.getTitle())
-						&& report.getScLoaReportAttachment() != null && report.getIsPK42BondCalc() == null) {
-					RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
-					return false;
+						&& report.getScLoaReportAttachment() != null) {
 
+					Boolean pk42 = report.getIsPK42BondCalc();
+					boolean showAlert = (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && pk42 == null)
+							|| (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && Boolean.FALSE.equals(pk42));
+					if (showAlert) {
+						RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
+						return false;
+					}
 				}
 			}
 		}
 		return true;
 	}
 
+	/**
+	 * @param report
+	 */
+	private void checkSetReport(ScLoaReport report) {
+
+		boolean isSetLOAReport = false;
+		ScLoa scLoa = getManagedBean().getScLoa();
+		if (!scLoa.isBrandNew() && scLoa.getScQuote() == null) {
+
+			Long statusId = scLoa.getPmStatus().getStatusId();
+			boolean isAvailableStatus = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
+					QTStatusConst.LOA_PENDING_REVISION).contains(statusId);
+
+			String fulfilmentCode = scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
+			boolean isOneOff = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentCode);
+
+			isSetLOAReport = isAvailableStatus && isOneOff;
+		}
+
+		if (isSetLOAReport) {
+			report.setIsPK42BondCalc(false);
+		} else {
+			report.setIsPK42BondCalc(true);
+		}
+	}
+
+	// #25726 - note 449 - End
 	// new #25726 - end
 			
 	// Bug #33674@Syazani -- Start 14/09/2022
