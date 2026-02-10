@@ -3996,6 +3996,7 @@ return scQt;
 		if (date.after(this.getManagedBean().getScQtApprovalRequestList().get(0).getProposalValidityEndDateNew())
 				&& (QTStatusConst.PCB_RQ1_APPROVED.longValue() == request.getDecisionType().getParameterId() || QTStatusConst.PCB_RQ3_APPROVED
 						.longValue() == request.getDecisionType().getParameterId())) {
+			request.setApproverAction(null);
 			throw new EpException(MessageConst.ERROR_770405);
 		}
 	}
