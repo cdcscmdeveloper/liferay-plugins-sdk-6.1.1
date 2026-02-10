@@ -992,7 +992,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 	}
 	
 	/**
-	 * Get value for sample, Bug #39486.
+	 * Get value for sample, Bug #39486 - #39877.
 	 * 
 	 * @param scQt the quotation tender object
 	 * 
