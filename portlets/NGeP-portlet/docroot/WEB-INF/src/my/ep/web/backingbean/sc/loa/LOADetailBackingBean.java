@@ -12163,9 +12163,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						&& report.getScLoaReportAttachment() != null) {
 
 					Boolean pk42 = report.getIsPK42BondCalc();
-					boolean showAlert = (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && pk42 == null)
-							|| (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && Boolean.FALSE.equals(pk42));
-					if (showAlert) {
+					boolean isShowAlert = (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && pk42 == null)
+							|| (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && !Boolean.TRUE.equals(pk42));
+					if (isShowAlert) {
 						RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
 						return false;
 					}					
