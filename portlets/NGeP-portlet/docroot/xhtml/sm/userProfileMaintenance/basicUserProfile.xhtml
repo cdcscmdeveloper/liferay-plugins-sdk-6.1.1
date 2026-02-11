@@ -772,11 +772,9 @@
 													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 													size="35">
 													<!-- #36718 - Start  -->
-													<p:ajax
-														process="@this"
-														update="@this basicMailAddPostCodeMyMsg" />
+													<p:ajax process="@this" partialSubmit="true" update="@this basicMailAddPostCodeMyMsg"
+														listener="#{smPersonnelBackingBean.checkPostcode(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode)}" />
 													<!-- #36718 - End  -->
-													<f:validator validatorId="postcodeValidator" />
 												</p:inputText>
 												<p:message id="basicMailAddPostCodeMyMsg" for="basicMailAddPostCodeMy"
 													showSummary="true" showDetail="false" display="icon" />
