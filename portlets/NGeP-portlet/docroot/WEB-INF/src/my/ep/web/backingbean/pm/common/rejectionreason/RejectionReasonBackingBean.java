@@ -233,6 +233,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setSuppAppCheck(Boolean.FALSE);
 			this.getManagedBean().setSuppComCheck(Boolean.FALSE);
 			this.getManagedBean().setSuppTypeCheck(Boolean.FALSE);
+			this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618 
+			
 	
 			if(id!=null && id>0){
 				loadRejectReason(id);
@@ -1937,6 +1939,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setAuditDeleteAppRestrictions(null);
 			this.getManagedBean().setAuditDeleteComRestrictions(null);
 			this.getManagedBean().setAuditDeleteSuppRestrictions(null);
+			
+			this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618
 		}
 		//35509 - END
 	

@@ -11018,8 +11018,13 @@ public class SmApplicationBackingBean extends
 		//#12483 - END
 		//Bug #26705
 		// #39422 - Start - Comment method
-		getlatestPoOverlappingRemarks();
+		//getlatestPoOverlappingRemarks();
 		// #39422 - End
+		
+		// #39679 - Start
+		getManagedBean().setApplnOverLapRemarks(null);
+		SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+		// #39679 - End
 		
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
@@ -11091,7 +11096,11 @@ public class SmApplicationBackingBean extends
 			return;
 		}
 		
-		getManagedBean().setChangeCurrRegStatus(true);
+		if(latestPOChange.getPmRegStatus().getRegStatusId() == prevRegStatusId){
+			getManagedBean().setChangeCurrRegStatus(false);
+		} else {
+			getManagedBean().setChangeCurrRegStatus(true);
+		}		
 		getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
 	}
 	
@@ -19326,22 +19335,77 @@ public class SmApplicationBackingBean extends
 	}
 	
 	/**
-	 * Updates the approved registration status ID for an approver user.
+	 * Updates the approved registration status ID based on the current context.
+	 * <p>
+	 * If the current status is null, the method exits. If the registration
+	 * status has changed and the user is an approver, the latest PO section
+	 * review status (if valid) overrides the current status.
+	 * </p>
 	 */
 	public void updateApproverRegistrationStatusValue() {
-		Long approvedStatusId = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId();
-		if (approvedStatusId == null || !getManagedBean().isApproverUser()) {
+
+		Long statusId = resolveCurrentStatusId();
+		if (statusId == null) {
 			return;
 		}
-		
-		if (getManagedBean().isChangeCurrRegStatus()) {
-			SmApplSectionReview latestPOSectionReview = findLatestPOSectionReview();
-			if (latestPOSectionReview != null && validStatusId(latestPOSectionReview)) {
-				approvedStatusId = findLatestPOSectionReview().getPmRegStatus().getPmStatus().getStatusId();
+
+		if (shouldOverrideWithLatestReview()) {
+			Long latestStatusId = resolveLatestReviewStatusId();
+			if (latestStatusId != null) {
+				statusId = latestStatusId;
 			}
 		}
 
-		getManagedBean().setApprovedStatusId(approvedStatusId);
+		getManagedBean().setApprovedStatusId(statusId);
+	}
+
+	/**
+	 * Resolves the current registration status ID safely.
+	 */
+	private Long resolveCurrentStatusId() {
+		if (getManagedBean() == null
+				|| getManagedBean().getSmSupplier() == null
+				|| getManagedBean().getSmSupplier().getSmAppl() == null
+				|| getManagedBean().getSmSupplier().getSmAppl()
+						.getPmRegStatus() == null
+				|| getManagedBean().getSmSupplier().getSmAppl()
+						.getPmRegStatus().getPmStatus() == null) {
+			return null;
+		}
+
+		return getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus()
+				.getPmStatus().getStatusId();
+	}
+
+	/**
+	 * Determines whether the status should be overridden with the latest PO
+	 * section review status.
+	 */
+	private boolean shouldOverrideWithLatestReview() {
+		if (getManagedBean() == null) {
+			return false;
+		}
+
+		if (!getManagedBean().isChangeCurrRegStatus()) {
+			return false;
+		}
+
+		assignValReqdToTrue();
+
+		return getManagedBean().isApproverUser();
+	}
+
+	/**
+	 * Resolves the status ID from the latest PO section review if valid.
+	 */
+	private Long resolveLatestReviewStatusId() {
+		SmApplSectionReview latestReview = findLatestPOSectionReview();
+
+		if (latestReview != null && validStatusId(latestReview)) {
+			return latestReview.getPmRegStatus().getPmStatus().getStatusId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -19380,8 +19444,8 @@ public class SmApplicationBackingBean extends
 //	#37925 END
 	// #9299 - Start
 	public boolean getAppVersionDetailsWithRedmineNo() {
-		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(),
-				SupplierManagementConst.APP_VERSION_REDMINE_NO_9299);
+		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(), SupplierManagementConst.APP_VERSION_REDMINE_NO_9299,
+				SupplierManagementConst.PHASE_1);
 	}
 
 	public boolean checkCompanyExperienceNewlyAdded(List<SmCompanyExperience> list) {

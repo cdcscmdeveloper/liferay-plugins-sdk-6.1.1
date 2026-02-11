@@ -10657,6 +10657,7 @@ private void retriveCommitteeRemarksList(){
 			evalReqDTO.setAnswersList(answers);
 			evalReqDTO.setChecklistType(getManagedBean().getCheckListType());
 			evalReqDTO.setScQt(this.getManagedBean().getScQt());//#28784
+			evalReqDTO.setSaveActionClick(true);//#38151
 			List<ScQtCheckList> qtCheckLists = null;
 			if ("T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				evalReqDTO
