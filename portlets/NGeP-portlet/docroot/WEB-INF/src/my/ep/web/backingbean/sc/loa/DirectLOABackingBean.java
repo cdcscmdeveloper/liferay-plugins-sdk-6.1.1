@@ -13305,7 +13305,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 					Boolean pk42 = report.getIsPK42BondCalc();
 					boolean showAlert = (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && pk42 == null)
-							|| (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && Boolean.FALSE.equals(pk42));
+							|| (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && !Boolean.TRUE.equals(pk42));
 					if (showAlert) {
 						RequestContext.getCurrentInstance().execute("bondChangesAlertDlg.show()");
 						return false;
