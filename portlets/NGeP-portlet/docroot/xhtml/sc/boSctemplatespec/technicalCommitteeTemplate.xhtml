@@ -22,6 +22,20 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
+		<ui:remove>#10098 Start Vinod</ui:remove>
+		<p:blockUI block=":form" widgetVar="blockWidgetAutoSave">
+			<div
+				style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+				<h:panelGrid columns="1">
+					<h:graphicImage value="/css/images/ajax-loader-autosave.gif" />
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<h:outputText escape="false" style="font-weight: bold;"
+						value="#{lbl['lbl.tpl.autosave.loading.msg']}" />
+				</h:panelGrid>
+			</div>
+		</p:blockUI>
+		<ui:remove>#10098 End Vinod</ui:remove>
 		<p:messages id="committeeTechnicalmessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
@@ -48,7 +62,15 @@
 		</table>
 		<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true"
 			style="width:100%;">
-        <ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
+			<ui:remove>#10098 Start Vinod</ui:remove>
+			<p:poll interval="60" id="autoSaveTemplateId"
+				rendered="#{specificationBackingBean.managedBean.templateSpecBean.techTemplateUpdateFromQT}"
+				listener="#{specificationBackingBean.autoSaveTemplateChecklist}"
+				onstart="blockWidgetAutoSave.show();"
+				oncomplete="blockWidgetAutoSave.hide(); blockWidget.hide();"
+				update="@all" />
+			<ui:remove>#10098 End Vinod</ui:remove>
+		<ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
         <ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include>
 			<table>
 				<tr>

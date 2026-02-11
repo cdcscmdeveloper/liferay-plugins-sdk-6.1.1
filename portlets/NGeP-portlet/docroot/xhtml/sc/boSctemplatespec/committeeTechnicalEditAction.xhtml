@@ -123,6 +123,7 @@ label.ui-button>span.ui-button-text {
 			<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true">
 				<ui:remove>#10098 Start Vinod</ui:remove>
 				<p:poll interval="60" id="autoSaveTemplateId"
+					rendered="#{specificationBackingBean.managedBean.templateSpecBean.techTemplateUpdateFromQT}"
 					listener="#{specificationBackingBean.autoSaveTemplateChecklist}"
 					onstart="blockWidgetAutoSave.show();"
 					oncomplete="blockWidgetAutoSave.hide(); blockWidget.hide();"

@@ -5772,7 +5772,15 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setSpecItemWeightageRequired(Boolean.TRUE);
 				}//30917-End
 				// #10098 Start Vinod
-				templateSpecBean.setTechTemplateUpdateFromQT(true);
+				Long statusId = this.getManagedBean().getQt() != null
+						&& this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt()
+						.getQtStatus().getStatusId() : 0L;
+				List<Long> specPrepareStatus = Arrays.asList(new Long[] {
+						QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION });
+				if (specPrepareStatus.contains(statusId)) {
+					templateSpecBean.setTechTemplateUpdateFromQT(true);
+				}
 				// #10098 End Vinod
 				return "/xhtml/sc/boSctemplatespec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList
@@ -6288,7 +6296,15 @@ public class SpecificationBackingBean extends
 
 				}
 				// #10098 Start Vinod
-				templateSpecBean.setFinTemplateUpdateFromQT(true);
+				Long statusId = this.getManagedBean().getQt() != null
+						&& this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt()
+						.getQtStatus().getStatusId() : 0L;
+				List<Long> specPrepareStatus = Arrays.asList(new Long[] {
+						QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION });
+				if (specPrepareStatus.contains(statusId)) {
+					templateSpecBean.setFinTemplateUpdateFromQT(true);
+				}
 				// #10098 End Vinod
 				// #25039#67#76 - start
 				// To recalculate estimate amount (Item Total Indicative Price)
@@ -15369,6 +15385,17 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 						
 			templateSpecBean.setSpecMaster(specMaster);
+			// #10098 Start Vinod
+			Long statusId = this.getManagedBean().getQt() != null
+					&& this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt()
+					.getQtStatus().getStatusId() : 0L;
+			List<Long> specPrepareStatus = Arrays.asList(new Long[] {
+					QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION });
+			if (specPrepareStatus.contains(statusId)) {
+				templateSpecBean.setTechTemplateUpdateFromQT(true);
+			}
+			// #10098 Start Vinod
 
 			this.getManagedBean().setScQtChecklist(qtCheckList);
 			this.getManagedBean().setIndex(-1);
@@ -25096,9 +25123,21 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	// #38151 End
 	
 	//#10098 Start Vinod
-	public void autoSaveTemplateChecklist(){
-		//RequestContext.getCurrentInstance().execute("confirmAutoTechsave.show()");
-		saveTemplateSpecDetails("SC","1");
+	/**
+	 * This method is called when the timer is ranout for 15 minutes to autosave
+	 * the technical or financial Template checklist.
+	 * 
+	 * @param
+	 * 
+	 * @return
+	 */
+	public void autoSaveTemplateChecklist() {
+		TemplateSpecBean templateSpecBean = this.getManagedBean().getTemplateSpecBean();
+		if (templateSpecBean.isTechTemplateUpdateFromQT() || templateSpecBean.isFinTemplateUpdateFromQT()) {
+			String docType = templateSpecBean.isTechTemplateUpdateFromQT() ? QTConstants.TECHNICAL_DOC_TYPE
+					: QTConstants.FINANCIAL_DOC_TYPE;
+			saveTemplateSpecDetails(QTConstants.SUPPLIER_CRITERIA, docType);
+		}
 	}
 	//#10098 End Vinod
 }
