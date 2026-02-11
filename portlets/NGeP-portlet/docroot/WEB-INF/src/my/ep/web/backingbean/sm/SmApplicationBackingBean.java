@@ -11091,7 +11091,11 @@ public class SmApplicationBackingBean extends
 			return;
 		}
 		
-		getManagedBean().setChangeCurrRegStatus(true);
+		if(latestPOChange.getPmRegStatus().getRegStatusId() == prevRegStatusId){
+			getManagedBean().setChangeCurrRegStatus(false);
+		} else {
+			getManagedBean().setChangeCurrRegStatus(true);
+		}		
 		getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
 	}
 	
@@ -19335,6 +19339,7 @@ public class SmApplicationBackingBean extends
 		}
 		
 		if (getManagedBean().isChangeCurrRegStatus()) {
+			assignValReqdToTrue();
 			SmApplSectionReview latestPOSectionReview = findLatestPOSectionReview();
 			if (latestPOSectionReview != null && validStatusId(latestPOSectionReview)) {
 				approvedStatusId = findLatestPOSectionReview().getPmRegStatus().getPmStatus().getStatusId();
