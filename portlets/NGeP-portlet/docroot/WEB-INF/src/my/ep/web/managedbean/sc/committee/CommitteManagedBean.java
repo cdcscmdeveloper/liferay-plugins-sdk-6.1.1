@@ -29,6 +29,9 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.tpl.comm.TplCommMember;
+import my.ep.persistence.entity.tpl.comm.TplCommMemberHistory;
+import my.ep.persistence.entity.tpl.comm.TplCommittee;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -269,14 +272,29 @@ public class CommitteManagedBean extends BaseManagedBean {
 	/** Flag to indicate to display committee view page */
     private boolean viewCommitteePage = Boolean.FALSE;
 
-	private Map<String, ScCommittee> committeMap;
+	private Map<String, TplCommittee> committeMap;
 	
 	/** The final committee */
-	private List<ScCommitteeMember> latestMembers;
+	private List<TplCommMember> latestMembers;
 	
 	private Paginator memberPaginator;
 	
 	private boolean refreshFCMaintenancePage = Boolean.FALSE;
+	
+	/** The tpl committe member. */
+	private TplCommMember tplCommMember = new TplCommMember();
+	
+	/** The tpl committee. */
+	private TplCommittee tplCommittee;
+	
+	/** The tpl comm member history. */
+	private TplCommMemberHistory selectedTplCommHistory;
+	
+	/** The tpl committe members. */
+	private List<TplCommMember> tplCommMembers;
+	
+	/** The to be del tpl committe members. */
+	private List<TplCommMember> toBeDelTplCommitteMembers;
 	//35320 - END
 	
 	/**
@@ -1496,19 +1514,19 @@ public class CommitteManagedBean extends BaseManagedBean {
 		this.viewCommitteePage = viewCommitteePage;
 	}
 
-	public Map<String, ScCommittee> getCommitteMap() {
+	public Map<String, TplCommittee> getCommitteMap() {
 		return committeMap;
 	}
 
-	public void setCommitteMap(Map<String, ScCommittee> committeMap) {
+	public void setCommitteMap(Map<String, TplCommittee> committeMap) {
 		this.committeMap = committeMap;
 	}
 
-	public List<ScCommitteeMember> getLatestMembers() {
+	public List<TplCommMember> getLatestMembers() {
 		return latestMembers;
 	}
 
-	public void setLatestMembers(List<ScCommitteeMember> latestMembers) {
+	public void setLatestMembers(List<TplCommMember> latestMembers) {
 		this.latestMembers = latestMembers;
 	}
 
@@ -1534,6 +1552,46 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	public void setRefreshFCMaintenancePage(boolean refreshFCMaintenancePage) {
 		this.refreshFCMaintenancePage = refreshFCMaintenancePage;
+	}
+
+	public TplCommMember getTplCommMember() {
+		return tplCommMember;
+	}
+
+	public void setTplCommMember(TplCommMember tplCommMember) {
+		this.tplCommMember = tplCommMember;
+	}
+
+	public TplCommittee getTplCommittee() {
+		return tplCommittee;
+	}
+
+	public void setTplCommittee(TplCommittee tplCommittee) {
+		this.tplCommittee = tplCommittee;
+	}
+
+	public TplCommMemberHistory getSelectedTplCommHistory() {
+		return selectedTplCommHistory;
+	}
+
+	public void setSelectedTplCommHistory(TplCommMemberHistory selectedTplCommHistory) {
+		this.selectedTplCommHistory = selectedTplCommHistory;
+	}
+
+	public List<TplCommMember> getTplCommMembers() {
+		return tplCommMembers;
+	}
+
+	public void setTplCommMembers(List<TplCommMember> tplCommMembers) {
+		this.tplCommMembers = tplCommMembers;
+	}
+
+	public List<TplCommMember> getToBeDelTplCommitteMembers() {
+		return toBeDelTplCommitteMembers;
+	}
+
+	public void setToBeDelTplCommitteMembers(List<TplCommMember> toBeDelTplCommitteMembers) {
+		this.toBeDelTplCommitteMembers = toBeDelTplCommitteMembers;
 	}
 	//#35320 - END
 

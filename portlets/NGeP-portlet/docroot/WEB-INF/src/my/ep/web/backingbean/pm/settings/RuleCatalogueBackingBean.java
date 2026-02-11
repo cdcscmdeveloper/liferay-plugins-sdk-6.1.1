@@ -1733,6 +1733,11 @@ public class RuleCatalogueBackingBean extends
 					break;
 				}
 			}
+			
+			/************ AUDIT #28895_35509 - START **************/
+			boolean auditConstRule = false;
+			/************ AUDIT #28895_35509 - END **************/
+			
 			/* 27827 - START */
 			if (resDTO.isSuccessful() && orgProfResDTO.isSuccessful()) {
 			/* 27827 - END */
@@ -1744,17 +1749,24 @@ public class RuleCatalogueBackingBean extends
 										MessageConst.INFO_770009,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				
 				/************ AUDIT #28895_35509 - START **************/
-				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IAuditPMSO.class);
+				auditConstRule = true;
+				/************ AUDIT #28895_35509 - END **************/
+			}
+			
+			/************ AUDIT #28895_35509 - START **************/
+			if (auditConstRule) {
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
 				AuditPMBackingBeanTemplate auTemplate = new AuditPMSysParamBackingBean();
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SYSTEMPARAMETERS)) {
 					getManagedBean().setAuditLevelCode(AuditConst.PM_LVL_CODE_2_SPCONSTANTRULE);
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SYSPARAMETER);
 				}
+				clearAllAuditBeanVal(getManagedBean());
 			}
-			clearAllAuditBeanVal(getManagedBean());
-			/************ AUDIT #28895_35509 - END **************/
+			/************ AUDIT #28895_35509 - END **************/			
 		} catch (Exception e) {
 			clearAllAuditBeanVal(getManagedBean());//#35509
 			throw new EpException(e.getMessage());
@@ -5944,8 +5956,14 @@ public class RuleCatalogueBackingBean extends
         	//end #29267 - CR 22113: Static Code Analysis
         }
         //#36738 Start
-        this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+        Long ruleTypeId = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleTypeId();
+        if (this.getManagedBean().getOriginalConfigRuleValueMap() != null && this.getManagedBean().getOriginalConfigRuleValueMap().containsKey(ruleTypeId)){
+        	this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getOriginalConfigRuleValueMap().get(ruleTypeId));
+        }else{
+            this.getManagedBean().setOriginalConfigRuleValueList(this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
+        }
         resetRuleValue();
+        this.getManagedBean().setRuleValueCollapsePanel(true);
         //#36738 End
 	}
 	
@@ -6180,6 +6198,16 @@ public class RuleCatalogueBackingBean extends
 		List<PmConfigRuleValue> originalList = this.getManagedBean().getOriginalConfigRuleValueList() != null ? 
 				 this.getManagedBean().getOriginalConfigRuleValueList() : this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues();
 		List<PmConfigRuleValue> resultList = new ArrayList<>(originalList);
+		HashMap<Long, List<PmConfigRuleValue>> map = this.getManagedBean().getOriginalConfigRuleValueMap();
+		
+		Long ruleTypeId = this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleTypeId();
+		if (map == null) {
+		    map = new HashMap<>();
+		}
+		if (!map.containsKey(ruleTypeId)) {
+		    map.put(ruleTypeId, originalList);
+		    this.getManagedBean().setOriginalConfigRuleValueMap(map);
+		}
 
 		// search via value
 		if (StringUtils.isNotBlank(searchRuleValues)) {
