@@ -49,7 +49,7 @@
 					<p:outputPanel rendered="#{not empty cc.attrs.bean.poRecommendationDesc}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
-							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}"/></td>
+							<td><h:outputText value="#{cc.attrs.bean.poRecommendationDesc}" converter="capitalizeConverter" /></td>
 						</tr>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{cc.attrs.smAppl.applType ne 'N'}">
@@ -66,7 +66,7 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.approver.country.of.origin']}" /></td>
 							<td>
-								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" />
+								<h:outputText value="#{cc.attrs.bean.strLabelCountryOrigin}" converter="capitalizeConverter" />
 							</td>
 						</tr>
 					</p:outputPanel>
@@ -84,10 +84,10 @@
 					<p:outputPanel rendered="#{cc.attrs.bean.displayCheckboxChangeCurrentStatus}">
 					<!-- #37925 END -->
 						<tr>
-							<td style="border-style: none !important;float: right !important;">
-								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" 
+							<td style="border-style: none !important;float: right !important;"> <!-- #37925 -->
+								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" id="changeRegStatusChk"
 									disabled="#{empty cc.attrs.currRegStatus}">
-									<p:ajax event="change" partialSubmit="true" process="@this"
+									<p:ajax event="change" partialSubmit="true" process="@this" listener="#{cc.attrs.backingBean.updateApproverRegistrationStatusValue()}"
 										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" />
 								</p:selectBooleanCheckbox>
 							</td>
@@ -274,7 +274,7 @@
 				
                 <!-- #15629 end -->
 												
-				<c:if test="#{cc.attrs.overLappedCategoryExists}">
+				<c:if test="#{cc.attrs.overLappedCategoryExists and cc.attrs.smAppl.applType ne 'C'}"> <!-- 39614 -->
 				<!-- 13362 START -->
 				<tr><td><br></br></td></tr>
 					<tr>
@@ -339,6 +339,9 @@
 								label="#{lbl['lbl.sm.remarks.overLapping']}"
 								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 								required="false">
+								<!-- 39422 START -->
+								<p:ajax event="blur" process="@this" update="@this"/>
+								<!-- 39422 End -->
 								<f:validateLength maximum="2500" />
 							</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
 								for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"

@@ -129,6 +129,11 @@ public class SLALogConstant {
 
 	// 29661 -end-
 	
+	// #27868 - start
+	public static final String DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM  = "getDropDownValuesCombineWIPParameter";
+	public static final String DP_GET_RADIOBUTTON_CODEVALUES = "getReasonCodeDropdownValues";
+	// #27868 - end
+	
 	private SLALogConstant(){
 		
 	}	

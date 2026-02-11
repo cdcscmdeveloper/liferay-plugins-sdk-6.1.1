@@ -49,8 +49,8 @@
 			<td>
 				<p:selectOneMenu value="#{itemExceedThresholdRptBb.managedBean.centralPanelContract}" style="width:300px">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.pleaseSelect']}" itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="#{true}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="#{false}"></f:selectItem>
 					<p:ajax event="change" listener="#{itemExceedThresholdRptBb.onCentralPanelChange}" update="@parent" partialSubmit="true" />
 				</p:selectOneMenu>
 			</td>
@@ -69,16 +69,10 @@
 					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.status']}" /></td>
 					<td>
 						<p:selectOneMenu id="statusCc" value="#{itemExceedThresholdRptBb.managedBean.status}" style="width:300px">
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.all']}" itemValue="#{null}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.rn.approve']}" itemValue="1"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.pending.assign.item.code']}" itemValue="2"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.completed']}" itemValue="3"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.cancel.pid.expired']}" itemValue="4"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.cancel.sq.expired']}" itemValue="5"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.reject.pid.expired']}" itemValue="6"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.reject.sq.expired']}" itemValue="7"></f:selectItem>
-							<p:ajax event="change" partialSubmit="true" />
-						</p:selectOneMenu>		
+							<f:selectItems value="#{itemExceedThresholdRptBb.getStatusDropdown()}" />
+							<p:ajax event="change" listener="#{itemExceedThresholdRptBb.onChangeStatus()}" update="@form" partialSubmit="true" />
+						</p:selectOneMenu>
+						
 					</td>
 				</tr>
 				<tr>
@@ -91,9 +85,10 @@
 					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.group.proc.type']}" /></td>
 					<td>
 						<p:selectOneMenu id="procurementTypeCc" value="#{itemExceedThresholdRptBb.managedBean.procurementType}" style="width:300px">
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.all']}" itemValue="#{null}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.procType.normal']}" itemValue="1011"></f:selectItem>
-						</p:selectOneMenu>	
+							<f:selectItems value="#{itemExceedThresholdRptBb.getProcurementModeDropdownValues()}" />
+							<p:ajax event="change" listener="#{itemExceedThresholdRptBb.onChangeProcurementType}" update="@form" partialSubmit="true" />
+						</p:selectOneMenu>
+						
 					</td>
 				</tr>
 				<tr>
@@ -107,9 +102,9 @@
 					<td>
 						<p:selectOneMenu id="groupByCc" value="#{itemExceedThresholdRptBb.managedBean.groupBy}" style="width:300px">
 							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.none']}" itemValue="#{null}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.ppNo']}" itemValue="1"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.doc.status']}" itemValue="2"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.proc.type']}" itemValue="3"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.ppNo']}" itemValue="3"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.doc.status']}" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.group.proc.type']}" itemValue="2"></f:selectItem>
 							<p:ajax event="change" partialSubmit="true" />
 						</p:selectOneMenu>		
 						<ac:iconTooltip id="groupByTooltipCc" value="#{lbl['lbl.sc.rpt.group.tooltip']}" />
@@ -148,16 +143,10 @@
 					<td style="width:20%"><p:outputLabel value="#{lbl['lbl.sc.rpt.status']}" /></td>
 					<td>
 						<p:selectOneMenu id="status" value="#{itemExceedThresholdRptBb.managedBean.status}" style="width:300px">
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.all']}" itemValue="#{null}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.rn.approve']}" itemValue="1"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.pending.assign.item.code']}" itemValue="2"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.completed']}" itemValue="3"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.cancel.pid.expired']}" itemValue="4"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.cancel.sq.expired']}" itemValue="5"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.reject.pid.expired']}" itemValue="6"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.sc.rpt.status.reject.sq.expired']}" itemValue="7"></f:selectItem>
-							<p:ajax event="change" partialSubmit="true" />
-						</p:selectOneMenu>		
+							<f:selectItems value="#{itemExceedThresholdRptBb.getStatusDropdown()}" />
+							<p:ajax event="change" listener="#{itemExceedThresholdRptBb.onChangeStatus()}" update="@form" partialSubmit="true" />
+						</p:selectOneMenu>
+						
 					</td>
 				</tr>
 				<tr>

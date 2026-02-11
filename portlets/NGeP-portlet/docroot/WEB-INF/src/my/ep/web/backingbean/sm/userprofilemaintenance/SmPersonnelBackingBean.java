@@ -408,6 +408,9 @@ public class SmPersonnelBackingBean extends
 
 		getManagedBean()
 				.setBasicSmPersonnelMailingAddress(mailPersonnelAddress);
+		// #36718 - Start
+		getManagedBean().setLatestBasicSmPersonnelMailingAddress(null);
+		// #36718 - End
 		getManagedBean().setBasicSmPersonnelPermanentAddress(
 				permPersonnelAddress);
 		smPersonnel
@@ -899,63 +902,85 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 	}
-	//9569 - Start
-	public void onTickSameAsPermForMail(SmAddress srcAddr,SmPersonnelAddress destAddr){
-		 Long sourceCountry = srcAddr.getPmCountry().getCountryId();
-		 Long sourceState =  srcAddr.getPmState().getStateId();
-		 PmDivision sourceDivision = srcAddr.getPmDivision();
-		 Long sourceDistrict = srcAddr.getPmDistrict().getDistrictId();
-		 Long sourceCity = srcAddr.getPmCity().getCityId();
-		 
-		if(destAddr.isSameAsPerm() == true){
-			//#36718 - START - check src address if any field not fill 
-			if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1())
-					|| srcAddr.getPmCountry() == null //#36717
-					|| srcAddr.getPmCountry().getCountryId() == null //#36717
-					|| srcAddr.getPmState() == null
-					|| srcAddr.getPmState().getStateId() == null
-					|| srcAddr.getPmDistrict() == null
-					|| srcAddr.getPmDistrict().getDistrictId() == null
-					|| srcAddr.getPmCity() == null
-					|| srcAddr.getPmCity().getCityId() == null
-					|| StringUtils.isBlank(srcAddr.getPostcode())) {
-				String addrType = SmCommonUtil.getMessage(
-						"lbl.sm.permenantaddress", null);
-				destAddr.setSameAsPerm(false);
-				throw new EpException(MessageConst.ERROR_722656,
-						new String[] { addrType });
-			} else {
-				if (srcAddr.getPostcode() != null && StringUtils.isNotBlank(srcAddr.getPostcode())
-						&& (!StringUtils.isNumeric(srcAddr.getPostcode()) || srcAddr.getPostcode().length() != 5)) {
-					destAddr.setSameAsPerm(false);
-					String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
-					throw new EpException(errMsg, null);
-				}
-				destAddr.setSmAddress((SmAddress) srcAddr.deepCopy());
-				updateMailAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
-			}
-		}else{
-			SmAddress prevAddr = (SmAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().deepCopy();
-			Long prevCountry = prevAddr.getPmCountry().getCountryId();
-			Long prevState = prevAddr.getPmState().getStateId();
-			PmDivision prevDivision = prevAddr.getPmDivision();
-			Long prevDistrict = prevAddr.getPmDistrict().getDistrictId();
-			Long prevCity = prevAddr.getPmCity().getCityId();
-			//#36718 - END
-		if(prevAddr.getAddress1() == null && prevCountry == null){
-				destAddr.setSmAddress(new SmAddress());
-				destAddr.getSmAddress().setPmCountry(new PmCountry());
-				destAddr.getSmAddress().setPmState(new PmState());
-				destAddr.getSmAddress().setPmDivision(new PmDivision());
-				destAddr.getSmAddress().setPmDistrict(new PmDistrict());
-				destAddr.getSmAddress().setPmCity(new PmCity());			
-			}else{	
-					destAddr.setSmAddress(prevAddr);
-					updateMailAddLists(prevCountry.toString(), prevState.toString(), prevDivision, prevDistrict.toString());
-			}
+	
+	// #36718 - Start
+	/**
+	 * 
+	 * @param srcAddr
+	 *            the source address that want to be copied
+	 * @param destAddr
+	 *            the destination address that want to be copied
+	 */
+	public void onTickSameAsPermForMail(SmAddress srcAddr, SmPersonnelAddress destAddr) {
+		if (destAddr.isSameAsPerm()) {
+			validateSourceAddress(srcAddr, destAddr);
+			validatePostcode(srcAddr, destAddr);
+
+			destAddr.setSmAddress((SmAddress) srcAddr.deepCopy());
+			updateMailAddLists(srcAddr.getPmCountry().getCountryId().toString(), srcAddr.getPmState().getStateId()
+					.toString(), srcAddr.getPmDivision(), srcAddr.getPmDistrict().getDistrictId().toString());
+			return;
+		}
+
+		restorePreviousMailingAddress(destAddr);
+	}
+
+	private void validateSourceAddress(SmAddress srcAddr, SmPersonnelAddress destAddr) {
+		if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1()) || srcAddr.getPmCountry() == null
+				|| srcAddr.getPmCountry().getCountryId() == null || srcAddr.getPmState() == null
+				|| srcAddr.getPmState().getStateId() == null || srcAddr.getPmDistrict() == null
+				|| srcAddr.getPmDistrict().getDistrictId() == null || srcAddr.getPmCity() == null
+				|| srcAddr.getPmCity().getCityId() == null || StringUtils.isBlank(srcAddr.getPostcode())) {
+
+			destAddr.setSameAsPerm(false);
+			String addrType = SmCommonUtil.getMessage("lbl.sm.permenantaddress", null);
+			throw new EpException(MessageConst.ERROR_722656, new String[] { addrType });
 		}
 	}
 
+	private void validatePostcode(SmAddress srcAddr, SmPersonnelAddress destAddr) {
+		String postcode = srcAddr.getPostcode();
+
+		// For my country
+		if (srcAddr.getPmCountry().getCountryId().equals(getManagedBean().getMyCountryId())
+				&& StringUtils.isNotBlank(postcode) && (!StringUtils.isNumeric(postcode) || postcode.length() != 5)) {
+			destAddr.setSameAsPerm(false);
+			String errMsg = SmCommonUtil.getMessage("lbl.sm.postcode.numberformat.errmsg", null);
+			throw new EpException(errMsg, null);
+		}
+	}
+
+	private void restorePreviousMailingAddress(SmPersonnelAddress destAddr) {
+
+		SmAddress prevAddr = null;
+
+		if (getManagedBean() != null && getManagedBean().getLatestBasicSmPersonnelMailingAddress() != null
+				&& getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress() != null) {
+			prevAddr = (SmAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().deepCopy();
+		}
+
+		if (prevAddr == null || (prevAddr.getAddress1() == null && prevAddr.getPmCountry() == null)) {
+			destAddr.setSmAddress(createEmptyAddress());
+			return;
+		}
+
+		destAddr.setSmAddress(prevAddr);
+		updateMailAddLists(prevAddr.getPmCountry().getCountryId().toString(), prevAddr.getPmState().getStateId()
+				.toString(), prevAddr.getPmDivision(), prevAddr.getPmDistrict().getDistrictId().toString());
+	}
+
+	private SmAddress createEmptyAddress() {
+		SmAddress addr = new SmAddress();
+		addr.setPmCountry(new PmCountry());
+		addr.setPmState(new PmState());
+		addr.setPmDivision(new PmDivision());
+		addr.setPmDistrict(new PmDistrict());
+		addr.setPmCity(new PmCity());
+		return addr;
+	}
+	// #36718 - End
+	
+	//9569 - Start
 	public void onTickSameAsPermForRes(SmAddress srcAddr,SmPersonnelAddress destAddr){
 		 Long sourceCountry = srcAddr.getPmCountry().getCountryId();
 		 Long sourceState =  srcAddr.getPmState().getStateId();

@@ -50,6 +50,7 @@ import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.bean.application.NgepApplicationBean; //#27868
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -198,6 +199,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.comm.TplCommMember;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -207,6 +209,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.ReasonCategory; //#27868
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.CustomUtils;
@@ -225,6 +228,7 @@ import my.ep.web.bean.sc.common.ZonesBean;	// Bug #36730@Syazani 07/01/2025
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.DPConstants; //#27868
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
@@ -3170,19 +3174,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	/**
 	 * Gets the procurement type tool tip.
-	 *
+	 * 
+	 * @param date
 	 * @return the procurement type tool tip
 	 */
-	public String getProcurementTypeToolTip(){
+	public String getProcurementTypeToolTip(Date date) {
 		// MaxProcurementAmt
-		BigDecimal maxProcurementAmt = getPRThresholdAmount();
-		DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-				.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-		String message = ResourceBundleUtils.getMessage(
-				"lbl.sc.procurementtype.tooltip", new String[] {amountDF.format(maxProcurementAmt)}, 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale());
+		// 27868 - start
+		String message;
+		message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip.rpt", null,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		// 27868 - end
 		return message;
 	}
 	
@@ -4424,6 +4426,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											});
 									Map<String, String> map = null;
 									for (TplSpecQuestion q : specMaster.getTplSpecQuestions()) {
+	
+										//#26059 - Start
+										CommonUtils commonUtils = new CommonUtils();
+										q.setClItem(commonUtils.removeItemNameNA(q.getClItem()));
+										//#26059 - End
+										
 										List<Map<String, String>> listPRQuestion = new ArrayList<>();
 										if (q.getSpecQuestionId().equals(
 												sstItem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId())
@@ -4532,6 +4540,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									for (TplSpecQuestion q : specMaster.getTplSpecQuestions()) {
 										List<Map<String, String>> listPRQuestion = new ArrayList<>();
 										map = new HashMap<>();
+	
+										//#26059 - Start
+										CommonUtils commonUtils = new CommonUtils();
+										q.setClItem(commonUtils.removeItemNameNA(q.getClItem()));
+										//#26059 - End
+		  
 										if (q.getQuestionType().equalsIgnoreCase(
 												ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM)) {
 											if (q.getSpecQuestionId()
@@ -5318,8 +5332,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							List<ScQtFinalizationReport> erList = new ArrayList<>();
 							getManagedBean().setEvaluationReportList(erList);
 						}
+						boolean isDemoRequired = report.getTitle().equalsIgnoreCase(
+								SourcingConstants.DEMO_EVALUATION_REPORT)
+								&& !checkDemoWIP(scQt);//#28784
 						// 18685 - START.                                     //#28784
-						if (null != report.getPmDocument() || report.getTitle().equalsIgnoreCase(SourcingConstants.DEMO_EVALUATION_REPORT)) {
+						if (null != report.getPmDocument() || isDemoRequired) {
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
@@ -6691,6 +6708,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		switch (committeeType) {
 		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
 		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE: // #35320
 			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
 		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
 			return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
@@ -7527,8 +7545,139 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	// #33787 End Vinod
+	// 27868 - start
 
+	/**
+	 * Determines whether a procurement type is RPT or standard based on creation date.
+	 *
+	 * @param dataCreatedDate the creation date of the record
+	 * @return RPT type if after effective date; otherwise, standard procurement type
+	 */
+	public static String validateProcurementTypeisRPT(Date dataCreatedDate) {
+		// call from pm app version check current date
+		Date datefromPmAppVersion = NgepApplicationBean.getRPTEffectiveDateForDP();
+		if (dataCreatedDate.after(datefromPmAppVersion)) {
+			return ParameterTypeConst.PROCUREMENT_TYPE_RPT;
+		} else {
+			return ParameterTypeConst.PROCUREMENT_TYPE;
+		}
+	}
+		
+	/**
+	 * Get purchase request threshold amount for tool tips
+	 * 
+	 * @return the purchase request threshold amount for tool tips
+	 */
+	protected BigDecimal getToolTipsPRThresholdAmount() {
+		BigDecimal maxProcurementAmt = BigDecimal.ZERO;
 
+		IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IRuleSO.class);
+
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(RuleTypeConst.PURCHASE_REQUEST_THERSHOLD);
+		RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+
+		if (ruleResDTO.isSuccessful()) {
+			if (ruleResDTO.getRuleValueList() != null && !ruleResDTO.getRuleValueList().isEmpty()) {
+				maxProcurementAmt = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
+			} else {
+				maxProcurementAmt = BigDecimal.valueOf(-1);
+			}
+		}
+
+		return maxProcurementAmt;
+	}
+		
+	/**
+	 * Displays info message for PK7 or Special Item procurement types.
+	 *
+	 * @param param the procurement parameter to evaluate and display related messages
+	 */
+	public void getSpecialItemAndPK7InfoMessage(PmParameter param) {
+		String parameterCode = StringUtils.EMPTY;
+		String parameterType = StringUtils.EMPTY;
+
+		if (param.getParameterCode() != null) {
+			parameterCode = param.getParameterCode();
+		}
+
+		if (param.getParameterType() != null) {
+			parameterType = param.getParameterType();
+		}
+
+		if (param.getParameterType() != null
+				&& param.getParameterType().equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) {
+			if (param.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_760441,
+								new String[] { getParameterDesc(parameterType, parameterCode) },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+			}
+			if (parameterCode.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_760442, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+		} else if ((param.getParameterType() != null && param.getParameterType().equalsIgnoreCase(
+				ParameterTypeConst.PROCUREMENT_TYPE))
+				&& parameterCode.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.INFO_760441, new String[] { getParameterDesc(parameterType, parameterCode) },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+	}
+
+	/**
+	 * Returns the PK7 justification code based on procurement type.
+	 *
+	 * @param dataCreatedDate the date used to determine procurement type
+	 * @return justification code for PK7 or PK7W based on type
+	 */
+	public String getParameterCodeForPK7(Date dataCreatedDate) {
+		String parameterType = validateProcurementTypeisRPT(dataCreatedDate);
+		if (parameterType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) {
+			return ReasonCategory.JUSTIFICATION_PK7W.value();
+		} else {
+			return ReasonCategory.JUSTIFICATION_PK7.value();
+		}
+	}
+
+	/**
+	 * Identifies supplier account type parameter code based on supplier account category.
+	 *
+	 * @param suppAccType supplier account type string (e.g., consultant, contractor, basic, G2G)
+	 * @return corresponding parameter code; empty string if type is blank or unknown
+	 */
+	public String identifySupplierAccTypeFromSmAppl(String suppAccType) {
+		if (StringUtils.isBlank(suppAccType)) {
+			return StringUtils.EMPTY;
+		}
+
+		// Normalize input to ignore case
+		if (suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_CONSULTANT)
+				|| suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_CONTRACTOR)) {
+			return DPConstants.PARAMETER_CODE_MOF_ACCOUNT;
+		} else if (suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_BASIC)) {
+			return DPConstants.PARAMETER_CODE_BASIC_ACCOUNT;
+		} else if (suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_G2G)
+				|| suppAccType.equalsIgnoreCase(DPConstants.SUPPLIER_ACCOUNT_TYPE_GOVT_SELLER)) {
+			return DPConstants.PARAMETER_CODE_G2G_ACCOUNT;
+		}
+
+		return StringUtils.EMPTY;
+	}
+
+	// 27868 - end
 	// 29661 -start-
 	/**
 	 * set all details to requDTO.
@@ -8128,5 +8277,232 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 29661 -end-
+	
+	//#28784 - Start
+	private boolean checkDemoWIP(ScQt scQt) {
+		try {
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			return evaluationSO.checkDemoWip(reqDTO);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkDemoWIP",
+					scQt.getQtNo(), "checkDemoWIP", getUserIdSessionFromLoginId(), e);
+		}
+		return true;
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	/**
+	 * Only used by demo to ensure that demo pdf/file able to be open even within zip file
+	 * 
+	 * @param zos
+	 * @param scAttachments
+	 * @throws IOException
+	 */
+	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFilesAsZipFile(ZipOutputStream zos,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		String demoKey = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);
 
+	    for (ScAttachment scAttachment : scAttachments) {
+
+	    	try {
+		        if (scAttachment == null || StringUtils.isBlank(scAttachment.getFilePath())) {
+		            continue;
+		        }
+
+		        File file = new File(getActualFilePath(scAttachment));
+		        String pdfEntryName = resolvePdfEntryName(scAttachment, demoKey);
+
+		        if (isDemoReport(scAttachment, demoKey)) {
+		            writeInnerZip(zos, file, pdfEntryName);
+		        } else {
+		            writePdfToOuterZip(zos, file, pdfEntryName);
+		        }
+			} catch (FileNotFoundException fnfe) {
+				SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+						"downloadSFAndRecommendationFilesAsZipFile", "",
+						"downloadSFAndRecommendationFilesAsZipFile", getUserIdSessionFromLoginId(), fnfe);
+				continue;
+	        }
+	    }
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private String resolvePdfEntryName(ScAttachment attachment, String demoKey) {
+
+	    String extension = FilenameUtils.getExtension(attachment.getFileName());
+
+	    if (StringUtils.isBlank(attachment.getTempFileName())) {
+	        return attachment.getFileName();
+	    }
+
+	    if (attachment.getTempFileName().contains(demoKey)) {
+	        return SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + "." + extension;
+	    }
+
+	    return attachment.getTempFileName() + "." + extension;
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private boolean isDemoReport(ScAttachment attachment, String demoKey) {
+	    return StringUtils.isNotBlank(attachment.getTempFileName())
+	            && attachment.getTempFileName().contains(demoKey);
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void writeInnerZip(
+	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
+
+	    ByteArrayOutputStream innerBaos = new ByteArrayOutputStream();
+
+	    try (ZipOutputStream innerZos = new ZipOutputStream(innerBaos)) {
+	        innerZos.putNextEntry(new ZipEntry(pdfEntryName));
+	        copyFile(file, innerZos);
+	        innerZos.closeEntry();
+	    }
+
+	    zos.putNextEntry(
+	        new ZipEntry(SourcingConstants.DEMO_EVALUATION_REPORT_WITHOUT_SLASH + ".zip")
+	    );
+	    zos.write(innerBaos.toByteArray());
+	    zos.closeEntry();
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void writePdfToOuterZip(
+	        ZipOutputStream zos, File file, String pdfEntryName) throws IOException {
+
+	    zos.putNextEntry(new ZipEntry(pdfEntryName));
+	    copyFile(file, zos);
+	    zos.closeEntry();
+	}
+	//#28784 - End
+
+	//#28784 - Start
+	private void copyFile(File file, OutputStream out) throws IOException {
+
+	    try (BufferedInputStream bis =
+	                 new BufferedInputStream(new FileInputStream(file))) {
+
+	        byte[] buffer = new byte[8192];
+	        int len;
+	        while ((len = bis.read(buffer)) > 0) {
+	            out.write(buffer, 0, len);
+	        }
+	    }
+	}
+	//#28784 - End
+	
+	//#28784 - Start
+	/**
+	 * To download multiple files.
+	 * 
+	 * @param zipFileName
+	 * @param scAttachments
+	 * @throws IOException
+	 */
+	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFiles(String zipFileName,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		HttpServletResponse response = null;
+		ZipOutputStream zos = null;
+		try {
+			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response = PortalUtil.getHttpServletResponse(portalresponse);
+			String finalFileName = zipFileName + ".zip";
+			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
+			response.setContentType(getMimeType(finalFileName));
+
+			zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+
+			downloadSFAndRecommendationFilesAsZipFile(zos, scAttachments);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			zos.close();
+			response.flushBuffer();
+			FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
+	//#28784 - End
+	
+	//#35320 - START
+	/**
+	 * Set PTJ Org Profile of user for committee member.
+	 * 
+	 * @param tplMember
+	 */
+	public void setTplCommMemberOrgProfile(TplCommMember tplMember) {
+
+		if (tplMember.getPmUser() != null && tplMember.getPmUser().getOrgTypeCode() != null) {
+			String orgTypeCode = tplMember.getPmUser().getOrgTypeCode().getParameterCode();
+			if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)) {
+				tplMember.setPmOrgProfile(getBKPOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			} else if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)) {
+				tplMember.setPmOrgProfile(getOTHOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			} else {
+				tplMember.setPmOrgProfile(getPTJOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			}
+		}
+	}
+	//#35320 - END
+	
+	//#35320 - START
+	/**
+	 * Set Committeemember data.
+	 * 
+	 * @param deleteScMember
+	 *  @param currentScMember
+	 */
+	public TplCommMember setTplCommitteeMemberData(TplCommMember deletedCommitteeMember,
+			TplCommMember currentCommitteeMember) {
+
+		deletedCommitteeMember.setDeleted(false);
+		deletedCommitteeMember.setRepresentativeType(currentCommitteeMember.getRepresentativeType());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setMemberRoleId(currentCommitteeMember.getMemberRoleId());
+		deletedCommitteeMember.setMemberName(currentCommitteeMember.getMemberName());
+		deletedCommitteeMember.setDesignation(currentCommitteeMember.getDesignation());
+		deletedCommitteeMember.setEmail(currentCommitteeMember.getEmail());
+		deletedCommitteeMember.setGrade(currentCommitteeMember.getGrade());
+		deletedCommitteeMember.setPNP(currentCommitteeMember.isPNP());
+		deletedCommitteeMember.setPmUser(currentCommitteeMember.getPmUser());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setAccessRight(currentCommitteeMember.getAccessRight());
+		deletedCommitteeMember.setTplCommittee(currentCommitteeMember.getTplCommittee());
+
+		if (deletedCommitteeMember.getMemberRole() != null) {
+			deletedCommitteeMember.setMemberRoleId(deletedCommitteeMember.getMemberRole().getParameterId());
+		}
+
+		if (deletedCommitteeMember.getRepresentativeType() != null) {
+			deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType()
+					.getParameterId());
+		}
+		return deletedCommitteeMember;
+	}
+	//#35320 - END
+	
+	//#35320 - START
+	/**
+	 * Representive type change.
+	 *
+	 * @param member the member
+	 */
+	public void tplRepresentiveTypeChangedListener(TplCommMember member) {
+		Long paramId = member.getRepresentativeTypeId();
+		if (null != paramId) {
+			member.setRepresentativeType(ParameterHelper.getInstance()
+					.getPmParameterById(paramId));
+		}
+	}
+	//#35320 - END
 }

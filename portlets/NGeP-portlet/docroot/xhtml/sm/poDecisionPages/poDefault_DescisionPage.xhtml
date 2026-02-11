@@ -50,11 +50,11 @@
 								process="@this"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 							<p:commandButton onstart="blockWidget.show()"
-								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
+								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog @([id$=changeRegStatusChk])"
 								value="#{lbl['lbl.sm.button.recommend.to.approve']}"
-								partialSubmit="true" process="@this"
+								partialSubmit="true" process="@this @([id$=changeRegStatusChk])"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-								action="#{backingBean.validateBeforeSubmitDialog('APPROVE')}" /> <!-- #29727, 32304 -->
+								action="#{backingBean.validateBeforeSubmitDialog('APPROVE')}" /> <!-- #29727, 32304, #37925 -->
 							<!-- #32008 - START -->
 							<p:commandButton onstart="blockWidget.show()"
 								rendered="#{!backingBean.managedBean.upsCannotEdit}"
@@ -116,9 +116,9 @@
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<p:commandButton value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									partialSubmit="true" process="@this @([id$=changeRegStatusChk])" update=":form:tt:submitApprvrDialog @([id$=changeRegStatusChk])"
 									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-									action="#{backingBean.validateBeforeSubmitDialog('APPROVE')}" /> <!-- #27297, 32304 -->
+									action="#{backingBean.validateBeforeSubmitDialog('APPROVE')}" /> <!-- #27297, 32304, #37925 -->
 							</c:if>
 
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
@@ -155,9 +155,9 @@
 								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
 									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
+									partialSubmit="true" process="@this @([id$=changeRegStatusChk])" update=":form:tt:submitApprvrDialog @([id$=changeRegStatusChk])"
 									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-									action="#{backingBean.validateBeforeSubmitDialog('APPROVE')}" /> <!-- 29727, 32304 -->
+									action="#{backingBean.validateBeforeSubmitDialog('APPROVE')}" /> <!-- 29727, 32304, #37925 -->
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton and !backingBean.managedBean.upsCannotEdit}"

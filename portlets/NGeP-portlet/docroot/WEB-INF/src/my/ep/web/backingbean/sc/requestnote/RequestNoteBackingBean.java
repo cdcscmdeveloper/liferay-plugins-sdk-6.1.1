@@ -49,8 +49,10 @@ import my.ep.biz.service.osb.sc.IDPOsbSO; //#25790
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO; //#27868
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.pm.map.IPmPK7MapSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
@@ -91,6 +93,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;  //#27868
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
@@ -113,6 +117,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.constant.DbValueConst; //#27868
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -126,11 +131,16 @@ import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg; //#27868
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmReason; //#27868
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.common.PmReasonRestr; //#27868
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.pm.map.PmPK7Mapping;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
@@ -150,6 +160,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sc.loaloi.ScLoa; //#25790
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa; //#25790
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -188,6 +199,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.ReasonHelper;
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil; //#26059
@@ -209,6 +221,7 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent; //#26059
 
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
@@ -830,6 +843,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if (CollectionUtils.isNotEmpty(requestNoteDtlList)) {
 			getManagedBean().setSmSupplier(requestNoteDtlList.get(0).getScRequestSupplierItem().getSmSupplier());
 		}
+		
+		//#26059 - Start
+		if(requestNoteResDTO.getAssignItemDtl()!=null){
+			getManagedBean().setExistInAssignItemDetail(Boolean.TRUE);
+		}
+		//#26059 - End
 
 		// created by
 		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
@@ -868,7 +887,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							requestItem.setPurchaseInDefault(null);
 						}
 					}
-
+					//#26059 - Start
+					CommonUtils commonUtils = new CommonUtils();
+					requestItem.setItemName(commonUtils.removeItemNameNA(requestItem.getItemName()));
+					compareItemName(requestItem);
+					//#26059 - End
 				}
 			}
 			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
@@ -1134,9 +1157,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// 26284 - Start
 		if ((outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || outcome.equals(BpmOutcomeConst.BPM_APPROVE)) && scRequestNote != null) {
 		    checkSupplierDisciplinaryAction(scRequestNote);
+			// 27868 - start
+		    if (validateProcurementTypeisRPT(getRequestNoteCreatedDate()).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
+				validateReasonStatus(this.getManagedBean().getRequestNoteDtls());
+				validateSupplierAccountTypeForPK7AndSpecialItem(this.getManagedBean().getRequestNoteDtls(),
+						getManagedBean().getRequestSupplierItem());
+		    }
+			// 27868 - end
 		}
 		// 26284 - End
-
 		parseRequestNote(scRequestNote, outcome);
 
 		scRequestNote.setWorkFlowStatuses(null);
@@ -1212,7 +1241,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				approverAction(outcome);
 			}
 			//#26059 - start
-			else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
+			else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT) || getManagedBean().isExceededAmountAlerted()) {
 				proceedSubmit(outcome);
 			}
 			//#26059 - end
@@ -1298,23 +1327,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	// #27545 - End
 
 	/**
-	 * submit codification task Action.
+	 * Submits the codification task action and validates item status.
+	 * * @param outcome The BPM outcome string (e.g., BPM_SUBMIT) that determines 
+	 * the workflow direction.
 	 */
 	public void submitCodificationAction(String outcome) {
-		debugLogger("submitCodificationAction");
-		getManagedBean().setAction(outcome);
-		List<ScRequestNoteDtl> requestNoteDtls = this.getManagedBean().getRequestNoteDtls();
+	    debugLogger("submitCodificationAction");
+	    getManagedBean().setAction(outcome);
+	    
+	    List<ScRequestNoteDtl> requestNoteDtls = this.getManagedBean().getRequestNoteDtls();
+	    
+	    // #26059 - Start
+	    List<String> nonExtensionCodeCode = putAllTheNonExtensionCodeItemInList(requestNoteDtls);
 
-		if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
-			// check is all items codified
-			for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
-				ScRequestItem requestItem = rnDtl.getRequestItem();
-				if (requestItem.getCmItem() == null) {
-					throw new EpException(MessageConst.ERROR_760448, new String[] { requestItem.getItemName() });
-				}
-			}
-		}
-		requestNoteCodificationSubmit(outcome);
+	    if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && !nonExtensionCodeCode.isEmpty()) {
+	    	validateAndThrowCodificationError(nonExtensionCodeCode);
+	    }
+	    
+	    requestNoteCodificationSubmit(outcome);
+	    // #26059 - End
 	}
 
 	/**
@@ -1407,153 +1438,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("validateRequestNote");
 		// show message for first submission, skip the message for second time
 		// submission
-		//#26059 - start
-		StringBuilder thresholdItems = new StringBuilder();
-		int count = 0; 
-		BigDecimal thresholdValue = new BigDecimal(0);
-		//#26059 - end
+		ThresholdData thresholdData = new ThresholdData(); //#26059 , #27868
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if (!requestNoteDtl.isDeleted()) {
-					String pType = requestNoteDtl.getProcurementType().getParameterCode();
-					if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
-							.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && !pType.equals(ParameterConst.PROC_TYPE_PK7)) {
-						// start - #31689
-						// title validation
-						if (StringUtils.isBlank(requestNoteDtl.getProcurementTitle())) {
-							throw new EpException(
-									MessageConst.ERROR_760315,
-									new String[] { ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
-						}
-
-						// pid validity
-						log.info("pID validity begin");
-						if (requestNoteDtl.getRequestItem() != null
-								&& requestNoteDtl.getRequestItem().getPurchaseInDefault() != null) {
-							pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
-						}
-						log.info("pID validity end");
-
-						// validate price type
-						if (null == requestNoteDtl.getPriceType()
-								|| null == requestNoteDtl.getPriceType().getParameterId()) {
-							throw new EpException(MessageConst.ERROR_760343, new String[] { requestNoteDtl
-									.getRequestItem().getItemName() });
-						}
-
-						// validate recommended supplier
-						if (null == requestNoteDtl.getScRequestSupplierItem()
-								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier()
-								|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId()) {
-							throw new EpException(MessageConst.ERROR_760356, new String[] { requestNoteDtl
-									.getRequestItem().getItemName() });
-						}
-
-						// quantity
-						if (null != requestNoteDtl.getRequestItem()
-								&& null == requestNoteDtl.getRequestItem().getQuantity()) {
-							throw new EpException(
-									MessageConst.ERROR_760315,
-									new String[] { ResourceBundleUtils.getMessage("lbl.sc.quantity",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
-						}
-
-						if (requestNoteDtl.getAssignedUser() == null
-								|| (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser()
-										.getUserId() == null)) {
-							throw new EpException(
-									MessageConst.ERROR_100022,
-									new String[] { ResourceBundleUtils.getMessage("lbl.sc.request.note.loa.prepare.by",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
-						}
-						// end - #31689
-						// Check total procurement amount per ptj per item per
-						// year
-						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
-						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
-							String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
-							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = "
-									+ requestNoteDtl.getRequestNoteDtlId());
-							debugLogger("RequestNoteBackingBean >> validateRequestNote : Extension Code : "
-									+ extensionCode);
-
-							Calendar cal = Calendar.getInstance();
-							if (requestNoteDtl.getCreatedDate() != null) {
-								cal.setTimeInMillis(requestNoteDtl.getCreatedDate().getTime());
-							} else {
-								cal.setTimeInMillis(System.currentTimeMillis());
-							}
-
-							flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
-							flReqDTO.setExtensionCode(extensionCode);
-							flReqDTO.setYear(cal.get(Calendar.YEAR));
-							IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance()
-									.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-							// BigDecimal totalAmt = itemSummarySO
-							// .retrieveAccumulatedAmount(flReqDTO);
-							// changes to calculate per ptj per item per year
-							// using 8 digit
-							BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
-
-							totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
-
-							debugLogger("RequestNoteBackingBean >> validateRequestNote : totalAmt = " + totalAmt);
-							IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-							RuleReqDTO ruleReqDTO = new RuleReqDTO();
-							ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
-							List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
-									.getRuleValueList();
-
-							if (ruleValueList != null && !ruleValueList.isEmpty()) {//#26059
-								PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-								thresholdValue = new BigDecimal(configRuleValue.getRuleValue());//#26059
-								// Temp(#34274 - Start)
-								// Rule : ITEM_THRESHOLD For 20k
-								if (totalAmt.compareTo(thresholdValue) > 0) {
-										//#26059 - start
-										count++;
-										thresholdItems.append(count + ". " + requestNoteDtl.getRequestItem().getItemName() + "</br>");
-										//#26059 - end
-								}
-								// Temp(#34274 - End)
-
-								// 26059 - start
-								// 26059 - end
-							} else {
-								throw new EpException(MessageConst.ERROR_770222,
-										new String[] { getRuleTypeDesc(ruleReqDTO.getRuleType()) });
-							}
-						}
-					}
+					validateDpThresholdPerItemPtjYear(requestNote, thresholdData, requestNoteDtl);
 				}
 			}
-			//#26059 - start
+			// #26059 - start
 			Long profileId = requestNote.getPmOrgProfile().getOrgProfileId();
 			Date createdDate = requestNote.getPmOrgProfile().getCreatedDate();
 			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
-			
-			if (count > 0) {
-				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-				requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+
+			if (thresholdData.count > 0) {
+				// #27868 - start
 				getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-
-				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
-					scRequestNoteDtl.setExceedThreshold(true);
-					resetBpkDecision(outcome, scRequestNoteDtl);
-				}
-
-				if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
-					updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
-					triggerAlertApproval(thresholdItems, thresholdValue, ptjName, requestNoteResDTO);
-				} else {					
-					getManagedBean().setCounter(getManagedBean().getCounter()+1);
-					triggerAlertSubmission(thresholdItems, thresholdValue, ptjName);
-				}
-
-			} else{
+				triggerAlert(outcome, thresholdData, ptjName);
+				// #27868 - end
+			} else if (getManagedBean().getRequestNote() != null
+					&& getManagedBean().getRequestNote().getRequestNoteId() != null) { // #27868
 				getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
 				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 				requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
@@ -1563,10 +1466,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					scRequestNoteDtl.setExceedThreshold(null);
 					scRequestNoteDtl.setBpkThresholdDecision(null);
 				}
-				
+
 				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
 			}
-			//#26059 - end
+			// #26059 - end
 		}
 
 		// approver group name validation
@@ -1680,59 +1583,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if (!requestNoteDtl.isDeleted()) {
-//					String pType = requestNoteDtl.getProcurementType().getParameterCode(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
-					// #32362 - comment out this condition - start
-					/*
-					 * if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) &&
-					 * !pType .equals(ParameterConst.PROC_TYPE_EMERGENCY)) &&
-					 * !pType.equals(ParameterConst.PROC_TYPE_PK7)) {
-					 */
-					// #32362 - comment out this condition - end
-					// title validation
-					if (StringUtils.isBlank(requestNoteDtl.getProcurementTitle())) {
-						throw new EpException(MessageConst.ERROR_760315, new String[] { ResourceBundleUtils.getMessage(
-								"lbl.sc.direct.purchase.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) });
-					}
-
-					// pid validity
-					log.info("pID validity begin");
-					if (requestNoteDtl.getRequestItem() != null
-							&& requestNoteDtl.getRequestItem().getPurchaseInDefault() != null) {
-						pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
-					}
-					log.info("pID validity end");
-
-					// validate price type
-					if (null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()) {
-						throw new EpException(MessageConst.ERROR_760343, new String[] { requestNoteDtl.getRequestItem()
-								.getItemName() });
-					}
-
-					// validate recommended supplier
-					if (null == requestNoteDtl.getScRequestSupplierItem()
-							|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier()
-							|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId()) {
-						throw new EpException(MessageConst.ERROR_760356, new String[] { requestNoteDtl.getRequestItem()
-								.getItemName() });
-					}
-
-					// quantity
-					if (null != requestNoteDtl.getRequestItem()
-							&& null == requestNoteDtl.getRequestItem().getQuantity()) {
-						throw new EpException(MessageConst.ERROR_760315, new String[] { ResourceBundleUtils.getMessage(
-								"lbl.sc.quantity", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) });
-					}
-
-					if (requestNoteDtl.getAssignedUser() == null
-							|| (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser()
-									.getUserId() == null)) {
-						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-								"lbl.sc.request.note.loa.prepare.by", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) });
-					}
-					// } #32362 - comment out this curly bracket
+					validateBasicDtl(requestNote, requestNoteDtl);  //#27868
 				}
 			}
 		}
@@ -1849,12 +1700,28 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								+ rnDtl.getRequestItem().getRequestNoteItemId() + ") " + "ReqSupItemId ("
 								+ rnDtl.getScRequestSupplierItem().getRequestSupplierItemId() + ") " + "RnNo ("
 								+ requestNote.getRequestNoteNo() + ")");
+						getManagedBean().setRequestSupplierItem(rnDtl.getScRequestSupplierItem()); //27868
+						//#26059 - Start
+						CommonUtils utils = new CommonUtils();
+						rnDtl.getRequestItem().setItemName(utils.removeItemNameNA(rnDtl.getRequestItem().getItemName()));
+						//#26059 - End
+						// 27868 - start
+						if (getParameterCodeForPK7(assignActualDate()).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+							finalizeWIPCodePK7(rnDtl);
+						}
+						// 27868 - end
 					}
 				}
 			}
 			log.info("--- Bug 31679 (" + requestNote.getRequestNoteNo() + ")" + "- Method: preRenderView End ---");
 		}
 		// #31679 - End
+		// 27868 - start
+		viewContractDetails(requestNote);
+		PmOrgProfile orgProfile = retrieveMinistryOrgProfile(getManagedBean().getRequestNote().getPmOrgProfile()
+				.getOrgProfileId());
+		getManagedBean().setMinistryOrgProfile(orgProfile);
+		// 27868 - end
 
 		// Redmine Enhancement #12177
 		log.info("Temp5: start performance - addButton");
@@ -2538,13 +2405,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if (cmSupplierItem.getSmSupplier().getPmOrgProfile() != null
 					&& cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()) {
 				getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_G2G);
+				//27868 - start
+				getManagedBean().setCreatedDate(getRequestNoteCreatedDate());
 				getManagedBean().setProcurementTypes(
-						getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE, Boolean.TRUE));
-
+						getRadioButtonCodeValues(validateProcurementTypeisRPT(getRequestNoteCreatedDate()),
+								Boolean.TRUE));
+				if (!isAgencyAllowedForSpecialItem()) {
+					disableSpecialItemRadioButton();
+				}
+				//27868 - end
 			} else {
 				getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
+				//27868 - start
+				getManagedBean().setCreatedDate(getRequestNoteCreatedDate());
 				getManagedBean().setProcurementTypes(
-						getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE, Boolean.FALSE));
+						getRadioButtonCodeValues(validateProcurementTypeisRPT(getRequestNoteCreatedDate()),
+								Boolean.FALSE));
+				if (!isAgencyAllowedForSpecialItem()) {
+					disableSpecialItemRadioButton();
+				}
+				//27868 - end
 			}
 
 			if (cmSupplierItem.getCmPricings() != null && cmSupplierItem.getCmPricings().size() > 0) {
@@ -2592,6 +2472,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// update item details data table
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 		// #28789 - start
+		initDefaultSelectedOrgType();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+			profileReqDTO.setUserId(user.getUserId());
+			profileReqDTO.setOrgType(OrganizationType.DIVISION.value());
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileListByOrgType(profileReqDTO);
+			if (orgProfileResDTO.getOrgProfileList() != null && !orgProfileResDTO.getOrgProfileList().isEmpty()) {
+				PmOrgProfile orgProfile = retrieveMinistryOrgProfile(orgProfileResDTO.getOrgProfileList().get(0).getOrgProfileId());
+				getManagedBean().setMinistryOrgProfile(orgProfile);
+			}
+		}
 		getManagedBean().setPriceTypeStringFlag(false);
 		getManagedBean().setPriceTypeTableFlag(false);
 		// #28789 - start
@@ -3029,17 +2923,27 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		FacesScopes facesScopes = new FacesScopes();
 		scRequestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
-		scRequestNoteDtl.setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE,
+		//27868 - start
+		getManagedBean().setCreatedDate(getRequestNoteCreatedDate());
+		scRequestNoteDtl.setProcurementType(getParameterByTypeAndCode(validateProcurementTypeisRPT(getRequestNoteCreatedDate()),
 				getManagedBean().getProcurementType()));
+		//27868 - end
 
 		if (scRequestNoteDtl.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			scRequestNoteDtl.setJustificationType(getReasonByCategoryAndCode(
 					ReasonCategory.JUSTIFICATION_AD_HOC.value(), getManagedBean().getJustificationType()));
 		} else if (scRequestNoteDtl.getProcurementType().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-			scRequestNoteDtl.setJustificationType(getReasonByCategoryAndCode(ReasonCategory.JUSTIFICATION_PK7.value(),
+			scRequestNoteDtl.setJustificationType(getReasonByCategoryAndCode(getParameterCodeForPK7(getRequestNoteCreatedDate()),
 					getManagedBean().getJustificationType()));
-		} else {
+		} //27868 - start
+		else if (scRequestNoteDtl.getProcurementType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			scRequestNoteDtl.setJustificationType(getReasonByCategoryAndCode(ReasonCategory.JUSTIFICATION_SIT.value(),
+					getManagedBean().getJustificationType()));
+		}
+		//27868 - end
+		else {
 			scRequestNoteDtl.setJustificationType(null);
 		}
 
@@ -3109,7 +3013,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		requestNote.setRequestNoteDtls(requestNoteDtls);
-
+		
+		if (scRequestNoteDtl.getJustificationType() != null && scRequestNoteDtl.getScRequestSupplierItem() != null) {// 27868
+			validateSuppAccTypePK7SpecialItemATC(scRequestNoteDtl);// 27868
+		}// 27868
 		// to get ptj
 		PmUser user = new FacesScopes().getUserSessionBean();
 		if (user != null) {
@@ -3189,6 +3096,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void procurementTypeEvent() {
 		debugLogger("procurementTypeEvent");
 		String procType = getManagedBean().getProcurementType();
+		//27868 - start
+		Date dataCreatedDate;
+		dataCreatedDate = assignActualDate();
+		getManagedBean().setCreatedDate(dataCreatedDate);
+		//27868 - end
 		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)
 				|| procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
@@ -3201,25 +3113,31 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setJustRequired(Boolean.TRUE);
 		} else if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
-			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
+			getManagedBean().setJustDropdown(getReasonCodeDropdownValues(getParameterCodeForPK7(dataCreatedDate))); //27868
+			getManagedBean().setJustRequired(Boolean.TRUE);
+		}// 27868 - start
+		else if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
+
+			PmOrgProfile pmOrgProfile = retrievePmOrgProfile();
+			if (pmOrgProfile != null) {
+				getManagedBean().setJustDropdown(
+						getReasonCodeDropdownValues(pmOrgProfile.getOrgProfileId(),
+								ReasonCategory.JUSTIFICATION_SIT.value()));
+			} else {
+				getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SIT.value()));
+			}
+
 			getManagedBean().setJustRequired(Boolean.TRUE);
 		}
+		// 27868 - end
 
-		// when procurement type as pk7 selected
-		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-			// Temp(#34274 - Start)
-			// MaxProcurementAmt
-			// DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			// .getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-			//
-			// BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-							MessageConst.INFO_760440, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-			// Temp(#34274 - End)
-		}
+		//27868 - start
+		PmParameter param = new PmParameter();
+		param.setParameterCode(procType);
+		param.setParameterType(validateProcurementTypeisRPT(dataCreatedDate));
+		getSpecialItemAndPK7InfoMessage(param);
+		//27868 - end
 	}
 
 	/**
@@ -7227,6 +7145,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					isRemarkRequired = true;
 				}
 				scRequestNoteDtl.setBpkThresholdDecision(group.getDecision());
+				scRequestNoteDtl.setApprovedDate(new Date());
 				requestNoteDtls.add(scRequestNoteDtl);
 			}
 			count++;
@@ -7430,4 +7349,1110 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				.replace("'", "&#x27;"); // For single quotes
 	}
 	// end - #26059
+
+
+	// start - #27868, #26059
+	/**
+	 * Holds threshold calculation data: item names, item count, and total threshold value.
+	 */
+	public class ThresholdData {
+
+	    private StringBuilder thresholdItems = new StringBuilder();
+	    private int count = 0;
+	    private BigDecimal thresholdValue = BigDecimal.ZERO;
+	}
+	
+	/**
+	 * Validates threshold per item per PTJ by year for PK7 or other procurement types.
+	 *
+	 * @param requestNote The main request note object.
+	 * @param thresholdData Data object holding threshold details.
+	 * @param requestNoteDtl The detail line of the request note.
+	 */
+	private void validateDpThresholdPerItemPtjYear(ScRequestNote requestNote, ThresholdData thresholdData,
+			ScRequestNoteDtl requestNoteDtl) {
+		String pType = requestNoteDtl.getProcurementType().getParameterCode();
+		
+		getDpThresholdPerItemPtjYearRPT(requestNote, thresholdData, requestNoteDtl, pType); //pk7, special item
+		getDpThresholdPerItemPtjYearPRT(requestNote, thresholdData, requestNoteDtl, pType); //ad hoc, normal
+		
+	}
+
+	/**
+	 * Validates request item and accumulates amount by item per year per PTJ.
+	 *
+	 * @param requestNote      Request note header details.
+	 * @param thresholdData    Holds threshold validation result and data.
+	 * @param requestNoteDtl   Item-level details to validate and process.
+	 * @param pType           Procurement type (e.g., N,G).
+	 */
+	private void getDpThresholdPerItemPtjYearPRT(ScRequestNote requestNote, ThresholdData thresholdData,
+			ScRequestNoteDtl requestNoteDtl, String pType) {
+		if (!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType.equals(ParameterConst.PROC_TYPE_EMERGENCY)
+				&& !pType.equals(ParameterConst.PROC_TYPE_PK7) && !pType.equals(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			validateBasicDtl(requestNote, requestNoteDtl);
+			// Check total procurement amount per ptj per item per
+			// year
+			FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
+			if (requestNoteDtl.getRequestItem().getCmItem() != null) {
+				String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
+
+				Calendar cal = Calendar.getInstance();
+				if (requestNoteDtl.getCreatedDate() != null) {
+					cal.setTimeInMillis(requestNoteDtl.getCreatedDate().getTime());
+				} else {
+					cal.setTimeInMillis(System.currentTimeMillis());
+				}
+
+				flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+				flReqDTO.setExtensionCode(extensionCode);
+				flReqDTO.setYear(cal.get(Calendar.YEAR));
+				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+
+				totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
+
+				retrieveDpThresholdForPRT(thresholdData, requestNoteDtl, totalAmt, requestNote);
+			}
+		}
+	}
+
+	/**
+	 * Retrieves and applies DP threshold rules for a PRT request note.
+	 */
+	private void retrieveDpThresholdForPRT(ThresholdData thresholdData, ScRequestNoteDtl requestNoteDtl,
+			BigDecimal totalAmt, ScRequestNote requestNote) {
+		IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		if(requestNote.getQuote()!=null && requestNote.getQuote().isPanel()) {
+			ruleReqDTO.setRuleType(RuleTypeConst.PANEL_THRESHOLD);
+		} else {
+			ruleReqDTO.setRuleType(RuleTypeConst.ITEM_THRESHOLD);
+		}
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
+				.getRuleValueList();
+
+		if (ruleValueList != null && !ruleValueList.isEmpty()) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			thresholdData.thresholdValue = new BigDecimal(configRuleValue.getRuleValue());
+			// Rule : ITEM_THRESHOLD For 20k / PANEL_THRESHOLD For 50k
+			if (totalAmt.compareTo(thresholdData.thresholdValue) > 0) {
+				thresholdData.count++;
+				thresholdData.thresholdItems.append(thresholdData.count + ". "
+						+ requestNoteDtl.getRequestItem().getItemName() + "</br>");
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770222,
+					new String[] { getRuleTypeDesc(ruleReqDTO.getRuleType()) });
+		}
+	}
+
+	/**
+	 * Validates basic fields of a request detail such as title, PID, price, supplier, quantity, and user.
+	 *
+	 * @param requestNote     The parent request note object.
+	 * @param requestNoteDtl  The detail line to validate.
+	 */
+	private void validateBasicDtl(ScRequestNote requestNote, ScRequestNoteDtl requestNoteDtl) {
+		// title validation
+		validateProcurementTitle(requestNoteDtl);
+
+		// pid validity
+		validatePid(requestNote, requestNoteDtl);
+
+		// validate price type
+		validatePriceType(requestNoteDtl);
+
+		// validate recommended supplier
+		validateSupplier(requestNoteDtl);
+
+		// quantity
+		validateQuantity(requestNoteDtl);
+
+		//assignedUser
+		validateAssignedUser(requestNoteDtl);
+	}
+
+	/**
+	 * Validates that an assigned user exists and has a valid user ID.
+	 *
+	 * @param requestNoteDtl The detail to validate.
+	 */
+	private void validateAssignedUser(ScRequestNoteDtl requestNoteDtl) {
+		if (requestNoteDtl.getAssignedUser() == null
+				|| (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId() == null)) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.request.note.loa.prepare.by", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+	}
+
+	/**
+	 * Validates that quantity for the item is provided.
+	 *
+	 * @param requestNoteDtl The detail to validate.
+	 */
+	private void validateQuantity(ScRequestNoteDtl requestNoteDtl) {
+		if (null != requestNoteDtl.getRequestItem() && null == requestNoteDtl.getRequestItem().getQuantity()) {
+			throw new EpException(MessageConst.ERROR_760315, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.quantity", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+	}
+
+	/**
+	 * Validates that a supplier is assigned to the request detail.
+	 *
+	 * @param requestNoteDtl The detail to validate.
+	 */
+	private void validateSupplier(ScRequestNoteDtl requestNoteDtl) {
+		if (null == requestNoteDtl.getScRequestSupplierItem()
+				|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier()
+				|| null == requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId()) {
+			throw new EpException(MessageConst.ERROR_760356, new String[] { requestNoteDtl.getRequestItem()
+					.getItemName() });
+		}
+	}
+
+	/**
+	 * Validates that the price type is set correctly.
+	 *
+	 * @param requestNoteDtl The detail to validate.
+	 */
+	private void validatePriceType(ScRequestNoteDtl requestNoteDtl) {
+		if (null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()) {
+			throw new EpException(MessageConst.ERROR_760343, new String[] { requestNoteDtl.getRequestItem()
+					.getItemName() });
+		}
+	}
+
+	/**
+	 * Validates PID using purchaseInDefault and request note.
+	 *
+	 * @param requestNote    The main request note.
+	 * @param requestNoteDtl The detail to validate.
+	 */
+	private void validatePid(ScRequestNote requestNote, ScRequestNoteDtl requestNoteDtl) {
+		log.info("pID validity begin");
+		if (requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getPurchaseInDefault() != null) {
+			pidValidity(requestNoteDtl.getRequestItem().getPurchaseInDefault(), requestNote);
+		}
+		log.info("pID validity end");
+	}
+
+	/**
+	 * Validates that the procurement title is not blank.
+	 *
+	 * @param requestNoteDtl The detail to validate.
+	 */
+	private void validateProcurementTitle(ScRequestNoteDtl requestNoteDtl) {
+		if (StringUtils.isBlank(requestNoteDtl.getProcurementTitle())) {
+			throw new EpException(MessageConst.ERROR_760315, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.direct.purchase.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+	}
+	
+	/**
+	 * Calculates DP threshold per item, PTJ, and year for RPT process type.
+	 *
+	 * @param requestNote   the request note containing procurement details
+	 * @param thresholdData the threshold tracking data
+	 * @param requestNoteDtl the specific request note detail item
+	 * @param pType         the procurement type
+	 */
+	public void getDpThresholdPerItemPtjYearRPT(ScRequestNote requestNote, ThresholdData thresholdData,
+			ScRequestNoteDtl requestNoteDtl, String pType) {
+		if (pType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+				|| pType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+			validateBasicDtl(requestNote, requestNoteDtl);
+			FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
+			if (requestNoteDtl.getRequestItem().getCmItem() != null) {
+				String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
+				debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = "
+						+ requestNoteDtl.getRequestNoteDtlId());
+				debugLogger("RequestNoteBackingBean >> validateRequestNote : Extension Code : " + extensionCode);
+
+				Calendar cal = Calendar.getInstance();
+				if (requestNoteDtl.getCreatedDate() != null) {
+					cal.setTimeInMillis(requestNoteDtl.getCreatedDate().getTime());
+				} else {
+					cal.setTimeInMillis(System.currentTimeMillis());
+				}
+
+				flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
+				flReqDTO.setExtensionCode(extensionCode);
+				flReqDTO.setYear(cal.get(Calendar.YEAR));
+				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+				// changes to calculate per ptj per item per year
+				// using 8 digit
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+
+				totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
+				retrieveDpThresholdForRPT(thresholdData, requestNoteDtl, totalAmt);
+			}
+		}
+	}
+
+	/**
+	 * Retrieves and validates DP threshold for RPT items based on justification type.
+	 *
+	 * @param thresholdData the threshold tracking data
+	 * @param requestNoteDtl the specific request note detail item
+	 * @param totalAmt       the total accumulated amount for the item
+	 */
+	private void retrieveDpThresholdForRPT(ThresholdData thresholdData, ScRequestNoteDtl requestNoteDtl, BigDecimal totalAmt) {
+		if (requestNoteDtl.getJustificationType() != null
+				&& requestNoteDtl.getJustificationType().getDpThreshold() != null
+				&& totalAmt.compareTo(requestNoteDtl.getJustificationType().getDpThreshold()) > 0) {
+			
+			thresholdData.thresholdValue = requestNoteDtl.getJustificationType().getDpThreshold();
+			if (totalAmt.compareTo(thresholdData.thresholdValue) > 0) {
+				thresholdData.count++;
+				thresholdData.thresholdItems.append(thresholdData.count + ". "
+						+ requestNoteDtl.getRequestItem().getItemName() + "</br>");
+			}
+		}
+	}
+	// end - #27868, #26059
+	
+	
+	
+	//27868 - start
+	/**
+	 * Returns the justification message required based on procurement type.
+	 *
+	 * @return justification requirement message string
+	 */
+	public String getJustificationRequiredMessage() {
+		String parameterCode = getManagedBean().getProcurementType();
+		getManagedBean().setCreatedDate(getRequestNoteCreatedDate());
+		String parameterType = validateProcurementTypeisRPT(getRequestNoteCreatedDate());
+		String procurementSelected = getParameterDesc(parameterType, parameterCode);
+		String[] msgParam = new String[] { procurementSelected };
+
+		if (DPConstants.PARAMETER_CODE_A.equalsIgnoreCase(parameterCode)) {
+			return ResourceBundleUtils.getMessage("lbl.sc.msg.justification.mandatory", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		} else if (DPConstants.PARAMETER_CODE_P.equalsIgnoreCase(parameterCode)
+				|| DPConstants.PARAMETER_CODE_S.equalsIgnoreCase(parameterCode)) {
+			return MessageUtils.getMessage(MessageConst.ERROR_760707, msgParam, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+		}
+		return DPConstants.EMPTY_STRING;
+	}
+	
+	/**
+	 * Returns the reason message required based on procurement type.
+	 *
+	 * @return reason requirement message string
+	 */
+	public String getReasonRequiredMessage() {
+		String parameterCode = getManagedBean().getProcurementType();
+		getManagedBean().setCreatedDate(getRequestNoteCreatedDate());
+		String parameterType = validateProcurementTypeisRPT(getRequestNoteCreatedDate());
+		String procurementSelected = getParameterDesc(parameterType, parameterCode);
+		String[] msgParam = new String[] { procurementSelected };
+
+		if (DPConstants.PARAMETER_CODE_A.equalsIgnoreCase(parameterCode)) {
+			return ResourceBundleUtils.getMessage("lbl.sc.msg.reason.mandatory", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		} else if (DPConstants.PARAMETER_CODE_P.equalsIgnoreCase(parameterCode)
+				|| DPConstants.PARAMETER_CODE_S.equalsIgnoreCase(parameterCode)) {
+			return MessageUtils.getMessage(MessageConst.ERROR_760706, msgParam, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+		}
+		return DPConstants.EMPTY_STRING;
+	}
+	
+	/**
+	 * Retrieves the parameter description for display based on procurement type and code.
+	 *
+	 * @param parameterCode the procurement parameter code
+	 * @return the description of the specified procurement parameter
+	 */
+	public String getParameterDescForView(String parameterCode){
+		//27868 - start
+		String parameterType = ParameterTypeConst.PROCUREMENT_TYPE_RPT;
+		return getParameterDesc(parameterType, parameterCode);
+	}
+	
+	/**
+	 * Retrieves the creation date of the current request note.
+	 * Returns the current date if the request note or its creation date is null.
+	 *
+	 * @return the request note creation date or the current date if unavailable
+	 */
+	public Date getRequestNoteCreatedDate() {
+	    ScRequestNote requestNote = getManagedBean().getRequestNote();
+	    if (requestNote != null && requestNote.getCreatedDate() != null) {
+	        return requestNote.getCreatedDate();
+	    }
+	    return new Date();
+	}
+	
+	/**
+	 * Compares the supplier’s account type with allowed types for PK7 and Special Item procurements.
+	 * Displays an error message if the supplier account type does not match the restriction list.
+	 *
+	 * @param rnDtl        the request note detail containing justification and reason info
+	 * @param supplierItem the supplier item associated with the request
+	 * @param isFromATC {@code true} if the validation is triggered from ATC,{@code false} otherwise, which may affect how the error message is displayed
+	 */
+	public void compareSupplierAccountTypeForPK7AndSpecialItem(ScRequestNoteDtl rnDtl,
+			ScRequestSupplierItem supplierItem, boolean isFromATC) {
+		boolean isSupplierAccTypeMatch = false;
+		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(rnDtl.getJustificationType().getReasonId());
+		List<PmReasonRestr> listReasonRestr = reqSO.retrieveReasonRestrListByParam(reqDTO).getReasonRestrList();
+		List<PmReasonRestr> distinctReasonRestrList = new ArrayList<>();
+		distinctSupplierAccType(listReasonRestr, distinctReasonRestrList);
+		
+		StringBuilder suppAccTypeSb = new StringBuilder();
+		String suppAccType = null;
+		if (supplierItem != null && supplierItem.getSmSupplier() != null && supplierItem.getSmSupplier().getSmAppl() != null) {
+			suppAccType = identifySupplierAccTypeFromSmAppl(supplierItem.getSmSupplier().getSmAppl().getSupplierType());			
+			suppAccType = verifyMOFAccount(supplierItem, suppAccType);
+		}
+
+		if ((distinctReasonRestrList != null && !distinctReasonRestrList.isEmpty()) && suppAccType != null) {
+			isSupplierAccTypeMatch = initializeReasonRestr(distinctReasonRestrList, isSupplierAccTypeMatch, suppAccTypeSb, suppAccType);
+			
+			if (!isSupplierAccTypeMatch){
+				getSupplierTypeErrorMessage(rnDtl,suppAccTypeSb.toString(),isFromATC);
+			}
+		}
+	}
+	
+	/**
+	 * Builds a distinct list of {@link PmReasonRestr} based on supplier account
+	 * type.
+	 * <p>
+	 * A record is considered duplicate if its {@code supplAcctTypeId} is null
+	 * or has the same {@code parameterCode} (case-insensitive) as an existing
+	 * entry.
+	 * </p>
+	 * 
+	 * @param listReasonRestr
+	 *            source list containing possible duplicates
+	 * @param distinctReasonRestrList
+	 *            target list to store distinct records
+	 */
+	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
+			List<PmReasonRestr> distinctReasonRestrList) {
+		for (PmReasonRestr rr : listReasonRestr) {
+			PmParameter param = rr.getSupplAcctTypeId();
+			boolean exists = false;
+
+			for (PmReasonRestr dr : distinctReasonRestrList) {
+				PmParameter existingParam = dr.getSupplAcctTypeId();
+
+				if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
+						existingParam != null ? existingParam.getParameterCode() : "")) {
+					exists = true;
+					break;
+				}
+			}
+
+			if (!exists) {
+	            distinctReasonRestrList.add(rr);
+	        }
+	    }
+	}
+
+	/**
+	 * Validates supplier’s MOF account; returns basic account if missing, otherwise keeps the supplied type.
+	 *
+	 * @param supplierItem supplier data to check MOF account
+	 * @param suppAccType  current supplier account type
+	 * @return validated supplier account type
+	 */
+	protected String verifyMOFAccount(ScRequestSupplierItem supplierItem, String suppAccType) {
+		if (suppAccType.equalsIgnoreCase(DPConstants.PARAMETER_CODE_MOF_ACCOUNT) && !StringUtils.isBlank(suppAccType)) {
+			ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+			SupplierDataMaintenanceReqDTO suppReqDTO = new SupplierDataMaintenanceReqDTO();
+			suppReqDTO.setSupplier(supplierItem.getSmSupplier());
+
+			if (null == supplierDataMaintenanceSO.retrieveMofSupplierBySupplierId(suppReqDTO).getSmMofAccount()) {
+				return DPConstants.PARAMETER_CODE_BASIC_ACCOUNT;
+			}
+		}
+		return suppAccType;
+	}
+	
+	// 27868 - start
+	/**
+	 * Returns the display description for the given procurement parameter.
+	 *
+	 * @param pmParameter procurement parameter
+	 * @return parameter description or empty string if null
+	 */
+	public String getParameterDescription(PmParameter pmParameter) {
+	    return pmParameter == null ? StringUtils.EMPTY : getParameterDesc(pmParameter);
+	}
+	
+	/**
+	 * Checks if the current user's organizational profile is allowed to access Special Item procurements.
+	 * <p>
+	 * Retrieves the user's organization profile and validates against active reason restrictions.
+	 * </p>
+	 *
+	 * @return {@code true} if the user's agency is allowed for Special Item; {@code false} otherwise
+	 */
+	public boolean isAgencyAllowedForSpecialItem() {
+		PmOrgProfile pmOrgProfile = retrievePmOrgProfile();
+
+		return pmOrgProfile != null ? getReasonCodeDropdownValues(pmOrgProfile.getOrgProfileId(),
+				ReasonCategory.JUSTIFICATION_SIT.value()).length > 1
+				: getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_SIT.value()).length > 1;
+	}
+	
+	/**
+	 * Removes the "Special Item" option from the procurement types dropdown.
+	 * <p>
+	 * Iterates through the managed bean's procurement types and removes any option
+	 * with the value equal to {@link ParameterConst#PROC_TYPE_SPECIAL_ITEM}.
+	 * Updates the managed bean with the filtered list.
+	 * </p>
+	 */
+	public void disableSpecialItemRadioButton() {
+		SelectItem[] procurementTypesArray = getManagedBean().getProcurementTypes();
+
+		if (procurementTypesArray != null && procurementTypesArray.length > 0) {
+			List<SelectItem> list = new ArrayList<>(Arrays.asList(procurementTypesArray));
+
+			for (Iterator<SelectItem> iterator = list.iterator(); iterator.hasNext();) {
+				SelectItem item = iterator.next();
+				if (ParameterConst.PROC_TYPE_SPECIAL_ITEM.equals(item.getValue())) {
+					iterator.remove();
+				}
+			}
+			SelectItem[] filteredArray = new SelectItem[list.size()];
+			list.toArray(filteredArray);
+
+			getManagedBean().setProcurementTypes(filteredArray);
+		}
+
+	}
+	
+	/**
+	 * Validates the supplier's account type for PK7 and Special Item procurement types.
+	 * <p>
+	 * For each request note detail of type PK7 or Special Item, compares the supplier's account type
+	 * against the restrictions defined in {@code pm_reason_restr}.
+	 * </p>
+	 *
+	 * @param requestNoteDtls list of {@link ScRequestNoteDtl} to validate
+	 * @param supplierItem the {@link ScRequestSupplierItem} to check against restrictions
+	 * @throws EpException if the supplier account type does not match the allowed types
+	 */
+	public void validateSupplierAccountTypeForPK7AndSpecialItem(List<ScRequestNoteDtl> requestNoteDtls,
+			ScRequestSupplierItem supplierItem) {
+		if (requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
+			for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
+				if (rnDtl.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+						|| rnDtl.getProcurementType().getParameterCode()
+								.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
+					// retrieve from pm_reason_restr and compare with suppler
+					// acc type
+					compareSupplierAccountTypeForPK7AndSpecialItem(rnDtl, supplierItem, false);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Validates the supplier's account type for PK7W and SIT justification categories when adding to cart.
+	 *
+	 * If the request note detail belongs to PK7W or SIT, it compares the supplier's account type
+	 * against the restrictions defined in {@code pm_reason_restr}.
+	 *
+	 * @param scRequestNoteDtl the {@link ScRequestNoteDtl} to validate
+	 * @throws EpException if the supplier account type does not meet the required criteria
+	 */
+	public void validateSuppAccTypePK7SpecialItemATC(ScRequestNoteDtl scRequestNoteDtl) {
+		if (scRequestNoteDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
+				.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())
+				|| scRequestNoteDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
+						.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+			compareSupplierAccountTypeForPK7AndSpecialItem(scRequestNoteDtl,
+					scRequestNoteDtl.getScRequestSupplierItem(), true);
+		}
+	}
+	
+	/**
+	 * Throws an exception with a formatted message if the supplier account type is invalid.
+	 * <p>
+	 * Determines the correct message format based on the user's locale and whether multiple
+	 * supplier account types are involved.
+	 * </p>
+	 *
+	 * @param rnDtl the {@link ScRequestNoteDtl} containing the justification and procurement type
+	 * @param suppAccTypeSb a comma-separated string of supplier account type descriptions
+	 * @param isFromATC {@code true} if the validation is triggered from ATC,{@code false} otherwise, which may affect how the error message is displayed
+	 * @throws EpException when the supplier account type does not meet the required restrictions
+	 */
+	public void getSupplierTypeErrorMessage(ScRequestNoteDtl rnDtl, String suppAccTypeSb, boolean isFromATC) {
+		int appendedCount = 0;
+
+		appendedCount = countSupplementaryAccountTypes(suppAccTypeSb, appendedCount);
+
+		if (DPConstants.LANGUAGE_CODE_EN.equalsIgnoreCase(new FacesScopes().getUserLocale().getLanguage())) {
+			String isOrAre;
+
+			isOrAre = resolveIsOrAre(appendedCount);
+			
+			if (isFromATC) {
+				throw new EpException(MessageConst.ERROR_760709, new String[] {
+						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), isOrAre,
+						suppAccTypeSb });
+			} else {
+				throw new EpException(MessageConst.ERROR_760717, new String[] {
+						rnDtl.getScRequestSupplierItem().getSupplierName(),
+						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), isOrAre,
+						suppAccTypeSb });
+			}
+			
+		} else {
+			// for MY
+			if (isFromATC) {
+				throw new EpException(MessageConst.ERROR_760709, new String[] {
+						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), suppAccTypeSb });
+
+			} else {
+				throw new EpException(MessageConst.ERROR_760717, new String[] {
+						rnDtl.getScRequestSupplierItem().getSupplierName(),
+						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+								.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()), suppAccTypeSb });
+			}
+		}
+	}
+
+
+	
+	/**
+	 * Counts the number of supplementary account types based on a comma-separated string.
+	 * <p>
+	 * If the input string is empty, the existing appended count will be returned.
+	 *
+	 * @param suppAccTypeSb a comma-separated string of supplementary account types
+	 * @param appendedCount the existing count to be used when the string is empty
+	 * @return the total number of supplementary account types
+	 */
+	protected int countSupplementaryAccountTypes(String suppAccTypeSb, int appendedCount) {
+	    return (suppAccTypeSb.length() > 0)
+	            ? suppAccTypeSb.split(",").length
+	            : appendedCount;
+	}
+
+	
+	/**
+	 * Determines whether to use "is" or "are" based on the given count.
+	 *
+	 * @param count the number of items
+	 * @return {@link DPConstants#ARE_STRING} if count is greater than one,
+	 *         otherwise {@link DPConstants#IS_STRING}
+	 */
+	protected String resolveIsOrAre(int appendedCount) {
+		String isOrAre;
+		if (appendedCount > 1) {
+			isOrAre = DPConstants.ARE_STRING;
+		} else {
+			isOrAre = DPConstants.IS_STRING;
+		}
+		return isOrAre;
+	}
+	
+	/**
+	 * Checks if the supplier account type matches any of the restrictions and builds an error message if not.
+	 *
+	 * @param listReasonRestr the list of {@link PmReasonRestr} restrictions to check against
+	 * @param supplierAccTypeMatch initial flag indicating if the supplier account type is already matched
+	 * @param suppAccTypeSb a {@link StringBuilder} to accumulate unmatched supplier account type descriptions
+	 * @param suppAccType the supplier account type to validate
+	 * @return {@code true} if the supplier account type matches any restriction; {@code false} otherwise
+	 */
+	public boolean initializeReasonRestr(List<PmReasonRestr> listReasonRestr, boolean supplierAccTypeMatch,
+			StringBuilder suppAccTypeSb, String suppAccType) {
+
+		Boolean isSupplierAccTypeMatch = supplierAccTypeMatch;
+
+		for (PmReasonRestr reasonRestr : listReasonRestr) {
+			if (!isSupplierAccTypeMatch) {
+				if ((reasonRestr.getSupplAcctTypeId() != null && reasonRestr.getSupplAcctTypeId().getParameterCode()
+						.equalsIgnoreCase(suppAccType))
+						|| reasonRestr.getSupplAcctTypeId() == null) {
+					isSupplierAccTypeMatch = true;
+				} else if (reasonRestr.getSupplAcctTypeId() != null
+						&& !reasonRestr.getSupplAcctTypeId().getParameterCode().equalsIgnoreCase(suppAccType)) {
+
+					String desc = getParameterDesc(reasonRestr.getSupplAcctTypeId(), new FacesScopes().getUserLocale());
+
+					appendIfNotExists(suppAccTypeSb, desc);
+				}
+
+				getManagedBean().setSupplierAccountTypeErrorMessage(suppAccTypeSb.toString());
+			}
+		}
+
+		return isSupplierAccTypeMatch;
+	}
+
+	/**
+	 * Appends a description to the supplier account type string if it is not
+	 * already present.
+	 * 
+	 * @param suppAccTypeSb
+	 *            the {@link StringBuilder} holding supplier account type
+	 *            descriptions
+	 * @param desc
+	 *            the description to append
+	 */
+	protected void appendIfNotExists(StringBuilder suppAccTypeSb, String desc) {
+		if (suppAccTypeSb.indexOf(desc) == -1) {
+			if (suppAccTypeSb.length() > 0) {
+				suppAccTypeSb.append(DPConstants.SEPARATOR_STRING);
+			}
+			suppAccTypeSb.append(desc);
+		}
+	}
+
+	/**
+	 * Validates the status of justification reasons for the given request note details.
+	 * Throws an {@link EpException} if any reason is inactive.
+	 *
+	 * @param requestNoteDtls the list of {@link ScRequestNoteDtl} to validate
+	 * @throws EpException if a reason is inactive
+	 */
+	public void validateReasonStatus(List<ScRequestNoteDtl> requestNoteDtls) {
+		for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
+			if (null != rnDtl.getJustificationType() && null != rnDtl.getJustificationType().getReasonId()) {
+				PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
+						.getReasonId());
+
+				if (reason != null && !reason.isRecordStatus()) {
+					throw new EpException(MessageConst.ERROR_760718, new String[] {
+							getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
+									.getParameterCode()), getReasonDesc(rnDtl.getJustificationType()) });
+				}
+
+			}
+		}
+	}
+	
+	/**
+	 * Retrieves the {@link PmReason} details for a given reason ID.
+	 *
+	 * @param reasonId the ID of the reason to retrieve
+	 * @return the {@link PmReason} object corresponding to the given reasonId, or null if not found
+	 */
+	private PmReason retrieveReasonDtlById(Long reasonId) {
+		IReasonSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IReasonSO.class);
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(reasonId);
+
+		return reqSO.retrieveReasonDtlById(reqDTO).getPmReason();
+	}
+
+	/**
+	 * Initializes the default organization type and sets the selected PTJ (organization profile)
+	 * for viewing contract details based on the given request note.
+	 *
+	 * @param requestNote the {@link ScRequestNote} containing contract and organization information
+	 */
+	protected void viewContractDetails(ScRequestNote requestNote) {
+		initDefaultSelectedOrgType();
+		this.getManagedBean().setSelectedPtj(requestNote.getPmOrgProfile());
+	}
+
+	/**
+	 * Initializes the default selected organization type (PTJ) and sets it in the managed bean.
+	 * Retrieves the organization type parameter based on type and code.
+	 */
+	public void initDefaultSelectedOrgType() {
+		PmParameter pmParameter = retrieveParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES,
+				ParameterConst.ORG_TYPE_PTJ);
+		this.getManagedBean().setSelectedOrgType(pmParameter);
+	}
+
+	/**
+	 * to set detail selected PTJ
+	 * 
+	 * @param userOrg
+	 */
+	public void userPtjListener(PmUserOrg userOrg) {
+		if (userOrg != null) {
+			this.getManagedBean().setSelectedUserPtj(userOrg);
+
+			FacesScopes facesScopes = new FacesScopes();
+
+			String saveIndex = facesScopes.getParameter("saveIndex");
+
+			if ((saveIndex == null) && (this.getManagedBean().getSaveIndex() != null)) {
+				saveIndex = this.getManagedBean().getSaveIndex().toString();
+			}
+			log.info("signerUserListener");
+
+			if (!this.getManagedBean().getRequestNoteDtls().isEmpty()) {
+				this.getManagedBean().getRequestNoteDtls().get(Integer.parseInt(saveIndex))
+						.setAssignedUser(userOrg.getPmUser());
+			}
+		}
+	}
+	
+	/**
+	 * Retrieves the organization profile (division level) of the currently logged-in user.
+	 *
+	 * @return the {@link PmOrgProfile} of the user, or {@code null} if not found
+	 */
+	public PmOrgProfile retrievePmOrgProfile() {
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+			profileReqDTO.setUserId(user.getUserId());
+			profileReqDTO.setOrgType(OrganizationType.DIVISION.value());
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileListByOrgType(profileReqDTO);
+			if (!orgProfileResDTO.getOrgProfileList().isEmpty()) {
+				return orgProfileResDTO.getOrgProfileList().get(0);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Triggers an alert when a request note exceeds defined threshold limits.
+	 * <p>
+	 * Marks request note details as exceeding the threshold, updates decisions, and triggers either
+	 * approval or submission alerts based on the outcome.
+	 * </p>
+	 *
+	 * @param outcome the BPM outcome (e.g., approval or submission)
+	 * @param thresholdData the threshold details including items and values
+	 * @param ptjName the name of the organizational unit (PTJ) related to the request
+	 */
+	protected void triggerAlert(String outcome, ThresholdData thresholdData, String ptjName) {
+		if (getManagedBean().getRequestNote() != null && getManagedBean().getRequestNote().getRequestNoteId() != null) {
+			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+			requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+
+			for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+				scRequestNoteDtl.setExceedThreshold(true);
+				resetBpkDecision(outcome, scRequestNoteDtl);
+			}
+
+			if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
+				triggerAlertApproval(thresholdData.thresholdItems, thresholdData.thresholdValue, ptjName,
+						requestNoteResDTO);
+			} else {
+				getManagedBean().setCounter(getManagedBean().getCounter() + 1);
+				triggerAlertSubmission(thresholdData.thresholdItems, thresholdData.thresholdValue, ptjName);
+			}
+		} else {
+			getManagedBean().setCounter(getManagedBean().getCounter() + 1);
+			triggerAlertSubmission(thresholdData.thresholdItems, thresholdData.thresholdValue, ptjName);
+		}
+	}
+	
+	/**
+	 * Determines actual date using quote’s created date; defaults to current
+	 * date.
+	 * 
+	 * @return resolved actual date
+	 */
+	protected Date assignActualDate() {
+		Date dataCreatedDate;
+		if (getManagedBean().getRequestNote() != null && getManagedBean().getRequestNote().getCreatedDate() != null) {
+			dataCreatedDate = getManagedBean().getRequestNote().getCreatedDate();
+		} else {
+			dataCreatedDate = new Date();
+		}
+		return dataCreatedDate;
+	}
+
+	/**
+	 * Finalize PK7 justification by resolving old-to-new reason mapping,
+	 * handling special item cases, and filtering inactive justification reasons.
+	 */
+	private void finalizeWIPCodePK7(ScRequestNoteDtl rnDtl) {
+		if (rnDtl.getJustificationType() != null && rnDtl.getJustificationType().getReasonId() != null) {
+			IPmPK7MapSO pk7MapSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IPmPK7MapSO.class);
+			
+			PmPK7Mapping pmPK7Mapping = pk7MapSO.findByOldReasonId(rnDtl.getJustificationType().getReasonId());
+
+			if (pmPK7Mapping != null){
+				defaultToPK7W(pmPK7Mapping, rnDtl);
+			}
+			else {
+				defaultToSpecialtem(rnDtl);				
+			}			
+		} else {
+			//set default PK7
+			rnDtl.setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_PK7));
+		}
+	}
+
+	/**
+	 * Defaults quotation to Special Item flow when justification matches SIT list.
+	 * Falls back to PK7W when no matching Special Item is found.
+	 */
+	protected void defaultToSpecialtem(ScRequestNoteDtl rnDtl) {
+		// special item
+		IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(rnDtl.getJustificationType().getReasonId());
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+
+		ReasonResDTO resDTO = reasonSO.retrieveReasonDescById(reqDTO);
+		PmReasonDesc reasonDesc = (resDTO != null) ? resDTO.getReasonDesc() : null;
+		boolean matched = false;
+
+		if (reasonDesc != null && reasonDesc.getReasonDesc() != null) {
+
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(
+					ReasonCategory.JUSTIFICATION_SIT.value());
+
+			for (PmReasonDesc sitReason : reasonDescs) {
+				if (sitReason != null && reasonDesc.getReasonDesc().trim().equalsIgnoreCase(sitReason.getReasonDesc().trim())) {
+					matched = true;
+					// set procurement type = Special Item
+					rnDtl.setProcurementType(getParameterByTypeAndCode(ParameterTypeConst.PROCUREMENT_TYPE_RPT, ParameterConst.PROC_TYPE_SPECIAL_ITEM));
+					rnDtl.setJustificationType(sitReason.getPmReason());
+					break;
+				}
+			}
+			
+			if (!matched) {
+				//set default PK7
+				rnDtl.setProcurementType(rnDtl.getProcurementType());
+				rnDtl.setJustificationType(rnDtl.getJustificationType());
+			}
+		}
+	}
+
+	/**
+	 * Applies PK7W defaults based on PK7 mapping.
+	 * Handles inactive old PK7 or mapped PK7W justification.
+	 */
+	protected void defaultToPK7W(PmPK7Mapping pmPK7Mapping, ScRequestNoteDtl rnDtl) {
+		if(pmPK7Mapping.getNewReason() == null){
+			//no PK7 New mapping, basically the old PK7 data already inactive
+			rnDtl.setProcurementType(rnDtl.getProcurementType());
+			rnDtl.setJustificationType(rnDtl.getJustificationType());
+		}
+		else if(pmPK7Mapping.getNewParameterCode().equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())){
+			//PK7 New
+			rnDtl.setProcurementType(pmPK7Mapping.getNewProcurementType());
+			rnDtl.setJustificationType(pmPK7Mapping.getNewReason());		
+		}
+	}
+	//27868 - end
+ 
+	//#26059 - Start
+	/**
+	 * Validates the extension code of a request note detail.
+	 *
+	 * @param requestNoteDtl
+	 * The request detail object to be validated.
+	 * @return true if the item is assigned or has a valid extension code length;
+	 * false otherwise.
+	 */
+	public boolean checkExtensionCode(ScRequestNoteDtl requestNoteDtl) {
+	    if (isInvalidRequestDetail(requestNoteDtl)) {
+	        return false;
+	    }
+
+	    if (getManagedBean().isExistInAssignItemDetail()) {
+	        return true;
+	    }
+
+	    CmItem cmItem = requestNoteDtl.getRequestItem().getCmItem();
+	    return isValidExtensionLength(cmItem.getExtensionCode());
+	}
+
+	/**
+	 * Checks if the request detail or its nested item objects are null. * @param
+	 * requestNoteDtl The object to check.
+	 * 
+	 * @return true if any required component is missing.
+	 */
+	private boolean isInvalidRequestDetail(ScRequestNoteDtl requestNoteDtl) {
+		return requestNoteDtl == null || requestNoteDtl.getRequestItem() == null
+				|| requestNoteDtl.getRequestItem().getCmItem() == null;
+	}
+
+	/**
+	 * Validates that the extension code is not blank and meets length
+	 * requirements (between 8 and 18 characters).
+	 * * @param extensionCode The code string to check.
+	 * @return true if the code length is within the valid range (8-18); false otherwise.
+	 */
+	private boolean isValidExtensionLength(String extensionCode) {
+	    if (StringUtils.isBlank(extensionCode)) {
+	        return false;
+	    }
+
+	    // Remove whitespace to get actual character count
+	    int codeLength = extensionCode.replaceAll("\\s+", "").length();
+
+	    // Logic: Return false if length is NOT between 8 and 18
+	    if (codeLength < DPConstants.NUMBER_EIGHT || codeLength > DPConstants.NUMBER_EIGHTEEN) {
+	        return false;
+	    }
+
+	    return true;
+	}
+
+	/**
+	 * Compares the item name of the request item with its associated CmItem
+	 * name. If the names differ, the extension code of the CmItem is trimmed to
+	 * 8 characters.
+	 * 
+	 * @param requestItem
+	 *            the request item containing the CmItem to compare and update
+	 */
+	public void compareItemName(ScRequestItem requestItem) {
+		if (requestItem == null || requestItem.getCmItem() == null) {
+			return;
+		}
+
+		if (getManagedBean().isExistInAssignItemDetail()) {
+			return;
+		}
+
+		String cmItemName = getCleanedItemName(requestItem.getCmItem().getItemName());
+		String itemName = getCleanedItemName(requestItem.getItemName());
+
+		boolean namesDiffer = !cmItemName.equalsIgnoreCase(itemName);
+		boolean tempUnspscBlank = StringUtils.isBlank(requestItem.getTempUnspscCode());
+
+		if (namesDiffer && tempUnspscBlank) {
+			trimExtensionCode(requestItem.getCmItem());
+		}
+	}
+
+	/**
+	 * Helper to clean item names by removing 'N/A' and trimming whitespace. * @param
+	 * rawName The raw name string from the item.
+	 * 
+	 * @return The cleaned name or an empty string.
+	 */
+	private String getCleanedItemName(String rawName) {
+		if (StringUtils.isBlank(rawName)) {
+			return StringUtils.EMPTY;
+		}
+		CommonUtils commonUtils = new CommonUtils();
+		return commonUtils.removeItemNameNA(rawName).trim();
+	}
+
+	/**
+	 * Trims the extension code to 8 characters if it exceeds that length. * @param
+	 * cmItem The CmItem to update.
+	 */
+	private void trimExtensionCode(CmItem cmItem) {
+		String extensionCode = cmItem.getExtensionCode();
+
+		if (StringUtils.isNotBlank(extensionCode) && extensionCode.length() > DPConstants.NUMBER_EIGHT) {
+			cmItem.setExtensionCode(extensionCode.substring(DPConstants.NUMBER_ZERO, DPConstants.NUMBER_EIGHT));
+		}
+	}
+	
+	/**
+	 * Processes a list of Request Note Details and compiles a list of item names 
+	 * that do not meet the criteria for having a valid extension code.
+	 *
+	 * An item's name is added to the result list if its associated {@code CmItem} 
+	 * is null, or if the item fails the extension code validation check performed 
+	 * by the helper method {@code checkExtensionCode(ScRequestNoteDtl)}.
+	 *
+	 * @param listNoteDtl The {@code List<ScRequestNoteDtl>} containing the request item details to be evaluated.
+	 * @return A {@code List<String>} containing the names ({@code itemName}) of all items 
+	 * that are identified as lacking a proper extension code or associated {@code CmItem}.
+	 */
+	private List<String> putAllTheNonExtensionCodeItemInList(List<ScRequestNoteDtl> listNoteDtl) {
+
+		List<String> listNonExtensionCode = new ArrayList<>();
+		for (ScRequestNoteDtl scRequestNoteDtl : listNoteDtl) {
+			ScRequestItem scRequestItem = scRequestNoteDtl.getRequestItem();
+			CmItem cmItem = scRequestItem.getCmItem();
+
+			if (cmItem == null || !checkExtensionCode(scRequestNoteDtl)) {
+				listNonExtensionCode.add(scRequestItem.getItemName());
+			}
+		}
+		return listNonExtensionCode;
+	}
+	
+	/**
+	 * Constructs a numbered list from a list of item names and throws a custom exception 
+	 * containing the formatted message.
+	 *
+	 * This method iterates through the provided list of item names, creates a 
+	 * numbered list string, and then throws an {@link EpException} using the constant 
+	 * {@code MessageConst.ERROR_760702} and the generated list as a parameter.
+	 * * @param listItemName The {@code List<String>} containing the names of the items 
+	 * that failed codification or triggered the error condition.
+	 * @throws EpException If the method is called, it always throws this exception 
+	 * containing the formatted list of item names.
+	 */
+	private void validateAndThrowCodificationError(List<String> listItemName) {
+
+		StringBuilder numberedList = new StringBuilder();
+		int count = DPConstants.NUMBER_ONE;
+
+		for (String itemName : listItemName) {
+			numberedList.append("\n").append(count).append(". ").append(itemName).append(".");
+			count++;
+		}
+		String formattedMessageParam = numberedList.toString();
+
+		throw new EpException(MessageConst.ERROR_760702, new String[] { formattedMessageParam });
+
+	}
+	
+	
+	/**
+	 * Determines whether the "Assign" button should be enabled or visible.
+	 *
+	 * The button is active (returns {@code true}) if either of the following conditions is met:
+	 * The current context is read-only ({@code readOnly == true}).
+	 * The context is NOT read-only, AND the following three conditions are simultaneously true:
+	 * The item's procurement type is **SERVICE** (matching {@code DbValueConst.PROCUMENT_TYPE_SERVICE}).
+	 * The item's temporary UNSPSC code is empty or null (validated via {@code StringUtils.isEmpty()}).
+	 * The item has an associated {@code CmItem} (i.e., {@code requestNoteDtl.getRequestItem().getCmItem()} is not null).
+	 *
+	 * @param readOnly      {@code true} if the form or context is in read-only mode, bypassing further checks.
+	 * @param requestNoteDtl The {@link ScRequestNoteDtl} instance being evaluated. This object is used to check its
+	 * procurement category and the details of its associated {@code RequestItem} (specifically the
+	 * {@code TempUnspscCode} and {@code CmItem}).
+	 * @return              {@code true} if the "Assign" button should be active (enabled or shown); {@code false} otherwise.
+	 */
+	public boolean validateAssignButton(boolean readOnly, ScRequestNoteDtl requestNoteDtl) {
+		if (readOnly) {
+			return true;
+		}
+
+		if (requestNoteDtl.getProcurementTypeCategory().getParameterId().equals(DbValueConst.PROCUMENT_TYPE_SERVICE)
+				&& StringUtils.isEmpty(requestNoteDtl.getRequestItem().getTempUnspscCode())
+				&& requestNoteDtl.getRequestItem().getCmItem() != null) {
+			return true;
+		}
+
+		return false;
+	}
+	//#26059 - End			 
 }

@@ -13,12 +13,10 @@
 		.column-align-center {
 			text-align: center !important;
 		}
-			 .calanderWidth input {
-	       width:75px;margin-bottom: 5px;
-	   }
-		.top-aligned-columns td {
-			vertical-align: top;
-		}
+		.calanderWidth input {
+	       width:75px;
+		   margin-bottom: 5px;
+	   	}
 		.column-align-right {
 			text-align: right !important;
 		}
@@ -53,7 +51,37 @@
 			border: none;
 			padding: 4px 3px;
 		}
+		/* 24336 Start*/
+		.columnWidth320 {
+			width: 320px;
+			vertical-align: top;
+			text-align: right;
+		}
+		.calanderWidth86 input { 
+	       width:86px; 
+		   margin-bottom: 5px; 
+		   vertical-align: top;
+	   	}
+		.calanderWidth86 input.ui-state-disabled {
+			width: 110px;
+		}
+		.top-aligned-columns td {
+			vertical-align: top;
+		}
+		.reduction-type-radio label {
+			float: left;
+			margin-left: 10px;
+		}
+		.change-contract-value-inputtext {
+			width: 110px;
+		}	
+		.committee-type-radio label {
+			float: left;
+			margin-left: 10px;
+		}
+		/* 24336 End*/
 		</style>
+
 		<script type="text/javascript">  
 	    $(document).on("keypress", 'form', function (e) {
     	    var code = e.keyCode || e.which;
@@ -185,11 +213,15 @@
 			or amendmentBackingBean.managedBean.decisionPbQcLOA or (amendmentBackingBean.managedBean.disableMeetingDetails and amendmentBackingBean.managedBean.disableDecisionDetails)}"
 			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.decision']))}" update=":form" />
 	
-	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting']}"
+			<!-- #24336 change menuitem value - Start -->
+	        <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.approver.setting.amendment.checklist']}" 
+			update=":form"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.isApproverSetting() and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
-			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.approver.setting']))}" update=":form" />
-	
+			rendered="#{(amendmentBackingBean.isCtApproverSetting() or amendmentBackingBean.isApproverSetting()) 
+				and !amendmentBackingBean.managedBean.prepareLOA and !ctBackingBean.managedBean.viewSCL}"
+			actionListener="#{amendmentBackingBean.setMenuByIndex(amendmentBackingBean.managedBean.indexing.get(lbl['lbl.ct.menu.approver.setting.amendment.checklist']))}"  />
+			<!-- #24336 - End -->
+
 		</p:tabMenu>
 		 </td>
 		 <td width="80%">
@@ -286,7 +318,12 @@
 					<ui:include src="pbqcc/signOffMember.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.approver.setting'] }">
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) 
+											== lbl['lbl.ct.menu.approver.setting.amendment.checklist'] }">
+					<!-- #24336 start -->
+					<ui:include	src="amendmentChecklist.xhtml" />
+					<!-- #24336 end -->
+					 
 					<ui:include	src="approverSetting.xhtml" />
 					<ui:include src="/xhtml/ct/shared/remarkAppSetting.xhtml" />
 					<!-- <ui:include	src="/xhtml/ct/common/fulfilmentSetting.xhtml" /> -->
@@ -366,10 +403,10 @@
 				</p:commandButton>
 			</div>
 		</p:confirmDialog>
-		
+		<!-- #26186 start -->
 		<p:confirmDialog message="#{lbl['lbl.msg.confirm.supplier.reject.amendment']}"
 			severity="alert" widgetVar="supplierrejectConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					partialSubmit="true" process="@this"
@@ -384,5 +421,6 @@
 				</p:commandButton>
 			</div>
 		</p:confirmDialog>
+		<!-- #26186 end -->
 	</ui:define>  
 </ui:composition>
