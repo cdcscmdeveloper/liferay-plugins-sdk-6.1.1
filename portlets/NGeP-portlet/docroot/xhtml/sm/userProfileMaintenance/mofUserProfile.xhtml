@@ -29,7 +29,7 @@
 				<!-- #34159 - START - add param disableValidation -->
 				<!-- 34810, #34400 - start  -->
 				<td style="white-space: nowrap; float: right;">
-					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+					<p:commandButton value="#{lbl['lbl.sm.button.save']}" process="@all" update="@form"
 						oncomplete="if (!args.validationFailed) confirmDlg.show()" >
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
@@ -851,7 +851,10 @@
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 													size="35">
-													<f:validator validatorId="postcodeValidator" />
+													<!-- #36718 - Start  -->
+													<p:ajax process="@all" partialSubmit="true" update="@this basicMailAddPostCodeMyMsg"
+														listener="#{smPersonnelBackingBean.checkPostcode(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode)}" />
+													<!-- #36718 - End  -->
 												</p:inputText>
 												<p:message id="basicMailAddPostCodeMyMsg"
 													for="basicMailAddPostCodeMy" showSummary="true"
