@@ -11455,7 +11455,7 @@ public class SmApplicationBackingBean extends
 		List<String> updateIds = new ArrayList<String>();
 		updateIds.add(":form");
 		//log.info("*** Submit Approve *** " + decision);
-		assignValReqdToFalse();
+//		assignValReqdToFalse(); #37925 submit requirement problem
 		//#34400
 		RequestContext.getCurrentInstance().update(updateIds);
 		// #28777 & #29727 - Start
