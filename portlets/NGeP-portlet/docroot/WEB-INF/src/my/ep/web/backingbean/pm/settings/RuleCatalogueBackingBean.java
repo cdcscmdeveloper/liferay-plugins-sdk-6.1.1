@@ -5963,13 +5963,6 @@ public class RuleCatalogueBackingBean extends
 		this.getManagedBean().setSearchRuleDataTypeExpiryDate(null);
 		this.getManagedBean().setSearchRuleDataTypeZone(0L);
 		this.getManagedBean().getSelectedRuleDescType().getRuleType().setConfigRuleValues(this.getManagedBean().getOriginalConfigRuleValueList());
-		
-		//#35323 - Start - Checking for list value.....
-		for (PmConfigRuleValue value : this.getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues()) {
-			log.info("CONFIG_RULE_VALUE=" + value.getRuleValueId());
-			log.info("EFF_DATE=" + value.getEffDate());
-		}
-		//#35323 - End - Checking for list value.....
 	}
 	
 	/**
