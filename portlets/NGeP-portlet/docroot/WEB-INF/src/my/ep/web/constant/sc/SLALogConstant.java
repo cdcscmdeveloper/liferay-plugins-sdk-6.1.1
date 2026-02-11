@@ -81,6 +81,10 @@ public class SLALogConstant {
 	public static final String QT_GET_CATEGORYCODES_FOR_CLONE = "getCategoryCodesForClone";
 	public static final String QT_PROC_CATEGORY_CHANGED = "procCategoryChanged";
 	//#29468 End Vinod
+	// #10098 Start Vinod
+	public static final String QT_AUTOSAVE_QT_DETAILS_ACTION = "autosaveQtDetailsAction";
+	public static final String QT_SAVE_SIDE_MENU_QT_DETAILS_ACTION = "saveSidemenuQtDetailsAction";
+	// #10098 End Vinod
 	public static final String QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN = "getRadioButtonCodeValuesBySearchBean";
 	public static final String QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL= "getDropdownValuesBySearchBeanForPartial";
 	public static final String QT_CREATE_LAMPIRANA3PDF_FOR_QT_VERIFICATION= "createLampiranA3forQTVerification";

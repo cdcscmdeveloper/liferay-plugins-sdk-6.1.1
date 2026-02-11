@@ -7733,16 +7733,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		if (priviousIndex != activeIndex) {
 			if (!isReadOnly) {
-				//10098 - Start (Harun)
+				// #10098 Start Vinod
 				if(null == this.getManagedBean().getQt().getQtNo()){
-					//initializeQtRemark();
 					RequestContext.getCurrentInstance().execute("confirmAutosave.show()"); //new dialog box
-					//initializeQtRemark();
 					activeIndex = 0; //for remain at QT Details screen while autosave
 				}else{
 					saveSidemenuQtDetailsAction(reqDTO);
 				}
-				//10098 - End (Harun)
+				// #10098 End Vinod
 				switch (priviousIndex) {
 				case 0:
 					//9019 - Start (Harun) #Note-360 Remove checking while not submit and allow to proceed 
@@ -8009,10 +8007,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setActiveIndex(activeIndex);
 		}
 		
-		//10098 - Start To handle autosave and prevent those from null
+		// #10098 Start Vinod To handle autosave and prevent those from null
 		ScQt scQt = this.getManagedBean().getQt();
 		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			log.info("harun remarks CollectionUtils.isEmpty 4444444===================");
 			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
 					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
 
@@ -8021,7 +8018,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
 		} else {
-			log.info("harun remarks CollectionUtils.isNOT Empty 44444===================");
 			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
 		}
 		
@@ -8041,9 +8037,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().getQt().setContractType(new PmParameter());
 			this.getManagedBean().getQt().getContractType().setParameterId((long) 0);
 		}
-		
-		//10098 - End
-		
+		// #10098 End Vinod
 	}	
 
 	private boolean isQTStatusBtwScheduleDocAndBeforePublished(Long currentStatusId) {
@@ -15133,116 +15127,62 @@ public void retrieveDemoQtDetails(Long qtId) {
         return triggerStatuses.contains(statusId);
 	}
 	
-		//10098 - Start (Harun) 
+	// #10098 Start Vinod
 	/**
-	 * Method to Auto Save the QT details.
+	 * Method to Auto Save the QT details when qt number is not generated.
 	 */
 	public void autosaveQtDetailsAction() {
-		log.info("harun autosaveQtDetailsAction tyrytryryry=================");
 		debugLogger("start of autosaveQtDetailsAction");
+
 		this.getManagedBean().setSaveFlow(true);
 		try {
-			
+
 			Long currentStatus = this.getManagedBean().getCurrentStatusId();
 			PmOrgProfile qtOrgProfile = this.getManagedBean().getQt().getPmOrgProfile();
-			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(currentStatus)
-					&& qtOrgProfile != null
+			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(currentStatus) && qtOrgProfile != null
 					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
 				throw new EpException(MessageConst.ERROR_760450);
 			}
-			
+
 			ScQt scQt = this.getManagedBean().getQt();
-			
-			/*
-			 * Bug 31610 - To Exclude 9019 to allow 31610 to be merge into SIT
-			 * NOTE: 9019 WHEN COMMIT MAKE SURE CHANGE SUCCESSMESSAGE FROM THIS INTO THE ONE THAT 9019 
-			 * INCLUDE BACK 9019
-			 * */
-			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
-			
-			//initializeQtRemark();
+
 			validateQtDetails();
-			//initializeQtRemark(scQt);
-			//#29521-start
 			retrieveScQtHist();
 			validateIsSupplierQualificationCriteriaChange();
 			validateIsZonalAdded();
-			//#29521-end
-			//#28784
 			checkDemoPresentationByStatus();
-			
-			if(isFirstSave){								
-				 /* 
-				  * BUG 31610
-				  * Added WorkflowStatus to cater qt maintenance search result not working
-				  */
+
+			if (scQt.getQtNo() == null && scQt.isBrandNew()) {
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
 				reqDTO.setQtdetail(this.getManagedBean().getQt());
-				IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTDetailSO.class);
-				
-				detailSO.updateDraftWorkflowStatus(reqDTO);			
-				//initializeQtRemark();
-				
+				IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+				detailSO.updateDraftWorkflowStatus(reqDTO);
+
 				successMessage(MessageConst.INFO_7000108, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
 			}
-			
-//			boolean emptyRemarksExist = false;
-//			if (null != this.getManagedBean().getQt().getScQtRemarks()
-//					&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-//				log.info("harun msk sini collection remark is not empty 44444 22222=====================");
-//				for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
-//					String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
-//					if (null == userRemark || "".equals(userRemark)) {
-//						log.info("harun cek userRemark is null 44444 22222=================");
-//						emptyRemarksExist = true;
-//					} else {
-//						log.info("harun cek userRemark not null 44444 22222================="+userRemark);
-//						emptyRemarksExist = false;
-//					}
-//				}
-//				log.info("harun cek emptyRemarksExist 44444 2222========"+emptyRemarksExist);
-//		
-//				if (emptyRemarksExist) {
-//					log.info("harun masuk 1 44444 2222========"+emptyRemarksExist);
-//					//ScQt scQt = this.getManagedBean().getQt();
-//					List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-//							.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-//		
-//					for (ScQtRemark qtRemark : qtRemarks) {
-//						log.info("harun masuk 111111 44444 2222========"+qtRemark.getRemark());
-//						qtRemark.setEditable(true);
-//					}
-//					this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-//		
-//				} else {
-//					log.info("harun masuk 2 44444 22222========"+emptyRemarksExist);
-//					//ScQt scQt = this.getManagedBean().getQt();
-//					this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-//				}
-//		
-//			} else if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-//				log.info("harun msk sini collection remark is empty 44444 22222=====================");
-//				List<ScQtRemark> qtRemarks = initializeRemarks(getManagedBean().getQt(), this.getManagedBean().getQt()
-//						.getCurrentWorkFlowStatus(), getManagedBean().getQt().getScQtRemarks(), ScQtRemark.class);
-//
-//				for (ScQtRemark qtRemark : qtRemarks) {
-//					qtRemark.setEditable(true);
-//				}
-//				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-//			}
-			/* Bug 31610 END */
-			debugLogger("end of autosaveQtDetailsAction");
-		} finally {
-
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt() != null && this.getManagedBean().getQt().getQtNo() != null ? this
+					.getManagedBean().getQt().getQtNo()
+					: " ";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKING_BEAN, qtNo,
+					SLALogConstant.QT_AUTOSAVE_QT_DETAILS_ACTION, getUserIdSessionFromLoginId(), e);
 		}
-		
+
 	}
-	
-	public void saveSidemenuQtDetailsAction(QuationTenderReqDTO quationTenderReqDTO) {
+
+	// #10098 End Vinod
+
+	// #10098 Start Vinod
+	/**
+	 * Method to Auto Save the QT details when the tab is changed.
+	 * 
+	 * @param quationTenderReqDTO
+	 */
+	private void saveSidemenuQtDetailsAction(QuationTenderReqDTO quationTenderReqDTO) {
 		debugLogger("start of saveSidemenuQtDetailsAction");
 
 		String taskId = this.getManagedBean().getTaskId();
@@ -15251,336 +15191,93 @@ public void retrieveDemoQtDetails(Long qtId) {
 		String processName = this.getManagedBean().getProcessName();
 		Object payLoad = this.getManagedBean().getPayLoad();
 		Long currentStatus = this.getManagedBean().getCurrentStatusId();
-		//QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 		quationTenderReqDTO.setSaveFlow(true);
 		quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 		FacesScopes facesScopes = new FacesScopes();
-		quationTenderReqDTO.setToken(facesScopes
-				.getBPMAuthenticationCtxToken());
+		quationTenderReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		quationTenderReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
-		
-		boolean emptyRemarksExist = false;
+
 		this.getManagedBean().setScQtRemarksEmpty(false);
-		if (null != this.getManagedBean().getQt().getScQtRemarks()
-				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			log.info("harun msk sini collection remark is not empty=====================");
-			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
-				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
-				if (null == userRemark || "".equals(userRemark)) {
-					log.info("harun cek userRemark is null=================");
-					emptyRemarksExist = true;
-					this.getManagedBean().setScQtRemarksEmpty(true);
-					// this.getManagedBean().getQt().getScQtRemarks().remove(i);
-	
-				} else {
-					log.info("harun cek userRemark not null================="+userRemark);
-					emptyRemarksExist = false;
-				}
-			}
-			log.info("harun cek emptyRemarksExist========"+emptyRemarksExist);
-	
-			if (emptyRemarksExist) {
-				ScQt scQt = this.getManagedBean().getQt();
-				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-	
-				for (ScQtRemark qtRemark : qtRemarks) {
-					qtRemark.setEditable(true);
-				}
-				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-	
-			} else {
-				ScQt scQt = this.getManagedBean().getQt();
-				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-			}
-	
-		} else if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			log.info("harun msk sini collection remark is empty=====================");
-			List<ScQtRemark> qtRemarks = initializeRemarks(getManagedBean().getQt(), this.getManagedBean().getQt()
-					.getCurrentWorkFlowStatus(), getManagedBean().getQt().getScQtRemarks(), ScQtRemark.class);
+		initializeQtRemark();
 
-			for (ScQtRemark qtRemark : qtRemarks) {
-				qtRemark.setEditable(true);
-			}
-			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-			this.getManagedBean().setScQtRemarksEmpty(true);// checking for
-															// empty remarks
-
-		}
-		log.info("harun cek saveSidemenuQtDetailsAction remarks==================="+this.getManagedBean().getQt().getScQtRemarks().get(0).getRemark());
-		
 		if (null == this.getManagedBean().getQt().getItemGroup()) {
 			this.getManagedBean().getQt().setCircularVer(null);
-		}else if (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() || this.getManagedBean()
-				.getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO) {
+		} else if (null == this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId()
+				|| this.getManagedBean().getQt().getItemGroup().getPanelItemGroupId() == ParameterConst.PM_PARAMETERID_ZERO) {
 			this.getManagedBean().getQt().setItemGroup(null);
 			this.getManagedBean().getQt().setCircularVer(null);
 		}
-		
+
 		IQTDetailSO detailSO;
 		QuationTenderResDTO quationTenderResDTO = null;
-		
+
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
-				log.info("harun msk sini sbb isScQtRemarksEmpty true=====================");
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			}
 			quationTenderResDTO = detailSO.saveQTDetailsForDraft(quationTenderReqDTO);
-			
-		} finally {
-			detailSO = null;
+
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt() != null && this.getManagedBean().getQt().getQtNo() != null ? this
+					.getManagedBean().getQt().getQtNo()
+					: " ";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKING_BEAN, qtNo,
+					SLALogConstant.QT_SAVE_SIDE_MENU_QT_DETAILS_ACTION, getUserIdSessionFromLoginId(), e);
 		}
 		renewQTSesionObject();
-		
+
 		this.getManagedBean().setTaskName(taskName);
-		this.getManagedBean().setQt(quationTenderResDTO.getQtDetail());
+		if (quationTenderResDTO != null && quationTenderResDTO.getQtDetail() != null) {
+			this.getManagedBean().setQt(quationTenderResDTO.getQtDetail());
+		}
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setCurrentStatusId(currentStatus);
 		this.getManagedBean().setPayLoad(payLoad);
 	}
-	//10098 - End (Harun) 
-	
+
+	// #10098 End Vinod
+	// #10098 Start Vinod
 	/**
-	 * Method to save the QT details.
+	 * Method to initialize QT Remark.
+	 * 
 	 */
-	public void saveCopyQtDetailsAction() {
-		
-		debugLogger("start of saveQtDetailsAction");
-		this.getManagedBean().setSaveFlow(true);
-		try {
-			
-			Long currentStatus = this.getManagedBean().getCurrentStatusId();
-			PmOrgProfile qtOrgProfile = this.getManagedBean().getQt().getPmOrgProfile();
-			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(currentStatus)
-					&& qtOrgProfile != null
-					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
-				throw new EpException(MessageConst.ERROR_760450);
-			}
-			
-			ScQt scQt = this.getManagedBean().getQt();
-			
-			/*
-			 * Bug 31610 - To Exclude 9019 to allow 31610 to be merge into SIT
-			 * NOTE: 9019 WHEN COMMIT MAKE SURE CHANGE SUCCESSMESSAGE FROM THIS INTO THE ONE THAT 9019 
-			 * INCLUDE BACK 9019
-			 * */
-			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
-			
-			validateQtDetails();
-			//#29521-start
-			retrieveScQtHist();
-			validateIsSupplierQualificationCriteriaChange();
-			validateIsZonalAdded();
-			//#29521-end
-			//#28784
-			checkDemoPresentationByStatus();
-			
-			if(isFirstSave){								
-				 /* 
-				  * BUG 31610
-				  * Added WorkflowStatus to cater qt maintenance search result not working
-				  */
-				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
-				reqDTO.setQtdetail(this.getManagedBean().getQt());
-				IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTDetailSO.class);
-				
-				detailSO.updateDraftWorkflowStatus(reqDTO);				
-				 
+	private void initializeQtRemark() {
 
-				successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.TRUE);
-			}else{
-				//9019 Start - re-endorse change INFO_700004 
-				successMessage(MessageConst.INFO_7000108, ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
-				//9019 Start
-			}
-			/* Bug 31610 END */
-			debugLogger("end of saveQtDetailsAction");
-		} finally {
-
-		}
-		
-	}
-	
-	public void initializeQtRemark(){
-		log.info("harun msk initializeQtRemark kkkkkkkkk=====================");
-//		ScQt scQt = this.getManagedBean().getQt();
-//		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-//			log.info("harun initializeQtRemark collection is empty===============");
-//			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-//					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-//
-//			for (ScQtRemark qtRemark : qtRemarks) {
-//				qtRemark.setEditable(true);
-//			}
-//			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-//		} else {
-//			log.info("harun initializeQtRemark collection not empty===============");
-//			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-//		}
-		//ScQt scQt = this.getManagedBean().getQt();
-//		boolean emptyRemarksExist = false;
-//		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-//			log.info("harun initializeQtRemark collection is empty 3333333===============");
-//			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-//					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-//
-//			for (ScQtRemark qtRemark : qtRemarks) {
-//				qtRemark.setEditable(true);
-//			}
-//			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-//
-//		} else{
-//			log.info("harun initializeQtRemark collection not empty 3333333===============");
-//			log.info("harun initializeQtRemark getScQtRemarks size 3333333==============="+this.getManagedBean().getQt().getScQtRemarks().size());
-//			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
-//				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
-//				if (null == userRemark || "".equals(userRemark)) {
-//					log.info("harun cek userRemark is null 3333333=================");
-//					emptyRemarksExist = true;
-//				} else {
-//					log.info("harun cek userRemark not null 3333333================="+userRemark);
-//					emptyRemarksExist = false;
-//				}
-//			}
-//			log.info("harun cek emptyRemarksExist 3333333========"+emptyRemarksExist);
-//	
-//			if (emptyRemarksExist) {
-//				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-//						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-//	
-//				for (ScQtRemark qtRemark : qtRemarks) {
-//					qtRemark.setEditable(true);
-//				}
-//				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-//	
-//			} else {
-//				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-//			}
-//		}
-		
-//		boolean emptyRemarksExist = false;
-//		this.getManagedBean().setScQtRemarksEmpty(false);
-//		if (null != this.getManagedBean().getQt().getScQtRemarks()
-//				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-//			log.info("harun msk sini collection remark is not empty=====================");
-//			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
-//				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
-//				if (null == userRemark || "".equals(userRemark)) {
-//					log.info("harun cek userRemark is null=================");
-//					emptyRemarksExist = true;
-//					this.getManagedBean().setScQtRemarksEmpty(true);
-//		
-//				} else {
-//					log.info("harun cek userRemark not null================="+userRemark);
-//					emptyRemarksExist = false;
-//				}
-//			}
-//			log.info("harun cek emptyRemarksExist========"+emptyRemarksExist);
-//	
-//			if (emptyRemarksExist) {
-//				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-//						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-//	
-//				for (ScQtRemark qtRemark : qtRemarks) {
-//					qtRemark.setEditable(true);
-//				}
-//				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-//	
-//			} else {
-//				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-//			}
-//	
-//		} else if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-//			log.info("harun msk sini collection remark is empty=====================");
-//			List<ScQtRemark> qtRemarks = initializeRemarks(getManagedBean().getQt(), this.getManagedBean().getQt()
-//					.getCurrentWorkFlowStatus(), getManagedBean().getQt().getScQtRemarks(), ScQtRemark.class);
-//
-//			for (ScQtRemark qtRemark : qtRemarks) {
-//				qtRemark.setEditable(true);
-//			}
-//			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-//			this.getManagedBean().setScQtRemarksEmpty(true);// checking for
-//															// empty remarks
-//
-//		}
-//		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) { //disable temp 16/11/2023 remove * when use
-//			log.info("harun remarks CollectionUtils.isEmpty 111111===================");
-////			ScQt scQt = this.getManagedBean().getQt();//32880 - Bug
-//			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-//					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-//
-//			for (ScQtRemark qtRemark : qtRemarks) {
-//				qtRemark.setEditable(true);
-//			}
-//			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-//
-//		} else{
-////			ScQt scQt = this.getManagedBean().getQt();//32880 - Bug
-//			log.info("harun remarks CollectionUtils.isNOT Empty 11111===================");
-//			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-//		}
-		
-		//ScQt scQt = this.getManagedBean().getQt();
-//		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-//			log.info("harun remarks CollectionUtils.isEmpty 4444444 777777===================");
-//			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
-//					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-//
-//			for (ScQtRemark qtRemark : qtRemarks) {
-//				qtRemark.setEditable(true);
-//			}
-//			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-//		} else {
-//			log.info("harun remarks CollectionUtils.isNOT Empty 44444 777777===================");
-//			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
-//		}
-		
 		boolean emptyRemarksExist = false;
 		if (null != this.getManagedBean().getQt().getScQtRemarks()
 				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			log.info("harun msk sini collection remark is not empty 44444 88888=====================");
 			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
 				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
 				if (null == userRemark || "".equals(userRemark)) {
-					log.info("harun cek userRemark is null 44444 888888=================");
 					emptyRemarksExist = true;
+					this.getManagedBean().setScQtRemarksEmpty(true);
 				} else {
-					log.info("harun cek userRemark not null 44444 888888================="+userRemark);
 					emptyRemarksExist = false;
 				}
 			}
-			log.info("harun cek emptyRemarksExist 44444 888888========"+emptyRemarksExist);
-	
+
 			if (emptyRemarksExist) {
-				log.info("harun masuk 1 44444 888888========"+emptyRemarksExist);
 				ScQt scQt = this.getManagedBean().getQt();
 				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
 						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
-	
+
 				for (ScQtRemark qtRemark : qtRemarks) {
 					qtRemark.setEditable(true);
 				}
 				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
-	
+
 			} else {
-				log.info("harun masuk 2 44444 888888========"+emptyRemarksExist);
 				ScQt scQt = this.getManagedBean().getQt();
 				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
 			}
-	
+
 		} else if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
-			log.info("harun msk sini collection remark is empty 44444 88888=====================");
 			List<ScQtRemark> qtRemarks = initializeRemarks(getManagedBean().getQt(), this.getManagedBean().getQt()
 					.getCurrentWorkFlowStatus(), getManagedBean().getQt().getScQtRemarks(), ScQtRemark.class);
 
@@ -15588,7 +15285,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 				qtRemark.setEditable(true);
 			}
 			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+			this.getManagedBean().setScQtRemarksEmpty(true);
 		}
 	}
-	
+	// #10098 End Vinod
 }
