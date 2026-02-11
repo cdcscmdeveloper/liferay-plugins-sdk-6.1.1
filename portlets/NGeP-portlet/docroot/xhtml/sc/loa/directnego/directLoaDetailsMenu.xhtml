@@ -436,10 +436,12 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td>
+					 <ui:remove>#39995 Start Vinod 11/02/2026 Added maxlength</ui:remove>
 				     <p:inputText disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						required="true" id="fileNoId"
 						value="#{directLOABackingBean.managedBean.scLoa.scQt.fileNo}"
-						label="#{lbl['lbl.sc.qt.fileno']}" size="28" >
+						label="#{lbl['lbl.sc.qt.fileno']}" size="28" maxlength="50" >
+					 <ui:remove>#39995 End Vinod 11/02/2026</ui:remove>
 						<!-- #29661 start -->
 						<p:ajax event="blur" process="fileNoId" update="fileNoId"
 						partialSubmit="true" 
