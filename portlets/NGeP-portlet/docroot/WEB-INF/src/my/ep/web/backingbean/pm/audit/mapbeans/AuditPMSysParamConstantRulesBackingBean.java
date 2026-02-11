@@ -131,18 +131,18 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			}
 		}
 		*/
+		
 		for (PmConfigRuleValue updateVal : update) {
 			PmConfigRuleValue matchingIdUpdatedOldVal = findMatchingSPRulesTypeValue(ruleValueOld, updateVal);
 			if (matchingIdUpdatedOldVal != null) {
-				
-				if("PC".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleType().getRuleDataTypeId().getParameterCode())) {
+				if("PC".equalsIgnoreCase(updateVal.getRuleDataTypeCode())) {
 					hasDocNo = true;
-					setDocNo(hasDocNo,hasDocNoCategory,matchingIdUpdatedOldVal);
+					setDocNo(hasDocNo,hasDocNoCategory,updateVal);
 				}
 					
-				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(matchingIdUpdatedOldVal.getRuleType().getRuleDataTypeId().getParameterCode())) {
+				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(updateVal.getRuleDataTypeCode())) {
 					hasDocNoCategory = true;
-					setDocNo(hasDocNo,hasDocNoCategory,matchingIdUpdatedOldVal);
+					setDocNo(hasDocNo,hasDocNoCategory,updateVal);
 				}
 				docId = BigInteger.valueOf(matchingIdUpdatedOldVal.getRuleValueId());
 				processSPRuleTypeValEffExpDate(matchingIdUpdatedOldVal, updateVal);
