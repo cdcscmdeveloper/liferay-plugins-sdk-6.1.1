@@ -31,6 +31,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
@@ -121,13 +122,13 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;	// Bug #39065@Syazani 08/10/2025
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -156,6 +157,7 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+// Bug #39065@Syazani 08/10/2025
 
 /**
  * The Class QTDocumentsBackingBean.
@@ -2399,8 +2401,15 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		VelocityContext context = new VelocityContext();
 
-		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();
+		//#21692 - Start
+		String hostUrl = "";
+		if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
+			hostUrl = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl");
+		} else {
+			FacesScopes fs = new FacesScopes();
+			hostUrl = fs.getRequest().getServerName() + ":" + fs.getRequest().getServerPort();
+		}
+		//#21692 - End
 		boolean isLocLevelDistrictContainsDivision = false;	// Bug #38731@Syazani 20/08/2025
 		context.put("hostUrl", hostUrl);
 
@@ -2760,7 +2769,14 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			quationTenderReqDTO.setScReports(reports);
 			qtDocumentSO.saveReportAndAttachment(quationTenderReqDTO);
 			
-		} finally {
+		}
+		//#21692 - Start 
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+		//#21692 - End
+		finally {
 			qtDocumentSO = null;
 		}
 		
