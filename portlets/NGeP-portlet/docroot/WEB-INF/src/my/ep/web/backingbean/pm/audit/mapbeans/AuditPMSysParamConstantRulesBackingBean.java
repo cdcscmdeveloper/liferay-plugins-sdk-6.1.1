@@ -153,6 +153,15 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		for (PmConfigRuleValue updateVal : update) {
 			PmConfigRuleValue matchingIdUpdatedOldVal = findMatchingSPRulesTypeValue(ruleValueOld, updateVal);
 			if (matchingIdUpdatedOldVal != null) {
+				if("PC".equalsIgnoreCase(updateVal.getRuleDataTypeCode())) {
+					hasDocNo = true;
+					setDocNo(hasDocNo,hasDocNoCategory,updateVal);
+				}
+					
+				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(updateVal.getRuleDataTypeCode())) {
+					hasDocNoCategory = true;
+					setDocNo(hasDocNo,hasDocNoCategory,updateVal);
+				}
 				docId = BigInteger.valueOf(matchingIdUpdatedOldVal.getRuleValueId());
 				/* 35323 - Audit Start */
 				if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(pmConfigRuleDesc.getRuleType()
@@ -473,10 +482,9 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		if (newCreatedItem != null
 				&& (Long.valueOf(newCreatedItem.getRuleValueId()) != null || Long.valueOf(newCreatedItem
 						.getRuleValueId()) > 0) && newCreatedItem.getCategoryL3Id() != null) {
-			docNo =  newCreatedItem.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+			return newCreatedItem.getCategoryL3Id().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ newCreatedItem.getCategoryL3Id().getPmCategoryL2().getCategoryL2Code()
 					+ newCreatedItem.getCategoryL3Id().getCategoryL3Code();
-			return docNo;
 		}
 		return null;
 	}
