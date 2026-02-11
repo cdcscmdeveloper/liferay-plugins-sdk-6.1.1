@@ -3928,7 +3928,7 @@ public class SmApplicationUtil {
 		}
 		return false;
 	}
-	// #39679 - End
+	// #39679 - Ends
 
 	private static void resetAddedCategoryOverlapStatus(SmAppl appl,
 			SmOverlapCategoryVO vo) {
