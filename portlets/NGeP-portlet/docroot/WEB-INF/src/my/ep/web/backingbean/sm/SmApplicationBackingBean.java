@@ -11018,8 +11018,13 @@ public class SmApplicationBackingBean extends
 		//#12483 - END
 		//Bug #26705
 		// #39422 - Start - Comment method
-		getlatestPoOverlappingRemarks();
+		//getlatestPoOverlappingRemarks();
 		// #39422 - End
+		
+		// #39679 - Start
+		getManagedBean().setApplnOverLapRemarks(null);
+		SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+		// #39679 - End
 		
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
@@ -11091,7 +11096,11 @@ public class SmApplicationBackingBean extends
 			return;
 		}
 		
-		getManagedBean().setChangeCurrRegStatus(true);
+		if(latestPOChange.getPmRegStatus().getRegStatusId() == prevRegStatusId){
+			getManagedBean().setChangeCurrRegStatus(false);
+		} else {
+			getManagedBean().setChangeCurrRegStatus(true);
+		}		
 		getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
 	}
 	
@@ -19335,6 +19344,7 @@ public class SmApplicationBackingBean extends
 		}
 		
 		if (getManagedBean().isChangeCurrRegStatus()) {
+			assignValReqdToTrue();
 			SmApplSectionReview latestPOSectionReview = findLatestPOSectionReview();
 			if (latestPOSectionReview != null && validStatusId(latestPOSectionReview)) {
 				approvedStatusId = findLatestPOSectionReview().getPmRegStatus().getPmStatus().getStatusId();
@@ -19380,8 +19390,8 @@ public class SmApplicationBackingBean extends
 //	#37925 END
 	// #9299 - Start
 	public boolean getAppVersionDetailsWithRedmineNo() {
-		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(),
-				SupplierManagementConst.APP_VERSION_REDMINE_NO_9299);
+		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(), SupplierManagementConst.APP_VERSION_REDMINE_NO_9299,
+				SupplierManagementConst.PHASE_1);
 	}
 
 	public boolean checkCompanyExperienceNewlyAdded(List<SmCompanyExperience> list) {
