@@ -198,6 +198,7 @@
 					<f:converter converterId="pmNumberConverter"/> <!-- #34397, #34398 -->
                     <f:attribute name="numberType" value="INTEGER"/>
                     <f:attribute name="ruleType" value="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleDesc}"/>
+                    <f:attribute name="zoneName" value="#{ruleCatalogueBackingBean.getZoneName(typeValueObj.zoneId)}"/> <!-- #34397, #34398 -->
 					<f:attribute name="min" value="0"/>	
 		  			<f:attribute name="max" value="9999"/>
 					<f:validator validatorId="quantityDoubleRangeValidator" />
