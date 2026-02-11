@@ -153,24 +153,14 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 		for (PmConfigRuleValue updateVal : update) {
 			PmConfigRuleValue matchingIdUpdatedOldVal = findMatchingSPRulesTypeValue(ruleValueOld, updateVal);
 			if (matchingIdUpdatedOldVal != null) {
-				PmConfigRule rt = matchingIdUpdatedOldVal.getRuleType();
-				String paramCode = null;
-				if (rt != null) {
-					PmParameter pmParam = rt.getRuleDataTypeId();
-
-					if (pmParam != null) {
-						paramCode = pmParam.getParameterCode();
-					}
-				}
-
-				if ("PC".equalsIgnoreCase(paramCode)) {
+				if("PC".equalsIgnoreCase(updateVal.getRuleDataTypeCode())) {
 					hasDocNo = true;
-					setDocNo(hasDocNo, hasDocNoCategory, matchingIdUpdatedOldVal);
+					setDocNo(hasDocNo,hasDocNoCategory,updateVal);
 				}
-
-				if (matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(paramCode)) {
+					
+				if(matchingIdUpdatedOldVal.getCategoryL3Id() != null && "C".equalsIgnoreCase(updateVal.getRuleDataTypeCode())) {
 					hasDocNoCategory = true;
-					setDocNo(hasDocNo, hasDocNoCategory, matchingIdUpdatedOldVal);
+					setDocNo(hasDocNo,hasDocNoCategory,updateVal);
 				}
 				docId = BigInteger.valueOf(matchingIdUpdatedOldVal.getRuleValueId());
 				/* 35323 - Audit Start */
