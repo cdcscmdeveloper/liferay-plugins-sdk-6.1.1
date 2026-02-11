@@ -3119,8 +3119,10 @@ public class SmApplicationBackingBean extends
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
 
-		//#36483 - START
+		//#36483 - START,#37925 checking null
 		if(currentPageType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC) 
+				&& getManagedBean().getBasicCompanyFacility() != null 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType() != null 
 				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 			for(SmFacility fac : getManagedBean().getSmAppl().getSmFacilities()){
 				if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
@@ -19020,8 +19022,7 @@ public class SmApplicationBackingBean extends
 	public void localContractorRegistrationUI(String applType, boolean isForeignCompany) {
 	    PmStatusDesc currentStatusDesc = SmApplicationUtil.getCurrRegStatusDesc(getManagedBean().getSmAppl());
 	    
-	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType) || 
-	        SupplierManagementConst.APPL_TYPE_BUMI.equals(applType)) {
+	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType)) {
 	        assignValReqdToFalse();
 	        getManagedBean().setDisplayLabelRegistrationStatus(true);
 	        setRegistrationStatusValue(isForeignCompany);
@@ -19037,6 +19038,10 @@ public class SmApplicationBackingBean extends
 	            getManagedBean().setDisplayDropdownRegStatus(true);
 	            updateRegistrationStatusList(currentStatusDesc);
 	        }
+	    } else if(SupplierManagementConst.APPL_TYPE_BUMI.equals(applType)) {
+	    	assignValReqdToTrue();
+            getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
+            getManagedBean().setDisplayDropdownRegStatus(true);
 	    }
 	    // Default case - no action needed
 	}
@@ -19216,6 +19221,11 @@ public class SmApplicationBackingBean extends
 
 	    if (smAppl == null || smSupplier == null) {
 	        return;
+	    }
+	    
+	    if(SupplierManagementConst.APPL_TYPE_BUMI.equals(smAppl.getApplType())){
+	    	assignValReqdToTrue();
+	    	return;
 	    }
 
 	    if (shouldRegistrationStatusBeOptional(smAppl, smSupplier)) {
