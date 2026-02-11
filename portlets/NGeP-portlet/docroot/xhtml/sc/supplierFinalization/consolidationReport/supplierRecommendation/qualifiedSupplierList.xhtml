@@ -81,22 +81,35 @@
 						</p:column>
 						<ui:remove>#29021 - end </ui:remove>
 						<p:column rowspan="2" style="width:5%; text-align:center;white-space:normal;">
-		               	<f:facet name="header">
-								<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
-								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
-									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
-								</p:commandLink><br/>		               		
-			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+							<f:facet name="header">
+								<ui:remove> #34840 </ui:remove>
+								<h:outputText value="#{lbl['lbl.sc.eval.ranking']}" />
+								<br />
+								<p:commandLink
+									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueOneTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
+									rendered="#{isOneTierWithTechnical or isTwoTier}"
+									process="@this">
+									<ui:remove> #28777#29729 </ui:remove>
+									<ui:remove> #34840 </ui:remove>
+									<h:outputText value="#{lbl['lbl.sc.technical']}"
+										styleClass="commandLink" />
+								</p:commandLink>
+								<br />
+								<p:commandLink
+									oncomplete="fetchQualifiedSuppliers([{name:'#{SourcingConstants.evaluationStageId}', value:'#{SourcingConstants.evaluationValueTwoTier}'},{name:'#{SourcingConstants.isDisqualifiedId}', value:'#{DbValueConst.recordStatusActive}'}]);"
+									process="@this">
+									<ui:remove> #28777#29729 </ui:remove>
+									<ui:remove> #34840 </ui:remove>
+									<h:outputText value="#{lbl['lbl.sc.financial']}"
+										styleClass="commandLink" />
 									<!--  #29466 - START -->
 									<f:setPropertyActionListener
 										value="#{consolidationReportBackingBean.managedBean.scQt}"
 										target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
 									<!--  #29466 - END -->
-								</p:commandLink>								
-		               		</f:facet>
-		               	</p:column>
+								</p:commandLink>
+							</f:facet>
+						</p:column>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
 						<ui:remove>#11134 -start-</ui:remove>
 						<p:column rowspan="2" style="width:7%; white-space:normal;">
