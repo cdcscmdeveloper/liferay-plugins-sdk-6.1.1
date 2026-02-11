@@ -47,6 +47,7 @@ public class PmNumberConverter extends NumberConverter {
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new my.ep.web.util.FacesScopes().getUserLocale()));
 			}
 			//#34397 - End
+
 			throw new ConverterException(fac, e);
 		}
 	}
