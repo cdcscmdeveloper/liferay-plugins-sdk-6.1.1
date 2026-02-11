@@ -61,9 +61,9 @@
 		Development #34216 START
 		</ui:remove>
 	<script type="text/javascript">
-		$(document).on('ready', function(){
+		/* $(document).on('ready', function(){
 			blockWidget.show();
-		})
+		}) */
 	</script>
 	<ui:remove>
 		Development #34216 END
@@ -211,13 +211,17 @@
 						</h:panelGroup>
 						
 						<div class="ppRightBtn">
+							<ui:remove>#10098 Start Vinod - Changed update to @all to reset poll for auto save.</ui:remove>
 							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 								action="#{templateSpecBackingBean.scoringOkAction(templateSpecBean)}"
 								partialSubmit="true"
 								process="@this, scoreSettPnl"
-								update="scoreSettPnl, @(.scoringBtn)">
+								onclick="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								update="@all">
 								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 							</p:commandButton>
+							<ui:remove>#10098 End Vinod</ui:remove>
 							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
 								partialSubmit="true" process="@this" update="@this"
 								action="#{templateSpecBackingBean.scoringCancelAction(templateSpecBean)}"

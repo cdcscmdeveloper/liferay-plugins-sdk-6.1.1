@@ -75,7 +75,7 @@ label.ui-button>span.ui-button-text {
 				</h:panelGrid>
 				<h:panelGrid columns="1">
 					<h:outputText escape="false" style="font-weight: bold;"
-						value="Please wait, system is saving your data." />
+						value="#{lbl['lbl.tpl.autosave.loading.msg']}" />
 				</h:panelGrid>
 			</div>
 		</p:blockUI>
@@ -122,35 +122,12 @@ label.ui-button>span.ui-button-text {
 		<h:panelGroup id="committeeTechEdit">
 			<p:panel header="#{lbl['lbl.sc.template.spec']}" toggleable="true">
 				<ui:remove>#10098 Start Vinod</ui:remove>
-				<p:dialog id="confirmAutoTechsaveId" widgetVar="confirmAutoTechsave"
-					header="#{lbl['lbl.sc.dialog.autosave.title']}" resizable="false"
-					width="30%" height="100" closable="false">
-					<table>
-						<tr>
-							<td align="center"><p:outputLabel
-									value="#{lbl['lbl.sc.dialog.autosave.content']}" /></td>
-						</tr>
-					</table>
-					<p:spacer height="1" />
-					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.yes']}"
-							action="#{specificationBackingBean.autosaveAction}"
-							onclick="confirmAutoTechsave.hide(); blockWidgetAutoSave.show(); stopAutoScorePoll.stop();"
-							oncomplete="blockWidgetAutoSave.hide();" partialSubmit="true"
-							process="@form" update="@form" />
-						<p:commandButton value="#{lbl['lbl.btn.no']}"
-							onclick="confirmAutoTechsave.hide(); stopAutoScorePoll.stop();" type="button"
-							update="@form"
-							partialSubmit="true" process="@this" />
-					</div>
-				</p:dialog>
+				<p:poll interval="60" id="autoSaveTemplateId"
+					listener="#{specificationBackingBean.autoSaveTemplateChecklist}"
+					onstart="blockWidgetAutoSave.show();"
+					oncomplete="blockWidgetAutoSave.hide(); blockWidget.hide();"
+					update="@all" />
 				<ui:remove>#10098 End Vinod</ui:remove>
-				<ui:remove>#10098 Start Vinod</ui:remove>
-			<p:poll interval="60" 
-				listener="#{specificationBackingBean.autoSaveTemplateChecklist}" 
-				oncomplete="confirmAutoTechsave.show();"
-				widgetVar="stopAutoScorePoll" />
-			<ui:remove>#10098 End Vinod</ui:remove>
 				<ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
 				<ui:include src="/xhtml/common/uominstruction.xhtml"></ui:include>
 

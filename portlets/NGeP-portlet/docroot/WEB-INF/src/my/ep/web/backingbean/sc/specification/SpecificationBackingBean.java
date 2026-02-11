@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -221,7 +220,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -260,7 +258,6 @@ import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
@@ -370,14 +367,6 @@ public class SpecificationBackingBean extends
 	/** Temporary ID for a new checklist row */
 	private int tempNewChecklistIndex = 0;
 	// Bug #35219@Syazani 07/11/2023 -- End
-	
-	private int pollNumTechnical;
-	private int pollNumFinancial;
-	private boolean resetTechnical = false;
-	private boolean resetFinancial = false;
-	private boolean stopTechnical =  false;
-	private boolean pollStop = false;
-	private static EpPropertiesUtils util = EpPropertiesUtils.getInstance();
 
 	/**
 	 * Instantiates a new specification backing bean.
@@ -5782,6 +5771,9 @@ public class SpecificationBackingBean extends
 				if(i>1){
 					this.getManagedBean().setSpecItemWeightageRequired(Boolean.TRUE);
 				}//30917-End
+				// #10098 Start Vinod
+				templateSpecBean.setTechTemplateUpdateFromQT(true);
+				// #10098 End Vinod
 				return "/xhtml/sc/boSctemplatespec/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList
 					.getDefinationType().getParameterCode())) {//#11104-start
@@ -6295,6 +6287,9 @@ public class SpecificationBackingBean extends
 					}
 
 				}
+				// #10098 Start Vinod
+				templateSpecBean.setFinTemplateUpdateFromQT(true);
+				// #10098 End Vinod
 				// #25039#67#76 - start
 				// To recalculate estimate amount (Item Total Indicative Price)
 					System.out.println("===========reCalculateEstimateAmount start============");
@@ -14510,9 +14505,6 @@ if (null != checklist && !checklist.isEmpty()) {
 	 * @return navigate to business owner or specification committee menu.
 	 */
 	public String completeTemplateSpecDetails(String flowType, String specType) {
-		//this.pollStop = true;//10098
-		//stopTechnical = true;
-		stopPollTechnical();
 		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSpecSO.class);
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -14989,9 +14981,6 @@ if (null != checklist && !checklist.isEmpty()) {
 
 		// Need to redirect particualr page..
 		if (resDTO.isSuccessful()) {
-				//this.pollStop = false; //10098
-				//stopTechnical = false;
-				startPollTechnical();
 			this.getManagedBean().setTempScQtChecklist(null);//1873 - note 97
 			ScQt qt = resDTO.getScQt();
 			if (qt != null) {
@@ -25106,257 +25095,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 	// #38151 End
 	
-	
-	//#10098 - Start
-	public void calculatePollTechnicalSpec() {
-		log.info("harun msk SpecificationBackingBean calculatePollTechnicalSpec===============");
-		//Jboss timeout checking by HttpSession is rounded 30 min -START-
-		//System.out.println("harun getMaxInactiveInterval: " + session.getMaxInactiveInterval());
-		//log.info("harun cek jboss timeout===================="+System.getProperties().getProperty("sun.net.client.defaultConnectTimeout"));
-		
-		//Setting by container timeout
-		/*ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-		HttpSession session = httpServletRequest.getSession();
-		
-		int postSaveBuffer = session.getMaxInactiveInterval()-QTConstants.AUTOSAVE_SETTING_BUFFERTIME_PRESAVE;
-		
-		pollNumber++;
-		if(session.getMaxInactiveInterval() > 0){
-	    	if(pollNumber == postSaveBuffer) {
-	    		saveTemplateSpecDetails(SourcingConstants.SUPPLIER_SELECTION,QTConstants.TECHNICAL_DOC_TYPE);
-		    	//reqCtx.execute("poll.stop();");
-		        //reqCtx.execute("poll.start();");
-	    	}else if(pollNumber == postSaveBuffer+QTConstants.AUTOSAVE_SETTING_BUFFERTIME_POSTSAVE){
-	    		pollNumber = 0;
-	    		RequestContext reqCtx = RequestContext.getCurrentInstance();
-		    	reqCtx.execute("autosaveWidget.show();");
-	    		
-	    	}else if(pollNumber == QTConstants.AUTOSAVE_SETTING_LOADING_HIDE){
-	    		RequestContext reqCtx = RequestContext.getCurrentInstance();
-	    		reqCtx.execute("autosaveWidget.hide();");
-	    	}
-		}*/
-		// -END-
-		
-		//Setting by compliance from CR document
-		String pollResetMin = util.getProperty("qt.autosave.setting.reset.min");
-		int pollResetMinInt = NumberUtils.toInt(pollResetMin, 0);
-		int pollResetSecond = pollResetMinInt * 60;
-		
-		pollNumTechnical++;
-		if(!resetTechnical && pollResetMinInt > 0){
-			if(pollNumTechnical == pollResetSecond) {
-	    		saveTemplateSpecDetails(SourcingConstants.SUPPLIER_SELECTION,QTConstants.TECHNICAL_DOC_TYPE);
-			}else if(pollNumTechnical == pollResetSecond+QTConstants.AUTOSAVE_SETTING_BUFFERTIME_POSTSAVE){
-				pollNumTechnical = 0;
-	    		RequestContext reqCtx = RequestContext.getCurrentInstance();
-		    	reqCtx.execute("autosaveWidget.show();");
-	    	}else if(pollNumTechnical == QTConstants.AUTOSAVE_SETTING_LOADING_HIDE){
-	    		RequestContext reqCtx = RequestContext.getCurrentInstance();
-	    		reqCtx.execute("autosaveWidget.hide();");
-	    	}
-		}else if(resetTechnical){
-			pollNumTechnical = 0;
-			resetTechnical = false;
-		}
-		
-//		if(stopTechnical){
-//			log.info("harun cek stopTechnical poll stop true============");
-//			pollStop = true;
-//		}else{
-//			log.info("harun cek stopTechnical poll stop false============");
-//			pollStop = false;
-//		}
-	
-	}
-	
-	public void calculatePollFinancialSpec() {
-		log.info("harun msk SpecificationBackingBean calculatePollFinancialSpec===============");
-		//Jboss timeout checking by HttpSession is rounded 30 min -START-
-		//System.out.println("harun getMaxInactiveInterval: " + session.getMaxInactiveInterval());
-		//log.info("harun cek jboss timeout===================="+System.getProperties().getProperty("sun.net.client.defaultConnectTimeout"));
-		
-		//Setting by container timeout
-		/*ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
-		HttpSession session = httpServletRequest.getSession();
-		
-		int postSaveBuffer = session.getMaxInactiveInterval()-QTConstants.AUTOSAVE_SETTING_BUFFERTIME_PRESAVE;
-		
-		pollNumber++;
-		if(session.getMaxInactiveInterval() > 0){
-	    	if(pollNumber == postSaveBuffer) {
-	    		saveTemplateSpecDetails(SourcingConstants.SUPPLIER_SELECTION,QTConstants.TECHNICAL_DOC_TYPE);
-		    	//reqCtx.execute("poll.stop();");
-		        //reqCtx.execute("poll.start();");
-	    	}else if(pollNumber == postSaveBuffer+QTConstants.AUTOSAVE_SETTING_BUFFERTIME_POSTSAVE){
-	    		pollNumber = 0;
-	    		RequestContext reqCtx = RequestContext.getCurrentInstance();
-		    	reqCtx.execute("autosaveWidget.show();");
-	    		
-	    	}else if(pollNumber == QTConstants.AUTOSAVE_SETTING_LOADING_HIDE){
-	    		RequestContext reqCtx = RequestContext.getCurrentInstance();
-	    		reqCtx.execute("autosaveWidget.hide();");
-	    	}
-		}*/
-		// -END-
-		
-		//Setting by compliance from CR document
-		String pollResetMin = util.getProperty("qt.autosave.setting.reset.min");
-		int pollResetMinInt = NumberUtils.toInt(pollResetMin, 0);
-		int pollResetSecond = pollResetMinInt * 60;
-		
-		pollNumFinancial++;
-		if(!resetFinancial && pollResetMinInt > 0){
-			log.info("harun cek pollNumFinancial======================"+pollNumFinancial);
-			if(pollNumFinancial == pollResetSecond) {
-	    		saveTemplateSpecDetails(SourcingConstants.SUPPLIER_SELECTION,QTConstants.TECHNICAL_DOC_TYPE);
-			}else if(pollNumFinancial == pollResetSecond+QTConstants.AUTOSAVE_SETTING_BUFFERTIME_POSTSAVE){
-				pollNumFinancial = 0;
-	    		RequestContext reqCtx = RequestContext.getCurrentInstance();
-		    	reqCtx.execute("autoFinanceWidget.show();");
-	    	}else if(pollNumFinancial == QTConstants.AUTOSAVE_SETTING_LOADING_HIDE){
-	    		RequestContext reqCtx = RequestContext.getCurrentInstance();
-	    		reqCtx.execute("autoFinanceWidget.hide();");
-	    	}
-		}else if(resetFinancial){
-			pollNumFinancial = 0;
-			resetFinancial = false;
-		}
-	
-	}
-	
-	public void resetPollScoring() {
-		log.info("harun msk resetPollScoring===========================");
-		saveTemplateSpecDetails(SourcingConstants.SUPPLIER_SELECTION,QTConstants.TECHNICAL_DOC_TYPE);
-		resetTechnical = true;
-	}
-	
-	public void resetPollSave() {
-		log.info("harun TemplateSpec resetPollSave new approach===================");
-		resetTechnical = true;
-	}
-	
-	public void stopPollTechnical(){
-		RequestContext reqCtx = RequestContext.getCurrentInstance();
-    	reqCtx.execute("pollTechnical.stop();");
-	
-	}
-	
-	public void startPollTechnical(){
-		RequestContext reqCtx = RequestContext.getCurrentInstance();
-    	reqCtx.execute("pollTechnical.start();");
-	
-	}
-
-	/**
-	 * @return the pollNumFinancial
-	 */
-	public int getPollNumFinancial() {
-		return pollNumFinancial;
-	}
-
-	/**
-	 * @param pollNumFinancial the pollNumFinancial to set
-	 */
-	public void setPollNumFinancial(int pollNumFinancial) {
-		this.pollNumFinancial = pollNumFinancial;
-	}
-
-	/**
-	 * @return the pollNumTechnical
-	 */
-	public int getPollNumTechnical() {
-		return pollNumTechnical;
-	}
-
-	/**
-	 * @param pollNumTechnical the pollNumTechnical to set
-	 */
-	public void setPollNumTechnical(int pollNumTechnical) {
-		this.pollNumTechnical = pollNumTechnical;
-	}
-
-	/**
-	 * @return the resetTechnical
-	 */
-	public boolean isResetTechnical() {
-		return resetTechnical;
-	}
-
-	/**
-	 * @param resetTechnical the resetTechnical to set
-	 */
-	public void setResetTechnical(boolean resetTechnical) {
-		this.resetTechnical = resetTechnical;
-	}
-
-	/**
-	 * @return the resetFinancial
-	 */
-	public boolean isResetFinancial() {
-		return resetFinancial;
-	}
-
-	/**
-	 * @param resetFinancial the resetFinancial to set
-	 */
-	public void setResetFinancial(boolean resetFinancial) {
-		this.resetFinancial = resetFinancial;
-	}
-
-	/**
-	 * @return the pollStop
-	 */
-	public boolean isPollStop() {
-		return pollStop;
-	}
-
-	/**
-	 * @param pollStop the pollStop to set
-	 */
-	public void setPollStop(boolean pollStop) {
-		this.pollStop = pollStop;
-	}
-
-	/**
-	 * @return the stopTechnical
-	 */
-	public boolean isStopTechnical() {
-		return stopTechnical;
-	}
-
-	/**
-	 * @param stopTechnical the stopTechnical to set
-	 */
-	public void setStopTechnical(boolean stopTechnical) {
-		this.stopTechnical = stopTechnical;
-	}
-	
-	public int actionHit = 0;
+	//#10098 Start Vinod
 	public void autoSaveTemplateChecklist(){
-		actionHit++;
-		log.info("autoSaveTemplateChecklist after 1 min : "+actionHit);
 		//RequestContext.getCurrentInstance().execute("confirmAutoTechsave.show()");
+		saveTemplateSpecDetails("SC","1");
 	}
-	public void autosaveAction(){
-		log.info("autosaveAction");
-		log.info("Start time: " + java.time.LocalTime.now());
-
-        try {
-            // Pause the current thread for 1 minute
-            TimeUnit.MINUTES.sleep(1);
-        } catch (InterruptedException e) {
-            // Handle the interruption
-            Thread.currentThread().interrupt();
-            System.out.println("The wait was interrupted.");
-        }
-
-        log.info("End time: " + java.time.LocalTime.now());
-	}
-	
-	//#10098 - End
+	//#10098 End Vinod
 }

@@ -61,6 +61,10 @@ public class TemplateSpecBean implements Serializable {
 	//#34363 Start Vinod
 	private boolean checkListCompleted;
 	//#34363 End Vinod
+	// #10098 Start Vinod
+	private boolean techTemplateUpdateFromQT;
+	private boolean finTemplateUpdateFromQT;
+	// #10098 End Vinod
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -395,5 +399,24 @@ public class TemplateSpecBean implements Serializable {
 		this.checkListCompleted = checkListCompleted;
 	}
 	//#34363 End Vinod
+
+	// #10098 Start Vinod
+	public boolean isTechTemplateUpdateFromQT() {
+		return techTemplateUpdateFromQT;
+	}
+
+	public void setTechTemplateUpdateFromQT(boolean techTemplateUpdateFromQT) {
+		this.techTemplateUpdateFromQT = techTemplateUpdateFromQT;
+	}
+
+	public boolean isFinTemplateUpdateFromQT() {
+		return finTemplateUpdateFromQT;
+	}
+
+	public void setFinTemplateUpdateFromQT(boolean finTemplateUpdateFromQT) {
+		this.finTemplateUpdateFromQT = finTemplateUpdateFromQT;
+	}
+
+	// #10098 End Vinod
 	
 }

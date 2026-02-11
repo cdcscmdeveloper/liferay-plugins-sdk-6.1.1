@@ -96,7 +96,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -156,11 +155,6 @@ public class TemplateSpecBackingBean extends
 	private static final String TPL_SPEC_KEY = "lbl.sc.template.spec";
 
 	private IPagingDataModel<TplSpecMaster> specMasterDataModel = new SpecMasterPagingDataModel();
-	
-	private int pollNumber;
-	private int pollNumberScore;
-	private boolean pollStart = false;
-	private static EpPropertiesUtils util = EpPropertiesUtils.getInstance();
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -2013,6 +2007,9 @@ public class TemplateSpecBackingBean extends
 		debugLogger("scoringOkAction");
 
 		ITemplateSpecSO templateSpecSO = null;
+		// #10098 Start Vinod
+		SpecificationBackingBean specBean = new SpecificationBackingBean();
+		// #10098 End Vinod
 		try {
 			TplSpecQuestion selectedSpecQuestion = templateSpecBean
 					.getSelectedSpecQuestion();
@@ -2032,9 +2029,15 @@ public class TemplateSpecBackingBean extends
 			if (maxScore != null) {
 				selectedSpecQuestion.setMaxScore(maxScore);
 			}
+			// #10098 Start Vinod
+			if (templateSpecBean.isTechTemplateUpdateFromQT() || templateSpecBean.isFinTemplateUpdateFromQT()) {
+				String docType = templateSpecBean.isTechTemplateUpdateFromQT() ? QTConstants.TECHNICAL_DOC_TYPE
+						: QTConstants.FINANCIAL_DOC_TYPE;
+				specBean.saveTemplateSpecDetails(QTConstants.SUPPLIER_CRITERIA, docType);
+			}
+			// #10098 End Vinod
 
 		} finally {
-			resetPoll();
 			templateSpecSO = null;
 		}
 
@@ -5944,12 +5947,4 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	//#38151 End
-		//#10098 - Start
-	public void resetPoll() {
-		log.info("harun TemplateSpec resetPoll new approach===================");
-		FacesContext fctx = FacesContext.getCurrentInstance();
-		SpecificationBackingBean specBackingBean = fctx.getApplication().evaluateExpressionGet(fctx , "#{specificationBackingBean}", SpecificationBackingBean.class);
-		specBackingBean.resetPollScoring();
-	}
-	//#10098 - End
 }
