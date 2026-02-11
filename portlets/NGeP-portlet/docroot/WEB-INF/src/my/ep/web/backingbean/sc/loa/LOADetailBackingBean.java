@@ -13487,6 +13487,37 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						getUserIdSessionFromLoginId(), e);
 			}
 		}
+		
+		/**
+	     * Determines whether the "Assign" button should be enabled or visible.
+	     * The button is considered active (returns {@code true}) if either of the following conditions is met:
+	     * The current context is read-only ({@code readOnly == true}).
+	     * The context is NOT read-only, AND the following three conditions are simultaneously true:
+	     * The item's procurement type is SERVICE (matching {@code DbValueConst.PROCUMENT_TYPE_SERVICE}).
+	     * The item's temporary UNSPSC code is empty or null (validated via {@code StringUtils.isEmpty()}).
+	     * The item has an associated {@code CmItem} (i.e., {@code getCmItem()} is not null).
+	     *
+	     * @param readOnly  {@code true} if the form or context is in read-only mode, bypassing further checks.
+	     * @param loaItem   The {@link ScLoiLoaItem} instance being evaluated.
+	     * @return          {@code true} if the "Assign" button should be active (enabled or shown); {@code false} otherwise.
+	     */
+	    public boolean validateAssignButton(boolean readOnly, ScLoiLoaItem loaItem) {
+	        if (readOnly) {
+	            return true;
+	        }
+
+	        if (loaItem != null && loaItem.getScRequestItem() != null) {
+	            ScRequestItem requestItem = loaItem.getScRequestItem();
+
+	            boolean isServiceType = DbValueConst.PROCUMENT_TYPE_SERVICE.equals(requestItem.getItemType().getParameterId());
+	            boolean isEmptyUnspsc = StringUtils.isEmpty(requestItem.getTempUnspscCode());
+	            boolean hasAssociatedCmItem = requestItem.getCmItem() != null;
+
+	            return isServiceType && isEmptyUnspsc && hasAssociatedCmItem;
+	        }
+
+	        return false;
+	    }
 		// #26059 - End
 }
 
