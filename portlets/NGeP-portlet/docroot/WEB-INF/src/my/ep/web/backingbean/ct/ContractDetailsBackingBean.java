@@ -94,7 +94,6 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote; //Fix - #30045
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.LoggerUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -2498,7 +2497,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#25002 start
 		if(ctContract.getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){	
 			typeSchedule = true;
-			System.out.println("Test Case 1: Contract marked as typeSchedule (true)");
 		}
 		//#25002 end
 		

@@ -3392,8 +3392,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctContractVer.getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 					&& ctContractVer.getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuSchedule);
-				System.out.println("Test Case 1: Schedule menu added for Ministry contract with SCHEDULED fulfillment and Other Change amendment");
-
 			}
 			//#25002 - end
 			
