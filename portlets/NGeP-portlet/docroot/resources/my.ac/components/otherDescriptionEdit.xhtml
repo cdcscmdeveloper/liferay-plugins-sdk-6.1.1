@@ -15,7 +15,7 @@
 	<cc:implementation>
 		<p:dialog
 			id="otherDescriptionEditDlgId"
-			header="#{cc.attrs.dialogHeader} #{backingBean.managedBean.selectedCategory.pmCategoryL1.categoryL1Code}#{backingBean.managedBean.selectedCategory.pmCategoryL2.categoryL2Code}#{backingBean.managedBean.selectedCategory.pmCategoryL3.categoryL3Code}"
+			header="#{cc.attrs.dialogHeader} #{backingBean.managedBean.historySuppCategory.pmCategoryL1.categoryL1Code}#{backingBean.managedBean.historySuppCategory.pmCategoryL2.categoryL2Code}#{backingBean.managedBean.historySuppCategory.pmCategoryL3.categoryL3Code}"
 			closable="true"
 			widgetVar="otherDescriptionEditDlg"
 			resizable="false" modal="true"
@@ -26,10 +26,11 @@
 					<tr>
 						<td><h:outputText
 								value="#{lbl['lbl.sm.other.desc.edit.text']}" style="margin: 10px;"/>
-							<h:inputText id="smOtherDesc"
+							<p:inputTextarea id="smOtherDesc"
 								maxlength="5000"
 								value="#{backingBean.managedBean.otherDescEdited}"
-								size="35" />
+								style="width:auto;" cols="90" rows="10"
+								autoResize="false" />
 						</td>
 					</tr>
 					<tr>
@@ -44,7 +45,9 @@
 						</td>
 					</tr>
 					<tr>
-						<td><p:commandButton
+						<td>
+							<div align="right">
+							<p:commandButton
 								id="btnYes"
 								value="#{lbl['lbl.btn.yes']}"
 								disabled="#{!backingBean.managedBean.updateRecordTC}"
@@ -55,6 +58,7 @@
 								value="#{lbl['lbl.btn.no']}"
 								action="#{backingBean.resetOtherDescriptionEdit}"
 								onclick="otherDescriptionEditDlg.hide();" />
+							</div>
 						</td>
 					</tr>
 				</table>

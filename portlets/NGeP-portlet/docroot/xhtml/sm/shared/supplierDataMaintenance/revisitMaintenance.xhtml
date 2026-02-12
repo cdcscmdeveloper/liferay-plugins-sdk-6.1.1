@@ -13,7 +13,7 @@
 			<p:commandLink onstart="blockWidget.show()"
 				oncomplete="blockWidget.hide()"
 				action="#{supplierDataMaintenanceBackingBean.onClickRevisitHistoryList()}"
-				process="@this" partialSubmit="true" update=":form">
+				update=":form">
 				<u><h:outputText
 						value="#{lbl['lbl.sm.rv.history.link.part.two']}"
 						style="color:blue;" escape="false" /></u>

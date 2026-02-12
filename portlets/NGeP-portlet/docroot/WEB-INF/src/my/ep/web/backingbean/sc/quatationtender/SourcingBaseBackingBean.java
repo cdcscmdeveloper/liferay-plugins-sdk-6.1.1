@@ -199,6 +199,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.comm.TplCommMember;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -4425,6 +4426,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											});
 									Map<String, String> map = null;
 									for (TplSpecQuestion q : specMaster.getTplSpecQuestions()) {
+	
+										//#26059 - Start
+										CommonUtils commonUtils = new CommonUtils();
+										q.setClItem(commonUtils.removeItemNameNA(q.getClItem()));
+										//#26059 - End
+										
 										List<Map<String, String>> listPRQuestion = new ArrayList<>();
 										if (q.getSpecQuestionId().equals(
 												sstItem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId())
@@ -4533,6 +4540,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									for (TplSpecQuestion q : specMaster.getTplSpecQuestions()) {
 										List<Map<String, String>> listPRQuestion = new ArrayList<>();
 										map = new HashMap<>();
+	
+										//#26059 - Start
+										CommonUtils commonUtils = new CommonUtils();
+										q.setClItem(commonUtils.removeItemNameNA(q.getClItem()));
+										//#26059 - End
+		  
 										if (q.getQuestionType().equalsIgnoreCase(
 												ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM)) {
 											if (q.getSpecQuestionId()
@@ -6695,6 +6708,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		switch (committeeType) {
 		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
 		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE: // #35320
 			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
 		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
 			return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
@@ -8419,4 +8433,76 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	//#28784 - End
+	
+	//#35320 - START
+	/**
+	 * Set PTJ Org Profile of user for committee member.
+	 * 
+	 * @param tplMember
+	 */
+	public void setTplCommMemberOrgProfile(TplCommMember tplMember) {
+
+		if (tplMember.getPmUser() != null && tplMember.getPmUser().getOrgTypeCode() != null) {
+			String orgTypeCode = tplMember.getPmUser().getOrgTypeCode().getParameterCode();
+			if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)) {
+				tplMember.setPmOrgProfile(getBKPOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			} else if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)) {
+				tplMember.setPmOrgProfile(getOTHOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			} else {
+				tplMember.setPmOrgProfile(getPTJOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			}
+		}
+	}
+	//#35320 - END
+	
+	//#35320 - START
+	/**
+	 * Set Committeemember data.
+	 * 
+	 * @param deleteScMember
+	 *  @param currentScMember
+	 */
+	public TplCommMember setTplCommitteeMemberData(TplCommMember deletedCommitteeMember,
+			TplCommMember currentCommitteeMember) {
+
+		deletedCommitteeMember.setDeleted(false);
+		deletedCommitteeMember.setRepresentativeType(currentCommitteeMember.getRepresentativeType());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setMemberRoleId(currentCommitteeMember.getMemberRoleId());
+		deletedCommitteeMember.setMemberName(currentCommitteeMember.getMemberName());
+		deletedCommitteeMember.setDesignation(currentCommitteeMember.getDesignation());
+		deletedCommitteeMember.setEmail(currentCommitteeMember.getEmail());
+		deletedCommitteeMember.setGrade(currentCommitteeMember.getGrade());
+		deletedCommitteeMember.setPNP(currentCommitteeMember.isPNP());
+		deletedCommitteeMember.setPmUser(currentCommitteeMember.getPmUser());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setAccessRight(currentCommitteeMember.getAccessRight());
+		deletedCommitteeMember.setTplCommittee(currentCommitteeMember.getTplCommittee());
+
+		if (deletedCommitteeMember.getMemberRole() != null) {
+			deletedCommitteeMember.setMemberRoleId(deletedCommitteeMember.getMemberRole().getParameterId());
+		}
+
+		if (deletedCommitteeMember.getRepresentativeType() != null) {
+			deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType()
+					.getParameterId());
+		}
+		return deletedCommitteeMember;
+	}
+	//#35320 - END
+	
+	//#35320 - START
+	/**
+	 * Representive type change.
+	 *
+	 * @param member the member
+	 */
+	public void tplRepresentiveTypeChangedListener(TplCommMember member) {
+		Long paramId = member.getRepresentativeTypeId();
+		if (null != paramId) {
+			member.setRepresentativeType(ParameterHelper.getInstance()
+					.getPmParameterById(paramId));
+		}
+	}
+	//#35320 - END
 }

@@ -105,11 +105,13 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 				processQtyValuesUpdate(matchingApprovalUpdated, updateVal);
 			}
 		}
+		/** Temporary cloes this deleted section
 		if (CollectionUtils.isNotEmpty(deletedItem)) {
 			for (PmPtjSpecialApproval deleted : deletedItem) {
 				processQtyValuesCreateDeleted(null, deleted);
 			}
 		}
+		**/
 		if (CollectionUtils.isNotEmpty(newCreatedItem)) {
 			for (PmPtjSpecialApproval newCreate : newCreatedItem) {
 				processQtyValuesCreateDeleted(newCreate, null);

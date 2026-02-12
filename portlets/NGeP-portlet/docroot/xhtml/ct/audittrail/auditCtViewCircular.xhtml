@@ -31,13 +31,11 @@
                 </p:commandLink>
             </div>
             
-            <!-- Tab menu -->
+            <!-- CCR Tabs -->
             <h:panelGroup id="searchCircularViewId">
-                <p:tabMenu id="sidemenuCircularId"
+                <p:tabMenu id="sidemenuCcrId"
                            activeIndex="#{auditContractBackingBean.managedBean.activeTab}"
                            styleClass="equal-width-tabs">
-
-                    <!-- CCR Tabs -->
                     <p:menuitem value="#{lbl['lbl.ct.audit.tab.central.contract']}"
                                 rendered="#{auditContractBackingBean.managedBean.ctType eq 'CCR'}"
                                 actionListener="#{auditContractBackingBean.handleButtonClick(0)}"
@@ -77,9 +75,13 @@
                             	actionListener="#{auditContractBackingBean.handleButtonClick(5)}"
                             	update="searchCircularViewId"
                             	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
-
-                	<!-- PCR Tabs -->
+                            	oncomplete="blockWidget.hide()" />                   
+            	</p:tabMenu>
+            	
+            	<!-- PCR Tabs -->
+            	<p:tabMenu id="sidemenuCircularId"
+                           activeIndex="#{auditContractBackingBean.managedBean.activeTab}"
+                           styleClass="equal-width-tabs">
                 	<p:menuitem value="#{lbl['lbl.ct.audit.tab.panel.contract']}"
                             	rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}"
                             	actionListener="#{auditContractBackingBean.handleButtonClick(0)}"
@@ -121,8 +123,7 @@
                             	update="searchCircularViewId"
                             	onstart="blockWidget.show()"
                             	oncomplete="blockWidget.hide()" />
-
-                            	
+                          	
                     <p:menuitem value="#{lbl['lbl.ct.audit.tab.item.supplier.panel']}"
                             	rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}"
                             	actionListener="#{auditContractBackingBean.handleButtonClick(6)}"
