@@ -165,7 +165,6 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
-import my.ep.persistence.entity.sm.SmSuppCatOtherDescHistory;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -1249,7 +1248,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return the redirect page
 	 */
 	public String proceedToApplication(String applicationType, boolean fromBpm, SmAppl appl, SmSupplier supp) {
-		try {
 
 			String sessionId = ((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestedSessionId(); 
 			long subStartTime = 0L;
@@ -1763,7 +1761,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								getManagedBean().getBusinessTypeVal()));
 				//31043 START
 				initNonMandatoryAndMandatoryDocs();
-				//this.getManagedBean().getOtherDescDataModel().reloadData();
 				SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean()); 
 				//31043 END
 				if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
@@ -2753,11 +2750,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					"SmApplicationBackingBean.proceedToApplication", "calcPersonnelListCount-updateCategoriesRecordStatus-36", 
 					subStartTime); //20211005@fadhli - #31754
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
-
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			return SmApplicationUtil.setNavigationForAppl(applicationType);
-		}
 	}
 	
 	//#26238
@@ -3088,8 +3080,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
 		
-		//#36483 - START
+		//#36483 - START,#37925 checking null
 		if(currentPageType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC) 
+				&& getManagedBean().getBasicCompanyFacility() != null 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType() != null 
 				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 			for(SmFacility fac : getManagedBean().getSmAppl().getSmFacilities()){
 				if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
@@ -10862,6 +10856,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
+		getManagedBean().setChangeCurrRegStatus(false); //#37925
 		//30974 - start
 
 		getManagedBean().setSearchRecommendRejectReason(null);
@@ -10915,7 +10910,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		//#12483 - END
 		//Bug #26705
-		getlatestPoOverlappingRemarks();
+		// #39422 - Start - Comment method
+		// getlatestPoOverlappingRemarks();
+		// #39422 - End
+		
+		//#39679 - Start
+		getManagedBean().setApplnOverLapRemarks(null);
+		SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+		//#39679 - End
 		
 		// 27877 - start - not required when pending site visit
 		BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
@@ -10979,12 +10981,45 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			return;
 		}
 
-		long currentRegStatusId = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId();
-
-		long latestRegStatusId = latestPOChange.getPmRegStatus().getRegStatusId();
-
-		getManagedBean().setChangeCurrRegStatus(currentRegStatusId != latestRegStatusId);
+		Long currentRegStatusId = getCurrRegStatusId();
+		Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
+		
+		if(prevRegStatusId != null && currentRegStatusId != prevRegStatusId){
+			getManagedBean().setApprovedStatusId(getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId());
+			return;
+		}
+		
+		if(latestPOChange.getPmRegStatus().getRegStatusId() == prevRegStatusId){
+			getManagedBean().setChangeCurrRegStatus(false);
+		} else {
+			getManagedBean().setChangeCurrRegStatus(true);
+		}		
 		getManagedBean().setApprovedStatusId(latestPOChange.getPmRegStatus().getPmStatus().getStatusId());
+	}
+
+	public Long getCurrRegStatusId() {
+		if (getManagedBean().getSmSupplier() == null || getManagedBean().getSmSupplier().getSmAppl() == null
+				|| getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus() == null
+				|| getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId() == null) {
+			return null;
+		}
+		return getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId();
+	}
+	
+	/**
+	 * Returns the registration status ID that was in effect before the current
+	 * status change for the given application section review.
+	 *
+	 * @param smApplSectionReview
+	 *        the application section review containing the previous registration status
+	 * @return the previous registration status ID
+	 */
+	public Long getPreviousRegStatusId(SmApplSectionReview smApplSectionReview) {
+		if (smApplSectionReview == null || smApplSectionReview.getPreviousRegStatusId() == null
+				|| smApplSectionReview.getPreviousRegStatusId().getRegStatusId() == null) {
+			return null;
+		}
+	    return smApplSectionReview.getPreviousRegStatusId().getRegStatusId();
 	}
 	
 	/**
@@ -11177,6 +11212,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the dialog id to be close
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
+		getManagedBean().setChangeCurrRegStatus(false); //#37925
 //		assignValReqdToFalse(); #37925
 
 		//		#15629 -- start - 27/1/2020
@@ -11310,7 +11346,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		List<String> updateIds = new ArrayList<String>();
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
-		assignValReqdToFalse();
+//		assignValReqdToFalse(); #37925 submit requirement problem
 		//#34400
 		RequestContext.getCurrentInstance().update(updateIds);
 		// #28777 & #29727 - Start
@@ -12018,6 +12054,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}
 				} else if (res	
 						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.ESCALATE)) {
+					//#37925 START
+					PmRegStatus currentRegStatus = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus();
+					getManagedBean().getPoSecReview().setPreviousRegStatusId(currentRegStatus);
+					//#37925 END
+					
 					String statusDesc = "";
 					if (getManagedBean().getPoSecReview() != null
 							&& getManagedBean().getPoSecReview()
@@ -18773,7 +18814,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	/**
 	 * To reset data
-	 *  
+	 * 
 	 */
 	public void resetOtherDescriptionEdit() {
 		getManagedBean().setOtherDescEdited(getManagedBean().getSelectedCategory().getOtherDesc());
@@ -18816,7 +18857,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				MessageUtils.getMessage(MessageConst.INFO_721228, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 		} catch (Exception e) {
-			 throw e;
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
 		} finally {
 			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
 			RequestContext.getCurrentInstance().execute("otherDescriptionEditDlg.hide();");
@@ -18964,8 +19006,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void localContractorRegistrationUI(String applType, boolean isForeignCompany) {
 	    PmStatusDesc currentStatusDesc = SmApplicationUtil.getCurrRegStatusDesc(getManagedBean().getSmAppl());
 	    
-	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType) || 
-	        SupplierManagementConst.APPL_TYPE_BUMI.equals(applType)) {
+	    if (SupplierManagementConst.APPL_TYPE_MOF.equals(applType)) {
 	        assignValReqdToFalse();
 	        getManagedBean().setDisplayLabelRegistrationStatus(true);
 	        setRegistrationStatusValue(isForeignCompany);
@@ -18981,6 +19022,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	            getManagedBean().setDisplayDropdownRegStatus(true);
 	            updateRegistrationStatusList(currentStatusDesc);
 	        }
+	    } else if(SupplierManagementConst.APPL_TYPE_BUMI.equals(applType)) {
+	    	assignValReqdToTrue();
+            getManagedBean().setDisplayCheckboxChangeCurrentStatus(false);
+            getManagedBean().setDisplayDropdownRegStatus(true);
 	    }
 	    // Default case - no action needed
 	}
@@ -19161,6 +19206,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    if (smAppl == null || smSupplier == null) {
 	        return;
 	    }
+	    
+	    if(SupplierManagementConst.APPL_TYPE_BUMI.equals(smAppl.getApplType())){
+	    	assignValReqdToTrue();
+	    	return;
+	    }
 
 	    if (shouldRegistrationStatusBeOptional(smAppl, smSupplier)) {
 	        assignValReqdToFalse();
@@ -19279,28 +19329,118 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	/**
-	 * Updates the approved registration status ID for an approver user.
+	 * Updates the approved registration status ID based on the current context.
+	 * <p>
+	 * If the current status is null, the method exits. If the registration
+	 * status has changed and the user is an approver, the latest PO section
+	 * review status (if valid) overrides the current status.
+	 * </p>
 	 */
 	public void updateApproverRegistrationStatusValue() {
-		if (getManagedBean() == null || !getManagedBean().isApproverUser()) {
+
+		Long statusId = resolveCurrentStatusId();
+		if (statusId == null) {
 			return;
 		}
 
-		Long approvedStatusId;
-		if (getManagedBean().isChangeCurrRegStatus()) {
-			approvedStatusId = findLatestPOSectionReview().getPmRegStatus().getPmStatus().getStatusId();
-		} else {
-			approvedStatusId = getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getPmStatus().getStatusId();
+		if (shouldOverrideWithLatestReview()) {
+			Long latestStatusId = resolveLatestReviewStatusId();
+			if (latestStatusId != null) {
+				statusId = latestStatusId;
+			}
 		}
 
-		getManagedBean().setApprovedStatusId(approvedStatusId);
+		getManagedBean().setApprovedStatusId(statusId);
+	}
+
+	/**
+	 * Resolves the current registration status ID safely.
+	 */
+	private Long resolveCurrentStatusId() {
+		if (getManagedBean() == null
+				|| getManagedBean().getSmSupplier() == null
+				|| getManagedBean().getSmSupplier().getSmAppl() == null
+				|| getManagedBean().getSmSupplier().getSmAppl()
+						.getPmRegStatus() == null
+				|| getManagedBean().getSmSupplier().getSmAppl()
+						.getPmRegStatus().getPmStatus() == null) {
+			return null;
+		}
+
+		return getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus()
+				.getPmStatus().getStatusId();
+	}
+
+	/**
+	 * Determines whether the status should be overridden with the latest PO
+	 * section review status.
+	 */
+	private boolean shouldOverrideWithLatestReview() {
+		if (getManagedBean() == null) {
+			return false;
+		}
+
+		if (!getManagedBean().isChangeCurrRegStatus()) {
+			return false;
+		}
+
+		assignValReqdToTrue();
+
+		return getManagedBean().isApproverUser();
+	}
+
+	/**
+	 * Resolves the status ID from the latest PO section review if valid.
+	 */
+	private Long resolveLatestReviewStatusId() {
+		SmApplSectionReview latestReview = findLatestPOSectionReview();
+
+		if (latestReview != null && validStatusId(latestReview)) {
+			return latestReview.getPmRegStatus().getPmStatus().getStatusId();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Checks whether the latest section review contains a valid status ID.
+	 * 
+	 * @param latestPOSectionReview
+	 *            the section review to validate
+	 * @return true if statusId is present, false otherwise
+	 */
+	public boolean validStatusId(SmApplSectionReview latestPOSectionReview) {
+		if (latestPOSectionReview == null) {
+			return false;
+		}
+
+		PmRegStatus pmRegStatus = latestPOSectionReview.getPmRegStatus();
+		if (pmRegStatus == null) {
+			return false;
+		}
+
+		PmStatus pmStatus = pmRegStatus.getPmStatus();
+		if (pmStatus == null) {
+			return false;
+		}
+		
+		PmRegStatus previousRegStatusId = latestPOSectionReview.getPreviousRegStatusId();
+		if(previousRegStatusId == null){
+			return false;
+			
+		}
+		if (previousRegStatusId.getRegStatusId() != getManagedBean().getSmSupplier().getSmAppl().getPmRegStatus().getRegStatusId()) {
+			return false;
+		}
+
+		return pmStatus.getStatusId() != null;
 	}
 //	#37925 END
 	
 	// #9299 - Start
 	public boolean getAppVersionDetailsWithRedmineNo() {
-		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(),
-				SupplierManagementConst.APP_VERSION_REDMINE_NO_9299);
+		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(), SupplierManagementConst.APP_VERSION_REDMINE_NO_9299,
+				SupplierManagementConst.PHASE_1);
 	}
 
 	public boolean checkCompanyExperienceNewlyAdded(List<SmCompanyExperience> list) {

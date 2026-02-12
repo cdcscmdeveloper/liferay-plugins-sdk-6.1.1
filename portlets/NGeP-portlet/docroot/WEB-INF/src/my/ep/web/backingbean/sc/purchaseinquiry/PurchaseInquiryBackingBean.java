@@ -710,8 +710,17 @@ public class PurchaseInquiryBackingBean extends
 			Date dataCreatedDate;
 			dataCreatedDate = assignActualDate();
 			getManagedBean().setCreatedDate(dataCreatedDate);
-			requestNoteDtl.setProcurementType(getParameterByTypeAndCode(validateProcurementTypeisRPT(dataCreatedDate),
-					requestNoteDtl.getProcurementType().getParameterCode()));
+
+			String procParameterType = validateProcurementTypeisRPT(dataCreatedDate);
+
+			if (ParameterConst.PROC_TYPE_PK7.equalsIgnoreCase(requestNoteDtl.getProcurementType().getParameterCode())
+					|| ParameterConst.PROC_TYPE_SPECIAL_ITEM.equalsIgnoreCase(requestNoteDtl.getProcurementType()
+							.getParameterCode())) {
+				procParameterType = ParameterTypeConst.PROCUREMENT_TYPE_RPT;
+			}
+
+			requestNoteDtl.setProcurementType(getParameterByTypeAndCode(procParameterType, requestNoteDtl
+					.getProcurementType().getParameterCode()));
 			// 27868 - end
 
 			// justification type
@@ -1803,7 +1812,16 @@ public class PurchaseInquiryBackingBean extends
 					}
 				}
 				//#29557 - end
-
+				
+				//#26059 - Start
+				CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
+				if(requestSupplierItem.getRequestNoteItem().getCmItem() !=null){
+					CmItem cmItem = requestSupplierItem.getRequestNoteItem().getCmItem(); 
+				    catalogueBackingBean.cleanItemNameNA(cmItem);
+					requestSupplierItem.getRequestNoteItem().setCmItem(cmItem);
+				}
+				//#26059 - End
+				
 				// RequestNote Details - checking workflow status exits or not
 				// for PI to RN
 				requestNoteDtl.getRequestItem().setSupplierItems(prInquiry.getScRequestSupplierItems());
@@ -2156,6 +2174,11 @@ public class PurchaseInquiryBackingBean extends
 			ScRequestNoteDtl scRequestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
 			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		}
+		
+		//#26059 - Start
+		filterItemName(requestSupplierItem.getRequestNoteItem());
+		//#26059 - End
+		
 		getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
 		getManagedBean().setScRequestSupplierItem(requestSupplierItem);
 		getManagedBean().setSupplierItemPrices(requestSupplierItem.getSupplierItemPrices());
@@ -4246,7 +4269,9 @@ public class PurchaseInquiryBackingBean extends
 	 *             if the reason code is inactive for any request note detail
 	 */
 	public void validateReasonStatus(List<ScRequestNoteDtl> requestNoteDtls) {
-		if (getManagedBean().isReasonCodeInActive() && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
+		PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
+				.getReasonId());
+		if (reason != null && !reason.isRecordStatus() && requestNoteDtls != null && !requestNoteDtls.isEmpty()) {
 			for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
 				throw new EpException(MessageConst.ERROR_760716, new String[] {
 						getParameterDesc(rnDtl.getProcurementType().getParameterType(), rnDtl.getProcurementType()
@@ -4590,38 +4615,32 @@ public class PurchaseInquiryBackingBean extends
 	}
 	
 	/**
-	 * Sets PK7 justification dropdown if reason code matches or is empty.
-	 *
-	 * @param dataCreatedDate creation date to determine PK7 parameter code
+	 * Checks whether any of the "as-is" justification reasons associated with
+	 * the current request note detail is present in the justification dropdown.
+	 * 
+	 * @return {@code true} if at least one dropdown item value matches a reason
+	 *         code from the request note detail; {@code false} otherwise
 	 */
-	private void finalizePK7Dropdown(Date dataCreatedDate) {
-		if (getParameterCodeForPK7(dataCreatedDate).equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())) {
-			getManagedBean().setNewPK7Code(Boolean.TRUE);
-			SelectItem[] wipPK7 = getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value());
+	private boolean isAsIsReasonIncludedInDropdown() {
+		SelectItem[] dropdownItems = getManagedBean().getJustDropdown();
 
-			if (wipPK7 != null && wipPK7.length > 0) {
-				List<SelectItem> wipPK7List = new ArrayList<>(Arrays.asList(wipPK7));
-				checkAndUpdateInactiveReason(wipPK7List);
+		if (dropdownItems == null || getManagedBean().getRequestNoteDtl() == null
+				|| getManagedBean().getRequestNoteDtl().getJustificationType() == null
+				|| getManagedBean().getRequestNoteDtl().getJustificationType().getReasonCode() == null) {
+			return false;
+		}
+
+		List<?> reasonCodes = Arrays
+				.asList(getManagedBean().getRequestNoteDtl().getJustificationType().getReasonCode());
+
+		for (SelectItem item : dropdownItems) {
+			Object value = item.getValue();
+			if (value != null && reasonCodes.contains(value)) {
+				return true;
 			}
 		}
-	}
 
-	/**
-	 * Checks the provided PK7 list and updates the inactive reason status if the request note detail's
-	 * justification type matches any item in the list.
-	 *
-	 * @param wipPK7List the list of PK7 {@link SelectItem} to check against
-	 */
-	protected void checkAndUpdateInactiveReason(List<SelectItem> wipPK7List) {
-		for (SelectItem item : wipPK7List) {
-			if (item.getValue() != null
-					&& getManagedBean().getRequestNoteDtl().getJustificationType() != null
-					&& Arrays.asList(getManagedBean().getRequestNoteDtl().getJustificationType().getReasonCode())
-							.contains(item.getValue())) {
-
-				updateInactiveReasonStatus();
-			}
-		}
+		return false;
 	}
 
 	/**
@@ -4651,20 +4670,34 @@ public class PurchaseInquiryBackingBean extends
 	 * @throws NullPointerException if justification type or reason ID is null
 	 */
 	private void inactiveReasonChecking() {
-		if (null != getManagedBean().getRequestNoteDtl().getJustificationType()
-				&& null != getManagedBean().getRequestNoteDtl().getJustificationType().getReasonId()) {
-			PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
-					.getReasonId());
+	    if (getManagedBean().getRequestNoteDtl() == null
+	            || getManagedBean().getRequestNoteDtl().getJustificationType() == null
+	            || getManagedBean().getRequestNoteDtl().getJustificationType().getReasonId() == null) {
+	        return;
+	    }
 
-			if (reason != null && !reason.isRecordStatus()) {
-				getManagedBean().setReasonCodeInActive(true);
-				String reasonDesc = getReasonDesc(reason);
-				if (!StringUtils.isEmpty(reasonDesc)) {
-					getManagedBean().setInActiveReasonDesc(reasonDesc);
-				}
-			}
+	    PmReason reason = retrieveReasonDtlById(
+	            getManagedBean().getRequestNoteDtl()
+	                    .getJustificationType()
+	                    .getReasonId()
+	    );
 
-		}
+	    if (reason == null) {
+	        return;
+	    }
+
+	    boolean isInactive = !reason.isRecordStatus();
+	    boolean isActiveButMissingAsIs =
+	            reason.isRecordStatus() && !isAsIsReasonIncludedInDropdown();
+
+	    if (isInactive || isActiveButMissingAsIs) {
+	        getManagedBean().setReasonCodeInActive(true);
+
+	        String reasonDesc = getReasonDesc(reason);
+	        if (StringUtils.isNotEmpty(reasonDesc)) {
+	            getManagedBean().setInActiveReasonDesc(reasonDesc);
+	        }
+	    }
 	}
 
 	/**
@@ -4767,6 +4800,19 @@ public class PurchaseInquiryBackingBean extends
 		return dataCreatedDate;
 	}
 	// 27868 - end
+	
+	//#26059 - Start
+	/**
+	 * Cleans the item name of the given request item, if available.
+	 *
+	 * @param scRequestItem the request item containing the item to clean
+	 */
+	private void filterItemName(ScRequestItem scRequestItem) {
+	    if (scRequestItem != null && scRequestItem.getCmItem() != null) {
+	        new CatalogueBackingBean().cleanItemNameNA(scRequestItem.getCmItem());
+	    }
+	}
+	//#26059 - End
 	
 	
 }

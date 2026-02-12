@@ -25,6 +25,7 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.directpurchase.IAssignItemDtlSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -37,6 +38,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.directpurchase.AssignItemDtlReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.exception.EpException;
@@ -68,6 +70,7 @@ import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.cm.CmConst;
+import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.managedbean.cm.codification.CodificationManagedBean;
 import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -159,7 +162,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			this.getManagedBean().initRefreshPageNoFlag();
 		}
 		//200921@akmal - Enhancement27627 - Start
-		resetAction();
+		//#26059 - Start
+		if (StringUtils.isEmpty(getManagedBean().getAutoCompleteUnspscCode().getUnspscCode())
+				|| (StringUtils.isNotEmpty(getManagedBean().getCmItemCode()) && getManagedBean().getCmItemCode()
+						.length() == DPConstants.NUMBER_EIGHT)) {
+			resetAction();
+		}
+		//#26059 - End
 		//200921@akmal - Enhancement27627 - End
 	}
 
@@ -1132,27 +1141,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public void setMeasurementFilterBean(SearchFilterBean measurementFilterBean) {
 		this.measurementFilterBean = measurementFilterBean;
 	}
-
-	public String assignProductCode(ScRequestItem requestItem, TplSpecQuestion tplSpecQuestion, boolean isSourcing) {
-		log.info(">>>>>>>>>requestItem= " + requestItem);
-		if(null != tplSpecQuestion){
-			requestItem  = new ScRequestItem();
-			requestItem.setItemName(tplSpecQuestion.getClItem());
-			requestItem.setItemDesc(tplSpecQuestion.getClSpecDetail());
-			requestItem.setItemType(tplSpecQuestion.getTplSpecMaster().getItemTypeCode());
-		}
-		this.getManagedBean().setAssignCodeFlg(true);
-		this.getManagedBean().setSelectedRequestItem(requestItem);
-		this.getManagedBean().setTplSpecQuestion(tplSpecQuestion);
-		this.getManagedBean().setSourcing(isSourcing);
-
-		FacesContext fc = FacesContext.getCurrentInstance();
-		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-
-		clearContractedCodePopUp();
-		return NAV_SEARCH_UNSPC_TO_ASSIGN;
-
-	}
+	
+	
 
 	/**
 	 * clear value contracted pop up screen.
@@ -1164,7 +1154,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				SearchOperator.OPERATOR_LIKE.value());
 		this.getManagedBean().setTitleFilterBean(titleFilterBean);
 		this.getManagedBean().setSearchDataModel(new SearchPagingDataModel());
-
+		
 		this.getManagedBean().setAutoCompleteUnspscCode(null);
 
 
@@ -1302,13 +1292,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 * Assign Item code for contracted item (service type)
 	 * 
 	 */
-	public String insertContractedItemCodeForService(CmUnspsc commodity) {
+	public String insertContractedItemCodeForService(CmUnspsc commodity , ScRequestItem requestItem) {
 		this.getManagedBean().setSelectedUNSPSCObj(commodity);
-		return insertContractedItemCode(null);
+		return insertContractedItemCode(null,requestItem);
 
 	}
 
-	public String insertContractedItemCode(Object [] objSelected) {
+	public String insertContractedItemCode(Object [] objSelected , ScRequestItem requestItem) {
 		log.info("**********insertContractedItemCode************");
 		FacesContext facesContext = null;
 
@@ -1501,9 +1491,20 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 			}
 
-			List<ScRequestItem> tempRequestItemList = new ArrayList<ScRequestItem>();
+			List<ScRequestItem> tempRequestItemList = new ArrayList<>();
 			TplSpecQuestion tplSpecQuestion = getManagedBean().getTplSpecQuestion();
 			ScRequestItem scRequestItem = this.getManagedBean().getSelectedRequestItem();
+			
+			//#26059 - Start
+			CommonUtils commonUtils = new CommonUtils();
+			scRequestItem.setItemName(commonUtils.removeItemNameNA(scRequestItem.getItemName()));
+			
+			if(requestItem !=null){
+				insertIntoAssignCodeDetail(requestItem);
+			}
+
+			//#26059 - End
+			
 			if(null == tplSpecQuestion){
 				scRequestItem.setCmItem(item);
 				tempRequestItemList.add(scRequestItem);
@@ -1529,11 +1530,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			boolean allCodeItemsAssigned = true;
 			if(CollectionUtils.isNotEmpty(this.getManagedBean()
 					.getSelectedVPendingRequestItemList())){
-				for (ScRequestItem requestItem : this.getManagedBean()
+				for (ScRequestItem requestItemPending : this.getManagedBean()
 						.getSelectedVPendingRequestItemList()) {
-					if (requestItem.getCmItem() != null) {
-						if (requestItem.getCmItem().getExtensionCode() == null
-								|| requestItem.getCmItem().getExtensionCode()
+					if (requestItemPending.getCmItem() != null) {
+						if (requestItemPending.getCmItem().getExtensionCode() == null
+								|| requestItemPending.getCmItem().getExtensionCode()
 								.isEmpty()) {
 							allCodeItemsAssigned = false;
 							break;
@@ -2309,7 +2310,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			// if come from pending codification, no task
 			RequestContext.getCurrentInstance().execute("unspscPopUp.hide()");
 
-			return insertContractedItemCodeForService(comodityObj);
+			return insertContractedItemCodeForService(comodityObj,null);
 			// return NAV_TO_ASSIGN_PRODUCT_CODE+"?faces-redirect=true";
 		}
 
@@ -3929,6 +3930,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			
 			if (newItem.getItemName() == null || newItem.getItemName().trim().isEmpty()) {
 				this.getManagedBean().setHideExtension(true);
+			}else{
+				this.getManagedBean().setHideExtension(false);
 			}
 						
 		} catch (Exception e) {
@@ -3967,5 +3970,169 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				+ common.removeItemNameNA(color.getColorName());
 	}
 	// #31503 -end-
+	
+	// #26059 - Start
+	/**
+	 * Assigns the necessary context for the product code assignment flow,
+	 * preparing the managed bean with the selected request item and navigation
+	 * details.
+	 * 
+	 * This method performs several critical setup actions: Initializes a new
+	 * {@code ScRequestItem} if a {@code TplSpecQuestion} is provided,
+	 * populating basic item fields from the question details. Sets various
+	 * flags and contextual objects in the managed bean (e.g.,
+	 * {@code assignCodeFlg}, {@code selectedRequestItem},
+	 * {@code tplSpecQuestion}, and {@code isSourcing}). If the request item has
+	 * a contract extension code longer than 8 characters, it calls
+	 * {@code setItemForSearchDataModel} to pre-populate search criteria.
+	 * Records the current view ID as the page to return to (
+	 * {@code backToPreviousPage}). Calls {@code} to
+	 * reset search data models if necessary.
+	 * 
+	 * @param requestItem
+	 *            The original {@code ScRequestItem} object, which may be
+	 *            overwritten if {@code tplSpecQuestion} is not null.
+	 * @param tplSpecQuestion
+	 *            The template specification question used to initialize a new
+	 *            {@code ScRequestItem} when populating a non-standard item for
+	 *            codification.
+	 * @param isSourcing
+	 *            A boolean flag indicating whether the operation is being
+	 *            performed in a sourcing context.
+	 * @return A navigation string, {@code NAV_SEARCH_UNSPC_TO_ASSIGN},
+	 *         directing the user to the UNSPSC code assignment search page.
+	 */
+	public String assignProductCode(ScRequestItem requestItem, TplSpecQuestion tplSpecQuestion, boolean isSourcing) {
+		ScRequestItem requestItemToUse = requestItem;
+
+		if (tplSpecQuestion != null) {
+			ScRequestItem newRequestItem = new ScRequestItem();
+			newRequestItem.setItemName(tplSpecQuestion.getClItem());
+			newRequestItem.setItemDesc(tplSpecQuestion.getClSpecDetail());
+			newRequestItem.setItemType(tplSpecQuestion.getTplSpecMaster().getItemTypeCode());
+
+			requestItemToUse = newRequestItem;
+		}
+
+		this.getManagedBean().setAssignCodeFlg(true);
+		this.getManagedBean().setSelectedRequestItem(requestItemToUse);
+		this.getManagedBean().setTplSpecQuestion(tplSpecQuestion);
+		this.getManagedBean().setSourcing(isSourcing);
+
+		if (requestItemToUse != null && requestItemToUse.getCmItem() != null
+				&& requestItemToUse.getCmItem().getExtensionCode().length() > DPConstants.NUMBER_EIGHT) {
+
+			setItemForSearchDataModel(tplSpecQuestion != null ? tplSpecQuestion : requestItemToUse.getTplSpecQuestion());
+		}
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+
+		resetUnspscSearchCriteria(requestItemToUse);
+
+		return NAV_SEARCH_UNSPC_TO_ASSIGN;
+	}
+
+	/**
+	 * Retrieves the full item object details and fetches the corresponding
+	 * commodity object based on the item's existing UNSPSC code.
+	 * 
+	 * This method performs the following steps: Retrieves the detailed
+	 * {@code CmItem} object using the item ID found in the
+	 * {@code TplSpecQuestion}. Extracts the UNSPSC code from the retrieved
+	 * {@code CmItem}. Uses the extracted UNSPSC code to search for the full
+	 * {@code CommodityObj} (UNSPSC segment, family, class, and commodity)
+	 * details. Sets the resulting {@code CommodityObj} into the managed bean's
+	 * {@code autoCompleteUnspscCode} property, typically to pre-populate a
+	 * search filter or display field.
+	 * 
+	 * @param question
+	 *            The {@code TplSpecQuestion} object containing the
+	 *            {@code CmItem} details necessary to start the codification
+	 *            object retrieval.
+	 * @throws BusinessException
+	 *             if any business service operation fails during item or
+	 *             commodity retrieval (though error handling is not shown in
+	 *             the provided snippet).
+	 */
+	private void setItemForSearchDataModel(TplSpecQuestion question) {
+
+		ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+
+		CodificationReqDTO cReqDTO = new CodificationReqDTO();
+		cReqDTO.setItemId(question.getCmItem().getItemId());
+
+		CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
+		CmItem item = cResDTO.getCmItem();
+
+		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+		codeReqDTO.setUnspscCode(item.getCmUnspsc().getUnspscCode());
+
+		CodificationResDTO codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
+
+		getManagedBean().setAutoCompleteUnspscCode(codeResDTO.getCommodityObj());
+	}
+
+	/**
+	 * Clears the search data model and filter criteria related to the
+	 * contracted item code pop-up. * This method is specifically designed to
+	 * reset the search state for the UNSPSC codification process only if the
+	 * item code extension field is either empty or its length does not exceed 8
+	 * characters, suggesting it is not a fully contracted or extended code. *
+	 * If the condition is met, it re-initializes the following state variables
+	 * in the managed bean: Replaces the existing {@code searchDataModel} with a
+	 * new {@code SearchPagingDataModel} instance. Sets
+	 * {@code autoCompleteUnspscCode} to {@code null}. Re-initializes the
+	 * {@code titleFilterBean} with a new {@code SearchFilterBean} using the
+	 * 'LIKE' operator. Sets the request extension code ({@code requestExtCode})
+	 * to {@code null}. * @param requestItem The {@code ScRequestItem} instance
+	 * containing item details, including the {@code CmItem} which holds the
+	 * {@code extensionCode} used for determining the clear condition.
+	 */
+	public void resetUnspscSearchCriteria(ScRequestItem requestItem) {
+
+		if (requestItem.getCmItem() == null || StringUtils.isEmpty(requestItem.getCmItem().getExtensionCode())
+				&& requestItem.getCmItem().getExtensionCode().length() <= DPConstants.NUMBER_EIGHT) {
+			this.getManagedBean().setSearchDataModel(new SearchPagingDataModel());
+			this.getManagedBean().setAutoCompleteUnspscCode(null);
+			titleFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+			this.getManagedBean().setTitleFilterBean(titleFilterBean);
+			this.getManagedBean().setRequestExtCode(null);
+		}
+
+	}
+
+	/**
+	 * Prepares and sends a request to the service layer to persist the
+	 * assignment code details associated with a specific request item.
+	 * 
+	 * This method utilizes the {@code BusinessDelegate} pattern to fetch the
+	 * necessary service object ({@code IAssignItemDtlSO}), wraps the provided
+	 * {@code ScRequestItem} in an {@code AssignItemDtlReqDTO}, and executes the
+	 * save operation.
+	 * 
+	 * @param scRequestItem
+	 *            The request item entity whose assignment details need to be
+	 *            saved.
+	 * @throws ServiceLookupException
+	 *             if the BusinessDelegate fails to retrieve the correct service
+	 *             object.
+	 * @throws RuntimeException
+	 *             (or relevant exception) if the underlying service call to
+	 *             {@code saveScAssignItemDetail} fails during persistence.
+	 */
+	private void insertIntoAssignCodeDetail(ScRequestItem scRequestItem) {
+
+		IAssignItemDtlSO assignItemDtlSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IAssignItemDtlSO.class);
+
+		AssignItemDtlReqDTO reqDTO = new AssignItemDtlReqDTO();
+		reqDTO.setScRequestItem(scRequestItem);
+
+		assignItemDtlSO.saveScAssignItemDetail(reqDTO);
+
+	}
+	// #26059 - End
 
 }

@@ -130,11 +130,11 @@
 							</p:column>
 
 							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
-							<p:column headerText="#{lbl['lbl.sc.total.score']}"
+							<p:column headerText="#{lbl['lbl.sc.mloi.overall.score']}"
 								style="text-align: right;">
 								<ui:remove><!-- #38151 datatable value popup--></ui:remove>
 								<p:commandLink action ="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
-	 											  rendered="#{lOIDetailBackingBean.managedBean.weightageReq and !lOIDetailBackingBea.managedBean.weightage35384WIP}" process="@this" update="@([id$=SuppScoreDetailsPopupId])" styleClass="commandLink" >
+	 											  rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}" process="@this" update="@([id$=SuppScoreDetailsPopupId])" styleClass="commandLink" >
 							
 								<h:outputText value="#{supplierDtl.totalScore}">
 									<f:convertNumber
@@ -142,7 +142,7 @@
 																				CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 								</h:outputText>
 								</p:commandLink>
-								<h:outputText value="#{supplierDtl.totalScore}" rendered="#{lOIDetailBackingBea.managedBean.weightage35384WIP}">
+								<h:outputText value="#{supplierDtl.totalScore}" rendered="#{lOIDetailBackingBean.managedBean.weightage35384WIP}">
 									<f:convertNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(
 																				CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
@@ -374,11 +374,11 @@
 							<p:column headerText="#{lbl['lbl.sc.total.overall.score']}"
 								style="text-align: right;">
 							<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
-							rendered ="#{lOIDetailBackingBean.managedBean.weightageReq and !lOIDetailBackingBea.managedBean.weightage35384WIP}">
+							rendered ="#{lOIDetailBackingBean.managedBean.weightageReq and !lOIDetailBackingBean.managedBean.weightage35384WIP}">
 									<p:commandLink
 										action="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
 										process="@this" update="@([id$=SuppScoreDetailsPopupId])"
-										rendered="#{!lOIDetailBackingBea.managedBean.weightage35384WIP}"
+										rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}"
 										styleClass="commandLink">
 
 										<h:outputText value="#{recommendedSuppl.totalScore}"
@@ -394,14 +394,14 @@
 
 								</p:dataList>
 										<h:outputText value="#{recommendedSuppl.totalScore}"
-											rendered="#{lOIDetailBackingBea.managedBean.weightage35384WIP and (isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}">
+											rendered="#{lOIDetailBackingBean.managedBean.weightage35384WIP and (isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}">
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 										</h:outputText>
 									
 
 									<h:outputText escape="false" value="&#60;br &#47;&#62;"
-										rendered="#{lOIDetailBackingBea.managedBean.weightage35384WIP and (isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}" />
+										rendered="#{lOIDetailBackingBean.managedBean.weightage35384WIP and (isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}" />
 								
 							</p:column>
 							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
@@ -970,29 +970,29 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{qualifiedSupp.technicalTotalScore}" />
-
+				<h:outputText value="#{qualifiedSupp.technicalTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{qualifiedSupp.financialTotalScore}" />
-
+				<h:outputText value="#{qualifiedSupp.financialTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{qualifiedSupp.recommendationTechnicalScore}" />
-
+				<h:outputText value="#{qualifiedSupp.recommendationTechnicalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{qualifiedSupp.recommendationFinancialScore}" />
-
+				<h:outputText value="#{qualifiedSupp.recommendationFinancialScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			<p:column style="text-align:center;">
-
-				<h:outputText value="#{qualifiedSupp.recommendationTotalScore}" />
-
+				<h:outputText value="#{qualifiedSupp.recommendationTotalScore}" >
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 		</p:dataTable>
 	</p:dialog>

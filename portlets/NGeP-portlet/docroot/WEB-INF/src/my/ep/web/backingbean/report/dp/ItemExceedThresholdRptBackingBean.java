@@ -18,6 +18,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -72,6 +73,15 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	}
 
 	/**
+	 * Generates report if all required fields are valid.
+	 * 
+	 * Calls {@link #reportValidationFields()} first. Only proceeds to
+	 * {@link #generateDpReport(LinkedHashMap)} if validation passes.
+	 * 
+	 * @param params report generation parameters
+	 * @see #reportValidationFields()
+	 * @see #generateDpReport(LinkedHashMap)
+	 * 
 	 * @param params
 	 */
 	public void generateReport(LinkedHashMap<String, String> params) { // NOSONAR - follow exact same return type the parent declares
@@ -136,17 +146,14 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 
 		if (MapUtils.isNotEmpty(map)) {
 			// mandatory map values
-			if (getManagedBean().getCentralPanelContract() == null){
-				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-						"lbl.rpt.drpdown.panel", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()) });
-			}
-			if (getManagedBean().getCentralPanelContract()){
-				//panel
-				this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_PANEL);
-			}else {
-				// non panel
-				this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_NON_PANEL);
+			if (getManagedBean().getCentralPanelContract() != null) {
+				if (getManagedBean().getCentralPanelContract()) {
+					// panel
+					this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_PANEL);
+				} else {
+					// non panel
+					this.getManagedBean().setReportName(DPConstants.SC_ITEM_EXCEEDED_THRESHOLD_NON_PANEL);
+				}
 			}
 
 			map.put(DpReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
@@ -159,12 +166,31 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 		return map;
 	}
 
+	/**
+	 * Adds non-empty string to map.
+	 * 
+	 * Skips null, empty, or blank strings (StringUtils.isNotEmpty).
+	 * 
+	 * @param map target map
+	 * @param key map key  
+	 * @param value string value to add (if non-empty)
+	 */
 	private void addIfNotEmpty(Map<String, String> map, String key, String value) {
 		if (StringUtils.isNotEmpty(value)) {
 			map.put(key, value);
 		}
 	}
 
+	/**
+	 * Adds non-null object to map as key-value pair.
+	 * 
+	 * Safely converts object to String via toString() and adds to map.
+	 * No-op if object is null.
+	 * 
+	 * @param map target map to populate
+	 * @param key map key
+	 * @param obj value to add (converted to String if non-null)
+	 */
 	private void addIfNotNull(Map<String, String> map, String key, Object obj) {
 		if (obj != null) {
 			map.put(key, obj.toString());
@@ -183,9 +209,16 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	}
 
 	/**
-	 * Generate year list.
+	 * Generates a list of selectable years for use in dropdown menus or UI
+	 * components. The list starts from the year 2018 and continues up to the
+	 * current system year. Each entry is represented as a {@link SelectItem}
+	 * with the year as both the value and label. Additionally, if the managed
+	 * bean's financial year is not yet set, this method initializes it to the
+	 * current year by default to ensure a valid selection is always available.
 	 * 
-	 * @return the list
+	 * @return a list of {@link SelectItem} objects representing the available
+	 *         year options, including all years from 2018 through the current
+	 *         year.
 	 */
 	public List<SelectItem> generateYearList() {
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -294,7 +327,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	 * @return the procurement mode dropdown values
 	 */
 	public SelectItem[] getProcurementModeDropdownValues() {
-		SelectItem[] items = getDropdownValuesBySearchBean("RPT", null);
+		SelectItem[] items = getDropdownValuesBySearchBean(ParameterTypeConst.PROCUREMENT_TYPE_RPT, null);
 		SelectItem[] filtered;
 		
 		if (getManagedBean().getCentralPanelContract() == null || !getManagedBean().getCentralPanelContract()){
@@ -485,33 +518,78 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	}
 
 	/**
-	 * @param params
-	 * @param isReportError
-	 * @return
+	 * Validates mandatory fields required for report generation.
+	 * 
+	 * Checks the following required fields:
+	 * Ministry selection (orgName and orgCode must not be empty)</li>
+	 * Central Panel Contract selection</li>
+	 * Financial Year selection</li>
+	 * 
+	 * Each validation failure adds an appropriate error message via {@link #addErrorMessage(String)}.
+	 * 
+	 * @return {@code true} if any validation error is found (report generation should be prevented),
+	 *         {@code false} if all fields are valid and report can be generated
 	 */
 	public boolean reportValidationFields() {
-		boolean isHasError = false;
-
-		boolean ministryInvalid = getManagedBean().getSelectedMinistry() == null
-				|| getManagedBean().getSelectedMinistry().getMinstryId() == null;
-		if (getManagedBean().isDisableRole() && ministryInvalid) {
-			isHasError = true;
-			addErrorMessage("lbl.rpt.ministry");
-		}
-		if (getManagedBean().getCentralPanelContract() == null) {
-			isHasError = true;
-			addErrorMessage("lbl.rpt.drpdown.panel");
-		}
-		if (getManagedBean().getFinancialYear() == null) {
-			isHasError = true;
-			addErrorMessage("lbl.sc.rpt.financial.year");
-		}
-
-		return isHasError;
+	    ItemExceedThresholdRptManagedBean bean = getManagedBean();
+	    boolean hasError = false;
+	    
+	    if (isMinistryInvalid(bean)) {
+	        hasError = true;
+	        addErrorMessage("lbl.rpt.ministry");
+	    }
+	    
+	    if (bean.getCentralPanelContract() == null) {
+	        hasError = true;
+	        addErrorMessage("lbl.rpt.drpdown.panel");
+	    }
+	    
+	    if (bean.getFinancialYear() == null) {
+	        hasError = true;
+	        addErrorMessage("lbl.sc.rpt.financial.year");
+	    }
+	    
+	    return hasError;
 	}
 
 	/**
-	 * @param labelKey
+	 * Validates ministry selection for report generation.
+	 * 
+	 *A ministry is considered invalid if:
+	 *
+	 *{@code bean.getSelectedMinistry()} is {@code null}</li>
+	 *{@code ministry.getPmOrgValidity()} is {@code null}</li>
+	 *
+	 * 
+	 * @param bean the managed bean containing ministry selection
+	 * @return {@code true} if ministry selection is invalid and requires user correction,
+	 *         {@code false} if ministry is properly selected with valid orgName and orgCode
+	 */
+	private boolean isMinistryInvalid(ItemExceedThresholdRptManagedBean bean) {
+	    PmOrgProfile ministry = bean.getSelectedMinistry();
+	    if (ministry == null || ministry.getPmOrgValidity() == null) {
+	        return true;
+	    }
+	    
+	    String orgName = ministry.getPmOrgValidity().getOrgName();
+	    String orgCode = ministry.getPmOrgValidity().getOrgCode();
+	    
+	    return StringUtils.isEmpty(orgName) || StringUtils.isEmpty(orgCode);
+	}
+
+
+	/**
+	 * Adds a global error message for a required field validation failure.
+	 * 
+	 * The error message is constructed using:
+	 * 
+	 *   Error key: {@link MessageConst#ERROR_100022} (formatted with field label)</li>
+	 *   Field label: Resolved from {@link ResourceBundleUtils#BUNDLE_COMMON_LABELS} using {@code labelKey}</li>
+	 *   Locale: Current user's locale from {@link FacesScopes#getUserLocale()}</li>
+	 * 
+	 * Marks the current FacesContext as validation failed, preventing form submission.
+	 * 
+	 * @param labelKey the message bundle key for the field label (e.g., "lbl.rpt.ministry")
 	 */
 	private void addErrorMessage(String labelKey) {
 		FacesContext.getCurrentInstance().addMessage(
@@ -553,6 +631,13 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	}
 	
 	/**
+	 * Returns filtered status options for report dropdown.
+	 * 
+	 * Adds "All" option first, then valid statuses matching
+	 * DPConstants.STATUS_ITEM_EXCEEDED_THRESHOLD_REPORT. Returns empty array if
+	 * any error occurs (logged via SLAUtils).
+	 * 
+	 * 
 	 * @param moduleCode
 	 * @param docType
 	 * @param searchBean

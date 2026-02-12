@@ -34,7 +34,7 @@
 					style="width:50%; text-align: center">
 					<div align="left">
 						<h:outputText value="#{cbb.managedBean.familyTitle}"
-							style="white-space: normal!important;" />
+							style="white-space: normal!important; word-wrap: break-word !important;" />
 					</div>
 				</p:column>
 			</p:dataTable>
@@ -55,34 +55,31 @@
 						<p:outputLabel style="font-weight: bold;"
 							value="#{lbl['lbl.cm.commodity.title']}" />
 					</td>
-					<td style="border: 10px !important; padding: 0;"><p:inputText
+					<td style="border: 10px !important; padding: 0;"><p:inputTextarea
 							id="commodityTitleId"
 							value="#{codificationBackingBean.managedBean.commodityTitle}"
 							style="width:300px;" disabled="true" /></td>
 				</tr>
 				<tr style="border: hidden !important;">
-					<td width="15%" style="border: hidden !important; padding: 0;">
-						<p:outputLabel style="font-weight: bold;"
-							value="#{lbl['lbl.sc.qt.extension.code']}" />
-					</td>
-					<td width="30%" style="border: 10px !important; padding: 0;">
-						<p:inputText id="segmentCodeId"
-							value="#{codificationBackingBean.managedBean.segmentCode}"
-							style="width:300px;" disabled="true" />
-					</td>
-					<td width="15%" style="border: hidden !important; padding: 0;">
-					  <h:panelGroup rendered="#{!codificationBackingBean.managedBean.hideExtension}">
+					<h:panelGroup
+						rendered="#{!codificationBackingBean.managedBean.hideExtension}">
+						<td width="15%" style="border: hidden !important; padding: 0;">
+							<p:outputLabel style="font-weight: bold;"
+								value="#{lbl['lbl.sc.qt.extension.code']}" />
+						</td>
+						<td width="30%" style="border: 10px !important; padding: 0;">
+							<p:inputText id="segmentCodeId"
+								value="#{codificationBackingBean.managedBean.segmentCode}"
+								style="width:300px;" disabled="true" />
+						</td>
+						<td width="15%" style="border: hidden !important; padding: 0;">
 							<p:outputLabel style="font-weight: bold;"
 								value="#{lbl['lbl.sc.qt.extension.title']}" />
-					 </h:panelGroup> 
-					</td>
-					<td>
-					     <h:panelGroup rendered="#{!codificationBackingBean.managedBean.hideExtension}">
-							<p:inputText id="segmentTitleId"
+						</td>
+						<td><p:inputTextarea id="segmentTitleId"
 								value="#{codificationBackingBean.managedBean.segmentTitle}"
-								style="width:300px;" disabled="true" />
-						</h:panelGroup>
-					</td>
+								style="width:300px;" disabled="true" /></td>
+					</h:panelGroup>
 				</tr>
 			</table>
 		</p:panel>
