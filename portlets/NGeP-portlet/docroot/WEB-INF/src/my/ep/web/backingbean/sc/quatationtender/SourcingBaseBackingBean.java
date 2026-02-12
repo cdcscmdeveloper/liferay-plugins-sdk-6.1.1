@@ -335,7 +335,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected void populateAttachmentDetails(ScAttachment attachment)
 			throws FileNotFoundException, IOException {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		PmUser createdUser = new FacesScopes().getUserSessionBean();
+		//#21692 - Start
+		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
+		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
+		//#21692 - End
 
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		if (attachment.getAttachmentId() == null
@@ -1075,8 +1078,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		//21692 - Start
+		HttpServletResponse res;
+		if (FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl") != null) {
+			res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		} else {
+			PortletResponse portletResponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			res = com.liferay.portal.util.PortalUtil
+					.getHttpServletResponse(portletResponse);
+		}
+		//21692 - End
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try {
@@ -5980,7 +5992,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
 					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
 				}
-
 				//Bug #39043 #39512 start
 				if (null != suppAns.getSupplierId()
 						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()){   

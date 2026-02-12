@@ -2395,8 +2395,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						// #30660
 						if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
 							this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
-							if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
-								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
+							if (this.getManagedBean().getSmAppl().getSmEquityCompanies() == null) {
+								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList<SmEquityCompany>());
 							}
 							//delete all old company share #27145
 							Iterator<SmEquityCompany> iterequityCompany = this.getManagedBean().getSmAppl().getSmEquityCompanies().iterator();
@@ -4045,17 +4045,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl(),
 					getManagedBean().getCurrentPageType());
-			
-			// 35208 START
-			if(getManagedBean().getSmSupplier().getSmAppl() != null){
-				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
-						getManagedBean().getSmSupplier().getSmAppl());
-			}
-			if(getManagedBean().getSmAppl() != null){
-				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
-						getManagedBean().getSmAppl());
-			}
-			// 35208 END
 
 			// init GST information
 			initGst();
@@ -15385,9 +15374,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 			ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
-			if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
+			if (SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())) {
 				ssmReqDTO.setBasicAcc(true);
-			}else{
+			} else {
 				ssmReqDTO.setBasicAcc(false);
 			}
 			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
@@ -15398,14 +15387,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					personnel = setDesignationSSM(personnel);
 					
 					//#30944 START
-					if(!this.getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-							&& !this.getManagedBean().getSmAppl().getApplType()
-									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
-							&& !this.getManagedBean().getSmAppl().getApplType()
-									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
-						for(SmPersonnel per : this.getManagedBean().getSmAppl().getSmPersonnels()){
-							if(per.getName().equals(personnel.getName())){
+					if (!this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) 
+							&& !this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+							&& !this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+						for (SmPersonnel per : this.getManagedBean().getSmAppl().getSmPersonnels()) {
+							if (per.getName().equals(personnel.getName())) {
 								personnel.setShareAmt(per.getShareAmt());
 							}
 						}

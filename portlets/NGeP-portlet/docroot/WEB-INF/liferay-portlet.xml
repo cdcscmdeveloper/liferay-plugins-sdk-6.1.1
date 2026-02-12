@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
 <liferay-portlet-app>
 	<portlet>
 		<portlet-name>auSearch</portlet-name>
@@ -1261,6 +1260,21 @@
 			scQTMaintenance-portlet
 		</css-class-wrapper>
 	</portlet>
+	
+	<!-- #31919 & #21692 - Start -->
+  	<portlet>
+		<portlet-name>applProposalValidPeriodExtension</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			scSupplierProposal-portlet
+		</css-class-wrapper>
+	</portlet>
+	<!-- #31919 & #21692 - Start -->
 	
 	<portlet>
 		<portlet-name>SiteVisit</portlet-name>
