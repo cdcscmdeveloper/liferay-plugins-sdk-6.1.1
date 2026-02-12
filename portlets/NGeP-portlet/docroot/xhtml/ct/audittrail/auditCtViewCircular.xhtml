@@ -31,108 +31,82 @@
                 </p:commandLink>
             </div>
             
-            <!-- CCR Tabs -->
-            <h:panelGroup id="searchCircularViewId">
-                <p:tabMenu id="sidemenuCcrId"
-                           activeIndex="#{auditContractBackingBean.managedBean.activeTab}"
-                           styleClass="equal-width-tabs">
-                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.central.contract']}"
-                                rendered="#{auditContractBackingBean.managedBean.ctType eq 'CCR'}"
-                                actionListener="#{auditContractBackingBean.handleButtonClick(0)}"
-                                update="searchCircularViewId"
-                                onstart="blockWidget.show()"
-                                oncomplete="blockWidget.hide()" />
-                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.purchase.in.default']}"
-                                rendered="#{auditContractBackingBean.managedBean.ctType eq 'CCR'}"
-                                actionListener="#{auditContractBackingBean.handleButtonClick(1)}"
-                                update="searchCircularViewId"
-                                onstart="blockWidget.show()"
-                                oncomplete="blockWidget.hide()" />
+			<h:panelGroup id="searchCircularViewId">
+			<!-- CCR Tabs -->
+			<ui:fragment
+				rendered="#{auditContractBackingBean.managedBean.ctType eq 'CCR'}">
+				<p:tabMenu id="sidemenuCcrId"
+					activeIndex="#{auditContractBackingBean.managedBean.activeTab}"
+					styleClass="equal-width-tabs">
+					<p:menuitem value="#{lbl['lbl.ct.audit.tab.central.contract']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(0)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem value="#{lbl['lbl.ct.audit.tab.purchase.in.default']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(1)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem
+						value="#{lbl['lbl.ct.audit.tab.contact.person.details']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(2)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem value="#{lbl['lbl.ct.audit.tab.exempted.ministry']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(3)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem
+						value="#{lbl['lbl.ct.audit.tab.related.cancelled.treasury']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(4)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem value="#{lbl['lbl.ct.audit.tab.contract.list']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(5)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+				</p:tabMenu>
+			</ui:fragment>
 
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.contact.person.details']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'CCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(2)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
+			<!-- PCR Tabs -->
+			<ui:fragment
+				rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}">
+				<p:tabMenu id="sidemenuCircularId"
+					activeIndex="#{auditContractBackingBean.managedBean.activeTab}"
+					styleClass="equal-width-tabs">
+					<p:menuitem value="#{lbl['lbl.ct.audit.tab.panel.contract']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(0)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem value="#{lbl['lbl.ct.audit.tab.purchase.in.default']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(1)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem
+						value="#{lbl['lbl.ct.audit.tab.contact.person.details']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(2)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem
+						value="#{lbl['lbl.ct.audit.tab.related.cancelled.treasury']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(3)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem value="#{lbl['lbl.ct.audit.tab.item.details']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(4)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem value="#{lbl['lbl.ct.audit.tab.item.supplier']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(5)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+					<p:menuitem value="#{lbl['lbl.ct.audit.tab.item.supplier.panel']}"
+						actionListener="#{auditContractBackingBean.handleButtonClick(6)}"
+						update="searchCircularViewId" onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()" />
+				</p:tabMenu>
+			</ui:fragment>
 
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.exempted.ministry']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'CCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(3)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
-
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.related.cancelled.treasury']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'CCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(4)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
-
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.contract.list']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'CCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(5)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />                   
-            	</p:tabMenu>
-            	
-            	<!-- PCR Tabs -->
-            	<p:tabMenu id="sidemenuPcrId"
-                           activeIndex="#{auditContractBackingBean.managedBean.activeTab}"
-                           styleClass="equal-width-tabs">
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.panel.contract']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(0)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
-
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.purchase.in.default']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(1)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
-
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.contact.person.details']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(2)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
-
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.related.cancelled.treasury']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(3)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
-
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.item.details']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(4)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
-
-                	<p:menuitem value="#{lbl['lbl.ct.audit.tab.item.supplier']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(5)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />
-                          	
-                    <p:menuitem value="#{lbl['lbl.ct.audit.tab.item.supplier.panel']}"
-                            	rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR'}"
-                            	actionListener="#{auditContractBackingBean.handleButtonClick(6)}"
-                            	update="searchCircularViewId"
-                            	onstart="blockWidget.show()"
-                            	oncomplete="blockWidget.hide()" />                   
-            	</p:tabMenu>
-
-            	<!-- DataTable for CCR & PCR -->
+			<!-- DataTable for CCR & PCR -->
                 <p:dataTable id="searchCircularId"
                              var="obj"
                              value="#{auditContractBackingBean.searchCircular}"
