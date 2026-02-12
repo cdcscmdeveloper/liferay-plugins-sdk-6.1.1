@@ -10856,7 +10856,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
-		getManagedBean().setChangeCurrRegStatus(false); //#37925
+		getManagedBean().setChangeCurrRegStatus(false); //#37925 - start
+		if (StringUtils.isBlank(getManagedBean().getCurrRegStatus())) {
+			PmStatusDesc statusDesc = SmApplicationUtil
+					.getCurrRegStatusDesc(getManagedBean().getSmAppl());
+			if (statusDesc != null){
+				getManagedBean().setCurrRegStatus(statusDesc.getStatusName());
+			}
+		}
+		//#37925 - end
 		//30974 - start
 
 		getManagedBean().setSearchRecommendRejectReason(null);
@@ -11346,7 +11354,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		List<String> updateIds = new ArrayList<String>();
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
-//		assignValReqdToFalse(); #37925 submit requirement problem
+		assignValReqdToFalse();
 		//#34400
 		RequestContext.getCurrentInstance().update(updateIds);
 		// #28777 & #29727 - Start

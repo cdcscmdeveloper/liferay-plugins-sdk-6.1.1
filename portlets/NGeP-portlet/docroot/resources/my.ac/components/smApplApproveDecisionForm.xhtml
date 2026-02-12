@@ -100,16 +100,14 @@
 							or cc.attrs.changeCurrRegStatus}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" />
-								<c:if test="#{cc.attrs.valueReqd}">
-									<p:outputLabel value="*" styleClass="mandatory" />
-								</c:if>
+								<p:outputLabel value="*" styleClass="mandatory" rendered="#{cc.attrs.bean.displayDropdownRegStatus}"/><!-- #37925 -->
 							</td>
 			
 							<td>
 								<h:outputText value="#{cc.attrs.bean.currRegStatus}" rendered="#{cc.attrs.bean.displayLabelRegistrationStatus}" /><!-- #37925 -->
 								<p:outputPanel rendered="#{!cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="approveSelBox" required="#{cc.attrs.valueReqd}"
+										id="approveSelBox" required="#{!cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"
 										value="#{cc.attrs.bean.approvedStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
@@ -122,7 +120,7 @@
 								</p:outputPanel>
 								<p:outputPanel rendered="#{cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"><!-- #37925 -->
 									<p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-										id="poRecommendSelBox" required="#{cc.attrs.valueReqd}"
+										id="poRecommendSelBox" required="#{cc.attrs.poRecommend and cc.attrs.bean.displayDropdownRegStatus}"
 										value="#{cc.attrs.bean.poRecommendStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
