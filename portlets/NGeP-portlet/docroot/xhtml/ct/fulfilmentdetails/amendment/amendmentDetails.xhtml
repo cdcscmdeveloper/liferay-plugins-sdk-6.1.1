@@ -352,7 +352,7 @@
 				<p:selectBooleanCheckbox
 					id ="approverAuthorityReq"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
-					disabled="#{!amendmentBackingBean.isContractAmountAmend() or ctBackingBean.managedBean.viewSCL}" /><!-- Enhancement 15851 - shaqimi -->
+					disabled="#{!amendmentBackingBean.isContractAmountAmend() or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableAmendDetails}" /><!-- Enhancement 15851 - shaqimi, Redmine- #40000 -->
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.contract.approval']}" style="text-align:left" />
 			</h:panelGrid>
