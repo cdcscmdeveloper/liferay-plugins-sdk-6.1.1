@@ -19348,9 +19348,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			if (latestStatusId != null) {
 				statusId = latestStatusId;
 			}
+			getManagedBean().setApprovedStatusId(statusId);
+			return;
 		}
 
-		getManagedBean().setApprovedStatusId(statusId);
+		if (getManagedBean().isApproverUser()) {
+			SmApplSectionReview latestPOSectionReview = findLatestPOSectionReview();
+			Long latestPORecommendationID = null;
+			if (isValidApplSectionReview(latestPOSectionReview)) {
+				latestPORecommendationID = latestPOSectionReview
+						.getPmRegStatus().getPmStatus().getStatusId();
+			}
+			getManagedBean().setApprovedStatusId(latestPORecommendationID);
+		}
 	}
 
 	/**
