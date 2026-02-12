@@ -19361,36 +19361,34 @@ public class SmApplicationBackingBean extends
 	 * </p>
 	 */
 	public void updateApproverRegistrationStatusValue() {
+	    Long statusId = resolveCurrentStatusId();
+	    if (statusId == null) {
+	        return;
+	    }
 
-		Long statusId = resolveCurrentStatusId();
-		if (statusId == null) {
-			return;
-		}
+	    if (shouldOverrideWithLatestReview()) {
+	        applyLatestStatusToApproved(statusId);
+	        return;
+	    }
+	    
+	    if (!getManagedBean().isChangeCurrRegStatus()) {
+	        if (getManagedBean().isPoUser()) {
+	            getManagedBean().setPoRecommendStatusId(statusId);
+	        }
+	        
+	        if (getManagedBean().isApproverUser()) {
+	            applyLatestStatusToApproved(statusId);
+	        }
+	    }
+	}
 
-		if (shouldOverrideWithLatestReview()) {
-			Long latestStatusId = resolveLatestReviewStatusId();
-			if (latestStatusId != null) {
-				statusId = latestStatusId;
-			}
-			getManagedBean().setApprovedStatusId(statusId);
-			return;
-		}
-		
-		if(!getManagedBean().isChangeCurrRegStatus()){
-			if(getManagedBean().isPoUser()){
-				getManagedBean().setPoRecommendStatusId(statusId);
-			}
-			
-			if (getManagedBean().isApproverUser()) {
-				SmApplSectionReview latestPOSectionReview = findLatestPOSectionReview();
-				Long latestPORecommendationID = null;
-				if (isValidApplSectionReview(latestPOSectionReview)) {
-					latestPORecommendationID = latestPOSectionReview
-							.getPmRegStatus().getPmStatus().getStatusId();
-				}
-				getManagedBean().setApprovedStatusId(latestPORecommendationID);
-			}
-		}
+	/** 
+	 * Helper to centralize the 'Latest Review' resolution logic 
+	 */
+	private void applyLatestStatusToApproved(Long defaultStatusId) {
+	    Long latestStatusId = resolveLatestReviewStatusId();
+	    Long finalStatus = (latestStatusId != null) ? latestStatusId : defaultStatusId;
+	    getManagedBean().setApprovedStatusId(finalStatus);
 	}
 
 	/**
