@@ -98,6 +98,15 @@ public class MolPayServlet extends HttpServlet {
 		String paydate = reqMap.get("paydate");
 		String skey = reqMap.get("skey");
 		String channel = reqMap.get("channel");
+		String paymentRefNo = reqMap.get("paymentRefNo");
+		String bankName = reqMap.get("bankName");
+		String providerTransId = reqMap.get("providerTransId");
+		String customerEmail = reqMap.get("customerEmail");
+		String customerContactNo = reqMap.get("customerContactNo");
+		
+		//DO NOT INCLUDE IN PROD because only to generate dummy excel in SIT/UAT
+		String cardMaskedNum = reqMap.get("cardMaskedNum");
+				
 		log.info("set session--");
 		req.getSession().setAttribute("orderidS", orderId);
 		log.info("getsession servlet: -"+req.getSession().getAttribute("orderidS"));
@@ -122,6 +131,8 @@ public class MolPayServlet extends HttpServlet {
 		log.info("error_desc:" + errorDesc);
 		log.info("channel:" + channel);
 		log.info("extraP:" + extraP);
+		log.info("paymentRefNo:" + paymentRefNo);
+		log.info("providerTransId:" + providerTransId);
 		
 		//#38377
 		log.info("#38377########paymentGateway map:"+reqMap.get("paymentGateway"));
@@ -196,11 +207,16 @@ public class MolPayServlet extends HttpServlet {
 					//32422 END
 					// #26307 start
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+					
+					//#38377
+					pymtReqDTO.setCustomerEmail(customerEmail);
+					pymtReqDTO.setContactNo(customerContactNo);
+					
 					log.info("Card type=============="+cardType);
 					if (cardType != null) {
 						if (cardType.equalsIgnoreCase("Credit")) {
 							cardType = "CC";
-						} else if (cardType.equalsIgnoreCase("Debit")) {
+						} else if (cardType.equalsIgnoreCase("Debit") || cardType.equalsIgnoreCase("Prepaid")) { //#39654 - add prepaid
 							cardType = "DC";
 						} 
 						log.info("cardType===="+cardType);
@@ -291,6 +307,7 @@ public class MolPayServlet extends HttpServlet {
 						log.info("SET MOLPAY TRANS ID--------------------33137"+molpayTransId);
 					}
 					//#38377
+					pymtReqDTO.setEpPaymentGateway(reqMap.get("paymentGateway").equals("Y")?true:false);
 					smPaymentRes.setMolpayTransactionId(reqMap.get("paymentGateway").equals("Y")?null:molpayTransId);
 					smPaymentRes.setFpxTranId(reqMap.get("paymentGateway").equals("Y")?null:tranID);
 					log.info("#38377########smPaymentRes.setTransactionId:"+smPaymentRes.getTransactionId());
@@ -303,6 +320,7 @@ public class MolPayServlet extends HttpServlet {
 					log.info("#38377########smPaymentRes.setErrorDesc:"+smPaymentRes.getErrorDesc());
 					//32422 START
 					if(bankDate != null){
+						log.info("#38377########bankDate:"+bankDate);
 						smPaymentRes.setTransactionDate(bankDate);
 					}else{
 						smPaymentRes.setTransactionDate(txDate);
@@ -316,6 +334,17 @@ public class MolPayServlet extends HttpServlet {
 					log.info("#38377########smPaymentRes.setPaymentStatus:"+smPaymentRes.getPaymentStatus());
 					smPaymentRes.setPaidAmt(txAmount);
 					log.info("#38377########smPaymentRes.setPaidAmt:"+smPaymentRes.getPaidAmt());
+					//#38377
+					smPaymentRes.setBankName(bankName);
+					log.info("#38377########smPaymentRes.setBankName:"+smPaymentRes.getBankName());
+					//#38377
+					smPaymentRes.setProviderTransactionId(providerTransId);
+					log.info("#38377########smPaymentRes.setProviderTransactionId:"+smPaymentRes.getProviderTransactionId());
+					
+					//#38377 - DO NOT INCLUDE IN PROD
+					log.info("#38377########cardMaskedNum:"+cardMaskedNum);
+					smPaymentRes.setMolpayTransactionId((cardMaskedNum!=null && cardMaskedNum.length()>0)?cardMaskedNum: smPaymentRes.getMolpayTransactionId());
+					
 					paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 					int requeryCount = paymentOrder.getRequeryCount() + 1;
 					paymentOrder.setRequeryCount(requeryCount);
@@ -364,7 +393,10 @@ public class MolPayServlet extends HttpServlet {
 					pymtReqDTO.setMethodName("doPost-MolPayServlet");
 					
 					log.info(">>>>#38377 enable payment update<<<");
-					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
+					PaymentResDTO pymtResDTO = reqSO.saveSuccessPaymentEmailTemplateParams(pymtReqDTO);
+					pymtReqDTO.setNotifyMessageId(pymtResDTO.getNotifyMessageId());
+					reqSO.sendSuccessPaymentEmail(pymtReqDTO);
+					pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
 					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
 						
@@ -486,38 +518,67 @@ public class MolPayServlet extends HttpServlet {
 			}
 		}
 		
+		String paymentRefNo = "";
+		String bankName = "";
+		String providerTransId = "";
+		String customerEmail = "";
+		String cardMaskedNum = "";
+		String customerContactNo = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {
 			try {
-				orderId = jsonObject.getString("orderId");
-				log.info("######38377#####json orderId: " + orderId);
-				tranID = jsonObject.getString("transId");
-				log.info("######38377#####json tranID: " + tranID);
-				status = jsonObject.getString("status");
-				log.info("######38377#####json status: " + status);
-				paydate = jsonObject.getString("trxDate");
-				log.info("######38377#####json paydate: " + paydate);
-				channel = jsonObject.getString("channel");
-				log.info("######38377#####json channel: " + channel);
-				currency = jsonObject.getString("currency");
-				log.info("######38377#####json currency: " + currency);
-				if (channel
-						.equals(SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE)) {
-					cardType = ParameterConst.CARD_TYPES_CREDIT; 
-				}
-				paydate = DateUtils.reformatDate(paydate,
-						"yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd HH:mm:ss");
-				log.info("######38377#####formatted paydate: " + paydate);
-				date1 = paydate;
-				log.info("######38377#####json date1: " + date1);
+				paymentRefNo = jsonObject.optString("paymentRefNo",null);
+				log.info("######38377#####json paymentRefNo: " + paymentRefNo);
+				providerTransId = jsonObject.optString("providerTransId",null);
+				providerTransId = providerTransId==null?paymentRefNo:providerTransId;
+				log.info("######38377#####json providerTransId: " + providerTransId);
 				paymentGateway = "Y";
+				bankName = jsonObject.optString("bankName",null);
+				log.info("######38377#####json bankName: " + bankName);
 				log.info("######38377#####json paymentGateway: " + paymentGateway);
-				errorCode = jsonObject.getString("errCode");
+				orderId = jsonObject.optString("orderId", null);
+				log.info("######38377#####json orderId: " + orderId);
+				tranID = jsonObject.optString("transId", null);
+				log.info("######38377#####json tranID: " + tranID);
+				status = jsonObject.optString("status", null);
+				log.info("######38377#####json status: " + status);
+				paydate = jsonObject.optString("trxDate", null);
+				log.info("######38377#####json paydate: " + paydate);
+				channel = jsonObject.optString("channel", null);
+				log.info("######38377#####json channel: " + channel);
+				amount = jsonObject.optString("amount", null);
+				log.info("######38377#####json amount: " + amount);
+				currency = jsonObject.optString("currency", null);
+				log.info("######38377#####json currency: " + currency);
+				customerEmail = jsonObject.optString("customerEmail", null);
+				log.info("######38377#####json customerEmail: " + customerEmail);
+				customerContactNo = jsonObject.optString("customerContactNo", null);
+				log.info("######38377#####json customerContactNo: " + customerContactNo);
+				if (SupplierManagementConst.PAYMENT_GATEWAY_CHANNEL_MGATE.equals(channel)) {
+					cardType = ParameterConst.CARD_TYPES_CREDIT;
+					
+					//do not include to PROD. Used for generate dummy transaction list excel
+					cardMaskedNum = jsonObject.optString("cardMaskedNum", null);
+					log.info("######38377#####json cardMaskedNum: " + cardMaskedNum);
+					
+					log.info("######38377#####json cardType: " + cardType);
+				}
+				if (paydate != null && !paydate.isEmpty()) {
+					try {
+						paydate = DateUtils.reformatDate(paydate, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd HH:mm:ss");
+						date1 = paydate;
+						log.info("######38377#####json date1: " + date1);
+					} catch (Exception e) {
+						// handle/ log bad date format without breaking the rest
+						// e.g., keep original paydate or set to null
+					}
+				}
+				errorCode = jsonObject.optString("errCode", null);
 				log.info("######38377#####json errCode: " + errorCode);
-				errorDesc = jsonObject.getString("errDesc");
+				errorDesc = jsonObject.optString("errDesc", null);
 				log.info("######38377#####json errorDesc: " + errorDesc);
 			} catch (Exception e1) {
-				e1.printStackTrace();
+				log.info("######38377#####error get payload" + e1.getMessage());
 			}
 		}
 		
@@ -540,6 +601,14 @@ public class MolPayServlet extends HttpServlet {
 		reqMap.put("cardType", cardType);
 		reqMap.put("molpayTransId", molpayTransId);
 		reqMap.put("paymentGateway", paymentGateway);
+		reqMap.put("paymentRefNo", paymentRefNo);
+		reqMap.put("providerTransId", providerTransId);
+		reqMap.put("bankName", bankName);
+		reqMap.put("customerEmail", customerEmail);
+		reqMap.put("customerContactNo", customerContactNo);
+		
+		//do not include to PROD. Used for generate dummy transaction list excel
+		reqMap.put("cardMaskedNum", cardMaskedNum);
 		
 		log.info("######38377#####nbcb:" + reqMap.get("nbcb"));
 		log.info("######38377#####orderId: " + reqMap.get("orderid"));
@@ -559,6 +628,14 @@ public class MolPayServlet extends HttpServlet {
 		log.info("######38377#####cardType:" + reqMap.get("cardType"));
 		log.info("######38377#####molpayTransId:" + reqMap.get("molpayTransId"));
 		log.info("######38377#####paymentGateway:" + reqMap.get("paymentGateway"));
+		log.info("######38377#####bankName:" + reqMap.get("bankName"));
+		log.info("######38377#####paymentRefNo:" + reqMap.get("paymentRefNo"));
+		log.info("######38377#####providerTransId:" + reqMap.get("providerTransId"));
+		log.info("######38377#####customerEmail:" + reqMap.get("customerEmail"));
+		log.info("######38377#####customerContactNo:" + reqMap.get("customerContactNo"));
+		
+		//do not include to PROD. Used for generate dummy transaction list excel
+		log.info("######38377#####cardMaskedNum:" + reqMap.get("cardMaskedNum"));
 		
 		return reqMap;
 	}

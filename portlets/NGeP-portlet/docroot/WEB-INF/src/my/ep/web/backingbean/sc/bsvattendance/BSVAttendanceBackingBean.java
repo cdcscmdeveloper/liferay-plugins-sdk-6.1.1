@@ -185,6 +185,7 @@ public class BSVAttendanceBackingBean extends
 				// #31518
 				ScQtBsv scQtBsv = resDTO.getScQtBsv();
 				BriefingZoneBean briefingZoneBean = null;
+				BriefingZoneBean briefingZoneFinalBean = null;//#28188
 				if (null != resDTO.getScQtBsv()&& resDTO.getScQtBsv().getQtBsvId() != null) {
 					scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv, 
 							this.getManagedBean().getScQt().getCurrentWorkFlowStatus(),
@@ -215,7 +216,53 @@ public class BSVAttendanceBackingBean extends
 				} else {
 					throw new EpException("No Bsv Details Avalible For this");
 				}
-				this.getManagedBean().setNormalBsvBean(briefingZoneBean);
+				//#28188 - Start
+				briefingZoneFinalBean = new BriefingZoneBean(null,null,null, scQtBsv);
+				if(!CollectionUtils.isEmpty(briefingZoneBean.getBriefingList()) && briefingZoneBean.getBriefingList().size() > 1){
+					List<ScQtBsvDtl> newBriefingFinalList = new ArrayList<ScQtBsvDtl>();
+					ScQtBsvDtl latestDtl = null;
+					for (ScQtBsvDtl scQtBsvDtl : briefingZoneBean.getBriefingList()) {
+						if (scQtBsvDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+				            if (latestDtl == null || (scQtBsvDtl.getBsvDate() != null 
+				                 && latestDtl.getBsvDate() != null
+				                 && scQtBsvDtl.getBsvDate().after(latestDtl.getBsvDate()))) {
+				                latestDtl = scQtBsvDtl;
+				            }
+						}
+				    }
+					
+				    if (latestDtl != null) {
+				    	newBriefingFinalList.add(latestDtl);
+				        briefingZoneFinalBean.setBriefingList(newBriefingFinalList);
+				    }
+				}else{
+					briefingZoneFinalBean.setBriefingList(briefingZoneBean.getBriefingList());
+				}
+				
+				if(!CollectionUtils.isEmpty(briefingZoneBean.getSitevisitList()) && briefingZoneBean.getSitevisitList().size() > 1){
+					List<ScQtBsvDtl> newSiteVisitFinalList = new ArrayList<ScQtBsvDtl>();
+					ScQtBsvDtl latestDtl = null;
+					for (ScQtBsvDtl scQtBsvDtl : briefingZoneBean.getSitevisitList()) {
+						if (scQtBsvDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+							if (latestDtl == null || (scQtBsvDtl.getBsvDate() != null 
+				                 && latestDtl.getBsvDate() != null
+				                 && scQtBsvDtl.getBsvDate().after(latestDtl.getBsvDate()))) {
+				                latestDtl = scQtBsvDtl;
+				            }
+						}
+				    }
+					
+					if (latestDtl != null) {
+						newSiteVisitFinalList.add(latestDtl);
+				        briefingZoneFinalBean.setSitevisitList(newSiteVisitFinalList);
+				    }
+				}else{
+					briefingZoneFinalBean.setSitevisitList(briefingZoneBean.getSitevisitList());
+				}
+				//#28188 - End
+				
+				//this.getManagedBean().setNormalBsvBean(briefingZoneBean);
+				this.getManagedBean().setNormalBsvBean(briefingZoneFinalBean);//#28188
 			}
 		} finally {
 			qTBriefingSO = null;
@@ -1738,7 +1785,7 @@ public class BSVAttendanceBackingBean extends
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_SL);					
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
-			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#355500 Flag changes
+			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_SUPPLIER);//#35500 Fix Reopen 27th Nov
 
 			if(!(newBriefingRegistrationList == null||newBriefingRegistrationList.isEmpty())){	
 				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_SL_COMPANY_NAME);

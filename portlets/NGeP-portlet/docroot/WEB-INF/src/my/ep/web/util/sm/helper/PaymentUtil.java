@@ -256,10 +256,12 @@ public class PaymentUtil {
         return new String(decryptedBytes, StandardCharsets.UTF_8);
     }
 
-	public static String constructJsonPayload(String merchantCode,
+    public static String constructJsonPayload(String merchantCode,
 			String clientKey, Long orderId, BigDecimal amount, String billName,
 			String email, String mobile, String billDesc, String country,
-			String cancelUrl) {
+			String cancelUrl,String responseUrl,String callbackUrl,String language) {
+		log.info("#38377--responseUrl:"+responseUrl);
+		log.info("#38377--callbackUrl:"+callbackUrl);
 		String payload = null;
 		StringBuilder sb = new StringBuilder();
 		sb.append("{").append("\"orderId\":\"").append(orderId.toString())
@@ -267,7 +269,10 @@ public class PaymentUtil {
 				.append("\",").append("\"billDesc\":\"").append(billDesc)
 				.append("\",").append("\"billEmail\":\"").append(email)
 				.append("\",").append("\"billMobile\":\"").append(mobile)
-				.append("\",").append("\"cancelurl\":\"").append(cancelUrl)
+				.append("\",").append("\"responseUrl\":\"").append(responseUrl)
+				.append("\",").append("\"callbackUrl\":\"").append(callbackUrl)
+				.append("\",").append("\"cancelUrl\":\"").append(cancelUrl)
+				.append("\",").append("\"language\":\"").append(language)
 				.append("\",").append("\"merchantCode\":\"")
 				.append(merchantCode).append("\",");
 		try {

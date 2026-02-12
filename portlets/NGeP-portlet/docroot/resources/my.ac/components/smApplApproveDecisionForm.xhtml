@@ -83,10 +83,10 @@
 					<p:outputPanel rendered="#{cc.attrs.bean.displayCheckboxChangeCurrentStatus}">
 					<!-- #37925 END -->
 						<tr>
-							<td style="border-style: none !important;float: right !important;">
-								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" 
+							<td style="border-style: none !important;float: right !important;"> <!-- #37925 -->
+								<p:selectBooleanCheckbox value="#{cc.attrs.changeCurrRegStatus}" id="changeRegStatusChk"
 									disabled="#{empty cc.attrs.currRegStatus}">
-									<p:ajax event="change" partialSubmit="true" process="@this"
+									<p:ajax event="change" partialSubmit="true" process="@this" listener="#{cc.attrs.backingBean.updateApproverRegistrationStatusValue()}"
 										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}" />
 								</p:selectBooleanCheckbox>
 							</td>
@@ -111,9 +111,10 @@
 										id="approveSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.approvedStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
 										<f:selectItems value="#{cc.attrs.bean.regStatusDescList}" var="reg"
 											itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
+										<p:ajax update="approveSelBoxMsg" process="@this" /><!-- #37925 -->
 									</p:selectOneMenu>
 									<p:message id="approveSelBoxMsg" for="approveSelBox"
 										showSummary="true" showDetail="false" display="icon" />
@@ -123,9 +124,10 @@
 										id="poRecommendSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.poRecommendStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true"  /><!-- #37925 -->
 										<f:selectItems value="#{cc.attrs.bean.regStatusDescList}" var="reg"
 											itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
+										<p:ajax update="poRecommendSelBoxMsg" process="@this" /><!-- #37925 -->
 									</p:selectOneMenu>
 									<p:message id="poRecommendSelBoxMsg" for="poRecommendSelBox"
 										showSummary="true" showDetail="false" display="icon" />
@@ -273,7 +275,7 @@
 				
                 <!-- #15629 end -->
 												
-				<c:if test="#{cc.attrs.overLappedCategoryExists}">
+				<c:if test="#{cc.attrs.overLappedCategoryExists and cc.attrs.smAppl.applType ne 'C'}"> <!-- 39614 -->
 				<!-- 13362 START -->
 				<tr><td><br></br></td></tr>
 					<tr>
@@ -338,6 +340,9 @@
 								label="#{lbl['lbl.sm.remarks.overLapping']}"
 								validatorMessage="#{lbl['lbl.sm.remarks.overLapping']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 								required="false">
+								<!-- 39422 START -->
+								<p:ajax event="blur" process="@this" update="@this"/>
+								<!-- 39422 End -->
 								<f:validateLength maximum="2500" />
 							</p:inputTextarea> <p:message id="rmrksForSplApprTxtAreaMsg"
 								for="rmrksForSplApprTxtArea" showSummary="true" showDetail="false"

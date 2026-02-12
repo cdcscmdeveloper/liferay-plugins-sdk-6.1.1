@@ -152,6 +152,16 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				}
 			}
 			// 36386 - End
+			
+			// 39692-Start
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+					&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getStopInstr().getFlRequest()
+							.getFulfilmentReqId())) {
+				throw new EpException(MessageConst.ERROR_760823);
+
+			}
+			// 39692-End
+			
 			reqDTO.setStopIns(flStopInstr);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
@@ -160,6 +170,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 
 			FulfilmentResDTO resDTO;//36386
@@ -532,6 +543,17 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 			}
 		} else {
+			
+			// 39692-Start
+			if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome
+						.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))
+					&& hasInvalidActiveFrnVsWorkflow(getManagedBean().getStopInstr().getFlRequest()
+							.getFulfilmentReqId())) {
+				throw new EpException(MessageConst.ERROR_760823);
+			}
+			// 39692-End
+			
 			if(getManagedBean().getStopInstr().getPmReason().getReasonCode() == null){
 				throw new EpException(MessageConst.ERROR_100022, new String[]{
 						ResourceBundleUtils.getMessage("lbl.fl.stop.instuc.reason.justification",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
@@ -1029,4 +1051,19 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		}	
 	}		
 	//29870-end
+	
+	/**
+	 * 39692
+	 *
+	 * Checks whether there is any active FRN (record_status = 1)
+	 * with an invalid workflow state such as Cancelled or Rejected.
+	 *
+	 * @param fulfilmentReqId
+	 * @return true if invalid FRN data is detected
+	 */
+	private boolean hasInvalidActiveFrnVsWorkflow(Long reqId) {
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
+	}
 }
