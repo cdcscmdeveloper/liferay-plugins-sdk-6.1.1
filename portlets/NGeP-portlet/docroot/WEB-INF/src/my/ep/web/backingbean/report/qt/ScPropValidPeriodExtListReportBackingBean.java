@@ -20,8 +20,6 @@ public class ScPropValidPeriodExtListReportBackingBean extends QtReportBackingBe
 		implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-//	private static final Logger log = EpLogger.getLogger(ScPropValidPeriodExtReportBackingBean.class);
-
 	@PostConstruct
 	public void init() {
 		this.getManagedBean().setReportCode(QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL);
