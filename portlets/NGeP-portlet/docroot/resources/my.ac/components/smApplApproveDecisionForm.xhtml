@@ -111,9 +111,10 @@
 										id="approveSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.approvedStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true" /><!-- #37925 -->
 										<f:selectItems value="#{cc.attrs.bean.regStatusDescList}" var="reg"
 											itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
+										<p:ajax update="approveSelBoxMsg" process="@this" /><!-- #37925 -->
 									</p:selectOneMenu>
 									<p:message id="approveSelBoxMsg" for="approveSelBox"
 										showSummary="true" showDetail="false" display="icon" />
@@ -123,9 +124,10 @@
 										id="poRecommendSelBox" required="#{cc.attrs.valueReqd}"
 										value="#{cc.attrs.bean.poRecommendStatusId}"
 										style="width: 240px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" noSelectionOption="true"  /><!-- #37925 -->
 										<f:selectItems value="#{cc.attrs.bean.regStatusDescList}" var="reg"
 											itemLabel="#{reg.statusName}" itemValue="#{reg.pmStatus.statusId}" />
+										<p:ajax update="poRecommendSelBoxMsg" process="@this" /><!-- #37925 -->
 									</p:selectOneMenu>
 									<p:message id="poRecommendSelBoxMsg" for="poRecommendSelBox"
 										showSummary="true" showDetail="false" display="icon" />
