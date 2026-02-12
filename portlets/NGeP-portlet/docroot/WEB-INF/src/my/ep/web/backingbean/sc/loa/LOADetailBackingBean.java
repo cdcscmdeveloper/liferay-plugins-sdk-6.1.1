@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.sql.Timestamp; // #29006
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -35,7 +35,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletSession;
 
-import my.ep.bean.application.NgepApplicationBean;
+import my.ep.bean.application.NgepApplicationBean; //#12177 Refactoe
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -152,15 +152,15 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
-import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
+import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean; //#25790
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.SSTConstant;
-import my.ep.web.constant.VMConstant;
-import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.report.QtReportConst;
+import my.ep.web.constant.VMConstant;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDateFormat;
@@ -196,9 +196,6 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
-// #29006
-//#12177 Refactoe
-//#25790
 
 // Auto-generated Javadoc
 /**
@@ -11880,7 +11877,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(), Boolean.TRUE);
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("LOI", "CancelLOAWithoutBPM", getManagedBean().getScLoa().getLoaNo(),
+			SLAUtils.getInstance().logSLAError("LOA", "cancelLOAWithoutBPM", getManagedBean().getScLoa().getLoaNo(),
 					"cancelLOAWithoutBPM", getUserIdSessionFromLoginId(), e);
 		}
 	}
@@ -11911,8 +11908,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(), Boolean.TRUE);
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("LOI", "CancelLOAWithoutBPM", getManagedBean().getScLoa().getLoaNo(),
-					"cancelLOAWithoutBPM", getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError("LOA", "cancelLOAWIP", getManagedBean().getScLoa().getLoaNo(),
+					"cancelLOAWIP", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	//#21692 - End
