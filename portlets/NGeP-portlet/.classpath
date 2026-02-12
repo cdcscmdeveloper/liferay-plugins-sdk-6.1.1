@@ -30,10 +30,5 @@
 	<classpathentry kind="lib" path="C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/modules/javax/enterprise/api/main/cdi-api-1.0-SP4.jar"/>
 	<classpathentry kind="src" path="/NGeP-bizBase"/>
 	<classpathentry kind="lib" path="C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/modules/org/picketbox/main/picketbox-4.0.7.Final.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/installation_material/working_folder_git_dev/NGeP4Git/NGeP-biz-ct/lib/test/hamcrest-core-1.3.jar"/>
-	<classpathentry kind="lib" path="C:/installation_material/working_folder_git_dev/NGeP4Git/NGeP-biz-ct/lib/test/junit-4.13.2.jar"/>
-	<classpathentry kind="lib" path="C:/installation_material/working_folder_git_dev/NGeP4Git/NGeP-biz-ct/lib/test/mockito-core-1.10.19.jar"/>
-	<classpathentry kind="lib" path="C:/installation_material/working_folder_git_dev/NGeP4Git/NGeP-biz-ct/lib/test/objenesis-1.3.jar"/>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>
