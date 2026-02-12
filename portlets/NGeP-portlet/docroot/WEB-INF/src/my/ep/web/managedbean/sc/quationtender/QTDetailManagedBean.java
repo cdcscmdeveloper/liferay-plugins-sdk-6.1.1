@@ -1961,6 +1961,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#35320 - Start
 	private boolean afterSF;
 	//#35320 - End
+	private List<TplSpecZoneDtl> deleteZonesTreeNodes;	//37851
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12501,4 +12502,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#38151
 
+	//37851 -- Start
+	public List<TplSpecZoneDtl> getDeleteZonesTreeNodes() {
+		return deleteZonesTreeNodes;
+	}
+
+	public void setDeleteZonesTreeNodes(List<TplSpecZoneDtl> deleteZonesTreeNodes) {
+		this.deleteZonesTreeNodes = deleteZonesTreeNodes;
+	}
+	//37851 --  End
 }
