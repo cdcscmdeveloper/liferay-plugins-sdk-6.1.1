@@ -12955,14 +12955,14 @@ private void retriveCommitteeRemarksList(){
 				totalScore = BigDecimal.valueOf(0);
 			}
 			// add weightage to calculation - start
-			/*if (null != specscore.getScQtCheckList().getQtScoreWeightage() &&
+			if (null != specscore.getScQtCheckList().getQtScoreWeightage() &&
 					(null != specscore.getScQtCheckList().getQtScoreWeightage().getWeightage() &&
 						!specscore.getScQtCheckList().getQtScoreWeightage().getWeightage().equals(BigDecimal.valueOf(0)))) {
 				BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
 				BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
 				
 				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, RoundingMode.HALF_UP).stripTrailingZeros();//#28784 no package bug//#28784 sonarqube
-			}*/
+			}
 			// add weightage to calculation - end
 			divNum = divNum.add(totalScore);
 		}		
