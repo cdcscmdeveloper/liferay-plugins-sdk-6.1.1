@@ -14,7 +14,19 @@
 		<br />
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item']}" escape="false"/>
 		<br />
-	<p:dataTable id="frnItemDt" var="item" 
+		<ui:remove>#29556-Start</ui:remove>
+		<h:outputText styleClass="instruction"
+			rendered="#{receivedNoteBackingBean.managedBean.contractFlag}"
+			value="#{lbl['lbl.fl.instruction.items.spec.guideline']}"
+			escape="false" />
+		<p:commandLink
+			rendered="#{receivedNoteBackingBean.managedBean.contractFlag}"
+			value="#{lbl['lbl.fl.instruction.items.spec.click.here']}"
+			ajax="false" style="font-size:10px;font-style:italic" process="@this"
+			action="#{receivedNoteBackingBean.downloadFile('/shared/FL/GARIS_PANDUAN_PENGGUNAAN_SISTEM_ePEROLEHAN_BAGI_PENYEDIAAN_ITEM_DAN_SPESIFIKASI.pdf')}"></p:commandLink>
+		<br />
+		<ui:remove>#29556-End</ui:remove>
+		<p:dataTable id="frnItemDt" var="item" 
 			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}"	
 			selection="#{receivedNoteBackingBean.managedBean.selectedItem}"
 			rowIndexVar="index" selectionMode="single" rowKey="#{item}" >

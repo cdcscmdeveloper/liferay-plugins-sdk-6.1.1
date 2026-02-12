@@ -2252,4 +2252,17 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				IFulfilmentSO.class);
 		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
 	}
+	
+	/** 
+	* #29556
+	* Download file GARIS_PANDUAN_PENGGUNAAN_SISTEM_ePEROLEHAN_BAGI_PENYEDIAAN_ITEM_DAN_SPESIFIKASI.pdf
+	*/
+	public void downloadFile(String filePath) throws IOException {
+		StringBuilder downloadPath = new StringBuilder();
+		downloadPath
+				.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR))
+				.append(filePath);
+
+		super.downloadFile(downloadPath.toString());
+	}
 }
