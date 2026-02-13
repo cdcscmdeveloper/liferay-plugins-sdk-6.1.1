@@ -725,7 +725,8 @@
 												update="uploadApprovalLetterDlg"
 												rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null and isEditableStatus}" />
 											<!-- #25725 note 165  -->
-											<p:commandLink
+											<!-- #25725/25726 note 267/458 -->
+											<h:commandLink
 												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 												action="#{lOADetailBackingBean.fileDownload}"
@@ -756,7 +757,8 @@
 										</td>
 										<td>
 											<p:outputPanel id="uploadedPage2">																			
-												<p:commandLink
+												<!-- #25725/25726 note 267/458 -->
+												<h:commandLink
 												title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 												value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
 												action="#{lOADetailBackingBean.fileDownload}"
