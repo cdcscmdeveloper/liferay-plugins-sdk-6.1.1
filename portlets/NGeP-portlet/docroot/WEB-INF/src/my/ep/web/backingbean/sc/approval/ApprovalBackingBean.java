@@ -2328,8 +2328,7 @@ return scQt;
 
 			qt.setScQtCommittees(null);
 			
-
-			qtReqDTO.setSuppResp(this.getManagedBean().getSuppResp());//#21962 new remark for supplier
+			
 			qtReqDTO.setDigiSignData(digiSign);
 			qtReqDTO.setPayLoad(dataType);
 			FacesScopes facesScope = new FacesScopes();
