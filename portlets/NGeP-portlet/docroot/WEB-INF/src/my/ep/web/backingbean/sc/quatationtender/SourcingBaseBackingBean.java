@@ -196,6 +196,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.comm.TplCommMember;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -263,6 +264,32 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
+
+//29661 -start-
+import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
+import my.ep.biz.bean.sc.CompanyExpBean;
+import my.ep.web.constant.sc.SLALogConstant;
+import my.ep.biz.service.ct.termination.IContractTerminationSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
+import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
+import my.ep.persistence.entity.ct.terminate.CtTermination;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.web.util.EpPortletUtil;
+import my.ep.constant.MapKeyEnum;
+import java.util.EnumMap;
+
+//29661 -end-
 
 /**
  * 
@@ -2087,9 +2114,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			scLoa.setBondPercentage(null);
 		}
 		return scLoa;
-	}
-	
-	//Enhancement #24259 #24269
+	}//Enhancement #24259 #24269	#25726
 	/**
 	 * Calculate bond amount with SST.
 	 * 
@@ -2101,28 +2126,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
 		
 		if(isDirectLoa) {
-			boolean setBondReq = true;
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)  
-					&& null != scLoa.getContractType() 
-					&& null != scLoa.getContractType().getParameterId()
-					&& scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				setBondReq = false;
-			}
+			boolean setBondReq = true; 
+			//20231122@asyrafhaziq_25726 - Issue 16
+			//new #25726 - Start
 			
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
+			List<String> flTypeCodes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_ONE_OFF,
+					ParameterConst.FULFILMENT_TYPE_SCHEDULED,
+					ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+			boolean isQTtypePK7 = null != scLoa.getQtType() && null != scLoa.getQtType().getParameterId()
+					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType().getParameterCode());
+			boolean isFulfilmentType = null != scLoa.getScQt() && null != scLoa.getScQt().getFulfilmentType()
 					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
+					&& flTypeCodes.contains(scLoa.getScQt().getFulfilmentType().getParameterCode());
+
+			if (isQTtypePK7 && isFulfilmentType) {
+		
+			//new #25726 - End
 				setBondReq = false;
 			}
 			
@@ -2147,7 +2166,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		return scLoa;
 	}		
-	//end Enhancement #24259 #24269
+	//end Enhancement #24259 #24269	#25726
+
 
 	/**
 	 * Get the OverallContractAmount.
@@ -6614,6 +6634,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		switch (committeeType) {
 		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
 		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE: // #35320
 			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
 		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
 			return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
@@ -7281,6 +7302,608 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	//#28784 - End
 	
+
+	
+	// 29661 -start-
+	/**
+	 * set all details to requDTO.
+	 * 
+	 * @param scQtProposalChecklist
+	 * @param scQt
+	 * @param clientType
+	 * @param contractStatus
+	 * @param isSearchOperator
+	 * @return
+	 */
+	protected EvaluationReqDTO setDetailsToReqDTO(
+			ScQtProposalChecklist scQtProposalChecklist, ScQt scQt,
+			String clientType, int contractStatus, boolean isSearchOperator) {
+
+		Long qtId = scQt.getQtId();
+		EvaluationReqDTO evaluationReqDTO = new EvaluationReqDTO();
+		evaluationReqDTO.setProposalChecklist(scQtProposalChecklist);
+		evaluationReqDTO.setScQt(scQt);
+		evaluationReqDTO.setQtId(qtId);
+		evaluationReqDTO.setCategoryL3Codes(getCategoryL3Codes(scQt));
+		evaluationReqDTO.setClientType(clientType);
+		evaluationReqDTO.setContractStatus(Integer.valueOf(contractStatus));
+		evaluationReqDTO.setSearchOperator(isSearchOperator);
+		evaluationReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		return evaluationReqDTO;
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * fetch categoryL3Id's Based on qtId.
+	 * 
+	 * @param scQt
+	 * @return List<Long>
+	 */
+	protected List<Long> getCategoryL3Codes(ScQt scQt) {
+		List<Long> categoryL3Ids = new ArrayList<>();
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtId(scQt.getQtId());
+		List<ScQtCategory> qtCategories = getQTDetailSO().getQtCategoryByQtId(
+				reqDTO).getCategories();
+		if (CollectionUtils.isNotEmpty(qtCategories)) {
+			for (ScQtCategory scQtCategory : qtCategories) {
+				Long categoryL3Id = scQtCategory.getPmCategoryL3()
+						.getCategoryL3Id();
+				categoryL3Ids.add(categoryL3Id);
+			}
+		}
+		return categoryL3Ids;
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * Gets the QTEvaluation so.
+	 * 
+	 * @return the QTEvaluation so
+	 */
+	private IQTEvaluationSO getQTEvaluationSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * calculate total contract value amount for supplier.
+	 * 
+	 * @param valueOfAmount
+	 * @return BigDecimal.
+	 */
+	protected BigDecimal calculateContractValueAmount(
+			CompanyExpBean valueOfAmount) {
+		BigDecimal inEffectiveValue = valueOfAmount
+				.getInEffectiveContractValue() != null ? valueOfAmount
+				.getInEffectiveContractValue() : BigDecimal.ZERO;
+		BigDecimal effectiveValue = valueOfAmount.getEffectiveContractValue() != null ? valueOfAmount
+				.getEffectiveContractValue() : BigDecimal.ZERO;
+		BigDecimal expiredValue = valueOfAmount.getExpiredContractValue() != null ? valueOfAmount
+				.getExpiredContractValue() : BigDecimal.ZERO;
+		BigDecimal terminatedValue = valueOfAmount.getTerminatedContractValue() != null ? valueOfAmount
+				.getTerminatedContractValue() : BigDecimal.ZERO;
+		return inEffectiveValue.add(effectiveValue).add(expiredValue)
+				.add(terminatedValue);
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * check contract status type terminated or others.
+	 * 
+	 * @param contractStatus
+	 * @param isTerminated
+	 * @return boolean.
+	 */
+	public boolean checkContractStatusType(int contractStatus,
+			boolean isTerminated) {
+
+		if (SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_TERMINATED == contractStatus
+				&& isTerminated) {
+
+			return Boolean.TRUE;
+		}
+
+		return Boolean.FALSE;
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * based on contract status code get contract status lable data.
+	 * 
+	 * @param contractStatusValue
+	 * @return String
+	 */
+	public String checkContractStatusLabel(int contractStatusValue) {
+
+		final Locale locale = new FacesScopes().getUserLocale();
+
+		final String key;
+		switch (contractStatusValue) {
+		case SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_INACTIVE:
+			key = QTConstants.COMPANY_EXP_STATUS_INACTIVE;
+			break;
+		case SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_EFFECTIVE:
+			key = QTConstants.COMPANY_EXP_STATUS_EFFECTIVE;
+			break;
+		case SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_EXPIRED:
+			key = QTConstants.COMPANY_EXP_STATUS_EXPIRED;
+			break;
+		case SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_TERMINATED:
+			key = QTConstants.COMPANY_EXP_STATUS_TERMINATED;
+			break;
+		default:
+			return ""; // unknown status
+		}
+
+		return ResourceBundleUtils.getMessage(key,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * check loa number exist for this company experience.
+	 * 
+	 * @param content
+	 * @return String
+	 */
+	public String getLabelContent(String content) {
+
+		boolean isNotEmpty = StringUtils.isNotBlank(content)
+				&& StringUtils.isNotEmpty(content);
+
+		if (isNotEmpty) {
+			return content;
+		}
+		return ResourceBundleUtils.getMessage(QTConstants.LABEL_TEXT_NA,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * fetch contractver and terminattion detials based on loa number.
+	 * 
+	 * @param loaNo
+	 * @return CtContractVer
+	 */
+	public CtContractVer retrieveContractVerTerminationDtls(String loaNo) {
+		if (StringUtils.isNotBlank(loaNo) && StringUtils.isNotEmpty(loaNo)) {
+			IContractTerminationSO contractTerminationSO = BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.CONTRACT_MANAGEMENT,
+							IContractTerminationSO.class);
+			ContractReqDTO contractReqDTO = new ContractReqDTO();
+			contractReqDTO.setLoaNo(loaNo);
+			ContractResDTO contractResDTO = contractTerminationSO
+					.retrieveContractVerTerminationDtls(contractReqDTO);
+
+			return checkContractVer(contractResDTO.getCtContractVer());
+		} else {
+			return checkContractVer(null);
+		}
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * create contractver and termination instances for the terminated
+	 * contracts.
+	 * 
+	 * @param ctContractver
+	 * @return CtContractVer
+	 */
+	private CtContractVer checkContractVer(CtContractVer ctContractver) {
+		CtContractVer newCtContractver = new CtContractVer();
+		if (null == ctContractver) {
+			newCtContractver.setCtTermination(new CtTermination());
+		} else {
+			return ctContractver;
+		}
+
+		return newCtContractver;
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * check loa reports exist for this supplier.
+	 * 
+	 * @param prpExp
+	 * @return true/false.
+	 */
+	public boolean loaReportCheck(ScQtPRPExperience prpExp) {
+		if (null == prpExp || null == prpExp.getSourceType()) {
+			return Boolean.FALSE;
+		}
+		
+		PmParameter sourceType = prpExp.getSourceType();
+		boolean isSourceType = null != sourceType && null != prpExp.getScLoa();
+
+		boolean isLoaSourceType = isSourceType
+				&& SourcingConstants.SOURECE_TYPE_QT_ID.equals(sourceType
+						.getParameterId())
+				&& CollectionUtils.isNotEmpty(prpExp.getScLoa()
+						.getScLoaReports());
+
+		boolean isSelfSourceType = null != sourceType
+				&& SourcingConstants.SOURECE_TYPE_SELF_ID.equals(sourceType
+						.getParameterId())
+				&& null != prpExp.getSmCompExpMaster()
+				&& CollectionUtils.isNotEmpty(prpExp.getSmCompExpMaster()
+						.getCompExpMasterDocs());
+
+		if (isLoaSourceType || isSelfSourceType) {
+
+			return Boolean.TRUE;
+		}
+
+		return Boolean.FALSE;
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * download loareportsdetils based on loa number.
+	 * 
+	 * @param scQtPRPExperience
+	 * @param scQt
+	 * @throws IOException
+	 */
+	public void downloadCompExpLOAReports(ScQtPRPExperience scQtPRPExperience)
+			throws IOException {
+		try {
+			PmParameter sourceType = scQtPRPExperience.getSourceType();
+			boolean isSourceType = null != sourceType
+					&& null != scQtPRPExperience.getScLoa();
+			boolean isLoaSourceType = isSourceType
+					&& SourcingConstants.SOURECE_TYPE_QT_ID.equals(sourceType
+							.getParameterId())
+					&& CollectionUtils.isNotEmpty(scQtPRPExperience.getScLoa()
+							.getScLoaReports());
+			boolean isSelfSourceType = null != sourceType
+					&& SourcingConstants.SOURECE_TYPE_SELF_ID.equals(sourceType
+							.getParameterId())
+					&& null != scQtPRPExperience.getSmCompExpMaster()
+					&& CollectionUtils.isNotEmpty(scQtPRPExperience
+							.getSmCompExpMaster().getCompExpMasterDocs());
+			if (isSelfSourceType) {
+				downloadCompExpSupportingDocuments(scQtPRPExperience
+						.getSmCompExpMaster().getCompExpMasterDocs());
+			} else if (isLoaSourceType) {
+				ScQt scQt = scQtPRPExperience.getScLoa().getScQt();
+				downLoadLOAReports(scQtPRPExperience, scQt);
+			}
+		} catch (Exception e) {
+			Long qtPrpExpId = scQtPRPExperience.getQtPrpExperienceId();
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SOURCING_BACKINGBEAN,
+					String.valueOf(qtPrpExpId),
+					SLALogConstant.DOWNLOAD_SUPPLIER_LOA_DETAILS_REPORTS
+							.concat(SourcingConstants.COMP_EXP_ERROR),
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * download loa compnay experience report details.
+	 * 
+	 * @param scQtPRPExperience
+	 * @param scQt
+	 * @throws IOException
+	 */
+	private void downLoadLOAReports(ScQtPRPExperience scQtPRPExperience,
+			ScQt scQt) throws IOException {
+		ScLoa scLoa = scQtPRPExperience.getScLoa();
+		LOADetailBackingBean loaDetailAll = new LOADetailBackingBean();
+		AwardSupplierReqDTO awardSuppReqDTO = new AwardSupplierReqDTO();
+		awardSuppReqDTO.setScLoa(scLoa);
+
+		AwardSupplierResDTO awardSuppResDTO = getQtAwardSO().retrieveLOADtl(
+				awardSuppReqDTO);
+
+		loaDetailAll.getManagedBean().setScLoa(awardSuppResDTO.getScLoa());
+		loaDetailAll.getManagedBean().getScLoa()
+				.setPmStatus(awardSuppResDTO.getScLoa().getPmStatus());
+		loaDetailAll.getManagedBean().getScLoa()
+				.setScLoaReports(awardSuppResDTO.getScLoa().getScLoaReports());
+		if (null != awardSuppResDTO.getScQt()) {
+			loaDetailAll.getManagedBean().setScQt(awardSuppResDTO.getScQt());
+		} else {
+			loaDetailAll.getManagedBean().setScQt(scQt);
+		}
+		if (awardSuppResDTO.getScLoa().getContractSigner() == null) {
+			awardSuppResDTO.getScLoa().setContractSigner(new PmUser());
+			loaDetailAll.getManagedBean().setContractSignerUser(
+					awardSuppResDTO.getScLoa().getContractSigner());
+		} else {
+			loaDetailAll.getManagedBean().setContractSignerUser(
+					awardSuppResDTO.getScLoa().getContractSigner());
+		}
+
+		getSuppLoiLoaMapData(loaDetailAll);
+		loaDetailAll.downloadAllReports();
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * getQtAwardSO - Gets the qt award so.
+	 * 
+	 * @return the qtAwardSO
+	 */
+	private IQTAwardSO getQtAwardSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * getSuppLoiLoaMapData - Gets the supp loi loa map data.
+	 * 
+	 * @param loaDetail
+	 *            the loa detail
+	 * 
+	 */
+	private void getSuppLoiLoaMapData(LOADetailBackingBean loaDetail) {
+		Long qtId = loaDetail.getManagedBean().getScQt().getQtId();
+		loaDetail.getManagedBean().setSuppLoiLoaMap(
+				retrieveSuppLoiLoaMapForReport(qtId));
+
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * retrieveSuppLoiLoaMapForReport - will retrieving SuppLoiLoaMap based on
+	 * qtid.
+	 * 
+	 * @param qtId
+	 *            the qt id
+	 * @retrun the list scloiloa instances.
+	 */
+	private Map<Long, List<ScLoiLoa>> retrieveSuppLoiLoaMapForReport(Long qtId) {
+
+		IQTAwardSO qtAwardSO = null;
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setDocId(qtId);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAList(reqDTO);
+
+			return resDTO.getLoiLoaSupplierMap();
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SOURCING_BACKINGBEAN,
+					String.valueOf(qtId),
+					SLALogConstant.RETRIEVE_SUPP_MAP_REPORT
+							.concat(SourcingConstants.COMP_EXP_ERROR),
+					getUserIdSessionFromLoginId(), e);
+		}
+		return null;
+
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * retrieve company exp contract status and value count.
+	 * 
+	 * @param scQtProposalChecklist
+	 * @param scQt
+	 * @param clientType
+	 * @param contractStatus
+	 * @param isSearchOperator
+	 * @return contract status and value count objects.
+	 */
+	protected EvaluationResDTO retrieveContractStatusValueCount(
+			ScQtProposalChecklist scQtProposalChecklist, ScQt scQt,
+			String clientType, int contractStatus, boolean isSearchOperator) {
+		try {
+
+			EvaluationReqDTO evaluationReqDTO = setDetailsToReqDTO(
+					scQtProposalChecklist, scQt, clientType, contractStatus,
+					isSearchOperator);
+			return getQTEvaluationSO().retrieveContractStatusValueCount(
+					evaluationReqDTO);
+		} catch (Exception e) {
+			Long qtProposalCheckListId = scQtProposalChecklist
+					.getQtProposalChecklistId();
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SOURCING_BACKINGBEAN,
+					String.valueOf(qtProposalCheckListId),
+					SLALogConstant.RETRIEVE_CONTRACT_STATUS_COUNT
+							.concat(SourcingConstants.COMP_EXP_ERROR),
+					getUserIdSessionFromLoginId(), e);
+		}
+
+		return null;
+
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * The Class ViewSupplierCompExpDtlsPagingDataModel.
+	 */
+	protected class ViewSupplierCompExpDtlsPagingDataModel extends
+			PagingDataModel<ScQtPRPExperience> {
+		private static final long serialVersionUID = 1L;
+		private EvaluationReqDTO evaluationReqDTO;
+
+		public ViewSupplierCompExpDtlsPagingDataModel(String componentId) {
+			super(componentId);
+		}
+
+		public ViewSupplierCompExpDtlsPagingDataModel(String componentId,
+				EvaluationReqDTO evaluationReqDTO) {
+			super(componentId, Boolean.TRUE);
+			this.evaluationReqDTO = evaluationReqDTO;
+		}
+
+		@Override
+		protected ISearchResultBean<ScQtPRPExperience> pageChangeListener(
+				ISearchBean<ScQtPRPExperience> searchBean) {
+
+			try {
+				evaluationReqDTO.setCompExpDtlsSerachBean(searchBean);
+				EvaluationResDTO evaluationResDTO = getQTEvaluationSO()
+						.retrieveCompanyExpDetails(evaluationReqDTO);
+
+				return evaluationResDTO.getCompExpDtlsSerachResults();
+			} catch (Exception e) {
+				Long qtId = evaluationReqDTO.getQtId();
+
+				SLAUtils.getInstance().logSLAError(
+						SLALogConstant.QT_MODULE,
+						SLALogConstant.QT_SOURCING_BACKINGBEAN,
+						String.valueOf(qtId),
+						SLALogConstant.COMP_EXP_SUPP_PAGING_DATA_MODEL
+								.concat(SourcingConstants.COMP_EXP_ERROR),
+						getUserIdSessionFromLoginId(), e);
+
+			}
+			return null;
+		}
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * download supplier managemnt supporting doucmnets during proposal and
+	 * evalation company experience viewing time.
+	 * 
+	 * @param supportingDocuments
+	 * @throws IOException
+	 */
+	public void downloadCompExpSupportingDocuments(
+			List<SmCompExpMasterDoc> supportingDocuments) throws IOException {
+		if (CollectionUtils.isNotEmpty(supportingDocuments)) {
+			List<ScAttachment> attachmentList = new ArrayList<>();
+			for (SmCompExpMasterDoc compExpDocs : supportingDocuments) {
+				ScLoaReportAttachment attachemnt = new ScLoaReportAttachment();
+				attachemnt.setFileName(compExpDocs.getFileName());
+				attachemnt.setFilePath(compExpDocs.getFilePath());
+				attachmentList.add(attachemnt);
+
+			}
+			downloadAllFiles(QTConstants.COMP_EXP_SUPPORTING_DOCUMENTS,
+					attachmentList);
+		}
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * This method is used to view the Loa Details page.
+	 * 
+	 * @param scQtPRPExperience
+	 * @param previousPageUrl
+	 * @return loaPagedetails
+	 * 
+	 */
+	public String viewLOADetailsPage(ScQtPRPExperience scQtPRPExperience,
+			String previousPageUrl) {
+		try {
+			ScLoa scLoa = scQtPRPExperience.getScLoa();
+			if (null != scLoa && null != scLoa.getLoaId()) {
+				EnumMap<MapKeyEnum, Object> loaArgs = new EnumMap<>(
+						MapKeyEnum.class);
+				ScLoaForQt scLoaForQt = new ScLoaForQt();
+				Long loaId = scLoa.getLoaId();
+
+				scLoaForQt.setLoaId(loaId);
+				loaArgs.put(MapKeyEnum.loiLoaSelected, scLoaForQt);
+
+				QtLOABackingBean qtLoaBbean = new QtLOABackingBean();
+
+				loaArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
+				ScQt scQt = scLoa.getScQt();
+				qtLoaBbean.preRenderViewForQtMaintenance(scQt, previousPageUrl,
+						loaArgs);
+			}
+
+		} catch (Exception e) {
+			Long qtPrpExpId = scQtPRPExperience.getQtPrpExperienceId();
+
+			SLAUtils.getInstance().logSLAError(
+					SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SOURCING_BACKINGBEAN,
+					String.valueOf(qtPrpExpId),
+					SLALogConstant.COMP_EXP_LOA_DETAILS_PAGE
+							.concat(SourcingConstants.COMP_EXP_ERROR),
+					getUserIdSessionFromLoginId(), e);
+		}
+
+		return null;
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * check portlet is supplier proposal
+	 * 
+	 * @return boolean
+	 */
+	public boolean isCheckProposalPortlet() {
+		return QTConstants.PORTLET_NAME_SUPPLIER_PROPOSAL.equals(EpPortletUtil
+				.getDisplayPortletId());
+	}
+
+	// 29661 -end-
+
+	// 29661 -start-
+	/**
+	 * check the portlet is evaluation
+	 * 
+	 * @return boolean.
+	 */
+	public boolean isCheckEvaluationPortlet() {
+		return QTConstants.PROPOSAL_EVALUATION_PORTLET.equals(EpPortletUtil
+				.getDisplayPortletId());
+	}
+
+	// 29661 -end-
+
 	//#28784 - Start
 	private boolean checkDemoWIP(ScQt scQt) {
 		try {
@@ -7436,4 +8059,76 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	//#28784 - End
+	
+	//#35320 - START
+	/**
+	 * Set PTJ Org Profile of user for committee member.
+	 * 
+	 * @param tplMember
+	 */
+	public void setTplCommMemberOrgProfile(TplCommMember tplMember) {
+
+		if (tplMember.getPmUser() != null && tplMember.getPmUser().getOrgTypeCode() != null) {
+			String orgTypeCode = tplMember.getPmUser().getOrgTypeCode().getParameterCode();
+			if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_BPK)) {
+				tplMember.setPmOrgProfile(getBKPOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			} else if (orgTypeCode.equalsIgnoreCase(ParameterConst.ORG_TYPE_OTHERS)) {
+				tplMember.setPmOrgProfile(getOTHOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			} else {
+				tplMember.setPmOrgProfile(getPTJOrgProfileByUserId(tplMember.getPmUser().getUserId()));
+			}
+		}
+	}
+	//#35320 - END
+	
+	//#35320 - START
+	/**
+	 * Set Committeemember data.
+	 * 
+	 * @param deleteScMember
+	 *  @param currentScMember
+	 */
+	public TplCommMember setTplCommitteeMemberData(TplCommMember deletedCommitteeMember,
+			TplCommMember currentCommitteeMember) {
+
+		deletedCommitteeMember.setDeleted(false);
+		deletedCommitteeMember.setRepresentativeType(currentCommitteeMember.getRepresentativeType());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setMemberRoleId(currentCommitteeMember.getMemberRoleId());
+		deletedCommitteeMember.setMemberName(currentCommitteeMember.getMemberName());
+		deletedCommitteeMember.setDesignation(currentCommitteeMember.getDesignation());
+		deletedCommitteeMember.setEmail(currentCommitteeMember.getEmail());
+		deletedCommitteeMember.setGrade(currentCommitteeMember.getGrade());
+		deletedCommitteeMember.setPNP(currentCommitteeMember.isPNP());
+		deletedCommitteeMember.setPmUser(currentCommitteeMember.getPmUser());
+		deletedCommitteeMember.setMemberRole(currentCommitteeMember.getMemberRole());
+		deletedCommitteeMember.setAccessRight(currentCommitteeMember.getAccessRight());
+		deletedCommitteeMember.setTplCommittee(currentCommitteeMember.getTplCommittee());
+
+		if (deletedCommitteeMember.getMemberRole() != null) {
+			deletedCommitteeMember.setMemberRoleId(deletedCommitteeMember.getMemberRole().getParameterId());
+		}
+
+		if (deletedCommitteeMember.getRepresentativeType() != null) {
+			deletedCommitteeMember.setRepresentativeTypeId(deletedCommitteeMember.getRepresentativeType()
+					.getParameterId());
+		}
+		return deletedCommitteeMember;
+	}
+	//#35320 - END
+	
+	//#35320 - START
+	/**
+	 * Representive type change.
+	 *
+	 * @param member the member
+	 */
+	public void tplRepresentiveTypeChangedListener(TplCommMember member) {
+		Long paramId = member.getRepresentativeTypeId();
+		if (null != paramId) {
+			member.setRepresentativeType(ParameterHelper.getInstance()
+					.getPmParameterById(paramId));
+		}
+	}
+	//#35320 - END
 }
