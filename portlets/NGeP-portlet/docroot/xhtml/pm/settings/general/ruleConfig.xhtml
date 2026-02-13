@@ -37,11 +37,11 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{ruleCatalogueBackingBean.searchRuleType}"
-					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch"/>
+					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch addButtonDiv"/>
 				&#160;
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{ruleCatalogueBackingBean.resetRuleType}" process="@this"
-					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch ruleTypePanelGrid" />
+					update="ruleTypeTableID ruleTypeValueTableID ruleTypeValueSearch ruleTypePanelGrid addButtonDiv" />
 			</div>
 		</p:panel>
 		<!-- 36738 End -->
@@ -636,7 +636,7 @@
 
 		</p:dataTable>
 
-		<div style="text-align: right; float: right; min-height: 30px;">
+		<h:panelGroup style="text-align: right; float: right; min-height: 30px;" id="addButtonDiv">
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C')}"
@@ -675,7 +675,7 @@
 				action="#{ruleCatalogueBackingBean.initPtjPopup}">
 			</p:commandButton>
 			<!-- 27827 - END -->
-		</div>
+		</h:panelGroup>
 		
 		<ac:confirmationPopup id="ruleValueDeleteId"
 				widget="ruleValueDeletePopUp"
