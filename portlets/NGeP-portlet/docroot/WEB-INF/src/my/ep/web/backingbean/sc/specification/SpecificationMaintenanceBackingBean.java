@@ -412,7 +412,7 @@ public void specCommitteeMaintenancereset() {
 		switchToOrigManagedBean();
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, destPage); // 29464
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, destPage+"?faces-redirect=true");//29464 //29732 add redirect true	
 		
 		return "";
 	}
