@@ -2267,12 +2267,16 @@ return scQt;
 
 			qt = tenderResDTO.getQtDetail();
 			if (tenderResDTO.isSuccessful()) {
-				if (isAllAccepted) {
+				//#21692 - Start
+				//Only if all supplier accepted EPV and status is lower than or equal to Reschedule proposal
+				if (isAllAccepted
+						&& isStatusLessThanOrEquals(this.getManagedBean().getCurrentStatusId(),
+								QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE,
+								QTStatusConst.QT_ORDERED_STATUSES)) {
 					new QTDocumentsBackingBean().reGenerateDocuments(
 							qt.getQtId(), 
 							QTFieldConst.FIELD_QT_VALIDITY_PERIOD);
 				}
-				//#21692 - Start
 				successMessage(getMessgeConstant(outcome), ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION, qt.getQtNo(), Boolean.TRUE);
 				// clear data
@@ -3197,7 +3201,6 @@ return scQt;
 	 * 
 	 */
 	public void saveAction() {
-		log.info("Save proposal validity Period (Days) extension");
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getQt();
 
@@ -3309,8 +3312,6 @@ return scQt;
 	 * Rejected and Revised will use same flow, but different Parameters and Notifications.
 	 */
 	public void submitAction() {
-		log.info("Submit proposal validity Period (Days) extension");
-
 		this.getManagedBean().setProposalValidityRevised(false);
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getQt();

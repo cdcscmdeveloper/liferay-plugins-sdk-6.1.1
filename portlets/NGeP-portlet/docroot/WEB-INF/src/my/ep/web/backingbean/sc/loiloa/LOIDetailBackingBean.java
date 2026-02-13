@@ -6620,7 +6620,7 @@ public class LOIDetailBackingBean extends
 						ParameterConst.DOCTYPE_LETTER_OF_INTENT, scLoi.getLoiNo(), Boolean.TRUE);
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("LOI", "CancelLoiWithoutBPM", getManagedBean().getScLoi().getLoiNo(),
+			SLAUtils.getInstance().logSLAError("LOI", "cancelLOIWithoutBPM", getManagedBean().getScLoi().getLoiNo(),
 					"cancelLOIWithoutBPM", getUserIdSessionFromLoginId(), e);
 		}
 	}

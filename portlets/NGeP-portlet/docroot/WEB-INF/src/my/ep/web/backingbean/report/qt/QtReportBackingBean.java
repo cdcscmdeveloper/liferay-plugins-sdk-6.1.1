@@ -765,9 +765,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		if (deskOfficerRoles && (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)
 				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode))) {
 			if (scQt != null && scQt.getQtId() != null) {
-				Date date = retriveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
+				Date date = retrieveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
 
-				log.info("date" + date);
 				ptjCode = scQt.getOrgProfileId().toString();
 				ptjName = retrievePTJByOrgProfileId(scQt.getOrgProfileId(), date);
 			}
@@ -811,32 +810,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	//#21692 - End
 
 	//#21692 - Start
-	private Date retriveDatesforOrgProfile(Date publishDate, Date createdDate) {
+	private Date retrieveDatesforOrgProfile(Date publishDate, Date createdDate) {
 		if (publishDate == null) {
-			log.info("===========createdDate=====" + createdDate);
 			return createdDate;
 		}
-		log.info("===========publishDate=====" + publishDate);
 		return publishDate;
-	}
-	//#21692 - End
-
-	//#21692 - Start
-	private ScQt findScQtByQuotationNumber() {
-		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
-			tenderReqDTO.setQtTndrNo(this.getManagedBean().getQuotationNumber().toUpperCase());
-
-			QuationTenderResDTO resDTO = getQTDetailSO().retriveQtByQtNumber(tenderReqDTO);
-			return resDTO.getQtDetail();
-		}
-		return null;
-	}
-	//#21692 - End
-
-	//#21692 - Start
-	private IQTDetailSO getQTDetailSO() {
-		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	//#21692 - End
 
@@ -1054,7 +1032,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * 
 	 * @return orgProfileId
 	 */
-	public String constuctConditionFields() {
+	public String constructConditionFields() {
 		StringBuilder conditionField = null;
 		if (null != this.getManagedBean().getScQt() && null == this.getManagedBean().getScQt()
 				.getMinistryOrgProfile()) {
