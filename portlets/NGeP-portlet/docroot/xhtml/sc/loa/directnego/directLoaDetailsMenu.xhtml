@@ -1165,7 +1165,8 @@
 											oncomplete="uploadApprovalLetterDlg.show();return false;"
 					 						icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg" 
 					 						rendered="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment eq null}"/>								
-											<p:commandLink
+											<!-- #25725/25726 note 267/458 -->
+											<h:commandLink
 											title="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 											value="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
 											action="#{directLOABackingBean.fileDownload}"
@@ -1192,8 +1193,8 @@
 									</td>
 									<td>
 										<p:outputPanel id="uploadedPage2">						
-																			
-											<p:commandLink
+											<!-- #25725/25726 note 267/458 -->								
+											<h:commandLink
 											title="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
 											value="#{directLOABackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
 											action="#{directLOABackingBean.fileDownload}"
