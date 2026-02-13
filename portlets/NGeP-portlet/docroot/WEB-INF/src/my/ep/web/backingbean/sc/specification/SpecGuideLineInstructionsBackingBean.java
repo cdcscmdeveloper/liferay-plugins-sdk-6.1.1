@@ -95,6 +95,17 @@ public class SpecGuideLineInstructionsBackingBean extends SourcingBaseBackingBea
 		}
 		return specGuideLineStreamContent;
 	}
+	
+	public StreamedContent getSpecItemPreparationGuideLineStreamContent() throws Exception {
+		if (specGuideLineStreamContent == null) {
+			ScSpecGuideLineAttachment specGuideLineAttachment = new ScSpecGuideLineAttachment();
+			generateSpecGuideLinePdfFromSharedrepository(specGuideLineAttachment, null,
+					SourcingConstants.DOCNAME_QT_SPEC_ITEM_PREP_GUIDELINE);
+			specGuideLineStreamContent = getAttachmentStreamContent(specGuideLineAttachment,
+					CommonConstants.FILE_CONTENT_TYPE_PDF);
+		}
+		return specGuideLineStreamContent;
+	}
 
 	private void generateSpecGuideLinePdfFromSharedrepository(ScAttachment attachment, String prefixFileName,
 			String constFileName) throws Exception {
