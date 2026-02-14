@@ -4346,6 +4346,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return null;
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		// selectedUserOrg.email
+		String email = this.getManagedBean().getSelectedUserOrg().getEmail().toLowerCase();
+		if (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			this.getManagedBean().getSelectedUserOrg().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	
 	//#29594 - START
 	public String retrieveMinistryName() {
