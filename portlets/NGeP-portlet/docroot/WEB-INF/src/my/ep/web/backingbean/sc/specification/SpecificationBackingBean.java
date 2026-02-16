@@ -17973,7 +17973,7 @@ public class SpecificationBackingBean extends
 		CommitteResDTO resDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		this.getManagedBean().setMaintanceFlow(true);
-		checkWeightage35384WIP();// #38151
+
 		ScCommitteeMember member = resDTO.getCommMember();
 		if (null != member) {
 
@@ -17987,6 +17987,7 @@ public class SpecificationBackingBean extends
 			}
 		}
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
+		checkWeightage35384WIP();// #38151
 		ScQt scQt = this.getManagedBean().getQt();
 		if (null == this.getManagedBean().getQt().getContractType()) {
 			this.getManagedBean().getQt().setContractType(new PmParameter());
