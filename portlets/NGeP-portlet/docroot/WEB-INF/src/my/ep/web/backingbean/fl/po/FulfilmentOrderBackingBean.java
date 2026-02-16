@@ -437,9 +437,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 		}
 		//#34443 start
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
-			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				throw new EpException(MessageConst.ERROR_100026, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)) {
+			if (flBB.getManagedBean().getRemarkList().get(0).getRemark() == null
+					|| flBB.getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+				throw new EpException(MessageConst.ERROR_100026,
+						new String[] { ResourceBundleUtils.getMessage("lbl.txt.remarks",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 			}
 		}
 		//#34443 end
