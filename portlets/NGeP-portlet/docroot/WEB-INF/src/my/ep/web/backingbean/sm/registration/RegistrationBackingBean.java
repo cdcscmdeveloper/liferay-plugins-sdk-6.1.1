@@ -4443,6 +4443,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 		*/
+		
+		// #36718 - Start
+		if (StringUtils.isBlank(getManagedBean().getSmBusinessAdd().getMapLatitude())
+				|| StringUtils.isBlank(getManagedBean().getSmBusinessAdd().getMapLongitude())) {
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
+					new String[] { SmCommonUtil.getMessage("lbl.sm.coordinate.company.info", null) }));
+		}
+		// #36718 - End
+				
 		if (!this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) && this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1) {
 			throw new EpException(MessageConst.ERROR_721011);
 		}
@@ -5939,6 +5948,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	//14685 - END
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = this.getManagedBean().getSmPersonnel().getEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().getSmPersonnel().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+
+	public void onChangeConfirmEmail() {
+		String email = this.getManagedBean().getConfirmEmail().toLowerCase();
+		if (!isAllowedEmail(email)) {
+			this.getManagedBean().setConfirmEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	
 	//  #30829 - Start 1/11/2021
     //  #30829 - Start 1/11/2021
