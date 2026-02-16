@@ -57,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScAssignItemDtl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchCondition;
@@ -1292,13 +1293,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 * Assign Item code for contracted item (service type)
 	 * 
 	 */
-	public String insertContractedItemCodeForService(CmUnspsc commodity , ScRequestItem requestItem) {
+	public String insertContractedItemCodeForService(CmUnspsc commodity) {
 		this.getManagedBean().setSelectedUNSPSCObj(commodity);
-		return insertContractedItemCode(null,requestItem);
+		return insertContractedItemCode(null);
 
 	}
 
-	public String insertContractedItemCode(Object [] objSelected , ScRequestItem requestItem) {
+	public String insertContractedItemCode(Object [] objSelected) {
 		log.info("**********insertContractedItemCode************");
 		FacesContext facesContext = null;
 
@@ -1499,8 +1500,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			CommonUtils commonUtils = new CommonUtils();
 			scRequestItem.setItemName(commonUtils.removeItemNameNA(scRequestItem.getItemName()));
 			
-			if(requestItem !=null){
-				insertIntoAssignCodeDetail(requestItem);
+			if(scRequestItem !=null){
+				insertIntoAssignCodeDetail(scRequestItem);
 			}
 
 			//#26059 - End
@@ -2310,7 +2311,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			// if come from pending codification, no task
 			RequestContext.getCurrentInstance().execute("unspscPopUp.hide()");
 
-			return insertContractedItemCodeForService(comodityObj,null);
+			return insertContractedItemCodeForService(comodityObj);
 			// return NAV_TO_ASSIGN_PRODUCT_CODE+"?faces-redirect=true";
 		}
 
@@ -4123,15 +4124,24 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 *             {@code saveScAssignItemDetail} fails during persistence.
 	 */
 	private void insertIntoAssignCodeDetail(ScRequestItem scRequestItem) {
-
-		IAssignItemDtlSO assignItemDtlSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IAssignItemDtlSO.class);
-
-		AssignItemDtlReqDTO reqDTO = new AssignItemDtlReqDTO();
-		reqDTO.setScRequestItem(scRequestItem);
-
-		assignItemDtlSO.saveScAssignItemDetail(reqDTO);
-
+		
+		if(scRequestItem !=null){
+			
+			List<ScAssignItemDtl> listAssignItemDtls = scRequestItem.getScAssignItemDtlList();
+	        
+	        if (listAssignItemDtls == null) {
+	            listAssignItemDtls = new ArrayList<ScAssignItemDtl>();
+	        }
+			
+			ScAssignItemDtl assignItemDtl = new ScAssignItemDtl();
+		    assignItemDtl.setScRequestItem(scRequestItem);
+		    assignItemDtl.setItemName(scRequestItem.getItemName());
+		    assignItemDtl.setItemDescription(scRequestItem.getItemDesc());
+		    
+		    listAssignItemDtls.add(assignItemDtl);
+		    
+		    scRequestItem.setScAssignItemDtlList(listAssignItemDtls);
+		} 
 	}
 	// #26059 - End
 
