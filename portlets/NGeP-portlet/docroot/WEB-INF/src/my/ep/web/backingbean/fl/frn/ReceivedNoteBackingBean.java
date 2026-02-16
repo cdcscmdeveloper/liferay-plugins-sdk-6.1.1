@@ -2018,11 +2018,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				RequestContext.getCurrentInstance().execute("limitConfirmDlg.show();");
 				return null;
 			} else {
-				return gpkiSignAction(outcome);
+				return confirmDialogueTrigger(outcome);
 			}
 		}
 
-		return gpkiSignAction(outcome);
+		return confirmDialogueTrigger(outcome);
 	}
 	
 	/**
